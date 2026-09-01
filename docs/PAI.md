@@ -131,8 +131,10 @@ uv run python scripts/runner/execute_pipeline.py --project template_code_project
 uv run python scripts/pipeline/stage_01_test.py --project template_code_project
 
 # Validate markdown (exemplar path)
-uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/docs/manuscript/
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 Active project slugs: see [_generated/active_projects.md](_generated/active_projects.md) — do not duplicate that roster here.
 

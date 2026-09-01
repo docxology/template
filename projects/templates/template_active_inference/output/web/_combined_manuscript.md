@@ -1599,7 +1599,7 @@ The exemplar therefore sits at a narrow intersection: finite discrete active inf
 
 # References
 
-See `manuscript/references.bib` for bibliography entries cited in the composed sections.
+See `docs/manuscript/references.bib` for bibliography entries cited in the composed sections.
 
 
 

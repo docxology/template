@@ -33,7 +33,7 @@ The profile should be rewritten, not merely renamed, when the fork changes domai
 
 ## Secure pipeline and optional review gates
 
-The gold-refinement exemplar now carries two explicit policy surfaces in `manuscript/config.yaml`:
+The gold-refinement exemplar now carries two explicit policy surfaces in `docs/manuscript/config.yaml`:
 
 - `steganography:` for secure PDF post-processing
 - `llm.reviews:` for optional review generation when Ollama is available and the run is explicitly opted in
@@ -52,7 +52,7 @@ Keep these non-claims explicit:
 
 ## Checklist
 
-- Update `manuscript/config.yaml` with the new domain lexicon and stage map.
+- Update `docs/manuscript/config.yaml` with the new domain lexicon and stage map.
 - Update `contribution_claims` with domain-owned evidence pointers.
 - Replace or extend the adapter profile before reusing certification language.
 - Keep a source-owned validator for the domain's failure modes.

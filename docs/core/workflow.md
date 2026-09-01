@@ -183,8 +183,10 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_code_project
 
 # Validate markdown integrity
-uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/docs/manuscript/
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ### 3. Integration Phase
 
@@ -396,7 +398,7 @@ uv run pytest --cov=src --cov-report=term-missing
 
 ```bash
 # Check what's failing
-uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/docs/manuscript/
 
 # Regenerate specific figures
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py

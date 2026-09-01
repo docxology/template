@@ -524,7 +524,7 @@ class TestEbookBundleManagerFallbacks:
     def test_find_cover_image_finds_manuscript_cover(self, tmp_path: Path) -> None:
         """_find_cover_image finds cover.png in manuscript/ directory."""
         project_root = tmp_path / "myproject"
-        manuscript_dir = project_root / "manuscript"
+        manuscript_dir = project_root / "docs" / "manuscript"
         manuscript_dir.mkdir(parents=True)
         cover = manuscript_dir / "cover.png"
         cover.write_bytes(b"fake-png")
@@ -592,8 +592,8 @@ class TestEbookStageFallbacks:
         project_root = repo_root / "projects" / "working" / "myproject"
         (project_root / "src").mkdir(parents=True)
         (project_root / "src" / "__init__.py").write_text("", encoding="utf-8")
-        manuscript_dir = project_root / "manuscript"
-        manuscript_dir.mkdir()
+        manuscript_dir = project_root / "docs" / "manuscript"
+        manuscript_dir.mkdir(parents=True)
         (manuscript_dir / "a.bib").write_text("@article{shared,title={A}}\n", encoding="utf-8")
         (manuscript_dir / "b.bib").write_text("@book{shared,title={B}}\n", encoding="utf-8")
         combined = project_root / "output" / "pdf" / "_combined_manuscript.md"
@@ -665,8 +665,8 @@ class TestEbookStageFallbacks:
         project_root = repo_root / "projects" / "working" / "myproject"
         (project_root / "src").mkdir(parents=True)
         (project_root / "src" / "__init__.py").write_text("", encoding="utf-8")
-        manuscript_dir = project_root / "manuscript"
-        manuscript_dir.mkdir()
+        manuscript_dir = project_root / "docs" / "manuscript"
+        manuscript_dir.mkdir(parents=True)
         (manuscript_dir / "references.bib").write_text(
             "@article{alpha2020primary,\n"
             "  author={Alpha, Ada},\n"

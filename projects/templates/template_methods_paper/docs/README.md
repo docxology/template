@@ -56,7 +56,7 @@ what the repo's gates enforce:
 | Thin orchestrator: `scripts/` only calls `src/`; gate/compile logic stays in `src/methods_dsl/` | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/methods_dsl/` infra-import scan |
 | Zero mocks: real `Method` fixtures / `tmp_path` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/audit/verify_no_mocks.py` |
 | ≥90% project coverage on `src/` | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` |
-| `manuscript/config.yaml` is the configuration source of truth | [`rendering_pipeline.md`](rendering_pipeline.md) | rendering infra |
+| `docs/manuscript/config.yaml` is the configuration source of truth | [`rendering_pipeline.md`](rendering_pipeline.md) | rendering infra |
 | Deterministic outputs (stable `plan_hash`); everything in `output/` regeneratable | [`output_conventions.md`](output_conventions.md) | reproducibility checks |
 
 ### Fork seed
@@ -71,7 +71,7 @@ cd "projects/working/$NEW"
 # 2. Extend src/methods_dsl/vocabulary.py / units.py only if your domain needs
 #    a new StepKind / Dimension (keep additions in the controlled vocabulary)
 # 3. Replace tests/ — real Method fixtures, no mocks, drive src/ coverage >= 90%
-# 4. Edit manuscript/config.yaml (title, authors)
+# 4. Edit docs/manuscript/config.yaml (title, authors)
 # 5. Update scripts/methods_analysis.py to compile your method(s)
 uv run pytest "projects/working/$NEW/tests" --cov="projects/working/$NEW/src" --cov-fail-under=90
 ```
@@ -95,5 +95,5 @@ grep -rnE "^(from|import) infrastructure" projects/templates/template_methods_pa
 
 - [../AGENTS.md](../AGENTS.md) — Full project documentation.
 - [../README.md](../README.md) — Project quick start.
-- [../manuscript/AGENTS.md](../manuscript/AGENTS.md) — Manuscript directory rules and token/figure protocol.
+- [../docs/manuscript/AGENTS.md](../docs/manuscript/AGENTS.md) — Manuscript directory rules and token/figure protocol.
 - [output_conventions.md](output_conventions.md) — Output directory structure and regeneration.

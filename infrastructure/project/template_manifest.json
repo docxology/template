@@ -29,7 +29,7 @@
       "name": "template_autopoiesis",
       "qualified_name": "templates/template_autopoiesis",
       "title": "template_autopoiesis",
-      "use_when": "Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater.",
+      "use_when": "Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `docs/manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater.",
       "test_file_count": 29,
       "coverage_floor": 90
     },

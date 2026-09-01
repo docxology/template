@@ -32,8 +32,10 @@ For Pandoc-crossref `@fig:` / `[@key]` exemplars, see [`docs/guides/manuscript-s
 
 ## Inputs to confirm
 
-- **Scope** — `projects/<name>/manuscript/` path or project name.
+- **Scope** — `projects/<name>/docs/manuscript/` path or project name.
 - **Style** — confirm registry/token vs pure Pandoc-crossref (do not mix styles in repairs).
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## Workflow
 
@@ -52,7 +54,7 @@ For Pandoc-crossref `@fig:` / `[@key]` exemplars, see [`docs/guides/manuscript-s
 ## Verification commands
 
 ```bash
-uv run python -m infrastructure.validation.cli markdown projects/<name>/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/<name>/docs/manuscript/
 uv run python -m infrastructure.validation.cli prerender projects/<name>/manuscript --repo-root .
 ```
 

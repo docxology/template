@@ -139,7 +139,7 @@ inside that exemplar.
 | `template-active-inference` | `template_active_inference` | Use this template when **several independent research tracks must compose into one manuscript whose claims stay consistent where the tracks overlap** — here: a closed-form analytical oracle, a pymdp simulation harness, a Lean formalization boundary, and shared GNN/ontology notation. |
 | `template-advanced-literature-review` | `template_advanced_literature_review` | Use this template when one review question needs distinct retrieval phases, phase-specific filters, and explicit cross-phase provenance. |
 | `template-autoresearch-project` | `template_autoresearch_project` | Use this template when you need a **bounded, offline AutoResearch loop**: deterministic ML candidate evaluation over a fixed local dataset, with evidence-linked claims, machine-readable ledgers, artifact-integrity manifests, and deferred human-review gates. |
-| `template-autopoiesis` | `template_autopoiesis` | Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater. |
+| `template-autopoiesis` | `template_autopoiesis` | Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `docs/manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater. |
 | `template-code-project` | `template_code_project` | Use this template for **code-driven computational research**: algorithms in `src/`, numerical experiments with deterministic seeds, automated publication-quality figures, and a manuscript that reports the computed results. |
 | `template-data-descriptor` | `template_data_descriptor` | Use this template when the contribution is a **published dataset or data paper**: a schema contract, file inventory, data dictionary, provenance chain, license boundary, quality checks, and machine-readable descriptor must all stay consistent before publication. |
 | `template-eda-notebook` | `template_eda_notebook` | Use this template for **exploratory data analysis on tabular data**: load a dataset, surface missingness, compute descriptive statistics and per-group means, rank features by correlation, and produce a few diagnostic figures. |
@@ -210,7 +210,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 | [`template_active_inference`](projects/templates/template_active_inference/) | Use this template when **several independent research tracks must compose into one manuscript whose claims stay consistent where the tracks overlap** — here: a closed-form analytical oracle, a pymdp simulation harness, a Lean formalization boundary, and shared GNN/ontology notation. |
 | [`template_advanced_literature_review`](projects/templates/template_advanced_literature_review/) | Use this template when one review question needs distinct retrieval phases, phase-specific filters, and explicit cross-phase provenance. |
 | [`template_autoresearch_project`](projects/templates/template_autoresearch_project/) | Use this template when you need a **bounded, offline AutoResearch loop**: deterministic ML candidate evaluation over a fixed local dataset, with evidence-linked claims, machine-readable ledgers, artifact-integrity manifests, and deferred human-review gates. |
-| [`template_autopoiesis`](projects/templates/template_autopoiesis/) | Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater. |
+| [`template_autopoiesis`](projects/templates/template_autopoiesis/) | Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `docs/manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater. |
 | [`template_code_project`](projects/templates/template_code_project/) | Use this template for **code-driven computational research**: algorithms in `src/`, numerical experiments with deterministic seeds, automated publication-quality figures, and a manuscript that reports the computed results. |
 | [`template_data_descriptor`](projects/templates/template_data_descriptor/) | Use this template when the contribution is a **published dataset or data paper**: a schema contract, file inventory, data dictionary, provenance chain, license boundary, quality checks, and machine-readable descriptor must all stay consistent before publication. |
 | [`template_eda_notebook`](projects/templates/template_eda_notebook/) | Use this template for **exploratory data analysis on tabular data**: load a dataset, surface missingness, compute descriptive statistics and per-group means, rank features by correlation, and produce a few diagnostic figures. |
@@ -409,7 +409,9 @@ maintained in [`AGENTS.md`](AGENTS.md#core-architecture) and
   through the pipeline into `output/<name>/{pdf,figures,data,reports}/`.
 - **Quality assurance:** infra ≥60 % and project ≥90 % coverage gates,
   no-mocks policy, deterministic seeds, real PDF/markdown validation.
-- **Configuration:** `projects/{name}/manuscript/config.yaml` plus environment
+- **Configuration:** `projects/{name}/docs/manuscript/config.yaml` plus environment
+**Manuscript location:** configurable but defaulting to `docs/manuscript/` (`projects/{name}/docs/manuscript/`). Set `TEMPLATE_MANUSCRIPT_DIR` (project-relative, e.g. `manuscript`) to override checkout-wide; the legacy `manuscript/` location remains auto-detected for backward compatibility.
+
   overrides feed PDF metadata, LaTeX preamble, figure labels, and validation
   rules.
 
@@ -423,7 +425,7 @@ maintained in [`AGENTS.md`](AGENTS.md#core-architecture) and
 | **`projects/{name}/src/`** | Project-specific scientific code (Layer 2) | Per-project `AGENTS.md` |
 | **`projects/{name}/tests/`** | Project test suite | Per-project `AGENTS.md` |
 | **`docs/`** | **Documentation hub** | **[docs/documentation-index.md](docs/documentation-index.md)** |
-| **`projects/{name}/manuscript/`** | Research manuscript sections | Per-project `AGENTS.md` |
+| **`projects/{name}/docs/manuscript/`** | Research manuscript sections | Per-project `AGENTS.md` |
 | **`output/`** | Generated public evidence plus local build output | Final evidence is tracked selectively; runtime residue is ignored |
 
 **📚 Explore Documentation:** See **[docs/documentation-index.md](docs/documentation-index.md)** for documentation structure
@@ -509,14 +511,14 @@ server support, persistent model/output volumes, and hot-reload. See
 
 ### Project Metadata Configuration
 
-Two configuration paths exist: edit `projects/{name}/manuscript/config.yaml`
+Two configuration paths exist: edit `projects/{name}/docs/manuscript/config.yaml`
 (recommended) **or** export `AUTHOR_NAME` / `AUTHOR_ORCID` / `AUTHOR_EMAIL` /
 `PROJECT_TITLE` / `DOI` environment variables (env vars override the YAML file).
 The YAML schema (paper title, authors with ORCID, publication DOI, keywords,
 optional LLM translations block) and a worked example are documented once in
 [`CLAUDE.md`](CLAUDE.md#configuration) and
 [`AGENTS.md`](AGENTS.md#configuration-system); both files also list every
-available field. See `projects/{name}/manuscript/config.yaml.example` for the full
+available field. See `projects/{name}/docs/manuscript/config.yaml.example` for the full
 template. Applied configuration drives PDF metadata, LaTeX document properties
 (see [`docs/reference/copypasta.md`](docs/reference/copypasta.md) for preamble
 examples), generated file headers, and cross-reference systems.
@@ -533,11 +535,11 @@ inline. Worked examples and the full pattern walkthrough live in
 
 ### Manuscript Structure
 
-Per-project manuscript files live in `projects/{name}/manuscript/`:
+Per-project manuscript files live in `projects/{name}/docs/manuscript/`:
 `config.yaml`, `preamble.md`, zero-padded numbered chapter files
 (`00_abstract.md` onward), optional `S01_*.md` supplements, and
 `99_references.md`. Exact chapter slugs vary per project — the canonical
-exemplar is [`projects/templates/template_code_project/manuscript/`](projects/templates/template_code_project/manuscript/);
+exemplar is [`projects/templates/template_code_project/docs/manuscript/`](projects/templates/template_code_project/manuscript/);
 the numbering system and slug rules are authoritative in
 [`docs/usage/manuscript-numbering-system.md`](docs/usage/manuscript-numbering-system.md).
 

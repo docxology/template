@@ -100,7 +100,7 @@ result = embed_steganography(Path("paper.pdf"))
 ## Configuration via config.yaml
 
 ```yaml
-# In projects/{name}/manuscript/config.yaml
+# In projects/{name}/docs/manuscript/config.yaml
 steganography:
   enabled: true
   overlays_enabled: true
@@ -110,6 +110,8 @@ steganography:
   encryption_enabled: false
   pdf_encryption_algorithm: "AES-256"
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ---
 

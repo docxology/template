@@ -1,6 +1,6 @@
 # Rendering Pipeline: Manuscript → PDF
 
-The `manuscript/` directory contains the narrative components of the
+The `docs/manuscript/` directory contains the narrative components of the
 research. It is compiled into a publication-ready PDF by the template's
 rendering infrastructure. This document describes each step, what it
 produces, and how to troubleshoot failures.
@@ -62,7 +62,7 @@ repository root)
 uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
 ```
 
-**Inputs**: `manuscript/config.yaml` + the `output/data` and `output/reports`
+**Inputs**: `docs/manuscript/config.yaml` + the `output/data` and `output/reports`
 artifacts from step 1.
 
 **Outputs**: `output/data/manuscript_variables.json` and a
@@ -77,8 +77,8 @@ inside `projects/`)
 uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
 ```
 
-**Inputs**: `manuscript/*.md` (resolved) + `manuscript/config.yaml` +
-`manuscript/preamble.md` + `manuscript/references.bib`.
+**Inputs**: `manuscript/*.md` (resolved) + `docs/manuscript/config.yaml` +
+`docs/manuscript/preamble.md` + `docs/manuscript/references.bib`.
 
 **Infrastructure modules involved**:
 
@@ -87,7 +87,7 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_m
 | `infrastructure/rendering/pdf_renderer.py` | Orchestrates Pandoc → XeLaTeX |
 | `infrastructure/rendering/manuscript_discovery.py` | Discovers and orders manuscript section files |
 | `infrastructure/rendering/manuscript_injection.py` | Resolves `{{TOKEN}}` markers via `write_resolved_manuscript_tree` |
-| `infrastructure/core/config/loader.py` | Reads `manuscript/config.yaml` for title, authors, metadata |
+| `infrastructure/core/config/loader.py` | Reads `docs/manuscript/config.yaml` for title, authors, metadata |
 
 **Outputs**: a combined publication PDF, per-section Beamer slides, and HTML
 versions of each section, all under `output/`.
@@ -134,7 +134,7 @@ fallbacks to `N/A`. Run step 1, then step 2, in order — never skip step 1.
 
 ### BibTeX citation error / PDF fails to compile
 
-**Cause**: malformed entry in `manuscript/references.bib`. Check the LaTeX
+**Cause**: malformed entry in `docs/manuscript/references.bib`. Check the LaTeX
 log under `output/pdf/` for the specific error.
 
 ### Slides not generated

@@ -4,7 +4,7 @@
     "project_name": "template_literature_meta_analysis",
     "populated_on": "2026-07-01",
     "populated_by": "Marcus Webb (Engineer)",
-    "note": "First real regression pins for the generic literature meta-analysis exemplar (default term 'modafinil'; multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics). The live pipeline makes network calls (multi-engine retrieval); these pins deliberately re-derive every value OFFLINE from the committed deterministic seed corpus data/fixtures/modafinil_corpus.jsonl (80 synthetic records, reserved 10.5555/ test DOIs, RNG seed 42) via the real source functions src.literature.corpus.Corpus.load + src.analysis.descriptive_stats + src.analysis.temporal_analysis -- the same functions whose outputs manuscript/src/manuscript/variables.py injects into the {{CORPUS_SIZE}}/{{UNIQUE_AUTHORS}}/{{CITATION_MAX}}/{{CITATION_TOTAL}}/{{GINI_COEFFICIENT}}/{{PEAK_YEAR}} tokens in manuscript/03a_results_field_overview.md. No network, no mocks. A live retrieval run replaces the fixture corpus and legitimately shifts these values; when that happens the pins and the manuscript must be updated together per docs/maintenance/regression-testing.md."
+    "note": "First real regression pins for the generic literature meta-analysis exemplar (default term 'modafinil'; multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics). The live pipeline makes network calls (multi-engine retrieval); these pins deliberately re-derive every value OFFLINE from the committed deterministic seed corpus data/fixtures/modafinil_corpus.jsonl (80 synthetic records, reserved 10.5555/ test DOIs, RNG seed 42) via the real source functions src.literature.corpus.Corpus.load + src.analysis.descriptive_stats + src.analysis.temporal_analysis -- the same functions whose outputs manuscript/src/manuscript/variables.py injects into the {{CORPUS_SIZE}}/{{UNIQUE_AUTHORS}}/{{CITATION_MAX}}/{{CITATION_TOTAL}}/{{GINI_COEFFICIENT}}/{{PEAK_YEAR}} tokens in docs/manuscript/03a_results_field_overview.md. No network, no mocks. A live retrieval run replaces the fixture corpus and legitimately shifts these values; when that happens the pins and the manuscript must be updated together per docs/maintenance/regression-testing.md."
   },
   "_provenance": {
     "field_overview_corpus_size": {
@@ -51,7 +51,7 @@
     }
   },
   "field_overview_corpus_size": {
-    "manuscript_section": "manuscript/03a_results_field_overview.md / Field Overview",
+    "manuscript_section": "docs/manuscript/03a_results_field_overview.md / Field Overview",
     "claim_text": "The de-duplicated corpus for modafinil contains $N = {{CORPUS_SIZE}}$ records spanning {{YEAR_START}}--{{YEAR_END}}",
     "value": 80,
     "abs_tolerance": 0,
@@ -62,7 +62,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "field_overview_unique_authors": {
-    "manuscript_section": "manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
+    "manuscript_section": "docs/manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
     "claim_text": "The corpus spans {{UNIQUE_AUTHORS}} unique authors across {{CORPUS_SIZE}} papers",
     "value": 151,
     "abs_tolerance": 0,
@@ -73,7 +73,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "field_overview_pct_with_doi": {
-    "manuscript_section": "manuscript/03a_results_field_overview.md / Identifier and Full-Text Coverage",
+    "manuscript_section": "docs/manuscript/03a_results_field_overview.md / Identifier and Full-Text Coverage",
     "claim_text": "{{DOI_COUNT}} of {{CORPUS_SIZE}} records ({{PCT_WITH_DOI}}\\%) carry DOIs",
     "value": 100.0,
     "abs_tolerance": 1e-09,
@@ -84,7 +84,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "bibliometrics_citation_count_max": {
-    "manuscript_section": "manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
+    "manuscript_section": "docs/manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
     "claim_text": "Citation counts range from zero to {{CITATION_MAX}} (mean {{CITATION_MEAN}}, median {{CITATION_MEDIAN}})",
     "value": 110,
     "abs_tolerance": 0,
@@ -95,7 +95,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "bibliometrics_citation_count_total": {
-    "manuscript_section": "manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
+    "manuscript_section": "docs/manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
     "claim_text": "with a total of {{CITATION_TOTAL}} citations across the corpus",
     "value": 3146,
     "abs_tolerance": 0,
@@ -106,7 +106,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "bibliometrics_gini_coefficient": {
-    "manuscript_section": "manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
+    "manuscript_section": "docs/manuscript/03a_results_field_overview.md / Descriptive Bibliometrics",
     "claim_text": "The Gini coefficient of citation concentration is {{GINI_COEFFICIENT}} (rendered 0.398)",
     "value": 0.397616020343293,
     "abs_tolerance": 1e-09,
@@ -117,7 +117,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "field_overview_peak_year": {
-    "manuscript_section": "manuscript/03a_results_field_overview.md / Field Overview + RQ1",
+    "manuscript_section": "docs/manuscript/03a_results_field_overview.md / Field Overview + RQ1",
     "claim_text": "peaking in {{PEAK_YEAR}} with {{PEAK_YEAR_PUBS}} records that year",
     "value": 2023,
     "abs_tolerance": 0,

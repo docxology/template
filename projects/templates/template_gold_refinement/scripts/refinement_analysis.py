@@ -101,7 +101,7 @@ def main() -> int:
     reverse_path.write_text(json.dumps(reverse_data, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Wrote {reverse_path}")
 
-    transmission = validate_transmission_bookends(root / "manuscript")
+    transmission = validate_transmission_bookends(root / "docs" / "manuscript")
     transmission_path = reports_dir / "transmission_bookends.json"
     transmission_path.write_text(json.dumps(transmission, indent=2), encoding="utf-8")
     print(f"Wrote {transmission_path}")

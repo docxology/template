@@ -77,9 +77,9 @@ def test_resolve_manuscript_dir_uses_injected_when_present(tmp_path: Path) -> No
 
 def test_resolve_manuscript_dir_refreshes_injected_auxiliary_files(tmp_path: Path) -> None:
     """Refreshes source config, preamble, and bibliography with injected Markdown."""
-    source = tmp_path / "manuscript"
+    source = tmp_path / "docs" / "manuscript"
     injected = tmp_path / "output" / "manuscript"
-    source.mkdir()
+    source.mkdir(parents=True)
     injected.mkdir(parents=True)
     (injected / "01_intro.md").write_text("# Intro")
     (source / "config.yaml").write_text("book:\n  title: Fresh\n", encoding="utf-8")
@@ -102,7 +102,7 @@ def test_resolve_manuscript_dir_falls_back_to_source(tmp_path: Path) -> None:
     """Falls back to manuscript/ when injected dir is absent."""
     result = _resolve_manuscript_dir(tmp_path)
 
-    assert result == tmp_path / "manuscript"
+    assert result == tmp_path / "docs" / "manuscript"
 
 
 def test_resolve_manuscript_dir_falls_back_to_docs_source(tmp_path: Path) -> None:
@@ -136,20 +136,20 @@ def test_resolve_manuscript_dir_refreshes_injected_config_from_docs_source(tmp_p
 
 
 def test_resolve_manuscript_dir_returns_manuscript_path_when_absent(tmp_path: Path) -> None:
-    """Returns manuscript/ even when neither injected nor source trees exist."""
+    """Returns docs/manuscript/ even when neither injected nor source trees exist."""
     project_root = tmp_path / "project"
     project_root.mkdir()
 
     result = _resolve_manuscript_dir(project_root)
 
-    assert result == project_root / "manuscript"
+    assert result == project_root / "docs" / "manuscript"
 
 
 def test_resolve_manuscript_dir_preserves_generated_config_ordering(tmp_path: Path) -> None:
     """Keeps injected config.yaml when it carries generated ordering marker."""
-    source = tmp_path / "manuscript"
+    source = tmp_path / "docs" / "manuscript"
     injected = tmp_path / "output" / "manuscript"
-    source.mkdir()
+    source.mkdir(parents=True)
     injected.mkdir(parents=True)
     (injected / "01_intro.md").write_text("# Intro")
     (source / "config.yaml").write_text("book:\n  title: Source\n", encoding="utf-8")
@@ -173,7 +173,7 @@ def test_resolve_manuscript_dir_falls_back_when_injected_empty(tmp_path: Path) -
 
     result = _resolve_manuscript_dir(tmp_path)
 
-    assert result == tmp_path / "manuscript"
+    assert result == tmp_path / "docs" / "manuscript"
 
 
 def test_resolve_manuscript_dir_ignores_non_md_files_in_injected(tmp_path: Path) -> None:
@@ -184,7 +184,7 @@ def test_resolve_manuscript_dir_ignores_non_md_files_in_injected(tmp_path: Path)
 
     result = _resolve_manuscript_dir(tmp_path)
 
-    assert result == tmp_path / "manuscript"
+    assert result == tmp_path / "docs" / "manuscript"
 
 
 # ---------------------------------------------------------------------------

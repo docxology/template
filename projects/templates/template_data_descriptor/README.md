@@ -2,7 +2,7 @@
 
 `template_data_descriptor` is a public exemplar for FAIR-style data descriptor papers and dataset release packets. It treats the dataset, schema, provenance, licensing, and validation report as the research object under test.
 
-Run via the template monorepo from the repository root with `uv run python scripts/pipeline/stage_01_test.py --project templates/template_data_descriptor --project-only`. Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` in forks, preserve template integrity, and keep output artifacts regenerated from source.
+Run via the template monorepo from the repository root with `uv run python scripts/pipeline/stage_01_test.py --project templates/template_data_descriptor --project-only`. Copy `docs/manuscript/config.yaml.example` to `docs/manuscript/config.yaml` in forks, preserve template integrity, and keep output artifacts regenerated from source.
 
 ## When to use this template
 
@@ -49,11 +49,11 @@ The canonical renderer is https://github.com/docxology/template with `--project 
 
 ## Configuration
 
-Primary configuration lives in `manuscript/config.yaml`; forkable defaults live in `manuscript/config.yaml.example`. Dataset-facing metadata lives in `data/example_descriptor.json`, and the public synthetic fixture bytes live under [`data/fixtures/`](data/fixtures/README.md).
+Primary configuration lives in `docs/manuscript/config.yaml`; forkable defaults live in `docs/manuscript/config.yaml.example`. Dataset-facing metadata lives in `data/example_descriptor.json`, and the public synthetic fixture bytes live under [`data/fixtures/`](data/fixtures/README.md).
 
 ## Figures and manuscript
 
-The manuscript embeds five figures generated deterministically from the descriptor and fixture bytes by the thin script [`scripts/generate_figures.py`](scripts/generate_figures.py) (schema data dictionary, file inventory, provenance flow, quality gate, and descriptor↔file checksum verification). All computation, rendering, and fail-closed registry publication lives in the tested `src/data_descriptor/` package (`descriptor.py`, `figures.py`, `figure_pipeline.py`, `registry.py`, `verification.py`); the script only selects the project root, delegates, and prints paths. Figures are written to and embedded from [`manuscript/figures/`](manuscript/figures/README.md). Regenerate with:
+The manuscript embeds five figures generated deterministically from the descriptor and fixture bytes by the thin script [`scripts/generate_figures.py`](scripts/generate_figures.py) (schema data dictionary, file inventory, provenance flow, quality gate, and descriptor↔file checksum verification). All computation, rendering, and fail-closed registry publication lives in the tested `src/data_descriptor/` package (`descriptor.py`, `figures.py`, `figure_pipeline.py`, `registry.py`, `verification.py`); the script only selects the project root, delegates, and prints paths. Figures are written to and embedded from [`manuscript/figures/`](docs/manuscript/figures/README.md). Regenerate with:
 
 ```bash
 uv run python projects/templates/template_data_descriptor/scripts/generate_figures.py

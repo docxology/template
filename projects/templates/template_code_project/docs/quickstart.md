@@ -45,7 +45,7 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 - `figures/` — 6 PNG plots (convergence, stability, benchmarks)
 - `data/` — CSV and JSON results
 - `reports/` — HTML dashboard and validation JSON
-- `manuscript/` — token-substituted markdown sections
+- `docs/manuscript/` — token-substituted markdown sections
 - `citations/` — APA/BibTeX/MLA citations
 
 ## Render the Publication PDF
@@ -67,7 +67,7 @@ Final PDF: `projects/templates/template_code_project/output/pdf/template_code_pr
 
 ## Common Next Steps
 
-- **Change step sizes**: edit `projects/templates/template_code_project/manuscript/config.yaml` → `experiment.step_sizes`, then re-run steps 2–4.
+- **Change step sizes**: edit `projects/templates/template_code_project/docs/manuscript/config.yaml` → `experiment.step_sizes`, then re-run steps 2–4.
 - **Add a new algorithm**: extend `src/optimizer.py`, add tests in `tests/test_optimizer.py`, and call it from the analysis script (see `docs/architecture.md`).
 - **Modify the manuscript**: edit markdown files under `projects/templates/template_code_project/manuscript/`, then hydrate variables and re-render (steps 3–4).
 

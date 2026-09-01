@@ -2,7 +2,7 @@
 
 `template_redacted_report` is a public exemplar for redacted release reports, disclosure control, and source-protection review. It is designed for lawful, accountable release workflows in intelligence, security, legal, or public-records contexts without publishing sensitive operational content.
 
-Run via the template monorepo from the repository root with `uv run python scripts/pipeline/stage_01_test.py --project templates/template_redacted_report --project-only`, then generate the canonical audit artifacts with `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_redacted_report`. Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` in forks and preserve template integrity.
+Run via the template monorepo from the repository root with `uv run python scripts/pipeline/stage_01_test.py --project templates/template_redacted_report --project-only`, then generate the canonical audit artifacts with `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_redacted_report`. Copy `docs/manuscript/config.yaml.example` to `docs/manuscript/config.yaml` in forks and preserve template integrity.
 
 ## When to use this template
 
@@ -49,9 +49,9 @@ The canonical renderer is https://github.com/docxology/template with `--project 
 
 ## Configuration
 
-Primary configuration lives in `manuscript/config.yaml`; forkable defaults live in `manuscript/config.yaml.example`. Public example segments, redaction decisions, release-policy name, and invented review records live in `data/example_segments.json`; they contain invented fixture text only.
+Primary configuration lives in `docs/manuscript/config.yaml`; forkable defaults live in `docs/manuscript/config.yaml.example`. Public example segments, redaction decisions, release-policy name, and invented review records live in `data/example_segments.json`; they contain invented fixture text only.
 
-`manuscript/config.yaml` declares two normal Stage 02 analysis scripts, run in
+`docs/manuscript/config.yaml` declares two normal Stage 02 analysis scripts, run in
 order: `scripts/01_generate_release_artifacts.py`, then
 `scripts/02_build_figures.py`. The first loads the fixture through the
 typed `src/redacted_report/artifacts.py` contract, applies

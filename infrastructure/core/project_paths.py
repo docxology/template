@@ -54,23 +54,75 @@ def _has_manuscript_sources(directory: Path) -> bool:
         return False
 
 
+def manuscript_source_dir_override() -> str | None:
+    """Return the configured manuscript-directory override, if any.
+
+    Set ``TEMPLATE_MANUSCRIPT_DIR`` to a project-relative directory name
+    (for example ``"manuscript"`` or ``"docs/manuscript"``) to point every
+    manuscript lookup at that location. Unset or empty means the default,
+    ``docs/manuscript/``.
+    """
+    import os
+
+    value = os.environ.get("TEMPLATE_MANUSCRIPT_DIR", "").strip()
+    return value or None
+
+
+def manuscript_dir_candidates(project_root: Path | str) -> tuple[Path, ...]:
+    """Return manuscript-directory candidates for *project_root* in priority order.
+
+    Priority: the ``TEMPLATE_MANUSCRIPT_DIR`` override (if set), then the
+    default ``docs/manuscript/`` tree, then the legacy ``manuscript/`` tree.
+    """
+    root = Path(project_root)
+    override = manuscript_source_dir_override()
+    candidates: list[Path] = []
+    if override:
+        candidates.append(root / override)
+    candidates.append(root / "docs" / "manuscript")
+    candidates.append(root / "manuscript")
+    # Deduplicate while preserving order (an override equal to a default).
+    seen: set[Path] = set()
+    unique: list[Path] = []
+    for candidate in candidates:
+        if candidate not in seen:
+            seen.add(candidate)
+            unique.append(candidate)
+    return tuple(unique)
+
+
+def manuscript_config_path(project_root: Path | str) -> Path:
+    """Return the most authoritative ``config.yaml`` for *project_root*.
+
+    Prefers the resolved manuscript directory (override -> ``docs/manuscript/``
+    -> legacy ``manuscript/``); falls back to any candidate that carries a
+    ``config.yaml`` even when the tree has no renderable Markdown source.
+    """
+    root = Path(project_root)
+    for candidate in manuscript_dir_candidates(root):
+        config = candidate / "config.yaml"
+        if config.is_file():
+            return config
+    return root / "docs" / "manuscript" / "config.yaml"
+
+
 def resolve_source_manuscript_dir(project_root: Path | str) -> Path:
     """Return the canonical populated manuscript source directory for a project.
 
-    The conventional ``manuscript/`` tree wins when it contains real Markdown
-    or TeX source.  Projects that keep their manuscript under
-    ``docs/manuscript/`` are supported without a compatibility symlink.  A
-    config-only ``manuscript/`` directory therefore cannot shadow a populated
-    ``docs/manuscript/`` tree.  When neither candidate is populated, the
-    conventional path is returned so existing diagnostics remain stable.
+    The manuscript location is **configurable but defaults to
+    ``docs/manuscript/``**: set ``TEMPLATE_MANUSCRIPT_DIR`` to relocate it.
+    Projects that still keep their manuscript in the legacy ``manuscript/``
+    tree remain supported: the legacy tree wins only when the default tree is
+    not populated, and a config-only legacy ``manuscript/`` directory cannot
+    shadow a populated ``docs/manuscript/`` tree. When neither candidate is
+    populated, the default ``docs/manuscript/`` path is returned so existing
+    diagnostics remain stable.
     """
     root = Path(project_root)
-    conventional = root / "manuscript"
-    documentation = root / "docs" / "manuscript"
-    for candidate in (conventional, documentation):
+    for candidate in manuscript_dir_candidates(root):
         if _has_manuscript_sources(candidate):
             return candidate
-    return conventional
+    return root / "docs" / "manuscript"
 
 
 def validate_project_name(project_name: str) -> str:

@@ -48,7 +48,7 @@ import the private names):
 - [`../tests/README.md`](../tests/README.md) documents fast-iteration commands:
   `uv sync --extra dev`, `-m "not long_running"`, and isolated `-n auto` for the
   state-free analytical modules (generated-artifact gates stay serial because
-  they mutate shared `manuscript/` and `output/` paths).
+  they mutate shared `docs/manuscript/` and `output/` paths).
 
 ## Type-check configuration
 

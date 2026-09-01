@@ -42,7 +42,7 @@ Exports:
 
 `InfrastructureReport` properties:
 
-- `pipeline_stages_declared` — YAML stage count (16 as of 2026-07-07; live re-derived, see `manuscript/AGENTS.md`)
+- `pipeline_stages_declared` — YAML stage count (16 as of 2026-07-07; live re-derived, see `docs/manuscript/AGENTS.md`)
 - `pipeline_stages_default_full` — default full run (10)
 - `pipeline_stages_core_only` — `--core-only` (8)
 

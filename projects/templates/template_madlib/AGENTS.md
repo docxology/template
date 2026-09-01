@@ -8,13 +8,13 @@
 | --- | --- |
 | `src/` | Domain logic only. Parse config, plan tokens, compose sections, write artifacts, and generate variables here. Do not import `infrastructure.*`. |
 | `scripts/` | Thin wrappers. They may put repo/project paths on `sys.path`, call `src/`, and delegate manuscript injection to shared infrastructure. |
-| `manuscript/` | Token shells plus metadata. Section prose, titles, and tables must resolve from generated variables, not hand-edited output. |
+| `docs/manuscript/` | Token shells plus metadata. Section prose, titles, and tables must resolve from generated variables, not hand-edited output. |
 | `tests/` | Real config/data/files/subprocesses only; no mocks. |
 | `output/` | Regeneratable and ignored. Never treat generated Markdown, PDFs, reports, or figures as source of truth. |
 
 ## Edit Rules
 
-- Add vocabulary in `manuscript/config.yaml` under `madlib.lexicon`.
+- Add vocabulary in `docs/manuscript/config.yaml` under `madlib.lexicon`.
 - Add new manuscript shape controls under `section_titles`, `narrative_moves`, `method_protocol`, `design_principles`, `pipeline_phases`, `evaluation_criteria`, `quality_probes`, `failure_modes`, `authoring_obligations`, `visualizations`, `audit_rules`, or `contribution_claims`.
 - Keep method changes config-owned. A generated Methods claim needs a `method_protocol` row, a `pipeline_phases` row when it is operational, a QA probe or failure mode when it can fail, and claim-ledger evidence when it supports a claim.
 - Review-packet, token-invariant, claim-ledger, and fork-migration language belongs in config plus `src/composition_*.py` / `src/figure_specs.py`; do not hide those obligations in generated output or freeform docs only.

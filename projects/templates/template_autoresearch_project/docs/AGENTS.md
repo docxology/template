@@ -7,7 +7,7 @@ artifacts under `../output/`.
 When adding a configurable loop feature, update:
 
 - `../autoresearch.yaml` for readiness controls and required artifacts.
-- `../manuscript/config.yaml` for project-local research questions and loop
+- `../docs/manuscript/config.yaml` for project-local research questions and loop
   stages.
 - [configuration.md](configuration.md) and [outputs.md](outputs.md) for the
   public contract.

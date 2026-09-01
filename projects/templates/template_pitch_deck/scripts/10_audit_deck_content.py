@@ -29,7 +29,7 @@ def main(argv: list[str] | None = None) -> int:
 
     root = project_root()
     repo_root = locate_repo_root(root)
-    manuscript_dir = root / "manuscript"
+    manuscript_dir = root / "docs" / "manuscript"
 
     tokens = build_deck_tokens(repo_root)
 

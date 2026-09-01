@@ -27,7 +27,7 @@ Live test counts and coverage snapshots belong in `../../../../docs/_generated/C
 
 ## Boundary Summary
 
-- `manuscript/config.yaml` owns the review topic, search engines, relevance keywords, hypotheses, and subfield taxonomy.
+- `docs/manuscript/config.yaml` owns the review topic, search engines, relevance keywords, hypotheses, and subfield taxonomy.
 - `src/literature/` owns retrieval, canonical records, corpus persistence, and de-duplication.
 - `src/analysis/` owns bibliometrics, TF-IDF, topics, embeddings, entities, and temporal metrics.
 - `src/knowledge_graph/` owns optional LLM extraction, hypothesis scoring, and nanopublications.

@@ -14,7 +14,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | Path | Role |
 | --- | --- |
 | `src/loop.py` | Layer-2 adapter: builds `RunConfig`, selects fixtures, invokes `infrastructure.sia.run_sia_loop`, and writes project artifacts |
-| `src/loop_config.py` | Reads `project_config.sia` from `manuscript/config.yaml` |
+| `src/loop_config.py` | Reads `project_config.sia` from `docs/manuscript/config.yaml` |
 | `src/reports.py` | Loop markdown report + `{{SIA_*}}` manuscript variables |
 | `src/fixtures/recorded_generations/` | Fixture replay for gens 1–3 (default CI) |
 | `tasks/mini_classify/` | Public/private task split (`data/public/` + `data/private/`) with the scorer at `tasks/mini_classify/data/public/evaluate.py` |
@@ -27,7 +27,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | --- | --- |
 | `uv run python scripts/run_sia_loop.py` | Fixture replay (deterministic) |
 | `… --live-sia` | Bounded subprocess target + evaluation; target code unchanged each generation (deterministic stub, no code mutation, no sandbox) |
-| `… --live-sia` (model set in `manuscript/config.yaml`) | Live mode with Ollama feedback note written but **not applied to code**; the LLM model is read from `project_config.sia.llm_model` (see `src/loop_config.py`), not a CLI flag. Shipped empty (`llm_model: ""`) = no LLM feedback |
+| `… --live-sia` (model set in `docs/manuscript/config.yaml`) | Live mode with Ollama feedback note written but **not applied to code**; the LLM model is read from `project_config.sia.llm_model` (see `src/loop_config.py`), not a CLI flag. Shipped empty (`llm_model: ""`) = no LLM feedback |
 
 Live mode demonstrates the loop's execution/evaluation plumbing, not autonomous
 code modification. Fixture replay records real threshold variants but all score
@@ -66,7 +66,7 @@ uv run python scripts/pipeline/stage_01_test.py --project templates/template_sia
 ## See also
 
 - [`README.md`](README.md)
-- [`manuscript/AGENTS.md`](manuscript/AGENTS.md)
+- [`docs/manuscript/AGENTS.md`](docs/manuscript/AGENTS.md)
 - [`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md)
 
 #

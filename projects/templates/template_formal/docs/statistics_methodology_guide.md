@@ -65,7 +65,7 @@ $p=0.1187$, not significant at $\alpha=0.05$. The manuscript relocates the
 decline's evidentiary weight to the shape of a wider, non-regression-gated
 13-point exploratory sweep and cross-seed replication, not to this one
 boundary-adjacent pairwise test — see
-[`manuscript/05_results_discussion.md`](../manuscript/05_results_discussion.md)
+[`manuscript/05_results_discussion.md`](../docs/manuscript/05_results_discussion.md)
 for the full, precisely-hedged account. This is the concrete lesson: a
 pairwise comparison touching a `0%`/`100%` boundary needs
 `fisher_exact_test_two_sided`, not a normal-approximation test, exactly as

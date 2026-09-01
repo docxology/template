@@ -120,7 +120,7 @@ def validate_bibliography_completeness(project_root: Path) -> StageResult:
       - passed: all keys resolved
       - failed: some keys missing (details includes "missing_keys")
     """
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = project_root / "docs" / "manuscript"
     bib_paths = sorted(manuscript_dir.glob("*.bib"))
     if not bib_paths:
         return StageResult(
@@ -180,7 +180,7 @@ def validate_variables_resolved(project_root: Path) -> StageResult:
     if injected_dir.exists() and any(injected_dir.glob("*.md")):
         scan_root = injected_dir
     else:
-        scan_root = project_root / "manuscript"
+        scan_root = project_root / "docs" / "manuscript"
 
     unresolved: list[tuple[Path, str]] = []
 

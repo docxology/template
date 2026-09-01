@@ -590,7 +590,9 @@ response = client.query(prompt, options=options)
 
 **Configuration:**
 
-Translations are configured in `projects/{name}/manuscript/config.yaml`:
+Translations are configured in `projects/{name}/docs/manuscript/config.yaml`:
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ```yaml
 llm:

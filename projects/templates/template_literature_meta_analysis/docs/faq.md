@@ -6,7 +6,7 @@ No. The committed fixture is synthetic and exists so the full pipeline can run o
 
 ## Where do I change the topic?
 
-Edit `manuscript/config.yaml`: `project_config.search.term`, query strings, relevance keywords, subfield keywords, and hypothesis definitions.
+Edit `docs/manuscript/config.yaml`: `project_config.search.term`, query strings, relevance keywords, subfield keywords, and hypothesis definitions.
 
 ## Why are mocks forbidden?
 

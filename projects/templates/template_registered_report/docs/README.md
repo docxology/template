@@ -18,7 +18,7 @@ deviation ledger. See the repo [`README.md`](../README.md) and
 | `src/registered_report/` | Preregistration schema/lock, protocol validation, registered analysis, deviation ledger, robustness audit, and figure-data modules |
 | `scripts/` | Thin orchestrators: `generate_figures.py`, `generate_review_artifacts.py` |
 | `tests/` | Zero-mock tests incl. the demonstration study and protocol checks |
-| `manuscript/` | `00_abstract.md` … `99_references.md`, config, references, `figures/` |
+| `docs/manuscript/` | `00_abstract.md` … `99_references.md`, config, references, `figures/` |
 | `data/` | Preregistration fixture registration (`example_registration.json`), claim ledger, and fixture docs |
 | `output/` | Generated figures and review artifacts (never hand-edited) |
 
@@ -39,7 +39,7 @@ uv run python projects/templates/template_registered_report/scripts/generate_fig
 uv run python projects/templates/template_registered_report/scripts/generate_review_artifacts.py
 ```
 
-Forks: copy `manuscript/config.yaml.example` to `manuscript/config.yaml` and
+Forks: copy `docs/manuscript/config.yaml.example` to `docs/manuscript/config.yaml` and
 keep template-integrity checks green (per repo README).
 
 ## Documentation in this tree
@@ -48,5 +48,5 @@ keep template-integrity checks green (per repo README).
 
 ## Status
 
-Publication-track exemplar: `manuscript/` is complete and gate-guarded; this
+Publication-track exemplar: `docs/manuscript/` is complete and gate-guarded; this
 docs/ tree was added by the docs-audit pass of 2026-08-29.

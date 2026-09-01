@@ -17,7 +17,7 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be made
 ## Forking responsibilities
 
 1. Remap metallurgical stages to domain operations
-2. Update lexicon categories in `manuscript/config.yaml`
+2. Update lexicon categories in `docs/manuscript/config.yaml`
 3. Add domain-specific evidence and validators
 4. Regenerate all outputs through the pipeline
 5. Do not hand-edit generated manuscript, PDFs, or figures

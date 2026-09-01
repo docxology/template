@@ -12,6 +12,6 @@ Do not add Madlib business logic here. Put schema parsing in `src/config.py`, to
 | `01_generate_madlib_artifacts.py` | `src.analysis.generate_artifacts` |
 | `z_generate_manuscript_variables.py` | `src.manuscript_variables.generate_variables` plus shared injection |
 
-Scripts may report generated method evidence, but they must not define the method protocol, figure registry, review-packet contract, or fork-migration obligations. Protocol rows, phases, probes, failure modes, audit rules, contribution claims, and review surfaces belong in `manuscript/config.yaml` plus project-local `src/`.
+Scripts may report generated method evidence, but they must not define the method protocol, figure registry, review-packet contract, or fork-migration obligations. Protocol rows, phases, probes, failure modes, audit rules, contribution claims, and review surfaces belong in `docs/manuscript/config.yaml` plus project-local `src/`.
 
 After source or config edits, rebuild generated outputs through the Stage 02–05 path. Do not patch `output/` from a script to make validation pass.

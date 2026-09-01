@@ -27,6 +27,7 @@ from infrastructure.validation.evidence_registry import (
 from infrastructure.validation.output.artifacts import read_artifact_manifest
 from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
 from infrastructure.validation.publication.models import PublicationAuditReport, PublicationFinding
+from infrastructure.core.project_paths import manuscript_config_path, resolve_source_manuscript_dir
 from infrastructure.validation.publication.rendered_provenance import (
     RenderedProvenanceValidation,
     rendered_manuscript_paths,
@@ -201,7 +202,7 @@ def check_methods(ctx: AuditContext) -> Iterable[PublicationFinding]:
 
 def check_evidence(ctx: AuditContext) -> Iterable[PublicationFinding]:
     """Validate manuscript Markdown against the project evidence registry and yield review findings."""
-    manuscript_dir = ctx.project_root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(ctx.project_root)
     if not manuscript_dir.is_dir():
         return
     registry = build_project_evidence_registry(
@@ -311,7 +312,7 @@ def check_artifact_manifest(ctx: AuditContext) -> Iterable[PublicationFinding]:
 def check_figure_registry(ctx: AuditContext) -> Iterable[PublicationFinding]:
     """Validate the figure registry against manuscript sources and yield findings."""
     figure_path = ctx.project_root / "output" / "figures" / "figure_registry.json"
-    manuscript_dir = ctx.project_root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(ctx.project_root)
     figure_ok, figure_issues = validate_figure_registry(
         figure_path,
         manuscript_dir,
@@ -342,7 +343,7 @@ def check_figure_registry(ctx: AuditContext) -> Iterable[PublicationFinding]:
 
 def check_cover_accessibility(ctx: AuditContext) -> Iterable[PublicationFinding]:
     """Require cover alt text when the project opts into tagged PDF output."""
-    config_path = ctx.project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(ctx.project_root)
     if not config_path.is_file():
         return
     try:

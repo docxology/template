@@ -6,10 +6,10 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `292643985e5af3f2`     |
-| Paper version                     | 2.5.2    |
-| First author                      | Daniel Ari Friedman |
-| Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |
+| Config hash (SHA-256, truncated)  | `N/A`     |
+| Paper version                     | 1.0    |
+| First author                      | Unknown |
+| Keywords                          |    |
 
 The configuration hash changes whenever any parameter in `config.yaml` is modified, ensuring that every rendered PDF is traceable to a specific configuration state.
 
@@ -50,7 +50,7 @@ This exemplar also demonstrates `infrastructure.benchmark`. The thin orchestrato
 
 This manuscript demonstrates the template's "madlib" capability: every quantitative claim is injected from computed data at render time. The substitution system processed the following variables:
 
-- **Configuration variables**: Drawn from `manuscript/config.yaml` (`experiment:` section)
+- **Configuration variables**: Drawn from `docs/manuscript/config.yaml` (`experiment:` section)
 - **Result variables**: Computed from `output/data/optimization_results.csv`
 - **Stability variables**: Extracted from `output/reports/stability_analysis.json`
 - **Provenance variables**: Generated at substitution time (timestamps, hashes, versions)

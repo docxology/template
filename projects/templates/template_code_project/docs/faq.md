@@ -125,4 +125,4 @@ correctly.
 - [`troubleshooting.md`](troubleshooting.md) — symptom-driven recipes.
 - [`output_conventions.md`](output_conventions.md) — output regeneration rules.
 - [`syntax_guide.md`](syntax_guide.md) — Pandoc-crossref syntax and token list.
-- [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — token protocol and figure list.
+- [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — token protocol and figure list.

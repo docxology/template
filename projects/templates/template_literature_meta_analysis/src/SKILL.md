@@ -13,7 +13,7 @@ When operating within this workspace, adhere to the following interaction protoc
 
 1. **No-Mock Constraint**: If you write tests for these modules, you MUST use `pytest-httpserver` or local data objects. Do not use `mocker.patch` or `MagicMock`.
 2. **Execution Context**: Execute modules using the thin orchestrators located in `scripts/`, or by running `uv run pytest` in the `tests/` directory. Do not write temporary execution blocks inside `src/`.
-3. **Data Immutability**: The code here processes JSONL and TriG outputs. Ensure you have parsed `manuscript/config.yaml` using your file reading tools to understand runtime constraints.
+3. **Data Immutability**: The code here processes JSONL and TriG outputs. Ensure you have parsed `docs/manuscript/config.yaml` using your file reading tools to understand runtime constraints.
 
 ## Architecture Guidelines for AI Agents
 

@@ -245,7 +245,7 @@ def build_evidence_overview(project_root: Path, result: AutoResearchLoopResult) 
             for claim in result.claims
         ],
         "source_ledger": {
-            "path": "manuscript/source_ledger.yaml",
+            "path": "docs/manuscript/source_ledger.yaml",
             "entry_count": len(entries),
             "tier_counts": source_tier_counts(entries),
             "checked_age_buckets": source_age_summary(entries),

@@ -134,7 +134,7 @@ Seeds and timestamp-free serializers are used where the pipeline supports exact 
 
 ## Configuration surface
 
-`manuscript/config.yaml` owns search terms, engines, phase boundaries, filters, sampling
+`docs/manuscript/config.yaml` owns search terms, engines, phase boundaries, filters, sampling
 seeds, full-text policy, embedding settings, knowledge-graph settings, hypotheses, and
 subfield taxonomy. `domain_profile.yaml` owns package and gate expectations;
 `experiment_plan.yaml` records the review design; `data/claim_ledger.yaml` records the
@@ -427,7 +427,7 @@ configuration change re-computes the values and re-targets the prose automatical
 The injection system computes variables from the configuration and generated
 artifacts, including:
 
-1. `manuscript/config.yaml`: search term, engine roster, subfield taxonomy, hypotheses
+1. `docs/manuscript/config.yaml`: search term, engine roster, subfield taxonomy, hypotheses
 2. `corpus.jsonl`: corpus size
 3. `temporal_analysis.json`: year range, CAGR, peak year, doubling time
 4. `citation_network.json`: edges, nodes, density, communities, PageRank, hubs
@@ -551,7 +551,7 @@ Three LLM-based content filters were designed for this review:
 3. **Molecular Detection Focus**: Filters for papers primarily focused on
    detecting and measuring specific atmospheric molecules.
 
-These filters are configurable through `manuscript/config.yaml` and can be
+These filters are configurable through `docs/manuscript/config.yaml` and can be
 enabled for specific phases or applied across the entire corpus. When enabled,
 they use a local Ollama LLM instance for cost-effective, privacy-preserving
 content classification.
@@ -1226,7 +1226,7 @@ and `cross_phase_analysis.json` without any network access.
 
 Refreshing the evidence snapshot is an intentional live operation. The multi-phase
 search stage reads every phase's queries, engines, and filters from
-`manuscript/config.yaml` — there is no per-phase command-line surface:
+`docs/manuscript/config.yaml` — there is no per-phase command-line surface:
 
 ```bash
 uv run python projects/templates/template_advanced_literature_review/scripts/01_multi_phase_search.py
@@ -1239,7 +1239,7 @@ project `AGENTS.md` contracts.
 
 ## Re-target to Another Topic
 
-Edit `manuscript/config.yaml` — `project_config.search.term`, `query`,
+Edit `docs/manuscript/config.yaml` — `project_config.search.term`, `query`,
 `relevance_keywords`, `subfield_keywords`, `hypothesis_definitions`, and the phase
 definitions under `project_config.search_phases` (queries, engines, temporal
 filters, `depends_on`) — then regenerate the seed corpus and re-run. No code
@@ -1362,7 +1362,7 @@ $t_d = \ln(2) / \ln(1 + \text{CAGR})$. For this run: CAGR = 6.76\%, doubling tim
 
 ## Configuration Surface
 
-A single `manuscript/config.yaml` controls the search term, per-engine query and keyword
+A single `docs/manuscript/config.yaml` controls the search term, per-engine query and keyword
 sets, engine enable toggles, subfield taxonomy, hypotheses, full-text and embedding
 options, and paper metadata. This run drew on 4 engines, a
 4-bucket taxonomy, and 4 hypotheses.
@@ -1412,7 +1412,7 @@ an unresolved placeholder is a hard error, so the rendered manuscript can contai
 orphaned or stale figures. The configuration hash and artifact inventory bind the prose
 to the exact pipeline run that produced it. The provenance chain is:
 
-1. `manuscript/config.yaml` defines the search term, engines, taxonomy, and hypotheses
+1. `docs/manuscript/config.yaml` defines the search term, engines, taxonomy, and hypotheses
 2. `scripts/01_multi_phase_search.py` retrieves or fixtures records → `corpus.jsonl`
 3. `scripts/02_meta_analysis_pipeline.py` analyses the corpus → `*.json` data files
 4. `scripts/04_generate_figures.py` renders figures → `*.png` + `figure_registry.json`
@@ -1434,7 +1434,7 @@ principles:
   figures are standard PNG files.
 - **Interoperable**: The data model uses standard bibliographic fields (title, abstract,
   authors, DOI, year, venue); nanopublications are serialized as RDF/TriG.
-- **Reusable**: The entire pipeline is regenerable from `manuscript/config.yaml`;
+- **Reusable**: The entire pipeline is regenerable from `docs/manuscript/config.yaml`;
   re-running with the same configuration reproduces identical outputs.
 
 ## Honesty

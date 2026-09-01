@@ -16,7 +16,7 @@ is the map, not the territory.
 ## Module-layout diagram
 
 Reproduced verbatim from
-[`manuscript/02_type_architecture.md`](../../manuscript/02_type_architecture.md#module-layout)
+[`manuscript/02_type_architecture.md`](../../docs/manuscript/02_type_architecture.md#module-layout)
 — that file is the source of truth for this diagram and the claims around it;
 do not re-derive or hand-edit a copy here.
 
@@ -65,7 +65,7 @@ bypassed" claim the manuscript's module-layout section makes.
 ## What "strongly-typed" means here, precisely
 
 Every subpackage draws the same line (see
-[`manuscript/02_type_architecture.md#sec:honesty-line`](../../manuscript/02_type_architecture.md#what-mypy---strict-proves-vs-what-is-a-runtime-discipline)):
+[`manuscript/02_type_architecture.md#sec:honesty-line`](../../docs/manuscript/02_type_architecture.md#what-mypy---strict-proves-vs-what-is-a-runtime-discipline)):
 some invariants are `mypy --strict` edit-time/CI-time proofs (nominal ID
 mixing, phase-method attribute resolution, `Result` exhaustiveness, the
 `IsolationLevel` literal, `Agent` construction from a bare `UUID`, `Protocol`

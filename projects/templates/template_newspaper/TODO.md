@@ -24,7 +24,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` aligned with publication metadata and render toggles.
+- Keep `docs/manuscript/config.yaml.example` aligned with publication metadata and render toggles.
 - A minimal one-page fork schema example is required in the same row if
   `content/edition.yaml` ever gains required fields.
 

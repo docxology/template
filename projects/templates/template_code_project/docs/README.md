@@ -57,7 +57,7 @@ project, mirror these invariants — they are what the repo's gates enforce:
 | Thin-orchestrator: `scripts/` only I/O + orchestration, logic in `src/`/`infrastructure/` | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/` infra-import grep |
 | Zero mocks: real data, `tmp_path`, `pytest-httpserver` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/audit/verify_no_mocks.py` |
 | ≥90% project coverage on `src/` | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` (canonical command below) |
-| `manuscript/config.yaml` is the single source of run policy | [`rendering_pipeline.md`](rendering_pipeline.md) | rendering infra |
+| `docs/manuscript/config.yaml` is the single source of run policy | [`rendering_pipeline.md`](rendering_pipeline.md) | rendering infra |
 | Deterministic outputs (fixed seeds); everything in `output/` regeneratable | [`output_conventions.md`](output_conventions.md) | reproducibility checks |
 
 **2. As a fork seed for a new project.** Minimum viable steps:
@@ -71,7 +71,7 @@ uv run python scripts/audit/copy_exemplar.py \
 cd "projects/working/$NEW"
 # 1. Rewrite src/ with your domain logic (keep the pure-function, infra-free shape)
 # 2. Replace tests/ — real-data tests, no mocks, drive src/ coverage ≥90%
-# 3. Edit manuscript/config.yaml (title, authors, thresholds) — the only policy knob
+# 3. Edit docs/manuscript/config.yaml (title, authors, thresholds) — the only policy knob
 # 4. Replace manuscript/*.md with your narrative; keep {{TOKEN}} + figure-label conventions
 # 5. Point scripts/ at your src/ functions (thin orchestrators only)
 uv run pytest "projects/working/$NEW/tests/" --cov="projects/working/$NEW/src" --cov-fail-under=90
@@ -114,6 +114,6 @@ grep -r "from infrastructure\|import infrastructure" projects/templates/template
 
 - [../AGENTS.md](../AGENTS.md) — Full project documentation (API reference, known issues, complete directory map)
 - [../README.md](../README.md) — Project quick start
-- [../manuscript/AGENTS.md](../manuscript/AGENTS.md) — Manuscript directory rules and `{{VARIABLE}}` protocol
+- [../docs/manuscript/AGENTS.md](../docs/manuscript/AGENTS.md) — Manuscript directory rules and `{{VARIABLE}}` protocol
 - [output_conventions.md](output_conventions.md) — Output directory structure and regeneration
 - [../../../docs/](../../../../docs/) — Repository-level documentation hub (measured file/subdirectory counts live in `docs/_generated/COUNTS.md`)

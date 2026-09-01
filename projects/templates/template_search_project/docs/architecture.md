@@ -93,7 +93,7 @@ order**. We exploit this:
    produces `output/deep_search/aggregate.json` and
    `manuscript/references_deep.bib`.
 2. `run_search_pipeline.py` — runs second; produces
-   `output/search/results.json` and `manuscript/references.bib`.
+   `output/search/results.json` and `docs/manuscript/references.bib`.
 3. `s_compose_literature_review.py` — runs third; consumes the deep-search
    outputs to write `manuscript/S01_literature_review.md`.
 4. `y_generate_search_figures.py` — runs fourth; consumes the standard-pipeline

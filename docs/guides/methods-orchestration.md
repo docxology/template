@@ -11,7 +11,7 @@ inspectable before publication.
 | --- | --- |
 | Pipeline stages | canonical resolver: explicit path → project methods/pipeline → repository/package definition |
 | Stage inputs and outputs | each stage `contract:` block |
-| Manuscript methods prose | `projects/<name>/manuscript/*method*.md` |
+| Manuscript methods prose | `projects/<name>/docs/manuscript/*method*.md` |
 | Evidence links | `projects/<name>/output/reports/evidence_registry.json` |
 | Artifact hashes and stage outputs | `projects/<name>/output/reports/artifact_manifest.json` |
 | Figure provenance | `projects/<name>/output/figures/figure_registry.json` when present |
@@ -19,6 +19,8 @@ inspectable before publication.
 | Source-backed claims | `projects/<name>/data/claim_ledger.yaml` when present |
 | Experiment/review design | `projects/<name>/experiment_plan.yaml` when present |
 | Validation commands | `infrastructure.methods` generated plan |
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## Commands
 

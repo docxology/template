@@ -165,8 +165,10 @@ Glossary generation simplified:
 ```bash
 # Run glossary generation (example: template_code_project)
 uv run python -m infrastructure.documentation.generate_glossary_cli \
-  projects/templates/template_code_project/src/ projects/templates/template_code_project/manuscript/98_symbols_glossary.md
+  projects/templates/template_code_project/src/ projects/templates/template_code_project/docs/manuscript/98_symbols_glossary.md
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 **Effect:** Generates glossary directly in `manuscript/98_symbols_glossary.md` - no intermediate files or copy steps needed.
 

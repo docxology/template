@@ -10,7 +10,7 @@ uv run python scripts/90_build_storybook_pdf.py
 ```
 
 The repository Stage-02 command runs the configured list in
-`manuscript/config.yaml`:
+`docs/manuscript/config.yaml`:
 
 ```bash
 uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_storybook

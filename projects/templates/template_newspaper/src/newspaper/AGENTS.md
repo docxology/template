@@ -23,4 +23,4 @@ into a print-ready PDF and a machine-readable render report.
 ## See Also
 
 - [`README.md`](README.md) — module roster and quick reference
-- [`../../manuscript/02_engine_architecture.md`](../../manuscript/02_engine_architecture.md) — architecture and method
+- [`../../docs/manuscript/02_engine_architecture.md`](../../docs/manuscript/02_engine_architecture.md) — architecture and method

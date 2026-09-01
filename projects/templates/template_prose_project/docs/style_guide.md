@@ -115,7 +115,7 @@ from projects.template_prose_project.src.config import load_project_config
 from projects.template_prose_project.src.pipeline import run_prose_pipeline
 
 def main():
-    config = load_project_config(Path("projects/templates/template_prose_project/manuscript/config.yaml"))
+    config = load_project_config(Path("projects/templates/template_prose_project/docs/manuscript/config.yaml"))
     artifacts = run_prose_pipeline(config, project_root=Path("projects/templates/template_prose_project"))
     if args.strict and any(not c.passed for c in artifacts.checks):
         sys.exit(1)
@@ -142,10 +142,10 @@ Our pipeline computes readability and validates citations automatically.
 ```markdown
 `projects/templates/template_prose_project/scripts/run_prose_pipeline.py` computes
 readability via `infrastructure.prose.analyze_manuscript` and validates
-citation keys against `manuscript/references.bib` parsed by
+citation keys against `docs/manuscript/references.bib` parsed by
 `src/prose_facade.parse_bib_keys`; `src/pipeline/__init__.py::run_prose_pipeline`
 evaluates the configured checks. The thresholds applied
-to the resulting metrics are read from `manuscript/config.yaml`
+to the resulting metrics are read from `docs/manuscript/config.yaml`
 (`prose.target_grade_level_min`, `prose.target_grade_level_max`,
 `prose.citation_density_min_per_1000`, …).
 ```
@@ -154,8 +154,8 @@ Two additional BAD/GOOD pairs:
 
 | BAD (vague) | GOOD (concrete) |
 |---|---|
-| "The manuscript reads at a college level." | "The manuscript's weighted Flesch-Kincaid Grade Level is `{{AVG_GRADE_LEVEL}}`, falling inside the configured band `[prose.target_grade_level_min, prose.target_grade_level_max]` defined in `manuscript/config.yaml`." |
-| "We validated the bibliography." | "`_check_bibliography` in `src/pipeline/checks.py` confirmed that all `{{CITATION_COUNT}}` cited keys appear in `manuscript/references.bib`; the `bibliography_consistency` entry of `output/checks.json` records `passed: true`." |
+| "The manuscript reads at a college level." | "The manuscript's weighted Flesch-Kincaid Grade Level is `{{AVG_GRADE_LEVEL}}`, falling inside the configured band `[prose.target_grade_level_min, prose.target_grade_level_max]` defined in `docs/manuscript/config.yaml`." |
+| "We validated the bibliography." | "`_check_bibliography` in `src/pipeline/checks.py` confirmed that all `{{CITATION_COUNT}}` cited keys appear in `docs/manuscript/references.bib`; the `bibliography_consistency` entry of `output/checks.json` records `passed: true`." |
 
 ---
 
@@ -182,8 +182,8 @@ multiple sibling exemplars.
 | run-pipeline script | `projects/templates/template_prose_project/scripts/run_prose_pipeline.py` |
 | figure script | `projects/templates/template_prose_project/scripts/y_generate_prose_figures.py` |
 | variables script | `projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py` |
-| config | `projects/templates/template_prose_project/manuscript/config.yaml` |
-| references | `projects/templates/template_prose_project/manuscript/references.bib` |
+| config | `projects/templates/template_prose_project/docs/manuscript/config.yaml` |
+| references | `projects/templates/template_prose_project/docs/manuscript/references.bib` |
 | review report | `projects/templates/template_prose_project/output/review_report.md` |
 | working PDF | `projects/templates/template_prose_project/output/pdf/template_prose_project_combined.pdf` |
 | promoted PDF | `output/template_prose_project/template_prose_project_combined.pdf` |

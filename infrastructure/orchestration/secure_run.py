@@ -24,6 +24,7 @@ from infrastructure.orchestration.pipeline_runner import (
     PipelineRunner,
 )
 from infrastructure.project.discovery import discover_projects
+from infrastructure.core.project_paths import manuscript_config_path
 
 logger = get_logger(__name__)
 
@@ -56,7 +57,7 @@ def _load_steganography() -> tuple[Any, Any]:  # pragma: no cover - import indir
 
 def _load_project_config(project_path: Path, *, strict: bool = False) -> dict[str, Any]:
     """Load ``manuscript/config.yaml`` for the project, if present."""
-    return _load_yaml_mapping(project_path / "manuscript" / "config.yaml", strict=strict)
+    return _load_yaml_mapping(manuscript_config_path(project_path), strict=strict)
 
 
 def _load_yaml_mapping(path: Path, *, strict: bool = False) -> dict[str, Any]:

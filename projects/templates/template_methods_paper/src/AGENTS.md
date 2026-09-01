@@ -8,7 +8,7 @@ specification library for this exemplar. All DSL logic lives in the
 callers (scripts, tests, manuscript variable generation) can write
 `from src import compile_method, run_all_gates`. The library is
 **standalone** except one sanctioned adapter
-(`src/methods_dsl/_logging.py`, declared in `manuscript/layer_contract.yaml`):
+(`src/methods_dsl/_logging.py`, declared in `docs/manuscript/layer_contract.yaml`):
 nothing else imports `infrastructure.*` or any sibling project.
 
 ## Key Concepts
@@ -58,7 +58,7 @@ flowchart LR
 
 ## Configuration as Source of Truth
 
-Manuscript and publication metadata are read from `manuscript/config.yaml`
+Manuscript and publication metadata are read from `docs/manuscript/config.yaml`
 (the configuration single source of truth). The DSL library itself declares
 its controlled vocabulary in code (`vocabulary.py`, `units.py`), not in
 external configuration — the whole point of a controlled vocabulary is that
@@ -71,7 +71,7 @@ exception: `src/methods_dsl/_logging.py` reaches into
 `infrastructure.core.logging.utils.get_logger` so gate and compiler log
 output matches every other project's structured format, and falls back to
 stdlib `logging` if `infrastructure` is not importable (a standalone fork).
-The exception is declared in `manuscript/layer_contract.yaml` and enforced by
+The exception is declared in `docs/manuscript/layer_contract.yaml` and enforced by
 the `src_infrastructure_import` drift check
 (`infrastructure/project/drift/checks_boundary.py`) — every other module here
 stays import-clean.

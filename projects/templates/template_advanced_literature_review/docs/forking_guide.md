@@ -11,7 +11,7 @@
 ## The one idea to internalize
 
 **Every domain-specific fact in the paper is injected from
-[`manuscript/config.yaml`](../manuscript/config.yaml) and the pipeline's own
+[`docs/manuscript/config.yaml`](../docs/manuscript/config.yaml) and the pipeline's own
 outputs**, the same discipline as `template_literature_meta_analysis`. On top
 of that, this template adds a second control surface: **the phase design
 itself** — how many phases, what each phase searches for, what temporal
@@ -40,7 +40,7 @@ uv run python scripts/audit/copy_exemplar.py \
   --dest projects/working/my_phased_review \
   --new-name my_phased_review
 
-# 2. Edit ONE file: projects/working/my_phased_review/manuscript/config.yaml
+# 2. Edit ONE file: projects/working/my_phased_review/docs/manuscript/config.yaml
 #    → project_config.search_phases        (your phase design)
 #    → project_config.llm_filters           (your content classifiers, if any)
 #    → project_config.phase_integration     (dedup/validation/quality-gate policy)
@@ -122,7 +122,7 @@ value keeps a paper:
 The bundled `study_type_classifier`, `jwst_data_filter`, and
 `molecular_detection_filter` ship with `apply_to_phases: []` (disabled) so the
 default offline run maximizes coverage; enable them per phase once you have a
-local Ollama server (see `manuscript/config.yaml` → `project_config.llm_extraction`).
+local Ollama server (see `docs/manuscript/config.yaml` → `project_config.llm_extraction`).
 
 ## Cross-phase policy: `phase_integration`
 

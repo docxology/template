@@ -160,8 +160,10 @@ ls output/templates/template_code_project/data/
 ### Run markdown validation
 ```bash
 uv run python -m infrastructure.validation.cli markdown \
-  projects/templates/template_code_project/manuscript/
+  projects/templates/template_code_project/docs/manuscript/
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 **Expected:** No errors. Warnings about optional elements are acceptable.
 

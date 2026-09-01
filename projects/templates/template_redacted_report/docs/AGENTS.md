@@ -7,7 +7,7 @@ exemplar.
 | --- | --- |
 | `README.md` | Quick orientation: design decisions, verification workflow, boundary rules. |
 | [`../AGENTS.md`](../AGENTS.md) | Root exemplar contract: ground truth, commands, boundaries. |
-| [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) | Manuscript editing rules (prose focus, figure protocol). |
+| [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) | Manuscript editing rules (prose focus, figure protocol). |
 
 ## When to update
 

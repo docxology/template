@@ -241,7 +241,7 @@ def build_scope_boundary_audit(project_root: Path) -> dict[str, Any]:
     rows = []
     violations: list[str] = []
     allowed_future_files = {"15_discussion_outlook.md", "17_conclusion.md"}
-    for path in sorted((root / "manuscript").glob("[0-9][0-9]_*.md")):
+    for path in sorted((root / "docs" / "manuscript").glob("[0-9][0-9]_*.md")):
         text = path.read_text(encoding="utf-8").lower()
         scope_category, matched_phrase = _blocked_scope_match(text)
         forbidden = bool(scope_category)

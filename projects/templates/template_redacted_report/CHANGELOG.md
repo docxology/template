@@ -29,10 +29,10 @@ and documentation completion.
 - `matplotlib` added to the project dependencies; SVG figure ids pinned via
   `svg.hashsalt` and the live `<dc:date>` metadata line stripped for
   byte-deterministic regeneration.
-- `manuscript/config.yaml` (and the forkable example) now run
+- `docs/manuscript/config.yaml` (and the forkable example) now run
   `02_build_figures.py` in the normal Stage 02 order after the canonical
   artifact writer.
-- `manuscript/config.yaml.example` paper date synced to the live config.
+- `docs/manuscript/config.yaml.example` paper date synced to the live config.
 
 ## 0.1.0 — 2026-07-10
 

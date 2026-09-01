@@ -4,7 +4,7 @@
 
 Run via the template monorepo from the repository root with `uv run python scripts/…`
 or project-local scripts under `projects/templates/template_pools_rules_tools/scripts/`.
-Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` for forkable
+Copy `docs/manuscript/config.yaml.example` to `docs/manuscript/config.yaml` for forkable
 configuration. Preserve template integrity when forking this exemplar into a
 standalone checkout.
 

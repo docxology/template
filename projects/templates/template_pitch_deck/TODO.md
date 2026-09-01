@@ -33,12 +33,12 @@ keeps a capability blocked rather than silently promoting it.
 - The `deck.pitch_subject` and `deck.subjects` configuration selects the
   authored subject and content prefix; a fork may add another subject without
   changing the renderer or token path-safety contract.
-- Theme is currently monochrome-red (black + white + 3× the same highlight, `manuscript/config.yaml`'s `deck.theme` block); `config.yaml.example` demonstrates a distinct 3-accent palette as a starting point for forks.
+- Theme is currently monochrome-red (black + white + 3× the same highlight, `docs/manuscript/config.yaml`'s `deck.theme` block); `config.yaml.example` demonstrates a distinct 3-accent palette as a starting point for forks.
 - `SlideBudget` (short/medium/long max-slide counts, currently 11/38/58) lives in `infrastructure/rendering/slide_deck.py`, not per-project config — a fork wanting different length budgets currently edits the shared infrastructure constant.
 
 ## Documentation and signposting gaps
 
-- `manuscript/README.md` and `src/README.md` are new, minimal — expand with worked examples if this exemplar gains a second pitch subject.
+- `docs/manuscript/README.md` and `src/README.md` are new, minimal — expand with worked examples if this exemplar gains a second pitch subject.
 - No architecture diagram doc yet beyond the in-deck Mermaid figure itself; consider a `docs/architecture.md` mirroring `template_newspaper`'s.
 
 ## Test and validator gaps

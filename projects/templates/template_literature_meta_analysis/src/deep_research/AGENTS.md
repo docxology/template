@@ -23,7 +23,7 @@ never performs a live (paid, non-deterministic) call. The orchestrator is
   `infrastructure.search.deep_research` (see its `__all__`). Never re-implement
   the models.
 - **Layer-contract exception**: this is the one src subpackage allowed to import
-  `infrastructure` — it is listed in `manuscript/layer_contract.yaml`
+  `infrastructure` — it is listed in `docs/manuscript/layer_contract.yaml`
   (`allow_infrastructure_imports`). Keep that entry in sync if files move.
 - **No mocks**: tests in `tests/test_deep_research_adapter.py` run the real
   adapter over the real shipped fixture and `tmp_path` files.

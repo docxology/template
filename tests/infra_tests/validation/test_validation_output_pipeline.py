@@ -73,7 +73,7 @@ class TestValidateTransmissionBookends:
 
     def test_qualified_project_uses_basename_combined_pdf(self, tmp_path, monkeypatch) -> None:
         project_dir = tmp_path / "projects" / "templates" / "demo"
-        config_path = project_dir / "manuscript" / "config.yaml"
+        config_path = project_dir / "docs" / "manuscript" / "config.yaml"
         config_path.parent.mkdir(parents=True)
         config_path.write_text(
             "publication:\n  transmission_bookends:\n    enabled: true\n",
@@ -133,12 +133,12 @@ class TestValidateMarkdown:
         assert mod.validate_manuscript_output_markdown("test", repo_root=tmp_path) is True
 
     def test_empty_manuscript_dir(self, tmp_path, monkeypatch):
-        ms_dir = tmp_path / "projects" / "active" / "test" / "manuscript"
+        ms_dir = tmp_path / "projects" / "active" / "test" / "docs" / "manuscript"
         ms_dir.mkdir(parents=True)
         assert mod.validate_manuscript_output_markdown("test", repo_root=tmp_path) is True
 
     def test_with_markdown_files(self, tmp_path, monkeypatch):
-        ms_dir = tmp_path / "projects" / "active" / "test" / "manuscript"
+        ms_dir = tmp_path / "projects" / "active" / "test" / "docs" / "manuscript"
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("# Introduction\n\nHello world.")
         (ms_dir / "02_methods.md").write_text("# Methods\n\nWe did things.")
@@ -147,7 +147,7 @@ class TestValidateMarkdown:
 
     def test_markdown_resolves_wip_project(self, tmp_path, monkeypatch):
         project = tmp_path / "projects" / "working" / "draft"
-        ms_dir = project / "manuscript"
+        ms_dir = project / "docs" / "manuscript"
         ms_dir.mkdir(parents=True)
         (project / "output").mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("# Introduction\n\nHello world.")
@@ -155,7 +155,7 @@ class TestValidateMarkdown:
 
     def test_clean_markdown_clears_stale_diagnostics(self, tmp_path, monkeypatch):
         project = tmp_path / "projects" / "active" / "test"
-        ms_dir = project / "manuscript"
+        ms_dir = project / "docs" / "manuscript"
         report_dir = project / "output" / "reports"
         ms_dir.mkdir(parents=True)
         report_dir.mkdir(parents=True)
@@ -392,7 +392,7 @@ class TestExecuteValidationPipeline:
         pdf_dir = project_dir / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "paper.pdf").write_bytes(b"%PDF-1.4 content")
-        ms_dir = project_dir / "manuscript"
+        ms_dir = project_dir / "docs" / "manuscript"
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("# Intro\n\nContent.")
         assert isinstance(mod.execute_validation_pipeline("test", repo_root=tmp_path), int)
@@ -405,7 +405,7 @@ class TestExecuteValidationPipeline:
         fig_dir = project_dir / "output" / "figures"
         fig_dir.mkdir(parents=True)
         (fig_dir / "figure_registry.json").write_text(json.dumps({"figures": []}))
-        ms_dir = project_dir / "manuscript"
+        ms_dir = project_dir / "docs" / "manuscript"
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("# Intro\n\nContent.")
         assert isinstance(mod.execute_validation_pipeline("test", repo_root=tmp_path), int)
@@ -447,7 +447,7 @@ class TestExecuteValidationPipeline:
         data_dir = project_dir / "output" / "data"
         data_dir.mkdir(parents=True)
         (data_dir / "results.csv").write_text("a,b\n1,2")
-        ms_dir = project_dir / "manuscript"
+        ms_dir = project_dir / "docs" / "manuscript"
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("# Intro\n\nContent.")
         assert isinstance(mod.execute_validation_pipeline("test", repo_root=tmp_path), int)
@@ -515,7 +515,7 @@ class TestExecuteValidationPipeline:
             path = output_dir / relative
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(payload)
-        manuscript = project_dir / "manuscript"
+        manuscript = project_dir / "docs" / "manuscript"
         manuscript.mkdir(parents=True)
         (manuscript / "01_intro.md").write_text("# Intro\n\nContent.\n", encoding="utf-8")
         (manuscript / "config.yaml").write_text(
@@ -587,7 +587,7 @@ class TestProseQualityGate:
     def _scaffold(self, tmp_path, *, enabled: bool | None, prose: str):
         project_dir = tmp_path / "projects" / "active" / "test"
         (project_dir / "output").mkdir(parents=True)
-        ms_dir = project_dir / "manuscript"
+        ms_dir = project_dir / "docs" / "manuscript"
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text(prose, encoding="utf-8")
         if enabled is not None:
@@ -664,7 +664,7 @@ class TestProseQualityGate:
         rc_legacy, legacy = self._run_capturing_check_results(tmp_path)
 
         # Now add an explicit disabled toggle; results must be unchanged.
-        (project_dir / "manuscript" / "config.yaml").write_text(
+        (project_dir / "docs" / "manuscript" / "config.yaml").write_text(
             "paper:\n  title: Test\nvalidation:\n  prose_quality:\n    enabled: false\n", encoding="utf-8"
         )
         rc_disabled, disabled = self._run_capturing_check_results(tmp_path)
@@ -693,7 +693,7 @@ class TestProseQualityGate:
         """A manuscript file that can't be decoded must not crash the report-only gate."""
         project_dir = self._scaffold(tmp_path, enabled=True, prose="# ok\n\nfine.")
         # Add a second .md with invalid UTF-8 bytes -> UnicodeDecodeError path.
-        (project_dir / "manuscript" / "bad.md").write_bytes(b"\xff\xfe not utf-8 \x80\x81")
+        (project_dir / "docs" / "manuscript" / "bad.md").write_bytes(b"\xff\xfe not utf-8 \x80\x81")
         pdf_dir = project_dir / "output" / "pdf"
         pdf_dir.mkdir(parents=True, exist_ok=True)
         (pdf_dir / "test_combined.pdf").write_bytes(_minimal_structural_pdf())
@@ -715,7 +715,7 @@ class TestProseQualityGate:
         assert calls == []
 
         # Enabled via config: prose check runs exactly once for this project.
-        (tmp_path / "projects" / "active" / "test" / "manuscript" / "config.yaml").write_text(
+        (tmp_path / "projects" / "active" / "test" / "docs" / "manuscript" / "config.yaml").write_text(
             "paper:\n  title: Test\nvalidation:\n  prose_quality:\n    enabled: true\n",
             encoding="utf-8",
         )
@@ -728,7 +728,7 @@ class TestClaimVerificationGate:
         project_dir = tmp_path / "projects" / "active" / "test"
         (project_dir / "output" / "pdf").mkdir(parents=True)
         (project_dir / "output" / "pdf" / "test_combined.pdf").write_bytes(_minimal_structural_pdf())
-        ms_dir = project_dir / "manuscript"
+        ms_dir = project_dir / "docs" / "manuscript"
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("We observed 12 participants in the cohort.", encoding="utf-8")
         (ms_dir / "config.yaml").write_text(

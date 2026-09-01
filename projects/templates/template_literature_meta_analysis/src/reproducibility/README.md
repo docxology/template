@@ -131,7 +131,7 @@ bounded candidate set, run LLM extraction only for uncached candidates, score
 only graphs in that active set while retaining the broader persistent cache,
 and write three
 JSON/JSONL artifacts. Full-text availability is opt-in and gated by
-`project_config.fulltext` in `manuscript/config.yaml`
+`project_config.fulltext` in `docs/manuscript/config.yaml`
 (`config_loader.load_fulltext_config()`); when disabled and no
 `--fulltext-dir` override is passed, this logs a loud warning and still
 produces a valid, empty-but-well-formed set of outputs.

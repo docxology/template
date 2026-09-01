@@ -45,7 +45,7 @@ from infrastructure.core.logging.utils import get_logger  # noqa: E402
 
 logger = get_logger(__name__)
 
-MANUSCRIPT_DIR = PROJECT_DIR / "manuscript"
+MANUSCRIPT_DIR = PROJECT_DIR / "docs" / "manuscript"
 OUTPUT_DATA_DIR = PROJECT_DIR / "output" / "data"
 OUTPUT_MANUSCRIPT_DIR = PROJECT_DIR / "output" / "manuscript"
 

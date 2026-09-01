@@ -113,7 +113,7 @@ def _imrad_section_files(root: Path) -> list[tuple[str, str]]:
 
     paths = sorted((root / "manuscript" / "sections" / "imrad").glob("**/*.md")) + sorted(
         path
-        for path in (root / "manuscript").glob("*.md")
+        for path in (root / "docs" / "manuscript").glob("*.md")
         if path.name not in {"AGENTS.md", "README.md", "SYNTAX.md", "preamble.md"}
     )
     return [(_section_id_from_path(root, path), path.read_text(encoding="utf-8")) for path in paths if path.is_file()]

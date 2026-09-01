@@ -41,6 +41,7 @@ from infrastructure.publishing.config_doi import (
     read_publication_version_doi,
     zenodo_record_url_for_doi,
 )
+from infrastructure.core.project_paths import manuscript_config_path
 from infrastructure.publishing.registry import (
     PLATFORM_REGISTRY,
     PlatformInfo,
@@ -105,7 +106,7 @@ class PublishingStatusReport:
 
 
 def _config_path_for(project_root: Path, config_path: Path | None) -> Path:
-    return config_path or (project_root / "manuscript" / "config.yaml")
+    return config_path or (manuscript_config_path(project_root))
 
 
 def _load_config(config_path: Path) -> dict[str, Any]:

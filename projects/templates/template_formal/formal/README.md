@@ -74,5 +74,5 @@ you want to re-run the formal side yourself:
 - [`lean/README.md`](lean/README.md), [`lean/AGENTS.md`](lean/AGENTS.md) — the Lean 4 spec
 - [`tla/README.md`](tla/README.md), [`tla/AGENTS.md`](tla/AGENTS.md) — the two TLA+ specs
 - [`../AGENTS.md`](../AGENTS.md) — project layer contract (`formal/` row)
-- [`../manuscript/05_results_discussion.md`](../manuscript/05_results_discussion.md) — §"The optional formal side-spec: shipped, not cut" and §"Formal side-spec expansion: what grew, and what still needs wiring"
+- [`../docs/manuscript/05_results_discussion.md`](../docs/manuscript/05_results_discussion.md) — §"The optional formal side-spec: shipped, not cut" and §"Formal side-spec expansion: what grew, and what still needs wiring"
 - [`../scripts/check_formal_specs.sh`](../scripts/check_formal_specs.sh) — the wiring script itself, fully commented

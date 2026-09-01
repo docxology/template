@@ -28,7 +28,7 @@ uv run python projects/templates/template_literature_meta_analysis/scripts/01_li
 
 ## Engine Returns `skipped`
 
-This is expected when a network, API key, or optional provider condition is absent. Check `manuscript/config.yaml` engine toggles and the provider-specific client logs before treating it as a failure.
+This is expected when a network, API key, or optional provider condition is absent. Check `docs/manuscript/config.yaml` engine toggles and the provider-specific client logs before treating it as a failure.
 
 ## LLM Extraction Is Unavailable
 
@@ -60,7 +60,7 @@ Add real-data tests for uncovered branches; do not remove tests or introduce moc
 ## YAML Parse Error
 
 ```bash
-uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_literature_meta_analysis/manuscript/config.yaml'))"
+uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_literature_meta_analysis/docs/manuscript/config.yaml'))"
 ```
 
 Tabs, unclosed quotes, and JSON-style trailing commas are the usual causes.

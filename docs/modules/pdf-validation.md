@@ -60,8 +60,10 @@ uv run python -m infrastructure.validation.cli pdf output/templates/template_cod
 uv run python -m infrastructure.validation.cli pdf output/templates/template_code_project/pdf/template_code_project_combined.pdf --verbose
 
 # Validate markdown files
-uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/docs/manuscript/
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 #### Automated Validation
 

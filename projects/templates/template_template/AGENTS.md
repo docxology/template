@@ -44,7 +44,7 @@ quick reference commands, and pitfalls.
 # Publishing
 
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)
-- Concept DOI: `manuscript/config.yaml` → `publication.doi` (PDF cover); `version_doi` / `version_record` for latest Zenodo deposit
+- Concept DOI: `docs/manuscript/config.yaml` → `publication.doi` (PDF cover); `version_doi` / `version_record` for latest Zenodo deposit
 - Standalone repo: [template_template GitHub repository](https://github.com/docxology/template_template)
 
 ## Key Subsystems
@@ -96,5 +96,5 @@ uv run python projects/templates/template_template/scripts/generate_architecture
 
 - [`README.md`](README.md)
 - [`docs/AGENTS.md`](docs/AGENTS.md)
-- [`manuscript/AGENTS.md`](manuscript/AGENTS.md)
+- [`docs/manuscript/AGENTS.md`](docs/manuscript/AGENTS.md)
 - [`src/template_template/AGENTS.md`](src/template_template/AGENTS.md)

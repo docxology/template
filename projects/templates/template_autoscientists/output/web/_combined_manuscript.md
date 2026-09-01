@@ -186,7 +186,7 @@ The configurations compared in @sec:results correspond directly to `SearchConfig
 - **Single-thread baseline** — `SearchConfig.single_thread_baseline()`: $1$ team, confirmation on (so the baseline is itself noise-honest), all structural coordination off.
 - **Ablations** — the full configuration with exactly one mechanism switched off, generated via `dataclasses.replace`.
 
-Confirmation averages each candidate over seeds $(101, 202, 303)$ and tests against a $\sigma = 2$ noise band; the primary evaluation seed is $7$; the stagnation window is $10$ experiments; a direction is retired after $3$ consecutive non-improving experiments. These values are the `SearchConfig` defaults and are echoed in `manuscript/config.yaml`.
+Confirmation averages each candidate over seeds $(101, 202, 303)$ and tests against a $\sigma = 2$ noise band; the primary evaluation seed is $7$; the stagnation window is $10$ experiments; a direction is retired after $3$ consecutive non-improving experiments. These values are the `SearchConfig` defaults and are echoed in `docs/manuscript/config.yaml`.
 
 ## Proposer
 
@@ -305,11 +305,11 @@ Two properties make the artifact reusable. First, every mechanism is gated behin
 
 # References {#sec:references}
 
-Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
+Bibliography lives in [`docs/manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
 
 To validate that `references.bib` is syntactically clean and contains the required fields per entry type:
 
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
-    projects/templates/template_autoscientists/manuscript/references.bib --strict
+    projects/templates/template_autoscientists/docs/manuscript/references.bib --strict
 ```

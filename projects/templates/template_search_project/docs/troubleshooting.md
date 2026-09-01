@@ -46,7 +46,7 @@ on stage 4.
 
 ## "BibTeX missing entries / wrong citation keys"
 
-**Symptom:** `manuscript/references.bib` does not contain a paper that
+**Symptom:** `docs/manuscript/references.bib` does not contain a paper that
 `output/search/results.json` does.
 
 **Causes / fixes:**
@@ -114,7 +114,7 @@ in their contents.
 
 ## "References.bib differs across runs even with the local corpus"
 
-**Symptom:** `git status` shows `manuscript/references.bib` modified
+**Symptom:** `git status` shows `docs/manuscript/references.bib` modified
 after a `--no-cache` run.
 
 **Causes / fixes:**

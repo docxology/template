@@ -2,13 +2,13 @@
 
 > **Public exemplar** — [DOI: 10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869)
 
-A combinatoric **grammar** that deterministically generates whole runnable projects — `src/`, `tests/`, `scripts/`, and `manuscript/` — one level past a manuscript generator.
+A combinatoric **grammar** that deterministically generates whole runnable projects — `src/`, `tests/`, `scripts/`, and `docs/manuscript/` — one level past a manuscript generator.
 
 ## When to use this template
 
 Use this template when you need to **generate runnable project trees
 deterministically** — not a manuscript, but a whole child project (its own
-`src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a
+`src/`, `tests/`, `scripts/`, and `docs/manuscript/`) selected by a seed from a
 combinatoric grammar, with recompute-based provenance verification and a
 falsifiable honesty manifest against green-by-construction test theater. It
 extends `template_madlib` one level up: from generating *a manuscript* to
@@ -26,18 +26,18 @@ Concretely, this template provides:
 
 ## Configuring from this template
 
-Edit `manuscript/config.yaml`:
+Edit `docs/manuscript/config.yaml`:
 - The `autopoiesis:` block controls the grammar (slots, options, seed, deps)
 - The `paper:` block controls publication metadata
 - The `analysis:` block controls which scripts run on render
 
-See [`SYNTAX.md`](SYNTAX.md) for grammar syntax, [`config.yaml.example`](manuscript/config.yaml.example) for a fork-safe starting point.
+See [`SYNTAX.md`](SYNTAX.md) for grammar syntax, [`config.yaml.example`](docs/manuscript/config.yaml.example) for a fork-safe starting point.
 
 ## Template integrity
 
 This project is a **canonical template exemplar**. To use it:
 1. Fork or copy the `projects/templates/template_autopoiesis/` directory
-2. Edit `manuscript/config.yaml` with your own grammar and metadata
+2. Edit `docs/manuscript/config.yaml` with your own grammar and metadata
 3. Run `uv sync && uv run pytest` to verify
 
 Standalone usage is documented in [`STANDALONE.md`](STANDALONE.md).
@@ -60,7 +60,7 @@ flowchart LR
 
 The spine:
 
-1. **Grammar** — defined in `manuscript/config.yaml` under `autopoiesis:`. Slots × options = archetypes.
+1. **Grammar** — defined in `docs/manuscript/config.yaml` under `autopoiesis:`. Slots × options = archetypes.
 2. **Expand** — deterministic SHA-256-based selection, no entropy source.
 3. **Materialize** — writes a complete child project to `output/children/child_{domain}_{spec_hash}/`.
 4. **Verify** — recomputes tree hash from disk and checks against `provenance.json`.

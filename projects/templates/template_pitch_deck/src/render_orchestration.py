@@ -215,7 +215,7 @@ def render_all_decks(
     pitch_subject: str | None = None,
 ) -> list[Path]:
     """Render all three lengths. Raises `DeckAuditFailure`/`RenderingError` on any failure."""
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = project_root / "docs" / "manuscript"
     figures_dir = project_root / "output" / "figures"
     pdf_dir = project_root / "output" / "pdf"
     pptx_dir = project_root / "output" / "pptx"

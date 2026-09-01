@@ -1,6 +1,6 @@
 # Rendering Pipeline
 
-Stage 02 runs the configured scripts in `manuscript/config.yaml`.
+Stage 02 runs the configured scripts in `docs/manuscript/config.yaml`.
 
 The cover and each numbered page render first as PNG files in
 `output/figures/storybook_pages/`. The final script assembles those images into

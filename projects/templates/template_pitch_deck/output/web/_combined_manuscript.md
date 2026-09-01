@@ -245,7 +245,7 @@ than authored slide-by-slide.
 `manuscript/deck_content_{short,medium,long}.yaml` are the single source of
 truth for slide content across three lengths. `src/deck_tokens.py` resolves
 live repository facts (`{{TOKEN}}` placeholders) from `template_template`'s own
-`manuscript/config.yaml` and the public exemplar roster — never hand-typed
+`docs/manuscript/config.yaml` and the public exemplar roster — never hand-typed
 literals. `src/render_orchestration.py` then renders the resolved model into
 PDF (via reportlab) and PPTX (via python-pptx) through `scripts/20_render_decks.py`,
 with both renderers consuming one shared content model.

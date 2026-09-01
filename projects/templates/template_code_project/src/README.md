@@ -27,7 +27,7 @@ logger.info(f"Optimal solution: {result.solution}")
 
 - **Gradient descent** optimization algorithm
 - **Quadratic function** evaluation, gradients, and analytical optimum (`quadratic_optimum`)
-- **Shared experiment config** in `experiment_config.py` (single loader for `manuscript/config.yaml`)
+- **Shared experiment config** in `experiment_config.py` (single loader for `docs/manuscript/config.yaml`)
 - **Importable analysis pipeline** in `analysis/`
 - **Matplotlib figures** in `figures/`
 - **Plotly dashboard builder** in `dashboard.py`
@@ -65,7 +65,7 @@ uv run pytest tests/ --cov=src --cov-fail-under=90
 
 ```mermaid
 graph TD
-    YAML[manuscript/config.yaml] --> CFG[experiment_config.py]
+    YAML[docs/manuscript/config.yaml] --> CFG[experiment_config.py]
     CFG --> ANA[analysis/]
     CFG --> FIG[figures/]
     CFG --> DASH[dashboard.py]

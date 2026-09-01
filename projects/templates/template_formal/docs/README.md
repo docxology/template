@@ -33,7 +33,7 @@ These are the artifacts the guides keep pointing back to:
   [`AGENTS.md`](../AGENTS.md)'s Layer contract).
 - [`formal/`](../formal) — the optional Lean 4 + TLA+ side-specs, wired to
   [`scripts/check_formal_specs.sh`](../scripts/check_formal_specs.sh).
-- [`manuscript/`](../manuscript) — the prose argument, citing real ISC
+- [`docs/manuscript/`](../docs/manuscript/) — the prose argument, citing real ISC
   numbers and real numbers from pinned regression tests.
 - [`tests/`](../tests), including
   [`test_mypy_oracle.py`](../tests/test_mypy_oracle.py) and
@@ -54,7 +54,7 @@ phase, and detecting malformed wire bytes, are **runtime disciplines**,
 not compiler guarantees — Python has no linear/affine type system, and no
 line in this template's source or manuscript claims otherwise. The full,
 claim-by-claim scoping lives in
-[`manuscript/02_type_architecture.md`](../manuscript/02_type_architecture.md)'s
+[`manuscript/02_type_architecture.md`](../docs/manuscript/02_type_architecture.md)'s
 "What mypy --strict proves vs. what is a runtime discipline" section and
 is restated practically in the [type system guide](type_system_guide.md).
 

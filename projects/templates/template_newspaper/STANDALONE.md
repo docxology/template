@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.20533675](https://doi.org/10.5281/zenodo.20533675)
 - Latest deposited version DOI: [10.5281/zenodo.20932039](https://zenodo.org/records/20932039)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_newspaper/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_newspaper), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmUsept2d9X3sz42whTgEGM9TjdxjzSqxnuyPCbu3pPwku), [netlify](https://6a4441f8d6dc10153d77788d--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/tzwf8/), [pypi](https://test.pypi.org/project/template-newspaper/1.0.2/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_newspaper)
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -49,7 +49,7 @@ rsync -a \
 
 ## Required Post-Fork Edits
 
-- Update `manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
+- Update `docs/manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
   `CITATION.cff`, `.zenodo.json`, and `codemeta.json`.
 - Replace `content/`, masthead settings, ad inventory, and local fixtures before
   presenting a fork as a real publication.

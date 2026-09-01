@@ -140,13 +140,13 @@ viable project.
 | `scripts/y_generate_prose_figures.py` | REQUIRED | `tests/test_scripts.py` (after Tier M: subprocess test with `--project-root`) |
 | `scripts/z_generate_manuscript_variables.py` | REQUIRED | `tests/test_scripts.py` (after Tier M: dedicated subprocess test) |
 | `scripts/00_preflight.py` | AESTHETIC | Emits a warning before PDF render; pipeline still runs without it |
-| `manuscript/config.yaml` | REQUIRED | `src/config.py` loader; pipeline aborts without it |
+| `docs/manuscript/config.yaml` | REQUIRED | `src/config.py` loader; pipeline aborts without it |
 | `manuscript/*.md` | REQUIRED | Read by `infrastructure.prose.analyze_manuscript`; no manuscript = no run |
-| `manuscript/references.bib` | REQUIRED | `_check_bibliography` reads it; `fail_on_missing=true` blocks empty bib |
-| `manuscript/preamble.md` | REQUIRED | Injected at PDF compile; missing → LaTeX errors |
-| `manuscript/SYNTAX.md` | AESTHETIC | Authoring guide for humans; pipeline never reads it |
-| `manuscript/config.yaml.example` | AESTHETIC | Documentation; forkers copy → `config.yaml` |
-| `manuscript/AGENTS.md` | AESTHETIC | Agent guide; pipeline never reads it (and the substitution pass deliberately skips it) |
+| `docs/manuscript/references.bib` | REQUIRED | `_check_bibliography` reads it; `fail_on_missing=true` blocks empty bib |
+| `docs/manuscript/preamble.md` | REQUIRED | Injected at PDF compile; missing → LaTeX errors |
+| `docs/manuscript/SYNTAX.md` | AESTHETIC | Authoring guide for humans; pipeline never reads it |
+| `docs/manuscript/config.yaml.example` | AESTHETIC | Documentation; forkers copy → `config.yaml` |
+| `docs/manuscript/AGENTS.md` | AESTHETIC | Agent guide; pipeline never reads it (and the substitution pass deliberately skips it) |
 | `docs/*.md` | AESTHETIC | Agent + human documentation; no gate parses these |
 | `docs/style_guide.md`, `docs/agent_instructions.md`, etc. | AESTHETIC (load-bearing for *agents*, not pipelines) | Drift detected only by audits; aspire to convert to a gate (see TIER L proposal `scripts/audit/check_template_drift.py`) |
 | `src/STYLE.md`, `tests/PATTERNS.md`, `scripts/CONVENTIONS.md` | AESTHETIC | Sibling-parity files; no automated enforcement |
@@ -164,7 +164,7 @@ AESTHETIC list as the audit surface that lives outside automated CI.
 
 * [`README.md`](README.md) — quick links.
 * [`../AGENTS.md`](../AGENTS.md) — project-level agent guide.
-* [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — substitution-marker registry.
+* [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — substitution-marker registry.
 * [`../src/AGENTS.md`](../src/AGENTS.md) — domain-orchestration guide.
 * [`../tests/AGENTS.md`](../tests/AGENTS.md) — test-suite agent guide.
 * [`../../../docs/rules/folder_structure.md`](../../../../docs/rules/folder_structure.md) — repository-wide tri-doc convention.

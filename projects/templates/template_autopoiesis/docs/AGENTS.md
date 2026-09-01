@@ -13,7 +13,7 @@ monorepo-wide rules live in [`../../../../AGENTS.md`](../../../../AGENTS.md).
 - `scripts/` — thin orchestrators only; they import from `src/` and never
   contain business logic. Numeric-prefixed scripts are order-sensitive.
 - `tests/` — zero-mock suite; per-directory `README.md`/`AGENTS.md` contracts.
-- `manuscript/` — source sections and config; `manuscript/AGENTS.md` is
+- `docs/manuscript/` — source sections and config; `docs/manuscript/AGENTS.md` is
   authoritative for token, figure, and bibliography rules.
 
 ## Conventions observed in this repo

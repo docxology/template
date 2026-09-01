@@ -44,6 +44,7 @@ from infrastructure.rendering.docx_renderer import render_docx
 from infrastructure.rendering.epub_renderer import render_epub
 from infrastructure.rendering.mobi_renderer import render_mobi
 from infrastructure.rendering._pdf_title_page_images import _cover_image_alt
+from infrastructure.core.project_paths import manuscript_config_path, resolve_source_manuscript_dir
 
 logger = get_logger(__name__)
 
@@ -98,11 +99,12 @@ def _find_combined_markdown(project_root: Path) -> Path | None:
 
 def _find_cover_image(project_root: Path) -> Path | None:
     """Look for a cover image in standard manuscript locations."""
+    manuscript_dir = resolve_source_manuscript_dir(project_root)
     candidates = [
-        project_root / "manuscript" / "cover.png",
-        project_root / "manuscript" / "cover.jpg",
-        project_root / "manuscript" / "assets" / "cover.png",
-        project_root / "manuscript" / "assets" / "cover.jpg",
+        manuscript_dir / "cover.png",
+        manuscript_dir / "cover.jpg",
+        manuscript_dir / "assets" / "cover.png",
+        manuscript_dir / "assets" / "cover.jpg",
         project_root / "output" / "figures" / "cover.png",
     ]
     for c in candidates:
@@ -118,7 +120,7 @@ def _read_config_metadata(project_root: Path) -> dict[str, Any] | None:
     except ImportError:
         return None
 
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     if not config_path.is_file():
         return None
     try:

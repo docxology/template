@@ -2,7 +2,7 @@
 
 A domain-neutral, modular, **fillable** scaffold for book-length technical
 works. The book's structure is data-driven from a single
-[`manuscript/config.yaml`](../manuscript/config.yaml); a tested Python backbone
+[`docs/manuscript/config.yaml`](../docs/manuscript/config.yaml); a tested Python backbone
 under [`src/`](../src) scaffolds, validates, and illustrates the manuscript; and
 thin orchestrator [`scripts/`](../scripts) wire everything into the repository's
 reproducible pipeline.
@@ -23,7 +23,7 @@ If you are new here, read these in order.
 
 These are the artifacts the guides keep pointing back to:
 
-- [`manuscript/config.yaml`](../manuscript/config.yaml) — the book structure
+- [`docs/manuscript/config.yaml`](../docs/manuscript/config.yaml) — the book structure
   (parts, chapters, labs, question banks, appendices, layout, typography).
 - [`src/textbook/`](../src/textbook) — the content engine
   (`constants`, `config`, `toc`, `content`, `models`).
@@ -44,9 +44,9 @@ parameter table `{#tbl:...}`), an inline `` ```mermaid `` diagram, and
 Summary / Key Terms / Further Reading / Practice sections. Cross-references use
 pandoc-crossref syntax (`[@fig:..]`, `[@tbl:..]`, `[@eq:..]`, `[@sec:..]`) —
 never hand-numbered. Citations `[@key]` must resolve in
-[`references.bib`](../manuscript/references.bib); glossary links
+[`references.bib`](../docs/manuscript/references.bib); glossary links
 `[**term**](#gl:<anchor>)` must resolve in
-[`glossary.md`](../manuscript/glossary.md). The full contract and how to fill it
+[`glossary.md`](../docs/manuscript/glossary.md). The full contract and how to fill it
 live in the [authoring guide](authoring_guide.md).
 
 ## Tooling

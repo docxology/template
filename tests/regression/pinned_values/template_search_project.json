@@ -26,7 +26,7 @@
     "bibtex_entry_count": {
       "commit": "691d6ebf",
       "date": "2026-07-01",
-      "reason": "manuscript/references.bib is auto-populated by the single-query pipeline (02_methodology.md stage 3 + 03_results.md output list). Its entry count = len(bib_entries) from src.pipeline._build_citation_keys(result.papers) -- one BibEntry per deduplicated paper, so 6.",
+      "reason": "docs/manuscript/references.bib is auto-populated by the single-query pipeline (02_methodology.md stage 3 + 03_results.md output list). Its entry count = len(bib_entries) from src.pipeline._build_citation_keys(result.papers) -- one BibEntry per deduplicated paper, so 6.",
       "script": "src.pipeline._build_citation_keys(result.papers) -> len(bib_entries)"
     },
     "bibtex_unique_citation_keys": {
@@ -37,7 +37,7 @@
     }
   },
   "run_num_papers": {
-    "manuscript_section": "manuscript/00_abstract.md + manuscript/03_results.md / Run snapshot",
+    "manuscript_section": "docs/manuscript/00_abstract.md + docs/manuscript/03_results.md / Run snapshot",
     "claim_text": "returned {{RESULT_NUM_PAPERS}} deduplicated paper(s)",
     "value": 6,
     "abs_tolerance": 0,
@@ -48,7 +48,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "run_with_doi": {
-    "manuscript_section": "manuscript/00_abstract.md + manuscript/03_results.md / Run snapshot",
+    "manuscript_section": "docs/manuscript/00_abstract.md + docs/manuscript/03_results.md / Run snapshot",
     "claim_text": "({{RESULT_WITH_DOI}} carrying a DOI ...)",
     "value": 4,
     "abs_tolerance": 0,
@@ -59,7 +59,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "run_with_abstract": {
-    "manuscript_section": "manuscript/00_abstract.md + manuscript/03_results.md / Run snapshot",
+    "manuscript_section": "docs/manuscript/00_abstract.md + docs/manuscript/03_results.md / Run snapshot",
     "claim_text": "{{RESULT_WITH_ABSTRACT}} carrying an abstract",
     "value": 6,
     "abs_tolerance": 0,
@@ -70,8 +70,8 @@
     "pinned_at_commit": "691d6ebf"
   },
   "bibtex_entry_count": {
-    "manuscript_section": "manuscript/02_methodology.md / stage 3 + manuscript/03_results.md / output list",
-    "claim_text": "manuscript/references.bib -- the auto-populated bibliography from the single-query pipeline (one entry per deduplicated paper)",
+    "manuscript_section": "docs/manuscript/02_methodology.md / stage 3 + docs/manuscript/03_results.md / output list",
+    "claim_text": "docs/manuscript/references.bib -- the auto-populated bibliography from the single-query pipeline (one entry per deduplicated paper)",
     "value": 6,
     "abs_tolerance": 0,
     "verifier_function": "src.pipeline._build_citation_keys",
@@ -81,7 +81,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "bibtex_unique_citation_keys": {
-    "manuscript_section": "manuscript/02_methodology.md / collision-free citation-key generation",
+    "manuscript_section": "docs/manuscript/02_methodology.md / collision-free citation-key generation",
     "claim_text": "collision-free citation-key generation in _build_citation_keys",
     "value": 6,
     "abs_tolerance": 0,

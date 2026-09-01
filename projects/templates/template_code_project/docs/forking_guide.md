@@ -40,7 +40,7 @@ add -f` it — `scripts/audit/check_tracked_all.py` blocks the push in
 
 This template is a **research-project skeleton**: pure-math `src/`,
 thin-orchestrator `scripts/`, real-data `tests/`, token-substituted
-`manuscript/`, and a 4-phase analysis → variables → render → copy pipeline.
+`docs/manuscript/`, and a 4-phase analysis → variables → render → copy pipeline.
 The included gradient-descent algorithm is throwaway scaffolding for the
 **transferable pattern**: every numeric in the manuscript is a
 `{{TOKEN}}` registered in one Python function and cross-checked by one
@@ -56,7 +56,7 @@ the short version:
 
 | Class | Examples | Action |
 |---|---|---|
-| REQUIRED — pipeline gate | `src/optimizer.py` and `invariants.py` (math primitives), all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
+| REQUIRED — pipeline gate | `src/optimizer.py` and `invariants.py` (math primitives), all `tests/test_*.py`, `pyproject.toml`, `docs/manuscript/config.yaml`, `manuscript/*.md`, `docs/manuscript/references.bib`, `docs/manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
 | REQUIRED — orchestration | `src/analysis/`, `src/figures/`, `src/dashboard.py`, `src/manuscript_variables.py`, all `scripts/*.py` | May import `infrastructure.*`; exercised by the end-to-end pipeline run |
 | AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/audit/check_template_drift.py` and audits; aspire to update them when code changes |
 

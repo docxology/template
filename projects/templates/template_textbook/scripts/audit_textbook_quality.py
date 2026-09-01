@@ -39,7 +39,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    config = load_config(PROJECT_DIR / "manuscript")
+    config = load_config(PROJECT_DIR / "docs" / "manuscript")
     report = run_manuscript_audit(
         PROJECT_DIR,
         config,

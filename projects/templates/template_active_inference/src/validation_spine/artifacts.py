@@ -59,10 +59,10 @@ CORE_ARTIFACT_PRODUCERS: dict[str, str] = {
 }
 
 CONFIG_INPUTS: tuple[str, ...] = (
-    "manuscript/config.yaml",
-    "manuscript/sheaf/manifest.yaml",
-    "manuscript/sheaf/tracks.yaml",
-    "manuscript/sheaf/coverage.yaml",
+    "docs/manuscript/config.yaml",
+    "docs/manuscript/sheaf/manifest.yaml",
+    "docs/manuscript/sheaf/tracks.yaml",
+    "docs/manuscript/sheaf/coverage.yaml",
     "tracks.yaml",
     "figures.yaml",
     "pymdp.yaml",

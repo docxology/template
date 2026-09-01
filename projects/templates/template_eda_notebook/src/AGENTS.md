@@ -44,7 +44,7 @@ flowchart LR
 
 ## Configuration as Source of Truth
 
-Manuscript and publication metadata are read from `manuscript/config.yaml`
+Manuscript and publication metadata are read from `docs/manuscript/config.yaml`
 (the configuration single source of truth). The EDA library itself is
 parameter-light: the dataset schema is declared in `src/eda/dataset.py`
 (`DatasetSchema`) and the shipped CSV path resolves relative to the project

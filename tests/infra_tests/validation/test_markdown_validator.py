@@ -35,8 +35,8 @@ class TestDiscoverMarkdownFilesTree:
     def test_finds_and_sorts_markdown_files(self, tmp_path):
         """Test discover_markdown_files finds and sorts markdown files."""
         # Create test markdown files
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "02_second.md").write_text("content")
         (manuscript / "01_first.md").write_text("content")
         (manuscript / "not_md.txt").write_text("content")
@@ -61,8 +61,8 @@ class TestDiscoverMarkdownFilesTree:
 
     def test_empty_directory(self, tmp_path):
         """Test discover_markdown_files with empty directory."""
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
 
         files = discover_markdown_files(manuscript, scope="tree")
 
@@ -75,8 +75,8 @@ class TestCollectSymbols:
     def test_extracts_labels_and_anchors(self, tmp_path):
         """Test collect_symbols extracts labels and anchors."""
         # Create test markdown files
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test1.md").write_text(
             "\\begin{equation}\\label{eq:test1}\\end{equation}\n# Section {#sec:test1}\n"
         )
@@ -109,8 +109,8 @@ class TestValidateImages:
     def test_detects_missing_image(self, tmp_path):
         """Test validate_images detects missing images."""
         # Create test markdown file
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("![alt text](../output/figures/missing.png)")
 
         problems = validate_images([str(manuscript / "test.md")], tmp_path)
@@ -121,11 +121,11 @@ class TestValidateImages:
     def test_validates_existing_image(self, tmp_path):
         """Test validate_images doesn't flag existing images."""
         # Create test markdown file and image
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("![alt text](../output/figures/existing.png)")
-        (tmp_path / "output" / "figures").mkdir(parents=True)
-        (tmp_path / "output" / "figures" / "existing.png").write_text("fake image")
+        (tmp_path / "docs" / "output" / "figures").mkdir(parents=True)
+        (tmp_path / "docs" / "output" / "figures" / "existing.png").write_text("fake image")
 
         problems = validate_images([str(manuscript / "test.md")], tmp_path)
 
@@ -133,8 +133,8 @@ class TestValidateImages:
 
     def test_ignores_image_syntax_inside_fenced_code(self, tmp_path):
         """Example figure markdown in fenced blocks must not trigger IMG_MISSING."""
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text(
             "```markdown\n![Caption](../output/figures/example.png)\n```\n",
             encoding="utf-8",
@@ -147,8 +147,8 @@ class TestValidateImages:
     def test_absolute_path(self, tmp_path):
         """Test validate_images with absolute image paths."""
         # Create test markdown file with absolute path
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         abs_image_path = str(tmp_path / "absolute_image.png")
         (manuscript / "test.md").write_text(f"![alt text]({abs_image_path})")
 
@@ -164,7 +164,7 @@ class TestValidateImages:
         This covers line 94 where abs_path is joined with repo_root when not absolute.
         """
         # Create a manuscript directory with an image reference
-        manuscript = tmp_path / "manuscript"
+        manuscript = tmp_path / "docs" / "manuscript"
         manuscript.mkdir(parents=True)
 
         (manuscript / "test.md").write_text("![alt text](../output/figures/test.png)")
@@ -173,9 +173,9 @@ class TestValidateImages:
         monkeypatch.chdir(tmp_path)
 
         # Pass RELATIVE path to markdown file - this triggers line 94
-        # because dirname("manuscript/test.md") = "manuscript"
-        # and join("manuscript", "../output/figures/test.png") = "output/figures/test.png" (relative!)
-        relative_md_path = "manuscript/test.md"
+        # because dirname("docs/manuscript/test.md") = "docs/manuscript"
+        # and join("docs/manuscript", "../output/figures/test.png") stays relative after normpath
+        relative_md_path = "docs/manuscript/test.md"
 
         problems = validate_images([relative_md_path], tmp_path)
 
@@ -188,8 +188,8 @@ class TestValidateImages:
 
         This covers line 94 with a file that actually exists.
         """
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
 
         # Create the image in a relative location from manuscript
         figures_dir = manuscript / "figures"
@@ -211,8 +211,8 @@ class TestValidateRefs:
     def test_detects_missing_equation_label(self, tmp_path):
         """Test validate_refs detects missing equation labels."""
         # Create test markdown file
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("Reference to \\eqref{eq:missing}")
 
         problems = validate_refs([str(manuscript / "test.md")], tmp_path, set(), set())
@@ -223,8 +223,8 @@ class TestValidateRefs:
     def test_detects_missing_anchor(self, tmp_path):
         """Test validate_refs detects missing anchors."""
         # Create test markdown file
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("Link to [section](#missing_anchor)")
 
         problems = validate_refs([str(manuscript / "test.md")], tmp_path, set(), set())
@@ -234,8 +234,8 @@ class TestValidateRefs:
 
     def test_ignores_markdown_link_pattern_inside_fenced_code(self, tmp_path):
         """LaTeX like p(#1) in ``` blocks must not be reported as (#1) internal links."""
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("```latex\n" r"\newcommand{\gen}[1]{p(#1)}" "\n```\n")
 
         problems = validate_refs([str(manuscript / "test.md")], tmp_path, set(), set())
@@ -245,8 +245,8 @@ class TestValidateRefs:
     def test_detects_bare_url(self, tmp_path):
         """Test validate_refs detects bare URLs."""
         # Create test markdown file
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("Visit https://example.com for more info")
 
         problems = validate_refs([str(manuscript / "test.md")], tmp_path, set(), set())
@@ -257,8 +257,8 @@ class TestValidateRefs:
     def test_detects_non_informative_link(self, tmp_path):
         """Test validate_refs detects non-informative link text."""
         # Create test markdown file
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("[https://example.com](https://example.com)")
 
         problems = validate_refs([str(manuscript / "test.md")], tmp_path, set(), set())
@@ -274,8 +274,8 @@ class TestValidateMath:
     def test_detects_inline_dollar_display_math(self, tmp_path):
         """Test validate_math detects inline dollar-display notation."""
         # Create test markdown file with inline $$ math
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("Math: $$x^2 + y^2 = z^2$$")
 
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
@@ -285,8 +285,8 @@ class TestValidateMath:
 
     def test_allows_isolated_dollar_display_math_blocks(self, tmp_path):
         """Pandoc-native display math blocks are valid for PDF and HTML."""
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text(
             "$$x^2 + y^2 = z^2$$\n\n$$\na+b=c\n$$\n",
             encoding="utf-8",
@@ -299,8 +299,8 @@ class TestValidateMath:
     def test_detects_bracket_math(self, tmp_path):
         """Test validate_math detects bracket math notation."""
         # Create test markdown file
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("Math: \\[x^2 + y^2 = z^2\\]")
 
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
@@ -311,8 +311,8 @@ class TestValidateMath:
     def test_detects_missing_label(self, tmp_path):
         """Test validate_math detects equations without labels."""
         # Create test markdown file
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text(r"\begin{equation}x^2 + y^2 = z^2\end{equation}")
 
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
@@ -323,8 +323,8 @@ class TestValidateMath:
     def test_detects_duplicate_label(self, tmp_path):
         """Test validate_math detects duplicate equation labels."""
         # Create test markdown file
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text(
             r"\begin{equation}\label{eq:duplicate}x^2\end{equation}" + "\n"
             r"\begin{equation}\label{eq:duplicate}y^2\end{equation}"
@@ -338,8 +338,8 @@ class TestValidateMath:
     def test_accepts_valid_equations(self, tmp_path):
         """Test validate_math accepts valid labeled equations."""
         # Create test markdown file
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text(
             "\\begin{equation}\\label{eq:valid1}x^2 + y^2 = z^2\\end{equation}\n"
             "\\begin{equation}\\label{eq:valid2}a^2 + b^2 = c^2\\end{equation}"
@@ -356,8 +356,8 @@ class TestValidateMarkdown:
     def test_no_problems_returns_zero(self, tmp_path):
         """Test validate_markdown returns 0 when no problems found."""
         # Create test markdown directory with valid content
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("# Test\n\nNo problems here.")
 
         problems, exit_code = validate_markdown(manuscript, tmp_path, strict=False)
@@ -368,8 +368,8 @@ class TestValidateMarkdown:
     def test_problems_non_strict_returns_zero(self, tmp_path):
         """Test validate_markdown returns 0 with problems in non-strict mode."""
         # Create test markdown directory with problems
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("\\begin{equation}x^2\\end{equation}")
 
         problems, exit_code = validate_markdown(manuscript, tmp_path, strict=False)
@@ -380,8 +380,8 @@ class TestValidateMarkdown:
     def test_problems_strict_returns_one(self, tmp_path):
         """Test validate_markdown returns 1 with problems in strict mode."""
         # Create test markdown directory with an ERROR-level problem
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text("![Missing image](../output/figures/missing.png)")
 
         problems, exit_code = validate_markdown(manuscript, tmp_path, strict=True)
@@ -396,8 +396,8 @@ class TestValidateMarkdown:
 
     def test_empty_directory_returns_zero(self, tmp_path):
         """Test validate_markdown with empty directory."""
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
 
         problems, exit_code = validate_markdown(manuscript, tmp_path)
 
@@ -410,7 +410,7 @@ class TestFindManuscriptDirectory:
 
     def test_finds_project_manuscript(self, tmp_path):
         """Test find_manuscript_directory finds projects/project/manuscript."""
-        manuscript = tmp_path / "projects" / "project" / "manuscript"
+        manuscript = tmp_path / "projects" / "project" / "docs" / "manuscript"
         manuscript.mkdir(parents=True)
 
         result = find_manuscript_directory(tmp_path, "project")
@@ -439,12 +439,12 @@ class TestIntegration:
     def test_full_validation_flow(self, tmp_path):
         """Test complete validation with images, refs, and math."""
         # Create test project structure
-        output_dir = tmp_path / "output" / "figures"
+        output_dir = tmp_path / "docs" / "output" / "figures"
         output_dir.mkdir(parents=True)
         (output_dir / "test_figure.png").write_text("fake image")
 
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text(
             r"""
 # Test Section {#sec:test}
@@ -472,8 +472,8 @@ Valid link: [See section](#sec:test)
 
     def test_multiple_problems_detected(self, tmp_path):
         """Test detection of multiple types of problems."""
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "test.md").write_text(
             r"""
 # Test Section
@@ -500,8 +500,8 @@ class TestPandocPitfalls:
     """Tests for ``validate_pandoc_pitfalls`` — patterns Pandoc converts to ``\\mid``."""
 
     def _write(self, tmp_path, name, content):
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir(exist_ok=True)
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True, exist_ok=True)
         (manuscript / name).write_text(content, encoding="utf-8")
         return [str(manuscript / name)]
 
@@ -552,8 +552,8 @@ class TestCitationAudit:
     """Tests for ``validate_citations`` — pre-render BibTeX-key check."""
 
     def _setup(self, tmp_path, md_content, bib_content):
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir(exist_ok=True)
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True, exist_ok=True)
         (manuscript / "test.md").write_text(md_content, encoding="utf-8")
         (manuscript / "references.bib").write_text(bib_content, encoding="utf-8")
         return [str(manuscript / "test.md")]
@@ -605,15 +605,15 @@ class TestCitationAudit:
         assert len(validate_citations(paths, tmp_path)) == 1
 
     def test_no_bib_file_no_problems(self, tmp_path):
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         md = manuscript / "test.md"
         md.write_text("[@anything]\n", encoding="utf-8")
         assert validate_citations([str(md)], tmp_path) == []
 
     def test_explicit_bib_path(self, tmp_path):
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         md = manuscript / "test.md"
         md.write_text("[@known]\n", encoding="utf-8")
         bib = tmp_path / "external.bib"
@@ -623,8 +623,8 @@ class TestCitationAudit:
     def test_sibling_bib_files_unioned_by_default(self, tmp_path):
         # Two .bib files next to the markdown — split-citation projects
         # (e.g. references.bib + references_deep.bib) must validate as a union.
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         md = manuscript / "test.md"
         md.write_text("Curated [@smith2020]; deep [@deep2024].\n", encoding="utf-8")
         (manuscript / "references.bib").write_text("@article{smith2020, title={Foo}}\n", encoding="utf-8")
@@ -632,8 +632,8 @@ class TestCitationAudit:
         assert validate_citations([str(md)], tmp_path) == []
 
     def test_explicit_bib_list(self, tmp_path):
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         md = manuscript / "test.md"
         md.write_text("[@a]\n[@b]\n", encoding="utf-8")
         bib_a = tmp_path / "a.bib"
@@ -645,8 +645,8 @@ class TestCitationAudit:
     def test_multibib_message_lists_all_filenames(self, tmp_path):
         # When multiple bibs are loaded and a key is missing, the error message
         # should list every filename so users know where to add the entry.
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         md = manuscript / "test.md"
         md.write_text("[@missing_everywhere]\n", encoding="utf-8")
         (manuscript / "references.bib").write_text("@article{smith2020, title={Foo}}\n", encoding="utf-8")
@@ -661,8 +661,8 @@ class TestNonRenderedFilesSkipped:
     """AGENTS.md / README.md / preamble.md never reach the renderer; checks skip them."""
 
     def test_pitfalls_skip_non_rendered(self, tmp_path):
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         # AGENTS.md routinely documents '|' patterns and shouldn't be flagged.
         (manuscript / "AGENTS.md").write_text("Mean |word| in docs.\n", encoding="utf-8")
         (manuscript / "preamble.md").write_text("| col1 | col2 |\n|------|------|\n| a \\| b | c |\n", encoding="utf-8")
@@ -675,16 +675,16 @@ class TestNonRenderedFilesSkipped:
         assert validate_pandoc_pitfalls(paths, tmp_path) == []
 
     def test_citations_skip_non_rendered(self, tmp_path):
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "AGENTS.md").write_text("[@undef_key]\n", encoding="utf-8")
         (manuscript / "references.bib").write_text("@misc{x}\n", encoding="utf-8")
         assert validate_citations([str(manuscript / "AGENTS.md")], tmp_path) == []
 
     def test_norm_operator_in_table_math_not_flagged(self, tmp_path):
         # ``\|`` inside ``$...$`` is the norm operator, NOT a Pandoc-converted pipe.
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         (manuscript / "table.md").write_text(
             "| Term | Symbol |\n|------|--------|\n| Cosine | $\\frac{u \\cdot v}{\\|u\\| \\|v\\|}$ |\n",
             encoding="utf-8",
@@ -696,8 +696,8 @@ class TestRegexHardening:
     """Tests for the broadened regex coverage (numeric pipes, code variants, BibTeX)."""
 
     def _write(self, tmp_path, name, content):
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir(exist_ok=True)
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True, exist_ok=True)
         path = manuscript / name
         path.write_text(content, encoding="utf-8")
         return [str(path)]
@@ -726,8 +726,8 @@ class TestRegexHardening:
 
     def test_bibtex_entry_without_trailing_comma_recognised(self, tmp_path):
         # Field-less ``@misc{key}`` is legal BibTeX; the original regex missed it.
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True)
         md = manuscript / "test.md"
         md.write_text("Cite [@field_less].\n", encoding="utf-8")
         bib = manuscript / "references.bib"
@@ -739,8 +739,8 @@ class TestDiagnosticCodes:
     """Every emission site in markdown_validator carries the matching stable code."""
 
     def _setup(self, tmp_path, files):
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir(exist_ok=True)
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True, exist_ok=True)
         paths = []
         for name, content in files.items():
             (manuscript / name).write_text(content, encoding="utf-8")
@@ -843,8 +843,8 @@ class TestDiagnosticCodes:
         assert problems[0].code == MarkdownCode.PANDOC_TABLE_ESCAPED_PIPE
 
     def test_undefined_citation_carries_code(self, tmp_path):
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir(exist_ok=True)
+        manuscript = tmp_path / "docs" / "manuscript"
+        manuscript.mkdir(parents=True, exist_ok=True)
         (manuscript / "test.md").write_text("Cite [@nope].\n", encoding="utf-8")
         (manuscript / "references.bib").write_text("@misc{good_only}\n", encoding="utf-8")
         problems = validate_citations([str(manuscript / "test.md")], tmp_path)

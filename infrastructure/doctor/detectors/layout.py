@@ -7,6 +7,7 @@ from typing import Any
 
 
 from infrastructure.doctor.models import Finding, Severity
+from infrastructure.core.project_paths import manuscript_config_path, resolve_source_manuscript_dir
 
 
 def detect_project_structure(repo_root: Path) -> list[Finding]:
@@ -82,7 +83,7 @@ def detect_manuscript_config(repo_root: Path) -> list[Finding]:
     for project in discover_projects(repo_root):
         if not project.has_manuscript:
             continue
-        cfg = project.path / "manuscript" / "config.yaml"
+        cfg = manuscript_config_path(project.path)
         if not cfg.is_file():
             findings.append(
                 Finding(
@@ -171,7 +172,7 @@ def detect_manuscript_preamble_and_bib(repo_root: Path) -> list[Finding]:
     for project in discover_projects(repo_root):
         if not project.has_manuscript:
             continue
-        ms_dir = project.path / "manuscript"
+        ms_dir = resolve_source_manuscript_dir(project.path)
         preamble = ms_dir / "preamble.md"
         bib = ms_dir / "references.bib"
 

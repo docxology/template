@@ -3,17 +3,17 @@
 Agent-facing notes for this documentation tree. The nearest authoritative
 contracts are [`../AGENTS.md`](../AGENTS.md) (exemplar), [`../src/AGENTS.md`](../src/AGENTS.md),
 [`../scripts/AGENTS.md`](../scripts/AGENTS.md), and
-[`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — each wins over this file.
+[`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — each wins over this file.
 
 ## Layout
 
 - `src/` — content-domain logic only; no layout/drawing code. Modules that
   import `infrastructure.*` must be declared in
-  `../manuscript/layer_contract.yaml`'s `allow_infrastructure_imports`.
+  `../docs/manuscript/layer_contract.yaml`'s `allow_infrastructure_imports`.
 - `scripts/` — thin orchestrators; numeric prefixes are order-sensitive
   (audit → diagrams → render → diligence audit). They exit non-zero on real
   failure; never mask an error with `|| true`.
-- `manuscript/` — two distinct things live there: the deck content YAMLs and
+- `docs/manuscript/` — two distinct things live there: the deck content YAMLs and
   the standard manuscript. Do not conflate them.
 
 ## Validation gates (from repo AGENTS.md)
@@ -30,7 +30,7 @@ contracts are [`../AGENTS.md`](../AGENTS.md) (exemplar), [`../src/AGENTS.md`](..
 ## Conventions observed in this repo
 
 - Zero-mock tests: real YAML, real rendered files read back, real introspection.
-- Publication identifiers in `manuscript/config.yaml` are real and recorded;
+- Publication identifiers in `docs/manuscript/config.yaml` are real and recorded;
   never set a placeholder `github_repository` or fake DOI (placeholder flips
   the PUBLISHING-STATUS block to a false "published" state).
 - Never hand-edit `output/`; regenerate through the render orchestration.

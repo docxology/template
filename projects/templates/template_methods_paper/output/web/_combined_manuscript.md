@@ -555,7 +555,7 @@ The typical analysis order is:
    gates, exports worklist/CSV/Mermaid/JSON per method, demonstrates the
    provenance hash-chain, and writes `../figures/step_counts.png`,
    printing each output path for manifest collection.
-2. `scripts/z_generate_manuscript_variables.py` — reads `manuscript/config.yaml`
+2. `scripts/z_generate_manuscript_variables.py` — reads `docs/manuscript/config.yaml`
    and the analysis outputs, then resolves every generated variable in
    `manuscript/*.md`.
 3. PDF rendering reads the resolved manuscript tree so figure paths and
@@ -652,7 +652,7 @@ sourced from a live analysis output or registered in `data/claim_ledger.yaml` fo
 evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
 Configuration provenance is itself injected: `a0f000565bef6a79` is the
-SHA-256 of `manuscript/config.yaml` at build time, and
+SHA-256 of `docs/manuscript/config.yaml` at build time, and
 `2026-08-14T14:20:53Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
 
@@ -750,11 +750,11 @@ a compiler implementation at BPL's full scale.
 
 # References {#sec:references}
 
-Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
+Bibliography lives in [`docs/manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
 
 To validate that `references.bib` is syntactically clean and contains the required fields per entry type:
 
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
-    projects/templates/template_methods_paper/manuscript/references.bib --strict
+    projects/templates/template_methods_paper/docs/manuscript/references.bib --strict
 ```

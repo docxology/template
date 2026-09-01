@@ -59,5 +59,5 @@ This exemplar is a **tracked public canonical project** (see
   fixture protocol, anti-patterns
 - [`../ISA.md`](../ISA.md) — the full Ideal-State Artifact: every ISC, the
   adversarial-round Decisions/Changelog history, and Verification trail
-- [`../manuscript/`](../manuscript) — the rendered argument these guides
+- [`../docs/manuscript/`](../docs/manuscript/) — the rendered argument these guides
   summarize practically for an extending agent

@@ -11,8 +11,10 @@ references and an LLM-synthesised reading report" with no manual steps.
   enrichment.
 * `infrastructure/reference/citation/` — BibTeX read/write/convert
   byte-compatible with the Pandoc-consumed
-  `projects/templates/template_code_project/manuscript/references.bib`.
+  `projects/templates/template_code_project/docs/manuscript/references.bib`.
 * [`projects/templates/template_search_project/`](../../projects/templates/template_search_project/) — fully wired public exemplar.
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## Stream Map
 

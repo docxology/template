@@ -18,7 +18,7 @@ phases merge into one corpus.
 
 ## Where do I change the domain or the phase design?
 
-Edit `manuscript/config.yaml` → `project_config.search_phases` (per-phase
+Edit `docs/manuscript/config.yaml` → `project_config.search_phases` (per-phase
 queries, engines, temporal filters), `llm_filters`, `phase_integration`, and
 `hypothesis_definitions`. See `forking_guide.md` for the full walkthrough.
 
@@ -41,7 +41,7 @@ See `testing_philosophy.md`.
 
 ## How do I add a new phase?
 
-Add an entry under `manuscript/config.yaml` → `project_config.search_phases`,
+Add an entry under `docs/manuscript/config.yaml` → `project_config.search_phases`,
 give it a `depends_on` list if it should cross-validate earlier phases, and
 add a matching entry to `phase_integration.quality_gates`. See
 `forking_guide.md` → "Designing your phases".

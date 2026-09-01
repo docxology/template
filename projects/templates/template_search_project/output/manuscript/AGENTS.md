@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Markdown source, LaTeX preamble, and bibliography for the literature-search manuscript. Source sections may use `{{UPPER_SNAKE}}` placeholders. Run `scripts/z_generate_manuscript_variables.py` after `run_search_pipeline.py`: it writes `output/data/manuscript_variables.json` and substitutes tokens into `output/manuscript/*.md` (plus copies `config.yaml` and `*.bib`). The PDF-rendering stage prefers `output/manuscript/` when it contains markdown (`infrastructure.rendering.pipeline._resolve_manuscript_dir`), so the PDF reflects resolved values. `src.analysis.validate_variables_resolved` scans `output/manuscript/` when present, otherwise `manuscript/`.
+Markdown source, LaTeX preamble, and bibliography for the literature-search manuscript. Source sections may use `{{UPPER_SNAKE}}` placeholders. Run `scripts/z_generate_manuscript_variables.py` after `run_search_pipeline.py`: it writes `output/data/manuscript_variables.json` and substitutes tokens into `output/manuscript/*.md` (plus copies `config.yaml` and `*.bib`). The PDF-rendering stage prefers `output/manuscript/` when it contains markdown (`infrastructure.rendering.pipeline._resolve_manuscript_dir`), so the PDF reflects resolved values. `src.analysis.validate_variables_resolved` scans `output/manuscript/` when present, otherwise `docs/manuscript/`.
 
 ## Key files
 

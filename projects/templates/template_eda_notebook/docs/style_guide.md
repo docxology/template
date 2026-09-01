@@ -102,7 +102,7 @@ Refer to files by their path relative to the repository root:
 | dataset loader | `projects/templates/template_eda_notebook/src/eda/dataset.py` |
 | analysis script | `projects/templates/template_eda_notebook/scripts/eda_analysis.py` |
 | notebook | `projects/templates/template_eda_notebook/notebooks/eda_walkthrough.ipynb` |
-| config | `projects/templates/template_eda_notebook/manuscript/config.yaml` |
+| config | `projects/templates/template_eda_notebook/docs/manuscript/config.yaml` |
 | dataset CSV | `projects/templates/template_eda_notebook/data/measurements.csv` |
 
 Never hardcode an absolute filesystem path in code — resolve relative to the

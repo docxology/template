@@ -165,7 +165,7 @@ class TestNestedProjectDiscovery:
         nested = program_dir / "nested_meta"
         (nested / "src").mkdir(parents=True)
         (nested / "tests").mkdir()
-        (nested / "manuscript").mkdir()
+        (nested / "docs" / "manuscript").mkdir(parents=True)
         (nested / "scripts").mkdir()
         (nested / "src" / "__init__.py").write_text("")
         (nested / "tests" / "__init__.py").write_text("")
@@ -284,7 +284,7 @@ class TestIntegrationScenarios:
         valid_full = projects_dir / "research_project"
         (valid_full / "src").mkdir(parents=True)
         (valid_full / "tests").mkdir()
-        (valid_full / "manuscript").mkdir()
+        (valid_full / "docs" / "manuscript").mkdir(parents=True)
         (valid_full / "scripts").mkdir()
         (valid_full / "src" / "__init__.py").write_text("")
         (valid_full / "tests" / "__init__.py").write_text("")
@@ -304,7 +304,7 @@ paper:
 authors:
   - name: "Dr. Researcher"
 """
-        (valid_full / "manuscript" / "config.yaml").write_text(config)
+        (valid_full / "docs" / "manuscript" / "config.yaml").write_text(config)
 
         # Valid minimal project
         valid_minimal = projects_dir / "minimal_project"
@@ -358,7 +358,7 @@ authors:
         (template_code_project / "src").mkdir(parents=True)
         (template_code_project / "tests").mkdir()
         (template_code_project / "scripts").mkdir()
-        (template_code_project / "manuscript").mkdir()
+        (template_code_project / "docs" / "manuscript").mkdir(parents=True)
         (template_code_project / "output").mkdir()
         (template_code_project / "src" / "__init__.py").write_text("")
         (template_code_project / "src" / "optimizer.py").write_text("# optimizer code")
@@ -370,7 +370,7 @@ authors:
         (second_project / "src").mkdir(parents=True)
         (second_project / "tests").mkdir()
         (second_project / "scripts").mkdir()
-        (second_project / "manuscript").mkdir()
+        (second_project / "docs" / "manuscript").mkdir(parents=True)
         (second_project / "src" / "__init__.py").write_text("")
         (second_project / "tests" / "__init__.py").write_text("")
 
@@ -447,14 +447,14 @@ authors = []
     def test_config_yaml_with_empty_authors(self, tmp_path: Path):
         """Test config.yaml with empty authors list."""
         project_dir = tmp_path / "empty_yaml_authors"
-        (project_dir / "manuscript").mkdir(parents=True)
+        (project_dir / "docs" / "manuscript").mkdir(parents=True)
 
         config = """\
 paper:
   title: "No Authors Paper"
 authors: []
 """
-        (project_dir / "manuscript" / "config.yaml").write_text(config)
+        (project_dir / "docs" / "manuscript" / "config.yaml").write_text(config)
 
         metadata = get_project_metadata(project_dir)
 
@@ -508,7 +508,7 @@ authors: []
     def test_unicode_in_metadata(self, tmp_path: Path):
         """Test metadata with unicode characters."""
         project_dir = tmp_path / "unicode_project"
-        (project_dir / "manuscript").mkdir(parents=True)
+        (project_dir / "docs" / "manuscript").mkdir(parents=True)
 
         config = """\
 paper:
@@ -518,7 +518,7 @@ authors:
   - name: "Maria Garcia"
   - name: "Chen Wei"
 """
-        (project_dir / "manuscript" / "config.yaml").write_text(config, encoding="utf-8")
+        (project_dir / "docs" / "manuscript" / "config.yaml").write_text(config, encoding="utf-8")
 
         metadata = get_project_metadata(project_dir)
 

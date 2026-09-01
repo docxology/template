@@ -31,13 +31,13 @@ what keeps that exploration reproducible, covered, and reusable.
 
 The boundary is enforced by `check_project_src_infrastructure_boundary` via
 `scripts/audit/check_template_drift.py --strict` and
-[`manuscript/layer_contract.yaml`](manuscript/layer_contract.yaml).
+[`docs/manuscript/layer_contract.yaml`](docs/manuscript/layer_contract.yaml).
 
 ## Configuration as the source of truth
 
-`manuscript/config.yaml` is the configuration single source of truth for paper
+`docs/manuscript/config.yaml` is the configuration single source of truth for paper
 title, authors, keywords, version, and publication metadata; it is mirrored by a
-sanitized [`manuscript/config.yaml.example`](manuscript/config.yaml.example) with
+sanitized [`docs/manuscript/config.yaml.example`](docs/manuscript/config.yaml.example) with
 the same top-level sections. The dataset schema (which columns are numeric) is
 declared in `src/eda/dataset.py::DatasetSchema`. No absolute paths are hardcoded
 in code — the shipped CSV (`data/measurements.csv`) resolves relative to the
@@ -117,6 +117,6 @@ quick reference commands, and pitfalls.
 
 - [Root projects AGENTS.md](../../AGENTS.md#permanent-canonical-exemplars) — public exemplar roster.
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md).
-- [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax.
+- [`docs/manuscript/SYNTAX.md`](docs/manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax.
 - [`src/AGENTS.md`](src/AGENTS.md) — EDA library API reference.
 - [`TODO.md`](TODO.md) — template-status gaps and improvement ladder.

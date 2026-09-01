@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.21298885](https://doi.org/10.5281/zenodo.21298885)
 - Latest deposited version DOI: [10.5281/zenodo.21298886](https://zenodo.org/records/21298886)
 - Additional declared locations: none declared
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -54,7 +54,7 @@ rsync -a \
 
 ## Required Post-Fork Edits
 
-- Update `manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
+- Update `docs/manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
   and `pyproject.toml` (rename the package, update authors/description).
 - Rename the `src/template_formal/` package if the fork uses a different
   package name, and update every `from template_formal...` import across

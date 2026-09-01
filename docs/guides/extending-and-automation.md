@@ -373,10 +373,12 @@ Generate citations, mint DOIs, and publish to Zenodo:
 from infrastructure.publishing import generate_citation_bibtex, extract_publication_metadata
 from pathlib import Path
 
-manuscript_dir = Path("projects/templates/template_code_project/manuscript")
+manuscript_dir = Path("projects/templates/template_code_project/docs/manuscript")
 metadata = extract_publication_metadata(sorted(manuscript_dir.glob("*.md")))
 print(generate_citation_bibtex(metadata))
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 See the [Publishing Guide](publishing-guide.md) for the full workflow.
 

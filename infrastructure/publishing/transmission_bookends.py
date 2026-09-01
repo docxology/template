@@ -26,6 +26,7 @@ from infrastructure.publishing.transmission_barcode_strip import (
 from infrastructure.publishing.transmission_figure import write_transmission_diagram
 from infrastructure.publishing.transmission_models import TransmissionContext
 from infrastructure.steganography.config import SteganographyConfig
+from infrastructure.core.project_paths import manuscript_config_path
 
 logger = get_logger(__name__)
 
@@ -287,7 +288,7 @@ def build_transmission_context(
 ) -> TransmissionContext | None:
     """Build bookend context when the feature is enabled."""
     _config_candidates = [
-        project_root / "manuscript" / "config.yaml",
+        manuscript_config_path(project_root),
         project_root / "output" / "manuscript" / "config.yaml",
         project_root / "docs" / "manuscript" / "config.yaml",
     ]

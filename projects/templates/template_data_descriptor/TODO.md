@@ -21,7 +21,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Extend `manuscript/config.yaml.example` when new descriptor fields become first-class.
+- Extend `docs/manuscript/config.yaml.example` when new descriptor fields become first-class.
 
 ## Documentation and signposting gaps
 

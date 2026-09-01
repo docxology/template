@@ -34,8 +34,10 @@ renderers without owning validation policy or project analysis.
   LaTeX/PDF output by hand.
 - `FIGURE_WIDTH_*` values must stay bare fractions, and figure alt-text comments
   belong before `\begin{figure}`.
-- PDF metadata and publishing information come from
-  `projects/{name}/manuscript/config.yaml`.
+- PDF metadata and publishing information come from the project's manuscript
+  `config.yaml`, resolved via `manuscript_config_path` (default
+  `projects/{name}/docs/manuscript/config.yaml`; configurable via
+  `TEMPLATE_MANUSCRIPT_DIR`, legacy `manuscript/` auto-detected).
 - Configured title-page artwork uses `paper.cover.image`/`paper.cover.alt` or
   the parallel `book.cover.*` fields. With `metadata.tagged_pdf: true`, the
   selected cover's `alt` must be a non-empty string; validation fails before a

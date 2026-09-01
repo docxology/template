@@ -215,4 +215,4 @@ See [README.md](README.md) for the project overview and quick start.
 
 - [Root AGENTS.md](../../AGENTS.md) - Template documentation
 - [`../../AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars) — public exemplar roster
-- [`manuscript/references.bib`](manuscript/references.bib) — full bibliography
+- [`docs/manuscript/references.bib`](docs/manuscript/references.bib) — full bibliography

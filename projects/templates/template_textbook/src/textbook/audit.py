@@ -177,7 +177,7 @@ def run_manuscript_audit(
     per-section stub count a problem and also requires every declared section
     to exist.
     """
-    manuscript_dir = project_dir / "manuscript"
+    manuscript_dir = project_dir / "docs" / "manuscript"
     problems: list[str] = list(validate_config(config))
     rows: list[str] = []
     total_words = 0

@@ -9,7 +9,7 @@ template-infrastructure operation. Do not treat stages as decorative labels.
 
 ### Editing rules
 
-1. **Lexicon changes**: edit `manuscript/config.yaml` under
+1. **Lexicon changes**: edit `docs/manuscript/config.yaml` under
    `gold_refinement.lexicon`, not source code.
 2. **Refinery stage changes**: edit `src/refinery.py` and ensure purity is
    strictly increasing (`assert_monotone_increase`).

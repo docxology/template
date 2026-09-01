@@ -31,7 +31,7 @@ from src.config import load_project_config
 from src.pipeline import run_prose_pipeline
 from src.report import write_review_report
 
-config = load_project_config("manuscript/config.yaml")
+config = load_project_config("docs/manuscript/config.yaml")
 report = analyze_manuscript(
     "manuscript",
     long_sentence_threshold=config.prose.long_sentence_threshold,

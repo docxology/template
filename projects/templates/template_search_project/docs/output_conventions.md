@@ -74,8 +74,8 @@ flowchart TB
 | `output/cache/abs/*.txt` | `infrastructure.search.literature.AbstractFetcher` | re-runs of the same fetcher |
 | `output/cache/pdf/*.{pdf,txt}` | `infrastructure.search.literature.FulltextFetcher` | re-runs of the same fetcher; LLM prompts |
 | `output/corpus.json` | `run_search_pipeline.py` (`write_corpus`) | future `LocalBackend` runs; archival |
-| `manuscript/references.bib` | `run_search_pipeline.py` | Combined PDF (Pandoc `--natbib` + BibTeX; merged with other `manuscript/*.bib`) |
-| `manuscript/references_deep.bib` | `run_deep_search.py` | Same; supplemental [`S01_literature_review.md`](../manuscript/S01_literature_review.md) |
+| `docs/manuscript/references.bib` | `run_search_pipeline.py` | Combined PDF (Pandoc `--natbib` + BibTeX; merged with other `manuscript/*.bib`) |
+| `manuscript/references_deep.bib` | `run_deep_search.py` | Same; supplemental [`S01_literature_review.md`](../docs/manuscript/S01_literature_review.md) |
 | `output/enrichment_log.json` | `run_search_pipeline.py` (via `pipeline._serialise_enrichment_log`) | debugging only |
 | `output/figures/*.png` | `y_generate_search_figures.py` | manuscript via `infrastructure.documentation.FigureManager` |
 | `output/data/manuscript_variables.json` | `z_generate_manuscript_variables.py` | debugging / tooling; same run fills `output/manuscript/` |

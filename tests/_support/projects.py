@@ -77,9 +77,9 @@ def make_project(
         write_doc(proj / "scripts" / "__init__.py", "")
 
     if with_manuscript:
-        (proj / "manuscript").mkdir(parents=True, exist_ok=True)
+        (proj / "docs" / "manuscript").mkdir(parents=True, exist_ok=True)
         write_doc(
-            proj / "manuscript" / "config.yaml",
+            proj / "docs" / "manuscript" / "config.yaml",
             "paper:\n  title: Synthetic Test Project\n",
         )
 

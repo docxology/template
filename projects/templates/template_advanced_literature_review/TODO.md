@@ -26,7 +26,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Retargeting should remain config-owned through `manuscript/config.yaml` phase definitions; avoid hard-coded domain terms in multi-phase `src/` modules.
+- Retargeting should remain config-owned through `docs/manuscript/config.yaml` phase definitions; avoid hard-coded domain terms in multi-phase `src/` modules.
 - Keep phase temporal boundaries, filtering criteria, and LLM prompts explicit and configurable.
 - New domains remain config-defined through phase records; a future phase shape
   must be accepted without code changes and covered by a scoped contract row.

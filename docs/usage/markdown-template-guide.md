@@ -6,7 +6,9 @@ This document explains the markdown template structure and cross-referencing sys
 
 The template demonstrates an academic paper structure organized as numbered markdown sections.
 
-> **Note:** The section file names, section labels (`{#sec:...}`), and the `eq:`/`fig:` labels listed throughout this guide are *illustrative naming patterns*, not the literal contents of any one exemplar. The canonical `template_code_project` ships `00_abstract.md`, `01_introduction.md`, `02_methodology.md`, `03_results.md`, `04_conclusion.md`, `05_experimental_setup.md`, `06_reproducibility.md`, `07_scope_and_related_work.md`, and `99_references.md` (plus `preamble.md`). List the real files for your checkout with `ls projects/templates/template_code_project/manuscript/`.
+> **Note:** The section file names, section labels (`{#sec:...}`), and the `eq:`/`fig:` labels listed throughout this guide are *illustrative naming patterns*, not the literal contents of any one exemplar. The canonical `template_code_project` ships `00_abstract.md`, `01_introduction.md`, `02_methodology.md`, `03_results.md`, `04_conclusion.md`, `05_experimental_setup.md`, `06_reproducibility.md`, `07_scope_and_related_work.md`, and `99_references.md` (plus `preamble.md`). List the real files for your checkout with `ls projects/templates/template_code_project/docs/manuscript/`.
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ### Core Sections (illustrative)
 
@@ -38,7 +40,7 @@ Labels are project-owned. Discover the current set instead of copying this
 guide's examples:
 
 ```bash
-rg -n '\{#sec:' projects/templates/template_code_project/manuscript/
+rg -n '\{#sec:' projects/templates/template_code_project/docs/manuscript/
 ```
 
 ### Equation References
@@ -210,7 +212,7 @@ Markdown validation is performed via the infrastructure validation module:
 
 ```bash
 uv run python -m infrastructure.validation.cli markdown \
-  projects/templates/template_code_project/manuscript/
+  projects/templates/template_code_project/docs/manuscript/
 ```
 
 This checks:
@@ -226,7 +228,7 @@ Glossary generation is **not** a fixed numbered pipeline stage in the root `scri
 
 ```bash
 uv run python -m infrastructure.documentation.generate_glossary_cli \
-  projects/templates/template_code_project/src/ projects/templates/template_code_project/manuscript/98_symbols_glossary.md
+  projects/templates/template_code_project/src/ projects/templates/template_code_project/docs/manuscript/98_symbols_glossary.md
 ```
 
 This:

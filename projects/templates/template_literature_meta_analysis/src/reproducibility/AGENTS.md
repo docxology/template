@@ -64,7 +64,7 @@ editing source:
 
 1. Add a `content_weights` and/or `structural_weights` block under
    `reproducibility_assessment` (or nested `project_config.reproducibility_assessment`)
-   in `manuscript/config.yaml`, keyed by the same attribute names
+   in `docs/manuscript/config.yaml`, keyed by the same attribute names
    (`sources`/`methods`/`experiments`/`sinks` for content;
    `source_consumption`/`sink_production`/`reference_resolution`/
    `path_coverage`/`cohesion` for structural).
@@ -201,7 +201,7 @@ layer would silently drop.
   `literature/fulltext_download.py`). Per `AGENTS.md`'s Regeneration Order,
   script 11 is an opt-in stage that must run *before* script 10 for this
   module to have anything to score. Until `project_config.fulltext.enabled`
-  is `true` in `manuscript/config.yaml` (or `--fulltext-dir` is passed
+  is `true` in `docs/manuscript/config.yaml` (or `--fulltext-dir` is passed
   explicitly pointing at a directory someone else populated),
   `run_reproducibility_pipeline` is a true no-op: it logs a loud warning and
   still writes a valid, well-formed but empty set of outputs (graceful

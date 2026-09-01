@@ -25,7 +25,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` as the copy-and-customize template
+- Keep `docs/manuscript/config.yaml.example` as the copy-and-customize template
   with the same top-level sections as `config.yaml`, including the `project_config.dsl`
   block.
 - Any future controlled vocabulary (units, step kinds, targets) must enter under

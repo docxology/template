@@ -9,13 +9,13 @@
 ## The one idea to internalize
 
 **Every domain-specific fact in the paper is injected from
-[`manuscript/config.yaml`](../manuscript/config.yaml) and the pipeline's own
+[`docs/manuscript/config.yaml`](../docs/manuscript/config.yaml) and the pipeline's own
 outputs.** The manuscript prose contains **no hard-coded topic terms** — it is
 written entirely in `{{TOKENS}}` (`{{SEARCH_TERM_TITLE}}`, `{{CORPUS_SIZE}}`,
 `{{SUBFIELD_TABLE}}`, `{{HYPOTHESIS_TABLE}}`, …). Re-targeting the config
 re-targets the entire paper; you should not need to touch a single `manuscript/*.md`
 body file to change topics. (Verified: the only place "modafinil" appears in
-`manuscript/` is the authoring `README.md`.)
+`docs/manuscript/` is the authoring `README.md`.)
 
 ## TL;DR
 
@@ -29,7 +29,7 @@ uv run python scripts/audit/copy_exemplar.py \
   --dest projects/working/my_review \
   --new-name my_review
 
-# 2. Edit ONE file: projects/working/my_review/manuscript/config.yaml
+# 2. Edit ONE file: projects/working/my_review/docs/manuscript/config.yaml
 #    → project_config.search.{term,query,arxiv_queries,relevance_keywords}
 #    → project_config.subfield_keywords  (your taxonomy)
 #    → project_config.hypothesis_definitions  (your hypotheses)
@@ -53,7 +53,7 @@ Your fork under `projects/working/my_review/` is local-only and won't be pushed
 even with `git add -f` — `scripts/audit/check_tracked_all.py` blocks it in
 `pre-push-quick`. See the root [`CLAUDE.md`](../../../../CLAUDE.md) "CONFIDENTIALITY INVARIANT".
 
-## The single control surface: `manuscript/config.yaml`
+## The single control surface: `docs/manuscript/config.yaml`
 
 Everything you need to re-target lives under `project_config:`. The blocks, in
 the order you'll touch them:

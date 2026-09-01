@@ -11,7 +11,7 @@ logic.
 | Package / module | Responsibility |
 | --- | --- |
 | `textbook/constants.py` | The structural contract: `CITATION_KEYS` (10), `GLOSSARY_ANCHORS` (15), `REQUIRED_SECTION_HEADINGS`, `REQUIRED_TOKENS`, `STUB_MARKERS`. |
-| `textbook/config.py` | `load_config`, `iter_chapters`, `validate_config` — read `manuscript/config.yaml`, the single source of truth. |
+| `textbook/config.py` | `load_config`, `iter_chapters`, `validate_config` — read `docs/manuscript/config.yaml`, the single source of truth. |
 | `textbook/toc.py` | Chapter numbering and part/chapter label generation. |
 | `textbook/content.py` | The meta-template engine: `scaffold_chapter`, `scaffold_lab`, `scaffold_question_bank`, `validate_chapter`, `count_stub_markers`, `count_words`. |
 | `textbook/models.py` | The worked formalisms: `logistic_growth`, `saturating_response`, `exponential_decay`, `half_life`, `linear_fit`, `descriptive_statistics`, `normalize_unit_interval`. |
@@ -25,7 +25,7 @@ logic.
 
 ## Design
 
-The engine is **data-driven from `manuscript/config.yaml`**. Chapters, labs, and
+The engine is **data-driven from `docs/manuscript/config.yaml`**. Chapters, labs, and
 question banks are declared in config; `textbook.config` reads them, `textbook.toc`
 numbers them, and `textbook.content` scaffolds and validates them against the
 contract in `textbook.constants`. To grow the book you edit `config.yaml`, not the

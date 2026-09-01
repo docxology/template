@@ -43,7 +43,7 @@ The report runs through a set of pure check functions:
 
 Each check produces a `CheckResult(passed, message, details)`; the run's `all_passed` flag is the conjunction.
 
-The thresholds each check applies come from `manuscript/config.yaml`. A `prose.preset` key (`lenient` for the bundled exemplar; `strict` in `config.yaml.example`) seeds the defaults for any knob the YAML does not set explicitly, so a fork can adopt a named editorial profile in one line and override individual knobs afterwards.
+The thresholds each check applies come from `docs/manuscript/config.yaml`. A `prose.preset` key (`lenient` for the bundled exemplar; `strict` in `config.yaml.example`) seeds the defaults for any knob the YAML does not set explicitly, so a fork can adopt a named editorial profile in one line and override individual knobs afterwards.
 
 ## Render
 
@@ -68,4 +68,4 @@ stages always see a fresh review):
 * `scripts/z_generate_manuscript_variables.py` reads `manuscript_report.json`
   + `config.yaml` and writes `output/data/manuscript_variables.json`
   along with a resolved manuscript tree under `output/manuscript/`.
-* `manuscript/references.bib` is **not** modified by this pipeline — the prose project does not generate citations, only validates them.
+* `docs/manuscript/references.bib` is **not** modified by this pipeline — the prose project does not generate citations, only validates them.

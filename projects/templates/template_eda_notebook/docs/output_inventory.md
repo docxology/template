@@ -54,4 +54,4 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_eda
 
 - [`output_conventions.md`](output_conventions.md) — layout, regeneration policy, troubleshooting.
 - [`rendering_pipeline.md`](rendering_pipeline.md) — manuscript → PDF flow.
-- [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — manuscript directory and figure protocol.
+- [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — manuscript directory and figure protocol.

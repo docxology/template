@@ -47,7 +47,7 @@
     }
   },
   "abstract_files_analysed": {
-    "manuscript_section": "manuscript/00_abstract.md / Run snapshot",
+    "manuscript_section": "docs/manuscript/00_abstract.md / Run snapshot",
     "claim_text": "The current configuration analyses {{FILES_ANALYSED}} file(s) ...",
     "value": 8,
     "abs_tolerance": 0,
@@ -58,7 +58,7 @@
     "pinned_at_commit": "64f665eb"
   },
   "abstract_total_words": {
-    "manuscript_section": "manuscript/00_abstract.md / Run snapshot",
+    "manuscript_section": "docs/manuscript/00_abstract.md / Run snapshot",
     "claim_text": "... totalling {{TOTAL_WORDS}} words across {{TOTAL_SENTENCES}} sentence(s) ...",
     "value": 1842,
     "abs_tolerance": 0,
@@ -69,7 +69,7 @@
     "pinned_at_commit": "cb53ae389"
   },
   "abstract_total_sentences": {
-    "manuscript_section": "manuscript/00_abstract.md / Run snapshot",
+    "manuscript_section": "docs/manuscript/00_abstract.md / Run snapshot",
     "claim_text": "... across {{TOTAL_SENTENCES}} sentence(s) and {{TOTAL_PARAGRAPHS}} paragraph(s).",
     "value": 90,
     "abs_tolerance": 0,
@@ -80,7 +80,7 @@
     "pinned_at_commit": "cb53ae389"
   },
   "abstract_avg_grade_level": {
-    "manuscript_section": "manuscript/00_abstract.md / Run snapshot",
+    "manuscript_section": "docs/manuscript/00_abstract.md / Run snapshot",
     "claim_text": "Average Flesch-Kincaid grade level is {{AVG_GRADE_LEVEL}}; ...",
     "value": 15.68,
     "abs_tolerance": 0.01,
@@ -91,7 +91,7 @@
     "pinned_at_commit": "cb53ae389"
   },
   "abstract_citation_count": {
-    "manuscript_section": "manuscript/00_abstract.md / Run snapshot",
+    "manuscript_section": "docs/manuscript/00_abstract.md / Run snapshot",
     "claim_text": "... the manuscript references {{CITATION_COUNT}} unique citation key(s); ...",
     "value": 6,
     "abs_tolerance": 0,
@@ -102,12 +102,12 @@
     "pinned_at_commit": "64f665eb"
   },
   "bibliography_unused_entries": {
-    "manuscript_section": "manuscript/03_results.md / bibliography_consistency",
-    "claim_text": "every [@key] in the prose resolves against manuscript/references.bib (bundled config run is green: 6 cited / 6 in bib / 0 missing / 0 unused).",
+    "manuscript_section": "docs/manuscript/03_results.md / bibliography_consistency",
+    "claim_text": "every [@key] in the prose resolves against docs/manuscript/references.bib (bundled config run is green: 6 cited / 6 in bib / 0 missing / 0 unused).",
     "value": 0,
     "abs_tolerance": 0,
     "verifier_function": "src.prose_facade.parse_bib_keys",
-    "verifier_args": {"source": "projects/templates/template_prose_project/manuscript/references.bib"},
+    "verifier_args": {"source": "projects/templates/template_prose_project/docs/manuscript/references.bib"},
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
     "pinned_at_commit": "64f665eb"

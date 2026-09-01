@@ -25,8 +25,8 @@ uv run python projects/templates/template_prose_project/scripts/z_generate_manus
 
 | Order | Script | Inputs | Outputs |
 |---|---|---|---|
-| 0 (optional) | `00_preflight.py` | `manuscript/` | Preflight diagnostics (stdout) |
-| 1 | `run_prose_pipeline.py` | `manuscript/` + `manuscript/config.yaml` | `output/{manuscript_report,checks,run_summary}.json`, `output/review_report.md` |
+| 0 (optional) | `00_preflight.py` | `docs/manuscript/` | Preflight diagnostics (stdout) |
+| 1 | `run_prose_pipeline.py` | `docs/manuscript/` + `docs/manuscript/config.yaml` | `output/{manuscript_report,checks,run_summary}.json`, `output/review_report.md` |
 | 2 | `y_generate_prose_figures.py` | `output/manuscript_report.json` | `output/figures/{section_word_counts,readability_metrics,citation_density}.png` |
 | 3 | `z_generate_manuscript_variables.py` | `output/manuscript_report.json` + config | `output/data/manuscript_variables.json` |
 

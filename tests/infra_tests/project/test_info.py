@@ -13,12 +13,12 @@ from infrastructure.project.info import collect_project_info, display_project_in
 
 def _scaffold_project(tmp_path: Path, name: str = "demo") -> Path:
     root = tmp_path / "projects" / name
-    (root / "manuscript").mkdir(parents=True)
-    (root / "manuscript" / "config.yaml").write_text(
+    (root / "docs" / "manuscript").mkdir(parents=True)
+    (root / "docs" / "manuscript" / "config.yaml").write_text(
         "paper:\n  title: Demo Title\nauthors:\n  - name: Author\n",
         encoding="utf-8",
     )
-    (root / "manuscript" / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+    (root / "docs" / "manuscript" / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
     (root / "src").mkdir()
     (root / "src" / "mod.py").write_text("def f():\n    return 1\n", encoding="utf-8")
     (root / "tests").mkdir()
@@ -49,8 +49,8 @@ def test_collect_project_info_missing_project(tmp_path: Path) -> None:
 
 def test_collect_project_info_handles_non_mapping_config(tmp_path: Path) -> None:
     project = tmp_path / "projects" / "demo"
-    (project / "manuscript").mkdir(parents=True)
-    (project / "manuscript" / "config.yaml").write_text("- not-a-mapping\n", encoding="utf-8")
+    (project / "docs" / "manuscript").mkdir(parents=True)
+    (project / "docs" / "manuscript" / "config.yaml").write_text("- not-a-mapping\n", encoding="utf-8")
 
     info = collect_project_info("demo", tmp_path)
 
@@ -61,8 +61,8 @@ def test_collect_project_info_handles_non_mapping_config(tmp_path: Path) -> None
 
 def test_collect_project_info_handles_scalar_paper_and_authors(tmp_path: Path) -> None:
     project = tmp_path / "projects" / "demo"
-    (project / "manuscript").mkdir(parents=True)
-    (project / "manuscript" / "config.yaml").write_text(
+    (project / "docs" / "manuscript").mkdir(parents=True)
+    (project / "docs" / "manuscript" / "config.yaml").write_text(
         "paper: title-only\nauthors: nobody\n",
         encoding="utf-8",
     )

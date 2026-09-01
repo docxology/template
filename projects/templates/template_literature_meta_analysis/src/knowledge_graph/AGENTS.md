@@ -54,7 +54,7 @@ Ollama must be running at `http://localhost:11434` with `gemma3:4b` pulled.
    derived automatically from its ordinal position by `_config_key_to_id()` — no manual
    alias mapping to edit.
 2. Add the corresponding URI to `HYPOTHESIS_CATEGORIES` in `schema.py`.
-3. Add keyword/description definitions in `manuscript/config.yaml` under `project_config.hypothesis_definitions`.
+3. Add keyword/description definitions in `docs/manuscript/config.yaml` under `project_config.hypothesis_definitions`.
 4. Regenerate nanopublications via `--clear-assertions` (new hypothesis won't have assertions otherwise).
 5. Update `manuscript/03_results_hypothesis.md` with a new row in the evidence table.
 

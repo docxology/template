@@ -60,9 +60,9 @@ contract.
 
 ## Configurable-surface gaps
 
-New configurable behavior belongs in `manuscript/config.yaml`, the loop
+New configurable behavior belongs in `docs/manuscript/config.yaml`, the loop
 configuration helpers, source ledgers, review-boundary files, or explicit task
-adapters. Keep `manuscript/config.yaml.example` in top-level parity and scrubbed
+adapters. Keep `docs/manuscript/config.yaml.example` in top-level parity and scrubbed
 of project-specific release values whenever config sections change.
 
 ## Documentation and signposting gaps

@@ -63,7 +63,7 @@ Structured manifest: `../data/transmission_manifest.json`
 
 This paper documents `template_prose_project`, the prose-focused exemplar of the [Research Project Template](https://github.com/docxology/template). It pairs the template's two-layer architecture with the [prose analysis infrastructure](https://github.com/docxology/template/tree/main/infrastructure/prose) (readability metrics, structural outline, editorial quality flags) and the [reference validation infrastructure](https://github.com/docxology/template/tree/main/infrastructure/reference) (BibTeX validation), demonstrating that **rigorous editorial review can be expressed as a configurable, deterministic pipeline** with no novel domain algorithm of its own.
 
-A single `manuscript/config.yaml` defines target grade-level bands, citation-density floors, structural rules (every section has an H1, no heading levels skipped), and bibliography-consistency policy. The pipeline reads the manuscript, runs the prose analysers, cross-checks every `[@key]` citation against `manuscript/references.bib`, evaluates the configured checks, and writes a deterministic markdown review report alongside three figures (per-file word counts, readability metrics, citation density) and a JSON `manuscript_report.json` suitable for CI artefacts.
+A single `docs/manuscript/config.yaml` defines target grade-level bands, citation-density floors, structural rules (every section has an H1, no heading levels skipped), and bibliography-consistency policy. The pipeline reads the manuscript, runs the prose analysers, cross-checks every `[@key]` citation against `docs/manuscript/references.bib`, evaluates the configured checks, and writes a deterministic markdown review report alongside three figures (per-file word counts, readability metrics, citation density) and a JSON `manuscript_report.json` suitable for CI artefacts.
 
 **Run snapshot.** The current configuration analyses 8 file(s) totalling 1842 words across 90 sentence(s) and 65 paragraph(s). Average Flesch-Kincaid grade level is 15.68; average Gunning Fog index is 16.38; the manuscript references 6 unique citation key(s); the longest section is 483 words and the shortest is 17. These numbers are auto-substituted by `scripts/z_generate_manuscript_variables.py` after every run, so the abstract tracks the JSON outputs in `output/`.
 
@@ -83,7 +83,7 @@ Editorial review is one of the longest-lived bottlenecks in scientific writing �
 
 `template_prose_project` exists to demonstrate that the editorial-review pass can be expressed as a **deterministic, configurable, infrastructure-backed pipeline**. This project carries no novel research contribution of its own; its purpose is to show how to compose existing template infrastructure into a complete, reproducible editorial workflow.
 
-The architecture is simple. `manuscript/config.yaml` defines policy: target grade-level band, citation-density floor, heading-structure rules, bibliography-consistency policy. The orchestrator script `scripts/run_prose_pipeline.py` reads the manuscript directory and calls [`infrastructure.prose.analyze_manuscript`](../../../../infrastructure/prose/SKILL.md) to produce a `ManuscriptReport`; `src/pipeline/__init__.py::run_prose_pipeline` then cross-checks the cited keys against the `references.bib` (via the project-owned `src.prose_facade.parse_bib_keys` helper), evaluates each configured check, and writes the JSON artefacts, while `src/report.py::write_review_report` assembles the markdown review and three diagnostic figures are rendered from the report. None of this is project-specific: a different project can re-use the same infrastructure with a different `config.yaml` and a different manuscript directory.
+The architecture is simple. `docs/manuscript/config.yaml` defines policy: target grade-level band, citation-density floor, heading-structure rules, bibliography-consistency policy. The orchestrator script `scripts/run_prose_pipeline.py` reads the manuscript directory and calls [`infrastructure.prose.analyze_manuscript`](../../../../infrastructure/prose/SKILL.md) to produce a `ManuscriptReport`; `src/pipeline/__init__.py::run_prose_pipeline` then cross-checks the cited keys against the `references.bib` (via the project-owned `src.prose_facade.parse_bib_keys` helper), evaluates each configured check, and writes the JSON artefacts, while `src/report.py::write_review_report` assembles the markdown review and three diagnostic figures are rendered from the report. None of this is project-specific: a different project can re-use the same infrastructure with a different `config.yaml` and a different manuscript directory.
 
 The remainder of this paper documents the methodology ([@sec:methodology]), the run-time results on the bundled manuscript ([@sec:results]), and the architectural lessons drawn from wiring prose analysis through the template pipeline ([@sec:conclusion]).
 
@@ -138,7 +138,7 @@ The report runs through a set of pure check functions:
 
 Each check produces a `CheckResult(passed, message, details)`; the run's `all_passed` flag is the conjunction.
 
-The thresholds each check applies come from `manuscript/config.yaml`. A `prose.preset` key (`lenient` for the bundled exemplar; `strict` in `config.yaml.example`) seeds the defaults for any knob the YAML does not set explicitly, so a fork can adopt a named editorial profile in one line and override individual knobs afterwards.
+The thresholds each check applies come from `docs/manuscript/config.yaml`. A `prose.preset` key (`lenient` for the bundled exemplar; `strict` in `config.yaml.example`) seeds the defaults for any knob the YAML does not set explicitly, so a fork can adopt a named editorial profile in one line and override individual knobs afterwards.
 
 ## Render
 
@@ -163,7 +163,7 @@ stages always see a fresh review):
 * `scripts/z_generate_manuscript_variables.py` reads `manuscript_report.json`
   + `config.yaml` and writes `output/data/manuscript_variables.json`
   along with a resolved manuscript tree under `output/manuscript/`.
-* `manuscript/references.bib` is **not** modified by this pipeline — the prose project does not generate citations, only validates them.
+* `docs/manuscript/references.bib` is **not** modified by this pipeline — the prose project does not generate citations, only validates them.
 
 
 
@@ -173,7 +173,7 @@ stages always see a fresh review):
 
 # Results {#sec:results}
 
-After running `scripts/run_prose_pipeline.py` with the bundled `manuscript/config.yaml` and the manuscript described in this paper, the project produces the following on-disk artefacts:
+After running `scripts/run_prose_pipeline.py` with the bundled `docs/manuscript/config.yaml` and the manuscript described in this paper, the project produces the following on-disk artefacts:
 
 * `output/manuscript_report.json` — the raw `ManuscriptReport` JSON.
 * `output/checks.json` — one `CheckResult` per configured check.
@@ -193,7 +193,7 @@ The pass/fail status of each configured check is recorded in `output/checks.json
 * **`citation_density_above_floor`** — citations per 1000 words must meet `prose.citation_density_min_per_1000`. The bundled config sets the floor to `0.0` (disabled) so the run is green out of the box; researchers should raise it to match the publication target.
 * **`no_skipped_heading_levels`** — every file in this manuscript uses contiguous heading levels.
 * **`every_file_has_h1`** — every prose file starts with an H1.
-* **`bibliography_consistency`** — every `[@key]` in the prose resolves against `manuscript/references.bib`.
+* **`bibliography_consistency`** — every `[@key]` in the prose resolves against `docs/manuscript/references.bib`.
 
 The figures in `../figures/` are colour-blind-safe (Wong 2011 palette) [@wong2011points], 300 dpi, and PNG-only for archival stability. They are referenced in [@sec:pipeline_internals] where we walk through the on-disk artefact set in full.
 
@@ -211,10 +211,10 @@ The full pass/fail summary lands in `output/review_report.md`, which is itself a
 
 This exemplar follows a single house style:
 
-* `manuscript/config.yaml` is the only place run policy lives.
+* `docs/manuscript/config.yaml` is the only place run policy lives.
 * `src/` is deliberately `infrastructure`-free: the report Protocols and the `parse_bib_keys`/`render_outline` helpers in `src/prose_facade.py` are the decoupling seam.
 * Scripts in `scripts/` do only filesystem I/O, CLI argument handling, and the `infrastructure/` calls (e.g. `infrastructure.prose.analyze_manuscript`) on `src/`'s behalf.
-* Every artefact in `output/` is regeneratable; `manuscript/references.bib` is curated and validated read-only by this project.
+* Every artefact in `output/` is regeneratable; `docs/manuscript/references.bib` is curated and validated read-only by this project.
 
 The contribution of this exemplar is architectural: a *generic, reusable* prose-quality module that any project in the template can opt into, and a *minimal, configurable* exemplar wiring it to the bibliography and the manuscript pipeline.
 
@@ -335,13 +335,13 @@ classDiagram
 
 # Reproducibility {#sec:reproducibility}
 
-The bundled `manuscript/config.yaml` is configured for the **strict reproducibility** discipline advocated for computational science by [@peng2011reproducible]:
+The bundled `docs/manuscript/config.yaml` is configured for the **strict reproducibility** discipline advocated for computational science by [@peng2011reproducible]:
 
 1. **No network calls.** All analysis is local: prose metrics, structure, quality flags, and bibliography validation are computed from in-repo files only.
 2. **Deterministic outputs.** `compute_metrics`, `analyze_structure`, and `analyze_quality` are pure functions over their input strings. The same manuscript text + the same `config.yaml` produces byte-identical JSON artefacts (modulo timestamp metadata in any caches the project later adds).
 3. **Threshold transparency.** Every pass/fail decision is recorded in `output/checks.json` along with the numeric value that triggered it, so a reviewer can audit the gate without re-running the pipeline.
-4. **No hidden state.** The pipeline does not mutate `manuscript/`; it reads and reports. `manuscript/references.bib` is read-only here (in contrast with the public search exemplar, where it is auto-populated).
-5. **Same code, different config.** A reviewer who wants stricter standards edits `manuscript/config.yaml` (`prose.target_grade_level_max: 14.0`, say); no code changes are required.
+4. **No hidden state.** The pipeline does not mutate `docs/manuscript/`; it reads and reports. `docs/manuscript/references.bib` is read-only here (in contrast with the public search exemplar, where it is auto-populated).
+5. **Same code, different config.** A reviewer who wants stricter standards edits `docs/manuscript/config.yaml` (`prose.target_grade_level_max: 14.0`, say); no code changes are required.
 
 ## Verifying reproducibility locally
 
@@ -376,7 +376,7 @@ The diff should be empty. If it is not, the pipeline has acquired non-determinis
 
 # References {#sec:references}
 
-Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
+Bibliography lives in [`docs/manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
 
 This project does not auto-generate the bibliography — it **validates** that every `[@key]` cited in the prose has a matching entry, via the project's own `src.prose_facade.parse_bib_keys` helper (a lightweight BibTeX-key regex that skips `@comment` blocks). The check policy is configured under `bibliography:` in [`config.yaml`](config.yaml).
 
@@ -384,7 +384,7 @@ To validate that `references.bib` is syntactically clean:
 
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
-    projects/templates/template_prose_project/manuscript/references.bib --strict
+    projects/templates/template_prose_project/docs/manuscript/references.bib --strict
 ```
 
 

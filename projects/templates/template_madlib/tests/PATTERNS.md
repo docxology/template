@@ -1,6 +1,6 @@
 # Test Patterns
 
-- Build temp project trees with real `manuscript/config.yaml` files.
+- Build temp project trees with real `docs/manuscript/config.yaml` files.
 - Assert generated JSON and PNG files exist, contain live values, and are nonblank when visual output is the contract.
 - Assert schema-driven titles, method protocol rows, design principles, operational phases, audit rules, and generated tables appear in variables.
 - Assert generated Methods prose explains method concepts that tables alone cannot carry: digest construction, review scenario, explicit/default field origin, selection invariants, slot-to-section allocation, figure evidence, claim-ledger alignment, validation gates, review-packet handoff, and fork migration.

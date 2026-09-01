@@ -3,7 +3,7 @@
 ## Source Code
 
 - Keep pure computation in `src/`; scripts only orchestrate.
-- Keep phase logic (`src/multi_phase/`) reading its configuration from `manuscript/config.yaml` → `project_config.search_phases`; never hard-code a phase name, temporal boundary, or query string.
+- Keep phase logic (`src/multi_phase/`) reading its configuration from `docs/manuscript/config.yaml` → `project_config.search_phases`; never hard-code a phase name, temporal boundary, or query string.
 - Never edit a symlinked module's content through this project's path (`src/analysis/`, `src/knowledge_graph/`, `src/reproducibility/`, `src/visualization/`, `src/config_loader.py`). Confirm with `git status` which repository the edit actually landed in — see `architecture.md`.
 - Keep retrieval clients injectable: tests must be able to point clients at local `pytest-httpserver` URLs.
 - Keep random behavior seeded through config or constants. The default seed is `42`.

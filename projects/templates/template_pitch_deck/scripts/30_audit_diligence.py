@@ -28,7 +28,7 @@ def main(argv: list[str] | None = None) -> int:
 
     root = project_root()
     repo_root = locate_repo_root(root)
-    manuscript_dir = root / "manuscript"
+    manuscript_dir = root / "docs" / "manuscript"
 
     had_gap = False
     for length in DECK_LENGTHS:

@@ -41,7 +41,7 @@ uv run python projects/templates/template_literature_meta_analysis/scripts/10_re
 
 ## Pipeline Notes
 
-- `manuscript/config.yaml` owns search term, ten enabled-engine toggles, relevance keywords, hypotheses, sampling, reproducibility scoring, and subfields.
+- `docs/manuscript/config.yaml` owns search term, ten enabled-engine toggles, relevance keywords, hypotheses, sampling, reproducibility scoring, and subfields.
 - The default `analysis.scripts` allowlist is offline and deterministic; it intentionally excludes network/LLM scripts `01`, `03`, `10`, and `11`.
 - The explicit full-text/reproducibility chain is `11_fulltext_download.py` → `10_reproducibility_assessment.py`; reversing it scores stale or absent full text.
 - `05_inject_variables.py` remains last in every declared pipeline order so it sees all available upstream artifacts.

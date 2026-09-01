@@ -1,7 +1,7 @@
 # AGENTS.md — docs/ for template_pools_rules_tools
 
 Agent-facing notes for this documentation tree. The nearest authoritative
-contracts are [`../AGENTS.md`](../AGENTS.md), [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md),
+contracts are [`../AGENTS.md`](../AGENTS.md), [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md),
 [`../src/AGENTS.md`](../src/AGENTS.md), and [`../scripts/AGENTS.md`](../scripts/AGENTS.md) —
 each wins over this file.
 
@@ -14,7 +14,7 @@ each wins over this file.
   figures generate (negative control:
   `tests/test_strong_rule_evaluator.py::test_section_schema_flags_missing_section`).
 - `tests/` — real file paths; skip via `pytest.mark.skipif` when files absent.
-- `manuscript/` — counts inject from `output/data/manuscript_variables.json`
+- `docs/manuscript/` — counts inject from `output/data/manuscript_variables.json`
   at render time. Never hand-author total/content/cover figure counts: the
   generator derives them from the content figure registry
   (`src/figure_support.py::INTEGRATION_FIGURE_SPECS`) and the separately

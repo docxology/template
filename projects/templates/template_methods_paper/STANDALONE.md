@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.21086548](https://doi.org/10.5281/zenodo.21086548)
 - Latest deposited version DOI: [10.5281/zenodo.21086549](https://zenodo.org/records/21086549)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_methods_paper/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_methods_paper), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/Qmc9puHs6KiEnCraVgWUXVxcyAZyT7nt9EMXXLBhy2bAou), [netlify](https://6a444b88aa6e4e3c5d216e16--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/6d7nh/), [pypi](https://test.pypi.org/project/template-methods-paper/1.0.0/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_methods_paper)
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -52,7 +52,7 @@ rsync -a \
 
 ## Required Post-Fork Edits
 
-- Update `manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
+- Update `docs/manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
   `CITATION.cff`, `.zenodo.json`, `codemeta.json`, and `pyproject.toml`.
 - Replace or extend the controlled vocabulary in `src/methods_dsl/units.py`
   and `vocabulary.py` to match your domain's units and step kinds.
@@ -84,7 +84,7 @@ uv run pytest projects/templates/template_methods_paper/tests \
 
 `src/methods_dsl/` is standalone except one sanctioned exception: the
 logging adapter (`_logging.py`) reaches into the repository's unified
-logging system, declared in `manuscript/layer_contract.yaml`. Every other
+logging system, declared in `docs/manuscript/layer_contract.yaml`. Every other
 module imports only the Python standard library, so the DSL itself is
 forkable as an infrastructure-free package; the thin analysis script and the
 manuscript-rendering pipeline are the only places that touch shared

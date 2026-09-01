@@ -92,7 +92,7 @@ def _create_test_project(repo_root: Path, project_name: str) -> None:
         with_scripts=True,
         with_output=True,
     )
-    (project_dir / "manuscript" / "config.yaml").write_text(
+    (project_dir / "docs" / "manuscript" / "config.yaml").write_text(
         """
 paper:
   title: "Test Project"

@@ -417,7 +417,7 @@ def _detect_staleness(project_root: Path) -> str:
 
     Returns a status string: 'fresh' or 'stale' with details.
     """
-    source_dir = project_root / "manuscript"
+    source_dir = project_root / "docs" / "manuscript"
     output_dir = project_root / "output" / "manuscript"
 
     if not output_dir.exists():

@@ -9,7 +9,7 @@ A phase's `deterministic_filters` (`min_year`, `max_year`,
 `output/data/phase_metadata.json` → `phases.<phase_id>.papers_final` against
 `project_config.phase_integration.quality_gates.<phase_id>.min_papers` before
 assuming a bug. Widen the phase's `queries` or `deterministic_filters` in
-`manuscript/config.yaml`, then rerun `scripts/01_multi_phase_search.py`.
+`docs/manuscript/config.yaml`, then rerun `scripts/01_multi_phase_search.py`.
 
 ## Cross-Phase Validation Conflicts
 
@@ -55,7 +55,7 @@ uv run python projects/templates/template_advanced_literature_review/scripts/01_
 
 Expected when a network, API key, or optional provider condition is absent
 for a given phase's `engines` selection. Check
-`manuscript/config.yaml` → `project_config.search_phases.<phase>.engines`
+`docs/manuscript/config.yaml` → `project_config.search_phases.<phase>.engines`
 and the provider-specific client logs before treating it as a failure.
 
 ## Hypothesis Scores Or Assertion Tokens Read `pending`
@@ -99,7 +99,7 @@ readlink projects/templates/template_advanced_literature_review/src/analysis
 ## YAML Parse Error
 
 ```bash
-uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_advanced_literature_review/manuscript/config.yaml'))"
+uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_advanced_literature_review/docs/manuscript/config.yaml'))"
 ```
 
 Tabs, unclosed quotes, and JSON-style trailing commas are the usual causes —

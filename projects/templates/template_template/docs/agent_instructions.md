@@ -32,6 +32,6 @@ run them **from the repository root** instead.
 
 ## Critical references
 
-- `manuscript/config.yaml` — publication metadata, token sources.
+- `docs/manuscript/config.yaml` — publication metadata, token sources.
 - `infrastructure/core/pipeline/pipeline.yaml` — stage DAG definition.
 - `projects/AGENTS.md` — public exemplar roster (introspected).

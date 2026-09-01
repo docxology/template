@@ -1,7 +1,7 @@
 # Front Matter
 
 <!-- This file is the first front-matter document rendered (see
-`manuscript/config.yaml` → `front_matter.files`). It carries the dedication,
+`docs/manuscript/config.yaml` → `front_matter.files`). It carries the dedication,
 an explanation of what this template is, a reader navigation guide, and a short
 note on how the book is generated. Replace the STUB content with your own. -->
 

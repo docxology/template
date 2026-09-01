@@ -61,30 +61,30 @@ The mega-madlib engine generated 24 tokens from seed 431 across 8 lexicon catego
 
 | Variable | Category | Value | Section | Source |
 |----------|----------|-------|---------|--------|
-| AUTHORING_BOUNDARY_TERM_1 | boundary_terms | analogy boundary | authoring_contract | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[1] |
-| AUTHORING_BOUNDARY_TERM_2 | boundary_terms | non-claim | authoring_contract | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[4] |
-| DISCUSSION_BOUNDARY_TERM_1 | boundary_terms | fork obligation | discussion | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[2] |
-| DISCUSSION_BOUNDARY_TERM_2 | boundary_terms | domain validator | discussion | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[3] |
-| DISCUSSION_REFINEMENT_VERB | refinement_verbs | smelting | discussion | manuscript/config.yaml#gold_refinement.lexicon.refinement_verbs[3] |
-| EVALUATION_GATE_TERM_1 | gate_terms | prerender | evaluation | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[0] |
-| EVALUATION_GATE_TERM_2 | gate_terms | citation validation | evaluation | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
-| INTRO_INTEGRITY_TERM_1 | integrity_terms | source tier | introduction | manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[1] |
-| INTRO_INTEGRITY_TERM_2 | integrity_terms | evidence spine | introduction | manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[0] |
-| METHOD_GATE_TERM_1 | gate_terms | evidence validation | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[1] |
-| METHOD_GATE_TERM_2 | gate_terms | figure registry check | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[2] |
-| METHOD_GATE_TERM_3 | gate_terms | citation validation | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
-| METHOD_MANUSCRIPT_TERM_1 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
-| METHOD_MANUSCRIPT_TERM_2 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
-| METHOD_METAL_TERM_1 | metallurgical_terms | assaying | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1] |
-| METHOD_METAL_TERM_2 | metallurgical_terms | parting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3] |
-| METHOD_METAL_TERM_3 | metallurgical_terms | smelting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2] |
-| REPRO_EVIDENCE_TERM_1 | evidence_terms | fact registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[0] |
-| REPRO_EVIDENCE_TERM_2 | evidence_terms | figure registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
-| RESULTS_EVIDENCE_TERM_1 | evidence_terms | artifact manifest | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[1] |
-| RESULTS_EVIDENCE_TERM_2 | evidence_terms | figure registry | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
-| RESULTS_EVIDENCE_TERM_3 | evidence_terms | token provenance | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[4] |
-| RESULTS_PURITY_ADJ_1 | purity_adjectives | unrefined | results | manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[0] |
-| RESULTS_PURITY_ADJ_2 | purity_adjectives | purified | results | manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[1] |
+| AUTHORING_BOUNDARY_TERM_1 | boundary_terms | analogy boundary | authoring_contract | docs/manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[1] |
+| AUTHORING_BOUNDARY_TERM_2 | boundary_terms | non-claim | authoring_contract | docs/manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[4] |
+| DISCUSSION_BOUNDARY_TERM_1 | boundary_terms | fork obligation | discussion | docs/manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[2] |
+| DISCUSSION_BOUNDARY_TERM_2 | boundary_terms | domain validator | discussion | docs/manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[3] |
+| DISCUSSION_REFINEMENT_VERB | refinement_verbs | smelting | discussion | docs/manuscript/config.yaml#gold_refinement.lexicon.refinement_verbs[3] |
+| EVALUATION_GATE_TERM_1 | gate_terms | prerender | evaluation | docs/manuscript/config.yaml#gold_refinement.lexicon.gate_terms[0] |
+| EVALUATION_GATE_TERM_2 | gate_terms | citation validation | evaluation | docs/manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
+| INTRO_INTEGRITY_TERM_1 | integrity_terms | source tier | introduction | docs/manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[1] |
+| INTRO_INTEGRITY_TERM_2 | integrity_terms | evidence spine | introduction | docs/manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[0] |
+| METHOD_GATE_TERM_1 | gate_terms | evidence validation | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.gate_terms[1] |
+| METHOD_GATE_TERM_2 | gate_terms | figure registry check | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.gate_terms[2] |
+| METHOD_GATE_TERM_3 | gate_terms | citation validation | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
+| METHOD_MANUSCRIPT_TERM_1 | manuscript_terms | evidence | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
+| METHOD_MANUSCRIPT_TERM_2 | manuscript_terms | evidence | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
+| METHOD_METAL_TERM_1 | metallurgical_terms | assaying | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1] |
+| METHOD_METAL_TERM_2 | metallurgical_terms | parting | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3] |
+| METHOD_METAL_TERM_3 | metallurgical_terms | smelting | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2] |
+| REPRO_EVIDENCE_TERM_1 | evidence_terms | fact registry | reproducibility | docs/manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[0] |
+| REPRO_EVIDENCE_TERM_2 | evidence_terms | figure registry | reproducibility | docs/manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
+| RESULTS_EVIDENCE_TERM_1 | evidence_terms | artifact manifest | results | docs/manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[1] |
+| RESULTS_EVIDENCE_TERM_2 | evidence_terms | figure registry | results | docs/manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
+| RESULTS_EVIDENCE_TERM_3 | evidence_terms | token provenance | results | docs/manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[4] |
+| RESULTS_PURITY_ADJ_1 | purity_adjectives | unrefined | results | docs/manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[0] |
+| RESULTS_PURITY_ADJ_2 | purity_adjectives | purified | results | docs/manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[1] |
 
 Selected purity adjectives for this section: unrefined, purified. Selected evidence terms: artifact manifest, figure registry, token provenance.
 
@@ -124,7 +124,7 @@ for the reported token plan, but the figure asks a neighboring question: how do
 selected inventory indices move when seeds and lexicon categories vary? This is
 not a stochastic robustness claim. It is a deterministic audit of the digest
 rule in `src/composition.py::generate_token_plan` against the configured
-lexicon inventories in `manuscript/config.yaml`.
+lexicon inventories in `docs/manuscript/config.yaml`.
 
 This view separates three issues that prose alone tends to blur. First, token
 injection is reproducible: the same seed and inventory generate the same
@@ -193,7 +193,7 @@ The implementation circuit in [@fig:implementation_circuit] shows how the concep
 The circuit is the results section's strongest guard against a prose-only
 interpretation of the template. It shows four layers that must remain connected:
 configuration, project code, generated artifacts, and validation feedback. A
-change in `manuscript/config.yaml` is not complete when the file is saved. It
+change in `docs/manuscript/config.yaml` is not complete when the file is saved. It
 must pass through source functions, generate updated variables and figures,
 hydrate the manuscript, and survive the validator return path. The circular
 layout is therefore a process claim: the manuscript is complete only when the
@@ -211,7 +211,7 @@ repair is central to the manuscript's definition of refinement.
 
 ## Claim-evidence assay
 
-The claim-evidence assay in [@fig:claim_evidence_assay] turns the assaying stage into a reader-facing diagnostic. Each bar is a contribution claim from `manuscript/config.yaml`, and each annotation names the source file or symbol used to support it. This makes the contribution ledger inspectable at the same level as the purity plots: unsupported claims would appear as failed assays rather than remaining hidden in prose.
+The claim-evidence assay in [@fig:claim_evidence_assay] turns the assaying stage into a reader-facing diagnostic. Each bar is a contribution claim from `docs/manuscript/config.yaml`, and each annotation names the source file or symbol used to support it. This makes the contribution ledger inspectable at the same level as the purity plots: unsupported claims would appear as failed assays rather than remaining hidden in prose.
 
 The generated assay currently reports 9 supported
 claims out of 9. The value of the figure is not the perfect

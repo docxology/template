@@ -39,7 +39,7 @@
     }
   },
   "setup_token_choice_count": {
-    "manuscript_section": "manuscript/05_experimental_setup.md / Configuration Counts",
+    "manuscript_section": "docs/manuscript/05_experimental_setup.md / Configuration Counts",
     "claim_text": "Token choices: `{{TOKEN_CHOICE_COUNT}}`",
     "value": 40,
     "abs_tolerance": 0,
@@ -50,7 +50,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "setup_lexicon_category_count": {
-    "manuscript_section": "manuscript/05_experimental_setup.md / Configuration Counts",
+    "manuscript_section": "docs/manuscript/05_experimental_setup.md / Configuration Counts",
     "claim_text": "Lexicon categories: `{{LEXICON_CATEGORY_COUNT}}`",
     "value": 10,
     "abs_tolerance": 0,
@@ -61,7 +61,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "evaluation_quality_probe_count": {
-    "manuscript_section": "manuscript/06_evaluation.md / Quality Probes (count in 05_experimental_setup.md / Configuration Counts)",
+    "manuscript_section": "docs/manuscript/06_evaluation.md / Quality Probes (count in 05_experimental_setup.md / Configuration Counts)",
     "claim_text": "Quality probes: `{{QUALITY_PROBE_COUNT}}`",
     "value": 14,
     "abs_tolerance": 0,
@@ -72,7 +72,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "setup_slot_rule_count": {
-    "manuscript_section": "manuscript/05_experimental_setup.md / Configuration Counts",
+    "manuscript_section": "docs/manuscript/05_experimental_setup.md / Configuration Counts",
     "claim_text": "Slot rules: `{{SLOT_RULE_COUNT}}`",
     "value": 22,
     "abs_tolerance": 0,
@@ -83,7 +83,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "setup_configured_field_visualized_count": {
-    "manuscript_section": "manuscript/05_experimental_setup.md / Configuration Counts",
+    "manuscript_section": "docs/manuscript/05_experimental_setup.md / Configuration Counts",
     "claim_text": "Enabled visualization flags: `{{CONFIGURED_FIELD_VISUALIZED_COUNT}}`",
     "value": 7,
     "abs_tolerance": 0,

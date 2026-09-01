@@ -71,8 +71,10 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 
 ```bash
 # Option 1: Edit config.yaml (recommended)
-cp projects/{name}/manuscript/config.yaml.example projects/{name}/manuscript/config.yaml
-vim projects/{name}/manuscript/config.yaml
+cp projects/{name}/docs/manuscript/config.yaml.example projects/{name}/docs/manuscript/config.yaml
+vim projects/{name}/docs/manuscript/config.yaml
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 # Option 2: Use environment variables
 export AUTHOR_NAME="Your Name"
@@ -101,7 +103,7 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 
 # 3. Generate figures and validate
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
-uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/docs/manuscript/
 
 # 4. Build pipeline
 uv run python scripts/runner/execute_pipeline.py --project {name} --core-only

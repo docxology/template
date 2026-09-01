@@ -29,7 +29,7 @@ This split (ARL-7 in `ISA.md`) exists so the advanced template can focus its own
 ## Data flow
 
 ```
-manuscript/config.yaml (search_phases: phase_1_foundation, phase_2_jwst, phase_3_molecules)
+docs/manuscript/config.yaml (search_phases: phase_1_foundation, phase_2_jwst, phase_3_molecules)
         │
         ▼
 scripts/01_multi_phase_search.py ─→ per-phase corpora
@@ -61,5 +61,5 @@ is the explicit live/network refresh path — see `agent_instructions.md` Rule 5
 | --- | --- | --- |
 | Math/parsing inside `scripts/` | Cannot be unit-tested without running the script | Move to `src/`, add a test class |
 | Editing a symlinked module's content by opening the path under this project | Edits land in `template_literature_meta_analysis/src/` and silently affect both templates | Edit at the sibling project directly; confirm with `git status` which repo path actually changed |
-| Hard-coding a phase name, domain term, or temporal boundary in `src/multi_phase/` | Breaks retargeting to a new domain/phase design | Read phase definitions from `manuscript/config.yaml` → `project_config.search_phases` |
+| Hard-coding a phase name, domain term, or temporal boundary in `src/multi_phase/` | Breaks retargeting to a new domain/phase design | Read phase definitions from `docs/manuscript/config.yaml` → `project_config.search_phases` |
 | Adding a new phase without a `depends_on` entry when it should cross-validate an earlier phase | Silently breaks `phase_integration.citation_validation` | Declare `depends_on` explicitly, matching `phase_2_jwst`/`phase_3_molecules` in `config.yaml` |

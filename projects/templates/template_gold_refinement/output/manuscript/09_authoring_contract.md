@@ -25,7 +25,7 @@ Security authorship has the same rule. Standards and guidance can shape the thre
 ## Fork checklist
 
 1. Remap metallurgical stages to domain operations in `src/refinery.py`
-2. Update lexicon categories in `manuscript/config.yaml` under `gold_refinement.lexicon`
+2. Update lexicon categories in `docs/manuscript/config.yaml` under `gold_refinement.lexicon`
 3. Update `contribution_claims` with domain-specific evidence pointers
 4. Add domain validators beyond the exemplar's generic gates
 5. Replace or extend `src/integrity.py` dimensions when the fork introduces new failure modes

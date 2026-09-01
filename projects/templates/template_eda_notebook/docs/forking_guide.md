@@ -46,7 +46,7 @@ The full inventory lives in [`AGENTS.md`](AGENTS.md); the short version:
 
 | Class | Examples | Action |
 |---|---|---|
-| REQUIRED — pipeline gate | `src/eda/*.py`, `src/__init__.py`, `data/measurements.csv`, all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
+| REQUIRED — pipeline gate | `src/eda/*.py`, `src/__init__.py`, `data/measurements.csv`, all `tests/test_*.py`, `pyproject.toml`, `docs/manuscript/config.yaml`, `manuscript/*.md`, `docs/manuscript/references.bib`, `docs/manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
 | REQUIRED — orchestration | `scripts/eda_analysis.py`, `notebooks/eda_walkthrough.ipynb` | The analysis entry point and the archetype this template demonstrates |
 | AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/audit/check_template_drift.py`; update them when code changes |
 

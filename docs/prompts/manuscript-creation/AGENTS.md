@@ -14,8 +14,10 @@ Agent skill `template-manuscript-creation` — Scaffold manuscript and project f
 ## Verification
 
 ```bash
-uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/docs/manuscript/
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## See also
 

@@ -65,7 +65,7 @@ The typical analysis order is:
    gates, exports worklist/CSV/Mermaid/JSON per method, demonstrates the
    provenance hash-chain, and writes `output/figures/step_counts.png`,
    printing each output path for manifest collection.
-2. `scripts/z_generate_manuscript_variables.py` — reads `manuscript/config.yaml`
+2. `scripts/z_generate_manuscript_variables.py` — reads `docs/manuscript/config.yaml`
    and the analysis outputs, then resolves every generated variable in
    `manuscript/*.md`.
 3. PDF rendering reads the resolved manuscript tree so figure paths and

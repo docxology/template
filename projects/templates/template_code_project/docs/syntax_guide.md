@@ -11,7 +11,7 @@ Hyperlinks must be informative. Never use placeholder text.
 - **BAD**: [this link](https://github.com/docxology/template) to see the template.
 - **GOOD**: See the [Research Project Template](https://github.com/docxology/template).
 
-For internal cross-references inside `manuscript/`, prefer relative paths:
+For internal cross-references inside `docs/manuscript/`, prefer relative paths:
 - **BAD**: See `https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py`
 - **GOOD**: See [`projects/templates/template_code_project/src/optimizer.py`](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py)
 
@@ -19,7 +19,7 @@ For internal cross-references inside `manuscript/`, prefer relative paths:
 
 ## 2. Pandoc-Crossref Cross-References
 
-Inside `manuscript/` files, use Pandoc-crossref `[@label]` syntax for
+Inside `docs/manuscript/` files, use Pandoc-crossref `[@label]` syntax for
 cross-referencing. **Never** use raw LaTeX `\ref{}` macros in Markdown
 source — they would render literally in the HTML and slide outputs and
 they bypass Pandoc-crossref's auto-numbering. Never hardcode figure or
@@ -65,7 +65,7 @@ When specifying numeric results in the manuscript, use the `{{VARIABLE_NAME}}` s
 
 Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_variables()`:
 
-**CONFIG_* — Derived from `manuscript/config.yaml`**
+**CONFIG_* — Derived from `docs/manuscript/config.yaml`**
 
 | Token | Value (default config) | Source |
 |---|---|---|
@@ -200,7 +200,7 @@ To add a figure that appears in `03_results.md`:
    ![Caption text describing the figure.](../output/figures/convergence_plot.png){#fig:new_label}
    ```
 3. Reference in text using Pandoc-crossref: `See [@fig:new_label].`
-4. Update `manuscript/AGENTS.md` to document the new figure label and generator.
+4. Update `docs/manuscript/AGENTS.md` to document the new figure label and generator.
 5. Re-run the full pipeline to verify the figure appears in the PDF.
 
 ---

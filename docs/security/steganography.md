@@ -12,7 +12,9 @@ By default, the `overlay_opacity` is set to `0.08` (8% visibility). At this sett
 
 ### 2. Dynamic `mailto:` Author QR Codes
 
-If `barcodes_enabled` is true, the `SteganographyProcessor` will automatically extract the `authors` array from your `projects/<name>/manuscript/config.yaml`.
+If `barcodes_enabled` is true, the `SteganographyProcessor` will automatically extract the `authors` array from your `projects/<name>/docs/manuscript/config.yaml`.
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 If it finds `email` keys for the authors, the processor dynamically generates an actionable `mailto:` URI bridging all authors together in the `to` field, and embeds it as a High Error-Correction (Q Level) QR code on every page margin.
 
@@ -26,7 +28,7 @@ Steganography configuration is resolved in three layers:
 
 1. Dataclass defaults in `infrastructure.steganography.config.SteganographyConfig` (`enabled: false`).
 2. Repository secure-run defaults in `infrastructure/config/secure_config.yaml`.
-3. Per-project overrides in `projects/<name>/manuscript/config.yaml` under `steganography:`.
+3. Per-project overrides in `projects/<name>/docs/manuscript/config.yaml` under `steganography:`.
 
 The ordinary processor honors the effective mapping. The explicit
 `secure_run.sh` boundary is stricter: malformed project YAML fails closed and

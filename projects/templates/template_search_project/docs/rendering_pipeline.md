@@ -1,6 +1,6 @@
 # Rendering Pipeline: Configuration → Search → Manuscript → PDF
 
-The `manuscript/` directory contains the narrative components of the search project. The full pipeline takes a `manuscript/config.yaml` and `data/corpus.json` (or live API responses) and produces a publication-ready combined PDF. This document describes every phase, what it produces, which scripts run it, and how to troubleshoot failures.
+The `docs/manuscript/` directory contains the narrative components of the search project. The full pipeline takes a `docs/manuscript/config.yaml` and `data/corpus.json` (or live API responses) and produces a publication-ready combined PDF. This document describes every phase, what it produces, which scripts run it, and how to troubleshoot failures.
 
 ## The Five-Phase Flow
 
@@ -18,7 +18,7 @@ uv run python projects/templates/template_search_project/scripts/run_deep_search
 uv run python projects/templates/template_search_project/scripts/run_search_pipeline.py
 ```
 
-**Inputs**: `manuscript/config.yaml` (`project_config.search`, `project_config.enrichment`, root `llm`, and `project_config.deep_search`) plus `data/corpus.json` when `project_config.search.sources` includes `local`.
+**Inputs**: `docs/manuscript/config.yaml` (`project_config.search`, `project_config.enrichment`, root `llm`, and `project_config.deep_search`) plus `data/corpus.json` when `project_config.search.sources` includes `local`.
 
 **`run_deep_search.py` outputs**:
 
@@ -30,7 +30,7 @@ uv run python projects/templates/template_search_project/scripts/run_search_pipe
 | `<keyword_slug>/papers.json` | `output/deep_search/` | same |
 | `<keyword_slug>/reading_report.md` | `output/deep_search/` | same |
 | `<keyword_slug>/per_paper/<safe_id>.md` | `output/deep_search/` | LLM stage when enabled |
-| `references_deep.bib` | `manuscript/` | `src/deep_search.py` |
+| `references_deep.bib` | `docs/manuscript/` | `src/deep_search.py` |
 
 **`run_search_pipeline.py` outputs**:
 
@@ -42,7 +42,7 @@ uv run python projects/templates/template_search_project/scripts/run_search_pipe
 | `enrichment_log.json` | `output/` | `src/pipeline.py` |
 | `reading_report.md` | `output/` | `src/report.py::write_reading_report` |
 | `run_summary.json` | `output/` | `src/pipeline.py` |
-| `references.bib` | `manuscript/` | `src/pipeline.py` (via `infrastructure.reference.citation.paper_to_bibentry`) |
+| `references.bib` | `docs/manuscript/` | `src/pipeline.py` (via `infrastructure.reference.citation.paper_to_bibentry`) |
 | `llm/synthesis.md`, `llm/per_paper/<safe_id>.md` | `output/` | `src/synthesis.py` (when `config.llm.enabled`) |
 
 ### Phase 2 — Compose the Literature Review
@@ -72,7 +72,7 @@ uv run python projects/templates/template_search_project/scripts/y_generate_sear
 uv run python projects/templates/template_search_project/scripts/z_generate_manuscript_variables.py
 ```
 
-**Inputs**: `output/search/results.json` (figures) + `manuscript/config.yaml` + `output/deep_search/aggregate.json` when present (variables).
+**Inputs**: `output/search/results.json` (figures) + `docs/manuscript/config.yaml` + `output/deep_search/aggregate.json` when present (variables).
 
 **`y_generate_search_figures.py` outputs**:
 
@@ -88,7 +88,7 @@ uv run python projects/templates/template_search_project/scripts/z_generate_manu
 |---|---|
 | `output/data/manuscript_variables.json` | `{ field: value }` mapping from `ManuscriptVariables` |
 | `output/manuscript/*.md` | Resolved copies of `manuscript/*.md` (every `{{TOKEN}}` substituted) |
-| `output/manuscript/config.yaml` | Copy of `manuscript/config.yaml` |
+| `output/docs/manuscript/config.yaml` | Copy of `docs/manuscript/config.yaml` |
 | `output/manuscript/*.bib` | Copies of every `manuscript/*.bib` (sorted) |
 
 **Critical**: every `{{TOKEN}}` defined in the field set of `src/manuscript_variables.py::ManuscriptVariables` must resolve before Phase 4. If a token is unresolved, the literal `{{TOKEN_NAME}}` will appear in the rendered PDF. The `variables_resolved` review stage detects this; the `<deep-search not run>` sentinel is the exception (it is intentionally written when no aggregate exists).
@@ -102,7 +102,7 @@ uv run python projects/templates/template_search_project/scripts/z_generate_manu
 uv run python scripts/pipeline/stage_03_render.py --project templates/template_search_project
 ```
 
-**Inputs**: `output/manuscript/*.md` (resolved) + `manuscript/config.yaml` + `manuscript/preamble.md` + every `manuscript/*.bib`.
+**Inputs**: `output/manuscript/*.md` (resolved) + `docs/manuscript/config.yaml` + `docs/manuscript/preamble.md` + every `manuscript/*.bib`.
 
 **Infrastructure modules involved**:
 

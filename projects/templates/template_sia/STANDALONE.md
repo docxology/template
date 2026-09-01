@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.20453879](https://doi.org/10.5281/zenodo.20453879)
 - Latest deposited version DOI: [10.5281/zenodo.20932066](https://zenodo.org/records/20932066)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_sia/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_sia), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmccbCX9YXJMd3fNfkZ3H59dnWRnB6xgeVCM8kmPGQtaBh), [netlify](https://6a4442bb57aaff1e1b2992d1--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/85bxe/), [pypi](https://test.pypi.org/project/template-sia/0.1.2/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_sia)
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -49,7 +49,7 @@ rsync -a \
 
 ## Required Post-Fork Edits
 
-- Update `manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
+- Update `docs/manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
   `CITATION.cff`, `.zenodo.json`, and `codemeta.json`.
 - Replace fixtures, reference-agent behavior, evaluation runner assumptions, and
   live-execution settings before claiming a new task result.

@@ -28,7 +28,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` aligned with the `project_config.sia` block and safe defaults.
+- Keep `docs/manuscript/config.yaml.example` aligned with the `project_config.sia` block and safe defaults.
 - New loop controls must enter through the typed config loader before they are exposed in README commands.
 
 ## Documentation and signposting gaps

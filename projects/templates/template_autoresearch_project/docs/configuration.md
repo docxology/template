@@ -76,7 +76,7 @@ rates and train/test metrics are serialized to `ml_training_history.csv`; and
 best-epoch, final-rate, loss-reduction, and train-test gap summaries are
 serialized to `ml_training_diagnostics.json`.
 
-## `manuscript/config.yaml` (loop settings)
+## `docs/manuscript/config.yaml` (loop settings)
 
 Loaded by `src.config.load_manuscript_loop_settings`:
 

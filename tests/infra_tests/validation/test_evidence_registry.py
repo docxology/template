@@ -79,11 +79,11 @@ def test_missing_evidence_source_paths_accepts_project_outside_repository(tmp_pa
     """A sidecar project may resolve outside the renderer repository boundary."""
     project = tmp_path.parent / "private-project"
     project.mkdir()
-    source = project / "manuscript" / "config.yaml"
-    source.parent.mkdir()
+    source = project / "docs" / "manuscript" / "config.yaml"
+    source.parent.mkdir(parents=True)
     source.write_text("paper: {}\n", encoding="utf-8")
     registry = VerifiedEvidenceRegistry(
-        [EvidenceFact(kind="artifact", value="config", source="config", source_path="manuscript/config.yaml")]
+        [EvidenceFact(kind="artifact", value="config", source="config", source_path="docs/manuscript/config.yaml")]
     )
 
     assert missing_evidence_source_paths(project, registry, repo_root=tmp_path) == ()
@@ -234,7 +234,7 @@ def test_registry_does_not_ignore_non_padded_numeric_table_claims() -> None:
 def test_build_project_registry_collects_variables_bibtex_figures_and_data(tmp_path: Path) -> None:
     project = tmp_path / "project"
     (project / "output" / "data").mkdir(parents=True)
-    (project / "manuscript" / "sections").mkdir(parents=True)
+    (project / "docs" / "manuscript" / "sections").mkdir(parents=True)
     (project / "data").mkdir()
     (project / "output" / "figures").mkdir(parents=True)
 
@@ -246,11 +246,11 @@ def test_build_project_registry_collects_variables_bibtex_figures_and_data(tmp_p
         'name,iterations\nsmall,"2,000"\n',
         encoding="utf-8",
     )
-    (project / "manuscript" / "references.bib").write_text(
+    (project / "docs" / "manuscript" / "references.bib").write_text(
         "@article{smith2026,title={A}}\n",
         encoding="utf-8",
     )
-    (project / "manuscript" / "sections" / "01.md").write_text(
+    (project / "docs" / "manuscript" / "sections" / "01.md").write_text(
         "![Figure](../figures/plot.png){#fig:plot}\n\nTable: Values {#tbl:values}\n",
         encoding="utf-8",
     )
@@ -267,7 +267,7 @@ section_figures:
 """,
         encoding="utf-8",
     )
-    sheaf_config = project / "manuscript" / "sheaf"
+    sheaf_config = project / "docs" / "manuscript" / "sheaf"
     sheaf_config.mkdir(parents=True)
     (sheaf_config / "tracks.yaml").write_text(
         """
@@ -292,7 +292,7 @@ tracks:
     assert registry.has("number", "6")
     assert registry.has("number", "30")
     assert {fact.source_tier for fact in registry.lookup("number", "6")} == {"configuration"}
-    assert {fact.source_path for fact in registry.lookup("number", "30")} == {"manuscript/sheaf/tracks.yaml"}
+    assert {fact.source_path for fact in registry.lookup("number", "30")} == {"docs/manuscript/sheaf/tracks.yaml"}
 
     report = validate_text_against_registry(
         "The generated table reports 2,000 iterations. Figure 6 lists track order 30.",
@@ -303,10 +303,10 @@ tracks:
 
 def test_build_project_registry_collects_config_reports_and_nested_run_artifacts(tmp_path: Path) -> None:
     project = tmp_path / "project"
-    (project / "manuscript").mkdir(parents=True)
+    (project / "docs" / "manuscript").mkdir(parents=True)
     (project / "output" / "reports").mkdir(parents=True)
     (project / "output" / "runs" / "run_1").mkdir(parents=True)
-    (project / "manuscript" / "config.yaml").write_text("sample_size: 64\n", encoding="utf-8")
+    (project / "docs" / "manuscript" / "config.yaml").write_text("sample_size: 64\n", encoding="utf-8")
     (project / "pyproject.toml").write_text(
         '[project]\nrequires-python = ">=3.10"\n\n[tool.coverage.report]\nfail_under = 91\n',
         encoding="utf-8",
@@ -409,14 +409,14 @@ def test_build_project_registry_bounds_raw_json_arrays_but_keeps_scalar_summarie
 
 def test_build_project_registry_collects_manuscript_asset_tables(tmp_path: Path) -> None:
     project = tmp_path / "project"
-    assets = project / "manuscript" / "assets" / "data"
+    assets = project / "docs" / "manuscript" / "assets" / "data"
     assets.mkdir(parents=True)
     (assets / "fixture.csv").write_text("group,value\ncontrol,2.10\n", encoding="utf-8")
 
     registry = build_project_evidence_registry(project)
 
     assert registry.has("number", "2.10")
-    assert {fact.source_path for fact in registry.lookup("number", "2.10")} == {"manuscript/assets/data/fixture.csv"}
+    assert {fact.source_path for fact in registry.lookup("number", "2.10")} == {"docs/manuscript/assets/data/fixture.csv"}
 
 
 def test_build_project_registry_collects_docs_manuscript_bibliography_and_labels(tmp_path: Path) -> None:
@@ -442,7 +442,7 @@ def test_build_project_registry_collects_docs_manuscript_bibliography_and_labels
 
 def test_registry_validates_internal_section_and_equation_references(tmp_path: Path) -> None:
     project = tmp_path / "project"
-    manuscript = project / "manuscript"
+    manuscript = project / "docs" / "manuscript"
     manuscript.mkdir(parents=True)
     (manuscript / "01.md").write_text(
         "# Methods {#sec:methods}\n\n"
@@ -464,7 +464,7 @@ def test_registry_validates_internal_section_and_equation_references(tmp_path: P
 
 def test_registry_validates_internal_listing_references(tmp_path: Path) -> None:
     project = tmp_path / "project"
-    manuscript = project / "manuscript"
+    manuscript = project / "docs" / "manuscript"
     manuscript.mkdir(parents=True)
     manuscript.joinpath("01_methods.md").write_text(
         "# Methods\n\nListing: Example {#lst:example}\n\nSee [@lst:example].\n",
@@ -537,7 +537,7 @@ The result is 888 and cites [@missing].
 
 def test_write_evidence_registry_report(tmp_path: Path) -> None:
     registry = VerifiedEvidenceRegistry()
-    registry.add(EvidenceFact(kind="citation", value="smith2026", source="manuscript/references.bib"))
+    registry.add(EvidenceFact(kind="citation", value="smith2026", source="docs/manuscript/references.bib"))
 
     report_path = write_evidence_registry_report(tmp_path, registry)
 
@@ -557,7 +557,7 @@ def test_new_fact_timestamp_honors_reproducible_build_epoch(
     fact = EvidenceFact(
         kind="citation",
         value="smith2026",
-        source="manuscript/references.bib",
+        source="docs/manuscript/references.bib",
     )
     assert fact.checked_at == "1970-01-01T00:00:00Z"
 
@@ -568,7 +568,7 @@ def test_write_evidence_registry_report_preserves_stable_fact_timestamps(tmp_pat
         EvidenceFact(
             kind="citation",
             value="smith2026",
-            source="manuscript/references.bib",
+            source="docs/manuscript/references.bib",
             checked_at="2026-05-24T00:00:00+00:00",
         )
     )
@@ -580,7 +580,7 @@ def test_write_evidence_registry_report_preserves_stable_fact_timestamps(tmp_pat
         EvidenceFact(
             kind="citation",
             value="smith2026",
-            source="manuscript/references.bib",
+            source="docs/manuscript/references.bib",
             checked_at="2026-05-24T00:01:00+00:00",
         )
     )
@@ -617,7 +617,7 @@ def test_compact_registry_report_caps_samples_and_summarizes_facts() -> None:
 
 def test_full_registry_report_is_explicit_debug_opt_in(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     registry = VerifiedEvidenceRegistry()
-    registry.add(EvidenceFact(kind="citation", value="smith2026", source="manuscript/references.bib"))
+    registry.add(EvidenceFact(kind="citation", value="smith2026", source="docs/manuscript/references.bib"))
     full_path = tmp_path / "reports" / "evidence_registry_full.json"
 
     monkeypatch.delenv("TEMPLATE_EVIDENCE_REGISTRY_FULL", raising=False)

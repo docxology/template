@@ -18,4 +18,4 @@ submitting a paid or non-deterministic job. `dispatch.py` builds the genuine
 - Exercise behavior with real files and dataclasses; do not use mocks.
 
 The infrastructure import is intentional and declared in
-`manuscript/layer_contract.yaml`.
+`docs/manuscript/layer_contract.yaml`.

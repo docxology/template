@@ -71,7 +71,7 @@ actions the *new* property actually depends on resolving.
    model.
 4. Re-run both specs after any change and quote the real `states
    generated`/`distinct states found` numbers if you update
-   `../../manuscript/05_results_discussion.md` — don't estimate or reuse a
+   `../../docs/manuscript/05_results_discussion.md` — don't estimate or reuse a
    stale number from a previous run.
 5. If you add a third `.tla` spec, add a corresponding section to
    [`README.md`](README.md) and wire it into

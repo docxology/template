@@ -111,8 +111,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/03a_architecture.md",
-      "sha256": "147c9801b9cc4a98dc498b6cb1e2cc80ee4cd49c9b4d33e58cccfcd8b324f9e2",
-      "size_bytes": 5394,
+      "sha256": "650d08e2700689c003f7c8e2abe9ad3984cd5c5d80c4c37c6c150fae2e3a61ac",
+      "size_bytes": 5404,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -174,8 +174,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/05b_scalability.md",
-      "sha256": "43e06eacc9ff61d840cb53edce874d75b0b50b6e8c9defabfc01787b661d8d36",
-      "size_bytes": 3373,
+      "sha256": "3cfb3a0d85e9f01e3d8dad9945a617088bf7cf528b21352b028503467d0f4e03",
+      "size_bytes": 3378,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -219,8 +219,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/07_security_provenance.md",
-      "sha256": "3a238062e71ccd25b3ddb637e7e745b7d93b370f09ae4f2d33eedb86f3352b30",
-      "size_bytes": 9958,
+      "sha256": "c099b86a3cf7a5fbc342e1b7a6a9d9da45106f4759e7d38a1643c1964fcf1f22",
+      "size_bytes": 9963,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -228,8 +228,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/08a_appendix_pipeline.md",
-      "sha256": "9aa4d6a0741054f559dda9fc8d53fb3256507af327ecc87e28c4a1ba294d41bc",
-      "size_bytes": 3259,
+      "sha256": "a21c24e4f1ce9303121dd103fd2238ef4a1f894f28f7972895763c039c31dd90",
+      "size_bytes": 3274,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -246,8 +246,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/08c_appendix_directory.md",
-      "sha256": "65dd9d7b89dfe3f01a4f4855db5a27925e3a340b15cd220101ef68b881e2a435",
-      "size_bytes": 2001,
+      "sha256": "2a262b24b866b3047515380050871b02a24c182e4451656f6775a11f509077f5",
+      "size_bytes": 2006,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -633,8 +633,8 @@
     {
       "contract_match": true,
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "2d5399173094b2d53a673626598489a5fe46eefabb91dcdd93effc07aa95cb8e",
-      "size_bytes": 115295,
+      "sha256": "c775a40d338bfc6aec01636b4de810e4a86e3e150893db76265221ecef6fe89b",
+      "size_bytes": 115335,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

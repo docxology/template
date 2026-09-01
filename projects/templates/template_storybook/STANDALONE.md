@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.21176000](https://doi.org/10.5281/zenodo.21176000)
 - Latest deposited version DOI: [10.5281/zenodo.21176001](https://zenodo.org/records/21176001)
 - Additional declared locations: [github](https://github.com/docxology/template_storybook/releases/tag/v0.1.0), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_storybook), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmPcB1mTMZQb541ZsmwDwc6rQgSTLR4BGYefdTLsj1s5Qy), [netlify](https://6a47fd2233010f4eb138cdcd--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/xbajh/), [pypi](https://test.pypi.org/project/template-storybook/0.1.0/), [software_heritage](https://archive.softwareheritage.org/api/1/origin/save/git/url/https://github.com/docxology/template_storybook/)
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -49,7 +49,7 @@ rsync -a \
 ## Required Post-Fork Edits
 
 - Replace `content/story.yaml`.
-- Update `manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, and `codemeta.json`.
+- Update `docs/manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, and `codemeta.json`.
 - Re-render every page and inspect the generated PDF.
 
 ## Validation Commands

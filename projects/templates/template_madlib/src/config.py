@@ -365,7 +365,7 @@ def _load_pipeline_phases(value: Any) -> tuple[PipelinePhase, ...]:
         return (
             PipelinePhase(
                 name="Schema parse",
-                input_artifact="manuscript/config.yaml",
+                input_artifact="docs/manuscript/config.yaml",
                 transformation="Load and validate the madlib schema.",
                 output_artifact="MadlibConfig",
                 guard="config tests",

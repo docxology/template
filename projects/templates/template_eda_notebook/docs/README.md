@@ -55,7 +55,7 @@ workflow. Mirror these invariants — they are what the repo's gates enforce:
 | Thin orchestrator: `scripts/` + notebook cells only call `src/`; logic in `src/eda/` | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/` infra-import scan |
 | Zero mocks: real CSV / frames / `tmp_path` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/audit/verify_no_mocks.py` |
 | ≥90% project coverage on `src/` | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` |
-| `manuscript/config.yaml` is the configuration source of truth | [`rendering_pipeline.md`](rendering_pipeline.md) | rendering infra |
+| `docs/manuscript/config.yaml` is the configuration source of truth | [`rendering_pipeline.md`](rendering_pipeline.md) | rendering infra |
 | Deterministic outputs (static, committed CSV fixture); everything in `output/` regeneratable | [`output_conventions.md`](output_conventions.md) | reproducibility checks |
 
 ### Fork seed
@@ -69,7 +69,7 @@ cd "projects/working/$NEW"
 # 1. Replace data/measurements.csv + update src/eda/dataset.py::DatasetSchema
 # 2. Extend src/eda/ with your transforms (keep them pure; no plotting/I/O)
 # 3. Replace tests/ — real-data, no mocks, drive src/ coverage >= 90%
-# 4. Edit manuscript/config.yaml (title, authors)
+# 4. Edit docs/manuscript/config.yaml (title, authors)
 # 5. Update the notebook cells + scripts/eda_analysis.py to call your functions
 uv run pytest "projects/working/$NEW/tests" --cov="projects/working/$NEW/src" --cov-fail-under=90
 ```
@@ -92,5 +92,5 @@ grep -r "from infrastructure\|import infrastructure" projects/templates/template
 
 - [../AGENTS.md](../AGENTS.md) — Full project documentation.
 - [../README.md](../README.md) — Project quick start.
-- [../manuscript/AGENTS.md](../manuscript/AGENTS.md) — Manuscript directory rules and figure protocol.
+- [../docs/manuscript/AGENTS.md](../docs/manuscript/AGENTS.md) — Manuscript directory rules and figure protocol.
 - [output_conventions.md](output_conventions.md) — Output directory structure and regeneration.

@@ -4,10 +4,12 @@ End-to-end module guide for the **discovery → export → synthesis** workflow:
 [`infrastructure/search/`](../../infrastructure/search/) finds papers,
 [`infrastructure/reference/`](../../infrastructure/reference/) exports them
 to BibTeX (compatible with the
-[`projects/templates/template_code_project/manuscript/references.bib`](../../projects/templates/template_code_project/manuscript/references.bib)
+[`projects/templates/template_code_project/docs/manuscript/references.bib`](../../projects/templates/template_code_project/docs/manuscript/references.bib)
 syntax read by Pandoc with `--natbib`), and
 [`infrastructure/llm/`](../../infrastructure/llm/) synthesises content over
 the result.
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ```mermaid
 flowchart LR
@@ -115,7 +117,7 @@ The project's no-mocks policy is satisfied by:
 ## Format Compatibility
 
 The BibTeX writer is byte-compatible with
-[`projects/templates/template_code_project/manuscript/references.bib`](../../projects/templates/template_code_project/manuscript/references.bib):
+[`projects/templates/template_code_project/docs/manuscript/references.bib`](../../projects/templates/template_code_project/docs/manuscript/references.bib):
 
 * 2-space indent, trailing-comma-rule.
 * `pages={N--M}` (auto-normalised from `-` / `–` / `—`).

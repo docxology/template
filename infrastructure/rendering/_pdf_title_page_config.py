@@ -9,6 +9,7 @@ from typing import Any
 import yaml
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.project_paths import manuscript_config_path
 
 __all__ = [
     "_author_blocks",
@@ -73,7 +74,7 @@ def _resolve_config_yaml(manuscript_dir: Path) -> Path | None:
         return primary
     for parent in (manuscript_dir.parent, manuscript_dir.parent.parent):
         try:
-            candidate = parent / "manuscript" / "config.yaml"
+            candidate = manuscript_config_path(parent)
         except (TypeError, ValueError):
             continue
         if candidate.is_file() and candidate != primary:

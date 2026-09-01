@@ -29,8 +29,10 @@ mkdir -p projects/{name}/src
 # Create supporting directories
 mkdir -p projects/{name}/tests
 mkdir -p projects/{name}/scripts
-mkdir -p projects/{name}/manuscript
+mkdir -p projects/{name}/docs/manuscript
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ### 2. Move Modules
 

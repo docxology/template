@@ -55,7 +55,7 @@ uv run python projects/templates/template_methods_paper/scripts/methods_analysis
 uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
 ```
 
-This reads `manuscript/config.yaml` plus the analysis outputs above and
+This reads `docs/manuscript/config.yaml` plus the analysis outputs above and
 resolves every `{{TOKEN}}` in `manuscript/*.md`.
 
 ## Render the Publication PDF
@@ -80,7 +80,7 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_m
 - **Extend the controlled vocabulary**: only if your domain genuinely needs a
   new `StepKind` or `Dimension` — add it to `vocabulary.py`/`units.py` with a
   test (see `docs/architecture.md`).
-- **Modify the manuscript**: edit markdown files under `manuscript/`, then
+- **Modify the manuscript**: edit markdown files under `docs/manuscript/`, then
   re-render.
 
 ## Getting Help

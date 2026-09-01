@@ -102,7 +102,7 @@ java -jar tla2tools.jar -config AntProtocolFaulty.cfg AntProtocolFaulty.tla
 A successful run ends with `Model checking completed. No error has been
 found.` and reports the number of states generated/distinct states found —
 quote these numbers, don't estimate them, if you cite a run in the
-manuscript (`../../manuscript/05_results_discussion.md`). TLC's scratch
+manuscript (`../../docs/manuscript/05_results_discussion.md`). TLC's scratch
 output directory (`states/`) is gitignored.
 
 ## See also

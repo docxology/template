@@ -46,7 +46,7 @@ flowchart TB
 | `output/run_summary.json` | `run_prose_pipeline.py` | downstream tooling |
 | `output/data/manuscript_variables.json` | `z_generate_manuscript_variables.py` | rendering (substituted into markdown) |
 | `output/figures/*.png` | `y_generate_prose_figures.py` | humans / CI dashboards — standalone diagnostics, deliberately **not** embedded in the manuscript PDF (see `manuscript/03_results.md`) |
-| `manuscript/references.bib` | **NOT** modified by this pipeline (read-only) | `pipeline/` cross-checks against it |
+| `docs/manuscript/references.bib` | **NOT** modified by this pipeline (read-only) | `pipeline/` cross-checks against it |
 
 ## Conventions
 
@@ -60,7 +60,7 @@ flowchart TB
   for archival stability.
 * **`output/` is tracked for this public exemplar** when files stay below the
   50 MB public output ceiling. Everything in it is regenerable from
-  `manuscript/` + `manuscript/config.yaml`.
-* **`manuscript/references.bib` is read-only here.** The prose project
+  `docs/manuscript/` + `docs/manuscript/config.yaml`.
+* **`docs/manuscript/references.bib` is read-only here.** The prose project
   *validates* citations; it never writes to the bib file. Contrast with
   the `template_search_project` exemplar, which auto-populates it.

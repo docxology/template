@@ -1,6 +1,6 @@
 # Results {#sec:results}
 
-**Run snapshot.** With the bundled `manuscript/config.yaml` the most recent execution evaluated the query *"reproducible research optimization"* against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an abstract); the per-source breakdown is local=6 and recorded backend errors are none. The deep-search workflow ([@sec:deep_search]) covered 3 keyword(s) — *convex optimization; stochastic gradient descent; reproducible research* — drawn from , producing 300 unique paper(s) after cross-keyword deduplication.
+**Run snapshot.** With the bundled `docs/manuscript/config.yaml` the most recent execution evaluated the query *"reproducible research optimization"* against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an abstract); the per-source breakdown is local=6 and recorded backend errors are none. The deep-search workflow ([@sec:deep_search]) covered 3 keyword(s) — *convex optimization; stochastic gradient descent; reproducible research* — drawn from , producing 300 unique paper(s) after cross-keyword deduplication.
 
 When `sources: [local]` is used, this section reports fixture execution only. It must not be read as a claim about empirical literature coverage; a live-provider run requires source-level provenance and a separately reviewed claim boundary.
 
@@ -16,14 +16,14 @@ The numerical values in the run-snapshot paragraph that opens this section are r
 
 ## Output artefacts
 
-After running `scripts/run_search_pipeline.py` against the default `manuscript/config.yaml`, the project produces:
+After running `scripts/run_search_pipeline.py` against the default `docs/manuscript/config.yaml`, the project produces:
 
 * `output/search/results.json` — the raw `SearchResult` JSON, including `per_source_counts` and `errors` for diagnostic purposes.
 * `output/search/cache/search_<hash>.json` — the deterministic search cache; identical reruns are file reads.
 * `output/cache/abs/<safe_id>.txt` — one file per fetched abstract.
 * `output/cache/pdf/<safe_id>.{pdf,txt}` — PDFs and extracted text (only when `enrichment.fetch_fulltext: true`).
 * `output/corpus.json` — a `LocalBackend`-compatible JSON corpus of every result, enriched in place.
-* `manuscript/references.bib` — the auto-populated bibliography from the single-query pipeline (merged with any other `manuscript/*.bib` at PDF render time).
+* `docs/manuscript/references.bib` — the auto-populated bibliography from the single-query pipeline (merged with any other `manuscript/*.bib` at PDF render time).
 * `output/llm/per_paper/<safe_id>.md` — per-paper LLM analyses (only when `llm.per_paper: true` *and* the LLM stack is reachable).
 * `output/llm/synthesis.md` — corpus-level LLM synthesis (only when `llm.corpus_synthesis: true` *and* the LLM stack is reachable).
 * `output/reading_report.md` — the final assembled reading report.

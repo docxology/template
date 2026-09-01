@@ -18,7 +18,7 @@ flowchart LR
 
 ### Stage A — Grammar loading and validation
 
-`load_grammar(project_root)` reads `manuscript/config.yaml`, extracts the
+`load_grammar(project_root)` reads `docs/manuscript/config.yaml`, extracts the
 `autopoiesis:` block, and hands it to `parse_grammar()`. Parsing enforces
 four invariants before a `Grammar` object can exist at all:
 
@@ -41,7 +41,7 @@ four invariants before a `Grammar` object can exist at all:
 `parse_grammar` additionally validates every entry in `deps:` against
 `VENDORABLE_DEPS` — the fixed tuple `(logging, glossary_gen, figure_manager,
 manuscript_injection, steganography)` — raising `GrammarError` on any unknown
-dependency name. This project's own grammar (see `manuscript/config.yaml`)
+dependency name. This project's own grammar (see `docs/manuscript/config.yaml`)
 currently declares `deps: []`, so the deps-vendoring path exercised in
 `materialize.py` is present in the code and covered by
 `test_deps_vendoring.py`, but not active for the manuscript's own default

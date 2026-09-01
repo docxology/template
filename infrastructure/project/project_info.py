@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.project.metadata import get_project_metadata
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 
 
 @dataclass
@@ -73,7 +74,7 @@ def build_project_info(project_dir: Path, program: str = "") -> "ProjectInfo":
         has_src=(project_dir / "src").exists(),
         has_tests=(project_dir / "tests").exists(),
         has_scripts=(project_dir / "scripts").exists(),
-        has_manuscript=(project_dir / "manuscript").exists(),
+        has_manuscript=resolve_source_manuscript_dir(project_dir).exists(),
         metadata=metadata,
         program=program,
     )

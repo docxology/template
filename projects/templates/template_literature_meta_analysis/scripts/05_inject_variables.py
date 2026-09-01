@@ -55,7 +55,7 @@ def main() -> int:
     args = parser.parse_args()
 
     project_dir = resolve_project_dir(args.project)
-    manuscript_dir = project_dir / "manuscript"
+    manuscript_dir = project_dir / "docs" / "manuscript"
     output_dir = project_dir / "output"
     rendered_dir = output_dir / "manuscript"
 

@@ -109,7 +109,7 @@ def verify_honesty(
     """Full honesty verification: AST + prose scan."""
     manifest = build_manifest(project_root)
 
-    ms_dir = Path(manuscript_dir) if manuscript_dir else Path(project_root) / "manuscript"
+    ms_dir = Path(manuscript_dir) if manuscript_dir else Path(project_root) / "docs" / "manuscript"
     if ms_dir.exists():
         for md_file in ms_dir.glob("*.md"):
             text = md_file.read_text()

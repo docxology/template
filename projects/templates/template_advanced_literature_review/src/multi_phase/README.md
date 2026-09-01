@@ -15,5 +15,5 @@ from hypothesis scoring; claim-level scores are attached later by the
 knowledge-graph stage when assertions exist. The script only parses CLI options
 and reports results.
 
-Retarget phases in `../../manuscript/config.yaml`, then run the focused tests in
+Retarget phases in `../../docs/manuscript/config.yaml`, then run the focused tests in
 `../../tests/test_multi_phase_search.py` before refreshing live evidence.

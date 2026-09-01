@@ -1,12 +1,12 @@
 # AGENTS.md - template_literature_meta_analysis
 
-Public literature meta-analysis exemplar for systematic/scoping reviews, bibliometrics, corpus NLP, optional knowledge-graph extraction, and manuscript variable injection. The bundled offline fixture targets `modafinil`, but the project is designed to be retargeted from `manuscript/config.yaml` without changing source code.
+Public literature meta-analysis exemplar for systematic/scoping reviews, bibliometrics, corpus NLP, optional knowledge-graph extraction, and manuscript variable injection. The bundled offline fixture targets `modafinil`, but the project is designed to be retargeted from `docs/manuscript/config.yaml` without changing source code.
 
 ## Ground Truth
 
 | Surface | Source of truth |
 | --- | --- |
-| Search term, engines, keywords, hypotheses, subfields | `manuscript/config.yaml` under `project_config` |
+| Search term, engines, keywords, hypotheses, subfields | `docs/manuscript/config.yaml` under `project_config` |
 | Offline corpus fixture | `data/fixtures/modafinil_corpus.jsonl` |
 | Retrieval/de-duplication | `src/literature/` |
 | Bibliometrics, text analytics, embeddings, topics | `src/analysis/` |
@@ -19,20 +19,20 @@ Public literature meta-analysis exemplar for systematic/scoping reviews, bibliom
 
 Generated `output/` files are regenerable; this canonical public exemplar tracks
 its current evidence snapshot. Never hand-edit `output/manuscript/`,
-`output/data/`, or `output/figures/`; edit `manuscript/`, `src/`, `scripts/`,
+`output/data/`, or `output/figures/`; edit `docs/manuscript/`, `src/`, `scripts/`,
 or config and regenerate.
 
 ## Where To Look
 
 | Task | Start here | Notes |
 | --- | --- | --- |
-| Retarget the review topic | `manuscript/config.yaml` | Change `project_config.search.term`, query blocks, relevance keywords, subfields, and hypotheses together. |
+| Retarget the review topic | `docs/manuscript/config.yaml` | Change `project_config.search.term`, query blocks, relevance keywords, subfields, and hypotheses together. |
 | Retrieval engines | `src/literature/AGENTS.md` | Clients degrade to `skipped` without network/keys; tests use `pytest-httpserver`. |
 | Bibliometric or NLP metrics | `src/analysis/AGENTS.md` | Pure functions plus runner helpers; keep I/O in scripts or runner boundaries. |
 | Knowledge graph / LLM extraction | `src/knowledge_graph/AGENTS.md` | Optional, resumable, and network/local-LLM gated. |
 | Reproducibility scoring | `src/reproducibility/AGENTS.md` | Opt-in; script 11 produces validated full text before script 10 consumes it. |
 | Figures | `src/visualization/AGENTS.md` | Headless matplotlib, colorblind palette, CLI DPI propagation. |
-| Manuscript tokens | `src/manuscript/AGENTS.md` and `manuscript/AGENTS.md` | Variables come from generated JSON outputs and config. |
+| Manuscript tokens | `src/docs/manuscript/AGENTS.md` and `docs/manuscript/AGENTS.md` | Variables come from generated JSON outputs and config. |
 | Project scripts | `scripts/AGENTS.md` | Thin orchestrators for roles 01-11; dependency order is explicit, not numeric. |
 | Tests | `tests/AGENTS.md` | Real data, temp files, local HTTP servers, no mocks. |
 | Human docs | `docs/README.md` | Project-local architecture, testing, style, and output docs. |
@@ -54,7 +54,7 @@ uv run python projects/templates/template_literature_meta_analysis/scripts/09_ex
 uv run python projects/templates/template_literature_meta_analysis/scripts/05_inject_variables.py
 ```
 
-Stage 01 (`01_literature_search.py`) is the live/network retrieval path. Use it only when intentionally refreshing the corpus from engines configured in `manuscript/config.yaml`. It writes both the merged corpus and a deterministic `output/data/retrieval_report.json`; a legacy resume without that report is labelled explicitly and never assigned reconstructed engine counts.
+Stage 01 (`01_literature_search.py`) is the live/network retrieval path. Use it only when intentionally refreshing the corpus from engines configured in `docs/manuscript/config.yaml`. It writes both the merged corpus and a deterministic `output/data/retrieval_report.json`; a legacy resume without that report is labelled explicitly and never assigned reconstructed engine counts.
 
 ## Optional gap-filler search (Monid)
 

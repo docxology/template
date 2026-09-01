@@ -93,13 +93,13 @@ viable project.
 | `scripts/00_preflight.py` | AESTHETIC | Emits a warning before PDF render; smoke-tested by `tests/test_scripts_smoke.py`; pipeline still runs without it |
 | `tests/test_scripts_smoke.py` | AESTHETIC | Subprocess smoke for auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`) |
 | `tests/test_documentation.py` | AESTHETIC | Unit tests for `documentation.py` API reference helpers |
-| `manuscript/config.yaml` | REQUIRED | Loaded by `infrastructure.rendering.pdf_renderer`; pipeline aborts without it |
+| `docs/manuscript/config.yaml` | REQUIRED | Loaded by `infrastructure.rendering.pdf_renderer`; pipeline aborts without it |
 | `manuscript/*.md` | REQUIRED | Pandoc reads token-substituted copies during PDF stage |
-| `manuscript/references.bib` | REQUIRED | Pandoc citeproc reads it during PDF stage |
-| `manuscript/preamble.md` | REQUIRED | Injected at PDF compile; missing → LaTeX errors |
-| `manuscript/SYNTAX.md` | AESTHETIC | Authoring guide for humans; pipeline never reads it |
-| `manuscript/config.yaml.example` | AESTHETIC | Documentation; forkers copy → `config.yaml` |
-| `manuscript/AGENTS.md` | AESTHETIC | Agent guide; pipeline never reads it |
+| `docs/manuscript/references.bib` | REQUIRED | Pandoc citeproc reads it during PDF stage |
+| `docs/manuscript/preamble.md` | REQUIRED | Injected at PDF compile; missing → LaTeX errors |
+| `docs/manuscript/SYNTAX.md` | AESTHETIC | Authoring guide for humans; pipeline never reads it |
+| `docs/manuscript/config.yaml.example` | AESTHETIC | Documentation; forkers copy → `config.yaml` |
+| `docs/manuscript/AGENTS.md` | AESTHETIC | Agent guide; pipeline never reads it |
 | `docs/*.md` | AESTHETIC | Agent + human documentation; no gate parses these |
 | `src/STYLE.md`, `tests/PATTERNS.md`, `scripts/CONVENTIONS.md` | AESTHETIC | Per-subdir style/test/script conventions |
 | `src/AGENTS.md`, `tests/AGENTS.md`, `scripts/AGENTS.md` | AESTHETIC | Per-subdir agent guides |
@@ -119,5 +119,5 @@ AESTHETIC list as the audit surface that lives outside automated CI.
 - [`../AGENTS.md`](../AGENTS.md) — Project-level documentation (API reference, known issues, full directory map)
 - [`../pyproject.toml`](../pyproject.toml) — Coverage gate settings (`fail_under = 90`, `branch = true`)
 - [`../tests/conftest.py`](../tests/conftest.py) — `sys.path` setup and `MPLBACKEND=Agg`
-- [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — Manuscript directory: `{{VARIABLE}}` protocol, figure list, workflow
+- [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — Manuscript directory: `{{VARIABLE}}` protocol, figure list, workflow
 - [`../../../AGENTS.md`](../../../AGENTS.md) — Root template documentation (infrastructure module reference)

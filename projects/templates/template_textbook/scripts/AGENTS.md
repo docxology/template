@@ -16,7 +16,7 @@ pattern for any new script.
 | `generate_figures.py` | `visualization.plots.generate_all_figures`, optional `visualization.gallery.generate_gallery_figures`, `visualization.registry.write_figure_registry` | `output/figures/` |
 | `generate_diagrams.py` | `mermaid.diagrams.generate_all_diagrams` | `output/figures/mermaid/` |
 | `analysis.py` | `textbook.analysis` | `output/data/` (JSON with both parameters and results) |
-| `scaffold_chapter.py` | `textbook.content`, `textbook.config.iter_chapters` / `iter_unit_intros`, `textbook_io.write_text_atomic` | stub `.md` files under `manuscript/` |
+| `scaffold_chapter.py` | `textbook.content`, `textbook.config.iter_chapters` / `iter_unit_intros`, `textbook_io.write_text_atomic` | stub `.md` files under `docs/manuscript/` |
 | `audit_textbook_quality.py` | `textbook.audit.run_manuscript_audit` | stdout gate (structural by default; intentional stubs allowed; `--require-complete` for filled forks; `--lenient` optional) |
 
 The remaining module files are `_bootstrap.py` (shared `PROJECT` /
@@ -35,6 +35,6 @@ The remaining module files are `_bootstrap.py` (shared `PROJECT` /
 
 ## Do not touch
 
-`manuscript/config.yaml`, `references.bib`, `glossary.md`, and any chapter / lab /
+`docs/manuscript/config.yaml`, `references.bib`, `glossary.md`, and any chapter / lab /
 question markdown are authored content. Scripts read them; agents editing scripts
 must not modify them.

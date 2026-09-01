@@ -54,8 +54,8 @@ def _complete_project(
     write_doc(project / ".agents" / "skills" / "SKILL.md", "# Example skill\n")
     write_doc(project / "tests" / "test_contract.py", "def test_contract():\n    assert 1 + 1 == 2\n")
     write_doc(project / "scripts" / "analysis.py", "def main():\n    return 0\n")
-    write_doc(project / "manuscript" / "config.yaml", config)
-    write_doc(project / "manuscript" / "00_result.md", manuscript)
+    write_doc(project / "docs" / "manuscript" / "config.yaml", config)
+    write_doc(project / "docs" / "manuscript" / "00_result.md", manuscript)
     write_doc(
         project / "pyproject.toml",
         (

@@ -24,7 +24,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` as the copy-and-customize template with
+- Keep `docs/manuscript/config.yaml.example` as the copy-and-customize template with
   the same top-level sections as `config.yaml`, including the `project_config.dataset` block.
 - Any future EDA parameters (e.g. correlation method, imputation strategy) must
   enter through typed source loaders rather than ad hoc YAML reads in scripts.

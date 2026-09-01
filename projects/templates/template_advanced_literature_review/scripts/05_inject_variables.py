@@ -37,7 +37,7 @@ def main() -> int:
             f"this project-local entrypoint only renders {PROJECT_NAME!r}; use the target project's own stage-05 script"
         )
 
-    manuscript_dir = PROJECT_ROOT / "manuscript"
+    manuscript_dir = PROJECT_ROOT / "docs" / "manuscript"
     output_dir = PROJECT_ROOT / "output"
     rendered_dir = output_dir / "manuscript"
     if not manuscript_dir.is_dir():

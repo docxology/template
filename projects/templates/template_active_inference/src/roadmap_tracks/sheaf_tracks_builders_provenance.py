@@ -187,7 +187,7 @@ def build_replay_matrix(project_root: Path) -> dict[str, Any]:
         outputs = sorted(rel for rel, producer in producers.items() if producer == script)
         if not outputs and script == "compose_manuscript.py":
             outputs = [
-                path.relative_to(root).as_posix() for path in sorted((root / "manuscript").glob("[0-9][0-9]_*.md"))
+                path.relative_to(root).as_posix() for path in sorted((root / "docs" / "manuscript").glob("[0-9][0-9]_*.md"))
             ]
         method = "subprocess_replay" if any(rel in replay_by_artifact for rel in outputs) else "artifact_fingerprint"
         excluded_outputs = [rel for rel in outputs if hash_cycle_excluded(rel, producers.get(rel, ""))]

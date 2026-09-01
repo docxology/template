@@ -21,7 +21,7 @@ bug in the abstraction — fix the engine to be driven by data instead.
 ## Source of truth and configuration
 
 `content/` is the edition source of truth for newspaper pages, while
-`manuscript/config.yaml` and `manuscript/config.yaml.example` are the
+`docs/manuscript/config.yaml` and `docs/manuscript/config.yaml.example` are the
 placeholder-safe paper, render, publication, and fork metadata surfaces for the
 template monorepo pipeline. Keep generated files under `output/` disposable, and
 document any new layout capability in data/config first so forks can replace the
@@ -34,7 +34,7 @@ edition without editing engine code.
 | `src/newspaper/` | the engine (9 modules) | adding a layout *capability* |
 | `content/` | the edition (YAML) | changing *this paper's* content |
 | `scripts/` | Stage-02 orchestrators (preflight, figures, render) | changing the pipeline wiring |
-| `manuscript/` | descriptive paper for Stage-03 infra render | documenting the engine |
+| `docs/manuscript/` | descriptive paper for Stage-03 infra render | documenting the engine |
 | `tests/` | pytest suite | always, alongside engine changes |
 | `output/` | generated artifacts (PDF, figures, reports) | never by hand |
 | `docs/` | human documentation | when behavior changes |

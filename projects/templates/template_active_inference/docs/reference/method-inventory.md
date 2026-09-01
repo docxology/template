@@ -283,7 +283,7 @@ Total documented definitions: 867
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
 | 16 | `function` | `extract_preamble` | docstring | Return the LaTeX inside the ```latex fence of preamble.md (or ""). |
-| 28 | `function` | `geometry_string` | docstring | Read page geometry from ``manuscript/config.yaml``; fall back to 0.5 in margins. |
+| 28 | `function` | `geometry_string` | docstring | Read page geometry from ``docs/manuscript/config.yaml``; fall back to 0.5 in margins. |
 
 ## `src/manuscript/sheaf/cli.py`
 

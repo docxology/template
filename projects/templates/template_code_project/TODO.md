@@ -23,7 +23,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` as the richer copy-and-customize template for publication, LLM, testing, and steganography toggles.
+- Keep `docs/manuscript/config.yaml.example` as the richer copy-and-customize template for publication, LLM, testing, and steganography toggles.
 - Any future optimizer hyperparameter config must enter through typed source
   loaders rather than ad hoc YAML reads in scripts.
 

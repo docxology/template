@@ -50,7 +50,7 @@ FIGURES_DIR = OUTPUT_DIR / "figures"
 
 # Key artifact paths
 CORPUS_PATH = DATA_DIR / "corpus.jsonl"
-MANUSCRIPT_DIR = PROJECT_ROOT / "manuscript"
+MANUSCRIPT_DIR = PROJECT_ROOT / "docs" / "manuscript"
 
 # ---------------------------------------------------------------------------
 # Analysis defaults (02_meta_analysis_pipeline.py)

@@ -70,8 +70,8 @@ section containment inside each block (a finite Alexandrov space: the
 topology IS the partial order). The presheaf assigns to each composing
 section its bound fragment set — which tracks (prose, formalism, simulation,
 lean, gnn, ontology, …) contribute which files — per
-[`manuscript/sheaf/manifest.yaml`](../manuscript/sheaf/manifest.yaml), with
-the track registry ([`manuscript/sheaf/tracks.yaml`](../manuscript/sheaf/tracks.yaml))
+[`manuscript/sheaf/manifest.yaml`](../docs/manuscript/sheaf/manifest.yaml), with
+the track registry ([`manuscript/sheaf/tracks.yaml`](../docs/manuscript/sheaf/tracks.yaml))
 carrying each track's renderer, role, and global compose order.
 
 Six laws are machine-verified by `verify_sheaf_laws`

@@ -47,7 +47,7 @@ flowchart LR
 * **Modifying `src/` or `tests/`** → [`style_guide.md`](style_guide.md)
   + [`testing_philosophy.md`](testing_philosophy.md).
 * **Editing manuscript prose** → [`syntax_guide.md`](syntax_guide.md)
-  + [`../manuscript/SYNTAX.md`](../manuscript/SYNTAX.md).
+  + [`../docs/manuscript/SYNTAX.md`](../docs/manuscript/SYNTAX.md).
 * **Running the full pipeline** → [`quickstart.md`](quickstart.md)
   + [`rendering_pipeline.md`](rendering_pipeline.md).
 * **A check or stage failed** → [`troubleshooting.md`](troubleshooting.md)
@@ -68,8 +68,8 @@ they are what the repo's gates enforce:
 | Thin-orchestrator: only `src/pipeline/` touches `infrastructure/`; `scripts/` are CLI shims | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/` infra-import grep |
 | Zero mocks: real Markdown + real BibTeX in `tmp_path` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/audit/verify_no_mocks.py` |
 | ≥90% project coverage on `src/` (live % → [`COUNTS.md`](../../../../docs/_generated/COUNTS.md)) | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` (canonical command below) |
-| `manuscript/config.yaml` is the single source of run policy | [`rendering_pipeline.md`](rendering_pipeline.md) | the prose pipeline |
-| `references.bib` hand-curated, read-only (validated, never written) | [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) | bibliography checks |
+| `docs/manuscript/config.yaml` is the single source of run policy | [`rendering_pipeline.md`](rendering_pipeline.md) | the prose pipeline |
+| `references.bib` hand-curated, read-only (validated, never written) | [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) | bibliography checks |
 
 **2. As a fork seed for a new prose/review project:**
 
@@ -80,9 +80,9 @@ uv run python scripts/audit/copy_exemplar.py \
   --dest "projects/working/$NEW" \
   --new-name "$NEW"
 cd "projects/working/$NEW"
-# 1. Edit manuscript/config.yaml (title, thresholds, bibliography policy) — the only knob
+# 1. Edit docs/manuscript/config.yaml (title, thresholds, bibliography policy) — the only knob
 # 2. Replace manuscript/*.md with your prose; keep H1-per-section + {{TOKEN}} conventions
-# 3. Curate manuscript/references.bib (validated, never auto-written)
+# 3. Curate docs/manuscript/references.bib (validated, never auto-written)
 # 4. Adjust src/ only if you need new checks — keep pipeline/ as the sole infra seam
 uv run pytest "projects/working/$NEW/tests/" --cov="projects/working/$NEW/src" --cov-fail-under=90
 uv run python scripts/runner/execute_pipeline.py --project "working/$NEW" --core-only
@@ -113,6 +113,6 @@ share the identical structural contract above.
 
 * Project [`README.md`](../README.md) — top-level project overview.
 * Project [`AGENTS.md`](../AGENTS.md) — agent walkthrough.
-* [`../manuscript/SYNTAX.md`](../manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax.
+* [`../docs/manuscript/SYNTAX.md`](../docs/manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax.
 * [`../../../infrastructure/prose/SKILL.md`](../../../../infrastructure/prose/SKILL.md) — underlying analysis API.
 * [`../../../infrastructure/reference/SKILL.md`](../../../../infrastructure/reference/SKILL.md) — bibliography validation API.

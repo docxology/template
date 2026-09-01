@@ -31,7 +31,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` as the richer copy-and-customize template for publication, LLM, testing, and steganography toggles.
+- Keep `docs/manuscript/config.yaml.example` as the richer copy-and-customize template for publication, LLM, testing, and steganography toggles.
 - Any future fault-injection or protocol-timing parameters must enter through typed source loaders (`network/bus.py::FaultConfig`) rather than ad hoc YAML reads in scripts.
 
 ## Documentation and signposting gaps

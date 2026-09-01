@@ -60,7 +60,7 @@ Core data:
 | `output/data/manuscript_variables.json` | Variables injected into the manuscript |
 | `output/data/manuscript_variable_provenance.json` | Source artifact and JSON-pointer mapping for injected variables and fragments |
 | `output/data/manuscript_figure_blocks.json` | Registry-backed Pandoc figure blocks inserted into the hydrated manuscript |
-| `output/data/publication_ledger.json` | Release-stage ledger of prior releases; written by `write_transmission_bookends()` when `manuscript/config.yaml`'s `publication.transmission_bookends.enabled` is `true` — see [`docs/guides/publishing-guide.md`](../../../../docs/guides/publishing-guide.md) |
+| `output/data/publication_ledger.json` | Release-stage ledger of prior releases; written by `write_transmission_bookends()` when `docs/manuscript/config.yaml`'s `publication.transmission_bookends.enabled` is `true` — see [`docs/guides/publishing-guide.md`](../../../../docs/guides/publishing-guide.md) |
 | `output/data/transmission_manifest.json` | Release-stage transmission manifest paired with the publication ledger above |
 
 Figures:

@@ -30,7 +30,7 @@ def _duplicate_track_markers(manuscript_dir: Path) -> list[str]:
 def validate_manuscript(project_root: Path) -> dict[str, bool]:
     """Validate manuscript."""
     root = project_root.resolve()
-    composed = list((root / "manuscript").glob("[0-9][0-9]_*.md"))
+    composed = list((root / "docs" / "manuscript").glob("[0-9][0-9]_*.md"))
     manifest_path = root / "manuscript" / "sheaf" / "manifest.yaml"
     from manuscript.sheaf import (
         load_coverage_json,
@@ -132,7 +132,7 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
     integration_issues = validate_integration_audit_artifacts(root)
     sheaf_track_issues = validate_sheaf_track_artifacts(root)
 
-    manuscript_dir = root / "manuscript"
+    manuscript_dir = root / "docs" / "manuscript"
     variable_keys = set(generate_variables(root, require_analysis_outputs=False))
     unknown_tokens = validate_manuscript_tokens(manuscript_dir, variable_keys)
     malformed_tokens: list[str] = []
@@ -159,7 +159,7 @@ def validate_manuscript(project_root: Path) -> dict[str, bool]:
         "sheaf_coverage_heatmap": heatmap_path.exists(),
         "methods_sheaf_layers": methods_sheaf_layers,
         "manuscript_tokens_registered": manuscript_tokens_registered,
-        "no_duplicate_sheaf_track_markers": not _duplicate_track_markers(root / "manuscript"),
+        "no_duplicate_sheaf_track_markers": not _duplicate_track_markers(root / "docs" / "manuscript"),
         "resolved_manuscript_hydrated": resolved_manuscript_hydrated,
         "gnn_concordance": gnn_ok,
         "semantic_sheaf_gluing": not validate_semantic_gluing(root),

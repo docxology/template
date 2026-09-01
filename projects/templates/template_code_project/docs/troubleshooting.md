@@ -44,7 +44,7 @@ analysis stage, or the token is not defined in `src/manuscript_variables.py::gen
    uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py --allow-draft
    ```
 
-## Edited `manuscript/config.yaml` but the figures or PDF didn't change
+## Edited `docs/manuscript/config.yaml` but the figures or PDF didn't change
 
 **Cause.** Stages 4-5 (analysis → render) were skipped or only the render
 stage ran (it does not re-execute `optimization_analysis.py`).
@@ -94,7 +94,7 @@ before compilation.
    grep -nE "Citation|undefined|Error" \
      projects/templates/template_code_project/output/pdf/_combined_manuscript.log
    ```
-2. Check the entry exists in `manuscript/references.bib` and is well-formed.
+2. Check the entry exists in `docs/manuscript/references.bib` and is well-formed.
 3. Ensure all required BibTeX fields are present (`author`, `title`,
    `year`, plus type-specific fields).
 
@@ -107,9 +107,9 @@ before compilation.
    uv run python projects/templates/template_code_project/scripts/optimization_analysis.py 2>&1 | tee /tmp/analysis.log
    ```
 2. Check the output directory exists and is writable.
-3. Validate `manuscript/config.yaml`:
+3. Validate `docs/manuscript/config.yaml`:
    ```bash
-   uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_code_project/manuscript/config.yaml'))"
+   uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_code_project/docs/manuscript/config.yaml'))"
    ```
 
 ## `uv` command not found
@@ -166,7 +166,7 @@ Or run the suite in parallel:
 uv run pytest projects/templates/template_code_project/tests/ -n auto
 ```
 
-## YAML parse error in `manuscript/config.yaml`
+## YAML parse error in `docs/manuscript/config.yaml`
 
 **Common mistakes.**
 
@@ -177,7 +177,7 @@ uv run pytest projects/templates/template_code_project/tests/ -n auto
 **Fix.** Validate the file before running:
 
 ```bash
-uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_code_project/manuscript/config.yaml'))"
+uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_code_project/docs/manuscript/config.yaml'))"
 ```
 
 ## PDF Rendering fails: `mmdc` could not find Chrome

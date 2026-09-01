@@ -31,7 +31,7 @@ Scripts are numbered by role, but numeric order is **not** run order: `05_inject
 assembles the final manuscript from every other stage's output (including `06`'s
 `fulltext_assessment.json`, which `00_abstract.md` renders unconditionally), so it must run
 *last* among the analysis scripts. The default offline order lives in
-`manuscript/config.yaml`'s `analysis.scripts` list (`02`, `04`, `06`, `07`, `08`, `09`, then
+`docs/manuscript/config.yaml`'s `analysis.scripts` list (`02`, `04`, `06`, `07`, `08`, `09`, then
 `05`). Network/LLM-gated scripts `01`, `03`, `10`, and `11` are excluded from that default
 allowlist. Run the opt-in producer/consumer chain explicitly as `11` then `10`, and run `05`
 again afterward when those optional artifacts must be reflected in the manuscript.
@@ -56,7 +56,7 @@ again afterward when those optional artifacts must be reflected in the manuscrip
 
 Multi-source literature search orchestrator.
 
-**APIs queried:** arXiv (default query list in `src/config.py` → `DEFAULT_ARXIV_QUERIES`), Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv (10 engines total). Override via `project_config.search.arxiv_queries` in `manuscript/config.yaml`.
+**APIs queried:** arXiv (default query list in `src/config.py` → `DEFAULT_ARXIV_QUERIES`), Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv (10 engines total). Override via `project_config.search.arxiv_queries` in `docs/manuscript/config.yaml`.
 
 **Key flags:**
 - `--resume` / `--no-resume` — load existing `corpus.jsonl` before fetching (default: resume on)
@@ -251,7 +251,7 @@ Violations of this pattern break the architecture and test coverage guarantees.
 
 All scripts support `--log-level {DEBUG,INFO,WARNING,ERROR}` for verbosity control.
 
-Scripts `01`, `02`, `03`, `10`, and `11` accept `--config PATH` (default `manuscript/config.yaml`), which **supplies settings** — search queries, relevance keywords, checkpoint intervals, custom hypothesis definitions, sampling, full-text paths, and scoring settings. Project *discovery* itself is by filesystem convention (a `src/` of Python modules plus `tests/`); `config.yaml` carries metadata and render/search settings, not the discovery predicate.
+Scripts `01`, `02`, `03`, `10`, and `11` accept `--config PATH` (default `docs/manuscript/config.yaml`), which **supplies settings** — search queries, relevance keywords, checkpoint intervals, custom hypothesis definitions, sampling, full-text paths, and scoring settings. Project *discovery* itself is by filesystem convention (a `src/` of Python modules plus `tests/`); `config.yaml` carries metadata and render/search settings, not the discovery predicate.
 
 ## Output Directory Structure
 

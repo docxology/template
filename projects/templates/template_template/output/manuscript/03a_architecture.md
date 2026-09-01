@@ -12,7 +12,7 @@ The repository is organized into two strictly separated layers:
 
 | Directory | Purpose |
 |-----------|---------|
-| `manuscript/` | Markdown chapters and `config.yaml` |
+| `docs/manuscript/` | Markdown chapters and `config.yaml` |
 | `scripts/` | Thin orchestrator scripts (Stage 02) |
 | `src/` | Project-specific Python modules |
 | `tests/` | Project-specific test suite |
@@ -27,7 +27,7 @@ The two layers communicate exclusively through Python imports and filesystem pat
 Projects are designed to be completely self-contained. Adding a new project requires no changes to the infrastructure layer, no modifications to `pyproject.toml`, and no updates to the pipeline orchestrator. A project is automatically discovered if and only if it satisfies two conditions:
 
 1. It exists as a subdirectory of `projects/`.
-2. It contains the file `manuscript/config.yaml`.
+2. It contains the file `docs/manuscript/config.yaml`.
 
 This paradigm enables horizontal scaling: N researchers can maintain N independent projects within a single repository, sharing infrastructure without coupling. Each project declares its own testing tolerances, manuscript metadata, LLM review preferences, and rendering configuration in its `config.yaml`. The system currently hosts its public canonical exemplars under `projects/templates/` (`templates/template_active_inference`, `templates/template_advanced_literature_review`, `templates/template_autopoiesis`, `templates/template_autoresearch_project`, `templates/template_autoscientists`, `templates/template_code_project`, `templates/template_data_descriptor`, `templates/template_eda_notebook`, `templates/template_formal`, `templates/template_gold_refinement`, `templates/template_literature_meta_analysis`, `templates/template_madlib`, `templates/template_methods_paper`, `templates/template_newspaper`, `templates/template_pitch_deck`, `templates/template_pools_rules_tools`, `templates/template_prose_project`, `templates/template_redacted_report`, `templates/template_registered_report`, `templates/template_search_project`, `templates/template_sia`, `templates/template_storybook`, `templates/template_template`, `templates/template_textbook`), including this meta-manuscript at `projects/templates/template_template/`.
 

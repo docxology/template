@@ -32,6 +32,7 @@ from infrastructure.project.drift.checks_publication_validators import (
     check_publishing_status_block_current,
 )
 from infrastructure.project.drift.models import Report
+from infrastructure.core.project_paths import manuscript_config_path
 
 __all__ = (
     "check_config_author_placeholders",
@@ -54,7 +55,7 @@ def check_publication_index_completeness(project_root: Path, report: Report, pro
     if not _is_canonical_template(project):
         return
 
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     config: dict[str, object] = {}
     if config_path.is_file():
         try:
@@ -389,7 +390,7 @@ def check_publication_metadata_consistency(project_root: Path, report: Report, p
     # publication status and for a project with no manuscript/config.yaml.
     check_pyproject_publication_consistency(project_root, report, project)
 
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     if not config_path.is_file():
         return
 
@@ -539,7 +540,7 @@ def check_repository_url_consistent(project_root: Path, report: Report, project:
     deliberately projects only authorship and concept-DOI fields, leaving the
     repository URL unbound to its source.
     """
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     if not config_path.is_file():
         return
     try:
@@ -608,7 +609,7 @@ def check_metadata_export_current(project_root: Path, report: Report, project: s
     churn — covered by check_publication_metadata_consistency — never
     false-fires here.
     """
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     targets = ("CITATION.cff", ".zenodo.json", "codemeta.json")
     if not config_path.is_file() or not any((project_root / name).is_file() for name in targets):
         return

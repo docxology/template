@@ -5,12 +5,12 @@ logic in `../src/`, orchestration in `../scripts/`, and generated artifacts
 under `../output/`.
 
 When adding or deepening a pipeline track or sheaf section, treat
-[`../tracks.yaml`](../tracks.yaml), [`../manuscript/sheaf/tracks.yaml`](../manuscript/sheaf/tracks.yaml),
-[`../manuscript/sheaf/manifest.yaml`](../manuscript/sheaf/manifest.yaml), and
+[`../tracks.yaml`](../tracks.yaml), [`../docs/manuscript/sheaf/tracks.yaml`](../docs/manuscript/sheaf/tracks.yaml),
+[`../docs/manuscript/sheaf/manifest.yaml`](../docs/manuscript/sheaf/manifest.yaml), and
 generated artifacts under `../output/` as the source of truth:
 
-- Update `../manuscript/sheaf/tracks.yaml` (registry) and `../manuscript/sheaf/manifest.yaml` (bindings).
-- Update section bundles under `../manuscript/sections/`.
+- Update `../docs/manuscript/sheaf/tracks.yaml` (registry) and `../docs/manuscript/sheaf/manifest.yaml` (bindings).
+- Update section bundles under `../docs/manuscript/sections/`.
 - Update `../tracks.yaml` pipeline gates when a track gains artifacts or scripts.
 - Update project tests under `../tests/` and
   `tests/infra_tests/project/test_active_inference_project_contract.py` when

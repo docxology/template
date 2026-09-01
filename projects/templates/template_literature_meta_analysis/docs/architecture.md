@@ -38,5 +38,5 @@ Offline, `corpus.jsonl` is seeded from the committed synthetic fixture
 | Anti-pattern | Why it's wrong | Fix |
 | --- | --- | --- |
 | Math/parsing inside `scripts/` | Cannot be unit-tested without running the script | Move to `src/`, add a test class |
-| `from infrastructure import …` in domain `src/` | Breaks the standalone boundary | Use `scripts/`, or declare the file in `manuscript/layer_contract.yaml` |
-| Hard-coding the domain term in `src/` | Breaks genericity | Read it from `manuscript/config.yaml` |
+| `from infrastructure import …` in domain `src/` | Breaks the standalone boundary | Use `scripts/`, or declare the file in `docs/manuscript/layer_contract.yaml` |
+| Hard-coding the domain term in `src/` | Breaks genericity | Read it from `docs/manuscript/config.yaml` |

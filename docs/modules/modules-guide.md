@@ -67,7 +67,9 @@ table_md = generate_markdown_table(entries)
 print(f"API entries: {len(entries)}")
 ```
 
-CLI: `uv run python -m infrastructure.documentation.generate_glossary_cli projects/templates/template_code_project/src/ projects/templates/template_code_project/manuscript/98_symbols_glossary.md` (second path is the markdown file to inject into; created if missing).
+CLI: `uv run python -m infrastructure.documentation.generate_glossary_cli projects/templates/template_code_project/src/ projects/templates/template_code_project/docs/manuscript/98_symbols_glossary.md` (second path is the markdown file to inject into; created if missing).
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ### LLM Assistance
 

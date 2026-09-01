@@ -40,7 +40,9 @@ If Ollama is not running, Stage 06 gracefully skips — no failure.
 
 ## Configuring LLM in config.yaml
 
-Each project controls LLM behavior in `projects/{name}/manuscript/config.yaml`:
+Each project controls LLM behavior in `projects/{name}/docs/manuscript/config.yaml`:
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ```yaml
 llm:

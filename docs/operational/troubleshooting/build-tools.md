@@ -112,8 +112,10 @@ tail -150 projects/{name}/output/pdf/_combined_manuscript.log | grep -A2 -B2 "gr
 
 1. Generate missing figures: `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_code_project` (replace with the intended qualified project)
 2. Verify graphicx package: `grep "usepackage{graphicx}" projects/{name}/output/pdf/_combined_manuscript.tex`
-3. Fix figure paths: `sed -i 's|{figures/|{../output/figures/|g' projects/{name}/manuscript/*.md`
+3. Fix figure paths: `sed -i 's|{figures/|{../output/figures/|g' projects/{name}/docs/manuscript/*.md`
 4. Run full rebuild: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only` (Stage 0 "Clean Output Directories" runs by default — there is no `--clean` flag)
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ---
 
@@ -137,7 +139,7 @@ grep "Emergency stop" projects/{name}/output/pdf/_combined_manuscript.log
 
 **Symptom:** PDF renders but title page missing
 
-**Solution:** Create/verify `projects/{name}/manuscript/config.yaml`:
+**Solution:** Create/verify `projects/{name}/docs/manuscript/config.yaml`:
 
 ```yaml
 paper:
@@ -205,10 +207,10 @@ Normal - pypdf gracefully handles malformed PDF objects.
 
 ```bash
 # Check labels exist (Pandoc-crossref attribute syntax, e.g. {#sec:name}, {#fig:name})
-grep -rn '{#sec:\|{#fig:\|{#eq:\|{#tbl:' projects/<name>/manuscript/
+grep -rn '{#sec:\|{#fig:\|{#eq:\|{#tbl:' projects/<name>/docs/manuscript/
 
 # Check the bracketed reference is present ([@sec:name], [@fig:name], ...)
-grep -rn '\[@sec:\|\[@fig:\|\[@eq:\|\[@tbl:' projects/<name>/manuscript/
+grep -rn '\[@sec:\|\[@fig:\|\[@eq:\|\[@tbl:' projects/<name>/docs/manuscript/
 ```
 
 **Solutions:**

@@ -21,6 +21,7 @@ from infrastructure.project.drift.checks_publication import (
     check_publishing_status_block_current,
 )
 from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
+from infrastructure.core.project_paths import manuscript_config_path
 
 
 def _read(path: Path) -> str:
@@ -377,10 +378,10 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
         "src/__init__.py",
         "tests",
         "tests/__init__.py",
-        "manuscript/config.yaml",
-        "manuscript/config.yaml.example",
-        "manuscript/references.bib",
-        "manuscript/preamble.md",
+        "docs/manuscript/config.yaml",
+        "docs/manuscript/config.yaml.example",
+        "docs/manuscript/references.bib",
+        "docs/manuscript/preamble.md",
     ]
     # Documented canonical surface (projects/templates/AGENTS.md): the
     # per-exemplar agent skill catalog. Project may arrive qualified
@@ -464,7 +465,7 @@ def check_template_signpost_contract(project_root: Path, report: Report, project
 
 def check_config_example_parity(project_root: Path, report: Report, project: str) -> None:
     """Check config example parity."""
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     example_path = project_root / "manuscript" / "config.yaml.example"
     if not config_path.is_file() or not example_path.is_file():
         return

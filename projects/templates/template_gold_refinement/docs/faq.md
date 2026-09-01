@@ -30,13 +30,13 @@ seed + same lexicon = same token plan, every time.
 
 ## How do I add a new lexicon category?
 
-Add it under `gold_refinement.lexicon` in `manuscript/config.yaml`. Required
+Add it under `gold_refinement.lexicon` in `docs/manuscript/config.yaml`. Required
 categories are: `metallurgical_terms`, `manuscript_terms`, `purity_adjectives`,
 `refinement_verbs`. Optional categories are allowed.
 
 ## How do I add a new manuscript token?
 
-1. Add a slot in `manuscript/config.yaml` under `gold_refinement.slots`
+1. Add a slot in `docs/manuscript/config.yaml` under `gold_refinement.slots`
 2. The variable name is auto-generated: `SLOT_NAME` (count=1) or
    `SLOT_NAME_1`, `SLOT_NAME_2`, ... (count>1)
 3. The live cross-reference test in `test_manuscript_variables.py` will fail

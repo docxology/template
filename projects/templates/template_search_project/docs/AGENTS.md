@@ -43,7 +43,7 @@ This sequence is intentional. Each document provides context the next assumes:
 
 **Show-not-tell.** Manuscript prose must reference concrete file paths and APIs. A reader of `02_methodology.md` should be able to open `src/pipeline.py` and find the named function within seconds.
 
-**Two bibliographies.** `manuscript/references.bib` (single-query) and `manuscript/references_deep.bib` (deep-search) coexist; Pandoc `--natbib` merges every `manuscript/*.bib` at render time.
+**Two bibliographies.** `docs/manuscript/references.bib` (single-query) and `manuscript/references_deep.bib` (deep-search) coexist; Pandoc `--natbib` merges every `manuscript/*.bib` at render time.
 
 **Alphabetical script order.** `run_*` < `s_*` < `y_*` < `z_*` < `zz_*` is enforced by `tests/test_script_order.py`. The composer must run before the resolver.
 
@@ -71,7 +71,7 @@ cd projects/templates/template_search_project && uv run python scripts/review --
 
 ## Contracts
 
-- Prefer linking to [`../manuscript/config.yaml`](../manuscript/config.yaml) as the single configuration reference.
+- Prefer linking to [`../docs/manuscript/config.yaml`](../docs/manuscript/config.yaml) as the single configuration reference.
 - Paths in docs assume execution from the repository root (`template/`) unless stated otherwise.
 - Cross-references inside this directory use relative links.
 
@@ -81,7 +81,7 @@ cd projects/templates/template_search_project && uv run python scripts/review --
 - [`../AGENTS.md`](../AGENTS.md) — project-level overview.
 - [`../pyproject.toml`](../pyproject.toml) — coverage-gate settings (`fail_under = 90`, `branch = true`).
 - [`../tests/conftest.py`](../tests/conftest.py) — `sys.path` setup and `MPLBACKEND=Agg`.
-- [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — manuscript-directory protocol.
-- [`../manuscript/SYNTAX.md`](../manuscript/SYNTAX.md) — project-local Pandoc syntax overlay.
+- [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — manuscript-directory protocol.
+- [`../docs/manuscript/SYNTAX.md`](../docs/manuscript/SYNTAX.md) — project-local Pandoc syntax overlay.
 - [`../src/AGENTS.md`](../src/AGENTS.md) — `src/` module-level guide.
 - [`../../../AGENTS.md`](../../../AGENTS.md) — root template documentation.

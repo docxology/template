@@ -116,7 +116,7 @@ all must fail every claim, or the checker has no teeth.
 ### Prose scanning for unsupported claims
 
 `verify_honesty(project_root, manuscript_dir=None)` first calls
-`build_manifest`, then — if a `manuscript/` directory exists — reads every
+`build_manifest`, then — if a `docs/manuscript/` directory exists — reads every
 `*.md` file in it and scans for a fixed, case-insensitive regex over six
 absolute-certainty words and one hard percentage figure, defined verbatim in
 `_UNSUPPORTED_CLAIM_PATTERN` in `src/honesty.py` (deliberately not quoted

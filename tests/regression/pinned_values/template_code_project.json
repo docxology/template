@@ -4,7 +4,7 @@
     "project_name": "template_code_project",
     "populated_on": "2026-06-13",
     "populated_by": "Codex",
-    "note": "First real regression pins for deterministic optimization claims in manuscript/03_results.md."
+    "note": "First real regression pins for deterministic optimization claims in docs/manuscript/03_results.md."
   },
   "_provenance": {
     "solution_accuracy_target_solution": {
@@ -51,7 +51,7 @@
     }
   },
   "solution_accuracy_target_solution": {
-    "manuscript_section": "manuscript/03_results.md / Solution Accuracy",
+    "manuscript_section": "docs/manuscript/03_results.md / Solution Accuracy",
     "claim_text": "Target solution: x = {{RESULT_OPTIMUM_X}} (relative error < 10^-4 for converged settings)",
     "value": 1.0,
     "abs_tolerance": 1e-12,
@@ -62,7 +62,7 @@
     "pinned_at_commit": "b85f2753"
   },
   "solution_accuracy_target_objective": {
-    "manuscript_section": "manuscript/03_results.md / Solution Accuracy",
+    "manuscript_section": "docs/manuscript/03_results.md / Solution Accuracy",
     "claim_text": "Target objective: f(x) = {{RESULT_OPTIMUM_F}} (absolute error < {{CONFIG_CONVERGENCE_TOL}} for converged settings)",
     "value": -0.5,
     "abs_tolerance": 1e-12,
@@ -73,7 +73,7 @@
     "pinned_at_commit": "b85f2753"
   },
   "opt_results_best_step_size": {
-    "manuscript_section": "manuscript/03_results.md / Convergence Analysis",
+    "manuscript_section": "docs/manuscript/03_results.md / Convergence Analysis",
     "claim_text": "Fastest configuration in this experiment: alpha={{RESULT_BEST_STEP_SIZE}} converges in {{RESULT_MIN_ITERATIONS}} iteration(s).",
     "value": 1.0,
     "abs_tolerance": 1e-12,
@@ -84,7 +84,7 @@
     "pinned_at_commit": "b85f2753"
   },
   "opt_results_min_iterations": {
-    "manuscript_section": "manuscript/03_results.md / Performance Metrics Summary",
+    "manuscript_section": "docs/manuscript/03_results.md / Performance Metrics Summary",
     "claim_text": "Smallest iteration count recorded: {{RESULT_MIN_ITERATIONS}}",
     "value": 1,
     "abs_tolerance": 0,
@@ -95,7 +95,7 @@
     "pinned_at_commit": "b85f2753"
   },
   "opt_results_max_iterations": {
-    "manuscript_section": "manuscript/03_results.md / Performance Metrics Summary",
+    "manuscript_section": "docs/manuscript/03_results.md / Performance Metrics Summary",
     "claim_text": "Largest iteration count recorded: {{RESULT_MAX_ITERATIONS}}",
     "value": 1000,
     "abs_tolerance": 0,
@@ -106,7 +106,7 @@
     "pinned_at_commit": "b85f2753"
   },
   "opt_results_mean_iterations_rounded": {
-    "manuscript_section": "manuscript/03_results.md / Computational Performance",
+    "manuscript_section": "docs/manuscript/03_results.md / Computational Performance",
     "claim_text": "Convergence: Fastest at alpha = {{RESULT_BEST_STEP_SIZE}} ({{RESULT_MIN_ITERATIONS}} iteration), average {{RESULT_AVG_ITERATIONS}} iterations",
     "value": 351,
     "abs_tolerance": 0,
@@ -117,7 +117,7 @@
     "pinned_at_commit": "f9f0f3f7e"
   },
   "opt_results_num_converged": {
-    "manuscript_section": "manuscript/03_results.md / Solution Accuracy",
+    "manuscript_section": "docs/manuscript/03_results.md / Solution Accuracy",
     "claim_text": "{{RESULT_NUM_CONVERGED}} of {{CONFIG_NUM_STEP_SIZES}} tested step sizes achieved the analytical optimum within numerical precision.",
     "value": 4,
     "abs_tolerance": 0,

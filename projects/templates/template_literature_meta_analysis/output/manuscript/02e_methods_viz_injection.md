@@ -34,7 +34,7 @@ configuration change re-computes the values and re-targets the prose automatical
 
 The injection system computes variables from seven sources:
 
-1. `manuscript/config.yaml` — search term, engine roster, subfield taxonomy, hypotheses
+1. `docs/manuscript/config.yaml` — search term, engine roster, subfield taxonomy, hypotheses
 2. `corpus.jsonl` — corpus size
 3. `temporal_analysis.json` — year range, CAGR, peak year, doubling time
 4. `citation_network.json` — edges, nodes, density, communities, PageRank, hubs

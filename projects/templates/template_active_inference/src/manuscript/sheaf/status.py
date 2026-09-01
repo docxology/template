@@ -195,13 +195,13 @@ def build_sheaf_render_log(project_root: Path) -> dict[str, Any]:
     matrix = build_sheaf_section_status_matrix(root)
     producers, _, artifacts_by_gate = _artifact_indexes(root)
     manuscript_outputs = sorted(
-        path.relative_to(root).as_posix() for path in (root / "manuscript").glob("[0-9][0-9]_*.md")
+        path.relative_to(root).as_posix() for path in (root / "docs" / "manuscript").glob("[0-9][0-9]_*.md")
     )
     events = [
         {
             "event_id": "registry_loaded",
             "component": "sheaf.registry",
-            "input": "manuscript/sheaf/tracks.yaml",
+            "input": "docs/manuscript/sheaf/tracks.yaml",
             "output": "registered_tracks",
             "status": "ok" if matrix["track_count"] > 0 else "failed",
             "detail": f"{matrix['track_count']} tracks",
@@ -209,7 +209,7 @@ def build_sheaf_render_log(project_root: Path) -> dict[str, Any]:
         {
             "event_id": "manifest_loaded",
             "component": "sheaf.manifest",
-            "input": "manuscript/sheaf/manifest.yaml",
+            "input": "docs/manuscript/sheaf/manifest.yaml",
             "output": "manifest_sections",
             "status": "ok" if matrix["section_count"] > 0 else "failed",
             "detail": f"{matrix['section_count']} sections",
@@ -234,7 +234,7 @@ def build_sheaf_render_log(project_root: Path) -> dict[str, Any]:
             "event_id": "layers_renderer_bound",
             "component": "sheaf.layers_report",
             "input": "output/data/sheaf_section_status_matrix.json",
-            "output": "manuscript/08_methods_sheaf.md",
+            "output": "docs/manuscript/08_methods_sheaf.md",
             "status": "ok" if (root / "manuscript" / "08_methods_sheaf.md").is_file() else "failed",
             "detail": "methods sheaf layer tables",
         },

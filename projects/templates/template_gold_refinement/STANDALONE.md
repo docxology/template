@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.20931955](https://doi.org/10.5281/zenodo.20931955)
 - Latest deposited version DOI: [10.5281/zenodo.20938523](https://zenodo.org/records/20938523)
 - Additional declared locations: [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_gold_refinement), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmQBXK5qoGv5NSWC8mzcx22AgkHeqBJL8z8HrCgEy7nzio), [osf](https://osf.io/u485p/), [pypi](https://test.pypi.org/project/template-gold-refinement/0.1.0/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_gold_refinement)
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -21,7 +21,7 @@ composition with mega-madlib token injection. In the template monorepo it is
 built and rendered through the shared pipeline; after copying it elsewhere,
 keep these surfaces aligned:
 
-- `manuscript/config.yaml` owns the `gold_refinement:` schema: seed, lexicon,
+- `docs/manuscript/config.yaml` owns the `gold_refinement:` schema: seed, lexicon,
   slots, section conditions, section titles, narrative moves, design
   principles, quality probes, failure modes, and authoring obligations.
 - `src/refinery.py` owns the five refinery stages and monotone purity enforcement.
@@ -39,7 +39,7 @@ See `docs/domain_fork_guide.md` for the stage-remap template and boundary rules.
 Before a fork claims a new method, update the config-owned method surface first:
 
 - Add or revise refinery stages in `src/refinery.py` with matching purity targets.
-- Update lexicon categories in `manuscript/config.yaml` to reflect domain vocabulary.
+- Update lexicon categories in `docs/manuscript/config.yaml` to reflect domain vocabulary.
 - Connect refinery stages to real domain operations (not just decorative labels).
 - Add `design_principles`, `quality_probes`, and `failure_modes` that can catch
   the new method failing.

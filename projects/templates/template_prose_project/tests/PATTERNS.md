@@ -98,7 +98,7 @@ def test_run_prose_pipeline_offline(tmp_path: Path):
     assert (iso / "output" / "manuscript_report.json").exists()
 ```
 
-The `_setup_isolated(tmp_path)` helper copies the bundled `manuscript/`
+The `_setup_isolated(tmp_path)` helper copies the bundled `docs/manuscript/`
 into a clean tree so subprocess tests never write into the project's
 own `output/`.
 
@@ -197,7 +197,7 @@ Do not delete tests to make a coverage number work — fix the gap.
 ## Integration Test
 
 `test_pipeline_integration.py::test_bundled_manuscript_runs` is the
-end-to-end fixture. It copies the project's `manuscript/` into a
+end-to-end fixture. It copies the project's `docs/manuscript/` into a
 temporary location, runs `run_prose_pipeline`, and asserts on file
 existence and shape (not exact value) so the test remains stable
 across editorial revisions of the bundled prose.

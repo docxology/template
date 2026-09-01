@@ -4,7 +4,7 @@ Read this before modifying `template_literature_meta_analysis`.
 
 ## Rule 1: Config Owns Domain Policy
 
-`manuscript/config.yaml` is the control surface for the review topic, query strings, enabled engines, relevance keywords, subfield taxonomy, and hypotheses. Retargeting from `modafinil` to another topic should primarily be a config and fixture-corpus change, not a source-code fork.
+`docs/manuscript/config.yaml` is the control surface for the review topic, query strings, enabled engines, relevance keywords, subfield taxonomy, and hypotheses. Retargeting from `modafinil` to another topic should primarily be a config and fixture-corpus change, not a source-code fork.
 
 ## Rule 2: Scripts Stay Thin
 

@@ -1,17 +1,17 @@
 # Abstract {#sec:abstract}
 
-This paper documents `template_search_project`, the literature-search exemplar shipped with the [Research Project Template](https://github.com/docxology/template). The project demonstrates **two configurable, reproducible pipelines** sharing the same configuration file and the same `infrastructure/search/` + `infrastructure/reference/` modules. The standard pipeline (`scripts/run_search_pipeline.py`) handles a single `SearchQuery` end-to-end. The deep-search pipeline (`scripts/run_deep_search.py`, see [@sec:deep_search]) fans out across a list of keywords (each capped at 100 papers per keyword from `project_config.deep_search.max_results_per_keyword` in `manuscript/config.yaml`), fully enriches every paper with its abstract and PDF fulltext, and (optionally) uses the local LLM to write a multi-section reading note for every paper. When a deep-search aggregate exists, the latest run covered **3** keyword(s) with **300** unique paper(s) after cross-keyword deduplication. Both turn a free-text topic into:
+This paper documents `template_search_project`, the literature-search exemplar shipped with the [Research Project Template](https://github.com/docxology/template). The project demonstrates **two configurable, reproducible pipelines** sharing the same configuration file and the same `infrastructure/search/` + `infrastructure/reference/` modules. The standard pipeline (`scripts/run_search_pipeline.py`) handles a single `SearchQuery` end-to-end. The deep-search pipeline (`scripts/run_deep_search.py`, see [@sec:deep_search]) fans out across a list of keywords (each capped at 100 papers per keyword from `project_config.deep_search.max_results_per_keyword` in `docs/manuscript/config.yaml`), fully enriches every paper with its abstract and PDF fulltext, and (optionally) uses the local LLM to write a multi-section reading note for every paper. When a deep-search aggregate exists, the latest run covered **3** keyword(s) with **300** unique paper(s) after cross-keyword deduplication. Both turn a free-text topic into:
 
 1. a deduplicated, year-filtered set of papers drawn from arXiv, Crossref, optional local corpora, and (opt-in) [Paperclip](https://paperclip.gxl.ai/);
-2. a Pandoc-compatible `references.bib` byte-identical in style to the canonical exemplar in [`template_code_project`](../../template_code_project/manuscript/references.bib) (file `manuscript/references.bib`);
+2. a Pandoc-compatible `references.bib` byte-identical in style to the canonical exemplar in [`template_code_project`](../../template_code_project/docs/manuscript/references.bib) (file `docs/manuscript/references.bib`);
 3. cached abstracts and (optionally) extracted PDF full text, written to disk under stable per-paper identifiers; and
 4. an LLM-synthesised reading report assembled from per-paper analyses and a cross-corpus thematic synthesis, all produced by a local Ollama model with pinned seed and temperature.
 
 All discovery logic lives in `infrastructure/search/literature/` ([source on GitHub](https://github.com/docxology/template/tree/main/infrastructure/search/literature)); all export logic lives in `infrastructure/reference/citation/` ([source on GitHub](https://github.com/docxology/template/tree/main/infrastructure/reference/citation)); LLM synthesis reuses the existing `infrastructure/llm/` ([source on GitHub](https://github.com/docxology/template/tree/main/infrastructure/llm)) bridge. The project itself contains only thin orchestration, manuscript prose, and a test suite — perfectly mirroring the **two-layer architecture** the template enforces.
 
-The motivating concern is *reproducibility*: a query at time $t_0$ should produce the same results at time $t_1$ unless the cache is explicitly invalidated. This is achieved by deterministic search caching keyed on canonical query identity, on-disk caching of every fetched abstract / PDF, and pinned LLM seeds. The same `manuscript/config.yaml` that drives the pipeline is also the only configuration any reviewer needs.
+The motivating concern is *reproducibility*: a query at time $t_0$ should produce the same results at time $t_1$ unless the cache is explicitly invalidated. This is achieved by deterministic search caching keyed on canonical query identity, on-disk caching of every fetched abstract / PDF, and pinned LLM seeds. The same `docs/manuscript/config.yaml` that drives the pipeline is also the only configuration any reviewer needs.
 
-**Run snapshot.** With the bundled `manuscript/config.yaml`, the most recent pipeline execution evaluated the query *"reproducible research optimization"* against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an abstract), and recorded backend errors: none. Resolve ``{{…}}`` tokens by running `scripts/z_generate_manuscript_variables.py` after `run_search_pipeline.py`; the script writes `output/data/manuscript_variables.json` and resolved markdown under `output/manuscript/`, which the PDF-rendering stage prefers when present.
+**Run snapshot.** With the bundled `docs/manuscript/config.yaml`, the most recent pipeline execution evaluated the query *"reproducible research optimization"* against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an abstract), and recorded backend errors: none. Resolve ``{{…}}`` tokens by running `scripts/z_generate_manuscript_variables.py` after `run_search_pipeline.py`; the script writes `output/data/manuscript_variables.json` and resolved markdown under `output/manuscript/`, which the PDF-rendering stage prefers when present.
 
 **Claim boundary.** The committed `data/corpus.json` and the default local-source run are deterministic workflow fixtures. Their counts, summaries, and generated bibliography exercise the pipeline contract; they are not empirical findings about the literature.
 
@@ -37,7 +37,7 @@ Reproducible computational research demands that every claim be traceable back t
 * The export side ([`infrastructure/reference/`](../../../../infrastructure/reference/)) provides BibTeX read/write/convert facilities byte-compatible with the existing exemplar `references.bib`, suitable for the combined-PDF pipeline (Pandoc `--natbib` + BibTeX).
 * A small project-local synthesis layer (in [`src/synthesis.py`](../src/synthesis.py)) takes enriched papers, builds reproducible LLM prompts, and assembles a markdown reading report.
 
-The project is *configurable* via a single `manuscript/config.yaml`: changing the topic, year filters, backend set, enrichment level, and LLM parameters never requires editing code. The project is *modular* in the strict sense the template uses: every reusable component lives in `infrastructure/`, and `src/` contains only project-specific orchestration.
+The project is *configurable* via a single `docs/manuscript/config.yaml`: changing the topic, year filters, backend set, enrichment level, and LLM parameters never requires editing code. The project is *modular* in the strict sense the template uses: every reusable component lives in `infrastructure/`, and `src/` contains only project-specific orchestration.
 
 The contribution of this exemplar is therefore not a new algorithm; it is a **demonstration that a reproducible literature workflow can be built from existing template infrastructure** with no new optional dependencies, no mocks in the test suite, and complete configurability through a single YAML file.
 
@@ -51,7 +51,7 @@ The contribution of this exemplar is therefore not a new algorithm; it is a **de
 
 Two distinct workflows run on top of `infrastructure/search/literature` and `infrastructure/reference/citation`:
 
-* **Standard pipeline** (`scripts/run_search_pipeline.py` → `src/pipeline.py::run_literature_pipeline`) — single `SearchQuery`. Four pure-orchestration stages with no LLM dependency: (1) search via `LiteratureClient`, (2) enrichment via `AbstractFetcher` and (optional) `FulltextFetcher`, (3) collision-free citation-key generation in `_build_citation_keys`, (4) writing `output/corpus.json` + `manuscript/references.bib` + `output/enrichment_log.json`. The orchestrator script then optionally calls `src/synthesis.py` for per-paper and corpus LLM synthesis and `src/report.py` for the final reading report.
+* **Standard pipeline** (`scripts/run_search_pipeline.py` → `src/pipeline.py::run_literature_pipeline`) — single `SearchQuery`. Four pure-orchestration stages with no LLM dependency: (1) search via `LiteratureClient`, (2) enrichment via `AbstractFetcher` and (optional) `FulltextFetcher`, (3) collision-free citation-key generation in `_build_citation_keys`, (4) writing `output/corpus.json` + `docs/manuscript/references.bib` + `output/enrichment_log.json`. The orchestrator script then optionally calls `src/synthesis.py` for per-paper and corpus LLM synthesis and `src/report.py` for the final reading report.
 * **Deep search** (`scripts/run_deep_search.py` → `src/deep_search.py::run_deep_search`) — multi-keyword fan-out: each keyword runs its own `SearchQuery` capped at `max_results_per_keyword` (100 by default), every paper is fully enriched (abstract + PDF fulltext when available), and an LLM-driven multi-section deep summary (CONTRIBUTION / METHOD / EVIDENCE / LIMITATIONS / CONNECTIONS / SIGNIFICANCE / TAGS) is written for each paper as a standalone markdown reading note. Output lands under `output/deep_search/<keyword_slug>/` plus aggregate `aggregate.json`, `aggregate_report.md`, and a unified, deduplicated `manuscript/references_deep.bib` with collision-free citation keys.
 
 The standard pipeline is described first in this section; the deep-search workflow is documented in [@sec:deep_search]. Diagnostic figures for the latest pipeline run appear at the end of this section.
@@ -145,7 +145,7 @@ Citation keys appear in `[brackets]` so a downstream tool — for example a Pand
 
 # Results {#sec:results}
 
-**Run snapshot.** With the bundled `manuscript/config.yaml` the most recent execution evaluated the query *"reproducible research optimization"* against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an abstract); the per-source breakdown is local=6 and recorded backend errors are none. The deep-search workflow ([@sec:deep_search]) covered 3 keyword(s) — *convex optimization; stochastic gradient descent; reproducible research* — drawn from , producing 300 unique paper(s) after cross-keyword deduplication.
+**Run snapshot.** With the bundled `docs/manuscript/config.yaml` the most recent execution evaluated the query *"reproducible research optimization"* against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an abstract); the per-source breakdown is local=6 and recorded backend errors are none. The deep-search workflow ([@sec:deep_search]) covered 3 keyword(s) — *convex optimization; stochastic gradient descent; reproducible research* — drawn from , producing 300 unique paper(s) after cross-keyword deduplication.
 
 When `sources: [local]` is used, this section reports fixture execution only. It must not be read as a claim about empirical literature coverage; a live-provider run requires source-level provenance and a separately reviewed claim boundary.
 
@@ -161,14 +161,14 @@ The numerical values in the run-snapshot paragraph that opens this section are r
 
 ## Output artefacts
 
-After running `scripts/run_search_pipeline.py` against the default `manuscript/config.yaml`, the project produces:
+After running `scripts/run_search_pipeline.py` against the default `docs/manuscript/config.yaml`, the project produces:
 
 * `output/search/results.json` — the raw `SearchResult` JSON, including `per_source_counts` and `errors` for diagnostic purposes.
 * `output/search/cache/search_<hash>.json` — the deterministic search cache; identical reruns are file reads.
 * `output/cache/abs/<safe_id>.txt` — one file per fetched abstract.
 * `output/cache/pdf/<safe_id>.{pdf,txt}` — PDFs and extracted text (only when `enrichment.fetch_fulltext: true`).
 * `output/corpus.json` — a `LocalBackend`-compatible JSON corpus of every result, enriched in place.
-* `manuscript/references.bib` — the auto-populated bibliography from the single-query pipeline (merged with any other `manuscript/*.bib` at PDF render time).
+* `docs/manuscript/references.bib` — the auto-populated bibliography from the single-query pipeline (merged with any other `manuscript/*.bib` at PDF render time).
 * `output/llm/per_paper/<safe_id>.md` — per-paper LLM analyses (only when `llm.per_paper: true` *and* the LLM stack is reachable).
 * `output/llm/synthesis.md` — corpus-level LLM synthesis (only when `llm.corpus_synthesis: true` *and* the LLM stack is reachable).
 * `output/reading_report.md` — the final assembled reading report.
@@ -200,7 +200,7 @@ With those three steps, every run from the same commit produces the same outputs
 * **Thin orchestrator pattern** — `scripts/run_search_pipeline.py` does only argument parsing, configuration loading, and I/O; all logic lives in `infrastructure/` or `src/`.
 * **No mocks** — neither in the new infrastructure modules nor in the project test suite.
 * **Multi-project support** — the project lives alongside `template_code_project/` and follows the same layout, so the existing pipeline runner discovers and executes it without modification.
-* **Reproducibility** — deterministic search caching, on-disk enrichment caching, and pinned LLM seeds make a single `manuscript/config.yaml` the only artifact a reviewer needs.
+* **Reproducibility** — deterministic search caching, on-disk enrichment caching, and pinned LLM seeds make a single `docs/manuscript/config.yaml` the only artifact a reviewer needs.
 
 We close with three concrete extensions that build naturally on this foundation:
 
@@ -214,7 +214,7 @@ The bundled `data/corpus.json` is a deterministic workflow fixture containing
 citation-shaped optimisation records [@boyd2004convex; @nocedal2006numerical;
 @nesterov2013gradient; @kingma2014adam; @reddi2018convergence;
 @peng2011reproducible]. It ensures that the auto-generated
-`manuscript/references.bib` contains citation-ready entries that downstream
+`docs/manuscript/references.bib` contains citation-ready entries that downstream
 tooling can resolve; it does not establish empirical literature findings.
 
 
@@ -337,7 +337,7 @@ classDiagram
 
 ## On-disk layout
 
-The project keeps committed input data in `data/`, regeneratable outputs in `output/` (gitignored), and the manuscript source in `manuscript/`. The Mermaid flowchart in this subsection (rendered in the HTML build; the PDF build strips Mermaid) lists every artefact the standard pipeline writes:
+The project keeps committed input data in `data/`, regeneratable outputs in `output/` (gitignored), and the manuscript source in `docs/manuscript/`. The Mermaid flowchart in this subsection (rendered in the HTML build; the PDF build strips Mermaid) lists every artefact the standard pipeline writes:
 
 * `data/corpus.json` — the bundled offline corpus, CI-safe default for `LocalBackend`.
 * `output/search/results.json` — raw `SearchResult` JSON from the latest run.
@@ -352,7 +352,7 @@ The project keeps committed input data in `data/`, regeneratable outputs in `out
 * `output/enrichment_log.json` — one entry per fetcher per paper.
 * `output/reading_report.md` — final markdown reading report.
 * `output/run_summary.json` — one-line metadata for the run.
-* `manuscript/references.bib` — auto-populated, Pandoc-ready BibTeX.
+* `docs/manuscript/references.bib` — auto-populated, Pandoc-ready BibTeX.
 
 ```mermaid
 flowchart TB
@@ -419,7 +419,7 @@ The deep-search workflow has its own collision handler in `src/deep_search.py::r
 
 # Reproducibility {#sec:reproducibility}
 
-Reproducibility in computational research has well-documented prerequisites: open data, open code, and a deterministic build that can be re-run from scratch [@peng2011reproducible]. The bundled `manuscript/config.yaml` is intentionally configured to satisfy all three for **strict reproducibility**:
+Reproducibility in computational research has well-documented prerequisites: open data, open code, and a deterministic build that can be re-run from scratch [@peng2011reproducible]. The bundled `docs/manuscript/config.yaml` is intentionally configured to satisfy all three for **strict reproducibility**:
 
 1. `project_config.search.sources: [local]` consumes `data/corpus.json`, which is a curated and committed JSON corpus. No network is required to run the pipeline.
 2. `search.cache_dir: output/search/cache` writes deterministic JSON cache files; running the same query twice produces a byte-identical artifact tree (modulo timestamp metadata in the cache file itself).
@@ -496,7 +496,7 @@ The deep-search workflow extends the standard literature pipeline along three ax
 
 ## Configuration
 
-The `deep_search:` block in `manuscript/config.yaml` controls the run. The most-used knobs:
+The `deep_search:` block in `docs/manuscript/config.yaml` controls the run. The most-used knobs:
 
 * `keywords` — list of free-text queries (each becomes one `SearchQuery`).
 * `max_results_per_keyword` — per-keyword cap (100 by default; honoured by the aggregator after dedup).
@@ -507,7 +507,7 @@ The `deep_search:` block in `manuscript/config.yaml` controls the run. The most-
 
 ## Pipeline shape
 
-The deep-search pipeline reads `project_config.deep_search` from `manuscript/config.yaml`, runs one `SearchQuery` per keyword (capped at `max_results_per_keyword`), aggregates the per-backend results through `LiteratureClient`, enriches every paper via `AbstractFetcher` and `FulltextFetcher`, generates collision-free citation keys with `paper_to_bibentry`, and (when `llm_per_paper: true` and Ollama is reachable) calls the local LLM with `DEEP_PROMPT` to produce a seven-section reading note per paper. The per-keyword outputs are then merged by `merge_papers` to form a deduplicated aggregate roster which is written to `manuscript/references_deep.bib`, `output/deep_search/aggregate.json`, and `output/deep_search/aggregate_report.md`. A Mermaid flowchart in this subsection renders the same flow visually in the HTML build.
+The deep-search pipeline reads `project_config.deep_search` from `docs/manuscript/config.yaml`, runs one `SearchQuery` per keyword (capped at `max_results_per_keyword`), aggregates the per-backend results through `LiteratureClient`, enriches every paper via `AbstractFetcher` and `FulltextFetcher`, generates collision-free citation keys with `paper_to_bibentry`, and (when `llm_per_paper: true` and Ollama is reachable) calls the local LLM with `DEEP_PROMPT` to produce a seven-section reading note per paper. The per-keyword outputs are then merged by `merge_papers` to form a deduplicated aggregate roster which is written to `manuscript/references_deep.bib`, `output/deep_search/aggregate.json`, and `output/deep_search/aggregate_report.md`. A Mermaid flowchart in this subsection renders the same flow visually in the HTML build.
 
 ```mermaid
 flowchart TB
@@ -1017,7 +1017,7 @@ This project can produce **two** BibTeX files; the template combined-PDF
 path uses Pandoc `--natbib` plus BibTeX and merges every `manuscript/*.bib`
 for citation resolution:
 
-* [`manuscript/references.bib`](references.bib) — single-query pipeline
+* [`docs/manuscript/references.bib`](references.bib) — single-query pipeline
   output (`scripts/run_search_pipeline.py`).
 * [`manuscript/references_deep.bib`](references_deep.bib) — deduplicated
   multi-keyword deep-search output (`scripts/run_deep_search.py`). Every
@@ -1043,7 +1043,7 @@ required fields per entry type:
 
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
-    projects/templates/template_search_project/manuscript/references.bib --strict
+    projects/templates/template_search_project/docs/manuscript/references.bib --strict
 uv run python -m infrastructure.reference.citation.cli validate \
     projects/templates/template_search_project/manuscript/references_deep.bib --strict
 ```

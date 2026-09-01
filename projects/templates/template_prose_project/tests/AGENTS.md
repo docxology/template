@@ -33,7 +33,7 @@ flowchart TB
 * **`tmp_path` fixture for filesystem isolation.** Tests never write to
   the project's own `output/` directory.
 * **Bundled manuscript is the integration fixture.** `test_pipeline_integration.py`
-  copies `manuscript/` to a temp dir and runs the whole pipeline against it.
+  copies `docs/manuscript/` to a temp dir and runs the whole pipeline against it.
 * **Coverage gate: 90%.** Measured coverage → [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md); reductions should be justified in the PR.
 
 ## Running

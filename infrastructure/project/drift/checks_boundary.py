@@ -8,6 +8,7 @@ from pathlib import Path
 import yaml
 
 from infrastructure.core.files.serialization import relative_or_self as _rel
+from infrastructure.core.project_paths import manuscript_config_path
 from infrastructure.project.drift.models import Report
 
 _STANDALONE_SRC_PROJECTS = frozenset(
@@ -27,7 +28,7 @@ _CODE_ADAPTER_ALLOWLIST = frozenset(
 
 
 def _load_layer_contract_allowlist(project_root: Path) -> set[str]:
-    contract_path = project_root / "manuscript" / "layer_contract.yaml"
+    contract_path = manuscript_config_path(project_root).parent / "layer_contract.yaml"
     if not contract_path.is_file():
         return set()
     loaded = yaml.safe_load(contract_path.read_text(encoding="utf-8"))

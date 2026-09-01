@@ -253,7 +253,7 @@ def _project_analysis_from_workspace(child: Path) -> ProjectAnalysis | None:
     except (OSError, ValueError, yaml.YAMLError) as exc:
         logger.warning(f"Could not load config for {child.name}: {exc}")
 
-    manuscript_dir = child / "manuscript"
+    manuscript_dir = child / "docs" / "manuscript"
     chapters: list[Path] = []
     if manuscript_dir.is_dir():
         numbered = [p for p in manuscript_dir.rglob("*.md") if p.name[0].isdigit()]

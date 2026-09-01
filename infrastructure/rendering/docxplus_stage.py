@@ -16,13 +16,14 @@ from pathlib import Path
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.rendering.docxplus_export import export_project
+from infrastructure.core.project_paths import manuscript_config_path
 
 logger = get_logger(__name__)
 
 
 def _manuscript_identity(project_root: Path) -> tuple[str | None, str | None]:
     """Title and author from ``manuscript/config.yaml``, when it has them."""
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     if not config_path.is_file():
         return None, None
     try:

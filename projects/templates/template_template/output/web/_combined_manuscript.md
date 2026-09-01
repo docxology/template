@@ -178,7 +178,7 @@ The repository is organized into two strictly separated layers:
 
 | Directory | Purpose |
 |-----------|---------|
-| `manuscript/` | Markdown chapters and `config.yaml` |
+| `docs/manuscript/` | Markdown chapters and `config.yaml` |
 | `scripts/` | Thin orchestrator scripts (Stage 02) |
 | `src/` | Project-specific Python modules |
 | `tests/` | Project-specific test suite |
@@ -193,7 +193,7 @@ The two layers communicate exclusively through Python imports and filesystem pat
 Projects are designed to be completely self-contained. Adding a new project requires no changes to the infrastructure layer, no modifications to `pyproject.toml`, and no updates to the pipeline orchestrator. A project is automatically discovered if and only if it satisfies two conditions:
 
 1. It exists as a subdirectory of `projects/`.
-2. It contains the file `manuscript/config.yaml`.
+2. It contains the file `docs/manuscript/config.yaml`.
 
 This paradigm enables horizontal scaling: N researchers can maintain N independent projects within a single repository, sharing infrastructure without coupling. Each project declares its own testing tolerances, manuscript metadata, LLM review preferences, and rendering configuration in its `config.yaml`. The system currently hosts its public canonical exemplars under `projects/templates/` (`templates/template_active_inference`, `templates/template_advanced_literature_review`, `templates/template_autopoiesis`, `templates/template_autoresearch_project`, `templates/template_autoscientists`, `templates/template_code_project`, `templates/template_data_descriptor`, `templates/template_eda_notebook`, `templates/template_formal`, `templates/template_gold_refinement`, `templates/template_literature_meta_analysis`, `templates/template_madlib`, `templates/template_methods_paper`, `templates/template_newspaper`, `templates/template_pitch_deck`, `templates/template_pools_rules_tools`, `templates/template_prose_project`, `templates/template_redacted_report`, `templates/template_registered_report`, `templates/template_search_project`, `templates/template_sia`, `templates/template_storybook`, `templates/template_template`, `templates/template_textbook`), including this meta-manuscript at `projects/templates/template_template/`.
 
@@ -604,7 +604,7 @@ However, the policy requires careful management of external dependencies. Tests 
 
 ## Scalability: From 1 to N Projects
 
-The Standalone Project Paradigm enables horizontal scaling: adding a new project requires creating a directory with `manuscript/config.yaml` and nothing else. No infrastructure code changes, no `pyproject.toml` modifications, no CI configuration updates. The `run.sh` orchestrator automatically discovers new projects and presents them in its interactive menu.
+The Standalone Project Paradigm enables horizontal scaling: adding a new project requires creating a directory with `docs/manuscript/config.yaml` and nothing else. No infrastructure code changes, no `pyproject.toml` modifications, no CI configuration updates. The `run.sh` orchestrator automatically discovers new projects and presents them in its interactive menu.
 
 We have validated scaling with 24 canonical exemplars under `projects/templates/`—always present for onboarding and tooling—and with this manuscript from `projects/templates/template_template` (147 tests) as a git-tracked public exemplar in the same automated discovery menus.
 
@@ -939,7 +939,7 @@ The build timestamp and Git commit hash (short SHA) are recorded in the PDF meta
 
 ### Layer 4: QR and Barcode Injection
 
-When barcodes are enabled, a bottom-of-page barcode strip (QR code + Code128 label) is merged onto **every** page, encoding the document identifier and page number (`ID:<doc-id-prefix>|P:<page>`). In `overlay_mode: "qr"`, a tiled QR overlay covers the full page in place of the text watermark. Both are configurable via the `steganography:` block in `manuscript/config.yaml` (or the repo-level `secure_config.yaml` defaults).
+When barcodes are enabled, a bottom-of-page barcode strip (QR code + Code128 label) is merged onto **every** page, encoding the document identifier and page number (`ID:<doc-id-prefix>|P:<page>`). In `overlay_mode: "qr"`, a tiled QR overlay covers the full page in place of the text watermark. Both are configurable via the `steganography:` block in `docs/manuscript/config.yaml` (or the repo-level `secure_config.yaml` defaults).
 
 ## The `secure_run.sh` Orchestrator
 
@@ -1007,15 +1007,15 @@ Software Heritage [@cosmo2020softwareheritage] complements this picture at the s
 | Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke` | `tests/infra_tests/` | coverage + junit-style logs | tolerant ceilings |
 | Project Tests | `scripts/pipeline/stage_01_test.py --project-only` | `projects/<name>/tests/` | coverage artefacts | blocking by default |
 | Project Analysis | `scripts/pipeline/stage_02_analysis.py` | thin scripts | `figures/`, `data/`, reports | Blocking |
-| Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `manuscript/config.yaml` | `output/data/connector_search/` | opt-in (`science` tag); skipped if not configured |
+| Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `docs/manuscript/config.yaml` | `output/data/connector_search/` | opt-in (`science` tag); skipped if not configured |
 | Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage "Connector Search"` | prior stage outputs | `.provenance/graph.json` | opt-in (`provenance` tag); skipped if not configured |
-| PDF Rendering | `scripts/pipeline/stage_03_render.py` | `manuscript/`, placeholders | `.pdf`/`.tex` bundles | Blocking |
+| PDF Rendering | `scripts/pipeline/stage_03_render.py` | `docs/manuscript/`, placeholders | `.pdf`/`.tex` bundles | Blocking |
 | Output Validation | `scripts/pipeline/stage_04_validate.py` | render tree | Markdown + PDF diagnostics JSON | Blocking / downgrade |
 | LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | resolved manuscript artefacts | textual reviews | Optional skip (`allow_skip`) |
 | LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | abstract metadata | multilingual snippets | Optional skip (`allow_skip`) |
 | Copy Outputs | `scripts/pipeline/stage_05_copy.py` | validated tree | mirrored `output/<name>/…` | soft fail logged |
 | Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | rendered combined markdown | `output/ebook/` (EPUB/MOBI/DOCX) | opt-in (`ebook` tag); soft fail |
-| Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `manuscript/config.yaml` | `output/metadata/` (ONIX/JSON/OPF) | opt-in (`metadata` tag); soft fail |
+| Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `docs/manuscript/config.yaml` | `output/metadata/` (ONIX/JSON/OPF) | opt-in (`metadata` tag); soft fail |
 | Executable Bundle | `scripts/runner/bundle_executable.py` | project tree + outputs | container bundle manifest | opt-in (`bundle` tag) |
 | Archival Publication | `scripts/runner/archive_publication.py` | bundle + deliverables | archival deposit manifest | opt-in (`archival` tag) |
 
@@ -1119,7 +1119,7 @@ template/
 ├── projects/                    # Typed program subfolders (`discover_projects`)
 │   ├── templates/               # Public exemplars (git-tracked) — full roster:
 │   │   │                        #   docs/_generated/active_projects.md (regenerated by scripts/docgen/active_projects.py)
-│   │   └── template_template/   # Present manuscript (`manuscript/` here)
+│   │   └── template_template/   # Present manuscript (`docs/manuscript/` here)
 │   ├── active/                  # Hot-seat rendered set (symlinked, private)
 │   ├── working/                 # Non-rendered backburner (symlinked, private)
 │   ├── published/               # Non-rendered published (symlinked, private)

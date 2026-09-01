@@ -20,7 +20,7 @@ root-level `src/*.py` compatibility stubs — the flat→package migration is co
 | `ml/` | MNIST task config, models, training, selection | `ml/task.py`, `ml/data.py`, `ml/models.py`, `ml/training.py`, `ml/selection.py` |
 | `diagnostics/` | Records, metrics, intervals, reports | `diagnostics/{records,metrics,intervals,reports}.py` (`__init__.py` facade) |
 | `figures/` | Figure specs and ML/process/security charts | `figures/figure_specs.py`, `figures/figures_core.py`, `figures/figures_ml_*.py` (`__init__.py` barrel) |
-| `manuscript/` | Token builders, tables, hydration | `manuscript/manuscript_tables.py`, `manuscript/manuscript_tokens_*.py` (root `manuscript_variables.py` is the hydration facade) |
+| `docs/manuscript/` | Token builders, tables, hydration | `manuscript/manuscript_tables.py`, `manuscript/manuscript_tokens_*.py` (root `manuscript_variables.py` is the hydration facade) |
 | `writers/` | JSON/CSV/manifest I/O, payloads, benchmark dispatch | `writers/{benchmark,figure_dispatch,io,manifests,payloads}.py` |
 | `security/` | Local security profile, threat model, attestation | `security/{artifacts,payloads,render}.py` |
 
@@ -33,7 +33,7 @@ Top-level orchestration (not in packages above):
 
 - Thin scripts: `scripts/`
 - Project docs: `docs/`
-- Manuscript source: `manuscript/`
+- Manuscript source: `docs/manuscript/`
 - Human-authored program: `program.md`
 - Seed proposals: `seed_ideas.yaml`
 - Executable MNIST task config: `mnist_task.yaml`
@@ -118,5 +118,5 @@ quick reference commands, and pitfalls.
 # Publishing
 
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)
-- `manuscript/config.yaml` uses split DOIs: `publication.doi` (concept), `version_doi`, `version_record`
+- `docs/manuscript/config.yaml` uses split DOIs: `publication.doi` (concept), `version_doi`, `version_record`
 - Current release/DOI records are generated in [`docs/_generated/publication_records.md`](../../../docs/_generated/publication_records.md); release with `uv run python scripts/publish/publish_project_release.py --project template_autoresearch_project --tag <vX.Y.Z> --repo docxology/template_autoresearch_project` after choosing the intended tag from `paper.version`.

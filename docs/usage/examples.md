@@ -8,10 +8,12 @@ This file shows examples of how to customize the template into specific research
 
 ## How Configuration Works
 
-Project identity and metadata live in `projects/{name}/manuscript/config.yaml`.
+Project identity and metadata live in `projects/{name}/docs/manuscript/config.yaml`.
 There is **no automated renaming script** and **no `.project_config` / `.env.template`
 generation** — you edit `config.yaml` directly (copy from `config.yaml.example`) and,
 optionally, override a few fields at runtime via environment variables.
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 The config loader (`infrastructure/core/config/loader.py`) reads `config.yaml` and
 exports exactly these values, which may also be supplied via environment variables:
@@ -30,7 +32,7 @@ env var named `PROJECT_NAME`, `PROJECT_CALLSIGN`, or `PROJECT_DESCRIPTION`.
 
 ## Example 1: Machine Learning Research Project
 
-**`projects/{name}/manuscript/config.yaml`:**
+**`projects/{name}/docs/manuscript/config.yaml`:**
 
 ```yaml
 paper:
@@ -54,7 +56,7 @@ keywords:
 
 ## Example 2: Data Science Package
 
-**`projects/{name}/manuscript/config.yaml`:**
+**`projects/{name}/docs/manuscript/config.yaml`:**
 
 ```yaml
 paper:
@@ -77,7 +79,7 @@ keywords:
 
 ## Example 3: Academic Paper
 
-**`projects/{name}/manuscript/config.yaml`:**
+**`projects/{name}/docs/manuscript/config.yaml`:**
 
 ```yaml
 paper:
@@ -144,10 +146,10 @@ graph TB
 
 ```bash
 # Copy the example config
-cp projects/{name}/manuscript/config.yaml.example projects/{name}/manuscript/config.yaml
+cp projects/{name}/docs/manuscript/config.yaml.example projects/{name}/docs/manuscript/config.yaml
 
 # Edit with your information
-vim projects/{name}/manuscript/config.yaml
+vim projects/{name}/docs/manuscript/config.yaml
 ```
 
 **Option B: Override fields via environment variables**

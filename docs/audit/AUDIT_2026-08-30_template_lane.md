@@ -12,6 +12,8 @@ At lane start the working tree was mid-migration by sibling agents: 47 untracked
 (manuscript-path resolution via `resolve_manuscript_dir`). A fresh `index.lock` (18:31)
 appeared mid-session. Per lane constraints: **report only, no commits, no edits to
 in-flight files.**
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## Gate results (all executed by me, this checkout)
 
@@ -49,7 +51,7 @@ in-flight files.**
    non-existent `output/figures/*.png`, and stale `manuscript/` paths), ~46 in
    `template_active_inference` (links from `docs/AGENTS.md` into the old
    `manuscript/sheaf/` paths), plus ~30 repo-root/docs links to
-   `projects/templates/template_code_project/manuscript/` files. Most are downstream
+   `projects/templates/template_code_project/docs/manuscript/` files. Most are downstream
    symptoms of the same migration + unrendered figure placeholders; they currently fail
    the docs lane. Owner: migration lane (path re-pointing) + template_textbook owner
    (real figures or non-link placeholder prose).

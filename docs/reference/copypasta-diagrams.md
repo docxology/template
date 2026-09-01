@@ -16,10 +16,12 @@ graph TB
         SRC["projects/{name}/src<br/>Core business logic<br/>Tested"]
         TESTS["projects/{name}/tests<br/>Test suite<br/>coverage"]
         SCRIPTS["projects/{name}/scripts<br/>Thin orchestrators<br/>Use src/ methods"]
-        MANUSCRIPT["projects/{name}/manuscript<br/>Research manuscript<br/>Cross-referenced"]
+        MANUSCRIPT["projects/{name}/docs/manuscript<br/>Research manuscript<br/>Cross-referenced"]
         PIPE["scripts/<br/><br/>Build pipeline<br/>Stage scripts"]
         OUTPUT["projects/{name}/output<br/>Generated files<br/>PDFs, figures, data"]
     end
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
     SRC -->|"provides tested methods"| SCRIPTS
     SCRIPTS -->|"import and use"| SRC

@@ -30,10 +30,10 @@ Every exemplar also carries these agent-facing surfaces:
 | Shared design/browser QA | `DESIGN.md` | Applies to generated manuscript, web, and PDF outputs across all public templates. |
 | Template-specific rules | `<template>/AGENTS.md` | Read this before editing that exemplar. |
 | Agent skill definition | `<template>/.agents/skills/<name>/SKILL.md` | Hermes-compatible YAML frontmatter skill; load when working inside that exemplar. |
-| Manuscript rules | `<template>/manuscript/AGENTS.md` | Token, figure, bibliography, and config rules. |
+| Manuscript rules | `<template>/docs/manuscript/AGENTS.md` | Token, figure, bibliography, and config rules. |
 | Script ordering | `<template>/scripts/AGENTS.md` | Project scripts stay thin and may be order-sensitive. |
 | Open work | `<template>/TODO.md` | Forward-only integrity/template-status ladder. |
-| Fork config | `<template>/manuscript/config.yaml.example` | Copy-and-customize template with placeholder-safe values. |
+| Fork config | `<template>/docs/manuscript/config.yaml.example` | Copy-and-customize template with placeholder-safe values. |
 | Output evidence | `<template>/output/` and repo `output/` | Disposable generated evidence; never hand-edit to pass gates. |
 
 ## Code Map
@@ -58,15 +58,15 @@ Every exemplar also carries these agent-facing surfaces:
   narrower project-specific rule.
 - All public templates must carry the canonical forkable surface:
   `README.md`, `AGENTS.md`, `TODO.md`, `pyproject.toml`, `.gitignore`,
-  `.agents/` (skill catalog), `scripts/`, `src/`, `tests/`, `manuscript/config.yaml`,
-  `manuscript/config.yaml.example`, `manuscript/references.bib`, and
-  `manuscript/preamble.md`.
+  `.agents/` (skill catalog), `scripts/`, `src/`, `tests/`, `docs/manuscript/config.yaml`,
+  `docs/manuscript/config.yaml.example`, `docs/manuscript/references.bib`, and
+  `docs/manuscript/preamble.md`.
 - `TODO.md` is future-only: current validation evidence first, then integrity
   gaps, configurable-surface gaps, documentation/signpost gaps,
   test/validator gaps, and an ordered improvement ladder.
-- `manuscript/config.yaml` is the live source of truth for manuscript metadata,
+- `docs/manuscript/config.yaml` is the live source of truth for manuscript metadata,
   thresholds, paths, structural toggles, and project-specific controls.
-- `manuscript/config.yaml.example` is the fork template. Keep it
+- `docs/manuscript/config.yaml.example` is the fork template. Keep it
   placeholder-safe and shape-specific; do not dump unrelated knobs into every
   exemplar.
 - Scripts are thin orchestrators. Business logic belongs in `src/` or shared

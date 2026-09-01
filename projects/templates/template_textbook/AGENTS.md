@@ -8,7 +8,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 
 ## Invariants (do not violate)
 
-1. **`manuscript/config.yaml` is the single source of truth.** Book structure —
+1. **`docs/manuscript/config.yaml` is the single source of truth.** Book structure —
    parts, chapters, labels, directories, the order of analysis scripts, front
    matter, and appendices — lives there and nowhere else. Never hand-number
    chapters, figures, equations, or sections; the TOC and numbering are derived
@@ -36,7 +36,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
    a reference without its definition renders as a dangling `??`.
 
 5. **Citations and glossary links must resolve.** Every `[@key]` must match a key
-   in `manuscript/references.bib` (`smith2020foundations`, `doe2019methods`,
+   in `docs/manuscript/references.bib` (`smith2020foundations`, `doe2019methods`,
    `lee2021systems`, `garcia2022dynamics`, `patel2018models`,
    `nguyen2023synthesis`, `kim2020data`, `brown2017principles`,
    `wilson2021analysis`, `taylor2019theory`). Glossary links use
@@ -85,9 +85,9 @@ Before claiming a change is done:
 
 - All `.py` under `src/` and `scripts/` — the content engine, models,
   visualization, Mermaid renderer, and thin orchestrators.
-- `manuscript/config.yaml` — structure is changed by adding entries, but the
+- `docs/manuscript/config.yaml` — structure is changed by adding entries, but the
   schema and existing keys are stable; treat it as the contract.
-- `manuscript/references.bib`, `manuscript/glossary.md` — the citation-key and
+- `docs/manuscript/references.bib`, `manuscript/glossary.md` — the citation-key and
   glossary-anchor namespaces other files depend on.
 - `tests/` — especially `test_manuscript_integrity.py`, which encodes the
   contract.

@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.20533125](https://doi.org/10.5281/zenodo.20533125)
 - Latest deposited version DOI: [10.5281/zenodo.20932112](https://zenodo.org/records/20932112)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_textbook/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_textbook), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmaTFtcxkdPJGC3HHWVCkQQC81SYTD8Ninu2BB9KxiHxEN), [netlify](https://6a4443ae4a7a3eb5dba63532--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/8kg5z/), [pypi](https://test.pypi.org/project/template-textbook/0.1.2/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_textbook)
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -50,7 +50,7 @@ rsync -a \
 
 ## Required Post-Fork Edits
 
-- Update `manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
+- Update `docs/manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
   `CITATION.cff`, `.zenodo.json`, `codemeta.json`, and `pyproject.toml`.
 - Replace title, author, units/chapters, glossary, bibliography, cover assets,
   and chapter prose as the book becomes real.

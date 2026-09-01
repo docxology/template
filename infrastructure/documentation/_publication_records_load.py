@@ -10,6 +10,7 @@ from infrastructure.core.files.serialization import load_yaml_mapping as _load_y
 from infrastructure.documentation._publication_records_types import PublicationRecord
 from infrastructure.project.public_scope import public_project_names
 from infrastructure.publishing.repository_metadata import normalized_repository_url
+from infrastructure.core.project_paths import manuscript_config_path
 
 
 def _load_json_mapping(path: Path) -> dict[str, Any]:
@@ -96,7 +97,7 @@ def load_publication_records(repo_root: Path) -> list[PublicationRecord]:
     records: list[PublicationRecord] = []
     for project_name in public_project_names(repo_root):
         project_root = repo_root / "projects" / project_name
-        config_path = project_root / "manuscript" / "config.yaml"
+        config_path = manuscript_config_path(project_root)
         config = _load_yaml_mapping(config_path)
         paper = _section_mapping(config, "paper")
         book = _section_mapping(config, "book")

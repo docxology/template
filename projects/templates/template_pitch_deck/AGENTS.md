@@ -99,7 +99,7 @@ A Hermes/agentskills.io-compatible skill for this exemplar lives at
 
 `build_deck_tokens(repo_root, pitch_subject="template_template")` reads:
 test count + coverage % from `docs/_generated/COUNTS.md`, DOI/version/license/
-github from the pitch subject's own `manuscript/config.yaml`, and the live
+github from the pitch subject's own `docs/manuscript/config.yaml`, and the live
 exemplar count from `infrastructure.project.public_scope.public_project_names`.
 Raises `ValueError`/`FileNotFoundError` rather than fabricating a value when
 a fact isn't yet available (e.g. before this project's own COUNTS.md row
@@ -142,6 +142,6 @@ uv run python projects/templates/template_pitch_deck/scripts/30_audit_diligence.
 ## See also
 
 - [`README.md`](README.md)
-- [`manuscript/README.md`](manuscript/README.md)
+- [`docs/manuscript/README.md`](docs/manuscript/README.md)
 - [`src/README.md`](src/README.md)
 - Memory and decision records: [`../../../docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md)

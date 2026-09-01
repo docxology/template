@@ -17,7 +17,7 @@ from tests._support.projects import make_project, write_doc
 def _scaffold_bundle_project(root: Path, name: str) -> None:
     project = make_project(root, name, program="templates", with_manuscript=True, with_scripts=True)
     (project / "src" / "demo.py").write_text("def run() -> int:\n    return 0\n")
-    (project / "manuscript" / "config.yaml").write_text(
+    (project / "docs" / "manuscript" / "config.yaml").write_text(
         "publication:\n  doi: '10.5281/zenodo.12345678'\n",
         encoding="utf-8",
     )

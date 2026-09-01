@@ -100,8 +100,8 @@ class TestDiscoverAnalysisScripts:
         project_dir = repo_root / "projects" / "project"
         scripts_dir = project_dir / "scripts"
         scripts_dir.mkdir(parents=True)
-        manuscript_dir = project_dir / "manuscript"
-        manuscript_dir.mkdir()
+        manuscript_dir = project_dir / "docs" / "manuscript"
+        manuscript_dir.mkdir(parents=True)
 
         (scripts_dir / "biology_analysis.py").write_text("# analysis")
         (scripts_dir / "generate_figures.py").write_text("# figures")
@@ -119,9 +119,9 @@ class TestDiscoverAnalysisScripts:
         repo_root = tmp_path / "repo"
         project_dir = repo_root / "projects" / "project"
         scripts_dir = project_dir / "scripts"
-        manuscript_dir = project_dir / "manuscript"
+        manuscript_dir = project_dir / "docs" / "manuscript"
         scripts_dir.mkdir(parents=True)
-        manuscript_dir.mkdir()
+        manuscript_dir.mkdir(parents=True)
         outside = project_dir.parent / "outside.py"
         outside.write_text("# outside", encoding="utf-8")
         (manuscript_dir / "config.yaml").write_text(
@@ -137,9 +137,9 @@ class TestDiscoverAnalysisScripts:
         repo_root = tmp_path / "repo"
         project_dir = repo_root / "projects" / "project"
         scripts_dir = project_dir / "scripts"
-        manuscript_dir = project_dir / "manuscript"
+        manuscript_dir = project_dir / "docs" / "manuscript"
         scripts_dir.mkdir(parents=True)
-        manuscript_dir.mkdir()
+        manuscript_dir.mkdir(parents=True)
         outside = tmp_path / "outside.py"
         outside.write_text("# outside", encoding="utf-8")
         (scripts_dir / "escape.py").symlink_to(outside)
@@ -159,7 +159,7 @@ class TestDiscoverAnalysisScripts:
         compatibility_manuscript = project_dir / "manuscript"
         scripts_dir.mkdir(parents=True)
         docs_manuscript.mkdir(parents=True)
-        compatibility_manuscript.mkdir()
+        compatibility_manuscript.mkdir(parents=True)
 
         (scripts_dir / "generate_variables.py").write_text("# variables")
         (scripts_dir / "generate_figures.py").write_text("# figures")

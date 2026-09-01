@@ -17,6 +17,7 @@ from infrastructure.validation.evidence_registry import (
     validate_text_against_registry,
 )
 from infrastructure.validation.output.artifacts import read_artifact_manifest
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 
 _CANONICAL_PROJECTS = PUBLIC_PROJECT_NAMES
 _DEFAULT_CHECKS = (
@@ -462,7 +463,7 @@ def _manifest_to_dict(manifest: BenchmarkManifest) -> dict[str, Any]:
 
 
 def _read_manuscript_markdown(project_root: Path) -> list[str]:
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(project_root)
     if not manuscript_dir.exists():
         return []
     texts: list[str] = []

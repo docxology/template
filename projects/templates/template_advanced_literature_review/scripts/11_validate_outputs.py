@@ -58,7 +58,7 @@ def main() -> int:
     figure_ok = True
     figure_issues: list[str] = []
     if figure_path.exists():
-        figure_ok, figure_issues = validate_figure_registry(figure_path, project_root / "manuscript")
+        figure_ok, figure_issues = validate_figure_registry(figure_path, project_root / "docs" / "manuscript")
 
     cross_phase_path = output_dir / "data" / "cross_phase_analysis.json"
     cross_phase_ok = False

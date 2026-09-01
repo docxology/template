@@ -76,7 +76,7 @@ plan = compile_method(method)  # tested src function
 
 ## Rule 4: "Show, Not Tell" Documentation
 
-Use explicit, verifiable references in `manuscript/` files.
+Use explicit, verifiable references in `docs/manuscript/` files.
 
 **GOOD**: `src/methods_dsl/compiler.py::topological_order()` schedules steps
 with Kahn's algorithm, breaking ties by ascending `step_id`.

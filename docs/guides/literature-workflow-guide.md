@@ -60,8 +60,10 @@ uv run python -m infrastructure.search.literature.cli to-bibtex \
 ```
 
 The emitted file is byte-compatible with the exemplar
-[`projects/templates/template_code_project/manuscript/references.bib`](../../projects/templates/template_code_project/manuscript/references.bib),
+[`projects/templates/template_code_project/docs/manuscript/references.bib`](../../projects/templates/template_code_project/docs/manuscript/references.bib),
 so Pandoc with `--natbib` picks it up unchanged.
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## 3. Search → Enriched Corpus → LLM Synthesis
 

@@ -37,6 +37,7 @@ from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering.epub_renderer import render_epub
 from infrastructure.rendering.mobi_renderer import render_mobi
 from infrastructure.rendering.docx_renderer import render_docx
+from infrastructure.core.project_paths import manuscript_config_path, resolve_source_manuscript_dir
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -53,7 +54,7 @@ def _load_manuscript_metadata(project_root: Path) -> tuple[str | None, str | Non
     "C") — both of which real-world converters (Amazon KDP's ingestion
     pipeline) can reject outright rather than merely warn about.
     """
-    config = load_config(project_root / "manuscript" / "config.yaml")
+    config = load_config(manuscript_config_path(project_root))
     if not config:
         return None, None, "en"
 
@@ -186,7 +187,7 @@ def run_ebook_generation(
         logger.warning("pandoc-crossref not on PATH; @fig:/@sec:/@tbl:/@eq: cross-references will not resolve.")
 
     try:
-        bibliographies = resolve_bibliography(project_root / "manuscript")
+        bibliographies = resolve_bibliography(resolve_source_manuscript_dir(project_root))
     except (BibliographyConflictError, OSError, UnicodeError) as exc:
         logger.error("Bibliography resolution failed: %s", exc)
         return 1

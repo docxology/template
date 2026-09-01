@@ -8,7 +8,7 @@ uv run python projects/templates/template_madlib/scripts/z_generate_manuscript_v
 uv run python projects/templates/template_madlib/scripts/02_validate_outputs.py
 ```
 
-The root analysis stage uses the allowlist in `manuscript/config.yaml` and runs these in order.
+The root analysis stage uses the allowlist in `docs/manuscript/config.yaml` and runs these in order.
 
 | Script | Responsibility |
 | --- | --- |

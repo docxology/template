@@ -5,7 +5,7 @@ The `src/` package is the project-local generation engine. Keep it free of `infr
 | Module | Role |
 | --- | --- |
 | *(package)* | Import as `src.<module>` from tests and scripts; modules use relative imports (`from .config import …`). |
-| `config.py` | Validate `manuscript/config.yaml` `madlib:` settings, including expanded manuscript-structure, design-principle, phase, evaluation, QA-probe, failure-mode, authoring-obligation, cover/visualization, and explicit/default-origin controls. |
+| `config.py` | Validate `docs/manuscript/config.yaml` `madlib:` settings, including expanded manuscript-structure, design-principle, phase, evaluation, QA-probe, failure-mode, authoring-obligation, cover/visualization, and explicit/default-origin controls. |
 | `config_models.py` | Typed dataclasses (`MadlibConfig`, `SlotSpec`, `MethodStep`, `PipelinePhase`, …) and default schema data (`SECTION_KEYS`, `DEFAULT_SECTION_TITLES`, `MADLIB_CONFIG_SCHEMA_VERSION`, …) shared by `config.py` and its loaders. |
 | `tokens.py` | Expand slot declarations into deterministic token choices. |
 | `run.py` | `MadlibRun` session plus `build_run()` — single load of config, token plan, sections, and field inventory for artifact and variable generation. |

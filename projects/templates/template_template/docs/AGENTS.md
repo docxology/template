@@ -93,6 +93,6 @@ introspection.py → metrics.json → inject_metrics.py → output/manuscript/*.
 ## See Also
 
 - [../AGENTS.md](../AGENTS.md) — Project-level technical documentation
-- [../manuscript/AGENTS.md](../manuscript/AGENTS.md) — Manuscript chapter index
+- [../docs/manuscript/AGENTS.md](../docs/manuscript/AGENTS.md) — Manuscript chapter index
 - [../src/template_template/AGENTS.md](../src/template_template/AGENTS.md) — Source code documentation
 - [../../../AGENTS.md](../../../AGENTS.md) — Root template documentation

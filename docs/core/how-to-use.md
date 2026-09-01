@@ -251,7 +251,9 @@ experience; this guide does not use a universal completion-time claim.
 
 - **[Markdown Template Guide](../usage/markdown-template-guide.md)** - formatting reference
 - **[Manuscript Numbering](../usage/manuscript-numbering-system.md)** - Section organization
-- **[LaTeX Preamble](../../projects/templates/template_code_project/manuscript/preamble.md)** - Styling configuration example
+- **[LaTeX Preamble](../../projects/templates/template_code_project/docs/manuscript/preamble.md)** - Styling configuration example
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ### Examples & Help
 

@@ -329,11 +329,13 @@ Runs the historically named `PDF Rendering` stage with progress tracking. It
 renders every format enabled by the effective `render.formats` YAML plus
 `ENABLE_<FORMAT>` environment configuration.
 
-- Processes `projects/{name}/manuscript/` markdown files
+- Processes `projects/{name}/docs/manuscript/` markdown files
 - Produces PDF/HTML/Beamer outputs by default and opt-in DOCX/EPUB outputs
 - Builds fresh combined sources from the current ordered manuscript inputs
 - Hydrates manuscript variables when the project provides the canonical producer;
   run Stage 2 first whenever analysis-derived inputs need regeneration
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 **Output**: format-specific directories under `projects/{name}/output/`; see
 [`usage/output-formats.md`](usage/output-formats.md).
@@ -366,7 +368,7 @@ Generates AI-powered manuscript reviews using local Ollama LLM.
 
 Generates multi-language technical abstract translations.
 
-- Translates abstract to configured languages (see `projects/{name}/manuscript/config.yaml`)
+- Translates abstract to configured languages (see `projects/{name}/docs/manuscript/config.yaml`)
 - Uses local Ollama LLM for translation
 - Saves translations to `projects/{name}/output/llm/`
 
@@ -588,7 +590,7 @@ export LOG_LEVEL=0  # Enable debug logging
 ### Render-format variables
 
 Format toggles default to PDF/HTML/Slides **on**, DOCX/EPUB **off**. Set
-in `projects/{name}/manuscript/config.yaml` under `render.formats`, or
+in `projects/{name}/docs/manuscript/config.yaml` under `render.formats`, or
 override per-run via env (env precedence beats yaml):
 
 | Variable | Type | Default | Effect |

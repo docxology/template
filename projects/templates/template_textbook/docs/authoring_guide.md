@@ -1,7 +1,7 @@
 # Authoring Guide
 
 This is the developer-facing companion to the in-book authoring appendix
-([`appendix_authoring_guide.md`](../manuscript/appendices/appendix_authoring_guide.md)).
+([`appendix_authoring_guide.md`](../docs/manuscript/appendices/appendix_authoring_guide.md)).
 It walks the full fill-the-stubs workflow and shows how to scale the book to
 hundreds or thousands of pages while keeping the contract green.
 
@@ -12,7 +12,7 @@ hand-build structure, numbering, or figure paths.
 ## 1. Scaffold (or grow) the structure
 
 A fresh scaffold is already in place. To add a chapter or a whole part, edit
-[`manuscript/config.yaml`](../manuscript/config.yaml):
+[`docs/manuscript/config.yaml`](../docs/manuscript/config.yaml):
 
 ```yaml
 units:
@@ -60,12 +60,12 @@ Replace each marker with real content while obeying the contract (see the
 
 - **Write objectives, prose, summaries** over the `STUB`/`TODO`/`TKTK` markers.
 - **Cite real sources** with `[@key]` — and add the entry to
-  [`references.bib`](../manuscript/references.bib). If you introduce a new
+  [`references.bib`](../docs/manuscript/references.bib). If you introduce a new
   permanent contract key, add it to `CITATION_KEYS` in
   [`src/textbook/constants.py`](../src/textbook/constants.py) so the integrity
   test keeps `references.bib` in sync.
 - **Link key terms** with `[**term**](#gl:<anchor>)` — defined in
-  [`glossary.md`](../manuscript/glossary.md); new permanent anchors go in
+  [`glossary.md`](../docs/manuscript/glossary.md); new permanent anchors go in
   `GLOSSARY_ANCHORS`.
 - **Cross-reference, never number.** Use `[@fig:..]`, `[@tbl:..]`, `[@eq:..]`,
   `[@sec:..]`. Do not type "Figure 4.1" — pandoc-crossref assigns the numbers.

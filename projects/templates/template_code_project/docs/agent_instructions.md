@@ -65,7 +65,7 @@ result = gradient_descent(x0, obj_func, grad_func, step_size=alpha)
 
 ## Rule 4: "Show, Not Tell" Documentation
 
-When updating `manuscript/` files, use explicit, verifiable references instead of vague descriptions.
+When updating `docs/manuscript/` files, use explicit, verifiable references instead of vague descriptions.
 
 **BAD** (vague, unverifiable):
 ```markdown

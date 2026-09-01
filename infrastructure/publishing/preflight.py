@@ -12,6 +12,7 @@ from typing import Mapping, Sequence, cast
 
 from infrastructure.core.config.loader import load_config
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.core.project_paths import manuscript_config_path
 
 _GITHUB_REPOSITORY = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 PUBLICATION_MANIFEST_SCHEMA = "template-publication-payload/v1"
@@ -187,7 +188,7 @@ def _normalize_github_repository(value: object, *, source: str) -> str:
 
 def _declared_github_repository(project_root: Path) -> str:
     """Read the state-changing GitHub target from manuscript configuration."""
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     config = load_config(config_path)
     publication = config.get("publication") if isinstance(config, Mapping) else None
     declared = publication.get("github_repository") if isinstance(publication, Mapping) else None

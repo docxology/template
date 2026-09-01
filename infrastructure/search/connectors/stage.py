@@ -20,6 +20,7 @@ from infrastructure.core.logging.utils import get_logger, log_header, log_succes
 from infrastructure.core.project_paths import find_repo_root, resolve_project_root
 from infrastructure.search.connectors import ConnectorRegistry, get_registry
 from infrastructure.search.connectors.types import SearchOptions
+from infrastructure.core.project_paths import manuscript_config_path
 
 logger = get_logger(__name__)
 
@@ -185,7 +186,7 @@ def build_plan(
         )
         configured_max_results = DEFAULT_MAX_RESULTS
     else:
-        requests, configured_max_results = _configured_requests(project_dir / "manuscript" / "config.yaml")
+        requests, configured_max_results = _configured_requests(manuscript_config_path(project_dir))
 
     selected_max_results = configured_max_results if max_results is None else max_results
     if not isinstance(selected_max_results, int) or isinstance(selected_max_results, bool) or selected_max_results <= 0:

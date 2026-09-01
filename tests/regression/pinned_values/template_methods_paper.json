@@ -4,7 +4,7 @@
     "project_name": "template_methods_paper",
     "populated_on": "2026-07-01",
     "populated_by": "Marcus Webb (Engineer)",
-    "note": "First real regression pins for the controlled-method specification DSL exemplar (manuscript/03_results.md). Every value is re-derived by calling the real src/methods_dsl functions (compile_method, run_all_gates, demo_chain_report) on the two shipped worked example methods (PBSPreparation, SensorCalibrationSweep) -- never copied from the manuscript. The two full SHA-256 plan hashes are the strongest pins: compile_method uses a canonical sorted-key JSON encoding + Kahn's-algorithm topological sort, so the hash is byte-exact and reproducible across processes/platforms; any change to a step, its order, kind, target, or the method target/version flips the hash. The manuscript displays only the first 12 hex chars ({{PBS_PLAN_HASH}} / {{CALIBRATION_PLAN_HASH}}); these pins bind the full digest so sub-display drift is also caught."
+    "note": "First real regression pins for the controlled-method specification DSL exemplar (docs/manuscript/03_results.md). Every value is re-derived by calling the real src/methods_dsl functions (compile_method, run_all_gates, demo_chain_report) on the two shipped worked example methods (PBSPreparation, SensorCalibrationSweep) -- never copied from the manuscript. The two full SHA-256 plan hashes are the strongest pins: compile_method uses a canonical sorted-key JSON encoding + Kahn's-algorithm topological sort, so the hash is byte-exact and reproducible across processes/platforms; any change to a step, its order, kind, target, or the method target/version flips the hash. The manuscript displays only the first 12 hex chars ({{PBS_PLAN_HASH}} / {{CALIBRATION_PLAN_HASH}}); these pins bind the full digest so sub-display drift is also caught."
   },
   "_provenance": {
     "pbs_plan_hash": {
@@ -51,7 +51,7 @@
     }
   },
   "pbs_plan_hash": {
-    "manuscript_section": "manuscript/03_results.md / Compiled-plan summary",
+    "manuscript_section": "docs/manuscript/03_results.md / Compiled-plan summary",
     "claim_text": "| `PBSPreparation` | {{PBS_STEP_COUNT}} | `{{PBS_TARGET}}` | `{{PBS_PLAN_HASH}}` |  (rendered PBS_PLAN_HASH = 313b9b17de98, full digest pinned here)",
     "value": "313b9b17de98b637296ee3c1411ad00dc83a14538607ef49772d3761b45e145e",
     "abs_tolerance": 0,
@@ -62,7 +62,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "calibration_plan_hash": {
-    "manuscript_section": "manuscript/03_results.md / Compiled-plan summary",
+    "manuscript_section": "docs/manuscript/03_results.md / Compiled-plan summary",
     "claim_text": "| `SensorCalibrationSweep` | {{CALIBRATION_STEP_COUNT}} | `{{CALIBRATION_TARGET}}` | `{{CALIBRATION_PLAN_HASH}}` |  (rendered CALIBRATION_PLAN_HASH = d89cced19be6, full digest pinned here)",
     "value": "d89cced19be6e52db2617e60d75ea89d338622ce5db201e040c358796b1a0e4a",
     "abs_tolerance": 0,
@@ -73,7 +73,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "pbs_step_count": {
-    "manuscript_section": "manuscript/03_results.md / Compiled-plan summary",
+    "manuscript_section": "docs/manuscript/03_results.md / Compiled-plan summary",
     "claim_text": "| `PBSPreparation` | {{PBS_STEP_COUNT}} | ... |  (rendered PBS_STEP_COUNT = 5)",
     "value": 5,
     "abs_tolerance": 0,
@@ -84,7 +84,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "calibration_step_count": {
-    "manuscript_section": "manuscript/03_results.md / Compiled-plan summary",
+    "manuscript_section": "docs/manuscript/03_results.md / Compiled-plan summary",
     "claim_text": "| `SensorCalibrationSweep` | {{CALIBRATION_STEP_COUNT}} | ... |  (rendered CALIBRATION_STEP_COUNT = 4)",
     "value": 4,
     "abs_tolerance": 0,
@@ -95,7 +95,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "total_gates_passed": {
-    "manuscript_section": "manuscript/03_results.md / Validation gates",
+    "manuscript_section": "docs/manuscript/03_results.md / Validation gates",
     "claim_text": "the analysis script tallies {{TOTAL_GATES_PASSED}} of {{TOTAL_GATES_RUN}} staged-gate evaluations passing (run_all_gates x {{EXAMPLE_METHOD_COUNT}} methods x {{DSL_GATE_COUNT}} gates each)  (rendered 8 of 8)",
     "value": 8,
     "abs_tolerance": 0,
@@ -106,7 +106,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "total_gates_run": {
-    "manuscript_section": "manuscript/03_results.md / Validation gates",
+    "manuscript_section": "docs/manuscript/03_results.md / Validation gates",
     "claim_text": "{{TOTAL_GATES_PASSED}} of {{TOTAL_GATES_RUN}} staged-gate evaluations passing  (rendered TOTAL_GATES_RUN = 8 = 2 methods x 4 gates)",
     "value": 8,
     "abs_tolerance": 0,
@@ -117,7 +117,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "trust_chain_length": {
-    "manuscript_section": "manuscript/03_results.md / Provenance demonstration",
+    "manuscript_section": "docs/manuscript/03_results.md / Provenance demonstration",
     "claim_text": "appends a {{TRUST_CHAIN_LENGTH}}-record demonstration hash-chain for one value (calibration_offset) through DECLARED -> CALIBRATED -> VERIFIED tiers  (rendered TRUST_CHAIN_LENGTH = 3)",
     "value": 3,
     "abs_tolerance": 0,

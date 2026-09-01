@@ -524,8 +524,10 @@ Before committing documentation:
 ### Good AGENTS.md References
 
 - [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) - module docs
-- [projects/templates/template_code_project/manuscript/](../../projects/templates/template_code_project/manuscript/) - Example manuscript (active project)
+- [projects/templates/template_code_project/docs/manuscript/](../../projects/templates/template_code_project/docs/manuscript/) - Example manuscript (active project)
 - [tests/AGENTS.md](../../tests/AGENTS.md) - Test framework docs
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ### Good README.md References
 

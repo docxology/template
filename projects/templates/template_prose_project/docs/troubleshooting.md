@@ -34,13 +34,13 @@ a list of files that do not start with `#`.
 
 **Fixes:**
 
-1. Each file under `manuscript/` must begin with a top-level heading
+1. Each file under `docs/manuscript/` must begin with a top-level heading
    (`# Title`). Add an H1 to the offending file.
 2. If the file is intentionally H1-less (e.g. front-matter-only),
    exclude it via the `exclude_filenames` argument to
    `infrastructure.prose.read_manuscript_dir` — but typically the right
    fix is to add the H1.
-3. Or set `prose.require_h1_per_section: false` in `manuscript/config.yaml`
+3. Or set `prose.require_h1_per_section: false` in `docs/manuscript/config.yaml`
    (loosens the policy globally).
 
 ### "Bibliography consistency failed: missing keys"
@@ -50,7 +50,7 @@ a list of files that do not start with `#`.
 
 **Fixes:**
 
-1. Add the missing entries to `manuscript/references.bib` (this project
+1. Add the missing entries to `docs/manuscript/references.bib` (this project
    never writes to the bib — manual curation is intentional).
 2. Or remove the offending `[@key]` from the prose if the citation was
    speculative.
@@ -66,7 +66,7 @@ a list of files that do not start with `#`.
 
 1. **Too high (dense prose):** shorten sentences, replace polysyllabic
    words with simpler synonyms, split paragraphs.
-2. **Too low (over-simple):** verify `manuscript/` contains the actual
+2. **Too low (over-simple):** verify `docs/manuscript/` contains the actual
    prose, not placeholder text. The default min of 10.0 corresponds to
    roughly mid-secondary-school reading; below that suggests stub
    content.

@@ -20,7 +20,7 @@ a runtime-guarded discipline that only looks similar in prose.
 
 ## The honesty line: what mypy --strict proves vs. what is a runtime discipline
 
-This is [`manuscript/02_type_architecture.md`](../manuscript/02_type_architecture.md)'s
+This is [`manuscript/02_type_architecture.md`](../docs/manuscript/02_type_architecture.md)'s
 central claim, restated as a practical checklist. Before you add a new
 "illegal state unrepresentable" claim to this template, work out which
 column it belongs in — both require a paired test, but a different kind.
@@ -92,7 +92,7 @@ Every strong claim in this template follows the same shape. To add one:
    which a `frozen=True` dataclass can never satisfy, and the `src/`-only
    gate reported zero errors the whole time because `src/` itself never
    instantiates `Agent` with a concrete type argument (see
-   [`manuscript/05_results_discussion.md`](../manuscript/05_results_discussion.md)'s
+   [`manuscript/05_results_discussion.md`](../docs/manuscript/05_results_discussion.md)'s
    "mypy-as-oracle proof-of-detection" section for the full story). Fixed
    by `tests/mypy_fixtures/good_agent_belief_instantiation.py`, which
    type-checks `Agent[BeliefState]` itself as a permanent regression

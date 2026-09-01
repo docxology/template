@@ -35,10 +35,10 @@ current count with
 uv run python projects/templates/template_search_project/scripts/run_search_pipeline.py
 ```
 
-This reads `manuscript/config.yaml` (default: `sources: [local]` ←
+This reads `docs/manuscript/config.yaml` (default: `sources: [local]` ←
 `data/corpus.json`), produces:
 
-* `manuscript/references.bib` (Pandoc-ready BibTeX)
+* `docs/manuscript/references.bib` (Pandoc-ready BibTeX)
 * `output/corpus.json`
 * `output/search/results.json`
 * `output/search/cache/search_<hash>.json`
@@ -84,7 +84,7 @@ The infrastructure pipeline runner:
 
 ## 5. Switch to live search
 
-Edit `manuscript/config.yaml`:
+Edit `docs/manuscript/config.yaml`:
 
 ```yaml
 search:
@@ -103,7 +103,7 @@ ollama serve &
 ollama pull gemma3:4b
 ```
 
-Edit `manuscript/config.yaml`:
+Edit `docs/manuscript/config.yaml`:
 
 ```yaml
 llm:

@@ -154,7 +154,9 @@ universal root-pipeline stage unless the project includes that generator.
 
 **File**: `manuscript/98_symbols_glossary.md`
 
-**Generation**: `uv run python -m infrastructure.documentation.generate_glossary_cli projects/templates/template_code_project/src/ projects/templates/template_code_project/manuscript/98_symbols_glossary.md` (or your project’s paths; see [`docs/modules/modules-guide.md`](../modules/modules-guide.md))
+**Generation**: `uv run python -m infrastructure.documentation.generate_glossary_cli projects/templates/template_code_project/src/ projects/templates/template_code_project/docs/manuscript/98_symbols_glossary.md` (or your project’s paths; see [`docs/modules/modules-guide.md`](../modules/modules-guide.md))
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ### Guard Clause
 
@@ -205,7 +207,7 @@ Document setup and styling configuration loaded before content. Defines packages
 
 **File**: `manuscript/preamble.md`
 
-**Location**: `projects/{name}/manuscript/preamble.md`
+**Location**: `projects/{name}/docs/manuscript/preamble.md`
 
 ## M
 
@@ -227,7 +229,7 @@ Research document composed of numbered sections in `manuscript/` directory. Conv
 
 Automated checking of markdown files for broken references, missing images, invalid links, and syntax errors.
 
-**Command**: `uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/`
+**Command**: `uv run python -m infrastructure.validation.cli markdown projects/{name}/docs/manuscript/`
 
 **See**: [markdown-template-guide.md](../usage/markdown-template-guide.md)
 

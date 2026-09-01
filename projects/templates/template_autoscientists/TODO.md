@@ -21,7 +21,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` aligned when `SearchConfig` or `SyntheticObjective` defaults change.
+- Keep `docs/manuscript/config.yaml.example` aligned when `SearchConfig` or `SyntheticObjective` defaults change.
 - A script-level config summary is unnecessary while analysis scripts remain
   config-free; if that boundary changes, add the summary and a scoped row first.
 

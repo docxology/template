@@ -279,7 +279,9 @@ def _declared_location_paths(project_root: Path, section: str) -> tuple[str, ...
         if not relative:
             continue
         if "/" not in relative:
-            relative = f"manuscript/{relative}"
+            # Bare manuscript filenames resolve against the default
+            # docs/manuscript/ tree first, then the legacy manuscript/ tree.
+            relative = f"docs/manuscript/{relative}"
         candidates.append(relative)
     if not candidates or not all(_safe_repo_file(project_root, item) for item in candidates):
         return ()

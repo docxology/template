@@ -36,6 +36,10 @@ agent-facing documentation. Project-specific science stays in
 - Optional tools such as CodeGraph and LEANN are navigation aids. Publication
   claims require source files, tests, evidence registries, artifacts, and gates.
 
+## Manuscript directory resolution
+
+The per-project manuscript directory is **configurable but defaults to `docs/manuscript/`**: `infrastructure.core.project_paths.resolve_source_manuscript_dir` and `manuscript_config_path` resolve it as `TEMPLATE_MANUSCRIPT_DIR` override → `docs/manuscript/` → legacy `manuscript/` (auto-detected for backward compatibility). Never hard-code `project_root / "manuscript"`; use these helpers so the location stays configurable.
+
 ## Public API Rules
 
 - Infrastructure packages that re-export symbols must keep explicit `__all__`

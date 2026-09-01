@@ -66,4 +66,4 @@ def test_make_project_standalone_layout_without_projects_prefix(tmp_path) -> Non
     is_valid, message = validate_project_structure(proj)
     assert is_valid, message
     assert proj == tmp_path / "project"
-    assert (proj / "manuscript" / "config.yaml").is_file()
+    assert (proj / "docs" / "manuscript" / "config.yaml").is_file()

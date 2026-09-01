@@ -481,7 +481,7 @@ def _load_strong_rules_config(project_root: pathlib.Path) -> dict[str, object]:
 
 def load_rule_context_from_project(project_root: pathlib.Path) -> dict[str, object]:
     """Build a default evaluation context for *project_root*."""
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = project_root / "docs" / "manuscript"
     config_block = _load_strong_rules_config(project_root)
 
     # `manuscript_sections` must reflect ONLY the real `# `-level headings

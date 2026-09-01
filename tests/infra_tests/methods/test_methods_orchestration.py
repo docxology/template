@@ -34,7 +34,7 @@ def test_build_plan_maps_pipeline_contracts_to_methods_surface(repo_root: Path) 
 
     assert plan.project_name == "templates/template_code_project"
     assert plan.pipeline_source.as_posix().endswith("infrastructure/core/pipeline/pipeline.yaml")
-    assert "projects/templates/template_code_project/manuscript/02_methodology.md" in plan.method_sections
+    assert "projects/templates/template_code_project/docs/manuscript/02_methodology.md" in plan.method_sections
     assert plan.artifact_manifest == Path(
         "projects/templates/template_code_project/output/reports/artifact_manifest.json"
     )
@@ -214,7 +214,7 @@ def test_discovers_method_section_by_heading(tmp_path: Path) -> None:
     from infrastructure.methods.orchestration import _discover_method_sections
 
     project = make_project(tmp_path, "template_test", with_manuscript=True)
-    manuscript = project / "manuscript"
+    manuscript = project / "docs" / "manuscript"
     write_doc(manuscript / "03a_architecture.md", "# Architecture\n\n# Methods\n\nWe did X.\n")
     write_doc(manuscript / "02_introduction.md", "# Introduction\n\nContext only.\n")
     write_doc(manuscript / "05_discussion.md", "## Methodological caveats\n\nNotes.\n")
@@ -235,11 +235,11 @@ def test_discovers_method_section_by_filename_token(tmp_path: Path) -> None:
     from infrastructure.methods.orchestration import _discover_method_sections
 
     project = make_project(tmp_path, "template_test", with_manuscript=True)
-    write_doc(project / "manuscript" / "02_methodology.md", "Body without a heading token.\n")
+    write_doc(project / "docs" / "manuscript" / "02_methodology.md", "Body without a heading token.\n")
 
     sections = _discover_method_sections(project, tmp_path)
 
-    assert any(s.endswith("manuscript/02_methodology.md") for s in sections), sections
+    assert any(s.endswith("docs/manuscript/02_methodology.md") for s in sections), sections
 
 
 def test_render_markdown_includes_actions_and_validation(repo_root: Path) -> None:
@@ -319,7 +319,7 @@ def test_external_lifecycle_plan_uses_portable_alias_and_private_git_boundary(tm
 
     assert qualified.project_root == Path("projects/working/demo")
     assert qualified.pipeline_source == Path("projects/working/demo/methods_pipeline.yaml")
-    assert qualified.method_sections == ("projects/working/demo/manuscript/02_methodology.md",)
+    assert qualified.method_sections == ("projects/working/demo/docs/manuscript/02_methodology.md",)
     assert qualified.stages[0].script == "projects/working/demo/scripts/analyze.py"
     assert qualified.stages[0].input_artifacts == ("projects/working/demo/src/",)
     assert qualified.stages[0].output_artifacts == ("projects/working/demo/output/data/result.json",)
@@ -422,7 +422,7 @@ def test_validation_rejects_malformed_or_empty_evidence_json(tmp_path: Path) -> 
 
     _write_minimal_repo(tmp_path)
     project = tmp_path / "projects" / "template_test"
-    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(project / "docs" / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
     reports = project / "output" / "reports"
     write_doc(reports / "artifact_manifest.json", "{not-json}\n")
     write_doc(reports / "evidence_registry.json", "{}\n")
@@ -440,7 +440,7 @@ def test_validation_rejects_artifact_manifest_hash_drift(tmp_path: Path) -> None
 
     _write_minimal_repo(tmp_path)
     project = tmp_path / "projects" / "template_test"
-    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(project / "docs" / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
     artifact = project / "output" / "data" / "result.csv"
     write_doc(artifact, "before\n")
     reports = project / "output" / "reports"
@@ -478,7 +478,7 @@ def test_validation_rejects_unknown_builtin_executor_method(tmp_path: Path) -> N
 
     _write_minimal_repo(tmp_path)
     project = tmp_path / "projects" / "template_test"
-    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(project / "docs" / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
     write_doc(
         project / "methods_pipeline.yaml",
         """
@@ -553,7 +553,7 @@ def test_validation_skips_generated_artifacts_when_not_required(tmp_path: Path) 
 
     _write_minimal_repo(tmp_path)
     project = tmp_path / "projects" / "template_test"
-    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(project / "docs" / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
 
     plan = build_methods_orchestration_plan(tmp_path, "template_test")
     issues = validate_methods_orchestration_plan(plan, repo_root=tmp_path, require_generated_artifacts=False)
@@ -568,7 +568,7 @@ def test_validation_rejects_orphaned_dependencies_and_missing_scripts(tmp_path: 
 
     _write_minimal_repo(tmp_path)
     project = tmp_path / "projects" / "template_test"
-    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(project / "docs" / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
     pipeline = tmp_path / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
     write_doc(
         pipeline,
@@ -597,7 +597,7 @@ def test_build_plan_prefers_methods_pipeline_yaml(tmp_path: Path) -> None:
 
     _write_minimal_repo(tmp_path)
     project = tmp_path / "projects" / "template_test"
-    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(project / "docs" / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
     write_doc(
         project / "methods_pipeline.yaml",
         """
@@ -656,7 +656,7 @@ def _write_external_project_source(repo_root: Path, private_root: Path) -> Path:
         with_manuscript=True,
         with_scripts=True,
     )
-    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(project / "docs" / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
     write_doc(project / "scripts" / "analyze.py", 'print("analysis")\n')
     write_doc(
         project / "methods_pipeline.yaml",

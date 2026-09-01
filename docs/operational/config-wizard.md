@@ -21,8 +21,10 @@ There is no separate `template config wizard` CLI in this repository. Use the st
 
 ## Configuration files
 
-- **Manuscript metadata:** `projects/{name}/manuscript/config.yaml` — authors, title, optional LLM blocks (see [`CLAUDE.md`](../../CLAUDE.md)).
+- **Manuscript metadata:** `projects/{name}/docs/manuscript/config.yaml` — authors, title, optional LLM blocks (see [`CLAUDE.md`](../../CLAUDE.md)).
 - **Example env vars:** [`infrastructure/config/.env.template`](../../infrastructure/config/.env.template) — copy patterns into a local `.env` if you use publishing APIs or secrets (optional).
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## Quick health check
 

@@ -238,7 +238,7 @@ The following pre-normalization sections were archived on 2026-08-09:
 
 ## Current validation evidence
 
-- Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_code_project/manuscript --repo-root .`
+- Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_code_project/docs/manuscript --repo-root .`
 - Project tests and coverage: `uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-fail-under=90`
 - Stage 02 analysis must write `output/data/optimization_results.csv` before strict manuscript-variable generation: `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_code_project`
 - Stage 03 manuscript render: `uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project`
@@ -247,6 +247,8 @@ The following pre-normalization sections were archived on 2026-08-09:
 - Code quality: `uv run ruff check projects/templates/template_code_project/src/` and `uv run mypy projects/templates/template_code_project/src/` must both pass clean.
 - Benchmark reproducibility: tracked benchmark reports and figures contain only deterministic facts; wall-clock timing is logged as a runtime diagnostic, and two-run byte-equality tests enforce the boundary.
 - Live test count and measured coverage percentage → [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md) (regenerated, never hardcoded here; both numbers drift faster than this file).
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 
 ## Ordered improvement ladder

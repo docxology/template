@@ -9,6 +9,7 @@ from pathlib import Path
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.rendering import RenderManager
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 
 logger = get_logger(__name__)
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -17,7 +18,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 def _resolve_manuscript_dir(project: str | None) -> Path:
     if project:
         project_root = resolve_project_root(REPO_ROOT, project)
-        manuscript_dir = project_root / "manuscript"
+        manuscript_dir = resolve_source_manuscript_dir(project_root)
         if manuscript_dir.is_dir():
             return manuscript_dir
         logger.error("No manuscript directory for project %r: %s", project, manuscript_dir)

@@ -1,6 +1,6 @@
 # Content License — CC BY 4.0
 
-The **manuscript content** of this project (everything under `manuscript/`,
+The **manuscript content** of this project (everything under `docs/manuscript/`,
 including text, figures, tables, and diagrams) is licensed under the
 **Creative Commons Attribution 4.0 International License (CC BY 4.0)**.
 

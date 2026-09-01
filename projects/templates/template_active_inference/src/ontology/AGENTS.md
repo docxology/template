@@ -9,7 +9,7 @@ formal interop artifacts, and generated method inventories.
 | --- | --- |
 | Load and flatten section ontology | `bindings.py` |
 | Public exports | `__init__.py` |
-| Canonical terms in use | `../../domain_profile.yaml`, `../../manuscript/sheaf/*.yaml` |
+| Canonical terms in use | `../../domain_profile.yaml`, `../../docs/manuscript/sheaf/*.yaml` |
 
 ## Contracts
 

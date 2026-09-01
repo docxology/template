@@ -32,14 +32,14 @@ procedure.
 
 The boundary is enforced by `check_project_src_infrastructure_boundary` via
 `scripts/audit/check_template_drift.py --strict` and
-[`manuscript/layer_contract.yaml`](manuscript/layer_contract.yaml).
+[`docs/manuscript/layer_contract.yaml`](docs/manuscript/layer_contract.yaml).
 
 ## Configuration as the source of truth
 
-`manuscript/config.yaml` is the configuration single source of truth for
+`docs/manuscript/config.yaml` is the configuration single source of truth for
 paper title, authors, keywords, version, and publication metadata; it is
 mirrored by a sanitized
-[`manuscript/config.yaml.example`](manuscript/config.yaml.example) with the
+[`docs/manuscript/config.yaml.example`](docs/manuscript/config.yaml.example) with the
 same top-level sections. The controlled vocabulary (units, step kinds,
 targets, gate order) is declared in code
 (`src/methods_dsl/units.py`, `vocabulary.py`, `validation.py`), not
@@ -116,6 +116,6 @@ quick reference commands, and pitfalls.
 
 - [Root projects AGENTS.md](../../AGENTS.md#permanent-canonical-exemplars) — public exemplar roster.
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md).
-- [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax.
+- [`docs/manuscript/SYNTAX.md`](docs/manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax.
 - [`src/AGENTS.md`](src/AGENTS.md) / [`src/methods_dsl/AGENTS.md`](src/methods_dsl/AGENTS.md) — DSL library API reference.
 - [`TODO.md`](TODO.md) — template-status gaps and improvement ladder.

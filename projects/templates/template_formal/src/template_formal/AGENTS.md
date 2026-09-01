@@ -5,7 +5,7 @@ The package root. Six subpackages — [`types/`](types/), [`storage/`](storage/)
 [`colony/`](colony/) — each own exactly one concern the manuscript argues for.
 See [`README.md`](README.md) for the responsibility table and the module-layout
 diagram (reproduced from
-[`manuscript/02_type_architecture.md`](../../manuscript/02_type_architecture.md)).
+[`manuscript/02_type_architecture.md`](../../docs/manuscript/02_type_architecture.md)).
 
 ## Layer-dependency contract (enforce, don't just document)
 
@@ -50,7 +50,7 @@ sentence and, if the claim is checkable, a `tests/mypy_fixtures/bad_*.py` or
 `good_*.py` fixture wired into `tests/test_mypy_oracle.py`'s
 `_EXPECTED_BAD_FIXTURE_SUBSTRINGS` map — an unbound claim is not verified,
 per this repo's Proof-of-Detection discipline. See
-[`../../manuscript/02_type_architecture.md#sec:honesty-line`](../../manuscript/02_type_architecture.md)
+[`../../docs/manuscript/02_type_architecture.md#sec:honesty-line`](../../docs/manuscript/02_type_architecture.md)
 for the canonical statement of every current claim's scope.
 
 ## See also

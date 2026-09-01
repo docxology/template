@@ -52,7 +52,7 @@ adding new track IDs.
 Future configurable surfaces should remain registry-owned. Add or change
 capabilities through `tracks.yaml`, `manuscript/sheaf/tracks.yaml`,
 `manuscript/sheaf/manifest.yaml`, `figures.yaml`, and
-`manuscript/config.yaml`; keep `manuscript/config.yaml.example` structurally in
+`docs/manuscript/config.yaml`; keep `docs/manuscript/config.yaml.example` structurally in
 parity with placeholder-safe values whenever a top-level section is added.
 
 ## Documentation and signposting gaps

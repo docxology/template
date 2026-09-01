@@ -55,7 +55,7 @@ close this gap; it does not currently exist.
 The autopoiesis metaphor is figurative. Maturana and Varela's operational
 sense of autopoiesis is a system that continuously regenerates its own
 constitutive components through its own operation [@maturana_varela_1980].
-Here the grammar (`manuscript/config.yaml`) is fixed input; `parse_grammar`
+Here the grammar (`docs/manuscript/config.yaml`) is fixed input; `parse_grammar`
 and `expand` are pure functions of that input plus a seed; no code path
 feeds a materialized child back into the grammar or rewrites
 `src/grammar.py`. Children are causally downstream of the grammar — the
@@ -145,7 +145,7 @@ grammar_hash is not None:` block) exercised in production but untested; that
 gap is now closed by `tests/test_cover_art.py::test_render_cover_with_grammar_hash_*`,
 added this session (see "Coverage is uneven across modules" below).
 
-Separately, for most of this project's life `manuscript/references.bib` held
+Separately, for most of this project's life `docs/manuscript/references.bib` held
 a single self-referential `friedman2026autopoiesis` entry noting the DOI was
 forthcoming, while `99_references.md` carried a hand-written, uncited list
 alongside it — a citation without a resolvable BibTeX entry is exactly the

@@ -18,6 +18,7 @@ import yaml
 from infrastructure.core.files.serialization import load_yaml_mapping as _load_yaml_mapping
 from infrastructure.core.files.serialization import relative_or_self as _rel
 from infrastructure.project.drift.models import Report
+from infrastructure.core.project_paths import manuscript_config_path
 
 
 def _read(path: Path) -> str:
@@ -158,7 +159,7 @@ def check_publishing_status_block_current(project_root: Path, report: Report, pr
     enforcement that makes that surfacing durable rather than a one-time edit
     that silently drifts the next time `config.yaml` changes.
     """
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     if not config_path.is_file():
         return
     readme_path = project_root / "README.md"
@@ -220,7 +221,7 @@ def check_config_author_placeholders(project_root: Path, report: Report, project
     inspects the source of truth directly. Scoped to manuscript/config.yaml only;
     config.yaml.example is expected to hold placeholders and is never scanned.
     """
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     if not config_path.is_file():
         return
     config = _load_yaml_mapping(config_path)

@@ -6,7 +6,7 @@ The `template_code_project` exemplar is designed around a strict separation of c
 
 | Layer | Primary Files | Public API | Invariants | Testability |
 |---|---|---|---|---|
-| **`src/` — Project Logic** | `src/optimizer.py`, `src/invariants.py`, `src/experiment_config.py`, `src/analysis/`, `src/figures/`, `src/dashboard.py`, `src/manuscript_variables.py` | Optimizer primitives plus importable analysis/figure/dashboard builders | Math primitives stay pure; `experiment_config.py` is the single loader for `manuscript/config.yaml` → `experiment:` | Direct unit tests for pure logic; integration tests for generated artifacts |
+| **`src/` — Project Logic** | `src/optimizer.py`, `src/invariants.py`, `src/experiment_config.py`, `src/analysis/`, `src/figures/`, `src/dashboard.py`, `src/manuscript_variables.py` | Optimizer primitives plus importable analysis/figure/dashboard builders | Math primitives stay pure; `experiment_config.py` is the single loader for `docs/manuscript/config.yaml` → `experiment:` | Direct unit tests for pure logic; integration tests for generated artifacts |
 | **`scripts/` — Orchestrators** | `scripts/optimization_analysis.py`, `scripts/build_dashboard.py`, `scripts/z_generate_manuscript_variables.py`, `scripts/generate_api_docs.py`, `scripts/00_preflight.py` | CLI compatibility wrappers and script entry points | No experiment, plotting, dashboard, or manuscript-variable logic lives only in scripts; `00_preflight` and `generate_api_docs` are AESTHETIC | Subprocess/integration tests exercise real commands |
 | **`infrastructure/` — Cross-Cutting** | `infrastructure/scientific/`, `infrastructure/reporting/`, `infrastructure/rendering/`, `infrastructure/core/`, `infrastructure/validation/` | Stability checks, benchmarking, PDF rendering, structured logging, progress bars | Generic reusable behavior only; no project-specific assumptions | Covered by separate `tests/infra_tests/` suite |
 
@@ -25,7 +25,7 @@ No arrows go upward. Core mathematical code stays independent; project analysis 
 
 ```mermaid
 graph TD
-    YAML[manuscript/config.yaml] -->|experiment:| CFG[src/experiment_config.py]
+    YAML[docs/manuscript/config.yaml] -->|experiment:| CFG[src/experiment_config.py]
 
     A[scripts/optimization_analysis.py] -->|delegates| A2[src/analysis/]
     A2 -->|reads| CFG
@@ -73,7 +73,7 @@ graph TD
 | `print()` inside `scripts/` | Bypasses structured logging; lost in CI output | Use `get_logger(__name__).info(...)` |
 | Hardcoded absolute output paths in pure math modules | Makes copied projects brittle | Keep paths relative to the project root and isolated to analysis/dashboard/manuscript-variable modules |
 | `unittest.mock`, `MagicMock`, `@patch` in `tests/` | Zero-mock policy | Compute real results with real numpy arrays |
-| Hardcoded step-size constants in `scripts/` or duplicate YAML parsing in `src/` | Configuration drift vs `manuscript/config.yaml` | Use `load_experiment_config()` from `src/experiment_config.py` |
+| Hardcoded step-size constants in `scripts/` or duplicate YAML parsing in `src/` | Configuration drift vs `docs/manuscript/config.yaml` | Use `load_experiment_config()` from `src/experiment_config.py` |
 
 ## How to Add a New Algorithm
 

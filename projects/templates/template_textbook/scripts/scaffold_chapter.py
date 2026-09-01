@@ -34,7 +34,7 @@ def main() -> int:
     parser.add_argument("--part", help="Only scaffold chapters in this part id (e.g. part_I)")
     args = parser.parse_args()
 
-    manuscript = PROJECT_DIR / "manuscript"
+    manuscript = PROJECT_DIR / "docs" / "manuscript"
     config = load_config(manuscript)
 
     written = 0

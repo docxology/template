@@ -33,7 +33,7 @@ Check `CANONICAL_STAGES` and ensure each `output_purity > input_purity`.
 GoldRefinementConfigError: lexicon category 'metallurgical_terms' must be a non-empty list
 ```
 
-**Fix:** Add vocabulary to `manuscript/config.yaml` under
+**Fix:** Add vocabulary to `docs/manuscript/config.yaml` under
 `gold_refinement.lexicon`. Required categories:
 `metallurgical_terms`, `manuscript_terms`, `purity_adjectives`,
 `refinement_verbs`.

@@ -7,7 +7,7 @@ Project source for the literature meta-analysis exemplar. All domain behavior li
 1. Keep logic in `src/`, not in `scripts/`.
 2. Keep tests real: no mocks, local HTTP servers for HTTP behavior, temp files for I/O.
 3. Keep stochastic analysis deterministic with seed `42` unless config explicitly overrides it.
-4. Keep config-driven domain policy in `manuscript/config.yaml`.
+4. Keep config-driven domain policy in `docs/manuscript/config.yaml`.
 5. Link `../../../docs/_generated/COUNTS.md` for live test/coverage facts instead of hardcoding them.
 
 ## Dependency Graph

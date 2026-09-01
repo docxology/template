@@ -314,7 +314,7 @@ def test_detect_project_structure_with_pyproject_no_doc202(tmp_path: Path):
 def _make_project_with_manuscript(parent: Path, name: str) -> Path:
     """Create a project that has a manuscript/ directory (triggers config checks)."""
     proj = _make_valid_project(parent, name)
-    (proj / "manuscript").mkdir()
+    (proj / "docs" / "manuscript").mkdir(parents=True)
     return proj
 
 
@@ -341,7 +341,7 @@ def test_detect_manuscript_config_yaml_parse_error(tmp_path: Path):
     projects_dir = tmp_path / "projects" / "templates"
     projects_dir.mkdir(parents=True)
     proj = _make_project_with_manuscript(projects_dir, "bad_yaml")
-    cfg = proj / "manuscript" / "config.yaml"
+    cfg = proj / "docs" / "manuscript" / "config.yaml"
     # Deliberately malformed YAML
     cfg.write_text("key: [\nbad yaml: {unclosed\n")
 
@@ -360,7 +360,7 @@ def test_detect_manuscript_config_title_missing_warn(tmp_path: Path):
     projects_dir = tmp_path / "projects" / "templates"
     projects_dir.mkdir(parents=True)
     proj = _make_project_with_manuscript(projects_dir, "empty_title")
-    cfg = proj / "manuscript" / "config.yaml"
+    cfg = proj / "docs" / "manuscript" / "config.yaml"
     cfg.write_text("paper:\n  title: ''\n")
 
     findings = detect_manuscript_config(tmp_path)
@@ -378,7 +378,7 @@ def test_detect_manuscript_config_paper_title_ok(tmp_path: Path):
     projects_dir = tmp_path / "projects" / "templates"
     projects_dir.mkdir(parents=True)
     proj = _make_project_with_manuscript(projects_dir, "good_paper")
-    cfg = proj / "manuscript" / "config.yaml"
+    cfg = proj / "docs" / "manuscript" / "config.yaml"
     cfg.write_text("paper:\n  title: 'My Research Paper'\n")
 
     findings = detect_manuscript_config(tmp_path)
@@ -395,7 +395,7 @@ def test_detect_manuscript_config_book_title_fallback(tmp_path: Path):
     projects_dir = tmp_path / "projects" / "templates"
     projects_dir.mkdir(parents=True)
     proj = _make_project_with_manuscript(projects_dir, "good_book")
-    cfg = proj / "manuscript" / "config.yaml"
+    cfg = proj / "docs" / "manuscript" / "config.yaml"
     cfg.write_text("book:\n  title: 'My Book Project'\n")
 
     findings = detect_manuscript_config(tmp_path)
@@ -412,7 +412,7 @@ def test_detect_manuscript_config_data_not_dict_warns(tmp_path: Path):
     projects_dir = tmp_path / "projects" / "templates"
     projects_dir.mkdir(parents=True)
     proj = _make_project_with_manuscript(projects_dir, "scalar_yaml")
-    cfg = proj / "manuscript" / "config.yaml"
+    cfg = proj / "docs" / "manuscript" / "config.yaml"
     # YAML parses to a plain string, not a dict
     cfg.write_text("just a bare string\n")
 
@@ -443,7 +443,7 @@ def test_detect_manuscript_preamble_and_bib(tmp_path: Path):
     projects_dir = tmp_path / "projects" / "templates"
     projects_dir.mkdir(parents=True)
     proj = _make_project_with_manuscript(projects_dir, "bib_test")
-    ms_dir = proj / "manuscript"
+    ms_dir = proj / "docs" / "manuscript"
     (ms_dir / "preamble.md").write_text("# Preamble\n")
     (ms_dir / "references.bib").write_text("@article{test, title={Test}}\n")
 

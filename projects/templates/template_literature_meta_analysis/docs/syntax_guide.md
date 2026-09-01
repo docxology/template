@@ -24,7 +24,7 @@ Common token families:
 
 | Family | Source |
 | --- | --- |
-| `SEARCH_TERM*`, `ENGINE_LIST`, `N_ENGINES` | `manuscript/config.yaml` |
+| `SEARCH_TERM*`, `ENGINE_LIST`, `N_ENGINES` | `docs/manuscript/config.yaml` |
 | `CORPUS_SIZE*`, year/growth fields | `output/data/corpus.jsonl`, `temporal_analysis.json` |
 | `SUBFIELD_TABLE` / `SUBFIELD_LIST` / `N_SUBFIELDS` | `subfield_classification.json` + config |
 | `HYPOTHESIS_*`, `H*_SCORE` | config + `hypothesis_scores.json` |

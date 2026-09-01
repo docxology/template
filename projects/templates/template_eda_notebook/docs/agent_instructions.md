@@ -71,7 +71,7 @@ matrix = correlation_matrix(frame)  # tested src function
 
 ## Rule 4: "Show, Not Tell" Documentation
 
-Use explicit, verifiable references in `manuscript/` files.
+Use explicit, verifiable references in `docs/manuscript/` files.
 
 **GOOD**: `src/eda/correlation.py::strongest_pairs()` ranks feature pairs by
 absolute correlation while preserving sign.

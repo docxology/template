@@ -20,6 +20,7 @@ from infrastructure.rendering.dockerfile_gen import (
     build_dockerfile,
 )
 from infrastructure.rendering.manifest import build_manifest
+from infrastructure.core.project_paths import manuscript_config_path
 
 logger = get_logger(__name__)
 
@@ -56,7 +57,7 @@ def _resolve_combined_pdf(repo_root: Path, project_name: str, project_dir: Path)
 
 def _load_publication_doi(project_dir: Path) -> str | None:
     """Read ``publication.doi`` from ``manuscript/config.yaml`` when present."""
-    config_path = project_dir / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_dir)
     if not config_path.is_file():
         return None
     raw: Any = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}

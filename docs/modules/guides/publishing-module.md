@@ -269,8 +269,10 @@ print(run.results)
 
 ### Publication config schema (`published_artifacts`)
 
-The `publication:` block in `projects/<name>/manuscript/config.yaml` holds the
+The `publication:` block in `projects/<name>/docs/manuscript/config.yaml` holds the
 durable identifiers consumed by `status_report.py`:
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ```yaml
 publication:

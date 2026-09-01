@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.21298892](https://doi.org/10.5281/zenodo.21298892)
 - Latest deposited version DOI: [10.5281/zenodo.21298893](https://zenodo.org/records/21298893)
 - Additional declared locations: none declared
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -21,7 +21,7 @@ Use this exemplar for preregistered reports or replication projects outside the 
 1. Copy with `uv run python scripts/audit/copy_exemplar.py --source templates/template_registered_report --dest <destination> --new-name <project_slug>`.
 2. Replace `data/example_registration.json`.
 3. Record registered-report stage metadata, ethics-review status, and sensitivity analyses.
-4. Update `manuscript/config.yaml`, `domain_profile.yaml`, and `experiment_plan.yaml`.
+4. Update `docs/manuscript/config.yaml`, `domain_profile.yaml`, and `experiment_plan.yaml`.
 5. Run tests before interpreting any results.
 
 Do not treat exploratory analyses as confirmatory without recording the deviation.

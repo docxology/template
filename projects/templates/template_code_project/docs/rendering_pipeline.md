@@ -1,6 +1,6 @@
 # Rendering Pipeline: Manuscript → PDF
 
-The `manuscript/` directory contains the narrative components of the research. It is compiled into a publication-ready PDF automatically by the template's rendering infrastructure. This document describes every step, what it produces, which scripts run it, and how to troubleshoot failures.
+The `docs/manuscript/` directory contains the narrative components of the research. It is compiled into a publication-ready PDF automatically by the template's rendering infrastructure. This document describes every step, what it produces, which scripts run it, and how to troubleshoot failures.
 
 ## Prerequisite: Mermaid diagrams need `chrome-headless-shell`
 
@@ -41,7 +41,7 @@ The pipeline has four steps. Each step must complete before the next begins.
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 ```
 
-**Inputs**: `src/optimizer.py` functions + `manuscript/config.yaml` experiment parameters
+**Inputs**: `src/optimizer.py` functions + `docs/manuscript/config.yaml` experiment parameters
 
 **Outputs**:
 
@@ -68,7 +68,7 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py
 ```
 
-**Inputs**: `manuscript/config.yaml` + `output/data/optimization_results.csv` + `output/reports/*.json`
+**Inputs**: `docs/manuscript/config.yaml` + `output/data/optimization_results.csv` + `output/reports/*.json`
 
 **What it does**: Calls `src/manuscript_variables.py::generate_variables(..., require_analysis_outputs=True)` (default) to compute all token values, then calls `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` to write substituted copies of `manuscript/*.md` to `output/manuscript/`. It also writes the full mapping to `output/data/manuscript_variables.json`.
 
@@ -89,7 +89,7 @@ uv run python projects/templates/template_code_project/scripts/z_generate_manusc
 uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
 ```
 
-**Inputs**: `output/manuscript/*.md` (substituted) + `manuscript/config.yaml` + `manuscript/preamble.md` + `manuscript/references.bib`
+**Inputs**: `output/manuscript/*.md` (substituted) + `docs/manuscript/config.yaml` + `docs/manuscript/preamble.md` + `docs/manuscript/references.bib`
 
 When `publication.transmission_bookends.enabled: true`, the combined PDF also includes generated `00_00_transmission_begin.md` and `99_zz_transmission_end.md` (compact metadata, dual-row integrity strip, `transmission_manifest.json`, prior releases capped at three rows on the end page). Verify single-page fit: `uv run python -m infrastructure.publishing.transmission_page_check projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf`. After render, run `uv run python -m infrastructure.orchestration secure --steganography-only --project templates/template_code_project --deterministic` for the hardened `*_steganography.pdf` and `.hashes.json` manifest; the Python `secure` subcommand owns `--deterministic`. See [`docs/guides/publishing-guide.md`](../../../../docs/guides/publishing-guide.md#transmission-bookends-optional).
 
@@ -102,7 +102,7 @@ Zenodo and GitHub uploads use a metadata-driven basename from `publication.depos
 | `infrastructure/rendering/pdf_renderer.py` | Orchestrates Pandoc → XeLaTeX pipeline |
 | `infrastructure/rendering/_pdf_latex_helpers.py` | LaTeX package validation and preamble injection |
 | `infrastructure/rendering/manuscript_discovery.py` | Discovers and orders manuscript section files |
-| `infrastructure/core/config/loader.py` | Reads `manuscript/config.yaml` for title, authors, metadata |
+| `infrastructure/core/config/loader.py` | Reads `docs/manuscript/config.yaml` for title, authors, metadata |
 
 **Outputs**:
 - `projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf` — working publication PDF
@@ -170,9 +170,9 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 
 **Symptom**: XeLaTeX exits with a BibTeX error or undefined citation key.
 
-**Cause**: Malformed entry in `manuscript/references.bib` (unclosed braces, duplicate keys, missing required fields).
+**Cause**: Malformed entry in `docs/manuscript/references.bib` (unclosed braces, duplicate keys, missing required fields).
 
-**Fix**: Validate `manuscript/references.bib` with a BibTeX linter or check `projects/templates/template_code_project/output/pdf/_combined_manuscript.log` for the specific error message. Negative control: a deliberately malformed bib entry (unclosed brace or duplicate key) makes the render fail with that exact error instead of producing a PDF with unresolved `[?]` citations.
+**Fix**: Validate `docs/manuscript/references.bib` with a BibTeX linter or check `projects/templates/template_code_project/output/pdf/_combined_manuscript.log` for the specific error message. Negative control: a deliberately malformed bib entry (unclosed brace or duplicate key) makes the render fail with that exact error instead of producing a PDF with unresolved `[?]` citations.
 
 ### Slides not generated
 

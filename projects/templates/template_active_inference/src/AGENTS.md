@@ -15,7 +15,7 @@ resolves paths, and calls these functions (thin-orchestrator pattern).
 
 | Area | Modules | Role |
 | --- | --- | --- |
-| Orchestration | `orchestration/analysis.py`, `orchestration/coverage_pipeline.py` | Analysis entry + sheaf coverage PNG/page (no matplotlib in `manuscript/`) |
+| Orchestration | `orchestration/analysis.py`, `orchestration/coverage_pipeline.py` | Analysis entry + sheaf coverage PNG/page (no matplotlib in `docs/manuscript/`) |
 | Analytical | `analytical/invariants.py` (+ facades at `invariants.py`) | Closed-form invariant checks |
 | Simulation | `simulation/si_{belief,policy,loop,artifacts}.py`, `si_runner.py` (facade) | pymdp T-maze runner |
 | Sheaf | `manuscript/sheaf/*` | Coverage matrix JSON only in `coverage.py` |

@@ -32,7 +32,7 @@ The authoritative token list is the return value of
 
 | Family | Source |
 | --- | --- |
-| `SEARCH_TERM*`, `ENGINE_LIST`, `N_ENGINES` | `manuscript/config.yaml` → `project_config.search` |
+| `SEARCH_TERM*`, `ENGINE_LIST`, `N_ENGINES` | `docs/manuscript/config.yaml` → `project_config.search` |
 | subfield counts | `subfield_classification.json` |
 | figure counts | `output/figures/` and figure registry |
 
@@ -51,7 +51,7 @@ The authoritative token list is the return value of
 
 | Token | Source |
 | --- | --- |
-| `N_HYPOTHESES`, `HYPOTHESIS_LIST`, `HYPOTHESIS_TABLE` | `manuscript/config.yaml` → `project_config.hypothesis_definitions` |
+| `N_HYPOTHESES`, `HYPOTHESIS_LIST`, `HYPOTHESIS_TABLE` | `docs/manuscript/config.yaml` → `project_config.hypothesis_definitions` |
 | `TOTAL_ASSERTIONS`, `TOTAL_ASSERTIONS_RAW` | `assertion_summary.json` (knowledge-graph stage) |
 | `{HID}_SUPPORT`, `{HID}_CONTRADICT`, `{HID}_NEUTRAL`, `{HID}_TOTAL` | Per-hypothesis assertion counts, `HID` = the config key (`H1`, `H2`, ...) |
 | `ASSERTION_SUPPORT_PCT`, `ASSERTION_CONTRADICT_PCT` | Corpus-wide support/contradict percentages |

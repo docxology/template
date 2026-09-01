@@ -4,7 +4,7 @@
     "project_name": "template_sia",
     "populated_on": "2026-07-01",
     "populated_by": "Marcus Webb (Engineer)",
-    "note": "Regression pins for the deterministic SIA harness in manuscript/03_results.md. Fixture replay copies genuinely executed threshold variants and reads results.json verbatim. All variants score 1.0 on the toy dataset, so the load-bearing claim is a flat robustness control—not fabricated self-improvement."
+    "note": "Regression pins for the deterministic SIA harness in docs/manuscript/03_results.md. Fixture replay copies genuinely executed threshold variants and reads results.json verbatim. All variants score 1.0 on the toy dataset, so the load-bearing claim is a flat robustness control—not fabricated self-improvement."
   },
   "_provenance": {
     "generation_count": {
@@ -39,7 +39,7 @@
     }
   },
   "generation_count": {
-    "manuscript_section": "manuscript/03_results.md / SIA generation metrics (fixture replay) table",
+    "manuscript_section": "docs/manuscript/03_results.md / SIA generation metrics (fixture replay) table",
     "claim_text": "{{SIA_METRICS_TABLE}} ... a three-generation fixture-replay run (Gen 1, 2, 3)",
     "value": 3,
     "abs_tolerance": 0,
@@ -50,7 +50,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "first_generation_accuracy": {
-    "manuscript_section": "manuscript/03_results.md / SIA generation metrics (fixture replay) table",
+    "manuscript_section": "docs/manuscript/03_results.md / SIA generation metrics (fixture replay) table",
     "claim_text": "| 1 | accuracy | 1.0000 | 6 | (genuinely executed threshold variant)",
     "value": 1.0,
     "abs_tolerance": 1e-9,
@@ -61,7 +61,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "final_generation_accuracy": {
-    "manuscript_section": "manuscript/03_results.md / Final injected token",
+    "manuscript_section": "docs/manuscript/03_results.md / Final injected token",
     "claim_text": "Final injected token: accuracy=1.0000 (n=6).",
     "value": 1.0,
     "abs_tolerance": 1e-9,
@@ -72,7 +72,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "metric_delta_final_minus_first": {
-    "manuscript_section": "manuscript/03_results.md / metric delta prose",
+    "manuscript_section": "docs/manuscript/03_results.md / metric delta prose",
     "claim_text": "Metric delta (final - first generation): 0.0000.",
     "value": 0.0,
     "abs_tolerance": 5e-05,
@@ -83,7 +83,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "final_generation_n_samples": {
-    "manuscript_section": "manuscript/03_results.md / Final injected token",
+    "manuscript_section": "docs/manuscript/03_results.md / Final injected token",
     "claim_text": "Final injected token: accuracy=1.0000 (n=6).",
     "value": 6,
     "abs_tolerance": 0,

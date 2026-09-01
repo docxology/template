@@ -13,7 +13,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | `scripts/` | Thin orchestrators; may import `infrastructure/` and `src/` |
 | Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); do not hardcode measured test totals or coverage % |
 
-Enforced by `check_project_src_infrastructure_boundary` via `scripts/audit/check_template_drift.py --strict` and `manuscript/layer_contract.yaml`.
+Enforced by `check_project_src_infrastructure_boundary` via `scripts/audit/check_template_drift.py --strict` and `docs/manuscript/layer_contract.yaml`.
 
 ## Overview
 
@@ -46,7 +46,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 Double publish (Zenodo + GitHub) via `scripts/publish/publish_project_release.py`. Manuscript config enables transmission bookends, steganography profile documentation, and metadata-driven deposit filenames (`Author_2026_Convergence_{hash8}.pdf` — local working PDF remains `template_code_project_combined.pdf`).
 
-Current release/DOI records are generated from `manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, GitHub, and Zenodo into [`docs/_generated/publication_records.md`](../../../docs/_generated/publication_records.md). Do not copy per-version DOI rows here.
+Current release/DOI records are generated from `docs/manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, GitHub, and Zenodo into [`docs/_generated/publication_records.md`](../../../docs/_generated/publication_records.md). Do not copy per-version DOI rows here.
 
 Workflow reference: [`docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md) (transmission bookends + deposit filename sections) · [`infrastructure/publishing/README.md`](../../../infrastructure/publishing/README.md) (publishing module reference) · [`docs/maintenance/archival-targets.md`](../../../docs/maintenance/archival-targets.md) (archival targets). Render/stego path: [`docs/rendering_pipeline.md`](docs/rendering_pipeline.md).
 
@@ -515,6 +515,6 @@ Step sizes: 100%|██████████████████| 4/4 [00
 - [Root AGENTS.md](../../AGENTS.md) - Template documentation
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) — split `publication.doi` (concept) / `version_doi` layout
 - [infrastructure/scientific/](../../../infrastructure/scientific/AGENTS.md) - Scientific utilities
-- [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax for this project
+- [`docs/manuscript/SYNTAX.md`](docs/manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax for this project
 - [`../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide manuscript semantics
 - [`../../AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars) — public exemplar roster

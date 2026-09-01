@@ -107,10 +107,10 @@ def _green_project(
     write_doc(root / "scripts" / "__init__.py", '"""Runtime stage bootstrap."""\n')
     write_doc(root / "scripts" / "pipeline" / "stage_03_render.py", 'print("render")\n')
     write_doc(
-        project / "manuscript" / "00_abstract.md",
+        project / "docs" / "manuscript" / "00_abstract.md",
         "# Abstract\n\nAuthoring token {{RESULT_COUNT}} is hydratable.\n",
     )
-    write_doc(project / "manuscript" / "01_methods.md", "# Methods\n\nMethod source.\n")
+    write_doc(project / "docs" / "manuscript" / "01_methods.md", "# Methods\n\nMethod source.\n")
 
     if hydrated:
         write_doc(
@@ -123,7 +123,7 @@ def _green_project(
         )
         rendered_inputs = sorted((project / "output" / "manuscript").glob("*.md"))
     else:
-        rendered_inputs = sorted(path for path in (project / "manuscript").glob("*.md") if path.name != "config.yaml")
+        rendered_inputs = sorted(path for path in (project / "docs" / "manuscript").glob("*.md") if path.name != "config.yaml")
 
     combined = project / "output" / "web" / "_combined_manuscript.md"
     combined_text = "\n\n".join(path.read_text(encoding="utf-8").rstrip() for path in rendered_inputs) + "\n"
@@ -668,7 +668,7 @@ def test_composition_drift_blocks_refresh_and_preserves_receipt(tmp_path: Path) 
     receipt_path = project / RECEIPT_RELATIVE_PATH
     old_receipt = receipt_path.read_bytes()
 
-    write_doc(project / "manuscript" / "01_methods.md", "# Methods\n\nChanged without rerender.\n")
+    write_doc(project / "docs" / "manuscript" / "01_methods.md", "# Methods\n\nChanged without rerender.\n")
 
     validation = validate_rendered_provenance(tmp_path, PROJECT)
     assert [issue.code for issue in validation.issues] == ["COMPOSITION_DRIFT"]

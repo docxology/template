@@ -44,11 +44,11 @@ Two scripts execute in alphabetical order:
 The pipeline's `scripts/pipeline/stage_03_render.py` calls
 `infrastructure/rendering/_manuscript_source.py::resolve_manuscript_dir`, the render
 hook that detects the presence of `output/manuscript/` and uses it instead of
-`manuscript/` (population of `output/manuscript/*.md` itself happens via
+`docs/manuscript/` (population of `output/manuscript/*.md` itself happens via
 `infrastructure/rendering/manuscript_injection.py::write_resolved_manuscript_tree`,
 invoked from Stage 02's `inject_metrics.py`). This means:
 
-1. The raw manuscript files with `${variable}` tokens stay untouched in `manuscript/`
+1. The raw manuscript files with `${variable}` tokens stay untouched in `docs/manuscript/`
 2. The rendered files with computed values live in `output/manuscript/`
 3. Stage 03 picks up the rendered files automatically
 
@@ -62,7 +62,7 @@ invoked from Stage 02's `inject_metrics.py`). This means:
 
 ### Key Configuration
 
-From `manuscript/config.yaml`:
+From `docs/manuscript/config.yaml`:
 
 ```yaml
 paper:

@@ -33,7 +33,7 @@ keeps a capability blocked rather than silently promoting it.
 ## Configurable-surface gaps
 
 - Retargeting the query, sources, and deep-search keywords should remain
-  entirely `manuscript/config.yaml`-owned; avoid hard-coding search terms in
+  entirely `docs/manuscript/config.yaml`-owned; avoid hard-coding search terms in
   `src/`.
 - Keep the Ollama budget knobs (`context_window`, `long_max_tokens`,
   `max_input_length`, `review_timeout`) explicit in config rather than

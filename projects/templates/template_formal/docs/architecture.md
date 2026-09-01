@@ -16,7 +16,7 @@ repository's build machinery.
 Each layer owns exactly one of the paper's typed-design concerns, and each
 is exercised by the colony coordination loop at the bottom, never bypassed.
 This is the real diagram from
-[`manuscript/02_type_architecture.md`](../manuscript/02_type_architecture.md)
+[`manuscript/02_type_architecture.md`](../docs/manuscript/02_type_architecture.md)
 (reused here, not re-derived — the manuscript is the source of truth for
 this graph):
 
@@ -96,7 +96,7 @@ the manuscript cover, not part of the trial/statistics dependency graph.
 
 ## Manuscript / scripts / tests relationship
 
-- **`manuscript/`** is prose, not generated output — `00_abstract.md`
+- **`docs/manuscript/`** is prose, not generated output — `00_abstract.md`
   through `05_results_discussion.md` cite real ISC numbers, real file
   paths, and real numbers pulled from test output (see the
   [statistics methodology guide](statistics_methodology_guide.md) for how

@@ -15,9 +15,9 @@
 
 1. To add or modify a track's definition, edit the pipeline-gate entry in
    [`tracks.yaml`](../tracks.yaml) (id, paths, gate) and/or the sheaf
-   fragment entry in [`manuscript/sheaf/tracks.yaml`](../manuscript/sheaf/tracks.yaml)
+   fragment entry in [`manuscript/sheaf/tracks.yaml`](../docs/manuscript/sheaf/tracks.yaml)
    (order, renderer, label); bind it to a manuscript section in
-   [`manuscript/sheaf/manifest.yaml`](../manuscript/sheaf/manifest.yaml).
+   [`manuscript/sheaf/manifest.yaml`](../docs/manuscript/sheaf/manifest.yaml).
 2. Regenerate the roadmap-track evidence in this exact order (matches
    [`AGENTS.md`](../AGENTS.md#regeneration-order)):
    ```bash

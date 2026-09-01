@@ -8,7 +8,7 @@ directories — **fonds** (passive data pools: bibliography, contacts, datasets)
 **tools** (executable tool entry points). Resource directories are read-only
 from this project's perspective. Ground truth for integration and figure
 counts lives in `output/data/manuscript_variables.json`; configuration is
-owned by `manuscript/config.yaml`. See the repo [`README.md`](../README.md)
+owned by `docs/manuscript/config.yaml`. See the repo [`README.md`](../README.md)
 and [`../AGENTS.md`](../AGENTS.md).
 
 ## Directory map
@@ -19,7 +19,7 @@ and [`../AGENTS.md`](../AGENTS.md).
 | `src/` (figures) | `figure_support.py`, `figures.py`, `cover_figure.py`, `rule_hierarchy_figure.py` |
 | `scripts/` | Thin orchestrators: validate sources → integration → manuscript vars → strong rules → figures |
 | `tests/` | Zero-mock tests incl. property-based and fail-closed validator negatives |
-| `manuscript/` | Section sources, config, references; `figures/` PNG assets + registry |
+| `docs/manuscript/` | Section sources, config, references; `figures/` PNG assets + registry |
 | `output/` | Integration reports, manuscript variables, figures (never hand-edited) |
 
 ## How to run / test
@@ -44,5 +44,5 @@ uv run python projects/templates/template_pools_rules_tools/scripts/04_validate_
 
 ## Status
 
-Publication-track exemplar: `manuscript/` is complete and gate-guarded; this
+Publication-track exemplar: `docs/manuscript/` is complete and gate-guarded; this
 docs/ tree was added by the docs-audit pass of 2026-08-29.

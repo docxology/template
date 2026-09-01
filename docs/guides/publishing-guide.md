@@ -66,7 +66,9 @@ from infrastructure.publishing import (
 from infrastructure.publishing.metadata_from_config import publication_metadata_from_config
 from pathlib import Path
 
-metadata = publication_metadata_from_config(Path("projects/templates/template_code_project/manuscript/config.yaml"))
+metadata = publication_metadata_from_config(Path("projects/templates/template_code_project/docs/manuscript/config.yaml"))
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 # Generate citations in multiple formats
 bibtex = generate_citation_bibtex(metadata)
@@ -545,7 +547,7 @@ Structured manifest: `output/data/transmission_manifest.json` (`title`, `version
 
 Dual-row integrity strip (`output/figures/transmission_integrity_strip.png`): row 1 — Metadata, Citation, Contact, Integrity; row 2 — Zenodo URL, GitHub URL, Manifest JSON; Code128 raster from `python-barcode` encodes the steganography payload hash block.
 
-**`template_code_project` production target:** `publication.github_repository: docxology/template_code_project` with bookends enabled in `projects/templates/template_code_project/manuscript/config.yaml`. Example production release (choose a tag from `paper.version`; keep `publication.doi` as the concept DOI and let the publish flow update `version_doi` / `version_record`):
+**`template_code_project` production target:** `publication.github_repository: docxology/template_code_project` with bookends enabled in `projects/templates/template_code_project/docs/manuscript/config.yaml`. Example production release (choose a tag from `paper.version`; keep `publication.doi` as the concept DOI and let the publish flow update `version_doi` / `version_record`):
 
 ```bash
 uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only
@@ -880,7 +882,7 @@ from infrastructure.publishing import (
 
 # Check if everything is ready. The function takes two list[Path] arguments
 # (manuscript markdown + rendered PDFs) and returns a plain dict.
-markdown_files = sorted(Path("projects/templates/template_code_project/manuscript").glob("*.md"))
+markdown_files = sorted(Path("projects/templates/template_code_project/docs/manuscript").glob("*.md"))
 pdf_files = sorted(Path("output/templates/template_code_project/pdf").glob("*.pdf"))
 readiness = validate_publication_readiness(markdown_files, pdf_files)
 print(f"Ready: {readiness['ready_for_publication']} (score {readiness['completeness_score']})")

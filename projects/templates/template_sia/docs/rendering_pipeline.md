@@ -19,7 +19,7 @@ flowchart LR
 
 ## Config controls
 
-`manuscript/config.yaml`:
+`docs/manuscript/config.yaml`:
 
 | Block | Keys | Effect |
 | --- | --- | --- |

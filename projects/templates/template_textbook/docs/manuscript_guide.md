@@ -6,7 +6,7 @@ cross-references are computed rather than typed.
 ## Layout
 
 The structure is declared in
-[`manuscript/config.yaml`](../manuscript/config.yaml) and mirrored on disk:
+[`docs/manuscript/config.yaml`](../docs/manuscript/config.yaml) and mirrored on disk:
 
 ```
 manuscript/
@@ -23,7 +23,7 @@ manuscript/
   assets/            # cover image, etc.
 ```
 
-The book's parts and chapters are declared in `manuscript/config.yaml` (the single
+The book's parts and chapters are declared in `docs/manuscript/config.yaml` (the single
 source of truth); the shipped scaffold is organised as:
 
 | Part | Title | Chapters |
@@ -98,14 +98,14 @@ shift; the cross-ref keeps prose correct as the book grows.
 ## Citations and glossary
 
 - Citations use `[@key]` and must resolve in
-  [`references.bib`](../manuscript/references.bib). The contract keys are the ten
+  [`references.bib`](../docs/manuscript/references.bib). The contract keys are the ten
   in `CITATION_KEYS`: `smith2020foundations`, `doe2019methods`, `lee2021systems`,
   `garcia2022dynamics`, `patel2018models`, `nguyen2023synthesis`, `kim2020data`,
   `brown2017principles`, `wilson2021analysis`, `taylor2019theory`. Add real
   references to `references.bib` and keep `CITATION_KEYS` in sync as you replace
   the placeholders.
 - Glossary links use `[**term**](#gl:<anchor>)` and must resolve in
-  [`glossary.md`](../manuscript/glossary.md). The contract anchors are the
+  [`glossary.md`](../docs/manuscript/glossary.md). The contract anchors are the
   fifteen `GLOSSARY_ANCHORS`: `system`, `model`, `parameter`, `variable`,
   `equilibrium`, `feedback`, `gradient`, `threshold`, `network`, `dynamics`,
   `emergence`, `regulation`, `boundary`, `state`, `observable`.

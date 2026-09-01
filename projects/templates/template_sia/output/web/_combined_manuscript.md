@@ -119,4 +119,4 @@ template_sia demonstrates how to embed the SIA harness contract in the Research 
 
 # References {#sec:references}
 
-See `references.bib` for BibTeX entries cited in this manuscript, including [@sia2026] and the template repository DOI from `manuscript/config.yaml`.
+See `references.bib` for BibTeX entries cited in this manuscript, including [@sia2026] and the template repository DOI from `docs/manuscript/config.yaml`.

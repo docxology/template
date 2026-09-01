@@ -118,7 +118,7 @@ The page scripts are intentionally thin so forks can add, remove, or reorder
 pages without moving rendering behavior out of `src/`.
 
 Configuration entry points are `content/story.yaml` for story data and
-`manuscript/config.yaml` / `manuscript/config.yaml.example` for repository
+`docs/manuscript/config.yaml` / `docs/manuscript/config.yaml.example` for repository
 pipeline metadata, render formats, and the Stage-02 script list.
 
 ## Tests

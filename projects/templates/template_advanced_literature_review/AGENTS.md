@@ -1,12 +1,12 @@
 # AGENTS.md - template_advanced_literature_review
 
-Advanced multi-phase literature-review pipeline exemplar with iterative search refinement, multi-phrase querying, deterministic plus optional LLM-based filtering, and cross-method validation. It demonstrates three configurable search phases (foundation, JWST-era, and molecular detection) over a tracked exoplanet-atmosphere evidence snapshot. The project is designed to be retargeted through `manuscript/config.yaml`; derive corpus counts from generated evidence instead of copying them into prose.
+Advanced multi-phase literature-review pipeline exemplar with iterative search refinement, multi-phrase querying, deterministic plus optional LLM-based filtering, and cross-method validation. It demonstrates three configurable search phases (foundation, JWST-era, and molecular detection) over a tracked exoplanet-atmosphere evidence snapshot. The project is designed to be retargeted through `docs/manuscript/config.yaml`; derive corpus counts from generated evidence instead of copying them into prose.
 
 ## Ground Truth
 
 | Surface | Source of truth |
 | --- | --- |
-| Search phases, terms, keywords, hypotheses, subfields | `manuscript/config.yaml` under `project_config` |
+| Search phases, terms, keywords, hypotheses, subfields | `docs/manuscript/config.yaml` under `project_config` |
 | Multi-phase corpus data | `output/data/combined_corpus.jsonl` (tracked evidence snapshot) |
 | Phase-aware retrieval/filtering | `src/literature/` and `src/multi_phase/` |
 | Bibliometrics, text analytics, embeddings, topics | `src/analysis/` (standalone-safe mirror of the single-term implementation) |
@@ -21,21 +21,21 @@ Advanced multi-phase literature-review pipeline exemplar with iterative search r
 
 Generated `output/` files are regenerable; this canonical public exemplar tracks
 its current evidence snapshot. Never hand-edit `output/manuscript/`,
-`output/data/`, or `output/figures/`; edit `manuscript/`, `src/`, `scripts/`,
+`output/data/`, or `output/figures/`; edit `docs/manuscript/`, `src/`, `scripts/`,
 or config and regenerate.
 
 ## Where To Look
 
 | Task | Start here | Notes |
 | --- | --- | --- |
-| Retarget the review topic | `manuscript/config.yaml` | Change phase definitions, queries, keywords, hypotheses, and subfields together. |
+| Retarget the review topic | `docs/manuscript/config.yaml` | Change phase definitions, queries, keywords, hypotheses, and subfields together. |
 | Multi-phase search configuration | `src/multi_phase/AGENTS.md` | Phase-aware search with iterative refinement and filtering. |
 | Literature engines | `src/literature/AGENTS.md` | Clients degrade gracefully; drift checks keep the mirror aligned with the single-term template. |
 | Bibliometric or NLP metrics | `src/analysis/AGENTS.md` | Pure functions plus runners; copied into standalone exports. |
 | Knowledge graph / LLM extraction | `src/knowledge_graph/AGENTS.md` | Optional, resumable, network/LLM gated; copied into standalone exports. |
 | Reproducibility scoring | `src/reproducibility/AGENTS.md` | Workflow-graph assessment; copied into standalone exports. |
 | Figures and visualization | `src/visualization/AGENTS.md` | Headless matplotlib, colorblind palette; copied into standalone exports. |
-| Multi-phase manuscript tokens | `src/manuscript/AGENTS.md` and `manuscript/AGENTS.md` | Phase-aware variables from generated JSON outputs and config. |
+| Multi-phase manuscript tokens | `src/docs/manuscript/AGENTS.md` and `docs/manuscript/AGENTS.md` | Phase-aware variables from generated JSON outputs and config. |
 | Project scripts (11-stage pipeline) | `scripts/AGENTS.md` | Orchestrators for stages 01-11; dependency order is explicit. |
 | Tests | `tests/AGENTS.md` | Real data, temp files, multi-phase fixtures, no mocks. |
 | Human docs | `README.md` | Project-local architecture, multi-phase specifics, testing. |
@@ -44,7 +44,7 @@ or config and regenerate.
 
 The default offline lane is `scripts/01b_fixture_phase_replay.py` followed by the
 deterministic stages below (that is what `analysis.scripts` in
-`manuscript/config.yaml` runs). For a live corpus refresh instead, run from the
+`docs/manuscript/config.yaml` runs). For a live corpus refresh instead, run from the
 template repository root:
 
 ```bash

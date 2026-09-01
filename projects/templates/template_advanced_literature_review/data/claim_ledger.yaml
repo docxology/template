@@ -2,17 +2,17 @@ claims:
   - claim_id: configured-default-search-term
     kind: string
     value: exoplanet atmospheres
-    source: projects/templates/template_advanced_literature_review/manuscript/config.yaml project_config.search.term
+    source: projects/templates/template_advanced_literature_review/docs/manuscript/config.yaml project_config.search.term
     source_tier: project_config
     freshness: active
-    artifact_path: manuscript/config.yaml
+    artifact_path: docs/manuscript/config.yaml
   - claim_id: configured-search-phase-count
     kind: number
     value: 3
-    source: projects/templates/template_advanced_literature_review/manuscript/config.yaml project_config.search_phases
+    source: projects/templates/template_advanced_literature_review/docs/manuscript/config.yaml project_config.search_phases
     source_tier: project_config
     freshness: active
-    artifact_path: manuscript/config.yaml
+    artifact_path: docs/manuscript/config.yaml
   - claim_id: offline-replay-citation-count
     kind: number
     value: 2
@@ -33,14 +33,14 @@ claims:
     source: manuscript/02d_methods_knowledge_graph.md evidence-score definition
     source_tier: method
     freshness: active
-    artifact_path: manuscript/02d_methods_knowledge_graph.md
+    artifact_path: docs/manuscript/02d_methods_knowledge_graph.md
   - claim_id: figure-label-font-size
     kind: number
     value: 16
     source: manuscript/02e_methods_viz_injection.md centralized figure style contract
     source_tier: method
     freshness: active
-    artifact_path: manuscript/02e_methods_viz_injection.md
+    artifact_path: docs/manuscript/02e_methods_viz_injection.md
   - claim_id: visualization-palette-size
     kind: number
     value: 8

@@ -11,8 +11,10 @@ This guide documents all configuration options available in the Research Project
 The template supports three configuration methods (in priority order):
 
 1. **Environment Variables** (highest priority - override all)
-2. **Configuration File** (`projects/{name}/manuscript/config.yaml`)
+2. **Configuration File** (`projects/{name}/docs/manuscript/config.yaml`)
 3. **Default Values** (lowest priority)
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## Core Configuration
 
@@ -86,8 +88,8 @@ archive unchanged.
 
 ### Location
 
-**Location**: `projects/{name}/manuscript/config.yaml`
-**Template**: `projects/{name}/manuscript/config.yaml.example`
+**Location**: `projects/{name}/docs/manuscript/config.yaml`
+**Template**: `projects/{name}/docs/manuscript/config.yaml.example`
 
 ### Structure
 
@@ -234,7 +236,7 @@ tag tree, reading order, or PDF/UA conformance.
 
 #### Render-format YAML block
 
-Per-project format defaults live in `projects/<name>/manuscript/config.yaml`
+Per-project format defaults live in `projects/<name>/docs/manuscript/config.yaml`
 under a new `render.formats` block:
 
 ```yaml
@@ -328,7 +330,7 @@ The template validates configuration at startup:
 
 ```bash
 # Check configuration
-uv run python -c "from infrastructure.core.config.loader import load_config; print(load_config('projects/templates/template_code_project/manuscript/config.yaml', strict=True))"
+uv run python -c "from infrastructure.core.config.loader import load_config; print(load_config('projects/templates/template_code_project/docs/manuscript/config.yaml', strict=True))"
 ```
 
 Permissive loading remains the default so partial project configs can fall
@@ -387,7 +389,7 @@ experiment_id: "EX-2026-001"
 ```
 
 `load_config()` infers the project name from a standard
-`…/projects/<name>/manuscript/config.yaml` layout, or you can pass it
+`…/projects/<name>/docs/manuscript/config.yaml` layout, or you can pass it
 explicitly via `load_config(path, project_name="my_project")`. Calling
 `register_project_schema_extension("", {...})` registers a key that
 applies to *all* projects (use sparingly).

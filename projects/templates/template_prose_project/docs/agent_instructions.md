@@ -87,7 +87,7 @@ the scripts layer.
 
 ## Rule 4: "Show, Not Tell" Documentation
 
-When updating `manuscript/` files, use explicit, verifiable references instead
+When updating `docs/manuscript/` files, use explicit, verifiable references instead
 of vague descriptions.
 
 **BAD** (vague, unverifiable):
@@ -100,7 +100,7 @@ The pipeline analyses the manuscript using standard readability metrics.
 `projects/templates/template_prose_project/scripts/run_prose_pipeline.py` calls
 `infrastructure.prose.analyze_manuscript` to compute Flesch-Kincaid Grade
 Level, Flesch Reading Ease, and Gunning Fog from the files under
-`manuscript/`, then validates citations against `manuscript/references.bib`
+`docs/manuscript/`, then validates citations against `docs/manuscript/references.bib`
 via `src/prose_facade.parse_bib_keys` (`src/pipeline/__init__.py::run_prose_pipeline`
 evaluates the configured checks).
 ```
@@ -115,7 +115,7 @@ The bibliography is automatically validated.
 `_check_bibliography` in `src/pipeline/checks.py` cross-references the
 `[@key]` citations extracted by `infrastructure.prose` against the keys
 returned by `src/prose_facade.parse_bib_keys` (a minimal regex over
-`manuscript/references.bib` that skips `@comment` blocks), emitting a
+`docs/manuscript/references.bib` that skips `@comment` blocks), emitting a
 `CheckResult` with `name="bibliography_consistency"` whose
 `details.missing` lists unmatched keys.
 ```
@@ -124,7 +124,7 @@ returned by `src/prose_facade.parse_bib_keys` (a minimal regex over
 
 ## Rule 5: Determinism Policy
 
-Every threshold and toggle lives in `manuscript/config.yaml`. There are no
+Every threshold and toggle lives in `docs/manuscript/config.yaml`. There are no
 random draws anywhere in `src/` or `scripts/`. Two requirements apply:
 
 1. **Configuration is the single source of truth.** Do not hard-code a
@@ -133,7 +133,7 @@ random draws anywhere in `src/` or `scripts/`. Two requirements apply:
 2. **Outputs are reproducible byte-for-byte for a given configuration and
    manuscript.** `output/manuscript_report.json`, `output/checks.json`,
    `output/run_summary.json`, and the figure PNGs are stable across runs
-   when nothing under `manuscript/` changes.
+   when nothing under `docs/manuscript/` changes.
 
 If you need to introduce randomness for any reason, document the seed in
 the call site and assert against bounds, not exact values, in tests.
@@ -146,7 +146,7 @@ the call site and assert against bounds, not exact values, in tests.
   `src/`, `scripts/`, `tests/` — zero-mock policy, infrastructure delegation,
   thin orchestrator, error-message format, type hints.
 - **[`syntax_guide.md`](syntax_guide.md)** governs Markdown under
-  `manuscript/` — `{{TOKEN}}` injection, `[@sec:…]` Pandoc-crossref section
+  `docs/manuscript/` — `{{TOKEN}}` injection, `[@sec:…]` Pandoc-crossref section
   references, citation syntax, code-block tagging.
 
 Do not apply code-style rules to manuscript prose, and do not apply manuscript
@@ -168,7 +168,7 @@ If you need to change what a generated file contains, change the **generator**:
 - To change `output/review_report.md` → modify `src/report.py`.
 - To change `output/figures/*.png` → modify `src/figures.py`.
 - To change `output/manuscript/*.md` (token-substituted copies) → modify the
-  template under `manuscript/` and/or `src/manuscript_variables.py`.
+  template under `docs/manuscript/` and/or `src/manuscript_variables.py`.
 - To change `output/pdf/template_prose_project_combined.pdf` → modify the
   manuscript source files, then re-render.
 

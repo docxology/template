@@ -24,7 +24,7 @@ cat ../output/reports/gate_report.json
 | Script | Role | Pipeline |
 | --- | --- | --- |
 | `methods_analysis.py` | Compiles every example method, runs all validation gates, exports worklist/CSV/Mermaid/JSON per method, demonstrates a provenance hash-chain, and plots a step-count figure | Required |
-| `z_generate_manuscript_variables.py` | Reads `methods_analysis.py`'s outputs plus `manuscript/config.yaml` and resolves every `{{TOKEN}}` in `manuscript/*.md` | Required (runs after analysis) |
+| `z_generate_manuscript_variables.py` | Reads `methods_analysis.py`'s outputs plus `docs/manuscript/config.yaml` and resolves every `{{TOKEN}}` in `manuscript/*.md` | Required (runs after analysis) |
 | `generate_api_docs.py` | Builds a glossary-style API index over `src/` via `infrastructure.documentation.glossary_gen` | Optional |
 
 `run_methods_analysis(project_root=...)` accepts an output-root override so

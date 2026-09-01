@@ -8,6 +8,7 @@ from typing import Any
 import yaml
 
 from infrastructure.core.exceptions import FileNotFoundError
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 
 
 def collect_project_info(project_name: str, repo_root: Path) -> dict[str, Any]:
@@ -28,7 +29,7 @@ def collect_project_info(project_name: str, repo_root: Path) -> dict[str, Any]:
         "tests": {},
     }
 
-    manuscript_dir = project_dir / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(project_dir)
     if manuscript_dir.exists():
         info["manuscript"]["location"] = str(manuscript_dir)
         info["manuscript"]["md_files"] = len(list(manuscript_dir.glob("*.md")))

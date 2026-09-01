@@ -16,7 +16,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Integrity and template-status gaps
 
-- Keep `manuscript/config.yaml` as the only source of truth for parts, chapters,
+- Keep `docs/manuscript/config.yaml` as the only source of truth for parts, chapters,
   appendices, labs, and question banks.
 - Keep finished chapters clearly separated from fillable stubs.
 - Keep the structured scaffold audit (`textbook.audit.run_manuscript_audit`)
@@ -24,7 +24,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- `manuscript/config.yaml.example` is checked against the live shape by
+- `docs/manuscript/config.yaml.example` is checked against the live shape by
   `tests/test_contracts.py::test_live_and_example_config_shapes_are_lockstep`;
   extend that contract when `units:` or appendix keys change.
 

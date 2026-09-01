@@ -103,14 +103,14 @@ The infrastructure pipeline runner discovers `scripts/*.py` in lexical order. Th
 | Order | Script | Purpose |
 |---|---|---|
 | 1 | `scripts/run_deep_search.py` | Multi-keyword fan-out; writes `manuscript/references_deep.bib` |
-| 2 | `scripts/run_search_pipeline.py` | Single-query pipeline; writes `manuscript/references.bib` |
+| 2 | `scripts/run_search_pipeline.py` | Single-query pipeline; writes `docs/manuscript/references.bib` |
 | 3 | `scripts/s_compose_literature_review.py` | Composes `manuscript/S01_literature_review.md` from deep-search outputs |
 | 4 | `scripts/y_generate_search_figures.py` | Writes the three diagnostic PNGs |
 | 5 | `scripts/z_generate_manuscript_variables.py` | Resolves `{{TOKEN}}` markers; copies `*.md` + `*.bib` to `output/manuscript/` |
 | 6 | `scripts/zz_generate_review_report.py` | Aggregates review-stage outputs |
 | 7 | `scripts/zzz_build_dashboard.py` | Reads `output/corpus.json` + `output/deep_search/aggregate.json`; writes the interactive HTML dashboard last |
 
-`run` < `s` < `y` < `z` < `zz` < `zzz` is **load-bearing**: the composer must run before the resolver so the freshly written `S01_literature_review.md` is in `manuscript/` when `z_generate_manuscript_variables.py` mirrors it into `output/manuscript/`, and the dashboard must run last so its corpus / aggregate inputs already exist. `tests/test_script_order.py` codifies this.
+`run` < `s` < `y` < `z` < `zz` < `zzz` is **load-bearing**: the composer must run before the resolver so the freshly written `S01_literature_review.md` is in `docs/manuscript/` when `z_generate_manuscript_variables.py` mirrors it into `output/manuscript/`, and the dashboard must run last so its corpus / aggregate inputs already exist. `tests/test_script_order.py` codifies this.
 
 `scripts/review` is out-of-band — it is a CLI executable, not a `*.py` file, and is invoked by `zz_generate_review_report.py`.
 
@@ -130,7 +130,7 @@ The pipeline retrieves papers from major literature sources and stores them.
 `src/pipeline.py::run_literature_pipeline` queries the backends listed in
 `project_config.search.sources` (default `{{CONFIG_SOURCES}}`) via
 `infrastructure.search.literature.LiteratureClient`, deduplicates on `paper.id`,
-and writes `{{RESULT_NUM_PAPERS}}` entries to `manuscript/references.bib`
+and writes `{{RESULT_NUM_PAPERS}}` entries to `docs/manuscript/references.bib`
 through `infrastructure.reference.citation.paper_to_bibentry`.
 ```
 
@@ -151,7 +151,7 @@ When AI agents or humans refer to files in logs, documentation, comments, or imp
 
 | Short Name | Absolute Path (from repo root) |
 |---|---|
-| project config | `projects/templates/template_search_project/manuscript/config.yaml` |
+| project config | `projects/templates/template_search_project/docs/manuscript/config.yaml` |
 | typed config | `projects/templates/template_search_project/src/config.py` |
 | standard pipeline | `projects/templates/template_search_project/src/pipeline.py` |
 | deep search | `projects/templates/template_search_project/src/deep_search.py` |
@@ -164,7 +164,7 @@ When AI agents or humans refer to files in logs, documentation, comments, or imp
 | deep run script | `projects/templates/template_search_project/scripts/run_deep_search.py` |
 | composer | `projects/templates/template_search_project/scripts/s_compose_literature_review.py` |
 | review CLI | `projects/templates/template_search_project/scripts/review` |
-| standard BibTeX | `projects/templates/template_search_project/manuscript/references.bib` |
+| standard BibTeX | `projects/templates/template_search_project/docs/manuscript/references.bib` |
 | deep BibTeX | `projects/templates/template_search_project/manuscript/references_deep.bib` |
 | working PDF | `projects/templates/template_search_project/output/pdf/template_search_project_combined.pdf` |
 | promoted PDF | `output/templates/template_search_project/template_search_project_combined.pdf` |

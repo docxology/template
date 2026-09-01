@@ -27,7 +27,7 @@ repository:
 
 ## 2. Pandoc-Crossref Cross-References
 
-Inside `manuscript/` files, use Pandoc-crossref `[@sec:label]` syntax for
+Inside `docs/manuscript/` files, use Pandoc-crossref `[@sec:label]` syntax for
 cross-section references. **Never** use raw LaTeX `\ref{}` macros in
 Markdown source — they would render literally in the HTML and slide outputs
 and bypass Pandoc-crossref's auto-numbering.
@@ -51,7 +51,7 @@ exemplar uses:
 ### Section Label Registry
 
 All eight section files use the labels enumerated in
-[`manuscript/SYNTAX.md`](../manuscript/SYNTAX.md):
+[`docs/manuscript/SYNTAX.md`](../docs/manuscript/SYNTAX.md):
 
 | File | Section H1 | Label |
 |---|---|---|
@@ -86,7 +86,7 @@ All tokens defined in `src/manuscript_variables.py::ManuscriptVariables`:
 
 | Token | Source |
 |---|---|
-| `{{CONFIG_TITLE}}` | `paper.title` from `manuscript/config.yaml` |
+| `{{CONFIG_TITLE}}` | `paper.title` from `docs/manuscript/config.yaml` |
 | `{{TOTAL_WORDS}}` | sum of `metrics.word_count` across all manuscript files |
 | `{{TOTAL_SENTENCES}}` | sum of `metrics.sentence_count` |
 | `{{TOTAL_PARAGRAPHS}}` | sum of `metrics.paragraph_count` |

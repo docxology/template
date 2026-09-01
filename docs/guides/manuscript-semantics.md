@@ -167,7 +167,9 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 
 1. Use Markdown pipe-tables; the caption attaches via `: <caption text> {#tbl:label}` placed **directly below the table** (no blank line).
 2. Reference with `[@tbl:label]`, not `\ref{tab:label}` or `Table 1`.
-3. For dynamic table bodies, use a `{{TOKEN}}` placeholder (substituted at render time) inside the table — see [`template_code_project/manuscript/03_results.md`](../../projects/templates/template_code_project/manuscript/03_results.md) `RESULT_TABLE_ROWS` for an example. Generate the body from typed analysis records, and bind its population, units, rounding, and missing-value policy to those same records.
+3. For dynamic table bodies, use a `{{TOKEN}}` placeholder (substituted at render time) inside the table — see [`template_code_project/manuscript/03_results.md`](../../projects/templates/template_code_project/docs/manuscript/03_results.md) `RESULT_TABLE_ROWS` for an example. Generate the body from typed analysis records, and bind its population, units, rounding, and missing-value policy to those same records.
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## 5. Sections
 
@@ -425,7 +427,7 @@ Before committing a manuscript change:
 
 ## See also
 
-- [`projects/templates/template_code_project/manuscript/SYNTAX.md`](../../projects/templates/template_code_project/manuscript/SYNTAX.md) — code-exemplar-specific token table and figure registry.
+- [`projects/templates/template_code_project/docs/manuscript/SYNTAX.md`](../../projects/templates/template_code_project/docs/manuscript/SYNTAX.md) — code-exemplar-specific token table and figure registry.
 - [`projects/templates/template_prose_project/manuscript/SYNTAX.md`](../../projects/templates/template_prose_project/manuscript/SYNTAX.md) — prose-exemplar-specific syntax notes.
 - [`projects/templates/template_search_project/manuscript/SYNTAX.md`](../../projects/templates/template_search_project/manuscript/SYNTAX.md) — search-exemplar-specific BibTeX-automation notes.
 - [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) — Pandoc `--natbib` invocation (`build_pandoc_tex_command`); [`_pdf_combined_renderer.py`](../../infrastructure/rendering/_pdf_combined_renderer.py) is the backward-compatible re-export facade.

@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869)
 - Latest deposited version DOI: [10.5281/zenodo.21229620](https://zenodo.org/records/21229620)
 - Additional declared locations: [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmanoQUGKKFeYFtd5HRpB4ysE9jVxbzvaWpqgpWu5rRi8V), [osf](https://osf.io/ksmzp/)
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -65,5 +65,5 @@ python scripts/autopoiesis.py materialize --out-root /tmp/children
 - **No PDF rendering** of child manuscripts — requires Chrome/Pandoc via infrastructure
 - **Byte-stability** is within-platform only (same Python, same OS)
 - **Multi-file vendor deps** are not supported — single-file stubs only
-- **Grammar config** must be at `manuscript/config.yaml` — path is not configurable at CLI level
+- **Grammar config** must be at `docs/manuscript/config.yaml` — path is not configurable at CLI level
 - **Infrastructure deps** (logging, glossary_gen, etc.) will be stubs if infrastructure tree is absent

@@ -12,13 +12,13 @@ Hyperlinks must be informative. Never use placeholder text.
 - **BAD**: [this link](https://github.com/docxology/template) to see the template.
 - **GOOD**: See the [Research Project Template](https://github.com/docxology/template).
 
-For internal cross-references inside `manuscript/`, prefer relative paths.
+For internal cross-references inside `docs/manuscript/`, prefer relative paths.
 
 ---
 
 ## 2. Pandoc-Crossref Cross-References
 
-Inside `manuscript/` files, use Pandoc-crossref `[@label]` syntax. **Never** use
+Inside `docs/manuscript/` files, use Pandoc-crossref `[@label]` syntax. **Never** use
 raw LaTeX `\ref{}` macros — they render literally in HTML/slide outputs and
 bypass auto-numbering. Never hardcode figure or table numbers.
 
@@ -102,7 +102,7 @@ Do not use a `Table:` prefix and do not hardcode the table number — use
    ![Caption text describing the figure.](../output/figures/my_figure.png){#fig:my_label}
    ```
 4. Reference it: `See [@fig:my_label].`
-5. Update `manuscript/AGENTS.md` and this registry, then re-run the pipeline.
+5. Update `docs/manuscript/AGENTS.md` and this registry, then re-run the pipeline.
 
 ---
 

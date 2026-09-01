@@ -94,7 +94,7 @@ We normalized these historically plural practices into a five-stage relational m
 
 ## Inputs and source ownership
 
-The run begins from three authored inputs: `manuscript/config.yaml`, the Markdown section shells in `manuscript/`, and executable functions in `src/`. Configuration owns the seed, lexicon inventories, slot declarations, contribution claims, audit rules, and security-assay rows. Source modules own stage calculations, token selection, formalism records, evidence aggregation, and figure specifications. Markdown owns interpretation and cross-references but consumes computed values only through generated variables.
+The run begins from three authored inputs: `docs/manuscript/config.yaml`, the Markdown section shells in `docs/manuscript/`, and executable functions in `src/`. Configuration owns the seed, lexicon inventories, slot declarations, contribution claims, audit rules, and security-assay rows. Source modules own stage calculations, token selection, formalism records, evidence aggregation, and figure specifications. Markdown owns interpretation and cross-references but consumes computed values only through generated variables.
 
 Generated files are observations, not editing surfaces. The analysis writes the refinery result, token plan, claim-support registry, integrity summaries, and figure-quality records; manuscript hydration then resolves variables into disposable Markdown. This ownership rule prevents a reported number or selected phrase from being corrected only in the rendered paper while its computational source remains unchanged.
 
@@ -132,7 +132,7 @@ The formal layer is generated from `src/formalisms.py`, not hand-numbered prose.
 | F2 | Monotone refinement | [@eq:monotone_refinery] | `src/purity.py::assert_monotone_increase` |
 | F3 | Token-selection digest | [@eq:token_digest] | `src/composition.py::_choose_value` |
 | F4 | Claim-support fraction | [@eq:claim_support] | `src/evidence.py::EvidenceRegistry.support_rate` |
-| F5 | Integrity vector | [@eq:integrity_vector] | `manuscript/config.yaml#gold_refinement.audit_rules` |
+| F5 | Integrity vector | [@eq:integrity_vector] | `docs/manuscript/config.yaml#gold_refinement.audit_rules` |
 | F6 | Certification predicate | [@eq:certification_predicate] | `src/refinery.py::RefineryResult.is_nine_nines_certified` |
 | F7 | Adversarial assay | [@eq:adversarial_assay] | `src/security_assay.py::build_security_assay` |
 : Source-owned formalism registry. {#tbl:formalism_registry}
@@ -175,7 +175,7 @@ $$
 \mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render}, v_{references}, v_{security})
 $$ {#eq:integrity_vector}
 
-A publication claim is only as strong as the weakest required gate. Source: `manuscript/config.yaml#gold_refinement.audit_rules`.
+A publication claim is only as strong as the weakest required gate. Source: `docs/manuscript/config.yaml#gold_refinement.audit_rules`.
 
 **F6: Certification predicate.** Certification is a predicate over final purity and validation readiness.
 
@@ -234,7 +234,7 @@ Karat grades map purity fractions to a gold-fineness vocabulary used here as an 
 
 | Phase | Input | Transformation | Output | Guard |
 |-------|-------|----------------|--------|-------|
-| Schema intake | manuscript/config.yaml | Load and validate gold_refinement block | GoldRefinementConfig | config schema tests |
+| Schema intake | docs/manuscript/config.yaml | Load and validate gold_refinement block | GoldRefinementConfig | config schema tests |
 | Refinery execution | GoldRefinementConfig | Run five refinery stages with monotone purity | RefineryResult | monotone purity test |
 | Token planning | GoldRefinementConfig | Expand slots into deterministic token choices | TokenPlan | seed-stability tests |
 | Figure generation | RefineryResult and TokenPlan | Generate purity progression, karat grading, and token density figures | ../figures/*.png | nonblank figure tests |
@@ -387,30 +387,30 @@ The mega-madlib engine generated 24 tokens from seed 431 across 8 lexicon catego
 
 | Variable | Category | Value | Section | Source |
 |----------|----------|-------|---------|--------|
-| AUTHORING_BOUNDARY_TERM_1 | boundary_terms | analogy boundary | authoring_contract | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[1] |
-| AUTHORING_BOUNDARY_TERM_2 | boundary_terms | non-claim | authoring_contract | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[4] |
-| DISCUSSION_BOUNDARY_TERM_1 | boundary_terms | fork obligation | discussion | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[2] |
-| DISCUSSION_BOUNDARY_TERM_2 | boundary_terms | domain validator | discussion | manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[3] |
-| DISCUSSION_REFINEMENT_VERB | refinement_verbs | smelting | discussion | manuscript/config.yaml#gold_refinement.lexicon.refinement_verbs[3] |
-| EVALUATION_GATE_TERM_1 | gate_terms | prerender | evaluation | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[0] |
-| EVALUATION_GATE_TERM_2 | gate_terms | citation validation | evaluation | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
-| INTRO_INTEGRITY_TERM_1 | integrity_terms | source tier | introduction | manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[1] |
-| INTRO_INTEGRITY_TERM_2 | integrity_terms | evidence spine | introduction | manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[0] |
-| METHOD_GATE_TERM_1 | gate_terms | evidence validation | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[1] |
-| METHOD_GATE_TERM_2 | gate_terms | figure registry check | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[2] |
-| METHOD_GATE_TERM_3 | gate_terms | citation validation | methodology | manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
-| METHOD_MANUSCRIPT_TERM_1 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
-| METHOD_MANUSCRIPT_TERM_2 | manuscript_terms | evidence | methodology | manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
-| METHOD_METAL_TERM_1 | metallurgical_terms | assaying | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1] |
-| METHOD_METAL_TERM_2 | metallurgical_terms | parting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3] |
-| METHOD_METAL_TERM_3 | metallurgical_terms | smelting | methodology | manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2] |
-| REPRO_EVIDENCE_TERM_1 | evidence_terms | fact registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[0] |
-| REPRO_EVIDENCE_TERM_2 | evidence_terms | figure registry | reproducibility | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
-| RESULTS_EVIDENCE_TERM_1 | evidence_terms | artifact manifest | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[1] |
-| RESULTS_EVIDENCE_TERM_2 | evidence_terms | figure registry | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
-| RESULTS_EVIDENCE_TERM_3 | evidence_terms | token provenance | results | manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[4] |
-| RESULTS_PURITY_ADJ_1 | purity_adjectives | unrefined | results | manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[0] |
-| RESULTS_PURITY_ADJ_2 | purity_adjectives | purified | results | manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[1] |
+| AUTHORING_BOUNDARY_TERM_1 | boundary_terms | analogy boundary | authoring_contract | docs/manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[1] |
+| AUTHORING_BOUNDARY_TERM_2 | boundary_terms | non-claim | authoring_contract | docs/manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[4] |
+| DISCUSSION_BOUNDARY_TERM_1 | boundary_terms | fork obligation | discussion | docs/manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[2] |
+| DISCUSSION_BOUNDARY_TERM_2 | boundary_terms | domain validator | discussion | docs/manuscript/config.yaml#gold_refinement.lexicon.boundary_terms[3] |
+| DISCUSSION_REFINEMENT_VERB | refinement_verbs | smelting | discussion | docs/manuscript/config.yaml#gold_refinement.lexicon.refinement_verbs[3] |
+| EVALUATION_GATE_TERM_1 | gate_terms | prerender | evaluation | docs/manuscript/config.yaml#gold_refinement.lexicon.gate_terms[0] |
+| EVALUATION_GATE_TERM_2 | gate_terms | citation validation | evaluation | docs/manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
+| INTRO_INTEGRITY_TERM_1 | integrity_terms | source tier | introduction | docs/manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[1] |
+| INTRO_INTEGRITY_TERM_2 | integrity_terms | evidence spine | introduction | docs/manuscript/config.yaml#gold_refinement.lexicon.integrity_terms[0] |
+| METHOD_GATE_TERM_1 | gate_terms | evidence validation | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.gate_terms[1] |
+| METHOD_GATE_TERM_2 | gate_terms | figure registry check | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.gate_terms[2] |
+| METHOD_GATE_TERM_3 | gate_terms | citation validation | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.gate_terms[3] |
+| METHOD_MANUSCRIPT_TERM_1 | manuscript_terms | evidence | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
+| METHOD_MANUSCRIPT_TERM_2 | manuscript_terms | evidence | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.manuscript_terms[4] |
+| METHOD_METAL_TERM_1 | metallurgical_terms | assaying | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[1] |
+| METHOD_METAL_TERM_2 | metallurgical_terms | parting | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[3] |
+| METHOD_METAL_TERM_3 | metallurgical_terms | smelting | methodology | docs/manuscript/config.yaml#gold_refinement.lexicon.metallurgical_terms[2] |
+| REPRO_EVIDENCE_TERM_1 | evidence_terms | fact registry | reproducibility | docs/manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[0] |
+| REPRO_EVIDENCE_TERM_2 | evidence_terms | figure registry | reproducibility | docs/manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
+| RESULTS_EVIDENCE_TERM_1 | evidence_terms | artifact manifest | results | docs/manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[1] |
+| RESULTS_EVIDENCE_TERM_2 | evidence_terms | figure registry | results | docs/manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[3] |
+| RESULTS_EVIDENCE_TERM_3 | evidence_terms | token provenance | results | docs/manuscript/config.yaml#gold_refinement.lexicon.evidence_terms[4] |
+| RESULTS_PURITY_ADJ_1 | purity_adjectives | unrefined | results | docs/manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[0] |
+| RESULTS_PURITY_ADJ_2 | purity_adjectives | purified | results | docs/manuscript/config.yaml#gold_refinement.lexicon.purity_adjectives[1] |
 
 Selected purity adjectives for this section: unrefined, purified. Selected evidence terms: artifact manifest, figure registry, token provenance.
 
@@ -450,7 +450,7 @@ for the reported token plan, but the figure asks a neighboring question: how do
 selected inventory indices move when seeds and lexicon categories vary? This is
 not a stochastic robustness claim. It is a deterministic audit of the digest
 rule in `src/composition.py::generate_token_plan` against the configured
-lexicon inventories in `manuscript/config.yaml`.
+lexicon inventories in `docs/manuscript/config.yaml`.
 
 This view separates three issues that prose alone tends to blur. First, token
 injection is reproducible: the same seed and inventory generate the same
@@ -519,7 +519,7 @@ The implementation circuit in [@fig:implementation_circuit] shows how the concep
 The circuit is the results section's strongest guard against a prose-only
 interpretation of the template. It shows four layers that must remain connected:
 configuration, project code, generated artifacts, and validation feedback. A
-change in `manuscript/config.yaml` is not complete when the file is saved. It
+change in `docs/manuscript/config.yaml` is not complete when the file is saved. It
 must pass through source functions, generate updated variables and figures,
 hydrate the manuscript, and survive the validator return path. The circular
 layout is therefore a process claim: the manuscript is complete only when the
@@ -537,7 +537,7 @@ repair is central to the manuscript's definition of refinement.
 
 ## Claim-evidence assay
 
-The claim-evidence assay in [@fig:claim_evidence_assay] turns the assaying stage into a reader-facing diagnostic. Each bar is a contribution claim from `manuscript/config.yaml`, and each annotation names the source file or symbol used to support it. This makes the contribution ledger inspectable at the same level as the purity plots: unsupported claims would appear as failed assays rather than remaining hidden in prose.
+The claim-evidence assay in [@fig:claim_evidence_assay] turns the assaying stage into a reader-facing diagnostic. Each bar is a contribution claim from `docs/manuscript/config.yaml`, and each annotation names the source file or symbol used to support it. This makes the contribution ledger inspectable at the same level as the purity plots: unsupported claims would appear as failed assays rather than remaining hidden in prose.
 
 The generated assay currently reports 9 supported
 claims out of 9. The value of the figure is not the perfect
@@ -709,7 +709,7 @@ The same caution applies to checklist-shaped infrastructure. Reporting guideline
 | Mode | Risk | Detection | Mitigation |
 |------|------|-----------|------------|
 | Non-monotone purity | A stage has lower output purity than input. | assert_monotone_increase raises ValueError. | Fix stage purity targets in src/refinery.py. |
-| Empty lexicon category | A required lexicon category is empty or missing. | Config validation raises GoldRefinementConfigError. | Add vocabulary to manuscript/config.yaml. |
+| Empty lexicon category | A required lexicon category is empty or missing. | Config validation raises GoldRefinementConfigError. | Add vocabulary to docs/manuscript/config.yaml. |
 | Unresolved token | A manuscript placeholder has no generated variable. | test_all_manuscript_tokens_are_generated fails. | Add variable in src/manuscript_variables.py. |
 | Rhetorical-only analogy | The analogy is decorative with no operational mapping. | Review that each stage maps to a real infrastructure operation. | Connect stages to template pipeline operations. |
 | Undetected integrity gap | A high-severity failure mode is present but no owner, validator, or generated artifact makes it visible. | build_integrity_dimensions lists severity, detectability, owner, validator, and evidence surface. | Add or revise the source-owned integrity dimension before promoting the manuscript. |
@@ -774,7 +774,7 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be made
 ## Forking responsibilities
 
 1. Remap metallurgical stages to domain operations
-2. Update lexicon categories in `manuscript/config.yaml`
+2. Update lexicon categories in `docs/manuscript/config.yaml`
 3. Add domain-specific evidence and validators
 4. Regenerate all outputs through the pipeline
 5. Do not hand-edit generated manuscript, PDFs, or figures
@@ -797,7 +797,7 @@ Reproduction requires identity, execution, and verification—not merely access 
 
 ## Deterministic regeneration
 
-The refinery pipeline is fully deterministic. Given the same `manuscript/config.yaml` and `src/` code, every run produces identical output. This is the local version of a reproducible computational research norm: the reader should be able to inspect the source, rerun the workflow, and recover the same derived artifacts [@peng2011reproducible; @sandve2013ten].
+The refinery pipeline is fully deterministic. Given the same `docs/manuscript/config.yaml` and `src/` code, every run produces identical output. This is the local version of a reproducible computational research norm: the reader should be able to inspect the source, rerun the workflow, and recover the same derived artifacts [@peng2011reproducible; @sandve2013ten].
 
 Executable-publication scholarship sharpens that norm. Executable research compendia and executable papers treat an article as a package of narrative, code, data, environment, and rendered outputs rather than as a static document with detachable supplements [@nuest2017erc; @lasser2020executable]. The present exemplar is smaller and more template-specific: it does not provide a universal executable-paper format, but it does make the manuscript variables, figures, reports, and rendered PDF/HTML products rebuildable from source-owned inputs.
 
@@ -832,13 +832,13 @@ A reproduction report should record command exit status, the source revision, `4
 
 ## Config ownership
 
-All vocabulary, slots, section conditions, steganography toggles, and optional LLM review gates are declared in `manuscript/config.yaml` under `gold_refinement:`, `steganography:`, and `llm:`. The config is the source of truth; generated prose is disposable.
+All vocabulary, slots, section conditions, steganography toggles, and optional LLM review gates are declared in `docs/manuscript/config.yaml` under `gold_refinement:`, `steganography:`, and `llm:`. The config is the source of truth; generated prose is disposable.
 
 `src/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
 
 The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `497be5f411529ad8`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
-The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
+The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `docs/manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 
 Metadata is part of that path, not administrative garnish. Work on reproducible computational metadata argues that data, tools, workflows, environments, and reports need machine-readable descriptors before re-execution and reuse can be automated reliably [@chen2021metadata]. Here, the evidence registry, token plan, figure registry, output statistics, and config hash are the local metadata stack. They make the object inspectable, but they remain descriptive: they identify what was generated and from where, not whether a domain conclusion is correct.
 
@@ -922,10 +922,10 @@ The software improvements in this version do not remove these limitations. Enfor
 | Token provenance | Can every selected token be traced to a category, section, value, and config key? | The token plan contains one row for each generated token. | output/reports/token_plan.json |
 | Karat grade correctness | Does each stage map to the correct karat grade? | karat_for_purity returns the expected grade for each stage. | src/purity.py |
 | Integrity risk visibility | Can the manuscript identify high-severity integrity failures and the validator or artifact that detects them? | The integrity risk model emits dimensions, owners, residual risk scores, and evidence-tier rows. | src/integrity.py and ../figures/integrity_risk_matrix.png |
-| Scholarship boundary | Do pre-1800 metallurgy references support the analogy, reproducibility, provenance, and source-domain framing without being used as evidence for universal manuscript-quality claims? | The scope, discussion, and evaluation sections cite historically bounded metallurgy scholarship while keeping certification local to source-owned gates. | manuscript/references.bib and manuscript/07_scope.md |
+| Scholarship boundary | Do pre-1800 metallurgy references support the analogy, reproducibility, provenance, and source-domain framing without being used as evidence for universal manuscript-quality claims? | The scope, discussion, and evaluation sections cite historically bounded metallurgy scholarship while keeping certification local to source-owned gates. | docs/manuscript/references.bib and manuscript/07_scope.md |
 | Reporting-guideline completeness | Does the manuscript distinguish checklist-style completeness from methodological validity? | The methods, scope, discussion, and evaluation sections cite reporting-guideline scholarship while explicitly limiting what the local gates prove. | manuscript/02_methodology.md, manuscript/04_discussion.md, manuscript/07_scope.md, and manuscript/08_evaluation.md |
 | Executable-compendium identity | Can a reader identify the executable package, metadata stack, software release, and generated artifacts needed to rebuild the manuscript? | The reproducibility, scope, evaluation, and authoring-contract sections cite executable-publication and software-citation scholarship while keeping preservation and portability claims bounded. | manuscript/06_reproducibility.md, manuscript/07_scope.md, manuscript/08_evaluation.md, manuscript/09_authoring_contract.md, output/reports/evidence_registry.json, and output/reports/output_statistics.json |
-| Adversarial assay boundary | Does security language distinguish declared threat scope from real scan evidence and external compliance? | The security assay emits threats, standards, evidence surfaces, validators, and claim boundaries without claiming Codex Security findings. | src/security_assay.py, manuscript/config.yaml, and manuscript/03_results.md |
+| Adversarial assay boundary | Does security language distinguish declared threat scope from real scan evidence and external compliance? | The security assay emits threats, standards, evidence surfaces, validators, and claim boundaries without claiming Codex Security findings. | src/security_assay.py, docs/manuscript/config.yaml, and manuscript/03_results.md |
 
 The selected evaluation gate terms are prerender and citation validation. They are intentionally narrower than peer review: they check source ownership, token coverage, figure registration, claim support, and rendering integrity before a human reviewer assesses the substantive analogy.
 
@@ -994,7 +994,7 @@ Security authorship has the same rule. Standards and guidance can shape the thre
 ## Fork checklist
 
 1. Remap metallurgical stages to domain operations in `src/refinery.py`
-2. Update lexicon categories in `manuscript/config.yaml` under `gold_refinement.lexicon`
+2. Update lexicon categories in `docs/manuscript/config.yaml` under `gold_refinement.lexicon`
 3. Update `contribution_claims` with domain-specific evidence pointers
 4. Add domain validators beyond the exemplar's generic gates
 5. Replace or extend `src/integrity.py` dimensions when the fork introduces new failure modes

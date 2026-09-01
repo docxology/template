@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.21298890](https://doi.org/10.5281/zenodo.21298890)
 - Latest deposited version DOI: [10.5281/zenodo.21298891](https://zenodo.org/records/21298891)
 - Additional declared locations: none declared
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -22,7 +22,7 @@ Use this exemplar for lawful release-review and redaction workflows outside the 
 2. Replace public fixture segments with cleared sample content only.
 3. Configure the lawful classification taxonomy, release ceiling, residual-risk patterns, and required reviewer roles for your organization.
 4. Replace invented review records with cleared approval records that do not expose source text.
-5. Update `manuscript/config.yaml`, `domain_profile.yaml`, and `experiment_plan.yaml`.
+5. Update `docs/manuscript/config.yaml`, `domain_profile.yaml`, and `experiment_plan.yaml`.
 6. Run tests before generating a release report.
 7. Run `python scripts/01_generate_release_artifacts.py`; inspect the text-free
    audit and hashed ledger before any separate narrative-publication step.

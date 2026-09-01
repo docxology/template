@@ -10,7 +10,7 @@ algorithms, validation, or rendering.
 - **Logic goes here, not in scripts.** If you find yourself computing a value or
   validating structure inside a script, move it into a `src/` module and import it.
 - **Edit config, not the engine, to change content.** Chapters/labs/questions are
-  declared in `manuscript/config.yaml`. The engine (`textbook.config`,
+  declared in `docs/manuscript/config.yaml`. The engine (`textbook.config`,
   `textbook.toc`, `textbook.content`) reads that file. Adding a chapter means
   adding a config entry, then running `scripts/scaffold_chapter.py`.
 - **The contract is `textbook.constants`.** `CITATION_KEYS`, `GLOSSARY_ANCHORS`,
@@ -36,5 +36,5 @@ algorithms, validation, or rendering.
 - `mermaid/` — diagram specs (`diagram_specs.yaml`), `diagrams.py`, `renderer.py`.
 - `textbook_{paths,io,logging,visuals}.py` — shared utilities.
 
-Do not modify `manuscript/config.yaml`, `references.bib`, `glossary.md`, or any
+Do not modify `docs/manuscript/config.yaml`, `references.bib`, `glossary.md`, or any
 chapter/lab/question markdown when changing the engine; those are authored content.

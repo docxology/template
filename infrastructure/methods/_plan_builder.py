@@ -12,6 +12,7 @@ from infrastructure.methods._project_boundary import (
 )
 from infrastructure.methods.models import MethodStage
 from infrastructure.project.discovery import resolve_project_root
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 
 # A manuscript file is a method section if its *filename* carries a method token
 # (below) OR it contains a top-level Methods/Methodology/Protocol heading. The
@@ -93,7 +94,7 @@ def _discover_method_sections(
     *,
     project_display_root: Path | None = None,
 ) -> tuple[str, ...]:
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(project_root)
     if not manuscript_dir.is_dir():
         return ()
     sections = []

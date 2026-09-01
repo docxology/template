@@ -15,7 +15,7 @@ The boundary is preserved differently here: `src/pipeline.py` and `src/deep_sear
 
 They have different fan-out semantics:
 
-- `pipeline.py::run_literature_pipeline` runs **one** `SearchQuery` against the configured sources, deduplicates on `paper.id`, enriches every result, and produces `manuscript/references.bib`.
+- `pipeline.py::run_literature_pipeline` runs **one** `SearchQuery` against the configured sources, deduplicates on `paper.id`, enriches every result, and produces `docs/manuscript/references.bib`.
 - `deep_search.py::run_deep_search` runs **N** queries (one per keyword), each capped at `max_results_per_keyword`, fully enriches every paper, and produces a per-keyword tree under `output/deep_search/` plus the unified `manuscript/references_deep.bib`.
 
 Splitting them keeps each function's input and output shape coherent and lets `tests/test_pipeline.py` and `tests/test_deep_search.py` exercise the two contracts independently. They both delegate citation-key generation to the same `infrastructure.reference.citation.paper_to_bibentry` utility, and `_disambiguate_citation_key` (in `src/pipeline.py`) is reused.
@@ -90,11 +90,11 @@ Ollama threads the seed through the sampler, so a pinned model + seed + zero-tem
 
 ### Why two `.bib` files?
 
-`manuscript/references.bib` is produced by the single-query pipeline; `manuscript/references_deep.bib` is produced by the deep-search fan-out. They coexist because Pandoc's `--natbib` mode merges every `manuscript/*.bib` (sorted) into one bibliography at render time. Splitting the files keeps each pipeline's output isolated and reviewable independently. See [`syntax_guide.md`](syntax_guide.md#8-two-bibliography-citation-rule).
+`docs/manuscript/references.bib` is produced by the single-query pipeline; `manuscript/references_deep.bib` is produced by the deep-search fan-out. They coexist because Pandoc's `--natbib` mode merges every `manuscript/*.bib` (sorted) into one bibliography at render time. Splitting the files keeps each pipeline's output isolated and reviewable independently. See [`syntax_guide.md`](syntax_guide.md#8-two-bibliography-citation-rule).
 
 ### How do I add a tracked keyword to the deep-search?
 
-1. Edit `manuscript/config.yaml` → `project_config.deep_search.keywords:` and add the new entry.
+1. Edit `docs/manuscript/config.yaml` → `project_config.deep_search.keywords:` and add the new entry.
 2. Re-run `scripts/run_deep_search.py`.
 3. The composer (`scripts/s_compose_literature_review.py`) will pick up the new keyword's `output/deep_search/<keyword_slug>/` tree and include it in `manuscript/S01_literature_review.md` on the next pipeline run.
 
@@ -126,7 +126,7 @@ Because `output/manuscript/references_deep.bib` is the copy the renderer reads, 
 
 `config.llm.review_timeout` (default `600.0` seconds) bounds individual LLM requests. Long fulltext + large context can exceed this. Either raise the timeout, lower `project_config.enrichment.max_fulltext_chars`, or use `project_config.deep_search.llm_review_timeout` to override per stage.
 
-### A run mutated `manuscript/references.bib` even though I didn't touch the corpus
+### A run mutated `docs/manuscript/references.bib` even though I didn't touch the corpus
 
 The BibTeX writer is a deterministic function of `(corpus, citation-key generator)`. If the file mutated, one of those changed: check `git diff data/corpus.json` and the per-citation-key disambiguation suffixes in `output/run_summary.json::citation_keys`.
 
@@ -138,4 +138,4 @@ The BibTeX writer is a deterministic function of `(corpus, citation-key generato
 - [`troubleshooting.md`](troubleshooting.md) — symptom-driven recipes.
 - [`syntax_guide.md`](syntax_guide.md) — Pandoc-crossref labels and the `{{TOKEN}}` registry.
 - [`testing_philosophy.md`](testing_philosophy.md) — zero-mock and LLM-as-callable patterns.
-- [`../manuscript/SYNTAX.md`](../manuscript/SYNTAX.md) — manuscript-side syntax conventions.
+- [`../docs/manuscript/SYNTAX.md`](../docs/manuscript/SYNTAX.md) — manuscript-side syntax conventions.

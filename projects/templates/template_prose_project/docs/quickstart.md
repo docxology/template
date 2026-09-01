@@ -28,8 +28,8 @@ All tests should pass without an internet connection.
 uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
 ```
 
-Reads `manuscript/config.yaml`, runs prose analysis on
-`manuscript/*.md`, validates `manuscript/references.bib`, and writes:
+Reads `docs/manuscript/config.yaml`, runs prose analysis on
+`manuscript/*.md`, validates `docs/manuscript/references.bib`, and writes:
 
 * `output/manuscript_report.json`
 * `output/checks.json`

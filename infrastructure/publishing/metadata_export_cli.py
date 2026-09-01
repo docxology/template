@@ -12,6 +12,7 @@ from infrastructure.core.config.loader import load_config
 from infrastructure.core.project_paths import find_repo_root
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.publishing.metadata_export import write_metadata_files
+from infrastructure.core.project_paths import manuscript_config_path
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -58,7 +59,7 @@ def main(argv: list[str] | None = None) -> int:
 
     repo_root = _resolve_repo_root(args.repo_root)
     project_root = resolve_project_root(repo_root, args.project)
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     config = load_config(config_path)
     if config is None:
         print(f"Could not load config: {config_path}")

@@ -15,7 +15,7 @@ using project-local source code and thin Stage-02 scripts.
 - `output/` is generated; regenerate it through scripts rather than editing it.
 
 Configuration entry points are `content/story.yaml` and
-`manuscript/config.yaml`; keep `manuscript/config.yaml.example` aligned for
+`docs/manuscript/config.yaml`; keep `docs/manuscript/config.yaml.example` aligned for
 forks.
 
 For project-scale decisions and negative controls, follow the repository memory

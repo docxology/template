@@ -28,7 +28,9 @@ uv run pytest projects/templates/template_code_project/tests/ --cov=projects/tem
 uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_code_project
 
 # Validate markdown
-uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/docs/manuscript/
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 # Open manuscript
 open output/templates/template_code_project/pdf/template_code_project_combined.pdf  # Top-level output (example project)
@@ -81,10 +83,10 @@ flowchart TB
 ### Create a New Document Section
 ```bash
 # 1. Create markdown file
-vim projects/templates/template_code_project/manuscript/08_new_section.md
+vim projects/templates/template_code_project/docs/manuscript/08_new_section.md
 
 # 2. Add content with section label
-echo "# New Section {#sec:new_section}" > projects/templates/template_code_project/manuscript/08_new_section.md
+echo "# New Section {#sec:new_section}" > projects/templates/template_code_project/docs/manuscript/08_new_section.md
 
 # 3. Rebuild
 ./run.sh pipeline --project templates/template_code_project --core-only

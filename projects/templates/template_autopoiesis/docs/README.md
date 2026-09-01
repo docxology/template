@@ -3,7 +3,7 @@
 ## What this repo is
 
 A combinatoric **grammar** that deterministically generates whole runnable
-child projects — `src/`, `tests/`, `scripts/`, and `manuscript/` — selected by
+child projects — `src/`, `tests/`, `scripts/`, and `docs/manuscript/` — selected by
 a seed from a grammar, with recompute-based provenance verification and
 sealing. Public canonical exemplar of the Research Project Template
 ([`projects/templates/AGENTS.md`](../AGENTS.md)); see the repo
@@ -17,7 +17,7 @@ sealing. Public canonical exemplar of the Research Project Template
 | `src/primitives/` | Primitive dynamics/graph/optimization/signal/statistics registries |
 | `scripts/` | Thin orchestrators: archetype/child realization, sealing, cover art, manuscript-asset and variable generation |
 | `tests/` | Zero-mock test suite incl. property-invariant, stress, and meta-teeth tests |
-| `manuscript/` | Section sources, config, references for the rendered PDF |
+| `docs/manuscript/` | Section sources, config, references for the rendered PDF |
 | `data/` | Authored source-data overlays (e.g. `claim_ledger.yaml` mapping manuscript claims to evidence identifiers) |
 | `output/` | Generated evidence (never hand-edited) |
 
@@ -49,5 +49,5 @@ uv run python projects/templates/template_autopoiesis/scripts/04_seal.py
 
 ## Status
 
-Publication-track exemplar: `manuscript/` is complete and gate-guarded; this
+Publication-track exemplar: `docs/manuscript/` is complete and gate-guarded; this
 docs/ tree was added by the docs-audit pass of 2026-08-29.

@@ -376,7 +376,9 @@ ollama ps
 **Diagnosis:**
 ```bash
 # Check translation configuration
-cat projects/{name}/manuscript/config.yaml | grep -A 10 "llm:"
+cat projects/{name}/docs/manuscript/config.yaml | grep -A 10 "llm:"
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 # Check environment variables
 env | grep TRANSLATION
@@ -386,7 +388,7 @@ env | grep TRANSLATION
 
 1. **Configure translations in config.yaml:**
    ```yaml
-   # projects/{name}/manuscript/config.yaml
+   # projects/{name}/docs/manuscript/config.yaml
    llm:
      translations:
        enabled: true
@@ -398,7 +400,7 @@ env | grep TRANSLATION
 
 2. **Or disable translations:**
    ```yaml
-   # projects/{name}/manuscript/config.yaml
+   # projects/{name}/docs/manuscript/config.yaml
    llm:
      translations:
        enabled: false
@@ -423,7 +425,7 @@ Want to generate only specific review types
 
 1. **Configure review types in config.yaml:**
    ```yaml
-   # projects/{name}/manuscript/config.yaml
+   # projects/{name}/docs/manuscript/config.yaml
    llm:
      reviews:
        enabled: true
@@ -437,7 +439,7 @@ Want to generate only specific review types
 
 2. **Disable reviews entirely:**
    ```yaml
-   # projects/{name}/manuscript/config.yaml
+   # projects/{name}/docs/manuscript/config.yaml
    llm:
      reviews:
        enabled: false
@@ -445,7 +447,7 @@ Want to generate only specific review types
 
 3. **Generate multiple review types:**
    ```yaml
-   # projects/{name}/manuscript/config.yaml
+   # projects/{name}/docs/manuscript/config.yaml
    llm:
      reviews:
        enabled: true

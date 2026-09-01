@@ -30,7 +30,7 @@ def validate_phase10_contract(project_root: str | Path) -> list[str]:
     evidence; source readiness must still be complete before those tools run.
     """
     root = Path(project_root)
-    manuscript = root / "manuscript"
+    manuscript = root / "docs" / "manuscript"
     issues: list[str] = []
     for relative in REQUIRED_MANUSCRIPT_FILES:
         path = manuscript / relative

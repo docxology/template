@@ -14,7 +14,7 @@ can no longer prove it still satisfies the contract it was born from.
 that is copied once, it defines a **grammar** — a finite set of orthogonal
 *slots*, each with a finite set of *options* — and a pure function that maps
 a single integer seed plus that grammar to one specific, fully-formed child
-project. The grammar lives in `manuscript/config.yaml` under the
+project. The grammar lives in `docs/manuscript/config.yaml` under the
 `autopoiesis:` key and is parsed and validated by `parse_grammar()` in
 `src/grammar.py`. Two grammars that differ in even one option, one slot name,
 or one dependency string hash to different `grammar_hash` values, because
@@ -37,7 +37,7 @@ no metabolism here. What is borrowed, deliberately and narrowly, is the
 structural pattern: a bounded specification (the grammar) produces
 instances (children) that are themselves complete, self-contained,
 independently testable projects — each with its own `src/`, `tests/`,
-`scripts/`, and `manuscript/` — capable of being verified without reference
+`scripts/`, and `docs/manuscript/` — capable of being verified without reference
 back to the parent that produced them. The parent grammar does not merely
 describe children; it is causally and exclusively responsible for which
 children can exist, in the same sense that a formal grammar is responsible
@@ -171,7 +171,7 @@ proposal:
 This template extends `template_madlib` one level up the generation
 hierarchy: `template_madlib` generates a manuscript from a token grammar;
 `template_autopoiesis` generates a whole project — `src/`, `tests/`,
-`scripts/`, and `manuscript/` together — from a combinatoric grammar, and
+`scripts/`, and `docs/manuscript/` together — from a combinatoric grammar, and
 that generated project is itself capable of running its own test gate. The
 demonstration primitive library intentionally spans a small, heterogeneous
 set of domains chosen for orthogonality of failure mode, not for domain

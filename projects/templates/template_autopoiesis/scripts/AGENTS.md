@@ -10,7 +10,7 @@ an error, not a skipped registry entry.
 
 ## Files on disk
 
-The analysis-stage allowlist in `manuscript/config.yaml` currently names these
+The analysis-stage allowlist in `docs/manuscript/config.yaml` currently names these
 thin entry points, in execution order:
 
 - `02_measure_test_coverage.py`

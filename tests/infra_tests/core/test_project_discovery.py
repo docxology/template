@@ -32,35 +32,63 @@ def test_find_repo_root_points_at_repository_root() -> None:
 
 
 class TestResolveSourceManuscriptDir:
-    """Canonical manuscript-source resolution across supported layouts."""
+    """Canonical manuscript-source resolution across supported layouts.
 
-    def test_prefers_populated_conventional_manuscript(self, tmp_path):
+    The manuscript directory is configurable but defaults to
+    ``docs/manuscript/``; the legacy ``manuscript/`` tree remains
+    auto-detected for backward compatibility.
+    """
+
+    def test_prefers_populated_docs_manuscript_over_legacy(self, tmp_path):
         project = tmp_path / "project"
-        conventional = project / "manuscript"
+        legacy = project / "manuscript"
         documentation = project / "docs" / "manuscript"
-        conventional.mkdir(parents=True)
+        legacy.mkdir(parents=True)
         documentation.mkdir(parents=True)
-        (conventional / "01_intro.md").write_text("# Conventional\n", encoding="utf-8")
-        (documentation / "01_intro.md").write_text("# Documentation\n", encoding="utf-8")
-
-        assert resolve_source_manuscript_dir(project) == conventional
-
-    def test_config_only_conventional_tree_does_not_shadow_docs_manuscript(self, tmp_path):
-        project = tmp_path / "project"
-        conventional = project / "manuscript"
-        documentation = project / "docs" / "manuscript"
-        conventional.mkdir(parents=True)
-        documentation.mkdir(parents=True)
-        (conventional / "config.yaml").write_text("paper: {}\n", encoding="utf-8")
-        (conventional / "preamble.md").write_text("```latex\n% setup\n```\n", encoding="utf-8")
+        (legacy / "01_intro.md").write_text("# Legacy\n", encoding="utf-8")
         (documentation / "01_intro.md").write_text("# Documentation\n", encoding="utf-8")
 
         assert resolve_source_manuscript_dir(project) == documentation
 
-    def test_returns_conventional_path_when_no_source_tree_is_populated(self, tmp_path):
+    def test_falls_back_to_legacy_when_docs_manuscript_absent(self, tmp_path):
+        project = tmp_path / "project"
+        legacy = project / "manuscript"
+        legacy.mkdir(parents=True)
+        (legacy / "01_intro.md").write_text("# Legacy\n", encoding="utf-8")
+
+        assert resolve_source_manuscript_dir(project) == legacy
+
+    def test_config_only_legacy_tree_does_not_shadow_docs_manuscript(self, tmp_path):
+        project = tmp_path / "project"
+        legacy = project / "manuscript"
+        documentation = project / "docs" / "manuscript"
+        legacy.mkdir(parents=True)
+        documentation.mkdir(parents=True)
+        (legacy / "config.yaml").write_text("paper: {}\n", encoding="utf-8")
+        (legacy / "preamble.md").write_text("```latex\n% setup\n```\n", encoding="utf-8")
+        (documentation / "01_intro.md").write_text("# Documentation\n", encoding="utf-8")
+
+        assert resolve_source_manuscript_dir(project) == documentation
+
+    def test_env_override_wins_over_defaults(self, tmp_path, monkeypatch):
+        project = tmp_path / "project"
+        override = project / "custom" / "manuscript"
+        documentation = project / "docs" / "manuscript"
+        override.mkdir(parents=True)
+        documentation.mkdir(parents=True)
+        (override / "01_intro.md").write_text("# Override\n", encoding="utf-8")
+        (documentation / "01_intro.md").write_text("# Documentation\n", encoding="utf-8")
+
+        monkeypatch.setenv("TEMPLATE_MANUSCRIPT_DIR", "custom/manuscript")
+        try:
+            assert resolve_source_manuscript_dir(project) == override
+        finally:
+            monkeypatch.delenv("TEMPLATE_MANUSCRIPT_DIR")
+
+    def test_returns_docs_manuscript_path_when_no_source_tree_is_populated(self, tmp_path):
         project = tmp_path / "project"
 
-        assert resolve_source_manuscript_dir(project) == project / "manuscript"
+        assert resolve_source_manuscript_dir(project) == project / "docs" / "manuscript"
 
 
 class TestValidateProjectStructure:

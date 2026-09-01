@@ -11,7 +11,7 @@ The quality standard is claim humility. A fork that only changes words has not p
 | Obligation | Required action | Review surface |
 | --- | --- | --- |
 | Review generated claims | Inspect hydrated manuscript bodies before copied outputs are treated as reader-ready. | `output/manuscript and output/web` |
-| Review config diffs | Treat lexicon, slot, title, move, and section-switch edits as source-data changes. | `manuscript/config.yaml` |
+| Review config diffs | Treat lexicon, slot, title, move, and section-switch edits as source-data changes. | `docs/manuscript/config.yaml` |
 | Extend claim evidence | Update the claim ledger when generated prose adds a new claim boundary. | `data/claim_ledger.yaml` |
 | Add domain validators | Add tests and validation artifacts before using the template for domain-specific claims. | `tests and output/reports` |
 | Rerun the full project path | Regenerate analysis artifacts, render outputs, validate outputs, and copy deliverables. | `pipeline command logs` |

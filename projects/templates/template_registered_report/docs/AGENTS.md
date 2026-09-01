@@ -14,7 +14,7 @@ verifier-hardening rules follow the monorepo
 - `scripts/` — thin orchestrators only; business logic belongs in `src/`.
 - `tests/` — zero-mock suite (`test_protocol.py`, `test_demo_study.py`,
   `test_figures.py`, and script tests for both orchestrators).
-- `manuscript/` — `manuscript/AGENTS.md` (if present) plus section README
+- `docs/manuscript/` — `docs/manuscript/AGENTS.md` (if present) plus section README
   govern that tree's token/figure/bibliography rules.
 
 ## Conventions observed in this repo

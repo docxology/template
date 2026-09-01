@@ -67,10 +67,10 @@ uv run python scripts/pipeline/stage_04_validate.py --project templates/template
 
 ## Configuration
 
-`manuscript/config.yaml` is the configuration source of truth (paper
+`docs/manuscript/config.yaml` is the configuration source of truth (paper
 metadata, publication block, and the `dsl` block documenting the example
 methods and staged gates); copy
-[`manuscript/config.yaml.example`](manuscript/config.yaml.example) to start a
+[`docs/manuscript/config.yaml.example`](docs/manuscript/config.yaml.example) to start a
 new project. The controlled vocabulary itself is declared in code
 (`src/methods_dsl/vocabulary.py`, `units.py`), not configuration. No absolute
 paths are hardcoded anywhere.
@@ -160,7 +160,7 @@ auto-discover; **IPFS (Web3.Storage)** has no `WEB3_STORAGE_TOKEN` configured.
 
 - `src/methods_dsl/` is standalone except one sanctioned exception
   (`_logging.py`), declared in
-  [`manuscript/layer_contract.yaml`](manuscript/layer_contract.yaml) and
+  [`docs/manuscript/layer_contract.yaml`](docs/manuscript/layer_contract.yaml) and
   enforced by the `src_infrastructure_import` drift check.
 
 ## Research overlays
@@ -184,6 +184,6 @@ for the library API.
 
 - Forward backlog: [`TODO.md`](TODO.md).
 - Standalone fork guide: [`STANDALONE.md`](STANDALONE.md).
-- Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
+- Copy-and-customize config: [`docs/manuscript/config.yaml.example`](docs/manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_methods_paper/tests --cov=projects/templates/template_methods_paper/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.

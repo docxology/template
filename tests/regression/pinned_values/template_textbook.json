@@ -39,7 +39,7 @@
     }
   },
   "structure_num_parts": {
-    "manuscript_section": "manuscript/front_matter.md / How to Read This Book (+ About This Template)",
+    "manuscript_section": "docs/manuscript/front_matter.md / How to Read This Book (+ About This Template)",
     "claim_text": "The book is organised into four parts that build on one another. ... Twelve chapters across four parts",
     "value": 4,
     "abs_tolerance": 0,
@@ -50,7 +50,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "structure_num_chapters": {
-    "manuscript_section": "manuscript/front_matter.md / About This Template",
+    "manuscript_section": "docs/manuscript/front_matter.md / About This Template",
     "claim_text": "**Twelve chapters** across four parts, each a valid chapter shell ...",
     "value": 12,
     "abs_tolerance": 0,
@@ -61,7 +61,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "structure_chapters_per_part": {
-    "manuscript_section": "manuscript/README.md / Layout",
+    "manuscript_section": "docs/manuscript/README.md / Layout",
     "claim_text": "part_0/ Orientation and Methods (3 chapters); part_I/ Fundamentals (3 chapters); part_II/ Core Systems (3 chapters); part_III/ Applications and Synthesis (3 chapters)",
     "value": 3,
     "abs_tolerance": 0,
@@ -72,7 +72,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "structure_num_labs": {
-    "manuscript_section": "manuscript/front_matter.md / About This Template (+ manuscript/README.md Layout)",
+    "manuscript_section": "docs/manuscript/front_matter.md / About This Template (+ manuscript/README.md Layout)",
     "claim_text": "A matching lab and question bank for every chapter ... One guided lab per chapter, grouped by part",
     "value": 12,
     "abs_tolerance": 0,
@@ -83,7 +83,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "structure_num_questions": {
-    "manuscript_section": "manuscript/front_matter.md / About This Template (+ manuscript/README.md Layout)",
+    "manuscript_section": "docs/manuscript/front_matter.md / About This Template (+ manuscript/README.md Layout)",
     "claim_text": "A matching lab and question bank for every chapter ... One question bank per chapter, grouped by part",
     "value": 12,
     "abs_tolerance": 0,

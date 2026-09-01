@@ -60,7 +60,7 @@ def main() -> None:
 
     corpus = Corpus.load(corpus_path)
     if args.fixture_honesty:
-        manuscript_dir = PROJECT_ROOT / "manuscript"
+        manuscript_dir = PROJECT_ROOT / "docs" / "manuscript"
         violations = validate_fixture_honesty(manuscript_dir, corpus_path)
         if violations:
             for v in violations:

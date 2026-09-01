@@ -17,6 +17,7 @@ except ImportError:
     _yaml = None  # type: ignore[assignment]
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.project_paths import manuscript_config_path
 
 logger = get_logger(__name__)
 
@@ -75,7 +76,7 @@ def get_project_metadata(project_dir: Path) -> dict[str, Any]:
             logger.warning(f"Failed to parse {pyproject_path}: {e}")
 
     # Try manuscript/config.yaml for additional metadata
-    config_path = project_dir / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_dir)
     if config_path.exists():
         if _yaml is None:
             logger.debug("PyYAML not available, skipping config.yaml")

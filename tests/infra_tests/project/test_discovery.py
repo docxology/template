@@ -54,7 +54,7 @@ def valid_project_structure(tmp_path: Path) -> Path:
 
     # Optional directories
     (project_dir / "scripts").mkdir()
-    (project_dir / "manuscript").mkdir()
+    (project_dir / "docs" / "manuscript").mkdir(parents=True)
     (project_dir / "output").mkdir()
 
     # Required Python files
@@ -110,7 +110,7 @@ def multi_project_repo(tmp_path: Path) -> Path:
     (beta / "src").mkdir(parents=True)
     (beta / "tests").mkdir()
     (beta / "scripts").mkdir()
-    (beta / "manuscript").mkdir()
+    (beta / "docs" / "manuscript").mkdir(parents=True)
     (beta / "src" / "main.py").write_text("def main(): pass\n")
     (beta / "tests" / "__init__.py").write_text("")
 
@@ -479,7 +479,7 @@ class TestDiscoverProjects:
         (full / "src").mkdir(parents=True)
         (full / "tests").mkdir()
         (full / "scripts").mkdir()
-        (full / "manuscript").mkdir()
+        (full / "docs" / "manuscript").mkdir(parents=True)
         (full / "src" / "__init__.py").write_text("")
         (full / "tests" / "__init__.py").write_text("")
 

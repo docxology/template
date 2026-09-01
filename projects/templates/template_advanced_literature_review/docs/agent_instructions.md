@@ -6,7 +6,7 @@ project root [`AGENTS.md`](../AGENTS.md), which this file specializes for
 
 ## Rule 1: Config Owns Phase Design and Domain Policy
 
-`manuscript/config.yaml` → `project_config.search_phases` is the control
+`docs/manuscript/config.yaml` → `project_config.search_phases` is the control
 surface for how many phases exist, their queries, engines, and temporal
 filters. `llm_filters`, `phase_integration`, and `hypothesis_definitions`
 control content filtering and cross-phase policy. Retargeting to a new domain

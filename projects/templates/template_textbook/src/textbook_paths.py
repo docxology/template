@@ -22,7 +22,7 @@ from pathlib import Path
 PROJECT = Path(__file__).resolve().parent.parent
 SRC = PROJECT / "src"
 SCRIPTS_DIR = PROJECT / "scripts"
-MANUSCRIPT = PROJECT / "manuscript"
+MANUSCRIPT = PROJECT / "docs" / "manuscript"
 
 
 def ensure_project_paths(

@@ -44,7 +44,7 @@ per-figure inventory.
 
 ## Data flow
 
-1. `manuscript/config.yaml` (gold_refinement block) → `config.py::load_gold_refinement_config()`
+1. `docs/manuscript/config.yaml` (gold_refinement block) → `config.py::load_gold_refinement_config()`
 2. `config.py` → `composition.py::generate_token_plan()` → TokenPlan
 3. `refinery.py::run_refinery()` → RefineryResult (5 stages with monotonicity, order, and adjacent-continuity guards)
 4. `refinery.py::stages_to_target()` → shortest ordered prefix reaching a declared target; `purity.py::PurityVector` → noncompensatory quality dimensions

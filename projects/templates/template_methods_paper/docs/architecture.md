@@ -86,7 +86,7 @@ graph TD
 |---|---|---|
 | Gate or scheduling logic inside `scripts/` | Cannot be unit-tested at the same granularity; drifts from the library | Move to `src/methods_dsl/validation.py` or `compiler.py`, add a test, call it from the script |
 | `import matplotlib` inside `src/methods_dsl/` | Breaks library purity; needs a display backend | Return text/JSON from exporters; plot in `scripts/` |
-| `from infrastructure import ...` anywhere except `_logging.py` | Breaks the standalone/forkable contract | Keep the library standalone; the one sanctioned exception is declared in `manuscript/layer_contract.yaml` |
+| `from infrastructure import ...` anywhere except `_logging.py` | Breaks the standalone/forkable contract | Keep the library standalone; the one sanctioned exception is declared in `docs/manuscript/layer_contract.yaml` |
 | Reordering or skipping a staged gate | Breaks the BPL-inspired staged short-circuit; later gates assume earlier ones passed | Always run gates via `run_all_gates`, never call `plan_gate`/`target_gate` standalone in product code |
 | Hardcoding a `plan_hash` literal in a test | Silently stops testing the moment the compiler's hash input changes | Compile the same method twice and assert hash equality live |
 | Hardcoded absolute paths | Makes copied projects brittle | Resolve paths relative to the project root via `project_paths.py` |

@@ -118,9 +118,11 @@ For each quantitative claim in a manuscript:
 ```python
 """Regression pins for deterministic optimization result claims.
 
-Manuscript: projects/templates/template_code_project/manuscript/03_results.md.
+Manuscript: projects/templates/template_code_project/docs/manuscript/03_results.md.
 Claim: "Target solution: x = {{RESULT_OPTIMUM_X}} ..."
 """
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 from pathlib import Path
 import sys
@@ -157,7 +159,7 @@ def test_solution_accuracy_claims_rederive_from_quadratic(load_pinned_values: An
     "value": 1.0,
     "abs_tolerance": 1e-12,
     "verifier_function": "src.optimizer.quadratic_optimum",
-    "verifier_args": {"source": "projects/templates/template_code_project/manuscript/config.yaml"},
+    "verifier_args": {"source": "projects/templates/template_code_project/docs/manuscript/config.yaml"},
     "pinned_on": "2026-06-13",
     "pinned_by": "Codex",
     "pinned_at_commit": "b85f2753"

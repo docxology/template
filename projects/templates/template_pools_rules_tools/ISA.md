@@ -76,10 +76,10 @@ coverage gate regresses.
   inline dicts introduced elsewhere.
 - Project coverage floor stays ≥90% for `src/` (per repo `CLAUDE.md`); new
   code must ship with tests, not just prose about it.
-- Figure captions/labels registered in `manuscript/config.yaml` under
+- Figure captions/labels registered in `docs/manuscript/config.yaml` under
   `figures:` must match the actual `@fig:` labels used in the prose
   (pandoc-crossref binds on the YAML `label` field).
-- **`manuscript/preamble.md` MUST be wrapped in a closed ` ```latex … ``` `
+- **`docs/manuscript/preamble.md` MUST be wrapped in a closed ` ```latex … ``` `
   fence** — `_pdf_latex_helpers.py::extract_preamble` only captures fenced
   content; an unfenced file falls back to a conservative single-line
   whitelist that silently drops any multi-line directive (memory:
@@ -132,16 +132,16 @@ fonds/rules/tools contract intact.
 - [x] ISC-13: `scripts/05_generate_figures.py` run produces `manuscript/figures/resilience_layers.png` on disk
 - [x] ISC-14: `scripts/05_generate_figures.py` run produces `manuscript/figures/pipeline_flow.png` on disk
 - [x] ISC-15: `scripts/05_generate_figures.py` run produces `manuscript/figures/cover_art.png` on disk
-- [x] ISC-16: `manuscript/config.yaml` `figures:` registry gains a `fond_taxonomy` entry with path/caption/label/width
-- [x] ISC-17: `manuscript/config.yaml` `figures:` registry gains a `rule_hierarchy` entry with path/caption/label/width
-- [x] ISC-18: `manuscript/config.yaml` `figures:` registry gains a `tool_contract` entry with path/caption/label/width
-- [x] ISC-19: `manuscript/config.yaml` `figures:` registry gains a `resilience_layers` entry with path/caption/label/width
-- [x] ISC-20: `manuscript/config.yaml` `figures:` registry gains a `pipeline_flow` entry with path/caption/label/width
-- [x] ISC-21: `manuscript/config.yaml` gains `paper.cover.image: "figures/cover_art.png"`
-- [x] ISC-22: `manuscript/preamble.md` is wrapped in a single closed ` ```latex … ``` ` fence (fixes silent-drop defect)
-- [x] ISC-22.1: `manuscript/config.yaml` gains `metadata.geometry` with margins smaller than the previously-authored-but-dropped 2.5cm/3cm/3cm
+- [x] ISC-16: `docs/manuscript/config.yaml` `figures:` registry gains a `fond_taxonomy` entry with path/caption/label/width
+- [x] ISC-17: `docs/manuscript/config.yaml` `figures:` registry gains a `rule_hierarchy` entry with path/caption/label/width
+- [x] ISC-18: `docs/manuscript/config.yaml` `figures:` registry gains a `tool_contract` entry with path/caption/label/width
+- [x] ISC-19: `docs/manuscript/config.yaml` `figures:` registry gains a `resilience_layers` entry with path/caption/label/width
+- [x] ISC-20: `docs/manuscript/config.yaml` `figures:` registry gains a `pipeline_flow` entry with path/caption/label/width
+- [x] ISC-21: `docs/manuscript/config.yaml` gains `paper.cover.image: "figures/cover_art.png"`
+- [x] ISC-22: `docs/manuscript/preamble.md` is wrapped in a single closed ` ```latex … ``` ` fence (fixes silent-drop defect)
+- [x] ISC-22.1: `docs/manuscript/config.yaml` gains `metadata.geometry` with margins smaller than the previously-authored-but-dropped 2.5cm/3cm/3cm
 - [x] ISC-22.2: `\geometry{}` is removed from `preamble.md` (single source of margins is `config.yaml`, no double-declare)
-- [x] ISC-23: `manuscript/preamble.md` (inside the fence) gains `\usepackage{fontsize}` + `\changefontsize[<baselineskip>]{<size>}` with size < 10pt and correct bracket-order (bracketed arg first)
+- [x] ISC-23: `docs/manuscript/preamble.md` (inside the fence) gains `\usepackage{fontsize}` + `\changefontsize[<baselineskip>]{<size>}` with size < 10pt and correct bracket-order (bracketed arg first)
 - [x] ISC-24: rendered PDF `_combined_manuscript.tex` (post pipeline) contains the recovered `\hypersetup{}`, `\newtcolorbox{noteBox}`, and `\crefname{}` calls that were previously silently dropped
 - [x] ISC-25: `manuscript/03_pools.md` cites `@fig:taxonomy` in prose
 - [x] ISC-26: `manuscript/04_rules.md` cites `@fig:rulehier` in prose
@@ -260,7 +260,7 @@ fonds/rules/tools contract intact.
   "manuscript render/typography"): grepped
   `gotcha-preamble-silent-drop-and-fontsize-argorder.md` and
   `gotcha-template-render-passes-verify-final-pdf.md` before touching
-  typography. Found this project's `manuscript/preamble.md` has **no closing
+  typography. Found this project's `docs/manuscript/preamble.md` has **no closing
   ` ```latex ``` ` fence** — confirmed with `grep -n '```' preamble.md` → 0
   matches. Cross-referenced against `_pdf_latex_helpers.py::extract_preamble`'s
   whitelist regex line-by-line: only single-line `\usepackage{...}`,
@@ -318,7 +318,7 @@ fonds/rules/tools contract intact.
 
 ISC-1..8, 47..52: `uv run pytest projects/templates/template_pools_rules_tools/tests/ --cov=... --cov-fail-under=90` → "225 passed" / "Required test coverage of 90% reached. Total coverage: 91.42%" (final run, post fresh figure regen).
 
-ISC-9..15, 64: `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py` → 9 lines `INFO figures: saved .../manuscript/figures/<name>.png`, `ls output/figures/` → all 9 filenames present (mirrored copy). Script body is 33 non-blank orchestration lines (Read confirmed).
+ISC-9..15, 64: `uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py` → 9 lines `INFO figures: saved .../docs/manuscript/figures/<name>.png`, `ls output/figures/` → all 9 filenames present (mirrored copy). Script body is 33 non-blank orchestration lines (Read confirmed).
 
 ISC-16..21: `yaml.safe_load(config.yaml)` → `d['paper']['cover']` = `{'image': 'figures/cover_art.png'}`, `d['metadata']` = `{'geometry': 'a4paper,margin=1.6cm,top=1.8cm,bottom=1.8cm'}`, `list(d['figures'].keys())` = 8 entries including all 5 new ones.
 

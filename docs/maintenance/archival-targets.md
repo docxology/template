@@ -42,11 +42,13 @@ For each publication:
 A "publication" in this context means a manuscript + its reproducibility bundle. The archived bundle should include:
 
 - **The rendered PDF** (YAML stage 7; script prefix `stage_03`) — the human-readable canonical artifact
-- **The Markdown manuscript sources** (`projects/<name>/manuscript/`) — durable plain-text
+- **The Markdown manuscript sources** (`projects/<name>/docs/manuscript/`) — durable plain-text
 - **A frozen lockfile** (`uv.lock` snapshot at publication commit)
 - **The source-code commit hash** (linked to the GitHub commit + Software Heritage snapshot)
 - **A `MANIFEST.json`** listing all files + their SHA-256 hashes
 - **A `PROVENANCE.json`** with build environment metadata (Python version, OS, deterministic seed values used)
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 The current publishing pipeline produces some of these; the rest are the gap this guide is addressing.
 

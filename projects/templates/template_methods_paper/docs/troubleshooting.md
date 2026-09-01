@@ -3,7 +3,7 @@
 Symptom-driven recipes for the most common breakage modes when running this
 project.
 
-## Edited `src/methods_dsl/examples_methods.py` or `manuscript/config.yaml` but the figure/PDF didn't change
+## Edited `src/methods_dsl/examples_methods.py` or `docs/manuscript/config.yaml` but the figure/PDF didn't change
 
 **Cause.** The analysis stage was skipped, or only the render stage ran (it
 does not re-execute `methods_analysis.py`).
@@ -51,7 +51,7 @@ writing the word `TOKEN` inside double braces as illustrative prose).
 
 **Fix.**
 
-1. Check `manuscript/SYNTAX.md`'s token table for the exact spelling.
+1. Check `docs/manuscript/SYNTAX.md`'s token table for the exact spelling.
 2. If the token should exist, add it to `generate_variables()` and a test in
    `tests/test_manuscript_variables.py`.
 3. If you were describing the mechanism generically, rephrase without double
@@ -81,9 +81,9 @@ writing the word `TOKEN` inside double braces as illustrative prose).
    uv run python projects/templates/template_methods_paper/scripts/methods_analysis.py 2>&1 | tee /tmp/analysis.log
    ```
 2. Check the output directory exists and is writable.
-3. Validate `manuscript/config.yaml`:
+3. Validate `docs/manuscript/config.yaml`:
    ```bash
-   uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_methods_paper/manuscript/config.yaml'))"
+   uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_methods_paper/docs/manuscript/config.yaml'))"
    ```
 
 ## `output/figures/` is empty after running the script
@@ -158,7 +158,7 @@ uv run pytest projects/templates/template_methods_paper/tests \
   --cov=projects/templates/template_methods_paper/src --cov-fail-under=90
 ```
 
-## YAML parse error in `manuscript/config.yaml`
+## YAML parse error in `docs/manuscript/config.yaml`
 
 **Common mistakes:** tabs instead of spaces, trailing commas, unclosed
 quotes.
@@ -166,7 +166,7 @@ quotes.
 **Fix.** Validate before running:
 
 ```bash
-uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_methods_paper/manuscript/config.yaml'))"
+uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_methods_paper/docs/manuscript/config.yaml'))"
 ```
 
 ## See also

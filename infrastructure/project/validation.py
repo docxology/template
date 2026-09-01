@@ -7,6 +7,7 @@ of projects within the repository.
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 
 logger = get_logger(__name__)
 
@@ -58,7 +59,7 @@ def validate_project_structure(project_dir: Path) -> tuple[bool, str]:
 
     # Check optional but recommended directories
     scripts_dir = project_dir / "scripts"
-    manuscript_dir = project_dir / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(project_dir)
 
     if not scripts_dir.exists():
         logger.debug(f"{project_dir.name}: Optional scripts/ directory not found")

@@ -44,7 +44,7 @@ def main() -> int:
     from manuscript.sheaf import compose_all_sections
     from manuscript.variables import generate_variables
 
-    manuscript_dir = PROJECT_ROOT / "manuscript"
+    manuscript_dir = PROJECT_ROOT / "docs" / "manuscript"
     out_pdf_dir = PROJECT_ROOT / "output" / "pdf"
     out_pdf_dir.mkdir(parents=True, exist_ok=True)
 

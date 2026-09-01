@@ -26,7 +26,7 @@ manuscript composition via mega-madlib token injection.
 | Shared boolean coercion helper | `src/coercion.py` |
 | Shared parsing and I/O helpers | `src/parsing.py` |
 | Cover visualization (matplotlib composite figure) | `src/cover_visualization.py` |
-| Experiment parameters and metadata | `manuscript/config.yaml` |
+| Experiment parameters and metadata | `docs/manuscript/config.yaml` |
 | Open follow-up scope | `TODO.md` |
 
 Generated counts and claim numbers belong in `output/data/manuscript_variables.json`
@@ -38,7 +38,7 @@ and hydrated manuscript output, not in hand-authored prose.
 | --- | --- |
 | `src/` | Domain logic only. Refinery, purity, config, composition, and variable generation here. Do not import `infrastructure.*`. |
 | `scripts/` | Thin orchestrators. They may put repo/project paths on `sys.path`, call `src/`, and delegate manuscript injection to shared infrastructure. |
-| `manuscript/` | Token shells plus metadata. Section prose, titles, and tables must resolve from generated variables. |
+| `docs/manuscript/` | Token shells plus metadata. Section prose, titles, and tables must resolve from generated variables. |
 | `tests/` | Real config/data/files only; no mocks. |
 | `output/` | Regeneratable artifacts. Never hand-edit generated Markdown, PDFs, reports, or figures; update the source owner and rerun the pipeline. |
 
@@ -72,7 +72,7 @@ numbers.
 
 ## Edit Rules
 
-- Add vocabulary in `manuscript/config.yaml` under `gold_refinement.lexicon`.
+- Add vocabulary in `docs/manuscript/config.yaml` under `gold_refinement.lexicon`.
 - Add refinement stages or modify purity targets in `src/refinery.py` and
   `src/purity.py` together — purity must increase monotonically across stages.
 - Change `src/config.py` only when the schema changes, and cover new validation

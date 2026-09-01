@@ -16,7 +16,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Integrity and template-status gaps
 
-- Keep the grammar the single source of truth in `manuscript/config.yaml` (`autopoiesis:` block) and all generation logic in `src/` (`grammar.py`, `expand.py`, `materialize.py`, `realize.py`, `sealing.py`, `verify.py`, `honesty.py`) — scripts stay thin orchestrators.
+- Keep the grammar the single source of truth in `docs/manuscript/config.yaml` (`autopoiesis:` block) and all generation logic in `src/` (`grammar.py`, `expand.py`, `materialize.py`, `realize.py`, `sealing.py`, `verify.py`, `honesty.py`) — scripts stay thin orchestrators.
 - Keep materialization routed through `src/emit_templates.py::emit_all` for
   every child-facing analysis, test, project, and manuscript file so standalone
   emitters and generated children cannot drift silently.
@@ -24,13 +24,13 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Keep the placeholder-safe `manuscript/config.yaml.example` synchronized with the live config shape, including the list-form slot and dependency syntax.
+- Keep the placeholder-safe `docs/manuscript/config.yaml.example` synchronized with the live config shape, including the list-form slot and dependency syntax.
 - The optional `archetype_filters` mapping is the fork-owned selector for materializing a subset of the combinatoric product space; keep its values schema-validated and included in the grammar digest.
 
 ## Documentation and signposting gaps
 
 - Keep README and `SYNTAX.md` clear that Stage 02 expands the grammar and materializes/verifies children, while Stage 03 renders the descriptive manuscript PDF.
-- `SPEC.md` Phase 10 and `manuscript/preamble.md` are source-owned inputs to the deterministic manuscript contract; keep the checklist, explicit fences, and renderer-qualified receipt synchronized.
+- `SPEC.md` Phase 10 and `docs/manuscript/preamble.md` are source-owned inputs to the deterministic manuscript contract; keep the checklist, explicit fences, and renderer-qualified receipt synchronized.
 
 ## Dependency-mode gaps
 

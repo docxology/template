@@ -105,8 +105,10 @@ Run:
 
 ```bash
 uv run python -m infrastructure.reference.citation.cli format \
-    projects/<name>/manuscript/references.bib
+    projects/<name>/docs/manuscript/references.bib
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 in a pre-commit hook so style drift cannot mask real semantic conflicts in
 diffs. The writer round-trips byte-stable through the parser.
@@ -115,7 +117,7 @@ diffs. The writer round-trips byte-stable through the parser.
 
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
-    projects/<name>/manuscript/references.bib --strict
+    projects/<name>/docs/manuscript/references.bib --strict
 ```
 
 `--strict` exits non-zero when entries are missing required fields per

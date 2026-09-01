@@ -108,7 +108,7 @@ Three LLM-based content filters were designed for this review:
 3. **Molecular Detection Focus**: Filters for papers primarily focused on
    detecting and measuring specific atmospheric molecules.
 
-These filters are configurable through `manuscript/config.yaml` and can be
+These filters are configurable through `docs/manuscript/config.yaml` and can be
 enabled for specific phases or applied across the entire corpus. When enabled,
 they use a local Ollama LLM instance for cost-effective, privacy-preserving
 content classification.

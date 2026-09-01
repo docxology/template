@@ -18,46 +18,46 @@ Visualization is enabled for configured_field_matrix, section_configuration_heat
 
 | Variable | Category | Value | Section | Source |
 | --- | --- | --- | --- | --- |
-| `STUDY_ADJECTIVE` | adjectives | reviewable | abstract | `manuscript/config.yaml#madlib.lexicon.adjectives[5]` |
-| `STUDY_NOUN` | nouns | pipeline | abstract | `manuscript/config.yaml#madlib.lexicon.nouns[4]` |
-| `STUDY_VERB` | verbs | hydrate | abstract | `manuscript/config.yaml#madlib.lexicon.verbs[1]` |
-| `INTRO_NOUNS_1` | nouns | protocol | introduction | `manuscript/config.yaml#madlib.lexicon.nouns[5]` |
-| `INTRO_NOUNS_2` | nouns | section | introduction | `manuscript/config.yaml#madlib.lexicon.nouns[3]` |
-| `INTRO_NOUNS_3` | nouns | lexicon | introduction | `manuscript/config.yaml#madlib.lexicon.nouns[2]` |
-| `INTRO_NOUNS_4` | nouns | artifact | introduction | `manuscript/config.yaml#madlib.lexicon.nouns[6]` |
-| `INTRO_VERBS_1` | verbs | condition | introduction | `manuscript/config.yaml#madlib.lexicon.verbs[3]` |
-| `INTRO_VERBS_2` | verbs | bind | introduction | `manuscript/config.yaml#madlib.lexicon.verbs[6]` |
-| `INTRO_VERBS_3` | verbs | bind | introduction | `manuscript/config.yaml#madlib.lexicon.verbs[6]` |
-| `INTRO_VERBS_4` | verbs | compose | introduction | `manuscript/config.yaml#madlib.lexicon.verbs[0]` |
-| `METHOD_NAME` | methods | conditional section hydration | methods | `manuscript/config.yaml#madlib.lexicon.methods[3]` |
-| `METHOD_CONSTRAINT` | constraints | publication claims stay local until release | methods | `manuscript/config.yaml#madlib.lexicon.constraints[3]` |
-| `METHOD_ARTIFACT_1` | artifacts | token-injection flow | methods | `manuscript/config.yaml#madlib.lexicon.artifacts[6]` |
-| `METHOD_ARTIFACT_2` | artifacts | quality-gate matrix | methods | `manuscript/config.yaml#madlib.lexicon.artifacts[9]` |
-| `METHOD_QUALITY_1` | qualities | claim humility | methods | `manuscript/config.yaml#madlib.lexicon.qualities[4]` |
-| `METHOD_QUALITY_2` | qualities | render readiness | methods | `manuscript/config.yaml#madlib.lexicon.qualities[3]` |
-| `RESULT_MEASURE_1` | measures | provenance coverage | results | `manuscript/config.yaml#madlib.lexicon.measures[3]` |
-| `RESULT_MEASURE_2` | measures | evidence registry cleanliness | results | `manuscript/config.yaml#madlib.lexicon.measures[6]` |
-| `RESULT_MEASURE_3` | measures | category density | results | `manuscript/config.yaml#madlib.lexicon.measures[2]` |
-| `RESULT_ARTIFACT_1` | artifacts | configured-field figures | results | `manuscript/config.yaml#madlib.lexicon.artifacts[10]` |
-| `RESULT_ARTIFACT_2` | artifacts | token inventory | results | `manuscript/config.yaml#madlib.lexicon.artifacts[0]` |
-| `DISCUSSION_ADJECTIVE` | adjectives | auditable | discussion | `manuscript/config.yaml#madlib.lexicon.adjectives[0]` |
-| `DISCUSSION_AUDIENCE_1` | audiences | pipeline maintainers | discussion | `manuscript/config.yaml#madlib.lexicon.audiences[2]` |
-| `DISCUSSION_AUDIENCE_2` | audiences | research educators | discussion | `manuscript/config.yaml#madlib.lexicon.audiences[3]` |
-| `CONFIG_CONSTRAINT` | constraints | disabled sections retain explicit traceability | configuration | `manuscript/config.yaml#madlib.lexicon.constraints[2]` |
-| `EVALUATION_MEASURE_1` | measures | copied output readiness | evaluation | `manuscript/config.yaml#madlib.lexicon.measures[7]` |
-| `EVALUATION_MEASURE_2` | measures | figure registry completeness | evaluation | `manuscript/config.yaml#madlib.lexicon.measures[5]` |
-| `EVALUATION_MEASURE_3` | measures | category density | evaluation | `manuscript/config.yaml#madlib.lexicon.measures[2]` |
-| `EVALUATION_ARTIFACT_1` | artifacts | manuscript variable map | evaluation | `manuscript/config.yaml#madlib.lexicon.artifacts[3]` |
-| `EVALUATION_ARTIFACT_2` | artifacts | provenance trace map | evaluation | `manuscript/config.yaml#madlib.lexicon.artifacts[8]` |
-| `REPRODUCIBILITY_ARTIFACT_1` | artifacts | section plan | reproducibility | `manuscript/config.yaml#madlib.lexicon.artifacts[1]` |
-| `REPRODUCIBILITY_ARTIFACT_2` | artifacts | manuscript variable map | reproducibility | `manuscript/config.yaml#madlib.lexicon.artifacts[3]` |
-| `LIMITATION_FAILURE_1` | failures | domain misuse | limitations | `manuscript/config.yaml#madlib.lexicon.failures[4]` |
-| `LIMITATION_FAILURE_2` | failures | overclaimed generated prose | limitations | `manuscript/config.yaml#madlib.lexicon.failures[1]` |
-| `LIMITATION_FAILURE_3` | failures | figure provenance gap | limitations | `manuscript/config.yaml#madlib.lexicon.failures[3]` |
-| `SCOPE_CONSTRAINT` | constraints | all lexicon entries live in config | scope | `manuscript/config.yaml#madlib.lexicon.constraints[1]` |
-| `SCOPE_AUDIENCE` | audiences | pipeline maintainers | scope | `manuscript/config.yaml#madlib.lexicon.audiences[2]` |
-| `AUTHORING_AUDIENCE` | audiences | manuscript reviewers | authoring_contract | `manuscript/config.yaml#madlib.lexicon.audiences[1]` |
-| `AUTHORING_QUALITY` | qualities | render readiness | authoring_contract | `manuscript/config.yaml#madlib.lexicon.qualities[3]` |
+| `STUDY_ADJECTIVE` | adjectives | reviewable | abstract | `docs/manuscript/config.yaml#madlib.lexicon.adjectives[5]` |
+| `STUDY_NOUN` | nouns | pipeline | abstract | `docs/manuscript/config.yaml#madlib.lexicon.nouns[4]` |
+| `STUDY_VERB` | verbs | hydrate | abstract | `docs/manuscript/config.yaml#madlib.lexicon.verbs[1]` |
+| `INTRO_NOUNS_1` | nouns | protocol | introduction | `docs/manuscript/config.yaml#madlib.lexicon.nouns[5]` |
+| `INTRO_NOUNS_2` | nouns | section | introduction | `docs/manuscript/config.yaml#madlib.lexicon.nouns[3]` |
+| `INTRO_NOUNS_3` | nouns | lexicon | introduction | `docs/manuscript/config.yaml#madlib.lexicon.nouns[2]` |
+| `INTRO_NOUNS_4` | nouns | artifact | introduction | `docs/manuscript/config.yaml#madlib.lexicon.nouns[6]` |
+| `INTRO_VERBS_1` | verbs | condition | introduction | `docs/manuscript/config.yaml#madlib.lexicon.verbs[3]` |
+| `INTRO_VERBS_2` | verbs | bind | introduction | `docs/manuscript/config.yaml#madlib.lexicon.verbs[6]` |
+| `INTRO_VERBS_3` | verbs | bind | introduction | `docs/manuscript/config.yaml#madlib.lexicon.verbs[6]` |
+| `INTRO_VERBS_4` | verbs | compose | introduction | `docs/manuscript/config.yaml#madlib.lexicon.verbs[0]` |
+| `METHOD_NAME` | methods | conditional section hydration | methods | `docs/manuscript/config.yaml#madlib.lexicon.methods[3]` |
+| `METHOD_CONSTRAINT` | constraints | publication claims stay local until release | methods | `docs/manuscript/config.yaml#madlib.lexicon.constraints[3]` |
+| `METHOD_ARTIFACT_1` | artifacts | token-injection flow | methods | `docs/manuscript/config.yaml#madlib.lexicon.artifacts[6]` |
+| `METHOD_ARTIFACT_2` | artifacts | quality-gate matrix | methods | `docs/manuscript/config.yaml#madlib.lexicon.artifacts[9]` |
+| `METHOD_QUALITY_1` | qualities | claim humility | methods | `docs/manuscript/config.yaml#madlib.lexicon.qualities[4]` |
+| `METHOD_QUALITY_2` | qualities | render readiness | methods | `docs/manuscript/config.yaml#madlib.lexicon.qualities[3]` |
+| `RESULT_MEASURE_1` | measures | provenance coverage | results | `docs/manuscript/config.yaml#madlib.lexicon.measures[3]` |
+| `RESULT_MEASURE_2` | measures | evidence registry cleanliness | results | `docs/manuscript/config.yaml#madlib.lexicon.measures[6]` |
+| `RESULT_MEASURE_3` | measures | category density | results | `docs/manuscript/config.yaml#madlib.lexicon.measures[2]` |
+| `RESULT_ARTIFACT_1` | artifacts | configured-field figures | results | `docs/manuscript/config.yaml#madlib.lexicon.artifacts[10]` |
+| `RESULT_ARTIFACT_2` | artifacts | token inventory | results | `docs/manuscript/config.yaml#madlib.lexicon.artifacts[0]` |
+| `DISCUSSION_ADJECTIVE` | adjectives | auditable | discussion | `docs/manuscript/config.yaml#madlib.lexicon.adjectives[0]` |
+| `DISCUSSION_AUDIENCE_1` | audiences | pipeline maintainers | discussion | `docs/manuscript/config.yaml#madlib.lexicon.audiences[2]` |
+| `DISCUSSION_AUDIENCE_2` | audiences | research educators | discussion | `docs/manuscript/config.yaml#madlib.lexicon.audiences[3]` |
+| `CONFIG_CONSTRAINT` | constraints | disabled sections retain explicit traceability | configuration | `docs/manuscript/config.yaml#madlib.lexicon.constraints[2]` |
+| `EVALUATION_MEASURE_1` | measures | copied output readiness | evaluation | `docs/manuscript/config.yaml#madlib.lexicon.measures[7]` |
+| `EVALUATION_MEASURE_2` | measures | figure registry completeness | evaluation | `docs/manuscript/config.yaml#madlib.lexicon.measures[5]` |
+| `EVALUATION_MEASURE_3` | measures | category density | evaluation | `docs/manuscript/config.yaml#madlib.lexicon.measures[2]` |
+| `EVALUATION_ARTIFACT_1` | artifacts | manuscript variable map | evaluation | `docs/manuscript/config.yaml#madlib.lexicon.artifacts[3]` |
+| `EVALUATION_ARTIFACT_2` | artifacts | provenance trace map | evaluation | `docs/manuscript/config.yaml#madlib.lexicon.artifacts[8]` |
+| `REPRODUCIBILITY_ARTIFACT_1` | artifacts | section plan | reproducibility | `docs/manuscript/config.yaml#madlib.lexicon.artifacts[1]` |
+| `REPRODUCIBILITY_ARTIFACT_2` | artifacts | manuscript variable map | reproducibility | `docs/manuscript/config.yaml#madlib.lexicon.artifacts[3]` |
+| `LIMITATION_FAILURE_1` | failures | domain misuse | limitations | `docs/manuscript/config.yaml#madlib.lexicon.failures[4]` |
+| `LIMITATION_FAILURE_2` | failures | overclaimed generated prose | limitations | `docs/manuscript/config.yaml#madlib.lexicon.failures[1]` |
+| `LIMITATION_FAILURE_3` | failures | figure provenance gap | limitations | `docs/manuscript/config.yaml#madlib.lexicon.failures[3]` |
+| `SCOPE_CONSTRAINT` | constraints | all lexicon entries live in config | scope | `docs/manuscript/config.yaml#madlib.lexicon.constraints[1]` |
+| `SCOPE_AUDIENCE` | audiences | pipeline maintainers | scope | `docs/manuscript/config.yaml#madlib.lexicon.audiences[2]` |
+| `AUTHORING_AUDIENCE` | audiences | manuscript reviewers | authoring_contract | `docs/manuscript/config.yaml#madlib.lexicon.audiences[1]` |
+| `AUTHORING_QUALITY` | qualities | render readiness | authoring_contract | `docs/manuscript/config.yaml#madlib.lexicon.qualities[3]` |
 
 ## Provenance Matrix
 

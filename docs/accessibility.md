@@ -61,7 +61,9 @@ qualified project name:
 
 ```bash
 uv run python -m infrastructure.validation.cli markdown \
-  projects/templates/template_code_project/manuscript --repo-root . --strict
+  projects/templates/template_code_project/docs/manuscript --repo-root . --strict
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 uv run python -m infrastructure.validation.cli publication-audit \
   --project templates/template_code_project \

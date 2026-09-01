@@ -66,12 +66,14 @@ service-level objectives.
 
 Current renderer behavior:
 
-- Manuscript sections are discovered from `projects/{name}/manuscript/*.md`.
+- Manuscript sections are discovered from `projects/{name}/docs/manuscript/*.md`.
 - Working render artifacts are written under `projects/{name}/output/`.
 - Copy Outputs copies final deliverables to `output/{name}/`.
 - The primary combined PDF is available at `output/{name}/pdf/{name}_combined.pdf`;
   a root convenience copy may also exist at `output/{name}/{name}_combined.pdf`.
 - Web output is under `output/{name}/web/`.
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ### Combined Document
 

@@ -37,7 +37,7 @@ uv run python projects/templates/template_advanced_literature_review/scripts/10_
 uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
 ```
 
-Inputs are `manuscript/config.yaml` plus `output/data/*.json` /
+Inputs are `docs/manuscript/config.yaml` plus `output/data/*.json` /
 `output/data/*.jsonl`, including `phase_metadata.json` and
 `hypothesis_scores.json` for phase-aware tokens (`src/manuscript/variables/extractors/multi_phase.py`,
 `extractors/hypotheses.py`). Outputs are resolved markdown files under
@@ -86,7 +86,7 @@ and the repo-level test/evidence reports also written under `output/reports/`.
   `output/data/` wasn't deleted.
 - Missing figure: rerun `scripts/04_generate_figures.py --dpi 300` and check
   `output/figures/figure_registry.json`.
-- Citation error: check `manuscript/references.bib` and the generated
+- Citation error: check `docs/manuscript/references.bib` and the generated
   `_combined_manuscript.log`.
 - Mermaid/Chrome error: install `chrome-headless-shell` as described in the
   root rendering docs, then rerun `scripts/pipeline/stage_03_render.py`.

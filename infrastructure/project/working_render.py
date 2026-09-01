@@ -13,6 +13,7 @@ from infrastructure.core.pipeline.executor import PipelineExecutor
 from infrastructure.core.pipeline.types import PipelineConfig
 from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.validation.content.pdf_validator import validate_pdf_rendering
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 
 WORKING_DIR = "projects/working"
 REQUIRED_MARKERS = ("tests", "manuscript")
@@ -56,7 +57,7 @@ def list_working_projects(repo: Path) -> list[str]:
 
 def has_manuscript(project_dir: Path) -> bool:
     """Return True when *project_dir* holds a ``manuscript/`` dir with ``*.md`` files."""
-    manuscript = project_dir / "manuscript"
+    manuscript = resolve_source_manuscript_dir(project_dir)
     return manuscript.is_dir() and any(manuscript.glob("*.md"))
 
 

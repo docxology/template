@@ -442,8 +442,10 @@ git clone template-repo "$PROJECT_NAME"
 cd "$PROJECT_NAME"
 
 # Customize (edit config.yaml or set environment variables)
-cp projects/{name}/manuscript/config.yaml.example projects/{name}/manuscript/config.yaml
-vim projects/{name}/manuscript/config.yaml
+cp projects/{name}/docs/manuscript/config.yaml.example projects/{name}/docs/manuscript/config.yaml
+vim projects/{name}/docs/manuscript/config.yaml
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 # Initialize
 uv sync

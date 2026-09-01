@@ -91,4 +91,4 @@ from the repository root so imports resolve.
 - [`troubleshooting.md`](troubleshooting.md) — symptom-driven recipes.
 - [`output_conventions.md`](output_conventions.md) — output regeneration rules.
 - [`syntax_guide.md`](syntax_guide.md) — Pandoc-crossref syntax.
-- [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — figure protocol.
+- [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — figure protocol.

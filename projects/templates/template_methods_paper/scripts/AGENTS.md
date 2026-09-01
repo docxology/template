@@ -76,7 +76,7 @@ uv run python projects/templates/template_methods_paper/scripts/z_generate_manus
 
 | Function | Role |
 | --- | --- |
-| `main()` | Reads `manuscript/config.yaml` and `output/data`/`output/reports` artifacts via `src.manuscript_variables.generate_variables`, writes `output/data/manuscript_variables.json`, and injects every `{{TOKEN}}` via `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree`. `--allow-draft` permits `N/A` fallbacks before `methods_analysis.py` has run. |
+| `main()` | Reads `docs/manuscript/config.yaml` and `output/data`/`output/reports` artifacts via `src.manuscript_variables.generate_variables`, writes `output/data/manuscript_variables.json`, and injects every `{{TOKEN}}` via `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree`. `--allow-draft` permits `N/A` fallbacks before `methods_analysis.py` has run. |
 
 All DSL logic is in `src/methods_dsl/`; these scripts only orchestrate. Tested
 by [`../tests/test_methods_analysis_script.py`](../tests/test_methods_analysis_script.py),

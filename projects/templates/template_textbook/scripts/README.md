@@ -17,7 +17,7 @@ computation, validation, and rendering lives in `src/`.
 
 ## Growing the book
 
-1. Add a chapter entry to `manuscript/config.yaml`.
+1. Add a chapter entry to `docs/manuscript/config.yaml`.
 2. `uv run python scripts/scaffold_chapter.py` to write contract-satisfying stubs.
 3. Fill the stubs (replace `<!-- STUB -->`, `TODO:`, `TKTK`).
 4. `uv run python scripts/audit_textbook_quality.py` to check structure and progress.

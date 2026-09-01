@@ -9,7 +9,7 @@ any Python environment with only the standard library installed. All
 cross-cutting concerns (rendering, validation, logging) are delegated to
 `infrastructure/` and called from `scripts/` — with one declared exception,
 `_logging.py`, which is the sanctioned adapter for structured log output
-(see `manuscript/layer_contract.yaml`). This keeps the library testable with
+(see `docs/manuscript/layer_contract.yaml`). This keeps the library testable with
 zero mocks and reusable outside the pipeline.
 
 ### What is the "thin orchestrator" pattern?
@@ -97,7 +97,7 @@ code-derived facts that are not generated per-run instead go in
 
 `src/methods_dsl/` must stay infrastructure-free outside the one declared
 exception. Move that code to `scripts/`, or add it to
-`manuscript/layer_contract.yaml`'s `allow_infrastructure_imports` list only
+`docs/manuscript/layer_contract.yaml`'s `allow_infrastructure_imports` list only
 if it is a genuinely sanctioned cross-cutting adapter.
 
 ### My test uses `unittest.mock` and the drift gate failed
@@ -125,4 +125,4 @@ without double curly braces instead.
 - [`troubleshooting.md`](troubleshooting.md) — symptom-driven recipes.
 - [`output_conventions.md`](output_conventions.md) — output regeneration rules.
 - [`syntax_guide.md`](syntax_guide.md) — Pandoc-crossref + token syntax.
-- [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — token/figure protocol.
+- [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — token/figure protocol.

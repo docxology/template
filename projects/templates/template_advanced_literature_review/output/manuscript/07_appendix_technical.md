@@ -61,7 +61,7 @@ $t_d = \ln(2) / \ln(1 + \text{CAGR})$. For this run: CAGR = 6.76\%, doubling tim
 
 ## Configuration Surface
 
-A single `manuscript/config.yaml` controls the search term, per-engine query and keyword
+A single `docs/manuscript/config.yaml` controls the search term, per-engine query and keyword
 sets, engine enable toggles, subfield taxonomy, hypotheses, full-text and embedding
 options, and paper metadata. This run drew on 4 engines, a
 4-bucket taxonomy, and 4 hypotheses.

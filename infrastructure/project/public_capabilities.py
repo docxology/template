@@ -40,8 +40,9 @@ from infrastructure.project.public_capability_contracts import (
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
+from infrastructure.core.project_paths import manuscript_config_path, resolve_source_manuscript_dir
 
-REQUIRED_DIRECTORIES = ("src", "tests", "manuscript", "scripts", ".agents/skills")
+REQUIRED_DIRECTORIES = ("src", "tests", "docs/manuscript", "scripts", ".agents/skills")
 REQUIRED_FILES = ("README.md", "AGENTS.md", "pyproject.toml")
 CAPABILITY_MANIFEST_SCHEMA_VERSION = "template-public-capabilities-v1"
 CANONICAL_CI_PYTHON_VERSIONS = ("3.10", "3.14")
@@ -446,9 +447,9 @@ def _package_capability(
 
 
 def _load_project_config(project_root: Path) -> tuple[dict[str, Any], list[str]]:
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     if not config_path.is_file():
-        return {}, ["manuscript/config.yaml is missing"]
+        return {}, ["manuscript/config.yaml missing (default docs/manuscript/; TEMPLATE_MANUSCRIPT_DIR overrides)"]
     try:
         loaded: Any = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     except (OSError, yaml.YAMLError) as exc:
@@ -554,7 +555,7 @@ def _hydration_capability(
     issues: list[str] = []
     token_count = 0
     token_sources: list[str] = []
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(project_root)
     try:
         with _silenced_loggers("infrastructure.rendering.manuscript_discovery"):
             manuscript_files = discover_manuscript_files(manuscript_dir)

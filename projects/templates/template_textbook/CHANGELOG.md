@@ -13,7 +13,7 @@ scaffold for book-length technical works.
 
 ### Added
 
-- **Data-driven manuscript** — `manuscript/config.yaml` is the single source of
+- **Data-driven manuscript** — `docs/manuscript/config.yaml` is the single source of
   truth (Parts → chapters → labs → question banks → appendices). 4 Parts, 12
   chapters, 12 labs, 12 question banks.
 - **Tested computational backbone** — `src/textbook/` (`models`, `config`, `toc`,

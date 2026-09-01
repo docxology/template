@@ -10,7 +10,7 @@ and executes both projects with the same code.
 
 Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
-Subfolder documentation: [`docs/AGENTS.md`](docs/AGENTS.md), [`manuscript/AGENTS.md`](manuscript/AGENTS.md), [`src/AGENTS.md`](src/AGENTS.md), [`tests/AGENTS.md`](tests/AGENTS.md), [`scripts/AGENTS.md`](scripts/AGENTS.md) (each with a [`README.md`](README.md) in the same directory).
+Subfolder documentation: [`docs/AGENTS.md`](docs/AGENTS.md), [`docs/manuscript/AGENTS.md`](docs/manuscript/AGENTS.md), [`src/AGENTS.md`](src/AGENTS.md), [`tests/AGENTS.md`](tests/AGENTS.md), [`scripts/AGENTS.md`](scripts/AGENTS.md) (each with a [`README.md`](README.md) in the same directory).
 
 ## Layout
 
@@ -70,7 +70,7 @@ flowchart TB
 
 * `src/config.py::ProjectConfig` — every knob is here. Adding a new flag
   means: add a field to the dataclass, add YAML parsing in
-  `from_dict`, add a default in `manuscript/config.yaml`. Tests live in
+  `from_dict`, add a default in `docs/manuscript/config.yaml`. Tests live in
   `tests/test_config.py`.
 
 * `src/pipeline.py::run_literature_pipeline` — the single-query search →
@@ -106,7 +106,7 @@ own `SearchQuery` (capped at `max_results_per_keyword`, default 100),
 every paper is fully enriched (abstract + fulltext), and each paper
 gets a multi-section markdown reading note (LLM-generated when enabled).
 See [`src/deep_search.py`](src/deep_search.py) and
-[`manuscript/07_deep_search.md`](manuscript/07_deep_search.md).
+[`manuscript/07_deep_search.md`](docs/manuscript/07_deep_search.md).
 
 | Command | Behaviour |
 |---|---|
@@ -145,7 +145,7 @@ empirical assertion language in fixture-backed synthesis.
 
 To target a different topic:
 
-1. Edit `manuscript/config.yaml` → `project_config.search.query`.
+1. Edit `docs/manuscript/config.yaml` → `project_config.search.query`.
 2. Adjust `project_config.search.year_min` / `year_max` / `sources` as needed.
 3. Re-run `scripts/run_search_pipeline.py`.
 

@@ -31,8 +31,8 @@ __all__ = [
 
 def _figure_inputs() -> list[str]:
     return [
-        "manuscript/sheaf/manifest.yaml",
-        "manuscript/sheaf/tracks.yaml",
+        "docs/manuscript/sheaf/manifest.yaml",
+        "docs/manuscript/sheaf/tracks.yaml",
         "output/data/sheaf_coverage_matrix.json",
         "figures.yaml",
     ]

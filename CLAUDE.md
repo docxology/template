@@ -367,7 +367,8 @@ uv run pytest tests/infra_tests/test_specific.py::test_function -v
 
 ## Configuration
 
-### Project Metadata (`projects/{name}/manuscript/config.yaml`)
+### Project Metadata (`projects/{name}/docs/manuscript/config.yaml`)
+**Manuscript location:** configurable but defaulting to `docs/manuscript/` (`projects/{name}/docs/manuscript/`). Set `TEMPLATE_MANUSCRIPT_DIR` (project-relative, e.g. `manuscript`) to override checkout-wide; the legacy `manuscript/` location remains auto-detected for backward compatibility.
 
 ```yaml
 paper:
@@ -569,7 +570,7 @@ uv run python -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import 
 **Markdown Validation Errors**: Check image paths and references
 
 ```bash
-uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/docs/manuscript/
 ```
 
 ### Debug Mode

@@ -17,7 +17,7 @@ tested validation library. See the repo [`README.md`](../README.md).
 | `src/data_descriptor/` | Descriptor schema, verification (checksum/row-count recompute), registry, and figure-data modules |
 | `scripts/` | Thin orchestrators: `generate_figures.py`, `generate_release_artifacts.py` |
 | `tests/` | Zero-mock tests incl. mismatch/verification negative controls |
-| `manuscript/` | Section sources (`00_abstract.md` … `99_references.md`), config, references |
+| `docs/manuscript/` | Section sources (`00_abstract.md` … `99_references.md`), config, references |
 | `data/` | Demonstration dataset fixtures and the example descriptor |
 | `output/` | Generated figures and release artifacts (never hand-edited) |
 
@@ -38,7 +38,7 @@ uv run python projects/templates/template_data_descriptor/scripts/generate_figur
 uv run python projects/templates/template_data_descriptor/scripts/generate_release_artifacts.py
 ```
 
-Forks: copy `manuscript/config.yaml.example` to `manuscript/config.yaml` and
+Forks: copy `docs/manuscript/config.yaml.example` to `docs/manuscript/config.yaml` and
 keep template-integrity checks green (per repo README).
 
 ## Documentation in this tree
@@ -47,5 +47,5 @@ keep template-integrity checks green (per repo README).
 
 ## Status
 
-Publication-track exemplar: `manuscript/` is complete and gate-guarded; this
+Publication-track exemplar: `docs/manuscript/` is complete and gate-guarded; this
 docs/ tree was added by the docs-audit pass of 2026-08-29.

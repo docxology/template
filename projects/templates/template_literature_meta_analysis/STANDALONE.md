@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.20931964](https://doi.org/10.5281/zenodo.20931964)
 - Latest deposited version DOI: [10.5281/zenodo.20931965](https://zenodo.org/records/20931965)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_literature_meta_analysis/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_literature_meta_analysis), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmbeNkcrBdccxaPihkcjRxLNagNeYLFaGA7xgi5aXEigM1), [netlify](https://6a444119738f1fa89d68e5a2--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/3z5yp/), [pypi](https://test.pypi.org/project/template-literature-meta-analysis/0.1.0/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_literature_meta_analysis)
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -53,7 +53,7 @@ rsync -a \
 
 ## Required Post-Fork Edits
 
-- Set the topic in `manuscript/config.yaml` → `project_config.search.term` and the
+- Set the topic in `docs/manuscript/config.yaml` → `project_config.search.term` and the
   `query` / `arxiv_queries` / `relevance_keywords` / `subfield_keywords` /
   `hypothesis_definitions` blocks for the new domain.
 - Update `CITATION.cff`, `.zenodo.json`, `codemeta.json`, and `pyproject.toml`

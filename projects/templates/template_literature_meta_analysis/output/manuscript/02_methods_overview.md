@@ -46,11 +46,11 @@ layouts), so re-running produces byte-identical outputs. A live run with engines
 enabled and credentials supplied replaces the seed corpus with real records — as in
 this instance, which retrieved 2334 live records. The template is
 domain-agnostic: the search term, query, keyword set, subfield taxonomy, and hypotheses
-all come from `manuscript/config.yaml`.
+all come from `docs/manuscript/config.yaml`.
 
 ## Configuration Surface
 
-A single `manuscript/config.yaml` controls:
+A single `docs/manuscript/config.yaml` controls:
 
 - **Search parameters**: term, query string, per-engine queries, relevance keywords,
   start year, max results, resume/clear behaviour

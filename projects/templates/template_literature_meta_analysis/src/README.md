@@ -8,7 +8,7 @@ Source code for the literature meta-analysis exemplar.
 | `analysis/` | Descriptive stats, text processing, embeddings, topic modeling, temporal metrics, citation networks |
 | `knowledge_graph/` | Optional assertion extraction, hypothesis scoring, nanopublications, RDF/TriG export |
 | `visualization/` | Headless matplotlib figures and shared style config |
-| `manuscript/` | Token computation and manuscript hydration helpers |
+| `docs/manuscript/` | Token computation and manuscript hydration helpers |
 
 Run the project coverage gate from the repository root:
 

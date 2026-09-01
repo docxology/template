@@ -4,7 +4,7 @@
     "project_name": "template_gold_refinement",
     "populated_on": "2026-07-01",
     "populated_by": "Marcus Webb (Engineer)",
-    "note": "First real regression pins for the metallurgical gold-refining exemplar in manuscript/03_results.md. The refinery pipeline (ore -> smelting -> assaying -> cupellation -> certification) is load-bearing, not rhetorical: each headline number is re-derived from a real source function -- run_refinery() for stage count / final purity / nines count, formalism_count() for the source-owned formalism registry, and build_evidence_registry() for the project-local claim-support assay -- never hand-copied from the rendered manuscript. Nine-nines (0.999999999) certification is the terminal purity claim."
+    "note": "First real regression pins for the metallurgical gold-refining exemplar in docs/manuscript/03_results.md. The refinery pipeline (ore -> smelting -> assaying -> cupellation -> certification) is load-bearing, not rhetorical: each headline number is re-derived from a real source function -- run_refinery() for stage count / final purity / nines count, formalism_count() for the source-owned formalism registry, and build_evidence_registry() for the project-local claim-support assay -- never hand-copied from the rendered manuscript. Nine-nines (0.999999999) certification is the terminal purity claim."
   },
   "_provenance": {
     "refinery_num_stages": {
@@ -45,7 +45,7 @@
     }
   },
   "refinery_num_stages": {
-    "manuscript_section": "manuscript/03_results.md / opening + Final certification",
+    "manuscript_section": "docs/manuscript/03_results.md / opening + Final certification",
     "claim_text": "The refinery pipeline produces a monotonically increasing purity sequence across 5 stages, reaching final purity of 99.9999999% (nine-nines) (24K (nine-nines certified)).",
     "value": 5,
     "abs_tolerance": 0,
@@ -56,7 +56,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "refinery_final_purity": {
-    "manuscript_section": "manuscript/03_results.md / Final certification",
+    "manuscript_section": "docs/manuscript/03_results.md / Final certification",
     "claim_text": "Final purity: 99.9999999% (nine-nines) ... reaching final purity of 99.9999999% (nine-nines)",
     "value": 0.999999999,
     "abs_tolerance": 1e-12,
@@ -67,7 +67,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "refinery_final_nines": {
-    "manuscript_section": "manuscript/03_results.md / Final certification",
+    "manuscript_section": "docs/manuscript/03_results.md / Final certification",
     "claim_text": "Nines count: 9",
     "value": 9,
     "abs_tolerance": 0,
@@ -78,7 +78,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "formalism_count": {
-    "manuscript_section": "manuscript/03_results.md / Formalism traceability",
+    "manuscript_section": "docs/manuscript/03_results.md / Formalism traceability",
     "claim_text": "The registry currently exposes 7 source-owned formalisms.",
     "value": 7,
     "abs_tolerance": 0,
@@ -89,7 +89,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "claim_support_supported": {
-    "manuscript_section": "manuscript/03_results.md / Contribution claims + Claim-evidence assay",
+    "manuscript_section": "docs/manuscript/03_results.md / Contribution claims + Claim-evidence assay",
     "claim_text": "The project-local claim-support assay reports 9 supported claims out of 9 total claims, for 100.00% support.",
     "value": 9,
     "abs_tolerance": 0,
@@ -100,7 +100,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "claim_support_total": {
-    "manuscript_section": "manuscript/03_results.md / Contribution claims + Claim-evidence assay",
+    "manuscript_section": "docs/manuscript/03_results.md / Contribution claims + Claim-evidence assay",
     "claim_text": "... out of 9 total claims, for 100.00% support. Unsupported claims: 0.",
     "value": 9,
     "abs_tolerance": 0,

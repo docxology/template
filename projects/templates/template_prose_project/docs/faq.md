@@ -86,7 +86,7 @@ Yes, via `tests/test_scripts.py`, which invokes
 `scripts/y_generate_prose_figures.py` through `subprocess.run`. The tests
 assert exit codes and on-disk artefacts, not call counts. The integration
 test `tests/test_pipeline_integration.py` additionally drives
-`run_prose_pipeline` directly against the bundled `manuscript/`.
+`run_prose_pipeline` directly against the bundled `docs/manuscript/`.
 
 ### How do I run a single test?
 
@@ -102,7 +102,7 @@ Use the standard pytest selector syntax (`module::Class::method`).
 
 1. Add `manuscript/NN_section.md` with a single H1 (`# Title`) at the top.
 2. The pipeline will pick it up automatically — `infrastructure.prose.read_manuscript_dir`
-   discovers every `*.md` under `manuscript/`.
+   discovers every `*.md` under `docs/manuscript/`.
 3. Verify the file passes `every_file_has_h1` and `no_skipped_heading_levels`
    by re-running `scripts/run_prose_pipeline.py`.
 4. If you want to cross-reference the section, give it a label in the H1:
@@ -234,4 +234,4 @@ If you skipped step 3, the check function exists but is never invoked.
 - [`output_conventions.md`](output_conventions.md) — output regeneration rules.
 - [`syntax_guide.md`](syntax_guide.md) — Pandoc syntax and token list.
 - [`testing_philosophy.md`](testing_philosophy.md) — zero-mock standard.
-- [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — substitution-marker registry.
+- [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — substitution-marker registry.

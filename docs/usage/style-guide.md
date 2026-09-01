@@ -4,7 +4,9 @@
 
 **Quick Reference:** [Markdown Template Guide](markdown-template-guide.md) | [Image Management](image-management.md) | [Visualization Guide](visualization-guide.md)
 
-This guide provides clear, example-driven formatting patterns for writing research content in `projects/{name}/manuscript/`. For exhaustive rules, see [`docs/rules/manuscript_style.md`](../rules/manuscript_style.md).
+This guide provides clear, example-driven formatting patterns for writing research content in `projects/{name}/docs/manuscript/`. For exhaustive rules, see [`docs/rules/manuscript_style.md`](../rules/manuscript_style.md).
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## 📖 Table of Contents
 
@@ -143,7 +145,7 @@ where they are first discussed.
 
 ### Figure Paths
 
-All paths are **relative to `projects/{name}/manuscript/`**:
+All paths are **relative to `projects/{name}/docs/manuscript/`**:
 
 ```markdown
 % ✅ Correct — relative path from manuscript/

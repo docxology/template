@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.20533669](https://doi.org/10.5281/zenodo.20533669)
 - Latest deposited version DOI: [10.5281/zenodo.20931927](https://zenodo.org/records/20931927)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_autoscientists/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_autoscientists), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmX6F3ExeC87DxxH95YgJuHcJmjhXuf1x54BKF6V5bn5z4), [netlify](https://6a44401a17ba160047501e98--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/6xcf5/), [pypi](https://test.pypi.org/project/template-autoscientists/1.0.2/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_autoscientists)
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -49,7 +49,7 @@ rsync -a \
 
 ## Required Post-Fork Edits
 
-- Update `manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
+- Update `docs/manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
   `CITATION.cff`, `.zenodo.json`, and `codemeta.json`.
 - Replace `SyntheticObjective`, proposer policy, and ablation set when studying a
   new coordination problem.

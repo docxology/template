@@ -54,14 +54,14 @@ _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 
 <!-- PUBLISHING-STATUS:END -->
 
 The publishing metadata and per-platform status below are **compiled from
-`manuscript/config.yaml`** by `infrastructure.publishing.status_report` — do not
+`docs/manuscript/config.yaml`** by `infrastructure.publishing.status_report` — do not
 hand-edit between the markers; update the config and regenerate (see the legend).
 
 ## What it does
 
 ```mermaid
 flowchart LR
-    CFG[manuscript/config.yaml] --> SEARCH[search<br/>arxiv · crossref · local · paperclip]
+    CFG[docs/manuscript/config.yaml] --> SEARCH[search<br/>arxiv · crossref · local · paperclip]
     SEARCH --> DEDUP{{dedupe<br/>DOI · arXiv · title-year}}
     DEDUP --> CACHE[(SearchCache<br/>deterministic JSON)]
     DEDUP --> ENRICH[enrich<br/>abstracts · PDF fulltext]
@@ -157,7 +157,7 @@ flowchart TB
 
 ## Configuration
 
-Every knob lives in [`manuscript/config.yaml`](manuscript/config.yaml). The
+Every knob lives in [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml). The
 defaults shown below are the values that ship with the bundled config —
 they are **CI-safe / offline by default** so a fresh clone can render the
 manuscript with no network and no Ollama server. Switching to live search
@@ -242,7 +242,7 @@ live provider source and retain its provenance before making substantive claims.
 
 | Key | Default | Meaning |
 |---|---|---|
-| `references_path` | `manuscript/references.bib` | Where `run_search_pipeline.py` writes its (auto-populated) BibTeX. |
+| `references_path` | `docs/manuscript/references.bib` | Where `run_search_pipeline.py` writes its (auto-populated) BibTeX. |
 
 ## Architecture
 
@@ -254,7 +254,7 @@ live provider source and retain its provenance before making substantive claims.
 * `scripts/s_compose_literature_review.py` — composes `S01_literature_review.md` from the deep-search outputs (runs after `run_*` and before `y_*`/`z_*`).
 * `scripts/y_generate_search_figures.py`, `scripts/z_generate_manuscript_variables.py`, `scripts/zz_generate_review_report.py`, `scripts/zzz_build_dashboard.py` — project-analysis stage chain (lexicographic order); the dashboard stage runs last and writes `output/web/dashboard.html`, `output/data/dashboard_payload.json`, and `output/reports/dashboard_*.txt`.
 * `tests/` — real-data tests; LLM tested with a deterministic local callable.
-* Per-folder pointers: [`docs/README.md`](docs/README.md), [`manuscript/README.md`](manuscript/README.md), [`src/README.md`](src/README.md), [`tests/README.md`](tests/README.md), [`scripts/README.md`](scripts/README.md).
+* Per-folder pointers: [`docs/README.md`](docs/README.md), [`docs/manuscript/README.md`](docs/manuscript/README.md), [`src/README.md`](src/README.md), [`tests/README.md`](tests/README.md), [`scripts/README.md`](scripts/README.md).
 
 The project enforces the template's two-layer architecture: every reusable
 component is in `infrastructure/`; only project-specific glue is in `src/`;
@@ -321,7 +321,7 @@ Run manually from the project directory: `uv run python scripts/review`.
 
 ## Related Documentation
 
-* [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation / cross-reference conventions specific to this project.
+* [`docs/manuscript/SYNTAX.md`](docs/manuscript/SYNTAX.md) — Pandoc citation / cross-reference conventions specific to this project.
 * [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — repository-wide canonical manuscript semantics.
 * [`docs/modules/literature-search-and-references.md`](../../../docs/modules/literature-search-and-references.md)
 * [`docs/guides/literature-workflow-guide.md`](../../../docs/guides/literature-workflow-guide.md)

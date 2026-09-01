@@ -61,8 +61,10 @@ metadata:
 ```bash
 uv sync
 uv run python scripts/pipeline/stage_01_test.py --project <name>
-uv run python -m infrastructure.validation.cli markdown projects/<name>/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/<name>/docs/manuscript/
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## When NOT to use
 

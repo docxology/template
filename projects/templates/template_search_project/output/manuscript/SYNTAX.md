@@ -25,7 +25,7 @@ When you write a manual `[@key]` reference, the key must already exist in either
 
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
-    projects/templates/template_search_project/manuscript/references.bib --strict
+    projects/templates/template_search_project/docs/manuscript/references.bib --strict
 uv run python -m infrastructure.reference.citation.cli validate \
     projects/templates/template_search_project/manuscript/references_deep.bib --strict
 ```

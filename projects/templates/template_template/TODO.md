@@ -25,7 +25,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` as the copy-and-customize metadata
+- Keep `docs/manuscript/config.yaml.example` as the copy-and-customize metadata
   starting point (shape-synced with the live config: split DOIs,
   `repository_url`, `published_artifacts`, `transmission_bookends`).
 - Explicit config keys are required before any new manuscript metric becomes

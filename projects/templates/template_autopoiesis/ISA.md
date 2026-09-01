@@ -84,13 +84,13 @@ not yet published.
 
 ## Criteria
 
-- [x] ISC-1: `manuscript/config.yaml` declares `metadata.geometry:
+- [x] ISC-1: `docs/manuscript/config.yaml` declares `metadata.geometry:
   "a4paper,margin=0.25in"` — verified by `Read`.
-- [x] ISC-2: `manuscript/preamble.md` no longer declares `\geometry{...}`
+- [x] ISC-2: `docs/manuscript/preamble.md` no longer declares `\geometry{...}`
   directly (would clash with pandoc-injected geometry) — verified by `Read`.
-- [x] ISC-3: `manuscript/preamble.md` declares `\usepackage{fontsize}` +
+- [x] ISC-3: `docs/manuscript/preamble.md` declares `\usepackage{fontsize}` +
   `\changefontsize[11pt]{9pt}` for a denser body font — verified by `Read`.
-- [x] ISC-4: `manuscript/config.yaml` declares `paper.cover.image:
+- [x] ISC-4: `docs/manuscript/config.yaml` declares `paper.cover.image:
   "figures/cover_art.png"` — verified by `Read`.
 - [x] ISC-5: The rendered PDF's title page shows the cover art image —
   verified via `pdftoppm` + visual inspection of `cover-01.png`.
@@ -113,7 +113,7 @@ not yet published.
 - [x] ISC-10: `src/manuscript_figures.py` (previously 0% covered, 71
   statements) has real tests — verified by `test_manuscript_figures.py` (7
   tests) and a `--cov` re-run showing 97.47%.
-- [x] ISC-11: `manuscript/config.yaml` declares an explicit `analysis.scripts`
+- [x] ISC-11: `docs/manuscript/config.yaml` declares an explicit `analysis.scripts`
   allowlist in dependency order, excluding `autopoiesis.py` (CLI entrypoint)
   and `seal_child.py` (library helper) — verified by `Read` and by
   `scripts/pipeline/stage_02_analysis.py` reporting `7/7` scripts completed
@@ -356,9 +356,9 @@ not yet published.
 
 ## Verification
 
-- ISC-1..4: `Read manuscript/config.yaml` shows `cover.image:
+- ISC-1..4: `Read docs/manuscript/config.yaml` shows `cover.image:
   "figures/cover_art.png"` and `metadata.geometry: "a4paper,margin=0.25in"`;
-  `Read manuscript/preamble.md` shows no `\geometry{` and shows
+  `Read docs/manuscript/preamble.md` shows no `\geometry{` and shows
   `\changefontsize[11pt]{9pt}`.
 - ISC-5..6, ISC-9: `pdftoppm -png -f 1 -l 1 output/pdf/template_autopoiesis_combined.pdf`
   → `cover-01.png` shows the existing donut-chart cover art on the title

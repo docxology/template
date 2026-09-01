@@ -15,7 +15,7 @@ or corrupted, re-run the appropriate step to recreate it.
 - `data/measurements.csv` (the shipped dataset)
 - `src/eda/*.py` (pure data logic)
 - `scripts/eda_analysis.py` (orchestration: plotting + writing)
-- `manuscript/config.yaml` (paper/publication metadata)
+- `docs/manuscript/config.yaml` (paper/publication metadata)
 
 ## Directory Structure
 
@@ -83,7 +83,7 @@ flowchart TB
 
 ## See Also
 
-- [`manuscript/AGENTS.md`](../manuscript/AGENTS.md) — Manuscript modification protocol and figure protocol.
+- [`docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — Manuscript modification protocol and figure protocol.
 - [`rendering_pipeline.md`](rendering_pipeline.md) — Full pipeline description.
 - [`syntax_guide.md`](syntax_guide.md) — Figure references.
 - [`output_inventory.md`](output_inventory.md) — Producer/stage table.

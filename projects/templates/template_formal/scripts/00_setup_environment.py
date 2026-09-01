@@ -19,7 +19,7 @@ from infrastructure.rendering.preflight import run_manuscript_preflight  # noqa:
 
 
 def main() -> int:
-    manuscript_dir = Path(__file__).resolve().parent.parent / "manuscript"
+    manuscript_dir = Path(__file__).resolve().parent.parent / "docs" / "manuscript"
     ok, message = run_manuscript_preflight(manuscript_dir)
     if ok:
         return 0

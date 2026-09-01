@@ -2,7 +2,9 @@
 
 ## Overview
 
-This guide provides formatting standards for writing research manuscripts in the `projects/{name}/manuscript/` directory. All manuscript content must follow these standards to ensure consistency, proper rendering, and correct cross-referencing.
+This guide provides formatting standards for writing research manuscripts in the `projects/{name}/docs/manuscript/` directory. All manuscript content must follow these standards to ensure consistency, proper rendering, and correct cross-referencing.
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 **Canonical syntax reference:** [`docs/guides/manuscript-semantics.md`](../guides/manuscript-semantics.md) is the single source of truth for manuscript Markdown semantics. The PDF pipeline runs Pandoc with `--natbib` (converts `[@key]` to natbib citation commands) plus the `pandoc-crossref` filter (resolves `@fig:`, `@tbl:`, `@eq:`, `@sec:` cross-references). Raw `\cite{}` and `\ref{}` work in PDF-only output but **break HTML / EPUB rendering** and are never used in any real exemplar manuscript — this guide teaches the Pandoc-native syntax throughout.
 
@@ -318,7 +320,7 @@ All figures must use relative paths from the manuscript directory.
 
 **Requirements:**
 
-- Paths are relative to `projects/{name}/manuscript/` (Pandoc resolves them via `--resource-path`)
+- Paths are relative to `projects/{name}/docs/manuscript/` (Pandoc resolves them via `--resource-path`)
 - Figures are stored in `projects/{name}/output/figures/`
 - Use forward slashes (`/`) even on Windows
 - Include file extension (`.png` preferred for archival stability)
@@ -507,7 +509,7 @@ The results (see [@tbl:results]) indicate...
 
 ### Dynamic Table Bodies
 
-For table rows generated from analysis output rather than hand-typed, use a `{{TOKEN}}` placeholder inside the table body — see [`template_code_project/manuscript/03_results.md`](../../projects/templates/template_code_project/manuscript/03_results.md) (`RESULT_TABLE_ROWS`) for a real example. Never hardcode a number that changes with `config.yaml` or an analysis re-run.
+For table rows generated from analysis output rather than hand-typed, use a `{{TOKEN}}` placeholder inside the table body — see [`template_code_project/manuscript/03_results.md`](../../projects/templates/template_code_project/docs/manuscript/03_results.md) (`RESULT_TABLE_ROWS`) for a real example. Never hardcode a number that changes with `config.yaml` or an analysis re-run.
 
 ### Complex Tables (merged cells)
 
@@ -586,7 +588,7 @@ distinctions, so keys such as `Smith2024` and `smith2024` conflict.
 **Requirements:**
 
 - Prefer keys in one canonical
-  `projects/{name}/manuscript/references.bib`. Supplemental top-level `.bib`
+  `projects/{name}/docs/manuscript/references.bib`. Supplemental top-level `.bib`
   files are allowed: combined PDF, HTML, DOCX, EPUB, and ebook-stage exports
   consume the same filename-sorted union. Keep citation keys unique
   case-insensitively within and across the files; duplicate and case-only
@@ -1125,7 +1127,7 @@ the iterative algorithm described in [@sec:algorithm].
 
 - [docs/guides/manuscript-semantics.md](../guides/manuscript-semantics.md) - Canonical single source of truth for manuscript syntax
 - [docs/usage/style-guide.md](../usage/style-guide.md) - User-facing manuscript style guide (equations, figures, captions, tables)
-- [projects/templates/template_code_project/manuscript/](../../projects/templates/template_code_project/manuscript/) - Example manuscript (active project)
+- [projects/templates/template_code_project/docs/manuscript/](../../projects/templates/template_code_project/docs/manuscript/) - Example manuscript (active project)
 - [docs/usage/markdown-template-guide.md](../usage/markdown-template-guide.md) - Markdown and cross-referencing guide
 - [docs/usage/manuscript-numbering-system.md](../usage/manuscript-numbering-system.md) - Section numbering system
 - [code_style.md](code_style.md) - Code formatting standards

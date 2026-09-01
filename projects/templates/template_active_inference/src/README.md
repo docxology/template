@@ -8,7 +8,7 @@ import from here.
 - `gnn/` — Generalized Notation Notation (GNN) model parsing, the model object,
   and cross-track concordance checks.
 - `simulation/` — pymdp sophisticated-inference T-maze model, deterministic runner, policy-comparison artifacts, and scoped JAX/pymdp runtime diagnostics.
-- `manuscript/` — sheaf composition and run-derived manuscript variable hydration.
+- `docs/manuscript/` — sheaf composition and run-derived manuscript variable hydration.
 - `ontology/` — shared ontology-term bindings used to keep tracks consistent.
 - `orchestration/` — pipeline manifest describing the analysis stages.
 - `gates/` — validation gates over generated outputs.

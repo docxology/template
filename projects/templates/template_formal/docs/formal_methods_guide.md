@@ -65,7 +65,7 @@ That is because the invariant is built entirely on `iSentHello`/`rSentAck`
 reset — so it certifies **send-provenance** ("a real message was genuinely
 sent by the other peer, at some point"), not **content-integrity**
 ("the specific delivered frame was uncorrupted"). See
-[`manuscript/05_results_discussion.md`](../manuscript/05_results_discussion.md)'s
+[`manuscript/05_results_discussion.md`](../docs/manuscript/05_results_discussion.md)'s
 Theorem 12, clause (iii), for the corrected wording.
 
 ### TLA+ negative control — [`AntProtocolFaultyNegControl.tla`](../formal/tla/AntProtocolFaultyNegControl.tla)

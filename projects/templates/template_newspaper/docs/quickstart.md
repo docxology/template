@@ -40,7 +40,7 @@ open /tmp/triplicate-01.png
 ```
 
 Stage 02 runs the `scripts/` (figures + newspaper render); Stage 03 renders the
-descriptive `manuscript/`.
+descriptive `docs/manuscript/`.
 
 ## Tests & checks
 

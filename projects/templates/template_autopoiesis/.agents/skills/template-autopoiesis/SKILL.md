@@ -47,7 +47,7 @@ uv run python projects/templates/template_autopoiesis/scripts/seal_child.py
   time, not read from a cached manifest.
 - **No mocks.** All tests must use real generated files and real computation.
 - **Outputs are disposable.** Never hand-edit `output/`; regenerate from the
-  grammar in `manuscript/config.yaml`.
+  grammar in `docs/manuscript/config.yaml`.
 - **Figure provenance fails closed.** `scripts/01_generate_manuscript_assets.py`
   requires `output/data/coverage_full.json` and writes
   `output/figures/figure_registry.json` only after all four referenced PNGs exist.

@@ -43,7 +43,7 @@ Expected: a passing suite. Live collection counts are tracked in
 
 ## The Single Control Surface
 
-Everything is driven by [`manuscript/config.yaml`](../manuscript/config.yaml) →
+Everything is driven by [`docs/manuscript/config.yaml`](../docs/manuscript/config.yaml) →
 `project_config.search`. The bundled defaults:
 
 ```yaml
@@ -113,7 +113,7 @@ Final PDF: `projects/templates/template_literature_meta_analysis/output/pdf/temp
 
 ## Common Next Steps
 
-- **Re-target the topic**: edit `manuscript/config.yaml` → `project_config.search.term` (and the
+- **Re-target the topic**: edit `docs/manuscript/config.yaml` → `project_config.search.term` (and the
   query/keyword/subfield/hypothesis blocks), then re-run stages 1–5.
 - **Add a search engine**: implement a client in `src/literature/`, register it in
   `src/literature/search_runner.py`, and add a toggle under `project_config.search.engines`.

@@ -76,7 +76,7 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_e
   `src/eda/dataset.py::DatasetSchema`, then re-run the analysis.
 - **Add a new EDA step**: extend a module in `src/eda/`, add a test, then call it
   from the notebook and `scripts/eda_analysis.py` (see `docs/architecture.md`).
-- **Modify the manuscript**: edit markdown files under `manuscript/`, then
+- **Modify the manuscript**: edit markdown files under `docs/manuscript/`, then
   re-render.
 
 ## Getting Help

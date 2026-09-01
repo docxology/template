@@ -4,7 +4,7 @@
     "project_name": "template_autoresearch_project",
     "populated_on": "2026-07-01",
     "populated_by": "Engineer",
-    "note": "First real regression pins for the deterministic bounded-ML AutoResearch claims in manuscript/03_results.md 'Candidate Outcome'. Every value is re-derived by calling src.ml.task.run_bounded_ml_task with the configured budget policy (no mocks, no hand-copy). Percent-rendered tokens (BASELINE_ACCURACY, BEST_ACCURACY, ACCURACY_DELTA) pin the underlying raw fraction the token formats."
+    "note": "First real regression pins for the deterministic bounded-ML AutoResearch claims in docs/manuscript/03_results.md 'Candidate Outcome'. Every value is re-derived by calling src.ml.task.run_bounded_ml_task with the configured budget policy (no mocks, no hand-copy). Percent-rendered tokens (BASELINE_ACCURACY, BEST_ACCURACY, ACCURACY_DELTA) pin the underlying raw fraction the token formats."
   },
   "_provenance": {
     "candidate_outcome_candidate_count": {
@@ -51,7 +51,7 @@
     }
   },
   "candidate_outcome_candidate_count": {
-    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "manuscript_section": "docs/manuscript/03_results.md / Candidate Outcome",
     "claim_text": "... after evaluating {{EVALUATED_CANDIDATE_COUNT}} candidate(s) from a proposed set of {{CANDIDATE_COUNT}}.",
     "value": 5,
     "abs_tolerance": 0,
@@ -62,7 +62,7 @@
     "pinned_at_commit": "64f665eb"
   },
   "candidate_outcome_evaluated_candidate_count": {
-    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "manuscript_section": "docs/manuscript/03_results.md / Candidate Outcome",
     "claim_text": "... after evaluating {{EVALUATED_CANDIDATE_COUNT}} candidate(s) from a proposed set of {{CANDIDATE_COUNT}}.",
     "value": 4,
     "abs_tolerance": 0,
@@ -73,7 +73,7 @@
     "pinned_at_commit": "64f665eb"
   },
   "candidate_outcome_baseline_accuracy": {
-    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "manuscript_section": "docs/manuscript/03_results.md / Candidate Outcome",
     "claim_text": "The {{BASELINE_ID}} ({{BASELINE_MODEL_TYPE_LABEL}}) baseline reached {{BASELINE_ACCURACY}} {{METRIC_NAME}} (renders 82.6%).",
     "value": 0.826,
     "abs_tolerance": 1e-06,
@@ -84,7 +84,7 @@
     "pinned_at_commit": "64f665eb"
   },
   "candidate_outcome_best_accuracy": {
-    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "manuscript_section": "docs/manuscript/03_results.md / Candidate Outcome",
     "claim_text": "... while the selected candidate reached {{BEST_ACCURACY}} (renders 89.4%).",
     "value": 0.894,
     "abs_tolerance": 1e-06,
@@ -95,7 +95,7 @@
     "pinned_at_commit": "64f665eb"
   },
   "candidate_outcome_accuracy_delta": {
-    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "manuscript_section": "docs/manuscript/03_results.md / Candidate Outcome",
     "claim_text": "... an absolute change of {{ACCURACY_DELTA}} (renders 6.8%).",
     "value": 0.068,
     "abs_tolerance": 1e-06,
@@ -106,7 +106,7 @@
     "pinned_at_commit": "64f665eb"
   },
   "candidate_outcome_accepted_parameter_count": {
-    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "manuscript_section": "docs/manuscript/03_results.md / Candidate Outcome",
     "claim_text": "The selected model has {{ACCEPTED_PARAMETER_COUNT}} parameters.",
     "value": 50890,
     "abs_tolerance": 0,
@@ -117,7 +117,7 @@
     "pinned_at_commit": "64f665eb"
   },
   "candidate_outcome_benchmark_score": {
-    "manuscript_section": "manuscript/03_results.md / Candidate Outcome",
+    "manuscript_section": "docs/manuscript/03_results.md / Candidate Outcome",
     "claim_text": "The benchmark score is {{BENCHMARK_SCORE}} (renders 1).",
     "value": 1.0,
     "abs_tolerance": 1e-09,

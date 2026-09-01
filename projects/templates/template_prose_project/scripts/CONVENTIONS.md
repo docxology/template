@@ -27,7 +27,7 @@ def main() -> int:
 ```python
 # WRONG — script implements analysis inline
 def main():
-    config = yaml.safe_load(Path("manuscript/config.yaml").read_text())
+    config = yaml.safe_load(Path("docs/manuscript/config.yaml").read_text())
     text = (Path("manuscript") / "00_abstract.md").read_text()
     words = len(re.findall(r"\b\w+\b", text))   # BAD — analysis in script
     if words < 100:
@@ -113,7 +113,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--config",
         type=Path,
-        default=Path("projects/templates/template_prose_project/manuscript/config.yaml"),
+        default=Path("projects/templates/template_prose_project/docs/manuscript/config.yaml"),
         help="Path to project config YAML.",
     )
     parser.add_argument(
@@ -131,7 +131,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 ```
 
 The `--project-root` flag is what makes `test_scripts.py` able to run
-the script against an isolated `tmp_path` copy of `manuscript/` without
+the script against an isolated `tmp_path` copy of `docs/manuscript/` without
 touching the project's real `output/`.
 
 ## Output Layout

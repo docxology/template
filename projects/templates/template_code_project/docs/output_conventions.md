@@ -8,7 +8,7 @@ The project-relative `output/` directory (`projects/templates/template_code_proj
 
 **Key principle:** The source of truth for all outputs is the combination of:
 - `src/optimizer.py` (pure mathematical logic)
-- `manuscript/config.yaml` (experiment parameters)
+- `docs/manuscript/config.yaml` (experiment parameters)
 - `scripts/optimization_analysis.py` (orchestration)
 - `scripts/z_generate_manuscript_variables.py` (token substitution)
 
@@ -54,7 +54,7 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
    ```bash
    uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
    ```
-   **Outputs**: `figures/`, `data/`, `reports/`, `citations/`, `manuscript/`
+   **Outputs**: `figures/`, `data/`, `reports/`, `citations/`, `docs/manuscript/`
 
 3. **Hydrate manuscript variables** — substitutes `{{VARIABLE}}` tokens in all manuscript templates (strict: requires analysis CSV unless `--allow-draft`).
    ```bash
@@ -116,6 +116,6 @@ To add a new figure or data product:
 
 ## See Also
 
-- [`manuscript/AGENTS.md`](../manuscript/AGENTS.md) — Manuscript modification protocol and token system
+- [`docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — Manuscript modification protocol and token system
 - [`rendering_pipeline.md`](rendering_pipeline.md) — Full 4-phase pipeline description
 - [`syntax_guide.md`](syntax_guide.md) — Figure references and `{{VARIABLE}}` syntax

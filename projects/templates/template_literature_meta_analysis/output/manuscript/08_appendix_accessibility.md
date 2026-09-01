@@ -18,7 +18,7 @@ an unresolved placeholder is a hard error, so the rendered manuscript can contai
 orphaned or stale figures. The configuration hash and artifact inventory bind the prose
 to the exact pipeline run that produced it. The provenance chain is:
 
-1. `manuscript/config.yaml` defines the search term, engines, taxonomy, and hypotheses
+1. `docs/manuscript/config.yaml` defines the search term, engines, taxonomy, and hypotheses
 2. `scripts/01_literature_search.py` retrieves records → `corpus.jsonl`
 3. `scripts/02_meta_analysis_pipeline.py` analyses the corpus → `*.json` data files
 4. `scripts/04_generate_figures.py` renders figures → `*.png` + `figure_registry.json`
@@ -40,7 +40,7 @@ principles:
   figures are standard PNG files.
 - **Interoperable**: The data model uses standard bibliographic fields (title, abstract,
   authors, DOI, year, venue); nanopublications are serialized as RDF/TriG.
-- **Reusable**: The entire pipeline is regenerable from `manuscript/config.yaml`;
+- **Reusable**: The entire pipeline is regenerable from `docs/manuscript/config.yaml`;
   re-running with the same configuration reproduces identical outputs.
 
 ## Honesty

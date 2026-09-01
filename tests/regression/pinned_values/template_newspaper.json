@@ -4,7 +4,7 @@
     "project_name": "template_newspaper",
     "populated_on": "2026-07-01",
     "populated_by": "Marcus Webb (Engineer)",
-    "note": "First real regression pins for the data-driven large-format newspaper layout engine. Unlike a scientific-results manuscript this exemplar reports deterministic LAYOUT / RENDER statistics: manuscript/04_reproducibility.md explicitly names 'the page count, the trim dimensions, the figure count' as its quantitative claims and points at data/claim_ledger.yaml as their register. Each pin re-derives its value from src (load_edition, load_newspaper_config(...).geometry(), figures.generate_all) exactly as the real render path (engine.build_and_render) does -- never by copying a number from the manuscript prose. Trim is bound through the config loader (edition.yaml declares page: tabloid) rather than the bare PageGeometry default so it exercises the same path the renderer uses. No mocks: real YAML content dir + real Pillow/Matplotlib figure generation."
+    "note": "First real regression pins for the data-driven large-format newspaper layout engine. Unlike a scientific-results manuscript this exemplar reports deterministic LAYOUT / RENDER statistics: docs/manuscript/04_reproducibility.md explicitly names 'the page count, the trim dimensions, the figure count' as its quantitative claims and points at data/claim_ledger.yaml as their register. Each pin re-derives its value from src (load_edition, load_newspaper_config(...).geometry(), figures.generate_all) exactly as the real render path (engine.build_and_render) does -- never by copying a number from the manuscript prose. Trim is bound through the config loader (edition.yaml declares page: tabloid) rather than the bare PageGeometry default so it exercises the same path the renderer uses. No mocks: real YAML content dir + real Pillow/Matplotlib figure generation."
   },
   "_provenance": {
     "layout_edition_page_count": {
@@ -33,7 +33,7 @@
     }
   },
   "layout_edition_page_count": {
-    "manuscript_section": "manuscript/04_reproducibility.md / Reproducibility (line 17: \"exactly twelve pages\"); manuscript/00_abstract.md (\"twelve-page, large-format newspaper\")",
+    "manuscript_section": "docs/manuscript/04_reproducibility.md / Reproducibility (line 17: \"exactly twelve pages\"); docs/manuscript/00_abstract.md (\"twelve-page, large-format newspaper\")",
     "claim_text": "renders ... a valid PDF of exactly twelve pages at the correct trim with no over-set page",
     "value": 12,
     "abs_tolerance": 0,
@@ -44,7 +44,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "layout_trim_width_pt": {
-    "manuscript_section": "manuscript/04_reproducibility.md / Reproducibility (\"the trim dimensions\"); data/claim_ledger.yaml / page-trim-width-pt",
+    "manuscript_section": "docs/manuscript/04_reproducibility.md / Reproducibility (\"the trim dimensions\"); data/claim_ledger.yaml / page-trim-width-pt",
     "claim_text": "the page trim ... US Tabloid / Ledger, 11in x 17in -> 792pt wide (page-trim-width-pt: 792)",
     "value": 792.0,
     "abs_tolerance": 1e-9,
@@ -55,7 +55,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "layout_trim_height_pt": {
-    "manuscript_section": "manuscript/04_reproducibility.md / Reproducibility (\"the trim dimensions\"); data/claim_ledger.yaml / page-trim-height-pt",
+    "manuscript_section": "docs/manuscript/04_reproducibility.md / Reproducibility (\"the trim dimensions\"); data/claim_ledger.yaml / page-trim-height-pt",
     "claim_text": "the page trim ... 11in x 17in -> 1224pt tall (page-trim-height-pt: 1224)",
     "value": 1224.0,
     "abs_tolerance": 1e-9,
@@ -66,7 +66,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "layout_generated_figure_count": {
-    "manuscript_section": "manuscript/04_reproducibility.md / Reproducibility (\"the figure count\"); data/claim_ledger.yaml / figure-count",
+    "manuscript_section": "docs/manuscript/04_reproducibility.md / Reproducibility (\"the figure count\"); data/claim_ledger.yaml / figure-count",
     "claim_text": "halftone \"engraving\" figures and ... charts ... 6 halftone scenes + 4 color ad graphics + 3 charts = 13 (figure-count: 13)",
     "value": 13,
     "abs_tolerance": 0,

@@ -177,11 +177,11 @@ layouts), so re-running produces byte-identical outputs. A live run with engines
 enabled and credentials supplied replaces the seed corpus with real records — as in
 this instance, which retrieved 2334 live records. The template is
 domain-agnostic: the search term, query, keyword set, subfield taxonomy, and hypotheses
-all come from `manuscript/config.yaml`.
+all come from `docs/manuscript/config.yaml`.
 
 ## Configuration Surface
 
-A single `manuscript/config.yaml` controls:
+A single `docs/manuscript/config.yaml` controls:
 
 - **Search parameters**: term, query string, per-engine queries, relevance keywords,
   start year, max results, resume/clear behaviour
@@ -479,7 +479,7 @@ configuration change re-computes the values and re-targets the prose automatical
 
 The injection system computes variables from seven sources:
 
-1. `manuscript/config.yaml` — search term, engine roster, subfield taxonomy, hypotheses
+1. `docs/manuscript/config.yaml` — search term, engine roster, subfield taxonomy, hypotheses
 2. `corpus.jsonl` — corpus size
 3. `temporal_analysis.json` — year range, CAGR, peak year, doubling time
 4. `citation_network.json` — edges, nodes, density, communities, PageRank, hubs
@@ -1221,7 +1221,7 @@ uv run python scripts/09_export_bibliography.py
 
 ## Re-target to Another Topic
 
-Edit `manuscript/config.yaml` — `project_config.search.term`, `query`,
+Edit `docs/manuscript/config.yaml` — `project_config.search.term`, `query`,
 `relevance_keywords`, `subfield_keywords`, and `hypothesis_definitions` — then regenerate
 the seed corpus and re-run. No code changes are required; the manuscript re-targets
 through token injection.
@@ -1343,7 +1343,7 @@ $t_d = \ln(2) / \ln(1 + \text{CAGR})$. For this run: CAGR = 5.48\%, doubling tim
 
 ## Configuration Surface
 
-A single `manuscript/config.yaml` controls the search term, per-engine query and keyword
+A single `docs/manuscript/config.yaml` controls the search term, per-engine query and keyword
 sets, engine enable toggles, subfield taxonomy, hypotheses, full-text and embedding
 options, and paper metadata. This run drew on 10 engines, a
 6-bucket taxonomy, and 6 hypotheses.
@@ -1393,7 +1393,7 @@ an unresolved placeholder is a hard error, so the rendered manuscript can contai
 orphaned or stale figures. The configuration hash and artifact inventory bind the prose
 to the exact pipeline run that produced it. The provenance chain is:
 
-1. `manuscript/config.yaml` defines the search term, engines, taxonomy, and hypotheses
+1. `docs/manuscript/config.yaml` defines the search term, engines, taxonomy, and hypotheses
 2. `scripts/01_literature_search.py` retrieves records → `corpus.jsonl`
 3. `scripts/02_meta_analysis_pipeline.py` analyses the corpus → `*.json` data files
 4. `scripts/04_generate_figures.py` renders figures → `*.png` + `figure_registry.json`
@@ -1415,7 +1415,7 @@ principles:
   figures are standard PNG files.
 - **Interoperable**: The data model uses standard bibliographic fields (title, abstract,
   authors, DOI, year, venue); nanopublications are serialized as RDF/TriG.
-- **Reusable**: The entire pipeline is regenerable from `manuscript/config.yaml`;
+- **Reusable**: The entire pipeline is regenerable from `docs/manuscript/config.yaml`;
   re-running with the same configuration reproduces identical outputs.
 
 ## Honesty

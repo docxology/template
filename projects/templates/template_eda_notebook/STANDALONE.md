@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.21086292](https://doi.org/10.5281/zenodo.21086292)
 - Latest deposited version DOI: [10.5281/zenodo.21086293](https://zenodo.org/records/21086293)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_eda_notebook/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_eda_notebook), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmSsHhWo2JC76gQSy6rQuN6uKTP1gH9vtj3kGKLgY5oU4E), [netlify](https://6a444920f59418acc0357e9f--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/ycwsk/), [pypi](https://test.pypi.org/project/template-eda-notebook/1.0.0/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_eda_notebook)
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -49,7 +49,7 @@ rsync -a \
 
 ## Required Post-Fork Edits
 
-- Update `manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
+- Update `docs/manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
   `CITATION.cff`, `.zenodo.json`, `codemeta.json`, and `pyproject.toml`.
 - Replace `data/measurements.csv` with your dataset and update
   `src/eda/dataset.py::DatasetSchema` to match its columns.

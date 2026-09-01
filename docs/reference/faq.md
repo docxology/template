@@ -80,7 +80,9 @@ Use real fixtures/data and cover the relevant code paths in that project's
 
 ### **Q: How do I rename the project?**
 
-**A:** Customize your project by editing `projects/{name}/manuscript/config.yaml` or setting environment variables (`AUTHOR_NAME`, `PROJECT_TITLE`, etc.). See [Configuration Guide](../operational/config/configuration.md) for details.
+**A:** Customize your project by editing `projects/{name}/docs/manuscript/config.yaml` or setting environment variables (`AUTHOR_NAME`, `PROJECT_TITLE`, etc.). See [Configuration Guide](../operational/config/configuration.md) for details.
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ### **Q: Can I add new output formats?**
 

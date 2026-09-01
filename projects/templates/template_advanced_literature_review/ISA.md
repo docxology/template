@@ -36,7 +36,7 @@ A researcher can configure a multi-phase literature review that automatically di
 - Must maintain 90% per-project coverage floor for project-specific `src/` code
 - Must preserve offline determinism for the default analysis allowlist
 - Must not break compatibility with existing template infrastructure
-- Phase configuration must be entirely config-driven through `manuscript/config.yaml`
+- Phase configuration must be entirely config-driven through `docs/manuscript/config.yaml`
 
 ## Goal
 
@@ -45,13 +45,13 @@ A complete advanced literature review template that demonstrates multi-phase sea
 ## Criteria
 
 - [x] ARL-1: Pipeline scripts 01-11 exist, remain thin, and declare their dependency order; paid/live stages are opt-in
-- [x] ARL-2: Multi-phase search configuration in `manuscript/config.yaml` with 3 phases defined
+- [x] ARL-2: Multi-phase search configuration in `docs/manuscript/config.yaml` with 3 phases defined
 - [x] ARL-3: Phase-aware retrieval preserves phase/query provenance through deterministic cross-phase de-duplication
 - [x] ARL-4: Knowledge-graph and deep-research inputs use the shared typed infrastructure contracts and offline replay by default
 - [x] ARL-5: Hypothesis and manuscript-variable extraction preserve cross-phase evidence without hard-coded result counts
 - [x] ARL-6: Manuscript/config sources satisfy the public-draft publication and strict structural-drift contracts
 - [x] ARL-7: Symlinked modules (analysis/, knowledge_graph/, reproducibility/, visualization/) preserve single-template functionality
-- [x] ARL-8: Project-specific modules (manuscript/, multi_phase/, config_*) implement advanced features
+- [x] ARL-8: Project-specific modules (docs/manuscript/, multi_phase/, config_*) implement advanced features
 - [x] ARL-9: Test suite covers multi-phase functionality with real data fixtures
 - [x] ARL-10: Documentation (AGENTS.md, README.md, manuscript docs) describe advanced architecture
 

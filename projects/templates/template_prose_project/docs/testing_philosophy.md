@@ -36,7 +36,7 @@ Files (`projects/templates/template_prose_project/tests/`):
   `TestCitationExtractionViaPipeline`, `TestProseRunArtifacts`,
   `TestCheckResult`, `TestLongSentenceThresholdWired`,
   `TestNegativeControls`).
-- `test_pipeline_integration.py` — runs the bundled `manuscript/` end-to-end
+- `test_pipeline_integration.py` — runs the bundled `docs/manuscript/` end-to-end
   against `run_prose_pipeline` (1 test).
 - `test_prose_facade.py` — covers `src/prose_facade.py` report Protocols,
   `render_outline`, and `parse_bib_keys` (16 tests).
@@ -97,7 +97,7 @@ Every test uses real artefacts:
 ## Integration Test
 
 `tests/test_pipeline_integration.py::test_bundled_manuscript_runs` is the
-end-to-end fixture: it copies the project's own `manuscript/` directory
+end-to-end fixture: it copies the project's own `docs/manuscript/` directory
 into a temporary location, runs `run_prose_pipeline` against it, and
 verifies that `manuscript_report.json`, `checks.json`, `review_report.md`,
 and `run_summary.json` all land in the expected locations. The assertion

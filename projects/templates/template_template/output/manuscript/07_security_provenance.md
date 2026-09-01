@@ -54,7 +54,7 @@ The build timestamp and Git commit hash (short SHA) are recorded in the PDF meta
 
 ### Layer 4: QR and Barcode Injection
 
-When barcodes are enabled, a bottom-of-page barcode strip (QR code + Code128 label) is merged onto **every** page, encoding the document identifier and page number (`ID:<doc-id-prefix>|P:<page>`). In `overlay_mode: "qr"`, a tiled QR overlay covers the full page in place of the text watermark. Both are configurable via the `steganography:` block in `manuscript/config.yaml` (or the repo-level `secure_config.yaml` defaults).
+When barcodes are enabled, a bottom-of-page barcode strip (QR code + Code128 label) is merged onto **every** page, encoding the document identifier and page number (`ID:<doc-id-prefix>|P:<page>`). In `overlay_mode: "qr"`, a tiled QR overlay covers the full page in place of the text watermark. Both are configurable via the `steganography:` block in `docs/manuscript/config.yaml` (or the repo-level `secure_config.yaml` defaults).
 
 ## The `secure_run.sh` Orchestrator
 

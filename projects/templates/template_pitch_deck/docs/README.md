@@ -16,7 +16,7 @@ project owns content, validation, and orchestration. See the repo
 | Path | Role |
 | --- | --- |
 | `src/` | Content loading, `{{TOKEN}}` resolution, cliché lint, diligence audit, live-repo fact tokens, chart rendering, render orchestration |
-| `manuscript/` | Deck content YAMLs (`deck_content_*.yaml`) + the standard about-this-template manuscript (`00_abstract.md` … `99_references.md`) |
+| `docs/manuscript/` | Deck content YAMLs (`deck_content_*.yaml`) + the standard about-this-template manuscript (`00_abstract.md` … `99_references.md`) |
 | `scripts/` | Thin orchestrators: audit → diagrams → charts → render → diligence audit |
 | `tests/` | Zero-mock tests; rendered PDF/PPTX read back with `pypdf`/`python-pptx` |
 | `output/` | `pdf/`, `pptx/`, `figures/`, `slides_standalone/` (never hand-edited) |
@@ -37,9 +37,9 @@ uv run python projects/templates/template_pitch_deck/scripts/30_audit_diligence.
 ## Documentation in this tree
 
 - [`AGENTS.md`](AGENTS.md) — agent-facing layout, gates, and conventions.
-- Manuscript-specific rules: [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md).
+- Manuscript-specific rules: [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md).
 
 ## Status
 
-Publication-track exemplar: `manuscript/` is complete and gate-guarded; this
+Publication-track exemplar: `docs/manuscript/` is complete and gate-guarded; this
 docs/ tree was added by the docs-audit pass of 2026-08-29.

@@ -108,7 +108,7 @@ The template provides pre-structured manuscript files in the `manuscript/` direc
 
 ```mermaid
 flowchart TB
-    M[projects/templates/template_code_project/manuscript/]
+    M[projects/templates/template_code_project/docs/manuscript/]
     M --> PRE[preamble.md<br/>LaTeX styling]
     M --> ABS[00_abstract.md<br/>Research overview]
     M --> INTRO[01_introduction.md]
@@ -119,6 +119,8 @@ flowchart TB
     M --> REP[06_reproducibility.md]
     M --> SCOPE[07_scope_and_related_work.md]
     M --> BIB[references.bib<br/>Bibliography]
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
@@ -131,7 +133,7 @@ flowchart TB
 1. **Open the abstract file**
 
    ```bash
-   vim projects/templates/template_code_project/manuscript/00_abstract.md
+   vim projects/templates/template_code_project/docs/manuscript/00_abstract.md
    # Or use your preferred text editor
    ```
 
@@ -160,7 +162,7 @@ flowchart TB
 1. **Open the introduction**
 
    ```bash
-   vim projects/templates/template_code_project/manuscript/01_introduction.md
+   vim projects/templates/template_code_project/docs/manuscript/01_introduction.md
    ```
 
 2. **Add your content**:
@@ -441,7 +443,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 1. **Open preamble**
 
    ```bash
-   vim projects/templates/template_code_project/manuscript/preamble.md
+   vim projects/templates/template_code_project/docs/manuscript/preamble.md
    ```
 
 2. **Add `\definecolor` declarations** near the top of the preamble (the shipped file keeps its color setup above the `\hypersetup` block):
@@ -469,14 +471,14 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    }
    ```
 
-**See [template_code_project/manuscript/preamble.md](../../projects/templates/template_code_project/manuscript/preamble.md) for the LaTeX preamble configuration.**
+**See [template_code_project/manuscript/preamble.md](../../projects/templates/template_code_project/docs/manuscript/preamble.md) for the LaTeX preamble configuration.**
 
 ### Add Bibliography
 
 1. **Edit references.bib**
 
    ```bash
-   vim projects/templates/template_code_project/manuscript/references.bib
+   vim projects/templates/template_code_project/docs/manuscript/references.bib
    ```
 
 2. **Add entries**:

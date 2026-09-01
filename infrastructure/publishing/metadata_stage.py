@@ -6,12 +6,13 @@ from typing import Any
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.publishing.metadata_package import ebook_metadata_from_config, generate_metadata_package
+from infrastructure.core.project_paths import manuscript_config_path
 
 logger = get_logger(__name__)
 
 
 def _load_config(project_root: Path) -> dict[str, Any] | None:
-    config_path = project_root / "manuscript" / "config.yaml"
+    config_path = manuscript_config_path(project_root)
     if not config_path.is_file():
         return None
     try:

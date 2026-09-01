@@ -30,7 +30,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` aligned with the declared config blocks
+- Keep `docs/manuscript/config.yaml.example` aligned with the declared config blocks
   (`contribution_claims`, `pipeline_phases`, `audit_rules`, `steganography`,
   `evaluation`, `authoring_contract`, and explicit LLM-review gates) when code
   defaults change.

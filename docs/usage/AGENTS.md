@@ -20,12 +20,14 @@ Technical guide for `docs/usage/` — content authoring, formatting, visualizati
 
 ## Key Conventions
 
-- **Manuscript examples**: default to [`projects/templates/template_code_project/manuscript/`](../../projects/templates/template_code_project/manuscript/); active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md).
+- **Manuscript examples**: default to [`projects/templates/template_code_project/docs/manuscript/`](../../projects/templates/template_code_project/docs/manuscript/); active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md).
 - Figures use Pandoc image syntax `![caption](path){#fig:name}` with cross-references `[@fig:name]` — never a raw LaTeX `\begin{figure}`/`\ref{fig:name}` pair (see [Manuscript Semantics](../guides/manuscript-semantics.md)).
 - Equations use `$$ … $$ {#eq:name}` (or `\begin{equation}\label{eq:name}…\end{equation}`) with cross-references `[@eq:name]` — never raw `\eqref{eq:name}`.
 - All images must exist in `output/figures/` before manuscript build
 - Use descriptive link text (no bare URLs)
 - Follow the style guide for consistent formatting
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 ## See Also
 

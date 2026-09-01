@@ -4,7 +4,7 @@
     "project_name": "template_template",
     "populated_on": "2026-07-01",
     "populated_by": "Marcus Webb (Engineer)",
-    "note": "First real regression pins for the autopoietic meta-template. This exemplar introspects the LIVE repository (infrastructure/ subdirectory roster, pipeline.yaml DAG, PUBLIC_PROJECT_NAMES) and injects the numbers into its own manuscript via build_manuscript_metrics_dict. Every value below is re-derived by calling the real src.template_template.introspection functions on the repo root -- never hand-copied from a rendered ${token}. Two stability tiers are pinned: (1) the declared pipeline.yaml DAG structure and the current confidentiality-controlled public exemplar roster count (24) at tolerance 0; (2) the live infrastructure module_count at abs_tolerance 2, following this exemplar's own convention (manuscript/AGENTS.md: rotating layout facts link to docs/_generated/COUNTS.md) -- the band catches a broken discovery (0, halved) or a large jump while tolerating single-module organic repo growth."
+    "note": "First real regression pins for the autopoietic meta-template. This exemplar introspects the LIVE repository (infrastructure/ subdirectory roster, pipeline.yaml DAG, PUBLIC_PROJECT_NAMES) and injects the numbers into its own manuscript via build_manuscript_metrics_dict. Every value below is re-derived by calling the real src.template_template.introspection functions on the repo root -- never hand-copied from a rendered ${token}. Two stability tiers are pinned: (1) the declared pipeline.yaml DAG structure and the current confidentiality-controlled public exemplar roster count (24) at tolerance 0; (2) the live infrastructure module_count at abs_tolerance 2, following this exemplar's own convention (docs/manuscript/AGENTS.md: rotating layout facts link to docs/_generated/COUNTS.md) -- the band catches a broken discovery (0, halved) or a large jump while tolerating single-module organic repo growth."
   },
   "_provenance": {
     "pipeline_stages_declared": {
@@ -34,12 +34,12 @@
     "module_count": {
       "commit": "691d6ebf",
       "date": "2026-07-01",
-      "reason": "Count of infrastructure/ subdirectories returned by discover_infrastructure_modules (23 at pin time). This is the single most-cited introspection number in the manuscript (${module_count} appears in the abstract, introduction, architecture, results, quality, scalability, infrastructure-modules, ai-collaboration, and appendix-docs sections). It is a LIVE count that legitimately drifts as the repo grows, so per this exemplar's own convention (manuscript/AGENTS.md defers rotating layout facts to docs/_generated/COUNTS.md) it is pinned with abs_tolerance 2: wide enough to survive adding one infra module, tight enough to fail loudly on a broken discovery (0, a halving) or a large structural jump.",
+      "reason": "Count of infrastructure/ subdirectories returned by discover_infrastructure_modules (23 at pin time). This is the single most-cited introspection number in the manuscript (${module_count} appears in the abstract, introduction, architecture, results, quality, scalability, infrastructure-modules, ai-collaboration, and appendix-docs sections). It is a LIVE count that legitimately drifts as the repo grows, so per this exemplar's own convention (docs/manuscript/AGENTS.md defers rotating layout facts to docs/_generated/COUNTS.md) it is pinned with abs_tolerance 2: wide enough to survive adding one infra module, tight enough to fail loudly on a broken discovery (0, a halving) or a large structural jump.",
       "script": "PYTHONPATH=.:projects/templates/template_template/src uv run python -c 'len(discover_infrastructure_modules(Path(\".\").resolve()))'"
     }
   },
   "pipeline_stages_declared": {
-    "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03c_documentation.md, 07_security_provenance.md, manuscript/AGENTS.md / pipeline-stages token table",
+    "manuscript_section": "docs/manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03c_documentation.md, 07_security_provenance.md, docs/manuscript/AGENTS.md / pipeline-stages token table",
     "claim_text": "a YAML-declared pipeline (${pipeline_stages_declared} stages; default full ${pipeline_stages_default_full}) ... `${pipeline_stages_declared}` | YAML stage count (17)",
     "value": 17,
     "abs_tolerance": 0,
@@ -57,7 +57,7 @@
     "refresh_reason": "pipeline.yaml gained the opt-in `docxplus_export` stage (stage 13), taking the declared count from 16 to 17. `pipeline_stages_default_full` and `pipeline_stages_core_only` are deliberately unchanged: the stage carries the `docxplus` opt-in tag, so PipelineExecutor filters it out of default and core-only runs, which is the whole point of adding it as an optional export rather than a required one."
   },
   "pipeline_stages_default_full": {
-    "manuscript_section": "manuscript/00_abstract.md, 03a_architecture.md, 03c_documentation.md, 07_security_provenance.md, manuscript/AGENTS.md / pipeline-stages token table",
+    "manuscript_section": "docs/manuscript/00_abstract.md, 03a_architecture.md, 03c_documentation.md, 07_security_provenance.md, docs/manuscript/AGENTS.md / pipeline-stages token table",
     "claim_text": "default full runs use ${pipeline_stages_default_full} stages ... `${pipeline_stages_default_full}` | Default full run (10)",
     "value": 10,
     "abs_tolerance": 0,
@@ -71,7 +71,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "pipeline_stages_core_only": {
-    "manuscript_section": "manuscript/04_results.md / Multi-Project Pipeline Execution table, manuscript/AGENTS.md / pipeline-stages token table",
+    "manuscript_section": "docs/manuscript/04_results.md / Multi-Project Pipeline Execution table, docs/manuscript/AGENTS.md / pipeline-stages token table",
     "claim_text": "Effective core stages: ${pipeline_stages_core_only} ... `${pipeline_stages_core_only}` | `--core-only` run (8)",
     "value": 8,
     "abs_tolerance": 0,
@@ -85,7 +85,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "public_exemplar_roster_count": {
-    "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 08d_appendix_exemplars.md / ${public_exemplar_list}",
+    "manuscript_section": "docs/manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 08d_appendix_exemplars.md / ${public_exemplar_list}",
     "claim_text": "an empirical evaluation across the canonical exemplar projects under `projects/templates/` (${public_exemplar_list}) ... The full public exemplar roster is: ${public_exemplar_list}.",
     "value": 24,
     "abs_tolerance": 0,
@@ -103,7 +103,7 @@
     "refresh_reason": "public_project_names() returns 24 after template_advanced_literature_review joined PUBLIC_PROJECT_NAMES; generated rosters, CI scope, ownership, documentation, claims, and standalone-export gates were updated in the same change."
   },
   "module_count": {
-    "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03e_quality.md, 04_results.md, 05b_scalability.md, 06_infrastructure_modules.md, 05d_ai_collaboration.md, 08e_appendix_docs.md / ${module_count}",
+    "manuscript_section": "docs/manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03e_quality.md, 04_results.md, 05b_scalability.md, 06_infrastructure_modules.md, 05d_ai_collaboration.md, 08e_appendix_docs.md / ${module_count}",
     "claim_text": "a Two-Layer Architecture that separates ${module_count} infrastructure subdirectories ... All ${module_count} enumerated subdirectories carry Tier-1/README.md and Tier-2/AGENTS.md coverage",
     "value": 28,
     "abs_tolerance": 2,

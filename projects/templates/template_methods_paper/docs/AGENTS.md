@@ -75,11 +75,11 @@ grep -rnE "^(from|import) infrastructure" \
 | `tests/conftest.py` | REQUIRED | Shared `Method` fixtures + `sys.path` setup |
 | `scripts/methods_analysis.py` | REQUIRED | Pipeline analysis entry point; writes exports + reports + figure |
 | `scripts/z_generate_manuscript_variables.py` | REQUIRED | Resolves every `{{TOKEN}}` before rendering |
-| `manuscript/config.yaml` | REQUIRED | Loaded by `infrastructure.rendering`; pipeline aborts without it |
+| `docs/manuscript/config.yaml` | REQUIRED | Loaded by `infrastructure.rendering`; pipeline aborts without it |
 | `manuscript/*.md` | REQUIRED | Pandoc reads these during the PDF stage |
-| `manuscript/references.bib` | REQUIRED | Pandoc reads it via `--natbib` for PDF (`--citeproc` applies only to DOCX/EPUB/MOBI/HTML) |
-| `manuscript/preamble.md` | REQUIRED | Injected at PDF compile |
-| `manuscript/SYNTAX.md`, `config.yaml.example`, `AGENTS.md` | AESTHETIC | Authoring/agent guides; pipeline never reads them |
+| `docs/manuscript/references.bib` | REQUIRED | Pandoc reads it via `--natbib` for PDF (`--citeproc` applies only to DOCX/EPUB/MOBI/HTML) |
+| `docs/manuscript/preamble.md` | REQUIRED | Injected at PDF compile |
+| `docs/manuscript/SYNTAX.md`, `config.yaml.example`, `AGENTS.md` | AESTHETIC | Authoring/agent guides; pipeline never reads them |
 | `docs/*.md` | AESTHETIC | Agent + human documentation |
 | `src/STYLE.md`, `tests/PATTERNS.md`, `scripts/CONVENTIONS.md` | AESTHETIC | Per-subdir conventions |
 | `pyproject.toml` | REQUIRED | Coverage gate config, pytest options, dependencies |
@@ -94,4 +94,4 @@ misleads future contributors; it just means no pre-commit hook catches it.
 - [`../AGENTS.md`](../AGENTS.md) — Project-level documentation.
 - [`../pyproject.toml`](../pyproject.toml) — Coverage gate settings.
 - [`../tests/conftest.py`](../tests/conftest.py) — `sys.path` setup and shared fixtures.
-- [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — Manuscript directory rules.
+- [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — Manuscript directory rules.

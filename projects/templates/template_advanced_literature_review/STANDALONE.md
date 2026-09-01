@@ -10,7 +10,7 @@
 - Stable concept DOI: n/a
 - Latest deposited version DOI: n/a
 - Additional declared locations: none declared
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -48,7 +48,7 @@ rsync -a \
 
 ### Core Configuration
 
-- Set the domain and phases in `manuscript/config.yaml` → `project_config.search_phases` with appropriate temporal boundaries and methodological focus for your field.
+- Set the domain and phases in `docs/manuscript/config.yaml` → `project_config.search_phases` with appropriate temporal boundaries and methodological focus for your field.
 - Update the `project_config.search.term`, `query` blocks, `relevance_keywords`, `subfield_keywords`, and `hypothesis_definitions` for the new domain.
 - Configure each phase's deterministic filters and optional `llm_filters` in `project_config`.
 

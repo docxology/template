@@ -26,7 +26,7 @@ pipeline stages). Support modules that are not pipeline stages:
 - `_io.py` — shared script I/O helpers
 - `generate_fixture_corpus.py` — writes the deterministic synthetic fixture corpus
 
-The default `analysis.scripts` list in `manuscript/config.yaml` excludes stages
+The default `analysis.scripts` list in `docs/manuscript/config.yaml` excludes stages
 10 and 11 (both) and runs `01b_fixture_phase_replay.py` instead of the live
 `01_multi_phase_search.py`. For enrichment, run stage 11 (`11_fulltext_download.py`)
 before stage 10, then rerun stage 05 so manuscript variables reflect the new

@@ -2,7 +2,7 @@
 
 ## Grammar Structure
 
-The grammar is defined in `manuscript/config.yaml` under the `autopoiesis:` key:
+The grammar is defined in `docs/manuscript/config.yaml` under the `autopoiesis:` key:
 
 ```yaml
 autopoiesis:

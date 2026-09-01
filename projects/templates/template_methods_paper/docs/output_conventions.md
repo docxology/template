@@ -16,7 +16,7 @@ missing or corrupted, re-run the appropriate step to recreate it.
 - `src/methods_dsl/*.py` (model, validation, compilation, export, trust logic)
 - `scripts/methods_analysis.py` (orchestration: gates + compile + export + plot)
 - `scripts/z_generate_manuscript_variables.py` (token generation + injection)
-- `manuscript/config.yaml` (paper/publication metadata)
+- `docs/manuscript/config.yaml` (paper/publication metadata)
 
 ## Directory Structure
 
@@ -60,10 +60,10 @@ flowchart TB
    ```bash
    uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
    ```
-   **Outputs**: `data/manuscript_variables.json`, `manuscript/` (resolved tree)
+   **Outputs**: `data/manuscript_variables.json`, `docs/manuscript/` (resolved tree)
 
 4. **Render PDF** — converts the manuscript to PDF via Pandoc/LaTeX (and, when
-   `render.formats.slides: true` in `manuscript/config.yaml`, per-section
+   `render.formats.slides: true` in `docs/manuscript/config.yaml`, per-section
    Beamer decks).
    ```bash
    uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
@@ -97,7 +97,7 @@ flowchart TB
 
 ## See Also
 
-- [`manuscript/AGENTS.md`](../manuscript/AGENTS.md) — Manuscript modification protocol and token/figure protocol.
+- [`docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — Manuscript modification protocol and token/figure protocol.
 - [`rendering_pipeline.md`](rendering_pipeline.md) — Full pipeline description.
 - [`syntax_guide.md`](syntax_guide.md) — Token and figure references.
 - [`output_inventory.md`](output_inventory.md) — Producer/stage table.

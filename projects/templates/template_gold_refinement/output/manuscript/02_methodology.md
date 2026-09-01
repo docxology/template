@@ -18,7 +18,7 @@ We normalized these historically plural practices into a five-stage relational m
 
 ## Inputs and source ownership
 
-The run begins from three authored inputs: `manuscript/config.yaml`, the Markdown section shells in `manuscript/`, and executable functions in `src/`. Configuration owns the seed, lexicon inventories, slot declarations, contribution claims, audit rules, and security-assay rows. Source modules own stage calculations, token selection, formalism records, evidence aggregation, and figure specifications. Markdown owns interpretation and cross-references but consumes computed values only through generated variables.
+The run begins from three authored inputs: `docs/manuscript/config.yaml`, the Markdown section shells in `docs/manuscript/`, and executable functions in `src/`. Configuration owns the seed, lexicon inventories, slot declarations, contribution claims, audit rules, and security-assay rows. Source modules own stage calculations, token selection, formalism records, evidence aggregation, and figure specifications. Markdown owns interpretation and cross-references but consumes computed values only through generated variables.
 
 Generated files are observations, not editing surfaces. The analysis writes the refinery result, token plan, claim-support registry, integrity summaries, and figure-quality records; manuscript hydration then resolves variables into disposable Markdown. This ownership rule prevents a reported number or selected phrase from being corrected only in the rendered paper while its computational source remains unchanged.
 
@@ -56,7 +56,7 @@ The formal layer is generated from `src/formalisms.py`, not hand-numbered prose.
 | F2 | Monotone refinement | [@eq:monotone_refinery] | `src/purity.py::assert_monotone_increase` |
 | F3 | Token-selection digest | [@eq:token_digest] | `src/composition.py::_choose_value` |
 | F4 | Claim-support fraction | [@eq:claim_support] | `src/evidence.py::EvidenceRegistry.support_rate` |
-| F5 | Integrity vector | [@eq:integrity_vector] | `manuscript/config.yaml#gold_refinement.audit_rules` |
+| F5 | Integrity vector | [@eq:integrity_vector] | `docs/manuscript/config.yaml#gold_refinement.audit_rules` |
 | F6 | Certification predicate | [@eq:certification_predicate] | `src/refinery.py::RefineryResult.is_nine_nines_certified` |
 | F7 | Adversarial assay | [@eq:adversarial_assay] | `src/security_assay.py::build_security_assay` |
 : Source-owned formalism registry. {#tbl:formalism_registry}
@@ -99,7 +99,7 @@ $$
 \mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render}, v_{references}, v_{security})
 $$ {#eq:integrity_vector}
 
-A publication claim is only as strong as the weakest required gate. Source: `manuscript/config.yaml#gold_refinement.audit_rules`.
+A publication claim is only as strong as the weakest required gate. Source: `docs/manuscript/config.yaml#gold_refinement.audit_rules`.
 
 **F6: Certification predicate.** Certification is a predicate over final purity and validation readiness.
 
@@ -158,7 +158,7 @@ Karat grades map purity fractions to a gold-fineness vocabulary used here as an 
 
 | Phase | Input | Transformation | Output | Guard |
 |-------|-------|----------------|--------|-------|
-| Schema intake | manuscript/config.yaml | Load and validate gold_refinement block | GoldRefinementConfig | config schema tests |
+| Schema intake | docs/manuscript/config.yaml | Load and validate gold_refinement block | GoldRefinementConfig | config schema tests |
 | Refinery execution | GoldRefinementConfig | Run five refinery stages with monotone purity | RefineryResult | monotone purity test |
 | Token planning | GoldRefinementConfig | Expand slots into deterministic token choices | TokenPlan | seed-stability tests |
 | Figure generation | RefineryResult and TokenPlan | Generate purity progression, karat grading, and token density figures | output/figures/*.png | nonblank figure tests |

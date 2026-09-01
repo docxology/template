@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.21298894](https://doi.org/10.5281/zenodo.21298894)
 - Latest deposited version DOI: [10.5281/zenodo.21298895](https://zenodo.org/records/21298895)
 - Additional declared locations: none declared
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -57,14 +57,14 @@ rsync -a \
 
 ## Required Post-Fork Edits
 
-- Update `manuscript/config.yaml` (`project_config.search.query`, `project_config.search.sources`,
+- Update `docs/manuscript/config.yaml` (`project_config.search.query`, `project_config.search.sources`,
   `project_config.deep_search.keywords`, `publication.*`), `domain_profile.yaml`,
   `experiment_plan.yaml`, `CITATION.cff`, `.zenodo.json`, `codemeta.json`, and
   `pyproject.toml`.
 - Replace `data/corpus.json` (the bundled offline fixture) with your own
   corpus, or switch `project_config.search.sources` to `[arxiv, crossref]` (and set
   `crossref_mailto`) for live retrieval.
-- Regenerate `manuscript/references.bib`, figures, and manuscript variables
+- Regenerate `docs/manuscript/references.bib`, figures, and manuscript variables
   before updating any manuscript claims.
 
 ## Validation Commands
@@ -103,7 +103,7 @@ for it) — see the header comment in `pyproject.toml` and
 ## What Not To Claim
 
 Do not claim retrieval coverage, novelty, or synthesis findings from a
-renamed fork until `manuscript/references.bib`, the figures in
+renamed fork until `docs/manuscript/references.bib`, the figures in
 `output/figures/`, and `output/data/manuscript_variables.json` have been
 regenerated from the forked query/corpus. The bundled `data/corpus.json` is a
 small deterministic fixture for CI, not evidence about any real research

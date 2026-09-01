@@ -18,7 +18,7 @@ Use `01_literature_search.py` before Phase 1 only when intentionally refreshing 
 uv run python projects/templates/template_literature_meta_analysis/scripts/05_inject_variables.py
 ```
 
-Inputs are `manuscript/config.yaml` plus `output/data/*.json` / `output/data/*.jsonl`. Outputs are resolved markdown files under `output/manuscript/`.
+Inputs are `docs/manuscript/config.yaml` plus `output/data/*.json` / `output/data/*.jsonl`. Outputs are resolved markdown files under `output/manuscript/`.
 
 ## Phase 3: Validate Markdown Before Render
 
@@ -42,5 +42,5 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_lit
 
 - Literal `{{TOKEN}}`: rerun `scripts/05_inject_variables.py`; if still present, add the token in `src/manuscript/variables/compute.py` and test it.
 - Missing figure: rerun `scripts/04_generate_figures.py --dpi 300` and check `output/figures/figure_registry.json`.
-- Citation error: check `manuscript/references.bib` and the generated `_combined_manuscript.log`.
+- Citation error: check `docs/manuscript/references.bib` and the generated `_combined_manuscript.log`.
 - Mermaid/Chrome error: install `chrome-headless-shell` as described in the root rendering docs, then rerun `scripts/pipeline/stage_03_render.py`.

@@ -61,11 +61,11 @@ def test_template_active_inference_is_public_and_discoverable() -> None:
 
 def test_required_project_layout() -> None:
     root = _project_root()
-    for part in ("src", "tests", "scripts", "manuscript"):
+    for part in ("src", "tests", "scripts", "docs/manuscript"):
         assert (root / part).is_dir(), f"missing {part}/"
-    assert (root / "manuscript" / "sheaf" / "manifest.yaml").is_file()
-    assert (root / "manuscript" / "sheaf" / "tracks.yaml").is_file()
-    assert (root / "manuscript" / "sheaf" / "coverage.yaml").is_file()
+    assert (root / "docs" / "manuscript" / "sheaf" / "manifest.yaml").is_file()
+    assert (root / "docs" / "manuscript" / "sheaf" / "tracks.yaml").is_file()
+    assert (root / "docs" / "manuscript" / "sheaf" / "coverage.yaml").is_file()
     assert (root / "figures.yaml").is_file()
     assert (root / "tracks.yaml").is_file()
     assert (root / "data" / "claim_ledger.yaml").is_file()
@@ -95,17 +95,17 @@ def test_compose_manuscript_validate_only_strict() -> None:
 
 def test_sheaf_coverage_page_exists() -> None:
     root = _project_root()
-    assert (root / "manuscript" / "00_00_sheaf_coverage.md").is_file()
+    assert (root / "docs" / "manuscript" / "00_00_sheaf_coverage.md").is_file()
 
 
 def test_full_sheaf_appendix_binds_registry_tracks() -> None:
     root = _project_root()
-    path = root / "manuscript" / "16_appendix_full_sheaf.md"
+    path = root / "docs" / "manuscript" / "16_appendix_full_sheaf.md"
     assert path.is_file(), "composed appendix must be committed; run compose_manuscript.py"
     text = path.read_text(encoding="utf-8")
     import yaml
 
-    tracks_yaml = root / "manuscript" / "sheaf" / "tracks.yaml"
+    tracks_yaml = root / "docs" / "manuscript" / "sheaf" / "tracks.yaml"
     tracks_data = yaml.safe_load(tracks_yaml.read_text())["tracks"]
     # Non-optional tracks must all appear in the appendix.
     # Optional tracks that are designated methods-only (e.g. 'layers') are legitimately
@@ -147,8 +147,8 @@ def test_coverage_json_schema_on_clean_tree(isolated_project: Path) -> None:
     import yaml
 
     data = json.loads(json_path.read_text(encoding="utf-8"))
-    tracks = yaml.safe_load((root / "manuscript" / "sheaf" / "tracks.yaml").read_text(encoding="utf-8"))
-    manifest = yaml.safe_load((root / "manuscript" / "sheaf" / "manifest.yaml").read_text(encoding="utf-8"))
+    tracks = yaml.safe_load((root / "docs" / "manuscript" / "sheaf" / "tracks.yaml").read_text(encoding="utf-8"))
+    manifest = yaml.safe_load((root / "docs" / "manuscript" / "sheaf" / "manifest.yaml").read_text(encoding="utf-8"))
     assert len(data.get("tracks") or []) == len(tracks["tracks"])
     assert len(data.get("sections") or []) == len(manifest["sections"])
     gray = sum(
@@ -162,7 +162,7 @@ def test_coverage_json_schema_on_clean_tree(isolated_project: Path) -> None:
 
 def test_methods_sheaf_layers_in_composed_manuscript() -> None:
     root = _project_root()
-    path = root / "manuscript" / "08_methods_sheaf.md"
+    path = root / "docs" / "manuscript" / "08_methods_sheaf.md"
     assert path.is_file(), "composed methods section must be committed; run compose_manuscript.py"
     text = path.read_text(encoding="utf-8")
     assert "sheaf_layers_overview.png" in text
@@ -201,7 +201,7 @@ def test_z_generate_writes_resolved_manuscript_without_tokens(isolated_project: 
         check=False,
     )
     assert result.returncode == 0, result.stderr
-    resolved_dir = root / "output" / "manuscript"
+    resolved_dir = root / "output" / "docs" / "manuscript"
     assert resolved_dir.is_dir()
     abstract = (resolved_dir / "00_abstract.md").read_text(encoding="utf-8")
     assert "{{" not in abstract

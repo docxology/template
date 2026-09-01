@@ -10,7 +10,7 @@ coordinate I/O and call tested functions.
 
 ## The single source of truth
 
-[`manuscript/config.yaml`](../manuscript/config.yaml) declares the entire book:
+[`docs/manuscript/config.yaml`](../docs/manuscript/config.yaml) declares the entire book:
 its parts, the chapters inside each part (in order), the labs and question banks
 that mirror those chapters, the reference appendices, and the page/typography
 settings. Nothing downstream hard-codes the structure — the table of contents,

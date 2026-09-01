@@ -28,6 +28,10 @@ The `infrastructure/project/` module provides project discovery, validation, and
 - `python -m infrastructure.project.promotion candidate --project-root <path>`
   - Candidate security scan plus composite promotion decision.
 
+### Manuscript directory resolution
+
+Manuscript directories resolve via `infrastructure.core.project_paths.resolve_source_manuscript_dir` / `manuscript_config_path`: `TEMPLATE_MANUSCRIPT_DIR` override → default `docs/manuscript/` → legacy `manuscript/`. Structural contracts (e.g. `public_capabilities.REQUIRED_DIRECTORIES`) expect `docs/manuscript/`.
+
 ### Project Metadata (`metadata.py`)
 
 - `get_project_metadata(project_dir)` - Extract configuration from pyproject.toml and config.yaml (includes `[tool.template]` flags such as `skip_combined_pytest`). Defined in `metadata.py` and re-exported from `infrastructure.project` (`from infrastructure.project import get_project_metadata`); it is **not** re-exported by `discovery.py`.

@@ -3,7 +3,7 @@
 Symptom-driven recipes for the most common breakage modes when running this
 project.
 
-## Edited `data/measurements.csv` or `manuscript/config.yaml` but the figures/PDF didn't change
+## Edited `data/measurements.csv` or `docs/manuscript/config.yaml` but the figures/PDF didn't change
 
 **Cause.** The analysis stage was skipped, or only the render stage ran (it does
 not re-execute `eda_analysis.py`).
@@ -51,9 +51,9 @@ and update `src/eda/dataset.py::DatasetSchema` to match its columns.
    uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py 2>&1 | tee /tmp/analysis.log
    ```
 2. Check the output directory exists and is writable.
-3. Validate `manuscript/config.yaml`:
+3. Validate `docs/manuscript/config.yaml`:
    ```bash
-   uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_eda_notebook/manuscript/config.yaml'))"
+   uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_eda_notebook/docs/manuscript/config.yaml'))"
    ```
 
 ## `output/figures/` is empty after running the script
@@ -135,14 +135,14 @@ uv run pytest projects/templates/template_eda_notebook/tests \
   --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90
 ```
 
-## YAML parse error in `manuscript/config.yaml`
+## YAML parse error in `docs/manuscript/config.yaml`
 
 **Common mistakes:** tabs instead of spaces, trailing commas, unclosed quotes.
 
 **Fix.** Validate before running:
 
 ```bash
-uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_eda_notebook/manuscript/config.yaml'))"
+uv run python -c "import yaml; yaml.safe_load(open('projects/templates/template_eda_notebook/docs/manuscript/config.yaml'))"
 ```
 
 ## See also

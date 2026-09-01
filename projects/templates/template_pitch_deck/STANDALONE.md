@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.21281509](https://doi.org/10.5281/zenodo.21281509)
 - Latest deposited version DOI: [10.5281/zenodo.21281510](https://zenodo.org/records/21281510)
 - Additional declared locations: none declared
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -51,7 +51,7 @@ rsync -a \
 
 ## Required Post-Fork Edits
 
-- Update `manuscript/config.yaml` (`deck.pitch_subject`, `deck.theme`, `deck.source_base_url`), `CITATION.cff`-equivalent metadata, and author/publication fields.
+- Update `docs/manuscript/config.yaml` (`deck.pitch_subject`, `deck.theme`, `deck.source_base_url`), `CITATION.cff`-equivalent metadata, and author/publication fields.
 - Replace `manuscript/deck_content_{short,medium,long}.yaml` with your own pitch narrative; update `src/deck_tokens.py::build_deck_tokens` to source facts from whatever project/organization you are pitching (it does not have to be another exemplar in this monorepo).
 - Every slide referencing a live-sourced fact token needs a `source` citation — `src/diligence_audit.py` enforces this; extend `FACT_TOKEN_PREFIXES` if your fork's token naming differs.
-- `infrastructure/rendering/{slide_deck,pptx_deck}.py` are shared, generic infrastructure — do not fork those; only the project-local `manuscript/` and `src/` content should change.
+- `infrastructure/rendering/{slide_deck,pptx_deck}.py` are shared, generic infrastructure — do not fork those; only the project-local `docs/manuscript/` and `src/` content should change.

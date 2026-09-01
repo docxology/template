@@ -12,7 +12,7 @@ for directory-specific rules.
 
 Ground truth for integration and figure counts lives in
 `output/data/manuscript_variables.json`; configuration is owned by
-`manuscript/config.yaml`. Content-figure counts derive from
+`docs/manuscript/config.yaml`. Content-figure counts derive from
 `src/figure_support.py::INTEGRATION_FIGURE_SPECS`, while the separately declared
 `COVER_FIGURE_FILENAMES` contract covers layout-only cover art.
 
@@ -35,7 +35,7 @@ write back to `fonds/`, `rules/`, or `tools/` from project code.
 | `src/` | Pure readers and validators — no `infrastructure` imports |
 | `scripts/` | Thin orchestrators; import from `src/` only |
 | `tests/` | Real file paths; skip with `pytest.mark.skipif` when files absent |
-| `manuscript/` | Self-contained prose sections referencing the integration |
+| `docs/manuscript/` | Self-contained prose sections referencing the integration |
 
 ---
 

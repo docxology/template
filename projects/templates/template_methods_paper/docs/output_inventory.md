@@ -28,7 +28,7 @@ Paths in the table are relative to `projects/templates/template_methods_paper/`.
 | `output/reports/diagnostics.json` | Structured diagnostic events (markdown/content validation red/yellow flags) | `infrastructure/core/logging/diagnostic.py::DiagnosticReporter` | 6 — Validate Output |
 | `output/reports/evidence_registry.json` | Verified evidence registry backing compiled claims | `infrastructure/validation/evidence_registry.py::build_project_evidence_registry()`/`write_evidence_registry_report()` via `infrastructure/validation/output/pipeline.py` | 6 — Validate Output |
 | `output/pdf/*combined.pdf` | Working combined publication PDF | `infrastructure/rendering/pdf_renderer.py` via `scripts/pipeline/stage_03_render.py` | 5 — Render PDF |
-| `output/slides/*_slides.pdf` (+ `.tex`/`.aux`/`.log`/`.nav`/`.snm`/`.toc`/`.vrb` build artifacts) | Per-section Beamer slide decks | `infrastructure/rendering/slides_renderer.py` (`SlidesRenderer`) via `infrastructure/rendering/core.py::RenderingPipeline.render_slides`, invoked from `scripts/pipeline/stage_03_render.py` (opt-in via `render.formats.slides` in `manuscript/config.yaml`) | 5 — Render PDF |
+| `output/slides/*_slides.pdf` (+ `.tex`/`.aux`/`.log`/`.nav`/`.snm`/`.toc`/`.vrb` build artifacts) | Per-section Beamer slide decks | `infrastructure/rendering/slides_renderer.py` (`SlidesRenderer`) via `infrastructure/rendering/core.py::RenderingPipeline.render_slides`, invoked from `scripts/pipeline/stage_03_render.py` (opt-in via `render.formats.slides` in `docs/manuscript/config.yaml`) | 5 — Render PDF |
 | `output/web/*.html` | HTML version of each section | `infrastructure/rendering` | 5 — Render PDF |
 | `output/logs/*.log` | Per-stage pipeline logs | `scripts/runner/execute_pipeline.py` | every stage |
 
@@ -72,4 +72,4 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_met
 
 - [`output_conventions.md`](output_conventions.md) — layout, regeneration policy, troubleshooting.
 - [`rendering_pipeline.md`](rendering_pipeline.md) — manuscript → PDF flow.
-- [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — manuscript directory and token/figure protocol.
+- [`../docs/manuscript/AGENTS.md`](../docs/manuscript/AGENTS.md) — manuscript directory and token/figure protocol.

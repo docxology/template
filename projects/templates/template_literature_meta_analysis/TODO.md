@@ -21,7 +21,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Retargeting should remain config-owned through `manuscript/config.yaml`; avoid hard-coded domain terms in `src/`.
+- Retargeting should remain config-owned through `docs/manuscript/config.yaml`; avoid hard-coded domain terms in `src/`.
 - Keep live retrieval knobs explicit for engines, relevance keywords, subfields, and hypotheses.
 
 ## Documentation and signposting gaps

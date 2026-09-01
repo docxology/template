@@ -25,7 +25,7 @@ helpers [`src/visualization/_scaffold.py`](../src/visualization/_scaffold.py)
 deterministic.
 
 The committed cover image
-[`manuscript/assets/cover/template_textbook_cover.png`](../manuscript/assets/cover/template_textbook_cover.png)
+[`manuscript/assets/cover/template_textbook_cover.png`](../docs/manuscript/assets/cover/template_textbook_cover.png)
 is itself a deterministic, tested artifact: regenerate it by calling
 `cover_art(output_dir)` from [`src/visualization/plots.py`](../src/visualization/plots.py)
 (byte-stable nested modular blocks), then copy the result over the tracked asset.

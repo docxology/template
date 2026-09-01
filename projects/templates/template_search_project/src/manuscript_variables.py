@@ -154,7 +154,7 @@ def write_resolved_manuscript_tree(
     (see :func:`infrastructure.rendering.pipeline._resolve_manuscript_dir`).
     """
     root = Path(project_root)
-    manuscript_dir = root / "manuscript"
+    manuscript_dir = root / "docs" / "manuscript"
     out_dir = root / "output" / "manuscript"
     out_dir.mkdir(parents=True, exist_ok=True)
 

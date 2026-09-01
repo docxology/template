@@ -8,4 +8,4 @@ Contributions are **methodological** and **architectural**. On the methods side,
 
 **Results (this configuration):** 4 of 6 grid points report `converged=True` in the CSV; non-convergent rows flag either slow progress at small $\alpha$ under the iteration cap or instability when $|1-\alpha| \geq 1$. The analytical minimizer remains $x^\ast = 1.0$ with $f(x^\ast) = -0.5$ for the configured $(A,b)$.
 
-**Keywords:** optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation
+**Keywords:** 

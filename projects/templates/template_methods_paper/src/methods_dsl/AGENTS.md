@@ -15,7 +15,7 @@ its central subject.
 
 - Keep this subpackage standalone: import only stdlib, except
   `_logging.py`'s single sanctioned `infrastructure.core.logging.utils`
-  import (declared in `manuscript/layer_contract.yaml`). No other module here
+  import (declared in `docs/manuscript/layer_contract.yaml`). No other module here
   imports `infrastructure.*` or a sibling project.
 - Never render plots or write files here. Exporters return text
   (`to_worklist_markdown`, `to_csv_rows`, `to_mermaid`, `to_json`) or take an

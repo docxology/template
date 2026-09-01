@@ -103,7 +103,7 @@ def validate_source_ledger_contract(project_root: Path, *, today: date | None = 
         return [str(exc)]
     ledger_keys = {entry.citekey for entry in entries}
     bib_keys = _bibtex_citekeys(root / "manuscript" / "references.bib")
-    manuscript_keys = _manuscript_citekeys(root / "manuscript")
+    manuscript_keys = _manuscript_citekeys(root / "docs" / "manuscript")
     issues: list[str] = []
     missing_bib = sorted(ledger_keys - bib_keys)
     if missing_bib:

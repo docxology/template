@@ -3,7 +3,7 @@
 | Module | Role |
 | --- | --- |
 | `loop.py` | Layer-2 adapter: project config/fixtures → `infrastructure.sia.run_sia_loop` → reports, variables, figures, and manifest |
-| `loop_config.py` | Reads `project_config.sia` from `manuscript/config.yaml` (legacy root fallback supported) |
+| `loop_config.py` | Reads `project_config.sia` from `docs/manuscript/config.yaml` (legacy root fallback supported) |
 | `approval.py` | Typed `ApprovalContract`: fail-closed sandbox/diff/rollback/owner-receipt validation for `live_proposal`/`live_apply` forks (`fixture_replay` requires none of it) |
 | `reports.py` | Loop markdown + manuscript variable hydration |
 | `artifact_manifest.py` | Artifact manifest writer (hashes + metadata) for SIA loop outputs |

@@ -30,7 +30,7 @@ Expected: a passing suite at ≥90% coverage of `src/`. Live collection counts a
 
 ## The Single Control Surface
 
-Everything phase-related is driven by [`manuscript/config.yaml`](../manuscript/config.yaml) →
+Everything phase-related is driven by [`docs/manuscript/config.yaml`](../docs/manuscript/config.yaml) →
 `project_config.search_phases`. The bundled defaults:
 
 ```yaml

@@ -68,7 +68,7 @@ uv run pytest tests/test_free_energy.py tests/test_bernoulli_toy.py \
 Do **not** run the generated-artifact gates (`tests/gates/`,
 `test_roadmap_promotion.py`, `test_track_consolidation_*.py`,
 `test_simulation_invariants.py`) under `-n auto`: they mutate and restore shared
-`manuscript/` and `output/` files, so parallel workers race on the same paths.
+`docs/manuscript/` and `output/` files, so parallel workers race on the same paths.
 Run those serially (the default), then use `-n auto` only for the analytical and
 other state-free modules above.
 

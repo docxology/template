@@ -33,8 +33,10 @@
 1. **Edit the abstract**
 
    ```bash
-   vim projects/templates/template_code_project/manuscript/00_abstract.md
+   vim projects/templates/template_code_project/docs/manuscript/00_abstract.md
    ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 2. **Add your content**
 
@@ -79,7 +81,7 @@
 2. **Create the file**
 
    ```bash
-   vim projects/templates/template_code_project/manuscript/07_limitations.md
+   vim projects/templates/template_code_project/docs/manuscript/07_limitations.md
    ```
 
 3. **Add section header with label**
@@ -317,7 +319,7 @@ From [@eq:important], we see...
 **Validation**:
 
 ```bash
-uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/docs/manuscript/
 ```
 
 **See Also**: [Markdown Template Guide](../usage/markdown-template-guide.md)
@@ -698,7 +700,7 @@ outside the core selection.
 1. **Create supplemental file**
 
    ```bash
-   vim projects/templates/template_code_project/manuscript/S03_supplemental_figures.md
+   vim projects/templates/template_code_project/docs/manuscript/S03_supplemental_figures.md
    ```
 
 2. **Add content**

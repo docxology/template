@@ -78,7 +78,7 @@ evidence.
 
 Generic, Layer-1 facts for working in this repository.
 
-- **Manuscript variables are injected, not hand-authored.** Per-project metrics, counts, and variables come from `output/data/manuscript_variables.json` at render time. For `template_code_project`, the default pipeline calls `generate_variables(..., require_analysis_outputs=True)` via `projects/{name}/scripts/z_generate_manuscript_variables.py` and fails when `output/data/optimization_results.csv` is absent; pass `--allow-draft` only for intentional early drafts. PDF Publishing Information reads `publication.doi`, optional `publication.repository_url`, and `publication.repository_label` from `projects/{name}/manuscript/config.yaml` via `infrastructure/rendering/_pdf_latex_helpers.py`.
+- **Manuscript variables are injected, not hand-authored.** Per-project metrics, counts, and variables come from `output/data/manuscript_variables.json` at render time. For `template_code_project`, the default pipeline calls `generate_variables(..., require_analysis_outputs=True)` via `projects/{name}/scripts/z_generate_manuscript_variables.py` and fails when `output/data/optimization_results.csv` is absent; pass `--allow-draft` only for intentional early drafts. PDF Publishing Information reads `publication.doi`, optional `publication.repository_url`, and `publication.repository_label` from `projects/{name}/docs/manuscript/config.yaml` via `infrastructure/rendering/_pdf_latex_helpers.py`.
 - **Validation & rendering pitfalls.** Content-validation diagnostics use stable dotted IDs from `infrastructure/validation/content/diagnostic_codes.py` (`MarkdownCode`, `BibtexCode`); every new `DiagnosticEvent` must pass `code=…`, and renaming an existing code is a breaking change for downstream `jq`/`rg` filters. Fast manuscript pre-flight: `uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .`. Multi-pass PDF rendering continues when pass 1 wrote output despite recoverable `Missing $` errors so later passes resolve forward references. Mermaid: unquoted `//` line comments; stadium nodes `[/label/]` close with `/]`; combined-PDF Mermaid via Chrome headless or `mmdc`, else verbatim figure fallback. `FIGURE_WIDTH_*` values must be bare fractions (e.g. `0.9`); the alt-text comment belongs before `\begin{figure}`; prefer inline `$...$` over `\(...\)` in Markdown list items.
 - **Entry points & gates.** `run.sh` and `secure_run.sh` source only [`scripts/shell/shell_bootstrap.sh`](scripts/shell/shell_bootstrap.sh); menu and argparse live in `infrastructure.orchestration`. [`scripts/shell/bash_utils.sh`](scripts/shell/bash_utils.sh) serves backup/health scripts and tests, not pipeline entrypoints. Exemplar doc/code drift: `scripts/audit/check_template_drift.py` → `infrastructure.project.drift.run_drift_checks()` on `PUBLIC_PROJECT_NAMES` (`--project`, `--strict`). Layer 1 module size: `scripts/gates/module_line_count_check.py` and `uv run python -m infrastructure.core.health` (`module-line-count`). The health registry also runs the executable methods contract and `scripts/gates/public_capabilities.py` across the canonical public roster. Opt-in gates under `scripts/gates/` report `status: "skipped"` under `skipped_tools` when tools are missing. `bandit.yaml` `exclude_dirs` skips rotating/private trees so CI stays strict on `infrastructure/`, `scripts/`, and public exemplars.
 
@@ -126,7 +126,7 @@ Operational gotchas: running **all** `projects/*/tests/` in **one** pytest proce
 - `projects/{name}/src/` - Research algorithms and analysis (domain-specific per project)
 - `projects/{name}/tests/` - Project test suite
 - `projects/{name}/scripts/` - Project analysis scripts (thin orchestrators)
-- `projects/{name}/manuscript/` - Research manuscript
+- `projects/{name}/docs/manuscript/` - Research manuscript
 - `projects/{name}/output/` - Working outputs during pipeline execution
 - `output/{name}/...` - Final deliverables after pipeline completion
 
@@ -383,16 +383,18 @@ flowchart TB
 
 ## ⚙️ Configuration System
 
+> **Manuscript location.** The manuscript directory is configurable but defaults to `docs/manuscript/` (i.e. `projects/{name}/docs/manuscript/`). Set `TEMPLATE_MANUSCRIPT_DIR` (project-relative path, e.g. `manuscript`) to relocate it for an entire checkout; the legacy `manuscript/` location is still auto-detected for backward compatibility. Resolution lives in `infrastructure.core.project_paths.resolve_source_manuscript_dir`.
+
 ### Configuration File (Recommended)
 
 The system supports configuration through a YAML file, providing a centralized, version-controllable way to manage all paper metadata.
 
-**Location**: `projects/{name}/manuscript/config.yaml` — resolved by
+**Location**: `projects/{name}/docs/manuscript/config.yaml` — resolved by
 `infrastructure.core.project_paths.resolve_source_manuscript_dir`, which also
 accepts a populated `docs/manuscript/` tree (conventional `manuscript/` with
 real sources wins when both exist). See the function's docstring for the exact
 precedence.
-**Template**: `projects/{name}/manuscript/config.yaml.example`
+**Template**: `projects/{name}/docs/manuscript/config.yaml.example`
 
 **Example configuration**:
 
@@ -466,7 +468,7 @@ Environment variables are supported as an alternative configuration method and t
 **Priority order**:
 
 1. Environment variables (highest priority - override config file)
-2. Config file (`projects/{name}/manuscript/config.yaml`)
+2. Config file (`projects/{name}/docs/manuscript/config.yaml`)
 3. Default values (lowest priority)
 
 ### Configuration Examples
@@ -474,8 +476,8 @@ Environment variables are supported as an alternative configuration method and t
 #### Using Configuration File (Recommended)
 
 ```bash
-# Edit projects/{name}/manuscript/config.yaml with your information
-vim projects/{name}/manuscript/config.yaml
+# Edit projects/{name}/docs/manuscript/config.yaml with your information
+vim projects/{name}/docs/manuscript/config.yaml
 
 # Build with config file values
 uv run python scripts/pipeline/stage_03_render.py --project {name}
@@ -596,7 +598,7 @@ AES-256 password encryption.
 **Configuration** (`infrastructure/config/secure_config.yaml`):
 
 Controls all steganography settings. Any `steganography:` block in a project's
-`manuscript/config.yaml` overrides these repo-level defaults. Key fields:
+`docs/manuscript/config.yaml` overrides these repo-level defaults. Key fields:
 
 ```yaml
 steganography:
@@ -690,7 +692,7 @@ uv run python scripts/pipeline/stage_07_executive_report.py --project {name}
 
 ```bash
 # Validate markdown files
-uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/docs/manuscript/
 
 # Validate PDF outputs
 uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_combined.pdf
@@ -723,10 +725,10 @@ uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_comb
 
 ```bash
 # Validate all markdown files
-uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/docs/manuscript/
 
 # Strict mode (fail on any issues)
-uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/ --strict
+uv run python -m infrastructure.validation.cli markdown projects/{name}/docs/manuscript/ --strict
 ```
 
 **Validation Checks**:
@@ -1265,7 +1267,7 @@ which xelatex
 uv run python -m infrastructure.rendering.latex_package_validator
 
 # Validate markdown first
-uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/docs/manuscript/
 
 # Check compilation logs
 ls projects/{name}/output/pdf/*_compile.log output/{name}/pdf/*_compile.log
@@ -1380,7 +1382,7 @@ Key log files for debugging:
    uv run python -c "from pathlib import Path; from infrastructure.core.files import clean_output_directories; clean_output_directories(Path('.'), '{name}')"
 
    # Backup source files only
-   tar -czf project_backup.tar.gz projects/{name}/src/ projects/{name}/tests/ projects/{name}/scripts/ projects/{name}/manuscript/ docs/
+   tar -czf project_backup.tar.gz projects/{name}/src/ projects/{name}/tests/ projects/{name}/scripts/ projects/{name}/docs/manuscript/ docs/
    ```
 
 ### Adding Features
@@ -1461,7 +1463,7 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 - **Source code**: `projects/{name}/src/`
 - **Tests**: `projects/{name}/tests/`
 - **Scripts**: `projects/{name}/scripts/`
-- **Manuscript**: `projects/{name}/manuscript/`
+- **Manuscript**: `projects/{name}/docs/manuscript/`
 
 ### Code Quality
 

@@ -11,7 +11,7 @@ uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_sia \
   --dest "projects/working/$NEW" \
   --new-name "$NEW"
-# Edit manuscript/config.yaml (title, project_config.sia.task_name)
+# Edit docs/manuscript/config.yaml (title, project_config.sia.task_name)
 # Replace tasks/mini_classify/ with your task tree
 # Record fixtures under src/fixtures/recorded_generations/ for CI replay
 uv run pytest "projects/working/$NEW/tests/" --cov="projects/working/$NEW/src" --cov-fail-under=90
@@ -28,7 +28,7 @@ Private work stays under `projects/working/` (local-only). Promote to `projects/
 | `src/fixtures/recorded_generations/` | REQUIRED for default CI replay |
 | `scripts/run_sia_loop.py`, `scripts/z_generate_manuscript_variables.py` | REQUIRED |
 | `tests/` | REQUIRED (90% gate) |
-| `manuscript/config.yaml`, `manuscript/*.md`, `references.bib` | REQUIRED |
+| `docs/manuscript/config.yaml`, `manuscript/*.md`, `references.bib` | REQUIRED |
 | `docs/*.md` | AESTHETIC (load-bearing for agents) |
 | `domain_profile.yaml`, `experiment_plan.yaml` | REQUIRED forkability overlays |
 

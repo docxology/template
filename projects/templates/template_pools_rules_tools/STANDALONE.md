@@ -10,7 +10,7 @@
 - Stable concept DOI: [10.5281/zenodo.21298888](https://doi.org/10.5281/zenodo.21298888)
 - Latest deposited version DOI: [10.5281/zenodo.21298889](https://zenodo.org/records/21298889)
 - Additional declared locations: none declared
-- Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
+- Metadata source: [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
 
@@ -239,7 +239,7 @@ entrypoints:
 ## Licence
 
 CC-BY-4.0, declared in [`CITATION.cff`](CITATION.cff) (`license:`) and in
-[`manuscript/config.yaml`](manuscript/config.yaml) (`publication.license`).
+[`docs/manuscript/config.yaml`](docs/manuscript/config.yaml) (`publication.license`).
 The grant travels with a fork: this exemplar ships its own
 [`LICENSE`](LICENSE). Note that the parent template repository's root `LICENSE`
 is Apache-2.0, which is a different licence from this project's declared one.

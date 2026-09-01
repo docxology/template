@@ -60,7 +60,7 @@ stages:
     write_doc(root / "scripts" / "pipeline" / "stage_02_analysis.py", 'print("analysis")\n')
     write_doc(root / "scripts" / "runner" / "execute_pipeline.py", 'print("pipeline")\n')
 
-    source = project / "manuscript" / "01_methods.md"
+    source = project / "docs" / "manuscript" / "01_methods.md"
     hydrated = project / "output" / "manuscript" / source.name
     manuscript = "# Methods\n\nA deterministic procedure produces a source-bound artifact.\n"
     write_doc(source, manuscript)
@@ -219,7 +219,7 @@ def test_publication_audit_flags_missing_project_skill(tmp_path: Path) -> None:
 
 def test_publication_audit_requires_alt_for_tagged_pdf_cover(tmp_path: Path) -> None:
     project = make_project(tmp_path, "template_test", program="templates", with_manuscript=True)
-    config_path = project / "manuscript" / "config.yaml"
+    config_path = project / "docs" / "manuscript" / "config.yaml"
     config_path.write_text(
         "paper:\n  title: Tagged paper\n  cover:\n    image: cover.png\nmetadata:\n  tagged_pdf: true\n",
         encoding="utf-8",
@@ -268,7 +268,7 @@ def test_publication_audit_rendered_mode_requires_reports(tmp_path: Path) -> Non
         with_manuscript=True,
         with_output=True,
     )
-    write_doc(project / "manuscript" / "02_methods_overview.md", "# Methods\n\nProcedure.\n")
+    write_doc(project / "docs" / "manuscript" / "02_methods_overview.md", "# Methods\n\nProcedure.\n")
     write_doc(
         project / "methods_pipeline.yaml",
         """
@@ -354,7 +354,7 @@ def test_publication_audit_flags_missing_figure_registry_for_referenced_figure(t
         with_output=True,
     )
     write_doc(
-        project / "manuscript" / "03_results.md",
+        project / "docs" / "manuscript" / "03_results.md",
         "# Results\n\n![Result](../output/figures/result.png){#fig:result}\n",
     )
     report = build_publication_audit(
@@ -375,7 +375,7 @@ def test_publication_audit_checks_accessibility_for_hydrated_only_figure(tmp_pat
         with_manuscript=True,
         with_output=True,
     )
-    write_doc(project / "manuscript" / "00_abstract.md", "# Abstract\n\nNo source figure.\n")
+    write_doc(project / "docs" / "manuscript" / "00_abstract.md", "# Abstract\n\nNo source figure.\n")
     write_doc(
         project / "output" / "manuscript" / "03_results.md",
         "# Results\n\n![Injected result](../figures/injected.png){#fig:injected}\n",

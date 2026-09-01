@@ -4,7 +4,7 @@
     "project_name": "template_active_inference",
     "populated_on": "2026-07-01",
     "populated_by": "Marcus Webb (Engineer)",
-    "note": "First real regression pins for the multi-track Active Inference exemplar. This exemplar's jax/pymdp tracks are NOT importable from the root .venv (numpy 2.4.1 + scipy 1.17.1 only, no jax/pymdp), so these pins are deliberately drawn from the numpy/scipy-only ANALYTICAL track (src/analytical/*) — the closed-form Bernoulli/Ising toy that backs the MI-sweep and free-energy Results sections (manuscript/10_results_mi_sweep.md, 11_results_free_energy.md, 05_methods_analytical.md). Every value is re-derived by calling the same src functions the analysis pipeline uses (analytical.bernoulli_toy / analytical.decomposition / analytical.hyperparameters), exactly as orchestration/analysis.write_parameter_sweep and manuscript/variables.py compute the manuscript tokens — never hand-copied from the manuscript. No mocks: real deterministic (no-sampling) closed-form objects only."
+    "note": "First real regression pins for the multi-track Active Inference exemplar. This exemplar's jax/pymdp tracks are NOT importable from the root .venv (numpy 2.4.1 + scipy 1.17.1 only, no jax/pymdp), so these pins are deliberately drawn from the numpy/scipy-only ANALYTICAL track (src/analytical/*) — the closed-form Bernoulli/Ising toy that backs the MI-sweep and free-energy Results sections (docs/manuscript/10_results_mi_sweep.md, 11_results_free_energy.md, 05_methods_analytical.md). Every value is re-derived by calling the same src functions the analysis pipeline uses (analytical.bernoulli_toy / analytical.decomposition / analytical.hyperparameters), exactly as orchestration/analysis.write_parameter_sweep and manuscript/variables.py compute the manuscript tokens — never hand-copied from the manuscript. No mocks: real deterministic (no-sampling) closed-form objects only."
   },
   "_provenance": {
     "mi_sweep_grid_points": {
@@ -39,7 +39,7 @@
     }
   },
   "mi_sweep_grid_points": {
-    "manuscript_section": "manuscript/10_results_mi_sweep.md / Mutual-information parameter sweep (also 05_methods_analytical.md)",
+    "manuscript_section": "docs/manuscript/10_results_mi_sweep.md / Mutual-information parameter sweep (also 05_methods_analytical.md)",
     "claim_text": "We sweep coupling strength $\\lambda$ on a grid of {{param_sweep_grid_points}} points up to $\\lambda_{\\max} = {{lambda_max}}$.",
     "value": 21,
     "abs_tolerance": 0,
@@ -50,7 +50,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "mi_sweep_lambda_max": {
-    "manuscript_section": "manuscript/10_results_mi_sweep.md / Mutual-information parameter sweep (also 05_methods_analytical.md)",
+    "manuscript_section": "docs/manuscript/10_results_mi_sweep.md / Mutual-information parameter sweep (also 05_methods_analytical.md)",
     "claim_text": "... up to $\\lambda_{\\max} = {{lambda_max}}$ ... across $\\lambda \\in [0, {{lambda_max}}]$",
     "value": 4.0,
     "abs_tolerance": 0,
@@ -61,7 +61,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "ising_mi_saturation": {
-    "manuscript_section": "manuscript/11_results_free_energy.md / Saturation MI (also 10_results_mi_sweep.md figure caption)",
+    "manuscript_section": "docs/manuscript/11_results_free_energy.md / Saturation MI (also 10_results_mi_sweep.md figure caption)",
     "claim_text": "Saturation MI (grid maximum on the measured $\\lambda$ sweep): {{ising_mi_saturation}} nats. ... grid maximum {{ising_mi_saturation}} nats.",
     "value": 0.6030524127937693,
     "abs_tolerance": 1e-12,
@@ -72,7 +72,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "mi_sweep_max_residual": {
-    "manuscript_section": "manuscript/10_results_mi_sweep.md / Mutual-information parameter sweep (also 15_discussion_outlook.md, 16_appendix_full_sheaf.md)",
+    "manuscript_section": "docs/manuscript/10_results_mi_sweep.md / Mutual-information parameter sweep (also 15_discussion_outlook.md, 16_appendix_full_sheaf.md)",
     "claim_text": "... both are deterministic (no sampling) and agree to {{sweep_max_residual}} nats. ... cross-implementation agreement check (max residual {{sweep_max_residual}} nats), not a sampling residual.",
     "value": 4.440892098500626e-16,
     "abs_tolerance": 1e-12,
@@ -83,7 +83,7 @@
     "pinned_at_commit": "691d6ebf"
   },
   "free_energy_argmin_lambda": {
-    "manuscript_section": "manuscript/11_results_free_energy.md / Free-energy decomposition",
+    "manuscript_section": "docs/manuscript/11_results_free_energy.md / Free-energy decomposition",
     "claim_text": "The curve in [@fig:free_energy_curve] instead reports free energy against the *mean-field* prior: its minimum at $\\lambda={{free_energy_argmin_lambda}}$ is where the entangled posterior coincides with the factorized mean-field product ...",
     "value": 0.0,
     "abs_tolerance": 0,

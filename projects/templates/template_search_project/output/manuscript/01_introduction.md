@@ -12,6 +12,6 @@ Reproducible computational research demands that every claim be traceable back t
 * The export side ([`infrastructure/reference/`](../../../../infrastructure/reference/)) provides BibTeX read/write/convert facilities byte-compatible with the existing exemplar `references.bib`, suitable for the combined-PDF pipeline (Pandoc `--natbib` + BibTeX).
 * A small project-local synthesis layer (in [`src/synthesis.py`](../src/synthesis.py)) takes enriched papers, builds reproducible LLM prompts, and assembles a markdown reading report.
 
-The project is *configurable* via a single `manuscript/config.yaml`: changing the topic, year filters, backend set, enrichment level, and LLM parameters never requires editing code. The project is *modular* in the strict sense the template uses: every reusable component lives in `infrastructure/`, and `src/` contains only project-specific orchestration.
+The project is *configurable* via a single `docs/manuscript/config.yaml`: changing the topic, year filters, backend set, enrichment level, and LLM parameters never requires editing code. The project is *modular* in the strict sense the template uses: every reusable component lives in `infrastructure/`, and `src/` contains only project-specific orchestration.
 
 The contribution of this exemplar is therefore not a new algorithm; it is a **demonstration that a reproducible literature workflow can be built from existing template infrastructure** with no new optional dependencies, no mocks in the test suite, and complete configurability through a single YAML file.

@@ -90,7 +90,7 @@ coverage, lint, type, validation, and regeneration gates.
 - [x] ISC-17: `src/literature/README.md` "Deduplication Strategy" prose reflects all 9 sources, not 3.
 - [x] ISC-18: `src/literature/README.md` "Output" section no longer asserts a stale fixed corpus count/engine-set as current fact.
 - [x] ISC-19: `src/literature/SKILL.md` description no longer says "three engines" / names only 3.
-- [x] ISC-20: `manuscript/config.yaml` `pipeline_stages` includes an `export_bibliography` entry pointing at `09_export_bibliography.py`.
+- [x] ISC-20: `docs/manuscript/config.yaml` `pipeline_stages` includes an `export_bibliography` entry pointing at `09_export_bibliography.py`.
 - [x] ISC-21: Anti: no ISC-5..20 edit causes any of the 397 pre-existing literature tests to fail.
 - [x] ISC-22: Anti: no ISC-5..20 edit reduces `src/literature/` coverage below 90%.
 - [x] ISC-23: Anti: no edit touches `output/` generated manuscript artifacts by hand.
@@ -198,7 +198,7 @@ plus propagate any other repo-wide literature-research improvements.
 
 **What shipped:** a new `src/reproducibility/` subpackage (models/scoring/prompts/
 extraction/runner, mirroring `knowledge_graph/`'s exact conventions), wired into
-`scripts/10_reproducibility_assessment.py`, `manuscript/config.yaml`, and the
+`scripts/10_reproducibility_assessment.py`, `docs/manuscript/config.yaml`, and the
 manuscript-variable pipeline (`03e_results_reproducibility.md`). 129 new tests,
 zero mocks, full project suite 1099/1099 passing, 96.29% coverage (up from
 93.69%), ruff/mypy/doc-lint all clean — independently re-verified via fresh

@@ -101,7 +101,9 @@ var, or split the script into stages.
 **Symptom:** `[skip] PDF rendering disabled in config (render.formats.pdf=false)`.
 
 This is the **expected** log line when a format is gated off. Confirm intent
-by checking `projects/<name>/manuscript/config.yaml` `render.formats` block.
+by checking `projects/<name>/docs/manuscript/config.yaml` `render.formats` block.
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 **Symptom:** `[skip] DOCX rendering: no combined markdown found`.
 

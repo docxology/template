@@ -18,7 +18,7 @@ at the configured trim → renders each page (`layout.render_page`) → saves th
 
 ## The descriptive manuscript (Stage 03)
 
-`manuscript/` holds a short paper *about* the engine. The repository's Stage-03
+`docs/manuscript/` holds a short paper *about* the engine. The repository's Stage-03
 infrastructure renderer turns it into a standard PDF, exactly as for the sibling
 templates. This is independent of the newspaper artifact.
 

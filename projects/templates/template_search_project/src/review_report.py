@@ -238,7 +238,7 @@ def generate_review_report(project_root: Path, template_root: Path, review_dir: 
     )
     lines.append(
         f"**manuscript/ files** ({len(os.listdir(project_root / 'manuscript'))}):  "
-        + ", ".join(sorted(os.listdir(project_root / "manuscript")))
+        + ", ".join(sorted(os.listdir(project_root / "docs" / "manuscript")))
     )
     lines.append(
         f"**scripts/ executables** ({len(os.listdir(project_root / 'scripts'))}):  "
@@ -284,7 +284,7 @@ def generate_review_report(project_root: Path, template_root: Path, review_dir: 
     lines.append("**99_references.md** present (defers to .bib)")
     cite_pat = re.compile(r"\[@[\w:]+\]")
     cite_keys: set[str] = set()
-    for md in (project_root / "manuscript").glob("*.md"):
+    for md in (project_root / "docs" / "manuscript").glob("*.md"):
         if md.name == "99_references.md":
             continue
         cite_keys.update(cite_pat.findall(md.read_text(encoding="utf-8")))

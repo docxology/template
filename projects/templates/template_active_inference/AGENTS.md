@@ -10,9 +10,9 @@ routing layer; put directory-specific contracts in the nearest child
 | Surface | Source of truth |
 | --- | --- |
 | Pipeline track gates | [`tracks.yaml`](tracks.yaml) |
-| Manuscript sheaf registry | [`manuscript/sheaf/tracks.yaml`](manuscript/sheaf/tracks.yaml) |
-| IMRAD section matrix | [`manuscript/sheaf/manifest.yaml`](manuscript/sheaf/manifest.yaml) |
-| Coverage styling/report inputs | [`manuscript/sheaf/coverage.yaml`](manuscript/sheaf/coverage.yaml) |
+| Manuscript sheaf registry | [`manuscript/sheaf/tracks.yaml`](docs/manuscript/sheaf/tracks.yaml) |
+| IMRAD section matrix | [`manuscript/sheaf/manifest.yaml`](docs/manuscript/sheaf/manifest.yaml) |
+| Coverage styling/report inputs | [`manuscript/sheaf/coverage.yaml`](docs/manuscript/sheaf/coverage.yaml) |
 | Figure registry, captions, alt text | [`figures.yaml`](figures.yaml) |
 | pymdp/SI run config | [`pymdp.yaml`](pymdp.yaml) |
 | Open follow-up scope | [`TODO.md`](TODO.md) |
@@ -25,7 +25,7 @@ hand-authored prose.
 
 | Task | Start here | Notes |
 | --- | --- | --- |
-| Manuscript section edits | [`manuscript/AGENTS.md`](manuscript/AGENTS.md) | Edit fragments under `manuscript/sections/imrad/`; numbered main files are mostly composed. |
+| Manuscript section edits | [`docs/manuscript/AGENTS.md`](docs/manuscript/AGENTS.md) | Edit fragments under `manuscript/sections/imrad/`; numbered main files are mostly composed. |
 | Sheaf registry/composition | [`src/manuscript/sheaf/AGENTS.md`](src/manuscript/sheaf/AGENTS.md) | Registry, manifest, coverage, generated renderers, and semantic checks. |
 | Analytical formulas | [`src/analytical/AGENTS.md`](src/analytical/AGENTS.md) | Bernoulli K=2, MI/FE/EFE decomposition, invariants, sweep I/O. |
 | Simulation/SI harness | [`src/simulation/AGENTS.md`](src/simulation/AGENTS.md) | pymdp config/runtime, SI T-maze, graph-world traces, deterministic run logs. |

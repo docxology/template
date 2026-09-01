@@ -1,6 +1,6 @@
 # Rendering Pipeline: Manuscript → PDF
 
-The `manuscript/` directory contains the narrative components of the research. It
+The `docs/manuscript/` directory contains the narrative components of the research. It
 is compiled into a publication-ready PDF by the template's rendering
 infrastructure. This document describes each step, what it produces, and how to
 troubleshoot failures.
@@ -58,8 +58,8 @@ uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py
 uv run python scripts/pipeline/stage_03_render.py --project templates/template_eda_notebook
 ```
 
-**Inputs**: `manuscript/*.md` + `manuscript/config.yaml` + `manuscript/preamble.md`
-+ `manuscript/references.bib`.
+**Inputs**: `manuscript/*.md` + `docs/manuscript/config.yaml` + `docs/manuscript/preamble.md`
++ `docs/manuscript/references.bib`.
 
 **Infrastructure modules involved**:
 
@@ -67,7 +67,7 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_e
 |---|---|
 | `infrastructure/rendering/pdf_renderer.py` | Orchestrates Pandoc → XeLaTeX |
 | `infrastructure/rendering/manuscript_discovery.py` | Discovers and orders manuscript section files |
-| `infrastructure/core/config/loader.py` | Reads `manuscript/config.yaml` for title, authors, metadata |
+| `infrastructure/core/config/loader.py` | Reads `docs/manuscript/config.yaml` for title, authors, metadata |
 
 **Outputs**: a combined publication PDF, per-section Beamer slides, and HTML
 versions of each section, all under `output/`.
@@ -107,7 +107,7 @@ uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py
 
 ### BibTeX citation error / PDF fails to compile
 
-**Cause**: malformed entry in `manuscript/references.bib`. Check the LaTeX log
+**Cause**: malformed entry in `docs/manuscript/references.bib`. Check the LaTeX log
 under `output/pdf/` for the specific error.
 
 ### Slides not generated

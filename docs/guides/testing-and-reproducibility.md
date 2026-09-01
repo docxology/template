@@ -611,7 +611,7 @@ from pathlib import Path
 
 report = verify_output_integrity(
     Path("projects/templates/template_code_project/output"),
-    Path("projects/templates/template_code_project/manuscript"),
+    Path("projects/templates/template_code_project/docs/manuscript"),
 )
 if report.overall_integrity:
     print("All integrity checks passed")
@@ -619,6 +619,8 @@ else:
     for issue in report.issues:
         print(f"  Issue: {issue}")
 ```
+> Manuscript location is configurable but defaults to `docs/manuscript/` (`TEMPLATE_MANUSCRIPT_DIR` overrides checkout-wide; legacy `manuscript/` auto-detected).
+
 
 This check is necessary but does not prove source freshness, scientific
 correctness, claim support, semantic accessibility, or release authority. Run

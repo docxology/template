@@ -4,7 +4,7 @@ Use monorepo pipeline scripts from the repository root for normal test/render st
 
 ## Canonical Stage 02 analysis
 
-`manuscript/config.yaml` allowlists one normal analysis entrypoint:
+`docs/manuscript/config.yaml` allowlists one normal analysis entrypoint:
 
 ```bash
 uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_redacted_report

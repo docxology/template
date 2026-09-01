@@ -88,7 +88,7 @@ main()
 
 Scripts use hardcoded parameters for reproducibility:
 
-- **Step sizes**: `[0.01, 0.1, 0.5, 1.0, 1.5, 2.5]` (read from `manuscript/config.yaml` → `experiment.step_sizes`; the six configured values) for convergence comparison
+- **Step sizes**: `[0.01, 0.1, 0.5, 1.0, 1.5, 2.5]` (read from `docs/manuscript/config.yaml` → `experiment.step_sizes`; the six configured values) for convergence comparison
 - **Initial point**: `[0.0]` for 1D optimization
 - **Plot settings**: 300 DPI, tight bounding box
 - **Output directories**: `output/figures/`, `output/data/`

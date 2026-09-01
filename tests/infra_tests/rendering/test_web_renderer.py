@@ -150,8 +150,8 @@ class TestCombinedHtmlRendering:
         from infrastructure.rendering.web_renderer import WebRenderer
 
         # Create test markdown files
-        manuscript_dir = tmp_path / "manuscript"
-        manuscript_dir.mkdir()
+        manuscript_dir = tmp_path / "docs" / "manuscript"
+        manuscript_dir.mkdir(parents=True)
         md1 = manuscript_dir / "01_intro.md"
         md1.write_text("# Introduction\n\nThis is the introduction.")
 
@@ -199,8 +199,8 @@ class TestCombinedHtmlRendering:
         from infrastructure.rendering.core import RenderManager
 
         # Create test files
-        manuscript_dir = tmp_path / "manuscript"
-        manuscript_dir.mkdir()
+        manuscript_dir = tmp_path / "docs" / "manuscript"
+        manuscript_dir.mkdir(parents=True)
         md1 = manuscript_dir / "a.md"
         md1.write_text("# Section A\n\nContent A.")
 
@@ -224,8 +224,8 @@ class TestCombinedHtmlRendering:
         from infrastructure.rendering.config import RenderingConfig
         from infrastructure.rendering.web_renderer import WebRenderer
 
-        manuscript_dir = tmp_path / "manuscript"
-        manuscript_dir.mkdir()
+        manuscript_dir = tmp_path / "docs" / "manuscript"
+        manuscript_dir.mkdir(parents=True)
         md = manuscript_dir / "01_intro.md"
         md.write_text(
             "# Introduction\n\nPrior work matters [@jaynes2003probability; @shannon1948theory].\n",
@@ -273,8 +273,8 @@ def _make_renderer(tmp_path):
 
 
 def test_pandoc_metadata_args_enable_linked_references(tmp_path: Path) -> None:
-    manuscript_dir = tmp_path / "manuscript"
-    manuscript_dir.mkdir()
+    manuscript_dir = tmp_path / "docs" / "manuscript"
+    manuscript_dir.mkdir(parents=True)
     (manuscript_dir / "config.yaml").write_text(
         "paper:\n  title: Test\n  subtitle: Accessible summary\n"
         "authors:\n  - name: Ada Lovelace\nmetadata:\n  language: en-GB\n",
@@ -376,14 +376,14 @@ def test_figure_images_link_to_full_resolution_assets_idempotently(tmp_path: Pat
 def test_repository_link_rewrite_resolves_manuscript_paths_and_preserves_web_pages(tmp_path: Path) -> None:
     """Public web output maps source links without rewriting local pages."""
     repository_root = repository_root_for(Path(__file__))
-    source = repository_root / "projects/templates/template_code_project/manuscript/01_introduction.md"
+    source = repository_root / "projects/templates/template_code_project/docs/manuscript/01_introduction.md"
     web_dir = tmp_path / "web"
     web_dir.mkdir()
     (web_dir / "other.html").write_text("<html></html>", encoding="utf-8")
     html_file = web_dir / "manuscript__01_introduction.html"
     html_file.write_text(
-        '<a href="../../../../docs/_generated/COUNTS.md#coverage">Counts</a>'
-        '<a href="../../../../infrastructure/rendering/web_renderer.py?view=source">Renderer</a>'
+        '<a href="../../../../../docs/_generated/COUNTS.md#coverage">Counts</a>'
+        '<a href="../../../../../infrastructure/rendering/web_renderer.py?view=source">Renderer</a>'
         '<a href="01_introduction.md?view=source#intro">Source</a>'
         '<a href="other.html#part">Local page</a>'
         '<a data-href="01_introduction.md">Metadata</a>'
@@ -414,7 +414,7 @@ def test_repository_link_rewrite_resolves_manuscript_paths_and_preserves_web_pag
 def test_repository_link_rewrite_rejects_unsafe_uri_schemes(tmp_path: Path) -> None:
     """Renderer-owned anchors fail closed for executable URI schemes."""
     repository_root = repository_root_for(Path(__file__))
-    source = repository_root / "projects/templates/template_code_project/manuscript/01_introduction.md"
+    source = repository_root / "projects/templates/template_code_project/docs/manuscript/01_introduction.md"
     html_file = tmp_path / "page.html"
     html_file.write_text('<a href="javascript:alert(1)">unsafe</a>', encoding="utf-8")
 
@@ -450,8 +450,8 @@ def test_deployed_web_link_issues_reports_missing_local_renderer_links(tmp_path:
 
 
 def test_individual_render_embeds_publication_css_and_full_resolution_figure_link(tmp_path: Path) -> None:
-    manuscript_dir = tmp_path / "manuscript"
-    manuscript_dir.mkdir()
+    manuscript_dir = tmp_path / "docs" / "manuscript"
+    manuscript_dir.mkdir(parents=True)
     source = manuscript_dir / "03_results.md"
     source.write_text(
         "# Results\n\n![Dense figure](../figures/dense.png){#fig:dense width=100%}\n",
@@ -471,8 +471,8 @@ def test_individual_render_embeds_publication_css_and_full_resolution_figure_lin
 
 def test_individual_render_output_names_include_parent_context(tmp_path: Path) -> None:
     renderer = _make_renderer(tmp_path)
-    source_a = tmp_path / "manuscript" / "parts" / "alpha" / "00-overview.md"
-    source_b = tmp_path / "manuscript" / "parts" / "beta" / "00-overview.md"
+    source_a = tmp_path / "docs" / "manuscript" / "parts" / "alpha" / "00-overview.md"
+    source_b = tmp_path / "docs" / "manuscript" / "parts" / "beta" / "00-overview.md"
 
     assert renderer._output_file_for_source(source_a).name == "alpha__00-overview.html"
     assert renderer._output_file_for_source(source_b).name == "beta__00-overview.html"

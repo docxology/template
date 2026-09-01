@@ -30,7 +30,7 @@ instead. See `STANDALONE.md` for the fork checklist and template-integrity gates
 ## Publication and rendering
 
 This exemplar is an explicit public draft: its publication status and repository
-identity come from `manuscript/config.yaml`, while the committed offline replay
+identity come from `docs/manuscript/config.yaml`, while the committed offline replay
 and claim ledger provide the reproducible evidence boundary. Run it in the
 [template monorepo](https://github.com/docxology/template) with:
 
@@ -71,7 +71,7 @@ project config and the generated publication records are refreshed.
 
 ## Quick Start
 
-1. **Configure your domain** in `manuscript/config.yaml`:
+1. **Configure your domain** in `docs/manuscript/config.yaml`:
    ```yaml
    project_config:
      search_phases:
@@ -111,7 +111,7 @@ template's own directory, while pipeline stages run from the repository root.
 
 ## Configuration
 
-The template is configured through `manuscript/config.yaml`:
+The template is configured through `docs/manuscript/config.yaml`:
 
 ### Search Phases
 Each phase defines:
@@ -246,7 +246,7 @@ _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 
 
 CC-BY-4.0, granted by this exemplar's own [`LICENSE`](LICENSE) and declared in
 [`CITATION.cff`](CITATION.cff) (`license:`), [`pyproject.toml`](pyproject.toml)
-(`[project] license`), and [`manuscript/config.yaml`](manuscript/config.yaml)
+(`[project] license`), and [`docs/manuscript/config.yaml`](docs/manuscript/config.yaml)
 (`metadata.license`), from which the `codemeta.json` and `.zenodo.json` sidecars
 are generated. The template monorepo's own root `LICENSE` is Apache-2.0 and does
 not govern this project's content.

@@ -13,7 +13,7 @@ the monorepo `docs/rules/memory_and_decision_records.md`.
 - `scripts/` — thin orchestrators only; business logic belongs in `src/`.
 - `tests/` — zero-mock suite; `test_verification.py` carries checksum/row-count
   mismatch negative controls; `test_registry.py` covers the registry contract.
-- `manuscript/` — `manuscript/AGENTS.md` is authoritative for token, figure,
+- `docs/manuscript/` — `docs/manuscript/AGENTS.md` is authoritative for token, figure,
   and bibliography rules in that tree.
 
 ## Conventions observed in this repo
