@@ -19,6 +19,7 @@ logger = get_logger(__name__)
 EXCLUDE_NAMES = {
     "preamble.md",
     "AGENTS.md",
+    "MANUSCRIPT_STATUS.md",
     "README.md",
     "SYNTAX.md",
     "config.yaml",
