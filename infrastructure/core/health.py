@@ -164,22 +164,27 @@ def gate_spec_sha256(specs: Sequence[tuple[str, Sequence[str]]]) -> str:
 def _repository_state(repo_root: Path) -> tuple[str | None, bool | None]:
     """Return current commit and cleanliness, or unknown outside a Git checkout."""
 
-    commit = subprocess.run(  # noqa: S603 - fixed git executable and argv.
-        ["git", "rev-parse", "HEAD"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
-    status = subprocess.run(  # noqa: S603 - fixed git executable and argv.
-        ["git", "status", "--porcelain", "--untracked-files=normal"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
+    try:
+        commit = subprocess.run(  # noqa: S603 - fixed git executable and argv.
+            ["git", "rev-parse", "HEAD"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        status = subprocess.run(  # noqa: S603 - fixed git executable and argv.
+            ["git", "status", "--porcelain", "--untracked-files=normal"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except OSError:
+        # A missing or unexecutable git binary is the same contract as being
+        # outside a Git checkout: the repository state is simply unknown.
+        return None, None
     if commit.returncode != 0 or status.returncode != 0:
         return None, None
     return commit.stdout.strip(), not bool(status.stdout.strip())

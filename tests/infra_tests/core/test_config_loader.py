@@ -292,6 +292,26 @@ class TestFindConfigFile:
     def test_lookup_rejects_traversal_project_name(self, tmp_path):
         assert find_config_file(tmp_path, "../outside") is None
 
+    def test_infer_project_name_covers_published_and_other_parents(self):
+        """projects/published/ and projects/other/ configs infer their project."""
+        from pathlib import Path
+
+        from infrastructure.core.config.loader import _infer_project_name_from_path
+
+        for parent in ("published", "other"):
+            config = Path("repo") / "projects" / parent / "demo" / "manuscript" / "config.yaml"
+            assert _infer_project_name_from_path(config) == "demo", parent
+
+    def test_find_config_file_under_published_lifecycle_parent(self, tmp_path):
+        """A config under projects/published/<name>/ is found by bare name."""
+        config_file = tmp_path / "projects" / "published" / "demo" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        config_file.write_text("paper:\n  title: Demo\n", encoding="utf-8")
+
+        result = find_config_file(tmp_path, "demo")
+
+        assert result == config_file
+
 
 class TestIntegration:
     """Integration tests for config loading workflow."""

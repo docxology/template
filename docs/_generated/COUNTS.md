@@ -121,7 +121,7 @@ Result: **608** project-scope infrastructure tests collected and **823** publish
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_active_inference` | 899 | 91.89 % |
+| `template_active_inference` | 899 | 91.87 % |
 | `template_advanced_literature_review` | 93 | 91.96 % |
 | `template_autopoiesis` | 528 | 97.03 % |
 | `template_autoresearch_project` | 377 | 96.33 % |
@@ -144,7 +144,7 @@ Result: **608** project-scope infrastructure tests collected and **823** publish
 | `template_sia` | 77 | 94.39 % |
 | `template_storybook` | 25 | 93.91 % |
 | `template_template` | 147 | 97.53 % |
-| `template_textbook` | 247 | 96.08 % |
+| `template_textbook` | 247 | 96.36 % |
 
 Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs; coverage values come from `uv run python scripts/docgen/counts.py --verify-coverage`, which invokes each project's own `uv` environment with the shared `release` marker profile and a bounded subprocess. After changing an inventoried project coverage input—including source, tests, scripts, configuration, data, manuscript content, or dependency locks—rerun the coverage verifier and then explicitly refresh provenance with `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails when coverage-input hashes no longer match. Generated output plus runtime, build, cache, and environment artifacts are excluded from that versioned inventory. `template_active_inference` pins its own `.venv`/toolchain, so its release-profile coverage is re-derived in that environment, not from the repo-root interpreter. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 

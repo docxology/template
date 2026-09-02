@@ -61,6 +61,32 @@ _HOOK_KEYS = frozenset(
 )
 
 
+def _definition_from_entry(entry: Any, index: int, source: Path) -> "StageDefinition":
+    """Parse one stage entry, failing closed with the source location.
+
+    Shared by ``PipelineDAG.from_yaml`` and ``PipelineDAG.from_dict`` so both
+    construction paths validate identically.
+    """
+    if not isinstance(entry, dict):
+        raise ValueError(f"Each pipeline stage entry must be a mapping (stage #{index} in {source})")
+    name = entry.get("name")
+    if not isinstance(name, str) or not name.strip():
+        raise ValueError(f"Pipeline stage #{index} in {source} is missing a non-empty 'name'")
+    return StageDefinition(
+        name=name,
+        key=entry.get("key"),
+        script=entry.get("script"),
+        method=entry.get("method"),
+        args=entry.get("args", []),
+        allow_skip=entry.get("allow_skip", False),
+        depends_on=entry.get("depends_on", []),
+        tags=entry.get("tags", []),
+        failure_mode=entry.get("failure_mode"),
+        contract=_parse_contract(entry.get("contract"), name),
+        hooks=_parse_hooks(entry.get("hooks"), name),
+    )
+
+
 @dataclass
 class StageDefinition:
     """A single stage parsed from ``pipeline.yaml``.
@@ -117,47 +143,24 @@ class PipelineDAG:
             raise ValueError(f"pipeline.yaml must have a top-level 'stages' list: {yaml_path}")
 
         definitions: list[StageDefinition] = []
-        for entry in raw["stages"]:
-            if not isinstance(entry, dict):
-                raise ValueError("Each pipeline stage entry must be a mapping")
-            definitions.append(
-                StageDefinition(
-                    name=entry["name"],
-                    key=entry.get("key"),
-                    script=entry.get("script"),
-                    method=entry.get("method"),
-                    args=entry.get("args", []),
-                    allow_skip=entry.get("allow_skip", False),
-                    depends_on=entry.get("depends_on", []),
-                    tags=entry.get("tags", []),
-                    failure_mode=entry.get("failure_mode"),
-                    contract=_parse_contract(entry.get("contract"), entry["name"]),
-                    hooks=_parse_hooks(entry.get("hooks"), entry["name"]),
-                )
-            )
+        for index, entry in enumerate(raw["stages"], start=1):
+            definitions.append(_definition_from_entry(entry, index, yaml_path))
         logger.debug(f"Parsed {len(definitions)} stage definition(s) from {yaml_path.name}")
         return cls(definitions, opt_in_tags=opt_in_tags_from_mapping(raw))
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "PipelineDAG":
-        """Construct from an in-memory dict (useful for tests)."""
+        """Construct from an in-memory dict (useful for tests).
+
+        Applies the same fail-closed validation as :meth:`from_yaml` so a
+        malformed in-memory definition raises instead of silently yielding
+        an empty or partially-parsed DAG.
+        """
+        if not isinstance(data, dict) or "stages" not in data:
+            raise ValueError("pipeline definition must have a top-level 'stages' list")
         definitions: list[StageDefinition] = []
-        for entry in data.get("stages", []):
-            definitions.append(
-                StageDefinition(
-                    name=entry["name"],
-                    key=entry.get("key"),
-                    script=entry.get("script"),
-                    method=entry.get("method"),
-                    args=entry.get("args", []),
-                    allow_skip=entry.get("allow_skip", False),
-                    depends_on=entry.get("depends_on", []),
-                    tags=entry.get("tags", []),
-                    failure_mode=entry.get("failure_mode"),
-                    contract=_parse_contract(entry.get("contract"), entry["name"]),
-                    hooks=_parse_hooks(entry.get("hooks"), entry["name"]),
-                )
-            )
+        for index, entry in enumerate(data["stages"], start=1):
+            definitions.append(_definition_from_entry(entry, index, Path("<memory>")))
         return cls(definitions, opt_in_tags=opt_in_tags_from_mapping(data))
 
     # ── Filtering ────────────────────────────────────────────────────────

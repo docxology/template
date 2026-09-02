@@ -557,8 +557,6 @@ def test_active_coverage_workspace_has_exact_isolated_git_identity(tmp_path: Pat
 
 def _repo_root_anchor(spec) -> str:
     """Map a disposable-tree support spec to its canonical repo-root path."""
-    if spec.relative_path.as_posix() == "manuscript/SYNTAX.md":
-        return "projects/templates/template_active_inference/manuscript/SYNTAX.md"
     return spec.relative_path.as_posix()
 
 
@@ -590,7 +588,6 @@ def test_active_coverage_support_closure_exactly_matches_outward_documentation_l
         "docs/RUN_GUIDE.md",
         "docs/_generated/COUNTS.md",
         "docs/_generated/COUNTS.md",
-        "docs/guides/manuscript-semantics.md",
         "docs/guides/manuscript-semantics.md",
         "docs/guides/publishing-guide.md",
         "docs/guides/zenodo-doi-strategy.md",

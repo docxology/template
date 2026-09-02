@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-import re
 from pathlib import Path
 
 from infrastructure.core.pipeline.dag import PipelineDAG
-from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
+from infrastructure.core.pipeline.definition import (
+    PipelinePurpose,
+    PipelineSourceResolutionError,
+    resolve_pipeline_source,
+)
 from infrastructure.core.project_paths import validate_project_name
 from infrastructure.methods._project_boundary import (
     _external_lifecycle_git_boundary,
@@ -40,17 +43,6 @@ from infrastructure.methods.models import (
     MethodsProjectAudit,
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-
-_METHOD_SECTION_TOKENS = ("method", "methodology", "experimental_setup", "protocol")
-
-# A manuscript file is a method section if its *filename* carries a method token
-# (above) OR it contains a top-level Methods/Methodology/Protocol heading. The
-# heading fallback covers exemplars (e.g. template_template) whose Methods content
-# lives inside a differently-named section file such as `03a_architecture.md`.
-_METHOD_HEADING_RE = re.compile(
-    r"(?m)^#{1,3}[ \t]+(?:methods?|methodology|experimental[ _-]setup|protocol)\b",
-    re.IGNORECASE,
-)
 
 
 def build_methods_orchestration_plan(
@@ -316,17 +308,40 @@ def audit_methods_projects(
     artifact_mode: str = "rendered",
     projects_dir: str = "projects",
 ) -> MethodsAuditReport:
-    """Build and validate deterministic methods plans for many projects."""
+    """Build and validate deterministic methods plans for many projects.
+
+    One unbuildable project does not abort the roster: its failure is
+    captured as a ``METHODS.PLAN_BUILD_FAILED`` error issue so the report
+    still materializes the state of every remaining project.
+    """
     audited: list[MethodsProjectAudit] = []
     for project_name in projects:
-        plan = build_methods_orchestration_plan(
-            repo_root,
-            project_name,
-            projects_dir=projects_dir,
-            artifact_mode=artifact_mode,
-        )
+        try:
+            plan = build_methods_orchestration_plan(
+                repo_root,
+                project_name,
+                projects_dir=projects_dir,
+                artifact_mode=artifact_mode,
+            )
+        except (OSError, PipelineSourceResolutionError, ValueError) as exc:
+            audited.append(
+                MethodsProjectAudit(
+                    plan=None,
+                    issues=(
+                        _issue(
+                            "error",
+                            "METHODS.PLAN_BUILD_FAILED",
+                            f"could not build methods plan: {exc}",
+                            project_name,
+                            "Resolve the project's pipeline source and layout, then rerun the audit.",
+                        ),
+                    ),
+                    project_name=project_name,
+                )
+            )
+            continue
         issues = validate_methods_orchestration_plan(plan, repo_root=repo_root)
-        audited.append(MethodsProjectAudit(plan=plan, issues=issues))
+        audited.append(MethodsProjectAudit(plan=plan, issues=issues, project_name=plan.project_name))
     return MethodsAuditReport(projects=tuple(audited), artifact_mode=artifact_mode)
 
 

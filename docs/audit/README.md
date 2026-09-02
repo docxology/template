@@ -13,6 +13,7 @@ Generated filepath and reference audit output, produced by
 | [`PROJECT_STATE_REPORT_2026-08-28.md`](PROJECT_STATE_REPORT_2026-08-28.md) | 2026-08-28 point-in-time project-state session receipt |
 | [`_FLEET_REPORT_2026-08-30.md`](_FLEET_REPORT_2026-08-30.md) | 2026-08-30 agent-ergonomics fleet report (moved from repo root 2026-08-31; point-in-time snapshot) |
 | [`REVIEW_LOG_2026-08-31.md`](REVIEW_LOG_2026-08-31.md) | 2026-08-31 agent-ergonomics passes review log (moved from repo root 2026-08-31; point-in-time session log) |
+| [`REVIEW_LOG_2026-09-02.md`](REVIEW_LOG_2026-09-02.md) | 2026-09-02 infrastructure deep-pass review log (scout-verified findings, TDD fixes, coverage-provenance remediation launch) |
 
 ## Regenerating
 

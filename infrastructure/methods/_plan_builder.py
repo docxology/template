@@ -13,6 +13,10 @@ from infrastructure.methods._project_boundary import (
 from infrastructure.methods.models import MethodStage
 from infrastructure.project.discovery import resolve_project_root
 
+# A manuscript file is a method section if its *filename* carries a method token
+# (below) OR it contains a top-level Methods/Methodology/Protocol heading. The
+# heading fallback covers exemplars (e.g. template_template) whose Methods content
+# lives inside a differently-named section file such as `03a_architecture.md`.
 _METHOD_SECTION_TOKENS = ("method", "methodology", "experimental_setup", "protocol")
 _METHOD_HEADING_RE = re.compile(
     r"(?m)^#{1,3}[ \t]+(?:methods?|methodology|experimental[ _-]setup|protocol)\b",

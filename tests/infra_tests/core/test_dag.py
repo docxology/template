@@ -263,3 +263,32 @@ class TestPipelineDAGSorting:
         )
         sorted_ = dag.sorted_stages()
         assert [s.name for s in sorted_] == ["C", "A", "B"]
+
+
+def test_from_yaml_missing_stage_name_raises_valueerror_with_source(tmp_path):
+    """A stage entry without 'name' raises ValueError naming the source."""
+    yaml_file = tmp_path / "pipeline.yaml"
+    yaml_file.write_text(
+        "stages:\n  - script: scripts/run.py\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="pipeline.yaml"):
+        PipelineDAG.from_yaml(yaml_file)
+
+
+def test_from_dict_rejects_non_mapping_stage_entries():
+    """from_dict applies the same per-entry validation as from_yaml."""
+    with pytest.raises(ValueError, match="mapping"):
+        PipelineDAG.from_dict({"stages": ["not-a-mapping"]})
+
+
+def test_from_dict_rejects_missing_stage_name():
+    """from_dict fails closed on a stage entry without a name."""
+    with pytest.raises(ValueError, match="name"):
+        PipelineDAG.from_dict({"stages": [{"script": "scripts/run.py"}]})
+
+
+def test_from_dict_rejects_missing_stages_key():
+    """from_dict requires the top-level 'stages' key like from_yaml."""
+    with pytest.raises(ValueError, match="stages"):
+        PipelineDAG.from_dict({})

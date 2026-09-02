@@ -100,6 +100,97 @@ def test_all_public_source_audit_has_typed_aggregate(repo_root: Path) -> None:
     assert report.to_dict()["artifact_mode"] == "source"
 
 
+def test_audit_methods_projects_continues_past_unbuildable_projects(tmp_path: Path) -> None:
+    """One unbuildable project must not hide the audit state of the rest."""
+    from infrastructure.methods import audit_methods_projects
+
+    _write_minimal_repo(tmp_path)
+    write_doc(tmp_path / "scripts" / "runner" / "execute_pipeline.py", 'print("runner")\n')
+    good = tmp_path / "projects" / "template_test"
+    # A fully valid project-local pipeline and surfaces (same recipe as the
+    # external-lifecycle fixture) so template_test audits clean in source mode.
+    write_doc(good / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(good / "scripts" / "analyze.py", 'print("analysis")\n')
+    write_doc(
+        good / "methods_pipeline.yaml",
+        """
+stages:
+  - name: Project Analysis
+    key: analysis
+    script: projects/{project}/scripts/analyze.py
+    tags: [core]
+    contract:
+      input_artifacts: ["projects/{project}/src/"]
+      output_artifacts: ["projects/{project}/output/data/result.json"]
+      definition_of_done: "Analysis writes a result."
+      failure_code: "PROJECT_ANALYSIS_FAILED"
+      gate: "experiment_method_design"
+""",
+    )
+    broken = make_project(
+        tmp_path,
+        "template_broken",
+        program="templates",
+        with_manuscript=True,
+        with_scripts=True,
+    )
+    # A malformed project-local pipeline makes exactly this project's plan
+    # unbuildable (PipelineDAG.from_yaml raises before any plan exists).
+    write_doc(broken / "methods_pipeline.yaml", "not_pipeline: true\n")
+
+    report = audit_methods_projects(
+        tmp_path,
+        ["template_test", "templates/template_broken"],
+        artifact_mode="source",
+    )
+
+    assert [audit.project_name for audit in report.projects] == [
+        "template_test",
+        "templates/template_broken",
+    ]
+    valid, broken_audit = report.projects
+    assert valid.passed
+    assert not broken_audit.passed
+    assert any(issue.code == "METHODS.PLAN_BUILD_FAILED" for issue in broken_audit.issues)
+    payload = broken_audit.to_dict()
+    assert payload["plan"] is None
+    assert payload["passed"] is False
+
+
+def test_cli_all_public_markdown_survives_unbuildable_projects(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The markdown roster render skips plan-less audits instead of crashing."""
+    from infrastructure.methods.cli import main as methods_main
+
+    # A malformed project-local pipeline for every roster name makes each
+    # plan unbuildable (the packaged default pipeline always resolves, so
+    # an empty repo is not enough to fail a build).
+    for name in PUBLIC_PROJECT_NAMES:
+        # Roster names are qualified ("templates/<name>"); the on-disk dir is
+        # the bare name under the typed subfolder.
+        project_dir = tmp_path / "projects" / "templates" / name.split("/")[-1]
+        project_dir.mkdir(parents=True)
+        write_doc(project_dir / "methods_pipeline.yaml", "not_pipeline: true\n")
+    code = methods_main(
+        [
+            "plan",
+            "--all-public",
+            "--repo-root",
+            str(tmp_path),
+            "--artifact-mode",
+            "source",
+            "--format",
+            "markdown",
+        ]
+    )
+
+    assert code == 1
+    out = capsys.readouterr().out
+    assert out.count("METHODS.PLAN_BUILD_FAILED") == len(PUBLIC_PROJECT_NAMES)
+    assert f"Audited {len(PUBLIC_PROJECT_NAMES)} project(s)" in out
+
+
 def test_public_template_projects_have_methods_orchestration_plans(repo_root: Path) -> None:
     from infrastructure.methods import build_methods_orchestration_plan
 

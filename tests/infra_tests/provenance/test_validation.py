@@ -50,6 +50,9 @@ def test_self_loop_detected(tmp_path: Path) -> None:
     assert not report.is_valid
     codes = [f.code for f in report.errors]
     assert "PROV_SELF_LOOP" in codes
+    # One defect, one finding: the trivial cycle must not additionally be
+    # reported as PROV_CYCLE_DETECTED for the same self-referential edge.
+    assert "PROV_CYCLE_DETECTED" not in codes
 
 
 def test_cycle_detected(tmp_path: Path) -> None:

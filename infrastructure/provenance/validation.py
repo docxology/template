@@ -118,6 +118,10 @@ def validate_provenance_dag(store: Provenance) -> ProvenanceValidationReport:
         visited[node_id] = 1
         path.append(node_id)
         for neighbor in adjacency.get(node_id, []):
+            if neighbor == node_id:
+                # Trivial cycle already reported as PROV_SELF_LOOP above;
+                # do not double-report the same defect as a full cycle.
+                continue
             if visited.get(neighbor) == 1:
                 cycle_str = " -> ".join(path[path.index(neighbor) :] + [neighbor])
                 findings.append(
