@@ -3026,7 +3026,9 @@ def test_real_accessible_reveal_render_has_semantics_long_description_and_reader
     assert 'href="../figures/figure_exact_values.md#fig-values-trend"' in rendered
     assert 'class="table-scroll"' in rendered
     assert 'aria-label="Scrollable data table"' in rendered
-    assert rendered.count("<tr") == 7  # one header plus the six-row geometry-bounded excerpt
+    # The calibrated longtable debit leaves room for five complete body rows;
+    # Reveal consumes the same geometry-bounded AST as Beamer.
+    assert rendered.count("<tr") == 6  # one header plus the five-row excerpt
     assert not list(slides.glob(".*.pandoc*.json"))
 
 
@@ -4046,8 +4048,11 @@ def test_real_pandoc_grid_table_list_width_and_height_boundaries(tmp_path: Path)
     height_fail = manuscript / "list-height-fail.md"
     write_grid(width_pass, ["a" * 40])
     write_grid(width_fail, ["a" * 42])
-    write_grid(height_pass, [f"item-{index}" for index in range(6)])
-    write_grid(height_fail, [f"item-{index}" for index in range(8)])
+    # One header line, two longtable rule/strut lines, and five list lines
+    # exactly consume the eight-line 16:9 frame budget. A sixth list line is
+    # therefore the first fail-closed boundary at the 20-point body floor.
+    write_grid(height_pass, [f"item-{index}" for index in range(5)])
+    write_grid(height_fail, [f"item-{index}" for index in range(6)])
     renderer = SlidesRenderer(
         RenderingConfig(
             output_dir=str(tmp_path / "output"),
@@ -4071,7 +4076,7 @@ def test_real_pandoc_grid_table_list_width_and_height_boundaries(tmp_path: Path)
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table\]") as height_error:
         renderer.render_accessible_pair(height_fail, manuscript_dir=manuscript)
-    assert height_error.value.context["first_row_lines"] == 8
+    assert height_error.value.context["first_row_lines"] == 6
 
 
 @pytest.mark.slow
