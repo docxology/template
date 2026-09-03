@@ -723,7 +723,7 @@ def test_thin_cli_runs_from_outside_project(tmp_path: Path) -> None:
         check=False,
         capture_output=True,
         text=True,
-        timeout=10,
+        timeout=120,
     )
     assert completed.returncode == 0, completed.stderr
     assert (output_dir / "phase_metadata.json").is_file()

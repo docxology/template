@@ -55,7 +55,7 @@ the current public exemplars but does not replace either generated source of tru
 | [`templates/template_advanced_literature_review/`](templates/template_advanced_literature_review/) | Advanced multi-phase literature review with phase-aware filtering and offline replay | yes (`src/multi_phase/*`, `src/deep_research/*`) | fixture-backed | registry-backed | see canonical facts | see canonical facts |
 | [`templates/template_autopoiesis/`](templates/template_autopoiesis/) | Combinatoric grammar generating whole runnable child projects from a seed | yes (`src/grammar.py`, `src/expand.py`, `src/materialize.py`) | curated read-only, 5 live-verified | 4 embedded | see canonical facts | see canonical facts |
 | [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) | AutoResearch-centric (plan/evidence/claim/artifact/readiness loop) | yes (`src/loop.py`) | curated read-only (validated, never written) | 0 | see canonical facts | see canonical facts |
-| [`templates/template_autoscientists/`](templates/template_autoscientists/) | AutoScientists coordination-mechanism testbed (champion log + dead-end registry + effect-size ranking + confirmation + reorg) | yes (`src/coordination/*`) | curated read-only | see canonical facts | see canonical facts | see canonical facts |
+| [`templates/template_autoscientists/`](templates/template_autoscientists/) | AutoScientists coordination-mechanism testbed (champion log + dead-end registry + effect-size ranking + confirmation + reorg) | yes (`src/agents.py`, `src/comparison.py`) | curated read-only | see canonical facts | see canonical facts | see canonical facts |
 | [`templates/template_code_project/`](templates/template_code_project/) | Code-centric (numerical experiment + analysis) | yes (`src/optimizer.py`, `src/invariants.py`) | curated read-only | 6 figures | see canonical facts | see canonical facts |
 | [`templates/template_data_descriptor/`](templates/template_data_descriptor/) | Dataset descriptor/data-paper scaffold (schema, file inventory, provenance chain, data dictionary, quality checks, license boundary) | yes (`src/data_descriptor/*`) | curated read-only | n/a | see canonical facts | see canonical facts |
 | [`templates/template_eda_notebook/`](templates/template_eda_notebook/) | Exploratory data analysis notebook exemplar (notebook imports tested `src/eda/*`, no notebook-owned business logic) | yes (`src/eda/*`) | n/a | 2 figures | see canonical facts | see canonical facts |
@@ -65,7 +65,7 @@ the current public exemplars but does not replace either generated source of tru
 | [`templates/template_madlib/`](templates/template_madlib/) | Conditional token-injection manuscript generator (config-owned lexicon, QA probes, authoring contract, and IMRAD hydration) | yes (`src/tokens.py`, `src/composition.py`) | curated read-only | token-density figure | see canonical facts | see canonical facts |
 | [`templates/template_methods_paper/`](templates/template_methods_paper/) | Methods paper: controlled-method specification DSL (units/vocabulary/model/staged-validation/deterministic-compiler/export/trust), informed by BPL | yes (`src/methods_dsl/*`) | curated read-only | 1 (step-count figure) | see canonical facts | see canonical facts |
 | [`templates/template_newspaper/`](templates/template_newspaper/) | Newspaper layout engine (data-driven 12-page broadsheet from YAML via ReportLab) | no (orchestration over the ReportLab layout engine) | n/a | full-page layout | see canonical facts | see canonical facts |
-| [`templates/template_pitch_deck/`](templates/template_pitch_deck/) | Pitch deck / slide deck scaffold exemplar | yes (`src/pitch_deck/*`) | curated read-only | slide figures | see canonical facts | see canonical facts |
+| [`templates/template_pitch_deck/`](templates/template_pitch_deck/) | Pitch deck / slide deck scaffold exemplar | yes (`src/deck_tokens.py`, `src/render_orchestration.py`) | curated read-only | slide figures | see canonical facts | see canonical facts |
 | [`templates/template_prose_project/`](templates/template_prose_project/) | Prose-centric (editorial review) | no (orchestration over `infrastructure/prose`, `infrastructure/reference`) | curated read-only (validated, never written) | 0 (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
 | [`templates/template_redacted_report/`](templates/template_redacted_report/) | Formal redaction and release-review report (classification ceiling, source-control markings, authority, redaction ledger, mosaic-risk checks) | yes (`src/redacted_report/*`) | curated read-only | n/a | see canonical facts | see canonical facts |
 | [`templates/template_registered_report/`](templates/template_registered_report/) | Registered-report/preregistration workflow (hypotheses, outcomes, analysis plan, deviation ledger, confirmatory/exploratory boundary) | yes (`src/registered_report/*`) | curated read-only | n/a | see canonical facts | see canonical facts |
@@ -418,7 +418,7 @@ from .my_module import AnalysisResult              # ✅ Import from same projec
 
 # Infrastructure utilities (allowed)
 from infrastructure.core.logging.utils import get_logger  # ✅ Infrastructure access
-from infrastructure.figure_manager import FigureManager   # ✅ Infrastructure access
+from infrastructure.documentation.figure_manager import FigureManager  # ✅ Infrastructure access
 ```
 
 **Project Scripts (Thin Orchestrators):**
@@ -747,7 +747,7 @@ At minimum for a project under `projects/`:
 # projects/{name}/scripts/analysis_pipeline.py
 from src.my_module import MyAnalyzer     # ✅ Import business logic
 from src.utils import Utils              # ✅ Import algorithms
-from infrastructure.figure_manager import FigureManager  # ✅ Import utilities
+from infrastructure.documentation.figure_manager import FigureManager  # ✅ Import utilities
 
 def main():
     """Run analysis pipeline."""
@@ -772,7 +772,7 @@ def analyze_terms(texts):  # Should be in src/
     pass
 
 # ❌ WRONG: No infrastructure utilities
-import matplotlib.pyplot as plt  # Should use infrastructure.figure_manager
+import matplotlib.pyplot as plt  # Should use infrastructure.documentation.figure_manager
 plt.savefig("figure.png")
 ```
 

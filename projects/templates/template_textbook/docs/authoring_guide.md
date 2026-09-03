@@ -15,7 +15,7 @@ A fresh scaffold is already in place. To add a chapter or a whole part, edit
 [`manuscript/config.yaml`](../manuscript/config.yaml):
 
 ```yaml
-parts:
+units:
   - id: part_I
     title: "Fundamentals"
     label: "I"

@@ -418,3 +418,6 @@ run.config.yml
 # Root-anchored: must NOT catch projects/templates/template_pitch_deck's
 # .agents/skills/template-pitch-deck/ tracked skill dir.
 /template-pitch-deck/
+
+# Agent-ergonomics fleet scratch archive (round 2, 2026-08-31); owner-curated, local-only
+_agent_erg_archive_*/

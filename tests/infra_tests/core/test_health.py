@@ -327,3 +327,21 @@ class TestCLI:
         assert proc.returncode == 0
         for name in GATE_NAMES:
             assert name in proc.stdout, f"missing gate {name!r} in help"
+
+
+class TestRepositoryState:
+    """``_repository_state`` degrades to unknown when git is unavailable."""
+
+    def test_unresolvable_git_executable_returns_unknown_state(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        from infrastructure.core.health import _repository_state
+
+        # Real environmental fault, no mocks: a PATH with no git binary makes
+        # the actual subprocess call raise FileNotFoundError.
+        monkeypatch.setenv("PATH", str(tmp_path))
+
+        commit, clean = _repository_state(tmp_path)
+
+        assert commit is None
+        assert clean is None

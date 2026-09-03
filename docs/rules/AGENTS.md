@@ -72,7 +72,7 @@ The template provides **two pipeline orchestrators** with different scope:
 **Interactive Menu (`./run.sh`)**
 
 - **Use for**: Full pipeline with optional LLM stages
-- **Stages**: 1-9 (displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
+- **Stages**: default full run is 10 stages (displayed as [1/10] to [10/10]; clean included). `--core-only` runs 8 ([1/8] to [8/8]). Counts come from the generated STAGE_SUMMARY in the root AGENTS.md.
 - **Features**: Interactive menu, research templates, LLM reviews, translations
 - **When to use**: Full builds, LLM features needed
 

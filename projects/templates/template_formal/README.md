@@ -230,7 +230,7 @@ MYPYPATH=projects/templates/template_formal/src \
   projects/templates/template_formal/src
 ```
 
-Real expected output: `Success: no issues found in 27 source files`.
+Real expected output: `Success: no issues found in 28 source files`.
 
 **Zero mocks.** `grep -rn "MagicMock\|mocker.patch\|unittest.mock" projects/templates/template_formal/tests/`
 must return nothing — every test uses a real on-disk SQLite file (`tmp_path`),

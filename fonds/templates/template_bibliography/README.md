@@ -34,23 +34,17 @@ cp -r fonds/templates/template_bibliography fonds/my_bibliography
 
 ### Citing in a project
 
-In your project's `project.yaml`, add a `fonds_ref`:
-
-```yaml
-fonds_refs:
-  - fonds/my_bibliography
-```
-
-Then in LaTeX:
-
-```latex
-\bibliography{../../fonds/my_bibliography/data/references}
-```
-
-Or in Pandoc:
+Projects consume the fond directly from its path — there is no `project.yaml`
+front-matter mechanism. Reference the BibTeX file directly, e.g. in Pandoc:
 
 ```bash
 pandoc paper.md --bibliography ../../fonds/my_bibliography/data/references.bib -o paper.pdf
+```
+
+Or in LaTeX:
+
+```latex
+\bibliography{../../fonds/my_bibliography/data/references}
 ```
 
 ---

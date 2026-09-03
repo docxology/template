@@ -33,7 +33,9 @@ def test_refresh_notebook_binding_script_runs_from_project_root():
         check=False,
         capture_output=True,
         text=True,
-        timeout=30,
+        # 30s is too tight under heavy fleet/CI load: cold imports (pandas) plus
+        # the notebook digest walk can exceed it while the script itself is fine.
+        timeout=120,
     )
 
     assert result.returncode == 0, result.stderr

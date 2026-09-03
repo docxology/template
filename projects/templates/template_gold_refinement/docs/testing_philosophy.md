@@ -7,14 +7,19 @@ All tests use real data, real computation, and real files. No `MagicMock`,
 
 ## Test categories
 
-| Category | File | Coverage |
-|----------|------|----------|
-| Purity & karat | `test_purity.py` | 97% |
-| Refinery pipeline | `test_refinery.py` | 97% |
-| Config schema | `test_config.py` | 93% |
-| Token composition | `test_composition.py` | 97% |
-| Assay validation | `test_assay.py` | 100% |
-| Manuscript variables | `test_manuscript_variables.py` | 96% |
+The suite covers: purity/karat grading (`test_purity.py`), the refinery
+pipeline (`test_refinery.py`, `test_property_monotonicity.py`), config schema
+(`test_config.py`, `test_negative_controls.py`), token composition
+(`test_composition.py`), assay and evidence validation (`test_assay.py`,
+`test_evidence.py`), manuscript variables
+(`test_manuscript_variables.py`), figures and registries (`test_figures.py`,
+`test_figures_submodules.py`, `test_registry_integrity.py`), and the
+dashboard/policy/cover/security/boundary surfaces. The full file map with
+coverage areas lives in [`../tests/AGENTS.md`](../tests/AGENTS.md).
+
+Live test count and achieved coverage are generated — see
+[`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md); do not
+copy measured percentages into this file.
 
 ## Key invariants tested
 

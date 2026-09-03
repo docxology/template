@@ -202,12 +202,12 @@ flowchart TD
 | **logging/formatters.py** | Specialized logging formatters | `JSONFormatter`, `TemplateFormatter` |
 | **runtime/function_profiler.py** | Function-level profiling and memory snapshots | `CodeProfiler`, `monitor_performance()`, `profile_memory_usage()` |
 | **pytest_orchestration.py** | Test profiles, coverage-safe subprocess commands, and bounded worker policy | `resolve_xdist_args()`, `parse_project_workers()`, `validate_project_matrix_concurrency()` |
-| **pytest_profiles.py** | Typed quick/release test profiles and explicit marker selection | `TestProfile`, `resolve_test_profile()` |
+| **pytest_profiles.py** | Typed quick/release test profiles and explicit marker selection | `TestProfileSpec`, `resolve_test_profile()` |
 | **test_performance.py** | Owned serial/parallel test-lane evidence | `run_test_benchmark()`, `build_test_performance_manifest()` |
-| **test_runner_cache.py** | Cache identity for reproducible changed-surface test runs | `build_cache_identity()`, `cache_key()` |
+| **test_runner_cache.py** | Cache identity for reproducible changed-surface test runs | `_cache_identity_inputs()`, `_resolve_roster_revision()` |
 | **subprocess_policy.py** | Typed timeout/cwd/credential/process-group policy for intentional wrappers | `SubprocessPolicy`, `run_with_policy()`, `validate_policy_inventory()` |
 | **test_impact.py** | Changed-surface lane guidance with safe isolation rules | `classify_changed_paths()`, `TestImpactPlan` |
-| **public_matrix_receipt.py** | Versioned public test-matrix evidence with timing, collection, cache, and skip metadata | `PublicMatrixReceipt`, `write_public_matrix_receipt()` |
+| **public_matrix_receipt.py** | Versioned public test-matrix evidence with timing, collection, cache, and skip metadata | `PublicMatrixReceipt`, `build_public_matrix_receipt()`, `build_public_matrix_cache_key()` |
 | **config/cli.py** | Configuration command-line interface | `main()` |
 
 ### Module Dependencies

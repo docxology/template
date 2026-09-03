@@ -60,4 +60,4 @@ for the canonical statement of every current claim's scope.
 - [`../../tests/AGENTS.md`](../../tests/AGENTS.md) — how each subpackage is
   exercised (no-mocks policy, mypy-oracle harness, coverage gate).
 - [`../../ISA.md`](../../ISA.md) — the full 122-ISC build history this
-  package's docstrings cite by number (ISC-1..122).
+  package's docstrings cite by number (ISC-1..123).

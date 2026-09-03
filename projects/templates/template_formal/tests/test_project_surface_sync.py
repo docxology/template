@@ -72,7 +72,7 @@ def test_authoritative_mypy_command_is_synchronized_across_fork_surfaces() -> No
         surface = (PROJECT_ROOT / relative_path).read_text(encoding="utf-8")
         assert expected_prefix in surface, relative_path
     readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
-    assert "Success: no issues found in 27 source files" in readme
+    assert "Success: no issues found in 28 source files" in readme
 
 
 def test_documented_project_script_paths_resolve_on_disk() -> None:

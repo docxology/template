@@ -19,7 +19,7 @@ deviation ledger. See the repo [`README.md`](../README.md) and
 | `scripts/` | Thin orchestrators: `generate_figures.py`, `generate_review_artifacts.py` |
 | `tests/` | Zero-mock tests incl. the demonstration study and protocol checks |
 | `manuscript/` | `00_abstract.md` … `99_references.md`, config, references, `figures/` |
-| `data/` | Deterministic demonstration dataset |
+| `data/` | Preregistration fixture registration (`example_registration.json`), claim ledger, and fixture docs |
 | `output/` | Generated figures and review artifacts (never hand-edited) |
 
 ## How to run / test

@@ -14,7 +14,10 @@ visualization specs and quality reports; `manuscript_variables.py`
 generates all `{{TOKEN}}` values; `coercion.py` normalizes loosely-typed config
 values; `cover_visualization.py` renders the cover art; `dashboard.py` builds
 the self-contained HTML metrics dashboard; and `security_assay.py` models
-threat/standard/evidence-surface security-assay records.
+threat/standard/evidence-surface security-assay records; `analogy_boundary.py`
+guards the bounded analogy predicate; `transmission.py` validates the
+transmission bookends; and `parsing.py` supplies shared parsing and I/O
+helpers.
 
 ## Layer Contract
 
@@ -41,6 +44,9 @@ in `scripts/` (thin orchestrators).
 | `cover_visualization.py` | Renders the project's cover art from `figures/_common` specs and integrity/formalism data |
 | `dashboard.py` | Self-contained HTML dashboard: refinery metrics, purity progression, token distribution, evidence-registry status |
 | `security_assay.py` | `SecurityAssayRecord` — threat / standard / evidence-surface / validator / claim-boundary rows |
+| `analogy_boundary.py` | Bounded analogy-boundary predicate: executable mappings, measurable dimensions, explicit non-claims |
+| `transmission.py` | Transmission bookend validation (SHA-256 receipt for the begin/end manuscript pair) |
+| `parsing.py` | Shared parsing and I/O helpers |
 
 ## Key Design Rules
 

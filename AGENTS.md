@@ -18,6 +18,8 @@ This document provides documentation for the Research Project Template system, e
 | [`README.md`](README.md) | Onboarding, documentation hub links, exemplar table |
 | [`.cursorrules`](.cursorrules) | Cursor agents: layer rules, CI scope, editing discipline |
 | [`CLAUDE.md`](CLAUDE.md) | Command cheat sheet, patterns; keep in sync with this file for pipeline wording |
+| [`START_HERE.md`](START_HERE.md) | Agent entry point: install, first pipeline run, orientation ladder |
+| [`STATUS.md`](STATUS.md) | Per-subsystem verification ledger (last-verified dates, health) |
 | **This file (`AGENTS.md`)** | Full reference: stages, validation, modules, troubleshooting |
 | [`docs/documentation-index.md`](docs/documentation-index.md) | Flat index of long-lived docs |
 | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) | Authoritative public CI/documentation project names — never hard-code rotating private paths in docs |
@@ -385,7 +387,11 @@ flowchart TB
 
 The system supports configuration through a YAML file, providing a centralized, version-controllable way to manage all paper metadata.
 
-**Location**: `projects/{name}/manuscript/config.yaml`
+**Location**: `projects/{name}/manuscript/config.yaml` — resolved by
+`infrastructure.core.project_paths.resolve_source_manuscript_dir`, which also
+accepts a populated `docs/manuscript/` tree (conventional `manuscript/` with
+real sources wins when both exist). See the function's docstring for the exact
+precedence.
 **Template**: `projects/{name}/manuscript/config.yaml.example`
 
 **Example configuration**:
@@ -609,7 +615,7 @@ steganography:
 
 #### Entry Point Comparison
 
-- **`./run.sh`**: Main entry point — interactive menu or pipeline run. Bash progress: `[0/9]` clean, then `[1/9]`–`[9/9]` for nine tracked steps (labels from [`STAGE_NAMES`](infrastructure/orchestration/menu.py), kept in sync with [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)).
+- **`./run.sh`**: Main entry point — interactive menu or pipeline run. Progress banners are generic `[i/N]` lines emitted from the resolved DAG (see [`PipelineRunner._banner`](infrastructure/orchestration/pipeline_runner.py)): the default full run is **10** stages and `--core-only` is **8**, per the generated `STAGE_SUMMARY` below (kept in sync with [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)).
 - **`./run.sh --pipeline`**: Non-interactive full DAG; optional LLM stages may skip if Ollama is unavailable.
 - **`./run.sh --secure-run`**: Forwards to the `secure` orchestration subcommand (same Python CLI as bare `./run.sh`; use when you want argv shaping from the main shell).
 - **`./secure_run.sh`**: Ensures steganography extras (`uv sync --group steganography`), then `python -m infrastructure.orchestration secure`. **`--project`** is required when running the pipeline phase (omit only for `--steganography-only` across all projects). See [Secure Pipeline](#secure-pipeline-secure_runsh) above.
@@ -619,7 +625,7 @@ steganography:
 
 **Full Pipeline Stages** — counts come from the generated `STAGE_SUMMARY` at the end of this file. `run.sh` shows `[0/N]` for clean and `[1/N]`–`[N/N]` for the numbered default-run stages (labels from [`STAGE_NAMES`](infrastructure/orchestration/menu.py)). `--core-only` drops LLM-tagged and opt-in stages.
 
-- **[0/9] Clean Output Directories** - Clean working and final output directories (pre-step)
+- **[1/10] Clean Output Directories** - Clean working and final output directories (first default-run stage)
 1. **Environment Setup** - Verify system requirements and dependencies
 2. **Infrastructure Tests** - Run the focused `pipeline-smoke` infrastructure contract (may be skipped; full coverage gate is explicit)
 3. **Project Tests** - Run project test suite (90% coverage minimum)
@@ -633,7 +639,7 @@ steganography:
 **Opt-in long-horizon stages** (NOT in default core or `--core-only` runs — there is no `--tags` CLI flag; invoke the stage or runner script directly):
 
 - **Ebook Generation** (`scripts/pipeline/stage_11_ebook.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/pipeline/stage_11_ebook.py --project <name>`.
-- **docxplus Export** (`scripts/pipeline/stage_13_docxplus.py`, tag `docxplus`) — Generate the DOCX+ export. Soft-fail; invoke the stage script directly.
+- **docxplus Export** (`scripts/pipeline/stage_13_docxplus.py`, tag `docxplus`) — Export the project as a conforming `.docx`/`.docxplus` that carries its own source tree. Soft-fail: skips when the optional `docxplus` extra is not installed (`uv sync --extra docxplus`). Invoke: `uv run python scripts/pipeline/stage_13_docxplus.py --project <name>`.
 - **Metadata Package** (`scripts/pipeline/stage_12_metadata.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/pipeline/stage_12_metadata.py --project <name>`.
 - **Executable Bundle** (`scripts/runner/bundle_executable.py`, tag `bundle`) — Produce a container + lockfile + agent-runnable `manifest.json` for the project. Invoke the runner directly; it is not under `scripts/pipeline/`.
 - **Archival Publication** (`scripts/runner/archive_publication.py`, tag `archival`) — Mirror the executable bundle to archival targets. Defaults to dry-run; pass `--commit` only with owner authorization. Invoke the runner directly; it is not under `scripts/pipeline/`.
@@ -1008,17 +1014,13 @@ Scientific computing best practices and tools.
 
 - `stability.py` - Numerical stability checking
 - `benchmarking.py` - Performance benchmarking
-- `documentation.py` - API documentation generation
-- `validation.py` - Best practices validation
-- `templates.py` - Research workflow templates
+- `confirmation.py` - Improvement-confirmation statistics
 
 **Key Features:**
 
 - **Numerical Stability**: Algorithm stability testing
 - **Performance Benchmarking**: Execution time and memory analysis
-- **Scientific Documentation**: API documentation generation
-- **Best Practices Validation**: Code quality assessment
-- **Research Workflow Templates**: Reproducible experiment templates
+- **Confirmation**: `confirm_improvement` verifies that measured improvements are real
 
 **Usage:**
 
@@ -1092,11 +1094,12 @@ Automated publishing to academic platforms.
 
 **Module Structure:**
 
-- `core.py` - Publication metadata extraction, DOI validation, citation generation
+- `_metadata_extraction.py` - Publication metadata extraction (`extract_publication_metadata`) and DOI validation (`validate_doi`)
 - `api.py` - Platform API clients (Zenodo, arXiv, GitHub)
 - `citations.py` - Citation helpers (BibTeX CLI target plus APA/MLA library helpers)
 - `metadata.py` - Publication metadata management
 - `platforms.py` - Platform-specific integration logic
+- `zenodo/`, `arxiv/`, `github/`, `huggingface/`, `osf/`, `pypi/`, `archival/`, `static_site/` - Per-platform subpackages
 
 **Key Features:**
 

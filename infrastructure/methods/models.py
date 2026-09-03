@@ -109,19 +109,29 @@ class MethodsIssue:
 
 @dataclass(frozen=True)
 class MethodsProjectAudit:
-    """Methods audit result for one project."""
+    """Methods audit result for one project.
 
-    plan: MethodsOrchestrationPlan
+    ``plan`` is ``None`` when the project's plan could not be built at all
+    (for example a missing or malformed pipeline source); the build failure
+    is captured as a ``METHODS.PLAN_BUILD_FAILED`` error issue so an
+    aggregate audit still reports the state of every other project.
+    """
+
+    plan: MethodsOrchestrationPlan | None
     issues: tuple[MethodsIssue, ...]
+    project_name: str | None = None
 
     @property
     def passed(self) -> bool:
         """Return whether the project has no blocking issues."""
-        return not any(issue.severity == "error" for issue in self.issues)
+        return self.plan is not None and not any(issue.severity == "error" for issue in self.issues)
 
     def to_dict(self) -> dict[str, object]:
         """Serialize to a JSON-safe mapping."""
-        payload = self.plan.to_dict()
+        if self.plan is None:
+            payload: dict[str, object] = {"project_name": self.project_name, "plan": None}
+        else:
+            payload = self.plan.to_dict()
         payload["issues"] = [issue.to_dict() for issue in self.issues]
         payload["passed"] = self.passed
         return payload

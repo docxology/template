@@ -164,7 +164,7 @@ First words showing incorrect page order:
 
 ## Dependencies
 
-- `pypdf>=6.15.0`: PDF text extraction (replaces deprecated PyPDF2; current
+- `pypdf>=6.16.1`: PDF text extraction (replaces deprecated PyPDF2; current
   minimum also clears the blocking security advisories tracked by pip-audit)
 - `reportlab>=4.0`: PDF generation for tests
 

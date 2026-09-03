@@ -5,6 +5,13 @@ module checks the on-disk shape of every declared exemplar without importing
 project code, running project scripts, following private symlinks, or making
 network calls. The report is small enough to run before the isolated project
 matrix.
+
+This is the fast, minimal layer (4 markers + 2 directories + non-empty
+``src``/``tests``). The broader per-exemplar file contract — the 15-item
+canonical layout including ``manuscript/`` and the ``.agents/`` skill
+catalog — is enforced by
+:mod:`infrastructure.project.drift.checks_exemplar` (``check_required_files_exist``),
+run from the template-drift gate.
 """
 
 from __future__ import annotations

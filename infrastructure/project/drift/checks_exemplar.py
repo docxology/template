@@ -382,6 +382,19 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
         "manuscript/references.bib",
         "manuscript/preamble.md",
     ]
+    # Documented canonical surface (projects/templates/AGENTS.md): the
+    # per-exemplar agent skill catalog. Project may arrive qualified
+    # ("templates/template_x"); the skill folder is named for the bare,
+    # hyphenated project name (template_code_project -> template-code-project).
+    skill_name = project.split("/")[-1].replace("_", "-")
+    must_exist.extend(
+        [
+            ".agents/AGENTS.md",
+            f".agents/skills/{skill_name}/SKILL.md",
+            f".agents/skills/{skill_name}/AGENTS.md",
+            f".agents/skills/{skill_name}/README.md",
+        ]
+    )
     for rel in must_exist:
         if not (project_root / rel).exists():
             report.add(

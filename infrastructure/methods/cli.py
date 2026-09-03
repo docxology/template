@@ -67,7 +67,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
                 else:
                     for project in report.projects:
-                        print(render_methods_orchestration_markdown(project.plan), end="")
+                        if project.plan is not None:
+                            print(render_methods_orchestration_markdown(project.plan), end="")
                         _print_issues(project.issues)
                     print(
                         f"\nAudited {len(report.projects)} project(s): "

@@ -9,6 +9,61 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Infrastructure hardening (2026-09-02)
+
+- `infrastructure.methods`: `audit_methods_projects()` is now fail-per-project.
+  A project whose methods plan cannot be built (missing or malformed pipeline
+  source) is captured as a `METHODS.PLAN_BUILD_FAILED` error issue with
+  `plan: null` instead of aborting the whole `--all-public` roster, so one
+  broken exemplar no longer hides the audit state of the rest. The Markdown
+  CLI render skips plan-less audits instead of crashing.
+  (`MethodsProjectAudit.plan` is now `MethodsOrchestrationPlan | None` with an
+  explicit `project_name` field; single-project consumers are unaffected.)
+- `infrastructure.core.config`: `_infer_project_name_from_path()` now
+  recognizes every lifecycle parent its docstring documents — the
+  `published` and `other` candidates were silently missing, so per-project
+  schema-extension suppression (unknown-key warning filtering) never applied
+  to configs under `projects/published/<name>/` or `projects/other/<name>/`.
+- `infrastructure.core.pipeline.dag`: `from_yaml()` and `from_dict()` share
+  one `_definition_from_entry()` parser; a stage entry missing `name` now
+  raises the module's own `ValueError` naming the source file and entry index
+  instead of a bare `KeyError`, and `from_dict()` applies the same top-level
+  and per-entry validation as `from_yaml()` instead of silently accepting
+  malformed in-memory definitions.
+- `infrastructure.core.health`: `_repository_state()` degrades to the
+  documented unknown state (`None, None`) when the `git` executable cannot be
+  resolved (`FileNotFoundError`), matching the "unknown outside a Git
+  checkout" contract; previously it raised out of `run_health_checks()`.
+- `infrastructure.provenance`: a self-referential edge now produces exactly
+  one finding (`PROV_SELF_LOOP`); the cycle check no longer double-reports
+  the same trivial edge as `PROV_CYCLE_DETECTED`.
+- Exemplar drift contract: `check_required_files_exist()` now enforces the
+  documented `.agents/` skill catalog (`.agents/AGENTS.md` plus the
+  per-exemplar `<hyphenated-name>/{SKILL,AGENTS,README}.md` skill folder), so
+  deleting an exemplar's agent catalog fails the drift gate. All 24 public
+  exemplars already carry the catalog.
+- Documentation accuracy: corrected the stale "16-stage" pipeline claims to
+  17 (README.md key features, `docs/repurposing-architectures.md`, with the
+  scope corrected to "env setup through archival publication"), and updated
+  `scripts/pipeline/SKILL.md` (stages 00–13, trigger regex `stage_1[0-3]`)
+  with `docs/_generated/skills_index.md` and `.cursor/skill_manifest.json`
+  regenerated. `infrastructure.project.public_template_contract` now
+  cross-references the broader drift-gate file contract in its docstring.
+- Coverage measurement unblocked (regression from 2026-08-31): the
+  `_COVERAGE_COPY_SUPPORT_SPECS` entry for Active's `manuscript/SYNTAX.md`
+  (added in `437589bae`, repointed in `50b293dd4`) made
+  `--verify-coverage` fail for `template_active_inference` with
+  "coverage support destination already exists" — the spec's destination is
+  inside the project tree the workspace already copies, and the file is
+  already bound to the coverage provenance through the project-tree source
+  hash. The spec is removed; the closure-equality test's expected-target
+  list is corrected to the live outward-link closure (the
+  `docs/guides/manuscript-semantics.md` duplicate added on 2026-08-31 does
+  not exist in the live scan), and the dead `_repo_root_anchor` path-mapping
+  shim is retired. All three Active support-closure tests pass again; the
+  full 24-exemplar coverage re-measurement and provenance refresh for the
+  stale `docs/_generated/coverage_snapshot.json` could then run.
+
 ### Executable bundle (Stage 14)
 
 - Closed backlog row `EXECUTABLE-BUNDLE-MAJ-2` with the **self-contained

@@ -47,6 +47,11 @@ ensure_repo_root_on_path()
 uv run python scripts/audit/lint_docs.py
 uv run python scripts/audit/lint_docs.py --mermaid-only
 
+# Path-scoped lint (fast targeted check on slow volumes; full-repo lint can
+# exceed several minutes on external drives). Fail-closed on missing or
+# repo-escaping paths.
+uv run python scripts/audit/lint_docs.py --paths README.md START_HERE.md docs/ --links-only --json
+
 # Template drift
 uv run python scripts/audit/check_template_drift.py --strict
 

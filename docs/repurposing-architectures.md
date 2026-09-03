@@ -14,7 +14,7 @@ adoption boundary.
 
 | Architecture | Module | What it gives you | Adopt in isolation? |
 | --- | --- | --- | --- |
-| Declarative DAG pipeline | `infrastructure.core.pipeline` | A 16-stage pipeline from env setup through PDF rendering, validation, and publishing — configured via YAML, not code | Yes — `pipeline.yaml` + `infrastructure.core.pipeline` |
+| Declarative DAG pipeline | `infrastructure.core.pipeline` | A 17-stage pipeline from env setup through archival publication — configured via YAML, not code | Yes — `pipeline.yaml` + `infrastructure.core.pipeline` |
 | Two-layer separation | `infrastructure/` + `projects/` | Generic build tools (Layer 1) never depend on project code (Layer 2); projects import infrastructure, never the reverse | Yes — copy the directory contract |
 | Thin orchestrator pattern | `scripts/` + `infrastructure.orchestration` | Scripts coordinate; business logic lives in importable packages. Public-exemplar drift checks catch known violations; review still owns semantic placement | Yes — adopt the directory and test contract |
 | Multi-format rendering | `infrastructure.rendering` | Pandoc + XeLaTeX pipeline producing PDF, HTML, slides, DOCX, and EPUB from Markdown manuscripts | Yes — `infrastructure.rendering` + pandoc + texlive |

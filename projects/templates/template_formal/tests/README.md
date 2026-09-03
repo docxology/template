@@ -49,7 +49,7 @@ uv run pytest tests -q --cov=src/template_formal --cov-report=term-missing
 ```
 
 Current collection and coverage values are generated in the repository
-snapshot [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not
+snapshot [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md), not
 maintained as a second hand-authored number here.
 
 The lowest-covered modules are `storage/db.py` (88.04%, missing a few

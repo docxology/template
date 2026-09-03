@@ -2,7 +2,7 @@
 name: template-pipeline
 version: 1.1.0
 description: >
-  Numbered pipeline stage orchestrators (stages 00–12) for the template
+  Numbered pipeline stage orchestrators (stages 00–13) for the template
   research framework.  Each stage_NN_*.py is a thin orchestrator that wires
   the repo root onto sys.path and delegates to infrastructure/ modules.
 tags:
@@ -10,7 +10,7 @@ tags:
   - orchestration
   - stages
   - template
-trigger: "run a pipeline stage|stage_0[0-9]|stage_1[0-2]|connector_search|provenance_record|research_workflow"
+trigger: "run a pipeline stage|stage_0[0-9]|stage_1[0-3]|connector_search|provenance_record|research_workflow"
 ---
 
 # template-pipeline

@@ -72,6 +72,13 @@ def _scaffold_minimal_project(tmp_path: Path, name: str = "fake_project") -> Pat
     # grant. `test_required_files_exist_flags_missing_license` is the paired
     # positive control proving the detector still rejects its absence.
     (root / "LICENSE").write_text("MIT License\n\nCopyright (c) 2026 Test\n", encoding="utf-8")
+    # Documented canonical surface (projects/templates/AGENTS.md): the
+    # per-exemplar agent skill catalog.
+    skill_dir = root / ".agents" / "skills" / name.replace("_", "-")
+    skill_dir.mkdir(parents=True)
+    (root / ".agents" / "AGENTS.md").write_text("# Agent contract\n", encoding="utf-8")
+    for filename in ("SKILL.md", "AGENTS.md", "README.md"):
+        (skill_dir / filename).write_text(f"# {filename}\n", encoding="utf-8")
     write_doc(
         root / "README.md",
         """# Fake
@@ -246,6 +253,42 @@ def test_required_files_exist_flags_missing_config_example(drift_module, tmp_pat
         f.severity == "ERROR" and f.rule == "missing_canonical_file" and "manuscript/config.yaml.example" in f.message
         for f in rep.findings
     )
+
+
+def test_required_files_exist_flags_missing_agents_catalog(drift_module, tmp_path):
+    """Positive control: the documented .agents/ skill catalog is enforced."""
+    import shutil
+
+    root = _scaffold_minimal_project(tmp_path)
+    shutil.rmtree(root / ".agents")
+    rep = drift_module.Report()
+    drift_module.check_required_files_exist(root, rep, "fake_project")
+    assert any(
+        f.severity == "ERROR" and f.rule == "missing_canonical_file" and ".agents/AGENTS.md" in f.message
+        for f in rep.findings
+    )
+
+
+def test_required_files_exist_flags_missing_skill_definition(drift_module, tmp_path):
+    """The per-exemplar skill SKILL.md is part of the canonical surface."""
+    root = _scaffold_minimal_project(tmp_path)
+    (root / ".agents" / "skills" / "fake-project" / "SKILL.md").unlink()
+    rep = drift_module.Report()
+    drift_module.check_required_files_exist(root, rep, "fake_project")
+    assert any(
+        f.severity == "ERROR"
+        and f.rule == "missing_canonical_file"
+        and ".agents/skills/fake-project/SKILL.md" in f.message
+        for f in rep.findings
+    )
+
+
+def test_required_files_exist_skill_name_uses_bare_qualified_project(drift_module, tmp_path):
+    """A qualified roster name ("templates/<name>") maps to the same skill folder."""
+    root = _scaffold_minimal_project(tmp_path)
+    rep = drift_module.Report()
+    drift_module.check_required_files_exist(root, rep, "templates/fake_project")
+    assert rep.findings == []
 
 
 def test_required_files_exist_allows_fit_for_purpose_docs(drift_module, tmp_path):

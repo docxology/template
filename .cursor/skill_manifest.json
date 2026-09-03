@@ -1072,7 +1072,7 @@
     },
     {
       "name": "template-pipeline",
-      "description": "Numbered pipeline stage orchestrators (stages 00–12) for the template research framework.  Each stage_NN_*.py is a thin orchestrator that wires the repo root onto sys.path and delegates to infrastructure/ modules.\n",
+      "description": "Numbered pipeline stage orchestrators (stages 00–13) for the template research framework.  Each stage_NN_*.py is a thin orchestrator that wires the repo root onto sys.path and delegates to infrastructure/ modules.\n",
       "path": "scripts/pipeline/SKILL.md",
       "cursor_at": "scripts/pipeline/SKILL.md"
     },

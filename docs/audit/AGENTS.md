@@ -17,6 +17,28 @@ Currently tracked:
 
 Treat every checked-in `.md` report as a snapshot, not a hand-authored guide.
 
+## 2026-08-31 fleet archival note
+
+The four root-level `AUDIT_2026-08-30*.md` lane reports were moved here from the
+repo root on 2026-08-31 (agent-ergonomics fleet pass) — they are untracked
+working-tree snapshots, not yet in git history, and root Markdown is reserved
+for long-lived documentation. They are point-in-time audit lanes for
+2026-08-30 only; no entry doc links to them as current guidance.
+
+On 2026-08-31 (agent-ergonomics round 2), the tracked root-level
+`_FLEET_REPORT_2026-08-30.md` (git-guards diagnostics lane) was relocated here
+via `git mv` — root Markdown stays reserved for long-lived entry documentation.
+The dated `REVIEW_LOG_2026-08-31.md` remains at root as the tracked append-only
+review log (referenced by TO-DO.md rows).
+
+The two root-level dated session logs `_FLEET_REPORT_2026-08-30.md` and
+`REVIEW_LOG_2026-08-31.md` were moved here from the repo root on 2026-08-31
+(agent-ergonomics round-2 pass), per the same policy: root Markdown is
+reserved for long-lived documentation, and dated lane reports are snapshots.
+`TO-DO.md` row `ERG-ENTRY-DOCS-2026-08-31` references
+[`REVIEW_LOG_2026-08-31.md`](REVIEW_LOG_2026-08-31.md) at its new path.
+
+
 ## Working here
 
 - **Never hand-edit `filepath-audit-report.md`.** Regenerate it with

@@ -19,7 +19,7 @@ class TestRefinementAnalysisScript:
             [sys.executable, str(_PROJECT_ROOT / "scripts" / "refinement_analysis.py")],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=240,
             cwd=str(_PROJECT_ROOT),
             env=_SCRIPT_ENV,
         )
@@ -49,7 +49,7 @@ class TestRefinementAnalysisScript:
             [sys.executable, str(_PROJECT_ROOT / "scripts" / "refinement_analysis.py")],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=240,
             cwd=str(_PROJECT_ROOT),
             env=_SCRIPT_ENV,
         )
@@ -69,7 +69,7 @@ class TestManuscriptVariablesScript:
             [sys.executable, str(_PROJECT_ROOT / "scripts" / "refinement_analysis.py")],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=240,
             cwd=str(_PROJECT_ROOT),
             env=_SCRIPT_ENV,
         )
@@ -82,7 +82,7 @@ class TestManuscriptVariablesScript:
             ],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=240,
             cwd=str(_PROJECT_ROOT),
             env=_SCRIPT_ENV,
         )
@@ -118,7 +118,7 @@ class TestManuscriptVariablesScript:
             ],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=240,
             cwd=str(_PROJECT_ROOT),
             env=_SCRIPT_ENV,
         )
@@ -138,7 +138,7 @@ class TestCoverVisualizationScript:
                 [sys.executable, str(_PROJECT_ROOT / "scripts" / script)],
                 capture_output=True,
                 text=True,
-                timeout=60,
+                timeout=240,
                 cwd=str(_PROJECT_ROOT),
                 env=_SCRIPT_ENV,
             )

@@ -4,6 +4,12 @@ This index lists documentation files in the Research Project Template by categor
 
 **Project layout:** `projects/` is a **rotating** set of workspaces. The only path **guaranteed** for documentation examples is [`projects/templates/template_code_project/`](../projects/templates/template_code_project/). Authoritative current names: [`_generated/active_projects.md`](_generated/active_projects.md).
 
+## Repo status and navigation
+
+- **[START_HERE.md](../START_HERE.md)** - Agent entry point: orientation ladder, install, first pipeline run
+- **[STATUS.md](../STATUS.md)** - Per-subsystem verification ledger (single source for current state)
+- **[TO-DO.md](../TO-DO.md)** - Authoritative backlog
+
 ## Quick start by persona
 
 ### New user / content creator
