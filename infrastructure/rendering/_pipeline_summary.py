@@ -20,6 +20,7 @@ from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.publishing.transmission_bookends import is_transmission_bookend
 from infrastructure.rendering._epub_package_validation import validate_epub_package
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
+from infrastructure.rendering._slides_accessibility import accessible_reveal_output_issues
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_log_quality import (
     collect_latex_log_findings,
@@ -155,7 +156,7 @@ def generate_rendering_summary(project_name: str = "project", *, repo_root: Path
 
     slides_dir = output_dir / "slides"
     if slides_dir.exists():
-        for slide in sorted(slides_dir.glob("*.pdf")):
+        for slide in sorted((*slides_dir.glob("*.pdf"), *slides_dir.glob("*.html"))):
             size_kb = slide.stat().st_size / 1024
             summary["slides"].append({"name": slide.name, "size_kb": size_kb})
 
@@ -292,8 +293,8 @@ def _expected_slide_outputs(project_root: Path) -> list[Path]:
     return expected
 
 
-def _verify_slide_outputs(project_root: Path) -> bool:
-    """Validate every Beamer PDF expected from the current manuscript inputs."""
+def _verify_slide_outputs(project_root: Path, *, slides_profile: str = "archive") -> bool:
+    """Validate current slide identities under the selected profile contract."""
 
     expected = _expected_slide_outputs(project_root)
     if not expected:
@@ -318,7 +319,17 @@ def _verify_slide_outputs(project_root: Path) -> bool:
         for path in invalid:
             logger.error("Slide output missing or structurally invalid: %s", path)
         return False
-    logger.info("✅ Slide outputs valid: %d expected deck(s)", len(expected))
+
+    if slides_profile == "accessible":
+        invalid_html = [
+            (path, accessible_reveal_output_issues(path)) for path in (pdf.with_suffix(".html") for pdf in expected)
+        ]
+        invalid_html = [(path, issues) for path, issues in invalid_html if issues]
+        if invalid_html:
+            for path, issues in invalid_html:
+                logger.error("Accessible Reveal output missing or invalid: %s (%s)", path, "; ".join(issues))
+            return False
+    logger.info("✅ Slide outputs valid: %d expected deck(s), profile=%s", len(expected), slides_profile)
     return True
 
 
@@ -490,7 +501,7 @@ def verify_render_outputs(project_name: str = "project", *, repo_root: Path | No
     if config.enable_html:
         checks.append(("HTML", _verify_combined_html(project_root)))
     if config.enable_slides:
-        slides_valid = _verify_slide_outputs(project_root)
+        slides_valid = _verify_slide_outputs(project_root, slides_profile=config.slides_profile)
         if not config.enable_pdf:
             slides_valid = slides_valid and _verify_latex_warning_policy(
                 project_root,

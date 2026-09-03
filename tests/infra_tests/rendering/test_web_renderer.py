@@ -4,6 +4,7 @@ Tests web/HTML rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
+import re
 from pathlib import Path
 
 import pytest
@@ -100,6 +101,66 @@ class TestMathJaxIntegration:
         assert content.index(_MATHJAX_FONT_URL) < content.index(_MATHJAX_URL)
         assert "aria-roledescription" in content
         assert "mathematical expression" in content
+        assert 'displayOverflow: "linebreak"' in content
+        assert 'width: "100%"' in content
+        assert "lineleading: 0.5" in content
+
+    def test_harden_mathjax_script_overwrites_wrong_sri_and_removes_duplicate_loader(self, tmp_path):
+        html = tmp_path / "math.html"
+        html.write_text(
+            "<html><head>"
+            f'<script src="{_MATHJAX_URL}" integrity="sha384-AAAA" crossorigin="use-credentials"></script>'
+            f'<script defer src="{_MATHJAX_URL}?bypass=1">ignored</script>'
+            "</head><body></body></html>",
+            encoding="utf-8",
+        )
+
+        WebRenderer._harden_mathjax_script(html)
+
+        content = html.read_text(encoding="utf-8")
+        assert content.count(_MATHJAX_URL) == 1
+        assert content.count(f'integrity="{_MATHJAX_INTEGRITY}"') == 1
+        assert content.count('crossorigin="anonymous"') == 1
+        assert "sha384-AAAA" not in content
+        assert "use-credentials" not in content
+
+    def test_harden_mathjax_script_replaces_untrusted_config_before_loader(self, tmp_path):
+        html = tmp_path / "math.html"
+        html.write_text(
+            "<html><head>"
+            f'<script src="{_MATHJAX_URL}"></script>'
+            "<script data-template-mathjax-config></script>"
+            "</head><body></body></html>",
+            encoding="utf-8",
+        )
+
+        WebRenderer._harden_mathjax_script(html)
+
+        content = html.read_text(encoding="utf-8")
+        assert content.count("data-template-mathjax-config") == 1
+        assert "window.MathJax.chtml" in content
+        assert content.index("data-template-mathjax-config") < content.index(_MATHJAX_URL)
+
+    def test_harden_mathjax_script_removes_line_owned_attributes_without_whitespace_residue(self, tmp_path):
+        """Canonicalization removes a Pandoc-formatted source line cleanly."""
+        html = tmp_path / "math.html"
+        html.write_text(
+            "<html><head>\n"
+            '<script defer=""\n'
+            "  \n"
+            f'  type="text/javascript" nonce="alpha beta" src="{_MATHJAX_URL}"\n'
+            f'  integrity="{_MATHJAX_INTEGRITY}" crossorigin="anonymous"></script>\n'
+            "</head><body></body></html>\n",
+            encoding="utf-8",
+        )
+
+        WebRenderer._harden_mathjax_script(html)
+        WebRenderer._harden_mathjax_script(html)
+
+        content = html.read_text(encoding="utf-8")
+        assert re.search(r"(?m)^[ \t]+$", content) is None
+        assert '<script defer=""\n  type="text/javascript" nonce="alpha beta"' in content
+        assert content.count(f'src="{_MATHJAX_URL}"') == 1
 
 
 class TestCssIntegration:
@@ -369,8 +430,100 @@ def test_figure_images_link_to_full_resolution_assets_idempotently(tmp_path: Pat
     assert 'href="../figures/dense.png"' in content
     assert 'target="_blank"' in content
     assert 'rel="noopener"' in content
-    assert 'aria-label="Open full-size figure"' in content
+    assert 'aria-label="Open full-size figure, Dense figure."' in content
     assert 'class="figure-full-size-label"' in content
+
+
+def test_numbered_figure_full_size_link_has_contextual_accessible_name(
+    tmp_path: Path,
+) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure id="fig:dense"><img src="../figures/dense.png" '
+        'alt="Dense scientific figure"><figcaption>Figure 7: Evidence map \\(F(q)\\).</figcaption>'
+        "</figure></body></html>",
+        encoding="utf-8",
+    )
+
+    WebRenderer._add_full_resolution_figure_links(html_file)
+
+    content = html_file.read_text(encoding="utf-8")
+    assert 'aria-label="Open full-size Figure 7, Evidence map F(q)."' in content
+    assert 'aria-label="Open full-size figure"' not in content
+
+
+def test_full_size_link_uses_concise_caption_result_not_caption_metadata(
+    tmp_path: Path,
+) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure id="fig:evidence"><img src="../figures/evidence.png" '
+        'alt="Evidence map"><figcaption>Figure 12: Evidence classes remain in separate lanes. '
+        "Source relation: source-owned explanatory map; uncertainty: none.</figcaption>"
+        "</figure></body></html>",
+        encoding="utf-8",
+    )
+
+    WebRenderer._add_full_resolution_figure_links(html_file)
+
+    content = html_file.read_text(encoding="utf-8")
+    assert 'aria-label="Open full-size Figure 12, Evidence classes remain in separate lanes."' in content
+    assert "Source relation" in content
+    assert 'aria-label="Open full-size Figure 12, Evidence classes remain in separate lanes. Source' not in content
+
+
+def test_full_size_link_shortens_a_long_result_at_a_semantic_boundary(
+    tmp_path: Path,
+) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure><img src="evidence.png" alt="Evidence map">'
+        "<figcaption>Figure 6: Evidence class and replication remain claim-lane specific; "
+        "guarantees do not migrate between client and server lanes.</figcaption></figure></body></html>",
+        encoding="utf-8",
+    )
+
+    WebRenderer._add_full_resolution_figure_links(html_file)
+
+    content = html_file.read_text(encoding="utf-8")
+    assert 'aria-label="Open full-size Figure 6, Evidence class and replication remain claim-lane specific"' in content
+    assert "guarantees do not migrate" in content
+    assert (
+        'aria-label="Open full-size Figure 6, Evidence class and replication remain claim-lane specific;' not in content
+    )
+
+
+def test_full_size_figure_link_rejects_missing_context(tmp_path: Path) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure><img src="../figures/dense.png" alt=""></figure></body></html>',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RenderingError, match="contextual full-size link"):
+        WebRenderer._add_full_resolution_figure_links(html_file)
+
+
+def test_accessibility_wraps_wide_tables_without_body_scroll_idempotently(
+    tmp_path: Path,
+) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        "<html><body><table><caption>Exact seed-level values</caption>"
+        "<thead><tr><th>Seed</th></tr></thead><tbody><tr><td>1</td></tr></tbody>"
+        "</table></body></html>",
+        encoding="utf-8",
+    )
+
+    WebRenderer._enhance_accessibility(html_file)
+    WebRenderer._enhance_accessibility(html_file)
+
+    content = html_file.read_text(encoding="utf-8")
+    assert content.count('class="table-scroll"') == 1
+    assert 'role="region"' in content
+    assert 'tabindex="0"' in content
+    assert 'aria-label="Scrollable table: Exact seed-level values"' in content
+    assert content.count('data-responsive-table="true"') == 1
 
 
 def test_repository_link_rewrite_resolves_manuscript_paths_and_preserves_web_pages(tmp_path: Path) -> None:
@@ -411,6 +564,32 @@ def test_repository_link_rewrite_resolves_manuscript_paths_and_preserves_web_pag
     assert 'href="#local"' in content
 
 
+def test_repository_link_rewrite_preserves_safe_renderer_figure_assets(
+    tmp_path: Path,
+) -> None:
+    repository_root = repository_root_for(Path(__file__))
+    source = repository_root / "projects/templates/template_code_project/manuscript/01_introduction.md"
+    output = tmp_path / "output"
+    web_dir = output / "web"
+    figures_dir = output / "figures"
+    web_dir.mkdir(parents=True)
+    figures_dir.mkdir()
+    (figures_dir / "figure_exact_values.md").write_text("# Exact values\n", encoding="utf-8")
+    html_file = web_dir / "index.html"
+    html_file.write_text(
+        '<a href="../figures/figure_exact_values.md#fig-values-dense">Exact values</a>',
+        encoding="utf-8",
+    )
+
+    rewrite_repository_links(
+        html_file,
+        repository_root=repository_root,
+        rendered_sources={source: html_file.name},
+    )
+
+    assert 'href="../figures/figure_exact_values.md#fig-values-dense"' in html_file.read_text(encoding="utf-8")
+
+
 def test_repository_link_rewrite_rejects_unsafe_uri_schemes(tmp_path: Path) -> None:
     """Renderer-owned anchors fail closed for executable URI schemes."""
     repository_root = repository_root_for(Path(__file__))
@@ -447,6 +626,23 @@ def test_deployed_web_link_issues_reports_missing_local_renderer_links(tmp_path:
     assert len(issues) == 2
     assert any("missing.html" in issue for issue in issues)
     assert any("outside.html" in issue for issue in issues)
+
+
+def test_deployed_web_link_issues_accepts_safe_sibling_figure_assets(tmp_path: Path) -> None:
+    output = tmp_path / "output"
+    web_dir = output / "web"
+    figures_dir = output / "figures"
+    web_dir.mkdir(parents=True)
+    figures_dir.mkdir()
+    (figures_dir / "dense.png").write_bytes(b"image")
+    (figures_dir / "figure_exact_values.md").write_text("# Exact values\n", encoding="utf-8")
+    (web_dir / "index.html").write_text(
+        '<a href="../figures/dense.png">Figure</a>'
+        '<a href="../figures/figure_exact_values.md#fig-values-dense">Exact values</a>',
+        encoding="utf-8",
+    )
+
+    assert deployed_web_link_issues(web_dir) == ()
 
 
 def test_individual_render_embeds_publication_css_and_full_resolution_figure_link(tmp_path: Path) -> None:
@@ -642,6 +838,14 @@ class TestEmbedCss:
         assert ".figure-full-size-link" in content
         assert "cursor: zoom-in" in content
         assert "width: min(1080px, calc(100vw - 3rem))" in content
+        assert "overflow-x: clip" in content
+        assert ".table-scroll" in content
+        assert "overflow-x: auto" in content
+        assert "white-space: pre-wrap" in content
+        assert "pre > code.sourceCode > span" in content
+        assert "pre.sourceCode code span" in content
+        assert 'mjx-container[display="true"] { max-width: 100%; overflow: visible; }' in content
+        assert ".figure-exact-values" in content
 
 
 class TestTheoremBlocks:

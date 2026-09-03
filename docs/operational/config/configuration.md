@@ -229,6 +229,14 @@ tag tree, reading order, or PDF/UA conformance.
 | `ENABLE_SLIDES` | `1` | Per-format toggle — per-section Beamer PDFs. |
 | `ENABLE_DOCX` | `0` | Opt-in — combined Word document at `output/<project>/docx/`. |
 | `ENABLE_EPUB` | `0` | Opt-in — combined EPUB at `output/<project>/epub/`. |
+| `SLIDES_PROFILE` | `archive` | Slide composition profile: backwards-compatible `archive` or opt-in `accessible`. |
+| `SLIDES_MAX_PROSE_WORDS` | `80` | Accessible-profile prose ceiling; values above 80 are rejected. |
+| `SLIDES_MAX_TABLE_ROWS` | `8` | Accessible-profile displayed table-row ceiling; values above 8 are rejected. |
+| `SLIDES_MIN_FIGURE_AREA_PERCENT` | `70` | Minimum figure-led frame allocation; values below 70 are rejected. |
+| `SLIDES_TITLE_FONT_PT` | `28` | Native title font floor in points. |
+| `SLIDES_BODY_FONT_PT` | `20` | Native body font floor in points. |
+| `SLIDES_FIGURE_LABEL_FONT_PT` | `16` | Native figure-label/caption font floor in points. |
+| `SLIDES_READER_HREF` | `../web/index.html` | Relative or HTTPS link to the canonical manuscript reader. |
 
 > **Precedence** (highest first): `ENABLE_<FORMAT>` env var → `render.formats.<format>` in `manuscript/config.yaml` → dataclass default. See [`../../usage/output-formats.md`](../../usage/output-formats.md) for the full reference.
 
@@ -250,6 +258,13 @@ render:
 Format values must be native YAML booleans (`true` or `false`), not quoted
 strings such as `"false"`; invalid values fail closed at the rendering
 configuration boundary.
+
+The sibling `render.slides` block selects the accessible presentation profile
+and its non-weakenable density/typography policy. See
+[`../../usage/output-formats.md`](../../usage/output-formats.md#accessible-presentation-profile)
+for the complete YAML example, semantic splitting behavior, and the distinct
+Reveal.js/Beamer accessibility boundaries. Explicit `SLIDES_*` environment
+values take precedence over the corresponding YAML field.
 
 The block is validated by `infrastructure/core/config/schema.py` (strict
 `additionalProperties: false` on the inner mapping). When a format is

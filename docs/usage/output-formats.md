@@ -89,11 +89,62 @@ than being treated as absent.
 
 - One Beamer PDF per manuscript section (`<section>_slides.pdf`). Generated
   from the same source markdown via the `slides_renderer.py` module.
+- Reveal.js HTML (`<section>_slides.html`) is available through
+  `RenderManager.render_slides(..., output_format="revealjs")` or the rendering
+  CLI's `--format revealjs` option.
 - Beamer and Reveal.js decks resolve in-text citations against the shared
   top-level bibliography union. They suppress a repeated bibliography block;
   use the combined manuscript or dedicated references deck for the full list.
 - Use the `render:skip-beamer` HTML comment in a section to suppress its
   slide deck.
+
+#### Accessible presentation profile
+
+`archive` is the backwards-compatible default. Opt in to semantic accessible
+composition in `manuscript/config.yaml`:
+
+```yaml
+render:
+  slides:
+    profile: accessible
+    max_prose_words: 80
+    max_table_rows: 8
+    min_figure_area_percent: 70
+    title_font_pt: 28
+    body_font_pt: 20
+    figure_label_font_pt: 16
+    reader_href: ../web/index.html
+```
+
+The numeric settings are guardrails: word and table-row maxima may only become
+stricter, while figure-area and font floors may only increase. The renderer
+uses one Pandoc semantic tree for both presentation formats. It may split
+between paragraphs or other complete blocks, but never inside a list, equation,
+code block, table, or figure. Oversized indivisible content produces a precise
+`slides.density.*` failure instead of a smaller font. Tables display at most
+eight body rows and link to the complete manuscript table; figure frames
+allocate at least 70% of the usable slide area. An overfull accessible Beamer
+frame is removed and reported as `slides.density.beamer-overflow` rather than
+retained as a visually clipped PDF.
+
+Reveal.js is the accessibility-enhanced presentation surface: named slide
+regions, keyboard navigation, visible focus, high contrast, responsive tables,
+reduced-motion behavior, source-owned figure alternatives and long
+descriptions, and a persistent manuscript-reader link. Beamer uses the same
+frame plan and visible 28/20/16-point floors but remains an explicitly labelled
+untagged PDF derivative. These controls do not establish WCAG or PDF/UA
+conformance. Reveal core, theme, and plugin assets use one version-pinned CDN
+release, so the browser deck remains network-dependent and is not an offline or
+byte-pinned bundle. Its MathJax loader is a narrower exception: the renderer
+normalizes it to one exact URL and reviewed SRI digest. The linked manuscript
+HTML retains complete captions, tables, long descriptions, and exact-value
+fallbacks and remains the canonical reader.
+
+Every slide-policy field also has an environment override: `SLIDES_PROFILE`,
+`SLIDES_MAX_PROSE_WORDS`, `SLIDES_MAX_TABLE_ROWS`,
+`SLIDES_MIN_FIGURE_AREA_PERCENT`, `SLIDES_TITLE_FONT_PT`,
+`SLIDES_BODY_FONT_PT`, `SLIDES_FIGURE_LABEL_FONT_PT`, and
+`SLIDES_READER_HREF`. Explicit environment values take precedence over YAML.
 
 ### DOCX (`output/<qualified-project>/docx/`)
 

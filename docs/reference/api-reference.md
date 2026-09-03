@@ -3732,7 +3732,7 @@ Verify every ``[@key]`` citation resolves in the project's BibTeX file(s).
 *function — defined in `infrastructure.validation.output.validator`*
 
 ```python
-validate_copied_outputs(output_dir: Path, *, project_name: str | None=None, enabled_formats: Collection[str] | None=None, manuscript_dir: Path | None=None, inventory: StableOutputInventory | None=None) -> bool
+validate_copied_outputs(output_dir: Path, *, project_name: str | None=None, enabled_formats: Collection[str] | None=None, manuscript_dir: Path | None=None, inventory: StableOutputInventory | None=None, slides_profile: str='archive') -> bool
 ```
 
 Validate all project outputs were copied successfully.

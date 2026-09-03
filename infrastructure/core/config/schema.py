@@ -24,7 +24,7 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
 from dataclasses import dataclass
-from typing import Any, Mapping, TypedDict
+from typing import Any, Literal, Mapping, TypedDict
 
 
 class AuthorConfig(TypedDict, total=False):
@@ -142,10 +142,24 @@ class RenderFormatsConfig(TypedDict, total=False):
     epub: bool
 
 
+class RenderSlidesConfig(TypedDict, total=False):
+    """YAML schema for semantic presentation composition."""
+
+    profile: Literal["archive", "accessible"]
+    max_prose_words: int
+    max_table_rows: int
+    min_figure_area_percent: int
+    title_font_pt: int
+    body_font_pt: int
+    figure_label_font_pt: int
+    reader_href: str
+
+
 class RenderConfig(TypedDict, total=False):
     """YAML schema for the ``render:`` section of config.yaml."""
 
     formats: RenderFormatsConfig
+    slides: RenderSlidesConfig
 
 
 class AnalysisConfig(TypedDict, total=False):
@@ -263,6 +277,20 @@ def generate_manuscript_config_schema(
                         "slides": {"type": "boolean"},
                         "docx": {"type": "boolean"},
                         "epub": {"type": "boolean"},
+                    },
+                    "additionalProperties": False,
+                },
+                "slides": {
+                    "type": "object",
+                    "properties": {
+                        "profile": {"type": "string", "enum": ["archive", "accessible"]},
+                        "max_prose_words": {"type": "integer", "minimum": 1, "maximum": 80},
+                        "max_table_rows": {"type": "integer", "minimum": 1, "maximum": 8},
+                        "min_figure_area_percent": {"type": "integer", "minimum": 70, "maximum": 100},
+                        "title_font_pt": {"type": "integer", "minimum": 28, "maximum": 96},
+                        "body_font_pt": {"type": "integer", "minimum": 20, "maximum": 72},
+                        "figure_label_font_pt": {"type": "integer", "minimum": 16, "maximum": 48},
+                        "reader_href": {"type": "string", "minLength": 1},
                     },
                     "additionalProperties": False,
                 },
@@ -414,6 +442,7 @@ __all__ = [
     "PublicationConfig",
     "RenderConfig",
     "RenderFormatsConfig",
+    "RenderSlidesConfig",
     "ResolvedTestingConfig",
     "ReviewsConfig",
     "SteganographyConfigYAML",

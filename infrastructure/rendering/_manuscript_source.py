@@ -21,6 +21,35 @@ from infrastructure.rendering.latex_validation import ValidationReport
 
 logger = get_logger(__name__)
 
+_ACCESSIBLE_BEAMER_OVERFLOW_CODE = "slides.density.beamer-overflow"
+
+
+def _is_provisional_pre_aux_slide_overflow(manager: RenderManager, error: TemplateError) -> bool:
+    """Return whether the canonical post-AUX slide refresh owns this failure.
+
+    In the full render pipeline, an accessible section deck is first composed
+    before the current combined-manuscript AUX exists.  Unresolved section
+    references therefore use readable fallback prose; the mandatory strict
+    refresh later replaces it with canonical numbers.  A layout overflow in
+    that preliminary slide pair is not the publication result.  Defer only
+    this exact slide-only diagnostic when the combined-PDF refresh is enabled.
+    Every other first-pass failure remains immediately fatal, and a failing
+    strict refresh still propagates from ``render_combined_outputs``.
+    """
+
+    config = manager.config
+    if not (config.enable_pdf and config.enable_slides and config.slides_profile == "accessible"):
+        return False
+    failures = error.context.get("format_failures")
+    if not isinstance(failures, list) or len(failures) != 1:
+        return False
+    failure = failures[0]
+    return bool(
+        isinstance(failure, dict)
+        and failure.get("format") == "accessible slide pair"
+        and failure.get("diagnostic_code") == _ACCESSIBLE_BEAMER_OVERFLOW_CODE
+    )
+
 
 def has_generated_manuscript_ordering(config_path: Path) -> bool:
     """Return True when an injected config owns generated manuscript ordering."""
@@ -356,9 +385,16 @@ def render_individual_files(
             # RenderingError and all other template-domain failures carry the
             # same diagnostic contract. Record a per-section failure instead
             # of aborting before the combined-render summary is written.
-            logger.warning(f"  ❌ Rendering error for {source_file.name}: {render_error.message}")
-            reporter.record(render_error.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
-            failed_files.append(source_file.name)
+            if _is_provisional_pre_aux_slide_overflow(manager, render_error):
+                logger.info(
+                    "  Preliminary accessible Beamer overflow for %s is deferred to the mandatory "
+                    "strict post-AUX refresh",
+                    source_file.name,
+                )
+            else:
+                logger.warning(f"  ❌ Rendering error for {source_file.name}: {render_error.message}")
+                reporter.record(render_error.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
+                failed_files.append(source_file.name)
         except (OSError, subprocess.SubprocessError, ValueError) as e:
             logger.warning(f"  ❌ Unexpected error rendering {source_file.name}: {e}")
             reporter.record_error(

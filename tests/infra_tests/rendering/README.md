@@ -47,7 +47,7 @@ uv run pytest tests/infra_tests/rendering/test_web_renderer.py -v
 - Cross-reference handling
 - Style application
 
-### Slide Renderer Tests (`test_slides_renderer_core.py`)
+### Slide Renderer Tests (`test_slides_renderer_core.py`, `test_slides_accessibility.py`)
 
 Presentation slide generation:
 
@@ -60,6 +60,11 @@ uv run pytest tests/infra_tests/rendering/test_slides_renderer_core.py -v
 - Reveal.js HTML slides
 - Slide structure
 - Content formatting
+- Archive-profile backwards compatibility
+- Semantic block-boundary composition and stable density diagnostics
+- 80-word prose, eight-row table, 70% figure-area, and 28/20/16-point contracts
+- Reveal.js headings, landmarks, keyboard support, figure alternatives, long descriptions, and manuscript links
+- Beamer typography floors and explicit untagged-derivative boundary
 
 ## Test Categories
 

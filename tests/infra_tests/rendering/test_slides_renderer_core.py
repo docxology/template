@@ -27,9 +27,10 @@ from pypdf import PdfReader
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import slides_renderer
+from infrastructure.rendering._slides_accessibility import AccessibleSlidePolicy
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering._slides_math_header import write_slides_math_header
-from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths
+from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths, normalize_accessible_projection_latex
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 
 
@@ -468,6 +469,11 @@ class TestRevealJsRendering:
         result = renderer._render_revealjs(source, output)
         assert result == output
         assert output.is_file()
+        # The opt-in accessible profile owns its valid Reveal theme; archive
+        # mode preserves the historical caller-configured theme unchanged.
+        rendered = output.read_text(encoding="utf-8")
+        assert "theme/metropolis.css" in rendered
+        assert "mathjax" not in rendered.casefold()
 
     def test_render_revealjs_failure(self, tmp_path):
         """Test reveal.js rendering failure handling with real execution."""
@@ -626,6 +632,129 @@ class TestFigurePathFixing:
         assert "{../figures/free_energy_curve.png}" in fixed
         assert "alt={Curve on {[}0, 6{]} with $I(q_\\lambda)$}" in fixed
         assert "../output/figures" not in fixed
+
+    def test_accessible_figure_latex_preserves_ratio_and_removes_empty_caption(self):
+        tex = (
+            r"\begin{figure}\includegraphics[width=0.98\linewidth,height=0.7\textheight,"
+            r"alt={Curve on {[}0, 6{]}}]{figure.png}\caption{}\label{fig:curve}\end{figure}"
+        )
+
+        updated, graphics, captions = normalize_accessible_projection_latex(tex)
+
+        assert "keepaspectratio,width=0.98\\linewidth,height=0.7\\textheight" in updated
+        assert r"\caption{}" not in updated
+        assert r"\refstepcounter{figure}\label{fig:curve}" in updated
+        assert r"\label{fig:curve}" in updated
+        assert graphics == 1
+        assert captions == 1
+
+    def test_accessible_bare_and_linked_projection_images_preserve_aspect_ratio(self):
+        tex = (
+            r"\includegraphics[width=0.98\linewidth,height=0.7\textheight]{plain.png}"
+            "\n"
+            r"\href{full.png}{\includegraphics[width=0.98\linewidth,height=0.7\textheight]{linked.png}}"
+            "\n"
+            r"\begin{figure}"
+            r"\href{left-full.png}{\includegraphics[width=0.45\linewidth,height=0.7\textheight]{left.png}}"
+            r"\href{right-full.png}{\includegraphics[width=0.45\linewidth,height=0.7\textheight]{right.png}}"
+            r"\end{figure}"
+        )
+
+        updated, graphics, captions = normalize_accessible_projection_latex(tex)
+
+        assert updated.count("keepaspectratio") == 4
+        assert graphics == 4
+        assert captions == 0
+
+    def test_accessible_figure_latex_is_idempotent_and_leaves_unbounded_images_alone(self):
+        tex = (
+            r"\includegraphics[keepaspectratio,width=0.9\linewidth,height=0.5\textheight]{bounded.png}"
+            "\n"
+            r"\includegraphics[width=0.5\linewidth]{width-only.png}"
+        )
+
+        updated, graphics, captions = normalize_accessible_projection_latex(tex)
+
+        assert updated == tex
+        assert graphics == 0
+        assert captions == 0
+
+    def test_accessible_projection_normalization_is_scoped_and_brace_aware(self):
+        tex = (
+            r"\begin{figure}"
+            r"\includegraphics[width=0.98\linewidth,height=0.7\textheight,"
+            r"keepaspectratio=false,alt={Panel, keepaspectratio, evidence}]{figure.png}"
+            r"\caption{}\label{fig:curve}"
+            r"\begin{algorithm}\caption{}\label{alg:nested}\end{algorithm}"
+            "% \\caption{} \\includegraphics[width=1in,height=1in]{comment.png}\n"
+            r"\begin{verbatim}\caption{}\includegraphics[width=1in,height=1in]{code.png}\end{verbatim}"
+            r"\verb|\includegraphics[width=1in,height=1in]{inline.png}|"
+            r"\caption{Literal \texttt{\caption{}} and "
+            r"\includegraphics[width=1in,height=1in]{caption.png}}"
+            r"\custom{\caption{}}"
+            r"\end{figure}"
+            r"\begin{longtable}{ll}\caption{}\label{tbl:values}A&B\end{longtable}"
+            r"\begin{algorithm}\caption{}\label{alg:outside}\end{algorithm}"
+        )
+
+        updated, graphics, captions = normalize_accessible_projection_latex(tex)
+        second, second_graphics, second_captions = normalize_accessible_projection_latex(updated)
+
+        assert "keepaspectratio,width=0.98\\linewidth,height=0.7\\textheight" in updated
+        assert "alt={Panel, keepaspectratio, evidence}" in updated
+        assert "keepaspectratio=false" not in updated
+        assert r"\label{fig:curve}" in updated
+        assert r"\label{tbl:values}" in updated
+        assert updated.count(r"\refstepcounter{figure}") == 1
+        assert r"\refstepcounter{table}" not in updated
+        assert updated.count(r"\caption{}") == 6
+        assert r"\label{alg:nested}" in updated
+        assert r"\label{alg:outside}" in updated
+        assert "comment.png" in updated
+        assert "code.png" in updated
+        assert "inline.png" in updated
+        assert "caption.png" in updated
+        assert graphics == 1
+        assert captions == 2
+        assert second == updated
+        assert second_graphics == 0
+        assert second_captions == 0
+
+    @pytest.mark.requires_latex
+    def test_empty_caption_replacement_preserves_float_and_longtable_numbering(self, tmp_path):
+        compiler = next((name for name in ("pdflatex", "xelatex", "lualatex") if shutil.which(name)), None)
+        if compiler is None:
+            pytest.skip("No LaTeX compiler available")
+        source = (
+            r"\documentclass{article}"
+            r"\usepackage{longtable}"
+            r"\begin{document}"
+            r"\begin{figure}\caption{}\label{fig:first}A\end{figure}"
+            r"Figure \ref{fig:first}. "
+            r"\begin{longtable}{l}\caption{}\label{tbl:long}Value\\\end{longtable}"
+            r"Long \ref{tbl:long}. "
+            r"\begin{table}\caption{}\label{tbl:next}B\end{table}"
+            r"Next \ref{tbl:next}."
+            r"\end{document}"
+        )
+        normalized, _graphics, captions = normalize_accessible_projection_latex(source)
+        tex_path = tmp_path / "numbering.tex"
+        tex_path.write_text(normalized, encoding="utf-8")
+
+        for _pass in range(2):
+            subprocess.run(
+                [compiler, "-interaction=nonstopmode", "-halt-on-error", tex_path.name],
+                cwd=tmp_path,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+
+        extracted = " ".join(page.extract_text() or "" for page in PdfReader(str(tex_path.with_suffix(".pdf"))).pages)
+        assert captions == 3
+        assert re.search(r"Figure\s+1", extracted)
+        assert re.search(r"Long\s+1", extracted)
+        assert re.search(r"Next\s+2", extracted)
 
 
 class TestSlidesRendererCore:
@@ -789,6 +918,7 @@ class TestSlidesMathHeaderInjection:
         manuscript.mkdir()
         self._make_renderer(tmp_path)
         header = write_slides_math_header(manuscript, tmp_path / "slides")
+        assert header is not None
         content = header.read_text(encoding="utf-8")
         assert "\\providecommand{\\crefrange}[2]" in content
         assert "\\providecommand{\\Crefrange}[2]" in content
@@ -809,7 +939,9 @@ class TestSlidesMathHeaderInjection:
             encoding="utf-8",
         )
         self._make_renderer(tmp_path)
-        content = write_slides_math_header(manuscript, tmp_path / "slides").read_text(encoding="utf-8")
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
+        assert header is not None
+        content = header.read_text(encoding="utf-8")
         assert "\\usepackage{algpseudocode}" in content
         assert "\\usepackage{algorithm}" not in content, (
             "the float package was carried over; it has no beamer implementation"
@@ -818,6 +950,17 @@ class TestSlidesMathHeaderInjection:
         # \providecommand is a no-op for \caption -- the caption package has
         # already defined it, and then refuses it outside a float.
         assert "\\renewcommand{\\caption}" in content
+
+        accessible_header = write_slides_math_header(
+            manuscript,
+            tmp_path / "accessible-slides",
+            accessible_policy=AccessibleSlidePolicy(),
+        )
+        assert accessible_header is not None
+        accessible_content = accessible_header.read_text(encoding="utf-8")
+        algorithm_override = accessible_content.split("% Non-floating stand-in for the `algorithm` float.", 1)[1]
+        assert r"\fontsize{20pt}{24pt}\selectfont" in algorithm_override
+        assert r"\nobreak\small" not in algorithm_override
 
     def test_postprocessor_overrides_generated_codelisting_float(self):
         """The override lands after pandoc-crossref's preamble declaration."""
@@ -842,6 +985,15 @@ code
         assert r"\renewcommand{\caption}[2][]" in updated
         assert r"\refstepcounter{codelisting}" in updated
         assert slides_renderer.make_codelisting_slide_safe(updated) == (updated, 0)
+
+        accessible_updated, accessible_changed = slides_renderer.make_codelisting_slide_safe(
+            tex,
+            accessible_body_font_pt=20,
+        )
+        assert accessible_changed == 1
+        override = accessible_updated.split("Beamer-safe codelisting override", 1)[1]
+        assert r"\fontsize{20pt}{24pt}\selectfont" in override
+        assert r"\footnotesize" not in override
 
     def test_beamer_renames_compiled_pdf_to_output_file(self, tmp_path):
         """When compile_latex writes {stem}_slides.pdf, normalize to output_file."""
@@ -905,6 +1057,53 @@ code
         h_idx = cmd.index("-H")
         assert cmd[h_idx + 1].endswith("_slides_math_header.tex")
         assert Path(cmd[h_idx + 1]).exists()
+
+    @pytest.mark.parametrize(
+        ("slides_profile", "expected_aspect_ratio"),
+        [
+            ("archive", False),
+            ("accessible", True),
+        ],
+    )
+    def test_accessible_beamer_owns_widescreen_canvas_without_changing_archive(
+        self,
+        tmp_path,
+        slides_profile,
+        expected_aspect_ratio,
+    ):
+        """Only the opt-in projection profile requests Beamer's 16:9 canvas."""
+
+        source = tmp_path / "00_intro.md"
+        source.write_text("# Slide 1\n\nHello.\n", encoding="utf-8")
+        (tmp_path / "slides").mkdir()
+        captured: dict[str, list[str]] = {}
+
+        def fake_run(cmd, *args, **kwargs):
+            captured["cmd"] = cmd
+            tex_path = Path(cmd[cmd.index("-o") + 1])
+            tex_path.write_text("\\documentclass{beamer}\\begin{document}foo\\end{document}\n")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
+
+        def fake_compile(tex, out_dir, **kwargs):
+            compiled = out_dir / f"{tex.stem}.pdf"
+            compiled.write_bytes(b"%PDF-1.4 fake\n")
+            return compiled
+
+        renderer = SlidesRenderer(
+            RenderingConfig(
+                output_dir=tmp_path,
+                slides_dir=tmp_path / "slides",
+                slides_profile=slides_profile,
+            ),
+            process_runner=fake_run,
+            latex_compile=fake_compile,
+        )
+
+        output_file = tmp_path / "slides" / "00_intro_slides.pdf"
+        renderer._render_beamer_with_paths(source, output_file, manuscript_dir=None, figures_dir=None)
+
+        aspect_ratio_arg = "--variable=aspectratio:169"
+        assert (aspect_ratio_arg in captured["cmd"]) is expected_aspect_ratio
 
     def test_beamer_pandoc_cmd_includes_h_flag_for_citation_fallbacks(self, tmp_path):
         """The slides math header is now always written so natbib

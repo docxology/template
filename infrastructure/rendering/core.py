@@ -50,7 +50,8 @@ class RenderManager:
         """Render all supported formats for a source file.
 
         For markdown files, generates:
-        - Beamer slides (presentation format)
+        - Beamer slides (archive profile), or paired Beamer and Reveal.js
+          slides (accessible profile)
         - HTML web version
 
         Args:
@@ -93,7 +94,9 @@ class RenderManager:
                 source_text = source_file.read_text(encoding="utf-8")
                 skip_beamer = "<!-- render:skip-beamer -->" in source_text
 
-                # 1. Beamer slides for presentation
+                # 1. Presentation derivatives. Accessible mode is an atomic
+                # Beamer/Reveal pair; archive mode preserves the historical
+                # Beamer-only pipeline behavior.
                 if not self.config.enable_slides:
                     logger.info(f"Skipping Beamer slides for {source_file.name} (render.formats.slides=false)")
                     _remove_stale_slide_artifacts(Path(self.config.slides_dir), source_file.stem)
@@ -102,13 +105,21 @@ class RenderManager:
                     _remove_stale_slide_artifacts(Path(self.config.slides_dir), source_file.stem)
                 else:
                     try:
-                        logger.debug("Rendering Beamer slides...")
-                        rendered_paths.append(self.render_slides(source_file, output_format="beamer"))
-                        logger.debug("Beamer slides rendered successfully")
+                        if self.config.slides_profile == "accessible":
+                            logger.debug("Rendering accessible Beamer/Reveal slide pair...")
+                            rendered_paths.extend(self.render_accessible_slide_pair(source_file))
+                            logger.debug("Accessible Beamer/Reveal slide pair rendered successfully")
+                        else:
+                            logger.debug("Rendering Beamer slides...")
+                            rendered_paths.append(self.render_slides(source_file, output_format="beamer"))
+                            logger.debug("Beamer slides rendered successfully")
                     except (OSError, subprocess.SubprocessError, ValueError, TemplateError) as e:  # noqa: BLE001 — tracked in format_errors; raises if any required format fails
-                        format_errors.append(("beamer", e))
-                        # Enhanced error reporting for Beamer slide failures
-                        error_msg = f"Failed to render Beamer slides: {str(e)}"
+                        slide_format = (
+                            "accessible slide pair" if self.config.slides_profile == "accessible" else "beamer"
+                        )
+                        format_errors.append((slide_format, e))
+                        # Enhanced error reporting for presentation failures.
+                        error_msg = f"Failed to render {slide_format}: {str(e)}"
 
                         # Check if PDF was created but is empty (0.0 KB)
                         # Derive expected path from config — do NOT re-invoke the renderer
@@ -159,7 +170,19 @@ class RenderManager:
             if not rendered_paths:
                 failed_formats = ", ".join(f"{fmt}: {err}" for fmt, err in format_errors)
                 raise TemplateError(
-                    f"No rendered_paths generated for {source_file.name}. All formats failed: {failed_formats}"
+                    f"No rendered_paths generated for {source_file.name}. All formats failed: {failed_formats}",
+                    context={
+                        "source": source_file.name,
+                        "format_failures": [
+                            {
+                                "format": format_name,
+                                "diagnostic_code": (
+                                    error.context.get("diagnostic_code") if isinstance(error, TemplateError) else None
+                                ),
+                            }
+                            for format_name, error in format_errors
+                        ],
+                    },
                 )
 
             if format_errors:
@@ -168,7 +191,19 @@ class RenderManager:
                 raise TemplateError(
                     f"Partial rendering failure for {source_file.name}: "
                     f"{len(rendered_paths)} format(s) succeeded, "
-                    f"{len(format_errors)} failed ({failed_names}). {failed_formats}"
+                    f"{len(format_errors)} failed ({failed_names}). {failed_formats}",
+                    context={
+                        "source": source_file.name,
+                        "format_failures": [
+                            {
+                                "format": format_name,
+                                "diagnostic_code": (
+                                    error.context.get("diagnostic_code") if isinstance(error, TemplateError) else None
+                                ),
+                            }
+                            for format_name, error in format_errors
+                        ],
+                    },
                 )
 
             logger.debug(f"Successfully rendered {len(rendered_paths)} format(s) for {source_file.name}")
@@ -200,6 +235,21 @@ class RenderManager:
         return self.slides_renderer.render(
             source_file,
             output_format=output_format,
+            manuscript_dir=self.manuscript_dir,
+            figures_dir=self.figures_dir,
+            strict_cross_deck_refs=strict_cross_deck_refs,
+        )
+
+    def render_accessible_slide_pair(
+        self,
+        source_file: Path,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> tuple[Path, Path]:
+        """Render the canonical accessible Beamer/Reveal derivative pair."""
+
+        return self.slides_renderer.render_accessible_pair(
+            source_file,
             manuscript_dir=self.manuscript_dir,
             figures_dir=self.figures_dir,
             strict_cross_deck_refs=strict_cross_deck_refs,

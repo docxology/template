@@ -258,3 +258,33 @@ def test_generated_schema_describes_tagged_cover_accessibility_fields() -> None:
     assert schema["properties"]["paper"]["properties"]["cover"]["properties"]["alt"]["type"] == "string"
     assert schema["properties"]["book"]["properties"]["cover"]["properties"]["alt"]["type"] == "string"
     assert schema["properties"]["metadata"]["properties"]["tagged_pdf"]["type"] == "boolean"
+
+
+def test_generated_schema_describes_strict_accessible_slide_policy() -> None:
+    """Editor schema exposes the non-weakenable semantic slide contract."""
+
+    from jsonschema import Draft202012Validator
+    from jsonschema.exceptions import ValidationError
+
+    validator = Draft202012Validator(generate_manuscript_config_schema())
+    valid = {
+        "render": {
+            "slides": {
+                "profile": "accessible",
+                "max_prose_words": 80,
+                "max_table_rows": 8,
+                "min_figure_area_percent": 70,
+                "title_font_pt": 28,
+                "body_font_pt": 20,
+                "figure_label_font_pt": 16,
+                "reader_href": "../web/index.html",
+            }
+        }
+    }
+
+    validator.validate(valid)
+
+    with pytest.raises(ValidationError):
+        validator.validate({"render": {"slides": {"profile": "accessible", "max_prose_words": 81}}})
+    with pytest.raises(ValidationError):
+        validator.validate({"render": {"slides": {"profile": "accessible", "extra": True}}})

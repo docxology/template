@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 _OVERRIDE_MARKER = "% template: Beamer-safe codelisting override"
-_OVERRIDE = rf"""
+
+
+def _override(font_command: str) -> str:
+    return rf"""
 {_OVERRIDE_MARKER}
 % pandoc-crossref declares codelisting as a float in the generated preamble.
 % Floats cannot appear inside Beamer frames, so retain its counter while
@@ -14,7 +17,7 @@ _OVERRIDE = rf"""
   \refstepcounter{{codelisting}}%
   \par\medskip
   \begin{{beamercolorbox}}[wd=\linewidth,sep=0.5em]{{block body}}%
-  \footnotesize
+  {font_command}
   \renewcommand{{\caption}}[2][]{{%
     \par\textbf{{Listing~\thecodelisting: }}##2\par\smallskip%
   }}%
@@ -32,7 +35,11 @@ _OVERRIDE = rf"""
 """
 
 
-def make_codelisting_slide_safe(tex_content: str) -> tuple[str, int]:
+def make_codelisting_slide_safe(
+    tex_content: str,
+    *,
+    accessible_body_font_pt: int | None = None,
+) -> tuple[str, int]:
     """Replace pandoc-crossref's generated listing float for Beamer.
 
     ``pandoc-crossref`` emits a regular LaTeX float named ``codelisting``.
@@ -51,7 +58,12 @@ def make_codelisting_slide_safe(tex_content: str) -> tuple[str, int]:
     document_marker = r"\begin{document}"
     if document_marker not in tex_content:
         return tex_content, 0
-    return tex_content.replace(document_marker, f"{_OVERRIDE}\n{document_marker}", 1), 1
+    font_command = (
+        r"\footnotesize"
+        if accessible_body_font_pt is None
+        else rf"\fontsize{{{accessible_body_font_pt}pt}}{{{accessible_body_font_pt + 4}pt}}\selectfont"
+    )
+    return tex_content.replace(document_marker, f"{_override(font_command)}\n{document_marker}", 1), 1
 
 
 __all__ = ["make_codelisting_slide_safe"]

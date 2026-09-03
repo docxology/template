@@ -544,6 +544,59 @@ def test_render_individual_files_success(tmp_path: Path) -> None:
     assert (out_dir / "03_results.out").is_file()
 
 
+@pytest.mark.parametrize(("enable_pdf", "expected_failures"), [(True, []), (False, ["23_limitations.md"])])
+def test_render_individual_files_defers_only_pre_aux_accessible_beamer_overflow(
+    tmp_path: Path,
+    enable_pdf: bool,
+    expected_failures: list[str],
+) -> None:
+    """Only a pipeline-owned post-AUX refresh can supersede first-pass overflow."""
+
+    source = tmp_path / "23_limitations.md"
+    source.write_text("# Limitations\n\nSee the discussion section.\n", encoding="utf-8")
+
+    class OverflowingSlidesRenderer:
+        def render_accessible_pair(self, _source_file: Path, **_kwargs: object) -> tuple[Path, Path]:
+            raise RenderingError(
+                "[slides.density.beamer-overflow] preliminary fallback prose exceeds the frame",
+                context={"diagnostic_code": "slides.density.beamer-overflow"},
+            )
+
+    class WritingWebRenderer:
+        def render(self, source_file: Path) -> Path:
+            output = tmp_path / f"{source_file.stem}.html"
+            output.write_text("<!doctype html><title>Current section</title>", encoding="utf-8")
+            return output
+
+    manager = RenderManager(
+        RenderingConfig(
+            enable_pdf=enable_pdf,
+            enable_html=True,
+            enable_slides=True,
+            slides_profile="accessible",
+            output_dir=str(tmp_path / "output"),
+            pdf_dir=str(tmp_path / "output/pdf"),
+            slides_dir=str(tmp_path / "output/slides"),
+            web_dir=str(tmp_path / "output/web"),
+        ),
+        slides_renderer=OverflowingSlidesRenderer(),
+        web_renderer=WritingWebRenderer(),
+    )
+    reporter = DiagnosticReporter(project_name="t", output_dir=tmp_path / "reports", load_existing=False)
+
+    _rendered_count, failed_files = _render_individual_files(manager, [source], reporter)
+
+    assert failed_files == expected_failures
+    assert len(reporter.events) == len(expected_failures)
+    if reporter.events:
+        assert reporter.events[0].context["format_failures"] == [
+            {
+                "format": "accessible slide pair",
+                "diagnostic_code": "slides.density.beamer-overflow",
+            }
+        ]
+
+
 def test_render_individual_files_cleans_stale_web_artifacts(tmp_path: Path) -> None:
     """Render-only reruns remove obsolete generated HTML before writing current pages.
 
@@ -729,6 +782,71 @@ def test_render_pipeline_impl_skip_manuscript_hydration_branch(
     assert called == []
     # Pipeline proceeds (may return 0 or 1 depending on downstream tools, but not 1 from the script)
     assert rc in (0, 1)
+
+
+def test_render_pipeline_propagates_accessible_slide_policy(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Source-owned slide policy reaches the path-bound renderer config."""
+
+    for env_name in (
+        "SLIDES_PROFILE",
+        "SLIDES_MAX_PROSE_WORDS",
+        "SLIDES_MAX_TABLE_ROWS",
+        "SLIDES_MIN_FIGURE_AREA_PERCENT",
+        "SLIDES_TITLE_FONT_PT",
+        "SLIDES_BODY_FONT_PT",
+        "SLIDES_FIGURE_LABEL_FONT_PT",
+        "SLIDES_READER_HREF",
+    ):
+        monkeypatch.delenv(env_name, raising=False)
+    project = tmp_path / "accessible_slides_proj"
+    _make_project_with_manuscript(project, n_md=1)
+    (project / "manuscript" / "config.yaml").write_text(
+        "render:\n"
+        "  slides:\n"
+        "    profile: accessible\n"
+        "    max_prose_words: 72\n"
+        "    max_table_rows: 7\n"
+        "    min_figure_area_percent: 72\n"
+        "    title_font_pt: 30\n"
+        "    body_font_pt: 22\n"
+        "    figure_label_font_pt: 17\n"
+        "    reader_href: reader/index.html\n",
+        encoding="utf-8",
+    )
+    captured: list[RenderingConfig] = []
+
+    def _capture_manager(
+        config: RenderingConfig,
+        *,
+        manuscript_dir: Path,
+        figures_dir: Path,
+    ) -> RenderManager:
+        captured.append(config)
+        return RenderManager(config, manuscript_dir=manuscript_dir, figures_dir=figures_dir)
+
+    dependencies = _dependencies_for(project, manager_factory=_capture_manager)
+
+    rc = _render_pipeline_impl(
+        "accessible_slides_proj",
+        skip_manuscript_hydration=True,
+        repo_root=tmp_path,
+        dependencies=dependencies,
+    )
+
+    assert rc == 0
+    assert len(captured) == 1
+    config = captured[0]
+    assert config.slides_profile == "accessible"
+    assert config.slides_max_prose_words == 72
+    assert config.slides_max_table_rows == 7
+    assert config.slides_min_figure_area_percent == 72
+    assert config.slides_title_font_pt == 30
+    assert config.slides_body_font_pt == 22
+    assert config.slides_figure_label_font_pt == 17
+    assert config.slides_reader_href == "reader/index.html"
 
 
 def test_render_pipeline_impl_manuscript_variable_script_nonzero_exits_one(

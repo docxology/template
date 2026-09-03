@@ -30,7 +30,7 @@ renderer = RenderManager(
 renderer.render_pdf(source_file)
 renderer.render_web(source_file)        # standalone HTML
 renderer.render_slides(source_file)     # beamer (PDF) by default
-renderer.render_all(source_file)        # md → slides + web; tex → PDF
+renderer.render_all(source_file)        # archive md → Beamer + web; tex → PDF
 
 # Render combined manuscript from multiple ordered source files
 renderer.render_combined_pdf(source_files, manuscript_dir, project_name="my_project")
@@ -44,6 +44,38 @@ from infrastructure.rendering import RenderingConfig
 config = RenderingConfig()
 # Configure PDF, HTML, slides options
 ```
+
+For projection-scale slides, explicitly select the accessible profile. The
+archive profile remains the default for backwards compatibility:
+
+```python
+config = RenderingConfig(
+    slides_profile="accessible",
+    slides_max_prose_words=80,
+    slides_max_table_rows=8,
+    slides_min_figure_area_percent=70,
+    slides_title_font_pt=28,
+    slides_body_font_pt=20,
+    slides_figure_label_font_pt=16,
+    slides_reader_href="../web/index.html",
+)
+```
+
+Accessible mode splits only at Pandoc semantic block boundaries, isolates
+figures/tables/equations/code/evidence, and fails with a coded `slides.*`
+diagnostic when an indivisible block cannot fit. Treat Reveal.js and the linked
+manuscript HTML as the accessibility-enhanced reader surfaces. Beamer output is
+an untagged presentation derivative; successful rendering is not a WCAG or
+PDF/UA conformance verdict. Reveal core, theme, and plugin assets use one
+version-pinned CDN release and therefore remain network-dependent; that version
+pin is not an offline or byte-pinned guarantee. The MathJax executable path is
+separately normalized to one loader with the repository's exact SRI digest.
+
+With `slides_profile="accessible"`, the canonical `render_all()` path emits a
+transactional Beamer/Reveal pair for each eligible Markdown source. Both files
+consume one composed Pandoc AST; any pair-member failure removes both outputs.
+Use `render_accessible_slide_pair()` for the same explicit programmatic
+contract. Archive mode keeps the historical Beamer-required behavior.
 
 ## Manuscript Discovery
 

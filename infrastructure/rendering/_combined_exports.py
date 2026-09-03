@@ -387,16 +387,24 @@ def render_combined_outputs(
     else:
         logger.info("[skip] PDF rendering disabled in config (render.formats.pdf=false)")
 
-    # Standalone Beamer decks are rendered before the combined manuscript so
+    # Standalone slide decks are rendered before the combined manuscript so
     # the ordinary per-file pass can proceed in one sweep. The combined PDF is
     # the authoritative numbering surface, however, and only its retained AUX
     # file contains labels defined in other sections. Refresh every enabled
     # deck after that AUX exists so cross-section references cannot ship as
-    # LaTeX's unresolved ``??`` marker. This second pass is intentionally
-    # narrow: it reruns Beamer only, leaving the already-current HTML and
-    # combined PDF untouched.
-    if combined_pdf_succeeded and config.enable_slides and md_files:
-        _refresh_slides_against_combined_aux(manager, md_files)
+    # unresolved markers. Archive mode reruns Beamer only. The opt-in
+    # accessible profile refreshes its atomic Beamer/Reveal pair so both
+    # derivatives receive the same current combined-manuscript numbering.
+    if config.enable_slides and md_files:
+        if combined_pdf_succeeded:
+            _refresh_slides_against_combined_aux(manager, md_files)
+        elif config.enable_pdf and config.slides_profile == "accessible":
+            # The accessible Beamer/Reveal pair is a canonical derivative of
+            # the current combined AUX numbering. A failed combined build
+            # leaves only the pre-AUX fallback pass (and may have consumed a
+            # prior AUX before it was cleared), so neither member is safe to
+            # publish. Archive mode retains its historical standalone output.
+            _remove_refresh_decks(manager, _slide_refresh_sources(md_files))
 
     if config.enable_html:
         logger.debug("\n" + "=" * BANNER_WIDTH)
@@ -452,15 +460,67 @@ def _refresh_slides_against_combined_aux(
     manager: RenderManager,
     md_files: list[Path],
 ) -> None:
-    """Re-render Beamer decks after the combined PDF writes its label map.
+    """Re-render slide derivatives after the combined PDF writes its label map.
 
     A section deck cannot resolve labels owned by another section on its first
     standalone compile. ``SlidesRenderer`` resolves those labels from the
     combined manuscript AUX file when it is available, so this refresh is the
     producer-order bridge between the combined PDF and the slide surfaces.
+    Accessible mode refreshes the paired Beamer/Reveal contract atomically;
+    archive mode retains its historical Beamer-only behavior.
     Missing transmission bookends and explicitly skipped Beamer sources are
     excluded exactly as they are in the ordinary per-file renderer.
     """
+    refresh_sources = _slide_refresh_sources(md_files)
+
+    if not refresh_sources:
+        return
+
+    try:
+        _require_current_combined_aux(manager)
+    except RenderingError:
+        _remove_refresh_decks(manager, refresh_sources)
+        raise
+
+    logger.info(
+        "Refreshing %d slide derivative set(s) against the combined manuscript AUX label map",
+        len(refresh_sources),
+    )
+    failures: list[str] = []
+    for source_file in refresh_sources:
+        output_file = _slide_pdf_path(manager, source_file)
+        try:
+            output_file.unlink(missing_ok=True)
+            if manager.config.slides_profile == "accessible":
+                manager.render_accessible_slide_pair(
+                    source_file,
+                    strict_cross_deck_refs=True,
+                )
+            else:
+                manager.render_slides(
+                    source_file,
+                    output_format="beamer",
+                    strict_cross_deck_refs=True,
+                )
+        except (TemplateError, OSError, subprocess.SubprocessError, ValueError, TypeError) as exc:
+            cleanup_failures: list[str] = []
+            for refresh_path in _slide_refresh_paths(manager, source_file):
+                try:
+                    refresh_path.unlink(missing_ok=True)
+                except OSError as cleanup_exc:
+                    cleanup_failures.append(str(cleanup_exc))
+            cleanup_suffix = f"; cleanup failed: {'; '.join(cleanup_failures)}" if cleanup_failures else ""
+            failures.append(f"{source_file.name}: {exc}{cleanup_suffix}")
+    if failures:
+        raise RenderingError(
+            "Combined-PDF AUX slide refresh failed; refusing to publish stale standalone decks: " + "; ".join(failures),
+            context={"failed_sources": failures},
+        )
+
+
+def _slide_refresh_sources(md_files: list[Path]) -> list[Path]:
+    """Return sources whose slide derivatives depend on combined numbering."""
+
     refresh_sources: list[Path] = []
     for source_file in combined_source_files(md_files):
         if not source_file.is_file():
@@ -474,42 +534,7 @@ def _refresh_slides_against_combined_aux(
             ) from exc
         if not is_transmission_bookend(source_file) and "<!-- render:skip-beamer -->" not in source_text:
             refresh_sources.append(source_file)
-
-    if not refresh_sources:
-        return
-
-    try:
-        _require_current_combined_aux(manager)
-    except RenderingError:
-        _remove_refresh_decks(manager, refresh_sources)
-        raise
-
-    logger.info(
-        "Refreshing %d Beamer deck(s) against the combined manuscript AUX label map",
-        len(refresh_sources),
-    )
-    failures: list[str] = []
-    for source_file in refresh_sources:
-        output_file = _slide_pdf_path(manager, source_file)
-        try:
-            output_file.unlink(missing_ok=True)
-            manager.render_slides(
-                source_file,
-                output_format="beamer",
-                strict_cross_deck_refs=True,
-            )
-        except (TemplateError, OSError, subprocess.SubprocessError, ValueError, TypeError) as exc:
-            try:
-                output_file.unlink(missing_ok=True)
-            except OSError as cleanup_exc:
-                failures.append(f"{source_file.name}: {exc}; cleanup failed: {cleanup_exc}")
-            else:
-                failures.append(f"{source_file.name}: {exc}")
-    if failures:
-        raise RenderingError(
-            "Combined-PDF AUX slide refresh failed; refusing to publish stale standalone decks: " + "; ".join(failures),
-            context={"failed_sources": failures},
-        )
+    return refresh_sources
 
 
 def _combined_aux_path(manager: RenderManager) -> Path:
@@ -595,17 +620,26 @@ def _slide_pdf_path(manager: RenderManager, source_file: Path) -> Path:
     return Path(manager.config.slides_dir) / f"{source_file.stem}_slides.pdf"
 
 
+def _slide_refresh_paths(manager: RenderManager, source_file: Path) -> tuple[Path, ...]:
+    """Return every derivative owned by the profile's AUX refresh."""
+
+    pdf_path = _slide_pdf_path(manager, source_file)
+    if manager.config.slides_profile != "accessible":
+        return (pdf_path,)
+    return (pdf_path, pdf_path.with_suffix(".html"))
+
+
 def _remove_refresh_decks(manager: RenderManager, source_files: list[Path]) -> None:
-    """Remove first-pass decks when the current combined AUX cannot support refresh."""
+    """Remove first-pass decks when canonical combined numbering is unavailable."""
     cleanup_failures: list[str] = []
     for source_file in source_files:
-        output_file = _slide_pdf_path(manager, source_file)
-        try:
-            output_file.unlink(missing_ok=True)
-        except OSError as exc:
-            cleanup_failures.append(f"{output_file}: {exc}")
+        for output_file in _slide_refresh_paths(manager, source_file):
+            try:
+                output_file.unlink(missing_ok=True)
+            except OSError as exc:
+                cleanup_failures.append(f"{output_file}: {exc}")
     if cleanup_failures:
         raise RenderingError(
-            "Could not remove first-pass Beamer decks after AUX validation failed",
+            "Could not remove first-pass slide derivatives after combined-PDF dependency failed",
             context={"cleanup_failures": cleanup_failures},
         )
