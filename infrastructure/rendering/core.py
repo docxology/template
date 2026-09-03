@@ -177,9 +177,7 @@ class RenderManager:
                             {
                                 "format": format_name,
                                 "diagnostic_code": (
-                                    error.context.get("diagnostic_code")
-                                    if isinstance(error, TemplateError)
-                                    else None
+                                    error.context.get("diagnostic_code") if isinstance(error, TemplateError) else None
                                 ),
                             }
                             for format_name, error in format_errors
@@ -200,9 +198,7 @@ class RenderManager:
                             {
                                 "format": format_name,
                                 "diagnostic_code": (
-                                    error.context.get("diagnostic_code")
-                                    if isinstance(error, TemplateError)
-                                    else None
+                                    error.context.get("diagnostic_code") if isinstance(error, TemplateError) else None
                                 ),
                             }
                             for format_name, error in format_errors
