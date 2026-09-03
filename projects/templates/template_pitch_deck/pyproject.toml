@@ -24,7 +24,7 @@ dependencies = [
     # `execute_pipeline.py --core-only`) need them declared explicitly —
     # same pattern as `template_search_project`/`template_newspaper`.
     "reportlab>=4.0.0",
-    "pypdf>=6.15.0",
+    "pypdf>=6.16.1",
     "Pillow>=12.3.0",
     # `infrastructure.rendering.slide_deck._draw_qr_code`/`pptx_deck._add_qr_code`
     # call `infrastructure.steganography.barcode_generators.generate_qr_code`

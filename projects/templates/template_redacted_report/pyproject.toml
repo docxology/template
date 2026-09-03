@@ -14,7 +14,7 @@ requires-python = ">=3.10"
 dependencies = [
     "pyyaml>=6.0",
     "reportlab>=4.0.0",
-    "pypdf>=6.15.0",
+    "pypdf>=6.16.1",
     "matplotlib>=3.8.0",
     "pillow>=12.3.0",
 ]

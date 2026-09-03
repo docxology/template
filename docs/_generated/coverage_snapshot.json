@@ -43,7 +43,7 @@
     },
     "template_literature_meta_analysis": {
       "coverage_pct": "95.92 %",
-      "source_hash": "df6f7142f1bae4183ad0e1969bc84abc95bc9b68ece47698850d5bbef4eec5ec"
+      "source_hash": "671afdb136f2318dcd2a6d7cda91717852dcd60f1cdb067274680522b1d884bf"
     },
     "template_madlib": {
       "coverage_pct": "99.11 %",
@@ -59,7 +59,7 @@
     },
     "template_pitch_deck": {
       "coverage_pct": "97.27 %",
-      "source_hash": "78bdc21042a474ec3500c7611f84a95f953dfac25a669d86b00510089c82feee"
+      "source_hash": "3476550a33c32abfd3406dbf500c279474f61c43e9132124832e956fca3f4310"
     },
     "template_pools_rules_tools": {
       "coverage_pct": "94.72 %",
@@ -71,7 +71,7 @@
     },
     "template_redacted_report": {
       "coverage_pct": "97.03 %",
-      "source_hash": "a8831ce5fff7687d0f97f4b0523026357e9bd803f9587a2c662e91a09c44e94d"
+      "source_hash": "aab88dcaac39b550e2cf7200ce10b43dd66b533981a3488dc569f410f65b500a"
     },
     "template_registered_report": {
       "coverage_pct": "94.35 %",
@@ -79,7 +79,7 @@
     },
     "template_search_project": {
       "coverage_pct": "96.28 %",
-      "source_hash": "4b108ff6526483aa0f467f278f01ca7f989e625bfd21bdc94778b00456805c0a"
+      "source_hash": "88a1c581658690206441dcab6e1fc9322c30abff177264b546a085b63af759e6"
     },
     "template_sia": {
       "coverage_pct": "94.39 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "c0dd6354c24753fcc97e407f8dfb10d7018f3152",
+  "source_commit": "1e1e757db9e6984653e188aa6b77d0075412f53c",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -194,16 +194,16 @@
       "template_eda_notebook": "b175ddb202fc758df6ace08598073104a6c8f9a0ea7440063930b55b56a58bf2",
       "template_formal": "c82dd4190e470f606f9b8635ae3c078b7a8e99415dc1f1a6952d27894247ed6b",
       "template_gold_refinement": "b0dd82a33f6eadbb212daf1eb573f35d161010781cf21e579cb4435496fb3c16",
-      "template_literature_meta_analysis": "df6f7142f1bae4183ad0e1969bc84abc95bc9b68ece47698850d5bbef4eec5ec",
+      "template_literature_meta_analysis": "671afdb136f2318dcd2a6d7cda91717852dcd60f1cdb067274680522b1d884bf",
       "template_madlib": "b39d3c59a86c2a23efc21bcfc720a55adae0df88c399b1bb6c55a121a3119238",
       "template_methods_paper": "e83434d91526804c5459c07f941d2014912860be0c27d801532823981cc0204d",
       "template_newspaper": "ce12a7b72d5de9180f838bae97a2cd795f4b35471f621371626f6a3ba2503bc5",
-      "template_pitch_deck": "78bdc21042a474ec3500c7611f84a95f953dfac25a669d86b00510089c82feee",
+      "template_pitch_deck": "3476550a33c32abfd3406dbf500c279474f61c43e9132124832e956fca3f4310",
       "template_pools_rules_tools": "f181f1573ca25aefd22324aa894f76b060dd903fe1c65618b824cc2dbfefbbef",
       "template_prose_project": "8ad281d8d066dd5c2753c5ffdfeda5c0eccc3b7211de24873cefb23254e0b6a3",
-      "template_redacted_report": "a8831ce5fff7687d0f97f4b0523026357e9bd803f9587a2c662e91a09c44e94d",
+      "template_redacted_report": "aab88dcaac39b550e2cf7200ce10b43dd66b533981a3488dc569f410f65b500a",
       "template_registered_report": "76797f49b23f2d831fb8283124ed1a8e0fa116391f02846621ec9b485cec67c6",
-      "template_search_project": "4b108ff6526483aa0f467f278f01ca7f989e625bfd21bdc94778b00456805c0a",
+      "template_search_project": "88a1c581658690206441dcab6e1fc9322c30abff177264b546a085b63af759e6",
       "template_sia": "67893c30e97742f80b7ca08cee375349ad7ea3e89d03bf746cf085a649dabf3b",
       "template_storybook": "dd2d1dd727f21f8fb01de4850a5b524916ffaa2b4e9847c2a5c363239c158675",
       "template_template": "1685050fd6209cc06482f98382cdbf4763de643b37cbcf01970f9a611c42c3b1",
