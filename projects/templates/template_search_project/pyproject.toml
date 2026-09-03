@@ -56,7 +56,7 @@ dev = [
 # and `uv sync --group llm` install the same deps when this project is
 # used standalone. Keep these in sync with the root pyproject.toml.
 rendering = [
-    "pypdf>=6.15.0",
+    "pypdf>=6.16.1",
     "reportlab>=4.0.0",
 ]
 llm = [

@@ -129,7 +129,7 @@ ml-benchmarking/
 dependencies = [
     "numpy>=1.22",
     "matplotlib>=3.7",
-    "pypdf>=6.15.0",
+    "pypdf>=6.16.1",
     # Common packages
 ]
 ```
@@ -141,7 +141,7 @@ dependencies = [
 cat > shared/requirements-common.txt << EOF
 numpy>=1.22
 matplotlib>=3.7
-pypdf>=6.15.0
+pypdf>=6.16.1
 EOF
 
 # Install in each project
