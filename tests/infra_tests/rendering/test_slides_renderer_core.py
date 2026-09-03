@@ -27,6 +27,7 @@ from pypdf import PdfReader
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import slides_renderer
+from infrastructure.rendering._slides_accessibility import AccessibleSlidePolicy
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering._slides_math_header import write_slides_math_header
 from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths, normalize_accessible_projection_latex
@@ -950,6 +951,17 @@ class TestSlidesMathHeaderInjection:
         # already defined it, and then refuses it outside a float.
         assert "\\renewcommand{\\caption}" in content
 
+        accessible_header = write_slides_math_header(
+            manuscript,
+            tmp_path / "accessible-slides",
+            accessible_policy=AccessibleSlidePolicy(),
+        )
+        assert accessible_header is not None
+        accessible_content = accessible_header.read_text(encoding="utf-8")
+        algorithm_override = accessible_content.split("% Non-floating stand-in for the `algorithm` float.", 1)[1]
+        assert r"\fontsize{20pt}{24pt}\selectfont" in algorithm_override
+        assert r"\nobreak\small" not in algorithm_override
+
     def test_postprocessor_overrides_generated_codelisting_float(self):
         """The override lands after pandoc-crossref's preamble declaration."""
         tex = r"""\documentclass{beamer}
@@ -973,6 +985,15 @@ code
         assert r"\renewcommand{\caption}[2][]" in updated
         assert r"\refstepcounter{codelisting}" in updated
         assert slides_renderer.make_codelisting_slide_safe(updated) == (updated, 0)
+
+        accessible_updated, accessible_changed = slides_renderer.make_codelisting_slide_safe(
+            tex,
+            accessible_body_font_pt=20,
+        )
+        assert accessible_changed == 1
+        override = accessible_updated.split("Beamer-safe codelisting override", 1)[1]
+        assert r"\fontsize{20pt}{24pt}\selectfont" in override
+        assert r"\footnotesize" not in override
 
     def test_beamer_renames_compiled_pdf_to_output_file(self, tmp_path):
         """When compile_latex writes {stem}_slides.pdf, normalize to output_file."""

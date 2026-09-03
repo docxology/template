@@ -196,6 +196,16 @@ def write_slides_math_header(
             f"\\setbeamerfont{{subsection title}}{{size*={{{accessible_title_pt}pt}}{{{title_leading}pt}}}}\n"
             f"\\setbeamerfont{{caption}}{{size*={{{label}pt}}{{{label_leading}pt}}}}\n"
             f"\\setbeamerfont{{caption name}}{{size*={{{label}pt}}{{{label_leading}pt}}}}\n"
+            f"\\setbeamerfont{{itemize/enumerate body}}{{size*={{{body}pt}}{{{body_leading}pt}}}}\n"
+            f"\\setbeamerfont{{itemize/enumerate subbody}}{{size*={{{body}pt}}{{{body_leading}pt}}}}\n"
+            f"\\setbeamerfont{{itemize/enumerate subsubbody}}{{size*={{{body}pt}}{{{body_leading}pt}}}}\n"
+            f"\\setbeamerfont{{itemize item}}{{size*={{{body}pt}}{{{body_leading}pt}}}}\n"
+            f"\\setbeamerfont{{itemize subitem}}{{size*={{{body}pt}}{{{body_leading}pt}}}}\n"
+            f"\\setbeamerfont{{itemize subsubitem}}{{size*={{{body}pt}}{{{body_leading}pt}}}}\n"
+            f"\\setbeamerfont{{description body}}{{size*={{{body}pt}}{{{body_leading}pt}}}}\n"
+            f"\\setbeamerfont{{description item}}{{size*={{{body}pt}}{{{body_leading}pt}}}}\n"
+            f"\\setbeamerfont{{quote}}{{size*={{{body}pt}}{{{body_leading}pt}}}}\n"
+            f"\\setbeamerfont{{quotation}}{{size*={{{body}pt}}{{{body_leading}pt}}}}\n"
             f"\\AtBeginEnvironment{{longtable}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
             f"\\AtBeginEnvironment{{tabular}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
             f"\\AtBeginEnvironment{{equation}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
@@ -266,10 +276,17 @@ def write_slides_math_header(
         if "\\usepackage{algorithm}" in loaded:
             # A plain rule-delimited block: same visual role on a slide,
             # none of the float machinery beamer cannot run.
+            accessible_algorithm_font = (
+                rf"\fontsize{{{accessible_policy.body_font_pt}pt}}"
+                rf"{{{accessible_policy.body_font_pt + 4}pt}}\selectfont"
+                if accessible_policy is not None
+                else ""
+            )
+            algorithm_font = r"\small" if accessible_policy is None else accessible_algorithm_font
             snippet_parts.append(
                 "% Non-floating stand-in for the `algorithm` float.\n"
                 "\\newenvironment{algorithm}[1][]{%\n"
-                "  \\par\\medskip\\noindent\\rule{\\linewidth}{0.4pt}\\par\\nobreak\\small\n"
+                f"  \\par\\medskip\\noindent\\rule{{\\linewidth}}{{0.4pt}}\\par\\nobreak{algorithm_font}\n"
                 "  \\renewcommand{\\caption}[1]{\\par\\noindent\\textbf{##1}\\par}}{%\n"
                 "  \\par\\nobreak\\noindent\\rule{\\linewidth}{0.4pt}\\par\\medskip}\n"
             )

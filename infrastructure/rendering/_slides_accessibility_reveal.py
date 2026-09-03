@@ -206,13 +206,20 @@ main#main-content {{ inline-size: 100%; block-size: 100vh; min-block-size: 100vh
   justify-content: center;
 }}
 .reveal section.figure-led img {{
-  display: block;
-  width: 100% !important;
   height: calc({policy.min_figure_area_percent}vh - 5.5rem) !important;
   max-height: calc({policy.min_figure_area_percent}vh - 5.5rem);
   max-width: 100%;
   object-fit: contain;
+}}
+.reveal section.figure-led img:not(.accessible-multi-image-panel) {{
+  display: block;
+  width: 100% !important;
   margin-inline: auto;
+}}
+.reveal section.figure-led img.accessible-multi-image-panel {{
+  display: inline-block;
+  vertical-align: middle;
+  margin-inline: 0;
 }}
 .reveal figcaption, .reveal .slide-reader-link {{ font-size: {label_px:.2f}px; line-height: 1.3; }}
 .slide-reader-nav {{

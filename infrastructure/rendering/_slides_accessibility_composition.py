@@ -21,7 +21,8 @@ from infrastructure.rendering._slides_accessibility_ast import (
     _prepare_code_block_for_frame,
     _shorten_figure_caption,
     _split_prose_block_to_fit,
-    _word_count,
+    _validate_body_width_geometry,
+    _validate_header_geometry,
 )
 from infrastructure.rendering._slides_accessibility_contracts import (
     BASE_BODY_LINES_16_9,
@@ -31,6 +32,12 @@ from infrastructure.rendering._slides_accessibility_contracts import (
     density_error,
 )
 from infrastructure.rendering._slides_accessibility_tables import _excerpt_table
+from infrastructure.rendering._slides_accessibility_raw_tex import _validate_raw_tex_geometry
+from infrastructure.rendering._slides_accessibility_text_geometry import (
+    _math_vertical_line_demand,
+    _validate_math_geometry,
+    _word_count,
+)
 
 
 _BASE_BODY_LINES_16_9 = BASE_BODY_LINES_16_9
@@ -65,6 +72,7 @@ def _compose_segment(
     continuation = 1
     excerpted_tables = 0
     heading = _header_text(header)
+    _validate_header_geometry(header, policy=policy, source=source)
 
     # A title that consumes three or more projected lines leaves at most four
     # body lines.  Preserve that full title as an explicit divider, then use
@@ -94,6 +102,8 @@ def _compose_segment(
             pending_lines = 0
             continue
 
+        _validate_math_geometry(block, source=source, heading=heading)
+        _validate_raw_tex_geometry(block, source=source, heading=heading)
         kind = _block_kind(block)
         words = _word_count(block)
         if kind == "prose-slide":
@@ -188,6 +198,33 @@ def _compose_segment(
             ]
         else:
             maximum_lines = _frame_body_line_capacity(header, continuation, policy)
+            math_source, math_lines = _math_vertical_line_demand(block)
+            if kind == "equation-led":
+                _validate_body_width_geometry(
+                    block,
+                    policy=policy,
+                    source=source,
+                    heading=heading,
+                    content_kind="equation",
+                )
+            elif kind == "evidence-slide":
+                _validate_body_width_geometry(
+                    block,
+                    policy=policy,
+                    source=source,
+                    heading=heading,
+                    content_kind="evidence",
+                )
+            if kind == "equation-led" and math_lines > maximum_lines:
+                raise _density_error(
+                    "slides.density.math-height",
+                    "one vertically nested equation cannot fit the projection frame at the declared font floor",
+                    source=source,
+                    heading=heading,
+                    math_source=math_source,
+                    estimated_lines=math_lines,
+                    maximum_lines=maximum_lines,
+                )
             if kind == "evidence-slide" and (
                 words > policy.max_prose_words or _estimated_block_lines(block, policy) > maximum_lines
             ):
@@ -262,12 +299,18 @@ def compose_accessible_pandoc_document(
     figure_frames = 0
     for index, (header, blocks) in enumerate(segments):
         level, attributes, _inlines = _header_parts(header)
+        _validate_header_geometry(header, policy=policy, source=source)
         classes = {str(value) for value in (attributes[1] if len(attributes) > 1 else [])}
         next_level = _header_parts(segments[index + 1][0])[0] if index + 1 < len(segments) else None
+        projected_blocks = [
+            block for block in blocks if block.get("t") != "HorizontalRule" and not _is_presentation_page_break(block)
+        ]
         explicit_divider = (
-            level == 1 or "section-divider" in classes or (not blocks and next_level is not None and next_level > level)
+            level == 1
+            or "section-divider" in classes
+            or (not projected_blocks and next_level is not None and next_level > level)
         )
-        if not blocks:
+        if not projected_blocks:
             if not explicit_divider:
                 raise _density_error(
                     "slides.structure.title-only",

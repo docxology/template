@@ -372,16 +372,70 @@ that exceeds its declared budget fails with a `slides.density.*` diagnostic;
 an indivisible list is reported specifically as
 `slides.density.indivisible-list`. Table excerpts retain a contiguous prefix of
 at most eight complete body rows after title, header, cell wrapping, and rules
-are priced against the same geometry. Persistent frame navigation links the
-full table and caption in the canonical HTML companion. If even one complete
+are priced against the same geometry. Ordinary tokens must fit one physical
+column at the 20-point floor; their minima conservatively weight wide glyphs,
+and explicit hyphens are recognized as TeX break points. Long inline code is
+priced as character-breakable only when its source characters serialize to the
+same simple, brace-free `texttt` body that the downstream `breaktt` pass
+rewrites; braced TeX literal encodings remain indivisible. Contiguous colspan
+constraints are solved jointly, so overlapping spans can share width in their
+common columns. If the resulting
+per-column minima exceed the frame width, composition stops before LaTeX with
+`slides.density.indivisible-table-width`, including required and available
+width units plus the offending token and its exact column or span. Citeproc is
+run for the geometry parse, so author-year expansions, citation prefixes, and
+suffixes are priced from the project bibliography rather than a fixed
+placeholder; cross-reference citations remain available to their normal
+filters. Hard line breaks, physical code-block lines, nested list indentation
+and item structure, definition-list entries, and quote paragraphs are preserved
+in the vertical estimate. Unknown layout-affecting math commands, projected
+footnotes, and unmodelled rich table-cell blocks fail closed with stable
+diagnostics instead of being assigned optimistic dimensions. Persistent frame navigation links
+the full table and caption in the canonical HTML companion. If even one complete
 body row cannot fit at the 20-point floor, the paired render stops with
 `slides.density.indivisible-table` and exact geometry; it never publishes an
 implementation diagnostic as audience content, clips a row, or shrinks type.
-an accidental title-only frame fails with `slides.structure.title-only`.
+An accidental title-only frame fails with `slides.structure.title-only`.
 Explicit level-one headings and headings marked `section-divider` remain valid
 section dividers. Accessible Beamer also rejects and removes a compiled
 derivative when its LaTeX log reports an overfull frame, using the stable
 `slides.density.beamer-overflow` diagnostic.
+
+The same proportional token model prices complete prose blocks and titles,
+including section dividers and continuation-title allocation; the 80-word
+policy remains an absolute ceiling rather than an assertion that every set of
+80 wide words fits. Citeproc-resolved mixed citations replace each unresolved
+cross-reference placeholder once, so an author-year span and its `eq:`/`fig:`
+peer are not duplicated in geometry. Supported `aligned` and `substack` math
+also contributes calibrated row-height demand; malformed environments or rows
+beyond the validated frame geometry fail before either derivative is created.
+Optional physical spacing after a math row break is deliberately unsupported.
+Raw TeX is admitted only through the declared theorem-like block subset and
+simple reference inlines; arbitrary control sequences in headings, prose, and
+tables fail before rendering. Loose-list paragraphs and every block inside one
+definition entry are priced separately. When projection must excerpt a table,
+its complete-table footer is removed before the row budget is recomputed; the
+canonical reader retains the untouched table and footer.
+For captioned source listings, the projection copy retains an empty caption to
+preserve pandoc-crossref's counter and label while omitting the full prose
+caption from the frame. The unmodified source still supplies the complete
+caption to canonical HTML. Width diagnostics prefer an individually impossible
+physical column over an unrelated active colspan; otherwise they retain the
+exact span start, end, token, and minimum that made the joint constraints
+infeasible.
+
+When source code can be rewritten into the accessible `breaktt` form, the
+renderer verifies that `seqsplit.sty` is available before relying on
+character-level wrapping. A missing package is
+`slides.capability.seqsplit-required`; the derivative pair is not emitted.
+Archive mode keeps its historical identity fallback. Accessible Beamer assigns
+the declared body typography to nested itemize/enumerate levels, descriptions,
+quotes, captioned listings, and algorithm stand-ins so those paths cannot
+silently reset below the 20-point floor.
+The shared source/LaTeX predicate also recognizes Pandoc's brace-free `\ `
+control-space serialization. Archive and accessible output therefore retain
+the historical safe wrapping behavior for long space-bearing monospace spans,
+while apostrophes, brackets, and other braced encodings remain fail-closed.
 
 The canonical `RenderManager.render_all()` and Stage 03 path treat accessible
 slides as an exact pair: every eligible source produces both
@@ -514,7 +568,9 @@ graph TD
 | **core.py** | Main rendering orchestration | `RenderManager` - Unified API for all formats | All other modules |
 | **pdf_renderer.py** | PDF document generation | `PDFRenderer.render_combined_pdf()` - LaTeX compilation | latex_utils, manuscript_discovery |
 | **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and Reveal.js support; archive mode chooses an adaptive `--slide-level` in the 2–4 range and applies `_beamer_allowframebreaks.lua`, while accessible mode consumes the semantic Pandoc AST from `_slides_accessibility.py` | latex_utils, Pandoc, semantic slide composer |
-| **_slides_accessibility.py** | Accessible presentation composition | Typed density/typography policy, semantic frame composition, table excerpts, stable diagnostics, and Reveal.js accessibility post-processing | Pandoc JSON AST, shared HTML accessibility postprocessor |
+| **_slides_accessibility.py** | Accessible presentation composition facade | Public policy, frame, and diagnostic exports plus semantic frame composition | `_slides_accessibility_*`, shared HTML accessibility postprocessor |
+| **_slides_accessibility_text_geometry.py** | Shared projected-text geometry | Citeproc-resolved visible text, physical-token widths, hard-break/container lines, and conservative math geometry | Pandoc JSON AST, `_slides_accessibility_contracts.py` |
+| **_slides_accessibility_tables.py** | Accessible table composition | Joint column/span minima, supported rich-cell geometry, bounded whole-row excerpts, and stable fail-closed diagnostics | `_slides_accessibility_text_geometry.py`, Pandoc JSON AST |
 | **_slides_codelisting.py** | Captioned slide listings | Replaces pandoc-crossref's generated listing float after Pandoc preamble assembly so numbered code captions compile inside Beamer frames | slides_renderer |
 | **_slides_framebreaks.py** | Dense slide splitting | Isolates unbreakable listing, figure, table, and list environments while splitting long top-level frame content safely; explicit `\begingroup`/`\endgroup` regions remain in one continuation frame | slides_renderer |
 | **web_renderer.py** | Web HTML output | `WebRenderer` - MathJax integration; markdown preprocess in `_web_markdown_preprocess.py`, HTML postprocess in `_web_postprocess.py` | pandoc |

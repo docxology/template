@@ -11,12 +11,15 @@ import base64
 import json
 import re
 import shutil
+import subprocess
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering._bibliography import BibliographyConflictError
 from infrastructure.rendering._slides_accessibility import (
     AccessibleSlidePolicy,
     _estimated_visible_characters,
@@ -24,6 +27,15 @@ from infrastructure.rendering._slides_accessibility import (
     compose_accessible_pandoc_document,
     enhance_accessible_reveal,
 )
+from infrastructure.rendering._slides_accessibility_tables import (
+    _table_column_character_capacities,
+    _table_column_minima,
+)
+from infrastructure.rendering._slides_accessibility_contracts import (
+    proportional_text_width_units,
+    tex_math_vertical_line_demand,
+)
+from infrastructure.rendering._slides_accessibility_text_geometry import _plain_text
 from infrastructure.rendering._slides_reveal_content import (
     ACCESSIBLE_REVEAL_URL,
     activate_hardened_reveal_mathjax,
@@ -58,21 +70,43 @@ def _paragraph(text: str) -> dict[str, Any]:
     return {"t": "Para", "c": _inlines(text)}
 
 
-def _citation(identifier: str) -> dict[str, Any]:
+def _hard_line_paragraph(line_count: int) -> dict[str, Any]:
+    inlines: list[dict[str, Any]] = []
+    for index in range(line_count):
+        if index:
+            inlines.append({"t": "LineBreak"})
+        inlines.append({"t": "Str", "c": "x"})
+    return {"t": "Para", "c": inlines}
+
+
+def _nested_fraction_source(depth: int) -> str:
+    source = "1"
+    for _ in range(depth):
+        source = rf"\frac{{1}}{{{source}}}"
+    return source
+
+
+def _citation(
+    identifier: str,
+    *,
+    prefix: str = "",
+    rendered_text: str | None = None,
+    suffix: str = "",
+) -> dict[str, Any]:
     return {
         "t": "Cite",
         "c": [
             [
                 {
                     "citationId": identifier,
-                    "citationPrefix": [],
-                    "citationSuffix": [],
+                    "citationPrefix": _inlines(prefix),
+                    "citationSuffix": _inlines(suffix),
                     "citationMode": {"t": "NormalCitation"},
                     "citationNoteNum": 0,
                     "citationHash": 0,
                 }
             ],
-            [{"t": "Str", "c": f"[@{identifier}]"}],
+            _inlines(rendered_text) if rendered_text is not None else [{"t": "Str", "c": f"[@{identifier}]"}],
         ],
     }
 
@@ -191,6 +225,21 @@ def _spanning_cell(value: str, *, row_span: int = 1, column_span: int = 1) -> li
         row_span,
         column_span,
         [{"t": "Plain", "c": _inlines(value)}],
+    ]
+
+
+def _block_cell(
+    blocks: list[dict[str, Any]],
+    *,
+    row_span: int = 1,
+    column_span: int = 1,
+) -> list[Any]:
+    return [
+        ["", [], []],
+        {"t": "AlignDefault"},
+        row_span,
+        column_span,
+        blocks,
     ]
 
 
@@ -327,6 +376,533 @@ def test_semantic_composer_rejects_geometry_overflow_without_written_boundary() 
     assert exc_info.value.context["maximum_lines"] == 8
 
 
+def test_semantic_composer_counts_authored_hard_lines_at_the_physical_boundary() -> None:
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Hard lines"), _hard_line_paragraph(8)]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/hard-lines.md",
+    )
+    assert composition.frame_count == 1
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Hard lines"), _hard_line_paragraph(9)]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/hard-lines.md",
+        )
+
+    assert exc_info.value.context["estimated_lines"] == 9
+    assert exc_info.value.context["maximum_lines"] == 8
+
+
+def test_semantic_composer_fails_closed_on_pandoc_notes() -> None:
+    note = {"t": "Note", "c": [_paragraph("A projected footnote would violate the declared floor.")]}
+    paragraph = {"t": "Para", "c": [*_inlines("Bounded statement"), note]}
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-note\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Note boundary"), paragraph]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/notes.md",
+        )
+
+    assert exc_info.value.context["block_type"] == "Para"
+
+
+def test_semantic_composer_fails_closed_on_pandoc_notes_in_headings() -> None:
+    note = {"t": "Note", "c": [_paragraph("A projected title footnote would violate the floor.")]}
+    header = _header("Note boundary")
+    header["c"][2].append(note)
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-note\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([header, _paragraph("Bounded statement.")]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/notes.md",
+        )
+
+    assert exc_info.value.context["block_type"] == "Header"
+
+
+def test_semantic_composer_fails_closed_on_unmodeled_heading_math() -> None:
+    math_source = r"\rule{50cm}{1pt}"
+    header = _header("Math boundary")
+    header["c"][2].append({"t": "Math", "c": [{"t": "InlineMath"}, math_source]})
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-math-geometry\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([header, _paragraph("Bounded statement.")]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/math-heading.md",
+        )
+
+    assert exc_info.value.context["unsupported_commands"] == ["rule"]
+
+
+def test_semantic_composer_fails_closed_on_unmodeled_raw_heading_inline() -> None:
+    header = _header("Raw boundary")
+    header["c"][2].append({"t": "RawInline", "c": ["tex", r"\kern50cm"]})
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-raw-geometry\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([header, _paragraph("Bounded statement.")]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/raw-heading.md",
+        )
+
+    assert exc_info.value.context["unsupported_command"] == "kern"
+
+
+@pytest.mark.parametrize("surface", ["heading", "prose", "table"])
+def test_semantic_composer_fails_closed_on_unmodeled_raw_inline_across_surfaces(surface: str) -> None:
+    raw_inline = {"t": "RawInline", "c": ["tex", r"\hspace*{50cm} X"]}
+    header = _header("Raw inline boundary")
+    body: dict[str, Any] = _paragraph("Bounded statement.")
+    if surface == "heading":
+        header["c"][2].append(raw_inline)
+    elif surface == "prose":
+        body = {"t": "Para", "c": [raw_inline]}
+    else:
+        body = _table_values(["Expression"], [["placeholder"]])
+        body["c"][4][0][3][0][1][0][4][0]["c"] = [raw_inline]
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-raw-geometry\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([header, body]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/raw-inline.md",
+        )
+
+    assert exc_info.value.context["unsupported_command"] == "hspace"
+
+
+@pytest.mark.parametrize("container", ["prose", "table"])
+def test_semantic_composer_fails_closed_on_unmodeled_math_commands(container: str) -> None:
+    math_source = r"\rule{50cm}{1pt}"
+    math_inline = {"t": "Math", "c": [{"t": "InlineMath"}, math_source]}
+    if container == "prose":
+        block = {"t": "Para", "c": [math_inline]}
+    else:
+        block = _table_values(["Expression"], [["placeholder"]])
+        block["c"][4][0][3][0][1][0][4][0]["c"] = [math_inline]
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-math-geometry\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Math contract"), block]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/math.md",
+        )
+
+    assert exc_info.value.context["math_source"] == math_source
+    assert exc_info.value.context["unsupported_commands"] == ["rule"]
+
+
+def test_semantic_composer_rejects_overwide_display_math_token() -> None:
+    math_source = "W" * 40
+    equation = {"t": "Para", "c": [{"t": "Math", "c": [{"t": "DisplayMath"}, math_source]}]}
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-equation-token\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Equation width"), equation]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/equation.md",
+        )
+
+    assert exc_info.value.context["first_offending_token"] == math_source
+    assert exc_info.value.context["required_width_units"] > exc_info.value.context["available_width_units"]
+
+
+def test_semantic_composer_rejects_overwide_evidence_token() -> None:
+    token = "W" * 23
+    evidence = {"t": "BlockQuote", "c": [_paragraph(token)]}
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-evidence-token\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Evidence width"), evidence]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/evidence.md",
+        )
+
+    assert exc_info.value.context["first_offending_token"] == token
+
+
+def test_semantic_composer_treats_nonbreaking_spaces_as_physical_token_joins() -> None:
+    token = "\N{LATIN CAPITAL LETTER W}\N{LATIN CAPITAL LETTER W}\N{NO-BREAK SPACE}" * 14 + "WW"
+    paragraph = {"t": "Para", "c": [{"t": "Str", "c": token}]}
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose-token\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Nonbreaking width"), paragraph]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/nonbreaking.md",
+        )
+
+    assert exc_info.value.context["first_offending_token"] == token
+
+
+@pytest.mark.parametrize(
+    ("raw_source", "unsupported_command"),
+    [
+        (r"\rule{50cm}{1pt}", "rule"),
+        (r"\kern50cm X", "kern"),
+        (r"\hbox to 50cm{X}", "hbox"),
+        (r"\begin{center}X\end{center}", "raw-block-shape"),
+    ],
+)
+def test_semantic_composer_rejects_unmodeled_raw_tex_physical_geometry(
+    raw_source: str,
+    unsupported_command: str,
+) -> None:
+    raw = {"t": "RawBlock", "c": ["tex", raw_source]}
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-raw-geometry\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Raw geometry"), raw]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/raw.md",
+        )
+
+    assert exc_info.value.context["unsupported_command"] == unsupported_command
+
+
+def test_semantic_composer_accepts_allowlisted_theorem_raw_tex() -> None:
+    raw = {
+        "t": "RawBlock",
+        "c": [
+            "tex",
+            r"\begin{theorem}[Bounded claim]\label{thm:bounded} "
+            r"For $\lambda>0$, \texttt{method} follows (\ref{eq:method}). "
+            r"\end{theorem}",
+        ],
+    }
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Formal result"), raw]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/formalism.md",
+    )
+
+    assert composition.frame_count == 1
+
+
+def test_semantic_composer_accepts_allowlisted_raw_reference_inline() -> None:
+    paragraph = {
+        "t": "Para",
+        "c": [*_inlines("See theorem"), {"t": "RawInline", "c": ["tex", r"\ref{thm:bounded}"]}],
+    }
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Formal reference"), paragraph]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/formalism.md",
+    )
+
+    assert composition.frame_count == 1
+
+
+@pytest.mark.parametrize(
+    "raw_source",
+    [
+        r"\begin{theorem}x\end{theorem}",
+        r"\begin{aligned}a&=b\end{aligned}",
+    ],
+)
+def test_semantic_composer_rejects_block_only_raw_tex_as_inline(raw_source: str) -> None:
+    paragraph = {"t": "Para", "c": [{"t": "RawInline", "c": ["latex", raw_source]}]}
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-raw-geometry\]"):
+        compose_accessible_pandoc_document(
+            _document([_header("Raw inline"), paragraph]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/raw-inline.md",
+        )
+
+
+@pytest.mark.parametrize("environment", ["center", "aligned"])
+def test_semantic_composer_rejects_nested_raw_tex_environments(environment: str) -> None:
+    raw = {
+        "t": "RawBlock",
+        "c": [
+            "tex",
+            rf"\begin{{theorem}}Claim \begin{{{environment}}}x\end{{{environment}}}\end{{theorem}}",
+        ],
+    }
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-raw-geometry\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Nested raw environment"), raw]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/raw-block.md",
+        )
+
+    assert exc_info.value.context["unsupported_command"] == "nested-environment"
+
+
+def test_semantic_composer_accepts_the_declared_aligned_math_environment() -> None:
+    math_source = (
+        r"\begin{aligned}"
+        r"q(s)&=\operatorname{normalize}(p(s))\\"
+        r"\log q(s)&=\log p(s)-\log Z"
+        r"\end{aligned}"
+    )
+    equation = {"t": "Para", "c": [{"t": "Math", "c": [{"t": "DisplayMath"}, math_source]}]}
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Aligned math"), equation]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/aligned.md",
+    )
+
+    assert composition.frame_count == 1
+
+
+def test_semantic_composer_rejects_optional_aligned_row_spacing() -> None:
+    math_source = r"\begin{aligned}x&=1\\[10cm]y&=2\end{aligned}"
+    equation = {"t": "Para", "c": [{"t": "Math", "c": [{"t": "DisplayMath"}, math_source]}]}
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-math-geometry\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Aligned spacing"), equation]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/aligned-spacing.md",
+        )
+
+    assert exc_info.value.context["unsupported_commands"] == ["row-spacing"]
+
+
+def test_semantic_composer_treats_aligned_row_break_as_control_symbol() -> None:
+    math_source = r"\begin{aligned}x_0&=0\\x_1&=1\end{aligned}"
+    equation = {"t": "Para", "c": [{"t": "Math", "c": [{"t": "DisplayMath"}, math_source]}]}
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Row separator"), equation]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/aligned.md",
+    )
+
+    assert composition.frame_count == 1
+
+
+@pytest.mark.parametrize(
+    ("kind", "passing_rows", "failing_rows", "passing_lines", "failing_lines"),
+    [("aligned", 6, 7, 8, 9), ("substack", 14, 15, 8, 9)],
+)
+def test_semantic_composer_prices_supported_multiline_math_geometry(
+    kind: str,
+    passing_rows: int,
+    failing_rows: int,
+    passing_lines: int,
+    failing_lines: int,
+) -> None:
+    def math_source(rows: int) -> str:
+        body = r"\\ ".join("a" for _ in range(rows))
+        if kind == "aligned":
+            return r"\begin{aligned}" + body + r"\end{aligned}"
+        return rf"x_{{\substack{{{body}}}}}=1"
+
+    passing_source = math_source(passing_rows)
+    passing_equation = {
+        "t": "Para",
+        "c": [{"t": "Math", "c": [{"t": "DisplayMath"}, passing_source]}],
+    }
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Multiline pass"), passing_equation]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/math.md",
+    )
+
+    assert composition.frame_count == 1
+    assert tex_math_vertical_line_demand(passing_source) == passing_lines
+
+    failing_source = math_source(failing_rows)
+    failing_equation = {
+        "t": "Para",
+        "c": [{"t": "Math", "c": [{"t": "DisplayMath"}, failing_source]}],
+    }
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.math-height\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Multiline fail"), failing_equation]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/math.md",
+        )
+
+    assert exc_info.value.context["math_source"] == failing_source
+    assert exc_info.value.context["estimated_lines"] == failing_lines
+    assert exc_info.value.context["maximum_lines"] == 8
+
+
+def test_semantic_composer_models_display_and_table_math_height() -> None:
+    passing_math = {"t": "Math", "c": [{"t": "DisplayMath"}, _nested_fraction_source(16)]}
+    passing_equation = {"t": "Para", "c": [passing_math]}
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Fraction depth"), passing_equation]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/math.md",
+    )
+    assert composition.frame_count == 1
+
+    failing_source = _nested_fraction_source(17)
+    failing_equation = {"t": "Para", "c": [{"t": "Math", "c": [{"t": "DisplayMath"}, failing_source]}]}
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.math-height\]") as equation_error:
+        compose_accessible_pandoc_document(
+            _document([_header("Fraction depth"), failing_equation]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/math.md",
+        )
+    assert equation_error.value.context["estimated_lines"] == 9
+
+    table = _table_values(["Expression"], [["placeholder"]])
+    table["c"][4][0][3][0][1][0][4][0]["c"] = [{"t": "Math", "c": [{"t": "InlineMath"}, failing_source]}]
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table\]") as table_error:
+        compose_accessible_pandoc_document(
+            _document([_header("Fraction table"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/math.md",
+        )
+    assert table_error.value.context["first_row_lines"] == 9
+
+
+def test_semantic_composer_prices_list_indent_and_nested_item_lines() -> None:
+    passing_width = {"t": "BulletList", "c": [[_paragraph("a" * 40)]]}
+    composition = compose_accessible_pandoc_document(
+        _document([_header("List width"), passing_width]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/lists.md",
+    )
+    assert composition.frame_count == 1
+
+    failing_width = {"t": "BulletList", "c": [[_paragraph("a" * 42)]]}
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose-token\]") as width_error:
+        compose_accessible_pandoc_document(
+            _document([_header("List width"), failing_width]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/lists.md",
+        )
+    assert width_error.value.context["first_offending_token"] == "a" * 42
+
+    def nested(child_count: int) -> dict[str, Any]:
+        children = {"t": "BulletList", "c": [[_paragraph(f"child {index}")] for index in range(child_count)]}
+        return {"t": "BulletList", "c": [[_paragraph("parent"), children]]}
+
+    nested_composition = compose_accessible_pandoc_document(
+        _document([_header("Nested list"), nested(7)]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/lists.md",
+    )
+    assert nested_composition.frame_count == 1
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-list\]") as height_error:
+        compose_accessible_pandoc_document(
+            _document([_header("Nested list"), nested(8)]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/lists.md",
+        )
+    assert height_error.value.context["estimated_lines"] == 9
+
+
+def test_semantic_composer_models_definition_list_entry_geometry() -> None:
+    def definition_list(entry_count: int) -> dict[str, Any]:
+        return {
+            "t": "DefinitionList",
+            "c": [[_inlines(f"term{index}"), [[_paragraph("x")]]] for index in range(entry_count)],
+        }
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Definitions"), definition_list(7)]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/definitions.md",
+    )
+    assert composition.frame_count == 1
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-definition-list\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Definitions"), definition_list(8)]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/definitions.md",
+        )
+    assert exc_info.value.context["estimated_lines"] == 9
+
+
+def test_semantic_composer_recursively_prices_one_definition_with_many_paragraphs() -> None:
+    def definition_list(paragraph_count: int) -> dict[str, Any]:
+        return {
+            "t": "DefinitionList",
+            "c": [[_inlines("term"), [[_paragraph("x") for _ in range(paragraph_count)]]]],
+        }
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("One definition"), definition_list(8)]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/definitions.md",
+    )
+    assert composition.frame_count == 1
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-definition-list\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("One definition"), definition_list(10)]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/definitions.md",
+        )
+    assert exc_info.value.context["estimated_lines"] == 10
+
+
+def test_semantic_composer_debits_loose_list_paragraph_spacing() -> None:
+    def loose_list(paragraph_count: int) -> dict[str, Any]:
+        return {"t": "BulletList", "c": [[_paragraph("x") for _ in range(paragraph_count)]]}
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Loose list"), loose_list(7)]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/lists.md",
+    )
+    assert composition.frame_count == 1
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-list\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Loose list"), loose_list(8)]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/lists.md",
+        )
+    assert exc_info.value.context["estimated_lines"] == 9
+
+
+def test_semantic_composer_recursively_prices_evidence_block_paragraphs() -> None:
+    def evidence(paragraph_count: int) -> dict[str, Any]:
+        return {"t": "BlockQuote", "c": [_paragraph("x") for _ in range(paragraph_count)]}
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Evidence"), evidence(9)]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/evidence.md",
+    )
+    assert composition.frame_count == 1
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-evidence\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Evidence"), evidence(10)]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/evidence.md",
+        )
+    assert exc_info.value.context["estimated_lines"] == 9
+
+
+def test_semantic_composer_preserves_evidence_div_block_geometry() -> None:
+    evidence = {
+        "t": "Div",
+        "c": [["", ["evidence"], []], [_paragraph("x") for _ in range(10)]],
+    }
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-evidence\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Evidence container"), evidence]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/evidence-div.md",
+        )
+
+    assert exc_info.value.context["estimated_lines"] == 19
+    assert exc_info.value.context["maximum_lines"] == 8
+
+
 def test_semantic_composer_fails_on_an_indivisible_dense_block() -> None:
     dense = _paragraph(" ".join(f"word{index}" for index in range(81)))
 
@@ -395,7 +971,144 @@ def test_semantic_composer_debits_cross_reference_fallback_at_visible_label_widt
     bibliography = {"t": "Para", "c": [_citation("mildner2025fedgvi")]}
     section_reference = {"t": "Para", "c": [_citation("sec:results-hierarchical")]}
 
-    assert _estimated_visible_characters(section_reference) > 2 * _estimated_visible_characters(bibliography)
+    assert _estimated_visible_characters(bibliography) == 32
+    assert _estimated_visible_characters(section_reference) > _estimated_visible_characters(bibliography)
+
+
+def test_semantic_composer_prices_citation_prefix_and_suffix_before_citeproc() -> None:
+    citation = {
+        "t": "Para",
+        "c": [
+            _citation(
+                "bissiri2016",
+                prefix="compare the detailed construction in",
+                suffix="especially chapter twelve and appendix alpha",
+            )
+        ],
+    }
+
+    assert _estimated_visible_characters(citation) == proportional_text_width_units(
+        "compare the detailed construction in " + "a" * 32 + " especially chapter twelve and appendix alpha"
+    )
+
+
+def test_semantic_composer_uses_resolved_citeproc_text_and_rejects_one_overwide_family_name() -> None:
+    long_family = "W" * 24
+    citation = _citation(
+        "longfamily2026",
+        rendered_text=f"({long_family} 2026)",
+    )
+    paragraph = {"t": "Para", "c": [*_inlines("The source is"), {"t": "Space"}, citation]}
+
+    assert _estimated_visible_characters(paragraph) == proportional_text_width_units(
+        f"The source is ({long_family} 2026)"
+    )
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose-token\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Resolved citation geometry"), paragraph]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/discussion.md",
+        )
+
+    assert long_family in exc_info.value.context["first_offending_token"]
+    assert exc_info.value.context["required_width_units"] > exc_info.value.context["available_width_units"]
+
+
+def test_resolved_mixed_citation_prices_one_cross_reference_rendition() -> None:
+    cite = {
+        "t": "Cite",
+        "c": [
+            [
+                {
+                    "citationId": "smith2026",
+                    "citationPrefix": [{"t": "Str", "c": "see"}],
+                    "citationSuffix": [],
+                    "citationMode": {"t": "NormalCitation"},
+                    "citationNoteNum": 1,
+                    "citationHash": 0,
+                },
+                {
+                    "citationId": "eq:model",
+                    "citationPrefix": [],
+                    "citationSuffix": [],
+                    "citationMode": {"t": "NormalCitation"},
+                    "citationNoteNum": 1,
+                    "citationHash": 0,
+                },
+            ],
+            [
+                {"t": "Str", "c": "(see"},
+                {"t": "Space"},
+                {"t": "Str", "c": "Smith"},
+                {"t": "Space"},
+                {"t": "Str", "c": "2026;"},
+                {"t": "Space"},
+                {"t": "Strong", "c": [{"t": "Str", "c": "eq:model?"}]},
+                {"t": "Str", "c": ")"},
+            ],
+        ],
+    }
+
+    normalized = " ".join(_plain_text(cite).split())
+
+    assert normalized == "(see Smith 2026; eq. eq:model )"
+    assert normalized.count("eq:model") == 1
+    assert _estimated_visible_characters({"t": "Para", "c": [cite]}) < proportional_text_width_units(
+        normalized + " eq. eq:model"
+    )
+
+
+@pytest.mark.parametrize(("glyph", "count"), [("W", 23), ("A", 32), ("m", 28)])
+def test_semantic_composer_rejects_overwide_ordinary_prose_tokens(glyph: str, count: int) -> None:
+    token = glyph * count
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose-token\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Physical token"), _paragraph(token)]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/discussion.md",
+        )
+
+    assert exc_info.value.context["first_offending_token"] == token
+    assert exc_info.value.context["required_width_units"] > 43
+
+
+def test_semantic_composer_prices_aggregate_proportional_prose_width() -> None:
+    passing = _paragraph(" ".join(["WW"] * 72))
+    failing = _paragraph(" ".join(["WW"] * 80))
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Wide prose pass"), passing]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/discussion.md",
+    )
+    assert composition.frame_count == 1
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Wide prose fail"), failing]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/discussion.md",
+        )
+
+    assert exc_info.value.context["estimated_lines"] == 9
+    assert exc_info.value.context["maximum_lines"] == 8
+
+
+@pytest.mark.parametrize("literal", ["'", "[", "{"])
+def test_semantic_composer_rejects_long_code_outside_exact_breaktt_contract(literal: str) -> None:
+    code = "a" * 80 + literal
+    paragraph = {"t": "Para", "c": [{"t": "Code", "c": [["", [], []], code]}]}
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose-token\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Code token"), paragraph]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/discussion.md",
+        )
+
+    assert exc_info.value.context["first_offending_token"] == code
+    assert exc_info.value.context["required_width_units"] > 43
 
 
 def test_semantic_composer_splits_before_unresolved_crossrefs_overflow_beamer() -> None:
@@ -428,6 +1141,27 @@ def test_semantic_composer_splits_before_unresolved_crossrefs_overflow_beamer() 
     assert "sec:results-parameter-recovery" in json.dumps(prose[1])
 
 
+def test_semantic_composer_prices_citeproc_author_year_expansion_before_split() -> None:
+    paragraph = _paragraph_with_citations(
+        "The first bounded synthesis relates REF0 REF1 REF2 and REF3 while preserving each source claim. "
+        "The second bounded synthesis relates REF4 REF5 REF6 and REF7 while preserving each evidence class.",
+        [f"long-surname-source-{index}" for index in range(8)],
+    )
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Citation-rich synthesis"), paragraph]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/discussion.md",
+    )
+
+    prose = [block for block in composition.document["blocks"] if block["t"] == "Para"]
+    assert composition.frame_count == 2
+    assert len(prose) == 2
+    assert "long-surname-source-3" in json.dumps(prose[0])
+    assert "long-surname-source-4" not in json.dumps(prose[0])
+    assert "long-surname-source-4" in json.dumps(prose[1])
+
+
 def test_semantic_composer_excerpts_table_without_mutating_source() -> None:
     table = _table(10)
     source = _document([_header("Exact values"), table])
@@ -450,6 +1184,43 @@ def test_semantic_composer_excerpts_table_without_mutating_source() -> None:
     assert len(table["c"][4][0][3]) == 10
     assert all(colspec[1]["t"] == "ColWidth" for colspec in rendered_table["c"][2])
     assert all(colspec[1]["t"] == "ColWidthDefault" for colspec in table["c"][2])
+
+
+def test_semantic_composer_removes_complete_table_footer_from_projection_excerpt() -> None:
+    table = _table(10)
+    table["c"][5][1] = [_row("Total 10")]
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Excerpted total"), table]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    rendered_table = next(block for block in composition.document["blocks"] if block["t"] == "Table")
+    assert composition.excerpted_table_count == 1
+    assert len(rendered_table["c"][4][0][3]) < 10
+    assert rendered_table["c"][5][1] == []
+    source_footer = " ".join(_visible_text(table["c"][5]).split())
+    assert "Total" in source_footer and "10" in source_footer
+
+
+def test_table_excerpt_recomputes_geometry_after_dropping_a_long_footer() -> None:
+    table = _table(10)
+    footer = _row("complete-source total")
+    footer[1][0][4] = [_hard_line_paragraph(7)]
+    table["c"][5][1] = [footer]
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Excerpted long footer"), table]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    rendered_table = next(block for block in composition.document["blocks"] if block["t"] == "Table")
+    assert composition.excerpted_table_count == 1
+    assert len(rendered_table["c"][4][0][3]) == 6
+    assert rendered_table["c"][5][1] == []
+    assert len(table["c"][5][1]) == 1
 
 
 def test_uniform_pandoc_table_widths_are_redistributed_by_visible_demand() -> None:
@@ -490,6 +1261,373 @@ def test_genuinely_unequal_authored_table_widths_are_preserved() -> None:
     rendered = next(block for block in composition.document["blocks"] if block["t"] == "Table")
     widths = [float(colspec[1]["c"]) for colspec in rendered["c"][2]]
     assert widths == pytest.approx([0.25, 0.75])
+
+
+def test_table_widths_honor_prose_hyphen_and_breakable_code_minima() -> None:
+    long_code = "canonical_parameter_identifier_that_becomes_breakable"
+    table = _table_values(
+        ["Symbol", "Meaning", "Code term"],
+        [["y_t", "Observation/outcome rank-biserial-derived index", long_code]],
+    )
+    code_inline = {"t": "Code", "c": [["", [], []], long_code]}
+    table["c"][4][0][3][0][1][2][4][0]["c"] = [code_inline]
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Notation mapping"), table]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/notation.md",
+    )
+
+    rendered = next(block for block in composition.document["blocks"] if block["t"] == "Table")
+    widths = [float(colspec[1]["c"]) for colspec in rendered["c"][2]]
+    minima, tokens = _table_column_minima(rendered["c"], 3)
+    capacities = _table_column_character_capacities(widths, AccessibleSlidePolicy(), minima)
+    assert len(rendered["c"][2]) == 3
+    assert all(capacity >= minimum for capacity, minimum in zip(capacities, minima, strict=True))
+    assert minima[1] == 19
+    assert minima[1] > len("biserial-") + 1
+    assert minima[2] < len(long_code)
+    assert tokens[1] == "Observation/outcome"
+    assert tokens[2] == "Code"
+
+
+def test_overlapping_colspans_share_their_common_column_minimum() -> None:
+    wide_token = "W" * 18
+    table = {
+        "t": "Table",
+        "c": [
+            ["", [], []],
+            [None, []],
+            [[{"t": "AlignDefault"}, {"t": "ColWidthDefault"}] for _ in range(3)],
+            [
+                ["", [], []],
+                [
+                    [
+                        ["", [], []],
+                        [
+                            _spanning_cell(wide_token, column_span=2),
+                            _spanning_cell("x"),
+                        ],
+                    ]
+                ],
+            ],
+            [
+                [
+                    ["", [], []],
+                    0,
+                    [],
+                    [
+                        [
+                            ["", [], []],
+                            [
+                                _spanning_cell("x"),
+                                _spanning_cell(wide_token, column_span=2),
+                            ],
+                        ]
+                    ],
+                ]
+            ],
+            [["", [], []], []],
+        ],
+    }
+
+    minima, _tokens = _table_column_minima(table["c"], 3)
+
+    # Each W span requires 36 calibrated width units. The one-unit internal
+    # gutter means the column minima must contribute at least 35. A local
+    # greedy split would over-allocate; the exact interval solver shares the
+    # middle column and finds the feasible 37-unit allocation [2, 33, 2].
+    assert minima == [2, 33, 2]
+    assert sum(minima[:2]) + 1 >= 36
+    assert sum(minima[1:]) + 1 >= 36
+    assert sum(minima) <= 41
+
+
+@pytest.mark.parametrize("token_length", [41, 42])
+def test_infeasible_colspan_diagnostic_preserves_active_span_provenance(token_length: int) -> None:
+    token = "a" * token_length
+    table = {
+        "t": "Table",
+        "c": [
+            ["", [], []],
+            [None, []],
+            [[{"t": "AlignDefault"}, {"t": "ColWidthDefault"}] for _ in range(3)],
+            [
+                ["", [], []],
+                [
+                    [
+                        ["", [], []],
+                        [_spanning_cell("A"), _spanning_cell("B"), _spanning_cell("C")],
+                    ]
+                ],
+            ],
+            [
+                [
+                    ["", [], []],
+                    0,
+                    [],
+                    [
+                        [
+                            ["", [], []],
+                            [_spanning_cell(token, column_span=2), _spanning_cell("x")],
+                        ]
+                    ],
+                ]
+            ],
+            [["", [], []], []],
+        ],
+    }
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Spanning boundary"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/spanning.md",
+        )
+
+    context = exc_info.value.context
+    assert context["column_minimum_width_units"] == [2, token_length - 3, 2]
+    assert context["first_offending_token"] == token
+    assert context["first_offending_column_index"] == 1
+    assert context["offending_span_start_column_index"] == 1
+    assert context["offending_span_end_column_index"] == 2
+    assert context["offending_span_required_width_units"] == token_length - 1
+
+
+def test_individually_impossible_column_outranks_unrelated_span_diagnostic() -> None:
+    def span_row(cells: list[list[Any]]) -> list[Any]:
+        return [["", [], []], cells]
+
+    table = {
+        "t": "Table",
+        "c": [
+            ["", [], []],
+            [None, []],
+            [[{"t": "AlignDefault"}, {"t": "ColWidthDefault"}] for _ in range(3)],
+            [["", [], []], [span_row([_spanning_cell("A"), _spanning_cell("B"), _spanning_cell("C")])]],
+            [
+                [
+                    ["", [], []],
+                    0,
+                    [],
+                    [span_row([_spanning_cell("W" * 8, column_span=2), _spanning_cell("W" * 23)])],
+                ]
+            ],
+            [["", [], []], []],
+        ],
+    }
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Mixed width failure"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/table.md",
+        )
+
+    context = exc_info.value.context
+    assert context["column_minimum_width_units"] == [2, 13, 45]
+    assert context["first_offending_column_index"] == 3
+    assert context["first_offending_token"] == "W" * 23
+    assert context["first_offending_column_minimum_width_units"] == 45
+    assert context["offending_span_start_column_index"] is None
+    assert context["offending_span_end_column_index"] is None
+    assert context["offending_span_required_width_units"] is None
+
+
+def test_table_code_block_prices_each_physical_line_as_indivisible_monospace() -> None:
+    code_line = "aaaaa-" * 8
+    table = _table_values(["Code"], [["placeholder"]])
+    table["c"][4][0][3][0][1][0] = _block_cell([{"t": "CodeBlock", "c": [["", [], []], code_line]}])
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Verbatim boundary"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/verbatim.md",
+        )
+
+    assert exc_info.value.context["first_offending_token"] == code_line
+    assert exc_info.value.context["required_width_units"] > 43
+
+
+@pytest.mark.parametrize(
+    ("command", "passing_count", "failing_count"),
+    [(r"\sum", 14, 16), (r"\rightarrow", 19, 20)],
+)
+def test_table_math_controls_use_calibrated_visible_width(
+    command: str,
+    passing_count: int,
+    failing_count: int,
+) -> None:
+    passing_source = command * passing_count
+    passing_table = _table_values(["Expression"], [["placeholder"]])
+    passing_table["c"][4][0][3][0][1][0][4][0]["c"] = [{"t": "Math", "c": [{"t": "InlineMath"}, passing_source]}]
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Math boundary pass"), passing_table]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/math.md",
+    )
+    assert composition.frame_count == 1
+
+    math_source = command * failing_count
+    table = _table_values(["Expression"], [["placeholder"]])
+    table["c"][4][0][3][0][1][0][4][0]["c"] = [{"t": "Math", "c": [{"t": "InlineMath"}, math_source]}]
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Math boundary"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/math.md",
+        )
+
+    assert exc_info.value.context["first_offending_token"] == math_source
+    assert exc_info.value.context["required_width_units"] > 43
+
+
+def test_table_list_geometry_prices_indent_and_item_line_structure() -> None:
+    horizontal = _table_values(["Item"], [["placeholder"]])
+    horizontal["c"][4][0][3][0][1][0] = _block_cell([{"t": "BulletList", "c": [[_paragraph("a" * 42)]]}])
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as width_error:
+        compose_accessible_pandoc_document(
+            _document([_header("List width"), horizontal]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/list.md",
+        )
+    assert width_error.value.context["first_offending_token"] == "a" * 42
+
+    vertical = _table_values(["Items"], [["placeholder"]])
+    vertical["c"][4][0][3][0][1][0] = _block_cell(
+        [{"t": "BulletList", "c": [[_paragraph(f"item-{index}")] for index in range(8)]}]
+    )
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table\]") as height_error:
+        compose_accessible_pandoc_document(
+            _document([_header("List height"), vertical]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/list.md",
+        )
+    assert height_error.value.context["first_row_lines"] == 8
+
+
+def test_table_cell_geometry_counts_authored_hard_lines() -> None:
+    def table_with_lines(line_count: int) -> dict[str, Any]:
+        table = _table_values(["Evidence"], [["placeholder"]])
+        table["c"][4][0][3][0][1][0] = _block_cell([_hard_line_paragraph(line_count)])
+        return table
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Table hard lines"), table_with_lines(6)]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/table-lines.md",
+    )
+    assert composition.frame_count == 1
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Table hard lines"), table_with_lines(7)]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/table-lines.md",
+        )
+    assert exc_info.value.context["first_row_lines"] == 7
+
+
+def test_unmodeled_rich_table_cell_block_fails_with_stable_diagnostic() -> None:
+    table = _table_values(["Claim"], [["placeholder"]])
+    table["c"][4][0][3][0][1][0] = _block_cell([{"t": "BlockQuote", "c": [_paragraph("bounded evidence")]}])
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-table-cell-block\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Rich cell"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/rich.md",
+        )
+
+    assert exc_info.value.context["block_type"] == "BlockQuote"
+
+
+@pytest.mark.parametrize(
+    ("glyph", "passing_count", "failing_count"),
+    [("A", 30, 31), ("m", 26, 27), ("w", 30, 31), ("W", 22, 23)],
+)
+def test_proportional_glyph_classes_match_one_column_preflight_boundary(
+    glyph: str,
+    passing_count: int,
+    failing_count: int,
+) -> None:
+    passing_token = glyph * passing_count
+    failing_token = glyph * failing_count
+    passing_table = _table_values(["Field"], [[passing_token]])
+    failing_table = _table_values(["Field"], [[failing_token]])
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Glyph boundary pass"), passing_table]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/glyph-boundary.md",
+    )
+    assert composition.frame_count == 1
+    assert proportional_text_width_units(passing_token) <= 43
+    assert proportional_text_width_units(failing_token) > 43
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Glyph boundary fail"), failing_table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/glyph-boundary.md",
+        )
+
+    context = exc_info.value.context
+    assert context["column_count"] == 1
+    assert context["available_width_units"] == 43
+    assert context["required_width_units"] > context["available_width_units"]
+    assert context["first_offending_token"] == failing_token
+
+
+def test_resolved_citeproc_family_name_sets_table_token_minimum() -> None:
+    long_family = "A" * 32
+    table = _table_values(["Source"], [["placeholder"]])
+    table["c"][4][0][3][0][1][0][4][0]["c"] = [_citation("longfamily2026", rendered_text=f"({long_family} 2026)")]
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Resolved citation table"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
+
+    assert long_family in exc_info.value.context["first_offending_token"]
+    assert exc_info.value.context["required_width_units"] > exc_info.value.context["available_width_units"]
+
+
+def test_irreducible_eight_column_gallery_fails_before_latex_with_width_context() -> None:
+    table = _table_values(
+        [
+            "Mechanism",
+            "Evidence class",
+            "Naive score",
+            "Selected mean",
+            "Mean difference",
+            "Confidence interval",
+            "Win fraction",
+            "Display flag",
+        ],
+        [["byzantine", "directional", "0.6306", "0.6599", "0.0293", "[0.0124, 0.0462]", "0.84", "shown"]],
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Contamination gallery"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/extended-methods.md",
+        )
+
+    context = exc_info.value.context
+    assert context["diagnostic_code"] == "slides.density.indivisible-table-width"
+    assert context["column_count"] == 8
+    assert context["body_font_pt"] == 20
+    assert context["required_width_units"] > context["available_width_units"]
+    assert len(context["column_minimum_width_units"]) == 8
+    assert 1 <= context["first_offending_column_index"] <= 8
+    assert context["first_offending_token"] != ""
+    assert context["intercolumn_gutter_width_units"] == 7
 
 
 def test_table_excerpt_geometry_accounts_for_cell_wrapping() -> None:
@@ -535,24 +1673,11 @@ def test_table_excerpt_geometry_accounts_for_continuation_title_lines() -> None:
 
 def test_table_excerpt_fails_closed_when_no_whole_row_fits() -> None:
     table = _table_values(
-        [
-            "Method",
-            "Contamination rate",
-            "Rank-biserial-derived d-equivalent",
-            "Interpretive label",
-            "Raw p value",
-            "Adjusted q value",
-            "Reject null",
-        ],
+        ["Metric", "Condition"],
         [
             [
-                "RKL operating point " * 8,
-                "0.5 nested contamination " * 8,
-                "saturated effect " * 8,
-                "large conditional label " * 8,
-                "1e-8 raw probability " * 8,
-                "2e-8 adjusted probability " * 8,
-                "yes under declared family " * 8,
+                "alpha beta gamma delta " * 24,
+                "nested condition remains source bounded " * 24,
             ]
         ],
     )
@@ -568,7 +1693,7 @@ def test_table_excerpt_fails_closed_when_no_whole_row_fits() -> None:
     assert context["source"] == "manuscript/results.md"
     assert context["heading"] == "Paired contrasts"
     assert context["diagnostic_code"] == "slides.density.indivisible-table"
-    assert context["column_count"] == 7
+    assert context["column_count"] == 2
     assert context["body_row_count"] == 1
     assert context["available_lines"] == 8
     assert context["fixed_lines"] == 1
@@ -579,8 +1704,8 @@ def test_table_excerpt_fails_closed_when_no_whole_row_fits() -> None:
     assert context["footer_lines"] == 0
     assert context["first_body_header_lines"] == 0
     assert context["first_row_lines"] > context["available_lines"]
-    assert len(context["resolved_widths"]) == 7
-    assert len(context["column_character_capacities"]) == 7
+    assert len(context["resolved_widths"]) == 2
+    assert len(context["column_character_capacities"]) == 2
 
 
 def test_row_span_uses_physical_columns_and_cannot_be_fragmented_by_excerpt() -> None:
@@ -652,6 +1777,74 @@ def test_malformed_table_body_still_raises_renderer_error() -> None:
         )
 
 
+def test_captioned_listing_keeps_source_caption_but_projects_counter_only() -> None:
+    caption = "A complete source-owned listing caption that consumes projected vertical geometry"
+    code = "\n".join(f"x_{index} = {index}" for index in range(5))
+    listing = {
+        "t": "CodeBlock",
+        "c": [["lst:test", ["python"], [["caption", caption]]], code],
+    }
+    document = _document([_header("Listing"), listing])
+
+    composition = compose_accessible_pandoc_document(
+        document,
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/listing.md",
+    )
+
+    rendered = next(block for block in composition.document["blocks"] if block["t"] == "CodeBlock")
+    assert document["blocks"][1]["c"][0][2] == [["caption", caption]]
+    assert rendered["c"][0][0] == "lst:test"
+    assert rendered["c"][0][2] == [["caption", ""]]
+    assert rendered["c"][1] == code
+
+    overheight = {
+        "t": "CodeBlock",
+        "c": [
+            ["lst:test", ["python"], [["caption", caption]]],
+            "\n".join(f"x_{index} = {index}" for index in range(8)),
+        ],
+    }
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-code\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Listing"), overheight]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/listing.md",
+        )
+    assert exc_info.value.context["projected_caption_lines"] == 1
+    assert exc_info.value.context["estimated_lines"] == 9
+
+
+def test_shell_code_reflows_only_tokens_supported_by_breakable_monospace_contract() -> None:
+    fitting = {"t": "CodeBlock", "c": [["", ["bash"], []], "W" * 33 + "'"]}
+    fitting_composition = compose_accessible_pandoc_document(
+        _document([_header("Fitting shell token"), fitting]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/shell.md",
+    )
+    assert any(block.get("t") == "CodeBlock" for block in fitting_composition.document["blocks"])
+
+    reflowable = {"t": "CodeBlock", "c": [["", ["bash"], []], "W" * 35]}
+    reflowed_composition = compose_accessible_pandoc_document(
+        _document([_header("Reflowable shell token"), reflowable]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/shell.md",
+    )
+    reflowed = next(block for block in reflowed_composition.document["blocks"] if block.get("t") == "Para")
+    assert reflowed["c"][0]["t"] == "Code"
+
+    for unsafe_token in ("W" * 34 + "'", "W" * 34 + "{"):
+        unsafe = {"t": "CodeBlock", "c": [["", ["bash"], []], unsafe_token]}
+        with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-code-line\]") as exc_info:
+            compose_accessible_pandoc_document(
+                _document([_header("Unsafe shell token"), unsafe]),
+                policy=AccessibleSlidePolicy(),
+                source="manuscript/shell.md",
+            )
+        assert exc_info.value.context["first_offending_token"] == unsafe_token
+        assert exc_info.value.context["maximum_characters"] == 34
+
+
 def test_semantic_composer_isolates_figures_equations_code_and_evidence() -> None:
     image = {
         "t": "Image",
@@ -715,10 +1908,13 @@ def test_long_title_figure_allocation_uses_title_adjusted_body_geometry() -> Non
         "t": "Figure",
         "c": [["fig:trend", [], []], [None, []], [{"t": "Plain", "c": [image]}]],
     }
+    authored_title = (
+        "A deliberately wide evidence heading that wraps across multiple projection lines for careful reading"
+    )
     composition = compose_accessible_pandoc_document(
         _document(
             [
-                _header("A deliberately long evidence heading that wraps across multiple projection lines"),
+                _header(authored_title),
                 figure,
             ]
         ),
@@ -734,12 +1930,12 @@ def test_long_title_figure_allocation_uses_title_adjusted_body_geometry() -> Non
     continuation_header = continuation_headers[1]["c"]
     assert continuation_header[2]
     visible_title = " ".join(_visible_text(continuation_header[2]).split())
-    assert len(visible_title) <= 36
+    assert proportional_text_width_units(visible_title) <= 36
     assert any(
         pair
         == [
             "aria-label",
-            "A deliberately long evidence heading that wraps across multiple projection lines, part 2",
+            f"{authored_title}, part 2",
         ]
         for pair in continuation_header[1][2]
     )
@@ -751,24 +1947,17 @@ def test_long_title_figure_allocation_uses_title_adjusted_body_geometry() -> Non
     assert ["height", "70%"] in rendered_image["c"][0][2]
 
 
-def test_unbreakable_continuation_title_stays_within_one_line_contract() -> None:
-    image = _image("trend.png")
-    figure = {
-        "t": "Figure",
-        "c": [["fig:trend", [], []], [None, []], [{"t": "Plain", "c": [image]}]],
-    }
-    authored_title = "unbreakable_identifier_" + "x" * 64
+@pytest.mark.parametrize("authored_title", ["W" * 22, "unbreakable_identifier_" + "x" * 64])
+def test_unbreakable_title_fails_before_divider_or_content_render(authored_title: str) -> None:
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-title-token\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header(authored_title), _paragraph("Bounded content.")]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
 
-    composition = compose_accessible_pandoc_document(
-        _document([_header(authored_title), figure]),
-        policy=AccessibleSlidePolicy(),
-        source="manuscript/results.md",
-    )
-
-    continuation_headers = [block for block in composition.document["blocks"] if block["t"] == "Header"]
-    visible_title = " ".join(_visible_text(continuation_headers[1]["c"][2]).split())
-    assert len(visible_title) <= 36
-    assert any(pair == ["aria-label", f"{authored_title}, part 2"] for pair in continuation_headers[1]["c"][1][2])
+    assert exc_info.value.context["first_offending_token"] == authored_title
+    assert exc_info.value.context["required_width_units"] > exc_info.value.context["available_width_units"]
 
 
 def test_multi_panel_figure_preserves_one_bounded_authored_row() -> None:
@@ -797,6 +1986,66 @@ def test_multi_panel_figure_preserves_one_bounded_authored_row() -> None:
         [["width", "45%"]],
     ]
     assert all(["height", "70%"] in image["c"][0][2] for image in images)
+    assert all("accessible-multi-image-panel" in image["c"][0][1] for image in images)
+
+
+def test_multi_panel_figure_rejects_hard_line_break_pseudo_rows() -> None:
+    figure = {
+        "t": "Figure",
+        "c": [
+            ["fig:panels", [], []],
+            [None, []],
+            [
+                {
+                    "t": "Plain",
+                    "c": [
+                        _image("left.png", width="45%", alt="Left"),
+                        {"t": "LineBreak"},
+                        _image("right.png", width="45%", alt="Right"),
+                    ],
+                }
+            ],
+        ],
+    }
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.multi-image-layout\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Panel comparison"), figure]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
+
+    assert "pseudo-rows" in str(exc_info.value)
+
+
+def test_multi_panel_figure_requires_declared_minimum_usable_width() -> None:
+    figure = {
+        "t": "Figure",
+        "c": [
+            ["fig:panels", [], []],
+            [None, []],
+            [
+                {
+                    "t": "Plain",
+                    "c": [
+                        _image("left.png", width="30%", alt="Left"),
+                        {"t": "Space"},
+                        _image("right.png", width="30%", alt="Right"),
+                    ],
+                }
+            ],
+        ],
+    }
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.multi-image-layout\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Panel comparison"), figure]),
+            policy=AccessibleSlidePolicy(min_figure_area_percent=70),
+            source="manuscript/results.md",
+        )
+
+    assert exc_info.value.context["authored_total_width_percent"] == 60
+    assert exc_info.value.context["minimum_total_width_percent"] == 70
 
 
 @pytest.mark.parametrize(
@@ -955,6 +2204,43 @@ def test_semantic_composer_rejects_accidental_title_only_but_accepts_section_div
 
     composition = compose_accessible_pandoc_document(
         _document([_header("Methods", level=1)]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/methods.md",
+    )
+    assert composition.frame_count == 1
+    assert composition.section_divider_count == 1
+
+
+def test_semantic_composer_validates_title_only_divider_geometry() -> None:
+    title = "W" * 23
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-title-token\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header(title, level=1)]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/divider.md",
+        )
+
+    assert exc_info.value.context["first_offending_token"] == title
+
+
+@pytest.mark.parametrize(
+    "separator",
+    [
+        {"t": "HorizontalRule"},
+        {"t": "RawBlock", "c": ["tex", r"\pagebreak"]},
+    ],
+)
+def test_semantic_composer_does_not_lose_separator_only_headings(separator: dict[str, Any]) -> None:
+    with pytest.raises(RenderingError, match=r"\[slides\.structure\.title-only\]"):
+        compose_accessible_pandoc_document(
+            _document([_header("Orphan heading"), separator]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/orphan.md",
+        )
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Methods", level=1), separator]),
         policy=AccessibleSlidePolicy(),
         source="manuscript/methods.md",
     )
@@ -1419,6 +2705,54 @@ def test_real_accessible_reveal_resolves_crossrefs_and_hardens_complex_math(tmp_
 
 
 @pytest.mark.slow
+def test_real_accessible_reveal_preserves_multi_image_widths_in_final_css(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    figures = tmp_path / "output" / "figures"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    figures.mkdir(parents=True)
+    for name in ("left.png", "right.png"):
+        _write_png(figures / name)
+    source = manuscript / "panels.md"
+    source.write_text(
+        "## Panel comparison\n\n"
+        "![Left panel](../output/figures/left.png){width=45%} "
+        "![Right panel](../output/figures/right.png){width=45%}\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            figures_dir=str(figures),
+            slides_profile="accessible",
+        )
+    )
+
+    output = renderer.render(
+        source,
+        output_format="revealjs",
+        manuscript_dir=manuscript,
+        figures_dir=figures,
+    )
+    rendered = output.read_text(encoding="utf-8")
+    image_tags = re.findall(r"<img\b[^>]+(?:left|right)\.png[^>]*>", rendered)
+
+    assert len(image_tags) == 2
+    assert all('class="accessible-multi-image-panel"' in tag for tag in image_tags)
+    assert all(re.search(r'style="[^"]*width:\s*45(?:\.0)?%', tag) for tag in image_tags)
+    assert ".reveal section.figure-led img:not(.accessible-multi-image-panel)" in rendered
+    assert ".reveal section.figure-led img.accessible-multi-image-panel" in rendered
+    universal_rule = re.search(r"\.reveal section\.figure-led img \{(?P<body>[^}]*)\}", rendered)
+    assert universal_rule is not None
+    assert "width: 100% !important" not in universal_rule.group("body")
+    assert accessible_reveal_output_issues(output) == ()
+    assert not list(slides.glob(".*.pandoc*.json"))
+
+
+@pytest.mark.slow
 def test_failed_accessible_pair_composition_removes_both_stale_derivatives(tmp_path: Path) -> None:
     if not shutil.which("pandoc"):
         pytest.skip("Pandoc not installed")
@@ -1447,6 +2781,41 @@ def test_failed_accessible_pair_composition_removes_both_stale_derivatives(tmp_p
     assert not stale_pdf.exists()
     assert not stale_html.exists()
     assert not list(slides.glob(".*.pandoc*.json"))
+
+
+def test_accessible_bibliography_conflict_cleans_raw_pandoc_json(tmp_path: Path) -> None:
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / "citations.md"
+    source.write_text("## Citation\n\nA bounded citation [@SharedKey].\n", encoding="utf-8")
+    (manuscript / "a.bib").write_text(
+        "@article{SharedKey, title={First}, author={Example, Ada}, year={2026}}\n",
+        encoding="utf-8",
+    )
+    (manuscript / "b.bib").write_text(
+        "@article{sharedkey, title={Second}, author={Example, Ben}, year={2026}}\n",
+        encoding="utf-8",
+    )
+
+    def unexpected_process(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("bibliography validation must precede Pandoc execution")
+
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        ),
+        process_runner=unexpected_process,
+    )
+
+    with pytest.raises(BibliographyConflictError, match="Case-insensitive duplicate citation keys"):
+        renderer.render(source, output_format="revealjs", manuscript_dir=manuscript)
+
+    assert not list(slides.glob(".*.pandoc.json"))
+    assert not list(slides.glob(".*.accessible.json"))
+    assert not list(slides.glob(".*.accessible.json.tmp"))
 
 
 @pytest.mark.slow
@@ -1680,6 +3049,74 @@ def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: 
 
 @pytest.mark.slow
 @pytest.mark.requires_latex
+def test_real_accessible_captioned_listings_keep_counter_without_projecting_full_caption(tmp_path: Path) -> None:
+    if not shutil.which("pandoc") or not shutil.which("pandoc-crossref") or not shutil.which("pdftotext"):
+        pytest.skip("Pandoc, pandoc-crossref, and pdftotext are required")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / "captioned-listings.md"
+    caption = "A complete source-owned listing caption that consumes projected vertical geometry"
+    listings: list[str] = []
+    for lines in (4, 5):
+        code = "\n".join(f"x_{index} = {index}" for index in range(lines))
+        listings.append(f'## Listing {lines}\n\n```{{#lst:test-{lines} .python caption="{caption}"}}\n{code}\n```\n')
+    source.write_text("\n".join(listings), encoding="utf-8")
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    tex = pdf_result.with_suffix(".tex").read_text(encoding="utf-8")
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert tex.count(r"\caption{}") == 2
+    assert r"\label{lst:test-4}" in tex
+    assert r"\label{lst:test-5}" in tex
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+    extracted = subprocess.run(
+        ["pdftotext", str(pdf_result), "-"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    assert "Listing 1:" in extracted
+    assert "Listing 2:" in extracted
+    assert caption not in extracted
+
+    canonical_html = tmp_path / "canonical.html"
+    subprocess.run(
+        [
+            "pandoc",
+            str(source),
+            "-t",
+            "html",
+            "--filter",
+            shutil.which("pandoc-crossref") or "pandoc-crossref",
+            "-o",
+            str(canonical_html),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    canonical_text = " ".join(canonical_html.read_text(encoding="utf-8").split())
+    assert caption in canonical_text
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
 def test_real_accessible_pair_sizes_unresolved_section_reference_fallbacks(tmp_path: Path) -> None:
     if not shutil.which("pandoc") or not shutil.which("pandoc-crossref"):
         pytest.skip("Pandoc and pandoc-crossref are required")
@@ -1720,6 +3157,1240 @@ def test_real_accessible_pair_sizes_unresolved_section_reference_fallbacks(tmp_p
     assert "sec:results-" not in tex
     assert "Overfull \\vbox" not in log
     assert not list(slides.glob(".*.pandoc*.json"))
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_accessible_pair_budgets_citeproc_expansion_before_beamer(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / "citations.md"
+    source.write_text(
+        "## Citation-rich synthesis\n\n"
+        "The first bounded synthesis relates the generalized update, the federated objective, the belief-sharing "
+        "term, and the robust loss while preserving each source claim [compare @bissiri2016, especially chapter "
+        "twelve and appendix alpha; @mildner2025; @friston2024; "
+        "@futami2018]. The second bounded synthesis relates divergence control, influence analysis, coherent "
+        "updating, and matched inference while preserving each evidence class [@knoblauch2019; @fujisawa2008; "
+        "@ghosh2016; @wilcoxon1945].\n",
+        encoding="utf-8",
+    )
+    (manuscript / "references.bib").write_text(
+        "\n".join(
+            f"@article{{{key}, title={{{title}}}, author={{{author}}}, journal={{Journal}}, year={{{year}}}}}"
+            for key, title, author, year in [
+                ("bissiri2016", "General Bayes", "Bissiri, Pier Giovanni and Holmes, Christopher", "2016"),
+                ("mildner2025", "Federated GVI", "Mildner, Clara and Westerhout, Tessa", "2025"),
+                ("friston2024", "Belief sharing", "Friston, Karl and Albarracin, Mahault", "2024"),
+                ("futami2018", "Robust inference", "Futami, Futoshi and Sato, Issei", "2018"),
+                ("knoblauch2019", "Generalised variational inference", "Knoblauch, Jeremias and Jewson, Jack", "2019"),
+                ("fujisawa2008", "Robust divergence", "Fujisawa, Hironori and Eguchi, Shinto", "2008"),
+                ("ghosh2016", "Influence functions", "Ghosh, Abhik and Basu, Ayanendranath", "2016"),
+                ("wilcoxon1945", "Matched comparisons", "Wilcoxon, Frank", "1945"),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    config = RenderingConfig(
+        output_dir=str(tmp_path / "output"),
+        slides_dir=str(slides),
+        slides_profile="accessible",
+        latex_compiler=compiler,
+    )
+
+    pdf_result, html_result = SlidesRenderer(config).render_accessible_pair(
+        source,
+        manuscript_dir=manuscript,
+    )
+
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    tex = pdf_result.with_suffix(".tex").read_text(encoding="utf-8")
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert "Citation-rich synthesis (part 2)" in tex
+    assert "compare Bissiri" in tex
+    assert "chapter twelve and appendix alpha" in tex
+    assert "Overfull \\vbox" not in log
+    assert "Overfull \\hbox" not in log
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize(
+    ("surface", "diagnostic_code"),
+    [
+        ("prose", "slides.density.indivisible-prose-token"),
+        ("table", "slides.density.indivisible-table-width"),
+    ],
+)
+def test_real_citeproc_long_family_name_fails_geometry_before_derivatives(
+    tmp_path: Path,
+    surface: str,
+    diagnostic_code: str,
+) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    long_family = "W" * 24
+    source = manuscript / f"long-citation-{surface}.md"
+    body = "Evidence [@longfamily2026].\n" if surface == "prose" else "| Source |\n|---|\n| [@longfamily2026] |\n"
+    source.write_text(f"## Long family boundary\n\n{body}", encoding="utf-8")
+    (manuscript / "references.bib").write_text(
+        "@article{longfamily2026,\n"
+        f"  author = {{Ada {{{long_family}}}}},\n"
+        "  title = {A source-bound citation},\n"
+        "  journal = {Journal},\n"
+        "  year = {2026}\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    with pytest.raises(RenderingError, match=rf"\[{re.escape(diagnostic_code)}\]") as exc_info:
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert long_family in exc_info.value.context["first_offending_token"]
+    assert exc_info.value.context["required_width_units"] > exc_info.value.context["available_width_units"]
+    assert not (slides / f"{source.stem}_slides.pdf").exists()
+    assert not (slides / f"{source.stem}_slides.html").exists()
+    assert not list(slides.glob(".*.pandoc*.json"))
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize(("glyph", "count"), [("W", 23), ("A", 32), ("m", 28)])
+def test_real_pandoc_overwide_prose_glyph_token_fails_preflight(
+    tmp_path: Path,
+    glyph: str,
+    count: int,
+) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / f"prose-glyph-{ord(glyph)}.md"
+    token = glyph * count
+    source.write_text(f"## Prose token\n\n{token}\n", encoding="utf-8")
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose-token\]") as exc_info:
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert exc_info.value.context["first_offending_token"] == token
+    assert not (slides / f"{source.stem}_slides.pdf").exists()
+    assert not (slides / f"{source.stem}_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize("literal", ["'", "[", "{"])
+def test_real_pandoc_long_nonrewritable_prose_code_fails_preflight(tmp_path: Path, literal: str) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / f"prose-code-{ord(literal)}.md"
+    code = "a" * 80 + literal
+    source.write_text(f"## Prose code token\n\n`{code}`\n", encoding="utf-8")
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose-token\]") as exc_info:
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert exc_info.value.context["first_offending_token"] == code
+    assert not (slides / f"{source.stem}_slides.pdf").exists()
+    assert not (slides / f"{source.stem}_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_pandoc_hard_line_boundary_passes_eight_and_rejects_nine(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    passing_source = manuscript / "hard-lines-pass.md"
+    failing_source = manuscript / "hard-lines-fail.md"
+    passing_source.write_text(
+        "## Hard lines pass\n\n" + "  \n".join("x" for _ in range(8)) + "\n",
+        encoding="utf-8",
+    )
+    failing_source.write_text(
+        "## Hard lines fail\n\n" + "  \n".join("x" for _ in range(9)) + "\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(passing_source, manuscript_dir=manuscript)
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose\]") as exc_info:
+        renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
+    assert exc_info.value.context["estimated_lines"] == 9
+    assert not (slides / "hard-lines-fail_slides.pdf").exists()
+    assert not (slides / "hard-lines-fail_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_proportional_prose_and_title_widths_fail_before_latex(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    passing_source = manuscript / "wide-prose-pass.md"
+    passing_source.write_text("## Wide prose\n\n" + " ".join(["WW"] * 72) + "\n", encoding="utf-8")
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(passing_source, manuscript_dir=manuscript)
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+    wide_prose = manuscript / "wide-prose-fail.md"
+    wide_prose.write_text("## Wide prose\n\n" + " ".join(["WW"] * 80) + "\n", encoding="utf-8")
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose\]") as prose_error:
+        renderer.render_accessible_pair(wide_prose, manuscript_dir=manuscript)
+    assert prose_error.value.context["estimated_lines"] == 9
+    assert prose_error.value.context["maximum_lines"] == 8
+
+    titles = {
+        "wide-title": "W" * 22,
+        "identifier-title": "unbreakable_identifier_" + "x" * 64,
+    }
+    for stem, title in titles.items():
+        source = manuscript / f"{stem}.md"
+        source.write_text(f"## {title}\n\nBounded content.\n", encoding="utf-8")
+        with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-title-token\]") as title_error:
+            renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+        assert title_error.value.context["first_offending_token"] == title
+        assert not (slides / f"{stem}_slides.pdf").exists()
+        assert not (slides / f"{stem}_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize(
+    ("stem", "markdown"),
+    [
+        (
+            "body-note",
+            "## Note boundary\n\nBounded statement.[^1]\n\n[^1]: A projected footnote is unsupported.\n",
+        ),
+        (
+            "heading-note",
+            "## Note boundary^[A title footnote is unsupported.]\n\nBounded statement.\n",
+        ),
+    ],
+)
+def test_real_pandoc_note_fails_before_projecting_subfloor_footnote(
+    tmp_path: Path,
+    stem: str,
+    markdown: str,
+) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / f"{stem}.md"
+    source.write_text(markdown, encoding="utf-8")
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-note\]"):
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert not (slides / f"{stem}_slides.pdf").exists()
+    assert not (slides / f"{stem}_slides.html").exists()
+
+
+@pytest.mark.slow
+def test_real_pandoc_optional_aligned_spacing_fails_before_derivatives(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / "aligned-spacing.md"
+    math_source = r"\begin{aligned}x&=1\\[10cm]y&=2\end{aligned}"
+    source.write_text(f"## Aligned spacing\n\n$${math_source}$$\n", encoding="utf-8")
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-math-geometry\]") as exc_info:
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert exc_info.value.context["unsupported_commands"] == ["row-spacing"]
+    assert not (slides / "aligned-spacing_slides.pdf").exists()
+    assert not (slides / "aligned-spacing_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize("surface", ["prose", "table", "heading"])
+def test_real_pandoc_unknown_math_geometry_fails_before_derivatives(tmp_path: Path, surface: str) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / f"unknown-math-{surface}.md"
+    math = r"$\rule{50cm}{1pt}$"
+    if surface == "prose":
+        heading = "Unknown math geometry"
+        body = math
+    elif surface == "table":
+        heading = "Unknown math geometry"
+        body = f"| Expression |\n|---|\n| {math} |"
+    else:
+        heading = f"Unknown math geometry {math}"
+        body = "Bounded statement."
+    source.write_text(f"## {heading}\n\n{body}\n", encoding="utf-8")
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-math-geometry\]") as exc_info:
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert exc_info.value.context["unsupported_commands"] == ["rule"]
+    assert not (slides / f"{source.stem}_slides.pdf").exists()
+    assert not (slides / f"{source.stem}_slides.html").exists()
+
+
+@pytest.mark.slow
+def test_real_pandoc_raw_table_spacing_fails_before_derivatives(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / "raw-table-spacing.md"
+    source.write_text(
+        "## Raw table spacing\n\n| Expression |\n|---|\n| \\hspace*{50cm} X |\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-raw-geometry\]") as exc_info:
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert exc_info.value.context["unsupported_command"] == "hspace"
+    assert not (slides / "raw-table-spacing_slides.pdf").exists()
+    assert not (slides / "raw-table-spacing_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_nested_fraction_depth_sixteen_passes_and_seventeen_fails_preflight(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    passing_source = manuscript / "fraction-depth-pass.md"
+    failing_source = manuscript / "fraction-depth-fail.md"
+    passing_source.write_text(
+        "## Fraction depth pass\n\n$$" + _nested_fraction_source(16) + "$$\n",
+        encoding="utf-8",
+    )
+    failing_source.write_text(
+        "## Fraction depth fail\n\n$$" + _nested_fraction_source(17) + "$$\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(passing_source, manuscript_dir=manuscript)
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.math-height\]") as exc_info:
+        renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
+    assert exc_info.value.context["estimated_lines"] == 9
+    assert not (slides / "fraction-depth-fail_slides.pdf").exists()
+    assert not (slides / "fraction-depth-fail_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_supported_multiline_math_rows_pass_then_fail_preflight(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+
+    def aligned(rows: int, *, separator: str = r"\\ ") -> str:
+        lines = [rf"x_{{{index}}}&={index}" for index in range(rows)]
+        return r"\begin{aligned}" + separator.join(lines) + r"\end{aligned}"
+
+    def substack(rows: int) -> str:
+        body = r"\\ ".join("a" for _ in range(rows))
+        return r"x_{\substack{" + body + r"}}=1"
+
+    passing_source = manuscript / "multiline-pass.md"
+    unspaced_rows = aligned(2, separator=r"\\")
+    passing_source.write_text(
+        f"## Row separator\n\n$${unspaced_rows}$$\n\n"
+        f"## Aligned six\n\n$${aligned(6)}$$\n\n"
+        f"## Substack fourteen\n\n$${substack(14)}$$\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(passing_source, manuscript_dir=manuscript)
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+    failing_cases = {
+        "aligned-seven": aligned(7),
+        "substack-fifteen": substack(15),
+    }
+    for stem, math_source in failing_cases.items():
+        source = manuscript / f"{stem}.md"
+        source.write_text(f"## {stem}\n\n$${math_source}$$\n", encoding="utf-8")
+        with pytest.raises(RenderingError, match=r"\[slides\.density\.math-height\]") as exc_info:
+            renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+        assert exc_info.value.context["math_source"] == math_source
+        assert exc_info.value.context["estimated_lines"] == 9
+        assert exc_info.value.context["maximum_lines"] == 8
+        assert not (slides / f"{stem}_slides.pdf").exists()
+        assert not (slides / f"{stem}_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_accessible_pair_renders_ordinary_three_five_and_six_column_tables(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / "tables.md"
+    source.write_text(
+        "## Notation mapping\n\n"
+        "| Symbol | Meaning | Code term |\n"
+        "|---|---|---|\n"
+        "| $o$ | Observation/outcome index | `observation_or_outcome_index` |\n\n"
+        "## Robustness onset\n\n"
+        "| Mechanism | Onset rate | Naive @ worst | Robust @ worst | Robust method @ worst |\n"
+        "|---|---:|---:|---:|---|\n"
+        "| confident-wrong | 0.25 | 0.6306 | 0.6599 | reverse-KL preset |\n\n"
+        "## Inference and planning\n\n"
+        "| Method | Raw p | q | Power | Target $n_{\\rm trial}$ | Reject |\n"
+        "|---|---:|---:|---:|---:|---|\n"
+        "| Robust preset | 0.001 | 0.004 | 0.91 | 64 | yes |\n",
+        encoding="utf-8",
+    )
+    config = RenderingConfig(
+        output_dir=str(tmp_path / "output"),
+        slides_dir=str(slides),
+        slides_profile="accessible",
+        latex_compiler=compiler,
+    )
+
+    pdf_result, html_result = SlidesRenderer(config).render_accessible_pair(
+        source,
+        manuscript_dir=manuscript,
+    )
+
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    tex = pdf_result.with_suffix(".tex").read_text(encoding="utf-8")
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert tex.count(r"\begin{longtable}") == 3
+    assert "Observation/outcome" in tex
+    assert r"\breaktt{observation\_or\_outcome\_index}" in tex
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+
+@pytest.mark.slow
+def test_real_pandoc_grid_table_code_block_fails_as_indivisible_monospace(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / "verbatim-grid.md"
+    code_line = "aaaaa-" * 8
+    inner_width = len(code_line) + 4
+    border = "+" + "-" * (inner_width + 2) + "+"
+    header_border = "+" + "=" * (inner_width + 2) + "+"
+    source.write_text(
+        "\n".join(
+            [
+                "## Verbatim grid boundary",
+                "",
+                border,
+                "| " + "Code".ljust(inner_width) + " |",
+                header_border,
+                "| " + ("    " + code_line).ljust(inner_width) + " |",
+                border,
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert exc_info.value.context["first_offending_token"] == code_line
+    assert exc_info.value.context["required_width_units"] > 43
+    assert not (slides / "verbatim-grid_slides.pdf").exists()
+    assert not (slides / "verbatim-grid_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+@pytest.mark.parametrize(
+    ("command", "passing_count", "failing_count"),
+    [(r"\sum", 14, 16), (r"\rightarrow", 19, 20)],
+)
+def test_real_pandoc_table_math_controls_fail_calibrated_width_preflight(
+    tmp_path: Path,
+    command: str,
+    passing_count: int,
+    failing_count: int,
+) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    passing_source = manuscript / f"math-control-{len(command)}-pass.md"
+    failing_source = manuscript / f"math-control-{len(command)}-fail.md"
+    passing_math = command * passing_count
+    failing_math = command * failing_count
+    passing_source.write_text(
+        f"## Math control pass\n\n| Expression |\n|---|\n| ${passing_math}$ |\n",
+        encoding="utf-8",
+    )
+    failing_source.write_text(
+        f"## Math control fail\n\n| Expression |\n|---|\n| ${failing_math}$ |\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(passing_source, manuscript_dir=manuscript)
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
+
+    assert exc_info.value.context["first_offending_token"] == failing_math
+    assert exc_info.value.context["required_width_units"] > 43
+    assert not (slides / f"{failing_source.stem}_slides.pdf").exists()
+    assert not (slides / f"{failing_source.stem}_slides.html").exists()
+
+
+def test_accessible_seqsplit_probe_uses_injected_credential_free_process_boundary(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "must-not-cross-render-boundary")
+    calls: list[tuple[list[str], dict[str, object]]] = []
+
+    def locate_seqsplit(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append((command, kwargs))
+        return subprocess.CompletedProcess(command, 0, stdout="/texmf/seqsplit.sty\n", stderr="")
+
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path),
+            slides_dir=str(tmp_path),
+            slides_profile="accessible",
+            security_profile="untrusted",
+            untrusted_temp_root=str(tmp_path),
+        ),
+        process_runner=locate_seqsplit,
+    )
+
+    renderer._require_accessible_seqsplit()
+
+    assert len(calls) == 1
+    command, kwargs = calls[0]
+    assert command == ["kpsewhich", "seqsplit.sty"]
+    assert kwargs["check"] is False
+    assert kwargs["capture_output"] is True
+    assert kwargs["text"] is True
+    assert kwargs["timeout"] == 30
+    environment = kwargs["env"]
+    assert isinstance(environment, dict)
+    assert set(environment) <= {"PATH", "LANG", "LC_ALL", "HOME", "TMPDIR"}
+    assert environment["HOME"] == str(tmp_path)
+    assert environment["TMPDIR"] == str(tmp_path)
+    assert "AWS_SECRET_ACCESS_KEY" not in environment
+    assert "must-not-cross-render-boundary" not in environment.values()
+
+
+@pytest.mark.slow
+def test_accessible_long_code_requires_seqsplit_before_latex(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    empty_texmf = tmp_path / "empty-texmf"
+    manuscript.mkdir()
+    empty_texmf.mkdir()
+    source = manuscript / "seqsplit-required.md"
+    source.write_text(
+        "## Long code capability\n\n| Code |\n|---|\n| `" + "a" * 64 + "` |\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("TEXMFHOME", str(empty_texmf))
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.capability\.seqsplit-required\]") as exc_info:
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert exc_info.value.context == {
+        "diagnostic_code": "slides.capability.seqsplit-required",
+        "required_latex_package": "seqsplit",
+    }
+    assert not (slides / "seqsplit-required_slides.pdf").exists()
+    assert not (slides / "seqsplit-required_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_pandoc_grid_table_list_width_and_height_boundaries(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+
+    def write_grid(path: Path, items: list[str]) -> None:
+        inner_width = max(len("Items"), *(len(item) + 2 for item in items)) + 2
+        border = "+" + "-" * (inner_width + 2) + "+"
+        header_border = "+" + "=" * (inner_width + 2) + "+"
+        path.write_text(
+            "\n".join(
+                [
+                    f"## {path.stem}",
+                    "",
+                    border,
+                    "| " + "Items".ljust(inner_width) + " |",
+                    header_border,
+                    *("| " + ("* " + item).ljust(inner_width) + " |" for item in items),
+                    border,
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+        )
+
+    width_pass = manuscript / "list-width-pass.md"
+    width_fail = manuscript / "list-width-fail.md"
+    height_pass = manuscript / "list-height-pass.md"
+    height_fail = manuscript / "list-height-fail.md"
+    write_grid(width_pass, ["a" * 40])
+    write_grid(width_fail, ["a" * 42])
+    write_grid(height_pass, [f"item-{index}" for index in range(6)])
+    write_grid(height_fail, [f"item-{index}" for index in range(8)])
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    for passing_source in (width_pass, height_pass):
+        pdf_result, html_result = renderer.render_accessible_pair(passing_source, manuscript_dir=manuscript)
+        log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+        assert pdf_result.is_file()
+        assert html_result.is_file()
+        assert "Overfull \\hbox" not in log
+        assert "Overfull \\vbox" not in log
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as width_error:
+        renderer.render_accessible_pair(width_fail, manuscript_dir=manuscript)
+    assert width_error.value.context["first_offending_token"] == "a" * 42
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table\]") as height_error:
+        renderer.render_accessible_pair(height_fail, manuscript_dir=manuscript)
+    assert height_error.value.context["first_row_lines"] == 8
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_general_list_width_nested_height_and_font_floor_boundaries(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    if not shutil.which("pdftotext"):
+        pytest.skip("pdftotext is required for projected glyph-size evidence")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    width_pass = manuscript / "general-list-width-pass.md"
+    width_fail = manuscript / "general-list-width-fail.md"
+    nested_pass = manuscript / "nested-list-pass.md"
+    nested_fail = manuscript / "nested-list-fail.md"
+    width_pass.write_text("## List width pass\n\n- " + "a" * 40 + "\n", encoding="utf-8")
+    width_fail.write_text("## List width fail\n\n- " + "a" * 42 + "\n", encoding="utf-8")
+    nested_pass.write_text(
+        "## Nested list pass\n\n- parent\n" + "".join(f"  - child {index}\n" for index in range(7)),
+        encoding="utf-8",
+    )
+    nested_fail.write_text(
+        "## Nested list fail\n\n- parent\n" + "".join(f"  - child {index}\n" for index in range(8)),
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    width_pdf, width_html = renderer.render_accessible_pair(width_pass, manuscript_dir=manuscript)
+    assert width_pdf.is_file()
+    assert width_html.is_file()
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose-token\]"):
+        renderer.render_accessible_pair(width_fail, manuscript_dir=manuscript)
+
+    nested_pdf, nested_html = renderer.render_accessible_pair(nested_pass, manuscript_dir=manuscript)
+    assert nested_pdf.is_file()
+    assert nested_html.is_file()
+    nested_log = nested_pdf.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert "Overfull \\hbox" not in nested_log
+    assert "Overfull \\vbox" not in nested_log
+    bbox_xml = tmp_path / "nested-list.xml"
+    subprocess.run(
+        ["pdftotext", "-bbox-layout", str(nested_pdf), str(bbox_xml)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    words = [
+        node
+        for node in ET.parse(bbox_xml).getroot().iter()
+        if node.tag.endswith("word") and (node.text or "") in {"parent", "child"}
+    ]
+    assert len(words) == 8
+    glyph_heights = [float(node.attrib["yMax"]) - float(node.attrib["yMin"]) for node in words]
+    assert min(glyph_heights) >= 18.0
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-list\]") as height_error:
+        renderer.render_accessible_pair(nested_fail, manuscript_dir=manuscript)
+    assert height_error.value.context["estimated_lines"] == 9
+    assert not (slides / "nested-list-fail_slides.pdf").exists()
+    assert not (slides / "nested-list-fail_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_definition_list_seven_entries_pass_and_eight_fail_preflight(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+
+    def definition_source(path: Path, count: int) -> None:
+        path.write_text(
+            f"## {path.stem}\n\n" + "\n\n".join(f"term{index}\n: x" for index in range(count)) + "\n",
+            encoding="utf-8",
+        )
+
+    passing_source = manuscript / "definitions-pass.md"
+    failing_source = manuscript / "definitions-fail.md"
+    definition_source(passing_source, 7)
+    definition_source(failing_source, 8)
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(passing_source, manuscript_dir=manuscript)
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-definition-list\]") as exc_info:
+        renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
+    assert exc_info.value.context["estimated_lines"] == 9
+    assert not (slides / "definitions-fail_slides.pdf").exists()
+    assert not (slides / "definitions-fail_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_one_definition_eight_paragraphs_pass_and_ten_fail_preflight(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+
+    def definition_source(path: Path, count: int) -> None:
+        continuation = "\n\n".join(f"  paragraph {index}" for index in range(1, count))
+        path.write_text(
+            f"## {path.stem}\n\nterm\n: paragraph 0\n\n{continuation}\n",
+            encoding="utf-8",
+        )
+
+    passing_source = manuscript / "one-definition-pass.md"
+    failing_source = manuscript / "one-definition-fail.md"
+    definition_source(passing_source, 8)
+    definition_source(failing_source, 10)
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(passing_source, manuscript_dir=manuscript)
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-definition-list\]") as exc_info:
+        renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
+    assert exc_info.value.context["estimated_lines"] == 10
+    assert not (slides / "one-definition-fail_slides.pdf").exists()
+    assert not (slides / "one-definition-fail_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_loose_list_seven_paragraphs_pass_and_eight_fail_preflight(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+
+    def list_source(path: Path, count: int) -> None:
+        continuation = "\n\n".join(f"  paragraph {index}" for index in range(1, count))
+        path.write_text(
+            f"## {path.stem}\n\n- paragraph 0\n\n{continuation}\n",
+            encoding="utf-8",
+        )
+
+    passing_source = manuscript / "loose-list-pass.md"
+    failing_source = manuscript / "loose-list-fail.md"
+    list_source(passing_source, 7)
+    list_source(failing_source, 8)
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(passing_source, manuscript_dir=manuscript)
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-list\]") as exc_info:
+        renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
+    assert exc_info.value.context["estimated_lines"] == 9
+    assert not (slides / "loose-list-fail_slides.pdf").exists()
+    assert not (slides / "loose-list-fail_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_evidence_quote_nine_paragraphs_pass_and_ten_fail_preflight(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+
+    def quote_source(path: Path, count: int) -> None:
+        path.write_text(
+            f"## {path.stem}\n\n" + "\n>\n".join("> x" for _ in range(count)) + "\n",
+            encoding="utf-8",
+        )
+
+    passing_source = manuscript / "evidence-pass.md"
+    failing_source = manuscript / "evidence-fail.md"
+    quote_source(passing_source, 9)
+    quote_source(failing_source, 10)
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(passing_source, manuscript_dir=manuscript)
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-evidence\]") as exc_info:
+        renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
+    assert exc_info.value.context["estimated_lines"] == 9
+    assert not (slides / "evidence-fail_slides.pdf").exists()
+    assert not (slides / "evidence-fail_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+@pytest.mark.parametrize(
+    ("literal", "latex_literal"),
+    [
+        ("'", r"\textquotesingle{}"),
+        ("[", "{[}"),
+        ("]", "{]}"),
+        (" ", r"\ "),
+    ],
+)
+def test_real_pandoc_code_serialization_matches_breaktt_predicate_across_threshold(
+    tmp_path: Path,
+    literal: str,
+    latex_literal: str,
+) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / f"code-contract-{ord(literal)}.md"
+    safe_below = "a" * 15
+    safe_at = "a" * 16
+    unsafe_below = "a" * 7 + literal + "a" * 7
+    unsafe_at = "a" * 7 + literal + "a" * 8
+    source.write_text(
+        "## Code serialization contract\n\n"
+        "| Code |\n|---|\n"
+        f"| `{safe_below}` |\n"
+        f"| `{safe_at}` |\n"
+        f"| `{unsafe_below}` |\n"
+        f"| `{unsafe_at}` |\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    tex = pdf_result.with_suffix(".tex").read_text(encoding="utf-8")
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    expected_breakable_count = 2 if literal == " " else 1
+    assert tex.count(r"\breaktt{") == expected_breakable_count
+    assert rf"\breaktt{{{safe_at}}}" in tex
+    serialized_at = f"{'a' * 7}{latex_literal}{'a' * 8}"
+    if literal == " ":
+        assert rf"\breaktt{{{serialized_at}}}" in tex
+    else:
+        assert rf"\texttt{{{serialized_at}}}" in tex
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+
+@pytest.mark.slow
+def test_real_pandoc_gallery_fails_width_preflight_before_derivatives(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / "gallery.md"
+    source.write_text(
+        "## Contamination gallery\n\n"
+        "| Mechanism | Evidence class | Naive score | Selected mean | Mean difference | Confidence interval | Win fraction | Display flag |\n"
+        "|---|---|---:|---:|---:|---|---:|---|\n"
+        "| byzantine | directional | 0.6306 | 0.6599 | 0.0293 | [0.0124, 0.0462] | 0.84 | shown |\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert exc_info.value.context["column_count"] == 8
+    assert exc_info.value.context["required_width_units"] > exc_info.value.context["available_width_units"]
+    assert not (slides / "gallery_slides.pdf").exists()
+    assert not (slides / "gallery_slides.html").exists()
+    assert not list(slides.glob(".*.pandoc*.json"))
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+@pytest.mark.parametrize(
+    ("glyph", "passing_count", "failing_count"),
+    [("A", 30, 31), ("m", 26, 27), ("w", 30, 31), ("W", 22, 23)],
+)
+def test_real_accessible_table_glyph_boundary_passes_then_fails_preflight(
+    tmp_path: Path,
+    glyph: str,
+    passing_count: int,
+    failing_count: int,
+) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    passing_source = manuscript / f"glyph-{ord(glyph)}-pass.md"
+    failing_source = manuscript / f"glyph-{ord(glyph)}-fail.md"
+    passing_token = glyph * passing_count
+    failing_token = glyph * failing_count
+    passing_source.write_text(
+        f"## Glyph boundary pass\n\n| Field |\n|---|\n| {passing_token} |\n",
+        encoding="utf-8",
+    )
+    failing_source.write_text(
+        f"## Glyph boundary fail\n\n| Field |\n|---|\n| {failing_token} |\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_result, html_result = renderer.render_accessible_pair(passing_source, manuscript_dir=manuscript)
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    assert "Overfull \\hbox" not in log
+    assert "Overfull \\vbox" not in log
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
+
+    assert exc_info.value.context["first_offending_token"] == failing_token
+    assert exc_info.value.context["required_width_units"] > 43
+    assert not (slides / f"{failing_source.stem}_slides.pdf").exists()
+    assert not (slides / f"{failing_source.stem}_slides.html").exists()
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize("literal", ["{", "\\", "~", "<"])
+def test_real_pandoc_braced_code_literals_remain_indivisible_at_preflight(
+    tmp_path: Path,
+    literal: str,
+) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / "unsafe-code.md"
+    unsafe_code = "W" * 43 + literal
+    source.write_text(
+        f"## Unsafe code serialization\n\n| Code |\n|---|\n| `{unsafe_code}` |\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript)
+
+    assert exc_info.value.context["first_offending_token"] == unsafe_code
+    assert exc_info.value.context["required_width_units"] > 43
+    assert not (slides / "unsafe-code_slides.pdf").exists()
+    assert not (slides / "unsafe-code_slides.html").exists()
 
 
 @pytest.mark.slow

@@ -13,7 +13,7 @@ renderers without owning validation policy or project analysis.
 | Facade | `core.py`, `config.py` | `RenderManager` and rendering configuration. |
 | Security profile | `security.py` | Trusted-local and isolated untrusted subprocess options, credential-free environments, and bounded output roots. |
 | PDF pipeline | `pdf_renderer.py`, `_pdf_combined_*.py`, `_pdf_title_page.py`, `_pdf_latex_helpers.py` | Combined PDF assembly, title/publishing pages, LaTeX helpers. |
-| Format renderers | `slides_renderer.py`, `_slides_accessibility.py`, `_slides_math_header.py`, `_slides_tex_figures.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_markdown_preprocess.py`, `_web_postprocess.py`, `_web_figure_details.py`, `pandoc_renderers.py`, `pptx_deck.py`, `slide_deck.py`, `_slide_draw.py`, `mermaid_figure.py` | Slides, opt-in semantic accessible-slide composition, Beamer math-header and figure-path helpers, Beamer-safe captioned listings and archive frame splitting, HTML orchestration, web-only markdown preprocess (citations/theorems), deterministic HTML post-processing and structured figure-detail association, DOCX, EPUB, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
+| Format renderers | `slides_renderer.py`, `_slides_accessibility.py`, `_slides_accessibility_ast.py`, `_slides_accessibility_composition.py`, `_slides_accessibility_contracts.py`, `_slides_accessibility_tables.py`, `_slides_accessibility_text_geometry.py`, `_slides_math_header.py`, `_slides_tex_figures.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_markdown_preprocess.py`, `_web_postprocess.py`, `_web_figure_details.py`, `pandoc_renderers.py`, `pptx_deck.py`, `slide_deck.py`, `_slide_draw.py`, `mermaid_figure.py` | Slides, opt-in semantic accessible-slide composition and fail-closed geometry, Beamer math-header and figure-path helpers, profile-aware captioned listings and archive frame splitting, HTML orchestration, web-only Markdown preprocessing (citations/theorems), deterministic HTML post-processing and structured figure-detail association, DOCX, EPUB, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
 | Pandoc filters | `_pandoc_filters.py`, `formalism.lua`, `convert_latex_images.lua`, `_beamer_allowframebreaks.lua` | `_pandoc_filters.py` resolves the repo-shipped Lua filters for every writer; `formalism.lua` numbers Definition/Proposition/Theorem blocks and resolves `[@def:...]`. |
 | Bibliographies | `_bibliography.py`, `_pdf_combined_bibliography.py` | Shared sorted `manuscript/*.bib` discovery, repeated/symlink-path deduplication, duplicate-key rejection, Pandoc arguments, and PDF bibliography injection. |
 | Manuscript source | `manuscript_discovery.py`, `manuscript_injection.py`, `_manuscript_source.py`, `manuscript_composition.py`, `render_cache.py` | Section ordering, substitutions, resolved manuscript trees, render-boundary composition evidence (`manuscript_composition.py`), and modular section caching (`render_cache.py`). |
@@ -106,11 +106,41 @@ renderers without owning validation policy or project analysis.
   projection canvas. A source block that cannot
   satisfy those bounds fails with a stable `slides.*` diagnostic instead of
   shrinking or character-count splitting. Dense tables retain a contiguous
-  whole-row excerpt when geometry permits; when even one complete row cannot
-  fit, `slides.density.indivisible-table` stops the paired render with exact
-  geometry instead of publishing a diagnostic frame, shrinking, clipping, or
-  fragmenting a row. Persistent frame navigation links the complete table and
-  caption in canonical HTML.
+  whole-row excerpt when geometry permits. Before line-height pricing, ordinary
+  prose tokens receive wide-glyph-aware physical-column minima at real TeX
+  whitespace/hyphen break points. Long inline code is discounted only when its
+  source serializes to the simple brace-free `texttt` body the downstream
+  `breaktt` pass rewrites; braced literal encodings stay indivisible. Overlapping
+  contiguous spans are solved jointly. If those minima exceed the frame,
+  `slides.density.indivisible-table-width` fails before LaTeX with the first
+  offending token and exact required/available width units. When even one
+  complete row cannot fit vertically, `slides.density.indivisible-table` stops
+  the paired render with exact geometry instead of publishing a diagnostic
+  frame, shrinking, clipping, or fragmenting a row. Persistent frame navigation
+  links the complete table and caption in canonical HTML.
+  The accessible parse resolves bibliography citations before geometry is
+  priced, retains citation prefixes/suffixes, and leaves cross-reference
+  citations intact; a resolved mixed citation substitutes each unresolved
+  cross-reference placeholder once rather than appending a duplicate debit.
+  Complete prose and title packing uses the same proportional glyph/space
+  metric, including section dividers. Hard line breaks, rich
+  list/definition/quote structure, code-block physical lines, and supported
+  `aligned`/`substack` mathematical rows contribute to horizontal and vertical
+  demand. Unknown layout-affecting math, projected
+  footnotes, arbitrary raw TeX outside the theorem/reference allowlist, optional
+  physical math-row spacing, or unmodelled rich table-cell blocks fail with
+  stable diagnostics. Notes and geometry checks apply to headings as well as
+  body blocks. Loose-list paragraphs and definition-entry block boundaries are
+  priced explicitly; omitted complete-table footers never consume excerpt rows.
+  Projected captioned listings retain an empty caption, counter, and label while
+  canonical HTML retains the complete source caption. Width diagnostics prefer
+  an individually impossible column over an unrelated active span, then report
+  exact span provenance when the joint constraint is the cause.
+  Long-code discounts additionally require an installed `seqsplit.sty`; archive
+  mode retains its historical graceful fallback, including Pandoc's brace-free
+  `\ ` control-space rewrite. The 20-point accessible body
+  floor applies to nested lists, quotes, code listings, and algorithm stand-ins,
+  not only top-level prose.
   Reveal.js is the keyboard-operable,
   long-description-bearing presentation reader; dense captions and complete
   tables link to the canonical manuscript HTML. Beamer remains an explicitly

@@ -8,7 +8,7 @@ single import surface.
 
 from __future__ import annotations
 
-from infrastructure.rendering._slides_accessibility_ast import (
+from infrastructure.rendering._slides_accessibility_text_geometry import (
     _estimated_visible_characters as _estimated_visible_characters,
 )
 from infrastructure.rendering._slides_accessibility_composition import (

@@ -151,6 +151,47 @@ class SlidesRenderer:
         self._process_runner = process_runner
         self._latex_compile = latex_compile
 
+    def _require_accessible_seqsplit(self) -> None:
+        """Require the package that makes accessible long-code pricing truthful.
+
+        Archive rendering keeps the historical graceful LaTeX fallback. Accessible
+        composition, however, discounts a long simple inline Code node only because
+        the downstream ``breaktt`` macro inserts character-level opportunities.
+        If ``seqsplit.sty`` is unavailable, that macro is intentionally an identity
+        fallback and the geometric premise is false. Detect the capability through
+        the same injected, security-profiled process boundary as every other slide
+        subprocess.
+        """
+
+        located = ""
+        try:
+            completed = self._process_runner(
+                ["kpsewhich", "seqsplit.sty"],
+                check=False,
+                capture_output=True,
+                text=True,
+                **subprocess_options(self.config.security(), 30),
+            )
+        except (OSError, subprocess.SubprocessError):
+            completed = None
+        if completed is not None and getattr(completed, "returncode", None) == 0:
+            stdout = getattr(completed, "stdout", "")
+            if isinstance(stdout, str):
+                located = stdout.strip()
+        if located:
+            return
+        raise RenderingError(
+            "[slides.capability.seqsplit-required] Accessible long monospace wrapping requires seqsplit.sty",
+            context={
+                "diagnostic_code": "slides.capability.seqsplit-required",
+                "required_latex_package": "seqsplit",
+            },
+            suggestions=[
+                "Install the TeX seqsplit package before rendering the accessible slide profile.",
+                "Shorten or remove the long projected monospace token; archive rendering retains its historical fallback.",
+            ],
+        )
+
     def render(
         self,
         source_file: Path,
@@ -198,7 +239,11 @@ class SlidesRenderer:
             # A failed strict composition must not leave a prior derivative
             # that can be mistaken for the current source.
             output_file.unlink(missing_ok=True)
-            render_source, temporary_sources = self._prepare_accessible_source(source_file, output_dir)
+            render_source, temporary_sources = self._prepare_accessible_source(
+                source_file,
+                output_dir,
+                manuscript_dir=manuscript_dir,
+            )
 
         try:
             # For beamer, we need to handle figure paths specially.
@@ -262,7 +307,11 @@ class SlidesRenderer:
         temporary_sources: tuple[Path, ...] = ()
         completed = False
         try:
-            render_source, temporary_sources = self._prepare_accessible_source(source_file, output_dir)
+            render_source, temporary_sources = self._prepare_accessible_source(
+                source_file,
+                output_dir,
+                manuscript_dir=manuscript_dir,
+            )
             pdf_result = self._render_beamer_with_paths(
                 render_source,
                 pdf_output,
@@ -286,8 +335,14 @@ class SlidesRenderer:
             for temporary in temporary_sources:
                 temporary.unlink(missing_ok=True)
 
-    def _prepare_accessible_source(self, source_file: Path, output_dir: Path) -> tuple[Path, tuple[Path, ...]]:
-        """Compose Markdown into one bounded semantic Pandoc JSON document."""
+    def _prepare_accessible_source(
+        self,
+        source_file: Path,
+        output_dir: Path,
+        *,
+        manuscript_dir: Path | None,
+    ) -> tuple[Path, tuple[Path, ...]]:
+        """Resolve citations, then compose one bounded Pandoc JSON document."""
 
         profile = self.config.security()
         raw_handle = tempfile.NamedTemporaryFile(
@@ -299,17 +354,27 @@ class SlidesRenderer:
         raw_json = Path(raw_handle.name)
         raw_handle.close()
         composed_json = raw_json.with_suffix(".accessible.json")
-        profile.validate_output(raw_json)
-        profile.validate_output(composed_json)
-        cmd = [
-            self.config.pandoc_path,
-            str(source_file),
-            "-t",
-            "json",
-            "-o",
-            str(raw_json),
-        ]
+        temporary = composed_json.with_suffix(composed_json.suffix + ".tmp")
+        completed = False
         try:
+            profile.validate_output(raw_json)
+            profile.validate_output(composed_json)
+            profile.validate_output(temporary)
+            cmd = [
+                self.config.pandoc_path,
+                str(source_file),
+                "-t",
+                "json",
+                "-o",
+                str(raw_json),
+            ]
+            # Citeproc deliberately runs at the geometry boundary as well as at
+            # the final writers. Pandoc retains Cite nodes, so pandoc-crossref can
+            # still resolve protocol/figure/section identifiers later, while the
+            # composer sees the exact visible author-year strings, affixes, and
+            # locators rather than a fixed placeholder that can underprice long
+            # family names.
+            cmd.extend(_slide_bibliography_args(manuscript_dir))
             self._process_runner(
                 cmd,
                 check=True,
@@ -322,7 +387,6 @@ class SlidesRenderer:
                 policy=self.config.accessible_slide_policy(),
                 source=str(source_file),
             )
-            temporary = composed_json.with_suffix(composed_json.suffix + ".tmp")
             try:
                 temporary.write_text(
                     json.dumps(
@@ -345,10 +409,9 @@ class SlidesRenderer:
                 composition.figure_frame_count,
                 composition.excerpted_table_count,
             )
+            completed = True
             return composed_json, (raw_json, composed_json)
         except subprocess.CalledProcessError as exc:
-            raw_json.unlink(missing_ok=True)
-            composed_json.unlink(missing_ok=True)
             raise RenderingError(
                 f"Failed to parse accessible slide source: {exc.stderr}",
                 context={
@@ -357,10 +420,11 @@ class SlidesRenderer:
                     "diagnostic_code": "slides.parse.pandoc-json",
                 },
             ) from exc
-        except Exception:
-            raw_json.unlink(missing_ok=True)
-            composed_json.unlink(missing_ok=True)
-            raise
+        finally:
+            if not completed:
+                raw_json.unlink(missing_ok=True)
+                composed_json.unlink(missing_ok=True)
+                temporary.unlink(missing_ok=True)
 
     def _render_revealjs(
         self,
@@ -565,7 +629,12 @@ class SlidesRenderer:
                 strict_cross_deck_refs=strict_cross_deck_refs,
             )
 
-            tex_content, codelisting_replacements = make_codelisting_slide_safe(tex_content)
+            tex_content, codelisting_replacements = make_codelisting_slide_safe(
+                tex_content,
+                accessible_body_font_pt=(
+                    self.config.slides_body_font_pt if self.config.slides_profile == "accessible" else None
+                ),
+            )
             if codelisting_replacements:
                 logger.info("Replaced pandoc-crossref's listing float with a Beamer-safe block")
 
@@ -588,6 +657,11 @@ class SlidesRenderer:
                     "Made %d unresolved cross-reference token(s) breakable in slides",
                     reference_replacements,
                 )
+
+            if self.config.slides_profile == "accessible" and any(
+                (texttt_replacements, literal_replacements, reference_replacements)
+            ):
+                self._require_accessible_seqsplit()
 
             if self.config.slides_profile == "accessible":
                 tex_content, normalized_graphics, removed_empty_captions = normalize_accessible_projection_latex(
