@@ -332,6 +332,40 @@ def test_semantic_composer_splits_only_between_prose_blocks() -> None:
     assert composition.document["blocks"][3] == second
 
 
+def test_continuation_title_keeps_headroom_below_real_beamer_wrap_boundary() -> None:
+    authored_title = "Publication-facing interpretation"
+    first = _paragraph(" ".join(f"alpha{index}" for index in range(35)))
+    second = _paragraph(" ".join(f"beta{index}" for index in range(35)))
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header(authored_title), first, second]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/formalism.md",
+    )
+
+    headers = [block for block in composition.document["blocks"] if block["t"] == "Header"]
+    continuation = headers[1]
+    visible_title = " ".join(_visible_text(continuation["c"][2]).split())
+    assert proportional_text_width_units(visible_title) <= 35
+    assert visible_title != f"{authored_title} (part 2)"
+    assert ["aria-label", f"{authored_title}, part 2"] in continuation["c"][1][2]
+
+
+def test_wrapping_first_title_uses_divider_before_six_line_body() -> None:
+    authored_title = "Contamination sweep: regime-dependent server behavior under declared attacks"
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header(authored_title), _hard_line_paragraph(6)]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    headers = _classed_headers(composition.document)
+    assert composition.section_divider_count == 1
+    assert "section-divider" in headers[0][1]
+    assert "part 2" in headers[1][0]
+
+
 def test_semantic_composer_splits_long_paragraph_only_at_written_clause_boundary() -> None:
     first_sentence = " ".join(f"alpha{index}" for index in range(35)) + "."
     second_sentence = " ".join(f"beta{index}" for index in range(35)) + "."
@@ -1234,10 +1268,11 @@ def test_semantic_composer_excerpts_table_without_mutating_source() -> None:
     rendered_table = next(block for block in composition.document["blocks"] if block["t"] == "Table")
     assert composition.excerpted_table_count == 1
     # The configured eight-row value remains an absolute ceiling. Projection
-    # geometry retains six compact rows after the header and table rules are
-    # accounted for at 20 points. The persistent frame navigation owns the
-    # canonical-reader link, so no duplicate table caption consumes a row.
-    assert len(rendered_table["c"][4][0][3]) == 6
+    # geometry retains five compact rows after the header, row struts, and
+    # complete longtable rule chrome are accounted for at 20 points. The
+    # persistent frame navigation owns the canonical-reader link, so no
+    # duplicate table caption consumes a row.
+    assert len(rendered_table["c"][4][0][3]) == 5
     assert len(rendered_table["c"][4][0][3]) <= AccessibleSlidePolicy().max_table_rows
     assert rendered_table["c"][1] == [None, []]
     assert len(table["c"][4][0][3]) == 10
@@ -1277,7 +1312,7 @@ def test_table_excerpt_recomputes_geometry_after_dropping_a_long_footer() -> Non
 
     rendered_table = next(block for block in composition.document["blocks"] if block["t"] == "Table")
     assert composition.excerpted_table_count == 1
-    assert len(rendered_table["c"][4][0][3]) == 6
+    assert len(rendered_table["c"][4][0][3]) == 5
     assert rendered_table["c"][5][1] == []
     assert len(table["c"][5][1]) == 1
 
@@ -1574,7 +1609,7 @@ def test_table_cell_geometry_counts_authored_hard_lines() -> None:
         return table
 
     composition = compose_accessible_pandoc_document(
-        _document([_header("Table hard lines"), table_with_lines(6)]),
+        _document([_header("Table hard lines"), table_with_lines(5)]),
         policy=AccessibleSlidePolicy(),
         source="manuscript/table-lines.md",
     )
@@ -1582,11 +1617,11 @@ def test_table_cell_geometry_counts_authored_hard_lines() -> None:
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table\]") as exc_info:
         compose_accessible_pandoc_document(
-            _document([_header("Table hard lines"), table_with_lines(7)]),
+            _document([_header("Table hard lines"), table_with_lines(6)]),
             policy=AccessibleSlidePolicy(),
             source="manuscript/table-lines.md",
         )
-    assert exc_info.value.context["first_row_lines"] == 7
+    assert exc_info.value.context["first_row_lines"] == 6
 
 
 def test_unmodeled_rich_table_cell_block_fails_with_stable_diagnostic() -> None:
@@ -1727,7 +1762,36 @@ def test_table_excerpt_geometry_accounts_for_continuation_title_lines() -> None:
 
     rendered = next(block for block in composition.document["blocks"] if block["t"] == "Table")
     assert composition.section_divider_count == 1
-    assert len(rendered["c"][4][0][3]) == 6
+    assert len(rendered["c"][4][0][3]) == 5
+
+
+def test_table_excerpt_reserves_real_longtable_rule_and_row_strut_geometry() -> None:
+    compact = _table(6)
+    compact_composition = compose_accessible_pandoc_document(
+        _document([_header("Computational complexity"), compact]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/statistics.md",
+    )
+    compact_rendered = next(block for block in compact_composition.document["blocks"] if block["t"] == "Table")
+    assert len(compact_rendered["c"][4][0][3]) == 5
+    assert compact_composition.excerpted_table_count == 1
+
+    wrapped = _table_values(
+        ["Study", "Key parameters"],
+        [
+            ["1 — Belief sharing", "n_agents = 7; acuity = 0.55"],
+            ["2 — Language acquisition", "num_steps = 24"],
+            ["3 — Emergence / BMR", "candidate states n = 4"],
+        ],
+    )
+    wrapped_composition = compose_accessible_pandoc_document(
+        _document([_header("Study suite and contamination sweep"), wrapped]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/design.md",
+    )
+    wrapped_rendered = next(block for block in wrapped_composition.document["blocks"] if block["t"] == "Table")
+    assert len(wrapped_rendered["c"][4][0][3]) == 2
+    assert wrapped_composition.excerpted_table_count == 1
 
 
 def test_table_excerpt_fails_closed_when_no_whole_row_fits() -> None:
@@ -1755,7 +1819,7 @@ def test_table_excerpt_fails_closed_when_no_whole_row_fits() -> None:
     assert context["column_count"] == 2
     assert context["body_row_count"] == 1
     assert context["available_lines"] == 8
-    assert context["fixed_lines"] == 1
+    assert context["fixed_lines"] == 2
     assert context["title_font_pt"] == 28
     assert context["body_font_pt"] == 20
     assert context["maximum_body_rows"] == 8
@@ -1989,7 +2053,7 @@ def test_long_title_figure_allocation_uses_title_adjusted_body_geometry() -> Non
     continuation_header = continuation_headers[1]["c"]
     assert continuation_header[2]
     visible_title = " ".join(_visible_text(continuation_header[2]).split())
-    assert proportional_text_width_units(visible_title) <= 36
+    assert proportional_text_width_units(visible_title) <= 35
     assert any(
         pair
         == [

@@ -23,7 +23,13 @@ from infrastructure.core.exceptions import RenderingError
 BASE_BODY_LINES_16_9 = 8
 BODY_CHARACTERS_PER_LINE_20PT = 43
 LIST_CHARACTERS_PER_LINE_20PT = 34
-TITLE_CHARACTERS_PER_LINE_28PT = 36
+# Beamer's frame-title face is slightly wider than the 20-point proportional
+# body calibration.  A 36-unit title is the observed wrap boundary, not a safe
+# one-line budget: admitting it as one line can leave an entire body line
+# unreserved after TeX composes the frame title.  Keep one unit of headroom so
+# continuation titles remain physically one line at the declared 28-point
+# floor and long first titles trigger the existing divider path.
+TITLE_CHARACTERS_PER_LINE_28PT = 35
 MAX_TITLE_LINES_16_9 = 4
 BODY_LINES_PER_EXTRA_TITLE_LINE = 2
 BIBLIOGRAPHIC_CITATION_CHARACTERS = 32
@@ -33,7 +39,11 @@ BIBLIOGRAPHIC_CITATION_CHARACTERS = 32
 CONTINUATION_TITLE_TARGET_CHARS = TITLE_CHARACTERS_PER_LINE_28PT
 TABLE_INTERCOLUMN_GUTTER_CHARACTERS = 1
 TABLE_LIST_INDENT_WIDTH_UNITS = 3
-TABLE_RULE_PADDING_LINES = 1
+# A Pandoc longtable has top/mid/bottom rule spacing and row struts that prose
+# line counts do not own.  Two body-line units are the calibrated fixed debit;
+# one unit admitted both six compact rows and three heavily wrapped rows that
+# overflowed real 16:9 Beamer frames at the 20-point floor.
+TABLE_RULE_PADDING_LINES = 2
 TABLE_MINIMUM_COLUMN_CHARACTERS = 2
 TABLE_TOKEN_SAFETY_CHARACTERS = 1
 _NARROW_PROPORTIONAL_GLYPHS = frozenset("fijltI1.,:;!|'\"")
