@@ -67,6 +67,8 @@ _TEX_MATH_COMMAND_WIDTH_UNITS = {
     "longrightarrow": 3.0,
     "longleftarrow": 3.0,
     "longleftrightarrow": 3.8,
+    "xrightarrow": 3.0,
+    "downarrow": 2.2,
     # Font/style commands do not add a glyph; their braced content is still
     # priced character by character by the scanner below.
     "rm": 0.0,
@@ -118,6 +120,7 @@ _TEX_MATH_COMMAND_WIDTH_UNITS = {
     "widetilde": 0.0,
     "underbrace": 0.0,
     "overbrace": 0.0,
+    "textstyle": 0.0,
     "alpha": 1.2,
     "beta": 1.2,
     "gamma": 1.2,
@@ -168,6 +171,7 @@ _TEX_MATH_COMMAND_WIDTH_UNITS = {
     "max": 3.0,
     "argmin": 6.0,
     "argmax": 6.0,
+    "arg": 3.0,
     "lim": 3.0,
     "Pr": 2.0,
     "mid": 0.8,
@@ -194,7 +198,11 @@ _TEX_MATH_COMMAND_WIDTH_UNITS = {
     "cup": 1.5,
     "cap": 1.5,
     "cdot": 1.0,
+    "dots": 2.5,
+    "ldots": 2.5,
     "times": 1.5,
+    "ast": 1.5,
+    "star": 1.5,
     "pm": 1.5,
     "mp": 1.5,
     "oplus": 1.5,
@@ -203,6 +211,9 @@ _TEX_MATH_COMMAND_WIDTH_UNITS = {
     "nabla": 1.5,
     "infty": 1.5,
     "ell": 1.0,
+    "lfloor": 1.0,
+    "rfloor": 1.0,
+    "top": 1.5,
     "to": 2.2,
     "mapsto": 2.2,
     "quad": 2.0,
@@ -322,6 +333,11 @@ def tex_math_width_units(source: str) -> int:
                         index += len(command) + len(environment_match.group(0)) + 1
                         continue
                 width += _TEX_MATH_COMMAND_WIDTH_UNITS.get(command, min(6.0, max(1.5, len(command) * 0.8)))
+                # Deliberately stop at the command name rather than consuming
+                # its following arguments. In particular, ``\\xrightarrow``
+                # receives a conservative base-arrow debit above while its
+                # optional and required labels remain in the scan and therefore
+                # continue to widen the estimate.
                 index += len(command) + 1
                 continue
             if index + 1 < len(source):

@@ -33,7 +33,9 @@ from infrastructure.rendering._slides_accessibility_tables import (
 )
 from infrastructure.rendering._slides_accessibility_contracts import (
     proportional_text_width_units,
+    tex_math_width_units,
     tex_math_vertical_line_demand,
+    unsupported_tex_math_commands,
 )
 from infrastructure.rendering._slides_accessibility_text_geometry import _plain_text
 from infrastructure.rendering._slides_reveal_content import (
@@ -495,6 +497,63 @@ def test_semantic_composer_fails_closed_on_unmodeled_math_commands(container: st
 
     assert exc_info.value.context["math_source"] == math_source
     assert exc_info.value.context["unsupported_commands"] == ["rule"]
+
+
+@pytest.mark.parametrize(
+    "math_source",
+    [
+        r"1,\dots,n",
+        r"1,\ldots,n",
+        r"\arg\min_x f(x)",
+        r"q^\ast",
+        r"\textstyle\sum_i x_i",
+        r"D_\alpha\xrightarrow[\alpha\to 1]{}\mathrm{KL}",
+        r"A^\star",
+        r"x\downarrow y",
+        r"\lfloor x\rfloor",
+        r"x^\top y",
+    ],
+)
+def test_semantic_composer_accepts_declared_standard_math_commands(math_source: str) -> None:
+    equation = {"t": "Para", "c": [{"t": "Math", "c": [{"t": "DisplayMath"}, math_source]}]}
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Standard math"), equation]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/standard-math.md",
+    )
+
+    assert composition.frame_count == 1
+    assert unsupported_tex_math_commands(math_source) == ()
+
+
+def test_standard_math_command_widths_are_positive_except_for_style() -> None:
+    expected_widths = {
+        r"\dots": 3,
+        r"\ldots": 3,
+        r"\arg": 3,
+        r"\ast": 2,
+        r"\xrightarrow": 3,
+        r"\star": 2,
+        r"\downarrow": 3,
+        r"\lfloor": 1,
+        r"\rfloor": 1,
+        r"\top": 2,
+    }
+
+    assert {source: tex_math_width_units(source) for source in expected_widths} == expected_widths
+    assert tex_math_width_units(r"\textstyle x") == tex_math_width_units("x")
+
+
+@pytest.mark.parametrize(
+    "labeled_arrow",
+    [
+        r"\xrightarrow{\alpha}",
+        r"\xrightarrow[\alpha\to 1]{\mathrm{limit}}",
+    ],
+)
+def test_xrightarrow_width_includes_its_visible_labels(labeled_arrow: str) -> None:
+    assert tex_math_width_units(labeled_arrow) > tex_math_width_units(r"\xrightarrow{}")
 
 
 def test_semantic_composer_rejects_overwide_display_math_token() -> None:
