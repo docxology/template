@@ -170,7 +170,21 @@ class RenderManager:
             if not rendered_paths:
                 failed_formats = ", ".join(f"{fmt}: {err}" for fmt, err in format_errors)
                 raise TemplateError(
-                    f"No rendered_paths generated for {source_file.name}. All formats failed: {failed_formats}"
+                    f"No rendered_paths generated for {source_file.name}. All formats failed: {failed_formats}",
+                    context={
+                        "source": source_file.name,
+                        "format_failures": [
+                            {
+                                "format": format_name,
+                                "diagnostic_code": (
+                                    error.context.get("diagnostic_code")
+                                    if isinstance(error, TemplateError)
+                                    else None
+                                ),
+                            }
+                            for format_name, error in format_errors
+                        ],
+                    },
                 )
 
             if format_errors:
@@ -179,7 +193,21 @@ class RenderManager:
                 raise TemplateError(
                     f"Partial rendering failure for {source_file.name}: "
                     f"{len(rendered_paths)} format(s) succeeded, "
-                    f"{len(format_errors)} failed ({failed_names}). {failed_formats}"
+                    f"{len(format_errors)} failed ({failed_names}). {failed_formats}",
+                    context={
+                        "source": source_file.name,
+                        "format_failures": [
+                            {
+                                "format": format_name,
+                                "diagnostic_code": (
+                                    error.context.get("diagnostic_code")
+                                    if isinstance(error, TemplateError)
+                                    else None
+                                ),
+                            }
+                            for format_name, error in format_errors
+                        ],
+                    },
                 )
 
             logger.debug(f"Successfully rendered {len(rendered_paths)} format(s) for {source_file.name}")

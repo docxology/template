@@ -544,6 +544,59 @@ def test_render_individual_files_success(tmp_path: Path) -> None:
     assert (out_dir / "03_results.out").is_file()
 
 
+@pytest.mark.parametrize(("enable_pdf", "expected_failures"), [(True, []), (False, ["23_limitations.md"])])
+def test_render_individual_files_defers_only_pre_aux_accessible_beamer_overflow(
+    tmp_path: Path,
+    enable_pdf: bool,
+    expected_failures: list[str],
+) -> None:
+    """Only a pipeline-owned post-AUX refresh can supersede first-pass overflow."""
+
+    source = tmp_path / "23_limitations.md"
+    source.write_text("# Limitations\n\nSee the discussion section.\n", encoding="utf-8")
+
+    class OverflowingSlidesRenderer:
+        def render_accessible_pair(self, _source_file: Path, **_kwargs: object) -> tuple[Path, Path]:
+            raise RenderingError(
+                "[slides.density.beamer-overflow] preliminary fallback prose exceeds the frame",
+                context={"diagnostic_code": "slides.density.beamer-overflow"},
+            )
+
+    class WritingWebRenderer:
+        def render(self, source_file: Path) -> Path:
+            output = tmp_path / f"{source_file.stem}.html"
+            output.write_text("<!doctype html><title>Current section</title>", encoding="utf-8")
+            return output
+
+    manager = RenderManager(
+        RenderingConfig(
+            enable_pdf=enable_pdf,
+            enable_html=True,
+            enable_slides=True,
+            slides_profile="accessible",
+            output_dir=str(tmp_path / "output"),
+            pdf_dir=str(tmp_path / "output/pdf"),
+            slides_dir=str(tmp_path / "output/slides"),
+            web_dir=str(tmp_path / "output/web"),
+        ),
+        slides_renderer=OverflowingSlidesRenderer(),
+        web_renderer=WritingWebRenderer(),
+    )
+    reporter = DiagnosticReporter(project_name="t", output_dir=tmp_path / "reports", load_existing=False)
+
+    _rendered_count, failed_files = _render_individual_files(manager, [source], reporter)
+
+    assert failed_files == expected_failures
+    assert len(reporter.events) == len(expected_failures)
+    if reporter.events:
+        assert reporter.events[0].context["format_failures"] == [
+            {
+                "format": "accessible slide pair",
+                "diagnostic_code": "slides.density.beamer-overflow",
+            }
+        ]
+
+
 def test_render_individual_files_cleans_stale_web_artifacts(tmp_path: Path) -> None:
     """Render-only reruns remove obsolete generated HTML before writing current pages.
 

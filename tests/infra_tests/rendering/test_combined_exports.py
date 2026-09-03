@@ -995,6 +995,52 @@ def test_render_combined_outputs_removes_failed_refresh_deck(
     assert (Path(manager.config.slides_dir) / "03_results_slides.pdf").is_file()
 
 
+def test_accessible_final_aux_refresh_overflow_remains_fail_closed(tmp_path: Path) -> None:
+    """A persistent overflow in the authoritative refresh deletes the pair and fails."""
+
+    class FinalOverflowManager(_AuxRefreshManager):
+        def render_accessible_slide_pair(
+            self,
+            source_file: Path,
+            *,
+            strict_cross_deck_refs: bool = False,
+        ) -> tuple[Path, Path]:
+            self.events.append(f"pair:{source_file.stem}")
+            self.strict_refresh_flags.append(strict_cross_deck_refs)
+            pdf_output = Path(self.config.slides_dir) / f"{source_file.stem}_slides.pdf"
+            html_output = pdf_output.with_suffix(".html")
+            pdf_output.parent.mkdir(parents=True, exist_ok=True)
+            pdf_output.write_bytes(b"partial final beamer")
+            html_output.write_text("partial final reveal", encoding="utf-8")
+            raise RenderingError(
+                "[slides.density.beamer-overflow] strict refresh still exceeds the frame",
+                context={"diagnostic_code": "slides.density.beamer-overflow"},
+            )
+
+    manager = FinalOverflowManager(
+        tmp_path,
+        aux_text="\\relax\n\\newlabel{eq:foreign}{{7}{2}}\n",
+        slides_profile="accessible",
+    )
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    source, _definition = _write_foreign_ref_sources(manuscript_dir)
+
+    with pytest.raises(RenderingError, match="slides.density.beamer-overflow"):
+        render_combined_outputs(
+            manager,
+            [source],
+            manuscript_dir,
+            "templates/project",
+            _make_reporter(tmp_path),
+            rendered_count=0,
+        )
+
+    assert manager.strict_refresh_flags == [True]
+    assert not (Path(manager.config.slides_dir) / "01_intro_slides.pdf").exists()
+    assert not (Path(manager.config.slides_dir) / "01_intro_slides.html").exists()
+
+
 def test_render_combined_outputs_aux_refresh_is_idempotent(tmp_path: Path) -> None:
     """Repeated current-AUX refreshes replace decks with identical resolved content."""
     manager = _AuxRefreshManager(
