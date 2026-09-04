@@ -47,12 +47,27 @@ uv run pytest tests/infra_tests/rendering/test_web_renderer.py -v
 - Cross-reference handling
 - Style application
 
-### Slide Renderer Tests (`test_slides_renderer_core.py`, `test_slides_accessibility.py`)
+### Slide Renderer Tests
+
+The slide contract is partitioned across `test_slides_renderer_core.py`,
+`test_slides_accessibility.py`, `test_slides_accessibility_reveal_regressions.py`,
+`test_slides_beamer_accessibility.py`, `test_slides_beamer_safe_area.py`,
+`test_slides_crossref.py`, `test_slides_figure_area.py`,
+`test_slides_formal_content.py`, and `test_slides_identifier_integrity.py`.
 
 Presentation slide generation:
 
 ```bash
-uv run pytest tests/infra_tests/rendering/test_slides_renderer_core.py -v
+uv run pytest \
+  tests/infra_tests/rendering/test_slides_renderer_core.py \
+  tests/infra_tests/rendering/test_slides_accessibility.py \
+  tests/infra_tests/rendering/test_slides_accessibility_reveal_regressions.py \
+  tests/infra_tests/rendering/test_slides_beamer_accessibility.py \
+  tests/infra_tests/rendering/test_slides_beamer_safe_area.py \
+  tests/infra_tests/rendering/test_slides_crossref.py \
+  tests/infra_tests/rendering/test_slides_figure_area.py \
+  tests/infra_tests/rendering/test_slides_formal_content.py \
+  tests/infra_tests/rendering/test_slides_identifier_integrity.py -v
 ```
 
 **Test Coverage:**
@@ -65,6 +80,9 @@ uv run pytest tests/infra_tests/rendering/test_slides_renderer_core.py -v
 - 80-word prose, eight-row table, 70% figure-area, and 28/20/16-point contracts
 - Reveal.js headings, landmarks, keyboard support, figure alternatives, long descriptions, and manuscript links
 - Beamer typography floors and explicit untagged-derivative boundary
+- Post-compile Beamer glyph/rule safe areas and the fail-loud `pdfplumber` capability boundary
+- Figure max-fit allocation, authored-style rejection, and intrinsic raster geometry
+- Raw formal-content parity and contiguous identifier preservation
 
 ## Test Categories
 

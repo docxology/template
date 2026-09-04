@@ -13,6 +13,7 @@ from infrastructure.rendering._slides_accessibility_contracts import (
     LIST_CHARACTERS_PER_LINE_20PT,
     TABLE_LIST_INDENT_WIDTH_UNITS,
     TABLE_TOKEN_SAFETY_CHARACTERS,
+    AccessibleSlidePolicy,
     density_error,
     proportional_text_width_units,
     tex_hyphen_segments,
@@ -20,7 +21,6 @@ from infrastructure.rendering._slides_accessibility_contracts import (
     tex_math_width_units,
     unsupported_tex_math_commands,
 )
-from infrastructure.rendering.latex_texttt import long_texttt_source_is_breakable
 
 
 _WORD_RE = re.compile(r"[\w]+(?:[-'][\w]+)*", flags=re.UNICODE)
@@ -29,6 +29,65 @@ assert len(_BIBLIOGRAPHIC_CITATION_PLACEHOLDER) == BIBLIOGRAPHIC_CITATION_CHARAC
 _BODY_CHARACTERS_PER_LINE_20PT = BODY_CHARACTERS_PER_LINE_20PT
 _LIST_CHARACTERS_PER_LINE_20PT = LIST_CHARACTERS_PER_LINE_20PT
 _CROSS_REFERENCE_LABELS = CROSS_REFERENCE_LABELS
+
+
+def _indivisible_code_tokens(value: object) -> tuple[str, ...]:
+    """Return projected inline/code-block tokens that must stay contiguous."""
+
+    if isinstance(value, list):
+        return tuple(token for item in value for token in _indivisible_code_tokens(item))
+    if not isinstance(value, dict):
+        return ()
+    tag = value.get("t")
+    content = value.get("c")
+    if tag == "Code" and isinstance(content, list) and content:
+        token = str(content[-1])
+        return (token,) if token else ()
+    if tag == "CodeBlock" and isinstance(content, list) and len(content) == 2:
+        source = content[1]
+        if not isinstance(source, str):
+            return ()
+        return tuple(line.expandtabs(4) for line in source.splitlines() if line)
+    if tag == "Image":
+        return ()
+    return _indivisible_code_tokens(content)
+
+
+def _validate_indivisible_code_width(
+    value: object,
+    *,
+    capacity: int,
+    policy: AccessibleSlidePolicy,
+    source: str,
+    heading: str,
+) -> None:
+    """Fail before writing when one code token cannot fit at the font floor."""
+
+    width_factor = _BODY_CHARACTERS_PER_LINE_20PT / _LIST_CHARACTERS_PER_LINE_20PT
+    token, required = max(
+        (
+            (
+                candidate,
+                math.ceil(len(candidate) * width_factor) + TABLE_TOKEN_SAFETY_CHARACTERS,
+            )
+            for candidate in _indivisible_code_tokens(value)
+        ),
+        key=lambda item: item[1],
+        default=("", 0),
+    )
+    if required <= capacity:
+        return
+    raise density_error(
+        "slides.density.indivisible-code-token",
+        "one code token cannot fit the projection frame without character-level splitting",
+        source=source,
+        heading=heading,
+        body_font_pt=policy.body_font_pt,
+        available_width_units=capacity,
+        required_width_units=required,
+        first_offending_token=token,
+        remediation="use a shorter projected label or a bounded excerpt",
+    )
 
 
 def _plain_text(value: object) -> str:
@@ -163,8 +222,7 @@ def _inline_physical_tokens(value: object) -> list[tuple[str, int]]:
         code = str(content[-1])
         if not code:
             return []
-        unbreakable_characters = 1 if long_texttt_source_is_breakable(code) else len(code)
-        width = math.ceil(unbreakable_characters * (_BODY_CHARACTERS_PER_LINE_20PT / _LIST_CHARACTERS_PER_LINE_20PT))
+        width = math.ceil(len(code) * (_BODY_CHARACTERS_PER_LINE_20PT / _LIST_CHARACTERS_PER_LINE_20PT))
         return [(code, width + TABLE_TOKEN_SAFETY_CHARACTERS)]
     if tag == "Math" and isinstance(content, list) and content:
         source = str(content[-1])
@@ -338,14 +396,11 @@ def _estimated_lines_with_hard_breaks(value: object, capacity: int) -> int:
         lines = 0
         for item in raw_items:
             item_lines = _estimated_lines_with_hard_breaks(item, capacity)
-            paragraph_count = (
-                sum(isinstance(block, dict) and block.get("t") in {"Para", "Plain"} for block in item)
-                if isinstance(item, list)
-                else 0
-            )
-            # A loose list item's paragraph separation consumes one additional
-            # calibrated line. Compact nested lists retain their existing fit.
-            lines += item_lines + int(paragraph_count > 1)
+            # Seven short paragraphs in one loose item fit the safe footer
+            # boundary. The regular seven-line budget already absorbs their
+            # compact paragraph separation, so no second environment debit is
+            # charged. Nested child items retain one line apiece.
+            lines += item_lines
         return max(1, lines)
     if tag == "BlockQuote":
         if not isinstance(content, list):
@@ -354,7 +409,10 @@ def _estimated_lines_with_hard_breaks(value: object, capacity: int) -> int:
             1,
             sum(_estimated_lines_with_hard_breaks(item, capacity) for item in content),
         )
-        return max(1, math.ceil(source_lines * 8 / 9))
+        # Eight short quoted paragraphs fit and the ninth crosses the physical
+        # boundary. Map that compact quote geometry onto seven regular body
+        # units while retaining the next-paragraph fail boundary.
+        return max(1, math.ceil(source_lines * 7 / 8))
     if tag == "Div":
         # Pandoc containers preserve their child block boundaries.  Flattening
         # ten one-line paragraphs into one wrapping string substantially
@@ -368,9 +426,10 @@ def _estimated_lines_with_hard_breaks(value: object, capacity: int) -> int:
     if tag == "DefinitionList":
         if not isinstance(content, list):
             return 1
-        # Multiple description items need one shared environment debit. A
-        # single term shares its first projected line with its first definition.
-        lines = int(len(content) > 1)
+        # A term shares its projected line with its short definition. Seven
+        # single-line entries fit the safe footer boundary; the regular body
+        # budget therefore needs no additional environment-level debit.
+        lines = 0
         for item in content:
             if not isinstance(item, list) or len(item) != 2:
                 return lines + 1

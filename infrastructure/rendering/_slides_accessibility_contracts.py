@@ -18,11 +18,27 @@ from infrastructure.core.exceptions import RenderingError
 
 # Stable 16:9 projection geometry for the opt-in accessible profile. The
 # public policy's 80-word value is an absolute ceiling, not a promise that 80
-# unusually long words fit on every frame. These conservative estimates are
-# calibrated against the profile's 28/20/16-point native floors.
-BASE_BODY_LINES_16_9 = 8
+# unusually long words fit on every frame. With the safe 25-point footer, a
+# one-line title leaves room for seven regular 24-point-leading body lines at
+# the 20-point floor. Compact table rows and figure boxes use separate measured
+# units below rather than pretending every block has prose-line geometry.
+BASE_BODY_LINES_16_9 = 7
 BODY_CHARACTERS_PER_LINE_20PT = 43
 LIST_CHARACTERS_PER_LINE_20PT = 34
+# The accessible Beamer footer owns one explicitly bounded 25-point line:
+# 19 points for its fixed 16-point reader label plus a 6-point physical bottom
+# skip.  The footer is not a figure label, so caller-selected caption sizing
+# does not change the body budget. Rendered evidence supersedes the historical
+# eight-line estimate: the safe reservation admits seven regular body lines.
+ACCESSIBLE_BEAMER_FOOTER_FONT_PT = 16
+ACCESSIBLE_BEAMER_FOOTER_LEADING_PT = 19
+ACCESSIBLE_BEAMER_FOOTER_BOTTOM_SKIP_PT = 6
+ACCESSIBLE_BEAMER_FOOTER_RESERVED_PT = ACCESSIBLE_BEAMER_FOOTER_LEADING_PT + ACCESSIBLE_BEAMER_FOOTER_BOTTOM_SKIP_PT
+# Rendered geometry is checked against glyph/rule bounds, not merely TeX's
+# box-warning stream.  The structural footer skip is deliberately larger than
+# the required visible-glyph clearance because glyph descent varies by engine.
+ACCESSIBLE_BEAMER_MIN_BOTTOM_CLEARANCE_PT = 4.0
+ACCESSIBLE_BEAMER_MIN_SIDE_CLEARANCE_PT = 6.0
 # Beamer's frame-title face is slightly wider than the 20-point proportional
 # body calibration.  A 36-unit title is the observed wrap boundary, not a safe
 # one-line budget: admitting it as one line can leave an entire body line
@@ -39,11 +55,23 @@ BIBLIOGRAPHIC_CITATION_CHARACTERS = 32
 CONTINUATION_TITLE_TARGET_CHARS = TITLE_CHARACTERS_PER_LINE_28PT
 TABLE_INTERCOLUMN_GUTTER_CHARACTERS = 1
 TABLE_LIST_INDENT_WIDTH_UNITS = 3
+# Pandoc's ``longtable`` resets ``\linewidth`` to the projection canvas and can
+# therefore stretch a table to both paper edges.  The accessible TeX pass
+# captures the frame body's pre-environment ``\linewidth`` instead; the same
+# 43-unit body width below is already the semantic composer's usable-width
+# contract, so no second percentage discount belongs in table preflight.
+ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH = r"\AFSlideTableWidth"
 # A Pandoc longtable has top/mid/bottom rule spacing and row struts that prose
 # line counts do not own.  Two body-line units are the calibrated fixed debit;
 # one unit admitted both six compact rows and three heavily wrapped rows that
 # overflowed real 16:9 Beamer frames at the 20-point floor.
 TABLE_RULE_PADDING_LINES = 2
+# Longtable rows and rules use compact struts rather than 24-point prose
+# leading. Real two-, three-, five-, and six-column renders establish eight
+# table geometry units under the same safe footer. This separate budget never
+# promises that eight body rows fit: wrapping, headers, and the two rule units
+# are charged before the user-level eight-row ceiling is applied.
+TABLE_BODY_LINE_UNITS_16_9 = 8
 TABLE_MINIMUM_COLUMN_CHARACTERS = 2
 TABLE_TOKEN_SAFETY_CHARACTERS = 1
 _NARROW_PROPORTIONAL_GLYPHS = frozenset("fijltI1.,:;!|'\"")
@@ -52,9 +80,9 @@ _WIDE_PROPORTIONAL_GLYPHS = frozenset("m@%&")
 _MEDIUM_WIDE_PROPORTIONAL_GLYPHS = frozenset("w")
 # Latin Modern Sans spaces are narrower than the ordinary ``a`` unit, but a
 # conservative 0.8 debit is needed once interword glue and author-year
-# punctuation are composed across a complete 20-point prose line.  It keeps
-# the measured 72-pair wide-glyph boundary inside eight lines while moving the
-# known 80-pair and citation-rich overflow cases to preflight.
+# punctuation are composed across a complete 20-point prose line. With the
+# safe footer, 63 ``WW`` pairs occupy seven lines and the 64th pair crosses the
+# fail-closed boundary; the public 80-word policy remains only a ceiling.
 _PROPORTIONAL_SPACE_WIDTH_UNITS = 0.8
 _TEX_MATH_SUPPORTED_ENVIRONMENTS = frozenset({"aligned"})
 _TEX_MATH_COMMAND_WIDTH_UNITS = {
@@ -417,15 +445,15 @@ def unsupported_tex_math_commands(source: str) -> tuple[str, ...]:
 def tex_math_vertical_line_demand(source: str) -> int:
     """Return conservative projection-line demand for supported TeX math.
 
-    The accessible 16:9/20-point boundary is empirically clean through sixteen
-    nested fraction controls and overflows at seventeen. Two nested fraction
-    levels therefore consume one of the profile's eight body-line units. The
-    count deliberately overprices sequential fractions. ``aligned`` is clean
-    through six rows and overflows at seven, so its environment contributes two
-    fixed lines beyond its authored row count. A substack is typeset more
-    compactly: fourteen rows are clean and fifteen overflow, represented as two
-    authored rows per body line plus one fixed line. Horizontal composition is
-    priced independently.
+    With the safe footer, the accessible 16:9/20-point boundary is empirically
+    clean through fourteen nested fraction controls and crosses the seven-line
+    budget at fifteen. Two nested fraction levels therefore consume one body
+    line. The count deliberately overprices sequential fractions. ``aligned``
+    is clean through five rows and crosses the boundary at six, so its
+    environment contributes two fixed lines beyond its authored row count. A
+    substack is typeset more compactly: twelve rows are clean and thirteen
+    cross the boundary, represented as two authored rows per body line plus one
+    fixed line. Horizontal composition is priced independently.
     """
 
     fraction_count = len(re.findall(r"\\(?:dfrac|frac|tfrac)\b", source))

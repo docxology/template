@@ -116,8 +116,24 @@ render:
     reader_href: ../web/index.html
 ```
 
+Accessible Beamer additionally requires the rendered-geometry inspection
+capability supplied by `pdfplumber`. Install the rendering dependency group in
+a source checkout with `uv sync --group rendering`, or install the package extra
+with `python -m pip install 'research-project-template[rendering]'`. If that
+capability is absent, the accessible profile fails with
+`slides.capability.pdf-geometry-required` and removes the unverified derivative;
+the default `archive` profile remains available. See
+[Optional Dependencies & Capability Matrix](../development/optional-dependencies.md#accessible-beamer-geometry-fail-loud-installed-capability)
+for the complete boundary.
+
 The numeric settings are guardrails: word and table-row maxima may only become
-stricter, while figure-area and font floors may only increase. The renderer
+stricter, while figure-area and font floors may only increase. They are policy
+ceilings and floors, not guarantees that every 80-word paragraph or eight-row
+table fits. With a one-line title, the fixed 25-point Beamer footer leaves
+seven regular 24-point-leading body lines at the 20-point floor. Compact table
+rows and rules have a separately calibrated eight-unit geometry budget, and
+figure percentages use a separate title-adjusted envelope; neither enlarges
+the regular prose region. The renderer
 uses one Pandoc semantic tree for both presentation formats. It may split
 between paragraphs or other complete blocks, but never inside a list, equation,
 code block, table, or figure. Oversized indivisible content produces a precise

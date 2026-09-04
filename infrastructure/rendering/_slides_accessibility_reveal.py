@@ -10,6 +10,19 @@ from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
+from infrastructure.rendering._slides_accessibility_figures import (
+    FIGURE_SAFE_BODY_MAX_HEIGHT_PERCENT_16_9,
+    FIGURE_SAFE_BODY_MAX_WIDTH_PERCENT,
+    REVEAL_LOGICAL_SLIDE_HEIGHT_PX,
+)
+from infrastructure.rendering._slides_accessibility_reveal_controls import (
+    add_interactive_keyboard_guard as _add_interactive_keyboard_guard,
+    disable_automatic_reveal_scroll as _disable_automatic_reveal_scroll,
+    normalize_reveal_viewport as _normalize_reveal_viewport,
+    rendered_title_only_headings as _rendered_title_only_headings,
+    reveal_scroll_activation_issues,
+    reveal_viewport_issues,
+)
 from infrastructure.rendering._slides_reveal_content import (
     activate_hardened_reveal_mathjax,
     promote_display_math_labels,
@@ -52,6 +65,7 @@ _ACCESSIBLE_REVEAL_MARKERS = (
     'aria-roledescription="slide"',
     "dist/theme/white.css",
     "overflow-x: hidden",
+    "data-template-interactive-keyboard-guard",
 )
 
 
@@ -180,6 +194,7 @@ def _accessible_reveal_css(policy: AccessibleSlidePolicy) -> str:
     body_px = policy.body_font_pt * (4 / 3)
     title_px = policy.title_font_pt * (4 / 3)
     label_px = policy.figure_label_font_pt * (4 / 3)
+    maximum_figure_height_px = REVEAL_LOGICAL_SLIDE_HEIGHT_PX * FIGURE_SAFE_BODY_MAX_HEIGHT_PERCENT_16_9 / 100
     return f"""<style data-template-accessible-slides>
 :root {{ --r-background-color: #ffffff; --r-main-color: #111111; --r-link-color: #004b87; }}
 html, body {{ max-width: 100%; overflow-x: hidden; }}
@@ -200,23 +215,28 @@ main#main-content {{ inline-size: 100%; block-size: 100vh; min-block-size: 100vh
 .reveal table {{ max-width: 100%; min-width: 100%; width: max-content; font-size: inherit; border-collapse: collapse; }}
 .reveal th, .reveal td {{ border: 2px solid #404040; padding: 0.25em 0.4em; }}
 .reveal section.figure-led figure {{
-  min-height: {policy.min_figure_area_percent}vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* Reveal scales its 960×700 logical canvas to the viewport. Keep figure
+     geometry in that canvas so narrow viewports do not scale ``vh`` twice. */
+  max-block-size: {maximum_figure_height_px:g}px;
 }}
-.reveal section.figure-led img {{
-  height: calc({policy.min_figure_area_percent}vh - 5.5rem) !important;
-  max-height: calc({policy.min_figure_area_percent}vh - 5.5rem);
+/* The minimum is an allocation floor carried independently from the
+   title/footer-safe maximum; neither value asserts literal ink coverage. */
+.reveal section.figure-led img.accessible-max-fit-image {{
+  height: var(--template-figure-safe-max-height) !important;
+  min-height: var(--template-figure-min-allocation-height);
+  max-height: var(--template-figure-safe-max-height);
   max-width: 100%;
   object-fit: contain;
 }}
-.reveal section.figure-led img:not(.accessible-multi-image-panel) {{
+.reveal section.figure-led img.accessible-max-fit-image:not(.accessible-multi-image-panel) {{
   display: block;
-  width: 100% !important;
+  width: {FIGURE_SAFE_BODY_MAX_WIDTH_PERCENT}% !important;
   margin-inline: auto;
 }}
-.reveal section.figure-led img.accessible-multi-image-panel {{
+.reveal section.figure-led img.accessible-max-fit-image.accessible-multi-image-panel {{
   display: inline-block;
   vertical-align: middle;
   margin-inline: 0;
@@ -224,24 +244,30 @@ main#main-content {{ inline-size: 100%; block-size: 100vh; min-block-size: 100vh
 .reveal figcaption, .reveal .slide-reader-link {{ font-size: {label_px:.2f}px; line-height: 1.3; }}
 .slide-reader-nav {{
   position: fixed;
-  inset-inline-end: 0.75rem;
-  inset-block-start: 0.5rem;
+  inset-inline-end: max(0.75rem, env(safe-area-inset-right));
+  inset-block-start: max(0.5rem, env(safe-area-inset-top));
   z-index: 30;
   background: #ffffff;
   border: 2px solid #111111;
   padding: 0.3rem 0.55rem;
+  box-sizing: border-box;
+  max-inline-size: calc(100vw - 1rem);
+  overflow-wrap: anywhere;
 }}
 .skip-link {{
   position: fixed;
-  inset-inline-start: 0.5rem;
+  inset-inline-start: max(0.5rem, env(safe-area-inset-left));
   inset-block-start: -8rem;
   z-index: 100;
   background: #ffffff;
   color: #111111;
   border: 3px solid #111111;
   padding: 0.5rem;
+  box-sizing: border-box;
+  max-inline-size: calc(100vw - 1rem);
+  overflow-wrap: anywhere;
 }}
-.skip-link:focus {{ inset-block-start: 0.5rem; }}
+.skip-link:focus {{ inset-block-start: max(0.5rem, env(safe-area-inset-top)); }}
 .visually-hidden {{
   position: absolute !important; inline-size: 1px !important; block-size: 1px !important;
   padding: 0 !important; margin: -1px !important; overflow: hidden !important;
@@ -252,6 +278,128 @@ main#main-content {{ inline-size: 100%; block-size: 100vh; min-block-size: 100vh
   overflow: auto; overflow-wrap: anywhere;
 }}
 .figure-exact-values {{ font-size: {label_px:.2f}px; max-width: 100%; overflow-wrap: anywhere; }}
+@media (max-width: 32rem) {{
+  /* Reveal ordinarily fits a fixed 960 x 700 canvas by transforming each
+     active section.  At narrow reader widths that projection transform
+     compounds CSS reflow and makes nominal 28/20/16-point text physically
+     unreadable.  This media query keeps Reveal's active-slide and keyboard
+     state machine, but lays out the current slide as an unscaled document. */
+  html.reveal-full-page,
+  body.reveal-viewport {{
+    inline-size: 100%;
+    block-size: auto;
+    min-block-size: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }}
+  main#main-content {{
+    block-size: auto;
+    min-block-size: calc(100vh - 7.5rem);
+    min-block-size: calc(100dvh - 7.5rem);
+    margin-block-start: 7.5rem;
+    scroll-margin-block-start: 7.5rem;
+  }}
+  main#main-content .reveal {{
+    position: relative;
+    inset: auto;
+    inline-size: 100%;
+    block-size: auto !important;
+    min-block-size: inherit;
+    overflow: visible !important;
+    touch-action: pan-y pinch-zoom;
+  }}
+  main#main-content .reveal .slides {{
+    position: relative !important;
+    inset: auto !important;
+    inline-size: 100% !important;
+    block-size: auto !important;
+    min-block-size: inherit;
+    margin: 0 !important;
+    padding: 0;
+    overflow: visible;
+    pointer-events: auto;
+    perspective: none;
+    transform: none !important;
+    zoom: 1 !important;
+  }}
+  main#main-content .reveal .slides > section.stack.present {{
+    display: block !important;
+    position: relative !important;
+    inset: auto !important;
+    inline-size: 100% !important;
+    block-size: auto !important;
+    min-block-size: inherit;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }}
+  main#main-content .reveal .slides > section.present:not(.stack),
+  main#main-content .reveal .slides > section.stack.present > section.present {{
+    display: block !important;
+    position: relative !important;
+    inset: auto !important;
+    inline-size: 100% !important;
+    block-size: auto !important;
+    min-block-size: inherit;
+    margin: 0 !important;
+    padding: clamp(0.75rem, 3vw, 1.25rem) !important;
+    box-sizing: border-box !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transform-origin: center !important;
+    transition: none !important;
+  }}
+  main#main-content .reveal pre,
+  main#main-content .reveal mjx-container[display="true"] {{
+    max-inline-size: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }}
+  main#main-content .reveal section.figure-led figure {{
+    inline-size: 100%;
+    margin-inline: 0;
+  }}
+  main#main-content .reveal section.figure-led img.accessible-max-fit-image {{
+    /* These are logical-canvas pixels in projection mode.  With the narrow
+       transform removed they become readable CSS-pixel allocation bounds;
+       keep the source-owned floor/max variables instead of substituting vh. */
+    min-block-size: var(--template-figure-min-allocation-height);
+    max-block-size: var(--template-figure-safe-max-height);
+  }}
+  .slide-reader-nav {{
+    inset-inline: max(0.5rem, env(safe-area-inset-left));
+    inset-block-start: max(4.25rem, calc(env(safe-area-inset-top) + 4.25rem));
+  }}
+}}
+@media (max-width: 32rem) and (max-height: 20rem) {{
+  body {{ scroll-padding-block-start: 3.25rem; }}
+  body:has(.skip-link:focus) {{ scroll-padding-block-start: 7.25rem; }}
+  .slide-reader-nav {{
+    position: fixed;
+    inset-inline: max(0.5rem, env(safe-area-inset-left));
+    inset-block-start: max(0.5rem, env(safe-area-inset-top));
+    margin: 0;
+  }}
+  body:has(.skip-link:focus) .slide-reader-nav,
+  .skip-link:focus + .slide-reader-nav {{
+    inset-block-start: max(4.5rem, calc(env(safe-area-inset-top) + 4.5rem));
+  }}
+  main#main-content {{
+    block-size: auto;
+    min-block-size: calc(100vh - 3.25rem);
+    min-block-size: calc(100dvh - 3.25rem);
+    margin-block-start: 3.25rem;
+    scroll-margin-block-start: 3.25rem;
+  }}
+  body:has(.skip-link:focus) main#main-content,
+  .skip-link:focus ~ main#main-content {{
+    min-block-size: calc(100vh - 7.25rem);
+    min-block-size: calc(100dvh - 7.25rem);
+    margin-block-start: 7.25rem;
+  }}
+}}
 @media (prefers-reduced-motion: reduce) {{ .reveal .slides section {{ transition: none !important; }} }}
 @media (forced-colors: active) {{ .reveal th, .reveal td, .slide-reader-nav {{ border: 2px solid CanvasText; }} }}
 </style>"""
@@ -286,12 +434,15 @@ def enhance_accessible_reveal(
     harden_mathjax_script(html_file)
     enhance_accessibility(html_file, language=language, registry_path=registry_path)
     content = html_file.read_text(encoding="utf-8")
+    content = _normalize_reveal_viewport(content)
+    content = _disable_automatic_reveal_scroll(content)
     content = _reveal_semantics(content)
     authored_heading = _first_slide_heading(content)
     content = _set_document_title_and_heading(content, authored_heading)
     if "data-template-accessible-slides" not in content:
         content = content.replace("</head>", _accessible_reveal_css(policy) + "\n</head>", 1)
     content = _place_reader_navigation_after_skip_link(content, policy.reader_href)
+    content = _add_interactive_keyboard_guard(content)
     content = content.replace(
         '<div class="slides">',
         '<div class="slides" role="region" aria-label="Presentation slides">',
@@ -301,6 +452,16 @@ def enhance_accessible_reveal(
         raise RenderingError(
             "[slides.accessibility.keyboard] Reveal.js keyboard navigation is not enabled",
             context={"source": str(html_file), "diagnostic_code": "slides.accessibility.keyboard"},
+        )
+    title_only = _rendered_title_only_headings(content)
+    if title_only:
+        raise RenderingError(
+            "[slides.structure.title-only-rendered] Reveal emitted a non-divider slide with no visible body",
+            context={
+                "source": str(html_file),
+                "diagnostic_code": "slides.structure.title-only-rendered",
+                "headings": list(title_only),
+            },
         )
     write_if_changed(html_file, content)
 
@@ -323,6 +484,10 @@ def accessible_reveal_output_issues(html_file: Path) -> tuple[str, ...]:
     )
     if re.search(r"\bkeyboard\s*:\s*true\b", content) is None:
         issues.append("Reveal keyboard navigation is not enabled")
+    issues.extend(reveal_viewport_issues(content))
+    issues.extend(reveal_scroll_activation_issues(content))
+    if "data-template-interactive-keyboard-guard" not in content:
+        issues.append("Reveal interactive-control keyboard guard is missing")
     if re.search(r"</h[1-6]\s+[^>]*>", content, flags=re.IGNORECASE):
         issues.append("Reveal heading attributes appear on a closing tag")
     if re.search(r"<h1\b", content, flags=re.IGNORECASE) is None:
@@ -343,5 +508,7 @@ def accessible_reveal_output_issues(html_file: Path) -> tuple[str, ...]:
     ):
         if ids.count(labelled_by) != 1:
             issues.append(f"Reveal slide aria-labelledby does not resolve exactly once: {labelled_by}")
+    for heading in _rendered_title_only_headings(content):
+        issues.append(f"Reveal non-divider slide has no visible body: {heading}")
     issues.extend(reveal_reference_and_math_issues(content))
     return tuple(issues)

@@ -188,8 +188,9 @@ def _normalize_direct_projection_graphics(
 
     The normal float-body pass remains direct-scope only.  A second narrow
     pass may reach bare or linked image paragraphs, but only when their exact
-    bounded-width-by-70%-height options identify a composer-owned projection
-    envelope.
+    bounded width-and-height options identify a composer-owned projection
+    envelope. The height is the title/footer-safe maximum-fit bound, not the
+    configurable minimum allocation percentage.
     """
 
     pieces: list[str] = []

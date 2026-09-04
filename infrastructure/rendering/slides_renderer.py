@@ -47,6 +47,7 @@ from infrastructure.rendering._slides_accessibility import (
     enhance_accessible_reveal,
     load_and_compose_pandoc_json,
 )
+from infrastructure.rendering._slides_beamer_geometry import reject_unsafe_accessible_beamer_geometry
 from infrastructure.rendering._slides_framebreaks import split_long_slide_frames
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_log_quality import parse_latex_log_findings
@@ -60,6 +61,7 @@ from infrastructure.rendering.latex_texttt import (
 from infrastructure.rendering._slides_math_header import write_slides_math_header
 from infrastructure.rendering._slides_reveal_content import ACCESSIBLE_REVEAL_URL, ACCESSIBLE_REVEAL_VERSION
 from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths, normalize_accessible_projection_latex
+from infrastructure.rendering._slides_tex_tables import inset_accessible_longtables
 from infrastructure.rendering._web_postprocess import MATHJAX_URL
 from infrastructure.rendering.security import subprocess_options
 
@@ -152,15 +154,14 @@ class SlidesRenderer:
         self._latex_compile = latex_compile
 
     def _require_accessible_seqsplit(self) -> None:
-        """Require the package that makes accessible long-code pricing truthful.
+        """Require the package used by admitted literal/reference break sequences.
 
-        Archive rendering keeps the historical graceful LaTeX fallback. Accessible
-        composition, however, discounts a long simple inline Code node only because
-        the downstream ``breaktt`` macro inserts character-level opportunities.
-        If ``seqsplit.sty`` is unavailable, that macro is intentionally an identity
-        fallback and the geometric premise is false. Detect the capability through
-        the same injected, security-profiled process boundary as every other slide
-        subprocess.
+        Accessible authored ``Code`` remains indivisible. Two narrow generated
+        cases may still use ``breakseq``: recurring display literals and unresolved
+        cross-deck reference tokens. If ``seqsplit.sty`` is unavailable, that macro
+        is an identity fallback and the generated geometric premise is false.
+        Detect the capability through the same injected, security-profiled process
+        boundary as every other slide subprocess.
         """
 
         located = ""
@@ -181,13 +182,13 @@ class SlidesRenderer:
         if located:
             return
         raise RenderingError(
-            "[slides.capability.seqsplit-required] Accessible long monospace wrapping requires seqsplit.sty",
+            "[slides.capability.seqsplit-required] Accessible generated label wrapping requires seqsplit.sty",
             context={
                 "diagnostic_code": "slides.capability.seqsplit-required",
                 "required_latex_package": "seqsplit",
             },
             suggestions=[
-                "Install the TeX seqsplit package before rendering the accessible slide profile.",
+                "Install the TeX seqsplit package before rendering generated long labels in the accessible profile.",
                 "Shorten or remove the long projected monospace token; archive rendering retains its historical fallback.",
             ],
         )
@@ -643,7 +644,10 @@ class SlidesRenderer:
             # routing it through the math font in either text or math mode.
             tex_content = tex_content.replace("≥", r"\ensuremath{\ge}")
 
-            tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
+            if self.config.slides_profile == "archive":
+                tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
+            else:
+                texttt_replacements = 0
             if texttt_replacements:
                 logger.info("Made %d long monospace path span(s) breakable in slides", texttt_replacements)
 
@@ -672,20 +676,21 @@ class SlidesRenderer:
                 if removed_empty_captions:
                     logger.info("Removed %d empty projected caption(s)", removed_empty_captions)
 
-            # A long scientific caption is part of an unbreakable figure
-            # environment. Keep the image legible but leave vertical room for
-            # its accessibility/source caption on the same frame.
-            figure_fraction = (
-                f"{self.config.slides_min_figure_area_percent / 100:.2f}"
-                if self.config.slides_profile == "accessible"
-                else "0.40"
-            )
-            tex_content, graphics_replacements = constrain_includegraphics_textheight(
-                tex_content,
-                figure_fraction,
-            )
-            if graphics_replacements:
-                logger.info("Constrained %d slide figure height bound(s)", graphics_replacements)
+                tex_content, inset_tables = inset_accessible_longtables(tex_content)
+                if inset_tables:
+                    logger.info("Confined %d accessible table(s) to the frame-body width", inset_tables)
+
+            # Archive output retains the historical post-Pandoc cap. The
+            # accessible AST already owns its distinct allocation floor and
+            # title/footer-safe maximum; applying the legacy rewrite here
+            # would turn that floor back into an accidental image-height cap.
+            if self.config.slides_profile == "archive":
+                tex_content, graphics_replacements = constrain_includegraphics_textheight(
+                    tex_content,
+                    "0.40",
+                )
+                if graphics_replacements:
+                    logger.info("Constrained %d slide figure height bound(s)", graphics_replacements)
 
             if self.config.slides_profile == "archive":
                 tex_content, framebreak_replacements = split_long_slide_frames(tex_content)
@@ -708,6 +713,7 @@ class SlidesRenderer:
             compiled_pdf = self._latex_compile(temp_tex, output_dir, compiler=self.config.latex_compiler, timeout=900)
             if self.config.slides_profile == "accessible":
                 _reject_accessible_beamer_overflow(temp_tex.with_suffix(".log"), compiled_pdf)
+                reject_unsafe_accessible_beamer_geometry(compiled_pdf)
             ensure_pdf_at(compiled_pdf, output_file)
 
             if output_file.exists():

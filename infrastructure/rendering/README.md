@@ -334,7 +334,18 @@ uv run python -m infrastructure.rendering.cli slides presentation.md --format re
 
 The default `archive` profile preserves the historical Beamer and Reveal.js
 output. Projects that need a projection-scale, accessibility-enhanced slide
-surface can opt in through their source-owned `manuscript/config.yaml`:
+surface must install the rendering capability before opting in. From a source
+checkout, use `uv sync --group rendering`; for an installed distribution, use
+`python -m pip install 'research-project-template[rendering]'` (or install a
+local wheel with its `[rendering]` extra). Accessible Beamer validation fails
+loudly with `slides.capability.pdf-geometry-required` when `pdfplumber` is not
+available, because an uninspected PDF cannot satisfy the safe-area contract.
+The default `archive` profile does not require `pdfplumber` and retains its
+historical post-compile behavior. The full capability table is in
+[`../../docs/development/optional-dependencies.md`](../../docs/development/optional-dependencies.md).
+
+After installing that capability, opt in through the source-owned
+`manuscript/config.yaml`:
 
 ```yaml
 render:
@@ -351,9 +362,18 @@ render:
     reader_href: ../web/index.html
 ```
 
-These values are safety bounds. A project may choose fewer prose words or table
-rows, a larger figure allocation, or larger fonts; it cannot weaken the
-80-word/eight-row/70-percent/28-20-16 contract. `SLIDES_PROFILE` and the
+These values are policy ceilings and floors, not fit guarantees. A project may
+choose fewer prose words or table rows, a larger figure allocation, or larger
+fonts; it cannot weaken the 80-word/eight-row/70-percent/28-20-16 contract.
+Under the fixed 25-point Beamer footer and a one-line title, measured 16:9
+geometry admits seven regular 24-point-leading body lines at the 20-point
+floor. Unusually wide prose can reach that physical boundary well before 80
+words. Compact longtable rows and rules use a separately calibrated eight-unit
+table budget, while figure percentages use their own title-adjusted reference
+envelope; neither budget increases regular prose capacity. The 70-percent value is a
+minimum allocation within the title/footer-safe body, not an image-height cap;
+the measured one-line-title maximum-fit envelope is 80 percent and shrinks
+proportionally for wrapped titles. `SLIDES_PROFILE` and the
 corresponding `SLIDES_*` environment variables override YAML for an isolated
 render without changing project metadata.
 
@@ -372,12 +392,14 @@ that exceeds its declared budget fails with a `slides.density.*` diagnostic;
 an indivisible list is reported specifically as
 `slides.density.indivisible-list`. Table excerpts retain a contiguous prefix of
 at most eight complete body rows after title, header, cell wrapping, and rules
-are priced against the same geometry. Ordinary tokens must fit one physical
+are priced against the compact table geometry. Ordinary tokens must fit one physical
 column at the 20-point floor; their minima conservatively weight wide glyphs,
-and explicit hyphens are recognized as TeX break points. Long inline code is
-priced as character-breakable only when its source characters serialize to the
-same simple, brace-free `texttt` body that the downstream `breaktt` pass
-rewrites; braced TeX literal encodings remain indivisible. Contiguous colspan
+and explicit hyphens are recognized as TeX break points. Authored inline code,
+paths, and individual shell-command tokens remain indivisible. A shell command
+may reflow only at its source whitespace; an over-wide token fails with
+the established `slides.density.indivisible-code-line` diagnostic rather than
+acquiring a mid-identifier
+break. Contiguous colspan
 constraints are solved jointly, so overlapping spans can share width in their
 common columns. If the resulting
 per-column minima exceed the frame width, composition stops before LaTeX with
@@ -416,6 +438,12 @@ tables fail before rendering. Loose-list paragraphs and every block inside one
 definition entry are priced separately. When projection must excerpt a table,
 its complete-table footer is removed before the row budget is recomputed; the
 canonical reader retains the untouched table and footer.
+Allowlisted definition, theorem, lemma, proposition, corollary, hypothesis,
+proof, and remark blocks keep their original TeX for Beamer and acquire an
+HTML-only semantic fallback for Reveal. Anchor-only blocks and safe declarations
+are retained as auxiliaries but cannot create a title-only frame. A second
+rendered-output check ignores speaker notes, hidden content, and empty figures
+when deciding whether a non-divider slide has a visible body.
 For captioned source listings, the projection copy retains an empty caption to
 preserve pandoc-crossref's counter and label while omitting the full prose
 caption from the frame. The unmodified source still supplies the complete
@@ -424,18 +452,22 @@ physical column over an unrelated active colspan; otherwise they retain the
 exact span start, end, token, and minimum that made the joint constraints
 infeasible.
 
-When source code can be rewritten into the accessible `breaktt` form, the
-renderer verifies that `seqsplit.sty` is available before relying on
-character-level wrapping. A missing package is
-`slides.capability.seqsplit-required`; the derivative pair is not emitted.
-Archive mode keeps its historical identity fallback. Accessible Beamer assigns
+Accessible authored code never uses `breaktt`. The renderer verifies that
+`seqsplit.sty` is available only when generated recurring display labels or
+unresolved cross-deck reference tokens require the narrower `breakseq` path. A
+missing package is `slides.capability.seqsplit-required`; the derivative pair
+is not emitted. Archive mode keeps its historical long-code fallback.
+Accessible Beamer assigns
 the declared body typography to nested itemize/enumerate levels, descriptions,
 quotes, captioned listings, and algorithm stand-ins so those paths cannot
 silently reset below the 20-point floor.
-The shared source/LaTeX predicate also recognizes Pandoc's brace-free `\ `
-control-space serialization. Archive and accessible output therefore retain
-the historical safe wrapping behavior for long space-bearing monospace spans,
-while apostrophes, brackets, and other braced encodings remain fail-closed.
+Archive output continues to recognize Pandoc's brace-free `\ ` control-space
+serialization for its historical wrapping behavior; the accessible profile
+instead preserves every authored monospace token as one contiguous unit.
+An over-wide shell `CodeBlock` retains the established
+`slides.density.indivisible-code-line` diagnostic. Newly covered inline,
+heading, and table `Code` nodes use `slides.density.indivisible-code-token` so
+callers can distinguish a semantic token from a complete code-block line.
 
 The canonical `RenderManager.render_all()` and Stage 03 path treat accessible
 slides as an exact pair: every eligible source produces both
@@ -444,6 +476,14 @@ renderer fails, both public derivatives are removed. Stage 03 verification and
 the Stage 04/05 enabled-output gates require the complete pair in accessible
 mode. The default archive profile retains its historical required-Beamer and
 optional-Reveal behavior.
+
+Reveal postprocessing replaces every input viewport declaration with one
+zoom-permitting viewport, contains document-level horizontal overflow, and
+reserves nonoverlapping fixed lanes for the skip link, companion navigation,
+and projected content at 400-percent-equivalent reflow widths. A capture-phase
+keyboard guard handles Space only for controls whose native activation uses
+Space; links, text input, Enter activation, and noninteractive Reveal navigation
+retain their browser or Reveal behavior.
 
 The two outputs have deliberately different accessibility status:
 
@@ -465,6 +505,10 @@ config = RenderingConfig(
 manager = RenderManager(config)
 pdf_path, reveal_path = manager.render_accessible_slide_pair(Path("manuscript/01_intro.md"))
 ```
+
+This call has the same optional-dependency boundary: install the `rendering`
+extra before requesting `slides_profile="accessible"`. Programmatic archive
+rendering remains available without `pdfplumber`.
 
 When a figure registry record includes `long_description`, rendered HTML places
 one labelled disclosure after the caption and associates it with the image via

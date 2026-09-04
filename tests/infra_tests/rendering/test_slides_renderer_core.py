@@ -23,7 +23,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from pypdf import PdfReader
+from pypdf import PdfReader, PdfWriter
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import slides_renderer
@@ -1086,7 +1086,10 @@ code
 
         def fake_compile(tex, out_dir, **kwargs):
             compiled = out_dir / f"{tex.stem}.pdf"
-            compiled.write_bytes(b"%PDF-1.4 fake\n")
+            writer = PdfWriter()
+            writer.add_blank_page(width=453.543, height=255.12)
+            with compiled.open("wb") as stream:
+                writer.write(stream)
             return compiled
 
         renderer = SlidesRenderer(
