@@ -472,3 +472,48 @@ class TestBody:
         assert "DOI: forthcoming" not in body
         assert "10.5281/zenodo.999" in body
         assert "https://doi.org/10.5281/zenodo.999" in body
+
+    def test_configured_image_path_resolves_docs_manuscript_root_relative(self, tmp_path: Path) -> None:
+        import yaml
+
+        from infrastructure.rendering._pdf_title_page_images import _cover_image_path
+
+        project = tmp_path / "proj"
+        manuscript_dir = project / "docs" / "manuscript"
+        manuscript_dir.mkdir(parents=True)
+        figures_dir = project / "output" / "figures"
+        figures_dir.mkdir(parents=True)
+        (figures_dir / "cover.png").write_bytes(b"png")
+        config_file = manuscript_dir / "config.yaml"
+        config_file.write_text(
+            'paper:\n  cover:\n    image: "output/figures/cover.png"\n',
+            encoding="utf-8",
+        )
+        config = yaml.safe_load(config_file.read_text(encoding="utf-8"))
+
+        resolved = _cover_image_path(config, config_file)
+
+        assert resolved is not None
+        assert resolved == figures_dir / "cover.png"
+
+    def test_configured_image_path_keeps_legacy_output_manuscript_resolution(self, tmp_path: Path) -> None:
+        import yaml
+
+        from infrastructure.rendering._pdf_title_page_images import _cover_image_path
+
+        project = tmp_path / "proj"
+        manuscript_dir = project / "output" / "manuscript"
+        manuscript_dir.mkdir(parents=True)
+        figures_dir = project / "output" / "figures"
+        figures_dir.mkdir(parents=True)
+        (figures_dir / "cover.png").write_bytes(b"png")
+        config_file = manuscript_dir / "config.yaml"
+        config_file.write_text(
+            'paper:\n  cover:\n    image: "output/figures/cover.png"\n',
+            encoding="utf-8",
+        )
+        config = yaml.safe_load(config_file.read_text(encoding="utf-8"))
+
+        resolved = _cover_image_path(config, config_file)
+
+        assert resolved == figures_dir / "cover.png"
