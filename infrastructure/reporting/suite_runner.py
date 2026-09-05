@@ -26,6 +26,9 @@ from infrastructure.core.execution_boundary import (
     terminate_process_tree,
 )
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
+from infrastructure.core.pytest_profiles import (
+    DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS as DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+)
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.logging.progress import log_with_spinner
 from infrastructure.reporting.coverage_parser import (
@@ -38,7 +41,6 @@ from infrastructure.reporting.coverage_reporter import parse_pytest_output
 logger = get_logger(__name__)
 
 DEFAULT_TEST_SUITE_TIMEOUT_SECONDS = 1800.0
-DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS = 6900.0
 
 # Stack-trace patterns from pytest internals / urllib3 that clutter output
 _INTERNAL_STACK_PATTERNS = [

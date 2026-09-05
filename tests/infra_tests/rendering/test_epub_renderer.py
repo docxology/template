@@ -541,28 +541,28 @@ def test_render_epub_rejects_nonwriting_success_without_accepting_stale_output(t
     [
         (
             "member-count",
-            '    archive.writestr("mimetype", b"application/epub+zip", '
+            '    archive.writestr(zipfile.ZipInfo("mimetype"), b"application/epub+zip", '
             "compress_type=zipfile.ZIP_STORED)\n"
             "    for index in range(4096):\n"
-            '        archive.writestr(f"payload-{index}", b"x", '
+            '        archive.writestr(zipfile.ZipInfo(f"payload-{index}"), b"x", '
             "compress_type=zipfile.ZIP_STORED)",
             "",
             "member-count limit",
         ),
         (
             "compression-ratio",
-            '    archive.writestr("mimetype", b"application/epub+zip", '
+            '    archive.writestr(zipfile.ZipInfo("mimetype"), b"application/epub+zip", '
             "compress_type=zipfile.ZIP_STORED)\n"
-            '    archive.writestr("ratio.bin", b"A" * (1024 * 1024), '
+            '    archive.writestr(zipfile.ZipInfo("ratio.bin"), b"A" * (1024 * 1024), '
             "compress_type=zipfile.ZIP_DEFLATED)",
             "",
             "compression-ratio limit",
         ),
         (
             "member-size",
-            '    archive.writestr("mimetype", b"application/epub+zip", '
+            '    archive.writestr(zipfile.ZipInfo("mimetype"), b"application/epub+zip", '
             "compress_type=zipfile.ZIP_STORED)\n"
-            '    archive.writestr("oversized.bin", b"x", '
+            '    archive.writestr(zipfile.ZipInfo("oversized.bin"), b"x", '
             "compress_type=zipfile.ZIP_DEFLATED)",
             'central_offset = payload.find(b"PK\\x01\\x02")\n'
             "while central_offset >= 0:\n"
@@ -582,14 +582,23 @@ def test_render_epub_rejects_nonwriting_success_without_accepting_stale_output(t
     ],
     ids=["member-count", "compression-ratio", "member-size"],
 )
+@pytest.mark.parametrize("timezone", ["UTC", "America/Los_Angeles"])
 def test_render_epub_preflights_hostile_archive_before_any_payload_read(
     tmp_path: Path,
     case_name: str,
     archive_statements: str,
     payload_mutation: str,
     diagnostic: str,
+    timezone: str,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Count, ratio, and size limits reject before a corrupt payload is read."""
+
+    # Python 3.14 defaults string-named ZIP entries to the epoch in local
+    # time. Explicit ZipInfo entries keep fixture timestamps in ZIP range
+    # even when the renderer passes midnight UTC 1980 to a western timezone.
+    monkeypatch.setenv("TZ", timezone)
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "315532800")
 
     source = tmp_path / "source.md"
     source.write_text(SAMPLE_MD, encoding="utf-8")

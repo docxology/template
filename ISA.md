@@ -1,10 +1,10 @@
 ---
 project: humos-template
-task: "Iteration 11 - close remaining evidence-backed improvements and publish main"
-effort: E4
+task: "Evidence-led public template hardening and reviewed main publication"
 phase: complete
-progress: "v3.6.0 published 2026-07-23. This file is a historical archive of iterations 5-11; active work continues on main."
-iteration: 11-all-improvements-main-push
+progress: "Readiness, web temporary writes, and narrow Reveal layout corrected; focused suites and native gates passed; live Chrome geometry/navigation verified; pixel capture explicitly deferred."
+iteration: 12-public-template-hardening
+prior_iteration_11: 11-all-improvements-main-push
 baseline_head_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
 baseline_origin_main_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
 baseline_worktree_composable_program: "18 tracked modifications plus 28 untracked paths; three protective stashes; independently dirty nested Kmyth checkout"
@@ -18,25 +18,87 @@ published_ci_iter10: "CI run 29467202577 attempt 2: success"
 baseline_origin_main_iter10: 63042c1a23bb787c2f3c755ba4dda4ce8493fe0c
 baseline_dirty_iter10: 195 tracked paths plus 2413 untracked paths and an independently dirty kmyth submodule
 final_head_iter9: 138de2139110af3a563f18d5cfb70cf11509cd94 (external Hermes-Agent commit that absorbed this session's edits — see Decisions)
-iteration: 9-semantic-doc-accuracy-and-active-inference-workflow
+prior_iteration_9: 9-semantic-doc-accuracy-and-active-inference-workflow
 baseline_head_iter9: 1a983de2ddacce2d4674501ea6dee033d950c813
 baseline_dirty_iter9: 64 files modified/untracked at session start, all pre-existing regenerated output/ artifacts and unrelated infra edits (git status --short), not introduced this session
 prior_task_iter8b: Iteration 8b — user asked to "comprehensively proceed with all improvements and additions and pushes to main": clear the 3 remaining DEFERRED-VERIFY items (2 composability refactors, 8 stale-count infra tests) then commit and push
 prior_phase_iter8b: complete
 prior_progress_iter8b: 139/140 (1 residual DEFERRED-VERIFY — combined-coverage-gate subprocess leak, tracked in TO-DO, not fixed)
-iteration: 8b-comprehensive-completion-and-push
+prior_iteration_8b: 8b-comprehensive-completion-and-push
 baseline_head_iter8: 646bb159e1619421117b95b0d9b7ee192ee7f6c8
 baseline_dirty_iter8: 24 untracked stray "(1)"-suffixed Finder-duplicate files under template_active_inference/template_search_project output dirs, plus untracked INDEX.md — pre-existing, not introduced this session
-iteration: 7-deferred-refactors-workflow
+prior_iteration_7: 7-deferred-refactors-workflow
 baseline_head_iter7: 3c60e9551c0ac015a09ec10a86067f7571d4604e
 baseline_head: 890abb6ac3b09bf2ea226b1ee44ceedd7f8ef950 (clean tree)
-iteration: 5-multi-lens-review-plans-fixes
+prior_iteration_5: 5-multi-lens-review-plans-fixes
 mode: algorithm
 started: 2026-07-02
-updated: 2026-07-22
+updated: 2026-09-04
 ---
 
 # ISA — HumOS Template Package: Agentic Operability
+
+## Current campaign — 2026-09-04
+
+### Goal
+
+Review the public execution path, repair reproduced correctness and containment
+defects, and simplify rendering without changing supported interfaces or output
+semantics. Earlier iterations below are historical evidence, not current scope.
+
+### Criteria
+
+- [x] ISC-12.1: Baseline and final infrastructure, regression, public-exemplar,
+  and CI-equivalent gate results are recorded against the exact source tree.
+- [x] ISC-12.2: Slide AST, table composition, Beamer preparation, and HTML
+  post-processing have cohesive owners below the module warning threshold;
+  existing imports and behavior remain covered by tests and output comparison.
+- [x] ISC-12.3: HTML writes cannot follow planted temporary symlinks, and link
+  validation rejects unsupported schemes even when URL paths are empty.
+- [x] ISC-12.4: Malformed checkpoints fail validation without crashing resume;
+  default checkpoint storage uses the actual repository project root.
+- [x] ISC-12.5: Export inputs remain confined and repeated exports cannot reuse
+  a bundle containing stale artifacts.
+- [x] ISC-12.6: Documentation, generated references, and verification records
+  match the resulting source and explicitly identify unavailable checks.
+- [x] ISC-12.7: Real rendering and a fresh-context adversarial review verify
+  the final implementation and its failure boundaries.
+- [x] ISC-12.8: Public readiness has a coherent outer deadline, explicit project-count units, and rejects incomplete or contradictory reports.
+- [x] ISC-12.9: Per-section and combined web preprocessing preserve unrelated files when predictable temporary symlinks are planted.
+- [x] ISC-12.10: Live Chrome verification covers wide and narrow readers, navigation, math, tables, figure descriptions, and canonical links.
+- [x] Anti-12.1: No private sidecar, unrelated user work, publication endpoint,
+  dependency baseline, or coverage threshold is changed. Only the requested
+  PR branch and main publication are authorized remote mutations.
+- [x] Anti-12.2: Skipped tests and missing tools are never counted as passing;
+  pre-existing failures remain distinguishable from regressions.
+
+### Verification
+
+Baseline HEAD: `e5b3dfb2aabb519f17416eefe43a75a5da5caa10`, clean worktree.
+Hosted CI on that SHA passed. Local baseline uses a disposable clone to avoid
+changing tracked publication outputs. Initial local checks: Ruff lint/format,
+backlog and template drift passed; focused slide tests 182 passed, 53
+deselected; regression suite 55 passed. GitNexus has no index for this checkout;
+caller and import impact analysis uses direct source inspection.
+
+Final evidence: [public improvement review](docs/audit/REVIEW_2026-09-04.md).
+The full infrastructure run reached 83% coverage; its two generated-count
+failures passed after owner regeneration. All public exemplar commands passed
+with five explicit test skips; the active-inference retry needed more than the
+original outer deadline; the continuation aligns that deadline with the native
+verifier budget. Readiness and web-write negative controls passed, as did real
+slide rendering and fresh review. Live Chrome geometry, semantics, skip links,
+and canonical navigation were verified at narrow and wide sizes.
+[DEFERRED-VERIFY] Pixel capture lacks activeTab permission; DOM-rendered
+screenshots omitted content and are not accepted as visual evidence.
+
+The user subsequently authorized publication through an informative PR and
+merge to `main`. Release criteria are: fresh review of the final source,
+repository hooks and containment checks, an informative PR with exact test and
+limitation evidence, successful hosted checks before merge, and local/remote
+main SHA parity after merge. The PR and its hosted checks record the publication
+outcome; this repository receipt records the implementation and local evidence.
+No unrelated open PR, tag, package release, or deployment is part of this scope.
 
 > Project ISA (system of record). The template is a two-layer research-paper
 > pipeline (generic `infrastructure/` Layer 1 + per-project Layer 2) delivered

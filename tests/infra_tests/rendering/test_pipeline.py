@@ -304,7 +304,9 @@ def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path)
     # is not a virtual environment and, on Python 3.14, correctly reports the
     # resolved host binary as ``sys.executable`` even when invoked via that
     # symlink. The production contract is specifically the project venv.
-    venv.EnvBuilder(with_pip=False).create(project / ".venv")
+    # Keep relocatable macOS interpreters beside their shared libpython rather
+    # than copying only the executable away from its @rpath library.
+    venv.EnvBuilder(with_pip=False, symlinks=True).create(project / ".venv")
     template_root = tmp_path / "template"
     template_root.mkdir()
 

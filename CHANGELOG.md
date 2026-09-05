@@ -9,6 +9,38 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Rendering simplification and recovery hardening (2026-09-04)
+
+- Refresh the pull-request template with strict public readiness commands,
+  explicit evidence boundaries, and a link to the canonical pipeline stage map.
+
+- Align the public readiness deadline with the native verifier budget; reject
+  incomplete, duplicate, and contradictory aggregate reports and label project
+  counts explicitly. Explicit shorter deadlines remain supported.
+- Correct the extra width clamp in Reveal scroll mode so narrow screens use
+  the available slide width.
+- Isolate per-section web preprocessing in private temporary directories and
+  atomically write combined Markdown without following planted temporary links.
+  Preserve `RenderingError` for source preparation failures and clean temporary
+  copies on those paths.
+
+- Split slide figure handling, table parsing/measurement/width allocation,
+  Beamer preparation, and web assets/links/writes into cohesive internal
+  modules while preserving existing helper imports and rendering semantics.
+- Use confined atomic writes for HTML, Beamer TeX rewrites, and checkpoints.
+  HTML keeps its prior permissions; checkpoint files use `0600`. Failed writes
+  preserve the prior target instead of following predictable temporary links.
+- Reject unsupported HTML link schemes even when the URL path is empty.
+- Validate malformed checkpoint field types before resume and use the resolved
+  project directory for checkpoint placement.
+- Confine publishing export sources and allocate a fresh bundle for each export,
+  including same-second calls; update `latest` atomically after completion.
+- Make macOS interpreter fixtures use real symlink-backed environments and pin
+  ZIP fixture timestamps explicitly across UTC/Los Angeles on Python 3.14.
+  Fixture subprocess failures now propagate rather than appearing successful.
+- Align contributor Ruff commands with the complete public lint scope and remove
+  stale stage numbers from the command cheat sheet.
+
 ### Infrastructure hardening (2026-09-02)
 
 - `infrastructure.methods`: `audit_methods_projects()` is now fail-per-project.

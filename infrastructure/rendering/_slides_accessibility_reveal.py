@@ -189,6 +189,9 @@ main#main-content {{ inline-size: 100%; block-size: 100vh; min-block-size: 100vh
   max-width: 100%; min-width: 0; overflow-wrap: anywhere;
   text-align: left; line-height: 1.35;
 }}
+/* Scroll view already scales the logical slide to its viewport. A second
+   max-width clamp would shrink the content before that scale is applied. */
+.reveal .scroll-page section {{ max-width: none; }}
 .reveal h1, .reveal h2, .reveal h3 {{ color: #111111; font-size: {title_px:.2f}px; line-height: 1.15; }}
 .reveal a {{ color: #004b87; text-decoration: underline; text-decoration-thickness: 0.11em; }}
 .reveal a:focus-visible, .reveal button:focus-visible {{ outline: 4px solid #b34d00; outline-offset: 4px; }}

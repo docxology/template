@@ -10,11 +10,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.files.secure_write import atomic_write_text_confined
+from infrastructure.core.project_paths import find_repo_root, validate_project_name
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -57,16 +60,59 @@ class PipelineCheckpoint:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "PipelineCheckpoint":
-        """Create checkpoint from dictionary."""
-        stage_results = [StageResult(**sr) for sr in data.get("stage_results", [])]
+        """Create a checkpoint only from fields safe for resume and reporting."""
+        if not isinstance(data, dict):
+            raise ValueError("checkpoint must be an object")
+        for name in ("last_stage_completed", "total_stages"):
+            if type(data.get(name)) is not int:
+                raise ValueError(f"checkpoint {name} must be an integer")
+        for name in ("pipeline_start_time", "checkpoint_time"):
+            _validate_nonnegative_number(data.get(name), name)
+        digest = data.get("output_digest", "")
+        if digest is None:
+            digest = ""  # Optional in legacy checkpoint files.
+        if not isinstance(digest, str) or (
+            digest and (len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest))
+        ):
+            raise ValueError("checkpoint output_digest must be a SHA-256 hex digest")
+        raw_results = data.get("stage_results", [])
+        if not isinstance(raw_results, list):
+            raise ValueError("checkpoint stage_results must be a list")
+        stage_results = []
+        for raw in raw_results:
+            if not isinstance(raw, dict):
+                raise ValueError("checkpoint stage result must be an object")
+            result = StageResult(**raw)
+            if not isinstance(result.name, str) or not result.name:
+                raise ValueError("checkpoint stage name must be a non-empty string")
+            if type(result.exit_code) is not int or type(result.completed) is not bool:
+                raise ValueError("checkpoint stage exit_code/completed have invalid types")
+            _validate_nonnegative_number(result.duration, "stage duration")
+            if not isinstance(result.timestamp, str) or not isinstance(result.status, str):
+                raise ValueError("checkpoint stage timestamp/status must be strings")
+            if not isinstance(result.context, dict):
+                raise ValueError("checkpoint stage context must be an object")
+            stage_results.append(result)
         return cls(
             pipeline_start_time=data["pipeline_start_time"],
             last_stage_completed=data["last_stage_completed"],
             stage_results=stage_results,
             total_stages=data["total_stages"],
             checkpoint_time=data["checkpoint_time"],
-            output_digest=str(data.get("output_digest", "") or ""),
+            output_digest=digest,
         )
+
+
+def _validate_nonnegative_number(value: Any, name: str) -> None:
+    """Reject JSON booleans, nonnumbers, and nonfinite runtime measurements."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or value < 0:
+        raise ValueError(f"checkpoint {name} must be a nonnegative finite number")
+    try:
+        finite = math.isfinite(value)
+    except OverflowError:
+        finite = False
+    if not finite:
+        raise ValueError(f"checkpoint {name} must be a nonnegative finite number")
 
 
 class CheckpointManager:
@@ -94,8 +140,10 @@ class CheckpointManager:
             if project_dir is not None:
                 checkpoint_dir = project_dir / "output" / ".checkpoints"
             else:
-                resolved_root = repo_root if repo_root is not None else Path(__file__).parent.parent.parent
-                checkpoint_dir = resolved_root / "projects" / project_name / "output" / ".checkpoints"
+                resolved_root = repo_root if repo_root is not None else find_repo_root()
+                checkpoint_dir = (
+                    resolved_root / "projects" / validate_project_name(project_name) / "output" / ".checkpoints"
+                )
 
         self.checkpoint_dir = Path(checkpoint_dir)
         self.checkpoint_file = self.checkpoint_dir / "pipeline_checkpoint.json"
@@ -124,19 +172,18 @@ class CheckpointManager:
             Callers should log a warning and continue — pipeline execution
             proceeds regardless, but resume will not be available.
         """
-        checkpoint = PipelineCheckpoint(
-            pipeline_start_time=pipeline_start_time,
-            last_stage_completed=last_stage_completed,
-            stage_results=stage_results,
-            total_stages=total_stages,
-            checkpoint_time=time.time(),
-            output_digest=self._output_tree_digest(),
-        )
-
         try:
+            checkpoint = PipelineCheckpoint(
+                pipeline_start_time=pipeline_start_time,
+                last_stage_completed=last_stage_completed,
+                stage_results=stage_results,
+                total_stages=total_stages,
+                checkpoint_time=time.time(),
+                output_digest=self._output_tree_digest(),
+            )
+            payload = json.dumps(checkpoint.to_dict(), indent=2, allow_nan=False)
             self._ensure_checkpoint_dir()
-            with open(self.checkpoint_file, "w", encoding="utf-8") as f:
-                json.dump(checkpoint.to_dict(), f, indent=2)
+            atomic_write_text_confined(self.checkpoint_dir, self.checkpoint_file, payload + "\n", mode=0o600)
             logger.debug(f"Checkpoint saved: stage {last_stage_completed}/{total_stages}")
             return True
         except Exception as e:  # noqa: BLE001 — intentional: checkpoint save must not crash the pipeline regardless of failure mode
@@ -264,10 +311,10 @@ class CheckpointManager:
 
             # Check that all completed stages have exit_code 0
             for i, result in enumerate(checkpoint.stage_results):
-                if result.exit_code != 0 and result.completed:
+                if not result.completed or result.exit_code != 0:
                     return (
                         False,
-                        f"Stage {i} ({result.name}) marked completed but has non-zero exit code",
+                        f"Stage {i} ({result.name}) did not complete successfully; refusing to skip it on resume",
                     )
 
             if checkpoint.last_stage_completed > 0 and checkpoint.output_digest:

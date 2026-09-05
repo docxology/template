@@ -20,6 +20,13 @@ The `infrastructure/core/files/` package contains file cleanup, inventory, and o
 - `inventory_reports.py` - inventory reporting
 - `pdf_locator.py` - locate generated PDFs for validation and copy stages
 
+## Confined text writes
+
+`atomic_write_text_confined(root, target, content, *, mode=0o644)` writes UTF-8
+through exclusive temporary files and held directory descriptors. The default
+permissions are unchanged; callers can request `0o600` for checkpoints or retain
+an existing HTML file's mode. Symlink targets and escaped paths are rejected.
+
 ## `project_lock.py`
 
 Cross-process lock keyed by resolved project path (lock file under system temp, outside

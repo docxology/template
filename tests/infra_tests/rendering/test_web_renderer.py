@@ -963,3 +963,54 @@ class TestTheoremBlocks:
         assert "theorem-box" in result
         assert "Block-coordinate descent never increases" in result  # not dropped
         assert "\\begin{theorem}" not in result
+
+
+@pytest.mark.parametrize("combined", [False, True])
+def test_render_preserves_planted_temporary_symlink(tmp_path: Path, combined: bool) -> None:
+    """Real Pandoc rendering must not overwrite a predictable temp link's target."""
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    source = manuscript / "section.md"
+    source.write_text("# Safe publication\n\nBody text.\n", encoding="utf-8")
+    web = tmp_path / "output" / "web"
+    web.mkdir(parents=True)
+    protected = tmp_path / "unrelated.txt"
+    protected.write_text("keep original bytes", encoding="utf-8")
+    trap = web / "_combined_manuscript.md.tmp" if combined else source.with_suffix(".md.web.tmp")
+    trap.symlink_to(protected)
+    renderer = WebRenderer(RenderingConfig(web_dir=str(web), output_dir=str(web.parent)))
+
+    result = renderer.render_combined([source], manuscript) if combined else renderer.render(source)
+
+    assert "Safe publication" in result.read_text(encoding="utf-8")
+    assert protected.read_text(encoding="utf-8") == "keep original bytes"
+    assert trap.is_symlink()
+    assert source.read_text(encoding="utf-8") == "# Safe publication\n\nBody text.\n"
+    assert not list(web.glob(".web-source-*"))
+
+
+def test_render_cleans_private_source_after_pandoc_failure(tmp_path: Path) -> None:
+    """Failed subprocesses leave no preprocessed manuscript copies behind."""
+    source = tmp_path / "section.md"
+    source.write_text("# Private source\n", encoding="utf-8")
+    web = tmp_path / "web"
+    renderer = WebRenderer(RenderingConfig(web_dir=str(web), pandoc_path="/usr/bin/false"))
+    with pytest.raises(RenderingError):
+        renderer.render(source)
+    assert not list(web.glob(".web-source-*"))
+    assert not source.with_suffix(".md.web.tmp").exists()
+
+
+@pytest.mark.parametrize("source_kind", ["missing", "directory"])
+def test_render_source_io_failure_keeps_rendering_error_contract(tmp_path: Path, source_kind: str) -> None:
+    """Input I/O failures retain the public error type and remove private copies."""
+    source = tmp_path / "invalid.md"
+    if source_kind == "directory":
+        source.mkdir()
+    web = tmp_path / "web"
+    renderer = WebRenderer(RenderingConfig(web_dir=str(web)))
+    with pytest.raises(RenderingError) as caught:
+        renderer.render(source)
+    assert isinstance(caught.value.__cause__, OSError)
+    assert not list(web.glob(".web-source-*"))
+    assert not list(web.glob("*.html"))

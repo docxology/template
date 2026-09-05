@@ -77,17 +77,22 @@ ncx = ('<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">'
        f'<head><meta name="dtb:uid" content="{identifier}"/></head>'
        '<docTitle><text>Fixture</text></docTitle><navMap/></ncx>')
 with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-    archive.writestr("mimetype", "application/epub+zip", compress_type=zipfile.ZIP_STORED)
-    archive.writestr("META-INF/container.xml", container)
-    archive.writestr("EPUB/content.opf", package)
-    archive.writestr("EPUB/toc.ncx", ncx)
-    archive.writestr("EPUB/text/chapter.xhtml", chapter)
+    # Explicit timestamps do not reinterpret SOURCE_DATE_EPOCH in local time.
+    archive.writestr(zipfile.ZipInfo("mimetype"), "application/epub+zip", compress_type=zipfile.ZIP_STORED)
+    for name, payload in (
+        ("META-INF/container.xml", container),
+        ("EPUB/content.opf", package),
+        ("EPUB/toc.ncx", ncx),
+        ("EPUB/text/chapter.xhtml", chapter),
+    ):
+        archive.writestr(zipfile.ZipInfo(name), payload, compress_type=zipfile.ZIP_DEFLATED)
 """,
         encoding="utf-8",
     )
     script = bin_dir / "pandoc"
     script.write_text(
         f"""#!/bin/sh
+set -eu
 for a in "$@"; do printf '%s\\n' "$a" >> '{argv_log}'; done
 printf '%s\\n' '--END--' >> '{argv_log}'
 out=""
@@ -286,7 +291,8 @@ def test_combined_html_command_carries_the_filter(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_ebook_stage_command_carries_the_filter(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("timezone", ["UTC", "America/Los_Angeles"])
+def test_ebook_stage_command_carries_the_filter(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, timezone: str) -> None:
     """The ebook stage's EPUB/MOBI/DOCX renders apply formalism.lua.
 
     The stage imports its renderers at module scope and does not accept a
@@ -295,6 +301,8 @@ def test_ebook_stage_command_carries_the_filter(tmp_path: Path, monkeypatch: pyt
     """
     from infrastructure.rendering import ebook_stage
 
+    monkeypatch.setenv("TZ", timezone)
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "315532800")
     bin_dir, argv_log = _fake_pandoc(tmp_path)
     monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
 

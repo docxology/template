@@ -66,7 +66,9 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         """
         self.config = config
         self.control_config = self._resolve_control_config()
-        self.checkpoint_manager = CheckpointManager(project_name=config.project_name, repo_root=config.repo_root)
+        self.checkpoint_manager = CheckpointManager(
+            project_name=config.project_name, repo_root=config.repo_root, project_dir=config.project_dir
+        )
 
         # Log file: projects/{project_name}/output/logs/pipeline.log
         # Recreated by _setup_log_file_handler after clean stage deletes it.

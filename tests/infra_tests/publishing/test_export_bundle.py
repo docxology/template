@@ -15,9 +15,11 @@ import pytest
 
 from infrastructure.publishing.export_bundle import (
     _collect_artifacts,
+    _copy_artifacts,
     _make_bundle_dir,
     _read_config,
     _resolve_project_root,
+    _root_descriptor,
     _sha256,
     export_for_publishing,
     main,
@@ -409,3 +411,170 @@ def test_main_nonexistent_project_returns_one(tmp_path: Path) -> None:
         ]
     )
     assert ret == 1
+
+
+@pytest.mark.parametrize("project", ["../../outside", "/tmp", "templates/../outside", "C:\\outside"])
+def test_export_rejects_nonrelative_project_names(tmp_path: Path, project: str) -> None:
+    """The documented project-name interface cannot select arbitrary directories."""
+    with pytest.raises(ValueError):
+        _resolve_project_root(project, tmp_path)
+
+
+@pytest.mark.parametrize("escape", ["file", "bucket", "output", "config"])
+def test_export_rejects_symlink_escapes_before_writing(tmp_path: Path, escape: str) -> None:
+    """An export may not include files outside the selected project output tree."""
+    repo = tmp_path / "repo"
+    project = repo / "projects/templates/demo"
+    project.mkdir(parents=True)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "secret.pdf").write_bytes(b"private fixture")
+    (outside / "config.yaml").write_text("title: private fixture", encoding="utf-8")
+    output = project / "output"
+    if escape == "output":
+        output.symlink_to(outside, target_is_directory=True)
+    else:
+        output.mkdir()
+        if escape == "bucket":
+            (output / "pdf").symlink_to(outside, target_is_directory=True)
+        else:
+            (output / "pdf").mkdir()
+            if escape == "file":
+                (output / "pdf/book.pdf").symlink_to(outside / "secret.pdf")
+            else:
+                (output / "pdf/book.pdf").write_bytes(b"public fixture")
+                (project / "manuscript").mkdir()
+                (project / "manuscript/config.yaml").symlink_to(outside / "config.yaml")
+    exports = tmp_path / "exports"
+    with pytest.raises(ValueError, match="escapes"):
+        export_for_publishing("templates/demo", exports, repo)
+    assert not exports.exists()
+
+
+def test_export_preserves_managed_project_links(tmp_path: Path) -> None:
+    """Explicit lifecycle project links remain a supported local export source."""
+    repo = tmp_path / "repo"
+    linked = repo / "projects/working/demo"
+    linked.parent.mkdir(parents=True)
+    project = tmp_path / "managed-project"
+    (project / "output/pdf").mkdir(parents=True)
+    (project / "output/pdf/book.pdf").write_bytes(b"managed project fixture")
+    linked.symlink_to(project, target_is_directory=True)
+    bundle = export_for_publishing("working/demo", tmp_path / "exports", repo)
+    assert (bundle / "pdf/book.pdf").read_bytes() == b"managed project fixture"
+
+
+def test_export_rejects_intermediate_project_link(tmp_path: Path) -> None:
+    """Only a project leaf link, not an escaped project collection, is accepted."""
+    repo = tmp_path / "repo"
+    (repo / "projects").mkdir(parents=True)
+    outside = tmp_path / "outside"
+    (outside / "demo").mkdir(parents=True)
+    (repo / "projects/templates").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError, match="escapes"):
+        _resolve_project_root("templates/demo", repo)
+
+
+def test_bundle_collision_allocates_fresh_directory(tmp_path: Path) -> None:
+    """Repeated exports in one clock tick cannot retain stale artifacts."""
+    first = _make_bundle_dir(tmp_path, "templates/demo", "20260101T000000Z")
+    (first / "old.pdf").write_bytes(b"old fixture")
+    second = _make_bundle_dir(tmp_path, "templates/demo", "20260101T000000Z")
+    assert first != second
+    assert not list(second.iterdir())
+    assert (first / "old.pdf").read_bytes() == b"old fixture"
+
+
+def test_export_allows_contained_artifact_links(tmp_path: Path) -> None:
+    """A link to an artifact within output remains a legitimate export input."""
+    project = tmp_path / "projects/templates/demo"
+    (project / "output/pdf").mkdir(parents=True)
+    (project / "output/source.pdf").write_bytes(b"contained fixture")
+    (project / "output/pdf/book.pdf").symlink_to(project / "output/source.pdf")
+    bundle = export_for_publishing("templates/demo", tmp_path / "exports", tmp_path)
+    assert (bundle / "pdf/book.pdf").read_bytes() == b"contained fixture"
+
+
+def test_failed_export_preserves_latest(tmp_path: Path) -> None:
+    """Rejected input leaves the previous completed export selected."""
+    project = tmp_path / "projects/templates/demo"
+    (project / "output/pdf").mkdir(parents=True)
+    (project / "output/pdf/book.pdf").write_bytes(b"first fixture")
+    exports = tmp_path / "exports"
+    previous = export_for_publishing("templates/demo", exports, tmp_path)
+    (project / "output/pdf/book.pdf").unlink()
+    secret = tmp_path / "outside.pdf"
+    secret.write_bytes(b"private fixture")
+    (project / "output/pdf/book.pdf").symlink_to(secret)
+    with pytest.raises(ValueError, match="escapes"):
+        export_for_publishing("templates/demo", exports, tmp_path)
+    assert (exports / "latest").resolve() == previous
+    assert (previous / "pdf/book.pdf").read_bytes() == b"first fixture"
+
+
+def test_main_reports_invalid_project_without_traceback(tmp_path: Path, capsys) -> None:
+    """The CLI reports rejected project names as an ordinary command error."""
+    assert main(["--project", "../outside", "--repo-root", str(tmp_path)]) == 1
+    assert "ERROR:" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("swap", ["file", "bucket", "root"])
+def test_export_copy_refuses_symlink_swap_after_collection(tmp_path: Path, swap: str) -> None:
+    """An artifact replaced after scanning cannot redirect the export reader."""
+    output = tmp_path / "output"
+    (output / "pdf").mkdir(parents=True)
+    source = output / "pdf/book.pdf"
+    source.write_bytes(b"public fixture")
+    artifacts = _collect_artifacts(output)
+    outside = tmp_path / "outside"
+    (outside / "pdf").mkdir(parents=True)
+    (outside / "book.pdf").write_bytes(b"private fixture")
+    (outside / "pdf/book.pdf").write_bytes(b"private fixture")
+    if swap == "file":
+        source.unlink()
+        source.symlink_to(outside / "book.pdf")
+    elif swap == "bucket":
+        (output / "pdf").rename(output / "original-pdf")
+        (output / "pdf").symlink_to(outside, target_is_directory=True)
+    else:
+        output.rename(tmp_path / "original-output")
+        output.symlink_to(outside, target_is_directory=True)
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
+    with pytest.raises((OSError, ValueError)):
+        _copy_artifacts(artifacts, bundle, output_root=output)
+    assert not (bundle / "pdf/book.pdf").exists()
+
+
+def test_export_copy_keeps_original_root_descriptor(tmp_path: Path) -> None:
+    """Replacing the output path cannot redirect a reader already holding its root."""
+    output = tmp_path / "output"
+    (output / "pdf").mkdir(parents=True)
+    (output / "pdf/book.pdf").write_bytes(b"original fixture")
+    outside = tmp_path / "outside"
+    (outside / "pdf").mkdir(parents=True)
+    (outside / "pdf/book.pdf").write_bytes(b"private fixture")
+    with _root_descriptor(output) as descriptor:
+        artifacts = _collect_artifacts(output, output_fd=descriptor)
+        output.rename(tmp_path / "original-output")
+        output.symlink_to(outside, target_is_directory=True)
+        bundle = tmp_path / "bundle"
+        bundle.mkdir()
+        copied = _copy_artifacts(artifacts, bundle, output_root=output, output_fd=descriptor)
+    assert (bundle / "pdf/book.pdf").read_bytes() == b"original fixture"
+    assert copied["pdf"][0]["sha256"] == hashlib.sha256(b"original fixture").hexdigest()
+
+
+def test_export_manifest_hashes_actual_copied_bytes(tmp_path: Path) -> None:
+    """A regular artifact updated after scanning gets the digest of its exported content."""
+    output = tmp_path / "output"
+    (output / "pdf").mkdir(parents=True)
+    source = output / "pdf/book.pdf"
+    source.write_bytes(b"old fixture")
+    artifacts = _collect_artifacts(output)
+    source.write_bytes(b"updated fixture")
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
+    copied = _copy_artifacts(artifacts, bundle, output_root=output)
+    assert copied["pdf"][0]["sha256"] == hashlib.sha256(b"updated fixture").hexdigest()
+    assert copied["pdf"][0]["size_bytes"] == len(b"updated fixture")

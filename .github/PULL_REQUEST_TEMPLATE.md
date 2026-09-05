@@ -1,103 +1,49 @@
-# 🔀 Pull Request: [Title]
+## Change
 
-## 📝 Description
+<!-- Describe the concrete problem, resulting behavior, and affected public interfaces.
+Link issues when relevant. Explain any changed defaults or compatibility impact. -->
 
-<!--
-Provide a clear, concise summary of the changes.
-Link to any relevant issues using 'Closes #123' syntax.
--->
+## Verification
 
-**Impact Area:** [e.g., Core Infrastructure, Project X, CI/CD]
-**Issue(s):** Closes #
+<!-- List commands actually run and their results. Distinguish passing tests,
+skips, baseline failures, and deferred verification. Link relevant CI or audit
+receipts. Local success does not establish hosted CI success. -->
 
-### Local development (mirror CI)
+Useful local checks (run the ones relevant to this change):
 
 ```bash
-uv sync
-npm ci
-export PATH="$PWD/node_modules/.bin:$PATH"
+uv sync --frozen
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
-# Docs / API surface (when touching docs or infrastructure package exports):
-# uv run python scripts/audit/lint_docs.py
-# uv run python scripts/docgen/api_reference.py --check
+uv run pytest tests/infra_tests/ --benchmark-disable --cov=infrastructure --cov-fail-under=60 --timeout=120 -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance"
+uv run python scripts/gates/public_readiness.py --profile release --json
+uv run pytest tests/regression/ -q --no-cov --timeout=120
+uv run python scripts/audit/lint_docs.py
+uv run python scripts/docgen/api_reference.py --check
 ```
 
-See [`.github/AGENTS.md`](../.github/AGENTS.md) for full troubleshooting and security commands.
+The readiness report counts **projects**, not individual tests. Each public
+exemplar must meet its own coverage floor; `--allow-skips` is an explicit
+project-level exception, not evidence that skipped work passed.
 
----
+See [CI definitions](workflows/ci.yml) and [local pre-push checks](AGENTS.md#local-pre-push-parity-pre-commit-configyaml)
+for the full platform matrix and security checks. Identify affected pipeline
+stages using the [canonical stage map](../docs/RUN_GUIDE.md#core-pipeline-stages--executive-reporting).
 
-## 🚀 Technical Requirements
+## Compatibility and failure boundaries
 
-### 💎 Quality Standards
-- [ ] **Zero-Mock Policy**: Confirmed no use of `MagicMock`, `mocker.patch`, or `unittest.mock`. All tests use real data/computation.
-- [ ] **Thin Orchestrator Pattern**: All business/scientific logic resides in `src/`. Scripts remain thin coordinators.
-- [ ] **Architecture Alignment**: Changes respect the Layer 1 (Infra) vs Layer 2 (Project) separation.
+<!-- Describe preserved imports, changed dependencies/defaults, migration needs,
+security boundaries, and meaningful limitations. For rendering changes, separate
+real renderer/browser evidence from pixel or accessibility certification. -->
 
-### 🧪 Testing & Coverage
-- [ ] **Infrastructure Coverage**: ≥ 60% (as reported by CI)
-- [ ] **Project Coverage**: ≥ 90% (as reported by CI)
-- [ ] **Pipeline Validation**: Full `./run.sh --pipeline` (or specific stages) passed locally.
-- [ ] **Regression tier** (if numerical outputs or claim-binding pins changed): Ran `uv run pytest tests/regression/ -q --no-cov --timeout=120`.
-- [ ] **Skill manifest** (if `infrastructure/**/SKILL.md` changed): Ran `uv run python -m infrastructure.skills write` and included `.cursor/skill_manifest.json` in the PR.
-- [ ] **Docs lint** (if `docs/`, `.github/**/*.md`, or root `*.md` changed): Ran `uv run python scripts/audit/lint_docs.py`.
-- [ ] **API reference** (if `infrastructure/**/__init__.py` `__all__` changed): Ran `uv run python scripts/docgen/api_reference.py --check` (or `--write` and committed output).
-- [ ] **fep_lean CI** (only if `projects/fep_lean/**` changed): The **`fep_lean (gauss + lake)`** job runs when `projects/fep_lean/lean/lean-toolchain` exists; otherwise it is skipped. Confirm expectations for forks without Lean/Open Gauss.
+## Review checklist
 
----
+Mark completed items and explain anything not applicable:
 
-## 📊 Impact Analysis
-
-- **[ ] Breaking Change**: Does this change break backward compatibility? (If so, detail migration path below)
-- **[ ] Performance**: Any significant impact on import times or execution speed? (Threshold: ≤ 5s imports)
-- **[ ] Dependencies**: Have any new dependencies been added to `pyproject.toml`?
-
----
-
-## 🛠️ Pipeline Stages Affected
-
-Select stages that changed or need verification (matches `./run.sh` / [`docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md); script numbers are `scripts/NN_*.py`):
-
-| Stage | Primary path | Role |
-| :--- | :--- | :--- |
-| [ ] **0 — Clean** | `infrastructure/core/files/cleanup.py`, `infrastructure/core/pipeline/` | Pre-step output cleanup |
-| [ ] **1 — Setup** | `scripts/pipeline/stage_00_setup.py` | Env verification |
-| [ ] **2 — Infra tests** | `scripts/pipeline/stage_01_test.py`, `tests/infra_tests/` | Infrastructure suite |
-| [ ] **3 — Project tests** | `scripts/pipeline/stage_01_test.py`, `projects/*/tests/` | Project suite |
-| [ ] **4 — Analysis** | `scripts/pipeline/stage_02_analysis.py`, `projects/*/scripts/` | Analysis scripts |
-| [ ] **5 — Render** | `scripts/pipeline/stage_03_render.py` | PDF / multi-format render |
-| [ ] **6 — Validate** | `scripts/pipeline/stage_04_validate.py`, `infrastructure/validation/` | Output QA |
-| [ ] **7 — LLM review** | `scripts/pipeline/stage_06_llm_review.py` | Reviews (Ollama) |
-| [ ] **8 — LLM translations** | `scripts/pipeline/stage_06_llm_review.py` | Translations (Ollama) |
-| [ ] **9 — Copy** | `scripts/pipeline/stage_05_copy.py` | Deliverables → `output/` |
-| [ ] **Executive report** | `scripts/pipeline/stage_07_executive_report.py` | Multi-project summary |
-
----
-
-## 📸 Testing Evidence
-
-<!--
-Please provide screenshots, command outputs, or logs confirming local success.
-Example: uv run pytest output summary.
--->
-
-<details>
-<summary><b>View Testing Logs</b></summary>
-
-```text
-# Paste command output here
-```
-</details>
-
----
-
-## ✅ Checklist
-
-- [ ] `AGENTS.md` and `README.md` updated in the affected directories.
-- [ ] All code is PEP8 compliant (Ruff check/format passed).
-- [ ] Mypy type checking passes with zero errors.
-- [ ] Security scan reveals no new issues (`uv run pip-audit` with ignores from `.github/pip-audit-ignore.txt`; `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` — exclusions in `bandit.yaml`).
-- [ ] Commits follow project conventions (e.g., 'feat:', 'fix:', 'docs:').
+- [ ] Changes preserve the infrastructure/project boundary and thin orchestrators.
+- [ ] Tests use real implementations and comply with the repository no-mocks policy.
+- [ ] Relevant lint, type, test, coverage, and security checks passed.
+- [ ] Affected documentation and generated references match the implementation.
+- [ ] The staged diff contains only intended public files and no credentials or private artifacts.
+- [ ] Deferred checks and known failures are explicitly documented.
