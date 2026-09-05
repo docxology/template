@@ -56,6 +56,18 @@ Unsupported URI schemes fail validation even when their URL path is empty.
   belong before `\begin{figure}`.
 - PDF metadata and publishing information come from
   `projects/{name}/manuscript/config.yaml`.
+- The injected `output/manuscript/config.yaml` wins over the tracked source
+  copy whenever it is project-resolved — it carries the generated-ordering or
+  project-resolved marker, or the source is still a `{{TOKEN}}` template whose
+  tokens the injected copy has substituted
+  (`_manuscript_source.is_project_resolved`). A project generator's
+  substitution is never overwritten by the source template.
+- Whichever copy wins, `_manuscript_source.verify_config_tokens_resolved`
+  rejects a surviving `{{UPPER_SNAKE}}` token in the `config.yaml` the render
+  consumes, and the render stage exits non-zero — `config.yaml` feeds the title
+  page, so an unresolved token would otherwise print verbatim on the cover. A
+  token inside a backtick code span is prose documenting the syntax, not a
+  hydration target, and never fails a render.
 - Configured title-page artwork uses `paper.cover.image`/`paper.cover.alt` or
   the parallel `book.cover.*` fields. With `metadata.tagged_pdf: true`, the
   selected cover's `alt` must be a non-empty string; validation fails before a

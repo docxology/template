@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.exceptions import RenderingError, TemplateError
+from infrastructure.core.exceptions import RenderingError, TemplateError, ValidationError
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering._combined_exports import render_combined_outputs
@@ -24,6 +24,7 @@ from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_validation import ValidationReport
 from infrastructure.rendering.pipeline import (
     _has_generated_manuscript_ordering,
+    _is_project_resolved,
     _load_project_config_yaml,
     _log_manuscript_composition,
     _render_individual_files,
@@ -31,7 +32,9 @@ from infrastructure.rendering.pipeline import (
     _resolve_manuscript_dir,
     _run_manuscript_variable_script,
     _run_override_script,
+    _unresolved_config_tokens,
     _validate_latex_packages,
+    _verify_config_tokens_resolved,
     execute_render_pipeline,
     RenderPipelineDependencies,
     verify_render_outputs,
@@ -185,6 +188,150 @@ def test_resolve_manuscript_dir_ignores_non_md_files_in_injected(tmp_path: Path)
     result = _resolve_manuscript_dir(tmp_path)
 
     assert result == tmp_path / "manuscript"
+
+
+# ---------------------------------------------------------------------------
+# Project-resolved config.yaml is authoritative (never clobbered by the source)
+# ---------------------------------------------------------------------------
+
+
+def test_resolve_manuscript_dir_preserves_project_resolved_config(tmp_path: Path) -> None:
+    """A generator that substituted {{TOKEN}}s into the injected config keeps its work.
+
+    Regression pin: the source config is a token template, so copying it over
+    the injected copy would silently discard the project's substitution and
+    print ``{{PAPER_TITLE}}`` verbatim on the PDF title page.
+    """
+    source = tmp_path / "manuscript"
+    injected = tmp_path / "output" / "manuscript"
+    source.mkdir()
+    injected.mkdir(parents=True)
+    (injected / "01_intro.md").write_text("# Intro", encoding="utf-8")
+    (source / "config.yaml").write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
+    (injected / "config.yaml").write_text('paper:\n  title: "Resolved Title"\n', encoding="utf-8")
+
+    result = _resolve_manuscript_dir(tmp_path)
+
+    assert result == injected
+    rendered_config = (injected / "config.yaml").read_text(encoding="utf-8")
+    assert "Resolved Title" in rendered_config
+    assert "{{PAPER_TITLE}}" not in rendered_config
+
+
+def test_resolve_manuscript_dir_preserves_config_with_explicit_project_marker(tmp_path: Path) -> None:
+    """The explicit project-resolved marker claims ownership without any token diff."""
+    source = tmp_path / "manuscript"
+    injected = tmp_path / "output" / "manuscript"
+    source.mkdir()
+    injected.mkdir(parents=True)
+    (injected / "01_intro.md").write_text("# Intro", encoding="utf-8")
+    (source / "config.yaml").write_text("paper:\n  title: Source\n", encoding="utf-8")
+    (injected / "config.yaml").write_text(
+        "# Project-resolved config\npaper:\n  title: Project Owned\n",
+        encoding="utf-8",
+    )
+
+    result = _resolve_manuscript_dir(tmp_path)
+
+    assert result == injected
+    assert "Project Owned" in (injected / "config.yaml").read_text(encoding="utf-8")
+
+
+def test_is_project_resolved_preserves_generated_ordering_branch(tmp_path: Path) -> None:
+    """The original marker test survives as one branch of the generalized test."""
+    cfg = tmp_path / "config.yaml"
+    cfg.write_text("# Generated manuscript ordering\npaper:\n  title: X\n", encoding="utf-8")
+
+    assert _is_project_resolved(cfg) is True
+    assert _has_generated_manuscript_ordering(cfg) is True
+
+
+def test_is_project_resolved_false_for_plain_injected_config(tmp_path: Path) -> None:
+    """A tokenless source still refreshes a tokenless injected config, as before."""
+    source_cfg = tmp_path / "source_config.yaml"
+    injected_cfg = tmp_path / "config.yaml"
+    source_cfg.write_text("paper:\n  title: Source\n", encoding="utf-8")
+    injected_cfg.write_text("paper:\n  title: Stale\n", encoding="utf-8")
+
+    assert _is_project_resolved(injected_cfg, source_cfg) is False
+
+
+def test_is_project_resolved_false_when_injected_still_holds_the_token(tmp_path: Path) -> None:
+    """An injected copy that resolved nothing has no ownership claim."""
+    source_cfg = tmp_path / "source_config.yaml"
+    injected_cfg = tmp_path / "config.yaml"
+    source_cfg.write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
+    injected_cfg.write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
+
+    assert _is_project_resolved(injected_cfg, source_cfg) is False
+
+
+# ---------------------------------------------------------------------------
+# Unresolved {{TOKEN}} in the final config.yaml fails the render closed
+# ---------------------------------------------------------------------------
+
+
+def test_resolve_manuscript_dir_rejects_unresolved_token_in_injected_config(tmp_path: Path) -> None:
+    """A token surviving into the injected config aborts before anything renders."""
+    source = tmp_path / "manuscript"
+    injected = tmp_path / "output" / "manuscript"
+    source.mkdir()
+    injected.mkdir(parents=True)
+    (injected / "01_intro.md").write_text("# Intro", encoding="utf-8")
+    (source / "config.yaml").write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
+    (injected / "config.yaml").write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
+
+    with pytest.raises(ValidationError) as excinfo:
+        _resolve_manuscript_dir(tmp_path)
+
+    assert "PAPER_TITLE" in str(excinfo.value)
+
+
+def test_resolve_manuscript_dir_rejects_unresolved_token_in_source_config(tmp_path: Path) -> None:
+    """The same guarantee covers the non-injected fallback path."""
+    source = tmp_path / "manuscript"
+    source.mkdir()
+    (source / "01_intro.md").write_text("# Intro", encoding="utf-8")
+    (source / "config.yaml").write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
+
+    with pytest.raises(ValidationError) as excinfo:
+        _resolve_manuscript_dir(tmp_path)
+
+    assert "PAPER_TITLE" in str(excinfo.value)
+
+
+def test_unresolved_config_tokens_ignores_documented_token_in_code_span(tmp_path: Path) -> None:
+    """A config documenting the token syntax in backticks is not an unresolved token.
+
+    ``projects/templates/template_gold_refinement/manuscript/config.yaml``
+    contains ``transformation: "Resolve `{{TOKEN}}` placeholders ..."`` — prose
+    about the contract, which must never fail that project's render.
+    """
+    cfg = tmp_path / "config.yaml"
+    cfg.write_text(
+        'provenance:\n  transformation: "Resolve `{{TOKEN}}` placeholders into output/manuscript/"\n',
+        encoding="utf-8",
+    )
+
+    assert _unresolved_config_tokens(cfg) == []
+    _verify_config_tokens_resolved(cfg)
+
+
+def test_unresolved_config_tokens_reports_sorted_unique_tokens(tmp_path: Path) -> None:
+    """Every distinct live token is reported once, sorted."""
+    cfg = tmp_path / "config.yaml"
+    cfg.write_text(
+        'paper:\n  title: "{{PAPER_TITLE}}"\n  subtitle: "{{PAPER_TITLE}} / {{ABSTRACT}}"\n',
+        encoding="utf-8",
+    )
+
+    assert _unresolved_config_tokens(cfg) == ["ABSTRACT", "PAPER_TITLE"]
+
+
+def test_unresolved_config_tokens_missing_file(tmp_path: Path) -> None:
+    """An absent config has no tokens and never fails the render."""
+    assert _unresolved_config_tokens(tmp_path / "missing.yaml") == []
+    _verify_config_tokens_resolved(tmp_path / "missing.yaml")
 
 
 # ---------------------------------------------------------------------------
@@ -1168,5 +1315,19 @@ def test_execute_render_pipeline_outer_exception_returns_one(
 
     dependencies = replace(RenderPipelineDependencies(), resolve_project=_raise)
     rc = execute_render_pipeline("any_project", repo_root=tmp_path, dependencies=dependencies)
+
+    assert rc == 1
+
+
+def test_render_pipeline_impl_fails_on_unresolved_config_token(tmp_path: Path) -> None:
+    """An unresolved config token exits non-zero instead of printing on the title page."""
+    project = tmp_path / "token_proj"
+    _write_minimal_project_tree(project)
+    (project / "manuscript" / "config.yaml").write_text(
+        'paper:\n  title: "{{PAPER_TITLE}}"\n',
+        encoding="utf-8",
+    )
+
+    rc = _render_pipeline_impl("token_proj", repo_root=tmp_path, dependencies=_dependencies_for(project))
 
     assert rc == 1

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import stat
 import subprocess
 from pathlib import Path
@@ -51,15 +52,107 @@ def _is_provisional_pre_aux_slide_overflow(manager: RenderManager, error: Templa
     )
 
 
+GENERATED_ORDERING_MARKER = "# Generated manuscript ordering"
+"""Marker a generator writes when it owns the injected manuscript ordering."""
+
+PROJECT_RESOLVED_MARKER = "# Project-resolved config"
+"""Explicit opt-in marker: this injected config is the project's own artifact."""
+
+# ``{{UPPER_SNAKE}}`` is the canonical project hydration token, the same shape
+# as :data:`infrastructure.rendering.manuscript_injection._TOKEN_RE`.
+_CONFIG_TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
+
+# A token inside a backtick code span is prose *about* the token syntax, not a
+# hydration target — ``template_gold_refinement``'s config documents "Resolve
+# `{{TOKEN}}` placeholders into output/manuscript/". Those spans are stripped
+# before scanning so documenting the contract can never fail a render. Same
+# rationale as ``manuscript_injection.EXCLUDED_DOC_FILENAMES`` for markdown.
+_CODE_SPAN_RE = re.compile(r"`[^`\n]*`")
+
+
 def has_generated_manuscript_ordering(config_path: Path) -> bool:
     """Return True when an injected config owns generated manuscript ordering."""
     if not config_path.is_file():
         return False
-    return "# Generated manuscript ordering" in config_path.read_text(encoding="utf-8")
+    return GENERATED_ORDERING_MARKER in config_path.read_text(encoding="utf-8")
+
+
+def unresolved_config_tokens(config_path: Path) -> list[str]:
+    """Return the sorted unique ``{{UPPER_SNAKE}}`` tokens still present in *config_path*.
+
+    Backtick code spans are stripped first (see :data:`_CODE_SPAN_RE`), so a
+    config that *documents* the token syntax reports no unresolved tokens.
+    """
+    if not config_path.is_file():
+        return []
+    text = _CODE_SPAN_RE.sub("", config_path.read_text(encoding="utf-8"))
+    return sorted({match.group(1) for match in _CONFIG_TOKEN_RE.finditer(text)})
+
+
+def is_project_resolved(config_path: Path, source_config_path: Path | None = None) -> bool:
+    """Return whether the injected ``config.yaml`` is a project-owned artifact.
+
+    A project generator may substitute ``{{TOKEN}}`` values into
+    ``output/manuscript/config.yaml``; that resolved file is authoritative and
+    must not be clobbered by the tracked source template. Three branches claim
+    ownership:
+
+    1. :data:`GENERATED_ORDERING_MARKER` — the original marker behaviour,
+       unchanged;
+    2. :data:`PROJECT_RESOLVED_MARKER` — an explicit opt-in for generators that
+       do not reorder the manuscript;
+    3. inference — the tracked source still carries hydration tokens that the
+       injected copy has resolved.
+
+    Branch 3 is deliberately narrow: it fires only when the source itself is a
+    token template, so a project that merely hand-edits its injected config
+    still receives the source refresh it has always received.
+    """
+    if not config_path.is_file():
+        return False
+    text = config_path.read_text(encoding="utf-8")
+    if GENERATED_ORDERING_MARKER in text or PROJECT_RESOLVED_MARKER in text:
+        return True
+    if source_config_path is None:
+        return False
+    source_tokens = set(unresolved_config_tokens(source_config_path))
+    if not source_tokens:
+        return False
+    return bool(source_tokens - set(unresolved_config_tokens(config_path)))
+
+
+def verify_config_tokens_resolved(config_path: Path) -> None:
+    """Fail closed when a hydration token survives into the config the render consumes.
+
+    ``config.yaml`` supplies the PDF title page (title, subtitle, authors,
+    DOI), so an unresolved ``{{TOKEN}}`` there prints verbatim on the published
+    title page. The template already refuses unresolved tokens in manuscript
+    markdown; this extends the same guarantee to the configuration, whichever
+    copy of it won.
+
+    Raises:
+        ValidationError: when at least one ``{{UPPER_SNAKE}}`` token survives.
+    """
+    tokens = unresolved_config_tokens(config_path)
+    if not tokens:
+        return
+    raise ValidationError(
+        "unresolved {{TOKEN}} placeholder(s) in the config.yaml this render consumes: " + ", ".join(tokens),
+        context={"config": str(config_path), "tokens": ", ".join(tokens)},
+        suggestions=[
+            "Run the project's manuscript-variable generator so every config token is substituted.",
+            f"Then confirm no {{{{TOKEN}}}} remains in {config_path}.",
+        ],
+    )
 
 
 def resolve_manuscript_dir(project_root: Path) -> Path:
-    """Return the manuscript directory to render from."""
+    """Return the manuscript directory to render from.
+
+    Raises:
+        ValidationError: when an unresolved ``{{TOKEN}}`` survives into the
+            ``config.yaml`` of the directory this render will consume.
+    """
     import shutil as _shutil
 
     source_dir = resolve_source_manuscript_dir(project_root)
@@ -69,9 +162,9 @@ def resolve_manuscript_dir(project_root: Path) -> Path:
             cfg_src = source_dir / "config.yaml"
             cfg_dst = injected_dir / "config.yaml"
             if cfg_src.is_file():
-                if has_generated_manuscript_ordering(cfg_dst):
+                if is_project_resolved(cfg_dst, cfg_src):
                     logger.info(
-                        "Preserved generated config.yaml ordering in injected manuscript: %s",
+                        "Preserved project-resolved config.yaml in injected manuscript: %s",
                         cfg_dst,
                     )
                 else:
@@ -87,7 +180,9 @@ def resolve_manuscript_dir(project_root: Path) -> Path:
                 _shutil.copy2(bib, bib_dst)
                 logger.info(f"Refreshed {bib.name} in injected manuscript: {bib_dst}")
         logger.info(f"Rendering from injected manuscript directory: {injected_dir}")
+        verify_config_tokens_resolved(injected_dir / "config.yaml")
         return injected_dir
+    verify_config_tokens_resolved(source_dir / "config.yaml")
     return source_dir
 
 

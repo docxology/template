@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging.utils import get_logger, log_live_resource_usage, log_success
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.rendering._combined_exports import (  # noqa: F401
@@ -27,13 +28,16 @@ from infrastructure.rendering._combined_exports import (  # noqa: F401
 from infrastructure.rendering._manuscript_source import (  # noqa: F401
     clean_stale_render_deliverables as _clean_stale_render_deliverables,
     has_generated_manuscript_ordering as _has_generated_manuscript_ordering,
+    is_project_resolved as _is_project_resolved,
     load_project_config_yaml as _load_project_config_yaml,
     log_manuscript_composition as _log_manuscript_composition,
     render_individual_files as _render_individual_files,
     resolve_manuscript_dir as _resolve_manuscript_dir,
     run_manuscript_variable_script as _run_manuscript_variable_script,
     run_override_script as _run_override_script,
+    unresolved_config_tokens as _unresolved_config_tokens,
     validate_latex_packages as _validate_latex_packages,
+    verify_config_tokens_resolved as _verify_config_tokens_resolved,
 )
 from infrastructure.rendering._pipeline_summary import (
     generate_rendering_summary,
@@ -102,7 +106,15 @@ def _render_pipeline_impl(
     elif deps.hydrate_manuscript(project_root, template_repo_root=root) != 0:
         return 1
 
-    manuscript_dir = _resolve_manuscript_dir(project_root)
+    try:
+        manuscript_dir = _resolve_manuscript_dir(project_root)
+    except ValidationError as exc:
+        # config.yaml feeds the PDF title page; an unresolved {{TOKEN}} there
+        # would print verbatim on the published cover. Fail closed instead.
+        logger.error("❌ %s", exc.message)
+        for suggestion in exc.suggestions:
+            logger.error("   %s", suggestion)
+        return 1
 
     try:
         deps.write_bookends(project_root, project_name, repo_root=root)
