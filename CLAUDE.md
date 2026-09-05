@@ -94,6 +94,10 @@ uv run python scripts/runner/execute_pipeline.py --project {project_name} --core
 
 ### Testing
 
+Never run more than one exemplar pytest tree in the same process: every exemplar's
+`tests/` and `src/` packages share the same top-level names, so co-running two trees
+silently reuses whichever tree imported a module first. Run each exemplar in its own
+invocation (CI and the public readiness gate already do).
 ```bash
 # Run all tests (infrastructure + project)
 uv run python scripts/pipeline/stage_01_test.py --project {project_name}

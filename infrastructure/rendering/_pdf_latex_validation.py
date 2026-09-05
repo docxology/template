@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -84,13 +85,9 @@ def repair_truncated_aux(aux_file: Path) -> None:
                 else:
                     break
 
-            # Write the repaired content
-            _tmp = aux_file.with_suffix(aux_file.suffix + ".tmp")
-            try:
-                _tmp.write_text("\n".join(lines) + "\n", encoding="utf-8")
-                _tmp.replace(aux_file)
-            except Exception:  # noqa: BLE001
-                _tmp.unlink(missing_ok=True)
-                raise
+            # Write the repaired content through the confined atomic writer;
+            # a predictable .tmp name here was the last symlink-following
+            # write left in the TeX surface.
+            atomic_write_text_confined(aux_file.parent, aux_file, "\n".join(lines) + "\n")
     except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001
         logger.debug(f"  .aux repair skipped: {e}")

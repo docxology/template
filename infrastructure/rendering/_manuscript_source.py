@@ -224,14 +224,17 @@ def _clean_stale_web_artifacts(manager: RenderManager) -> None:
 
     Only removes files this renderer itself produces (the combined
     ``index.html`` and per-section ``{parent}__{stem}.html`` pages, per
-    ``WebRenderer._output_file_for_source``) — a blanket ``*.html`` glob would
-    also delete unrelated hand-authored web artifacts (e.g. a project's own
-    ``dashboard.html``) that happen to live in the same ``output/web/`` dir.
+    ``WebRenderer._output_file_for_source``) plus renderer-owned publish
+    targets (``.<stem>.<hex>.html.tmp``), the shared combined markdown, and
+    the favicon — a blanket ``*.html`` glob would also delete unrelated
+    hand-authored web artifacts (e.g. a project's own ``dashboard.html``)
+    that happen to live in the same ``output/web/`` dir.
     """
     web_dir = Path(manager.config.web_dir)
     if not web_dir.exists():
         return
     stale_files = [path for path in sorted(web_dir.glob("*.html")) if path.name == "index.html" or "__" in path.stem]
+    stale_files.extend(sorted(web_dir.glob(".*.html.tmp")))
     for renderer_owned in (web_dir / "_combined_manuscript.md", web_dir / "favicon.ico"):
         if renderer_owned.exists() or renderer_owned.is_symlink():
             stale_files.append(renderer_owned)

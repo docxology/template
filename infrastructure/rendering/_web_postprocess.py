@@ -252,10 +252,26 @@ def enhance_accessibility(
     a skip link, and writes the result only if the content changed.
     """
     content = html_file.read_text(encoding="utf-8")
-    if not re.search(r"<html\b[^>]*\blang=", content, flags=re.IGNORECASE):
+    lang_match = re.search(
+        r"<html\b[^>]*?\blang=(?P<q>[\"'])(?P<value>.*?)(?P=q)",
+        content,
+        flags=re.IGNORECASE,
+    )
+    if lang_match is None:
         content = re.sub(
             r"<html\b",
             f'<html lang="{html.escape(language, quote=True)}"',
+            content,
+            count=1,
+            flags=re.IGNORECASE,
+        )
+    elif not lang_match.group("value").strip():
+        # An empty lang attribute defeats the invariant this check exists
+        # for; replace the empty value instead of injecting a duplicate.
+        replacement = html.escape(language, quote=True)
+        content = re.sub(
+            r"(<html\b[^>]*?\blang=)([\"'])[\"']",
+            lambda match: f"{match.group(1)}{match.group(2)}{replacement}{match.group(2)}",
             content,
             count=1,
             flags=re.IGNORECASE,
@@ -301,6 +317,11 @@ def wrap_responsive_tables(content: str) -> str:
         if _has_html_attribute(attributes, "data-responsive-table"):
             return match.group(0)
         body = match.group("body")
+        if re.search(r"<table\b", body, flags=re.IGNORECASE):
+            # The non-greedy container match would close on the inner
+            # table and leave the outer remainder dangling outside the
+            # wrapper; leave authored nested tables untouched.
+            return match.group(0)
         caption_match = re.search(
             r"<caption\b[^>]*>(?P<caption>.*?)</caption>",
             body,

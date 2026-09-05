@@ -572,3 +572,19 @@ def test_checkpoint_cannot_skip_incomplete_stage(tmp_path, exit_code):
     manager = CheckpointManager(checkpoint_dir=tmp_path / ".checkpoints")
     assert manager.save_checkpoint(1.0, 1, [StageResult("Analysis", exit_code, 0.1, completed=False)], 3)
     assert manager.validate_checkpoint()[0] is False
+
+
+def test_output_tree_digest_ignores_planted_file_symlinks(tmp_path):
+    """A planted file symlink must not fold external bytes into the digest."""
+    with tempfile.TemporaryDirectory() as outside_dir:
+        manager = CheckpointManager(checkpoint_dir=tmp_path / ".checkpoints")
+        (tmp_path / "anchor.txt").write_bytes(b"anchor bytes")
+        anchored = manager._output_tree_digest()
+        target = tmp_path / "output.txt"
+        target.write_bytes(b"stable bytes")
+        assert manager._output_tree_digest() != anchored
+        outside_file = Path(outside_dir) / "external.bin"
+        outside_file.write_bytes(b"external payload")
+        target.unlink()
+        target.symlink_to(outside_file)
+        assert manager._output_tree_digest() == anchored

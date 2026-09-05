@@ -645,6 +645,38 @@ def test_deployed_web_link_issues_accepts_safe_sibling_figure_assets(tmp_path: P
     assert deployed_web_link_issues(web_dir) == ()
 
 
+def test_deployed_web_link_issues_reports_missing_local_img_sources(tmp_path: Path) -> None:
+    """The deployed-web scan fails closed on missing local image sources."""
+    web_dir = tmp_path / "web"
+    web_dir.mkdir()
+    (web_dir / "figures").mkdir()
+    (web_dir / "figures" / "present.png").write_bytes(b"image")
+    (web_dir / "index.html").write_text(
+        '<img src="figures/missing.png" alt="Missing">'
+        '<img src="figures/present.png" alt="Present">'
+        '<img src="https://example.org/remote.png" alt="Remote">'
+        '<img src="data:image/png;base64,AAA=" alt="Inline">',
+        encoding="utf-8",
+    )
+
+    issues = deployed_web_link_issues(web_dir)
+
+    assert len(issues) == 1
+    assert "img src" in issues[0]
+    assert "figures/missing.png" in issues[0]
+
+
+def test_deployed_web_link_issues_rejects_unsupported_img_schemes(tmp_path: Path) -> None:
+    web_dir = tmp_path / "web"
+    web_dir.mkdir()
+    (web_dir / "index.html").write_text('<img src="javascript:alert(1)" alt="Bad">', encoding="utf-8")
+
+    issues = deployed_web_link_issues(web_dir)
+
+    assert len(issues) == 1
+    assert "unsupported img src scheme" in issues[0]
+
+
 def test_individual_render_embeds_publication_css_and_full_resolution_figure_link(tmp_path: Path) -> None:
     manuscript_dir = tmp_path / "manuscript"
     manuscript_dir.mkdir()
@@ -1014,3 +1046,22 @@ def test_render_source_io_failure_keeps_rendering_error_contract(tmp_path: Path,
     assert isinstance(caught.value.__cause__, OSError)
     assert not list(web.glob(".web-source-*"))
     assert not list(web.glob("*.html"))
+
+
+def test_individual_render_preserves_existing_page_permissions(tmp_path: Path) -> None:
+    """Re-rendering a page must not widen its existing permission mode."""
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    source = manuscript_dir / "03_results.md"
+    source.write_text("# Results\n\nA short prose paragraph for rendering.\n", encoding="utf-8")
+    web_dir = tmp_path / "output" / "web"
+    renderer = WebRenderer(RenderingConfig(web_dir=str(web_dir), output_dir=str(tmp_path / "output")))
+    target = renderer._output_file_for_source(source)
+    web_dir.mkdir(parents=True)
+    target.write_text("<html><body>old</body></html>", encoding="utf-8")
+    target.chmod(0o600)
+
+    renderer.render(source)
+
+    assert target.is_file()
+    assert (target.stat().st_mode & 0o777) == 0o600

@@ -355,3 +355,19 @@ def test_clean_stale_web_artifacts_fails_when_canonical_target_cannot_be_removed
 
     with pytest.raises(OSError):
         _clean_stale_web_artifacts(_make_manager(web_dir))
+
+
+def test_clean_stale_web_artifacts_removes_renderer_owned_publish_temporaries(tmp_path):
+    """A hard-killed render's hidden .html.tmp publish target cannot ship."""
+    web_dir = tmp_path / "web"
+    web_dir.mkdir()
+    orphan_target = web_dir / ".index.8f3a1b2c4d5e.html.tmp"
+    orphan_target.write_text("<html>partial</html>", encoding="utf-8")
+    visible_tmp = web_dir / "notes.html.tmp"
+    visible_tmp.write_text("not renderer owned", encoding="utf-8")
+
+    manager = _make_manager(web_dir)
+    _clean_stale_web_artifacts(manager)
+
+    assert not orphan_target.exists()
+    assert visible_tmp.exists()

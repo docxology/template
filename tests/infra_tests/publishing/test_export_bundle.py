@@ -578,3 +578,44 @@ def test_export_manifest_hashes_actual_copied_bytes(tmp_path: Path) -> None:
     copied = _copy_artifacts(artifacts, bundle, output_root=output)
     assert copied["pdf"][0]["sha256"] == hashlib.sha256(b"updated fixture").hexdigest()
     assert copied["pdf"][0]["size_bytes"] == len(b"updated fixture")
+
+
+def test_failed_export_removes_partial_bundle(tmp_path: Path) -> None:
+    """A copy failure mid-export must not leave an orphan partial bundle."""
+    project = tmp_path / "projects/templates/demo"
+    (project / "output/pdf").mkdir(parents=True)
+    (project / "output/pdf/book.pdf").write_bytes(b"first fixture")
+    exports = tmp_path / "exports"
+    previous = export_for_publishing("templates/demo", exports, tmp_path)
+    (project / "output/pdf/book.pdf").unlink()
+    secret = tmp_path / "outside.pdf"
+    secret.write_bytes(b"private fixture")
+    (project / "output/pdf/book.pdf").symlink_to(secret)
+    with pytest.raises(ValueError, match="escapes"):
+        export_for_publishing("templates/demo", exports, tmp_path)
+    assert [path.name for path in exports.iterdir() if path.is_dir() and not path.is_symlink()] == [previous.name]
+    assert (exports / "latest").resolve() == previous
+
+
+def test_export_replaces_stale_directory_at_latest(tmp_path: Path) -> None:
+    """A stale real directory in the latest slot cannot fail a complete export."""
+    project = tmp_path / "projects/templates/demo"
+    (project / "output/pdf").mkdir(parents=True)
+    (project / "output/pdf/book.pdf").write_bytes(b"fixture")
+    exports = tmp_path / "exports"
+    (exports / "latest").mkdir(parents=True)
+    (exports / "latest" / "stale.txt").write_text("stale", encoding="utf-8")
+    bundle = export_for_publishing("templates/demo", exports, tmp_path)
+    assert (exports / "latest").is_symlink()
+    assert (exports / "latest").resolve() == bundle.resolve()
+
+
+def test_successful_export_leaves_no_manifest_temporaries(tmp_path: Path) -> None:
+    """The atomic manifest write leaves no temporary siblings behind."""
+    project = tmp_path / "projects/templates/demo"
+    (project / "output/pdf").mkdir(parents=True)
+    (project / "output/pdf/book.pdf").write_bytes(b"fixture")
+    bundle = export_for_publishing("templates/demo", tmp_path / "exports", tmp_path)
+    assert not list(bundle.glob(".manifest-*.tmp"))
+    manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["artifacts"]["pdf"][0]["sha256"] == hashlib.sha256(b"fixture").hexdigest()

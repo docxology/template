@@ -9,6 +9,46 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Adjacent-surface hardening and backlog contract closure (2026-09-05)
+
+- Beamer slides remap projection-unsupported Unicode (comparisons, arrows,
+  operators, Greek) through the math font using the shared protected-block
+  tokenizer; verbatim and inline-code regions stay byte-for-byte intact and
+  the established `≥` output is unchanged. Previously only `≥` was handled,
+  so glyphs such as `≤`, `≠`, or `β` silently vanished from projected frames.
+- The deployed-web issue scanner now validates local `<img src>` targets with
+  the same rules as anchors: missing files, path escapes, and unsupported
+  schemes fail closed; remote and `data:`/`blob:` image sources stay allowed.
+- Pandoc web output (per-section pages and the combined edition) is published
+  by rename from an exclusive temporary target, so a crash or planted symlink
+  can no longer leave truncated or redirected HTML. The TeX `.aux` repair and
+  the shared combined-markdown write use the confined atomic writer, and the
+  favicon write refuses planted symlinks.
+- Publishing exports write `manifest.json` atomically (exclusive temp, fsync,
+  rename), remove their own partial bundle when copying fails, and replace a
+  stale real directory in the `latest` slot instead of failing a complete
+  export. The documented hash-copied-bytes manifest contract is unchanged.
+- Checkpoint output-tree digests ignore planted file symlinks so external
+  content cannot enter the resume-approval digest.
+- The `template_code_project` experiment config degrades malformed
+  `experiment:` values to exemplar defaults with field-naming warnings
+  silently and flat/ragged matrices warn instead of vanishing silently.
+- Release rehearsals now block the overall receipt when the two fresh
+  checkouts produce different output digests: determinism is enforced, not
+  assumed. `git clone --revision` (Git 2.51+) is documented as the tool floor.
+- The backlog gate rejects `completed` rows: closed root rows moved verbatim
+  to [docs/audit/BACKLOG-CLOSURE-2026-09-05.md](docs/audit/BACKLOG-CLOSURE-2026-09-05.md),
+  leaving the root backlog future-work-only with its blocked-external rows
+  and receipts intact.
+- Test isolation: the `uv sync` success-path test runs in a synthetic
+  zero-dependency workspace instead of the shared checkout, the mermaid
+  retry counter is monkeypatch-scoped, and the tracked-count test skips
+  outside real git checkouts. The one-exemplar-tree-per-process rule and its
+  mechanism are documented in `CLAUDE.md` with a follow-up backlog row.
+- STATUS-CI-MATRIX-1 now records the PR #52 final-SHA runs; the deferred
+  pixel-capture follow-up closed via compositor screenshots (narrow scroll
+  mode measures 374.4px content width with no horizontal overflow).
+
 ### Rendering simplification and recovery hardening (2026-09-04)
 
 - Refresh the pull-request template with strict public readiness commands,

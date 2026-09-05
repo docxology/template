@@ -221,6 +221,8 @@ def run_clean_checkout_rehearsal(
     """Run two independent local clones for an explicit opt-in rehearsal."""
     root = Path(repo_root).resolve()
     run_receipts: list[CommandReceipt] = []
+    if plan.runs < 2:
+        raise ValueError("deterministic rehearsal requires at least two runs")
     run_command_receipts: list[tuple[CommandReceipt, ...]] = []
     output_clean = True
     with tempfile.TemporaryDirectory(prefix="template-release-rehearsal-") as temp_dir:
@@ -310,11 +312,22 @@ def run_clean_checkout_rehearsal(
                 )
             )
             output_clean = output_clean and clean_ok
+    passing_run_digests = {run.output_sha256 for run in run_receipts if run.status == "pass"}
+    deterministic = len(passing_run_digests) <= 1
     overall_status: ReceiptStatus = (
         "pass"
-        if len(run_receipts) == plan.runs and all(run.status == "pass" for run in run_receipts) and output_clean
+        if len(run_receipts) == plan.runs
+        and all(run.status == "pass" for run in run_receipts)
+        and output_clean
+        and deterministic
         else "blocked"
     )
+    if overall_status == "pass":
+        overall_skip_reason = ""
+    elif not deterministic:
+        overall_skip_reason = "runs produced different deterministic output digests"
+    else:
+        overall_skip_reason = "fresh-checkout command or clean-output check failed"
     return CleanCheckoutReceipt(
         revision=plan.revision,
         platform=platform_name,
@@ -322,8 +335,17 @@ def run_clean_checkout_rehearsal(
         runs=tuple(run_receipts),
         run_commands=tuple(run_command_receipts),
         output_clean=output_clean,
-        skip_reason="" if overall_status == "pass" else "fresh-checkout command or clean-output check failed",
+        skip_reason=overall_skip_reason,
     )
+
+
+def _rehearsal_exit_code(receipt: CleanCheckoutReceipt) -> int:
+    """Exit 0 only for a passing receipt that also validates cleanly.
+
+    ``validate()`` accepts well-formed blocked receipts (they are legitimate
+    records), so the status must gate the exit code separately.
+    """
+    return 0 if receipt.status == "pass" and receipt.validate() == [] else 1
 
 
 __all__ = [

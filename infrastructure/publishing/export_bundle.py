@@ -307,13 +307,27 @@ def _write_manifest(
         "artifacts": artifacts,
     }
     manifest_path = bundle_dir / "manifest.json"
-    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    payload = json.dumps(manifest, indent=2)
+    temporary = bundle_dir / f".manifest-{secrets.token_hex(12)}.tmp"
+    try:
+        with temporary.open("x", encoding="utf-8") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        temporary.replace(manifest_path)
+    finally:
+        temporary.unlink(missing_ok=True)
     return manifest_path
 
 
 def _update_latest_symlink(output_dir: Path, bundle_dir: Path) -> None:
     """Point output_dir/latest to bundle_dir (creates or replaces the symlink)."""
     latest = output_dir / "latest"
+    if latest.is_dir() and not latest.is_symlink():
+        # A stale real directory in the renderer-owned `latest` slot would
+        # fail the atomic replace only after the bundle is complete; remove
+        # it inside the caller-trusted destination instead.
+        shutil.rmtree(latest)
     temporary = output_dir / f".latest-{secrets.token_hex(12)}"
     try:
         target = bundle_dir.relative_to(output_dir)
@@ -392,21 +406,24 @@ def export_for_publishing(
         output_dir.mkdir(parents=True, exist_ok=True)
         bundle_dir = _make_bundle_dir(output_dir, project, timestamp)
 
-        # Copy artifacts into bundle
-        bundle_artifacts = _copy_artifacts(artifacts, bundle_dir, output_root=output_root, output_fd=output_fd)
-
-        # Write manifest
-        _write_manifest(
-            bundle_dir=bundle_dir,
-            project=project,
-            source_root=project_root,
-            metadata=metadata,
-            artifacts=bundle_artifacts,
-            timestamp=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        )
-
-        # Update latest symlink
-        _update_latest_symlink(output_dir, bundle_dir)
+        # Copy artifacts, write the manifest, and publish `latest`; any
+        # failure must not leave a partial bundle that consumers could
+        # mistake for a real export. The directory was allocated with an
+        # exclusive mkdir, so removing it cannot delete caller state.
+        try:
+            bundle_artifacts = _copy_artifacts(artifacts, bundle_dir, output_root=output_root, output_fd=output_fd)
+            _write_manifest(
+                bundle_dir=bundle_dir,
+                project=project,
+                source_root=project_root,
+                metadata=metadata,
+                artifacts=bundle_artifacts,
+                timestamp=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            )
+            _update_latest_symlink(output_dir, bundle_dir)
+        except BaseException:
+            shutil.rmtree(bundle_dir, ignore_errors=True)
+            raise
 
         return bundle_dir
 

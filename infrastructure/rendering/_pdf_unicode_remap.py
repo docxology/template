@@ -355,6 +355,66 @@ def _rewrite_segment(text: str, counts: dict[str, int]) -> str:
     return text
 
 
+def _map_prose_glyphs(
+    tex_content: str,
+    replacements: dict[str, str],
+    extra_protected: re.Pattern[str] | None = None,
+) -> tuple[str, int]:
+    """Apply an explicit glyph table to prose segments, skipping protected blocks.
+
+    Shares the protected-block tokeniser with :func:`remap_prose_unicode`:
+    ``Highlighting``, verbatim, ``Verbatim``, ``lstlisting``, ``\\verb``, and
+    ``\\passthrough{…}`` regions are returned byte-for-byte unchanged, so a
+    caller can remap only the glyphs it owns without altering code content.
+    ``extra_protected`` optionally excludes further regions — such as
+    graphics filename arguments, where a remapped glyph would corrupt the
+    path — before the glyph table applies.
+
+    Args:
+        tex_content: LaTeX source produced by Pandoc.
+        replacements: Ordered mapping of literal glyph to LaTeX replacement.
+        extra_protected: Additional regions left byte-for-byte unchanged.
+
+    Returns:
+        Tuple of the rewritten content and the number of substitutions.
+    """
+    counts: dict[str, int] = {}
+
+    def apply_table(segment: str) -> str:
+        for glyph, replacement in replacements.items():
+            if glyph in segment:
+                counts[glyph] = counts.get(glyph, 0) + segment.count(glyph)
+                segment = segment.replace(glyph, replacement)
+        return segment
+
+    def map_segment(segment: str) -> str:
+        if extra_protected is None:
+            return apply_table(segment)
+        parts: list[str] = []
+        last_end = 0
+        for match in extra_protected.finditer(segment):
+            if match.start() > last_end:
+                parts.append(apply_table(segment[last_end : match.start()]))
+            parts.append(match.group(0))
+            last_end = match.end()
+        if last_end < len(segment):
+            parts.append(apply_table(segment[last_end:]))
+        return "".join(parts)
+
+    rewritten: list[str] = []
+    last_end = 0
+    for match in _PROTECTED_BLOCK_RE.finditer(tex_content):
+        prose_segment = tex_content[last_end : match.start()]
+        if prose_segment:
+            rewritten.append(map_segment(prose_segment))
+        rewritten.append(match.group(0))
+        last_end = match.end()
+    tail = tex_content[last_end:]
+    if tail:
+        rewritten.append(map_segment(tail))
+    return "".join(rewritten), sum(counts.values())
+
+
 def _rewrite_latex_text_macros(text: str) -> str:
     """Replace text-symbol macros that expand to unsupported glyphs."""
     parts: list[str] = []

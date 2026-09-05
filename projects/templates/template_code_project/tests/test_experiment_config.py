@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 import numpy as np
@@ -76,3 +77,58 @@ class TestExperimentConfig:
     def test_load_without_project_root_uses_module_parent(self):
         cfg = load_experiment_config(None)
         assert len(cfg.step_sizes) >= 1
+
+
+class TestMalformedExperimentValues:
+    """Malformed values degrade to defaults with a field-naming warning."""
+
+    @staticmethod
+    def _write(tmp_path: Path, fragment: str) -> Path:
+        config_path = tmp_path / "manuscript" / "config.yaml"
+        config_path.parent.mkdir(parents=True)
+        config_path.write_text(f"{fragment}\n", encoding="utf-8")
+        return tmp_path
+
+    @pytest.mark.parametrize(
+        "fragment",
+        [
+            "experiment: 5",
+            "experiment:\n  initial_point: null",
+            "experiment:\n  initial_point: [abc]",
+            "experiment:\n  max_iterations: abc",
+            "experiment:\n  max_iterations: null",
+            "experiment:\n  max_iterations: 1.5",
+            "experiment:\n  tolerance: [1, 2]",
+            "experiment:\n  tolerance: abc",
+            "experiment:\n  step_sizes: [abc]",
+            "experiment:\n  step_sizes: [[1, 2], [3]]",
+            "experiment:\n  quadratic_A: [1.0, 2.0]",
+            "experiment:\n  quadratic_A: [[1.0, 2.0], [3.0]]",
+            "experiment:\n  quadratic_A: [[]]",
+            "experiment:\n  benchmark_dimensions: [1.5]",
+            "experiment:\n  benchmark_dimensions: [-2]",
+            "experiment:\n  benchmark_dimensions: [true]",
+            "experiment:\n  convergence_tolerance: .nan",
+        ],
+    )
+    def test_malformed_value_degrades_to_defaults_with_warning(
+        self, tmp_path: Path, caplog: pytest.LogCaptureFixture, fragment: str
+    ) -> None:
+        root = self._write(tmp_path, fragment)
+        with caplog.at_level(logging.WARNING):
+            cfg = load_experiment_config(root)
+        assert cfg == ExperimentConfig()
+        assert any("experiment." in record.getMessage() for record in caplog.records)
+
+    def test_nonintegral_dimension_does_not_truncate_but_valid_values_apply(
+        self, tmp_path: Path, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        root = self._write(
+            tmp_path,
+            "experiment:\n  benchmark_dimensions: [1.5]\n  max_iterations: 250\n",
+        )
+        with caplog.at_level(logging.WARNING):
+            cfg = load_experiment_config(root)
+        assert cfg.benchmark_dimensions == ExperimentConfig().benchmark_dimensions
+        assert cfg.max_iterations == 250
+        assert any("benchmark_dimensions" in record.getMessage() for record in caplog.records)

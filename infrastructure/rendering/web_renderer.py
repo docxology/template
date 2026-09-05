@@ -1,7 +1,10 @@
 """Web/HTML rendering module."""
 
+import os
 import re
+import secrets
 import shutil
+import stat
 import subprocess
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -68,13 +71,17 @@ class WebRenderer:
                     context={"source": str(source_file)},
                 ) from exc
 
+            # Pandoc writes the final published page directly; render to an
+            # exclusive temporary target and publish by rename so a crash or
+            # a planted symlink cannot leave truncated or redirected output.
+            render_target = output_dir / f".{output_file.stem}.{secrets.token_hex(12)}.html.tmp"
             cmd = [
                 self.config.pandoc_path,
                 str(safe_source),
                 "-t",
                 "html5",
                 "-o",
-                str(output_file),
+                str(render_target),
                 "--standalone",
                 f"--mathjax={_MATHJAX_URL}",
                 # A per-section page is rendered alone, so numbering here is
@@ -89,7 +96,19 @@ class WebRenderer:
             logger.info(f"Generating HTML from {source_file}")
 
             try:
-                subprocess.run(cmd, check=True, capture_output=True, text=True, **subprocess_options(profile, 600))
+                try:
+                    subprocess.run(cmd, check=True, capture_output=True, text=True, **subprocess_options(profile, 600))
+                    if output_file.exists():
+                        os.chmod(render_target, stat.S_IMODE(output_file.stat().st_mode))
+                    try:
+                        os.replace(render_target, output_file)
+                    except OSError as exc:
+                        raise RenderingError(
+                            f"Failed to publish rendered page: {exc}",
+                            context={"source": str(source_file), "target": str(output_file)},
+                        ) from exc
+                finally:
+                    render_target.unlink(missing_ok=True)
                 if output_file.exists():
                     self._harden_mathjax_script(output_file)
                     self._embed_favicon(output_file)
@@ -191,13 +210,16 @@ class WebRenderer:
         figures_dir = Path(self.config.figures_dir)
         lua_filter = Path(__file__).parent / "convert_latex_images.lua"
 
+        # The combined page is the authoritative HTML edition; publish the
+        # pandoc output by rename from an exclusive temporary target.
+        render_target = output_dir / f".{output_file.stem}.{secrets.token_hex(12)}.html.tmp"
         cmd = [
             self.config.pandoc_path,
             str(combined_md),
             "-t",
             "html5",
             "-o",
-            str(output_file),
+            str(render_target),
             "--standalone",
             f"--mathjax={_MATHJAX_URL}",
             "--toc",
@@ -246,6 +268,15 @@ class WebRenderer:
 
         try:
             subprocess.run(cmd, check=True, capture_output=True, text=True, **subprocess_options(profile, 600))
+            if output_file.exists():
+                os.chmod(render_target, stat.S_IMODE(output_file.stat().st_mode))
+            try:
+                os.replace(render_target, output_file)
+            except OSError as exc:
+                raise RenderingError(
+                    f"Failed to publish combined HTML: {exc}",
+                    context={"source": str(combined_md), "target": str(output_file)},
+                ) from exc
         except subprocess.CalledProcessError as e:
             error_msg = "Failed to convert markdown to HTML"
             all_output = ""
@@ -266,6 +297,8 @@ class WebRenderer:
                     f"Review Pandoc command: {' '.join(cmd)}",
                 ],
             ) from e
+        finally:
+            render_target.unlink(missing_ok=True)
 
         # Embed CSS styling in the generated HTML
         if output_file.exists():
