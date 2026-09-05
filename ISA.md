@@ -1,9 +1,13 @@
 ---
 project: humos-template
 task: "Evidence-led public template hardening and reviewed main publication"
-phase: complete
-progress: "Readiness, web temporary writes, and narrow Reveal layout corrected; focused suites and native gates passed; live Chrome geometry/navigation verified; pixel capture explicitly deferred."
-iteration: 12-public-template-hardening
+phase: in-progress
+progress: "Adjacent-surface audit over nine read-only lenses; rendering/web/export/checkpoint/config/rehearsal defects fixed with negative controls; backlog contract closed with verbatim evidence record; pixel-capture follow-up completed; verification and publication in progress."
+iteration: 13-adjacent-surface-hardening
+prior_iteration_12: 12-public-template-hardening
+baseline_head_iter12: 4521726a185c6d1217b595939d854b485ae90abc
+baseline_origin_main_iter12: 4521726a185c6d1217b595939d854b485ae90abc
+baseline_ci_iter12: "main CI run 33941394683: success (65 jobs); PR #52 run 33938657975: success"
 prior_iteration_11: 11-all-improvements-main-push
 baseline_head_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
 baseline_origin_main_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
@@ -33,72 +37,68 @@ baseline_head: 890abb6ac3b09bf2ea226b1ee44ceedd7f8ef950 (clean tree)
 prior_iteration_5: 5-multi-lens-review-plans-fixes
 mode: algorithm
 started: 2026-07-02
-updated: 2026-09-04
----
+updated: 2026-09-05
 
 # ISA — HumOS Template Package: Agentic Operability
 
-## Current campaign — 2026-09-04
+## Current campaign — 2026-09-05
 
 ### Goal
 
-Review the public execution path, repair reproduced correctness and containment
-defects, and simplify rendering without changing supported interfaces or output
-semantics. Earlier iterations below are historical evidence, not current scope.
+Audit the surfaces adjacent to the 2026-09-04 hardening with a fresh
+multi-lens review, close the deferred pixel-evidence follow-up, reconcile the
+backlog contract with its parser, and harden the confirmed adjacent defects
+without changing supported interfaces.
 
 ### Criteria
 
-- [x] ISC-12.1: Baseline and final infrastructure, regression, public-exemplar,
-  and CI-equivalent gate results are recorded against the exact source tree.
-- [x] ISC-12.2: Slide AST, table composition, Beamer preparation, and HTML
-  post-processing have cohesive owners below the module warning threshold;
-  existing imports and behavior remain covered by tests and output comparison.
-- [x] ISC-12.3: HTML writes cannot follow planted temporary symlinks, and link
-  validation rejects unsupported schemes even when URL paths are empty.
-- [x] ISC-12.4: Malformed checkpoints fail validation without crashing resume;
-  default checkpoint storage uses the actual repository project root.
-- [x] ISC-12.5: Export inputs remain confined and repeated exports cannot reuse
-  a bundle containing stale artifacts.
-- [x] ISC-12.6: Documentation, generated references, and verification records
-  match the resulting source and explicitly identify unavailable checks.
-- [x] ISC-12.7: Real rendering and a fresh-context adversarial review verify
-  the final implementation and its failure boundaries.
-- [x] ISC-12.8: Public readiness has a coherent outer deadline, explicit project-count units, and rejects incomplete or contradictory reports.
-- [x] ISC-12.9: Per-section and combined web preprocessing preserve unrelated files when predictable temporary symlinks are planted.
-- [x] ISC-12.10: Live Chrome verification covers wide and narrow readers, navigation, math, tables, figure descriptions, and canonical links.
-- [x] Anti-12.1: No private sidecar, unrelated user work, publication endpoint,
-  dependency baseline, or coverage threshold is changed. Only the requested
-  PR branch and main publication are authorized remote mutations.
-- [x] Anti-12.2: Skipped tests and missing tools are never counted as passing;
-  pre-existing failures remain distinguishable from regressions.
+- [x] ISC-13.1: Baseline re-verified live before any edit: clean tree at
+  `4521726a185c6d1217b595939d854b485ae90abc` equal to `origin/main`, hosted
+  main CI success re-confirmed.
+- [x] ISC-13.2: Beamer slides remap projection-unsupported Unicode through
+  the math font via the shared protected-block tokenizer; protected code
+  regions stay byte-identical and the established `≥` behavior is unchanged.
+- [x] ISC-13.3: The deployed-web issue scanner fails closed on missing,
+  unsafe, or unsupported-scheme local `<img src>` targets under the same
+  resolution rules as anchors.
+- [x] ISC-13.4: Pandoc web output publishes by rename from exclusive
+  temporary targets; aux repair and shared combined-markdown writes use the
+  confined atomic writer; the favicon write refuses planted symlinks.
+- [x] ISC-13.5: Export manifests are atomic; failed exports leave no partial
+  bundle; a stale real directory at `latest` cannot fail a complete export;
+  the documented hash-copied-bytes manifest contract is preserved.
+- [x] ISC-13.6: Checkpoint output-tree digests ignore planted file symlinks.
+- [x] ISC-13.7: Malformed `experiment:` values degrade to typed defaults with
+  field-naming warnings; no raw tracebacks; non-integral integers no longer
+  truncate silently.
+- [x] ISC-13.8: Release rehearsals block the overall receipt when the two
+  runs produce different digests; determinism is enforced, not assumed.
+- [x] ISC-13.9: The backlog gate rejects `completed` rows; the closed root
+  rows are preserved verbatim in a dated closure record; the four
+  blocked-external rows and their receipts are untouched.
+- [x] ISC-13.10: The pixel-capture follow-up closed with compositor
+  screenshots; the STATUS ledger records the PR #52 final-SHA runs.
+- [x] ISC-13.11: The one-exemplar-tree-per-process isolation rule is
+  documented with its mechanism; synthetic-workspace, monkeypatch, and
+  git-skip fixes keep tests off shared state; the sys.path restructure is a
+  tracked follow-up row.
+- [ ] ISC-13.12: Generated facts are regenerated by their owners; every gate
+  is green on the final tree; the work is published through a fresh reviewed
+  PR with hosted CI green and main SHA parity afterwards.
+- [x] Anti-13.1: No interface removals, dependency changes, coverage-floor
+  changes, private-sidecar promotion, releases, tags, or deployments; PR #52
+  is not reopened.
+- [x] Anti-13.2: Skips stay explicit and optional-tool-only; pre-existing
+  failures stay distinguishable; no receipt is relabeled without evidence.
 
 ### Verification
 
-Baseline HEAD: `e5b3dfb2aabb519f17416eefe43a75a5da5caa10`, clean worktree.
-Hosted CI on that SHA passed. Local baseline uses a disposable clone to avoid
-changing tracked publication outputs. Initial local checks: Ruff lint/format,
-backlog and template drift passed; focused slide tests 182 passed, 53
-deselected; regression suite 55 passed. GitNexus has no index for this checkout;
-caller and import impact analysis uses direct source inspection.
-
-Final evidence: [public improvement review](docs/audit/REVIEW_2026-09-04.md).
-The full infrastructure run reached 83% coverage; its two generated-count
-failures passed after owner regeneration. All public exemplar commands passed
-with five explicit test skips; the active-inference retry needed more than the
-original outer deadline; the continuation aligns that deadline with the native
-verifier budget. Readiness and web-write negative controls passed, as did real
-slide rendering and fresh review. Live Chrome geometry, semantics, skip links,
-and canonical navigation were verified at narrow and wide sizes.
-[DEFERRED-VERIFY] Pixel capture lacks activeTab permission; DOM-rendered
-screenshots omitted content and are not accepted as visual evidence.
-
-The user subsequently authorized publication through an informative PR and
-merge to `main`. Release criteria are: fresh review of the final source,
-repository hooks and containment checks, an informative PR with exact test and
-limitation evidence, successful hosted checks before merge, and local/remote
-main SHA parity after merge. The PR and its hosted checks record the publication
-outcome; this repository receipt records the implementation and local evidence.
-No unrelated open PR, tag, package release, or deployment is part of this scope.
+Baseline: clean tree at `4521726a185c6d1217b595939d854b485ae90abc` =
+`origin/main`; hosted main CI run 33941394683 passed 65 jobs with three
+expected optional skips (re-verified live at session start). GitNexus has no
+index for this checkout, so nine read-only scout lenses audited the adjacent
+surfaces through direct source review. Findings, fixes, negative controls,
+and receipts: [2026-09-05 review record](docs/audit/REVIEW_2026-09-05.md).
 
 > Project ISA (system of record). The template is a two-layer research-paper
 > pipeline (generic `infrastructure/` Layer 1 + per-project Layer 2) delivered

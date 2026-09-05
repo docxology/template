@@ -184,7 +184,9 @@ def test_validate_blocks_total_timeout_reports_targeted_block(tmp_path: Path) ->
 
 
 @pytest.mark.skipif(os.name == "nt", reason="POSIX executable script semantics")
-def test_validate_blocks_retries_transient_timeout_then_succeeds(tmp_path: Path) -> None:
+def test_validate_blocks_retries_transient_timeout_then_succeeds(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """A timeout on attempt 1 followed by success on attempt 2 is not a failure.
 
     Real flaky-mmdc behavior under load: first render exceeds the per-render
@@ -213,7 +215,7 @@ def test_validate_blocks_retries_transient_timeout_then_succeeds(tmp_path: Path)
     )
     flaky_mmdc.chmod(0o755)
     counter = tmp_path / "counter"
-    os.environ["MMLINT_TEST_COUNTER"] = str(counter)
+    monkeypatch.setenv("MMLINT_TEST_COUNTER", str(counter))
 
     block = find_mermaid_blocks([tmp_path])[0]
     workdir = tmp_path / "work"

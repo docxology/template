@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import html
 import re
+import secrets
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
@@ -210,8 +211,16 @@ def embed_favicon(html_file: Path) -> None:
 
 def write_favicon_file(output_dir: Path) -> None:
     """Write the embedded ``favicon.ico`` file into ``output_dir``, logging a warning on failure."""
+    target = output_dir / "favicon.ico"
     try:
-        (output_dir / "favicon.ico").write_bytes(_FAVICON_ICO)
+        if target.is_symlink():
+            raise OSError("refusing to follow a planted favicon.ico symlink")
+        temporary = output_dir / f".favicon-{secrets.token_hex(12)}.tmp"
+        try:
+            temporary.write_bytes(_FAVICON_ICO)
+            temporary.replace(target)
+        finally:
+            temporary.unlink(missing_ok=True)
     except OSError as exc:
         logger.warning("Failed to write favicon.ico: %s", exc)
 

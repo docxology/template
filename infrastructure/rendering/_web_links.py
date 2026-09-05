@@ -1,4 +1,4 @@
-"""Resolve public repository links and validate deployed publication anchors."""
+"""Resolve public repository links and validate deployed publication anchors and image sources."""
 
 from __future__ import annotations
 
@@ -17,6 +17,14 @@ _ANCHOR_HREF_RE = re.compile(
     r"(?P<prefix><a\b[^>]*?(?<!\S)href\s*=\s*)(?P<quote>[\"'])(?P<href>.*?)(?P=quote)",
     flags=re.IGNORECASE | re.DOTALL,
 )
+
+_IMG_SRC_RE = re.compile(
+    r"<img\b[^>]*?\bsrc\s*=\s*(?P<quote>[\"'])(?P<src>.*?)(?P=quote)",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+# Images legitimately embed remote or inline payloads; ``data``/``blob`` are
+# not valid navigation targets but are valid image sources.
+_PASSTHROUGH_SRC_SCHEMES = frozenset({"http", "https", "mailto", "tel", "data", "blob"})
 
 _PASSTHROUGH_HREF_SCHEMES = frozenset({"http", "https", "mailto", "tel"})
 
@@ -274,7 +282,7 @@ def rewrite_repository_links(
 
 
 def deployed_web_link_issues(web_dir: Path) -> tuple[str, ...]:
-    """Return fail-closed issues for renderer-owned deployed HTML anchors."""
+    """Return fail-closed issues for renderer-owned deployed HTML anchors and image sources."""
 
     try:
         root = web_dir.resolve(strict=True)
@@ -315,4 +323,26 @@ def deployed_web_link_issues(web_dir: Path) -> tuple[str, ...]:
             except (OSError, ValueError):
                 if _renderer_figure_asset_target(page, parsed.path) is None:
                     issues.append(f"{page.name}: local href leaves output/web or is missing: {raw_href}")
+        for match in _IMG_SRC_RE.finditer(content):
+            raw_src = html.unescape(match.group("src"))
+            parsed = urlsplit(raw_src)
+            scheme = parsed.scheme.lower()
+            if scheme in _PASSTHROUGH_SRC_SCHEMES:
+                continue
+            if scheme or parsed.netloc:
+                issues.append(f"{page.name}: unsupported img src scheme: {raw_src}")
+                continue
+            if not parsed.path or parsed.path.startswith("/"):
+                continue
+            decoded = unquote(parsed.path)
+            if "\x00" in decoded or "\\" in decoded:
+                issues.append(f"{page.name}: unsafe local img src: {raw_src}")
+                continue
+            candidate = page.parent / decoded
+            try:
+                resolved = candidate.resolve(strict=True)
+                resolved.relative_to(root)
+            except (OSError, ValueError):
+                if _renderer_figure_asset_target(page, parsed.path) is None:
+                    issues.append(f"{page.name}: local img src is missing or leaves output/web: {raw_src}")
     return tuple(issues)

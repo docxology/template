@@ -6,13 +6,16 @@ Beamer-specific preparation shared by archive and accessible profiles.
 
 from __future__ import annotations
 
+import re
 import shutil
 from collections.abc import Callable
 from pathlib import Path
+from typing import Final
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
+from infrastructure.rendering._pdf_unicode_remap import _T, _map_prose_glyphs
 from infrastructure.rendering._slides_codelisting import make_codelisting_slide_safe
 from infrastructure.rendering._slides_framebreaks import split_long_slide_frames
 from infrastructure.rendering._slides_math_header import write_slides_math_header
@@ -28,6 +31,86 @@ from infrastructure.rendering.latex_texttt import (
 
 logger = get_logger(__name__)
 _ACCESSIBLE_BEAMER_ASPECT_RATIO = "169"
+_SLIDES_FILENAME_ARG_RE: Final[re.Pattern[str]] = re.compile(
+    r"\\(?:includegraphics|input|include)\b(?:\[[^\]]*\])?\{[^{}]*\}"
+)
+_SLIDES_GLYPH_REMAP: Final[dict[str, str]] = {
+    # Beamer's Latin Modern text faces lack many glyphs Pandoc emits as
+    # literal Unicode; xelatex silently drops each one from the projected
+    # frame ("Missing character", exit code 0). Route the math families
+    # through the math font like the established ``≥`` handling, wrapped in
+    # ``\texorpdfstring`` exactly like the combined-PDF table so frametitle
+    # and section moving arguments cannot trip hyperref's ``Extra \fi``
+    # aux-write errors. Protected code regions (Highlighting/verbatim/
+    # ``\passthrough``) and graphics filename arguments stay untouched.
+    "≥": _T(r"\ge", ">="),
+    "≤": _T(r"\leq", "<="),
+    "≠": _T(r"\neq", "!="),
+    "≈": _T(r"\approx", "~"),
+    "≡": _T(r"\equiv", "=="),
+    "≪": _T(r"\ll", "<<"),
+    "≫": _T(r"\gg", ">>"),
+    "±": _T(r"\pm", "+/-"),
+    "×": _T(r"\times", "x"),
+    "÷": _T(r"\div", "/"),
+    "−": r"-",
+    "·": _T(r"\cdot", "."),
+    "∞": _T(r"\infty", "inf"),
+    "∂": _T(r"\partial", "d"),
+    "∇": _T(r"\nabla", "nabla"),
+    "∝": _T(r"\propto", "prop"),
+    "→": _T(r"\to", "->"),
+    "←": _T(r"\leftarrow", "<-"),
+    "↔": _T(r"\leftrightarrow", "<->"),
+    "⇒": _T(r"\Rightarrow", "=>"),
+    "⇐": _T(r"\Leftarrow", "<="),
+    "⇔": _T(r"\Leftrightarrow", "<=>"),
+    "∀": _T(r"\forall", "forall"),
+    "∃": _T(r"\exists", "exists"),
+    "∈": _T(r"\in", "in"),
+    "∉": _T(r"\notin", "notin"),
+    "⊆": _T(r"\subseteq", "subseteq"),
+    "⊂": _T(r"\subset", "subset"),
+    "⊇": _T(r"\supseteq", "supseteq"),
+    "⊃": _T(r"\supset", "supset"),
+    "∪": _T(r"\cup", "union"),
+    "∩": _T(r"\cap", "intersection"),
+    "⊥": _T(r"\perp", "perp"),
+    "⊤": _T(r"\top", "top"),
+    "α": _T(r"\alpha", "alpha"),
+    "β": _T(r"\beta", "beta"),
+    "γ": _T(r"\gamma", "gamma"),
+    "δ": _T(r"\delta", "delta"),
+    "ε": _T(r"\varepsilon", "epsilon"),
+    "ζ": _T(r"\zeta", "zeta"),
+    "η": _T(r"\eta", "eta"),
+    "θ": _T(r"\theta", "theta"),
+    "ι": _T(r"\iota", "iota"),
+    "κ": _T(r"\kappa", "kappa"),
+    "λ": _T(r"\lambda", "lambda"),
+    "μ": _T(r"\mu", "mu"),
+    "ν": _T(r"\nu", "nu"),
+    "ξ": _T(r"\xi", "xi"),
+    "π": _T(r"\pi", "pi"),
+    "ρ": _T(r"\rho", "rho"),
+    "σ": _T(r"\sigma", "sigma"),
+    "τ": _T(r"\tau", "tau"),
+    "υ": _T(r"\upsilon", "upsilon"),
+    "φ": _T(r"\varphi", "phi"),
+    "χ": _T(r"\chi", "chi"),
+    "ψ": _T(r"\psi", "psi"),
+    "ω": _T(r"\omega", "omega"),
+    "Γ": _T(r"\Gamma", "Gamma"),
+    "Δ": _T(r"\Delta", "Delta"),
+    "Θ": _T(r"\Theta", "Theta"),
+    "Λ": _T(r"\Lambda", "Lambda"),
+    "Ξ": _T(r"\Xi", "Xi"),
+    "Π": _T(r"\Pi", "Pi"),
+    "Σ": _T(r"\Sigma", "Sigma"),
+    "Φ": _T(r"\Phi", "Phi"),
+    "Ψ": _T(r"\Psi", "Psi"),
+    "Ω": _T(r"\Omega", "Omega"),
+}
 
 
 def _reject_accessible_beamer_overflow(log_file: Path, compiled_pdf: Path) -> None:
@@ -177,10 +260,11 @@ def transform_beamer_latex(
     if codelisting_replacements:
         logger.info("Replaced pandoc-crossref's listing float with a Beamer-safe block")
 
-    # Latin Modern's text face does not provide a literal U+2265 glyph
-    # in every size used by Beamer. Keep the semantic comparison while
-    # routing it through the math font in either text or math mode.
-    tex_content = tex_content.replace("≥", r"\ensuremath{\ge}")
+    tex_content, remapped_glyphs = _map_prose_glyphs(
+        tex_content, _SLIDES_GLYPH_REMAP, extra_protected=_SLIDES_FILENAME_ARG_RE
+    )
+    if remapped_glyphs:
+        logger.info("Remapped %d projection-unsupported glyph(s) to LaTeX math", remapped_glyphs)
 
     tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
     if texttt_replacements:

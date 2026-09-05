@@ -218,3 +218,28 @@ def test_backlog_normalizer_decomposes_legacy_major_rows(tmp_path: Path) -> None
 
     assert "| `EXAMPLE-MAJOR-1` | open | Medium |" in normalized
     assert "| `EXAMPLE-MAJOR-1` | open | Major |" not in normalized
+
+
+def test_root_backlog_rejects_completed_status_rows(tmp_path: Path) -> None:
+    """Completed rows must move to dated evidence; the gate fails closed."""
+    _write_backlog(
+        tmp_path / "TO-DO.md",
+        """# Root backlog
+
+Future work only.
+
+## Live baseline and constraints
+
+## Backlog operating rules
+
+### `ROOT-DONE-1`
+
+## Active root backlog
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `ROOT-DONE-1` | completed | Minor | fixture | Closed work must move to a dated review record | receipt | `uv run pytest tests -q` | completed row present fails |
+""",
+    )
+    report = validate_public_backlogs(tmp_path, public_names=())
+    assert any(finding.rule == "invalid_status" for finding in report.errors)

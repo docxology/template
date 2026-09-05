@@ -247,7 +247,9 @@ class CheckpointManager:
         files: list[Path] = []
         ignored_parts = {".checkpoints", ".pipeline", "logs", "__pycache__"}
         for path in output_root.rglob("*"):
-            if not path.is_file():
+            if path.is_symlink() or not path.is_file():
+                # A planted file symlink must not fold external content into
+                # the resume-approval digest or hang the walk.
                 continue
             try:
                 rel_parts = set(path.relative_to(output_root).parts)

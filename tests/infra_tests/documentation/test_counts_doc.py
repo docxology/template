@@ -126,8 +126,9 @@ def _coverage_support_file_snapshot(repo_root: Path) -> dict[str, tuple[bytes, i
 
 def test_tracked_infra_python_count_is_positive() -> None:
     """The tracked-py derivation returns the live git-tracked count."""
-    count = tracked_infra_python_count(_repo_root())
-    assert count > 100  # sanity floor; the tree has hundreds of modules
+    if not (_repo_root() / ".git").exists():
+        pytest.skip("tracked-py derivation requires a real git checkout")
+    assert tracked_infra_python_count(_repo_root()) > 100  # sanity floor; the tree has hundreds of modules
 
 
 def test_infrastructure_packages_excludes_private_and_is_sorted() -> None:

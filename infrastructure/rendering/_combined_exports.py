@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.exceptions import RenderingError, TemplateError
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger
@@ -133,13 +134,7 @@ def prepare_shared_combined_markdown(
     combined_path = project_root / "output" / "web" / "_combined_manuscript.md"
     profile.validate_output(combined_path)
     combined_path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = combined_path.with_suffix(combined_path.suffix + ".tmp")
-    try:
-        temporary.write_text(combined_content, encoding="utf-8")
-        temporary.replace(combined_path)
-    except OSError:
-        temporary.unlink(missing_ok=True)
-        raise
+    atomic_write_text_confined(combined_path.parent, combined_path, combined_content)
     write_manuscript_composition(
         project_root,
         project_name,
