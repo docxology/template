@@ -70,6 +70,10 @@ def _repo_root() -> Path:
 def _initialize_test_git_repository(repo_root: Path) -> str:
     """Create one committed temporary repository and return its exact HEAD."""
     subprocess.run(["git", "init", "-q", str(repo_root)], check=True)
+    # The initial commit must not leave background maintenance racing a later
+    # byte-and-mtime snapshot of canonical Git metadata.
+    for key, value in (("maintenance.auto", "false"), ("gc.auto", "0")):
+        subprocess.run(["git", "-C", str(repo_root), "config", key, value], check=True)
     subprocess.run(["git", "-C", str(repo_root), "config", "user.name", "Counts Test"], check=True)
     subprocess.run(
         ["git", "-C", str(repo_root), "config", "user.email", "counts@example.invalid"],
