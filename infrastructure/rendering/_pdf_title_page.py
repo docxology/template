@@ -55,6 +55,48 @@ __all__ = [
 
 logger = get_logger(__name__)
 
+# ── Author-block leading ─────────────────────────────────────────────────────
+#
+# A name, an affiliation, an email and an ORCID describe ONE person. Set at the
+# default leading they read as four unrelated centered lines, and the title page
+# loses the grouping a reader needs to tell one author from the next. Both
+# constants below tighten that block without touching a single type size, so
+# nothing shrinks below its designed print size.
+
+#: Extra leading between the metadata lines of one author inside ``\author{}``.
+#: ``\maketitle`` typesets ``\@author`` inside a one-column tabular, so the rows
+#: are ``\\``-separated and take an optional dimension directly.
+_AUTHOR_LINE_TRIM = "-2pt"
+
+#: Baseline multiplier for the custom-paper-cover author stack.
+#: :func:`_paper_cover_author_lines` emits each line as its own ``\par`` group,
+#: so there is no ``\\`` for ``_AUTHOR_LINE_TRIM`` to attach to; the equivalent
+#: tightening is a reduced ``\baselinestretch`` with no inter-paragraph glue,
+#: scoped to the block so the rest of the title page keeps normal leading.
+_AUTHOR_BLOCK_LINESPREAD = "0.92"
+
+
+def _tightened_author_block(author_lines: list[str]) -> list[str]:
+    """Wrap paper-cover author lines so each author reads as one compact unit.
+
+    Args:
+        author_lines: LaTeX lines from ``_paper_cover_author_lines``, each of
+            which ends its own paragraph.
+
+    Returns:
+        The same lines inside a group that removes paragraph glue and reduces
+        the baseline stretch, or an empty list when there is nothing to wrap.
+    """
+    if not author_lines:
+        return []
+    return [
+        r"\begingroup",
+        r"\setlength{\parskip}{0pt}",
+        r"\linespread{" + _AUTHOR_BLOCK_LINESPREAD + r"}\selectfont",
+        *author_lines,
+        r"\endgroup",
+    ]
+
 
 def generate_title_page_preamble(manuscript_dir: Path) -> str:
     """Generate LaTeX title page preamble commands from config.yaml metadata."""
@@ -86,6 +128,9 @@ def generate_title_page_preamble(manuscript_dir: Path) -> str:
                 parts = [name]
 
                 if not custom_paper_cover:
+                    # Every metadata row of one author is pulled up by
+                    # _AUTHOR_LINE_TRIM so the four lines read as one block.
+                    row = f"\\\\[{_AUTHOR_LINE_TRIM}]"
                     affils: list[str] = []
                     if "affiliations" in author:
                         raw = author["affiliations"]
@@ -93,15 +138,15 @@ def generate_title_page_preamble(manuscript_dir: Path) -> str:
                     elif "affiliation" in author:
                         affils = [author["affiliation"]]
                     for affil in affils:
-                        parts.append(f"\\\\\\footnotesize{{{_latex_text(affil)}}}")
+                        parts.append(f"{row}\\footnotesize{{{_latex_text(affil)}}}")
 
                     if "email" in author:
-                        parts.append(f"\\\\\\footnotesize{{\\texttt{{{_latex_text(author['email'])}}}}}")
+                        parts.append(f"{row}\\footnotesize{{\\texttt{{{_latex_text(author['email'])}}}}}")
 
                     if "orcid" in author:
                         orcid = str(author["orcid"])
                         parts.append(
-                            f"\\\\\\footnotesize{{\\href{{https://orcid.org/{_latex_href_url(orcid)}}}{{ORCID: {_latex_text(orcid)}}}}}"  # noqa: E501
+                            f"{row}\\footnotesize{{\\href{{https://orcid.org/{_latex_href_url(orcid)}}}{{ORCID: {_latex_text(orcid)}}}}}"  # noqa: E501
                         )
 
                 author_block = "".join(parts)
@@ -167,7 +212,7 @@ def generate_title_page_body(manuscript_dir: Path) -> str:
                 r"\vspace{0.4em}",
                 r"{\Large\sffamily " + subtitle + r"\par}" if subtitle else "",
                 r"\vspace{0.75em}",
-                *author_lines,
+                *_tightened_author_block(author_lines),
                 r"\vspace{0.35em}",
                 r"\makeatletter",
                 r"{\@date\par}",

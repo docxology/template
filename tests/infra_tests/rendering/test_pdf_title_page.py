@@ -140,6 +140,28 @@ class TestPreamble:
         assert "Grace Hopper" in out
         assert "Nameless Org" not in out
 
+    def test_preamble_tightens_the_author_metadata_lines(self, tmp_path: Path) -> None:
+        r"""One author's four lines are pulled into one block, not four loose rows.
+
+        Pins the emitted LaTeX rather than the intent. ``\maketitle`` typesets
+        ``\@author`` inside a one-column tabular, so the negative optional
+        argument on each row break is what actually closes the gaps; a regression
+        that dropped it would still produce a valid title page, just a visually
+        disjointed one, and no other assertion here would notice.
+        """
+        d = _manuscript(tmp_path, PAPER_CONFIG)
+
+        out = generate_title_page_preamble(d)
+
+        assert r"\\[-2pt]\footnotesize{Analytical Engine Lab}" in out
+        assert r"\\[-2pt]\footnotesize{\texttt{ada@example.org}}" in out
+        assert (
+            r"\\[-2pt]\footnotesize{\href{https://orcid.org/0000-0001-2345-6789}"
+            r"{ORCID: 0000-0001-2345-6789}}"
+        ) in out
+        # NEGATIVE CONTROL: no metadata row may fall back to default leading.
+        assert r"\\\footnotesize" not in out
+
 
 class TestBody:
     def test_body_renders_titlepage_with_subtitle(self, tmp_path: Path) -> None:
@@ -472,6 +494,74 @@ class TestBody:
         assert "DOI: forthcoming" not in body
         assert "10.5281/zenodo.999" in body
         assert "https://doi.org/10.5281/zenodo.999" in body
+
+    @staticmethod
+    def _cover_manuscript(tmp_path: Path, publication: str) -> Path:
+        """Write a real custom-paper-cover manuscript and return its directory."""
+        manuscript_dir = tmp_path / "output" / "manuscript"
+        cover_dir = tmp_path / "output" / "cover"
+        manuscript_dir.mkdir(parents=True)
+        cover_dir.mkdir(parents=True)
+        (cover_dir / "cover.png").write_bytes(b"png")
+        (manuscript_dir / "config.yaml").write_text(
+            'paper:\n  title: "Paper Title"\n  cover:\n    image: "output/cover/cover.png"\n'
+            'authors:\n  - name: "Ada Lovelace"\n    affiliation: "Analytical Engine Lab"\n'
+            '    email: "ada@example.org"\n    orcid: "0000-0001-2345-6789"\n' + publication,
+            encoding="utf-8",
+        )
+        return manuscript_dir
+
+    def test_paper_cover_author_block_is_typeset_as_one_tight_group(self, tmp_path: Path) -> None:
+        r"""The custom-cover author stack is wrapped in one leading-tightened group.
+
+        ``_paper_cover_author_lines`` ends every line with its own ``\par``, so
+        the tabular row trick used by ``\author{}`` has nothing to attach to and
+        the lines would sit a full ``\baselineskip`` apart. The equivalent
+        tightening is a scoped ``\linespread`` with no paragraph glue, and it must
+        open before the name and close after the last metadata line — a group
+        that opened after the name would leave the name floating away from its own
+        affiliation, which is the exact defect being fixed.
+        """
+        manuscript_dir = self._cover_manuscript(tmp_path, "")
+
+        body = generate_title_page_body(manuscript_dir)
+
+        assert body.count(r"\begingroup") == 1
+        assert body.count(r"\endgroup") == 1
+        assert body.count(r"\setlength{\parskip}{0pt}") == 1
+        assert body.count(r"\linespread{0.92}\selectfont") == 1
+        open_at = body.index(r"\linespread{0.92}\selectfont")
+        close_at = body.index(r"\endgroup")
+        for line in (
+            r"{\large\sffamily\bfseries Ada Lovelace\par}",
+            r"{\small\sffamily Analytical Engine Lab\par}",
+            r"{\small\sffamily\texttt{ada@example.org}\par}",
+        ):
+            assert line in body
+            assert open_at < body.index(line) < close_at, f"{line} escapes the tightened group"
+        assert body.index(r"\begingroup") < open_at
+
+    def test_paper_cover_doi_line_appears_only_once_a_doi_is_minted(self, tmp_path: Path) -> None:
+        """A null DOI draws no line; a minted one draws a linked one, in the block.
+
+        This is the plumbing a project leaves dormant while ``publication.doi``
+        is null. Exercising only the null case would leave the live path
+        unverified until the day it is switched on, which is the worst moment to
+        discover it; exercising only the populated case would not prove that an
+        absent DOI stays silent rather than printing an empty label.
+        """
+        unminted = generate_title_page_body(self._cover_manuscript(tmp_path / "null", "publication:\n  doi: null\n"))
+        minted = generate_title_page_body(
+            self._cover_manuscript(tmp_path / "real", 'publication:\n  doi: "10.5281/zenodo.17123456"\n')
+        )
+
+        assert "DOI:" not in unminted
+        assert (
+            r"{\small\sffamily DOI: \href{https://doi.org/10.5281/zenodo.17123456}{10.5281/zenodo.17123456}\par}"
+            in (minted)
+        )
+        # The DOI belongs to the same tightened unit as the author it identifies.
+        assert minted.index(r"\linespread{0.92}\selectfont") < minted.index("DOI:") < minted.index(r"\endgroup")
 
     def test_configured_image_path_resolves_docs_manuscript_root_relative(self, tmp_path: Path) -> None:
         import yaml
