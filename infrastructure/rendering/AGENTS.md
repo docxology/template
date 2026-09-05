@@ -24,6 +24,26 @@ renderers without owning validation policy or project analysis.
 | Executable bundle | `dockerfile_gen.py`, `manifest.py` | Deterministic reproducible-build Dockerfile generation (pinned base image and `uv` version) and the Stage-10 `manifest.json` of pinned numerical claims, git metadata, and build environment. |
 | CLI | `cli.py`, `render_all_cli.py` | Module commands and legacy all-format entrypoint. |
 
+## Internal rendering responsibilities
+
+- `_slides_accessibility_ast.py` handles semantic blocks and prose splitting;
+  `_slides_accessibility_figures.py` owns figure sizing and captions.
+- `_slides_accessibility_table_structure.py` validates table rows and spans;
+  `_slides_accessibility_table_cells.py` measures content;
+  `_slides_accessibility_table_widths.py` solves column constraints;
+  `_slides_accessibility_tables.py` composes whole-row excerpts.
+- `_slides_beamer.py` prepares Pandoc arguments, applies ordered TeX transforms,
+  and rejects overflow. `SlidesRenderer` retains execution and output lifecycle.
+- `_web_assets.py` owns reader assets/styles, `_web_links.py` resolves and
+  validates links, `_web_io.py` uses the shared confined atomic writer, and
+  `_web_postprocess.py` owns HTML/figure transformations. Existing helper import
+  surfaces remain available through explicit re-exports.
+
+HTML rewrites preserve existing permissions and leave unchanged files alone.
+HTML and Beamer TeX rewrites use exclusive temporary files in the destination
+folder, so a planted predictable temporary symlink cannot redirect the write.
+Unsupported URI schemes fail validation even when their URL path is empty.
+
 ## Boundaries
 
 - Project analysis outputs are inputs; rendering must not compute project
@@ -163,7 +183,6 @@ renderers without owning validation policy or project analysis.
   character-count or text-box-height estimates. Diagram figures likewise use
   one aspect-preserving fit inside the shared header/footer-safe content box;
   section-divider title and rule bands must remain structurally disjoint in
-Bands that overlap produce invalid geometry and are detected during layout validation, which then fails.
   both formats; rendering fails when title fit is missing or slide text enters
   the protected footer band, raising `RenderingError` before any deck is
   written. Overlapping divider bands are the known-wrong layout the slide
@@ -239,3 +258,9 @@ local TeX engine. If rendering behavior changes, run at least one real
 - [`README.md`](README.md)
 - [`References/README.md`](References/README.md)
 - [`../validation/AGENTS.md`](../validation/AGENTS.md)
+
+Web preprocessing uses a private temporary directory for each section and the
+confined atomic writer for combined Markdown. Predictable legacy temporary
+paths are never opened or removed; failures propagate without falling back to
+unprocessed source. The real-Pandoc regression probes live in
+`tests/infra_tests/rendering/test_web_renderer.py`.

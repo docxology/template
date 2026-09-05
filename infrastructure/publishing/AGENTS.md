@@ -49,6 +49,22 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `http_constants.py` | `REQUEST_TIMEOUT` — shared default outbound HTTP timeout (30s) for publishing platform clients |
 | `cli.py`, `publish_cli.py`, `archival_cli.py` | CLI entry points |
 
+### Local publishing exports
+
+`export_for_publishing()` accepts bare or qualified project names and preserves
+managed project leaf links. Project-name traversal, intermediate directory
+escapes, and output/config/artifact links outside the selected project are
+rejected. Confined source reads use held directory descriptors and no-follow
+opens, including during copying, so a source symlink swap cannot redirect the
+read. This requires OS support for no-follow descriptor-relative opens and fails
+closed when unavailable.
+
+Each export allocates a fresh bundle even when timestamps collide. Manifest
+hashes and sizes describe the copied bytes, and `latest` is replaced atomically
+only after a complete bundle exists. The caller selects a trusted destination;
+this contract does not sandbox hostile concurrent mutation of destination
+ancestors. No remote publication occurs through this export helper.
+
 ### Platform subpackages
 
 | Subpackage | Role |

@@ -30,13 +30,18 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import secrets
+import stat
 import shutil
 import sys
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, BinaryIO, Iterator
 from infrastructure.core.project_paths import (
     resolve_source_manuscript_dir,
+    validate_project_name,
 )
 
 
@@ -61,40 +66,95 @@ def _sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def _collect_artifacts(output_root: Path) -> dict[str, list[dict[str, Any]]]:
-    """Scan output/ sub-directories and return a structured artifact map.
+@contextmanager
+def _root_descriptor(root: Path, existing_fd: int | None = None) -> Iterator[int]:
+    """Hold a directory reached without following symlinks in any component."""
+    if existing_fd is not None:
+        yield existing_fd
+        return
+    if not hasattr(os, "O_NOFOLLOW") or os.open not in os.supports_dir_fd:
+        raise ValueError("confined export reads require no-follow directory descriptor support")
+    absolute = root.absolute()
+    if ".." in absolute.parts:
+        raise ValueError(f"export root must not contain traversal: {root}")
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    current = os.open(absolute.anchor, flags)
+    try:
+        for part in absolute.parts[1:]:
+            child = os.open(part, flags, dir_fd=current)
+            os.close(current)
+            current = child
+        yield current
+    finally:
+        os.close(current)
 
-    Returns a dict with keys ``pdf``, ``epub``, and ``metadata``, each
-    containing a list of ``{filename, source_path, sha256, size_bytes}`` dicts.
-    Only existing, non-empty files are included.
-    """
+
+@contextmanager
+def _source_reader(root: Path, source: Path, root_fd: int | None = None) -> Iterator[BinaryIO]:
+    """Open a previously resolved artifact under a held root, refusing swaps."""
+    relative = source.absolute().relative_to(root.absolute())
+    if not relative.parts or ".." in relative.parts:
+        raise ValueError(f"export source escapes selected root: {source}")
+    with _root_descriptor(root, root_fd) as descriptor:
+        current = os.dup(descriptor)
+        try:
+            for part in relative.parts[:-1]:
+                child = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=current)
+                os.close(current)
+                current = child
+            flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
+            source_fd = os.open(relative.name, flags, dir_fd=current)
+            with os.fdopen(source_fd, "rb") as handle:
+                if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                    raise ValueError(f"export source must be a regular file: {source}")
+                yield handle
+        finally:
+            os.close(current)
+
+
+def _collect_artifacts(output_root: Path, *, output_fd: int | None = None) -> dict[str, list[dict[str, Any]]]:
+    """Collect nonempty PDF/ebook/metadata files contained in the output tree."""
     buckets: dict[str, tuple[str, tuple[str, ...]]] = {
         "pdf": ("pdf", (".pdf",)),
         "epub": ("ebook", (".epub", ".mobi")),
         "metadata": ("metadata", (".xml", ".json", ".opf")),
     }
     result: dict[str, list[dict[str, Any]]] = {}
-
-    for key, (directory, extensions) in buckets.items():
-        src_dir = output_root / directory
-        entries: list[dict[str, Any]] = []
-        if src_dir.is_dir():
-            for f in sorted(src_dir.iterdir()):
-                if f.is_file() and f.suffix.lower() in extensions and f.stat().st_size > 0:
+    # Resolve before opening only for the standalone helper; production already
+    # holds the selected output root across collection and copying.
+    if output_fd is None:
+        output_root = output_root.resolve()
+    if not output_root.exists():
+        return {key: [] for key in buckets}
+    with _root_descriptor(output_root, output_fd) as descriptor:
+        for key, (directory, extensions) in buckets.items():
+            src_dir = _confined_path(output_root / directory, output_root)
+            entries: list[dict[str, Any]] = []
+            if src_dir.is_dir():
+                for candidate in sorted(src_dir.iterdir()):
+                    if not candidate.is_file() or candidate.suffix.lower() not in extensions:
+                        continue
+                    source = _confined_path(candidate, output_root)
+                    with _source_reader(output_root, source, descriptor) as handle:
+                        metadata = os.fstat(handle.fileno())
+                        if metadata.st_size == 0:
+                            continue
+                        digest = hashlib.sha256()
+                        for chunk in iter(lambda: handle.read(65536), b""):
+                            digest.update(chunk)
                     entries.append(
                         {
-                            "filename": f.name,
-                            "source_path": str(f),
-                            "sha256": _sha256(f),
-                            "size_bytes": f.stat().st_size,
+                            "filename": candidate.name,
+                            "source_path": str(source),
+                            "sha256": digest.hexdigest(),
+                            "size_bytes": metadata.st_size,
                         }
                     )
-        result[key] = entries
-
+            result[key] = entries
     return result
 
 
-def _read_config(manuscript_dir: Path) -> dict[str, Any]:
+def _read_config(manuscript_dir: Path, *, project_root: Path | None = None) -> dict[str, Any]:
     """Read manuscript/config.yaml and return a flat metadata dict.
 
     Returns an empty dict (with a warning) if the file is missing or unparseable.
@@ -107,7 +167,10 @@ def _read_config(manuscript_dir: Path) -> dict[str, Any]:
     try:
         import yaml  # noqa: PLC0415
 
-        raw: Any = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+        root = project_root if project_root is not None else manuscript_dir.resolve()
+        source = _confined_path(config_path, root)
+        with _source_reader(root, source) as handle:
+            raw: Any = yaml.safe_load(handle.read().decode("utf-8"))
         if not isinstance(raw, dict):
             print(f"WARNING: config.yaml did not parse to a dict: {config_path}", file=sys.stderr)
             return {}
@@ -146,16 +209,18 @@ def _resolve_project_root(project: str, repo_root: Path) -> Path:
 
     Also accepts bare project names (no slash) and tries common prefixes.
     """
-    # Qualified: templates/name, working/name, active/name, etc.
-    candidate = repo_root / "projects" / project
-    if candidate.is_dir():
-        return candidate
-
-    # Bare name — try common lifecycle prefixes
-    for prefix in ("templates", "working", "active"):
-        candidate = repo_root / "projects" / prefix / project
-        if candidate.is_dir():
-            return candidate
+    project = validate_project_name(project)
+    projects_root = (repo_root / "projects").resolve()
+    # Preserve this export API's established flat/templates/working/active order.
+    candidates = [projects_root / project]
+    if "/" not in project:
+        candidates.extend(projects_root / prefix / project for prefix in ("templates", "working", "active"))
+    for candidate in candidates:
+        _confined_path(candidate.parent, projects_root)
+        # Managed leaf project links intentionally resolve into a local sidecar.
+        resolved = candidate.resolve() if candidate.is_symlink() else _confined_path(candidate, projects_root)
+        if resolved.is_dir():
+            return resolved
 
     raise FileNotFoundError(
         f"Project not found: {project!r}\n"
@@ -164,37 +229,63 @@ def _resolve_project_root(project: str, repo_root: Path) -> Path:
     )
 
 
+def _confined_path(path: Path, root: Path) -> Path:
+    """Resolve a path and refuse project, bucket, or file symlink escapes."""
+    resolved = path.resolve()
+    if not resolved.is_relative_to(root.resolve()):
+        raise ValueError(f"export path escapes selected root: {path}")
+    return resolved
+
+
 def _make_bundle_dir(output_dir: Path, project: str, timestamp: str) -> Path:
-    """Create and return the timestamped bundle directory."""
-    # Flatten project name: templates/my_book → templates_my_book
-    safe_name = project.replace("/", "_").replace("\\", "_")
+    """Allocate a fresh bundle; same-second exports never share artifacts."""
+    safe_name = validate_project_name(project).replace("/", "_")
     bundle_name = f"{safe_name}-{timestamp}"
-    bundle_dir = output_dir / bundle_name
-    bundle_dir.mkdir(parents=True, exist_ok=True)
-    return bundle_dir
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for suffix in range(10000):
+        name = bundle_name if suffix == 0 else f"{bundle_name}-{suffix}"
+        bundle_dir = output_dir / name
+        try:
+            bundle_dir.mkdir()
+        except FileExistsError:
+            continue
+        return bundle_dir
+    raise FileExistsError(f"Unable to allocate a fresh export bundle for {project!r}")
 
 
-def _copy_artifacts(artifacts: dict[str, list[dict[str, Any]]], bundle_dir: Path) -> dict[str, list[dict[str, Any]]]:
-    """Copy artifacts into bundle_dir and return updated entries with bundle-relative paths."""
+def _copy_artifacts(
+    artifacts: dict[str, list[dict[str, Any]]],
+    bundle_dir: Path,
+    *,
+    output_root: Path,
+    output_fd: int | None = None,
+) -> dict[str, list[dict[str, Any]]]:
+    """Copy through confined descriptors and describe the actual bundled bytes."""
     updated: dict[str, list[dict[str, Any]]] = {}
-    for bucket, entries in artifacts.items():
-        bucket_dir = bundle_dir / bucket
-        if entries:
-            bucket_dir.mkdir(parents=True, exist_ok=True)
-        new_entries: list[dict[str, Any]] = []
-        for entry in entries:
-            src = Path(entry["source_path"])
-            dst = bucket_dir / entry["filename"]
-            shutil.copy2(src, dst)
-            new_entries.append(
-                {
-                    "filename": entry["filename"],
-                    "path": str(dst.relative_to(bundle_dir)),
-                    "sha256": entry["sha256"],
-                    "size_bytes": entry["size_bytes"],
-                }
-            )
-        updated[bucket] = new_entries
+    with _root_descriptor(output_root, output_fd) as descriptor:
+        for bucket, entries in artifacts.items():
+            bucket_dir = bundle_dir / bucket
+            if entries:
+                bucket_dir.mkdir(parents=True, exist_ok=True)
+            new_entries: list[dict[str, Any]] = []
+            for entry in entries:
+                source = Path(entry["source_path"])
+                destination = bucket_dir / entry["filename"]
+                with _source_reader(output_root, source, descriptor) as handle:
+                    metadata = os.fstat(handle.fileno())
+                    with destination.open("xb") as target:
+                        shutil.copyfileobj(handle, target)
+                        os.fchmod(target.fileno(), stat.S_IMODE(metadata.st_mode))
+                os.utime(destination, ns=(metadata.st_atime_ns, metadata.st_mtime_ns))
+                new_entries.append(
+                    {
+                        "filename": entry["filename"],
+                        "path": str(destination.relative_to(bundle_dir)),
+                        "sha256": _sha256(destination),
+                        "size_bytes": destination.stat().st_size,
+                    }
+                )
+            updated[bucket] = new_entries
     return updated
 
 
@@ -223,16 +314,16 @@ def _write_manifest(
 def _update_latest_symlink(output_dir: Path, bundle_dir: Path) -> None:
     """Point output_dir/latest to bundle_dir (creates or replaces the symlink)."""
     latest = output_dir / "latest"
-    # Remove old symlink or stale file
-    if latest.is_symlink() or latest.exists():
-        latest.unlink()
-    # Use a relative target so the symlink works when the directory is moved
+    temporary = output_dir / f".latest-{secrets.token_hex(12)}"
     try:
-        rel = bundle_dir.relative_to(output_dir)
-        latest.symlink_to(rel)
+        target = bundle_dir.relative_to(output_dir)
     except ValueError:
-        # Fall back to absolute path when bundle_dir is not under output_dir
-        latest.symlink_to(bundle_dir)
+        target = bundle_dir.resolve()
+    temporary.symlink_to(target)
+    try:
+        temporary.replace(latest)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 # --- main ---------------------------------------------------------------------
@@ -275,43 +366,49 @@ def export_for_publishing(
     project_root = _resolve_project_root(project, repo_root)
 
     # Gather metadata from manuscript/config.yaml
-    metadata = _read_config(resolve_source_manuscript_dir(project_root))
+    manuscript_dir = _confined_path(resolve_source_manuscript_dir(project_root), project_root)
+    _confined_path(manuscript_dir / "config.yaml", project_root)
+    metadata = _read_config(manuscript_dir, project_root=project_root)
 
-    # Collect artifacts from output/
-    output_root = project_root / "output"
-    artifacts = _collect_artifacts(output_root)
-
-    total_count = sum(len(v) for v in artifacts.values())
-    if total_count == 0:
-        print(
-            f"ERROR: no artifacts found under {output_root}\n"
-            f"  Run the pipeline first: ./run.sh --project {project} --pipeline --core-only",
-            file=sys.stderr,
-        )
+    # Collect artifacts only from the selected project's contained output tree.
+    output_root = _confined_path(project_root / "output", project_root)
+    if not output_root.is_dir():
+        print(f"ERROR: no artifacts found under {output_root}", file=sys.stderr)
         raise SystemExit(1)
+    with _root_descriptor(output_root) as output_fd:
+        artifacts = _collect_artifacts(output_root, output_fd=output_fd)
 
-    # Create timestamped bundle
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    output_dir.mkdir(parents=True, exist_ok=True)
-    bundle_dir = _make_bundle_dir(output_dir, project, timestamp)
+        total_count = sum(len(v) for v in artifacts.values())
+        if total_count == 0:
+            print(
+                f"ERROR: no artifacts found under {output_root}\n"
+                f"  Run the pipeline first: ./run.sh --project {project} --pipeline --core-only",
+                file=sys.stderr,
+            )
+            raise SystemExit(1)
 
-    # Copy artifacts into bundle
-    bundle_artifacts = _copy_artifacts(artifacts, bundle_dir)
+        # Create timestamped bundle
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        output_dir.mkdir(parents=True, exist_ok=True)
+        bundle_dir = _make_bundle_dir(output_dir, project, timestamp)
 
-    # Write manifest
-    _write_manifest(
-        bundle_dir=bundle_dir,
-        project=project,
-        source_root=project_root,
-        metadata=metadata,
-        artifacts=bundle_artifacts,
-        timestamp=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-    )
+        # Copy artifacts into bundle
+        bundle_artifacts = _copy_artifacts(artifacts, bundle_dir, output_root=output_root, output_fd=output_fd)
 
-    # Update latest symlink
-    _update_latest_symlink(output_dir, bundle_dir)
+        # Write manifest
+        _write_manifest(
+            bundle_dir=bundle_dir,
+            project=project,
+            source_root=project_root,
+            metadata=metadata,
+            artifacts=bundle_artifacts,
+            timestamp=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        )
 
-    return bundle_dir
+        # Update latest symlink
+        _update_latest_symlink(output_dir, bundle_dir)
+
+        return bundle_dir
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -345,7 +442,7 @@ def main(argv: list[str] | None = None) -> int:
             output_dir=args.output_dir,
             repo_root=args.repo_root,
         )
-    except FileNotFoundError as exc:
+    except (OSError, ValueError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
     except SystemExit as exc:

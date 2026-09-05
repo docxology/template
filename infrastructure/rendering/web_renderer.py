@@ -4,10 +4,12 @@ import re
 import shutil
 import subprocess
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import yaml
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
@@ -50,65 +52,66 @@ class WebRenderer:
         # per-section HTML resolves Pandoc ``[@key]`` citations and raw-LaTeX
         # spans instead of emitting them literally (the HTML writer, unlike the
         # citeproc PDF path, leaves them untouched).
-        safe_source = source_file.with_suffix(source_file.suffix + ".web.tmp")
-        try:
-            safe_source.write_text(
-                self._html_safe_markdown(
-                    source_file.read_text(encoding="utf-8"),
-                    preserve_crossrefs=True,
-                ),
-                encoding="utf-8",
-            )
-        except OSError:
-            safe_source = source_file
-
-        cmd = [
-            self.config.pandoc_path,
-            str(safe_source),
-            "-t",
-            "html5",
-            "-o",
-            str(output_file),
-            "--standalone",
-            f"--mathjax={_MATHJAX_URL}",
-            # A per-section page is rendered alone, so numbering here is
-            # section-local: correct for the section that declares the blocks
-            # (manuscripts keep them together), and unresolvable for a reference
-            # made from a different section, which the filter then leaves visible
-            # and reports. The combined ``index.html`` is the authoritative HTML
-            # edition and numbers the whole document.
-            *formalism_filter_args(),
-        ]
-
-        logger.info(f"Generating HTML from {source_file}")
-
-        try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True, **subprocess_options(profile, 600))
-            if output_file.exists():
-                self._harden_mathjax_script(output_file)
-                self._embed_favicon(output_file)
-                self._write_favicon_file(output_file.parent)
-                # Per-section pages must receive the same reading-width and
-                # figure-detail styling as the combined publication page.
-                self._embed_css(output_file)
-                self._normalize_figure_paths_in_file(output_file)
-                self._enhance_accessibility(
-                    output_file,
-                    registry_path=Path(self.config.figures_dir) / "figure_registry.json",
+        with TemporaryDirectory(prefix=".web-source-", dir=output_dir) as temporary_dir:
+            safe_source = Path(temporary_dir) / (source_file.name + ".web.tmp")
+            try:
+                safe_source.write_text(
+                    self._html_safe_markdown(
+                        source_file.read_text(encoding="utf-8"),
+                        preserve_crossrefs=True,
+                    ),
+                    encoding="utf-8",
                 )
-                self._add_full_resolution_figure_links(output_file)
-                self._add_responsive_image_variants(output_file)
-                self._rewrite_repository_links(output_file, {source_file: output_file.name})
-            return output_file
+            except OSError as exc:
+                raise RenderingError(
+                    f"Failed to prepare HTML source: {exc}",
+                    context={"source": str(source_file)},
+                ) from exc
 
-        except subprocess.CalledProcessError as e:
-            raise RenderingError(
-                f"Failed to render HTML: {e.stderr}",
-                context={"source": str(source_file)},
-            ) from e
-        finally:
-            if safe_source != source_file:
-                safe_source.unlink(missing_ok=True)
+            cmd = [
+                self.config.pandoc_path,
+                str(safe_source),
+                "-t",
+                "html5",
+                "-o",
+                str(output_file),
+                "--standalone",
+                f"--mathjax={_MATHJAX_URL}",
+                # A per-section page is rendered alone, so numbering here is
+                # section-local: correct for the section that declares the blocks
+                # (manuscripts keep them together), and unresolvable for a reference
+                # made from a different section, which the filter then leaves visible
+                # and reports. The combined ``index.html`` is the authoritative HTML
+                # edition and numbers the whole document.
+                *formalism_filter_args(),
+            ]
+
+            logger.info(f"Generating HTML from {source_file}")
+
+            try:
+                subprocess.run(cmd, check=True, capture_output=True, text=True, **subprocess_options(profile, 600))
+                if output_file.exists():
+                    self._harden_mathjax_script(output_file)
+                    self._embed_favicon(output_file)
+                    self._write_favicon_file(output_file.parent)
+                    # Per-section pages must receive the same reading-width and
+                    # figure-detail styling as the combined publication page.
+                    self._embed_css(output_file)
+                    self._normalize_figure_paths_in_file(output_file)
+                    self._enhance_accessibility(
+                        output_file,
+                        registry_path=Path(self.config.figures_dir) / "figure_registry.json",
+                    )
+                    self._add_full_resolution_figure_links(output_file)
+                    self._add_responsive_image_variants(output_file)
+                    self._rewrite_repository_links(output_file, {source_file: output_file.name})
+                return output_file
+
+            except subprocess.CalledProcessError as e:
+                raise RenderingError(
+                    f"Failed to render HTML: {e.stderr}",
+                    context={"source": str(source_file)},
+                ) from e
 
     def _output_file_for_source(self, source_file: Path) -> Path:
         """Return a collision-resistant HTML path for an individual section."""
@@ -175,13 +178,7 @@ class WebRenderer:
             self._combine_markdown_files(source_files),
             render_citations=False,
         )
-        _tmp = combined_md.with_suffix(combined_md.suffix + ".tmp")
-        try:
-            _tmp.write_text(combined_content, encoding="utf-8")
-            _tmp.replace(combined_md)
-        except OSError:
-            _tmp.unlink(missing_ok=True)
-            raise
+        atomic_write_text_confined(output_dir, combined_md, combined_content)
         logger.debug(f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)")
         write_manuscript_composition(
             output_dir.parents[1],

@@ -7,6 +7,7 @@ Generated filepath and reference audit output, produced by
 
 | File | What it is |
 | --- | --- |
+| [`REVIEW_2026-09-04.md`](REVIEW_2026-09-04.md) | Rendering refactor, checkpoint/export containment fixes, baseline and final verification receipt |
 | [`filepath-audit-report.md`](filepath-audit-report.md) | Repo-wide scan for broken path references, categorized by severity (red/yellow/green flags), with known false positives filtered out |
 | [`executable-bundle-offline-receipt-2026-08-26.md`](executable-bundle-offline-receipt-2026-08-26.md) | Offline-container verification receipt for EXECUTABLE-BUNDLE-MAJ-1/-2 (network-none pytest + fail-closed compose) |
 | [`AUDIT_2026-08-30.md`](AUDIT_2026-08-30.md) and [`AUDIT_2026-08-30_lane_*.md`](AUDIT_2026-08-30_lane_addendum.md) | 2026-08-30 point-in-time fleet audit lane reports (moved from repo root 2026-08-31; see [AGENTS.md](AGENTS.md) archival note) |

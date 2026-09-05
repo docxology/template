@@ -1,18 +1,16 @@
-"""Deterministic post-processing for rendered HTML artifacts."""
+"""HTML transformations and compatibility exports for web post-processing.
+
+Asset injection and repository link resolution live in narrow leaf modules;
+existing web and slide renderers retain their imports through this module.
+"""
 
 from __future__ import annotations
 
-import base64
 import html
 import re
-from collections.abc import Mapping
 from pathlib import Path
-from urllib.parse import quote, unquote, urlsplit
-
-import yaml
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._figure_alt_registry import (
     FigureAltRecord,
     FigureAltRegistry,
@@ -21,448 +19,41 @@ from infrastructure.rendering._figure_alt_registry import (
 )
 from infrastructure.rendering._html_attributes import (
     html_attribute_assignment_pattern as _html_attribute_assignment_pattern,
-    remove_html_attribute_assignment,
-    remove_unquoted_whitespace_only_lines,
 )
 from infrastructure.rendering._web_figure_details import apply_figure_long_description
-
-logger = get_logger(__name__)
-
-MATHJAX_URL = "https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-_MATHJAX_INTEGRITY = "sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz"
-_MATHJAX_FONT_URL = "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2"
-_MATHJAX_DYNAMIC_PREFIX = "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
-_MATHJAX_CONFIG_MARKER = "data-template-mathjax-config"
-_MATHJAX_CONFIG_SCRIPT = f"""<script {_MATHJAX_CONFIG_MARKER}>
-window.MathJax = window.MathJax || {{}};
-window.MathJax.chtml = Object.assign({{}}, window.MathJax.chtml, {{
-  fontURL: "{_MATHJAX_FONT_URL}",
-  dynamicPrefix: "{_MATHJAX_DYNAMIC_PREFIX}"
-}});
-var templateMathOutput = window.MathJax.output || {{}};
-window.MathJax.output = Object.assign({{}}, templateMathOutput, {{
-  displayOverflow: "linebreak",
-  linebreaks: Object.assign({{}}, templateMathOutput.linebreaks, {{
-    inline: true,
-    width: "100%",
-    lineleading: 0.5
-  }})
-}});
-window.normalizeTemplateMathJaxAria = function () {{
-  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {{
-    var roleDescription = node.getAttribute("aria-roledescription") || "";
-    if (/[\u0080-\u009f]/.test(roleDescription)) {{
-      node.setAttribute("aria-roledescription", "mathematical expression");
-    }}
-  }});
-}};
-window.MathJax.startup = Object.assign({{}}, window.MathJax.startup, {{
-  ready: function () {{
-    window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
-  }}
-}});
-</script>"""
-_FAVICON_MARKER = "data-template-favicon"
-_FAVICON_LINK = f'<link {_FAVICON_MARKER} rel="icon" href="favicon.ico">'
-_FAVICON_PNG = base64.b64decode(
-    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAALUlEQVR4nGNgGAWjYBSMglEwCkbBqBkFo2AUjIJRMApGwSgYBaNgFIwCABj7ABHX+aOtAAAAAElFTkSuQmCC"
+from infrastructure.rendering._web_io import write_if_changed as write_if_changed
+from infrastructure.rendering._web_assets import (
+    MATHJAX_URL as MATHJAX_URL,
+    _MATHJAX_INTEGRITY as _MATHJAX_INTEGRITY,
+    _MATHJAX_FONT_URL as _MATHJAX_FONT_URL,
+    _MATHJAX_DYNAMIC_PREFIX as _MATHJAX_DYNAMIC_PREFIX,
+    _MATHJAX_CONFIG_MARKER as _MATHJAX_CONFIG_MARKER,
+    _MATHJAX_CONFIG_SCRIPT as _MATHJAX_CONFIG_SCRIPT,
+    _FAVICON_MARKER as _FAVICON_MARKER,
+    _FAVICON_LINK as _FAVICON_LINK,
+    _FAVICON_PNG as _FAVICON_PNG,
+    _FAVICON_ICO as _FAVICON_ICO,
+    SHARED_DESIGN_TOKENS_CSS as SHARED_DESIGN_TOKENS_CSS,
+    harden_mathjax_script as harden_mathjax_script,
+    embed_favicon as embed_favicon,
+    write_favicon_file as write_favicon_file,
+    embed_css as embed_css,
 )
-_FAVICON_ICO = (
-    b"\x00\x00\x01\x00\x01\x00"
-    + bytes([16, 16, 0, 0])
-    + b"\x01\x00\x20\x00"
-    + len(_FAVICON_PNG).to_bytes(4, "little")
-    + (22).to_bytes(4, "little")
-    + _FAVICON_PNG
+from infrastructure.rendering._web_links import (
+    _ANCHOR_HREF_RE as _ANCHOR_HREF_RE,
+    _PASSTHROUGH_HREF_SCHEMES as _PASSTHROUGH_HREF_SCHEMES,
+    _PUBLIC_POOL_ROOTS as _PUBLIC_POOL_ROOTS,
+    repository_root_for as repository_root_for,
+    _repository_code_url as _repository_code_url,
+    _url_suffix as _url_suffix,
+    _reject_non_public_pool_target as _reject_non_public_pool_target,
+    _resolve_repository_href_target as _resolve_repository_href_target,
+    _quoted_relative_path as _quoted_relative_path,
+    _web_relative_target as _web_relative_target,
+    _renderer_figure_asset_target as _renderer_figure_asset_target,
+    rewrite_repository_links as rewrite_repository_links,
+    deployed_web_link_issues as deployed_web_link_issues,
 )
-
-SHARED_DESIGN_TOKENS_CSS = """:root {
-  --brand-1: #5b6ee0;
-  --web-bg: #f8f8f8;
-  --web-surface: #ffffff;
-  --web-text: #2c3e50;
-  --web-border: #bdc3c7;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --brand-1: #7e8ce8;
-    --web-bg: #0f1420;
-    --web-surface: #161c2b;
-    --web-text: #e6eaf2;
-    --web-border: #2a3447;
-  }
-}
-.theorem-box {
-  border-left: 4px solid var(--brand-1);
-  background: var(--web-surface);
-  padding: 0.6em 1em;
-  margin: 1.1em 0;
-  border-radius: 0 4px 4px 0;
-}
-.theorem-box.definition { border-left-style: dashed; }
-.theorem-box > p:first-child { margin-top: 0; }
-.theorem-box > p:last-child { margin-bottom: 0; }
-.figure-long-description {
-  border: 1px solid var(--web-border);
-  border-radius: 4px;
-  margin-block: 0.75rem;
-  padding: 0.5rem 0.75rem;
-}
-.figure-long-description > summary { cursor: pointer; font-weight: 700; }
-.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
-.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
-code { overflow-wrap: anywhere; word-break: break-word; }
-pre {
-  max-width: 100%;
-  overflow: visible;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
-div.sourceCode { max-width: 100%; overflow: visible; }
-pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
-pre.sourceCode code,
-pre.sourceCode code span { color: inherit; }
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span {
-  display: block;
-  max-width: 100%;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
-.table-scroll {
-  max-width: 100%;
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
-  scrollbar-gutter: stable;
-}
-.table-scroll:focus-visible {
-  outline: 3px solid var(--brand-1);
-  outline-offset: 3px;
-}
-.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }"""
-
-_ANCHOR_HREF_RE = re.compile(
-    r"(?P<prefix><a\b[^>]*?(?<!\S)href\s*=\s*)(?P<quote>[\"'])(?P<href>.*?)(?P=quote)",
-    flags=re.IGNORECASE | re.DOTALL,
-)
-_PASSTHROUGH_HREF_SCHEMES = frozenset({"http", "https", "mailto", "tel"})
-_PUBLIC_POOL_ROOTS = frozenset({"projects", "fonds", "rules", "tools"})
-
-
-def repository_root_for(path: Path) -> Path:
-    """Return the enclosing public repository root for a web render.
-
-    A source or output path outside this checkout is deliberately rejected. In
-    particular, private sidecar projects must never cause their authored links
-    to be rewritten against the public repository.
-    """
-
-    candidates: list[Path] = []
-    resolved = path.resolve(strict=False)
-    directory = resolved if resolved.is_dir() else resolved.parent
-    for candidate in (directory, *directory.parents):
-        if candidate not in candidates:
-            candidates.append(candidate)
-    for candidate in candidates:
-        citation = candidate / "CITATION.cff"
-        if (
-            resolved.is_relative_to(candidate)
-            and citation.is_file()
-            and not citation.is_symlink()
-            and (candidate / "infrastructure").is_dir()
-            and (candidate / "projects" / "templates").is_dir()
-        ):
-            return candidate.resolve(strict=True)
-    raise RenderingError(
-        f"Could not locate public repository root for web source: {path}",
-        context={"source": str(path)},
-    )
-
-
-def _repository_code_url(repository_root: Path) -> str:
-    """Read and validate the canonical repository URL from ``CITATION.cff``."""
-
-    citation = repository_root / "CITATION.cff"
-    if citation.is_symlink() or not citation.is_file():
-        raise RenderingError(f"Repository citation metadata is missing or unsafe: {citation}")
-    try:
-        payload = yaml.safe_load(citation.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, yaml.YAMLError) as exc:
-        raise RenderingError(f"Could not read repository citation metadata: {citation}") from exc
-    repository_code = payload.get("repository-code") if isinstance(payload, dict) else None
-    if not isinstance(repository_code, str):
-        raise RenderingError(f"CITATION.cff is missing repository-code: {citation}")
-    parsed = urlsplit(repository_code)
-    if (
-        parsed.scheme != "https"
-        or parsed.netloc.lower() != "github.com"
-        or len([part for part in parsed.path.split("/") if part]) != 2
-        or parsed.query
-        or parsed.fragment
-    ):
-        raise RenderingError(f"CITATION.cff repository-code is not a canonical GitHub HTTPS URL: {repository_code}")
-    return repository_code.rstrip("/")
-
-
-def _url_suffix(query: str, fragment: str) -> str:
-    return (f"?{query}" if query else "") + (f"#{fragment}" if fragment else "")
-
-
-def _reject_non_public_pool_target(relative_path: Path) -> None:
-    parts = relative_path.parts
-    if parts and parts[0] in _PUBLIC_POOL_ROOTS and (len(parts) < 2 or parts[1] != "templates"):
-        raise RenderingError(f"Web link targets non-public repository content: {relative_path.as_posix()}")
-
-
-def _resolve_repository_href_target(
-    href_path: str,
-    *,
-    html_file: Path,
-    repository_root: Path,
-    source_files: tuple[Path, ...] = (),
-) -> tuple[Path, bool]:
-    """Resolve one local href from Pandoc or a renderer postprocessor."""
-
-    decoded = unquote(href_path)
-    if "\x00" in decoded or "\\" in decoded:
-        raise RenderingError(f"Web link contains an unsafe local path: {href_path}")
-    lexical = Path(decoded)
-    if lexical.is_absolute():
-        raise RenderingError(f"Web link contains an unsupported absolute filesystem path: {href_path}")
-
-    # Pandoc preserves authored paths in the HTML. Prefer the output-page
-    # interpretation for renderer-owned assets, then the source directory for
-    # authored manuscript links, and finally a checkout-relative path used by
-    # generated links.
-    page_candidate = html_file.parent / lexical
-    candidate_paths: list[Path] = [page_candidate]
-    candidate_paths.extend(source.parent / lexical for source in source_files)
-    candidate_paths.append(repository_root / lexical)
-
-    page_target: Path | None = None
-    source_targets: list[Path] = []
-    root_target: Path | None = None
-    for index, candidate in enumerate(candidate_paths):
-        try:
-            if not candidate.exists():
-                continue
-            target = candidate.resolve(strict=True)
-        except OSError:
-            continue
-        if index == 0:
-            page_target = target
-        elif index < len(candidate_paths) - 1:
-            if target not in source_targets:
-                source_targets.append(target)
-        else:
-            root_target = target
-
-    if page_target is not None:
-        target = page_target
-    elif len(source_targets) > 1:
-        raise RenderingError(
-            f"Web link resolves to multiple manuscript targets: {href_path}",
-            context={"page": str(html_file), "targets": [str(path) for path in source_targets]},
-        )
-    elif source_targets:
-        target = source_targets[0]
-    elif root_target is not None:
-        target = root_target
-    else:
-        raise RenderingError(
-            f"Web link target does not exist: {href_path}",
-            context={"page": str(html_file)},
-        )
-
-    web_root = html_file.parent.resolve(strict=True)
-    if page_target is not None:
-        try:
-            page_target.relative_to(web_root)
-        except ValueError:
-            pass
-        else:
-            return page_target, page_target.is_dir()
-
-    root = repository_root.resolve(strict=True)
-    try:
-        relative = target.relative_to(root)
-    except ValueError as exc:
-        raise RenderingError(
-            f"Web link escapes the public repository: {href_path}",
-            context={"page": str(html_file), "target": str(target)},
-        ) from exc
-    _reject_non_public_pool_target(relative)
-    return target, target.is_dir()
-
-
-def _quoted_relative_path(path: Path) -> str:
-    """Quote a repository or web-relative path for an HTML URL."""
-
-    return quote(path.as_posix(), safe="/-._~")
-
-
-def _web_relative_target(html_file: Path, target: Path) -> str | None:
-    """Return a deployed-web-relative target when ``target`` is local HTML."""
-
-    try:
-        relative = target.relative_to(html_file.parent.resolve(strict=True))
-    except ValueError:
-        return None
-    return _quoted_relative_path(relative)
-
-
-def _renderer_figure_asset_target(html_file: Path, href_path: str) -> Path | None:
-    """Resolve a safe deployed link into the sibling ``output/figures`` tree."""
-
-    decoded = unquote(href_path)
-    if "\x00" in decoded or "\\" in decoded:
-        return None
-    lexical = Path(decoded)
-    if lexical.is_absolute():
-        return None
-    try:
-        target = (html_file.parent / lexical).resolve(strict=True)
-        figures_root = (html_file.parent.parent / "figures").resolve(strict=True)
-        target.relative_to(figures_root)
-    except (OSError, ValueError):
-        return None
-    if target.is_symlink() or not target.is_file():
-        return None
-    return target
-
-
-def rewrite_repository_links(
-    html_file: Path,
-    *,
-    repository_root: Path,
-    rendered_sources: Mapping[Path, str],
-) -> None:
-    """Rewrite local anchors into deployed pages or canonical repository URLs.
-
-    Pandoc preserves authored relative paths in the HTML. Links to renderer-
-    owned pages stay inside ``output/web``; links to manuscript source files
-    are mapped to their rendered page when available; every other public
-    repository target becomes a deterministic GitHub ``main`` URL. Unsafe or
-    nonexistent targets fail instead of surviving as broken deployed links.
-    """
-
-    root = repository_root.resolve(strict=True)
-    repository_code = _repository_code_url(root)
-    source_files = tuple(source.resolve(strict=True) for source in rendered_sources)
-    mapped_sources = {
-        source.resolve(strict=True): Path(output_name) for source, output_name in rendered_sources.items()
-    }
-    for output_name in mapped_sources.values():
-        if output_name.is_absolute() or ".." in output_name.parts:
-            raise RenderingError(f"Rendered web page name is unsafe: {output_name}")
-    content = html_file.read_text(encoding="utf-8")
-
-    def _rewrite(match: re.Match[str]) -> str:
-        raw_href = html.unescape(match.group("href"))
-        parsed = urlsplit(raw_href)
-        scheme = parsed.scheme.lower()
-        if scheme in _PASSTHROUGH_HREF_SCHEMES:
-            return match.group(0)
-        if scheme or parsed.netloc:
-            raise RenderingError(f"Web link uses an unsupported URI scheme: {raw_href}")
-        if not parsed.path or parsed.path.startswith("/"):
-            return match.group(0)
-        if _renderer_figure_asset_target(html_file, parsed.path) is not None:
-            return match.group(0)
-
-        target, is_directory = _resolve_repository_href_target(
-            parsed.path,
-            html_file=html_file,
-            repository_root=root,
-            source_files=source_files,
-        )
-        suffix = _url_suffix(parsed.query, parsed.fragment)
-        local_web_target = _web_relative_target(html_file, target)
-        mapped = mapped_sources.get(target)
-        if local_web_target is not None:
-            replacement = local_web_target
-        elif mapped is not None:
-            replacement = _quoted_relative_path(mapped)
-        else:
-            relative = target.relative_to(root)
-            encoded = _quoted_relative_path(relative)
-            if not encoded:
-                replacement = repository_code + ("/" if parsed.path.endswith("/") else "")
-            else:
-                route = "tree" if is_directory else "blob"
-                replacement = f"{repository_code}/{route}/main/{encoded}"
-                if is_directory and parsed.path.endswith("/"):
-                    replacement += "/"
-        escaped = html.escape(replacement + suffix, quote=True)
-        return f"{match.group('prefix')}{match.group('quote')}{escaped}{match.group('quote')}"
-
-    write_if_changed(html_file, _ANCHOR_HREF_RE.sub(_rewrite, content))
-
-
-def deployed_web_link_issues(web_dir: Path) -> tuple[str, ...]:
-    """Return fail-closed issues for renderer-owned deployed HTML anchors."""
-
-    try:
-        root = web_dir.resolve(strict=True)
-    except OSError as exc:
-        return (f"web output directory is unreadable: {web_dir}: {exc}",)
-    pages = [root / "index.html", *sorted(root.glob("*__*.html"))]
-    issues: list[str] = []
-    for page in pages:
-        if not page.is_file() or page.is_symlink():
-            issues.append(f"renderer-owned web page is missing or unsafe: {page}")
-            continue
-        try:
-            content = page.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError) as exc:
-            issues.append(f"renderer-owned web page is unreadable: {page}: {exc}")
-            continue
-        for match in _ANCHOR_HREF_RE.finditer(content):
-            raw_href = html.unescape(match.group("href"))
-            parsed = urlsplit(raw_href)
-            scheme = parsed.scheme.lower()
-            if scheme in _PASSTHROUGH_HREF_SCHEMES or (not parsed.path and not parsed.netloc):
-                continue
-            if scheme or parsed.netloc:
-                issues.append(f"{page.name}: unsupported href scheme: {raw_href}")
-                continue
-            if parsed.path.startswith("/"):
-                continue
-            decoded = unquote(parsed.path)
-            if "\x00" in decoded or "\\" in decoded:
-                issues.append(f"{page.name}: unsafe local href: {raw_href}")
-                continue
-            candidate = page.parent / decoded
-            try:
-                resolved = candidate.resolve(strict=True)
-                resolved.relative_to(root)
-            except (OSError, ValueError):
-                if _renderer_figure_asset_target(page, parsed.path) is None:
-                    issues.append(f"{page.name}: local href leaves output/web or is missing: {raw_href}")
-    return tuple(issues)
-
-
-def write_if_changed(path: Path, content: str) -> None:
-    """Write ``content`` to ``path`` only when it differs from the current file content.
-
-    Writes via a temporary file and atomic ``replace`` so the output is never
-    left in a partially-written state. No-op when the content is unchanged,
-    preserving mtime and avoiding spurious diffs.
-    """
-    if content == path.read_text(encoding="utf-8"):
-        return
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    try:
-        temporary.write_text(content, encoding="utf-8")
-        temporary.replace(path)
-    except OSError:
-        temporary.unlink(missing_ok=True)
-        raise
 
 
 def normalize_figure_paths(content: str) -> str:
@@ -829,95 +420,3 @@ def add_full_resolution_figure_links(html_file: Path) -> None:
         return match.group("open") + image_re.sub(_image, figure_body) + match.group("close")
 
     write_if_changed(html_file, figure_re.sub(_figure, content))
-
-
-def harden_mathjax_script(html_file: Path) -> None:
-    """Normalize the pinned MathJax loader and inject its shared config.
-
-    The URL is an executable dependency boundary: one page gets exactly one
-    loader, with exactly the reviewed SRI digest and anonymous CORS mode.
-    Existing, incorrect, or duplicate attributes are not trusted merely
-    because they use an ``integrity``-shaped value.
-    """
-    content = html_file.read_text(encoding="utf-8")
-    if MATHJAX_URL not in content:
-        return
-    config_re = re.compile(
-        r"<script\b(?=[^>]*\b" + re.escape(_MATHJAX_CONFIG_MARKER) + r"\b)[^>]*>.*?</script>",
-        flags=re.IGNORECASE | re.DOTALL,
-    )
-    config_line_re = re.compile(
-        r"^[ \t]*<script\b(?=[^>]*\b" + re.escape(_MATHJAX_CONFIG_MARKER) + r"\b)[^>]*>.*?</script>[ \t]*(?:\r?\n|$)",
-        flags=re.IGNORECASE | re.DOTALL | re.MULTILINE,
-    )
-    content = config_line_re.sub("", content)
-    content = config_re.sub("", content)
-    script_re = re.compile(r"<script\b(?P<attrs>[^>]*)>.*?</script>", flags=re.IGNORECASE | re.DOTALL)
-    matched_loader = False
-
-    def _replace(match: re.Match[str]) -> str:
-        nonlocal matched_loader
-        attributes = match.group("attrs")
-        sources = [
-            html.unescape(item.group("double") or item.group("single") or item.group("bare") or "")
-            for item in _html_attribute_assignment_pattern("src").finditer(attributes)
-        ]
-        if not any(
-            source == MATHJAX_URL or source.startswith((f"{MATHJAX_URL}?", f"{MATHJAX_URL}#")) for source in sources
-        ):
-            return match.group(0)
-        if matched_loader:
-            return ""
-        matched_loader = True
-        for attribute in ("src", "integrity", "crossorigin"):
-            attributes = remove_html_attribute_assignment(attributes, attribute)
-        attributes = remove_unquoted_whitespace_only_lines(attributes)
-        attributes = attributes.rstrip()
-        attributes += (
-            f' src="{html.escape(MATHJAX_URL, quote=True)}" integrity="{_MATHJAX_INTEGRITY}" crossorigin="anonymous"'
-        )
-        script = f"<script{attributes}></script>"
-        return f"{_MATHJAX_CONFIG_SCRIPT}\n{script}"
-
-    write_if_changed(html_file, script_re.sub(_replace, content))
-
-
-def embed_favicon(html_file: Path) -> None:
-    """Insert a marked ``<link>`` favicon reference before ``</head>`` in ``html_file`` if absent."""
-    content = html_file.read_text(encoding="utf-8")
-    if _FAVICON_MARKER in content:
-        return
-    if "</head>" not in content:
-        logger.warning("Could not find </head> tag in HTML, favicon not embedded")
-        return
-    write_if_changed(html_file, content.replace("</head>", f"\n{_FAVICON_LINK}\n</head>", 1))
-
-
-def write_favicon_file(output_dir: Path) -> None:
-    """Write the embedded ``favicon.ico`` file into ``output_dir``, logging a warning on failure."""
-    try:
-        (output_dir / "favicon.ico").write_bytes(_FAVICON_ICO)
-    except OSError as exc:
-        logger.warning("Failed to write favicon.ico: %s", exc)
-
-
-def embed_css(html_file: Path, css_file: Path) -> None:
-    """Embed the shared design tokens and renderer CSS into ``html_file``."""
-    try:
-        if not css_file.exists():
-            logger.warning("CSS file not found: %s, skipping CSS embedding", css_file)
-            return
-        css_content = SHARED_DESIGN_TOKENS_CSS + "\n" + css_file.read_text(encoding="utf-8")
-        content = html_file.read_text(encoding="utf-8")
-        style_tag = f"\n<style>\n{css_content}\n</style>\n"
-        if "</head>" in content:
-            updated = content.replace("</head>", style_tag + "</head>", 1)
-        elif "<head>" in content:
-            updated = content.replace("<head>", "<head>" + style_tag, 1)
-        else:
-            logger.warning("Could not find <head> tag in HTML, CSS not embedded")
-            return
-        write_if_changed(html_file, updated)
-        logger.debug("Embedded CSS from %s into %s", css_file.name, html_file.name)
-    except OSError as exc:
-        logger.warning("Failed to embed CSS: %s", exc)

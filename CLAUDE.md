@@ -33,14 +33,14 @@ This is a research project template with a test-driven development workflow, aut
 | Install deps | `uv sync` (root `default-groups` includes `public-exemplars`, covering all deterministic public-project dependencies; live research/publishing groups remain opt-in) |
 | Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
 | Public CI source paths | `uv run python -m infrastructure.project.public_scope source-paths` |
-| Ruff (CI scope) | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run ruff check --fix && uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run ruff format` |
+| Ruff (CI scope) | `uv run python -m infrastructure.project.public_scope lint-paths \| xargs uv run ruff check --fix && uv run python -m infrastructure.project.public_scope lint-paths \| xargs uv run ruff format` |
 | Mypy (CI scope) | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run mypy` |
 | Bandit (CI / security job) | `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` (exclusions in `bandit.yaml` → `exclude_dirs`) |
 | Pre-commit (lint stage) | `pre-commit run --all-files` |
 | Pre-push hooks | `pre-commit run --hook-stage pre-push --all-files` |
 | Local CI reproduction (act + fallback) | `./scripts/shell/ci_local.sh` (added 2026-05-20; see [`docs/maintenance/ci-local.md`](docs/maintenance/ci-local.md)) |
-| Executable bundle (opt-in Stage 14) | `uv run python scripts/runner/bundle_executable.py --project {name}` |
-| Archive publication dry-run (opt-in Stage 15) | `uv run python scripts/runner/archive_publication.py --project {name}` |
+| Executable bundle (opt-in stage; see pipeline table) | `uv run python scripts/runner/bundle_executable.py --project {name}` |
+| Archive publication dry-run (opt-in stage; see pipeline table) | `uv run python scripts/runner/archive_publication.py --project {name}` |
 | Archive publication real deposit | `uv run python scripts/runner/archive_publication.py --project {name} --providers zenodo software_heritage ipfs_pinata --commit` (requires credentials — see [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md)) |
 | Publication runbook (standalone GitHub + real Zenodo DOI + optional mirrors) | [`docs/guides/publication-runbook.md`](docs/guides/publication-runbook.md) |
 | Unified project release (GitHub + Zenodo + DOI) | `uv run python scripts/publish/publish_project_release.py --project {name} --tag v1.0.0 --repo owner/repo` (opt-in; see [`docs/guides/publication-runbook.md`](docs/guides/publication-runbook.md)) |

@@ -2,6 +2,20 @@
 
 Multi-format output generation for research manuscripts.
 
+## Maintaining rendering internals
+
+The public renderers retain their existing entry points. Slide composition is
+partitioned into semantic blocks, figure handling, table structure, cell metrics,
+column constraints, and whole-row excerpt composition. Beamer preparation lives
+in `_slides_beamer.py`; the renderer owns subprocess execution and derivative
+cleanup. Web assets, link validation, and atomic writes have separate owners.
+See [the internal responsibility map](AGENTS.md#internal-rendering-responsibilities).
+
+HTML rewrites retain the page's permissions and skip unchanged content. Shared
+confined writes protect HTML and rewritten Beamer TeX from temporary-file
+symlink redirection. Unsafe empty-path URI schemes are rejected like other
+unsupported links.
+
 ## Features
 
 ```mermaid

@@ -6,6 +6,8 @@ and error handling scenarios.
 
 import json
 import tempfile
+
+import pytest
 from pathlib import Path
 
 
@@ -480,3 +482,93 @@ def test_validate_checkpoint_rejects_swapped_outputs(tmp_path):
     assert ok is False
     assert err is not None
     assert "digest" in err.lower()
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("last_stage_completed", "1"),
+        ("last_stage_completed", True),
+        ("total_stages", "3"),
+        ("pipeline_start_time", float("nan")),
+        ("checkpoint_time", float("inf")),
+        ("output_digest", 123),
+    ],
+)
+def test_checkpoint_rejects_malformed_fields(tmp_path, field, value):
+    """Well-formed JSON with corrupt field types cannot escape resume recovery."""
+    manager = CheckpointManager(checkpoint_dir=tmp_path / ".checkpoints")
+    manager.checkpoint_dir.mkdir()
+    payload = PipelineCheckpoint(1.0, 1, [StageResult("Analysis", 0, 0.1)], 3, 2.0).to_dict()
+    payload[field] = value
+    manager.checkpoint_file.write_text(json.dumps(payload), encoding="utf-8")
+    assert manager.load_checkpoint() is None
+    assert manager.validate_checkpoint()[0] is False
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [("name", []), ("exit_code", False), ("duration", float("nan")), ("completed", "false"), ("context", [])],
+)
+def test_checkpoint_rejects_malformed_stage_fields(tmp_path, field, value):
+    """Persisted stages must have the types consumed by resume and reporting."""
+    manager = CheckpointManager(checkpoint_dir=tmp_path / ".checkpoints")
+    manager.checkpoint_dir.mkdir()
+    payload = PipelineCheckpoint(1.0, 1, [StageResult("Analysis", 0, 0.1)], 3, 2.0).to_dict()
+    payload["stage_results"][0][field] = value
+    manager.checkpoint_file.write_text(json.dumps(payload), encoding="utf-8")
+    assert manager.load_checkpoint() is None
+    assert manager.validate_checkpoint()[0] is False
+
+
+def test_default_checkpoint_uses_repository_root():
+    """Moving runtime helpers must not change the implicit repository root."""
+    from infrastructure.core.project_paths import find_repo_root
+
+    assert CheckpointManager().checkpoint_dir == find_repo_root() / "projects/project/output/.checkpoints"
+
+
+def test_failed_checkpoint_serialization_preserves_prior_checkpoint(tmp_path):
+    """A failed replacement keeps the last recoverable successful checkpoint."""
+    manager = CheckpointManager(checkpoint_dir=tmp_path / ".checkpoints")
+    assert manager.save_checkpoint(1.0, 1, [StageResult("Analysis", 0, 0.1)], 3)
+    previous = manager.checkpoint_file.read_bytes()
+    invalid = StageResult("Analysis", 0, 0.1, context={"unsupported": object()})
+    assert manager.save_checkpoint(1.0, 1, [invalid], 3) is False
+    assert manager.checkpoint_file.read_bytes() == previous
+    assert manager.validate_checkpoint()[0] is True
+
+
+def test_checkpoint_digest_failure_is_nonfatal(tmp_path):
+    """An unreadable output cannot turn best-effort checkpointing into a crash."""
+    import os
+
+    if hasattr(os, "geteuid") and os.geteuid() == 0:
+        pytest.skip("root bypasses file read permissions")
+    manager = CheckpointManager(checkpoint_dir=tmp_path / ".checkpoints")
+    result = tmp_path / "result.txt"
+    result.write_bytes(b"result")
+    result.chmod(0)
+    try:
+        assert manager.save_checkpoint(1.0, 1, [StageResult("Analysis", 0, 0.1)], 3) is False
+    finally:
+        result.chmod(0o600)
+
+
+def test_checkpoint_does_not_follow_existing_file_symlink(tmp_path):
+    """A checkpoint-path symlink cannot overwrite an unrelated file."""
+    manager = CheckpointManager(checkpoint_dir=tmp_path / ".checkpoints")
+    manager.checkpoint_dir.mkdir()
+    target = tmp_path / "unrelated.json"
+    target.write_bytes(b"untouched")
+    manager.checkpoint_file.symlink_to(target)
+    assert manager.save_checkpoint(1.0, 1, [StageResult("Analysis", 0, 0.1)], 3) is False
+    assert target.read_bytes() == b"untouched"
+
+
+@pytest.mark.parametrize("exit_code", [0, 1])
+def test_checkpoint_cannot_skip_incomplete_stage(tmp_path, exit_code):
+    """Resume must rerun a stage whose persisted result is not complete."""
+    manager = CheckpointManager(checkpoint_dir=tmp_path / ".checkpoints")
+    assert manager.save_checkpoint(1.0, 1, [StageResult("Analysis", exit_code, 0.1, completed=False)], 3)
+    assert manager.validate_checkpoint()[0] is False

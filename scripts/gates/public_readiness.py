@@ -38,7 +38,12 @@ def main(argv: list[str] | None = None) -> int:
     """Execute the public readiness gate."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
-    parser.add_argument("--timeout", type=_positive_int, default=DEFAULT_TIMEOUT_SECONDS)
+    parser.add_argument(
+        "--timeout",
+        type=_positive_int,
+        default=DEFAULT_TIMEOUT_SECONDS,
+        help=f"Outer seconds per project (default: {DEFAULT_TIMEOUT_SECONDS}); an explicit value overrides the Stage01 allowance.",
+    )
     parser.add_argument("--profile", choices=TEST_PROFILE_NAMES, default="release")
     parser.add_argument(
         "--project-workers",
@@ -54,7 +59,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--allow-skips",
         action="store_true",
-        help="Report skips without failing; use only for explicitly optional service lanes.",
+        help="Allow explicitly skipped projects; individual test skips remain in Stage01 summaries.",
     )
     parser.add_argument("--json", action="store_true", help="Emit the machine-readable report.")
     args = parser.parse_args(argv)

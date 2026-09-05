@@ -4,7 +4,7 @@
 >
 > Refresh target: every 6 months. Anything older than **183 days** should be treated as potentially dormant.
 
-**Last updated:** 2026-08-09
+**Last updated:** 2026-09-04
 **Maintained by:** Daniel Ari Friedman (see [MAINTAINERS.md](MAINTAINERS.md))
 
 ## Verification ledger
@@ -27,6 +27,8 @@
 | STATUS-SKILLS-1 | Skills manifest (`infrastructure/skills/`) | 2026-07-15 | Daniel (agent session) | Public-roster-driven skill discovery regenerated `.cursor/skill_manifest.json` and `docs/_generated/skills_index.md`; manifest, reachability, and all-exports gates passed in the 22-gate health sweep and hosted CI. | `uv run python -m infrastructure.skills check` | docs/_generated/status_evidence.json | automated | 🟢 healthy |
 | STATUS-REGRESSION-1 | Regression tests (`tests/regression/`) | 2026-07-15 | Daniel (agent session) | The source-re-derived claim-binding regression tier runs as an explicit hosted CI job; its historical 55-test/15-exemplar count is not a current roster claim. Public-exemplar structural and coverage contracts are additionally enforced per project. See `docs/maintenance/regression-testing.md`. | `uv run pytest tests/regression/ -q --no-cov --timeout=120` | docs/_generated/status_evidence.json | external | 🟡 external required-check configuration remains open |
 | STATUS-AUTORESEARCH-1 | AutoResearch exemplar (`projects/templates/template_autoresearch_project/`) | 2026-06-13 | Codex | `uv run pytest projects/templates/template_autoresearch_project/tests/ -q` passed 224 tests after adding evidence overview, benchmark-boundary, and source-ledger contract checks | `uv run pytest projects/templates/template_autoresearch_project/tests -q --no-cov --timeout=120` | docs/_generated/status_evidence.json | automated | 🟢 healthy |
+| STATUS-RENDER-RECOVERY-1 | Rendering internals, checkpoint recovery, and local exports | 2026-09-04 | Codex | Real accessible-slide and Beamer suites passed 65 tests; normalized render output remained identical. Checkpoint and export negative controls passed, including a fresh reviewer's source-swap probes. See [review receipt](docs/audit/REVIEW_2026-09-04.md). | `uv run pytest tests/infra_tests/rendering/test_slides_accessibility.py -m slow -q --no-cov --timeout=120` | docs/_generated/status_evidence.json | automated | 🟡 tested contracts and live Chrome layout/navigation passed; pixel capture remains deferred for activeTab permission |
+
 ## Health legend
 
 - 🟢 **healthy** — last verified ≤ 6 months ago; gates green; no known structural issue

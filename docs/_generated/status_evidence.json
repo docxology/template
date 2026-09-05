@@ -175,9 +175,20 @@
       "subsystem": "AutoResearch exemplar (`projects/templates/template_autoresearch_project/`)",
       "verification_scope": "`uv run pytest projects/templates/template_autoresearch_project/tests/ -q` passed 224 tests after adding evidence overview, benchmark-boundary, and source-ledger contract checks",
       "verified_by": "Codex"
+    },
+    {
+      "command": "`uv run pytest tests/infra_tests/rendering/test_slides_accessibility.py -m slow -q --no-cov --timeout=120`",
+      "health": "\ud83d\udfe1 tested contracts and live Chrome layout/navigation passed; pixel capture remains deferred for activeTab permission",
+      "id": "STATUS-RENDER-RECOVERY-1",
+      "last_verified": "2026-09-04",
+      "mode": "automated",
+      "receipt": "docs/_generated/status_evidence.json",
+      "subsystem": "Rendering internals, checkpoint recovery, and local exports",
+      "verification_scope": "Real accessible-slide and Beamer suites passed 65 tests; normalized render output remained identical. Checkpoint and export negative controls passed, including a fresh reviewer's source-swap probes. See [review receipt](docs/audit/REVIEW_2026-09-04.md).",
+      "verified_by": "Codex"
     }
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "d9fe05da73ce01f9150e49a5844d97e463980939b17c772a6e3b0122e422674f"
+  "source_sha256": "7b9bca64020f8e4a397484f34892f7c66d2b68b1d8cee527bd986bb36f077893"
 }
