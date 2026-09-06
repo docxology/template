@@ -114,12 +114,12 @@
       "command": "`uv run python scripts/audit/check_public_template_contract.py --strict`",
       "health": "\ud83d\udfe2 final-SHA hosted verification green; Python 3.10 EOL Oct 2026 \u2192 drop next refresh",
       "id": "STATUS-CI-MATRIX-1",
-      "last_verified": "2026-08-09",
+      "last_verified": "2026-09-05",
       "mode": "external",
       "receipt": "docs/_generated/status_evidence.json",
       "subsystem": "CI matrix (`.github/workflows/ci.yml`)",
-      "verification_scope": "Final-SHA run [`31304724930`](https://github.com/docxology/template/actions/runs/31304724930) passed all 67 jobs: Ubuntu/macOS infrastructure interpreters, Python 3.10/3.12 public project matrix, active-inference marker-portability lanes, regression, manuscript, documentation, security, static-health, no-mocks, Actionlint, lint, type checks, and performance.",
-      "verified_by": "Daniel (agent session)"
+      "verification_scope": "Final-SHA main run [`33941394683`](https://github.com/docxology/template/actions/runs/33941394683) passed 65 jobs with three expected optional skips, after PR run [`33938657975`](https://github.com/docxology/template/actions/runs/33938657975) passed 66 applicable checks with the same skips (PR #52, merged 2026-09-05). Ubuntu/macOS infrastructure interpreters, Python 3.10/3.14 public project matrix, active-inference marker-portability lanes, regression, manuscript, documentation, security, static-health, no-mocks, Actionlint, lint, type checks, and performance.",
+      "verified_by": "Codex (agent session)"
     },
     {
       "command": "`uv run python scripts/docgen/counts.py --check`",
@@ -175,9 +175,20 @@
       "subsystem": "AutoResearch exemplar (`projects/templates/template_autoresearch_project/`)",
       "verification_scope": "`uv run pytest projects/templates/template_autoresearch_project/tests/ -q` passed 224 tests after adding evidence overview, benchmark-boundary, and source-ledger contract checks",
       "verified_by": "Codex"
+    },
+    {
+      "command": "`uv run pytest tests/infra_tests/rendering/test_slides_accessibility.py -m slow -q --no-cov --timeout=120`",
+      "health": "\ud83d\udfe2 tested contracts, live Chrome layout/navigation, and compositor pixel evidence all passed",
+      "id": "STATUS-RENDER-RECOVERY-1",
+      "last_verified": "2026-09-05",
+      "mode": "automated",
+      "receipt": "docs/_generated/status_evidence.json",
+      "subsystem": "Rendering internals, checkpoint recovery, and local exports",
+      "verification_scope": "Real accessible-slide and Beamer suites passed 65 tests; normalized render output remained identical. Checkpoint and export negative controls passed, including a fresh reviewer's source-swap probes. Pixel capture completed 2026-09-05 via managed-Chromium compositor screenshots at 390\u00d7844 and 1200\u00d7800: narrow scroll-mode content measured 374.4px with no horizontal overflow and MathJax loaded with zero error nodes. See [review receipt](docs/audit/REVIEW_2026-09-04.md) and [2026-09-05 record](docs/audit/REVIEW_2026-09-05.md).",
+      "verified_by": "Codex"
     }
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "d9fe05da73ce01f9150e49a5844d97e463980939b17c772a6e3b0122e422674f"
+  "source_sha256": "a74b970b4475c5f0359472225ecd7614a72743bfda315def80bc6667f562ce5f"
 }

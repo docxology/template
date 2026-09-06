@@ -11,13 +11,11 @@ from __future__ import annotations
 import argparse
 import json
 import platform
-import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(REPO_ROOT))
-
 from infrastructure.publishing.rehearsal import (  # noqa: E402
+    _rehearsal_exit_code,
     build_clean_checkout_plan,
     run_clean_checkout_rehearsal,
 )
@@ -49,7 +47,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.receipt:
         write_receipt(args.receipt, receipt)
     print(json.dumps(receipt.to_dict(), indent=2, sort_keys=True))
-    return 0 if receipt.validate() == [] else 1
+    return _rehearsal_exit_code(receipt)
 
 
 if __name__ == "__main__":  # pragma: no cover

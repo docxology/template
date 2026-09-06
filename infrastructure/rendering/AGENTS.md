@@ -24,6 +24,26 @@ renderers without owning validation policy or project analysis.
 | Executable bundle | `dockerfile_gen.py`, `manifest.py` | Deterministic reproducible-build Dockerfile generation (pinned base image and `uv` version) and the Stage-10 `manifest.json` of pinned numerical claims, git metadata, and build environment. |
 | CLI | `cli.py`, `render_all_cli.py` | Module commands and legacy all-format entrypoint. |
 
+## Internal rendering responsibilities
+
+- `_slides_accessibility_ast.py` handles semantic blocks and prose splitting;
+  `_slides_accessibility_figures.py` owns figure sizing and captions.
+- `_slides_accessibility_table_structure.py` validates table rows and spans;
+  `_slides_accessibility_table_cells.py` measures content;
+  `_slides_accessibility_table_widths.py` solves column constraints;
+  `_slides_accessibility_tables.py` composes whole-row excerpts.
+- `_slides_beamer.py` prepares Pandoc arguments, applies ordered TeX transforms,
+  and rejects overflow. `SlidesRenderer` retains execution and output lifecycle.
+- `_web_assets.py` owns reader assets/styles, `_web_links.py` resolves and
+  validates links, `_web_io.py` uses the shared confined atomic writer, and
+  `_web_postprocess.py` owns HTML/figure transformations. Existing helper import
+  surfaces remain available through explicit re-exports.
+
+HTML rewrites preserve existing permissions and leave unchanged files alone.
+HTML and Beamer TeX rewrites use exclusive temporary files in the destination
+folder, so a planted predictable temporary symlink cannot redirect the write.
+Unsupported URI schemes fail validation even when their URL path is empty.
+
 ## Boundaries
 
 - Project analysis outputs are inputs; rendering must not compute project
@@ -36,6 +56,18 @@ renderers without owning validation policy or project analysis.
   belong before `\begin{figure}`.
 - PDF metadata and publishing information come from
   `projects/{name}/manuscript/config.yaml`.
+- The injected `output/manuscript/config.yaml` wins over the tracked source
+  copy whenever it is project-resolved — it carries the generated-ordering or
+  project-resolved marker, or the source is still a `{{TOKEN}}` template whose
+  tokens the injected copy has substituted
+  (`_manuscript_source.is_project_resolved`). A project generator's
+  substitution is never overwritten by the source template.
+- Whichever copy wins, `_manuscript_source.verify_config_tokens_resolved`
+  rejects a surviving `{{UPPER_SNAKE}}` token in the `config.yaml` the render
+  consumes, and the render stage exits non-zero — `config.yaml` feeds the title
+  page, so an unresolved token would otherwise print verbatim on the cover. A
+  token inside a backtick code span is prose documenting the syntax, not a
+  hydration target, and never fails a render.
 - Configured title-page artwork uses `paper.cover.image`/`paper.cover.alt` or
   the parallel `book.cover.*` fields. With `metadata.tagged_pdf: true`, the
   selected cover's `alt` must be a non-empty string; validation fails before a
@@ -260,3 +292,9 @@ local TeX engine. If rendering behavior changes, run at least one real
 - [`README.md`](README.md)
 - [`References/README.md`](References/README.md)
 - [`../validation/AGENTS.md`](../validation/AGENTS.md)
+
+Web preprocessing uses a private temporary directory for each section and the
+confined atomic writer for combined Markdown. Predictable legacy temporary
+paths are never opened or removed; failures propagate without falling back to
+unprocessed source. The real-Pandoc regression probes live in
+`tests/infra_tests/rendering/test_web_renderer.py`.

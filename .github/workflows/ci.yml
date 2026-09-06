@@ -1023,3 +1023,46 @@ jobs:
           name: public-matrix-receipt
           path: public_matrix_receipt.json
           if-no-files-found: error
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Final gate — single static check name for branch protection
+  # ─────────────────────────────────────────────────────────────────────────────
+  # GitHub cannot require dynamic matrix jobs by name, so branch protection on
+  # main requires this one static job. It succeeds only when every upstream
+  # job succeeded or was intentionally skipped by its own `if:` (e.g. the
+  # schedule-only public-matrix-receipt on push/PR events).
+  ci-gate:
+    name: CI Gate
+    if: always()
+    needs:
+      - detect
+      - detect-projects
+      - actionlint
+      - lint
+      - health
+      - verify-no-mocks
+      - setup-hook-windows-smoke
+      - test-infra
+      - test-regression
+      - test-project
+      - fep-lean
+      - validate
+      - security
+      - docs-lint
+      - performance
+      - public-matrix-receipt
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Evaluate upstream job results
+        env:
+          NEEDS_JSON: ${{ toJson(needs) }}
+        run: |
+          echo "$NEEDS_JSON"
+          if ! echo "$NEEDS_JSON" | jq -e 'to_entries | all(.value.result == "success" or .value.result == "skipped")' > /dev/null; then
+            echo "::error::One or more required CI jobs failed or were cancelled"
+            exit 1
+          fi
+          echo "All required CI jobs succeeded (or were intentionally skipped)."

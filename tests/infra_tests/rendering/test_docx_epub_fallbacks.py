@@ -340,30 +340,39 @@ class TestMobiRendererFallbacks:
             )
 
     @needs_pandoc
-    @pytest.mark.skipif(_CALIBRE is not None, reason="calibre is installed — test the absence path only")
-    def test_calibre_absent_in_environment_raises_rendering_error(self, tmp_path: Path) -> None:
-        """When calibre is genuinely absent from the environment, render_mobi fails.
+    def test_missing_ebook_convert_raises_rendering_error(self, tmp_path: Path) -> None:
+        """An unavailable ebook-convert binary fails closed with the install hint.
 
-        This asserts the real fallback: pandoc is present, but calibre is not,
-        so the MOBI render raises RenderingError with the calibre installation hint.
+        Exercises the real ``shutil.which`` resolution with an explicitly
+        unresolvable binary name, so the contract holds in every environment
+        regardless of whether calibre is installed.
         """
         src = tmp_path / "combined.md"
         src.write_text(_MINIMAL_MD, encoding="utf-8")
         out = tmp_path / "out.mobi"
         with pytest.raises(RenderingError, match="calibre ebook-convert binary not found"):
-            render_mobi(src, out)
+            render_mobi(src, out, calibre_path="ebook-convert-not-installed-fixture")
 
     @needs_pandoc
-    @pytest.mark.skipif(_CALIBRE is None, reason="calibre not installed — cannot test full pipeline")
-    def test_successful_mobi_render_when_calibre_present(self, tmp_path: Path) -> None:
-        """When both pandoc and calibre are present, render_mobi succeeds."""
+    def test_mobi_render_environment_contract(self, tmp_path: Path) -> None:
+        """render_mobi succeeds with calibre present and fails closed without it.
+
+        Both branches are real production behavior: with calibre installed the
+        full pandoc→EPUB→MOBI pipeline runs; without it the typed absence
+        error fires. The test asserts whichever contract this environment
+        supports, so the suite never skips.
+        """
         src = tmp_path / "combined.md"
         src.write_text(SAMPLE_MD, encoding="utf-8")
         out = tmp_path / "out.mobi"
-        result = render_mobi(src, out, title="Mobi Test", author="Author")
-        assert isinstance(result, MobiRenderResult)
-        assert out.exists()
-        assert result.size_bytes > 0
+        if _CALIBRE is not None:
+            result = render_mobi(src, out, title="Mobi Test", author="Author")
+            assert isinstance(result, MobiRenderResult)
+            assert out.exists()
+            assert result.size_bytes > 0
+        else:
+            with pytest.raises(RenderingError, match="calibre ebook-convert binary not found"):
+                render_mobi(src, out)
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -751,9 +760,14 @@ class TestEbookStageFallbacks:
         assert any(b"Second media revision" in payload for payload in svg_payloads)
 
     @needs_pandoc
-    @pytest.mark.skipif(_CALIBRE is None, reason="calibre not installed")
-    def test_full_pipeline_with_calibre_present(self, tmp_path: Path) -> None:
-        """When both pandoc and calibre are present, all formats succeed (exit 0)."""
+    def test_full_pipeline_ebook_generation_contract(self, tmp_path: Path) -> None:
+        """The ebook stage degrades per-format and the suite never skips.
+
+        With calibre installed, all three formats succeed (exit 0). Without
+        it, EPUB and DOCX still render via pandoc, MOBI fails closed, and
+        the stage reports partial success (exit 0) — the documented
+        per-format isolation contract of ``run_ebook_generation``.
+        """
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
         project_root = repo_root / "projects" / "active" / "myproject"
@@ -771,7 +785,10 @@ class TestEbookStageFallbacks:
         assert ebook_dir.is_dir()
         assert (ebook_dir / "myproject.epub").exists()
         assert (ebook_dir / "myproject.docx").exists()
-        assert (ebook_dir / "myproject.mobi").exists()
+        if _CALIBRE is not None:
+            assert (ebook_dir / "myproject.mobi").exists()
+        else:
+            assert not (ebook_dir / "myproject.mobi").exists()
 
 
 # ════════════════════════════════════════════════════════════════════════════════

@@ -70,6 +70,10 @@ def _repo_root() -> Path:
 def _initialize_test_git_repository(repo_root: Path) -> str:
     """Create one committed temporary repository and return its exact HEAD."""
     subprocess.run(["git", "init", "-q", str(repo_root)], check=True)
+    # The initial commit must not leave background maintenance racing a later
+    # byte-and-mtime snapshot of canonical Git metadata.
+    for key, value in (("maintenance.auto", "false"), ("gc.auto", "0")):
+        subprocess.run(["git", "-C", str(repo_root), "config", key, value], check=True)
     subprocess.run(["git", "-C", str(repo_root), "config", "user.name", "Counts Test"], check=True)
     subprocess.run(
         ["git", "-C", str(repo_root), "config", "user.email", "counts@example.invalid"],
@@ -122,8 +126,9 @@ def _coverage_support_file_snapshot(repo_root: Path) -> dict[str, tuple[bytes, i
 
 def test_tracked_infra_python_count_is_positive() -> None:
     """The tracked-py derivation returns the live git-tracked count."""
-    count = tracked_infra_python_count(_repo_root())
-    assert count > 100  # sanity floor; the tree has hundreds of modules
+    if not (_repo_root() / ".git").exists():
+        pytest.skip("tracked-py derivation requires a real git checkout")
+    assert tracked_infra_python_count(_repo_root()) > 100  # sanity floor; the tree has hundreds of modules
 
 
 def test_infrastructure_packages_excludes_private_and_is_sorted() -> None:

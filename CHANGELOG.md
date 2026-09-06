@@ -9,6 +9,131 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Archival tracker refresh and credential-free status checks (2026-09-06)
+
+- ``SoftwareHeritageProvider.check_status`` (plus
+  ``check_publication_status``, ``resolve_git_origin_url``, and a
+  ``--check-status`` mode on both archival CLIs) refreshes Software
+  Heritage's public archival state from credential-free ``GET`` evidence —
+  save-queue plus origin-visits, aggregated across the ``.git``/bare URL
+  variants, tolerant of both save-payload shapes the live API returns. It
+  never posts, so it cannot trigger a save.
+- The archival tracker snapshot
+  (``docs/maintenance/software-heritage-archival.md``) was refreshed with a
+  full 61-origin census as of 2026-09-06: 17 verified archived, 43 not yet
+  archived, 1 rate-limited mid-census (recorded as unknown). The 2026-06-27
+  "accepted/pending" list has fully landed.
+- ``ARCHIVAL-TRACKER-MIN-1`` closed with evidence in
+  ``docs/audit/BACKLOG-CLOSURE-2026-09-06.md``: the row needed credential-free
+  provider evidence, not external authority. Public archival submission
+  (save-code-now) remains owner-authorized work.
+
+### Test collection groundwork, CI gate, and rehearsal machinery (2026-09-06)
+
+- Root-level pytest runs now use ``--import-mode=importlib`` as groundwork for
+  shared-process collection; the single-tree suites are unaffected. Two exemplar
+  trees still cannot share one process — each exemplar's ``tests/`` is a package
+  named ``tests`` (the first tree's ``tests.conftest`` wins plugin registration)
+  and every exemplar imports its source as the shared top-level ``src`` package —
+  so one exemplar tree per process remains required and
+  ``TEST-ISOLATION-SYSPATH-1`` stays open for the unique package-naming
+  restructure.
+- CI gained a static ``ci-gate`` summary job — every upstream job must succeed or
+  be intentionally skipped — giving branch protection a single requireable check
+  name for the dynamic project-test matrix.
+- New dispatch-only ``release-rehearsal`` workflow runs the two fresh-checkout
+  deterministic rehearsals on hosted Linux and uploads the receipt (machinery
+  toward ``CLEAN-CHECKOUT-MAJ-1`` evidence).
+
+### Skip-free optional-tool coverage (2026-09-06)
+
+- The two remaining infrastructure-suite skips were complementary calibre
+  pairs: an absence-path test that only ran where calibre is missing and
+  presence-path tests that only ran where it is installed. They are now
+  environment-adaptive contract tests that always run: the MOBI absence
+  contract is exercised through an explicitly unresolvable
+  ``ebook-convert`` binary name (the same ``shutil.which`` resolution the
+  renderer performs), and the ebook-generation pipeline test asserts the
+  documented per-format degradation contract where calibre is absent
+  (EPUB and DOCX render via pandoc, MOBI fails closed, stage exits 0 with
+  partial success) alongside the full-success assertions where it is
+  present. The full infrastructure suite now reports zero skips.
+- Campaign close-out: the ISA publication criterion is closed against the
+  merged PR #53 state (hosted CI 66/66 green on the PR, main CI success at
+  the merge SHA, local/remote main parity verified).
+
+### Adjacent-surface hardening and backlog contract closure (2026-09-05)
+
+- Beamer slides remap projection-unsupported Unicode (comparisons, arrows,
+  operators, Greek) through the math font using the shared protected-block
+  tokenizer; verbatim and inline-code regions stay byte-for-byte intact and
+  the established `≥` output is unchanged. Previously only `≥` was handled,
+  so glyphs such as `≤`, `≠`, or `β` silently vanished from projected frames.
+- The deployed-web issue scanner now validates local `<img src>` targets with
+  the same rules as anchors: missing files, path escapes, and unsupported
+  schemes fail closed; remote and `data:`/`blob:` image sources stay allowed.
+- Pandoc web output (per-section pages and the combined edition) is published
+  by rename from an exclusive temporary target, so a crash or planted symlink
+  can no longer leave truncated or redirected HTML. The TeX `.aux` repair and
+  the shared combined-markdown write use the confined atomic writer, and the
+  favicon write refuses planted symlinks.
+- Publishing exports write `manifest.json` atomically (exclusive temp, fsync,
+  rename), remove their own partial bundle when copying fails, and replace a
+  stale real directory in the `latest` slot instead of failing a complete
+  export. The documented hash-copied-bytes manifest contract is unchanged.
+- Checkpoint output-tree digests ignore planted file symlinks so external
+  content cannot enter the resume-approval digest.
+- The `template_code_project` experiment config degrades malformed
+  `experiment:` values to exemplar defaults with field-naming warnings
+  silently and flat/ragged matrices warn instead of vanishing silently.
+- Release rehearsals now block the overall receipt when the two fresh
+  checkouts produce different output digests: determinism is enforced, not
+  assumed. `git clone --revision` (Git 2.51+) is documented as the tool floor.
+- The backlog gate rejects `completed` rows: closed root rows moved verbatim
+  to [docs/audit/BACKLOG-CLOSURE-2026-09-05.md](docs/audit/BACKLOG-CLOSURE-2026-09-05.md),
+  leaving the root backlog future-work-only with its blocked-external rows
+  and receipts intact.
+- Test isolation: the `uv sync` success-path test runs in a synthetic
+  zero-dependency workspace instead of the shared checkout, the mermaid
+  retry counter is monkeypatch-scoped, and the tracked-count test skips
+  outside real git checkouts. The one-exemplar-tree-per-process rule and its
+  mechanism are documented in `CLAUDE.md` with a follow-up backlog row.
+- STATUS-CI-MATRIX-1 now records the PR #52 final-SHA runs; the deferred
+  pixel-capture follow-up closed via compositor screenshots (narrow scroll
+  mode measures 374.4px content width with no horizontal overflow).
+
+### Rendering simplification and recovery hardening (2026-09-04)
+
+- Refresh the pull-request template with strict public readiness commands,
+  explicit evidence boundaries, and a link to the canonical pipeline stage map.
+
+- Align the public readiness deadline with the native verifier budget; reject
+  incomplete, duplicate, and contradictory aggregate reports and label project
+  counts explicitly. Explicit shorter deadlines remain supported.
+- Correct the extra width clamp in Reveal scroll mode so narrow screens use
+  the available slide width.
+- Isolate per-section web preprocessing in private temporary directories and
+  atomically write combined Markdown without following planted temporary links.
+  Preserve `RenderingError` for source preparation failures and clean temporary
+  copies on those paths.
+
+- Split slide figure handling, table parsing/measurement/width allocation,
+  Beamer preparation, and web assets/links/writes into cohesive internal
+  modules while preserving existing helper imports and rendering semantics.
+- Use confined atomic writes for HTML, Beamer TeX rewrites, and checkpoints.
+  HTML keeps its prior permissions; checkpoint files use `0600`. Failed writes
+  preserve the prior target instead of following predictable temporary links.
+- Reject unsupported HTML link schemes even when the URL path is empty.
+- Validate malformed checkpoint field types before resume and use the resolved
+  project directory for checkpoint placement.
+- Confine publishing export sources and allocate a fresh bundle for each export,
+  including same-second calls; update `latest` atomically after completion.
+- Make macOS interpreter fixtures use real symlink-backed environments and pin
+  ZIP fixture timestamps explicitly across UTC/Los Angeles on Python 3.14.
+  Fixture subprocess failures now propagate rather than appearing successful.
+- Align contributor Ruff commands with the complete public lint scope and remove
+  stale stage numbers from the command cheat sheet.
+
 ### Infrastructure hardening (2026-09-02)
 
 - `infrastructure.methods`: `audit_methods_projects()` is now fail-per-project.

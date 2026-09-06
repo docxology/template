@@ -24,3 +24,13 @@ The `infrastructure/core/runtime/` package contains runtime helpers for environm
 
 - [`README.md`](README.md)
 - [`../AGENTS.md`](../AGENTS.md)
+
+## Checkpoint recovery
+
+Checkpoint loading validates integer stage counters, finite nonnegative runtime
+measurements, stage result shapes, and optional output digests before resume.
+Malformed persisted fields produce an unavailable checkpoint instead of crashing
+the pipeline. Failed serialization, digest reads, or writes leave the previous
+valid checkpoint intact. New checkpoint files use private `0600` permissions.
+The executor passes the resolved project directory so lifecycle projects keep
+checkpoints alongside their own outputs.

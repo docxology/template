@@ -1,9 +1,10 @@
 # Software Heritage archival — docxology repositories
 
-> Status snapshot: 2026-06-27. Records which docxology public repositories have been
-> submitted to the Software Heritage (SWH) "Save code now" archive, which remain, and
-> how to finish + verify. Scope agreed: **docxology's own public repos (software +
-> papers)** — forks and private repos are excluded (see rationale below).
+> Status snapshot: 2026-09-06 (full 61-origin census via the read-only
+> `--check-status` refresh; see "Verified census" below). Records which docxology
+> public repositories have been archived by Software Heritage (SWH), which remain,
+> and how to finish + verify. Scope agreed: **docxology's own public repos
+> (software + papers)** — forks and private repos are excluded (see rationale below).
 
 ## How SWH archival works here
 
@@ -19,46 +20,72 @@
   raises the limit substantially**, which is the fastest way to submit the full set.
 - **Verify a repo** at: `https://archive.softwareheritage.org/browse/origin/?origin_url=<repo-url>`
   (a freshly *accepted/pending* request 404s here until the scheduled visit completes).
+- **Read-only refresh (no submission):** `uv run python scripts/runner/archive_publication.py
+  --project <name> --providers software_heritage --check-status` queries the
+  credential-free save-queue and origin-visits endpoints and prints a receipt whose
+  `extra.state` uses the tracker taxonomy — `verified`, `accepted`, `pending`,
+  `excluded`, `unavailable`, `rate-limited` — with an as-of timestamp. It never
+  posts, so it needs no authorization and cannot trigger a save.
+  For the whole roster, see the 2026-09-06 census below and
+  `docs/audit/BACKLOG-CLOSURE-2026-09-06.md`.
 
-## Submitted this session — accepted/pending (11)
+## Verified census — 2026-09-06 (17 of 61 archived)
 
-Confirmed in the live save-requests queue (status `accepted` → `pending` visit):
+Full roster refreshed via the read-only `--check-status` endpoint (save-queue +
+origin-visits, strongest evidence across the `.git`/bare URL variants; per-repo
+receipts recorded in the operator cache, summarized here):
 
-| Repo | Type |
-| --- | --- |
-| `template` | framework |
-| `template_active_inference` | exemplar |
-| `template_autoresearch_project` | exemplar |
-| `template_autoscientists` | exemplar |
-| `template_code_project` | exemplar |
-| `template_gold_refinement` | exemplar |
-| `template_literature_meta_analysis` | exemplar |
-| `template_madlib` | exemplar |
-| `template_newspaper` | exemplar |
-| `template_prose_project` | exemplar |
-| `democreate` | software |
+| Repo | Type | Save request | Visits | State |
+| --- | --- | --- | --- | --- |
+| `template` | framework | accepted | 4 | verified |
+| `template_active_inference` | exemplar | accepted | 4 | verified |
+| `template_autoresearch_project` | exemplar | accepted | 3 | verified |
+| `template_autoscientists` | exemplar | accepted | 3 | verified |
+| `template_code_project` | exemplar | accepted | 3 | verified |
+| `template_gold_refinement` | exemplar | accepted | 2 | verified |
+| `template_literature_meta_analysis` | exemplar | accepted | 4 | verified |
+| `template_madlib` | exemplar | accepted | 4 | verified |
+| `template_newspaper` | exemplar | accepted | 3 | verified |
+| `template_prose_project` | exemplar | accepted | 2 | verified |
+| `template_sia` | exemplar | accepted | 1 | verified |
+| `template_template` | exemplar | accepted | 3 | verified |
+| `template_textbook` | exemplar | accepted | 2 | verified |
+| `democreate` | software | accepted | 1 | verified |
+| `CogSecSkills` | software | accepted | 2 | verified |
+| `BeeStack` | scholarly | accepted | 2 | verified |
+| `AGEINT` | scholarly | accepted | 2 | verified |
 
-Verify the queue at <https://archive.softwareheritage.org/save/list/> (sorted by date;
-these appear at/near the top) or per-repo via the browse URL above once visits complete.
+As-of timestamp for every row: 2026-09-06 (16:5x UTC, single pass). The 2026-06-27
+snapshot's "submitted — accepted/pending" list has fully landed: all 11 entries are
+now `verified`, and `template_sia`, `template_template`, `template_textbook`
+(previously queued), plus `CogSecSkills`, `BeeStack`, and `AGEINT` were archived
+since — most by automatic harvesting rather than save requests.
 
-## Remaining own public repos to submit (rate-limited — queue when the window resets)
+## Not yet archived — 43 confirmed + 1 unverified (as of 2026-09-06)
 
-**Template exemplars:** `template_sia`, `template_template`, `template_textbook`,
-`template_bioinformatics_project`
+`unavailable` — no save request on record and no origin visits:
+
+**Template exemplars:** `template_bioinformatics_project`
 
 **Original software:** `codomyrmex`, `entofile`, `steganographer`, `dotscope`,
-`ivm-xyz`, `QuadCraft`, `QuadMath`, `timeline_generator`, `opentir`, `coasys`, `p3if`,
-`active-inference-pocket-lab`, `CogSecSkills`, `qr_live_protocol`, `hhs-opendata`,
+`ivm-xyz`, `QuadCraft`, `QuadMath`, `timeline_generator`, `opentir`, `coasys`,
+`p3if`, `active-inference-pocket-lab`, `qr_live_protocol`, `hhs-opendata`,
 `crescent-city`, `sunspot`, `godel_ivm`, `active_inference`, `active_torchference`,
 `markdown_decision_process`, `course`, `links`, `multi-time`, `snake`, `transformer`
 
 **Scholarly / paper / Zenodo-linked:** `itrace` (Zenodo DOI 10.5281/zenodo.20614908),
 `grateful_data`, `cohereants`, `crescent_city`, `blake_jiang`, `ntqr_llm`,
-`ento_linguistics`, `realizing_emptiness`, `biology_textbook`, `cognitive_case_diagrams`,
-`docxology`, `MetaInformAnt`, `BeeStack`, `AGEINT`, `ant_stack`, `biol-1`, `biol-8`,
-`literature`, `curriculum`, `institute_website`
+`ento_linguistics`, `realizing_emptiness`, `biology_textbook`,
+`cognitive_case_diagrams`, `docxology`, `MetaInformAnt`, `ant_stack`, `biol-1`,
+`biol-8`, `literature`, `curriculum`
+
+**Unverified (API rate limit mid-census):** `institute_website` — the refresh was
+throttled before its evidence completed; its state is unknown, not absent. Re-run
+`--check-status` after the cool-down before acting on it.
 
 Submission URL pattern for each: `https://github.com/docxology/<name>.git`
+(public archival submission requires owner authorization; `--check-status` itself
+performs no submission).
 
 ## Excluded — by design
 
@@ -70,7 +97,7 @@ Submission URL pattern for each: `https://github.com/docxology/<name>.git`
   many `*-private` mirrors, etc.): SWH can only archive **public** origins. Making a repo
   public is a deliberate access-control decision left to you — not something done here.
 
-## How to finish the remaining ~50
+## How to finish the remaining ~44
 
 Pick one:
 

@@ -106,18 +106,18 @@ def _create_temporary(parent_fd: int, filename: str) -> tuple[int, str]:
     raise OSError("could not allocate a unique confined temporary file")
 
 
-def _write_all(descriptor: int, content: str) -> None:
+def _write_all(descriptor: int, content: str, mode: int = 0o644) -> None:
     remaining = memoryview(content.encode("utf-8"))
     while remaining:
         written = os.write(descriptor, remaining)
         if written <= 0:
             raise OSError("short write while persisting confined evidence")
         remaining = remaining[written:]
-    os.fchmod(descriptor, 0o644)
+    os.fchmod(descriptor, mode)
     os.fsync(descriptor)
 
 
-def atomic_write_text_confined(root: Path, target: Path, content: str) -> None:
+def atomic_write_text_confined(root: Path, target: Path, content: str, *, mode: int = 0o644) -> None:
     """Atomically write UTF-8 text using held directory descriptors.
 
     Every path component is opened with ``O_NOFOLLOW``. The final rename is
@@ -125,6 +125,8 @@ def atomic_write_text_confined(root: Path, target: Path, content: str) -> None:
     an attacker-controlled symlink cannot redirect the write outside *root*.
     Directory identity checks make such a rename fail visibly rather than
     reporting success for a now-detached directory.
+    ``mode`` sets the final permissions before publication; the default remains
+    readable publication evidence (0644).
     """
     lexical_root, parent_parts, filename = _relative_target(root, target)
     parent_fd, opened = _open_parent(lexical_root, parent_parts, create=True)
@@ -133,7 +135,7 @@ def atomic_write_text_confined(root: Path, target: Path, content: str) -> None:
     try:
         _reject_existing_symlink(parent_fd, filename)
         temporary_fd, temporary_name = _create_temporary(parent_fd, filename)
-        _write_all(temporary_fd, content)
+        _write_all(temporary_fd, content, mode)
         os.close(temporary_fd)
         temporary_fd = -1
         if not _directory_identity_matches(lexical_root, parent_parts, parent_fd):

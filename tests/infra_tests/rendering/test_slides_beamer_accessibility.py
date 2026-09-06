@@ -11,6 +11,8 @@ from infrastructure.rendering._slides_accessibility import (
     AccessibleSlidePolicy,
     compose_accessible_pandoc_document,
 )
+from infrastructure.rendering._slides_beamer import transform_beamer_latex
+from infrastructure.rendering.config import RenderingConfig
 
 
 def _header(title: str) -> dict[str, Any]:
@@ -107,3 +109,45 @@ def test_atomic_shell_block_that_is_too_tall_fails_before_pandoc() -> None:
     assert exc_info.value.context["source_line_count"] == 8
     assert exc_info.value.context["estimated_lines"] == 8
     assert exc_info.value.context["maximum_lines"] == 7
+
+
+def test_beamer_transform_remaps_projection_unsupported_glyphs_outside_code() -> None:
+    """Beamer text faces get math-font fallbacks; protected code stays intact."""
+    tex = "Frame text with β ≤ 0.05 while q → p.\\n\\\\begin{verbatim}\\nβ ≤ raw\\n\\\\end{verbatim}\\n"
+
+    transformed = transform_beamer_latex(tex, RenderingConfig(), require_seqsplit=lambda: None)
+
+    assert r"\texorpdfstring{\ensuremath{\beta}}{beta}" in transformed
+    assert r"\texorpdfstring{\ensuremath{\leq}}{<=}" in transformed
+    assert r"\texorpdfstring{\ensuremath{\to}}{->}" in transformed
+    assert "β ≤ raw" in transformed
+    assert "β ≤ 0.05" not in transformed
+
+
+def test_beamer_transform_preserves_established_ge_remap() -> None:
+    tex = "count ≥ 3"
+
+    transformed = transform_beamer_latex(tex, RenderingConfig(), require_seqsplit=lambda: None)
+
+    assert r"\texorpdfstring{\ensuremath{\ge}}{>=}" in transformed
+    assert "≥" not in transformed
+
+
+def test_beamer_transform_leaves_nested_and_plain_tables_untouched_by_glyph_rule() -> None:
+    tex = "α level\\n\\\\begin{Highlighting}[]\\nα ≤ code\\n\\\\end{Highlighting}\\n"
+
+    transformed = transform_beamer_latex(tex, RenderingConfig(), require_seqsplit=lambda: None)
+
+    assert "α ≤ code" in transformed
+    assert r"\texorpdfstring{\ensuremath{\alpha}}{alpha}" in transformed
+
+
+def test_beamer_transform_leaves_graphics_filename_arguments_untouched() -> None:
+    """A Unicode figure filename must survive the glyph remap verbatim."""
+    tex = "\\includegraphics[width=50%]{β-panel.png} while β ≤ 1"
+
+    transformed = transform_beamer_latex(tex, RenderingConfig(), require_seqsplit=lambda: None)
+
+    assert "\\includegraphics[width=50%]{β-panel.png}" in transformed
+    assert r"\texorpdfstring{\ensuremath{\beta}}{beta}.png" not in transformed
+    assert r"\texorpdfstring{\ensuremath{\beta}}{beta} \texorpdfstring{\ensuremath{\leq}}{<=} 1" in transformed

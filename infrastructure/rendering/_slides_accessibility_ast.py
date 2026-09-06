@@ -1,4 +1,7 @@
-"""Pandoc-AST text and block geometry for accessible slides."""
+"""Pandoc block classification, semantic splitting, and frame geometry for accessible slides.
+
+Figure helpers remain re-exported here for compatibility.
+"""
 
 from __future__ import annotations
 
@@ -22,18 +25,26 @@ from infrastructure.rendering._slides_accessibility_contracts import (
     density_error,
     proportional_text_width_units,
 )
+from infrastructure.rendering._slides_accessibility_figures import (
+    _allocate_figure_area as _allocate_figure_area,
+    _has_projection_hard_line_break as _has_projection_hard_line_break,
+    _image_nodes as _image_nodes,
+    _image_width_percent as _image_width_percent,
+    _is_projection_image_only as _is_projection_image_only,
+    shorten_figure_caption,
+    _validate_projection_image_row as _validate_projection_image_row,
+)
+from infrastructure.rendering._slides_accessibility_raw_tex import _validate_raw_tex_geometry
 from infrastructure.rendering._slides_accessibility_text_geometry import (
     _block_contains,
-    _estimated_proportional_text_lines,
     _estimated_lines_with_hard_breaks,
+    _estimated_proportional_text_lines,
     _plain_text,
     _validate_indivisible_code_width,
     _validate_math_geometry,
     _widest_indivisible_inline_token,
     _word_count,
 )
-from infrastructure.rendering._slides_accessibility_raw_tex import _validate_raw_tex_geometry
-
 
 _PRESENTATION_PAGE_BREAK_RE = re.compile(r"^\\(?:clearpage|newpage|pagebreak)\s*$")
 _EQUATION_LABEL_RE = re.compile(r"^\{#(?:eq|def|prop|lem|thm):[^{}]+\}$")
@@ -58,6 +69,7 @@ _CONTINUATION_TITLE_TARGET_CHARS = CONTINUATION_TITLE_TARGET_CHARS
 _SEMANTIC_BREAK_SUFFIXES = SEMANTIC_BREAK_SUFFIXES
 _CLAUSE_COORDINATORS = CLAUSE_COORDINATORS
 _density_error = density_error
+_shorten_figure_caption = shorten_figure_caption
 
 
 def _compact_continuation_title(title: str, continuation: int) -> str:

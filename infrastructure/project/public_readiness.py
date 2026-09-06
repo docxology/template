@@ -11,6 +11,9 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
+from infrastructure.core.pytest_profiles import (
+    DEFAULT_PUBLIC_PROJECT_TEST_TIMEOUT_SECONDS as DEFAULT_TIMEOUT_SECONDS,
+)
 from infrastructure.core.pytest_orchestration import (
     TestProfileName,
     parse_project_workers,
@@ -20,7 +23,6 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 PUBLIC_READINESS_SCHEMA = "template-public-readiness-v2"
 PUBLIC_READINESS_PYTHON = "3.14"
-DEFAULT_TIMEOUT_SECONDS = 1200
 PUBLIC_READINESS_STATUSES = frozenset({"pass", "fail", "skip"})
 PUBLIC_READINESS_SKIP_PREFIX = "PUBLIC_READINESS_SKIP:"
 _OUTPUT_TAIL_LIMIT = 4000
@@ -37,6 +39,7 @@ class PublicReadinessResult:
     command: tuple[str, ...]
     output_tail: str = ""
     reason_code: str = ""
+    timeout_seconds: int | None = None
 
 
 @dataclass(frozen=True)
@@ -58,12 +61,23 @@ class PublicReadinessReport:
 
     @property
     def missing_projects(self) -> tuple[str, ...]:
-        """Return expected public projects absent from this checkout."""
-        return tuple(result.project for result in self.results if result.returncode is None)
+        """Return expected projects without a recorded subprocess result."""
+        present = {result.project for result in self.results if result.returncode is not None}
+        return tuple(project for project in self.expected_projects if project not in present)
 
     def exit_code(self, *, allow_skips: bool = False) -> int:
         """Return zero only when the roster is complete and all results pass."""
-        if self.missing_projects:
+        expected = set(self.expected_projects)
+        observed = [result.project for result in self.results]
+        if (
+            not expected
+            or len(expected) != len(self.expected_projects)
+            or len(set(observed)) != len(observed)
+            or set(observed) != expected
+            or self.missing_projects
+        ):
+            return 1
+        if any(result.status == "pass" and result.returncode != 0 for result in self.results):
             return 1
         if any(result.status not in PUBLIC_READINESS_STATUSES for result in self.results):
             return 1
@@ -82,6 +96,7 @@ class PublicReadinessReport:
             "profile": self.profile,
             "project_workers": self.project_workers,
             "counts": self.counts,
+            "counts_unit": "projects",
             "missing_projects": list(self.missing_projects),
             "results": [asdict(result) for result in self.results],
         }
@@ -102,8 +117,8 @@ def run_public_readiness(
     and live-service tests. ``project_workers`` controls only the outer
     project matrix; nested pytest-xdist is not introduced by this gate.
     """
-    if timeout_seconds <= 0:
-        raise ValueError("timeout_seconds must be positive")
+    if type(timeout_seconds) is not int or timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive (a finite integer, not a boolean)")
     resolved_profile = resolve_test_profile(profile, include_ollama_tests=include_ollama_tests)
     workers = parse_project_workers(project_workers)
     root = repo_root.resolve()
@@ -202,6 +217,7 @@ def run_public_readiness(
                     command=commands[project],
                     output_tail=output[-_OUTPUT_TAIL_LIMIT:],
                     reason_code=reason_code,
+                    timeout_seconds=timeout_seconds,
                 )
             )
 
@@ -220,7 +236,7 @@ def format_public_readiness(report: PublicReadinessReport) -> str:
             + (f" [{result.reason_code}]" if result.reason_code else "")
             for result in report.results
         ),
-        f"Counts: {json.dumps(report.counts, sort_keys=True)}",
+        f"Project counts: {json.dumps(report.counts, sort_keys=True)}",
     ]
     return "\n".join(lines)
 

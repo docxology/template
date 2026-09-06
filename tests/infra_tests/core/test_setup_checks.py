@@ -78,12 +78,23 @@ class TestSyncWorkspaceDependencies:
     """Tests for the sync_workspace_dependencies function."""
 
     def test_success_path_zero_exit_code(self, tmp_path: Path) -> None:
-        """Returns True when uv sync exits with code 0 in the repo root."""
-        # Use the real repo root — uv sync should succeed in a properly set-up env.
-        repo_root = Path(__file__).resolve().parents[4]
-        result = sync_workspace_dependencies(repo_root)
-        # We accept True or False depending on environment, but must return a bool.
-        assert isinstance(result, bool)
+        """Returns True when a real ``uv sync`` exits 0 in a synthetic workspace."""
+        # A zero-dependency project keeps the real uv subprocess while never
+        # mutating the shared checkout environment or requiring the network.
+        workspace = tmp_path / "workspace"
+        workspace.mkdir()
+        (workspace / "pyproject.toml").write_text(
+            "[project]\n"
+            'name = "setup-checks-fixture"\n'
+            'version = "0.0.0"\n'
+            'requires-python = ">=3.10"\n'
+            "dependencies = []\n"
+            "\n"
+            "[tool.uv]\n"
+            "package = false\n",
+            encoding="utf-8",
+        )
+        assert sync_workspace_dependencies(workspace) is True
 
     def test_returns_bool(self, tmp_path: Path) -> None:
         """sync_workspace_dependencies always returns a bool regardless of path."""

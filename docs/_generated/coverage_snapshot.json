@@ -22,8 +22,8 @@
       "source_hash": "5f8adb786d0544583b85dda29c4d8d99a33ba6f67762de250bab928f23d97866"
     },
     "template_code_project": {
-      "coverage_pct": "95.85 %",
-      "source_hash": "739ee889d3905ce8287dd69846c52408d006d1266f89e59d960ecf7862a3af4e"
+      "coverage_pct": "95.20 %",
+      "source_hash": "3681ef66909c33894a44b1d0c86ef509f48091d1038fbffe0ba4d113eb9d36f9"
     },
     "template_data_descriptor": {
       "coverage_pct": "96.13 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "1e1e757db9e6984653e188aa6b77d0075412f53c",
+  "source_commit": "5f0aee2744f24dcc7357692c4c547b9b23ba274d",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -189,7 +189,7 @@
       "template_autopoiesis": "5a921154767351fa31ff1705be13fae8680be3327c5e2308f3ad4dc6323685bc",
       "template_autoresearch_project": "0dc056217055e5c3e2ca2236a481ffb747ac8c9095dd91c459a276bf1ddc35af",
       "template_autoscientists": "5f8adb786d0544583b85dda29c4d8d99a33ba6f67762de250bab928f23d97866",
-      "template_code_project": "739ee889d3905ce8287dd69846c52408d006d1266f89e59d960ecf7862a3af4e",
+      "template_code_project": "3681ef66909c33894a44b1d0c86ef509f48091d1038fbffe0ba4d113eb9d36f9",
       "template_data_descriptor": "74a185b912e1b6fce39b0995c26f2a466121e6fb3445870edd9a185d5dd4cc21",
       "template_eda_notebook": "b175ddb202fc758df6ace08598073104a6c8f9a0ea7440063930b55b56a58bf2",
       "template_formal": "c82dd4190e470f606f9b8635ae3c078b7a8e99415dc1f1a6952d27894247ed6b",

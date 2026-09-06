@@ -30,6 +30,10 @@ XdistWorkers = Literal["auto"] | int
 
 TEST_PROFILE_NAMES: tuple[TestProfileName, ...] = ("quick", "release", "exhaustive")
 DEFAULT_TEST_PROFILE: TestProfileName = "quick"
+# Keep outer readiness supervision longer than Stage01, including report
+# generation and descendant cleanup after the inner verifier exits.
+DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS = 6900.0
+DEFAULT_PUBLIC_PROJECT_TEST_TIMEOUT_SECONDS = int(DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS) + 300
 TEST_RUNNER_BASE_DEPS: tuple[str, ...] = (
     "pytest",
     "pytest-cov",

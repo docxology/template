@@ -76,8 +76,14 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
   subprocess for every `PUBLIC_PROJECT_NAMES` entry and records stable
   PASS/FAIL/SKIP results. Exit code 2 is a failure unless the subprocess emits
   an explicit `PUBLIC_READINESS_SKIP:<reason>` marker.
-- The gate fails closed when a public exemplar is absent. Private symlinked
-  lifecycle projects are never included.
+- The gate fails closed when a public exemplar is absent, the report roster is
+  empty/incomplete/duplicated, or a passing result has a nonzero exit code.
+  Private symlinked lifecycle projects are never included.
+- The default outer deadline is 7,200 seconds per project, leaving 300 seconds
+  beyond the native verifier budget. Both defaults live in
+  `infrastructure.core.pytest_profiles`; `--timeout` accepts a positive integer
+  override. Results record the effective timeout and JSON counts are explicitly
+  project counts. `--allow-skips` permits project-level skips only.
 - Use `scripts/gates/public_readiness.py --json` for machine-readable output;
   `--include-ollama-tests --allow-skips` is reserved for the optional service
   lane.

@@ -1,10 +1,14 @@
 ---
 project: humos-template
-task: "Iteration 11 - close remaining evidence-backed improvements and publish main"
-effort: E4
+task: "Evidence-led public template hardening and reviewed main publication"
 phase: complete
-progress: "v3.6.0 published 2026-07-23. This file is a historical archive of iterations 5-11; active work continues on main."
-iteration: 11-all-improvements-main-push
+progress: "Adjacent-surface hardening published as PR #53 and merged at 541f7e72c with hosted CI 66/66 green; backlog contract closed with verbatim evidence; pixel capture closed; complementary calibre skips converted to environment-adaptive contract tests (zero suite skips)."
+iteration: 13-adjacent-surface-hardening
+prior_iteration_12: 12-public-template-hardening
+baseline_head_iter12: 4521726a185c6d1217b595939d854b485ae90abc
+baseline_origin_main_iter12: 4521726a185c6d1217b595939d854b485ae90abc
+baseline_ci_iter12: "main CI run 33941394683: success (65 jobs); PR #52 run 33938657975: success"
+prior_iteration_11: 11-all-improvements-main-push
 baseline_head_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
 baseline_origin_main_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
 baseline_worktree_composable_program: "18 tracked modifications plus 28 untracked paths; three protective stashes; independently dirty nested Kmyth checkout"
@@ -18,25 +22,85 @@ published_ci_iter10: "CI run 29467202577 attempt 2: success"
 baseline_origin_main_iter10: 63042c1a23bb787c2f3c755ba4dda4ce8493fe0c
 baseline_dirty_iter10: 195 tracked paths plus 2413 untracked paths and an independently dirty kmyth submodule
 final_head_iter9: 138de2139110af3a563f18d5cfb70cf11509cd94 (external Hermes-Agent commit that absorbed this session's edits — see Decisions)
-iteration: 9-semantic-doc-accuracy-and-active-inference-workflow
+prior_iteration_9: 9-semantic-doc-accuracy-and-active-inference-workflow
 baseline_head_iter9: 1a983de2ddacce2d4674501ea6dee033d950c813
 baseline_dirty_iter9: 64 files modified/untracked at session start, all pre-existing regenerated output/ artifacts and unrelated infra edits (git status --short), not introduced this session
 prior_task_iter8b: Iteration 8b — user asked to "comprehensively proceed with all improvements and additions and pushes to main": clear the 3 remaining DEFERRED-VERIFY items (2 composability refactors, 8 stale-count infra tests) then commit and push
 prior_phase_iter8b: complete
 prior_progress_iter8b: 139/140 (1 residual DEFERRED-VERIFY — combined-coverage-gate subprocess leak, tracked in TO-DO, not fixed)
-iteration: 8b-comprehensive-completion-and-push
+prior_iteration_8b: 8b-comprehensive-completion-and-push
 baseline_head_iter8: 646bb159e1619421117b95b0d9b7ee192ee7f6c8
 baseline_dirty_iter8: 24 untracked stray "(1)"-suffixed Finder-duplicate files under template_active_inference/template_search_project output dirs, plus untracked INDEX.md — pre-existing, not introduced this session
-iteration: 7-deferred-refactors-workflow
+prior_iteration_7: 7-deferred-refactors-workflow
 baseline_head_iter7: 3c60e9551c0ac015a09ec10a86067f7571d4604e
 baseline_head: 890abb6ac3b09bf2ea226b1ee44ceedd7f8ef950 (clean tree)
-iteration: 5-multi-lens-review-plans-fixes
+prior_iteration_5: 5-multi-lens-review-plans-fixes
 mode: algorithm
 started: 2026-07-02
-updated: 2026-07-22
----
+updated: 2026-09-06
 
 # ISA — HumOS Template Package: Agentic Operability
+
+## Current campaign — 2026-09-05
+
+### Goal
+
+Audit the surfaces adjacent to the 2026-09-04 hardening with a fresh
+multi-lens review, close the deferred pixel-evidence follow-up, reconcile the
+backlog contract with its parser, and harden the confirmed adjacent defects
+without changing supported interfaces.
+
+### Criteria
+
+- [x] ISC-13.1: Baseline re-verified live before any edit: clean tree at
+  `4521726a185c6d1217b595939d854b485ae90abc` equal to `origin/main`, hosted
+  main CI success re-confirmed.
+- [x] ISC-13.2: Beamer slides remap projection-unsupported Unicode through
+  the math font via the shared protected-block tokenizer; protected code
+  regions stay byte-identical and the established `≥` behavior is unchanged.
+- [x] ISC-13.3: The deployed-web issue scanner fails closed on missing,
+  unsafe, or unsupported-scheme local `<img src>` targets under the same
+  resolution rules as anchors.
+- [x] ISC-13.4: Pandoc web output publishes by rename from exclusive
+  temporary targets; aux repair and shared combined-markdown writes use the
+  confined atomic writer; the favicon write refuses planted symlinks.
+- [x] ISC-13.5: Export manifests are atomic; failed exports leave no partial
+  bundle; a stale real directory at `latest` cannot fail a complete export;
+  the documented hash-copied-bytes manifest contract is preserved.
+- [x] ISC-13.6: Checkpoint output-tree digests ignore planted file symlinks.
+- [x] ISC-13.7: Malformed `experiment:` values degrade to typed defaults with
+  field-naming warnings; no raw tracebacks; non-integral integers no longer
+  truncate silently.
+- [x] ISC-13.8: Release rehearsals block the overall receipt when the two
+  runs produce different digests; determinism is enforced, not assumed.
+- [x] ISC-13.9: The backlog gate rejects `completed` rows; the closed root
+  rows are preserved verbatim in a dated closure record; the four
+  blocked-external rows and their receipts are untouched.
+- [x] ISC-13.10: The pixel-capture follow-up closed with compositor
+  screenshots; the STATUS ledger records the PR #52 final-SHA runs.
+- [x] ISC-13.11: The one-exemplar-tree-per-process isolation rule is
+  documented with its mechanism; synthetic-workspace, monkeypatch, and
+  git-skip fixes keep tests off shared state; the sys.path restructure is a
+  tracked follow-up row.
+- [x] ISC-13.12: Generated facts are regenerated by their owners; every gate
+  is green on the final tree; the work is published through a fresh reviewed
+  PR with hosted CI green and main SHA parity afterwards. Continuation:
+  the two environment-conditional calibre skips became always-running
+  contract tests, so the infrastructure suite reports zero skips.
+- [x] Anti-13.1: No interface removals, dependency changes, coverage-floor
+  changes, private-sidecar promotion, releases, tags, or deployments; PR #52
+  is not reopened.
+- [x] Anti-13.2: Skips stay explicit and optional-tool-only; pre-existing
+  failures stay distinguishable; no receipt is relabeled without evidence.
+
+### Verification
+
+Baseline: clean tree at `4521726a185c6d1217b595939d854b485ae90abc` =
+`origin/main`; hosted main CI run 33941394683 passed 65 jobs with three
+expected optional skips (re-verified live at session start). GitNexus has no
+index for this checkout, so nine read-only scout lenses audited the adjacent
+surfaces through direct source review. Findings, fixes, negative controls,
+and receipts: [2026-09-05 review record](docs/audit/REVIEW_2026-09-05.md).
 
 > Project ISA (system of record). The template is a two-layer research-paper
 > pipeline (generic `infrastructure/` Layer 1 + per-project Layer 2) delivered

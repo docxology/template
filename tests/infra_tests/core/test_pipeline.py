@@ -484,3 +484,14 @@ sys.exit(0)
         # Results should include at least the resumed stages (checkpoint stage + new stages)
         assert len(results) > 0
         assert all(isinstance(r, PipelineStageResult) for r in results)
+
+
+@pytest.mark.parametrize("projects_dir", ["projects/templates", "projects/working"])
+def test_executor_checkpoint_uses_configured_project_directory(tmp_path: Path, projects_dir: str) -> None:
+    """Alternate project collections keep logs, outputs, and checkpoints together."""
+    config = PipelineConfig(project_name="demo", repo_root=tmp_path, projects_dir=projects_dir)
+    executor = PipelineExecutor(config)
+    assert executor.checkpoint_manager.checkpoint_dir == config.project_dir / "output/.checkpoints"
+    assert executor.checkpoint_manager.save_checkpoint(1.0, 0, [], 3)
+    assert (config.project_dir / "output/.checkpoints/pipeline_checkpoint.json").is_file()
+    assert not (tmp_path / "projects/demo").exists()
