@@ -485,6 +485,51 @@ tools.
 
 The numeric ceilings are defensive resource bounds, not promises that inputs
 below them will compose or render successfully.
+
+### Source-bound presentation panels
+
+An accessible deck can use complete presentation panels while the canonical
+manuscript retains its original figure. Annotate a single-image, top-level
+Markdown figure with `data-slide-manifest="../figures/example.slides.json"`.
+Archive mode ignores this selector. Accessible mode expands the manifest's
+panels in reading order, assigns unique derivative figure labels, and keeps
+full captions in the canonical reader. Each panel has its own concise `alt`.
+
+```json
+{
+  "schema_version": "1.0",
+  "panels": [
+    {
+      "src": "../figures/example-panel-1.png",
+      "alt": "First complete panel; encodings and bounded result.",
+      "sha256": "<SHA-256 of the exact panel raster>",
+      "minimum_label_px": 64.0
+    }
+  ]
+}
+```
+
+The figure producer measures the smallest visible label in raster pixels
+(native point size times export DPI divided by 72). This is a producer
+assertion whose integrity the renderer checks; it is not OCR or a scientific
+validity assessment. Every `src` uses the declared image roots and aliases,
+not the manifest's parent directory. Manifests are required local regular
+files, limited to 1 MiB and 64 distinct panels. Duplicate or unknown JSON keys,
+ambiguous attributes, missing/remote/escaping/symlinked files, hash mismatches,
+nonfinite or nonpositive measurements, and uninspectable rasters fail before
+writer execution. Each raster also meets the existing byte and pixel bounds.
+
+After Beamer compilation, the renderer measures every matching raster's actual
+embedded dimensions in PDF points and requires the declared smallest label to
+meet `figure_label_font_pt` (at least 16 pt). Equal-sized panel rasters are
+checked using the smallest declared label, conservatively, and missing panel
+occurrences fail. `slides.density.figure-label-scale` removes the invalid PDF;
+the paired rendering boundary removes both public derivatives. The Reveal
+panel retains the same source and alternative under its responsive max-fit
+allocation. Browser zoom and final-context visual review remain separate
+requirements. Neither a digest nor a label-size gate establishes accessibility
+conformance, source-panel semantic completeness, or scientific validity.
+
 Allowlisted definition, theorem, lemma, proposition, corollary, hypothesis,
 proof, and remark blocks keep their original TeX for Beamer and acquire an
 HTML-only semantic fallback for Reveal. Anchor-only blocks and safe declarations
@@ -675,6 +720,7 @@ graph TD
 | **_slides_accessibility_contracts.py** | Projection policy and diagnostics | Owns the opt-in 16:9 typography, density, table, and figure contracts plus stable fail-closed diagnostic construction | Rendering configuration, Pandoc node helpers |
 | **_slides_accessibility_figures.py** | Figure-led frame composition | Prices figure allocation, validates writer-visible targets, and reads bounded intrinsic raster geometry only through the confined image boundary | `_slides_accessibility_image_io.py`, Pandoc JSON AST |
 | **_slides_accessibility_image_io.py** | Confined local-raster inspection | Resolves local targets inside declared roots, rejects symlink and path escapes, opens with no-follow semantics, and bounds byte/pixel metadata reads | Pillow, filesystem descriptors, accessibility contracts |
+| **_slides_presentation_variants.py** | Source-bound presentation panels | Expands bounded local panel manifests and verifies actual embedded label scale | Confined image I/O, producer hashes, pdfplumber |
 | **_slides_accessibility_limits.py** | Pandoc resource limits | Enforces the 16 MiB JSON, 100,000-node, and 128-level AST ceilings before recursive composition | Pandoc JSON AST, rendering errors |
 | **_slides_accessibility_raw_tex.py** | Raw-TeX admission | Preserves the formal-statement subset while rejecting unsupported geometry and TeX lexical translations before writer fallback | Pandoc JSON AST, accessibility contracts |
 | **_slides_accessibility_text_geometry.py** | Shared projected-text geometry | Citeproc-resolved visible text, physical-token widths, hard-break/container lines, and conservative math geometry | Pandoc JSON AST, `_slides_accessibility_contracts.py` |

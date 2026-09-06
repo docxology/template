@@ -160,6 +160,7 @@ def test_rendered_safe_area_accepts_inset_content(tmp_path: Path) -> None:
 
 @pytest.mark.slow
 @pytest.mark.requires_latex
+@pytest.mark.timeout(330)  # The real isolated-install subprocess has a 300-second bound.
 def test_base_install_keeps_archive_available_and_accessible_geometry_fails_loud(
     tmp_path: Path,
 ) -> None:

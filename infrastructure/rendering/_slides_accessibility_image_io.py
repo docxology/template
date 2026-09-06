@@ -444,8 +444,51 @@ def validate_local_image_target(
     )
 
 
+def read_confined_slide_resource(
+    target: str,
+    *,
+    source: str,
+    authorized_roots: tuple[Path, ...],
+    figure_root: Path | None,
+    maximum_bytes: int,
+) -> bytes:
+    """Read a required local presentation resource with bounded no-follow I/O."""
+
+    resolved = _resolve_local_image(
+        target,
+        source=source,
+        heading="Presentation variant",
+        authorized_roots=authorized_roots,
+        figure_root=figure_root,
+    )
+    if resolved is None:
+        raise _unsafe_path_error(
+            "a presentation resource must resolve to an existing local file",
+            source=source,
+            heading="Presentation variant",
+            target=target,
+        )
+    try:
+        with _open_confined_image(resolved) as handle:
+            metadata = os.fstat(handle.fileno())
+            if not stat.S_ISREG(metadata.st_mode) or metadata.st_size > maximum_bytes:
+                raise ValueError("presentation resource exceeds its regular-file byte contract")
+            payload = handle.read(maximum_bytes + 1)
+            if len(payload) > maximum_bytes:
+                raise ValueError("presentation resource grew beyond its byte limit")
+            return payload
+    except (OSError, ValueError) as exc:
+        raise _unsafe_path_error(
+            "a presentation resource failed bounded no-follow reading",
+            source=source,
+            heading="Presentation variant",
+            target=target,
+        ) from exc
+
+
 __all__ = [
     "IntrinsicImageGeometry",
+    "read_confined_slide_resource",
     "inspect_intrinsic_image_geometry",
     "validate_local_image_target",
 ]

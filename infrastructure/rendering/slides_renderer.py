@@ -64,6 +64,7 @@ from infrastructure.rendering._slides_beamer import (
     transform_beamer_latex,
 )
 from infrastructure.rendering._slides_beamer_geometry import reject_unsafe_accessible_beamer_geometry
+from infrastructure.rendering._slides_presentation_variants import reject_small_embedded_labels
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
 from infrastructure.rendering._slides_reveal_content import ACCESSIBLE_REVEAL_URL, ACCESSIBLE_REVEAL_VERSION
@@ -564,6 +565,11 @@ class SlidesRenderer:
             if self.config.slides_profile == "accessible":
                 _reject_accessible_beamer_overflow(temp_tex.with_suffix(".log"), compiled_pdf)
                 reject_unsafe_accessible_beamer_geometry(compiled_pdf)
+                reject_small_embedded_labels(
+                    compiled_pdf,
+                    source_file,
+                    minimum_pt=self.config.slides_figure_label_font_pt,
+                )
             ensure_pdf_at(compiled_pdf, output_file)
 
             if output_file.exists():

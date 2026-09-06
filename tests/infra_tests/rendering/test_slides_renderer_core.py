@@ -1074,7 +1074,10 @@ code
         """Only the opt-in projection profile requests Beamer's 16:9 canvas."""
 
         source = tmp_path / "00_intro.md"
-        source.write_text("# Slide 1\n\nHello.\n", encoding="utf-8")
+        source.write_text(
+            '{"blocks": [], "meta": {}}' if slides_profile == "accessible" else "# Slide 1\n\nHello.\n",
+            encoding="utf-8",
+        )
         (tmp_path / "slides").mkdir()
         captured: dict[str, list[str]] = {}
 

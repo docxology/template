@@ -77,6 +77,13 @@ consume one composed Pandoc AST; any pair-member failure removes both outputs.
 Use `render_accessible_slide_pair()` for the same explicit programmatic
 contract. Archive mode keeps the historical Beamer-required behavior.
 
+For dense manuscript figures, use the explicit `data-slide-manifest`
+[panel contract](README.md#source-bound-presentation-panels) to select ordered,
+source-bound presentation rasters. The producer supplies each raster digest,
+concise alternative, and measured smallest label in pixels; the final Beamer
+scale gate requires at least 16 points after embedding. Do not lower the floor
+or substitute higher DPI for a semantic reflow.
+
 For external or otherwise hostile manuscript material, also set the distinct
 renderer process boundary:
 

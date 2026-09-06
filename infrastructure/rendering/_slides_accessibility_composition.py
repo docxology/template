@@ -38,6 +38,7 @@ from infrastructure.rendering._slides_accessibility_figures import (
     shorten_figure_caption,
     validate_document_image_targets,
 )
+from infrastructure.rendering._slides_presentation_variants import expand_presentation_variants
 from infrastructure.rendering._slides_accessibility_limits import (
     read_bounded_pandoc_json,
     validate_accessible_ast_limits,
@@ -410,6 +411,13 @@ def compose_accessible_pandoc_document(
         authorized_image_roots=authorized_image_roots,
         figure_image_root=figure_image_root,
     )
+    document = expand_presentation_variants(
+        document,
+        source=source,
+        roots=authorized_image_roots,
+        figure_root=figure_image_root,
+    )
+    validate_accessible_ast_limits(document, source=source)
     original_blocks = document["blocks"]
     segments: list[tuple[dict[str, Any], list[dict[str, Any]]]] = []
     current_header: dict[str, Any] | None = None
