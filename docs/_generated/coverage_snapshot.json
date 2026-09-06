@@ -1,9 +1,9 @@
 {
-  "measured_at": "2026-08-16",
+  "measured_at": "2026-09-06",
   "projects": {
     "template_active_inference": {
-      "coverage_pct": "91.87 %",
-      "source_hash": "59a8e50e33f4ebcd67e3bbefb7e04c190b223c13aed514fba1ab3bf3016fb962"
+      "coverage_pct": "91.88 %",
+      "source_hash": "70af2397cbafa31a40f486786053a7b3b596ae8080ac9b0cfe1a817a10ce126c"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "91.96 %",
@@ -94,12 +94,12 @@
       "source_hash": "1685050fd6209cc06482f98382cdbf4763de643b37cbcf01970f9a611c42c3b1"
     },
     "template_textbook": {
-      "coverage_pct": "96.36 %",
+      "coverage_pct": "96.08 %",
       "source_hash": "ac5ab42c6abac42d8bf3ab657c8467edc4e2b632dce6e928bc0f70b83afa574f"
     }
   },
   "schema_version": 5,
-  "source_commit": "5f0aee2744f24dcc7357692c4c547b9b23ba274d",
+  "source_commit": "617a1d398ddc1feccbdf621c3f4e304f7aead318",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -107,7 +107,7 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "e507c513b7e38128314b447ae997e9308c4b9813e8db9af49870044c89295c67",
+        "digest": "72d32e70585ad26d1deaef0aea6c5d97199b6b97b42404e7f9a503b38a048e1c",
         "entries": [
           {
             "identity": "sha256",
@@ -129,7 +129,7 @@
           {
             "identity": "sha256",
             "path": "docs/RUN_GUIDE.md",
-            "sha256": "a4b6ab0084c48c27044298b075ea478cc3a5171a6ac6ef5edbfa5cf4e966405f",
+            "sha256": "d16c52b11b5a6381a3a6ab8f5b50eac105ec9764307b4537e4ad91ea2a8bd506",
             "type": "file"
           },
           {
@@ -184,7 +184,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "59a8e50e33f4ebcd67e3bbefb7e04c190b223c13aed514fba1ab3bf3016fb962",
+      "template_active_inference": "70af2397cbafa31a40f486786053a7b3b596ae8080ac9b0cfe1a817a10ce126c",
       "template_advanced_literature_review": "2c9b17de4031ecd571cee8b2c08963f8363e079254f3049c4ee7e8d3ad15696b",
       "template_autopoiesis": "5a921154767351fa31ff1705be13fae8680be3327c5e2308f3ad4dc6323685bc",
       "template_autoresearch_project": "0dc056217055e5c3e2ca2236a481ffb747ac8c9095dd91c459a276bf1ddc35af",
