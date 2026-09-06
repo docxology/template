@@ -9,6 +9,23 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Skip-free optional-tool coverage (2026-09-06)
+
+- The two remaining infrastructure-suite skips were complementary calibre
+  pairs: an absence-path test that only ran where calibre is missing and
+  presence-path tests that only ran where it is installed. They are now
+  environment-adaptive contract tests that always run: the MOBI absence
+  contract is exercised through an explicitly unresolvable
+  ``ebook-convert`` binary name (the same ``shutil.which`` resolution the
+  renderer performs), and the ebook-generation pipeline test asserts the
+  documented per-format degradation contract where calibre is absent
+  (EPUB and DOCX render via pandoc, MOBI fails closed, stage exits 0 with
+  partial success) alongside the full-success assertions where it is
+  present. The full infrastructure suite now reports zero skips.
+- Campaign close-out: the ISA publication criterion is closed against the
+  merged PR #53 state (hosted CI 66/66 green on the PR, main CI success at
+  the merge SHA, local/remote main parity verified).
+
 ### Adjacent-surface hardening and backlog contract closure (2026-09-05)
 
 - Beamer slides remap projection-unsupported Unicode (comparisons, arrows,
