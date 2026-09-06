@@ -15,6 +15,7 @@ import math
 import os
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote, unquote, urlsplit
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._slides_accessibility_contracts import density_error
@@ -91,6 +92,12 @@ def _panels(
             raise _error("each presentation panel requires src, alt, sha256, and minimum_label_px", source)
         if any(not isinstance(panel[key], str) or not panel[key].strip() for key in ("src", "alt", "sha256")):
             raise _error("presentation panel strings must be nonempty", source)
+        # Both derivatives share one admitted resource contract. Pandoc's
+        # LaTeX graphics writer cannot portably address these literal filename
+        # characters even when their input URI is encoded. Reject before
+        # either writer rather than returning a successful but incomplete pair.
+        if any(character in unquote(urlsplit(panel["src"]).path) for character in "#%{}\\"):
+            raise _error("presentation panel filename is not portable across HTML and TeX writers", source)
         if panel["src"] in seen:
             raise _error("presentation panels must have distinct source paths", source)
         seen.add(panel["src"])
@@ -123,6 +130,32 @@ def _panels(
     return panels
 
 
+def _authored_identifiers(document: dict[str, Any]) -> set[str]:
+    """Reserve Attr identifiers throughout the AST, including table cells.
+
+    Attr has the same structural shape on headings, inline nodes, figures,
+    code blocks, and nested table structures. A conservative shape match also
+    reserves ambiguous user data rather than risking a duplicate HTML anchor.
+    """
+    identifiers: set[str] = set()
+    pending: list[object] = [document]
+    while pending:
+        value = pending.pop()
+        if isinstance(value, dict):
+            pending.extend(value.values())
+        elif isinstance(value, list):
+            if (
+                len(value) == 3
+                and isinstance(value[0], str)
+                and value[0]
+                and isinstance(value[1], list)
+                and isinstance(value[2], list)
+            ):
+                identifiers.add(value[0])
+            pending.extend(value)
+    return identifiers
+
+
 def expand_presentation_variants(
     document: dict[str, Any],
     *,
@@ -143,7 +176,7 @@ def expand_presentation_variants(
     blocks: list[dict[str, Any]] = []
     consumed: set[int] = set()
     expanded_nodes = 0
-    identifiers = {block["c"][0][0] for block in updated["blocks"] if block.get("t") == "Figure"}
+    identifiers = _authored_identifiers(updated)
     for block_index, block in enumerate(updated["blocks"], start=1):
         images = _image_nodes(block)
         annotated = [image for image in images if MANIFEST_ATTRIBUTE in _attributes(image, source)]
@@ -152,6 +185,11 @@ def expand_presentation_variants(
             continue
         if block.get("t") != "Figure" or len(images) != 1 or len(annotated) != 1:
             raise _error("presentation manifests require a top-level figure with one image", source)
+        if _authored_identifiers({"content": block["c"][1:]}):
+            raise _error(
+                "presentation figures cannot contain nested identifiers; put the evidence anchor on the outer Figure",
+                source,
+            )
         image = annotated[0]
         attributes = _attributes(image, source)
         consumed.add(id(image))
@@ -222,7 +260,9 @@ def relocate_presentation_panels(
         )
         if resolved is None:
             raise _error("selected panel no longer resolves to a confined local file", source)
-        image["c"][2][0] = Path(os.path.relpath(resolved.path, output_dir)).as_posix()
+        # A Pandoc image target is a URI. A literal '#' or '?' in a filename
+        # must not become a fragment or query when Reveal links the resource.
+        image["c"][2][0] = quote(Path(os.path.relpath(resolved.path, output_dir)).as_posix(), safe="/")
 
 
 def reject_small_embedded_labels(pdf: Path, composed_source: Path, *, minimum_pt: float) -> None:

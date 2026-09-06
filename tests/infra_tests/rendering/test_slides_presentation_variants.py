@@ -8,7 +8,7 @@ import json
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
-from urllib.parse import unquote
+from urllib.parse import quote, unquote, urlsplit
 
 from PIL import Image, ImageDraw
 import pytest
@@ -103,6 +103,74 @@ def test_variant_identifiers_are_unique_for_anonymous_and_colliding_figures(tmp_
     assert len(labels) == 4
     assert len(set(labels)) == 4
     assert all(labels)
+
+
+def test_variant_identifiers_reserve_headings_and_nested_inline_anchors(tmp_path: Path) -> None:
+    document, _ = _fixture(tmp_path)
+    collision = "fig:evidence-slide-panel-1"
+    document["blocks"][0]["c"][1][0] = collision
+    document["blocks"].insert(
+        1, {"t": "Para", "c": [{"t": "Span", "c": [[collision + "-variant", [], []], [{"t": "Str", "c": "Anchor"}]]}]}
+    )
+    result = _compose(tmp_path, document)
+    figures = [block for block in result["blocks"] if block["t"] == "Figure"]
+    assert figures[0]["c"][0][0] == collision + "-variant-variant"
+
+
+@pytest.mark.parametrize("owner", ("image", "wrapper", "caption"))
+def test_variant_rejects_nested_identifiers_before_cloning(tmp_path: Path, owner: str) -> None:
+    document, _ = _fixture(tmp_path, panels=2)
+    figure = document["blocks"][-1]
+    image = _image_nodes(figure)[0]
+    if owner == "image":
+        image["c"][0][0] = "image-anchor"
+    elif owner == "wrapper":
+        figure["c"][2][0]["c"] = [{"t": "Span", "c": [["wrapper-anchor", [], []], [image]]}]
+    else:
+        figure["c"][1][1] = [
+            {"t": "Plain", "c": [{"t": "Span", "c": [["caption-anchor", [], []], [{"t": "Str", "c": "Caption"}]]}]}
+        ]
+    with pytest.raises(RenderingError, match="cannot contain nested identifiers"):
+        _compose(tmp_path, document)
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize("filename", ("panel?1.png", "panel 1.png"))
+def test_real_pair_preserves_uri_sensitive_panel_filenames(tmp_path: Path, filename: str) -> None:
+    figures = tmp_path / "figures"
+    _, manifest = _fixture(figures)
+    (figures / "panel-0.png").rename(figures / filename)
+    manifest["panels"][0]["src"] = quote(filename, safe="/")
+    (figures / "panels.json").write_text(json.dumps(manifest))
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    source = manuscript / "source.md"
+    source.write_text(
+        "## Evidence\n\n![Canonical](../figures/canonical.png)"
+        '{#fig:evidence data-slide-manifest="../figures/panels.json"}\n'
+    )
+    output = tmp_path / "slides"
+    renderer = SlidesRenderer(RenderingConfig(slides_profile="accessible", slides_dir=str(output)))
+    pdf, html = renderer.render_accessible_pair(source, manuscript_dir=manuscript, figures_dir=figures)
+    assert pdf.exists()
+    targets = _ImageTargets()
+    targets.feed(html.read_text())
+    assert len(targets.sources) == 1
+    target = urlsplit(targets.sources[0])
+    assert not target.query and not target.fragment
+    linked = (html.parent / unquote(target.path)).resolve()
+    assert linked == (figures / filename).resolve()
+    assert linked.read_bytes() == (figures / filename).read_bytes()
+
+
+@pytest.mark.parametrize("filename", ("panel#1.png", "panel%20.png", "panel{1}.png", "panel\\1.png"))
+def test_variant_rejects_nonportable_writer_filenames(tmp_path: Path, filename: str) -> None:
+    document, manifest = _fixture(tmp_path)
+    (tmp_path / "panel-0.png").rename(tmp_path / filename)
+    manifest["panels"][0]["src"] = quote(filename, safe="/")
+    (tmp_path / "panels.json").write_text(json.dumps(manifest))
+    with pytest.raises(RenderingError, match="filename is not portable"):
+        _compose(tmp_path, document)
 
 
 @pytest.mark.parametrize(

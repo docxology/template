@@ -518,8 +518,15 @@ files, limited to 1 MiB and 64 distinct panels. Duplicate or unknown JSON keys,
 ambiguous attributes, missing/remote/escaping/symlinked files, hash mismatches,
 nonfinite or nonpositive measurements, and uninspectable rasters fail before
 writer execution. Each raster also meets the existing byte and pixel bounds.
-Selected targets are relocated relative to the derivative output directory for
-both writers, so figure-root aliases remain usable by the linked HTML reader.
+Selected targets are relocated as encoded URIs relative to the derivative
+output directory for both writers, so spaces and query punctuation in filenames
+remain usable by the linked HTML reader. Literal hash, percent, brace, and
+backslash filename characters are rejected before either writer because the
+TeX graphics path cannot portably preserve them. Generated panel IDs reserve
+the entire authored identifier namespace, including headings and nested spans.
+Place evidence anchors on the outer Figure: selected figures with nested image,
+span, or caption identifiers are rejected before cloning to prevent duplicate
+anchors or broken local references across panels.
 Keep the generated HTML and its referenced figure directory together when
 serving or distributing the presentation.
 

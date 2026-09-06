@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "617a1d398ddc1feccbdf621c3f4e304f7aead318",
+  "source_commit": "4417522cdde1e242a8d6b42038f68dce41797076",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
