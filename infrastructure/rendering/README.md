@@ -529,6 +529,9 @@ panel retains the same source and alternative under its responsive max-fit
 allocation. Browser zoom and final-context visual review remain separate
 requirements. Neither a digest nor a label-size gate establishes accessibility
 conformance, source-panel semantic completeness, or scientific validity.
+Unannotated images have no producer label measurement and are outside this
+label-size check. Projects requiring a complete figure-label audit must select
+a measured manifest for every required figure and verify that inventory.
 
 Allowlisted definition, theorem, lemma, proposition, corollary, hypothesis,
 proof, and remark blocks keep their original TeX for Beamer and acquire an

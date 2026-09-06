@@ -141,7 +141,8 @@ def expand_presentation_variants(
     blocks: list[dict[str, Any]] = []
     consumed: set[int] = set()
     expanded_nodes = 0
-    for block in updated["blocks"]:
+    identifiers = {block["c"][0][0] for block in updated["blocks"] if block.get("t") == "Figure"}
+    for block_index, block in enumerate(updated["blocks"], start=1):
         images = _image_nodes(block)
         annotated = [image for image in images if MANIFEST_ATTRIBUTE in _attributes(image, source)]
         if not annotated:
@@ -155,7 +156,12 @@ def expand_presentation_variants(
         panels = _panels(attributes[MANIFEST_ATTRIBUTE], source=source, roots=roots, figure_root=figure_root)
         for index, panel in enumerate(panels, start=1):
             variant = copy.deepcopy(block)
-            variant["c"][0][0] += f"-slide-panel-{index}"
+            base = variant["c"][0][0] or f"presentation-figure-{block_index}"
+            identifier = f"{base}-slide-panel-{index}"
+            while identifier in identifiers:
+                identifier += "-variant"
+            identifiers.add(identifier)
+            variant["c"][0][0] = identifier
             selected = _image_nodes(variant)[0]
             selected["c"][2][0] = panel["src"]
             selected["c"][1] = [{"t": "Str", "c": panel["alt"]}]

@@ -12,7 +12,6 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Final
 
-from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
 from infrastructure.rendering._pdf_unicode_remap import _T, _map_prose_glyphs
@@ -22,7 +21,10 @@ from infrastructure.rendering._slides_math_header import write_slides_math_heade
 from infrastructure.rendering._slides_tex_figures import normalize_accessible_projection_latex
 from infrastructure.rendering._slides_tex_tables import inset_accessible_longtables
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.latex_log_quality import parse_latex_log_findings
+from infrastructure.rendering.latex_log_quality import parse_latex_log_findings as parse_latex_log_findings
+from infrastructure.rendering._slides_beamer_geometry import (
+    reject_accessible_beamer_overflow,
+)
 from infrastructure.rendering.latex_texttt import (
     constrain_includegraphics_textheight,
     make_known_literals_breakable,
@@ -115,31 +117,8 @@ _SLIDES_GLYPH_REMAP: Final[dict[str, str]] = {
 
 
 def _reject_accessible_beamer_overflow(log_file: Path, compiled_pdf: Path) -> None:
-    """Discard a Beamer derivative whose fixed accessible layout overflowed."""
-
-    blocked = {r"Overfull \hbox", r"Overfull \vbox"}
-    findings = [
-        finding
-        for finding in parse_latex_log_findings(log_file, blocked_layout_kinds=blocked)
-        if finding.kind in blocked
-    ]
-    if not findings:
-        return
-    compiled_pdf.unlink(missing_ok=True)
-    examples = [f"{finding.kind} at line {finding.line_number}: {finding.message}" for finding in findings[:5]]
-    raise RenderingError(
-        "[slides.density.beamer-overflow] Accessible Beamer content exceeds its fixed frame geometry",
-        context={
-            "diagnostic_code": "slides.density.beamer-overflow",
-            "log_file": str(log_file),
-            "finding_count": len(findings),
-            "examples": examples,
-        },
-        suggestions=[
-            "Split the source at a semantic block boundary or shorten the projected excerpt.",
-            "Keep complete prose, captions, and tables in the linked canonical HTML manuscript.",
-        ],
-    )
+    """Compatibility adapter for the shared rendered-geometry validation."""
+    reject_accessible_beamer_overflow(log_file, compiled_pdf)
 
 
 def _slide_bibliography_args(manuscript_dir: Path | None) -> list[str]:

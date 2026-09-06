@@ -79,6 +79,20 @@ def test_variant_panels_preserve_source_and_reading_order(tmp_path: Path) -> Non
     assert "fig:evidence-slide-panel-2" in str(result)
 
 
+def test_variant_identifiers_are_unique_for_anonymous_and_colliding_figures(tmp_path: Path) -> None:
+    document, _ = _fixture(tmp_path)
+    original = document["blocks"][-1]
+    for label in ("", "", "fig:evidence-slide-panel-1"):
+        extra = copy.deepcopy(original)
+        extra["c"][0][0] = label
+        document["blocks"].append(extra)
+    result = _compose(tmp_path, document)
+    labels = [block["c"][0][0] for block in result["blocks"] if block["t"] == "Figure"]
+    assert len(labels) == 4
+    assert len(set(labels)) == 4
+    assert all(labels)
+
+
 @pytest.mark.parametrize(
     "target", ("missing.json", "../escape.json", "file:///tmp/escape.json", "https://invalid.example/a")
 )
