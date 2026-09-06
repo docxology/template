@@ -235,6 +235,170 @@ def test_software_heritage_success(httpserver: HTTPServer, tmp_path: Path) -> No
     assert receipt.extra.get("save_request_status") == "accepted"
 
 
+def test_software_heritage_check_status_verified(httpserver: HTTPServer) -> None:
+    """A full save visit verifies archival; only GET requests are issued."""
+    httpserver.expect_request(
+        "/origin/save/git/url/https://github.com/example/repo/",
+        method="GET",
+    ).respond_with_json({"save_request_status": "accepted", "save_task_status": "succeeded", "visit_status": "full"})
+    httpserver.expect_request(
+        "/origin/https://github.com/example/repo/visits/",
+        method="GET",
+    ).respond_with_json([{"visit_id": 1}])
+
+    provider = SoftwareHeritageProvider(base_url=httpserver.url_for(""))
+    receipt = provider.check_status("https://github.com/example/repo")
+    assert receipt.status == "ok"
+    assert receipt.error is None
+    assert receipt.bundle_sha256 is None
+    assert receipt.extra["state"] == "verified"
+    assert receipt.extra["save_request_status"] == "accepted"
+    assert receipt.extra["visit_count"] == "1"
+
+
+def test_software_heritage_check_status_verified_from_visits_alone(httpserver: HTTPServer) -> None:
+    """Automatic harvesting archives origins with no save request on record."""
+    httpserver.expect_request(
+        "/origin/save/git/url/https://github.com/example/repo/",
+        method="GET",
+    ).respond_with_data("", status=404)
+    httpserver.expect_request(
+        "/origin/https://github.com/example/repo/visits/",
+        method="GET",
+    ).respond_with_json([{"visit_id": 7}, {"visit_id": 9}])
+
+    provider = SoftwareHeritageProvider(base_url=httpserver.url_for(""))
+    receipt = provider.check_status("https://github.com/example/repo")
+    assert receipt.status == "ok"
+    assert receipt.extra["state"] == "verified"
+    assert receipt.extra["save_request_status"] == "none"
+
+
+def test_software_heritage_check_status_pending(httpserver: HTTPServer) -> None:
+    httpserver.expect_request(
+        "/origin/save/git/url/https://github.com/example/repo/",
+        method="GET",
+    ).respond_with_json({"save_request_status": "pending", "save_task_status": "scheduled"})
+    httpserver.expect_request(
+        "/origin/https://github.com/example/repo/visits/",
+        method="GET",
+    ).respond_with_json([])
+
+    provider = SoftwareHeritageProvider(base_url=httpserver.url_for(""))
+    receipt = provider.check_status("https://github.com/example/repo")
+    assert receipt.extra["state"] == "pending"
+
+
+def test_software_heritage_check_status_excluded(httpserver: HTTPServer) -> None:
+    httpserver.expect_request(
+        "/origin/save/git/url/https://github.com/example/repo/",
+        method="GET",
+    ).respond_with_json({"save_request_status": "rejected"})
+    httpserver.expect_request(
+        "/origin/https://github.com/example/repo/visits/",
+        method="GET",
+    ).respond_with_json([])
+
+    provider = SoftwareHeritageProvider(base_url=httpserver.url_for(""))
+    receipt = provider.check_status("https://github.com/example/repo")
+    assert receipt.extra["state"] == "excluded"
+
+
+def test_software_heritage_check_status_unavailable(httpserver: HTTPServer) -> None:
+    """No save request and no visits means the origin is not tracked yet."""
+    httpserver.expect_request(
+        "/origin/save/git/url/https://github.com/example/repo/",
+        method="GET",
+    ).respond_with_data("", status=404)
+    httpserver.expect_request(
+        "/origin/https://github.com/example/repo/visits/",
+        method="GET",
+    ).respond_with_json([])
+
+    provider = SoftwareHeritageProvider(base_url=httpserver.url_for(""))
+    receipt = provider.check_status("https://github.com/example/repo")
+    assert receipt.extra["state"] == "unavailable"
+
+
+def test_software_heritage_check_status_rate_limited(httpserver: HTTPServer) -> None:
+    httpserver.expect_request(
+        "/origin/save/git/url/https://github.com/example/repo/",
+        method="GET",
+    ).respond_with_data("", status=429)
+    httpserver.expect_request(
+        "/origin/https://github.com/example/repo/visits/",
+        method="GET",
+    ).respond_with_data("", status=429)
+
+    provider = SoftwareHeritageProvider(base_url=httpserver.url_for(""))
+    receipt = provider.check_status("https://github.com/example/repo")
+    assert receipt.status == "ok"
+    assert receipt.extra["state"] == "rate-limited"
+
+
+def test_software_heritage_check_status_transport_error() -> None:
+    """A connection failure yields an error receipt, not a fabricated state."""
+    provider = SoftwareHeritageProvider(base_url="http://127.0.0.1:1")
+    receipt = provider.check_status("https://github.com/example/repo")
+    assert receipt.status == "error"
+    assert "Software Heritage HTTP error" in (receipt.error or "")
+
+
+def test_software_heritage_check_status_aggregates_git_suffix_variant(httpserver: HTTPServer) -> None:
+    """Git remotes carry .git but SWH keys the bare URL; strongest evidence wins."""
+    httpserver.expect_request(
+        "/origin/save/git/url/https://github.com/example/repo.git/",
+        method="GET",
+    ).respond_with_data("", status=404)
+    httpserver.expect_request(
+        "/origin/https://github.com/example/repo.git/visits/",
+        method="GET",
+    ).respond_with_json([])
+    httpserver.expect_request(
+        "/origin/save/git/url/https://github.com/example/repo/",
+        method="GET",
+    ).respond_with_json({"save_request_status": "accepted", "save_task_status": "succeeded", "visit_status": "full"})
+    httpserver.expect_request(
+        "/origin/https://github.com/example/repo/visits/",
+        method="GET",
+    ).respond_with_json([{"visit_id": 3}])
+
+    provider = SoftwareHeritageProvider(base_url=httpserver.url_for(""))
+    receipt = provider.check_status("https://github.com/example/repo.git")
+    assert receipt.status == "ok"
+    assert receipt.extra["state"] == "verified"
+    assert receipt.extra["save_request_status"] == "none"
+    assert receipt.extra["save_request_status_normalized_1"] == "accepted"
+
+
+def test_software_heritage_check_status_save_list_payload(httpserver: HTTPServer) -> None:
+    """The live save endpoint answers with a list of requests; parse it anyway."""
+    httpserver.expect_request(
+        "/origin/save/git/url/https://github.com/example/repo/",
+        method="GET",
+    ).respond_with_json(
+        [
+            {
+                "id": 2375873,
+                "save_request_status": "accepted",
+                "save_task_status": "succeeded",
+                "visit_status": "full",
+            }
+        ]
+    )
+    httpserver.expect_request(
+        "/origin/https://github.com/example/repo/visits/",
+        method="GET",
+    ).respond_with_json([{"visit_id": 1}])
+
+    provider = SoftwareHeritageProvider(base_url=httpserver.url_for(""))
+    receipt = provider.check_status("https://github.com/example/repo")
+    assert receipt.status == "ok"
+    assert receipt.extra["state"] == "verified"
+    assert receipt.extra["save_request_status"] == "accepted"
+    assert receipt.extra["save_task_status"] == "succeeded"
+
+
 # ---------------------------------------------------------------------------
 # archive_publication orchestrator
 # ---------------------------------------------------------------------------

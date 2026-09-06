@@ -144,6 +144,44 @@ def archive_publication(
     return run
 
 
+def check_publication_status(
+    repo_url: str,
+    *,
+    base_url: str = "https://archive.softwareheritage.org/api/1",
+) -> ArchivalReceipt:
+    """Refresh archival state for one origin from credential-free evidence.
+
+    Read-only: queries the provider's public status endpoints and returns
+    the observation receipt. No deposit is attempted, so no credentials are
+    required and nothing is submitted to the provider.
+    """
+    from .providers import SoftwareHeritageProvider  # noqa: PLC0415 — avoids a provider cycle at import time
+
+    return SoftwareHeritageProvider(base_url=base_url).check_status(repo_url)
+
+
+def resolve_git_origin_url(git_dir: Path) -> str | None:
+    """Return the origin remote URL for a git working tree, or ``None``.
+
+    Uses real ``git`` so includes and walk-up resolution behave exactly as
+    Git itself would for the caller's checkout.
+    """
+    import subprocess  # noqa: PLC0415 — subprocess keeps this a real git query
+
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(git_dir), "remote", "get-url", "origin"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    url = result.stdout.strip()
+    return url if url.startswith(("http://", "https://", "git@")) else None
+
+
 def _deposit_with_manifest(
     provider: ArchivalProvider,
     bundle: Path,
