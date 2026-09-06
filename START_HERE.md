@@ -22,6 +22,11 @@ Honest framing: this is Daniel Ari Friedman's research OS, Apache 2.0-licensed. 
 - For a broader role-based entry map, see "Choose your path" below.
 
 ## Step 0: Install prerequisites
+**One-shot automated option:** `bash scripts/shell/setup-system-deps.sh`
+detects your OS and installs everything below — `pandoc`, a XeLaTeX TeX
+distribution, the LaTeX packages minimal distributions lack, and `uv` — then
+verifies with the repository's LaTeX package validator. It is idempotent;
+add `--check` to verify without installing anything. The manual steps follow.
 
 You need four tools before running anything. Check what you have and install what is missing.
 

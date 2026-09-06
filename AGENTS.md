@@ -1309,6 +1309,9 @@ brew install --cask mactex
 #### Missing Dependencies
 
 ```bash
+# One-shot (macOS / Debian-Ubuntu): installs pandoc, a XeLaTeX TeX
+# distribution, and missing LaTeX packages; idempotent, --check verifies only
+bash scripts/shell/setup-system-deps.sh
 # Install system dependencies
 # Ubuntu/Debian:
 sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended fonts-dejavu

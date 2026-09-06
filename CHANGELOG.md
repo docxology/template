@@ -28,6 +28,23 @@ not to the contents of any specific workspace.
   provider evidence, not external authority. Public archival submission
   (save-code-now) remains owner-authorized work.
 
+### One-shot system dependency setup (2026-09-06)
+
+- ``scripts/shell/setup-system-deps.sh`` installs and verifies the external
+  toolchain ``uv`` cannot provision: pandoc, a XeLaTeX TeX distribution
+  (BasicTeX on macOS, ``texlive-xetex`` + ``texlive-latex-extra`` on
+  Debian/Ubuntu), and the LaTeX packages minimal distributions lack —
+  detected via ``kpsewhich`` with the sty→tlmgr name mapping
+  (``subcaption``→``caption``, ``bm``→``tools``). Idempotent: present tools
+  are skipped. Fail-closed: when elevation is required and stdin is not a
+  TTY it prints the exact commands and exits 1 instead of hanging;
+  ``--check`` verifies without installing. Verification runs
+  ``infrastructure.rendering.latex_package_validator`` end-to-end.
+- ``scripts/shell/health-check.sh`` now fails on missing pandoc/xelatex
+  (both are required for rendering) and its error counters use
+  ``set -e``-safe increments so a first failure no longer aborts the
+  remaining diagnostics.
+
 ### Test collection groundwork, CI gate, and rehearsal machinery (2026-09-06)
 
 - Root-level pytest runs now use ``--import-mode=importlib`` as groundwork for
