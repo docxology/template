@@ -9,6 +9,25 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Archival tracker refresh and credential-free status checks (2026-09-06)
+
+- ``SoftwareHeritageProvider.check_status`` (plus
+  ``check_publication_status``, ``resolve_git_origin_url``, and a
+  ``--check-status`` mode on both archival CLIs) refreshes Software
+  Heritage's public archival state from credential-free ``GET`` evidence —
+  save-queue plus origin-visits, aggregated across the ``.git``/bare URL
+  variants, tolerant of both save-payload shapes the live API returns. It
+  never posts, so it cannot trigger a save.
+- The archival tracker snapshot
+  (``docs/maintenance/software-heritage-archival.md``) was refreshed with a
+  full 61-origin census as of 2026-09-06: 17 verified archived, 43 not yet
+  archived, 1 rate-limited mid-census (recorded as unknown). The 2026-06-27
+  "accepted/pending" list has fully landed.
+- ``ARCHIVAL-TRACKER-MIN-1`` closed with evidence in
+  ``docs/audit/BACKLOG-CLOSURE-2026-09-06.md``: the row needed credential-free
+  provider evidence, not external authority. Public archival submission
+  (save-code-now) remains owner-authorized work.
+
 ### Test collection groundwork, CI gate, and rehearsal machinery (2026-09-06)
 
 - Root-level pytest runs now use ``--import-mode=importlib`` as groundwork for

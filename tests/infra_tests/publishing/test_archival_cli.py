@@ -92,3 +92,105 @@ class TestArchivalCliMain:
                     "zenodo",
                 ]
             )
+
+    def test_check_status_from_repo_url(self, httpserver, capsys) -> None:
+        httpserver.expect_request(
+            "/origin/save/git/url/https://github.com/example/repo/",
+            method="GET",
+        ).respond_with_json(
+            {"save_request_status": "accepted", "save_task_status": "succeeded", "visit_status": "full"}
+        )
+        httpserver.expect_request(
+            "/origin/https://github.com/example/repo/visits/",
+            method="GET",
+        ).respond_with_json([{"visit_id": 1}])
+
+        exit_code = archival_cli.main(
+            [
+                "--check-status",
+                "--repo-url",
+                "https://github.com/example/repo",
+                "--providers",
+                "software_heritage",
+                "--base-url",
+                httpserver.url_for(""),
+            ]
+        )
+
+        captured = capsys.readouterr()
+        payload = json.loads(captured.out)
+        assert exit_code == 0
+        assert payload["status"] == "ok"
+        assert payload["extra"]["state"] == "verified"
+
+    def test_check_status_from_git_dir(self, tmp_path: Path, httpserver, capsys) -> None:
+        import subprocess
+
+        repo = tmp_path / "repo"
+        repo.mkdir()
+        subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+        subprocess.run(
+            ["git", "remote", "add", "origin", "https://github.com/example/repo"],
+            cwd=repo,
+            check=True,
+        )
+        httpserver.expect_request(
+            "/origin/save/git/url/https://github.com/example/repo/",
+            method="GET",
+        ).respond_with_data("", status=404)
+        httpserver.expect_request(
+            "/origin/https://github.com/example/repo/visits/",
+            method="GET",
+        ).respond_with_json([])
+
+        exit_code = archival_cli.main(
+            [
+                "--check-status",
+                "--git-dir",
+                str(repo),
+                "--providers",
+                "software_heritage",
+                "--base-url",
+                httpserver.url_for(""),
+            ]
+        )
+
+        captured = capsys.readouterr()
+        payload = json.loads(captured.out)
+        assert exit_code == 0
+        assert payload["extra"]["state"] == "unavailable"
+
+    def test_check_status_rejects_commit(self) -> None:
+        with pytest.raises(SystemExit, match="no deposits"):
+            archival_cli.main(
+                [
+                    "--check-status",
+                    "--repo-url",
+                    "https://github.com/example/repo",
+                    "--providers",
+                    "software_heritage",
+                    "--commit",
+                ]
+            )
+
+    def test_check_status_rejects_other_providers(self) -> None:
+        with pytest.raises(SystemExit, match="software_heritage"):
+            archival_cli.main(
+                [
+                    "--check-status",
+                    "--repo-url",
+                    "https://github.com/example/repo",
+                    "--providers",
+                    "zenodo",
+                ]
+            )
+
+    def test_check_status_requires_exactly_one_source(self) -> None:
+        with pytest.raises(SystemExit, match="exactly one"):
+            archival_cli.main(
+                [
+                    "--check-status",
+                    "--providers",
+                    "software_heritage",
+                ]
+            )
