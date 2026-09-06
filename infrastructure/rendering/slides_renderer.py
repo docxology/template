@@ -47,10 +47,12 @@ from infrastructure.rendering._slides_accessibility import (
     enhance_accessible_reveal,
     load_and_compose_pandoc_json,
 )
-from infrastructure.rendering._slides_beamer_geometry import reject_unsafe_accessible_beamer_geometry
+from infrastructure.rendering._slides_beamer_geometry import (
+    reject_accessible_beamer_overflow as _reject_accessible_beamer_overflow,
+    reject_unsafe_accessible_beamer_geometry,
+)
 from infrastructure.rendering._slides_framebreaks import split_long_slide_frames
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.latex_log_quality import parse_latex_log_findings
 from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
 from infrastructure.rendering.latex_texttt import (
     constrain_includegraphics_textheight,
@@ -88,34 +90,6 @@ _SECTION_REF_RE = re.compile(
     r"(?P<authored_open>\()?"
     r"\\(?P<command>ref|eqref)\{(?P<label>sec:[^}]+)\}"
 )
-
-
-def _reject_accessible_beamer_overflow(log_file: Path, compiled_pdf: Path) -> None:
-    """Discard a Beamer derivative whose fixed accessible layout overflowed."""
-
-    blocked = {r"Overfull \hbox", r"Overfull \vbox"}
-    findings = [
-        finding
-        for finding in parse_latex_log_findings(log_file, blocked_layout_kinds=blocked)
-        if finding.kind in blocked
-    ]
-    if not findings:
-        return
-    compiled_pdf.unlink(missing_ok=True)
-    examples = [f"{finding.kind} at line {finding.line_number}: {finding.message}" for finding in findings[:5]]
-    raise RenderingError(
-        "[slides.density.beamer-overflow] Accessible Beamer content exceeds its fixed frame geometry",
-        context={
-            "diagnostic_code": "slides.density.beamer-overflow",
-            "log_file": str(log_file),
-            "finding_count": len(findings),
-            "examples": examples,
-        },
-        suggestions=[
-            "Split the source at a semantic block boundary or shorten the projected excerpt.",
-            "Keep complete prose, captions, and tables in the linked canonical HTML manuscript.",
-        ],
-    )
 
 
 def _slide_bibliography_args(manuscript_dir: Path | None) -> list[str]:
@@ -236,6 +210,7 @@ class SlidesRenderer:
 
         render_source = source_file
         temporary_sources: tuple[Path, ...] = ()
+        accessible_resource_roots: tuple[Path, ...] = ()
         if self.config.slides_profile == "accessible":
             # A failed strict composition must not leave a prior derivative
             # that can be mistaken for the current source.
@@ -244,6 +219,10 @@ class SlidesRenderer:
                 source_file,
                 output_dir,
                 manuscript_dir=manuscript_dir,
+                figures_dir=figures_dir,
+            )
+            accessible_resource_roots = tuple(
+                dict.fromkeys(path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None)
             )
 
         try:
@@ -255,6 +234,7 @@ class SlidesRenderer:
                     manuscript_dir,
                     figures_dir,
                     strict_cross_deck_refs=strict_cross_deck_refs,
+                    accessible_resource_roots=accessible_resource_roots,
                 )
             # For reveal.js, use direct pandoc rendering.
             return self._render_revealjs(
@@ -263,6 +243,7 @@ class SlidesRenderer:
                 manuscript_dir,
                 figures_dir,
                 strict_cross_deck_refs=strict_cross_deck_refs,
+                accessible_resource_roots=accessible_resource_roots,
             )
         finally:
             for temporary in temporary_sources:
@@ -307,11 +288,15 @@ class SlidesRenderer:
         render_source = source_file
         temporary_sources: tuple[Path, ...] = ()
         completed = False
+        accessible_resource_roots = tuple(
+            dict.fromkeys(path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None)
+        )
         try:
             render_source, temporary_sources = self._prepare_accessible_source(
                 source_file,
                 output_dir,
                 manuscript_dir=manuscript_dir,
+                figures_dir=figures_dir,
             )
             pdf_result = self._render_beamer_with_paths(
                 render_source,
@@ -319,6 +304,7 @@ class SlidesRenderer:
                 manuscript_dir,
                 figures_dir,
                 strict_cross_deck_refs=strict_cross_deck_refs,
+                accessible_resource_roots=accessible_resource_roots,
             )
             html_result = self._render_revealjs(
                 render_source,
@@ -326,6 +312,7 @@ class SlidesRenderer:
                 manuscript_dir,
                 figures_dir,
                 strict_cross_deck_refs=strict_cross_deck_refs,
+                accessible_resource_roots=accessible_resource_roots,
             )
             completed = True
             return pdf_result, html_result
@@ -342,6 +329,7 @@ class SlidesRenderer:
         output_dir: Path,
         *,
         manuscript_dir: Path | None,
+        figures_dir: Path | None,
     ) -> tuple[Path, tuple[Path, ...]]:
         """Resolve citations, then compose one bounded Pandoc JSON document."""
 
@@ -387,6 +375,10 @@ class SlidesRenderer:
                 raw_json,
                 policy=self.config.accessible_slide_policy(),
                 source=str(source_file),
+                authorized_image_roots=tuple(
+                    path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None
+                ),
+                figure_image_root=figures_dir,
             )
             try:
                 temporary.write_text(
@@ -435,6 +427,7 @@ class SlidesRenderer:
         figures_dir: Path | None = None,
         *,
         strict_cross_deck_refs: bool = False,
+        accessible_resource_roots: tuple[Path, ...] = (),
     ) -> Path:
         """Render reveal.js slides."""
         theme = _ACCESSIBLE_REVEAL_THEME if self.config.slides_profile == "accessible" else self.config.slide_theme
@@ -461,10 +454,11 @@ class SlidesRenderer:
                 ]
             )
         cmd.extend(_slide_bibliography_args(manuscript_dir))
-        if manuscript_dir is not None:
-            cmd.extend(["--resource-path", str(manuscript_dir)])
-        if figures_dir is not None:
-            cmd.extend(["--resource-path", str(figures_dir)])
+        resource_roots = accessible_resource_roots or tuple(
+            path for path in (manuscript_dir, figures_dir) if path is not None
+        )
+        for resource_root in dict.fromkeys(resource_roots):
+            cmd.extend(["--resource-path", str(resource_root)])
 
         logger.info(f"Generating reveal.js slides from {source_file}")
 
@@ -521,6 +515,7 @@ class SlidesRenderer:
         figures_dir: Path | None,
         *,
         strict_cross_deck_refs: bool = False,
+        accessible_resource_roots: tuple[Path, ...] = (),
     ) -> Path:
         """Render beamer slides with proper figure path handling.
 
@@ -590,6 +585,10 @@ class SlidesRenderer:
         # Inject the math-font subset of the manuscript preamble so
         # \mid, \ll, \gg etc. render cleanly in slide decks without
         # pulling in the full combined-PDF preamble.
+        profile = self.config.security()
+        preamble_file = manuscript_dir / "preamble.md" if manuscript_dir is not None else None
+        if preamble_file is not None and preamble_file.exists():
+            profile.validate_source(preamble_file)
         math_header = write_slides_math_header(
             manuscript_dir,
             output_dir,
@@ -601,10 +600,11 @@ class SlidesRenderer:
             cmd.extend(["-H", str(math_header)])
 
         # Add resource paths if provided
-        if manuscript_dir:
-            cmd.extend(["--resource-path", str(manuscript_dir)])
-        if figures_dir:
-            cmd.extend(["--resource-path", str(figures_dir)])
+        resource_roots = accessible_resource_roots or tuple(
+            path for path in (manuscript_dir, figures_dir) if path is not None
+        )
+        for resource_root in dict.fromkeys(resource_roots):
+            cmd.extend(["--resource-path", str(resource_root)])
 
         logger.info(f"Generating beamer slides from {source_file}")
 
@@ -615,7 +615,7 @@ class SlidesRenderer:
                 check=True,
                 capture_output=True,
                 text=True,
-                **subprocess_options(self.config.security(), 600),
+                **subprocess_options(profile, 600),
             )
 
             # Read LaTeX content and fix figure paths
@@ -699,6 +699,16 @@ class SlidesRenderer:
                         "Inserted safe frame breaks in %d dense slide frame(s)",
                         framebreak_replacements,
                     )
+
+            if (self.config.slides_profile == "accessible" or profile.untrusted) and "^^" in tex_content:
+                temp_tex.unlink(missing_ok=True)
+                raise RenderingError(
+                    "[slides.security.tex-lexical-translation] Generated slide TeX contains forbidden lexical translation",
+                    context={
+                        "diagnostic_code": "slides.security.tex-lexical-translation",
+                        "source": str(source_file),
+                    },
+                )
 
             # Write fixed LaTeX back
             _tmp = temp_tex.with_suffix(temp_tex.suffix + ".tmp")

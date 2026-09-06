@@ -58,6 +58,9 @@ This is a **GitHub Template Repository** that gives you:
 - ✅ **Project structure** with clear separation of concerns
 - ✅ **Test-driven development** setup with coverage requirements
 - ✅ **Automated PDF generation** from markdown sources
+- ✅ **Opt-in accessible presentation composition** with transactional
+  Beamer/Reveal pairs, projection-scale typography, semantic splitting, and
+  fail-closed density diagnostics
 - ✅ **Thin orchestrator pattern** for maintainable code
 - ✅ **Methods orchestration** linking pipeline contracts, methods prose, artifacts, and evidence
 - ✅ **Executable methods contracts** with DAG, script, artifact, and verification validation
@@ -448,6 +451,9 @@ narrative + benefits:
 - **Markdown-to-PDF pipeline** with cross-referenced manuscripts and figure
   integration ([`docs/usage/markdown-template-guide.md`](docs/usage/markdown-template-guide.md),
   [`docs/modules/pdf-validation.md`](docs/modules/pdf-validation.md)).
+- **Accessible presentation profile** that preserves archive rendering by
+  default while optionally producing one semantic Beamer/Reveal pair per
+  section ([`docs/usage/output-formats.md`](docs/usage/output-formats.md#accessible-presentation-profile)).
 - **Validated build system** with 17 declared stages, a default 10-stage
   core+LLM path, an 8-stage `--core-only` path, and CI gates
   ([`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md)).

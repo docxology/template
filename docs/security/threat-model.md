@@ -148,7 +148,7 @@ flowchart TB
 | Release artifacts | Publish only intended files from public scope, with repeatable metadata | `scripts/publish/publish_project_release.py`, `infrastructure/publishing/_adapter_http.py` |
 | CI/security gates | Enforce formatting, typing, dependency, secret/confidentiality, generated-artifact, and security scans | `.github/workflows/ci.yml`, `.pre-commit-config.yaml` |
 | LLM/search inputs | Avoid prompt/data exfiltration and sanitize user-facing prompt paths | `infrastructure/llm/core/sanitization.py`, `infrastructure/llm/core/client.py` |
-| Rendering subprocesses | Avoid shell injection, resource hangs, unsafe generated HTML, and unbounded local file reads | `infrastructure/rendering/pdf_renderer.py`, `infrastructure/rendering/web_renderer.py` |
+| Rendering subprocesses | Avoid shell injection, resource hangs, unsafe generated HTML, and unbounded local file reads | `infrastructure/rendering/security.py`, `slides_renderer.py`, `_slides_accessibility_limits.py`, `_slides_accessibility_image_io.py`, `_slides_accessibility_raw_tex.py`, PDF/web renderers |
 | Provenance metadata | Prove origin without leaking recipient secrets or overclaiming tamper resistance | `infrastructure/steganography/THREAT_MODEL.md`, `infrastructure/steganography/core.py` |
 | Ownership continuity | Sensitive surfaces have explicit reviewers, and single-owner areas carry a documented exception | `.github/CODEOWNERS`, `.github/sensitive-ownership.yaml`, `tests/infra_tests/project/test_codeowners_parity.py` |
 
@@ -189,7 +189,7 @@ Non-capabilities assumed:
 | Release | `.github/workflows/release.yml` | Manual dispatch/tag into write-permission release | Existing tag verification and pinned release action | Release job has `contents: write`; branch/tag protections must be enforced outside repo |
 | Publish/archive | `scripts/publish/*`, `scripts/runner/archive_publication.py`, `upload_runner.py` | Local artifacts and tokens into external services | Shared preflight, explicit token checks, documented command-specific commit semantics | A missing `--dry-run` on the unified release publisher can cause real external writes |
 | Credentials | `CredentialManager`, `.env`, env vars, local credential JSON | Secret stores into runtime | Optional dotenv, safe YAML load, env substitution, bearer header helper | Logging and receipt objects must never include token values or credentialed URLs |
-| Rendering | Pandoc, LaTeX, web/slides renderers | Manuscript content into subprocesses/HTML/PDF | List-based subprocess calls, timeouts, HTML hardening helpers | Renderer toolchains are large; untrusted content should be isolated for hostile inputs |
+| Rendering | Pandoc, LaTeX, web/slides renderers | Manuscript content, Pandoc ASTs, preambles, and image paths into subprocesses/HTML/PDF | Exact process-profile validation; list-based calls; credential-stripped child environment; redirected `HOME`/`TMPDIR`; process-group timeouts; output-root confinement; lexical source and TeX preflight; bounded Pandoc JSON/AST; confined no-follow raster inspection; HTML hardening | These controls are not chroot/container isolation, network denial, general filesystem isolation, or a complete hostile-content sandbox |
 | LLM/search | LLM clients and search connectors | Manuscript/content into models and external APIs | Prompt sanitization default and raw-query warning | `query_raw` and opt-out sanitization rely on caller discipline |
 | Steganography | Metadata, hashes, barcodes, encryption | Project/recipient metadata into PDF outputs | Existing steganography threat model and standard primitives | Per-recipient secrets and embedded metadata can become privacy risk if misconfigured |
 | Ownership | CODEOWNERS and actual git history | Review intent vs actual control | Default CODEOWNERS catch-all, security policy | Explicit template roster drift and all sensitive categories have single-owner history |
@@ -238,11 +238,18 @@ Non-capabilities assumed:
    - Path: malicious Markdown/LaTeX/SVG/Mermaid/HTML content triggers a Pandoc,
      LaTeX, browser, or filter behavior that reads local files, hangs, or emits
      unsafe HTML.
-   - Current controls: list-based subprocess calls, timeouts, HTML hardening and
-     path normalization.
-   - Current status: the explicit untrusted-render profile isolates environment,
-     credentials, time, and output roots; active-content/file-inclusion fixtures
-     fail before tool invocation and process-group timeout cleanup is tested.
+   - Current controls: exact `trusted-local`/`untrusted` profile validation;
+     list-based subprocess calls; credential-stripped child-environment
+     allowlisting; redirected `HOME`/`TMPDIR`; process-group timeouts;
+     untrusted-output-root confinement; lexical active-content and inclusion
+     rejection; bounded Pandoc JSON/AST; TeX lexical-translation preflight; and
+     confined, no-follow local-raster metadata reads.
+   - Current status: an `untrusted` profile without its required temporary root
+     and every unknown profile name fail during configuration. Hostile fixtures
+     fail before the relevant writer or TeX invocation, and descendant timeout
+     cleanup is tested. The profile does not provide chroot/container isolation,
+     network denial, or general filesystem isolation; external material still
+     requires caller-controlled tooling and operating-system boundaries.
 
 6. Provenance metadata privacy failure.
    - Path: per-recipient or project identifiers are embedded into PDFs and later
@@ -290,7 +297,7 @@ Non-capabilities assumed:
 | TM-004 | CI/release workflow modified to weaken security gates or run with excess permissions | Medium | High | High | `.github/workflows/ci.yml`, `.github/workflows/release.yml`, `.pre-commit-config.yaml` | Protect workflow files through CODEOWNERS and branch protection; audit `permissions` deltas in CI |
 | TM-005 | Dependency/action supply chain compromise | Medium | High | High | `.github/workflows/ci.yml`, `bandit.yaml`, `uv.lock` | Keep action pins immutable, keep pip-audit exceptions time-bounded, and require review for lockfile/security config deltas |
 | TM-006 | LLM prompt injection or raw-query misuse leaks hidden context/private content | Medium | High | High | `infrastructure/llm/core/sanitization.py`, `infrastructure/llm/core/client.py`, `infrastructure/llm/core/bypass.py` | Keep `query_raw()` and sanitization opt-outs restricted to named callers, and expand offline tests preventing raw calls on project/manuscript text |
-| TM-007 | Rendering hostile manuscripts causes local file disclosure, command execution, unsafe HTML, or denial of service | Medium | High | High | `infrastructure/rendering/pdf_renderer.py`, `infrastructure/rendering/web_renderer.py`, `infrastructure/rendering/security.py` | Keep hostile inputs on the untrusted render profile with process, environment, path, and timeout isolation |
+| TM-007 | Rendering hostile manuscripts causes local file disclosure, command execution, unsafe HTML, or denial of service | Medium | High | High | `infrastructure/rendering/security.py`, `slides_renderer.py`, `_slides_accessibility_limits.py`, `_slides_accessibility_image_io.py`, `_slides_accessibility_raw_tex.py`, PDF/web renderers | Keep hostile inputs on the exact untrusted profile with its required temp root; retain child-environment allowlisting, output confinement, timeouts, AST/TeX/raster preflight, and separate OS isolation where the threat requires filesystem or network denial |
 | TM-008 | Provenance/watermark metadata leaks recipient/operator identifiers or keys | Low-Medium | High | High | `infrastructure/steganography/THREAT_MODEL.md`, `infrastructure/steganography/encryption.py`, `infrastructure/steganography/core.py`, `infrastructure/publishing/preflight.py` | Keep metadata classification in publication preflight and preserve its secure-render/publish negative coverage |
 | TM-009 | CODEOWNERS explicit project roster drifts from public roster | High | Medium | Medium | `.github/CODEOWNERS`, `infrastructure/project/public_scope.py`, `tests/infra_tests/project/test_codeowners_parity.py` | Keep generated CODEOWNERS project stanza and parity test in the release gate |
 | TM-010 | Security-sensitive ownership has bus factor 1 | High | Medium-High | High | `.github/sensitive-ownership.yaml`, `docs/security/ownership-and-promotion.md` | Maintain sole-owner exceptions, required Regression Tier review, and external branch-protection acceptance |

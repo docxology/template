@@ -11,11 +11,40 @@ from infrastructure.rendering._slides_accessibility_contracts import (
     ACCESSIBLE_BEAMER_MIN_BOTTOM_CLEARANCE_PT,
     ACCESSIBLE_BEAMER_MIN_SIDE_CLEARANCE_PT,
 )
+from infrastructure.rendering.latex_log_quality import parse_latex_log_findings
 
 
 _GEOMETRY_TOLERANCE_PT = 0.25
 _HORIZONTAL_RULE_TOLERANCE_PT = 0.75
 _MINIMUM_RULE_LENGTH_PT = 2.0
+
+
+def reject_accessible_beamer_overflow(log_file: Path, compiled_pdf: Path) -> None:
+    """Discard a Beamer derivative whose fixed accessible layout overflowed."""
+
+    blocked = {r"Overfull \hbox", r"Overfull \vbox"}
+    findings = [
+        finding
+        for finding in parse_latex_log_findings(log_file, blocked_layout_kinds=blocked)
+        if finding.kind in blocked
+    ]
+    if not findings:
+        return
+    compiled_pdf.unlink(missing_ok=True)
+    examples = [f"{finding.kind} at line {finding.line_number}: {finding.message}" for finding in findings[:5]]
+    raise RenderingError(
+        "[slides.density.beamer-overflow] Accessible Beamer content exceeds its fixed frame geometry",
+        context={
+            "diagnostic_code": "slides.density.beamer-overflow",
+            "log_file": str(log_file),
+            "finding_count": len(findings),
+            "examples": examples,
+        },
+        suggestions=[
+            "Split the source at a semantic block boundary or shorten the projected excerpt.",
+            "Keep complete prose, captions, and tables in the linked canonical HTML manuscript.",
+        ],
+    )
 
 
 def _numeric(item: dict[str, Any], key: str) -> float:
@@ -167,4 +196,4 @@ def reject_unsafe_accessible_beamer_geometry(compiled_pdf: Path) -> None:
     )
 
 
-__all__ = ["reject_unsafe_accessible_beamer_geometry"]
+__all__ = ["reject_accessible_beamer_overflow", "reject_unsafe_accessible_beamer_geometry"]

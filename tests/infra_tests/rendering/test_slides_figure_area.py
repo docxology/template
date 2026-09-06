@@ -143,6 +143,7 @@ def test_local_intrinsic_geometry_is_validated_without_treating_whitespace_as_fa
         _document("Portrait evidence", _figure(_image("../output/figures/portrait.png"))),
         policy=AccessibleSlidePolicy(),
         source=str(manuscript / "results.md"),
+        authorized_image_roots=(figures,),
     )
     attributes = _key_values(_first_rendered_image(composition.document))
 
@@ -165,6 +166,7 @@ def test_corrupt_resolvable_raster_fails_with_stable_figure_area_diagnostic(tmp_
             _document("Corrupt figure", _figure(_image("../output/figures/corrupt.png"))),
             policy=AccessibleSlidePolicy(),
             source=str(manuscript / "results.md"),
+            authorized_image_roots=(figures,),
         )
 
     assert exc_info.value.context["diagnostic_code"] == "slides.density.figure-area"
@@ -296,6 +298,57 @@ def test_real_beamer_and_reveal_max_fit_single_and_multi_images(tmp_path: Path) 
         r'class="[^"]*accessible-max-fit-image[^"]*"[^>]*style="[^"]*width:\s*45(?:\.0)?%',
         reveal,
     )
+    assert accessible_reveal_output_issues(html_path) == ()
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_beamer_continuation_figure_respects_title_and_footer_safe_fit(tmp_path: Path) -> None:
+    """A max-fit labeled figure must fit below a compact continuation title."""
+
+    pandoc = shutil.which("pandoc")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if pandoc is None or compiler is None:
+        pytest.skip("Pandoc and a LaTeX compiler are required")
+    manuscript = tmp_path / "manuscript"
+    figures = tmp_path / "output" / "figures"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    figures.mkdir(parents=True)
+    Image.new("RGB", (1883, 1487), "#3b6ea8").save(figures / "efe-decomposition.png")
+    source = manuscript / "continuation-figure.md"
+    prelude = "\n\n---\n\n".join(f"Bounded prelude {index}." for index in range(1, 17))
+    source.write_text(
+        "## Expected-free-energy identity as an algebraic check\n\n"
+        f"{prelude}\n\n---\n\n"
+        "![Expected-free-energy decomposition.](../output/figures/efe-decomposition.png)"
+        "{#fig:efe-decomp width=85%}\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            figures_dir=str(figures),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    pdf_path, html_path = renderer.render_accessible_pair(
+        source,
+        manuscript_dir=manuscript,
+        figures_dir=figures,
+    )
+
+    tex = pdf_path.with_suffix(".tex").read_text(encoding="utf-8")
+    assert pdf_path.is_file() and pdf_path.stat().st_size > 1_000
+    assert html_path.is_file() and html_path.stat().st_size > 1_000
+    assert r"\begin{frame}{Expected-free-energy\ldots{} (part 17)}" in tex
+    assert r"height=0.8\textheight" in tex
+    assert "keepaspectratio" in tex
+    assert r"\refstepcounter{figure}\label{fig:efe-decomp}" in tex
+    assert 'data-slide-figure-min-allocation-percent="70"' in html_path.read_text(encoding="utf-8")
     assert accessible_reveal_output_issues(html_path) == ()
 
 

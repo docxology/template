@@ -8,12 +8,14 @@ import math
 from pathlib import Path
 import re
 from typing import Any
-from urllib.parse import unquote, urlsplit
-
-from PIL import Image
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy, density_error
+from infrastructure.rendering._slides_accessibility_image_io import (
+    IntrinsicImageGeometry,
+    inspect_intrinsic_image_geometry,
+    validate_local_image_target,
+)
 
 
 # This is the maximum-fit envelope within the common 16:9 body after the
@@ -45,7 +47,6 @@ _FIGURE_ALLOCATION_KEYS = frozenset(
         "style",
     }
 )
-_INSPECTABLE_RASTER_SUFFIXES = frozenset({".avif", ".bmp", ".gif", ".jpeg", ".jpg", ".png", ".tif", ".tiff", ".webp"})
 
 
 @dataclass(frozen=True)
@@ -62,18 +63,6 @@ class FigureAreaAllocation:
         return self.maximum_height_percent * self.minimum_percent / 100
 
 
-@dataclass(frozen=True)
-class _IntrinsicImageGeometry:
-    """Intrinsic raster dimensions used only when a local target resolves."""
-
-    width: int
-    height: int
-
-    @property
-    def aspect(self) -> float:
-        return self.width / self.height
-
-
 def _image_nodes(value: object) -> list[dict[str, Any]]:
     """Return image nodes in source order without descending into image alt text."""
 
@@ -83,7 +72,12 @@ def _image_nodes(value: object) -> list[dict[str, Any]]:
         return []
     if value.get("t") == "Image":
         return [value]
-    return _image_nodes(value.get("c"))
+    if "c" in value:
+        return _image_nodes(value.get("c"))
+    # The Pandoc document root and its metadata mapping are containers rather
+    # than AST nodes and therefore do not have ``c``. Traverse their values so
+    # writer-visible metadata images receive the same target confinement.
+    return [image for item in value.values() for image in _image_nodes(item)]
 
 
 def _is_projection_image_only(value: object) -> bool:
@@ -155,19 +149,23 @@ def _image_target(image: dict[str, Any]) -> str:
     return content[2][0]
 
 
-def _resolvable_local_image_path(image: dict[str, Any], source: str) -> Path | None:
-    """Resolve a local image when the AST target and source location permit it."""
+def validate_document_image_targets(
+    value: object,
+    *,
+    source: str,
+    authorized_image_roots: tuple[Path, ...],
+    figure_image_root: Path | None = None,
+) -> None:
+    """Confine every Pandoc image target before either writer sees the AST."""
 
-    target = _image_target(image)
-    parsed = urlsplit(target)
-    if parsed.scheme or parsed.netloc or not parsed.path:
-        return None
-    target_path = Path(unquote(parsed.path))
-    candidates = [target_path] if target_path.is_absolute() else [Path(source).parent / target_path]
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate
-    return None
+    for image in _image_nodes(value):
+        validate_local_image_target(
+            _image_target(image),
+            source=source,
+            heading="Pandoc document metadata and content",
+            authorized_roots=authorized_image_roots,
+            figure_root=figure_image_root,
+        )
 
 
 def _intrinsic_image_geometry(
@@ -175,44 +173,18 @@ def _intrinsic_image_geometry(
     *,
     source: str,
     heading: str,
-) -> _IntrinsicImageGeometry | None:
-    """Validate intrinsic raster geometry when a supported local file resolves."""
+    authorized_image_roots: tuple[Path, ...],
+    figure_image_root: Path | None,
+) -> IntrinsicImageGeometry | None:
+    """Validate bounded intrinsic raster geometry inside authorized roots."""
 
-    target = _image_target(image)
-    path = _resolvable_local_image_path(image, source)
-    if path is None or path.suffix.casefold() not in _INSPECTABLE_RASTER_SUFFIXES:
-        return None
-    if not path.is_file():
-        raise density_error(
-            "slides.density.figure-area",
-            "a locally resolvable figure target is not a regular image file",
-            source=source,
-            heading=heading,
-            figure_target=target,
-        )
-    try:
-        with Image.open(path) as raster:
-            width, height = raster.size
-    except (OSError, ValueError) as exc:
-        raise density_error(
-            "slides.density.figure-area",
-            "a locally resolvable figure has unreadable intrinsic geometry",
-            source=source,
-            heading=heading,
-            figure_target=target,
-            error_type=type(exc).__name__,
-        ) from exc
-    if width <= 0 or height <= 0 or not math.isfinite(width / height):
-        raise density_error(
-            "slides.density.figure-area",
-            "a locally resolvable figure has invalid intrinsic dimensions",
-            source=source,
-            heading=heading,
-            figure_target=target,
-            intrinsic_width=width,
-            intrinsic_height=height,
-        )
-    return _IntrinsicImageGeometry(width=width, height=height)
+    return inspect_intrinsic_image_geometry(
+        _image_target(image),
+        source=source,
+        heading=heading,
+        authorized_roots=authorized_image_roots,
+        figure_root=figure_image_root,
+    )
 
 
 def _validate_projection_image_row(
@@ -296,6 +268,8 @@ def _allocate_figure_area(
     *,
     source: str,
     heading: str,
+    authorized_image_roots: tuple[Path, ...],
+    figure_image_root: Path | None,
 ) -> None:
     """Carry the allocation floor while independently maximizing image fit.
 
@@ -322,7 +296,13 @@ def _allocate_figure_area(
         attributes = content[0]
         if len(attributes) != 3 or not isinstance(attributes[1], list) or not isinstance(attributes[2], list):
             raise RenderingError("Accessible slide composition received malformed Pandoc Image attributes")
-        geometry = _intrinsic_image_geometry(image, source=source, heading=heading)
+        geometry = _intrinsic_image_geometry(
+            image,
+            source=source,
+            heading=heading,
+            authorized_image_roots=authorized_image_roots,
+            figure_image_root=figure_image_root,
+        )
         authored_width = next(
             (pair for pair in attributes[2] if isinstance(pair, list) and len(pair) == 2 and pair[0] == "width"),
             None,
@@ -396,6 +376,8 @@ def shorten_figure_caption(
     allocation: FigureAreaAllocation,
     source: str,
     heading: str,
+    authorized_image_roots: tuple[Path, ...] = (),
+    figure_image_root: Path | None = None,
 ) -> dict[str, Any]:
     """Prepare an isolated image frame while retaining full reader content."""
 
@@ -414,7 +396,14 @@ def shorten_figure_caption(
             heading=heading,
             min_figure_area_percent=policy.min_figure_area_percent,
         )
-        _allocate_figure_area(updated, allocation, source=source, heading=heading)
+        _allocate_figure_area(
+            updated,
+            allocation,
+            source=source,
+            heading=heading,
+            authorized_image_roots=authorized_image_roots,
+            figure_image_root=figure_image_root,
+        )
         return updated
     content = updated.get("c")
     if not isinstance(content, list) or len(content) != 3:
@@ -432,7 +421,14 @@ def shorten_figure_caption(
         heading=heading,
         min_figure_area_percent=policy.min_figure_area_percent,
     )
-    _allocate_figure_area(content[2], allocation, source=source, heading=heading)
+    _allocate_figure_area(
+        content[2],
+        allocation,
+        source=source,
+        heading=heading,
+        authorized_image_roots=authorized_image_roots,
+        figure_image_root=figure_image_root,
+    )
     # The footer and Reveal navigation already link the canonical HTML reader.
     # Repeating its full caption inside the projected frame would consume the
     # reserved figure region; the reader retains caption, long description,

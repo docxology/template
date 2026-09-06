@@ -15,7 +15,7 @@
 | --- | --- | --- | --- | --- |
 | **PDF** | on | `output/<qualified-project>/pdf/<name>_combined.pdf` | `application/pdf` | xelatex via pandoc |
 | **HTML** | on | `output/<qualified-project>/web/index.html` | `text/html` | pandoc |
-| **Slides** | on | `output/<qualified-project>/slides/<section>_slides.pdf` | `application/pdf` (beamer) | xelatex via pandoc |
+| **Slides** | on | `output/<qualified-project>/slides/<section>_slides.{pdf,html}` | Beamer PDF; Reveal HTML in the accessible pair | xelatex and pandoc |
 | **DOCX** | opt-in | `output/<qualified-project>/docx/<name>_combined.docx` | `application/vnd.openxmlformats-officedocument.wordprocessingml.document` | pandoc |
 | **EPUB** | opt-in | `output/<qualified-project>/epub/<name>_combined.epub` | `application/epub+zip` | pandoc |
 
@@ -53,7 +53,7 @@ ENABLE_DOCX=1 ENABLE_EPUB=1 \
 | --- | --- | --- | --- |
 | `ENABLE_PDF` | `0/1`, `true/false`, `yes/no` (case-insensitive) | `1` | Combined PDF + per-section LaTeX/PDF |
 | `ENABLE_HTML` | same | `1` | Combined HTML index + per-section HTML |
-| `ENABLE_SLIDES` | same | `1` | Per-section Beamer PDFs |
+| `ENABLE_SLIDES` | same | `1` | Archive: required per-section Beamer PDF. Accessible: transactional Beamer-PDF/Reveal-HTML pair. |
 | `ENABLE_DOCX` | same | `0` | Combined Microsoft Word document |
 | `ENABLE_EPUB` | same | `0` | Combined EPUB e-reader bundle |
 
@@ -87,11 +87,15 @@ than being treated as absent.
 
 ### Slides (`output/<qualified-project>/slides/`)
 
-- One Beamer PDF per manuscript section (`<section>_slides.pdf`). Generated
-  from the same source markdown via the `slides_renderer.py` module.
-- Reveal.js HTML (`<section>_slides.html`) is available through
+- In the default `archive` profile, one Beamer PDF per eligible manuscript
+  section (`<section>_slides.pdf`) is required. Reveal.js HTML is an optional,
+  explicitly requested derivative through
   `RenderManager.render_slides(..., output_format="revealjs")` or the rendering
   CLI's `--format revealjs` option.
+- In the `accessible` profile, each eligible section produces both
+  `<section>_slides.pdf` and `<section>_slides.html` from one composed Pandoc
+  AST. The pair is transactional: failure of either writer removes both
+  derivatives.
 - Beamer and Reveal.js decks resolve in-text citations against the shared
   top-level bibliography union. They suppress a repeated bibliography block;
   use the combined manuscript or dedicated references deck for the full list.
@@ -125,6 +129,21 @@ capability is absent, the accessible profile fails with
 the default `archive` profile remains available. See
 [Optional Dependencies & Capability Matrix](../development/optional-dependencies.md#accessible-beamer-geometry-fail-loud-installed-capability)
 for the complete boundary.
+
+Configuration accepts these exact inclusive integer intervals:
+
+| Field | Accepted interval | Default contract |
+| --- | ---: | --- |
+| `max_prose_words` | `[1, 80]` | Ceiling 80 |
+| `max_table_rows` | `[1, 8]` | Ceiling 8 |
+| `min_figure_area_percent` | `[70, 100]` | Floor 70% |
+| `title_font_pt` | `[28, 96]` | Floor 28 pt |
+| `body_font_pt` | `[20, 72]` | Floor 20 pt |
+| `figure_label_font_pt` | `[16, 48]` | Floor 16 pt |
+
+Within-range values remain policy settings rather than fit guarantees. The
+[detailed renderer reference](../../infrastructure/rendering/README.md#opt-in-to-accessible-presentation-composition)
+also lists the bounded AST, raw-TeX, image-path, and raster-resource diagnostics.
 
 The numeric settings are guardrails: word and table-row maxima may only become
 stricter, while figure-area and font floors may only increase. They are policy

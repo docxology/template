@@ -47,7 +47,7 @@ def _write_geometry_fixture(
     document.save()
 
 
-def test_accessible_longtable_captures_body_width_without_rewriting_cell_linewidth() -> None:
+def test_accessible_longtable_captures_stable_body_width_without_rewriting_cell_linewidth() -> None:
     source = r"""\begin{frame}{Values}
 {\def\LTcaptype{none}
 \begin{longtable}[]{@{}
@@ -70,7 +70,7 @@ A & B \\
 
     assert changed == 1
     assert rendered.count("% template-accessible-table-inset") == 1
-    assert rf"\setlength{{{ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH}}}{{\linewidth}}" in rendered
+    assert rf"\setlength{{{ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH}}}{{\textwidth}}" in rendered
     assert r"\setlength{\LTleft}{\fill}" in rendered
     assert r"\setlength{\LTright}{\fill}" in rendered
     assert rendered.count(rf"{ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH} - 2\tabcolsep") == 2
@@ -290,7 +290,7 @@ def test_real_accessible_beamer_keeps_footer_and_two_three_five_six_column_table
     tex = result.with_suffix(".tex").read_text(encoding="utf-8")
     log = result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
     assert tex.count("% template-accessible-table-inset") == 4
-    assert tex.count(rf"\setlength{{{ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH}}}{{\linewidth}}") == 4
+    assert tex.count(rf"\setlength{{{ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH}}}{{\textwidth}}") == 4
     assert "Overfull \\hbox" not in log
     assert "Overfull \\vbox" not in log
 
@@ -310,3 +310,80 @@ def test_real_accessible_beamer_keeps_footer_and_two_three_five_six_column_table
     assert all(x1 <= width - ACCESSIBLE_BEAMER_MIN_SIDE_CLEARANCE_PT for _x0, x1, width in horizontal_rules)
     assert len(footer_bottoms) == 4
     assert all(bottom <= height - ACCESSIBLE_BEAMER_MIN_BOTTOM_CLEARANCE_PT for bottom, height in footer_bottoms)
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_accessible_beamer_confines_two_and_three_column_continuation_tables(
+    tmp_path: Path,
+) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / "continuation_tables.md"
+    source.write_text(
+        "## Continuation-table geometry\n\n"
+        "This bounded introduction occupies the labelled frame before two complete tables. "
+        "Each table must therefore begin a continuation frame while retaining the full "
+        "twenty-point accessible body type and the protected side clearances.\n\n"
+        "| Role | Meaning |\n|---|---|\n"
+        "| `alpha_role` | Reference condition |\n"
+        "| `beta_role` | Comparison condition |\n\n"
+        "| Metric | Mean | Unit |\n|---|---:|---|\n"
+        "| Accuracy | 0.91 | proportion |\n"
+        "| Log score | 0.12 | nat |\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    result = renderer.render(source, output_format="beamer", manuscript_dir=manuscript)
+
+    assert result.is_file()
+    tex = result.with_suffix(".tex").read_text(encoding="utf-8")
+    assert tex.count("% template-accessible-table-inset") == 2
+    assert tex.count(rf"\setlength{{{ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH}}}{{\textwidth}}") == 2
+    assert r"\begin{frame}[fragile]{Continuation-table geometry (part 2)}" in tex
+    assert r"\begin{frame}{Continuation-table geometry (part 3)}" in tex
+
+    table_pages = []
+    with pdfplumber.open(result) as document:
+        for page in document.pages:
+            text = page.extract_text() or ""
+            if "alpha_role" not in text and "Accuracy" not in text:
+                continue
+            table_pages.append(page)
+            horizontal_rules = [
+                line
+                for line in page.lines
+                if abs(float(line["bottom"]) - float(line["top"])) <= 0.75 and float(line["x1"]) > float(line["x0"])
+            ]
+            assert len(horizontal_rules) == 3
+            assert all(float(line["x0"]) >= ACCESSIBLE_BEAMER_MIN_SIDE_CLEARANCE_PT for line in horizontal_rules)
+            assert all(
+                float(line["x1"]) <= float(page.width) - ACCESSIBLE_BEAMER_MIN_SIDE_CLEARANCE_PT
+                for line in horizontal_rules
+            )
+            table_words = [
+                word
+                for word in page.extract_words() or ()
+                if word.get("text") not in {"Untagged", "PDF", "derivative", "|", "HTML", "reader"}
+            ]
+            assert table_words
+            assert min(float(word["x0"]) for word in table_words) >= ACCESSIBLE_BEAMER_MIN_SIDE_CLEARANCE_PT
+            assert max(float(word["x1"]) for word in table_words) <= (
+                float(page.width) - ACCESSIBLE_BEAMER_MIN_SIDE_CLEARANCE_PT
+            )
+
+    assert len(table_pages) == 2

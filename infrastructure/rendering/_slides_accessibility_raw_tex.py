@@ -25,13 +25,7 @@ _SAFE_PROPOSITION_DECLARATION_RE = re.compile(
 )
 _SAFE_RAW_INLINE_RE = re.compile(r"\A\s*\\ref\{(?P<label>[-:._A-Za-z0-9]+)\}\s*\Z")
 _TEXT_COMMAND_RE = re.compile(r"\\(?P<command>texttt|textbf|textit|emph|ref|label)\{(?P<argument>[^{}]*)\}")
-_MATH_FRAGMENT_RE = re.compile(
-    r"(?P<bracket_display>\\\[(?P<bracket_display_body>.*?)\\\])"
-    r"|(?P<dollar_display>\$\$(?P<dollar_display_body>.*?)\$\$)"
-    r"|(?P<bracket_inline>\\\((?P<bracket_inline_body>.*?)\\\))"
-    r"|(?P<dollar_inline>(?<!\\)\$(?!\$)(?P<dollar_inline_body>.*?)(?<!\\)\$)",
-    re.DOTALL,
-)
+_MAX_RAW_TEX_CHARACTERS = 65_536
 _SAFE_TEXT_ESCAPES = frozenset({" ", "#", "%", "&", ",", "_", "{", "}"})
 _UNESCAPED_TEXT_SPECIALS = frozenset({"#", "$", "%", "&", "_", "^", "{", "}"})
 _UNESCAPED_MATH_SPECIALS = frozenset({"#", "%", "&"})
@@ -79,6 +73,76 @@ class _RawTexFormalBlock:
     title: str | None
     label: str | None
     body: str
+
+
+@dataclass(frozen=True)
+class _MathFragment:
+    """One explicitly delimited TeX math fragment found in linear time."""
+
+    start: int
+    end: int
+    body: str
+    display: bool
+
+
+def _next_unescaped_dollar(source: str, start: int) -> int | None:
+    """Return the next dollar not immediately escaped by a backslash."""
+
+    index = source.find("$", start)
+    while index >= 0:
+        if index == 0 or source[index - 1] != "\\":
+            return index
+        index = source.find("$", index + 1)
+    return None
+
+
+def _math_fragments(source: str) -> tuple[_MathFragment, ...]:
+    r"""Return non-overlapping math fragments with one forward-only scan.
+
+    The former alternation used a lazy wildcard for each possible opener. A
+    run of unmatched openers therefore rescanned the remaining suffix once per
+    opener. Fixed-delimiter searches consume every matched suffix exactly once;
+    after an unmatched opener, validation treats the remainder as prose and
+    fails it at the ordinary raw-TeX boundary.
+    """
+
+    fragments: list[_MathFragment] = []
+    index = 0
+    while index < len(source):
+        opener_length = 0
+        closer = ""
+        display = False
+        if source.startswith(r"\[", index):
+            opener_length, closer, display = 2, r"\]", True
+        elif source.startswith("$$", index):
+            opener_length, closer, display = 2, "$$", True
+        elif source.startswith(r"\(", index):
+            opener_length, closer = 2, r"\)"
+        elif source[index] == "$" and (index == 0 or source[index - 1] != "\\") and not source.startswith("$$", index):
+            opener_length, closer = 1, "$"
+        else:
+            index += 1
+            continue
+
+        body_start = index + opener_length
+        if closer == "$":
+            closing = _next_unescaped_dollar(source, body_start)
+        else:
+            found = source.find(closer, body_start)
+            closing = found if found >= 0 else None
+        if closing is None:
+            break
+        end = closing + len(closer)
+        fragments.append(
+            _MathFragment(
+                start=index,
+                end=end,
+                body=source[body_start:closing],
+                display=display,
+            )
+        )
+        index = end
+    return tuple(fragments)
 
 
 def _raw_tex_source(block: dict[str, Any]) -> str | None:
@@ -220,15 +284,12 @@ def _unsupported_mixed_fragment(source: str) -> str | None:
     """Validate prose and explicitly delimited math without grammar migration."""
 
     cursor = 0
-    for match in _MATH_FRAGMENT_RE.finditer(source):
-        if (finding := _unsupported_text_fragment(source[cursor : match.start()])) is not None:
+    for fragment in _math_fragments(source):
+        if (finding := _unsupported_text_fragment(source[cursor : fragment.start])) is not None:
             return finding
-        body = match.group("bracket_display_body") or match.group("dollar_display_body")
-        if body is None:
-            body = match.group("bracket_inline_body") or match.group("dollar_inline_body") or ""
-        if (finding := _unsupported_math_fragment(body)) is not None:
+        if (finding := _unsupported_math_fragment(fragment.body)) is not None:
             return finding
-        cursor = match.end()
+        cursor = fragment.end
     return _unsupported_text_fragment(source[cursor:])
 
 
@@ -237,17 +298,14 @@ def _tex_fragment_to_html(source: str) -> str:
 
     fragments: list[str] = []
     cursor = 0
-    for match in _MATH_FRAGMENT_RE.finditer(source):
-        fragments.append(_text_fragment_to_html(source[cursor : match.start()]))
-        display_body = match.group("bracket_display_body") or match.group("dollar_display_body")
-        inline_body = match.group("bracket_inline_body") or match.group("dollar_inline_body")
-        if display_body is not None:
-            math = html.escape(display_body.strip())
+    for fragment in _math_fragments(source):
+        fragments.append(_text_fragment_to_html(source[cursor : fragment.start]))
+        math = html.escape(fragment.body.strip())
+        if fragment.display:
             fragments.append(f'<span class="math display">\\[{math}\\]</span>')
-        elif inline_body is not None:
-            math = html.escape(inline_body.strip())
+        else:
             fragments.append(f'<span class="math inline">\\({math}\\)</span>')
-        cursor = match.end()
+        cursor = fragment.end
     fragments.append(_text_fragment_to_html(source[cursor:]))
     return "".join(fragments).strip()
 
@@ -328,6 +386,16 @@ def _first_unsupported_raw_tex(value: object) -> tuple[str, str] | None:
             return str(raw_source), f"raw-format:{normalized_format or '<empty>'}"
         if not isinstance(raw_source, str):
             return repr(raw_source), "raw-source-schema"
+        if len(raw_source) > _MAX_RAW_TEX_CHARACTERS:
+            return raw_source[:160] + "...", "raw-source-limit"
+        # TeX expands every ``^^`` lexical-translation form before it tokenizes
+        # commands.  A payload such as ``^^5cinput`` therefore contains no
+        # backslash for the command allowlist to see, but becomes ``\input`` at
+        # the Beamer writer. Reject the entire lexical mechanism before either
+        # writer fallback is created; ordinary single-caret superscripts remain
+        # admitted inside delimited mathematics.
+        if "^^" in raw_source:
+            return raw_source, "tex-lexical-translation"
         if value.get("t") == "RawInline":
             if _SAFE_RAW_INLINE_RE.fullmatch(raw_source) is not None:
                 return None

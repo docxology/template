@@ -18,6 +18,7 @@ from infrastructure.rendering._pdf_latex_helpers import (
     extract_math_font_preamble,
     extract_preamble,
 )
+from infrastructure.core.exceptions import RenderingError
 
 logger = get_logger(__name__)
 
@@ -78,6 +79,19 @@ def write_slides_math_header(
     snippet_parts: list[str] = []
     if preamble_file.exists():
         preamble = extract_preamble(preamble_file)
+        if accessible_policy is not None and "^^" in preamble:
+            # TeX performs double-caret lexical translation before command
+            # tokenization.  The accessible source contract never needs that
+            # mechanism, and allowing it here would bypass the AST preflight
+            # because the manuscript preamble is loaded separately with ``-H``.
+            raise RenderingError(
+                "[slides.security.tex-lexical-translation] Accessible slide preamble "
+                "contains forbidden TeX lexical translation",
+                context={
+                    "diagnostic_code": "slides.security.tex-lexical-translation",
+                    "source": str(preamble_file),
+                },
+            )
         math_snippet = extract_math_font_preamble(preamble)
         if math_snippet is not None:
             snippet_parts.append(math_snippet)
@@ -342,8 +356,18 @@ def write_slides_math_header(
     # snippet_parts is never empty past this point (the natbib/cref
     # fallback and the formalism-environment declarations above are both
     # unconditional appends) -- a header is always written here.
+    header_source = "\n".join(snippet_parts)
+    if accessible_policy is not None and "^^" in header_source:
+        raise RenderingError(
+            "[slides.security.tex-lexical-translation] Generated accessible slide header "
+            "contains forbidden TeX lexical translation",
+            context={
+                "diagnostic_code": "slides.security.tex-lexical-translation",
+                "source": str(preamble_file),
+            },
+        )
     output_dir.mkdir(parents=True, exist_ok=True)
     header_path = output_dir / "_slides_math_header.tex"
-    header_path.write_text("\n".join(snippet_parts), encoding="utf-8")
+    header_path.write_text(header_source, encoding="utf-8")
     logger.debug(f"Wrote slides math header: {header_path}")
     return header_path

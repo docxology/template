@@ -595,12 +595,18 @@ override per-run via env (env precedence beats yaml):
 |----------|------|---------|--------|
 | `ENABLE_PDF` | `0/1`,`true/false`,`yes/no` | `1` | Combined PDF + per-section LaTeX/PDF |
 | `ENABLE_HTML` | same | `1` | Combined HTML index + per-section HTML |
-| `ENABLE_SLIDES` | same | `1` | Per-section Beamer PDFs |
+| `ENABLE_SLIDES` | same | `1` | Archive profile: required per-section Beamer PDFs. Accessible profile: transactional Beamer-PDF/Reveal-HTML pairs. |
 | `ENABLE_DOCX` | same | `0` | Combined Word document (`output/<project>/docx/`) |
 | `ENABLE_EPUB` | same | `0` | Combined EPUB (`output/<project>/epub/`) |
 
 See [`usage/output-formats.md`](usage/output-formats.md) for the full
 configuration matrix.
+
+The opt-in `SLIDES_PROFILE=accessible` uses the source-owned density and
+typography settings documented there and removes both presentation derivatives
+when either member of a section pair fails. Renderer subprocess policy is
+separate: `RENDER_SECURITY_PROFILE` accepts only `trusted-local` or
+`untrusted`, and the latter requires `RENDER_UNTRUSTED_TEMP_ROOT`.
 
 ### LLM Review Variables
 

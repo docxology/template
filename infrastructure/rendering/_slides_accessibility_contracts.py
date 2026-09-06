@@ -40,11 +40,12 @@ ACCESSIBLE_BEAMER_FOOTER_RESERVED_PT = ACCESSIBLE_BEAMER_FOOTER_LEADING_PT + ACC
 ACCESSIBLE_BEAMER_MIN_BOTTOM_CLEARANCE_PT = 4.0
 ACCESSIBLE_BEAMER_MIN_SIDE_CLEARANCE_PT = 6.0
 # Beamer's frame-title face is slightly wider than the 20-point proportional
-# body calibration.  A 36-unit title is the observed wrap boundary, not a safe
-# one-line budget: admitting it as one line can leave an entire body line
-# unreserved after TeX composes the frame title.  Keep one unit of headroom so
-# continuation titles remain physically one line at the declared 28-point
-# floor and long first titles trigger the existing divider path.
+# body calibration.  A 35-unit continuation containing Pandoc's expanded
+# ellipsis can wrap even though the plain-text estimator admits it as one line,
+# leaving an entire body line unreserved beneath the title. Keep two units of
+# headroom below the observed 36-unit wrap boundary so continuation titles
+# remain physically one line at the declared 28-point floor and long first
+# titles trigger the existing divider path.
 TITLE_CHARACTERS_PER_LINE_28PT = 35
 MAX_TITLE_LINES_16_9 = 4
 BODY_LINES_PER_EXTRA_TITLE_LINE = 2
@@ -52,7 +53,7 @@ BIBLIOGRAPHIC_CITATION_CHARACTERS = 32
 # One-line title capacity at the 28-point floor. The continuation compactor
 # subtracts the complete `` (part N)`` suffix before selecting visible words.
 # The authored heading remains the frame's accessible name.
-CONTINUATION_TITLE_TARGET_CHARS = TITLE_CHARACTERS_PER_LINE_28PT
+CONTINUATION_TITLE_TARGET_CHARS = TITLE_CHARACTERS_PER_LINE_28PT - 1
 TABLE_INTERCOLUMN_GUTTER_CHARACTERS = 1
 TABLE_LIST_INDENT_WIDTH_UNITS = 3
 # Pandoc's ``longtable`` resets ``\linewidth`` to the projection canvas and can
@@ -393,6 +394,13 @@ def unsupported_tex_math_commands(source: str) -> tuple[str, ...]:
     """Return TeX control words without an explicit geometry contract."""
 
     commands: set[str] = set()
+    # TeX expands ``^^`` lexical translations before command tokenization.
+    # Consequently ``^^5cinput`` contains no literal backslash for the scanner
+    # below but reaches the writer as ``\input``. A single caret remains valid
+    # superscript syntax; the lexical double-caret mechanism is never needed by
+    # the accessible math subset.
+    if "^^" in source:
+        commands.add("tex-lexical-translation")
     if re.search(r"\\\\\s*\[[^\]]*\]", source):
         # TeX permits a physical vertical skip after an aligned row separator,
         # for example ``\\[10cm]``. The accessible profile does not model

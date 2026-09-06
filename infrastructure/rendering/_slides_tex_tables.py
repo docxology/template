@@ -69,11 +69,14 @@ def inset_accessible_longtables(tex_content: str) -> tuple[str, int]:
     r"""Confine each generated ``longtable`` to the frame body width.
 
     Pandoc evaluates a table's ``\linewidth`` after ``longtable`` has reset it
-    to the projection canvas.  Capturing the frame body's value before the
-    environment starts keeps rules and cells inside Beamer's text margins.
-    Only the generated column preamble is rewritten; cell-local
-    ``\linewidth`` values (notably Pandoc's header minipages) remain local to
-    their columns.  Archive rendering does not call this opt-in transform.
+    to the projection canvas.  At the start of a generated continuation frame,
+    Beamer can also leave the pre-environment ``\linewidth`` at ``\paperwidth``
+    until a preceding body paragraph or anchor establishes paragraph geometry.
+    ``\textwidth`` remains the stable frame-body width in both contexts, so the
+    owned table length is captured from it instead.  Only the generated column
+    preamble is rewritten; cell-local ``\linewidth`` values (notably Pandoc's
+    header minipages) remain local to their columns.  Archive rendering does
+    not call this opt-in transform.
     """
 
     pieces: list[str] = []
@@ -124,7 +127,7 @@ def inset_accessible_longtables(tex_content: str) -> tuple[str, int]:
                 tex_content[cursor : begin.start()],
                 _TABLE_MARKER + "\n",
                 "\\begingroup\n",
-                f"\\setlength{{{ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH}}}{{\\linewidth}}%\n",
+                f"\\setlength{{{ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH}}}{{\\textwidth}}%\n",
                 "\\setlength{\\LTleft}{\\fill}%\n",
                 "\\setlength{\\LTright}{\\fill}%\n",
                 begin.group(0),

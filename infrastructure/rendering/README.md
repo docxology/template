@@ -303,11 +303,19 @@ figure. Tagged combined PDFs consume the same registry descriptions for body
 images only when `metadata.tagged_pdf: true`; ordinary untagged PDFs are
 unchanged, and successful tagged rendering is not PDF/UA certification.
 
-**Note**: Figure paths are automatically corrected during rendering. The system handles:
+**Note**: Figure paths are normalized only within their declared resource
+roots. The system handles:
 
-- Path normalization for various formats (`../output/figures/`, `output/figures/`, etc.)
+- The four recognized figure aliases (`../output/figures/`,
+  `output/figures/`, `../figures/`, and `./figures/`) when the alias payload
+  remains inside the configured figure root
 - Unicode characters in filenames
-- Missing figure warnings (compilation continues gracefully, but logs the issue)
+- Missing-figure discovery warnings in the legacy/archive path
+
+Escaping or unrecognized traversal is never normalized. In the accessible
+profile, a resource-preflight or writer failure invalidates the transactional
+Beamer/Reveal pair; a discovery warning is not a promise that either derivative
+will be retained.
 
 ## Common Tasks
 
@@ -438,6 +446,31 @@ tables fail before rendering. Loose-list paragraphs and every block inside one
 definition entry are priced separately. When projection must excerpt a table,
 its complete-table footer is removed before the row budget is recomputed; the
 canonical reader retains the untouched table and footer.
+The accessible profile also treats the Pandoc document and local raster
+metadata as bounded rendering inputs. Pandoc JSON is limited to 16 MiB,
+100,000 AST nodes, and 128 levels of nesting. TeX's ``^^`` lexical-translation
+syntax is rejected in metadata, ordinary math, admitted raw blocks, generated
+headers, project preambles, and untrusted archive sources before a writer or
+TeX engine receives it. Local image targets must be relative to a
+caller-authorized resource root: absolute and ``file:`` targets, traversal,
+backslash paths, null bytes, symlink components, non-regular files, resources
+over 128 MiB, and rasters over 100 million pixels fail closed. Descriptor-based
+no-follow traversal is used where the platform supports it. Web image URLs
+remain remote references and are never opened merely to estimate intrinsic
+geometry. These checks protect the renderer boundary; they do not make an
+untrusted manuscript safe to execute through unrelated filters or external
+tools.
+
+| Bounded input | Limit or rejection | Stable diagnostic |
+| --- | --- | --- |
+| Pandoc JSON bytes / AST nodes / nesting | 16 MiB / 100,000 / 128 levels | `slides.schema.pandoc-limits` |
+| Raw TeX admitted for geometry analysis | 65,536 characters per value; unsupported geometry and every ``^^`` lexical translation are rejected | `slides.density.unsupported-raw-geometry` |
+| Local image target | 4,096 characters; absolute, ``file:``, escaping, backslash, null-byte, and symlinked targets are rejected | `slides.security.figure-path` |
+| Local raster metadata | 128 MiB and 100 million pixels; only the declared raster formats are inspected | `slides.security.figure-resource` |
+| Resolvable local raster | Must be a readable regular file with valid positive intrinsic geometry | `slides.density.figure-area` |
+
+The numeric ceilings are defensive resource bounds, not promises that inputs
+below them will compose or render successfully.
 Allowlisted definition, theorem, lemma, proposition, corollary, hypothesis,
 proof, and remark blocks keep their original TeX for Beamer and acquire an
 HTML-only semantic fallback for Reveal. Anchor-only blocks and safe declarations
@@ -509,6 +542,17 @@ pdf_path, reveal_path = manager.render_accessible_slide_pair(Path("manuscript/01
 This call has the same optional-dependency boundary: install the `rendering`
 extra before requesting `slides_profile="accessible"`. Programmatic archive
 rendering remains available without `pdfplumber`.
+
+`RenderingConfig.security_profile` and `RENDER_SECURITY_PROFILE` accept only
+the exact values `trusted-local` and `untrusted`; unknown values fail during
+configuration instead of falling back to trusted execution. The `untrusted`
+profile also requires `untrusted_temp_root` (or
+`RENDER_UNTRUSTED_TEMP_ROOT`) before a renderer is constructed. It confines
+outputs to that root, removes inherited credentials from child environments,
+bounds child timeouts, and rejects the documented active-content and inclusion
+primitives. This process profile is separate from the accessible composer's
+AST, TeX, and raster preflights; callers handling external material should use
+both boundaries rather than treating either one as a complete content sandbox.
 
 When a figure registry record includes `long_description`, rendered HTML places
 one labelled disclosure after the caption and associates it with the image via
@@ -613,8 +657,17 @@ graph TD
 | **pdf_renderer.py** | PDF document generation | `PDFRenderer.render_combined_pdf()` - LaTeX compilation | latex_utils, manuscript_discovery |
 | **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and Reveal.js support; archive mode chooses an adaptive `--slide-level` in the 2–4 range and applies `_beamer_allowframebreaks.lua`, while accessible mode consumes the semantic Pandoc AST from `_slides_accessibility.py` | latex_utils, Pandoc, semantic slide composer |
 | **_slides_accessibility.py** | Accessible presentation composition facade | Public policy, frame, and diagnostic exports plus semantic frame composition | `_slides_accessibility_*`, shared HTML accessibility postprocessor |
+| **_slides_accessibility_composition.py** | Semantic composition boundary | Validates the complete document, applies writer-specific formal-content fallbacks, and constructs projection frames without mutating canonical source | Pandoc JSON AST, contracts, figures, tables, text geometry |
+| **_slides_accessibility_contracts.py** | Projection policy and diagnostics | Owns the opt-in 16:9 typography, density, table, and figure contracts plus stable fail-closed diagnostic construction | Rendering configuration, Pandoc node helpers |
+| **_slides_accessibility_figures.py** | Figure-led frame composition | Prices figure allocation, validates writer-visible targets, and reads bounded intrinsic raster geometry only through the confined image boundary | `_slides_accessibility_image_io.py`, Pandoc JSON AST |
+| **_slides_accessibility_image_io.py** | Confined local-raster inspection | Resolves local targets inside declared roots, rejects symlink and path escapes, opens with no-follow semantics, and bounds byte/pixel metadata reads | Pillow, filesystem descriptors, accessibility contracts |
+| **_slides_accessibility_limits.py** | Pandoc resource limits | Enforces the 16 MiB JSON, 100,000-node, and 128-level AST ceilings before recursive composition | Pandoc JSON AST, rendering errors |
+| **_slides_accessibility_raw_tex.py** | Raw-TeX admission | Preserves the formal-statement subset while rejecting unsupported geometry and TeX lexical translations before writer fallback | Pandoc JSON AST, accessibility contracts |
 | **_slides_accessibility_text_geometry.py** | Shared projected-text geometry | Citeproc-resolved visible text, physical-token widths, hard-break/container lines, and conservative math geometry | Pandoc JSON AST, `_slides_accessibility_contracts.py` |
 | **_slides_accessibility_tables.py** | Accessible table composition | Joint column/span minima, supported rich-cell geometry, bounded whole-row excerpts, and stable fail-closed diagnostics | `_slides_accessibility_text_geometry.py`, Pandoc JSON AST |
+| **_slides_math_header.py** | Accessible math preamble | Builds the slide math header from validated project preamble material and rejects TeX lexical translations before writing | manuscript sources, accessibility policy |
+| **_slides_beamer_geometry.py** | Compiled Beamer geometry | Rejects safe-area violations and log-reported frame overflow after compilation, removing invalid derivatives | pdfplumber, LaTeX log parser |
+| **_slides_tex_tables.py** | Beamer table normalization | Insets generated longtables against the captured frame-body width and preserves continuation-table geometry | generated LaTeX, accessibility policy |
 | **_slides_codelisting.py** | Captioned slide listings | Replaces pandoc-crossref's generated listing float after Pandoc preamble assembly so numbered code captions compile inside Beamer frames | slides_renderer |
 | **_slides_framebreaks.py** | Dense slide splitting | Isolates unbreakable listing, figure, table, and list environments while splitting long top-level frame content safely; explicit `\begingroup`/`\endgroup` regions remain in one continuation frame | slides_renderer |
 | **web_renderer.py** | Web HTML output | `WebRenderer` - MathJax integration; markdown preprocess in `_web_markdown_preprocess.py`, HTML postprocess in `_web_postprocess.py` | pandoc |

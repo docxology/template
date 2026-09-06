@@ -36,6 +36,11 @@ from infrastructure.rendering._slides_accessibility_figures import (
     FIGURE_SAFE_BODY_REFERENCE_UNITS_16_9,
     FigureAreaAllocation,
     shorten_figure_caption,
+    validate_document_image_targets,
+)
+from infrastructure.rendering._slides_accessibility_limits import (
+    read_bounded_pandoc_json,
+    validate_accessible_ast_limits,
 )
 from infrastructure.rendering._slides_accessibility_tables import _excerpt_table
 from infrastructure.rendering._slides_accessibility_raw_tex import (
@@ -84,7 +89,13 @@ def _is_nonvisible_auxiliary_block(block: dict[str, Any]) -> bool:
 
 
 def _with_inline_writer_fallbacks(value: object) -> object:
-    """Pair allowlisted TeX reference inlines with explicit HTML peers."""
+    """Pair TeX reference inlines with HTML peers in one shallow-copy pass.
+
+    Copying an entire remaining subtree at every ancestor made a deeply nested
+    AST quadratic before the recursive projection even reached its leaf. The
+    composition entry point already bounds depth and node count; each mapping
+    now copies only its own non-content fields and reconstructs ``c`` once.
+    """
 
     if isinstance(value, list):
         rendered: list[object] = []
@@ -98,11 +109,11 @@ def _with_inline_writer_fallbacks(value: object) -> object:
         return rendered
     if not isinstance(value, dict):
         return copy.deepcopy(value)
-    updated = copy.deepcopy(value)
-    if updated.get("t") in {"RawBlock", "RawInline"}:
-        return updated
-    if "c" in updated:
-        updated["c"] = _with_inline_writer_fallbacks(updated["c"])
+    if value.get("t") in {"RawBlock", "RawInline"}:
+        return copy.deepcopy(value)
+    updated = {
+        key: (_with_inline_writer_fallbacks(item) if key == "c" else copy.deepcopy(item)) for key, item in value.items()
+    }
     return updated
 
 
@@ -140,6 +151,8 @@ def _compose_segment(
     *,
     policy: AccessibleSlidePolicy,
     source: str,
+    authorized_image_roots: tuple[Path, ...],
+    figure_image_root: Path | None,
 ) -> tuple[list[_Frame], int]:
     frames: list[_Frame] = []
     pending: list[dict[str, Any]] = []
@@ -269,6 +282,8 @@ def _compose_segment(
                     ),
                     source=source,
                     heading=heading,
+                    authorized_image_roots=authorized_image_roots,
+                    figure_image_root=figure_image_root,
                 ),
             ]
         elif kind == "table-led":
@@ -366,6 +381,8 @@ def compose_accessible_pandoc_document(
     *,
     policy: AccessibleSlidePolicy,
     source: str,
+    authorized_image_roots: tuple[Path, ...] = (),
+    figure_image_root: Path | None = None,
 ) -> AccessibleSlideComposition:
     """Compose one Pandoc JSON document into bounded semantic slide frames."""
 
@@ -374,6 +391,25 @@ def compose_accessible_pandoc_document(
             "Accessible slide composition requires a Pandoc JSON document",
             context={"source": source, "diagnostic_code": "slides.schema.pandoc-json"},
         )
+    validate_accessible_ast_limits(document, source=source)
+    # Validate the complete standalone-writer input, not only frame bodies.
+    # Pandoc metadata and headings may themselves contain Math, raw TeX, or
+    # Image nodes and are copied into the composed document. A document-wide
+    # preflight prevents those sibling routes from bypassing body validation.
+    metadata = document.get("meta")
+    metadata_values = list(metadata.values()) if isinstance(metadata, dict) else []
+    # Frame headers and retained body blocks are validated below after
+    # presentation-only page-break nodes have been removed. Metadata bypasses
+    # that segmentation path, so validate it explicitly before it is copied to
+    # the standalone writer document.
+    _validate_math_geometry(metadata_values, source=source, heading="Pandoc document metadata")
+    _validate_raw_tex_geometry(metadata_values, source=source, heading="Pandoc document metadata")
+    validate_document_image_targets(
+        document,
+        source=source,
+        authorized_image_roots=authorized_image_roots,
+        figure_image_root=figure_image_root,
+    )
     original_blocks = document["blocks"]
     segments: list[tuple[dict[str, Any], list[dict[str, Any]]]] = []
     current_header: dict[str, Any] | None = None
@@ -448,7 +484,14 @@ def compose_accessible_pandoc_document(
         else:
             content_header = _header_with(header, level=2)
 
-        frames, excerpted = _compose_segment(content_header, blocks, policy=policy, source=source)
+        frames, excerpted = _compose_segment(
+            content_header,
+            blocks,
+            policy=policy,
+            source=source,
+            authorized_image_roots=authorized_image_roots,
+            figure_image_root=figure_image_root,
+        )
         excerpted_tables += excerpted
         for frame in frames:
             output_blocks.append(
@@ -482,14 +525,27 @@ def load_and_compose_pandoc_json(
     *,
     policy: AccessibleSlidePolicy,
     source: str,
+    authorized_image_roots: tuple[Path, ...] = (),
+    figure_image_root: Path | None = None,
 ) -> AccessibleSlideComposition:
     """Load a Pandoc JSON file and compose it through the accessible policy."""
 
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads(read_bounded_pandoc_json(path, source=source))
+    except RecursionError as exc:
+        raise RenderingError(
+            "[slides.schema.pandoc-limits] Accessible Pandoc JSON exceeds the parser nesting limit",
+            context={"source": source, "diagnostic_code": "slides.schema.pandoc-limits"},
+        ) from exc
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise RenderingError(
             f"Could not read Pandoc JSON for accessible slides: {exc}",
             context={"source": source, "diagnostic_code": "slides.schema.pandoc-json"},
         ) from exc
-    return compose_accessible_pandoc_document(payload, policy=policy, source=source)
+    return compose_accessible_pandoc_document(
+        payload,
+        policy=policy,
+        source=source,
+        authorized_image_roots=authorized_image_roots,
+        figure_image_root=figure_image_root,
+    )

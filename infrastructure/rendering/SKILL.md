@@ -77,6 +77,26 @@ consume one composed Pandoc AST; any pair-member failure removes both outputs.
 Use `render_accessible_slide_pair()` for the same explicit programmatic
 contract. Archive mode keeps the historical Beamer-required behavior.
 
+For external or otherwise hostile manuscript material, also set the distinct
+renderer process boundary:
+
+```python
+config = RenderingConfig(
+    slides_profile="accessible",
+    security_profile="untrusted",
+    untrusted_temp_root="/absolute/caller-owned/temp-root",
+)
+```
+
+Only the exact security-profile names `trusted-local` and `untrusted` are
+accepted, and the untrusted profile requires its temporary root at
+configuration time. It strips inherited credentials from child environments,
+redirects child `HOME`/`TMPDIR`, confines outputs, and bounds subprocesses.
+Accessible composition separately bounds the Pandoc AST and local raster
+inspection and rejects unsupported TeX. Neither boundary is a chroot,
+container, network-denial mechanism, or complete hostile-content sandbox; see
+the [renderer boundary reference](README.md#opt-in-to-accessible-presentation-composition).
+
 ## Manuscript Discovery
 
 ```python
