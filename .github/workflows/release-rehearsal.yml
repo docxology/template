@@ -1,0 +1,59 @@
+name: Release Rehearsal
+
+# CLEAN-CHECKOUT-MAJ-1 machinery: two deterministic fresh-checkout rehearsals
+# on hosted Linux. Dispatch-only — zero cost on normal PRs; run from the
+# Actions tab (or `gh workflow run release-rehearsal.yml`) when a
+# clean-checkout receipt is needed.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rehearsal-${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: false
+
+env:
+  UV_FROZEN: "true"
+  MPLBACKEND: Agg
+
+jobs:
+  rehearsal:
+    name: Clean-checkout rehearsal (ubuntu)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14"
+
+      # Warm the uv cache from the repo lockfile so the rehearsal's fresh
+      # clones can satisfy `uv sync --locked --offline` without network.
+      - name: Warm uv cache
+        run: uv sync --group public-exemplars
+
+      - name: Run two deterministic fresh-checkout rehearsals
+        run: >-
+          uv run --frozen --no-sync python scripts/maintenance/release_rehearsal.py
+          --execute --receipt clean_checkout_rehearsal_receipt.json
+
+      - name: Summarize receipt
+        run: |
+          {
+            echo "## Clean-checkout rehearsal receipt"
+            echo '```json'
+            cat clean_checkout_rehearsal_receipt.json
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload rehearsal receipt
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: clean-checkout-rehearsal-receipt
+          path: clean_checkout_rehearsal_receipt.json
+          if-no-files-found: error

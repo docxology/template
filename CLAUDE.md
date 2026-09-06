@@ -94,10 +94,16 @@ uv run python scripts/runner/execute_pipeline.py --project {project_name} --core
 
 ### Testing
 
-Never run more than one exemplar pytest tree in the same process: every exemplar's
-`tests/` and `src/` packages share the same top-level names, so co-running two trees
-silently reuses whichever tree imported a module first. Run each exemplar in its own
-invocation (CI and the public readiness gate already do).
+Never run more than one exemplar pytest tree in the same process. Root-level pytest
+runs now use `--import-mode=importlib` (groundwork for shared-process collection;
+the single-tree suites are unaffected), but two exemplar trees still cannot share
+one process: each exemplar's `tests/` is a package named `tests`, so the first
+tree's `tests.conftest` wins plugin registration and the second tree's conftest
+fails with "Plugin already registered under a different name", and every exemplar
+imports its source as the same top-level `src` package, so `sys.modules` would
+resolve one tree's source modules for another. Run each exemplar in its own
+invocation (CI and the public readiness gate already do). Closing this needs unique
+exemplar `tests`/`src` package naming — tracked as `TEST-ISOLATION-SYSPATH-1`.
 ```bash
 # Run all tests (infrastructure + project)
 uv run python scripts/pipeline/stage_01_test.py --project {project_name}

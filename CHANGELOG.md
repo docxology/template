@@ -9,6 +9,23 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Test collection groundwork, CI gate, and rehearsal machinery (2026-09-06)
+
+- Root-level pytest runs now use ``--import-mode=importlib`` as groundwork for
+  shared-process collection; the single-tree suites are unaffected. Two exemplar
+  trees still cannot share one process — each exemplar's ``tests/`` is a package
+  named ``tests`` (the first tree's ``tests.conftest`` wins plugin registration)
+  and every exemplar imports its source as the shared top-level ``src`` package —
+  so one exemplar tree per process remains required and
+  ``TEST-ISOLATION-SYSPATH-1`` stays open for the unique package-naming
+  restructure.
+- CI gained a static ``ci-gate`` summary job — every upstream job must succeed or
+  be intentionally skipped — giving branch protection a single requireable check
+  name for the dynamic project-test matrix.
+- New dispatch-only ``release-rehearsal`` workflow runs the two fresh-checkout
+  deterministic rehearsals on hosted Linux and uploads the receipt (machinery
+  toward ``CLEAN-CHECKOUT-MAJ-1`` evidence).
+
 ### Skip-free optional-tool coverage (2026-09-06)
 
 - The two remaining infrastructure-suite skips were complementary calibre
