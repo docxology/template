@@ -12,6 +12,7 @@ import copy
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +22,7 @@ from infrastructure.rendering._slides_accessibility_figures import _image_nodes
 from infrastructure.rendering._slides_accessibility_limits import MAX_ACCESSIBLE_PANDOC_AST_NODES
 from infrastructure.rendering._slides_accessibility_image_io import (
     MAX_INTRINSIC_IMAGE_BYTES,
+    _resolve_local_image,
     inspect_intrinsic_image_geometry,
     read_confined_slide_resource,
 )
@@ -192,6 +194,35 @@ def expand_presentation_variants(
             raise _error("label measurements must enter through a source-bound presentation manifest", source)
     updated["blocks"] = blocks
     return updated
+
+
+def relocate_presentation_panels(
+    document: dict[str, Any],
+    *,
+    output_dir: Path,
+    source: str,
+    roots: tuple[Path, ...],
+    figure_root: Path | None,
+) -> None:
+    """Resolve selected panels once for both writers' output-relative paths.
+
+    Pandoc resource roots resolve input bytes but do not relocate linked HTML
+    assets. This runs only after manifest validation and composition; authored
+    measurement attributes cannot reach this boundary.
+    """
+    for image in _image_nodes(document):
+        if "data-slide-label-source-sha256" not in _attributes(image, source):
+            continue
+        resolved = _resolve_local_image(
+            image["c"][2][0],
+            source=source,
+            heading="Presentation variant",
+            authorized_roots=roots,
+            figure_root=figure_root,
+        )
+        if resolved is None:
+            raise _error("selected panel no longer resolves to a confined local file", source)
+        image["c"][2][0] = Path(os.path.relpath(resolved.path, output_dir)).as_posix()
 
 
 def reject_small_embedded_labels(pdf: Path, composed_source: Path, *, minimum_pt: float) -> None:

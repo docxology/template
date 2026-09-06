@@ -518,6 +518,10 @@ files, limited to 1 MiB and 64 distinct panels. Duplicate or unknown JSON keys,
 ambiguous attributes, missing/remote/escaping/symlinked files, hash mismatches,
 nonfinite or nonpositive measurements, and uninspectable rasters fail before
 writer execution. Each raster also meets the existing byte and pixel bounds.
+Selected targets are relocated relative to the derivative output directory for
+both writers, so figure-root aliases remain usable by the linked HTML reader.
+Keep the generated HTML and its referenced figure directory together when
+serving or distributing the presentation.
 
 After Beamer compilation, the renderer measures every matching raster's actual
 embedded dimensions in PDF points and requires the declared smallest label to

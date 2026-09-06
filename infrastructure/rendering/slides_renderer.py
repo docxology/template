@@ -64,7 +64,10 @@ from infrastructure.rendering._slides_beamer import (
     transform_beamer_latex,
 )
 from infrastructure.rendering._slides_beamer_geometry import reject_unsafe_accessible_beamer_geometry
-from infrastructure.rendering._slides_presentation_variants import reject_small_embedded_labels
+from infrastructure.rendering._slides_presentation_variants import (
+    reject_small_embedded_labels,
+    relocate_presentation_panels,
+)
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
 from infrastructure.rendering._slides_reveal_content import ACCESSIBLE_REVEAL_URL, ACCESSIBLE_REVEAL_VERSION
@@ -357,6 +360,13 @@ class SlidesRenderer:
                     path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None
                 ),
                 figure_image_root=figures_dir,
+            )
+            relocate_presentation_panels(
+                composition.document,
+                output_dir=output_dir,
+                source=str(source_file),
+                roots=tuple(path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None),
+                figure_root=figures_dir,
             )
             try:
                 temporary.write_text(

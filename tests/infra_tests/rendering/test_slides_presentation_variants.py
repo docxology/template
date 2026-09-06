@@ -5,8 +5,10 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote
 
 from PIL import Image, ImageDraw
 import pytest
@@ -18,6 +20,16 @@ from infrastructure.rendering._slides_accessibility_figures import _image_nodes
 from infrastructure.rendering._slides_presentation_variants import reject_small_embedded_labels
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer
+
+
+class _ImageTargets(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.sources: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag == "img":
+            self.sources.append(dict(attrs)["src"] or "")
 
 
 def _fixture(root: Path, *, panels: int = 1, minimum: float = 40) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -211,6 +223,12 @@ def test_real_beamer_reveal_pair_selects_variants_only_when_accessible(tmp_path:
         assert pdf.exists() and html.exists()
         assert "panel-0.png" in html.read_text()
         assert "Complete panel 1" in html.read_text()
+        images = _ImageTargets()
+        images.feed(html.read_text())
+        assert len(images.sources) == 1
+        linked = html.parent / unquote(images.sources[0])
+        assert linked.resolve() == (figures / "panel-0.png").resolve()
+        assert linked.read_bytes() == (figures / "panel-0.png").read_bytes()
     else:
         html = renderer.render(source, output_format="revealjs", manuscript_dir=manuscript, figures_dir=figures)
         assert "canonical.png" in html.read_text()
