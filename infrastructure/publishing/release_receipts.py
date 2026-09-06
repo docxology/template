@@ -59,6 +59,7 @@ class CommandReceipt:
     duration_seconds: float
     skip_reason: str = ""
     output_sha256: str = ""
+    output_tail: str = ""
 
     def validate(self) -> list[str]:
         """Return actionable contract errors."""

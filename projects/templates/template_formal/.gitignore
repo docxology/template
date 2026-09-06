@@ -39,3 +39,7 @@ formal/tla/*_TTrace_*.bin
 # Session working notes and local coverage HTML (never shipped)
 .debug-journal.md
 htmlcov/
+# Local artifacts (aligned with template_textbook convention)
+coverage_project.json
+.DS_Store
+.ruff_cache/

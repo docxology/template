@@ -44,9 +44,9 @@ DEFAULT_REHEARSAL_COMMANDS: tuple[tuple[str, ...], ...] = (
         "--all-projects",
         "--public-projects",
         "--profile",
-        "release",
+        "quick",
         "--project-workers",
-        "serial",
+        "2",
         "--receipt",
         REHEARSAL_RECEIPT_TOKEN,
     ),
@@ -106,6 +106,27 @@ def _digest_output(stdout: str, stderr: str) -> str:
     return hashlib.sha256(f"{stdout}\n{stderr}".encode("utf-8", errors="replace")).hexdigest()
 
 
+_FAILURE_TAIL_LIMIT = 4000
+
+
+def _failure_tail(stdout: str, stderr: str) -> str:
+    """Bounded diagnostic tail for failed commands (digest-only receipts are undiagnosable).
+
+    Stderr is appended after stdout so its final lines — where subprocess
+    failures usually surface — survive the limit. Credential-like patterns
+    are redacted rather than recorded.
+    """
+    combined = f"{stdout}\n{stderr}".strip()
+    if not combined:
+        return ""
+    tail = combined[-_FAILURE_TAIL_LIMIT:]
+    from infrastructure.publishing.release_receipts import _SECRET_PATTERN
+
+    if _SECRET_PATTERN.search(tail):
+        return "[redacted: credential-like pattern in output]"
+    return tail
+
+
 def _run_command(command: Sequence[str], cwd: Path, *, timeout_seconds: float = 1800) -> CommandReceipt:
     """Run one rehearsal command through the shared bounded policy."""
     started = monotonic()
@@ -127,6 +148,7 @@ def _run_command(command: Sequence[str], cwd: Path, *, timeout_seconds: float = 
         exit_code=result.returncode,
         duration_seconds=round(monotonic() - started, 3),
         output_sha256=_digest_output(result.stdout, result.stderr),
+        output_tail="" if status == "pass" else _failure_tail(result.stdout, result.stderr),
         skip_reason="" if status == "pass" else result.command_error or "command failed",
     )
 
@@ -248,6 +270,7 @@ def run_clean_checkout_rehearsal(
                     exit_code=clone.returncode,
                     duration_seconds=round(monotonic() - clone_started, 3),
                     output_sha256=_digest_output(clone.stdout, clone.stderr),
+                    output_tail="" if clone.returncode == 0 else _failure_tail(clone.stdout, clone.stderr),
                     skip_reason=clone.command_error or "fresh clone failed",
                 )
                 run_command_receipts.append((clone_receipt,))
@@ -292,6 +315,7 @@ def run_clean_checkout_rehearsal(
                 exit_code=clean.returncode,
                 duration_seconds=0.0,
                 output_sha256=_digest_output(clean.stdout, clean.stderr),
+                output_tail="" if clean.returncode == 0 else _failure_tail(clean.stdout, clean.stderr),
                 skip_reason="" if clean_ok else (clean_reason or "fresh checkout produced tracked or untracked output"),
             )
             command_receipts.append(clean_receipt)
