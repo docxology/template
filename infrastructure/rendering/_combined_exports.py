@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-import shutil
 import subprocess
 import traceback
 from collections.abc import Callable
@@ -17,8 +16,8 @@ from infrastructure.core.logging.diagnostic import DiagnosticReporter, Diagnosti
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.publishing.transmission_bookends import is_transmission_bookend
 from infrastructure.rendering import RenderManager
-from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
-from infrastructure.rendering._pandoc_filters import formalism_filter_args
+from infrastructure.rendering._bibliography import resolve_bibliography
+from infrastructure.rendering._pandoc_args import combined_pandoc_args
 from infrastructure.rendering._pdf_combined_markdown import preprocess_combined_markdown
 from infrastructure.rendering._pdf_combined_prevalidate import prevalidate_for_render
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
@@ -166,10 +165,13 @@ def render_combined_docx(
     reporter: DiagnosticReporter,
     *,
     combined_md: Path | None = None,
+    docx_renderer: Callable[..., Any] | None = None,
 ) -> None:
     """Render the combined DOCX from the preprocessed combined markdown."""
-    from infrastructure.rendering.docx_renderer import render_docx
+    if docx_renderer is None:
+        from infrastructure.rendering.docx_renderer import render_docx
 
+        docx_renderer = render_docx
     combined_md = combined_md or resolve_combined_markdown(manuscript_dir)
     if combined_md is None:
         logger.warning(
@@ -182,27 +184,16 @@ def render_combined_docx(
     out_path = docx_dir / f"{Path(project_name).name}_combined.docx"
     bibliographies = resolve_bibliography(manuscript_dir)
 
-    # Image refs in the combined markdown are written as ``figures/<name>``, so
-    # the resource path must be the *parent* of the figures dir (e.g. ``output/``),
-    # not the figures dir itself — otherwise pandoc silently drops every image.
     figures_dir = Path(manager.config.figures_dir)
-    extra_args = [
-        "--resource-path=" + str(manuscript_dir),
-        "--resource-path=" + str(figures_dir),
-        "--resource-path=" + str(figures_dir.parent),
-    ]
-    # Same numbering as the PDF edition, and ahead of --citeproc below so
-    # [@def:...] never reaches citeproc as an unresolved citation.
-    extra_args.extend(formalism_filter_args())
-
-    crossref = shutil.which("pandoc-crossref")
-    if crossref:
-        extra_args.extend(["--filter", crossref])
-    else:
-        logger.warning("pandoc-crossref not on PATH; DOCX @fig:/@sec:/@tbl:/@eq: will not resolve.")
-    if bibliographies:
-        extra_args.append("--citeproc")
-        extra_args.extend(pandoc_bibliography_args(bibliographies))
+    # Same numbering as the PDF edition; the shared builder carries the
+    # resource-path triple (manuscript dir, figures dir, figures parent),
+    # the formalism filter, the crossref probe, and citeproc+bibliography,
+    # so no edition can drop one resource-path leg or renumber itself.
+    extra_args = combined_pandoc_args(
+        [manuscript_dir, figures_dir, figures_dir.parent],
+        bibliographies,
+        edition="DOCX",
+    )
 
     import yaml as _yaml
     from infrastructure.rendering._pdf_title_page import _load_render_config, build_pandoc_metadata
@@ -219,7 +210,7 @@ def render_combined_docx(
     logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined DOCX manuscript...")
     try:
-        result = render_docx(
+        result = docx_renderer(
             combined_md,
             out_path,
             bibliography=None,
@@ -261,30 +252,16 @@ def render_combined_epub(
     out_path = epub_dir / f"{Path(project_name).name}_combined.epub"
     bibliographies = resolve_bibliography(manuscript_dir)
 
-    # Same resolution contract as DOCX: image refs are ``figures/<name>``, so the
-    # figures dir's parent must be on the resource path or pandoc silently drops them.
     figures_dir = Path(manager.config.figures_dir)
-    extra_args = [
-        "--resource-path=" + str(manuscript_dir),
-        "--resource-path=" + str(figures_dir),
-        "--resource-path=" + str(figures_dir.parent),
-    ]
-    # Without pandoc-crossref, {#fig-x} cross-reference targets (e.g. a manual
-    # "[see Figure](#fig-x)" link) don't reliably resolve to a real EPUB anchor
-    # — confirmed via epubcheck RSC-012 "Fragment identifier is not defined"
-    # on a real manuscript. render_combined_docx already adds this filter;
-    # EPUB needs the identical treatment, not a partial subset.
-    # Same numbering as the PDF and DOCX editions, and ahead of --citeproc below.
-    extra_args.extend(formalism_filter_args())
-
-    crossref = shutil.which("pandoc-crossref")
-    if crossref:
-        extra_args.extend(["--filter", crossref])
-    else:
-        logger.warning("pandoc-crossref not on PATH; EPUB @fig:/@sec:/@tbl:/@eq: will not resolve.")
-    if bibliographies:
-        extra_args.append("--citeproc")
-        extra_args.extend(pandoc_bibliography_args(bibliographies))
+    # Identical assembly to the DOCX edition — without the shared builder's
+    # crossref filter, {#fig-x} targets don't reliably resolve to real EPUB
+    # anchors (epubcheck RSC-012 "Fragment identifier is not defined" on a
+    # real manuscript). Same numbering as the PDF and DOCX editions.
+    extra_args = combined_pandoc_args(
+        [manuscript_dir, figures_dir, figures_dir.parent],
+        bibliographies,
+        edition="EPUB",
+    )
 
     from infrastructure.rendering._pdf_title_page import (
         _cover_image_alt,
