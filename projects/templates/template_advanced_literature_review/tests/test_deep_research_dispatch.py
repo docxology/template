@@ -97,3 +97,19 @@ def test_dispatch_fails_closed_when_fixture_is_missing(tmp_path: Path) -> None:
             tmp_path / "out",
             fixture_path=tmp_path / "missing.json",
         )
+
+
+def test_dispatch_fails_closed_on_malformed_fixture_json(tmp_path: Path) -> None:
+    """src/deep_research/AGENTS.md: 'Replay fails closed when its fixture is
+    absent or malformed.' Only the absent case had a test; this covers
+    malformed JSON and a fixture missing the required ``provider`` field.
+    """
+    invalid_json = tmp_path / "invalid.json"
+    invalid_json.write_text("{not valid json", encoding="utf-8")
+    with pytest.raises(json.JSONDecodeError):
+        dispatch_offline_replay("query", tmp_path / "out", fixture_path=invalid_json)
+
+    missing_provider = tmp_path / "missing_provider.json"
+    missing_provider.write_text(json.dumps({"status": "completed"}), encoding="utf-8")
+    with pytest.raises(KeyError, match="provider"):
+        dispatch_offline_replay("query", tmp_path / "out", fixture_path=missing_provider)

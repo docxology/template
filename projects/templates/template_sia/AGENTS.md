@@ -17,7 +17,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | `src/loop_config.py` | Reads `project_config.sia` from `manuscript/config.yaml` |
 | `src/reports.py` | Loop markdown report + `{{SIA_*}}` manuscript variables |
 | `src/fixtures/recorded_generations/` | Fixture replay for gens 1–3 (default CI) |
-| `tasks/mini_classify/` | Public/private task split + `evaluate.py` |
+| `tasks/mini_classify/` | Public/private task split (`data/public/` + `data/private/`) with the scorer at `tasks/mini_classify/data/public/evaluate.py` |
 | `scripts/run_sia_loop.py` | Thin orchestrator (`--project-root`, `--live-sia`) |
 | `scripts/z_generate_manuscript_variables.py` | Post-analysis token hydration |
 
@@ -34,6 +34,9 @@ code modification. Fixture replay records real threshold variants but all score
 1.0 on the toy dataset, so it demonstrates deterministic replay and threshold
 robustness—not measured self-improvement. See
 [`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md).
+`project_config.sia.approval_mode` is typed and defaults to `fixture_replay`;
+forks must select `live_proposal` or `live_apply` only alongside the sandbox,
+diff, rollback, and owner-receipt contract in `src/approval.py`.
 The project adapter lives in `src/loop.py`; scripts only parse arguments, call
 that API, and present output paths.
 

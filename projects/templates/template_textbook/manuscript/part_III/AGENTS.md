@@ -15,6 +15,7 @@ the chapter, lab, and question files only.
 ## Required elements in every Part III chapter
 
 Each chapter must contain all of the following (the audit gate checks for them):
+A chapter omitting any required element is precisely the known-wrong fixture shape the audit is built to flag.
 
 1. **Labelled H1** — the chapter title plus its section anchor:
    `# <Title> {#sec:part_III_<stem>}`.

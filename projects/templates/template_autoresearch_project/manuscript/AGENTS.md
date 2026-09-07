@@ -23,6 +23,15 @@ values, dataset/model labels, artifact paths, or registry captions left in
 numbered sections. Figure blocks must come from the registry-backed sidecars
 written during loop hydration.
 
+The manuscript artifact table lists only reviewed upstream analysis and
+evidence paths plus their roles; unknown paths are omitted by default. Exact
+bytes and the complete inventory, including manuscript-derived render, release,
+receipt, and transitive binder artifacts, remain authoritative only in
+`output/reports/artifact_manifest.json`. Embedding downstream rows or any byte
+counts would make a newly enabled format, transmission bookend, changed render,
+or binder update alter the Results section and create a one-generation feedback
+loop.
+
 ## Validation
 
 - Source ledger: `scripts/check_source_ledger.py` and `tests/test_source_ledger.py`

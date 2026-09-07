@@ -57,8 +57,9 @@ Structured manifest: `../data/transmission_manifest.json`
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Abstract {#sec:abstract}
@@ -75,8 +76,9 @@ Contributions are **methodological** and **architectural**. On the methods side,
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Introduction {#sec:introduction}
@@ -142,8 +144,9 @@ Restricting $f$ to a quadratic with known $(A,b)$ keeps the optimum, gradient, a
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Methodology {#sec:methodology}
@@ -210,7 +213,7 @@ Labels follow the same agency taxonomy used for plot colours (`_agency_category`
 
 The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict Zero-Mock testing policy, evaluated actively by executing `uv run pytest projects/templates/template_code_project/tests/` during the infrastructure build phase.
 
-1. **Project tests**: [`projects/templates/template_code_project/tests/test_optimizer.py`](../tests/test_optimizer.py) exercises `src/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks. Suite size: [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
+1. **Project tests**: [the project optimizer test suite](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/test_optimizer.py) exercises `src/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks. Suite size: [the measured repository counts](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md).
 2. **Infrastructure validation**: The repository-level `tests/infra_tests/` suite validates shared template modules (e.g. pipeline and discovery helpers) independently of this project’s manuscript.
 3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate on `projects/templates/template_code_project/src/` prior to treating the project as build-green.
 
@@ -237,8 +240,9 @@ The research template supports advanced LaTeX customization through the `preambl
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Results {#sec:results}
@@ -426,8 +430,9 @@ The experimental results validate the gradient descent implementation and confir
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Conclusion {#sec:conclusion}
@@ -490,8 +495,9 @@ The pipeline produced the figures referenced in [@sec:results], wrote `optimizat
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Experimental Setup {#sec:experimental_setup}
@@ -532,10 +538,10 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 
 ## Computational Environment
 
-- **Python**: 3.12.13
+- **Python**: 3.12.12
 - **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-08-03T00:12:48Z
+- **Generated**: 2026-08-14T14:20:53Z
 
 ## Pipeline ordering
 
@@ -562,8 +568,9 @@ This table is descriptive documentation only; it is not executed as code during 
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Reproducibility Certification {#sec:reproducibility}
@@ -587,10 +594,10 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |
-| Publication-quality figures        | 9   |
-| Structured data files (CSV/JSON)   | 5 |
-| Analysis reports                   | 25   |
-| **Total artifacts**                | **39** |
+| Publication-quality figures        | 7   |
+| Structured data files (CSV/JSON)   | 3 |
+| Analysis reports                   | 6   |
+| **Total artifacts**                | **16** |
 
 ## Numerical Validation Summary
 
@@ -627,8 +634,9 @@ To verify: modifying any value in `config.yaml` and re-running the pipeline will
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Scope, Related Work, and Positioning {#sec:scope}
@@ -658,8 +666,9 @@ These limitations are intentional: they narrow the failure surface so that infra
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # References {#sec:references}
@@ -675,8 +684,9 @@ uv run python -m infrastructure.reference.citation.cli validate \
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 ```{=latex}

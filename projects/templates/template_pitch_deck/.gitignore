@@ -18,3 +18,5 @@ htmlcov/
 
 # mmdc/Chrome sidecar config — machine-specific executable path, not portable.
 output/figures/*.puppeteer.json
+# Local artifacts (aligned with template_textbook convention)
+coverage_project.json

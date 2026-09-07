@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Executable-bundle stage orchestrator (Stage 10 — opt-in via [bundle] tag)."""
+"""Executable-bundle stage orchestrator (Stage 14 — opt-in via [bundle] tag)."""
 
 from __future__ import annotations
 
@@ -24,6 +24,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--project", required=True, help="Project name under projects/")
     parser.add_argument(
         "--python-version",
+        # ubuntu:24.04 ships 3.12; other tags require the deadsnakes PPA
+        # (dockerfile_gen bootstraps it automatically).
         default="3.12",
         help="Python version tag for the Dockerfile base (default: 3.12)",
     )

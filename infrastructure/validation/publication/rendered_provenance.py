@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import json
-import subprocess
 from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
 from infrastructure.core.files.secure_write import atomic_write_text_confined
+from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.core.project_paths import resolve_project_root
 from infrastructure.validation.output.artifacts import read_artifact_manifest
 from infrastructure.validation.rendered_snapshot import (
@@ -277,23 +277,22 @@ def _clean_index_issues(
             )
         }
     )
+    policy = SubprocessPolicy(
+        policy_id="git-metadata",
+        source_path="infrastructure/validation/publication/rendered_provenance.py",
+        timeout_seconds=30,
+        capture_output=True,
+        credential_free=True,
+    )
     try:
-        cached_result = subprocess.run(  # noqa: S603 - fixed argv, no shell
-            ["git", "-C", str(repo_root), "ls-files", "--cached", "-z"],
-            check=False,
-            capture_output=True,
-        )
-        dirty_result = subprocess.run(  # noqa: S603 - fixed argv, no shell
-            ["git", "-C", str(repo_root), "diff", "--name-only", "-z"],
-            check=False,
-            capture_output=True,
-        )
-    except OSError as exc:
+        cached_result = run_with_policy(["git", "ls-files", "--cached", "-z"], cwd=repo_root, env=None, policy=policy)
+        dirty_result = run_with_policy(["git", "diff", "--name-only", "-z"], cwd=repo_root, env=None, policy=policy)
+    except (OSError, ValueError) as exc:
         return (f"Git index is unavailable: {exc}",)
     if cached_result.returncode != 0 or dirty_result.returncode != 0:
         return ("Git index is unavailable for rendered evidence validation",)
-    cached = {raw.decode("utf-8") for raw in cached_result.stdout.split(b"\0") if raw}
-    dirty = {raw.decode("utf-8") for raw in dirty_result.stdout.split(b"\0") if raw}
+    cached = {raw for raw in cached_result.stdout.split("\0") if raw}
+    dirty = {raw for raw in dirty_result.stdout.split("\0") if raw}
     issues = [f"not cached: {path}" for path in sorted(required - cached)]
     issues.extend(f"working tree differs from cached evidence: {path}" for path in sorted(required & dirty))
     return tuple(issues)

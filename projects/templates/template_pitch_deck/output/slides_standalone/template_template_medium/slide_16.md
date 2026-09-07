@@ -1,6 +1,6 @@
 # Already public
 
-*Slide 16 of 37 — template_template pitch, medium deck — kind: `content`*
+*Slide 16 of 38 — template_template pitch, medium deck — kind: `content`*
 
 - Concept DOI 10.5281/zenodo.20419007, with a version-specific Zenodo deposit for the current release.
 - 9 durable publication records on file: Zenodo, GitHub, PyPI (sandbox), IPFS, Software Heritage, GitHub Pages, Netlify, Hugging Face, OSF.

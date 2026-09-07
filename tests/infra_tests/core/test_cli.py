@@ -83,7 +83,10 @@ class TestCreateParser:
         assert args.categories is None
 
 
-@pytest.mark.timeout(60)
+# Full-DAG subprocess runs take minutes even with instant stub stages;
+# the default 60s class pytest-timeout fires before the inner subprocess
+# timeout can. See DEEP_PASS_2026-08-21_ox-alpha-session7.md.
+@pytest.mark.timeout(900)
 class TestCLISubprocess:
     """Test CLI through real subprocess execution."""
 
@@ -161,7 +164,7 @@ authors:
                 capture_output=True,
                 text=True,
                 env=env,
-                timeout=30,
+                timeout=300,
             )
 
             assert result.returncode == 0
@@ -245,7 +248,7 @@ authors:
                 capture_output=True,
                 text=True,
                 env=env,
-                timeout=30,
+                timeout=300,
             )
 
             assert result.returncode == 0
@@ -259,8 +262,11 @@ authors:
             output_dir = Path(tmp_dir) / "output"
             output_dir.mkdir()
 
-            # Create a test file
-            test_file = output_dir / "test.pdf"
+            # Inventory scans recognized output categories rather than arbitrary
+            # root files, so place the fixture in the PDF category.
+            pdf_dir = output_dir / "pdf"
+            pdf_dir.mkdir()
+            test_file = pdf_dir / "test.pdf"
             test_file.write_bytes(b"fake pdf content")
 
             # Test CLI execution via subprocess
@@ -280,10 +286,8 @@ authors:
             )
 
             assert result.returncode == 0
-            # Inventory command may produce output in different formats
             combined_output = result.stdout + result.stderr
-            # Just check that it ran without error - specific output format may vary
-            assert len(combined_output.strip()) >= 0
+            assert "test.pdf" in combined_output
 
     def test_cli_discover_command(self):
         """Test discover command execution via CLI."""

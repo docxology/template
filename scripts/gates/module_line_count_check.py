@@ -12,6 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from infrastructure.validation.line_count import (  # noqa: E402
+    SOURCE_LINE_COUNT_RATCHETS,
     scan_infrastructure_and_scripts,
     scan_project_scripts,
     scan_project_src,
@@ -63,7 +64,10 @@ def main(argv: list[str] | None = None) -> int:
     warnings: list[tuple[str, int]] = []
     failures: list[tuple[str, int]] = []
 
-    infra_warn, infra_fail = scan_infrastructure_and_scripts(args.repo_root)
+    infra_warn, infra_fail = scan_infrastructure_and_scripts(
+        args.repo_root,
+        allowlist=SOURCE_LINE_COUNT_RATCHETS,
+    )
     warnings.extend(infra_warn)
     failures.extend(infra_fail)
 
@@ -71,7 +75,10 @@ def main(argv: list[str] | None = None) -> int:
     warnings.extend(proj_warn)
     failures.extend(proj_fail)
 
-    src_warn, src_fail = scan_project_src(args.repo_root)
+    src_warn, src_fail = scan_project_src(
+        args.repo_root,
+        allowlist=SOURCE_LINE_COUNT_RATCHETS,
+    )
     warnings.extend(src_warn)
     failures.extend(src_fail)
 

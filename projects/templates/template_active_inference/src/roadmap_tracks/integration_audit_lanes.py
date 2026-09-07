@@ -5,7 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import yaml
+from yaml_io import load_yaml
+
 
 ALLOWED_CLAIM_LANES = ("analytical", "formal", "pymdp", "release", "scope", "semantic", "visualization")
 
@@ -125,7 +126,7 @@ def _lane_from_source(source: str) -> str:
 def manifest_tracks_by_section(root: Path) -> dict[str, list[str]]:
     """Return sheaf track ids keyed by manuscript section id."""
     path = root / "manuscript" / "sheaf" / "manifest.yaml"
-    payload = yaml.safe_load(path.read_text(encoding="utf-8")) if path.is_file() else {}
+    payload = load_yaml(path)
     sections = payload.get("sections") if isinstance(payload, dict) else []
     return {
         str(section.get("id")): sorted(str(track_id) for track_id in (section.get("tracks") or {}))

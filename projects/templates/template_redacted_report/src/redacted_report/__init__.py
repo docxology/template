@@ -3,13 +3,16 @@
 from redacted_report.artifacts import (
     AUDIT_SCHEMA,
     LEDGER_SCHEMA,
+    MANUSCRIPT_BINDING_SCHEMA,
     PublicReleaseArtifacts,
     ReleaseArtifactPaths,
     ReleaseFixture,
     ReleaseInputError,
     build_public_release_artifacts,
+    build_manuscript_audit_binding,
     load_release_fixture,
     write_release_artifacts,
+    validate_manuscript_audit_binding,
 )
 from redacted_report.figures import FIGURE_SPECS, build_figure_registry, build_figures
 from redacted_report.redaction import (
@@ -50,6 +53,7 @@ from redacted_report.visuals import (
     PDFBackgroundProfile,
     RedactionVisualProfile,
     build_visual_variant_matrix,
+    evaluate_pixel_regression_gate,
     expected_dev_variant_filenames,
     expected_visual_variant_ids,
     normalize_pdf_background,
@@ -69,6 +73,7 @@ __all__ = [
     "DEFAULT_TAXONOMY",
     "FIGURE_SPECS",
     "LEDGER_SCHEMA",
+    "MANUSCRIPT_BINDING_SCHEMA",
     "PublicReleaseArtifacts",
     "RedactionDecision",
     "RedactionFinding",
@@ -92,9 +97,11 @@ __all__ = [
     "build_figure_registry",
     "build_figures",
     "build_public_release_artifacts",
+    "build_manuscript_audit_binding",
     "build_redaction_ledger",
     "build_release_packet",
     "build_visual_variant_matrix",
+    "evaluate_pixel_regression_gate",
     "declared_release_policies",
     "detect_residual_risks",
     "evaluate_review_gate",
@@ -118,4 +125,5 @@ __all__ = [
     "visual_redacted_segments",
     "write_dev_variant_pdfs",
     "write_release_artifacts",
+    "validate_manuscript_audit_binding",
 ]

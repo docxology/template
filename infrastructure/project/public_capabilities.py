@@ -44,7 +44,7 @@ from infrastructure.rendering.manuscript_discovery import discover_manuscript_fi
 REQUIRED_DIRECTORIES = ("src", "tests", "manuscript", "scripts", ".agents/skills")
 REQUIRED_FILES = ("README.md", "AGENTS.md", "pyproject.toml")
 CAPABILITY_MANIFEST_SCHEMA_VERSION = "template-public-capabilities-v1"
-CANONICAL_CI_PYTHON_VERSIONS = ("3.10", "3.12")
+CANONICAL_CI_PYTHON_VERSIONS = ("3.10", "3.14")
 RENDER_FORMAT_NAMES = ("pdf", "html", "slides", "docx", "epub")
 
 _HYDRATION_TOKEN_RE = re.compile(r"\{\{[A-Z_][A-Z0-9_]*\}\}|\$\{[A-Za-z_][A-Za-z0-9_]*\}")

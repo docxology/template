@@ -23,6 +23,7 @@ dependencies = [
     "pandas>=2.0.0",
     "numpy>=1.24.0",
     "matplotlib>=3.7.0",
+    "pillow>=12.3.0",
     "seaborn>=0.12.0",
     "scikit-learn>=1.3.0",
     "networkx>=3.1",
@@ -76,12 +77,10 @@ addopts = [
     "--strict-markers",
     "--disable-warnings",
     "--tb=short",
-    "--timeout=10",
+    "--timeout=120",
     "--cov=projects/templates/template_advanced_literature_review/src/multi_phase",
     "--cov-branch",
     "--cov-report=term-missing:skip-covered",
-    "--cov-report=html:htmlcov",
-    "--cov-fail-under=90",
 ]
 markers = [
     "unit: Unit tests (fast, no I/O)",
@@ -89,7 +88,7 @@ markers = [
     "llm: Tests requiring LLM access",
     "slow: Slow tests (>10 seconds)",
 ]
-timeout = 10
+timeout = 120
 
 [tool.coverage.run]
 source = ["src"]

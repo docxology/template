@@ -1,6 +1,6 @@
 # Archival publishing
 
-Multi-target mirror for long-horizon redundancy (Stage 13). See
+Multi-target mirror for long-horizon redundancy (Stage 15). See
 [`docs/maintenance/archival-targets.md`](../../../docs/maintenance/archival-targets.md)
 for provider rationale and threat scenarios.
 
@@ -63,7 +63,13 @@ uv run python -m infrastructure.publishing.archival_cli \
   --commit
 ```
 
-Pipeline stage: `uv run python scripts/runner/archive_publication.py --project <name>` (expects Stage 12 bundle).
+Pipeline stage: `uv run python scripts/runner/archive_publication.py --project <name>` (expects the Stage 14 executable bundle).
+
+Archive a deliberately curated bundle, not the whole Stage 5 root mirror. The
+mirror is a complete local debugging copy and can contain Git-ignored logs,
+telemetry, and render intermediates alongside its validated stable/shippable
+inventory. The Stage 14 executable bundle and format-specific release packages
+are the intended archival inputs.
 
 ## Import path
 
@@ -74,5 +80,5 @@ update old imports to the subpackage.
 ## Related
 
 - [`AGENTS.md`](AGENTS.md) — module internals, file list, provider protocol
-- [`../executable_bundle.py`](../executable_bundle.py) — `bundle_project()` for Stage 12
+- [`../executable_bundle.py`](../executable_bundle.py) — `bundle_project()` for the Executable Bundle stage
 - [`../zenodo/`](../zenodo/) — canonical Zenodo HTTP client used by `ZenodoProvider`

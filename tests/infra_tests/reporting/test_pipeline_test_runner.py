@@ -28,6 +28,12 @@ from infrastructure.reporting.pipeline_test_reporting import (
 from infrastructure.reporting.pipeline_test_runner import (
     INFRASTRUCTURE_TEST_SCOPES,
     TestSuiteResults as SuiteResults,
+    _build_generic_project_suite_config,
+    _build_infrastructure_suite_config,
+)
+from infrastructure.reporting.suite_runner import (
+    DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+    DEFAULT_TEST_SUITE_TIMEOUT_SECONDS,
 )
 
 
@@ -182,6 +188,50 @@ class TestInfrastructureTestScopes:
         monkeypatch.setenv("TEST_DISCOVERY_TIMEOUT_SEC", "45")
 
         assert parse_test_discovery_timeout("full") == 45.0
+
+
+class TestGenericProjectSuiteConfig:
+    """Generic single-project Stage-01 execution configuration."""
+
+    def test_uses_declared_project_verifier_timeout_capacity(self, tmp_path):
+        """The real generic config receives the same 6,900-second project budget."""
+        project_root = tmp_path / "projects" / "active" / "demo"
+        config = _build_generic_project_suite_config(
+            project_name="active/demo",
+            project_root=project_root,
+            repo_root=tmp_path,
+            cmd=["python", "-m", "pytest", str(project_root / "tests")],
+            env={"PYTHONPATH": str(project_root)},
+            coverage_threshold=90.0,
+            quiet=True,
+        )
+
+        assert config.timeout_seconds == DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS == 6900.0
+        assert config.total_timeout_seconds == DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS
+        assert config.coverage_cleanup_scope_dir == project_root
+        assert config.coverage_cleanup_recursive is True
+        assert config.spinner_label == "Running project tests for 'active/demo'"
+        assert config.coverage_json_paths[0] == project_root / "coverage_project.json"
+
+
+class TestInfrastructureSuiteConfig:
+    """Infrastructure Stage-01 execution configuration."""
+
+    def test_retry_cleanup_stays_at_nonrecursive_checkout_root(self, tmp_path):
+        config = _build_infrastructure_suite_config(
+            cmd=["python", "-m", "pytest", "tests/infra_tests"],
+            env={"PYTHONPATH": str(tmp_path)},
+            repo_root=tmp_path,
+            coverage_json_paths=[tmp_path / "coverage_infra.json"],
+            coverage_threshold=60.0,
+            quiet=True,
+            scope="full",
+        )
+
+        assert config.coverage_cleanup_scope_dir is None
+        assert config.coverage_cleanup_recursive is False
+        assert config.timeout_seconds == DEFAULT_TEST_SUITE_TIMEOUT_SECONDS == 1800.0
+        assert config.total_timeout_seconds is None
 
 
 class TestLogDiscoveredTests:

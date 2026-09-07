@@ -7,8 +7,10 @@ import shutil
 from collections.abc import Callable
 from pathlib import Path
 
+import pytest
+
 from src.loop import build_run_config, fixtures_dir, run_sia_loop_project
-from src.loop_config import load_paper_title, load_sia_settings
+from src.loop_config import SiaLoopSettings, load_paper_title, load_sia_settings
 from src.reports import compute_variables, write_loop_report, write_manuscript_variables
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -21,6 +23,21 @@ def test_load_sia_settings():
     assert settings.task_name == "mini_classify"
     assert settings.max_generations == 3
     assert settings.live is False
+    assert settings.approval_mode == "fixture_replay"
+
+
+def test_settings_reject_unknown_approval_mode() -> None:
+    with pytest.raises(ValueError, match="approval_mode"):
+        SiaLoopSettings("task", 1, 1, False, 60, "", "unknown")  # type: ignore[arg-type]
+
+
+def test_settings_reject_string_true_false_coercion(tmp_path: Path, copy_project_sandbox: Copy):
+    project = tmp_path / "project"
+    copy_project_sandbox(project)
+    config = project / "manuscript" / "config.yaml"
+    config.write_text(config.read_text(encoding="utf-8").replace("live: false", 'live: "false"'), encoding="utf-8")
+
+    assert load_sia_settings(project).live is False
 
 
 def test_fixtures_dir_exists():

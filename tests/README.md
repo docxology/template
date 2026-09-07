@@ -26,6 +26,26 @@ uv run pytest tests/integration/ -v
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 ```
 
+The maintained pipeline profiles are the canonical fast/release boundary:
+
+```bash
+# Quick contract loop: excludes slow, long-running, live-service, and benchmark lanes.
+uv run python scripts/pipeline/stage_01_test.py --profile quick
+
+# Release lane: includes deterministic slow tests while retaining explicit
+# opt-in boundaries for long-running and live-service tests.
+uv run python scripts/pipeline/stage_01_test.py --profile release
+```
+
+The actual pytest subprocess reports its own `discovery_count`; the runner does
+not perform a second collection-only subprocess by default. For collection
+diagnostics only, opt into the extra preflight explicitly:
+
+```bash
+TEMPLATE_TEST_DISCOVERY_PREFLIGHT=1 \
+  uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke
+```
+
 ## Layout
 
 ```mermaid
@@ -55,6 +75,20 @@ flowchart TB
 - Prefer `uv run` for test commands.
 - Keep infrastructure tests separate from project tests.
 - Keep integration tests focused on end-to-end behavior.
+
+## Behavioral test contract
+
+- Assertions must bind an observable contract: exact values, meaningful
+  structural invariants, output files/content, or explicit success/failure
+  status. Tautologies such as `or True`, non-negative checks on unconstrained
+  counts, and `hasattr` guards around APIs that do not exist are not coverage.
+- Optional toolchains use explicit `pytest.skip` with a reason. A test must
+  not silently disappear because an expected public API is absent or because a
+  broad exception was swallowed.
+- Negative controls must prove the failure signal, not merely complete without
+  raising. Rendering, subprocess, and hydrated-artifact tests belong in the
+  `slow` lane so the quick profile remains fast without weakening the release
+  contract.
 
 ## Ollama (`@pytest.mark.requires_ollama`)
 

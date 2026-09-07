@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging.utils import get_logger, log_live_resource_usage, log_success
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.rendering._combined_exports import (  # noqa: F401
@@ -25,19 +26,24 @@ from infrastructure.rendering._combined_exports import (  # noqa: F401
     render_combined_outputs as _render_combined_outputs,
 )
 from infrastructure.rendering._manuscript_source import (  # noqa: F401
+    clean_stale_render_deliverables as _clean_stale_render_deliverables,
     has_generated_manuscript_ordering as _has_generated_manuscript_ordering,
+    is_project_resolved as _is_project_resolved,
     load_project_config_yaml as _load_project_config_yaml,
     log_manuscript_composition as _log_manuscript_composition,
     render_individual_files as _render_individual_files,
     resolve_manuscript_dir as _resolve_manuscript_dir,
     run_manuscript_variable_script as _run_manuscript_variable_script,
     run_override_script as _run_override_script,
+    unresolved_config_tokens as _unresolved_config_tokens,
     validate_latex_packages as _validate_latex_packages,
+    verify_config_tokens_resolved as _verify_config_tokens_resolved,
 )
 from infrastructure.rendering._pipeline_summary import (
     generate_rendering_summary,
     log_rendering_summary,
     verify_pdf_outputs,
+    verify_render_outputs,
 )
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files, verify_figures_exist
@@ -48,7 +54,7 @@ logger = get_logger(__name__)
 
 
 def _write_transmission_bookends(project_root: Path, project_name: str, *, repo_root: Path) -> None:
-    from infrastructure.publishing.transmission_bookends import write_transmission_bookends
+    from infrastructure.transmission.transmission_bookends import write_transmission_bookends
 
     write_transmission_bookends(project_root, project_name, repo_root=repo_root)
 
@@ -70,7 +76,7 @@ class RenderPipelineDependencies:
     render_combined: Callable[..., None] = _render_combined_outputs
     generate_summary: Callable[..., dict[str, Any]] = generate_rendering_summary
     log_summary: Callable[[dict[str, Any]], None] = log_rendering_summary
-    verify_outputs: Callable[..., bool] = verify_pdf_outputs
+    verify_outputs: Callable[..., bool] = verify_render_outputs
 
 
 def _render_pipeline_impl(
@@ -100,7 +106,15 @@ def _render_pipeline_impl(
     elif deps.hydrate_manuscript(project_root, template_repo_root=root) != 0:
         return 1
 
-    manuscript_dir = _resolve_manuscript_dir(project_root)
+    try:
+        manuscript_dir = _resolve_manuscript_dir(project_root)
+    except ValidationError as exc:
+        # config.yaml feeds the PDF title page; an unresolved {{TOKEN}} there
+        # would print verbatim on the published cover. Fail closed instead.
+        logger.error("❌ %s", exc.message)
+        for suggestion in exc.suggestions:
+            logger.error("   %s", suggestion)
+        return 1
 
     try:
         deps.write_bookends(project_root, project_name, repo_root=root)
@@ -109,6 +123,12 @@ def _render_pipeline_impl(
 
     override_script = project_root / "scripts" / "_render_pdf_override.py"
     if override_script.exists():
+        stale_override_pdf = project_root / "output" / "pdf" / f"{Path(project_name).name}_combined.pdf"
+        try:
+            stale_override_pdf.unlink(missing_ok=True)
+        except OSError as exc:
+            logger.error("Could not remove stale override PDF %s: %s", stale_override_pdf, exc)
+            return 1
         return deps.run_override(project_root, override_script)
 
     if deps.validate_latex() != 0:
@@ -125,8 +145,8 @@ def _render_pipeline_impl(
 
     source_files = deps.discover_manuscript(manuscript_dir)
     if not source_files:
-        logger.warning("No manuscript files found")
-        return 0
+        logger.error("No manuscript files found; refusing to validate prior render outputs")
+        return 1
 
     _log_manuscript_composition(source_files)
 
@@ -142,6 +162,15 @@ def _render_pipeline_impl(
             slides_dir=str(project_root / "output" / "slides"),
             docx_dir=str(project_root / "output" / "docx"),
             epub_dir=str(project_root / "output" / "epub"),
+            slide_theme=env_config.slide_theme,
+            slides_profile=env_config.slides_profile,
+            slides_max_prose_words=env_config.slides_max_prose_words,
+            slides_max_table_rows=env_config.slides_max_table_rows,
+            slides_min_figure_area_percent=env_config.slides_min_figure_area_percent,
+            slides_title_font_pt=env_config.slides_title_font_pt,
+            slides_body_font_pt=env_config.slides_body_font_pt,
+            slides_figure_label_font_pt=env_config.slides_figure_label_font_pt,
+            slides_reader_href=env_config.slides_reader_href,
             enable_pdf=env_config.enable_pdf,
             enable_html=env_config.enable_html,
             enable_slides=env_config.enable_slides,
@@ -156,13 +185,19 @@ def _render_pipeline_impl(
         log_success("Initialized RenderManager from infrastructure.rendering", logger)
         logger.info(
             f"Render formats: pdf={config.enable_pdf} html={config.enable_html} "
-            f"slides={config.enable_slides} docx={config.enable_docx} epub={config.enable_epub}"
+            f"slides={config.enable_slides} docx={config.enable_docx} epub={config.enable_epub}; "
+            f"slides_profile={config.slides_profile}"
         )
     except (OSError, ValueError, TypeError) as e:
         logger.error(f"Failed to initialize RenderManager: {e}")
         return 1
 
     md_files = [f for f in source_files if f.suffix == ".md"]
+    try:
+        _clean_stale_render_deliverables(manager, source_files, project_name)
+    except OSError as exc:
+        logger.error("Could not remove stale render deliverable: %s", exc)
+        return 1
     rendered_count, failed_files = deps.render_individual(manager, source_files, reporter)
 
     if md_files:
@@ -229,6 +264,7 @@ __all__ = [
     "generate_rendering_summary",
     "log_rendering_summary",
     "verify_pdf_outputs",
+    "verify_render_outputs",
     "RenderPipelineDependencies",
     "execute_render_pipeline",
 ]

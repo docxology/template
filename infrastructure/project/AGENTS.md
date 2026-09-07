@@ -11,7 +11,7 @@ The `infrastructure/project/` module provides project discovery, validation, and
 **Core Functions:**
 
 - `discover_projects(repo_root, projects_dir="projects")` - Find all valid projects in the active projects directory
-- `resolve_project_root(repo_root, project_name)` - Resolve a project root. A qualified `<subfolder>/<name>` path (head in `templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) resolves directly under `projects/<subfolder>/<name>`. A bare name prefers `projects/active/<name>` (if it carries project markers), then `projects/working/<name>`, then a flat standalone `projects/<name>`, falling back to `projects/active/<name>`
+- `resolve_project_root(repo_root, project_name)` - Resolve a project root. A qualified `<subfolder>/<name>` path (head in `templates/`, `active/`, `working/`, `ongoing/`, `archive/`) resolves directly under `projects/<subfolder>/<name>`. A bare name prefers `projects/active/<name>` (if it carries project markers), then `projects/working/<name>`, then a flat standalone `projects/<name>`, then the public `projects/templates/<name>` exemplar, falling back to `projects/active/<name>`
 - `validate_project_structure(project_dir)` - Validate required directories exist
 
 ### Private Promotion Contracts (`promotion/`)
@@ -42,11 +42,19 @@ Single source of truth for which projects are public and which paths CI checks. 
 - `public_ci_source_paths(repo_root)` - import-safe public `src/` paths fed to mypy
 - `main(argv=None)` - CLI entry point for `lint-paths`, `source-paths`, and roster subcommands
 
+### Public Template Contract (`public_template_contract.py`)
+
+- `validate_public_template_contract(repo_root, *, public_names=...)` - validate
+  the regular marker files, source/test directories, and non-empty test scope
+  for every canonical public exemplar without following private symlinks.
+- `PublicTemplateContractReport` / `PublicTemplateFinding` - typed structural
+  findings used by `scripts/audit/check_public_template_contract.py`.
+
 ### Sidecar Symlink Sync (`linking.py`)
 
 Implements the private-projects sidecar symlink sync documented in root `CLAUDE.md`. Imported by `orchestration/cli.py`; auto-runs on `run.sh` / `python -m infrastructure.orchestration` unless `TEMPLATE_SKIP_LINK_SYNC=1`.
 
-- `LIFECYCLE_LINK_DIRS: dict[str, str]` - maps private sidecar subdirs to their `projects/<subfolder>/` link targets (`working/*` → `projects/working/*`, `archive/*` → `projects/archive/*`, optional `active/*`/`published/*`/`other/*`)
+- `LIFECYCLE_LINK_DIRS: dict[str, str]` - maps private sidecar subdirs to their `projects/<subfolder>/` link targets (`working/*` → `projects/working/*`, `archive/*` → `projects/archive/*`, optional `active/*`)
 - `private_projects_root(repo_root)` - resolve the sidecar root (env `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`, default sibling `../projects`)
 - `is_managed_symlink(path, private_root)` - classify a `projects/` entry as a managed sidecar symlink
 - Env vars: `TEMPLATE_PRIVATE_PROJECTS_ROOT` (root override), `TEMPLATE_SKIP_LINK_SYNC` (disable sync)
@@ -68,8 +76,14 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
   subprocess for every `PUBLIC_PROJECT_NAMES` entry and records stable
   PASS/FAIL/SKIP results. Exit code 2 is a failure unless the subprocess emits
   an explicit `PUBLIC_READINESS_SKIP:<reason>` marker.
-- The gate fails closed when a public exemplar is absent. Private symlinked
-  lifecycle projects are never included.
+- The gate fails closed when a public exemplar is absent, the report roster is
+  empty/incomplete/duplicated, or a passing result has a nonzero exit code.
+  Private symlinked lifecycle projects are never included.
+- The default outer deadline is 7,200 seconds per project, leaving 300 seconds
+  beyond the native verifier budget. Both defaults live in
+  `infrastructure.core.pytest_profiles`; `--timeout` accepts a positive integer
+  override. Results record the effective timeout and JSON counts are explicitly
+  project counts. `--allow-skips` permits project-level skips only.
 - Use `scripts/gates/public_readiness.py --json` for machine-readable output;
   `--include-ollama-tests --allow-skips` is reserved for the optional service
   lane.
@@ -88,7 +102,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
   `template_template` distribution-name exception, Python-series proof,
   fail-closed source/test parsing, direct hydration compile/main-guard smoke,
   and `@pytest.mark.skip` parsing.
-- `build_ci_matrix()` / `validate_ci_matrix()` own the Python 3.10/3.12 matrix
+- `build_ci_matrix()` / `validate_ci_matrix()` own the Python 3.10/3.14 matrix
   contract consumed by `.github/workflows/ci.yml`.
 - Thin gate: `uv run python scripts/gates/public_capabilities.py`; it is also
   part of the unified health registry. `--json` emits the full stable manifest;
@@ -139,7 +153,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `offending_tracked_projects(repo_root)` — non-exemplar paths tracked under `projects/`
 - `tracked_generated_artifacts(repo_root)` — committed files under disposable `output/` trees
 - `is_generated_artifact_path(path)` — path classifier for generated outputs
-- Used by `scripts/audit/check_tracked_projects.py` and `scripts/audit/check_tracked_generated_artifacts.py`
+- Used by `scripts/audit/check_tracked_all.py` and `scripts/audit/check_tracked_generated_artifacts.py`
 
 ### CodeGraph Local Integration (`codegraph.py`)
 
@@ -160,7 +174,23 @@ committed. The generated-artifact guard treats `.codegraph/*` as an offender.
 ```toml
 [tool.template]
 skip_combined_pytest = true  # omit from combined multi-project pytest union
+# Optional single-project Stage-01 verifier. The generic runner requires a
+# fresh structured receipt and independently rechecks the declared coverage floor.
+project_test_command = ["uv", "run", "--extra", "dev", "python", "scripts/run_full_verification.py"]
 ```
+
+`project_test_command` is not filename auto-discovery and is not used by the
+`--all-projects --public-projects` union runner. GitHub's per-project public
+matrix does use the single-project Stage-01 lane and therefore honors the
+declaration. Its Python entry point must resolve within the project's `scripts/`
+tree; shell strings, traversal, symlink escape, missing or stale receipts,
+zero-test receipts, and missing/below-floor coverage all fail.
+The adapter overlays the workspace's pinned pytest/Coverage stack, writes and
+reads only the selected project's `coverage_project.json`, and requires real
+JUnit outcomes plus pytest-produced warning and discovery counts. Its
+6,900-second verifier deadline remains below the shared 7,200-second stage
+deadline; both boundaries terminate descendants even when nested commands
+create new sessions.
 
 **Internal helpers (not exported from `infrastructure.project`)**:
 
@@ -281,7 +311,7 @@ flowchart TB
 
 ### Rendered vs Non-Rendered Subfolders
 
-All projects live under typed subfolders of `projects/`. The infrastructure distinguishes between **rendered subfolders** (`templates/`, optional `active/`) and **non-rendered subfolders** (`working/`, `archive/`, plus optional legacy `published/`/`other/`):
+All projects live under typed subfolders of `projects/`. The infrastructure distinguishes between **rendered subfolders** (`templates/`, optional `active/`) and **non-rendered subfolders** (`working/`, `ongoing/`, `archive/`):
 
 #### ✅ **Rendered Subfolders (`projects/templates/`, optional `projects/active/`)**
 - **Scanned** by `discover_projects()` as program directories (projects get qualified names `templates/<name>`, `active/<name>`)
@@ -297,7 +327,7 @@ All projects live under typed subfolders of `projects/`. The infrastructure dist
 
 ```python
 # discover_projects() scans projects/ and treats templates/ + optional active/ as program directories;
-# working/, archive/, and optional legacy published/other/ are skipped (NON_RENDERED_SUBDIRS).
+# working/, ongoing/, archive/ are skipped (NON_RENDERED_SUBDIRS).
 projects = discover_projects(repo_root)
 
 # Advanced: scan a different directory explicitly

@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
 
 from direct_recompute_support import copy_project_tree
+from manuscript.sheaf.semantic_maps import ARTIFACT_PRODUCERS
 from roadmap_tracks.sheaf_tracks_context import _ProvenanceContext
 from roadmap_tracks.sheaf_tracks_helpers import (
     _canonical_artifact_rows,
@@ -18,8 +20,16 @@ from roadmap_tracks.sheaf_tracks_io import (
     _bound_tracks,
     _claim_ids_by_path,
     _load_structured,
+    _load_yaml,
 )
-from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS, LEGACY_ARTIFACTS
+from roadmap_tracks.sheaf_tracks_registry import (
+    CANONICAL_ARTIFACTS,
+    HASH_CYCLE_AUTHORITY,
+    HASH_CYCLE_EXCLUDED_PRODUCERS,
+    HASH_CYCLE_EXCLUDED_PATHS,
+    LEGACY_ARTIFACTS,
+    hash_cycle_excluded,
+)
 
 
 @pytest.fixture(scope="module")
@@ -45,6 +55,20 @@ def test_load_structured_normalizes_non_object_yaml_to_empty(tmp_path: Path) -> 
     path.write_text("- not\n- an\n- object\n", encoding="utf-8")
 
     assert _load_structured(path) == {}
+
+
+def test_yaml_cache_tracks_content_not_restored_metadata(tmp_path: Path) -> None:
+    path = tmp_path / "config.yaml"
+    path.write_text("value: one\n", encoding="utf-8")
+    before = path.stat()
+    assert _load_yaml(path) == {"value": "one"}
+
+    path.write_text("value: two\n", encoding="utf-8")
+    os.utime(path, ns=(before.st_atime_ns, before.st_mtime_ns))
+    after = path.stat()
+    assert after.st_size == before.st_size
+    assert after.st_mtime_ns == before.st_mtime_ns
+    assert _load_yaml(path) == {"value": "two"}
 
 
 def test_bound_tracks_ignores_non_mapping_yaml_tracks(tmp_path: Path) -> None:
@@ -81,7 +105,7 @@ def test_portable_repo_path_falls_back_for_path_outside_detected_repo(tmp_path: 
     outside = tmp_path / "outside.txt"
     outside.write_text("outside\n", encoding="utf-8")
 
-    assert _portable_repo_path(outside, project) == outside.as_posix()
+    assert _portable_repo_path(outside, project) == "<external-path>"
 
 
 def test_copied_parity_classifies_real_file_states(tmp_path: Path) -> None:
@@ -121,6 +145,22 @@ def test_copied_parity_classifies_real_file_states(tmp_path: Path) -> None:
     assert payload["pre_copy_stage"] is True
 
 
+def test_copied_parity_rejects_symlink_without_touching_target(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    project = repo / "projects" / "templates" / "example"
+    project.mkdir(parents=True)
+    (repo / "run.sh").touch()
+    outside = tmp_path / "outside"
+    outside.write_bytes(b"outside")
+    source = project / "output" / "data" / "linked.json"
+    source.parent.mkdir(parents=True)
+    source.symlink_to(outside)
+
+    with pytest.raises(RuntimeError, match="must not contain symlinks"):
+        _copied_parity(project, ["output/data/linked.json"])
+    assert outside.read_bytes() == b"outside"
+
+
 def test_remove_legacy_artifacts_deletes_present_real_file(tmp_path: Path) -> None:
     present = tmp_path / LEGACY_ARTIFACTS[0]
     absent = tmp_path / LEGACY_ARTIFACTS[1]
@@ -158,7 +198,11 @@ def test_canonical_artifact_rows_bind_known_project_copy_state(copied_root: Path
         rows = _canonical_artifact_rows(copied_root, context)
         by_artifact = {row["artifact"]: row for row in rows}
         row = by_artifact["output/data/parameter_sweep.csv"]
-        cycle_row = by_artifact[CANONICAL_ARTIFACTS["provenance"]]
+        cycle_rows = (
+            by_artifact[CANONICAL_ARTIFACTS["provenance"]],
+            by_artifact["output/data/manuscript_variables.json"],
+            by_artifact[CANONICAL_ARTIFACTS["semantic"]],
+        )
 
         assert row["exists"] is True
         assert row["size_bytes"] == len(b"value\n1\n")
@@ -171,8 +215,37 @@ def test_canonical_artifact_rows_bind_known_project_copy_state(copied_root: Path
         assert row["validation_gates"]
         assert row["claim_ids"] == ["test-claim"]
         assert row["complete"] is True
-        assert cycle_row["cycle_excluded"] is True
-        assert cycle_row["hash_checked"] is False
+        for cycle_row in cycle_rows:
+            assert cycle_row["exists"] is True
+            assert cycle_row["cycle_excluded"] is True
+            assert cycle_row["hash_checked"] is False
+            assert cycle_row["hash_authority"] == HASH_CYCLE_AUTHORITY
+            assert cycle_row["sha256"] == ""
+            assert cycle_row["content_sha256"] == ""
+            assert cycle_row["size_bytes"] == 0
     finally:
         for path, payload in snapshots.items():
             path.write_bytes(payload)
+
+
+def test_hash_cycle_exclusion_is_the_exact_minimal_partition() -> None:
+    assert HASH_CYCLE_EXCLUDED_PRODUCERS == frozenset()
+    assert HASH_CYCLE_EXCLUDED_PATHS == {
+        "output/data/artifact_contract_index.json",
+        "output/data/artifact_provenance.json",
+        "output/data/manuscript_variables.json",
+        "output/data/sheaf_gluing_certificate.json",
+        "output/reports/replay_matrix.json",
+        "output/pdf/template_active_inference_combined.pdf",
+        "output/web/index.html",
+    }
+    assert all(hash_cycle_excluded(rel) for rel in HASH_CYCLE_EXCLUDED_PATHS)
+    assert {rel for rel, producer in ARTIFACT_PRODUCERS.items() if hash_cycle_excluded(rel, producer)} == {
+        "output/data/artifact_contract_index.json",
+        "output/data/artifact_provenance.json",
+        "output/data/manuscript_variables.json",
+        "output/data/sheaf_gluing_certificate.json",
+        "output/reports/replay_matrix.json",
+    }
+    assert not hash_cycle_excluded("output/data/sensitivity_sweep.json", "generate_sheaf_tracks.py")
+    assert not hash_cycle_excluded("output/figures/semantic_gluing_graph.png", "generate_figures.py")

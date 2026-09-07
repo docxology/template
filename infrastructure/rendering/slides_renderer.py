@@ -9,9 +9,8 @@ and intentionally **does not** route through
 ``geometry`` / ``hyperref`` / ``titlepage`` machinery would clash.
 
 The math-font subset *is* propagated. Whenever ``preamble.md`` loads
-``unicode-math``, :func:`_maybe_write_math_header` calls
-:func:`infrastructure.rendering._pdf_latex_helpers.extract_math_font_preamble`
-to write a minimal ``_slides_math_header.tex`` containing only
+``unicode-math``, :func:`infrastructure.rendering._slides_math_header.write_slides_math_header`
+writes a minimal ``_slides_math_header.tex`` containing only
 ``\\usepackage{unicode-math}`` plus the active ``\\setmathfont`` (with
 the same ``latinmodern-math.otf`` auto-fallback as the combined-PDF
 path), and passes it to Pandoc via ``-H header.tex``. This gives Beamer
@@ -25,33 +24,74 @@ single section in isolation and have a different acceptable-citation
 set than the full manuscript.
 """
 
+import json
 import re
 import subprocess
+import tempfile
 from collections.abc import Callable
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.rendering._pdf_latex_helpers import (
-    extract_math_font_preamble,
-    extract_preamble,
-)
 from infrastructure.rendering._slides_crossref import (
     COMBINED_AUX_BASENAME,
+    bind_displayed_equation_numbers,
     parse_aux_label_numbers,
     resolve_cross_deck_references,
+    transform_tex_prose,
+)
+from infrastructure.rendering._slides_codelisting import make_codelisting_slide_safe as make_codelisting_slide_safe
+from infrastructure.rendering._slides_accessibility import (
+    accessible_reveal_output_issues,
+    enhance_accessible_reveal,
+    load_and_compose_pandoc_json,
+)
+from infrastructure.rendering._slides_framebreaks import split_long_slide_frames as split_long_slide_frames
+from infrastructure.rendering._slides_beamer import (
+    _ACCESSIBLE_BEAMER_ASPECT_RATIO as _ACCESSIBLE_BEAMER_ASPECT_RATIO,
+    constrain_includegraphics_textheight as constrain_includegraphics_textheight,
+    make_known_literals_breakable as make_known_literals_breakable,
+    make_long_texttt_breakable as make_long_texttt_breakable,
+    make_pandoc_reference_tokens_breakable as make_pandoc_reference_tokens_breakable,
+    normalize_accessible_projection_latex as normalize_accessible_projection_latex,
+    pandoc_bibliography_args as pandoc_bibliography_args,
+    resolve_bibliography as resolve_bibliography,
+    write_slides_math_header as write_slides_math_header,
+    parse_latex_log_findings as parse_latex_log_findings,
+    _reject_accessible_beamer_overflow as _reject_accessible_beamer_overflow,
+    _slide_bibliography_args as _slide_bibliography_args,
+    beamer_command,
+    transform_beamer_latex,
+)
+from infrastructure.rendering._slides_beamer_geometry import reject_unsafe_accessible_beamer_geometry
+from infrastructure.rendering._slides_presentation_variants import (
+    reject_small_embedded_labels,
+    relocate_presentation_panels,
 )
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
-from infrastructure.rendering.latex_texttt import (
-    constrain_includegraphics_textheight,
-    make_known_literals_breakable,
-    make_long_texttt_breakable,
-    make_pandoc_reference_tokens_breakable,
-)
+from infrastructure.rendering._slides_reveal_content import ACCESSIBLE_REVEAL_URL, ACCESSIBLE_REVEAL_VERSION
+from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths
+from infrastructure.rendering._web_postprocess import MATHJAX_URL
 from infrastructure.rendering.security import subprocess_options
 
 logger = get_logger(__name__)
+
+
+# Accessible Reveal derivatives use a known Reveal theme rather than reusing
+# the Beamer-only ``metropolis`` default. Reveal.js does not ship a Metropolis
+# theme, so forwarding that name produces a broken stylesheet request. Pin the
+# companion runtime as part of the published reader contract; archive mode
+# retains its historical caller-configured URL/theme behavior.
+_ACCESSIBLE_REVEAL_VERSION = ACCESSIBLE_REVEAL_VERSION
+_ACCESSIBLE_REVEAL_URL = ACCESSIBLE_REVEAL_URL
+_ACCESSIBLE_REVEAL_THEME = "white"
+_SECTION_REF_RE = re.compile(
+    r"(?P<escaped_join>\\textasciitilde\{\})?"
+    r"(?P<authored_open>\()?"
+    r"\\(?P<command>ref|eqref)\{(?P<label>sec:[^}]+)\}"
+)
 
 
 class SlidesRenderer:
@@ -69,12 +109,54 @@ class SlidesRenderer:
         self._process_runner = process_runner
         self._latex_compile = latex_compile
 
+    def _require_accessible_seqsplit(self) -> None:
+        """Require the package used by admitted literal/reference break sequences.
+
+        Accessible authored ``Code`` remains indivisible. Two narrow generated
+        cases may still use ``breakseq``: recurring display literals and unresolved
+        cross-deck reference tokens. If ``seqsplit.sty`` is unavailable, that macro
+        is an identity fallback and the generated geometric premise is false.
+        Detect the capability through the same injected, security-profiled process
+        boundary as every other slide subprocess.
+        """
+
+        located = ""
+        try:
+            completed = self._process_runner(
+                ["kpsewhich", "seqsplit.sty"],
+                check=False,
+                capture_output=True,
+                text=True,
+                **subprocess_options(self.config.security(), 30),
+            )
+        except (OSError, subprocess.SubprocessError):
+            completed = None
+        if completed is not None and getattr(completed, "returncode", None) == 0:
+            stdout = getattr(completed, "stdout", "")
+            if isinstance(stdout, str):
+                located = stdout.strip()
+        if located:
+            return
+        raise RenderingError(
+            "[slides.capability.seqsplit-required] Accessible generated label wrapping requires seqsplit.sty",
+            context={
+                "diagnostic_code": "slides.capability.seqsplit-required",
+                "required_latex_package": "seqsplit",
+            },
+            suggestions=[
+                "Install the TeX seqsplit package before rendering generated long labels in the accessible profile.",
+                "Shorten or remove the long projected monospace token; archive rendering retains its historical fallback.",
+            ],
+        )
+
     def render(
         self,
         source_file: Path,
         output_format: str = "beamer",
         manuscript_dir: Path | None = None,
         figures_dir: Path | None = None,
+        *,
+        strict_cross_deck_refs: bool = False,
     ) -> Path:
         """Render slides from markdown with figure path resolution.
 
@@ -83,6 +165,9 @@ class SlidesRenderer:
             output_format: Output format ("beamer" for PDF, "revealjs" for HTML)
             manuscript_dir: Directory containing manuscript (for resource paths)
             figures_dir: Directory containing figures (for resource paths)
+            strict_cross_deck_refs: Fail when post-Pandoc TeX contains a
+                non-section reference that is neither local nor present in the
+                current combined-manuscript AUX label map.
 
         Returns:
             Path to generated slides file
@@ -99,15 +184,242 @@ class SlidesRenderer:
         profile.validate_output(output_file)
         profile.validate_source(source_file)
 
-        # For beamer, we need to handle figure paths specially
-        if output_format == "beamer":
-            return self._render_beamer_with_paths(source_file, output_file, manuscript_dir, figures_dir)
-        else:
-            # For reveal.js, use direct pandoc rendering
-            return self._render_revealjs(source_file, output_file)
+        if output_format not in {"beamer", "revealjs"}:
+            raise RenderingError(
+                f"Unsupported slide output format: {output_format}",
+                context={"source": str(source_file), "format": output_format},
+            )
 
-    def _render_revealjs(self, source_file: Path, output_file: Path) -> Path:
+        render_source = source_file
+        temporary_sources: tuple[Path, ...] = ()
+        accessible_resource_roots: tuple[Path, ...] = ()
+        if self.config.slides_profile == "accessible":
+            # A failed strict composition must not leave a prior derivative
+            # that can be mistaken for the current source.
+            output_file.unlink(missing_ok=True)
+            render_source, temporary_sources = self._prepare_accessible_source(
+                source_file,
+                output_dir,
+                manuscript_dir=manuscript_dir,
+                figures_dir=figures_dir,
+            )
+            accessible_resource_roots = tuple(
+                dict.fromkeys(path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None)
+            )
+
+        try:
+            # For beamer, we need to handle figure paths specially.
+            if output_format == "beamer":
+                return self._render_beamer_with_paths(
+                    render_source,
+                    output_file,
+                    manuscript_dir,
+                    figures_dir,
+                    strict_cross_deck_refs=strict_cross_deck_refs,
+                    accessible_resource_roots=accessible_resource_roots,
+                )
+            # For reveal.js, use direct pandoc rendering.
+            return self._render_revealjs(
+                render_source,
+                output_file,
+                manuscript_dir,
+                figures_dir,
+                strict_cross_deck_refs=strict_cross_deck_refs,
+                accessible_resource_roots=accessible_resource_roots,
+            )
+        finally:
+            for temporary in temporary_sources:
+                temporary.unlink(missing_ok=True)
+
+    def render_accessible_pair(
+        self,
+        source_file: Path,
+        manuscript_dir: Path | None = None,
+        figures_dir: Path | None = None,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> tuple[Path, Path]:
+        """Render one accessible Beamer/Reveal pair from one composed AST.
+
+        The accessible profile is a paired publication contract: both the
+        projected Beamer PDF and the accessibility-enhanced Reveal.js reader
+        consume the same semantic Pandoc JSON document.  A failure in either
+        renderer removes both public derivatives so a stale or partial pair
+        cannot satisfy a later pipeline gate.
+        """
+
+        if self.config.slides_profile != "accessible":
+            raise RenderingError(
+                "Accessible slide-pair rendering requires slides_profile='accessible'",
+                context={"source": str(source_file), "diagnostic_code": "slides.profile.pair-required"},
+            )
+
+        output_dir = Path(self.config.slides_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        pdf_output = output_dir / f"{source_file.stem}_slides.pdf"
+        html_output = output_dir / f"{source_file.stem}_slides.html"
+        profile = self.config.security()
+        profile.validate_source(source_file)
+        profile.validate_output(pdf_output)
+        profile.validate_output(html_output)
+
+        # Clear both identities before composition.  If composition itself
+        # fails, neither derivative from an older source revision survives.
+        pdf_output.unlink(missing_ok=True)
+        html_output.unlink(missing_ok=True)
+        render_source = source_file
+        temporary_sources: tuple[Path, ...] = ()
+        completed = False
+        accessible_resource_roots = tuple(
+            dict.fromkeys(path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None)
+        )
+        try:
+            render_source, temporary_sources = self._prepare_accessible_source(
+                source_file,
+                output_dir,
+                manuscript_dir=manuscript_dir,
+                figures_dir=figures_dir,
+            )
+            pdf_result = self._render_beamer_with_paths(
+                render_source,
+                pdf_output,
+                manuscript_dir,
+                figures_dir,
+                strict_cross_deck_refs=strict_cross_deck_refs,
+                accessible_resource_roots=accessible_resource_roots,
+            )
+            html_result = self._render_revealjs(
+                render_source,
+                html_output,
+                manuscript_dir,
+                figures_dir,
+                strict_cross_deck_refs=strict_cross_deck_refs,
+                accessible_resource_roots=accessible_resource_roots,
+            )
+            completed = True
+            return pdf_result, html_result
+        finally:
+            if not completed:
+                pdf_output.unlink(missing_ok=True)
+                html_output.unlink(missing_ok=True)
+            for temporary in temporary_sources:
+                temporary.unlink(missing_ok=True)
+
+    def _prepare_accessible_source(
+        self,
+        source_file: Path,
+        output_dir: Path,
+        *,
+        manuscript_dir: Path | None,
+        figures_dir: Path | None,
+    ) -> tuple[Path, tuple[Path, ...]]:
+        """Resolve citations, then compose one bounded Pandoc JSON document."""
+
+        profile = self.config.security()
+        raw_handle = tempfile.NamedTemporaryFile(
+            prefix=f".{source_file.stem}-",
+            suffix=".pandoc.json",
+            dir=output_dir,
+            delete=False,
+        )
+        raw_json = Path(raw_handle.name)
+        raw_handle.close()
+        composed_json = raw_json.with_suffix(".accessible.json")
+        temporary = composed_json.with_suffix(composed_json.suffix + ".tmp")
+        completed = False
+        try:
+            profile.validate_output(raw_json)
+            profile.validate_output(composed_json)
+            profile.validate_output(temporary)
+            cmd = [
+                self.config.pandoc_path,
+                str(source_file),
+                "-t",
+                "json",
+                "-o",
+                str(raw_json),
+            ]
+            # Citeproc deliberately runs at the geometry boundary as well as at
+            # the final writers. Pandoc retains Cite nodes, so pandoc-crossref can
+            # still resolve protocol/figure/section identifiers later, while the
+            # composer sees the exact visible author-year strings, affixes, and
+            # locators rather than a fixed placeholder that can underprice long
+            # family names.
+            cmd.extend(_slide_bibliography_args(manuscript_dir))
+            self._process_runner(
+                cmd,
+                check=True,
+                capture_output=True,
+                text=True,
+                **subprocess_options(profile, 600),
+            )
+            composition = load_and_compose_pandoc_json(
+                raw_json,
+                policy=self.config.accessible_slide_policy(),
+                source=str(source_file),
+                authorized_image_roots=tuple(
+                    path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None
+                ),
+                figure_image_root=figures_dir,
+            )
+            relocate_presentation_panels(
+                composition.document,
+                output_dir=output_dir,
+                source=str(source_file),
+                roots=tuple(path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None),
+                figure_root=figures_dir,
+            )
+            try:
+                temporary.write_text(
+                    json.dumps(
+                        composition.document,
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+                temporary.replace(composed_json)
+            except OSError:
+                temporary.unlink(missing_ok=True)
+                raise
+            logger.info(
+                "Accessible slide composition: %d frames (%d section dividers, %d figure frames, %d table excerpts)",
+                composition.frame_count,
+                composition.section_divider_count,
+                composition.figure_frame_count,
+                composition.excerpted_table_count,
+            )
+            completed = True
+            return composed_json, (raw_json, composed_json)
+        except subprocess.CalledProcessError as exc:
+            raise RenderingError(
+                f"Failed to parse accessible slide source: {exc.stderr}",
+                context={
+                    "source": str(source_file),
+                    "format": "pandoc-json",
+                    "diagnostic_code": "slides.parse.pandoc-json",
+                },
+            ) from exc
+        finally:
+            if not completed:
+                raw_json.unlink(missing_ok=True)
+                composed_json.unlink(missing_ok=True)
+                temporary.unlink(missing_ok=True)
+
+    def _render_revealjs(
+        self,
+        source_file: Path,
+        output_file: Path,
+        manuscript_dir: Path | None = None,
+        figures_dir: Path | None = None,
+        *,
+        strict_cross_deck_refs: bool = False,
+        accessible_resource_roots: tuple[Path, ...] = (),
+    ) -> Path:
         """Render reveal.js slides."""
+        theme = _ACCESSIBLE_REVEAL_THEME if self.config.slides_profile == "accessible" else self.config.slide_theme
         cmd = [
             self.config.pandoc_path,
             str(source_file),
@@ -117,8 +429,25 @@ class SlidesRenderer:
             str(output_file),
             "--standalone",
             "-V",
-            f"theme={self.config.slide_theme}",
+            f"theme={theme}",
         ]
+        if self.config.slides_profile == "accessible":
+            cmd.extend(
+                [
+                    "-f",
+                    "json",
+                    "--slide-level=2",
+                    f"--mathjax={MATHJAX_URL}",
+                    "-V",
+                    f"revealjs-url={_ACCESSIBLE_REVEAL_URL}",
+                ]
+            )
+        cmd.extend(_slide_bibliography_args(manuscript_dir))
+        resource_roots = accessible_resource_roots or tuple(
+            path for path in (manuscript_dir, figures_dir) if path is not None
+        )
+        for resource_root in dict.fromkeys(resource_roots):
+            cmd.extend(["--resource-path", str(resource_root)])
 
         logger.info(f"Generating reveal.js slides from {source_file}")
 
@@ -130,9 +459,38 @@ class SlidesRenderer:
                 text=True,
                 **subprocess_options(self.config.security(), 600),
             )
+            if self.config.slides_profile == "accessible":
+                try:
+                    enhance_accessible_reveal(
+                        output_file,
+                        policy=self.config.accessible_slide_policy(),
+                        registry_path=(figures_dir / "figure_registry.json") if figures_dir is not None else None,
+                        label_numbers=(
+                            parse_aux_label_numbers(Path(self.config.pdf_dir) / COMBINED_AUX_BASENAME)
+                            if strict_cross_deck_refs
+                            else None
+                        ),
+                        strict_cross_deck_refs=strict_cross_deck_refs,
+                    )
+                    issues = accessible_reveal_output_issues(output_file)
+                    if issues:
+                        raise RenderingError(
+                            "[slides.accessibility.reveal-output] Accessible Reveal output failed validation",
+                            context={
+                                "diagnostic_code": "slides.accessibility.reveal-output",
+                                "source": str(source_file),
+                                "output": str(output_file),
+                                "issues": list(issues),
+                            },
+                        )
+                except (OSError, RenderingError):
+                    output_file.unlink(missing_ok=True)
+                    raise
             return output_file
 
         except subprocess.CalledProcessError as e:
+            if self.config.slides_profile == "accessible":
+                output_file.unlink(missing_ok=True)
             raise RenderingError(
                 f"Failed to render slides: {e.stderr}",
                 context={"source": str(source_file), "format": "revealjs"},
@@ -144,6 +502,9 @@ class SlidesRenderer:
         output_file: Path,
         manuscript_dir: Path | None,
         figures_dir: Path | None,
+        *,
+        strict_cross_deck_refs: bool = False,
+        accessible_resource_roots: tuple[Path, ...] = (),
     ) -> Path:
         """Render beamer slides with proper figure path handling.
 
@@ -155,45 +516,22 @@ class SlidesRenderer:
         output_dir = output_file.parent
 
         # Create temporary LaTeX file
-        temp_tex = output_dir / f"{source_file.stem}_slides.tex"
+        # Derive intermediates from the stable public output name. Accessible
+        # mode consumes a randomized, short-lived JSON source; deriving from
+        # that temporary filename would leak nondeterministic build products
+        # into ``output/slides``.
+        temp_tex = output_file.with_suffix(".tex")
 
-        # Build pandoc command to convert markdown to LaTeX.
-        # ``--slide-level=2`` makes every h2 start its own Beamer frame
-        # (h1 becomes a section break) so a single h1 with several h2
-        # subsections renders as several slides instead of one huge
-        # overflowing frame. Combined with the allowframebreaks Lua
-        # filter below, even h2 sections with long body text split
-        # cleanly across multiple slides.
-        cmd = [
-            self.config.pandoc_path,
-            str(source_file),
-            "-t",
-            "beamer",
-            "-o",
-            str(temp_tex),
-            "--standalone",
-            "--slide-level=2",
-        ]
-
-        # Apply the allowframebreaks Lua filter so that long sections
-        # without h2 sub-headings still split across slides instead of
-        # triggering xelatex driver code 256 on overfull vboxes.
-        allowframebreaks_filter = Path(__file__).with_name("_beamer_allowframebreaks.lua")
-        if allowframebreaks_filter.exists():
-            cmd.extend(["--lua-filter", str(allowframebreaks_filter)])
-
-        # Inject the math-font subset of the manuscript preamble so
-        # \mid, \ll, \gg etc. render cleanly in slide decks without
-        # pulling in the full combined-PDF preamble.
-        math_header = self._maybe_write_math_header(manuscript_dir, output_dir)
-        if math_header is not None:
-            cmd.extend(["-H", str(math_header)])
-
-        # Add resource paths if provided
-        if manuscript_dir:
-            cmd.extend(["--resource-path", str(manuscript_dir)])
-        if figures_dir:
-            cmd.extend(["--resource-path", str(figures_dir)])
+        profile = self.config.security()
+        cmd = beamer_command(
+            self.config,
+            source_file,
+            temp_tex,
+            manuscript_dir,
+            figures_dir,
+            slide_level=2 if self.config.slides_profile == "accessible" else self._slide_level_for_source(source_file),
+            accessible_resource_roots=accessible_resource_roots,
+        )
 
         logger.info(f"Generating beamer slides from {source_file}")
 
@@ -204,7 +542,7 @@ class SlidesRenderer:
                 check=True,
                 capture_output=True,
                 text=True,
-                **subprocess_options(self.config.security(), 600),
+                **subprocess_options(profile, 600),
             )
 
             # Read LaTeX content and fix figure paths
@@ -212,40 +550,37 @@ class SlidesRenderer:
 
             # Fix figure paths for LaTeX compilation
             if figures_dir:
-                tex_content = self._fix_figure_paths(tex_content, output_dir, figures_dir)
+                tex_content = fix_slides_figure_paths(tex_content, output_dir, figures_dir)
 
-            tex_content = self._resolve_cross_deck_refs(tex_content)
+            tex_content = self._resolve_cross_deck_refs(
+                tex_content,
+                strict_cross_deck_refs=strict_cross_deck_refs,
+            )
 
-            tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
-            if texttt_replacements:
-                logger.info("Made %d long monospace path span(s) breakable in slides", texttt_replacements)
+            tex_content = transform_beamer_latex(
+                tex_content, self.config, require_seqsplit=self._require_accessible_seqsplit
+            )
 
-            tex_content, literal_replacements = make_known_literals_breakable(tex_content)
-            if literal_replacements:
-                logger.info("Made %d recurring long label(s) breakable in slides", literal_replacements)
-
-            tex_content, reference_replacements = make_pandoc_reference_tokens_breakable(tex_content)
-            if reference_replacements:
-                logger.info(
-                    "Made %d unresolved cross-reference token(s) breakable in slides",
-                    reference_replacements,
+            if (self.config.slides_profile == "accessible" or profile.untrusted) and "^^" in tex_content:
+                temp_tex.unlink(missing_ok=True)
+                raise RenderingError(
+                    "[slides.security.tex-lexical-translation] Generated slide TeX contains forbidden lexical translation",
+                    context={"diagnostic_code": "slides.security.tex-lexical-translation", "source": str(source_file)},
                 )
 
-            tex_content, graphics_replacements = constrain_includegraphics_textheight(tex_content, "0.46")
-            if graphics_replacements:
-                logger.info("Constrained %d slide figure height bound(s)", graphics_replacements)
-
-            # Write fixed LaTeX back
-            _tmp = temp_tex.with_suffix(temp_tex.suffix + ".tmp")
-            try:
-                _tmp.write_text(tex_content, encoding="utf-8")
-                _tmp.replace(temp_tex)
-            except OSError:
-                _tmp.unlink(missing_ok=True)
-                raise
+            # Replace only our TeX target through an exclusive confined temp.
+            atomic_write_text_confined(output_dir, temp_tex, tex_content)
 
             # Compile LaTeX to PDF (written as {temp_tex.stem}.pdf, e.g. slides_slides.pdf)
             compiled_pdf = self._latex_compile(temp_tex, output_dir, compiler=self.config.latex_compiler, timeout=900)
+            if self.config.slides_profile == "accessible":
+                _reject_accessible_beamer_overflow(temp_tex.with_suffix(".log"), compiled_pdf)
+                reject_unsafe_accessible_beamer_geometry(compiled_pdf)
+                reject_small_embedded_labels(
+                    compiled_pdf,
+                    source_file,
+                    minimum_pt=self.config.slides_figure_label_font_pt,
+                )
             ensure_pdf_at(compiled_pdf, output_file)
 
             if output_file.exists():
@@ -301,7 +636,28 @@ class SlidesRenderer:
                 },
             ) from e
 
-    def _resolve_cross_deck_refs(self, tex_content: str) -> str:
+    @staticmethod
+    def _slide_level_for_source(source_file: Path) -> int:
+        """Choose a frame-producing heading level for one markdown source.
+
+        Pandoc turns headings below ``--slide-level`` into Beamer blocks. A
+        deep manuscript section can therefore become one enormous block and
+        overflow even when the source contains natural subheadings. Heading
+        levels 2--4 are the useful presentation range: h1-only legacy decks
+        retain the historical level-2 behavior, while h3/h4-heavy results
+        sections get actual frame boundaries. Deeper headings remain block
+        content rather than creating a pathological one-frame-per-line deck.
+        """
+        source = source_file.read_text(encoding="utf-8")
+        levels = [len(match.group(1)) for match in re.finditer(r"^(#{1,6})[ \t]+", source, flags=re.MULTILINE)]
+        return max(2, min(4, max(levels, default=2)))
+
+    def _resolve_cross_deck_refs(
+        self,
+        tex_content: str,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> str:
         """Resolve cross-deck ``\\ref``/``\\eqref`` against the combined PDF's aux.
 
         Section decks are standalone Beamer builds, so a raw-LaTeX
@@ -311,265 +667,119 @@ class SlidesRenderer:
         (``{pdf_dir}/_combined_manuscript.aux``); this pre-pass replaces
         each cross-deck reference with the literal number that aux
         recorded — the same number the combined PDF prints. Within-deck
-        references are untouched (Beamer numbers them natively), labels
+        references are untouched by default (Beamer numbers them natively), labels
         missing from the aux are left as-is and noted in the render log,
         and a missing aux (e.g. first-ever render, before any combined
-        build) skips the pass entirely. Never fails the slide build.
+        build) skips only the numeric lookup. In the accessible profile,
+        section references use the combined-PDF number even when their label
+        is local to the deck; Beamer does not reliably number every heading
+        level that becomes a frame. A non-strict first pass uses a readable
+        section-name fallback rather than exposing the internal label.
+        The default standalone pass remains fail-open. The producer-ordered
+        refresh sets ``strict_cross_deck_refs`` and, in accessible mode, fails
+        when any reference (including a local section reference) is absent
+        from the current combined-manuscript AUX. That strict accessible pass
+        also tags labeled single-number equations with their canonical numbers
+        so the visible equation and its prose references agree.
         """
         aux_path = Path(self.config.pdf_dir) / COMBINED_AUX_BASENAME
         label_numbers = parse_aux_label_numbers(aux_path)
-        if not label_numbers:
-            logger.debug("No combined-manuscript aux label map at %s; cross-deck refs left as-is", aux_path)
-            return tex_content
+        if self.config.slides_profile == "accessible" and strict_cross_deck_refs:
+            tex_content = bind_displayed_equation_numbers(tex_content, label_numbers)
+        missing_accessible_sections: set[str] = set()
+        accessible_section_replacements = 0
+        if self.config.slides_profile == "accessible":
 
-        tex_content, replaced, unresolved = resolve_cross_deck_references(tex_content, label_numbers)
+            def _resolve_accessible_section_segment(segment: str) -> str:
+                def _resolve_accessible_section(match: re.Match[str]) -> str:
+                    nonlocal accessible_section_replacements
+                    command = match.group("command")
+                    label = match.group("label")
+                    number = label_numbers.get(label)
+                    if number is None:
+                        missing_accessible_sections.add(label)
+                        return match.group(0)
+                    accessible_section_replacements += 1
+                    join = "~" if match.group("escaped_join") else ""
+                    authored_open = match.group("authored_open") or ""
+                    authored_pair = bool(authored_open and segment[match.end() :].startswith(")"))
+                    resolved_number = number if command == "ref" or authored_pair else f"({number})"
+                    return join + authored_open + resolved_number
+
+                return _SECTION_REF_RE.sub(_resolve_accessible_section, segment)
+
+            tex_content = transform_tex_prose(tex_content, _resolve_accessible_section_segment)
+            if accessible_section_replacements:
+                logger.info(
+                    "Resolved %d accessible section reference(s) from %s",
+                    accessible_section_replacements,
+                    aux_path.name,
+                )
+        tex_content, replaced, unresolved = resolve_cross_deck_references(
+            tex_content,
+            label_numbers,
+            resolve_local=self.config.slides_profile == "accessible" and strict_cross_deck_refs,
+        )
         if replaced:
             logger.info(
                 "Resolved %d cross-deck reference(s) in slides from %s",
                 replaced,
                 aux_path.name,
             )
-        if unresolved:
+        all_unresolved = sorted({*unresolved, *missing_accessible_sections})
+        strict_unresolved = (
+            all_unresolved
+            if self.config.slides_profile == "accessible"
+            else [label for label in all_unresolved if not label.startswith("sec:")]
+        )
+        if strict_cross_deck_refs and strict_unresolved:
+            raise RenderingError(
+                "Current combined-manuscript AUX cannot resolve post-Pandoc cross-deck slide references",
+                context={
+                    "aux_path": str(aux_path),
+                    "unresolved_labels": strict_unresolved,
+                },
+            )
+        if all_unresolved:
             logger.warning(
                 "Left %d cross-deck reference(s) unresolved in slides (labels not in %s): %s",
-                len(unresolved),
+                len(all_unresolved),
                 aux_path.name,
-                ", ".join(unresolved),
+                ", ".join(all_unresolved),
             )
+        if not label_numbers:
+            logger.debug("No combined-manuscript aux label map at %s; numeric refs left as-is", aux_path)
+
+        # Pandoc-crossref emits ``\ref`` for section labels. Beamer does not
+        # assign numbers to every subsection level used as a slide boundary,
+        # so a same-deck section label can otherwise remain ``??`` even after
+        # the normal two-pass compile. Preserve the target identifier as a
+        # visible, breakable token rather than shipping an unresolved marker.
+        section_replacements = 0
+
+        def _render_section_segment(segment: str) -> str:
+            def _render_section_label(match: re.Match[str]) -> str:
+                nonlocal section_replacements
+                section_replacements += 1
+                join = "~" if match.group("escaped_join") else ""
+                authored_open = match.group("authored_open") or ""
+                if self.config.slides_profile == "accessible":
+                    slug = match.group("label").partition(":")[2]
+                    readable = re.sub(r"[^A-Za-z0-9]+", " ", slug).strip() or "referenced"
+                    return join + authored_open + rf"\emph{{{readable} section}}"
+                # Pandoc section identifiers may contain underscores. They are
+                # ordinary characters inside the ``\texttt`` argument, but TeX
+                # treats an unescaped underscore as a math-mode subscript and
+                # aborts the standalone slide deck. Keep the visible identifier
+                # unchanged while escaping the only special character permitted
+                # by the section-label grammar that is unsafe here.
+                label = match.group("label").replace("_", r"\_")
+                return join + authored_open + rf"\texttt{{{label}}}"
+
+            return _SECTION_REF_RE.sub(_render_section_label, segment)
+
+        tex_content = transform_tex_prose(tex_content, _render_section_segment)
+        if section_replacements:
+            mode = "readable names" if self.config.slides_profile == "accessible" else "visible labels"
+            logger.info("Rendered %d unnumbered section reference(s) as %s", section_replacements, mode)
         return tex_content
-
-    def _maybe_write_math_header(self, manuscript_dir: Path | None, output_dir: Path) -> Path | None:
-        """Write a Pandoc ``-H`` header file for Unicode math + citation
-        fallbacks, if needed.
-
-        Looks up ``preamble.md`` next to the manuscript, extracts any
-        ``\\usepackage{unicode-math}`` block, and writes a minimal
-        ``_slides_math_header.tex`` next to the slide output. The file is
-        rewritten on every render so it always reflects the current
-        ``preamble.md``; consumers should treat it as a build artefact.
-
-        The header also defines ``\\providecommand`` fallbacks for natbib
-        commands (``\\citep``, ``\\citet``, ``\\citealp``) and manuscript
-        cross-reference commands (``\\cref``, ``\\Cref``) so that
-        manuscript prose already normalized for the combined PDF still
-        typesets cleanly in slides. The fallback renders citations as
-        ``[key]`` and unresolved cross-references as detokenized label
-        strings — readable, distinct, and safe from undefined-control-
-        sequence and raw-underscore errors. It also unconditionally
-        declares the two auto-numbered formalism environments beamer does
-        not ship natively (``proposition``, ``hypothesis`` — see below).
-
-        Returns ``None`` only when ``manuscript_dir`` itself is ``None``;
-        otherwise a header path is always returned, since the natbib/cref
-        fallback and formalism-environment declarations are unconditional.
-        """
-        if manuscript_dir is None:
-            return None
-        preamble_file = manuscript_dir / "preamble.md"
-
-        snippet_parts: list[str] = []
-        if preamble_file.exists():
-            preamble = extract_preamble(preamble_file)
-            math_snippet = extract_math_font_preamble(preamble)
-            if math_snippet is not None:
-                snippet_parts.append(math_snippet)
-
-        # Natbib fallback definitions for slide rendering. \providecommand
-        # is a no-op when natbib is loaded (real definition wins). The layout
-        # defaults keep dense scientific prose and longtable-heavy sections
-        # within Beamer's narrower text block.
-        snippet_parts.append(
-            "% Slide layout defaults for warning-clean scientific decks.\n"
-            "\\usepackage{etoolbox}\n"
-            "\\IfFileExists{xurl.sty}{\\usepackage{xurl}}{}\n"
-            "\\IfFileExists{seqsplit.sty}{\\usepackage{seqsplit}}{\\newcommand{\\seqsplit}[1]{#1}}\n"
-            "\\protected\\def\\breakseq#1{\\seqsplit{#1}}\n"
-            "\\protected\\def\\breaktt#1{\\begingroup\\ttfamily\\seqsplit{#1}\\endgroup}\n"
-            "\\setlength{\\emergencystretch}{6em}\n"
-            "\\tolerance=5000\n"
-            "\\hbadness=10000\n"
-            "\\hfuzz=1pt\n"
-            "\\setlength{\\tabcolsep}{2pt}\n"
-            "\\AtBeginEnvironment{longtable}{\\tiny\\renewcommand{\\arraystretch}{0.86}\\setlength{\\tabcolsep}{1pt}}\n"
-            "\\AtBeginEnvironment{tabular}{\\tiny\\renewcommand{\\arraystretch}{0.86}\\setlength{\\tabcolsep}{1pt}}\n\n"
-            "% Natbib and cross-reference fallbacks — slides don't load natbib\n"
-            "% or cleveref, but combined-PDF manuscript prose may emit these\n"
-            "% commands. The fallback renders citations as a bracketed key list\n"
-            "% and cross-references as detokenized labels so slides don't fail on\n"
-            "% undefined control sequences or raw underscores. \\providecommand is\n"
-            "% a no-op if packages load later.\n"
-            "\\providecommand{\\citep}[1]{[#1]}\n"
-            "\\providecommand{\\citet}[1]{#1}\n"
-            "\\providecommand{\\citealp}[1]{#1}\n"
-            "\\providecommand{\\citeauthor}[1]{#1}\n"
-            "\\providecommand{\\citeyear}[1]{#1}\n"
-            "\\providecommand{\\cref}[1]{\\texttt{\\detokenize{#1}}}\n"
-            "\\providecommand{\\Cref}[1]{\\texttt{\\detokenize{#1}}}\n"
-        )
-
-        # Auto-numbered formalism environments the manuscript body may use
-        # (mirrors the \newtheorem declarations `preamble.md` defines for the
-        # combined PDF, per @sec:type-architecture-style raw-LaTeX blocks).
-        # Beamer's own document class already provides \theorem, \lemma,
-        # \corollary, and \definition as built-in styled blocks (redeclaring
-        # them via \newtheorem fails with "Command ... already defined"), so
-        # only the two environments beamer does *not* ship — proposition and
-        # hypothesis — need a declaration here. Each gets its own independent
-        # counter rather than chaining onto beamer's internal theorem counter
-        # (whose name is not a public API): slides already render several
-        # PDF-only features in simplified form (see the natbib/cref
-        # fallbacks above), so a proposition/hypothesis number that doesn't
-        # exactly match the PDF's shared sequence is consistent with that
-        # existing degraded-but-non-fatal slides behavior, not a regression.
-        snippet_parts.append("\\newtheorem{proposition}{Proposition}\n\\newtheorem{hypothesis}{Hypothesis}\n")
-
-        # snippet_parts is never empty past this point (the natbib/cref
-        # fallback and the formalism-environment declarations above are both
-        # unconditional appends) -- a header is always written here.
-        output_dir.mkdir(parents=True, exist_ok=True)
-        header_path = output_dir / "_slides_math_header.tex"
-        header_path.write_text("\n".join(snippet_parts), encoding="utf-8")
-        logger.debug(f"Wrote slides math header: {header_path}")
-        return header_path
-
-    def _fix_figure_paths(self, tex_content: str, output_dir: Path, figures_dir: Path) -> str:
-        """Fix figure paths in LaTeX content for proper compilation.
-
-        Converts paths like ../output/figures/file.png to relative paths
-        that work from the LaTeX compilation directory (output/slides).
-
-        Handles multiple path formats and preserves optional parameters.
-
-        Args:
-            tex_content: LaTeX content to process
-            output_dir: Directory where LaTeX compilation happens (output/slides)
-            figures_dir: Directory containing figures (output/figures)
-
-        Returns:
-            LaTeX content with corrected figure paths
-        """
-
-        def extract_filename(path_str: str) -> str:
-            """Extract filename from various path formats."""
-            # Handle various path formats
-            path_variations = [
-                "../output/figures/",
-                "output/figures/",
-                "../figures/",
-                "./figures/",
-            ]
-
-            for prefix in path_variations:
-                if prefix in path_str:
-                    return path_str.split(prefix)[-1]
-
-            # If no prefix matched, extract filename from path
-            if "/" in path_str or "\\" in path_str:
-                return re.split(r"[/\\]", path_str)[-1]
-            else:
-                # No separators — path_str is already a bare filename
-                return path_str
-
-        def matching_delimiter(start: int, opener: str, closer: str) -> int | None:
-            """Return the index just after a balanced delimiter group.
-
-            Pandoc commonly emits ``\\includegraphics[alt={... [ ...]}]{...}``.
-            A regex like ``\\[([^\\]]*)\\]`` stops at the first bracket inside
-            the alt text and therefore misses the real path argument.  This
-            scanner tracks braces while looking for the closing option
-            bracket, which is enough for Pandoc's generated Beamer LaTeX.
-            """
-            depth = 0
-            brace_depth = 0
-            escaped = False
-            for idx in range(start, len(tex_content)):
-                ch = tex_content[idx]
-                if escaped:
-                    escaped = False
-                    continue
-                if ch == "\\":
-                    escaped = True
-                    continue
-                if ch == "{":
-                    brace_depth += 1
-                    continue
-                if ch == "}":
-                    brace_depth = max(0, brace_depth - 1)
-                    continue
-                if ch == opener and brace_depth == 0:
-                    depth += 1
-                    continue
-                if ch == closer and brace_depth == 0:
-                    depth -= 1
-                    if depth == 0:
-                        return idx + 1
-            return None
-
-        def matching_brace(start: int) -> int | None:
-            """Find the index of the matching closing brace."""
-            depth = 0
-            escaped = False
-            for idx in range(start, len(tex_content)):
-                ch = tex_content[idx]
-                if escaped:
-                    escaped = False
-                    continue
-                if ch == "\\":
-                    escaped = True
-                    continue
-                if ch == "{":
-                    depth += 1
-                    continue
-                if ch == "}":
-                    depth -= 1
-                    if depth == 0:
-                        return idx + 1
-            return None
-
-        pieces: list[str] = []
-        cursor = 0
-        command = r"\includegraphics"
-        while True:
-            start = tex_content.find(command, cursor)
-            if start == -1:
-                pieces.append(tex_content[cursor:])
-                break
-
-            pieces.append(tex_content[cursor:start])
-            pos = start + len(command)
-            while pos < len(tex_content) and tex_content[pos].isspace():
-                pos += 1
-
-            if pos < len(tex_content) and tex_content[pos] == "[":
-                opt_end = matching_delimiter(pos, "[", "]")
-                if opt_end is None:
-                    pieces.append(tex_content[start:])
-                    cursor = len(tex_content)
-                    break
-                pos = opt_end
-                while pos < len(tex_content) and tex_content[pos].isspace():
-                    pos += 1
-
-            if pos >= len(tex_content) or tex_content[pos] != "{":
-                pieces.append(tex_content[start:pos])
-                cursor = pos
-                continue
-
-            arg_end = matching_brace(pos)
-            if arg_end is None:
-                pieces.append(tex_content[start:])
-                cursor = len(tex_content)
-                break
-
-            old_path = tex_content[pos + 1 : arg_end - 1]
-            if old_path.startswith("../figures/"):
-                pieces.append(tex_content[start:arg_end])
-            else:
-                filename = extract_filename(old_path)
-                new_path = f"../figures/{filename}"
-                pieces.append(tex_content[start : pos + 1])
-                pieces.append(new_path)
-                pieces.append("}")
-            cursor = arg_end
-
-        return "".join(pieces)

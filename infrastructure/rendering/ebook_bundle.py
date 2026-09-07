@@ -15,6 +15,7 @@ Usage::
         output_dir=Path("projects/my_book/output/ebook"),
         bibliography=Path("projects/my_book/manuscript/references.bib"),
         cover_image=Path("projects/my_book/manuscript/cover.png"),
+        cover_alt="A concise description of the book cover.",
     )
     # outputs == {
     #     "epub":          Path(".../output/ebook/book.epub"),
@@ -42,6 +43,7 @@ from infrastructure.publishing.metadata_package import (
 from infrastructure.rendering.docx_renderer import render_docx
 from infrastructure.rendering.epub_renderer import render_epub
 from infrastructure.rendering.mobi_renderer import render_mobi
+from infrastructure.rendering._pdf_title_page_images import _cover_image_alt
 
 logger = get_logger(__name__)
 
@@ -205,6 +207,7 @@ class EbookBundleManager:
         *,
         bibliography: Path | None = None,
         cover_image: Path | None = None,
+        cover_alt: str | None = None,
         publication_metadata: PublicationMetadata | None = None,
     ) -> dict[str, Path]:
         """Generate EPUB, MOBI, DOCX, and metadata package for *project_root*.
@@ -222,6 +225,9 @@ class EbookBundleManager:
             bibliography: Optional ``.bib`` file.
             cover_image: Optional cover image path. Auto-discovered from
                 standard manuscript locations when ``None``.
+            cover_alt: Source-owned alternative text for the EPUB cover image.
+                When omitted, the selected ``book.cover.alt`` or
+                ``paper.cover.alt`` value is read from manuscript config.
             publication_metadata: Optional pre-built
                 :class:`~infrastructure.publishing.metadata_package.PublicationMetadata`
                 instance. When ``None`` a metadata object is derived from
@@ -247,6 +253,8 @@ class EbookBundleManager:
 
         # Auto-discover cover image if not supplied
         resolved_cover = cover_image or _find_cover_image(project_root)
+        config = _read_config_metadata(project_root)
+        resolved_cover_alt = cover_alt if cover_alt is not None else (_cover_image_alt(config) if config else None)
 
         logger.info("EbookBundleManager: generating all formats for %r", stem)
 
@@ -258,6 +266,7 @@ class EbookBundleManager:
                 epub_path,
                 bibliography=bibliography,
                 cover_image=resolved_cover,
+                cover_alt=resolved_cover_alt,
                 pandoc_path=self.pandoc_path,
                 extra_args=self.extra_epub_args or None,
             )
@@ -305,7 +314,6 @@ class EbookBundleManager:
         if publication_metadata is not None:
             meta = publication_metadata
         else:
-            config = _read_config_metadata(project_root)
             meta = _metadata_from_config(config, project_root) if config else _minimal_metadata(stem)
 
         metadata_dir = output_dir / "metadata"
@@ -331,6 +339,7 @@ class EbookBundleManager:
         *,
         bibliography: Path | None = None,
         cover_image: Path | None = None,
+        cover_alt: str | None = None,
         publication_metadata: PublicationMetadata | None = None,
     ) -> dict[str, Path]:
         """Convenience wrapper that auto-discovers *combined_md* from the project tree.
@@ -344,6 +353,7 @@ class EbookBundleManager:
                 ``project_root/output/ebook/``.
             bibliography: Optional ``.bib`` file.
             cover_image: Optional cover image; auto-discovered if ``None``.
+            cover_alt: Alternative text paired with ``cover_image``.
             publication_metadata: Optional pre-built metadata.
 
         Returns:
@@ -365,6 +375,7 @@ class EbookBundleManager:
             out,
             bibliography=bibliography,
             cover_image=cover_image,
+            cover_alt=cover_alt,
             publication_metadata=publication_metadata,
         )
 

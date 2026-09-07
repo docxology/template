@@ -13,7 +13,9 @@ class RepoScanResults:
     Attributes:
         accuracy_issues: Import verification failures, missing commands, etc.
         completeness_gaps: Missing documentation, tests, or thin-orchestrator violations.
-        statistics: Aggregate metrics produced by each scan phase.
+        statistics: Aggregate counts produced after a complete scan. A freshly
+            constructed result has an empty mapping; ``RepositoryScanner.scan_all``
+            fills it with the discovered-file and issue counts.
     """
 
     accuracy_issues: list[ScanAccuracyIssue] = field(default_factory=list)

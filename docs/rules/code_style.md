@@ -4,7 +4,7 @@
 
 Consistent code formatting ensures readability, maintainability, and reduces merge conflicts. All Python code must follow these standards.
 
-**Automation**: CI and local hooks enforce **Ruff** (lint, format, import sorting) and **mypy** on the public CI source paths reported by `uv run python -m infrastructure.project.public_scope source-paths`. Mirror commands live in root [`CLAUDE.md`](../../CLAUDE.md); hook IDs are declared in [`/.pre-commit-config.yaml`](../../.pre-commit-config.yaml).
+**Automation**: CI and local hooks enforce **Ruff** (lint, format, import sorting) and **mypy** on the public CI source paths reported by `uv run python -m infrastructure.project.public_scope source-paths`. The enforcement is fail-closed by construction: a lint or type error exits non-zero and blocks the CI `lint` job; a known-wrong file with an intentional type error is rejected rather than warned on. Mirror commands live in root [`CLAUDE.md`](../../CLAUDE.md); hook IDs are declared in [`/.pre-commit-config.yaml`](../../.pre-commit-config.yaml).
 
 ## Python Code Style (PEP 8)
 

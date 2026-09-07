@@ -320,6 +320,7 @@ def test_exit_code_no_findings_returns_0() -> None:
     assert exit_code_for_report(report) == 0
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(45)
 def test_subprocess_check_template_drift_no_flags() -> None:
     """check_template_drift script runs with no flags and exits without crashing."""
@@ -335,6 +336,7 @@ def test_subprocess_check_template_drift_no_flags() -> None:
     assert result.returncode in (0, 1), f"stderr: {result.stderr[:500]}"
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(45)
 def test_subprocess_check_template_drift_strict_flag() -> None:
     """check_template_drift script runs with --strict flag and exits without crashing."""
@@ -349,6 +351,7 @@ def test_subprocess_check_template_drift_strict_flag() -> None:
     assert result.returncode in (0, 1), f"stderr: {result.stderr[:500]}"
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(45)
 def test_subprocess_check_template_drift_project_flag() -> None:
     """check_template_drift script runs with a valid --project flag."""

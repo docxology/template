@@ -28,6 +28,10 @@
           "help": "Write benchmark task status from grading outputs"
         },
         {
+          "name": "orchestrate",
+          "help": "Run full multi-phase AutoResearch orchestration"
+        },
+        {
           "name": "schema",
           "help": "Print this CLI's parameter schema as JSON and exit"
         }
@@ -35,6 +39,7 @@
       "exports": [
         "AutoResearchConfig",
         "AutoResearchIssue",
+        "AutoResearchOrchestrator",
         "AutoResearchPlan",
         "AutoResearchReport",
         "AutoResearchStage",
@@ -44,6 +49,8 @@
         "EXTRINSIC_QUALITY_CHECKS",
         "ExperimentCandidate",
         "INTRINSIC_QUALITY_CHECKS",
+        "OrchestrationEvent",
+        "OrchestrationResult",
         "ResearchIdea",
         "ResearchProgram",
         "ReviewGate",
@@ -82,6 +89,15 @@
         "scores_to_markdown",
         "write_default_manifest"
       ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.core._bounded_run_guardian",
+      "invocation": "python -m infrastructure.core._bounded_run_guardian",
+      "source_path": "infrastructure/core/_bounded_run_guardian.py",
+      "purpose": "Independent POSIX guardian for token-bound subprocess cleanup.",
+      "subcommands": [],
+      "exports": [],
       "effect": "read_only"
     },
     {
@@ -171,6 +187,12 @@
         }
       ],
       "exports": [
+        "STABLE_LOCAL_OUTPUT_INVENTORY_MODE",
+        "STABLE_OUTPUT_INVENTORY_MODE",
+        "OutputInventoryMode",
+        "StableOutputInventory",
+        "collect_stable_output_inventory",
+        "output_inventory_mode_for_project",
         "PipelinePurpose",
         "PipelineSource",
         "PipelineSourceOrigin",
@@ -535,6 +557,10 @@
         {
           "name": "review",
           "help": "Review provenance DAG for issues"
+        },
+        {
+          "name": "validate",
+          "help": "Validate provenance DAG structure and acyclicity"
         }
       ],
       "exports": [
@@ -548,13 +574,17 @@
         "SourceNode",
         "node_from_dict",
         "Provenance",
+        "ProvenanceStoreError",
         "Finding",
         "Review",
         "ReviewResult",
         "Severity",
         "review_provenance_store",
         "ProvenanceConfig",
-        "load_provenance_config"
+        "load_provenance_config",
+        "ProvenanceValidationFinding",
+        "ProvenanceValidationReport",
+        "validate_provenance_dag"
       ],
       "effect": "read_only"
     },
@@ -628,7 +658,15 @@
         "list_platforms",
         "get_platform",
         "first_class_platforms",
-        "documented_platforms"
+        "documented_platforms",
+        "CommandReceipt",
+        "ReleaseMetadataReceipt",
+        "CleanCheckoutReceipt",
+        "CoverageGapSnapshot",
+        "SubprocessPolicyReceipt",
+        "build_release_metadata_receipt",
+        "build_coverage_gap_snapshot",
+        "build_subprocess_policy_receipt"
       ],
       "effect": "mutating"
     },
@@ -742,11 +780,18 @@
         "DocxRenderResult",
         "EpubRenderResult",
         "EXCLUDED_DOC_FILENAMES",
+        "ExportResult",
+        "ManuscriptRenderCache",
         "RenderManager",
+        "RenderCacheError",
         "RenderingConfig",
+        "SectionCacheEntry",
         "discover_manuscript_files",
+        "export_project",
+        "is_docxplus_available",
         "render_docx",
         "render_epub",
+        "run_docxplus_export",
         "substitute_manuscript_text",
         "verify_figures_exist",
         "write_resolved_manuscript_tree"
@@ -1001,11 +1046,74 @@
         "BackendError",
         "LiteratureClient",
         "SearchCache",
+        "SEARCH_CACHE_SCHEMA_VERSION",
+        "query_cache_key",
+        "query_identity",
+        "validate_cache_payload",
         "AbstractFetcher",
         "FulltextFetcher",
         "FetchResult",
         "enrich_papers",
         "write_corpus"
+      ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.search.monid",
+      "invocation": "python -m infrastructure.search.monid",
+      "source_path": "infrastructure/search/monid/cli.py",
+      "purpose": "Command-line interface for the Monid client.",
+      "subcommands": [
+        {
+          "name": "discover",
+          "help": "POST /v1/discover"
+        },
+        {
+          "name": "inspect",
+          "help": "POST /v1/inspect"
+        },
+        {
+          "name": "run",
+          "help": "POST /v1/run"
+        },
+        {
+          "name": "get-run",
+          "help": "GET /v1/runs/:runId"
+        },
+        {
+          "name": "balance",
+          "help": "GET /v1/wallet/balance"
+        },
+        {
+          "name": "pricing-table",
+          "help": "print search API USD/1k comparison (offline)"
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit"
+        }
+      ],
+      "exports": [
+        "API_KEY_ENV",
+        "DEFAULT_BASE_URL",
+        "DiscoverHit",
+        "DiscoverResponse",
+        "EndpointPrice",
+        "InspectResponse",
+        "Money",
+        "MonidClient",
+        "MonidConfig",
+        "MonidError",
+        "MonidHttpClient",
+        "MonidResponse",
+        "RunRecord",
+        "LAST_REVIEWED",
+        "SEARCH_API_PRICES",
+        "SearchApiPrice",
+        "UrllibMonidHttpClient",
+        "WalletBalance",
+        "format_pricing_table",
+        "sorted_by_cost"
       ],
       "effect": "read_only"
     },
@@ -1149,6 +1257,15 @@
       "invocation": "python -m infrastructure.tools.linking",
       "source_path": "infrastructure/tools/linking.py",
       "purpose": "Symlink private lifecycle tools into the template checkout.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.transmission.transmission_page_check",
+      "invocation": "python -m infrastructure.transmission.transmission_page_check",
+      "source_path": "infrastructure/transmission/transmission_page_check.py",
+      "purpose": "Validate transmission bookends occupy exactly one PDF page each.",
       "subcommands": [],
       "exports": [],
       "effect": "read_only"

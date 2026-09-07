@@ -1,6 +1,6 @@
 # Layer 2 — projects/{name}/src/
 
-*Slide 18 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 18 of 57 — template_template pitch, long deck — kind: `content`*
 
 - Each exemplar's own domain logic: template_template's introspection/metrics, a code-project's optimizer, this deck's own content loader and token/cliche validators.
 - Kept out of infrastructure/ by convention, enforced by an automated project/infrastructure-boundary drift check.

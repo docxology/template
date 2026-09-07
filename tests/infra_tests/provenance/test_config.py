@@ -30,6 +30,11 @@ class TestProvenanceConfigDefaults:
         c = ProvenanceConfig()
         assert c.dag_path(tmp_path) == tmp_path / "output" / "provenance" / "dag.json"
 
+    @pytest.mark.parametrize("output_dir, filename", [("../outside", "dag.json"), ("output", "../dag.json")])
+    def test_dag_path_rejects_traversal(self, tmp_path, output_dir, filename):
+        with pytest.raises(ValueError, match="confined|escapes"):
+            ProvenanceConfig(output_dir=output_dir, filename=filename).dag_path(tmp_path)
+
     def test_to_dict(self):
         """to_dict() returns all config fields."""
         c = ProvenanceConfig(enabled=False, output_dir="out", filename="g.json", auto_hash_artifacts=True)
@@ -102,6 +107,11 @@ class TestLoadProvenanceConfig:
         """Non-mapping YAML content raises ValueError."""
         (tmp_path / "provenance.yaml").write_text("- item1\n- item2\n", encoding="utf-8")
         with pytest.raises(ValueError, match="must be a mapping"):
+            load_provenance_config(tmp_path)
+
+    def test_path_values_must_be_relative_strings(self, tmp_path):
+        (tmp_path / "provenance.yaml").write_text("output_dir: ../outside\n", encoding="utf-8")
+        with pytest.raises(ValueError, match="confined"):
             load_provenance_config(tmp_path)
 
     def test_empty_file_returns_defaults(self, tmp_path):

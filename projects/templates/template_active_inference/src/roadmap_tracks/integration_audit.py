@@ -16,6 +16,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from json_io import json_payloads_equal
 from roadmap_tracks.row_aggregates import all_rows
 
 from .figure_provenance import _figure_sources_mapped
@@ -421,6 +422,7 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     if (
         release_notes.get("all_notes_source_backed") is not True
         or release_notes.get("all_notes_source_backed") != notes_backed
+        or not json_payloads_equal(release_notes, build_release_notes_evidence(root))
     ):
         issues.append("release_notes_evidence.json has unsupported notes")
     return issues

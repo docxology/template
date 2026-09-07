@@ -15,7 +15,7 @@ Content-domain logic only — no layout/drawing code (that lives in
 | `standalone_slides.py` | per-slide standalone `.md` pages + deterministic per-slide QR deep-link URL computation |
 | `coverage_chart_data.py` | live `docs/_generated/COUNTS.md` → per-exemplar `(name, test_count, coverage_pct)` rows, for `scripts/16_generate_charts.py` |
 | `infra_facts.py` | live `infrastructure/` subpackage/file counts (reuses `infrastructure.documentation.counts_doc`), `INFRA_*` tokens |
-| `chart_rendering.py` | matplotlib plotting logic (bar/scatter/donut) for `scripts/16_generate_charts.py` — moved here from the script once it exceeded the thin-orchestrator line/function threshold |
+| `chart_rendering.py` | matplotlib plotting logic (bar/scatter/donut) for `scripts/16_generate_charts.py`; donut percentage labels select black/white from the real alpha-composited wedge and require 4.5:1 contrast |
 | `render_orchestration.py` | ties audit → diligence-gate → standalone-pages → QR-attach → render into one call per deck length |
 
 See `../AGENTS.md` for the full architecture.

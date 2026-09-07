@@ -11,6 +11,8 @@ from pathlib import Path
 import pytest
 
 from infrastructure.documentation.stage_table import (
+    DEFAULT_STAGE_TABLE_TARGETS,
+    build_stage_summary,
     build_stage_table,
     inject_stage_table,
     refresh_stage_tables,
@@ -238,3 +240,57 @@ def test_refresh_stage_tables_previews_and_writes_real_targets(synthetic_yaml: P
         yaml_path=synthetic_yaml,
     )
     assert stable.unchanged == (target,)
+
+
+def test_build_stage_summary_counts_default_and_core_only(tmp_path: Path) -> None:
+    yaml_path = tmp_path / "pipeline.yaml"
+    yaml_path.write_text(
+        """
+opt_in_tags: [preview]
+stages:
+  - name: Clean Output Directories
+    method: _run_clean_outputs
+    tags: [core, clean]
+  - name: LLM Review
+    script: llm.py
+    tags: [llm]
+  - name: Preview Export
+    script: preview.py
+    tags: [core, preview]
+""",
+        encoding="utf-8",
+    )
+    summary = build_stage_summary(yaml_path)
+    assert "**3 named stages**" in summary
+    assert "execute **2**" in summary
+    assert "`--core-only` executes **1**" in summary
+    assert "`preview`" in summary
+
+
+def test_hub_docs_do_not_hardcode_stale_stage_counts() -> None:
+    """Hub prose must not invent 16/14 indices that drift from pipeline.yaml."""
+    repo_root = Path(__file__).resolve().parents[3]
+    forbidden = (
+        "declares **16**",
+        "declares **16 named stages**",
+        "YAML stage 14 (Executable Bundle)",
+        "14 declared pipeline stages",
+    )
+    hubs = (
+        "README.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "docs/RUN_GUIDE.md",
+        "docs/PAI.md",
+        "infrastructure/core/AGENTS.md",
+        "docs/maintenance/stage-10-executable-bundle.md",
+        "infrastructure/publishing/archival/README.md",
+    )
+    offenders: list[str] = []
+    for relative in hubs:
+        text = (repo_root / relative).read_text(encoding="utf-8")
+        for phrase in forbidden:
+            if phrase in text:
+                offenders.append(f"{relative}: {phrase}")
+    assert not offenders, "stale stage-count prose:\n" + "\n".join(offenders)
+    assert "README.md" in DEFAULT_STAGE_TABLE_TARGETS

@@ -9,7 +9,7 @@ The Research Project Template pipelines integrate optional cryptographic hashing
 | File | Purpose |
 |------|---------|
 | [threat-model.md](threat-model.md) | Repository-wide threat model: assets, attacker model, attack surfaces, threat register, and ownership map |
-| [secure_execution.md](secure_execution.md) | Guide to the interactive orchestration environment `./secure_run.sh` |
+| [secure_execution.md](secure_execution.md) | Guide to the secure orchestration entry point `./secure_run.sh` |
 | [steganography.md](steganography.md) | How the `SteganographyProcessor` overlays watermarks and dynamic `mailto:` QR codes |
 | [hashing_and_manifests.md](hashing_and_manifests.md) | How cryptographic hashing ensures document provenance integrity |
 | [literature-fetch-security.md](literature-fetch-security.md) | Trust boundaries, threat model, and hardening for `infrastructure/search/literature/` web fetching |
@@ -23,7 +23,7 @@ The Research Project Template pipelines integrate optional cryptographic hashing
 Instead of using the default `./run.sh` pipeline menu, launch the pipeline using the secure orchestrator:
 
 ```bash
-./secure_run.sh --project template_code_project
+./secure_run.sh --project templates/template_code_project
 ```
 
 After the PDF rendering phase completes, secure-run reads `infrastructure/config/secure_config.yaml`, overlays any project `manuscript/config.yaml` `steganography:` settings, and executes the steganography pass on the selected project's finalized PDFs. Secured copies land in `<project>/output/pdf/` with the `_steganography.pdf` suffix along with cryptographic hash manifests (`.hashes.json`).

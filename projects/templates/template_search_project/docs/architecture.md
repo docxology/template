@@ -71,6 +71,12 @@ flowchart TB
 | `report.py` | yes | no | writes Markdown via callers |
 | `analysis.py` | yes | no | none (review-stage helpers) |
 | `dotenv.py` | yes | no | none (loads `.env` into `os.environ`) |
+| `composition.py` | yes | no | writes composed markdown via callers |
+| `dashboard.py` | yes | no | writes dashboard HTML/payload via callers |
+| `llm_runtime.py` | partial — Ollama client adapter | only when LLM enabled | none |
+| `review_report.py` | yes | no | writes review report via callers |
+| `search_invariants.py` | yes | no | none (pure invariant checks) |
+| `deep_search_cli.py` / `search_pipeline_cli.py` | yes | no | none (CLI arg shaping) |
 
 The `pipeline.py` module is the *only* place that touches
 `infrastructure.search.*`; every other module receives data through

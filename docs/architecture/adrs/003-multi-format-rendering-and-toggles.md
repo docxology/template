@@ -2,6 +2,8 @@
 
 - **Status:** Accepted
 - **Date:** 2026-05-20
+- **Amended:** 2026-08-14 — DOCX/EPUB now consume a fresh shared combined
+  Markdown source and Stages 3–5 enforce one effective-format contract.
 - **Extends:** the scope-implication of stage `PDF Rendering` in [ADR 002](002-declarative-dag-pipeline.md).
 
 ## Context
@@ -54,6 +56,16 @@ larger task.
 6. **Stage name preserved.** `pipeline.yaml` still calls the stage
    `PDF Rendering` — renaming would churn ADR 002 reading order. This ADR
    records the name-vs-scope mismatch as intentional.
+7. **Fresh shared source for non-PDF combined editions.** When DOCX or EPUB is
+   enabled, Stage 3 builds `output/web/_combined_manuscript.md` from the current
+   ordered manuscript inputs and records its composition. It does not reuse a
+   prior PDF artifact or require PDF to be enabled.
+8. **One effective-format contract across Stages 3–5.** Explicit environment
+   values override YAML independently per format. Stage 3 removes stale
+   renderer-owned deliverables before rendering, Stage 4 validates every
+   enabled canonical deliverable and rejects disabled-format leftovers, and
+   Stage 5 filters disabled renderer-owned artifacts from the fresh copied tree
+   before validating it.
 
 ## Alternatives considered
 
@@ -72,21 +84,26 @@ larger task.
 - Five-format capability with one new config key.
 - `RenderingConfig` is the single discovery point for format capability.
 - The pandoc dependency stays unchanged; no new system-level tool needed.
+- PDF, DOCX, and EPUB can be selected independently without publishing a stale
+  artifact from a prior format configuration.
 
 **Negative**
 
 - The YAML stage label `PDF Rendering` is now historically narrow. This ADR
   is the durable record of why we kept it.
-- DOCX/EPUB rendering reuses the preprocessed combined markdown produced by
-  the PDF stage. Disabling `enable_pdf` cascade-skips DOCX/EPUB. Documented
-  in [`../../usage/output-formats.md`](../../usage/output-formats.md) and
-  in the `[skip]` log line.
+- The shared combined Markdown is an internal renderer-owned artifact, not a
+  publication deliverable; its current-input composition receipt must remain
+  coupled to the export that consumes it.
 
 **Migration**
 
-- New code path: `infrastructure/rendering/pipeline.py::_render_combined_outputs`
-  now gates each renderer on `config.enable_<fmt>` and delegates to
-  `_render_combined_docx` / `_render_combined_epub` for the new formats.
+- The combined-export path in
+  `infrastructure/rendering/_combined_exports.py` gates each renderer on
+  `config.enable_<fmt>` and uses `prepare_shared_combined_markdown()` for
+  current DOCX/EPUB inputs.
+- `infrastructure/validation/output/render_formats.py` is the shared Stage 4/5
+  loader, exact-deliverable validator, disabled-output rejector, and copied-tree
+  filter.
 - Schema diff: `infrastructure/core/config/schema.py` gained a `render`
   top-level key with a nested `formats` sub-schema.
 - Per-project validator: `projects/templates/template_prose_project/src/config.py`
@@ -98,11 +115,15 @@ larger task.
 - Source: `infrastructure/rendering/docx_renderer.py`,
   `infrastructure/rendering/epub_renderer.py`,
   `infrastructure/rendering/config.py` (`RenderingConfig`),
-  `infrastructure/rendering/pipeline.py` (`_render_combined_outputs`,
-  `_resolve_combined_markdown`, `_load_project_config_yaml`).
+  `infrastructure/rendering/_combined_exports.py`
+  (`prepare_shared_combined_markdown`, `render_combined_outputs`), and
+  `infrastructure/validation/output/render_formats.py`.
 - Schema: `infrastructure/core/config/schema.py` (`render` property).
 - Tests: `tests/infra_tests/rendering/test_docx_renderer.py`,
-  `test_epub_renderer.py`, `test_format_toggles.py`.
+  `test_epub_renderer.py`, `test_format_toggles.py`,
+  `test_combined_exports.py`;
+  `tests/infra_tests/validation/test_render_formats.py`; and
+  `tests/infra_tests/test_stage_05_copy_formats.py`.
 - Docs: [`../../usage/output-formats.md`](../../usage/output-formats.md),
   [`../../operational/logging/output-design.md`](../../operational/logging/output-design.md).
 - Related ADRs: [`002-declarative-dag-pipeline.md`](002-declarative-dag-pipeline.md)

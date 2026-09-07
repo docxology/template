@@ -7,6 +7,9 @@ Tests for `infrastructure.provenance` store, review, and opt-in stage
 
 - `test_store.py` — provenance store read/write
 - `test_review.py` — review helpers
+- `test_validation.py` — graph structural and topological validation
+- `test_cli.py` — CLI subcommands
+- `test_config.py` — configuration loading and path resolution
 - `test_provenance_scripts.py` — stage script CLI surface
 
 ## Running

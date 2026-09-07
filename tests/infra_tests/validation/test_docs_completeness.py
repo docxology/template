@@ -224,4 +224,6 @@ class TestRunCompletenessPhase:
         """With proper docs, some gaps should still be detected (onboarding, etc)."""
         docs = [_make_doc_file("docs/TROUBLESHOOTING.md")]
         report, gaps = analyze_documentation_completeness(tmp_path, docs, {})
-        assert report["total_gaps"] >= 0
+        assert report["total_gaps"] == 2
+        assert report["by_category"] == {"workflows": 1, "onboarding": 1}
+        assert {gap.category for gap in gaps} == {"workflows", "onboarding"}

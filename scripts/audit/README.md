@@ -8,6 +8,9 @@ Audit and quality-gate scripts for documentation, filepath, drift, and git-guard
 |--------|-----------|
 | `lint_docs.py` | Documentation lint (mermaid, cross-links, consistency) |
 | `audit_documentation.py` | Advisory RedTeam docs audit |
+| `check_backlog.py` | Root/public future-work backlog contract |
+| `check_claim_bindings.py` | Complete public claim-binding inventory and source-pin contract |
+| `check_public_template_contract.py` | Roster-wide required markers and non-vacuous source/test scope |
 | `verify_no_mocks.py` | Lexical mock-framework gate; `--inventory` reports monkeypatch stand-ins |
 | `audit_filepaths.py` | Filepath audit |
 | `check_template_drift.py` | Template drift check |
@@ -19,6 +22,7 @@ Audit and quality-gate scripts for documentation, filepath, drift, and git-guard
 | `check_tracked_generated_artifacts.py` | Generated-artifact git-index hygiene |
 | `check_tracked_secrets.py` | High-confidence tracked-blob credential scan |
 | `check_staged_secrets.py` | High-confidence staged A/C/M/R index-blob scan |
+| `check_mirror_symlinks.py` | Managed-symlink mirror-shape guard (`projects/<lifecycle>/` holds managed symlinks only) |
 | `copy_exemplar.py` | Copy/update a canonical exemplar |
 
 ## Usage
@@ -26,6 +30,9 @@ Audit and quality-gate scripts for documentation, filepath, drift, and git-guard
 ```bash
 uv run python scripts/audit/lint_docs.py
 uv run python scripts/audit/check_template_drift.py --strict
+uv run python scripts/audit/check_backlog.py
+uv run python scripts/audit/check_claim_bindings.py
+uv run python scripts/audit/check_public_template_contract.py --strict
 uv run python scripts/audit/check_tracked_all.py
 uv run python scripts/audit/check_tracked_secrets.py
 uv run python scripts/audit/check_staged_secrets.py

@@ -36,7 +36,7 @@ This table is itself token-injected: the values shown are those produced by the 
 
 ## Methods: The Script Pipeline
 
-Six thin orchestration scripts govern the integration workflow (@fig:pipeline, @fig:pipelineflow):
+{{ORCHESTRATION_SCRIPTS}} thin orchestration scripts govern the integration workflow (@fig:pipeline, @fig:pipelineflow):
 
 | Script | Purpose | Key output |
 |---|---|---|
@@ -44,10 +44,10 @@ Six thin orchestration scripts govern the integration workflow (@fig:pipeline, @
 | `scripts/02_run_integration.py` | Run `run_integration_demo()` and print JSON summary | Console JSON |
 | `scripts/03_generate_manuscript.py` | Write `output/data/manuscript_variables.json` | JSON file |
 | `scripts/04_validate_strong_rules.py` | Semantic evaluation of strong-rule constraints (@sec:rules) against this project's own tree | Console report, non-zero exit on violation |
-| `scripts/05_generate_figures.py` | Render all 8 content figures plus the cover illustration | 9 PNG files under `manuscript/figures/` |
+| `scripts/05_generate_figures.py` | Render all {{CONTENT_FIGURES}} content figures plus {{COVER_FIGURES}} cover illustration | {{TOTAL_FIGURES}} PNG files under `manuscript/figures/` |
 | `scripts/z_generate_manuscript_variables.py` | Hydrate declared manuscript-variable placeholders and inject them into `output/manuscript/` immediately before rendering | JSON file + resolved manuscript tree |
 
-![The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step.](figures/pipeline_flow.png){#fig:pipelineflow width=95%}
+![The {{ORCHESTRATION_SCRIPTS}}-script pipeline from source validation through token hydration, ending at the combined-PDF render step.](figures/pipeline_flow.png){#fig:pipelineflow width=95%}
 
 ![Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing.](figures/status_dashboard.png){#fig:pipeline width=85%}
 
@@ -75,4 +75,4 @@ The resilience design above trades a small, constant amount of I/O overhead for 
 
 ## Test Coverage
 
-The ten `src/` modules — including `cover_figure` and `rule_hierarchy_figure` alongside the readers, orchestrator, evaluator, figure façade, token generator, and type definitions — are covered by tests across ten test files in `tests/`, including property-based tests (`test_property_based.py`) and coverage-extras tests targeting previously-uncovered branches (`test_coverage_extras.py`). Tests use real file paths, real YAML files, and real BibTeX content rather than mocks, ensuring that coverage numbers reflect genuine code paths through the resource-discovery logic. The current coverage report shows combined line coverage comfortably above the project's 90% floor; `strong_rule_evaluator.py`, the newest and most branch-heavy module, has the most room for additional edge-case tests, while the remaining seven modules are at or near 100%. These exact test/coverage counts drift as the suite grows — treat the figures above as a snapshot, not a frozen claim, and re-run `uv run pytest … --cov-report=term` for the current numbers. The `tests/test_integration.py` suite includes an end-to-end test that calls `run_integration_demo()` and asserts that the `summary` dict contains the expected keys with non-negative integer values — a contract test that verifies the token injection pipeline's data source. `tests/test_manuscript_variables.py` adds a negative control: it monkeypatches `run_integration_demo()`'s return value and asserts the derived tokens actually change, proving the token-generation function is live-wired to its source rather than emitting a hard-coded constant.
+The {{SRC_MODULES}} `src/` modules — including the readers, orchestrator, evaluator, figure modules, token generator, resource-schema validator, and type definitions — are covered by tests across {{TEST_FILES}} test files in `tests/`, including property-based tests (`test_property_based.py`) and coverage-extras tests targeting previously-uncovered branches (`test_coverage_extras.py`). Tests use real file paths, real YAML files, and real BibTeX content rather than mocks, ensuring that coverage numbers reflect genuine code paths through the resource-discovery logic. The current coverage report shows combined line coverage comfortably above the project's 90% floor; exact test and coverage totals drift as the suite grows, so re-run `uv run pytest … --cov-report=term` for the current measurements. The `tests/test_integration.py` suite includes an end-to-end test that calls `run_integration_demo()` and asserts that the `summary` dict contains the expected keys with non-negative integer values — a contract test that verifies the token injection pipeline's data source. `tests/test_manuscript_variables.py` adds negative controls that change both integration results and a real temporary project tree, proving the token generator tracks runtime and filesystem sources rather than emitting fixed constants.

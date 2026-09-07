@@ -66,7 +66,9 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         """
         self.config = config
         self.control_config = self._resolve_control_config()
-        self.checkpoint_manager = CheckpointManager(project_name=config.project_name, repo_root=config.repo_root)
+        self.checkpoint_manager = CheckpointManager(
+            project_name=config.project_name, repo_root=config.repo_root, project_dir=config.project_dir
+        )
 
         # Log file: projects/{project_name}/output/logs/pipeline.log
         # Recreated by _setup_log_file_handler after clean stage deletes it.
@@ -184,7 +186,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             logger.debug("Using default pipeline: %s", resolved)
 
         dag = PipelineDAG.from_yaml(resolved)
-        exclude_tags: set[str] = {"ebook", "metadata", "bundle", "archival", "science", "provenance"}
+        exclude_tags = set(dag.opt_in_tags)
         if not include_llm or self.config.skip_llm:
             exclude_tags.add("llm")
         if skip_clean:
@@ -195,6 +197,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
         self._merge_plugin_stages_into_dag(dag)
         specs = dag.to_stage_specs(self)
+        self.config.total_stages = len(specs)
         self._artifact_manifest_boundary_names = frozenset(spec.name for spec in specs if spec.key == "validate")
         return specs
 
@@ -406,6 +409,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         try:
             from infrastructure.core.pipeline.artifacts import (
                 aggregate_artifact_manifests,
+                output_inventory_mode_for_project,
                 write_stage_artifact_manifest,
             )
 
@@ -416,7 +420,13 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
                 stage_name=stage_spec.name,
                 contract=stage_spec.contract,
             )
-            aggregate_artifact_manifests(self.config.project_dir / "output")
+            aggregate_artifact_manifests(
+                self.config.project_dir / "output",
+                inventory_mode=output_inventory_mode_for_project(
+                    self.config.repo_root,
+                    self.config.project_dir,
+                ),
+            )
         except (OSError, ValueError) as exc:
             logger.warning(f"Failed to write artifact manifest: {exc}")
 
@@ -452,9 +462,18 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         # post-validation rewrite of an older manifest.
         self._artifact_manifest_sealed = True
         try:
-            from infrastructure.core.pipeline.artifacts import aggregate_artifact_manifests
+            from infrastructure.core.pipeline.artifacts import (
+                aggregate_artifact_manifests,
+                output_inventory_mode_for_project,
+            )
 
-            aggregate_artifact_manifests(self.config.project_dir / "output")
+            aggregate_artifact_manifests(
+                self.config.project_dir / "output",
+                inventory_mode=output_inventory_mode_for_project(
+                    self.config.repo_root,
+                    self.config.project_dir,
+                ),
+            )
         except (OSError, ValueError) as exc:
             logger.warning(f"Failed to finalize artifact manifest before validation: {exc}")
 

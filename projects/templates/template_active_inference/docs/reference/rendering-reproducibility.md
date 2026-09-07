@@ -31,8 +31,11 @@ claim pass; regenerate the producer that owns the artifact.
   sheaf fragments by `scripts/compose_manuscript.py`.
 - `output/manuscript/*.md` is hydrated from composed manuscript sections plus
   `output/data/manuscript_variables.json`.
-- `output/figures/*` comes from `scripts/generate_figures.py` and
-  `scripts/render_animation.py`.
+- Registered image bytes under `output/figures/` come from
+  `scripts/generate_figures.py`; animation bytes come from
+  `scripts/render_animation.py`. The exception is
+  `output/figures/figure_registry.json`, whose sole final producer is the
+  hydration boundary in `scripts/z_generate_manuscript_variables.py`.
 - `output/pdf/*` and `output/web/*` are render outputs, not sources of truth.
 - Root-level `output/templates/template_active_inference/**` is copied from the
   project-local `output/**` by the root pipeline.
@@ -43,7 +46,10 @@ The single hydration boundary is `scripts/z_generate_manuscript_variables.py`.
 Composition may emit `{{token}}` placeholders, but only hydration substitutes
 them. Unknown placeholders and single-brace token typos fail closed. Volatile
 counts, run facts, semantic restrictions, and figure captions must enter through
-`output/data/manuscript_variables.json`, never hard-coded prose.
+`output/data/manuscript_variables.json`, never hard-coded prose. After the
+staleness pass rewrites that canonical variables snapshot, hydration reloads it
+and atomically writes the fully resolved figure alt/caption registry. Figure
+generation never persists a competing raw-token registry.
 
 ## Producer order
 
@@ -91,7 +97,14 @@ typography-token contract from `figures.yaml`, rejects raw numeric font-size
 literals in the figure source modules, and inventories visual files that are
 intentionally outside the numbered registry. Auxiliary outputs such as the
 deterministic GIF must be classified and nonblank; unknown visual files fail the
-audit instead of silently sharing the output directory. The report marks figures
+audit instead of silently sharing the output directory. Auxiliary rows retain
+`size_bytes` for diagnostics, but freshness compares the decoded
+`content_sha256`, dimensions, mode, nonblank status, classification, and producer
+instead of the compression-dependent byte length. The two transmission images
+are attributed to their actual `infrastructure.publishing` generators. Thus an
+identical PNG re-encoded by another Pillow/zlib build passes, while changed
+pixels, missing or blank files, altered metadata, and unclassified files fail.
+The report marks figures
 backed by generated statistical data or report artifacts and fails when those
 bridge sources are missing. `output/data/statistical_visualization_bridge.json`
 expands those marked rows into a sheaf/scholarship crosswalk with manuscript

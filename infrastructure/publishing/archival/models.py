@@ -8,9 +8,10 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Final
+
+from infrastructure.core.determinism import now_utc_iso as _now_utc_iso
 
 __all__ = [
     "ArchivalError",
@@ -109,10 +110,6 @@ class ArchivalCredentials:
 # ---------------------------------------------------------------------------
 # Private helpers (consumed by providers and orchestrate)
 # ---------------------------------------------------------------------------
-
-
-def _now_utc_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _bundle_sha256(bundle: Path) -> str:

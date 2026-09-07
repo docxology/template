@@ -3,8 +3,9 @@
   "row_count": 3,
   "rows": [
     {
+      "authority": "stage_04_validate",
       "claim": "The final saved validation report is a release source; this row is explicitly deferred until the validation stage writes it.",
-      "deferred_until_validation": false,
+      "deferred_until_validation": true,
       "note_id": "validation_report_all_passed",
       "passed": true,
       "source": "output/reports/validation_report.json"

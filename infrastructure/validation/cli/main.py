@@ -17,6 +17,8 @@ from typing import Iterator
 from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.pipeline.artifacts import output_inventory_mode_for_project
+from infrastructure.core.project_paths import find_repo_root
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.validation.integrity.checks import verify_output_integrity
@@ -226,7 +228,11 @@ def validate_evidence_command(args: argparse.Namespace) -> None:
         logger.error(f"Manuscript directory not found: {manuscript_dir}")
         raise SystemExit(1)
 
-    registry = build_project_evidence_registry(project_root)
+    repo_root = _repository_root_for_evidence_argument(project_root)
+    registry = build_project_evidence_registry(
+        project_root,
+        output_inventory_mode=output_inventory_mode_for_project(repo_root, project_root),
+    )
     text = "\n".join(
         path.read_text(encoding="utf-8")
         for path in discover_manuscript_files(manuscript_dir)
@@ -248,6 +254,25 @@ def validate_evidence_command(args: argparse.Namespace) -> None:
         logger.info(json.dumps(payload, indent=2, sort_keys=True))
 
     raise SystemExit(1 if report.has_issues and args.fail_on_issues else 0)
+
+
+def _repository_root_for_evidence_argument(project_root: Path) -> Path:
+    """Recover the template root from a lexical ``projects/...`` argument.
+
+    Do not resolve the argument first: managed lifecycle projects are leaf
+    symlinks whose lexical template location carries the lifecycle authority.
+    Standalone/external project paths intentionally fall back to the running
+    template checkout and therefore receive stable-local inventory mode.
+    """
+
+    absolute = project_root.absolute()
+    for ancestor in (absolute, *absolute.parents):
+        if ancestor.name != "projects":
+            continue
+        candidate = ancestor.parent
+        if (candidate / "infrastructure").is_dir():
+            return candidate.resolve()
+    return find_repo_root()
 
 
 def validate_prose_quality_command(args: argparse.Namespace) -> None:

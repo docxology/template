@@ -60,6 +60,11 @@ uv run pytest tests/infra_tests/documentation/test_glossary_gen.py -v
 - Glossary formatting
 - Markdown generation
 
+### Backlog Contract Tests (`test_backlog.py`)
+
+The backlog contract verifies required future-work sections, duplicate stable
+IDs, and accidental references to private or rotating project paths.
+
 ## Test Categories
 
 ### Unit Tests

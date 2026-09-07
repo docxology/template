@@ -185,11 +185,11 @@ def _publication_doi_line(config: dict[str, Any]) -> str:
     publication = config.get("publication", {}) or {}
     if not isinstance(publication, dict):
         return ""
-    doi = str(publication.get("doi", "")).strip()
+    doi = str(publication.get("doi") or "").strip()
     if doi:
         doi_target = _latex_href_url(f"https://doi.org/{doi}")
         return r"DOI: \href{" + doi_target + r"}{" + _latex_text(doi) + r"}"
-    doi_status = str(publication.get("doi_status", "")).strip()
+    doi_status = str(publication.get("doi_status") or "").strip()
     if doi_status:
         return r"DOI: " + _latex_text(doi_status)
     return ""
@@ -214,6 +214,10 @@ def _paper_cover_author_lines(config: dict[str, Any]) -> list[str]:
                 + orcid
                 + r"}\par}"
             )
+        else:
+            lines.append(
+                r"{\small\sffamily ORCID: " + _latex_text(author.get("orcid_status", "not-provided")) + r"\par}"
+            )
         lines.append(r"\vspace{0.08em}")
     if not lines:
         lines.append(r"{\large\sffamily\bfseries Project Author\par}")
@@ -231,7 +235,7 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
     publication = config.get("publication", {}) or {}
     if not isinstance(publication, dict):
         publication = {}
-    doi = str(publication.get("doi", ""))
+    doi = str(publication.get("doi") or "")
     title = _latex_text(metadata["title"])
     subtitle = _latex_text(metadata["subtitle"])
     edition = _latex_text(metadata["edition"])
@@ -256,6 +260,10 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
                 + orcid
                 + r"}}\\[0.5em]"
             )
+        else:
+            author_lines.append(
+                r"{\normalsize ORCID: " + _latex_text(author.get("orcid_status", "not-provided")) + r"}\\[0.5em]"
+            )
     if not author_lines:
         author_lines.append(r"{\Large\bfseries Project Author}\\[0.5em]")
 
@@ -272,6 +280,15 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
         doi_target = _latex_href_url(f"https://doi.org/{doi}")
         cover_doi_line = r"{\small DOI: \href{" + doi_target + r"}{" + escaped_doi + r"}\par}"
         publishing_doi_line = r"\noindent DOI: \href{" + doi_target + r"}{" + escaped_doi + r"}\\"
+    else:
+        # A reserved-but-unpublished DOI is real yet does not resolve, so it is
+        # carried as plain cover text rather than a doi.org link that would 404.
+        # The paper cover already honors doi_status; the book cover now matches.
+        doi_status = str(publication.get("doi_status", "")).strip()
+        if doi_status:
+            escaped_status = _latex_text(doi_status)
+            cover_doi_line = r"{\small DOI: " + escaped_status + r"\par}"
+            publishing_doi_line = r"\noindent DOI: " + escaped_status + r"\\"
 
     publishing_lines = [
         r"\clearpage",

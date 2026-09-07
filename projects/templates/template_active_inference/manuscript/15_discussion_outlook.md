@@ -45,11 +45,19 @@ does not alter the blocked major-scope ladder for empirical or non-toy claims.
 
 <!-- sheaf-track:ontology -->
 
+```{=latex}
+\begin{samepage}
+```
+
 ### Ontology bindings
 
 - `coverage_semantics` → **Coverage matrix semantics**
 - `pedagogical_scope` → **Pedagogical scope**
 - `state_inference_mode` → **State inference harness**
+
+```{=latex}
+\end{samepage}
+```
 
 
 <!-- sheaf-track:release_notes -->

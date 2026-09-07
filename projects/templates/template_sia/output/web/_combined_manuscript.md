@@ -2,7 +2,7 @@
 
 This exemplar documents **template_sia**, a deterministic implementation of the Self-Improvement Agent (SIA) harness contract described in [@sia2026]. The default pipeline replays fixture-backed generations for the `mini_classify` task; opt-in live mode runs bounded target subprocesses and optional Ollama-backed meta/feedback steps.
 
-**Run snapshot.** Task `mini_classify`, run 1, 3 generation(s), live=false. Final accuracy=0.8333 over 6 held-out samples. Values are injected by `scripts/z_generate_manuscript_variables.py` after analysis.
+**Run snapshot.** Task `mini_classify`, run 1, 3 generation(s), live=false. Final accuracy=1.0000 over 6 held-out samples. Values are injected by `scripts/z_generate_manuscript_variables.py` after analysis.
 
 **Keywords:** self-improvement agents, benchmark harness, reproducible evaluation, agent loops
 
@@ -77,24 +77,27 @@ count, enabling at-a-glance comparison across runs.
 
 | Gen | Metric | Value | N |
 | --- | --- | ---: | ---: |
-| 1 | accuracy | 0.5000 | 6 |
-| 2 | accuracy | 0.6667 | 6 |
-| 3 | accuracy | 0.8333 | 6 |
+| 1 | accuracy | 1.0000 | 6 |
+| 2 | accuracy | 1.0000 | 6 |
+| 3 | accuracy | 1.0000 | 6 |
 
 : SIA generation metrics (fixture replay). {#tbl:sia-metrics}
 
-Metric delta (final − first generation): 0.3333.
+Metric delta (final − first generation): 0.0000.
 
-Final injected token: accuracy=0.8333 (n=6).
+Final injected token: accuracy=1.0000 (n=6).
 
 ![SIA metric progression across generations.](../figures/sia_metric_progression.png){#fig:sia-metric-progression width=85%}
 
-## Incremental improvement
+## Threshold robustness control
 
-The generation-over-generation accuracy delta quantifies the self-refinement
-signal at each step of the loop.
+The recorded target agents genuinely apply the proposed thresholds 0.5, 0.3,
+and 0.25. All three lie inside this toy dataset's clean separation gap and
+therefore score 1.0. The zero generation-over-generation delta is an important
+negative result: the harness records feedback and code variation without
+fabricating an improvement signal where the evaluation cannot distinguish one.
 
-![Generation-over-generation metric delta (Δaccuracy) for the SIA loop, illustrating the incremental improvement at each self-refinement step.](../figures/sia_improvement_delta.png){#fig:sia-improvement-delta width=80%}
+![Generation-over-generation metric delta (Δaccuracy) for the SIA fixture replay; the flat trace confirms threshold robustness and prevents a fabricated improvement claim.](../figures/sia_improvement_delta.png){#fig:sia-improvement-delta width=80%}
 
 
 
@@ -106,7 +109,7 @@ signal at each step of the loop.
 
 template_sia demonstrates how to embed the SIA harness contract in the Research Project Template without vendoring upstream orchestration code. Layer 1 (`infrastructure/sia/`) owns task validation, evaluation, context logging, and the generation state machine; Layer 2 wires a minimal classification task, fixture replay, and manuscript tokens.
 
-**Non-claims.** This tree is a harness and documentation exemplar. Fixture-replay metrics (final accuracy=0.8333) validate wiring only—they are not evidence of state-of-the-art self-improvement. Live self-modification and external LLM calls remain opt-in; default CI never executes generated agent code or claims benchmark parity with [@sia2026].
+**Non-claims.** This tree is a harness and documentation exemplar. Fixture-replay metrics (final accuracy=1.0000) validate wiring only—they are not evidence of state-of-the-art self-improvement. Live self-modification and external LLM calls remain opt-in; default CI never executes generated agent code or claims benchmark parity with [@sia2026].
 
 
 

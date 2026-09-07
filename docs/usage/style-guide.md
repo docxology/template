@@ -110,8 +110,8 @@ Every figure follows this exact structure — Pandoc image syntax with a
 [Manuscript Semantics](../guides/manuscript-semantics.md)):
 
 ```markdown
-![Algorithm convergence comparison showing exponential decay
-with rate $\rho \approx 0.85$ across all benchmark datasets.](../output/figures/convergence_plot.png){#fig:convergence_plot width=80%}
+![Algorithm convergence comparison across the declared benchmark datasets;
+the fitted rate is {{CONVERGENCE_RATE}}.](../output/figures/convergence_plot.png){#fig:convergence_plot width=80%}
 ```
 
 **Element-by-element breakdown:**
@@ -189,6 +189,15 @@ Captions are the single most important piece of text for each figure and table. 
 2. **Describe what the figure shows**, not just what it is
 3. **Include key information** — method name, dataset, metric, key finding
 4. **Include inline math** when it adds precision
+5. **Inject changing results** from canonical analysis outputs rather than
+   copying values into source markdown
+6. **Name the evidence boundary**: population, denominator, units, uncertainty
+   definition, comparison, and statistical procedure where relevant
+
+The visible caption is not image alt text. Supply concise, purpose-specific alt
+text through the generated figure registry, and add a nearby prose or appendix
+description for complex figures. See
+[Manuscript Semantics](../guides/manuscript-semantics.md).
 
 ### Good vs. Bad Captions
 
@@ -205,8 +214,8 @@ Scalability analysis demonstrating $O(n \log n)$ computational
 complexity for the proposed method across problem sizes $n = 10^2$ to $10^6$.
 
 % ✅ GOOD — describes the insight, not just the data
-Ablation study results showing that removing the attention mechanism
-reduces accuracy by 12.3\%, confirming its importance for feature extraction.
+Ablation study results showing the source-generated change
+`{{ABLATION_ACCURACY_CHANGE}}` under the preregistered comparison.
 ```
 
 ```markdown
@@ -234,11 +243,12 @@ When in doubt, use this pattern:
 Examples:
 
 ```markdown
-![Training loss curves for three model variants on ImageNet,
-showing that Model C converges 2.1× faster than the baseline.](../output/figures/loss_curves.png){#fig:loss_curves}
+![Training loss curves for three model variants on the declared dataset,
+showing a source-generated convergence ratio of {{CONVERGENCE_RATIO}}.](../output/figures/loss_curves.png){#fig:loss_curves}
 
-![Distribution of prediction errors across 500 test samples,
-demonstrating a mean absolute error of $0.032 \pm 0.008$.](../output/figures/error_distribution.png){#fig:error_distribution}
+![Distribution of prediction errors across {{TEST_SAMPLE_COUNT}} test samples;
+mean absolute error is {{MAE_WITH_UNCERTAINTY}} under the stated uncertainty
+definition.](../output/figures/error_distribution.png){#fig:error_distribution}
 ```
 
 ---

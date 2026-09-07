@@ -20,7 +20,8 @@ from pathlib import Path
 
 import pytest
 
-from json_io import load_json, load_json_strict, read_json, write_json
+from json_io import json_payloads_equal, load_json, load_json_strict, read_json, write_json
+from yaml_io import load_yaml, read_yaml
 from roadmap_tracks.row_aggregates import all_field_present, all_rows, rows
 
 
@@ -56,6 +57,14 @@ def test_load_json_strict_returns_object(tmp_path: Path) -> None:
     assert load_json_strict(obj) == {"a": 1, "b": [2, 3]}
 
 
+def test_json_payloads_equal_is_json_type_strict() -> None:
+    assert json_payloads_equal({"a": [True, 1, 1.0]}, {"a": [True, 1, 1.0]})
+    assert json_payloads_equal({"b": 2, "a": 1}, {"a": 1, "b": 2})
+    assert not json_payloads_equal({"value": True}, {"value": 1})
+    assert not json_payloads_equal({"value": 1}, {"value": 1.0})
+    assert not json_payloads_equal({"value": float("nan")}, {"value": float("nan")})
+
+
 def test_load_json_swallows_malformed_where_strict_raises(tmp_path: Path) -> None:
     """Contrast: the lenient loader treats a malformed artifact as absent."""
     bad = tmp_path / "malformed.json"
@@ -73,6 +82,24 @@ def test_write_read_json_roundtrip(tmp_path: Path) -> None:
     written = write_json(target, payload)
     assert written == target and target.is_file()
     assert read_json(target) == payload
+
+
+def test_load_yaml_and_read_yaml_helpers(tmp_path: Path) -> None:
+    """load_yaml + read_yaml handle missing, malformed, non-dict, and memoized files."""
+    assert load_yaml(tmp_path / "missing.yaml") == {}
+
+    bad = tmp_path / "bad.yaml"
+    bad.write_text("key: [unclosed", encoding="utf-8")
+    assert load_yaml(bad) == {}
+
+    scalar = tmp_path / "scalar.yaml"
+    scalar.write_text("plain scalar string", encoding="utf-8")
+    assert load_yaml(scalar) == {}
+
+    good = tmp_path / "good.yaml"
+    good.write_text("name: active_inference\nvalue: 42\n", encoding="utf-8")
+    assert load_yaml(good) == {"name": "active_inference", "value": 42}
+    assert read_yaml(good) == {"name": "active_inference", "value": 42}
 
 
 # ---------------------------------------------------------------------------

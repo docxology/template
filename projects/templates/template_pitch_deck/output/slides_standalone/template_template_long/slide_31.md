@@ -1,10 +1,8 @@
-# What reproducible means here
+# Reproducibility guarantees
 
-*Slide 31 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 31 of 57 — template_template pitch, long deck — kind: `section`*
 
-- Fixed RNG seeds and MPLBACKEND=Agg for headless, deterministic figure generation.
-- Two consecutive pipeline runs against the same repository state produce byte-identical rendered output.
-- Coverage and test counts are read from a generated report (docs/_generated/COUNTS.md), never hardcoded into prose that could go stale.
+*(no body content — section/title slide)*
 
 ---
 

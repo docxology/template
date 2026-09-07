@@ -19,25 +19,26 @@ from urllib.parse import unquote, urlsplit
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.docs._io import read_markdown
+from infrastructure.validation.docs.accuracy import heading_slug
+from infrastructure.validation.docs.consistency._shared import blank_content, blank_fences
 from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, iter_markdown_files
 
 logger = get_logger(__name__)
 
 # Project dirs that are tracked in this PUBLIC repo. Everything else under
-# projects/ — including the non-rendered typed subfolders (working/published/
-# archive/other) holding confidential / rotating WIP — is intentionally absent
-# from a clean checkout (enforced by .gitignore + scripts/audit/check_tracked_projects.py).
+# projects/ — including the non-rendered typed subfolders
+# (working/ongoing/archive/) holding confidential / rotating WIP — is
+# intentionally absent
+# from a clean checkout (enforced by .gitignore + scripts/audit/check_tracked_all.py).
 # Docs may legitimately reference those as "optional / restore-when-needed", so a
 # link into one of those areas is "absent by design", NOT a broken link.
 _TRACKED_PROJECT_DIRS = frozenset(PUBLIC_PROJECT_NAMES)
 _TRACKED_PROJECT_LEAF_DIRS = frozenset(name.split("/")[-1] for name in PUBLIC_PROJECT_NAMES)
 
 #: Typed subfolders whose contents are deliberately absent from a clean checkout.
-_ABSENT_TYPED_SUBDIRS: frozenset[str] = frozenset({"working", "ongoing", "published", "archive", "other"})
+_ABSENT_TYPED_SUBDIRS: frozenset[str] = frozenset({"working", "ongoing", "archive"})
 #: All typed subfolders that sit between ``projects/`` and a project dir.
-_TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset(
-    {"active", "working", "ongoing", "published", "archive", "other", "templates"}
-)
+_TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset({"active", "working", "ongoing", "archive", "templates"})
 
 
 def _qualified_project_segments(parts: tuple[str, ...]) -> tuple[str, int] | None:
@@ -149,15 +150,9 @@ def _strip_code(text: str) -> str:
     Whitespace replacement (rather than deletion) keeps line/column offsets correct
     so reported line numbers map to the source file faithfully.
     """
-
-    def _blank(match: re.Match[str]) -> str:
-        s = match.group(0)
-        # Preserve newlines so line counts stay correct.
-        return "".join("\n" if ch == "\n" else " " for ch in s)
-
-    text = _FENCE_RE.sub(_blank, text)
-    text = _DOUBLE_BACKTICK_RE.sub(_blank, text)
-    text = _SINGLE_BACKTICK_RE.sub(_blank, text)
+    text = _FENCE_RE.sub(blank_content, text)
+    text = _DOUBLE_BACKTICK_RE.sub(blank_content, text)
+    text = _SINGLE_BACKTICK_RE.sub(blank_content, text)
     return text
 
 
@@ -169,47 +164,6 @@ _NON_ANCHOR_FRAGMENT_PREFIXES: tuple[str, ...] = ("gl:",)
 _ATX_HEADING_RE = re.compile(r"^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$", re.MULTILINE)
 _EXPLICIT_ID_RE = re.compile(r"""<a\s+(?:id|name)\s*=\s*["']([^"']+)["']""", re.IGNORECASE)
 _CURLY_ID_RE = re.compile(r"\{#([A-Za-z0-9_:.-]+)\}")
-_INLINE_CODE_RE = re.compile(r"`([^`]*)`")
-_MD_LINK_TEXT_RE = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
-_HTML_TAG_RE = re.compile(r"<[^>]+>")
-
-
-def _blank_fences(text: str) -> str:
-    """Blank fenced code blocks while PRESERVING inline-code spans.
-
-    Headings legitimately contain inline code (``## `uv` command not found``) and
-    GitHub slugs the code's *text content*, so the inline-span blanking used for
-    link discovery would mis-slug those headings.
-    """
-
-    def _blank(match: re.Match[str]) -> str:
-        return "".join("\n" if ch == "\n" else " " for ch in match.group(0))
-
-    return _FENCE_RE.sub(_blank, text)
-
-
-def heading_slug(text: str) -> str:
-    """Return the GitHub-Flavored-Markdown anchor slug for a heading's text.
-
-    Mirrors ``github-slugger``: render-then-slug. Markup is reduced to its text
-    content, the result is lowercased, characters outside ``[\\w\\s-]`` are dropped,
-    and spaces become hyphens.
-
-    Two behaviours matter and are easy to get wrong:
-
-    * A leading emoji is dropped but the space after it is not, so
-      ``## 🚀 Quick Start`` slugs to ``-quick-start`` (leading hyphen), NOT
-      ``quick-start``.
-    * Intra-word underscores are not emphasis in GFM and survive into the slug,
-      so ``secure_run.sh`` contributes ``secure_runsh``.
-    """
-    s = _INLINE_CODE_RE.sub(r"\1", text.strip())
-    s = _MD_LINK_TEXT_RE.sub(r"\1", s)
-    s = _HTML_TAG_RE.sub("", s)
-    s = re.sub(r"[*~]+", "", s)
-    s = s.lower()
-    s = re.sub(r"[^\w\s-]", "", s, flags=re.UNICODE)
-    return s.replace(" ", "-")
 
 
 def collect_anchors(md_file: Path) -> frozenset[str]:
@@ -224,7 +178,7 @@ def collect_anchors(md_file: Path) -> frozenset[str]:
         return frozenset()
     anchors: set[str] = set(_EXPLICIT_ID_RE.findall(raw))
     seen: dict[str, int] = {}
-    for match in _ATX_HEADING_RE.finditer(_blank_fences(raw)):
+    for match in _ATX_HEADING_RE.finditer(blank_fences(raw)):
         heading = match.group(2)
         custom = _CURLY_ID_RE.search(heading)
         if custom:
@@ -354,8 +308,8 @@ def find_broken_links(
                 if 0 < line <= len(raw_lines) and _NOQA_RE.search(raw_lines[line - 1]):
                     continue
                 # A link into a deliberately-untracked project area (the
-                # non-rendered typed subfolders projects/working|published|
-                # archive|other/, or any non-exemplar projects/ name) is absent
+                # non-rendered typed subfolders projects/working|ongoing|archive/, or any
+                # non-exemplar projects/ name) is absent
                 # BY DESIGN in a public/confidential checkout — not a broken link.
                 _base = unquote(target.split("#", 1)[0].split("?", 1)[0])
                 if _base and _is_intentionally_absent_project(md, _base):

@@ -11,5 +11,5 @@
 | **Hypothesis** | One of the 4 configured claims about the topic, optionally scored by the knowledge-graph stage. |
 | **Assertion** | A directional (supports / contradicts / neutral) statement extracted from a record against a hypothesis, with a confidence score. |
 | **Nanopublication** | An RDF-serialized assertion plus its provenance. |
-| **CAGR** | Compound annual growth rate of publication volume (12.27\% for this corpus). |
+| **CAGR** | Compound annual growth rate of publication volume (6.76\% for this corpus). |
 | **Living literature review** | A synthesis that can be re-executed as the field evolves, with every number regenerable. |

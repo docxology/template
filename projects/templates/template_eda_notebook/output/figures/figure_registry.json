@@ -4,19 +4,28 @@
       "caption": "Pearson feature-correlation matrix rendered on a fixed minus-one-to-one scale.",
       "filename": "correlation_heatmap.png",
       "generated_by": "scripts.eda_analysis.run_eda",
-      "label": "fig:correlation_heatmap"
+      "label": "fig:correlation_heatmap",
+      "metadata": {
+        "alt_text": "3-by-3 Pearson correlation heatmap for height_cm, weight_kg, resting_hr_bpm on a fixed minus-one-to-one diverging scale. The diagonal is 1.00. Off-diagonal pairs are height_cm with weight_kg: 0.72; height_cm with resting_hr_bpm: -0.12; weight_kg with resting_hr_bpm: -0.08. Correlations are descriptive and do not establish causation."
+      }
     },
     {
       "caption": "Complete-case row counts for each sorted study group.",
       "filename": "group_counts.png",
       "generated_by": "scripts.eda_analysis.run_eda",
-      "label": "fig:group_counts"
+      "label": "fig:group_counts",
+      "metadata": {
+        "alt_text": "3 bars encode complete-case row counts: alpha: 38; beta: 34; gamma: 44. Largest count 44 occurs for gamma; smallest count 34 occurs for beta. These counts describe sample composition, not group effects."
+      }
     },
     {
       "caption": "Height distribution computed from complete-case histogram bins.",
       "filename": "height_histogram.png",
       "generated_by": "scripts.eda_analysis.run_eda",
-      "label": "fig:height_histogram"
+      "label": "fig:height_histogram",
+      "metadata": {
+        "alt_text": "10-bin histogram of 116 non-missing height_cm observations from 142.59 to 193.71. The tallest bar count is 33 in 168.15 to 173.26. Bars encode counts; missing values are excluded and no fitted distribution is implied."
+      }
     }
   ],
   "schema_version": "template-eda-notebook-figure-registry-v1"

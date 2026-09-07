@@ -7,8 +7,24 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from tests._support.projects import make_project, write_doc
+
+
+def test_methods_manifest_parser_preserves_explicit_inventory_mode() -> None:
+    from infrastructure.methods._plan_validation import _artifact_manifest_from_payload
+
+    manifest = _artifact_manifest_from_payload(
+        {
+            "entries": [],
+            "issues": [],
+            "inventory_mode": "stable-local-output-v1",
+        }
+    )
+
+    assert manifest.inventory_mode == "stable-local-output-v1"
 
 
 def test_build_plan_maps_pipeline_contracts_to_methods_surface(repo_root: Path) -> None:
@@ -82,6 +98,97 @@ def test_all_public_source_audit_has_typed_aggregate(repo_root: Path) -> None:
     assert len(report.projects) == len(PUBLIC_PROJECT_NAMES)
     assert report.passed
     assert report.to_dict()["artifact_mode"] == "source"
+
+
+def test_audit_methods_projects_continues_past_unbuildable_projects(tmp_path: Path) -> None:
+    """One unbuildable project must not hide the audit state of the rest."""
+    from infrastructure.methods import audit_methods_projects
+
+    _write_minimal_repo(tmp_path)
+    write_doc(tmp_path / "scripts" / "runner" / "execute_pipeline.py", 'print("runner")\n')
+    good = tmp_path / "projects" / "template_test"
+    # A fully valid project-local pipeline and surfaces (same recipe as the
+    # external-lifecycle fixture) so template_test audits clean in source mode.
+    write_doc(good / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(good / "scripts" / "analyze.py", 'print("analysis")\n')
+    write_doc(
+        good / "methods_pipeline.yaml",
+        """
+stages:
+  - name: Project Analysis
+    key: analysis
+    script: projects/{project}/scripts/analyze.py
+    tags: [core]
+    contract:
+      input_artifacts: ["projects/{project}/src/"]
+      output_artifacts: ["projects/{project}/output/data/result.json"]
+      definition_of_done: "Analysis writes a result."
+      failure_code: "PROJECT_ANALYSIS_FAILED"
+      gate: "experiment_method_design"
+""",
+    )
+    broken = make_project(
+        tmp_path,
+        "template_broken",
+        program="templates",
+        with_manuscript=True,
+        with_scripts=True,
+    )
+    # A malformed project-local pipeline makes exactly this project's plan
+    # unbuildable (PipelineDAG.from_yaml raises before any plan exists).
+    write_doc(broken / "methods_pipeline.yaml", "not_pipeline: true\n")
+
+    report = audit_methods_projects(
+        tmp_path,
+        ["template_test", "templates/template_broken"],
+        artifact_mode="source",
+    )
+
+    assert [audit.project_name for audit in report.projects] == [
+        "template_test",
+        "templates/template_broken",
+    ]
+    valid, broken_audit = report.projects
+    assert valid.passed
+    assert not broken_audit.passed
+    assert any(issue.code == "METHODS.PLAN_BUILD_FAILED" for issue in broken_audit.issues)
+    payload = broken_audit.to_dict()
+    assert payload["plan"] is None
+    assert payload["passed"] is False
+
+
+def test_cli_all_public_markdown_survives_unbuildable_projects(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The markdown roster render skips plan-less audits instead of crashing."""
+    from infrastructure.methods.cli import main as methods_main
+
+    # A malformed project-local pipeline for every roster name makes each
+    # plan unbuildable (the packaged default pipeline always resolves, so
+    # an empty repo is not enough to fail a build).
+    for name in PUBLIC_PROJECT_NAMES:
+        # Roster names are qualified ("templates/<name>"); the on-disk dir is
+        # the bare name under the typed subfolder.
+        project_dir = tmp_path / "projects" / "templates" / name.split("/")[-1]
+        project_dir.mkdir(parents=True)
+        write_doc(project_dir / "methods_pipeline.yaml", "not_pipeline: true\n")
+    code = methods_main(
+        [
+            "plan",
+            "--all-public",
+            "--repo-root",
+            str(tmp_path),
+            "--artifact-mode",
+            "source",
+            "--format",
+            "markdown",
+        ]
+    )
+
+    assert code == 1
+    out = capsys.readouterr().out
+    assert out.count("METHODS.PLAN_BUILD_FAILED") == len(PUBLIC_PROJECT_NAMES)
+    assert f"Audited {len(PUBLIC_PROJECT_NAMES)} project(s)" in out
 
 
 def test_public_template_projects_have_methods_orchestration_plans(repo_root: Path) -> None:
@@ -200,6 +307,116 @@ def test_bare_project_name_resolves_scripts_in_templates_dir(repo_root: Path) ->
     assert "METHODS.VERIFICATION_SCRIPT_MISSING" not in bare_error_codes
 
 
+def test_external_lifecycle_plan_uses_portable_alias_and_private_git_boundary(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    repo_root = tmp_path / "template"
+    private_root = tmp_path / "private"
+    _write_external_lifecycle_project(repo_root, private_root)
+
+    qualified = build_methods_orchestration_plan(repo_root, "working/demo", artifact_mode="source")
+    bare = build_methods_orchestration_plan(repo_root, "demo", artifact_mode="source")
+
+    assert qualified.project_root == Path("projects/working/demo")
+    assert qualified.pipeline_source == Path("projects/working/demo/methods_pipeline.yaml")
+    assert qualified.method_sections == ("projects/working/demo/manuscript/02_methodology.md",)
+    assert qualified.stages[0].script == "projects/working/demo/scripts/analyze.py"
+    assert qualified.stages[0].input_artifacts == ("projects/working/demo/src/",)
+    assert qualified.stages[0].output_artifacts == ("projects/working/demo/output/data/result.json",)
+    assert bare.project_root == qualified.project_root
+    assert bare.pipeline_source == qualified.pipeline_source
+    assert bare.stages[0].script == qualified.stages[0].script
+    assert bare.stages[0].input_artifacts == qualified.stages[0].input_artifacts
+    assert bare.stages[0].output_artifacts == qualified.stages[0].output_artifacts
+    assert validate_methods_orchestration_plan(qualified, repo_root=repo_root) == ()
+    assert validate_methods_orchestration_plan(bare, repo_root=repo_root) == ()
+
+
+def test_external_lifecycle_plan_rejects_non_lifecycle_leaf(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan
+
+    repo_root = tmp_path / "template"
+    private_root = tmp_path / "private"
+    project = _write_external_project_source(repo_root, private_root)
+    link = repo_root / "projects" / "demo"
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(project, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="managed lifecycle leaf"):
+        build_methods_orchestration_plan(repo_root, "demo", artifact_mode="source")
+
+
+def test_external_lifecycle_plan_requires_real_git_worktree(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan
+
+    repo_root = tmp_path / "template"
+    private_root = tmp_path / "private"
+    project = _write_external_project_source(repo_root, private_root)
+    link = repo_root / "projects" / "working" / "demo"
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(project, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="readable Git worktree"):
+        build_methods_orchestration_plan(repo_root, "working/demo", artifact_mode="source")
+
+
+def test_external_lifecycle_plan_rejects_intermediate_directory_link(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan
+
+    repo_root = tmp_path / "template"
+    private_root = tmp_path / "private"
+    _write_external_project_source(repo_root, private_root)
+    _initialize_git(private_root)
+    lifecycle_link = repo_root / "projects" / "working"
+    lifecycle_link.parent.mkdir(parents=True, exist_ok=True)
+    lifecycle_link.symlink_to(private_root / "working", target_is_directory=True)
+
+    with pytest.raises(ValueError, match="leaf symlink"):
+        build_methods_orchestration_plan(repo_root, "working/demo", artifact_mode="source")
+
+
+def test_external_lifecycle_plan_rejects_symlinked_projects_root(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan
+
+    repo_root = tmp_path / "template"
+    private_root = tmp_path / "private"
+    project = _write_external_project_source(repo_root, private_root)
+    _initialize_git(private_root)
+    projects_storage = tmp_path / "projects-storage"
+    (repo_root / "projects").rename(projects_storage)
+    (repo_root / "projects").symlink_to(projects_storage, target_is_directory=True)
+    link = projects_storage / "working" / "demo"
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(project, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="intermediate symlink"):
+        build_methods_orchestration_plan(repo_root, "working/demo", artifact_mode="source")
+
+
+def test_external_lifecycle_plan_rejects_script_and_artifact_escape(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    repo_root = tmp_path / "template"
+    private_root = tmp_path / "private"
+    project = _write_external_project_source(repo_root, private_root)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    write_doc(outside / "analyze.py", 'print("outside")\n')
+    (project / "scripts" / "analyze.py").unlink()
+    (project / "scripts" / "analyze.py").symlink_to(outside / "analyze.py")
+    (project / "output").symlink_to(outside, target_is_directory=True)
+    _initialize_git(private_root)
+    link = repo_root / "projects" / "working" / "demo"
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(project, target_is_directory=True)
+
+    plan = build_methods_orchestration_plan(repo_root, "working/demo", artifact_mode="source")
+    codes = {issue.code for issue in validate_methods_orchestration_plan(plan, repo_root=repo_root)}
+
+    assert "METHODS.STAGE_SCRIPT_OUTSIDE_REPOSITORY" in codes
+    assert "METHODS.ARTIFACT_PATH_OUTSIDE_REPOSITORY" in codes
+
+
 def test_validation_rejects_malformed_or_empty_evidence_json(tmp_path: Path) -> None:
     from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
 
@@ -239,9 +456,11 @@ def test_validation_rejects_artifact_manifest_hash_drift(tmp_path: Path) -> None
                         "stage_num": 1,
                         "stage_name": "Project Analysis",
                         "contract_match": True,
+                        "timestamp": "",
                     }
                 ],
                 "issues": [],
+                "inventory_mode": "stable-local-output-v1",
             }
         ),
     )
@@ -424,6 +643,65 @@ stages:
     )
     project = make_project(repo_root, "template_test", with_manuscript=True, with_scripts=True)
     (project / "output" / "reports").mkdir(parents=True, exist_ok=True)
+
+
+def _write_external_project_source(repo_root: Path, private_root: Path) -> Path:
+    """Create a real external project source tree without linking or Git metadata."""
+    _write_minimal_repo(repo_root)
+    write_doc(repo_root / "scripts" / "runner" / "execute_pipeline.py", 'print("runner")\n')
+    project = make_project(
+        private_root / "working",
+        "demo",
+        repo_layout=False,
+        with_manuscript=True,
+        with_scripts=True,
+    )
+    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(project / "scripts" / "analyze.py", 'print("analysis")\n')
+    write_doc(
+        project / "methods_pipeline.yaml",
+        """
+stages:
+  - name: Project Analysis
+    key: analysis
+    script: projects/{project}/scripts/analyze.py
+    tags: [core]
+    contract:
+      input_artifacts: ["projects/{project}/src/"]
+      output_artifacts: ["projects/{project}/output/data/result.json"]
+      definition_of_done: "Analysis writes a result."
+      failure_code: "PROJECT_ANALYSIS_FAILED"
+      gate: "experiment_method_design"
+""",
+    )
+    return project
+
+
+def _initialize_git(root: Path) -> None:
+    subprocess.run(
+        ["git", "-c", "core.fsmonitor=false", "init", "--quiet"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    subprocess.run(
+        ["git", "-c", "core.fsmonitor=false", "add", "."],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def _write_external_lifecycle_project(repo_root: Path, private_root: Path) -> Path:
+    """Create a managed lexical leaf link into a real private Git worktree."""
+    project = _write_external_project_source(repo_root, private_root)
+    _initialize_git(private_root)
+    link = repo_root / "projects" / "working" / "demo"
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(project, target_is_directory=True)
+    return project
 
 
 def test_schema_subcommand_emits_valid_json() -> None:

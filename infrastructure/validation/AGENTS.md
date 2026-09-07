@@ -19,9 +19,11 @@ running project science or rendering stages itself.
 | Repo audit | `repo/` | Repository scanner and audit orchestration. |
 | CLI | `cli/main.py` | `python -m infrastructure.validation.cli ...`. |
 | Gates | `line_count.py`, `security_gate.py`, `plugin_export.py` | Shared logic for scripts under `scripts/gates/`. |
-| Evidence registry | `evidence_registry.py`, `evidence_registry_collectors.py` | `VerifiedEvidenceRegistry` of project-local facts plus `validate_text_against_registry`; `register_all_project_facts` collects numbers/citations/labels from config, JSON, CSV, claim ledgers, BibTeX, markdown, and output artifacts. Source paths must exist inside the project or, for shared contracts, inside the repository boundary. Large JSON arrays are treated as raw matrices/corpora and bounded out; scalar summaries and CSV/claim-ledger evidence remain eligible, preventing publication audits from walking unbounded scientific payloads. |
+| Evidence registry | `evidence_registry.py`, `evidence_registry_collectors.py` | `VerifiedEvidenceRegistry` of project-local facts plus `validate_text_against_registry`; `register_all_project_facts` collects numbers/citations/labels from config, JSON, CSV, claim ledgers, BibTeX, markdown, and output artifacts. Output-derived facts are admitted only through the explicit stable inventory. Public exemplars use Git-shippable mode; lifecycle-aware callers may authorize local mode only for a resolved non-template project. Runtime/build/control and hidden-path files are excluded in both, so they cannot support manuscript claims or perturb the registry. Source paths must exist inside the project or, for shared contracts, inside the repository boundary. Large JSON arrays are treated as raw matrices/corpora and bounded out; scalar summaries and CSV/claim-ledger evidence remain eligible. |
+| Claim bindings | `claims.py` | Roster-level `bound` / `not_applicable` / `external_data` inventory, source-derived regression-pin validation, and versioned claim-binding receipts. |
 | Publication audit | `publication/` | Composes drift, methods, evidence, figure, artifact, rendered-output, and no-mock checks into a stable public-readiness report. |
 | XML parser policy | `xml_parser_policy.py` | `validate_xml_parser_policy`: AST import-level guard forbidding stdlib `xml.*` parsers and `lxml`, requiring `defusedxml` (DEP-DEFUSEDXML-1). |
+| Rendered snapshot | `rendered_snapshot/` | Package (`__init__.py` public API + private `_scan.py`/`_records.py`). Commits the current rendered-input and validation-report fingerprints used to detect output drift after a targeted render / validation run (the strict `check_rendered_provenance` snapshot surface). |
 
 ## Boundaries
 
@@ -31,6 +33,9 @@ running project science or rendering stages itself.
 - Do not weaken diagnostic codes. Stable dotted codes are downstream contracts.
 - Validation may inspect generated artifacts, but should not hand-edit them.
   Fix the source producer and regenerate.
+- New evidence facts derive `checked_at` from the deterministic build epoch;
+  preserve existing fact timestamps and carry one `SOURCE_DATE_EPOCH` through
+  render and validation.
 - Link checks must respect local-only private mirrors and generated-output skip
   policies.
 

@@ -12,6 +12,7 @@ from ontology.bindings import (
 
 from json_io import load_json_strict as _load_json
 from manuscript.sheaf.semantic_maps import SEMANTIC_RESTRICTION_LANES
+from yaml_io import load_yaml
 
 
 def _rel(root: Path, path: Path) -> str:
@@ -19,24 +20,16 @@ def _rel(root: Path, path: Path) -> str:
 
 
 def _configured_analysis_scripts(root: Path) -> list[str]:
-    import yaml
-
     config_path = root / "manuscript" / "config.yaml"
-    if not config_path.is_file():
-        return []
-    data = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+    data = load_yaml(config_path)
     analysis = data.get("analysis") or {}
     scripts = analysis.get("scripts") or []
     return [str(script) for script in scripts]
 
 
 def _claim_records(root: Path) -> list[dict[str, Any]]:
-    import yaml
-
     path = root / "data" / "claim_ledger.yaml"
-    if not path.is_file():
-        return []
-    ledger = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    ledger = load_yaml(path)
     records: list[dict[str, Any]] = []
     for claim in ledger.get("claims") or []:
         records.append(

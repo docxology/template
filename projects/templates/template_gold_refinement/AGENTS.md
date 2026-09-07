@@ -21,6 +21,8 @@ manuscript composition via mega-madlib token injection.
 | Secure-pipeline policy: steganography and LLM review gating | `src/pipeline_policy.py` |
 | Interactive HTML dashboard | `src/dashboard.py` |
 | Security assay records and summary | `src/security_assay.py` |
+| Bounded analogy predicate and negative control | `src/analogy_boundary.py` |
+| Transmission bookend validation | `src/transmission.py` |
 | Shared boolean coercion helper | `src/coercion.py` |
 | Shared parsing and I/O helpers | `src/parsing.py` |
 | Cover visualization (matplotlib composite figure) | `src/cover_visualization.py` |

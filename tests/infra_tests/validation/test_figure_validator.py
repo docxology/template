@@ -7,7 +7,44 @@ registry loading, reference detection, and validation reporting.
 import json
 
 
-from infrastructure.validation.content.figure_validator import validate_figure_registry
+from infrastructure.validation.content.figure_validator import (
+    validate_configured_cover_accessibility,
+    validate_figure_registry,
+)
+
+
+class TestConfiguredCoverAccessibility:
+    def test_tagged_paper_cover_requires_nonblank_alt(self) -> None:
+        config = {"paper": {"cover": {"image": "cover.png", "alt": "  "}}}
+
+        issues = validate_configured_cover_accessibility(config, required=True)
+
+        assert issues == ["Tagged PDF requires non-empty paper.cover.alt when paper.cover.image is configured"]
+
+    def test_tagged_book_cover_uses_book_alt_when_book_title_selects_book_path(self) -> None:
+        config = {
+            "paper": {"cover": {"image": "paper.png"}},
+            "book": {
+                "title": "Book",
+                "cover": {"image": "book.png", "alt": "Nested modular cover."},
+            },
+        }
+
+        assert validate_configured_cover_accessibility(config, required=True) == []
+
+    def test_tagged_cover_rejects_non_string_alt(self) -> None:
+        config = {"paper": {"cover": {"image": "cover.png", "alt": ["not", "plain", "text"]}}}
+
+        issues = validate_configured_cover_accessibility(config, required=True)
+
+        assert len(issues) == 1
+        assert "paper.cover.alt" in issues[0]
+
+    def test_untagged_or_image_free_config_does_not_require_cover_alt(self) -> None:
+        cover_without_alt = {"paper": {"cover": {"image": "cover.png"}}}
+
+        assert validate_configured_cover_accessibility(cover_without_alt, required=False) == []
+        assert validate_configured_cover_accessibility({"paper": {}}, required=True) == []
 
 
 class TestValidateFigureRegistry:

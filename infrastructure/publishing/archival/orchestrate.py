@@ -10,16 +10,19 @@ from __future__ import annotations
 import json
 import os
 from collections.abc import Mapping
+from inspect import Parameter, signature
 from pathlib import Path
 
 from .models import (
     ArchivalCredentials,
     ArchivalError,
+    ArchivalReceipt,
     ArchivalRun,
     DEFAULT_CREDENTIALS_PATH,
     _now_utc_iso,
 )
 from .providers import ArchivalProvider
+from infrastructure.publishing.preflight import PublicationPayloadManifest
 
 __all__ = [
     "load_credentials",
@@ -100,6 +103,7 @@ def archive_publication(
         raise ArchivalError(f"Bundle path does not exist: {bundle}")
 
     preflight: dict[str, object] | None = None
+    manifest: PublicationPayloadManifest | None = None
     if (repo_root is None) != (project_name is None):
         raise ArchivalError("archival safety context requires both repo_root and project_name")
     if repo_root is not None and project_name is not None:
@@ -113,9 +117,13 @@ def archive_publication(
             credential_sources or {},
             payload_root=repo_root / "output" / project_name,
         )
+        manifest = PublicationPayloadManifest.from_dict(preflight)
+        manifest.validate_current(bundle)
 
     started = _now_utc_iso()
-    receipts = tuple(provider.deposit(bundle, dry_run=dry_run) for provider in providers)
+    receipts = tuple(
+        _deposit_with_manifest(provider, bundle, dry_run=dry_run, manifest=manifest) for provider in providers
+    )
     finished = _now_utc_iso()
 
     run = ArchivalRun(
@@ -134,3 +142,63 @@ def archive_publication(
         )
 
     return run
+
+
+def check_publication_status(
+    repo_url: str,
+    *,
+    base_url: str = "https://archive.softwareheritage.org/api/1",
+) -> ArchivalReceipt:
+    """Refresh archival state for one origin from credential-free evidence.
+
+    Read-only: queries the provider's public status endpoints and returns
+    the observation receipt. No deposit is attempted, so no credentials are
+    required and nothing is submitted to the provider.
+    """
+    from .providers import SoftwareHeritageProvider  # noqa: PLC0415 — avoids a provider cycle at import time
+
+    return SoftwareHeritageProvider(base_url=base_url).check_status(repo_url)
+
+
+def resolve_git_origin_url(git_dir: Path) -> str | None:
+    """Return the origin remote URL for a git working tree, or ``None``.
+
+    Uses real ``git`` so includes and walk-up resolution behave exactly as
+    Git itself would for the caller's checkout.
+    """
+    import subprocess  # noqa: PLC0415 — subprocess keeps this a real git query
+
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(git_dir), "remote", "get-url", "origin"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    url = result.stdout.strip()
+    return url if url.startswith(("http://", "https://", "git@")) else None
+
+
+def _deposit_with_manifest(
+    provider: ArchivalProvider,
+    bundle: Path,
+    *,
+    dry_run: bool,
+    manifest: PublicationPayloadManifest | None,
+) -> ArchivalReceipt:
+    """Pass the immutable manifest to current providers while retaining old adapters."""
+    if manifest is None:
+        return provider.deposit(bundle, dry_run=dry_run)
+    parameters = signature(provider.deposit).parameters
+    accepts_manifest = "manifest" in parameters or any(
+        parameter.kind == Parameter.VAR_KEYWORD for parameter in parameters.values()
+    )
+    if accepts_manifest:
+        manifest.validate_current(bundle)
+        return provider.deposit(bundle, dry_run=dry_run, manifest=manifest)
+    # Third-party providers written against the v1 protocol remain usable, but
+    # the repository-owned providers all implement the manifest-bearing form.
+    return provider.deposit(bundle, dry_run=dry_run)

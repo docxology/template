@@ -616,3 +616,34 @@ class TestCorpusRemove:
         assert len(c) == 0
         c.add(p)
         assert len(c) == 1
+
+
+class TestCorpusSummary:
+    """Corpus.summary() diagnostic — empty and populated branches."""
+
+    def test_summary_empty_corpus(self):
+        c = Corpus()
+        s = c.summary()
+        assert s["total"] == 0
+        assert s["mean_completeness"] == 0.0
+
+    def test_summary_populated(self):
+        p1 = make_friston_2010()  # doi, abstract, authors, year
+        c = Corpus([p1])
+        s = c.summary()
+        assert s["total"] == 1
+        assert s["with_doi"] == 1
+        assert s["with_abstract"] == 1
+        assert s["with_authors"] == 1
+        assert s["with_year"] == 1
+        assert s["preprints"] == 0
+        assert s["mean_completeness"] > 0.0
+
+
+class TestFilterByYearBoundsError:
+    """filter_by_year must reject an inverted range."""
+
+    def test_start_greater_than_end_raises(self):
+        c = Corpus([make_friston_2010()])
+        with pytest.raises(ValueError, match="start=2020 > end=2010"):
+            c.filter_by_year(start=2020, end=2010)

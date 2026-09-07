@@ -75,8 +75,9 @@ The Core module provides fundamental foundation utilities used across the entire
 - Component status checking
 - Health status reporting
 
-**health.py**
+**health.py** / **health_gates.py**
 - Unified repository health check entry point (`uv run python -m infrastructure.core.health`)
+- `health_gates.build_gate_specs` owns the gate argv table; `health.py` re-exports it and runs the CLI
 - Aggregates every per-CLI quality gate (mypy, ruff, ruff-format, bandit, no-mocks, `__all__` audit, docs-lint, stage-table & api-reference idempotence, architecture-overview presence) into a single typed `HealthReport`
 - Subprocess-only orchestrator — exit code is the sole pass/fail signal; stdout/stderr captured for diagnostics only
 - `--json` for machine-readable output (consumed by CI artefact upload), `--gates=<names>` for subset runs, `--quiet`, `--repo-root`, `--no-color`, and bounded `--workers` concurrency (`1` keeps serial diagnostics)
@@ -96,6 +97,18 @@ The Core module provides fundamental foundation utilities used across the entire
 - Public API: `MemoryAdvisory`, `memory_path(repo_root)`, `example_path(repo_root)`, `empty_memory_payload()`, `normalize_bullets(items, *, max_items=MAX_BULLETS)`, `audit_memory_payload(payload)`, `load_memory(repo_root)`, `save_memory(repo_root, payload)`
 - Tests: `tests/infra_tests/core/test_agent_memory.py`
 
+**Testing cluster — re-homed to [`testing/`](testing/AGENTS.md) (`CORE-TESTING-REHOME-1`)**
+
+The pytest/testing modules below moved to the
+[`infrastructure/core/testing/`](testing/README.md) subpackage; their old
+`infrastructure/core/<module>.py` paths remain as backwards-compat shims
+re-exporting the public surface, so every existing import keeps resolving.
+The per-module documentation below still applies verbatim:
+`pytest_marker_exprs.py`, `pytest_orchestration.py`, `pytest_profiles.py`,
+`public_matrix_receipt.py`, `project_test_matrix.py`,
+`test_impact.py`, `test_performance.py`, `test_runner.py`,
+`test_runner_cache.py`, `test_runner_outputs.py`, `coverage_policy.py`.
+
 **pytest_marker_exprs.py**
 - ``build_pytest_marker_expression(...)`` returns one ``pytest -m`` string for subprocess runners (`pipeline_test_runner`, ``run_per_project_pytest``) so benchmarks and slow/Ollama-gated tests stay opt-in outside defaults.
 
@@ -107,12 +120,36 @@ The Core module provides fundamental foundation utilities used across the entire
 - Owns matched serial/parallel Stage-01 test commands and fail-closed performance manifests for the fast `pipeline-smoke` lane, the full infrastructure lane, or the public project matrix.
 - `scripts/maintenance/benchmark_tests.py` writes provenance-bound JSON evidence; it refuses dirty checkouts and requires both lanes to pass with identical selection and commit.
 
+**test_runner_outputs.py**
+- Owns the Git-visible output-tree inventory and content digest used by the
+  isolated public-project test runner; ignored caches and runtime logs remain
+  outside the receipt boundary, while tracked or non-ignored output changes
+  fail the output-isolation contract.
+
+**worker_policy.py**
+- Shared bounded worker resolution for the outer public-project matrix and inner pytest-xdist lanes.
+- `resolve_bounded_workers` applies explicit values, environment overrides, CPU-aware defaults, and a hard safety cap without allowing invalid or oversubscribed counts.
+- Environment controls: `TEMPLATE_PROJECT_WORKERS` / `MULTI_PROJECT_MAX_WORKERS` for outer project concurrency and `PYTEST_XDIST_WORKERS` for inner test workers.
+
 **project_test_matrix.py**
 - Shared bounded subprocess service for public readiness, per-project union coverage, and parallel documentation counts. ``run_project_test_matrix(tasks, workers=...)`` isolates each task, applies a hard timeout, continues after failure/timeout, captures bounded diagnostics when requested, and returns results in canonical input order regardless of completion order. Outer project workers must not be combined with inner pytest-xdist workers; the higher-level orchestration validators enforce that boundary.
+
+**subprocess_policy.py**
+- Source-owned typed policy inventory for intentional subprocess wrappers. `SubprocessPolicy` requires a positive timeout, existing source declaration, and process-group boundary; `run_with_policy` delegates to the shared bounded executor and can fail closed on non-zero exits. `INTENTIONAL_SUBPROCESS_POLICIES` covers the project matrix, renderer, git metadata, validation, and optional formal-spec lanes.
+
+**test_impact.py**
+- Read-only changed-surface classifier. `scripts/audit/test_impact.py` unions staged, unstaged, deleted, and non-ignored untracked paths before `classify_changed_paths()` reports infrastructure, documentation, public-exemplar, and local-only impacts, recommends the smallest safe lanes, and explicitly prohibits nested outer-project parallelism with inner pytest-xdist.
+
+**public_matrix_receipt.py**
+- Deterministic public-matrix receipt for per-project release lanes: records one bounded public-matrix run (per-project coverage floors, pass/fail, duration, resource profile, collection count, cache identity, and explicit skip reason) into a versioned contract, and fails closed when the on-disk output tree would drift from the receipt after the run. `write_public_matrix_receipt` lives here and is called from `test_runner.py`. Backs the `--receipt` public-matrix mode and the scheduled `public-matrix-receipt` CI job.
 
 **analysis_pipeline.py**
 - Stage-02 analysis-script runner: executes the discovered scripts under the standard subprocess contract (project-preferred interpreter, per-script timeout, sub-stage progress with EMA-based ETA), keeping `scripts/pipeline/stage_02_analysis.py` a thin orchestrator. Direct script paths are confined to the resolved project `scripts/` tree, and credential-like environment variables are redacted by default; set `ANALYSIS_ALLOW_SECRETS=1` only for an explicitly reviewed live integration.
 - Public API: `run_analysis_script(script_path, repo_root, project_name)`, `run_analysis_pipeline(scripts, repo_root, project_name)`
+
+**execution_boundary.py**
+- Bounded subprocess execution for project hooks and analysis scripts (SECURE-RUN-1 / PROJECT-EXECUTION-BOUNDARY-1): `run_bounded_subprocess` launches a command in a fresh process group so a timeout can `killpg` the whole tree (no orphaned descendants); `build_bounded_env` strips credential-like env vars unless explicitly allow-listed; `validate_hook_root` enforces root confinement; `classify_lifecycle_link` distinguishes intentional lifecycle links from escapes. Wired into `infrastructure.project.setup_hook.run_project_setup_hook` and `infrastructure.core.pipeline.hooks.run_stage_hooks`.
+- Public API: `run_bounded_subprocess`, `build_bounded_env`, `validate_hook_root`, `classify_lifecycle_link`, `LinkClassification`, `BoundedSubprocessResult`
 
 **analysis_timeout.py**
 - Resolves the per-script Stage-02 subprocess timeout from `ANALYSIS_SCRIPT_TIMEOUT_SEC` (default 7200s; `0`/`none`/`unlimited`/`inf` disables it; invalid/negative falls back to the default)
@@ -141,7 +178,8 @@ The Core module provides fundamental foundation utilities used across the entire
 
 **project_pyproject.py**
 - Cached single-read accessors for a project `pyproject.toml`'s test/coverage settings
-- Public API: `load_project_pyproject`, `project_declared_coverage_floor`, `resolve_project_cov_config`, `project_declares_dev_extra`, dataclass `ProjectPyprojectConfig`
+- Public API: `load_project_pyproject`, `project_declared_coverage_floor`, `project_declared_test_command`, `resolve_project_cov_config`, `project_declares_dev_extra`, dataclass `ProjectPyprojectConfig`
+- `[tool.template].project_test_command` is an explicit, default-off argv contract for the single-project Stage-01 lane; malformed declarations fail closed. Stage 01 overlays the workspace's exact pytest/Coverage runner versions, requires project-local coverage evidence plus real warning/discovery/outcome counts, and gives the verifier a 6,900-second deadline inside the tree-killing 7,200-second stage boundary. The `--all-projects --public-projects` union runner remains on isolated generic pytest, while GitHub's per-project public matrix invokes the same single-project Stage-01 contract and therefore honors an explicit verifier.
 
 **sidecar_linking.py**
 - Generic sidecar lifecycle symlink sync for template checkouts: creates/updates/prunes managed symlinks under `projects/` from a resolved private root, honoring per-pool env/config overrides
@@ -235,7 +273,7 @@ The Core module provides fundamental foundation utilities used across the entire
 
 **pipeline/pipeline.yaml**
 - Default declarative pipeline stage definitions
-- 14 declared pipeline stages (8 core + 2 LLM + 2 opt-in ebook/metadata + 2 opt-in bundle/archival); default full runs execute 10 core+LLM stages; `--core-only` runs 8
+- Declared / default-full / `--core-only` counts come from `pipeline.yaml` via `STAGE_SUMMARY` (see root `AGENTS.md`); `opt_in_tags` is the single exclude set for default and `--core-only` runs
 - Tag-based filtering for `--core-only` vs full pipeline
 - Stage metadata: name, script, description, dependencies, tags
 - Optional `telemetry:` configuration block

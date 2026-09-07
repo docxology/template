@@ -18,9 +18,17 @@ Ontology-facing symbols are checked per model: the Bernoulli toy binds `pi1`, `p
 
 <!-- sheaf-track:ontology -->
 
+```{=latex}
+\begin{samepage}
+```
+
 ### Ontology bindings
 
 - `expected_free_energy` → **ExpectedFreeEnergy**
 - `location` → **HiddenState**
 - `observation` → **ObservationLikelihood**
 - `policy` → **PolicyPosterior**
+
+```{=latex}
+\end{samepage}
+```

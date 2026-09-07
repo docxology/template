@@ -5,7 +5,8 @@ and saves them in JSON and Markdown formats.
 """
 
 import json
-from datetime import datetime
+import os
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -16,22 +17,40 @@ from .coverage_json_parser import parse_coverage_json
 logger = get_logger(__name__)
 
 
+def _report_timestamp() -> str:
+    """Return a reproducible timestamp for generated test reports."""
+    raw_epoch = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
+    if not raw_epoch:
+        return "1970-01-01T00:00:00+00:00 (SOURCE_DATE_EPOCH unset)"
+    try:
+        epoch = int(raw_epoch)
+    except ValueError:
+        return "1970-01-01T00:00:00+00:00 (invalid SOURCE_DATE_EPOCH)"
+    return datetime.fromtimestamp(epoch, tz=timezone.utc).isoformat(timespec="seconds")
+
+
 def generate_test_report(
     infra_results: Mapping[str, Any],
     project_results: Mapping[str, Any],
     repo_root: Path,
     include_coverage_details: bool = True,
     include_infrastructure_coverage: bool = True,
+    *,
+    project_root: Path | None = None,
 ) -> dict[str, Any]:
     """Generate structured test report from infrastructure and project test results.
 
     ``coverage_infra.json`` is repository-scoped, so a project-only run can
     otherwise accidentally ingest stale infrastructure coverage left by an
     earlier command. Callers should set ``include_infrastructure_coverage``
-    according to the phases executed for the current report.
+    according to the phases executed for the current report. When
+    ``project_root`` is supplied, only its CI-uploadable
+    ``coverage_project.json`` is eligible; absence fails closed instead of
+    falling back to stale evidence from a different project. Callers without
+    project identity retain the legacy repository-root location.
     """
     report: dict[str, Any] = {
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": _report_timestamp(),
         "infrastructure": infra_results,
         "project": project_results,
         "summary": {
@@ -61,7 +80,9 @@ def generate_test_report(
                 coverage_details["infrastructure"] = infra_coverage
 
         # Try to read project coverage details
-        project_coverage_json = repo_root / "coverage_project.json"
+        project_coverage_json = (
+            project_root / "coverage_project.json" if project_root is not None else repo_root / "coverage_project.json"
+        )
         project_coverage = parse_coverage_json(project_coverage_json)
         if project_coverage:
             coverage_details["project"] = project_coverage

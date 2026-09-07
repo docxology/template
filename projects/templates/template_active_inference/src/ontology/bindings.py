@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
-
+from yaml_io import load_yaml
 from gnn.concordance import BERNOULLI_EXPECTED_TERMS, BERNOULLI_SYMBOL_MAP, parity_gaps
 from gnn.parser import parse_gnn_file
 
@@ -26,9 +25,7 @@ SI_EXPECTED_TERMS: dict[str, str] = {
 
 def load_section_ontology(path: Path) -> dict[str, str]:
     """Load section ontology from a file."""
-    if not path.exists():
-        return {}
-    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    data = load_yaml(path)
     terms_block = data.get("terms")
     if isinstance(terms_block, dict):
         entries: dict[str, str] = {}

@@ -78,7 +78,8 @@ convex quadratic, its analytic minimiser is known in closed form — `x* = c`,
 computed independently by the sibling kernel `analytic_minimizer` — so the
 iterative and closed-form solutions can be cross-checked against each other
 rather than against a single hardcoded expectation. On the example input (a
-diagonal `A`, `c = (1, -1)`, {{OPTIMIZATION_EXAMPLE_STEPS}} steps at learning rate 0.1) the two agree to
+diagonal `A`, `c = (1, -1)`, {{OPTIMIZATION_EXAMPLE_STEPS}} steps at learning
+rate {{OPTIMIZATION_EXAMPLE_LEARNING_RATE}}) the two agree to
 within `1e-4`. The domain's negative control, `_negative_control_wrong_sign`,
 is the same loop with the gradient step's sign flipped (`x = x + lr * grad`
 instead of `x = x - lr * grad`); this turns descent into ascent and diverges

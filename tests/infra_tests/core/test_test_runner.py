@@ -12,6 +12,8 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import threading
+import time
 from pathlib import Path
 from textwrap import dedent
 
@@ -19,9 +21,12 @@ import pytest
 
 from infrastructure.core.test_runner import (
     DEFAULT_COVERAGE_FILE,
+    _output_tree_digest,
+    _contains_tests,
     DEFAULT_FAIL_UNDER,
     run_per_project_pytest,
 )
+from infrastructure.core.test_runner_outputs import declared_output_relpaths
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 pytestmark = pytest.mark.timeout(120)
@@ -173,6 +178,14 @@ def test_run_per_project_pytest_all_passing(synthetic_repo: Path, monkeypatch: p
     assert coverage_file.exists(), "Combined coverage data file should be created"
 
 
+def test_contains_tests_accepts_suffix_test_modules(tmp_path: Path) -> None:
+    """The isolated runner recognizes both supported pytest naming conventions."""
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir()
+    (tests_dir / "helpers_test.py").write_text("def test_ok(): pass\n", encoding="utf-8")
+    assert _contains_tests(tests_dir) is True
+
+
 def test_run_per_project_pytest_one_failing(synthetic_repo: Path) -> None:
     """A failing project → non-zero exit code from the orchestrator."""
     _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
@@ -311,6 +324,7 @@ def test_discovered_project_roster_is_sorted_by_qualified_name(synthetic_repo: P
     ]
 
 
+@pytest.mark.slow
 def test_run_per_project_pytest_continues_after_timeout(synthetic_repo: Path) -> None:
     marker_file = synthetic_repo / "beta-ran.txt"
     _write_project(
@@ -373,6 +387,16 @@ def test_empty_tests_directory_is_not_runnable(synthetic_repo: Path) -> None:
 
 def test_allow_empty_requires_explicit_opt_in(synthetic_repo: Path) -> None:
     assert run_per_project_pytest(synthetic_repo, projects=[], fail_under=100, allow_empty=True) == 0
+
+
+def test_empty_matrix_still_writes_an_explicit_failure_receipt(synthetic_repo: Path) -> None:
+    receipt_path = synthetic_repo / "empty-matrix-receipt.json"
+    assert run_per_project_pytest(synthetic_repo, projects=[], receipt_path=receipt_path) == 1
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    assert receipt.overall_exit == 1
+    assert receipt.skip_reasons["<no-runnable-projects>"].startswith("error:")
 
 
 def test_default_fail_under_constant_matches_repo_threshold() -> None:
@@ -614,14 +638,40 @@ def test_receipt_rejects_test_generated_output_drift(synthetic_repo: Path, monke
     assert receipt.overall_exit == 1
     assert receipt.lanes[0].exit_code == 0
     assert receipt.lanes[0].output_isolation_ok is False
-    assert receipt.validate(["alpha"]) == ["OUTPUT-ISOLATION: project 'alpha' changed output/"]
+    assert receipt.validate(["alpha"]) == [
+        "OVERALL-EXIT: receipt overall_exit=1",
+        "OUTPUT-ISOLATION: project 'alpha' changed output/",
+    ]
 
 
-def test_receipt_rejects_output_drift_after_project_process_exits(
+def test_output_digest_ignores_ignored_runtime_files_but_tracks_visible_files(tmp_path: Path) -> None:
+    """Fresh-checkout runtime caches do not mask visible output mutations."""
+    project_root = tmp_path / "projects" / "alpha"
+    output_dir = project_root / "output"
+    output_dir.mkdir(parents=True)
+    (tmp_path / ".gitignore").write_text("projects/alpha/output/runtime.log\n", encoding="utf-8")
+    tracked = output_dir / "result.txt"
+    tracked.write_text("baseline\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)  # noqa: S603
+    subprocess.run(["git", "add", "."], cwd=tmp_path, check=True)  # noqa: S603
+
+    before = _output_tree_digest(project_root)
+    (output_dir / "runtime.log").write_text("local cache\n", encoding="utf-8")
+    assert _output_tree_digest(project_root) == before
+
+    (output_dir / "new-visible.txt").write_text("must be reported\n", encoding="utf-8")
+    assert _output_tree_digest(project_root) != before
+
+    (output_dir / "new-visible.txt").unlink()
+    tracked.write_text("mutated\n", encoding="utf-8")
+    assert _output_tree_digest(project_root) != before
+
+
+def test_detached_project_writer_is_killed_before_receipt_finalization(
     synthetic_repo: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """A detached test writer cannot mutate output after an early comparison."""
+    """A successful project lane cannot leave a detached output writer alive."""
     monkeypatch.delenv("COVERAGE_FILE", raising=False)
     _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
     project_root = synthetic_repo / "projects" / "alpha"
@@ -675,8 +725,156 @@ def test_receipt_rejects_output_drift_after_project_process_exits(
     from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
 
     receipt = PublicMatrixReceipt.read(receipt_path)
+    assert output_file.read_text(encoding="utf-8") == "baseline\n"
+    assert rc == 0
+    assert receipt.overall_exit == 0
+    assert receipt.lanes[0].output_isolation_ok is True
+    assert receipt.validate(["alpha"]) == []
+
+
+def test_receipt_rejects_parent_output_drift_after_project_process_exits(
+    synthetic_repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A parent-owned mutation after the project matrix still fails closed."""
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+    project_root = synthetic_repo / "projects" / "alpha"
+    output_file = project_root / "output" / "result.txt"
+    output_file.parent.mkdir()
+    output_file.write_text("baseline\n", encoding="utf-8")
+    combined_coverage_file = synthetic_repo / DEFAULT_COVERAGE_FILE
+    mutation_errors: list[BaseException] = []
+
+    def mutate_after_project_matrix() -> None:
+        try:
+            # The combined file is created only after the bounded project matrix
+            # returns, leaving the coverage gate before receipt finalization.
+            deadline = time.monotonic() + 10
+            while not combined_coverage_file.exists():
+                if time.monotonic() >= deadline:
+                    raise TimeoutError("combined coverage file was not created")
+                time.sleep(0.005)
+            output_file.write_text("late drift\n", encoding="utf-8")
+        except BaseException as exc:  # noqa: BLE001 - propagate thread failure in the test process
+            mutation_errors.append(exc)
+
+    writer = threading.Thread(target=mutate_after_project_matrix, daemon=True)
+    writer.start()
+    receipt_path = synthetic_repo / "public-matrix-receipt.json"
+    try:
+        rc = run_per_project_pytest(
+            synthetic_repo,
+            projects=["alpha"],
+            fail_under=1,
+            timeout=60,
+            receipt_path=receipt_path,
+        )
+    finally:
+        writer.join(timeout=15)
+
+    assert not writer.is_alive()
+    assert mutation_errors == []
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
     assert output_file.read_text(encoding="utf-8") == "late drift\n"
     assert rc == 1
     assert receipt.overall_exit == 1
     assert receipt.lanes[0].output_isolation_ok is False
-    assert receipt.validate(["alpha"]) == ["OUTPUT-ISOLATION: project 'alpha' changed output/"]
+    assert receipt.validate(["alpha"]) == [
+        "OVERALL-EXIT: receipt overall_exit=1",
+        "OUTPUT-ISOLATION: project 'alpha' changed output/",
+    ]
+
+
+def test_output_digest_exclude_skips_declared_outputs(tmp_path: Path) -> None:
+    """The exclusion set removes a project's declared artifacts from the digest."""
+    project_root = tmp_path / "projects" / "alpha"
+    output_dir = project_root / "output"
+    output_dir.mkdir(parents=True)
+    declared = output_dir / "result.txt"
+    declared.write_text("regenerated per run\n", encoding="utf-8")
+    undeclared = output_dir / "side.txt"
+    undeclared.write_text("baseline\n", encoding="utf-8")
+    exclude = frozenset({"output/result.txt"})
+
+    before_excluding = _output_tree_digest(project_root, exclude=exclude)
+    declared.write_text("refreshed with a new commit pin\n", encoding="utf-8")
+    assert _output_tree_digest(project_root, exclude=exclude) == before_excluding
+
+    undeclared.write_text("mutated\n", encoding="utf-8")
+    assert _output_tree_digest(project_root, exclude=exclude) != before_excluding
+
+
+def test_declared_output_relpaths_tolerates_missing_or_malformed_manifest(tmp_path: Path) -> None:
+    """A missing or malformed manifest yields an empty set (strict isolation)."""
+    project_root = tmp_path / "projects" / "alpha"
+    (project_root / "output" / "reports").mkdir(parents=True)
+    assert declared_output_relpaths(project_root) == frozenset()
+
+    manifest = project_root / "output" / "reports" / "artifact_manifest.json"
+    manifest.write_text("{not json", encoding="utf-8")
+    assert declared_output_relpaths(project_root) == frozenset()
+
+    manifest.write_text(
+        '{"entries": [{"path": "output/reports/test_results.json"}, {"bogus": true}, "junk"]}',
+        encoding="utf-8",
+    )
+    assert declared_output_relpaths(project_root) == frozenset({"output/reports/test_results.json"})
+
+
+def test_receipt_allows_declared_output_artifact_regeneration(
+    synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A lane regenerating its *declared* output artifacts stays green.
+
+    Exemplars declare their regenerated outputs in
+    ``output/reports/artifact_manifest.json``; a fresh clone at a newer
+    commit would otherwise deterministically fail isolation when the
+    declared Stage-01 verifier refreshes e.g. the provenance commit pin —
+    the silent all-green-then-exit-1 rehearsal failure this exemption fixes.
+    """
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+    project_root = synthetic_repo / "projects" / "alpha"
+    output_file = project_root / "output" / "result.txt"
+    output_file.parent.mkdir()
+    output_file.write_text("stale commit pin\n", encoding="utf-8")
+    reports_dir = project_root / "output" / "reports"
+    reports_dir.mkdir()
+    (reports_dir / "artifact_manifest.json").write_text(
+        '{"entries": [{"path": "output/result.txt"}]}', encoding="utf-8"
+    )
+    (project_root / "tests" / "test_declared_regeneration.py").write_text(
+        dedent(
+            """
+            from pathlib import Path
+
+
+            def test_refreshes_declared_output_artifact() -> None:
+                output = Path(__file__).parent.parent / "output" / "result.txt"
+                output.write_text("current commit pin\\n", encoding="utf-8")
+            """
+        ).lstrip(),
+        encoding="utf-8",
+    )
+
+    receipt_path = synthetic_repo / "public-matrix-receipt.json"
+    rc = run_per_project_pytest(
+        synthetic_repo,
+        projects=["alpha"],
+        fail_under=1,
+        timeout=60,
+        receipt_path=receipt_path,
+    )
+
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    assert rc == 0
+    assert receipt.overall_exit == 0
+    assert receipt.lanes[0].exit_code == 0
+    assert receipt.lanes[0].output_isolation_ok is True
+    assert receipt.validate(["alpha"]) == []
+    assert output_file.read_text(encoding="utf-8") == "current commit pin\n"

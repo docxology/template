@@ -1,6 +1,6 @@
 # A template/ approach to Reproducible Generative Research
 
-*Slide 1 of 56 — template_template pitch, long deck — kind: `title`*
+*Slide 1 of 57 — template_template pitch, long deck — kind: `title`*
 
 *(no body content — section/title slide)*
 

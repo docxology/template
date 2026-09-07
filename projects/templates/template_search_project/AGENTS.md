@@ -73,8 +73,10 @@ flowchart TB
   `from_dict`, add a default in `manuscript/config.yaml`. Tests live in
   `tests/test_config.py`.
 
-* `src/pipeline.py::run_literature_pipeline` — the only function that
-  touches `infrastructure.search.*`. Returns a
+* `src/pipeline.py::run_literature_pipeline` — the single-query search →
+  enrich → BibTeX entry point into `infrastructure.search.*` (the
+  multi-keyword fan-out in `src/deep_search.py::run_deep_search` performs
+  the equivalent calls for the deep-search run mode). Returns a
   :class:`LiteratureRunArtifacts` so the script knows where every
   artefact landed without re-deriving paths.
 
@@ -91,7 +93,7 @@ flowchart TB
 
 | Command | Behaviour |
 |---|---|
-| `python scripts/run_search_pipeline.py` | Default config, hits live arXiv + Crossref, runs LLM if Ollama is reachable, writes everything. |
+| `python scripts/run_search_pipeline.py` | Configured live mode; only hits arXiv/Crossref or runs an LLM when those providers are explicitly enabled. The committed default uses the local fixture and no network. |
 | `… --no-llm` | Skip the LLM stage; produce reading report without synthesis. |
 | `… --no-cache` | Bypass cache reads (writes still happen). |
 | `… --corpus path.json` | Required when `project_config.search.sources` includes `local`. |
@@ -221,3 +223,17 @@ work — noted for future reference only.
 * [`docs/modules/literature-search-and-references.md`](../../../docs/modules/literature-search-and-references.md) — module overview.
 * [`docs/guides/literature-workflow-guide.md`](../../../docs/guides/literature-workflow-guide.md) — narrative tutorial.
 * [`infrastructure/search/AGENTS.md`](../../../infrastructure/search/AGENTS.md) and [`infrastructure/reference/AGENTS.md`](../../../infrastructure/reference/AGENTS.md) — infrastructure guides.
+
+## Optional gap-filler search (Monid)
+
+This exemplar stays **offline-by-default** and does not import Monid from
+`src/`. When an agent or operator already has MCP connectors or direct API
+keys configured, use those first. For uncovered web-search or data-endpoint
+gaps, the Layer-1 Monid gateway (`infrastructure/search/monid/`) provides
+`discover` / `inspect` / `run` with per-endpoint wallet pricing. Compare
+direct-provider USD/1k list prices via
+[`infrastructure/search/monid/PRICING.md`](../../../infrastructure/search/monid/PRICING.md);
+upstream skill:
+[`infrastructure/search/monid/SKILL.md`](../../../infrastructure/search/monid/SKILL.md).
+Requires `MONID_API_KEY` and spends prepaid balance — never wire into default
+CI or pipeline stages.

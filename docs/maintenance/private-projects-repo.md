@@ -29,8 +29,6 @@ mirrors existing private lifecycle folders into local template mirrors:
 | optional `ongoing/<name>` | `template/projects/ongoing/<name>` | No; long-lived, no publication target — explicit `ongoing/<name>` commands only |
 | `archive/<name>` | `template/projects/archive/<name>` | No |
 | optional `active/<name>` | `template/projects/active/<name>` | Yes, if deliberately reintroduced |
-| optional `published/<name>` | `template/projects/published/<name>` | No |
-| optional `other/<name>` | `template/projects/other/<name>` | No |
 
 Because `projects/` is a Python namespace package, symlinks resolve
 transparently for imports, project-root resolution, validation, and rendering.

@@ -10,7 +10,10 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.files.secure_write import atomic_write_text_confined
-from infrastructure.core.pipeline.artifacts import snapshot_current_artifact_manifest
+from infrastructure.core.pipeline.artifacts import (
+    STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    snapshot_current_artifact_manifest,
+)
 from infrastructure.rendering.manuscript_composition import (
     COMPOSITION_RELATIVE_PATH,
     read_manuscript_composition,
@@ -28,22 +31,31 @@ from infrastructure.validation.publication.rendered_provenance import (
     write_rendered_provenance_receipt,
 )
 from infrastructure.validation.rendered_snapshot import (
+    RenderedSnapshotError,
+    _output_records,
     build_current_rendered_snapshot,
 )
+from infrastructure.validation.output.validator import collect_detailed_validation_results
+from infrastructure.validation.output.pipeline import execute_validation_pipeline
 from tests._support.projects import make_project, write_doc
 
 PROJECT = "templates/template_test"
+EXTERNAL_PROJECT = "working/demo"
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 def _write_green_validation_report(root: Path, project: Path) -> dict[str, object]:
     snapshot = build_current_rendered_snapshot(root, PROJECT)
     checks = {"Rendered structure": True, "Artifact manifest": True}
+    detailed_validation = collect_detailed_validation_results(project / "output", require_pdf=False)
     payload: dict[str, object] = {
         "timestamp": "2026-01-01T00:00:00Z",
         "checks": checks,
         "figure_issues": [],
-        "output_statistics": {},
+        "output_statistics": {
+            "inventory_mode": "stable-shippable-output-v1",
+            "detailed_validation": detailed_validation,
+        },
         "summary": {
             "total_checks": len(checks),
             "passed": len(checks),
@@ -61,7 +73,12 @@ def _write_green_validation_report(root: Path, project: Path) -> dict[str, objec
     return payload
 
 
-def _green_project(root: Path, *, hydrated: bool = True) -> Path:
+def _green_project(
+    root: Path,
+    *,
+    hydrated: bool = True,
+    composition_algorithm: str = "web-renderer-combine-v1",
+) -> Path:
     project = make_project(
         root,
         "template_test",
@@ -111,11 +128,74 @@ def _green_project(root: Path, *, hydrated: bool = True) -> Path:
     combined = project / "output" / "web" / "_combined_manuscript.md"
     combined_text = "\n\n".join(path.read_text(encoding="utf-8").rstrip() for path in rendered_inputs) + "\n"
     write_doc(combined, combined_text)
-    write_manuscript_composition(project, PROJECT, rendered_inputs, combined)
+    write_manuscript_composition(
+        project,
+        PROJECT,
+        rendered_inputs,
+        combined,
+        algorithm=composition_algorithm,
+    )
     write_doc(project / "output" / "data" / "result.json", '{"count": 7}\n')
     snapshot_current_artifact_manifest(project / "output")
     _write_green_validation_report(root, project)
     return project
+
+
+def _external_stage4_project(tmp_path: Path) -> tuple[Path, Path]:
+    """Create tracked template/private worktrees joined by a managed lifecycle link."""
+
+    template_root = tmp_path / "template"
+    private_project = tmp_path / "private" / "demo"
+    make_project(
+        private_project.parent,
+        "demo",
+        repo_layout=False,
+        with_manuscript=True,
+        with_output=True,
+    )
+    write_doc(template_root / ".gitignore", "# synthetic template policy\n")
+    write_doc(template_root / "pyproject.toml", '[project]\nname = "synthetic-template"\n')
+    write_doc(
+        template_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml",
+        "stages:\n  - name: Render\n    script: scripts/pipeline/stage_03_render.py\n",
+    )
+    write_doc(template_root / "infrastructure" / "rendering" / "runtime.py", "ENABLED = True\n")
+    write_doc(template_root / "scripts" / "__init__.py", '"""Synthetic stage scripts."""\n')
+    write_doc(template_root / "scripts" / "pipeline" / "stage_03_render.py", 'print("render")\n')
+
+    write_doc(private_project / ".gitignore", "output/\n")
+    render_config = (
+        "render:\n  formats:\n    pdf: false\n    html: true\n    slides: false\n    docx: false\n    epub: false\n"
+    )
+    write_doc(private_project / "manuscript" / "config.yaml", render_config)
+    write_doc(private_project / "manuscript" / "01_intro.md", "# Intro\n\nCurrent prose.\n")
+    write_doc(private_project / "output" / "manuscript" / "config.yaml", render_config)
+    write_doc(private_project / "output" / "manuscript" / "01_intro.md", "# Intro\n\nCurrent prose.\n")
+    write_doc(
+        private_project / "output" / "web" / "index.html",
+        "<!doctype html><html><body>Current prose.</body></html>\n",
+    )
+    combined = private_project / "output" / "web" / "_combined_manuscript.md"
+    write_doc(combined, "# Intro\n\nCurrent prose.\n")
+    write_doc(private_project / "output" / "data" / "result.json", '{"status": "current"}\n')
+    write_manuscript_composition(
+        private_project,
+        EXTERNAL_PROJECT,
+        [private_project / "output" / "manuscript" / "01_intro.md"],
+        combined,
+    )
+
+    managed = template_root / "projects" / "working" / "demo"
+    managed.parent.mkdir(parents=True)
+    managed.symlink_to(private_project, target_is_directory=True)
+    for repository in (template_root, private_project):
+        subprocess.run(["git", "init", "-q"], cwd=repository, check=True, capture_output=True)
+        subprocess.run(["git", "add", "."], cwd=repository, check=True, capture_output=True)
+    snapshot_current_artifact_manifest(
+        private_project / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+    return template_root, private_project
 
 
 def test_receipt_is_deterministic_and_current_for_green_real_files(tmp_path: Path) -> None:
@@ -133,6 +213,169 @@ def test_receipt_is_deterministic_and_current_for_green_real_files(tmp_path: Pat
     assert first.config.file_count >= 3
     assert first.output.file_count >= 4
     assert validate_rendered_provenance(tmp_path, PROJECT).valid
+
+
+def test_rendered_snapshot_accepts_explicit_stable_local_manifest(tmp_path: Path) -> None:
+    """A blanket-ignored lifecycle output compares within its authorized mode."""
+    project = tmp_path / "private" / "demo"
+    result = project / "output" / "data" / "result.json"
+    result.parent.mkdir(parents=True)
+    result.write_text('{"count": 7}\n', encoding="utf-8")
+    subprocess.run(["git", "init", "-q", str(project)], check=True)
+    (project / ".gitignore").write_text("output/\n", encoding="utf-8")
+    snapshot_current_artifact_manifest(
+        project / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+
+    records, manifest = _output_records(
+        project,
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+
+    assert [record.key for record in records] == ["output/data/result.json"]
+    assert manifest.path == "output/reports/artifact_manifest.json"
+
+
+def test_external_working_project_stage4_and_receipt_bind_both_worktrees(tmp_path: Path) -> None:
+    """Stage 4 binds private source/output and shared template implementation."""
+
+    template_root, private_project = _external_stage4_project(tmp_path)
+
+    assert execute_validation_pipeline(EXTERNAL_PROJECT, repo_root=template_root) == 0
+    snapshot = build_current_rendered_snapshot(template_root, EXTERNAL_PROJECT)
+    receipt = write_rendered_provenance_receipt(template_root, EXTERNAL_PROJECT)
+
+    assert (private_project / RECEIPT_RELATIVE_PATH).is_file()
+    assert snapshot.stage.file_count > 0
+    assert snapshot.source.file_count > 0
+    assert snapshot.config.file_count > 0
+    assert snapshot.output.file_count > 0
+    assert receipt.stage == snapshot.stage
+    assert receipt.source == snapshot.source
+    assert receipt.config == snapshot.config
+    assert receipt.output == snapshot.output
+
+
+def test_external_snapshot_bare_name_recovers_managed_working_leaf(tmp_path: Path) -> None:
+    """Bare selection retains the same managed lifecycle authority as qualified."""
+
+    template_root, private_project = _external_stage4_project(tmp_path)
+    combined = private_project / "output" / "web" / "_combined_manuscript.md"
+    write_manuscript_composition(
+        private_project,
+        "demo",
+        [private_project / "output" / "manuscript" / "01_intro.md"],
+        combined,
+    )
+    snapshot_current_artifact_manifest(
+        private_project / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+
+    snapshot = build_current_rendered_snapshot(template_root, "demo")
+
+    assert snapshot.project == "demo"
+    assert snapshot.source.file_count > 0
+    assert snapshot.config.file_count > 0
+
+
+def test_external_snapshot_requires_real_private_git_boundary(tmp_path: Path) -> None:
+    """An arbitrary external directory cannot become source-bound evidence."""
+
+    template_root = tmp_path / "template"
+    private_project = tmp_path / "outside" / "demo"
+    write_doc(private_project / "src" / "analysis.py", "VALUE = 1\n")
+    write_doc(private_project / "manuscript" / "01_intro.md", "# Intro\n")
+    managed = template_root / "projects" / "working" / "demo"
+    managed.parent.mkdir(parents=True)
+    managed.symlink_to(private_project, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(template_root, EXTERNAL_PROJECT)
+
+    assert exc_info.value.code == "PROJECT_REPOSITORY_MISSING"
+
+
+def test_external_snapshot_rejects_intermediate_lifecycle_symlink(tmp_path: Path) -> None:
+    """Only the selected project leaf may cross into the private sidecar."""
+
+    template_root, private_project = _external_stage4_project(tmp_path)
+    leaf = template_root / "projects" / "working" / "demo"
+    leaf.unlink()
+    lifecycle = leaf.parent
+    lifecycle.rmdir()
+    lifecycle.symlink_to(private_project.parent, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(template_root, EXTERNAL_PROJECT)
+
+    assert exc_info.value.code == "PROJECT_LINK_INVALID"
+
+
+def test_external_snapshot_rejects_symlinked_projects_root(tmp_path: Path) -> None:
+    """A broad projects-directory redirect cannot authorize private source."""
+
+    template_root, _private_project = _external_stage4_project(tmp_path)
+    projects_root = template_root / "projects"
+    redirected = tmp_path / "redirected-projects"
+    projects_root.rename(redirected)
+    projects_root.symlink_to(redirected, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(template_root, EXTERNAL_PROJECT)
+
+    assert exc_info.value.code == "PROJECT_LINK_INVALID"
+
+
+def test_external_snapshot_rejects_public_template_leaf_symlink(tmp_path: Path) -> None:
+    """Tracked public-template identity cannot be delegated to an external leaf."""
+
+    template_root, private_project = _external_stage4_project(tmp_path)
+    public_link = template_root / "projects" / "templates" / "demo"
+    public_link.parent.mkdir(parents=True)
+    public_link.symlink_to(private_project, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(template_root, "templates/demo")
+
+    assert exc_info.value.code == "PROJECT_LINK_INVALID"
+
+
+def test_external_snapshot_rejects_source_symlink_outside_private_worktree(tmp_path: Path) -> None:
+    """A managed project link does not authorize nested source escapes."""
+
+    template_root = tmp_path / "template"
+    private_project = tmp_path / "private" / "demo"
+    outside = tmp_path / "outside"
+    write_doc(private_project / "src" / "analysis.py", "VALUE = 1\n")
+    write_doc(private_project / "manuscript" / "01_intro.md", "# Intro\n")
+    write_doc(outside / "secret.py", "SECRET = True\n")
+    (private_project / "src" / "escape").symlink_to(outside, target_is_directory=True)
+    subprocess.run(["git", "init", "-q"], cwd=private_project, check=True, capture_output=True)
+    subprocess.run(["git", "add", "."], cwd=private_project, check=True, capture_output=True)
+    managed = template_root / "projects" / "working" / "demo"
+    managed.parent.mkdir(parents=True)
+    managed.symlink_to(private_project, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(template_root, EXTERNAL_PROJECT)
+
+    assert exc_info.value.code == "SOURCE_SYMLINK_ESCAPE"
+
+
+def test_rendered_snapshot_rejects_manifest_from_another_inventory_mode(tmp_path: Path) -> None:
+    project = _green_project(tmp_path)
+    manifest_path = project / "output" / "reports" / "artifact_manifest.json"
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["inventory_mode"] = STABLE_LOCAL_OUTPUT_INVENTORY_MODE
+    manifest_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(tmp_path, PROJECT)
+
+    assert exc_info.value.code == "ARTIFACT_MANIFEST_INVALID"
+    assert "artifact inventory mode mismatch" in str(exc_info.value)
 
 
 @pytest.mark.parametrize(
@@ -319,6 +562,54 @@ def test_extra_stable_output_is_rejected_until_manifest_attests_it(tmp_path: Pat
     assert receipt_path.read_bytes() == old_receipt
 
 
+def test_runtime_history_is_nonstable_but_unattested_report_still_fails(tmp_path: Path) -> None:
+    project = _green_project(tmp_path)
+    write_rendered_provenance_receipt(tmp_path, PROJECT)
+
+    write_doc(
+        project / "output" / "reports" / ".history" / "telemetry-123.json",
+        '{"runtime": true}\n',
+    )
+    assert validate_rendered_provenance(tmp_path, PROJECT).valid
+
+    write_doc(project / "output" / "reports" / "unattested_quality_report.json", '{"quality": "green"}\n')
+    validation = validate_rendered_provenance(tmp_path, PROJECT)
+
+    assert [issue.code for issue in validation.issues] == ["ARTIFACT_MANIFEST_INCOMPLETE"]
+    assert "output/reports/unattested_quality_report.json" in validation.issues[0].message
+
+
+def test_report_and_receipt_are_fixed_points_over_ignored_runtime_state(tmp_path: Path) -> None:
+    """Regenerating validation evidence must ignore machine-local residue."""
+    project = _green_project(tmp_path)
+    write_rendered_provenance_receipt(tmp_path, PROJECT)
+    report_path = project / "output" / "reports" / "validation_report.json"
+    receipt_path = project / RECEIPT_RELATIVE_PATH
+    baseline_report = report_path.read_bytes()
+    baseline_receipt = receipt_path.read_bytes()
+
+    ignored_files = {
+        "pdf/build.aux": b"latex auxiliary",
+        "reports/.history/telemetry-123.json": b"{}\n",
+        "reports/snapshots/stage.json": b"{}\n",
+        "logs/pipeline.log": b"runtime log\n",
+        "figures/.partial.png": b"atomic leftover",
+    }
+    for relative, payload in ignored_files.items():
+        path = project / "output" / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(payload)
+    for relative in ("slides", "simulations", "llm"):
+        (project / "output" / relative).mkdir(parents=True, exist_ok=True)
+
+    _write_green_validation_report(tmp_path, project)
+    write_rendered_provenance_receipt(tmp_path, PROJECT)
+
+    assert report_path.read_bytes() == baseline_report
+    assert receipt_path.read_bytes() == baseline_receipt
+    assert validate_rendered_provenance(tmp_path, PROJECT).valid
+
+
 def test_manifest_and_validation_report_digests_are_bound_separately(tmp_path: Path) -> None:
     project = _green_project(tmp_path)
     write_rendered_provenance_receipt(tmp_path, PROJECT)
@@ -351,6 +642,24 @@ def test_nonhydrated_sources_are_bound_to_actual_combined_manuscript(tmp_path: P
     assert all(row.rendered_sha256 == receipt.combined_manuscript.sha256 for row in receipt.consumed_manuscript)
     composition = read_manuscript_composition(project / COMPOSITION_RELATIVE_PATH)
     assert composition.input_root_kind == "source"
+
+
+def test_shared_combined_algorithm_is_accepted_by_current_snapshot(tmp_path: Path) -> None:
+    """Strict provenance rebuilds a shared composition with its recorded algorithm."""
+
+    project = _green_project(
+        tmp_path,
+        hydrated=False,
+        composition_algorithm="shared-combined-markdown-v1",
+    )
+
+    snapshot = build_current_rendered_snapshot(tmp_path, PROJECT)
+    receipt = write_rendered_provenance_receipt(tmp_path, PROJECT)
+
+    assert snapshot.combined_manuscript.path == "output/web/_combined_manuscript.md"
+    assert receipt.combined_manuscript.sha256 == snapshot.combined_manuscript.sha256
+    composition = read_manuscript_composition(project / COMPOSITION_RELATIVE_PATH)
+    assert composition.algorithm == "shared-combined-markdown-v1"
 
 
 def test_composition_drift_blocks_refresh_and_preserves_receipt(tmp_path: Path) -> None:
@@ -640,3 +949,63 @@ def test_directory_symlink_fingerprint_is_checkout_root_independent(tmp_path: Pa
         snapshots.append(build_current_rendered_snapshot(root, PROJECT))
 
     assert snapshots[0].source == snapshots[1].source
+
+
+def test_symlinked_project_tree_is_walkable_and_escapes_are_still_refused(tmp_path: Path) -> None:
+    """A project symlinked into the repository is in scope; anything else is not.
+
+    Projects are not always stored inside the repository. A private sidecar
+    checkout is linked in at ``projects/working/<name>``, so the project root
+    resolves outside ``repo_root``; the containment guard refused the very first
+    directory and made the whole tree unreadable, even though that tree is
+    exactly what the snapshot was asked to describe.
+
+    ``extra_root`` admits the project being walked and nothing else. The three
+    cases below are the ones that matter: the declared project is walkable, a
+    symlink leaving both the repository and the project is still refused, and a
+    caller that declares no extra root keeps the original behavior.
+    """
+    from infrastructure.validation.rendered_snapshot import (
+        RenderedSnapshotError,
+        _iter_tree_files,
+    )
+
+    repository = tmp_path / "repo"
+    (repository / "projects" / "working").mkdir(parents=True)
+    outside = tmp_path / "sidecar" / "my_project"
+    (outside / "src").mkdir(parents=True)
+    (outside / "src" / "module.py").write_text("x = 1\n", encoding="utf-8")
+
+    linked = repository / "projects" / "working" / "my_project"
+    linked.symlink_to(outside, target_is_directory=True)
+
+    # POSITIVE: declaring the project root makes its tree walkable.
+    records = list(_iter_tree_files(linked, repo_root=repository, extra_root=linked))
+    assert [record.path.name for record in records] == ["module.py"]
+
+    # NEGATIVE CONTROL: without the declaration the boundary is unchanged, so
+    # the same walk is still refused. Without this the parameter could be
+    # widening the guard for everyone.
+    with pytest.raises(RenderedSnapshotError) as unguarded:
+        list(_iter_tree_files(linked, repo_root=repository))
+    assert unguarded.value.code == "SOURCE_SYMLINK_ESCAPE"
+
+    # NEGATIVE CONTROL: a symlink escaping BOTH the repository and the declared
+    # project is still refused, which is the case the guard exists for.
+    elsewhere = tmp_path / "unrelated"
+    elsewhere.mkdir()
+    (elsewhere / "secret.py").write_text("y = 2\n", encoding="utf-8")
+    (outside / "src" / "escape").symlink_to(elsewhere, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as escaped:
+        list(_iter_tree_files(linked, repo_root=repository, extra_root=linked))
+    assert escaped.value.code == "SOURCE_SYMLINK_ESCAPE"
+
+    # Internal alias inside the declared project is in scope. The guard exists
+    # to stop escapes, not to refuse a sidecar project linking to itself.
+    (outside / "src" / "escape").unlink()
+    (outside / "src" / "alias.py").symlink_to(outside / "src" / "module.py")
+    aliased = list(_iter_tree_files(linked, repo_root=repository, extra_root=linked))
+    keys = {record.key for record in aliased}
+    assert any(record.path.name == "module.py" for record in aliased)
+    assert any("alias.py" in key for key in keys)

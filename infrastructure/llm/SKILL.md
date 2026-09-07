@@ -162,17 +162,17 @@ prompt = composer.compose_template(
 
 ```bash
 # Query the LLM
-uv run python -m infrastructure.llm.cli.main query "What is machine learning?"
+uv run python -m infrastructure.llm query "What is machine learning?"
 
 # Check Ollama status
-uv run python -m infrastructure.llm.cli.main check
+uv run python -m infrastructure.llm check
 
 # List available models
-uv run python -m infrastructure.llm.cli.main models
+uv run python -m infrastructure.llm models
 
 # List available research templates
-uv run python -m infrastructure.llm.cli.main template --list
+uv run python -m infrastructure.llm template --list
 
 # Apply a research template (reads input from --input or stdin)
-uv run python -m infrastructure.llm.cli.main template paper_summarization --input "Abstract text..."
+uv run python -m infrastructure.llm template paper_summarization --input "Abstract text..."
 ```

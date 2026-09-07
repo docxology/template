@@ -163,3 +163,40 @@ class TestAssessPaperHypotheses:
         assertions = assess_paper_hypotheses(make_paper(), config)
         assert assertions[0].confidence == 1.0
         assert assertions[1].confidence == 0.0
+
+    def test_confidence_below_min_confidence_is_filtered(self, httpserver: HTTPServer):
+        """Negative control for the documented 'Confidence floor' invariant
+        (``src/knowledge_graph/AGENTS.md``): an assessment whose confidence is
+        strictly below ``config.min_confidence`` is dropped, while one at or
+        above the floor is kept.
+        """
+        response_data = [
+            {
+                "hypothesis_id": "PRIMARY_EFFICACY",
+                "direction": "supports",
+                "confidence": 0.59,
+                "reasoning": "just under the floor",
+            },
+            {
+                "hypothesis_id": "OPTIMAL_PERFORMANCE",
+                "direction": "supports",
+                "confidence": 0.6,
+                "reasoning": "exactly at the floor",
+            },
+        ]
+        httpserver.expect_request("/api/generate", method="POST").respond_with_json(
+            {"response": json.dumps(response_data), "done": True}
+        )
+
+        config = LLMConfig(
+            base_url=httpserver_base_url(httpserver),
+            model="test-model",
+            max_retries=1,
+            min_confidence=0.6,
+        )
+
+        assertions = assess_paper_hypotheses(make_paper(), config)
+
+        assert len(assertions) == 1
+        assert assertions[0].hypothesis_id == "OPTIMAL_PERFORMANCE"
+        assert assertions[0].confidence == 0.6

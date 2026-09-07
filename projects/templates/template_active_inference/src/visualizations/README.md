@@ -29,4 +29,9 @@ the current generated audit rows. The audit also checks that figure modules use
 shared style tokens instead of raw font-size literals and that non-registry
 visual outputs are explicitly classified as auxiliary artifacts.
 
-Entry point: `scripts/generate_figures.py` → `generate_all_figures()`.
+Image entry point: `scripts/generate_figures.py` → `generate_all_figures()`.
+The distinct, sole final registry owner is
+`scripts/z_generate_manuscript_variables.py` →
+`manuscript.refresh.refresh_manuscript_pipeline()` →
+`write_figure_registry_json()`, after the final canonical variables snapshot is
+reloaded.

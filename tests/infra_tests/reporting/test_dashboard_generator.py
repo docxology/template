@@ -129,6 +129,7 @@ def sample_summary(sample_projects, sample_aggregate):
     )
 
 
+@pytest.mark.slow
 class TestChartGeneration:
     """Test individual chart generation functions."""
 
@@ -230,6 +231,7 @@ class TestChartGeneration:
         plt.close(fig)
 
 
+@pytest.mark.slow
 class TestMatplotlibDashboard:
     """Test matplotlib dashboard generation."""
 
@@ -282,6 +284,7 @@ class TestMatplotlibDashboard:
         assert len(saved_files) == 2  # PNG and PDF
 
 
+@pytest.mark.slow
 class TestPlotlyDashboard:
     """Test plotly dashboard generation."""
 
@@ -303,6 +306,7 @@ class TestPlotlyDashboard:
             assert html_path is None
 
 
+@pytest.mark.slow
 class TestAllDashboards:
     """Test generating all dashboard formats."""
 
@@ -354,6 +358,7 @@ class TestAllDashboards:
         assert len(all_files) >= 2
 
 
+@pytest.mark.slow
 class TestEdgeCases:
     """Test edge cases and error handling."""
 

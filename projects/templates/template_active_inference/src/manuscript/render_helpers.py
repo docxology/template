@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-import yaml
+from yaml_io import load_yaml
 
 
 def extract_preamble(preamble_md: Path) -> str:
@@ -27,7 +27,5 @@ def extract_preamble(preamble_md: Path) -> str:
 
 def geometry_string(config_yaml: Path) -> str:
     """Read page geometry from ``manuscript/config.yaml``; fall back to 0.5 in margins."""
-    if not config_yaml.is_file():
-        return "margin=0.5in"
-    data = yaml.safe_load(config_yaml.read_text(encoding="utf-8")) or {}
+    data = load_yaml(config_yaml)
     return str((data.get("metadata") or {}).get("geometry") or "margin=0.5in")

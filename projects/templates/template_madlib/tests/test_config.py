@@ -21,6 +21,8 @@ def test_load_madlib_config_parses_valid_schema(tmp_path: Path) -> None:
     config = load_madlib_config(tmp_path)
 
     assert config.title == "Test Madlib"
+    assert config.schema_version == 2
+    assert config.source_schema_version == 1
     assert config.seed == 7
     assert config.composition_depth == "deep"
     assert config.section_conditions["discussion"] is False
@@ -87,6 +89,45 @@ def test_missing_optional_schema_blocks_use_defaults(tmp_path: Path) -> None:
     assert "madlib.visualizations" in config.defaulted_paths
     assert len(config.audit_rules) == 3
     assert len(config.contribution_claims) == 2
+
+
+def test_current_schema_version_is_recorded(tmp_path: Path) -> None:
+    payload = base_payload()
+    payload["madlib"]["schema_version"] = 2
+    write_config(tmp_path, payload)
+
+    config = load_madlib_config(tmp_path)
+
+    assert config.schema_version == 2
+    assert config.source_schema_version == 2
+
+
+def test_unknown_schema_version_fails_closed(tmp_path: Path) -> None:
+    payload = base_payload()
+    payload["madlib"]["schema_version"] = 99
+    write_config(tmp_path, payload)
+
+    with pytest.raises(MadlibConfigError, match="Unsupported madlib.schema_version"):
+        load_madlib_config(tmp_path)
+
+
+def test_boolean_schema_version_rejected(tmp_path: Path) -> None:
+    """`bool` is an `int` subclass in Python; the loader must reject it explicitly."""
+    payload = base_payload()
+    payload["madlib"]["schema_version"] = True
+    write_config(tmp_path, payload)
+
+    with pytest.raises(MadlibConfigError, match="madlib.schema_version must be an integer"):
+        load_madlib_config(tmp_path)
+
+
+def test_non_numeric_schema_version_rejected(tmp_path: Path) -> None:
+    payload = base_payload()
+    payload["madlib"]["schema_version"] = "not-a-version"
+    write_config(tmp_path, payload)
+
+    with pytest.raises(MadlibConfigError, match="madlib.schema_version must be an integer"):
+        load_madlib_config(tmp_path)
 
 
 def test_visualization_config_tracks_explicit_and_defaulted_flags(tmp_path: Path) -> None:

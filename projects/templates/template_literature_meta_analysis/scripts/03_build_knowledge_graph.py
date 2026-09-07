@@ -42,7 +42,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--clear-assertions", action="store_true")
     parser.add_argument("--max-papers", type=int, default=None)
     parser.add_argument("--config", type=str, default=None)
-    return parser.parse_args()
+    raw_args = sys.argv[1:]
+    args = parser.parse_args()
+    explicit_options = {
+        action.dest
+        for action in parser._actions
+        if any(
+            token == option or token.startswith(f"{option}=") for token in raw_args for option in action.option_strings
+        )
+    }
+    # The pipeline loads the project config after argparse. Preserve which
+    # values were explicitly supplied so config remains the default source,
+    # while a CLI override keeps its normal precedence.
+    args._explicit_options = frozenset(explicit_options)
+    return args
 
 
 def main() -> None:

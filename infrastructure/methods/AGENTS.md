@@ -26,7 +26,9 @@ algorithms or project analysis logic here.
 | File | Role |
 | --- | --- |
 | `models.py` | Dataclasses for keyed stages, versioned plans, per-project audits, aggregate reports, and issues. |
-| `orchestration.py` | Single/batch plan builders, validator, and Markdown renderer using the canonical pipeline-source resolver. |
+| `orchestration.py` | Public plan builders, validator entry point, audits, and Markdown renderer. |
+| `_plan_builder.py` | Private stage/section discovery and `{project}` expansion helpers. |
+| `_plan_validation.py` | Private artifact/script/command validation helpers. |
 | `cli.py` | `python -m infrastructure.methods plan` command. |
 | `__main__.py` | Module entry point. |
 

@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs the root environment, including deterministic dependencies for all public template exemplars)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. The always-present roster is generated from `PUBLIC_PROJECT_NAMES` in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
+5. Run `./run.sh --help` for all flags. The always-present roster is generated from `PUBLIC_PROJECT_NAMES` in [`infrastructure/project/public_scope.py`](infrastructure/project/public_scope.py) and published in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
 **Repurposing for your research?** See [`docs/repurposing-architectures.md`](docs/repurposing-architectures.md) — maps every reusable architecture (DAG pipeline, two-layer separation, evidence registry, multi-format rendering, MCP server, publishing stack) to its module and adoption path.
 
@@ -58,6 +58,9 @@ This is a **GitHub Template Repository** that gives you:
 - ✅ **Project structure** with clear separation of concerns
 - ✅ **Test-driven development** setup with coverage requirements
 - ✅ **Automated PDF generation** from markdown sources
+- ✅ **Opt-in accessible presentation composition** with transactional
+  Beamer/Reveal pairs, projection-scale typography, semantic splitting, and
+  fail-closed density diagnostics
 - ✅ **Thin orchestrator pattern** for maintainable code
 - ✅ **Methods orchestration** linking pipeline contracts, methods prose, artifacts, and evidence
 - ✅ **Executable methods contracts** with DAG, script, artifact, and verification validation
@@ -102,11 +105,12 @@ Pick the entry point that matches your goal:
 
 **📚 [Documentation Index](docs/documentation-index.md)** | **📖 [Documentation Guide](docs/AGENTS.md)** | **🔍 [Quick Reference](docs/README.md)**
 
-The template ships with a large documentation corpus under `docs/`. The full
-hierarchical map (with mermaid diagram) lives in
-[`docs/AGENTS.md`](docs/AGENTS.md); the authoritative per-file index lives in
-[`docs/documentation-index.md`](docs/documentation-index.md) (rely on that
-index, not a hard-coded file count, which drifts). Top-level layout:
+The template ships with a large documentation corpus under `docs/`. The
+hierarchical map (with mermaid diagram) lives in [`docs/AGENTS.md`](docs/AGENTS.md);
+the curated long-lived documentation map lives in
+[`docs/documentation-index.md`](docs/documentation-index.md). Generated rosters
+and measured facts remain authoritative for their own scopes; do not rely on a
+hard-coded file count, which drifts. Top-level layout:
 
 - `docs/core/` — essential reading: how-to-use, architecture, workflow
 - `docs/guides/` — progressive walkthroughs by skill level (1–12)
@@ -250,9 +254,11 @@ source and the latest rendered public artifacts. Public output files above
 50 MB remain excluded by the generated-artifact guard; private or rotating
 project outputs remain blocked.
 
-Each exemplar also has a standalone `docxology/template_*` GitHub repository
-linked to its Zenodo concept and latest version DOI. The current matrix is
-[`docs/_generated/publication_records.md`](docs/_generated/publication_records.md).
+Where declared, an exemplar has a standalone `docxology/template_*` GitHub
+repository and Zenodo concept/version records. The current declaration and
+verification state is the generated matrix in
+[`docs/_generated/publication_records.md`](docs/_generated/publication_records.md);
+unverified or `n/a` fields are not publication evidence.
 The standalone repository must exist before
 `scripts/publish/publish_project_release.py` can create a release there; the
 release script publishes the GitHub release asset and Zenodo deposit, but it
@@ -292,7 +298,7 @@ autonomous agents.
 projects live outside this public repo at `$TEMPLATE_PRIVATE_PROJECTS_ROOT`.
 The simplified sidecar uses `working/` and `archive/`; optional `ongoing/`
 (long-lived projects with no publication target) plus legacy
-`active/`, `published/`, and `other/` folders are still supported when present.
+`active/` folder is still supported when present.
 `run.sh` and `python -m infrastructure.orchestration` auto-sync existing folders
 into matching typed subfolders under `projects/`: `working/*` into
 `projects/working/*`, `ongoing/*` into `projects/ongoing/*`, `archive/*` into
@@ -445,11 +451,33 @@ narrative + benefits:
 - **Markdown-to-PDF pipeline** with cross-referenced manuscripts and figure
   integration ([`docs/usage/markdown-template-guide.md`](docs/usage/markdown-template-guide.md),
   [`docs/modules/pdf-validation.md`](docs/modules/pdf-validation.md)).
-- **Validated build system** with 16 declared stages, a default 10-stage
+- **Accessible presentation profile** that preserves archive rendering by
+  default while optionally producing one semantic Beamer/Reveal pair per
+  section ([`docs/usage/output-formats.md`](docs/usage/output-formats.md#accessible-presentation-profile)).
+- **Validated build system** with 17 declared stages, a default 10-stage
   core+LLM path, an 8-stage `--core-only` path, and CI gates
   ([`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md)).
 - **Generic + reusable** — drop the same `infrastructure/` into any project that
   follows the layout ([`docs/usage/template-description.md`](docs/usage/template-description.md)).
+
+## 📦 Optional export: docxplus
+
+An opt-in stage exports a project as a conforming `.docx` (and `.docxplus`, the same
+bytes under a name that says so) which *also carries the project's own source tree*
+in a signed manifest. Word, LibreOffice, and Google Docs open it as an ordinary
+document; `docxplus` recovers the repository from inside it.
+
+```bash
+uv sync --extra docxplus
+uv run python scripts/pipeline/stage_13_docxplus.py --project templates/template_code_project
+```
+
+The container format is imported from upstream
+([docxology/docxplus](https://github.com/docxology/docxplus), pinned to a released
+tag) rather than vendored: this repository stays the rendering engine, and the
+specification stays the container project's business. The stage is excluded from
+default runs by its `docxplus` tag and skips cleanly when the extra is absent, so
+nobody who does not want it pays for it.
 
 ## 🔒 Security & Monitoring
 
@@ -464,8 +492,8 @@ headers. Full surface and worked usage examples:
 Prerequisites: `pandoc` and a TeX distribution (`texlive-xetex` on Debian/Ubuntu,
 MacTeX on macOS). Python deps install with `uv sync` (project interpreter is
 `.venv/bin/python`; the template targets Python 3.10+ (`requires-python` in
-[`pyproject.toml`](pyproject.toml)) and CI tests infrastructure on 3.10–3.13, with
-[`.python-version`](.python-version) pinning 3.12 as the local default). Add per-project deps with
+[`pyproject.toml`](pyproject.toml)) and CI tests infrastructure on 3.10–3.14, with
+[`.python-version`](.python-version) pinning 3.14 as the local default). Add per-project deps with
 `uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>`. To
 generate a manuscript, follow the [Quickstart](#quickstart) at the top.
 
@@ -547,7 +575,9 @@ mode adds `output/executive_summary/` as a disposable copied-output surface.
 Two entry points — `./run.sh` (interactive or `--pipeline`) and
 `uv run python scripts/runner/execute_pipeline.py --project <name> [--core-only]`.
 
-> **Pipeline (canonical phrasing — keep in sync with CLAUDE.md and AGENTS.md):** The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **16 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, 2 opt-in bundle/archival stages, and 2 opt-in science/provenance stages (Connector Search, Provenance Record). Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages. Ebook, metadata, bundle, archival, science, and provenance stages are declared for contracts but invoked separately when needed (directly via their `scripts/pipeline/stage_*.py` entry points).
+<!-- BEGIN:STAGE_SUMMARY -->
+The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default full runs execute **10** core+LLM stages; `--core-only` executes **8**. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of those default runs unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
+<!-- END:STAGE_SUMMARY -->
 
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->
@@ -557,19 +587,20 @@ Two entry points — `./run.sh` (interactive or `--pipeline`) and
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
 | **1** Environment Setup | `scripts/pipeline/stage_00_setup.py` | `core` | hard fail |
 | **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable test-failure tolerance; zero-test, project-local coverage, verifier-receipt/evidence, and internal runner failures hard fail |
 | **4** Project Analysis | `scripts/pipeline/stage_02_analysis.py` | `core` | hard fail |
 | **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
 | **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
 | **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
-| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | PDF/bookends and artifact/provenance failures block; optional-format structure remains a warning + report |
+| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | enabled-format, enabled-PDF bookend, and artifact/provenance failures block; markdown, general output structure, and prose-quality checks remain advisory |
 | **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
 | **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | soft fail |
-| **13** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
-| **14** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
-| **15** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
+| **13** docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | `core`, `docxplus` | soft fail |
+| **14** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
+| **15** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
+| **16** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 Full per-stage flowchart, failure/skip transitions, and the script-to-stage
@@ -580,9 +611,10 @@ mapping for `--core-only` live in [`AGENTS.md`](AGENTS.md#pipeline-stages) and
 
 ## 📚 Documentation Index
 
-The full per-file documentation index lives in
-[`docs/documentation-index.md`](docs/documentation-index.md) (authoritative;
-counts drift, so it is not duplicated here). Top-level entry points:
+The curated documentation map lives in
+[`docs/documentation-index.md`](docs/documentation-index.md). It is a maintained
+map, not an exhaustive per-file inventory; generated counts and roster facts
+remain source-bound. Top-level entry points:
 
 - **System reference:** [`AGENTS.md`](AGENTS.md), [`CLAUDE.md`](CLAUDE.md), [`docs/AGENTS.md`](docs/AGENTS.md)
 - **Walkthroughs:** [`docs/guides/getting-started.md`](docs/guides/getting-started.md),

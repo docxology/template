@@ -1,6 +1,6 @@
 # Introspection
 
-*Slide 8 of 37 — template_template pitch, medium deck — kind: `content`*
+*Slide 8 of 38 — template_template pitch, medium deck — kind: `content`*
 
 - src/template_template/introspection.py discovers infrastructure/ subpackages, the pipeline.yaml stage DAG, and the public exemplar roster.
 - The scan reads the filesystem and YAML directly — it does not depend on any external service or cached snapshot.

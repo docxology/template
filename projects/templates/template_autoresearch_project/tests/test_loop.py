@@ -8,6 +8,14 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
+
+from infrastructure.core.pipeline.artifacts import (
+    STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    artifact_manifest_from_payload,
+    collect_stable_output_inventory,
+    validate_artifact_manifest,
+)
 
 from src.config import build_loop_config, load_manuscript_loop_settings
 from src.loop import build_claims, run_autoresearch_loop
@@ -415,6 +423,7 @@ def test_build_claims_only_supports_existing_files(project_root: Path, repo_root
     assert missing_path.exists() is False
 
 
+@pytest.mark.slow
 def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path) -> None:
     repo_root = Path(__file__).resolve().parents[4]
     project = tmp_path / "template_autoresearch_project"
@@ -427,6 +436,15 @@ def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path) -> None:
 
     result = _run_loop_without_coverage(project, repo_root)
 
+    manifest_path = project / "output" / "reports" / "artifact_manifest.json"
+    manifest = artifact_manifest_from_payload(json.loads(manifest_path.read_text(encoding="utf-8")))
+    inventory = collect_stable_output_inventory(
+        project / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+    expected_paths = {path.relative_to(project).as_posix() for path in inventory.files}
+
+    assert result.readiness_valid is True
     assert len(result.stage_results) == 7
     assert all(stage.status == "declared" for stage in result.stage_results)
     assert (project / "output" / "data" / "autoresearch_loop.json").exists()
@@ -437,7 +455,14 @@ def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path) -> None:
     assert (project / "output" / "data" / "autoresearch_phase_ledger.json").exists()
     assert (project / "output" / "data" / "figure_quality_report.json").exists()
     assert (project / "output" / "data" / "manuscript_variable_provenance.json").exists()
-    assert (project / "output" / "reports" / "artifact_manifest.json").exists()
+    assert manifest_path.exists()
+    assert manifest.inventory_mode == STABLE_LOCAL_OUTPUT_INVENTORY_MODE
+    assert {entry.path for entry in manifest.entries} == expected_paths
+    assert not validate_artifact_manifest(
+        manifest,
+        project_dir=project,
+        expected_inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    ).issues
     assert (project / "output" / "reports" / "evidence_registry_full.json").exists() is False
 
 

@@ -30,6 +30,12 @@ KARAT_GRADES: dict[int, float] = {
 
 # Nine-nines purity: 99.9999999% — ultra-high-purity certification
 NINE_NINES_PURITY: float = 0.999999999
+PURITY_VECTOR_DIMENSIONS: tuple[str, ...] = (
+    "stage_completion",
+    "claim_support",
+    "token_provenance",
+    "figure_quality",
+)
 
 
 @dataclass(frozen=True)
@@ -76,12 +82,30 @@ class PurityVector:
 
     def as_dict(self) -> dict[str, float]:
         """Return dimension names and values in stable display order."""
-        return {
-            "stage_completion": self.stage_completion,
-            "claim_support": self.claim_support,
-            "token_provenance": self.token_provenance,
-            "figure_quality": self.figure_quality,
-        }
+        return dict(
+            zip(
+                PURITY_VECTOR_DIMENSIONS,
+                (self.stage_completion, self.claim_support, self.token_provenance, self.figure_quality),
+                strict=True,
+            )
+        )
+
+    def select(self, dimensions: Sequence[str]) -> dict[str, float]:
+        """Return only configured dimensions, preserving declared order."""
+        requested = tuple(dimensions)
+        if not requested:
+            raise ValueError("at least one purity-vector dimension must be selected")
+        unknown = sorted(set(requested) - set(PURITY_VECTOR_DIMENSIONS))
+        if unknown:
+            raise ValueError(f"unknown purity-vector dimension(s): {', '.join(unknown)}")
+        if len(set(requested)) != len(requested):
+            raise ValueError("purity-vector dimensions must be unique")
+        values = self.as_dict()
+        return {dimension: values[dimension] for dimension in requested}
+
+    def selected_complete(self, dimensions: Sequence[str]) -> bool:
+        """Return whether every selected dimension is exactly complete."""
+        return all(value == 1.0 for value in self.select(dimensions).values())
 
     @property
     def weakest_dimension(self) -> tuple[str, float]:
@@ -176,6 +200,7 @@ def assert_monotone_increase(purities: Sequence[float]) -> bool:
 __all__ = [
     "KARAT_GRADES",
     "NINE_NINES_PURITY",
+    "PURITY_VECTOR_DIMENSIONS",
     "KaratGrade",
     "PurityVector",
     "assert_monotone_increase",

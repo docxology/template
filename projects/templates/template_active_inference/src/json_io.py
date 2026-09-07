@@ -7,6 +7,34 @@ from pathlib import Path
 from typing import Any
 
 
+def json_payloads_equal(left: object, right: object) -> bool:
+    """Return type-strict equality for two JSON-serializable values.
+
+    Python structural equality treats ``True == 1`` and ``1 == 1.0`` as
+    equal. Validation receipts compare the serialized JSON contract instead,
+    so a saved boolean or number cannot be forged with a different JSON type
+    while still matching its live builder.
+    """
+    try:
+        left_json = json.dumps(
+            left,
+            allow_nan=False,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        )
+        right_json = json.dumps(
+            right,
+            allow_nan=False,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        )
+        return left_json == right_json
+    except (TypeError, ValueError):
+        return False
+
+
 def load_json(path: Path) -> dict[str, Any]:
     """Load a JSON object from ``path``; return ``{}`` when missing or invalid."""
     if not path.is_file():

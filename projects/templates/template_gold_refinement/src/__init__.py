@@ -71,12 +71,15 @@ from .integrity import (
 from .purity import (
     KARAT_GRADES,
     NINE_NINES_PURITY,
+    PURITY_VECTOR_DIMENSIONS,
     KaratGrade,
     PurityVector,
     format_purity,
     karat_for_purity,
     purity_to_nines,
 )
+from .analogy_boundary import analogy_boundary_theorem, validate_analogy_boundary
+from .transmission import validate_transmission_bookends
 from .refinery import (
     CANONICAL_STAGES,
     RefinementStage,
@@ -117,11 +120,15 @@ __all__ = [
     # Purity
     "KARAT_GRADES",
     "NINE_NINES_PURITY",
+    "PURITY_VECTOR_DIMENSIONS",
     "KaratGrade",
     "PurityVector",
     "format_purity",
     "karat_for_purity",
     "purity_to_nines",
+    "analogy_boundary_theorem",
+    "validate_analogy_boundary",
+    "validate_transmission_bookends",
     # Config
     "GoldRefinementConfig",
     "GoldRefinementConfigError",

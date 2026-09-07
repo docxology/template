@@ -160,6 +160,7 @@ sync with the actual file — drift in this listing is caught by
 
 ```python
 from .config import ProjectConfig, load_project_config
+from .config import LLMReviewConfig
 from .figures import (
     generate_all_figures,
     plot_citation_density,
@@ -174,14 +175,18 @@ from .manuscript_variables import (
 )
 from .pipeline import ProseRunArtifacts, run_prose_pipeline
 from .report import write_review_report
+from .llm_review import build_llm_review_receipt, validate_transcript
 
 __all__ = [
     # Config
     "ProjectConfig",
+    "LLMReviewConfig",
     "load_project_config",
     # Pipeline
     "ProseRunArtifacts",
     "run_prose_pipeline",
+    "build_llm_review_receipt",
+    "validate_transcript",
     # Figures
     "generate_all_figures",
     "plot_readability_metrics",
@@ -197,12 +202,15 @@ __all__ = [
 ]
 ```
 
-Note: `CheckResult` (in `pipeline/checks.py`) and `write_resolved_manuscript_tree`
-(in `manuscript_variables.py`) are intentionally NOT in `__all__` — tests
-import them directly via `from src.pipeline import CheckResult` /
-`from src.manuscript_variables import write_resolved_manuscript_tree`
-because they are stable but not part of the user-facing API surface a
-forker should rely on.
+Note: `CheckResult` (in `pipeline/checks.py`) is intentionally NOT in
+`__all__` — tests import it directly via `from src.pipeline import
+CheckResult` because it is stable but not part of the user-facing API
+surface a forker should rely on. `write_resolved_manuscript_tree` is not
+part of `src/` at all — it lives in
+`infrastructure.rendering.manuscript_injection` and is imported directly
+from there (see `tests/test_manuscript_variables.py` and
+`scripts/z_generate_manuscript_variables.py`); `src/manuscript_variables.py`
+stays infrastructure-free per this file's own boundary table above.
 
 ## See Also
 

@@ -213,6 +213,30 @@ def test_pymdp_runtime_diagnostics_captures_known_warning_and_rejects_unexpected
             diagnostics_path.write_text(original, encoding="utf-8")
 
 
+def test_pymdp_runtime_diagnostics_normalizes_python_marker_versions() -> None:
+    from simulation.pymdp_runtime import RUNTIME_VERSION_CONTRACT, build_runtime_diagnostics
+
+    payload = build_runtime_diagnostics(
+        [
+            {
+                "context": "marker_contract",
+                "versions": {
+                    "inferactively_pymdp": "1.0.1",
+                    "jax": "0.6.2",
+                    "jaxlib": "0.6.2",
+                },
+            }
+        ]
+    )
+
+    assert payload["versions"] == {
+        "inferactively_pymdp": "1.0.1",
+        "jax": RUNTIME_VERSION_CONTRACT,
+        "jaxlib": RUNTIME_VERSION_CONTRACT,
+    }
+    assert payload["records"][0]["versions"] == payload["versions"]
+
+
 def test_policy_comparison_uses_configured_grid_and_writes_posterior_rows(project_root: Path) -> None:
     from simulation.pymdp_config import load_pymdp_config
     from simulation.si_artifacts import write_policy_comparison, write_policy_posterior_grid

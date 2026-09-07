@@ -15,7 +15,14 @@ _REQUIRED_FIELD_KEYS = ("name", "type", "nullable")
 _FIELD_TYPES = {"string", "number", "integer", "boolean", "date", "category"}
 _QUANTITATIVE_TYPES = {"number", "integer"}
 _TEXT_TYPES = {"string", "category"}
-_MEDIA_TYPES = {"text/csv", "application/json", "application/parquet", "application/x-parquet"}
+_MEDIA_TYPES = {
+    "text/csv",
+    "application/json",
+    "application/x-ndjson",
+    "application/parquet",
+    "application/x-parquet",
+}
+PUBLICATION_RECEIPT_SCHEMA = "template-data-descriptor/publication-receipt/1"
 
 
 @dataclass(frozen=True)
@@ -153,6 +160,44 @@ def build_release_bundle_manifest(descriptor: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def build_publication_receipt(
+    descriptor: dict[str, Any],
+    *,
+    artifact_digest: str,
+    authority_receipt: dict[str, str] | None = None,
+) -> dict[str, str]:
+    """Build a real-fork publication receipt only with owner evidence.
+
+    The shipped synthetic fixture cannot satisfy this contract. A DOI, URL, or
+    local manifest alone is deliberately insufficient evidence of publication.
+    """
+    report = build_descriptor_report(descriptor)
+    if not report.valid:
+        raise ValueError("publication receipt requires a valid descriptor")
+    if not authority_receipt:
+        raise ValueError("publication receipt requires an explicit owner authority receipt")
+    required = {"status", "authority", "receipt_id", "repository", "payload_digest", "evidence_type"}
+    missing = sorted(required - set(authority_receipt))
+    if missing:
+        raise ValueError(f"owner authority receipt missing fields: {missing}")
+    if authority_receipt["status"] != "approved" or authority_receipt["evidence_type"] != "owner_attestation":
+        raise ValueError("publication receipt requires an approved owner_attestation")
+    if authority_receipt["payload_digest"] != artifact_digest:
+        raise ValueError("publication authority payload digest does not match artifact payload")
+    if "synthetic" in authority_receipt["repository"].lower():
+        raise ValueError("synthetic repository identifiers cannot authorize publication")
+    if not all(str(authority_receipt[key]).strip() for key in required):
+        raise ValueError("publication authority receipt fields must be non-empty")
+    return {
+        "schema_version": PUBLICATION_RECEIPT_SCHEMA,
+        "status": "approved",
+        "authority": authority_receipt["authority"],
+        "receipt_id": authority_receipt["receipt_id"],
+        "repository": authority_receipt["repository"],
+        "payload_digest": artifact_digest,
+    }
+
+
 def _check_top_level(descriptor: dict[str, Any], findings: list[DescriptorFinding]) -> None:
     for key in _REQUIRED_TOP_LEVEL:
         if key not in descriptor:
@@ -184,9 +229,22 @@ def _check_files(descriptor: dict[str, Any], findings: list[DescriptorFinding]) 
             findings.append(DescriptorFinding("error", "unsafe_file_path", f"unsafe file path: {path}"))
         if str(item.get("media_type", "")) not in _MEDIA_TYPES:
             findings.append(DescriptorFinding("warning", "unknown_media_type", f"{path or '<missing>'} media type"))
+        elif str(item.get("media_type", "")) != "text/csv" and not str(item.get("justification", "")).strip():
+            findings.append(
+                DescriptorFinding(
+                    "error",
+                    "media_justification_missing",
+                    f"{path or '<missing>'} non-CSV media requires a real-data justification",
+                )
+            )
         if not _CHECKSUM_RE.match(str(item.get("checksum", ""))):
             findings.append(DescriptorFinding("error", "bad_checksum", f"{path or '<missing>'} lacks sha256 checksum"))
-        if int(item.get("rows", 0) or 0) <= 0:
+        raw_rows = item.get("rows", 0)
+        if isinstance(raw_rows, bool) or not isinstance(raw_rows, int):
+            findings.append(
+                DescriptorFinding("error", "bad_row_count", f"{path or '<missing>'} rows must be an integer")
+            )
+        elif raw_rows <= 0:
             findings.append(DescriptorFinding("warning", "nonpositive_rows", f"{path or '<missing>'} has no rows"))
 
 
@@ -274,11 +332,13 @@ def _check_numeric_bounds(
 
 
 def _release_file_entry(item: dict[str, Any]) -> dict[str, Any]:
+    raw_rows = item.get("rows", 0)
+    rows = raw_rows if isinstance(raw_rows, int) and not isinstance(raw_rows, bool) else 0
     return {
         "path": str(item.get("path", "")),
         "media_type": str(item.get("media_type", "")),
         "checksum": str(item.get("checksum", "")),
-        "rows": int(item.get("rows", 0) or 0),
+        "rows": rows,
     }
 
 

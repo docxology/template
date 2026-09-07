@@ -10,7 +10,7 @@ import os
 import tempfile
 import time
 from pathlib import Path
-from typing import cast
+from typing import Any, cast
 
 from infrastructure.core.config.queries import get_testing_config
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
@@ -26,11 +26,13 @@ from infrastructure.core.pytest_orchestration import (
     build_profile_marker_expression,
     build_project_pytest_command,
     build_pythonpath,
+    discovery_preflight_enabled,
     enforce_project_suite_guards,
     log_discovered_tests,
     parse_test_discovery_timeout,
     prepend_uv_to_path,
     project_declared_coverage_floor,
+    project_declared_test_command,
     resolve_test_profile,
     resolve_project_cov_config,
     resolve_infrastructure_test_paths,
@@ -44,9 +46,82 @@ from infrastructure.reporting.pipeline_test_reporting import (
     report_infra_only_results,
     report_results,
 )
-from infrastructure.reporting.suite_runner import TestSuiteConfig, run_test_suite
+from infrastructure.reporting.project_verifier import ProjectVerifierError, run_declared_project_verifier
+from infrastructure.reporting.suite_runner import (
+    DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+    TestSuiteConfig,
+    run_test_suite,
+)
 
 logger = get_logger(__name__)
+
+
+def _build_infrastructure_suite_config(
+    *,
+    cmd: list[str],
+    env: dict[str, str],
+    repo_root: Path,
+    coverage_json_paths: list[Path],
+    coverage_threshold: float,
+    quiet: bool,
+    scope: InfrastructureTestScope,
+) -> TestSuiteConfig:
+    """Build the infrastructure Stage-01 execution contract."""
+    return TestSuiteConfig(
+        label="Infrastructure",
+        cmd=cmd,
+        env=env,
+        repo_root=repo_root,
+        coverage_json_paths=coverage_json_paths,
+        coverage_threshold=coverage_threshold,
+        max_failures_env_var="MAX_INFRA_TEST_FAILURES",
+        max_failures_config_key="max_infra_test_failures",
+        quiet=quiet,
+        spinner_label=f"Running infrastructure tests ({scope})",
+        streaming_subprocess=True,
+        coverage_cleanup_scope_dir=None,
+        coverage_cleanup_recursive=False,
+    )
+
+
+def _build_generic_project_suite_config(
+    *,
+    project_name: str,
+    project_root: Path,
+    repo_root: Path,
+    cmd: list[str],
+    env: dict[str, str],
+    coverage_threshold: float,
+    quiet: bool,
+) -> TestSuiteConfig:
+    """Build the generic single-project Stage-01 execution contract.
+
+    Generic pytest and an explicitly declared project verifier share the same
+    single-project timeout capacity.  The larger budget only prevents the
+    runner from terminating an otherwise valid long suite prematurely; it is
+    not evidence that the suite completed or passed.
+    """
+    return TestSuiteConfig(
+        label="Project",
+        cmd=cmd,
+        env=env,
+        repo_root=repo_root,
+        coverage_json_paths=[
+            project_root / "coverage_project.json",
+            project_root / "coverage.json",
+            project_root / "htmlcov" / "coverage.json",
+        ],
+        coverage_threshold=coverage_threshold,
+        max_failures_env_var="MAX_PROJECT_TEST_FAILURES",
+        max_failures_config_key="max_project_test_failures",
+        quiet=quiet,
+        spinner_label=f"Running project tests for '{project_name}'",
+        streaming_subprocess=True,
+        timeout_seconds=DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+        total_timeout_seconds=DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+        coverage_cleanup_scope_dir=project_root,
+        coverage_cleanup_recursive=True,
+    )
 
 
 def run_infrastructure_tests(
@@ -75,7 +150,10 @@ def run_infrastructure_tests(
     start_time = time.time()
     project_root = resolve_project_root(repo_root, project_name)
 
-    clean_coverage_files(repo_root)
+    # Infrastructure coverage belongs to the repository root. Do not recurse
+    # into lifecycle sidecars or active private projects that may be running
+    # their own isolated test producer in the same checkout.
+    clean_coverage_files(repo_root, recursive=False)
 
     testing_config = get_testing_config(repo_root)
     full_scope = scope == "full"
@@ -136,27 +214,24 @@ def run_infrastructure_tests(
     env["PYTHONPATH"] = build_pythonpath(repo_root, project_root)
     prepend_uv_to_path(env)
 
-    log_discovered_tests(
-        cmd,
-        repo_root,
-        env,
-        f"infrastructure ({scope})",
-        timeout_seconds=parse_test_discovery_timeout(scope),
-    )
+    if discovery_preflight_enabled(env=env):
+        log_discovered_tests(
+            cmd,
+            repo_root,
+            env,
+            f"infrastructure ({scope})",
+            timeout_seconds=parse_test_discovery_timeout(scope),
+        )
 
     try:
-        config = TestSuiteConfig(
-            label="Infrastructure",
+        config = _build_infrastructure_suite_config(
             cmd=cmd,
             env=env,
             repo_root=repo_root,
             coverage_json_paths=coverage_json_paths,
             coverage_threshold=infra_threshold,
-            max_failures_env_var="MAX_INFRA_TEST_FAILURES",
-            max_failures_config_key="max_infra_test_failures",
             quiet=quiet,
-            spinner_label=f"Running infrastructure tests ({scope})",
-            streaming_subprocess=True,
+            scope=scope,
         )
         exit_code, test_results = run_test_suite(config)
         if strict and test_results.get("failed", 0) > 0:
@@ -235,6 +310,48 @@ def _run_project_tests_impl(
     logger.info("Test path: %s", project_root / "tests")
     logger.info("Coverage target: %s (%s%% minimum)", project_root / "src", project_threshold)
 
+    try:
+        declared_command = project_declared_test_command(project_root)
+    except ValueError as exc:
+        logger.error("Invalid declared project verifier for '%s': %s", project_name, exc)
+        return 1, cast(TestSuiteResults, {})
+    if declared_command is not None:
+        log_substep(
+            "Using the project's explicit structured Stage-01 verifier "
+            "(the generic pytest profile flags do not rewrite its declared argv).",
+            logger,
+        )
+        try:
+            exit_code, declared_results = run_declared_project_verifier(
+                repo_root,
+                project_root,
+                project_name,
+                declared_command,
+                coverage_floor=project_threshold,
+            )
+            exit_code, guarded_results = enforce_project_suite_guards(
+                exit_code,
+                cast(dict[str, Any], declared_results),
+                project_name=project_name,
+                project_root=project_root,
+                project_threshold=project_threshold,
+                strict=strict,
+            )
+            duration = time.time() - start_time
+            logger.info("Declared project verifier completed in %.1fs", duration)
+            if exit_code == 0:
+                log_success("Project verifier passed", logger)
+            return exit_code, cast(TestSuiteResults, guarded_results)
+        except (OSError, ProjectVerifierError, ValueError) as exc:
+            duration = time.time() - start_time
+            logger.error(
+                "Declared project verifier failed after %.1fs: %s",
+                duration,
+                exc,
+                exc_info=True,
+            )
+            return 1, cast(TestSuiteResults, {})
+
     cmd = build_project_pytest_command(
         project_root,
         [
@@ -256,12 +373,12 @@ def _run_project_tests_impl(
     )
     env.pop("COVERAGE_PROCESS_START", None)
 
-    apply_coverage_datafile(cmd, env, ".coverage.project")
+    apply_coverage_datafile(cmd, env, str(project_root / ".coverage.project"))
     cmd.extend(
         [
             "--cov-report=term-missing",
-            "--cov-report=html",
-            "--cov-report=json:coverage_project.json",
+            f"--cov-report=html:{project_root / 'htmlcov'}",
+            f"--cov-report=json:{project_root / 'coverage_project.json'}",
             f"--cov-fail-under={project_threshold}",
             "--tb=short",
         ]
@@ -290,31 +407,24 @@ def _run_project_tests_impl(
     # parametrized tests. Use the full-suite discovery budget here; the former
     # 30-second default produced a misleading warning even when collection
     # completed successfully moments later.
-    log_discovered_tests(
-        cmd,
-        repo_root,
-        env,
-        f"project '{project_name}'",
-        timeout_seconds=parse_test_discovery_timeout("full"),
-    )
+    if discovery_preflight_enabled(env=env):
+        log_discovered_tests(
+            cmd,
+            repo_root,
+            env,
+            f"project '{project_name}'",
+            timeout_seconds=parse_test_discovery_timeout("full"),
+        )
 
     try:
-        config = TestSuiteConfig(
-            label="Project",
+        config = _build_generic_project_suite_config(
+            project_name=project_name,
+            project_root=project_root,
+            repo_root=repo_root,
             cmd=cmd,
             env=env,
-            repo_root=repo_root,
-            coverage_json_paths=[
-                repo_root / "coverage_project.json",
-                repo_root / "coverage.json",
-                repo_root / "htmlcov" / "coverage.json",
-            ],
             coverage_threshold=project_threshold,
-            max_failures_env_var="MAX_PROJECT_TEST_FAILURES",
-            max_failures_config_key="max_project_test_failures",
             quiet=quiet,
-            spinner_label=f"Running project tests for '{project_name}'",
-            streaming_subprocess=True,
         )
         exit_code, test_results = run_test_suite(config)
         if strict and test_results.get("failed", 0) > 0:
@@ -407,6 +517,7 @@ def execute_test_pipeline(
             repo_root,
             include_coverage_details=True,
             include_infrastructure_coverage=run_infra,
+            project_root=resolve_project_root(repo_root, project_name),
         )
         output_dir = resolve_project_root(repo_root, project_name) / "output" / "reports"
         save_test_report_to_files(report, output_dir)

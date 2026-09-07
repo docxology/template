@@ -10,10 +10,7 @@ import subprocess
 import tempfile
 from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:
-    from infrastructure.steganography import KmythAvailability
+from typing import cast
 
 from redacted_report.publication_meta import publication_author_and_date  # noqa: F401 - byline API re-export
 from redacted_report.redaction import (
@@ -48,6 +45,8 @@ from redacted_report._proof_renderer import (  # noqa: F401 - compatibility re-e
     _redaction_parts,
     _split_keep_spaces,
 )
+from redacted_report.kmyth_support import _kmyth_help_error, _kmyth_seal_probe_error  # noqa: F401
+from redacted_report.kmyth_support import _resolve_kmyth_status
 
 
 def style_redaction_decisions(
@@ -192,6 +191,60 @@ def expected_dev_variant_filenames(
             names.extend((f"{variant_id}.hashes.json.ski", f"{variant_id}_steganography.pdf.ski"))
     names.append("variant_matrix.json")
     return tuple(names)
+
+
+def evaluate_pixel_regression_gate(
+    output_dir: Path,
+    *,
+    manifest_path: Path | None = None,
+    executable_resolver: Callable[[str], str | None] = shutil.which,
+) -> dict[str, object]:
+    """Evaluate an opt-in pixel gate without treating missing tooling as green.
+
+    The base exemplar does not pin a raster implementation. Therefore a
+    missing executable or manifest is reported as ``unavailable``. A pinned
+    manifest is checked against current PNG bytes and returns ``pass`` only
+    when every declared artifact matches.
+    """
+    tool = executable_resolver("pdftoppm")
+    manifest = (manifest_path or (output_dir / "pixel_regression_manifest.json")).resolve()
+    if not tool:
+        return {"status": "unavailable", "reason": "raster_tool_unavailable", "tool": "pdftoppm"}
+    if not manifest.is_file():
+        return {"status": "unavailable", "reason": "manifest_not_pinned", "tool": "pdftoppm"}
+    try:
+        payload = json.loads(manifest.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return {"status": "fail", "reason": f"invalid_manifest: {exc}"}
+    if not isinstance(payload, dict):
+        return {"status": "fail", "reason": "manifest_root_not_object"}
+    if payload.get("schema_version") != "template-redacted-report/pixel-regression/1":
+        return {"status": "fail", "reason": "unsupported_manifest_schema"}
+    if payload.get("tool") != "pdftoppm" or not str(payload.get("tool_version", "")).strip():
+        return {"status": "fail", "reason": "raster_tool_not_pinned"}
+    files = payload.get("files")
+    if not isinstance(files, dict) or not files:
+        return {"status": "fail", "reason": "manifest_files_missing"}
+    mismatches: list[str] = []
+    for relative, expected in files.items():
+        if not isinstance(relative, str) or Path(relative).is_absolute() or ".." in Path(relative).parts:
+            mismatches.append(str(relative))
+            continue
+        path = (output_dir / relative).resolve()
+        try:
+            path.relative_to(output_dir.resolve())
+        except ValueError:
+            mismatches.append(relative)
+            continue
+        if not path.is_file() or not isinstance(expected, str) or _file_sha256(path) != expected:
+            mismatches.append(relative)
+    return {
+        "status": "pass" if not mismatches else "fail",
+        "tool": "pdftoppm",
+        "tool_version": payload["tool_version"],
+        "checked": len(files),
+        "mismatches": tuple(sorted(mismatches)),
+    }
 
 
 def verify_dev_variant_outputs(
@@ -526,134 +579,6 @@ def _write_steganography_pdf(
         authors=[publication_author_and_date()[0]],
         keywords=["redaction", "visual-proof", style.name, background.name],
     )
-
-
-def _resolve_kmyth_status(
-    *,
-    include_kmyth: bool,
-    binary_dir: str | Path | None,
-    seal_probe_timeout_seconds: int,
-    installation_validator: Callable[..., KmythAvailability] | None = None,
-    help_checker: Callable[[Path], str] | None = None,
-    seal_probe: Callable[..., str] | None = None,
-) -> dict[str, object]:
-    if not include_kmyth:
-        return {
-            "requested": False,
-            "available": False,
-            "binary_dir": str(binary_dir or ""),
-            "seal_path": "",
-            "unseal_path": "",
-            "tools_runnable": False,
-            "summary": "Kmyth not requested.",
-        }
-
-    if installation_validator is None:
-        from infrastructure.steganography import validate_kmyth_installation
-
-        installation_validator = validate_kmyth_installation
-    check_help = help_checker or _kmyth_help_error
-    probe_seal = seal_probe or _kmyth_seal_probe_error
-    availability = installation_validator(binary_dir=binary_dir)
-    if not availability.available or availability.seal_path is None or availability.unseal_path is None:
-        return {
-            "requested": True,
-            "available": False,
-            "binary_dir": str(binary_dir or ""),
-            "seal_path": str(availability.seal_path or ""),
-            "unseal_path": str(availability.unseal_path or ""),
-            "tools_runnable": False,
-            "summary": availability.summary(),
-        }
-
-    help_errors = tuple(
-        error
-        for error in (
-            check_help(availability.seal_path),
-            check_help(availability.unseal_path),
-        )
-        if error
-    )
-    if help_errors:
-        return {
-            "requested": True,
-            "available": False,
-            "binary_dir": str(binary_dir or ""),
-            "seal_path": str(availability.seal_path),
-            "unseal_path": str(availability.unseal_path),
-            "tools_runnable": False,
-            "summary": "Kmyth tools found but not runnable: " + "; ".join(help_errors),
-        }
-
-    probe_error = probe_seal(availability.seal_path, timeout_seconds=seal_probe_timeout_seconds)
-    if probe_error:
-        return {
-            "requested": True,
-            "available": False,
-            "binary_dir": str(binary_dir or ""),
-            "seal_path": str(availability.seal_path),
-            "unseal_path": str(availability.unseal_path),
-            "tools_runnable": True,
-            "summary": "Kmyth tools runnable, but TPM seal probe failed: " + probe_error,
-        }
-
-    return {
-        "requested": True,
-        "available": True,
-        "binary_dir": str(binary_dir or ""),
-        "seal_path": str(availability.seal_path),
-        "unseal_path": str(availability.unseal_path),
-        "tools_runnable": True,
-        "summary": availability.summary(),
-    }
-
-
-def _kmyth_help_error(
-    tool_path: Path,
-    *,
-    runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
-) -> str:
-    try:
-        result = runner(  # noqa: S603 - fixed executable path, shell=False
-            [str(tool_path), "--help"],
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=15,
-        )
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        return f"{tool_path.name}: {exc}"
-    if result.returncode != 0:
-        detail = result.stderr.strip() or result.stdout.strip() or f"exit status {result.returncode}"
-        return f"{tool_path.name}: {detail}"
-    return ""
-
-
-def _kmyth_seal_probe_error(
-    tool_path: Path,
-    *,
-    timeout_seconds: int,
-    runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
-) -> str:
-    with tempfile.TemporaryDirectory(prefix="redaction-kmyth-probe-") as tmp_dir:
-        input_path = Path(tmp_dir) / "probe.txt"
-        output_path = Path(tmp_dir) / "probe.txt.ski"
-        input_path.write_text("template_redacted_report kmyth probe\n", encoding="utf-8")
-        try:
-            result = runner(  # noqa: S603 - fixed executable path, shell=False
-                [str(tool_path), "--input", str(input_path), "--output", str(output_path)],
-                check=False,
-                capture_output=True,
-                text=True,
-                timeout=timeout_seconds,
-            )
-        except (OSError, subprocess.TimeoutExpired) as exc:
-            return str(exc)
-        if result.returncode != 0:
-            return result.stderr.strip() or result.stdout.strip() or f"exit status {result.returncode}"
-        if not output_path.exists():
-            return f"{tool_path.name} exited successfully but did not write a sidecar"
-    return ""
 
 
 def _kmyth_sidecars_for(base_pdf: Path, secure_pdf: Path) -> dict[str, Path]:

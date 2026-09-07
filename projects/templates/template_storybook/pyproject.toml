@@ -10,7 +10,7 @@ description = "A full-page illustrated storybook exemplar with data-owned pages,
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 requires-python = ">=3.10"
 dependencies = [
-    "Pillow>=10.0",
+    "Pillow>=12.3.0",
     "pyyaml>=6.0",
     "reportlab>=4.0",
 ]

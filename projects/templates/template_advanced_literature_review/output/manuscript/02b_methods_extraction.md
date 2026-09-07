@@ -11,15 +11,15 @@ An open-access resolver maps each record to a downloadable PDF where one exists 
 it to a deterministic path. Full-text availability is summarized without requiring any
 download, so the offline default still reports coverage. For this run:
 
-- **Abstract coverage**: 100.0\% of records (46 of
+- **Abstract coverage**: 100.0\% of records (80 of
   46) carry an abstract; 0 records lack one.
-- **Open-access status**: 43.5\% of records are open access (20 records);
+- **Open-access status**: 42.5\% of records are open access (34 records);
   the remainder are closed or unknown.
-- **PDF availability**: 43.5\% of records (20) have a direct
-  PDF link; 20 have a publisher PDF, and 26 have
+- **PDF availability**: 42.5\% of records (34) have a direct
+  PDF link; 34 have a publisher PDF, and 46 have
   no full-text source available.
 
-The identifier coverage for this corpus is: 46 DOIs, 5
+The identifier coverage for this corpus is: 80 DOIs, 12
 OpenAlex IDs, and 0 arXiv IDs. DOI coverage dominates and supports
 cross-engine de-duplication.
 
@@ -28,7 +28,7 @@ cross-engine de-duplication.
 Titles, abstracts, and (when present) full text are tokenized and reduced to keyphrases
 and named entities by offline, dependency-light extractors — no mandatory LLM.
 Term-frequency statistics drive a TF-IDF representation over a 137-feature
-vocabulary. The most frequent terms in the corpus are: atmospheric, uncertainty, spectra, temperature, abundance, coverage, opacity, sources, analysis, assumptions, observed, retrievals, models, stellar, across, evaluated, retrieval, structure, composition, jwst. These terms
+vocabulary. The most frequent terms in the corpus are: atmospheric, uncertainty, spectra, temperature, abundance, analysis, assumptions, opacity, retrievals, sources, stellar, coverage, evaluated, observed, across, composition, models, provide, competing, retrieval. These terms
 reflect the configured domain and the records retained by the retrieval and filtering
 policy; fixture-derived terms are not evidence about the live field.
 

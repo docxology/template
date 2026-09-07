@@ -38,6 +38,10 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark_parser = subparsers.add_parser("benchmark", help="Write benchmark task status from grading outputs")
     _add_project_args(benchmark_parser)
 
+    orchestrate_parser = subparsers.add_parser("orchestrate", help="Run full multi-phase AutoResearch orchestration")
+    _add_project_args(orchestrate_parser)
+    orchestrate_parser.add_argument("--json", action="store_true", help="Emit orchestration results as JSON")
+
     schema_parser = subparsers.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit")
     schema_parser.set_defaults(func=lambda _args: emit_schema(build_parser()))
 
@@ -61,6 +65,8 @@ def main(argv: list[str] | None = None) -> int:
         return _summarize(args.repo_root, args.project, args.projects_dir)
     if args.command == "benchmark":
         return _benchmark(args.repo_root, args.project, args.projects_dir)
+    if args.command == "orchestrate":
+        return _orchestrate(args.repo_root, args.project, args.projects_dir, args.json)
     return 2
 
 
@@ -110,6 +116,22 @@ def _benchmark(repo_root: Path, project: str, projects_dir: str) -> int:
     path = write_benchmark_scores(plan.project_root, plan)
     print(f"AutoResearch benchmark scores JSON: {path}")
     return 0
+
+
+def _orchestrate(repo_root: Path, project: str, projects_dir: str, as_json: bool) -> int:
+    import json
+    from infrastructure.autoresearch.orchestrator import AutoResearchOrchestrator
+
+    orchestrator = AutoResearchOrchestrator(repo_root, project, projects_dir=projects_dir)
+    result = orchestrator.execute_plan()
+    if as_json:
+        print(json.dumps(result.to_dict(), indent=2))
+    else:
+        print(f"AutoResearch Orchestration: {'SUCCESS' if result.success else 'FAILED'}")
+        print(f"  Project: {result.project_name}")
+        print(f"  Phase Reached: {result.phase_reached}")
+        print(f"  Events Logged: {len(result.events)}")
+    return 0 if result.success else 1
 
 
 if __name__ == "__main__":

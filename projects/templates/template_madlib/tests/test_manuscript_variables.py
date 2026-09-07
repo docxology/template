@@ -8,6 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from src.config import load_madlib_config
 from src.manuscript_variables import _build_timestamp, generate_variables, save_variables
 
@@ -91,6 +93,7 @@ def test_missing_source_date_epoch_is_explicit_and_deterministic() -> None:
     assert _build_timestamp("") == "not-recorded (set SOURCE_DATE_EPOCH)"
 
 
+@pytest.mark.slow
 def test_z_generate_script_resolves_output_manuscript_without_touching_tracked_outputs(tmp_path: Path) -> None:
     isolated_project = tmp_path / "template_madlib"
     for directory in ("manuscript", "scripts", "src"):

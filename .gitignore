@@ -153,6 +153,7 @@ projects/templates/*
 projects/templates/template_advanced_literature_review/output/*
 !projects/templates/template_advanced_literature_review/output/data/
 projects/templates/template_advanced_literature_review/output/data/*
+!projects/templates/template_advanced_literature_review/output/data/corpus.jsonl
 !projects/templates/template_advanced_literature_review/output/data/deep_research_replay.json
 !projects/templates/template_advanced_literature_review/output/data/cross_phase_analysis.json
 !projects/templates/template_advanced_literature_review/output/figures/
@@ -261,6 +262,15 @@ projects/templates/*/output/reports/pipeline_report.md
 projects/templates/*/output/reports/render_summary.txt
 projects/templates/*/output/reports/telemetry.json
 projects/templates/*/output/reports/telemetry.txt
+# Structured diagnostics are local validator telemetry, not publication
+# evidence; canonical validation/evidence receipts carry the release result.
+projects/templates/*/output/reports/diagnostics.json
+# The opt-in full evidence dump is diagnostic and can be very large; the
+# bounded canonical evidence_registry.json remains the public receipt.
+projects/templates/*/output/reports/evidence_registry_full.json
+# Archived telemetry is bounded local runtime history, not stable exemplar
+# evidence. This rule must follow the broad per-template negations above.
+projects/templates/*/output/reports/.history/**
 # PDF and slide source/intermediate files are reproducible build products.
 # Keep final PDF deliverables; source manuscripts and references remain in
 # manuscript/ and are the canonical authoring surface.
@@ -408,3 +418,6 @@ run.config.yml
 # Root-anchored: must NOT catch projects/templates/template_pitch_deck's
 # .agents/skills/template-pitch-deck/ tracked skill dir.
 /template-pitch-deck/
+
+# Agent-ergonomics fleet scratch archive (round 2, 2026-08-31); owner-curated, local-only
+_agent_erg_archive_*/

@@ -92,6 +92,40 @@ echo "Backup created: $BACKUP_DIR/$BACKUP_NAME"
 - AWS S3 (automated backups)
 - Backblaze (continuous backup)
 
+### Repository Full-Snapshot Helper
+
+The repository's paired rsync helpers preserve `~/.hermes`, the repository
+`.cache/`, and the repository `output/` under fixed snapshot labels. The
+default remote path is `backups/full/<snapshot>` relative to an SSH-configured
+login named `backup`; use another safe SSH alias or `user@hostname` as the
+first positional argument.
+
+```bash
+# Non-writing plan
+bash scripts/shell/backup-full.sh --dry-run backup pre-upgrade-2026-08-14
+
+# Create a write-once-by-helper snapshot, list it, then restore to private scratch
+bash scripts/shell/backup-full.sh backup pre-upgrade-2026-08-14
+bash scripts/shell/restore-test.sh --list backup pre-upgrade-2026-08-14
+bash scripts/shell/restore-test.sh backup pre-upgrade-2026-08-14
+```
+
+Backup holds an atomic per-name lock and uses a partial directory until every
+transfer and the versioned metadata contract succeed, then refuses any
+overwrite of the final name. Restore checks that metadata, compares the current
+snapshot with its restored copy, and leaves a private control directory with
+the tree, diagnostics, and receipt for review. It never restores over the
+checkout, inside the local backup namespace, or onto an earlier restore.
+
+Use `--local-root <absolute-dir>` with both scripts for a disposable local
+round trip. Local success verifies the code and layout, not off-site storage.
+The helpers do not provide creation-time/at-rest content integrity, a quiesced
+source view, hard-link/ACL/xattr preservation, encryption, credentials,
+retention, monitoring, or Git-source recovery; configure and test those
+separately. The full operational
+boundary is in
+[`docs/operational/maintenance.md`](../operational/maintenance.md#backup-helpers-and-acceptance-boundary).
+
 **GitHub backup:**
 
 ```bash

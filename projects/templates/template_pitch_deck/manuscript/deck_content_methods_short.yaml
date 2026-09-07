@@ -1,0 +1,23 @@
+title: "{{PITCH_SUBJECT_TITLE}}"
+subtitle: "A controlled-method specification pitch for reproducible research teams"
+slides:
+  - kind: title
+    title: "{{PITCH_SUBJECT_TITLE}}"
+    notes: "Open with the methods audience and the narrow claim boundary."
+  - kind: content
+    title: "The methods problem"
+    bullets:
+      - "Research methods are often described as prose before their assumptions become executable."
+      - "A controlled specification keeps inputs, stages, outputs, and validation criteria explicit."
+  - kind: content
+    title: "What {{PITCH_SUBJECT_NAME}} contributes"
+    bullets:
+      - "The DSL compiles a declared method plan into deterministic artifacts and a versioned export receipt."
+      - "The source and test suite make malformed stages and changed numeric values fail closed."
+    source: "projects/templates/template_methods_paper/src"
+  - kind: content
+    title: "The invitation"
+    bullets:
+      - "Start with one method that already has a clear input/output contract."
+      - "Keep external data, publication, and domain-validity claims behind their own evidence gates."
+    source: "projects/templates/template_methods_paper/README.md"

@@ -1,8 +1,10 @@
-# Appendix
+# Funding & consulting
 
-*Slide 53 of 56 — template_template pitch, long deck — kind: `section`*
+*Slide 53 of 57 — template_template pitch, long deck — kind: `content`*
 
-*(no body content — section/title slide)*
+- The code itself is available to adopt directly today — real, tested, and licensed for reuse, no engagement required to start.
+- Open to funding conversations for a dedicated integration (a new pitch subject, a distinct theme, a deeper introspection surface) — no such engagement exists yet, this is an invitation to scope one, not an established program.
+- Open to scoping a consulting engagement on request — pairing through a first regeneration cycle, or adapting the two-layer architecture to an existing codebase outside this monorepo. No such engagement has happened yet; this is an invitation, not a track record.
 
 ---
 

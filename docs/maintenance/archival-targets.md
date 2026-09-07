@@ -41,7 +41,7 @@ For each publication:
 
 A "publication" in this context means a manuscript + its reproducibility bundle. The archived bundle should include:
 
-- **The rendered PDF** (Stage 5 output) — the human-readable canonical artifact
+- **The rendered PDF** (YAML stage 7; script prefix `stage_03`) — the human-readable canonical artifact
 - **The Markdown manuscript sources** (`projects/<name>/manuscript/`) — durable plain-text
 - **A frozen lockfile** (`uv.lock` snapshot at publication commit)
 - **The source-code commit hash** (linked to the GitHub commit + Software Heritage snapshot)
@@ -53,7 +53,7 @@ The current publishing pipeline produces some of these; the rest are the gap thi
 ## Implementation
 
 The code lives at `infrastructure/publishing/archival/` (`providers.py`,
-`orchestrate.py`, `models.py`; driven by the opt-in Stage 13 wrapper
+`orchestrate.py`, `models.py`; driven by the opt-in YAML stage 15 runner
 `scripts/runner/archive_publication.py`). The public entry point is
 `archive_publication()`:
 
@@ -128,7 +128,7 @@ The verification step is part of `STATUS.md` row "Publishing" — refresh quarte
 
 ## Status
 
-Implemented as the opt-in Stage 13 archival path. `archive_publication()` and
+Implemented as the opt-in YAML stage 15 archival path. `archive_publication()` and
 its provider classes live in `infrastructure/publishing/archival/`; invoke via
 `scripts/runner/archive_publication.py` (dry-run by default — pass `--commit` plus
 `--providers` for real deposits; see the CLAUDE.md quick-reference). See

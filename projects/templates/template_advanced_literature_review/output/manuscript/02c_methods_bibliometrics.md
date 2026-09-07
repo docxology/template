@@ -3,9 +3,9 @@
 Descriptive statistics summarize the corpus along every available axis: counts by year,
 venue, and author; citation-count distributions; and author productivity. Temporal
 analysis fits the publication time series, reporting a compound annual growth rate of
-12.27\% across 2010--2023 (a span of 13 years), with
-a mean year-over-year growth rate of 63.3\% and a doubling time of
-1.4 years. The peak publication year is 2023 with
+6.76\% across 2000--2023 (a span of 23 years), with
+a mean year-over-year growth rate of 38.9\% and a doubling time of
+2.1 years. The peak publication year is 2023 with
 9 records.
 
 ## Growth Metrics
@@ -16,7 +16,7 @@ $$
 \text{CAGR} = \left(\frac{N_{\text{end}}}{N_{\text{start}}}\right)^{1/(\text{year span})} - 1
 $$
 
-where $N_{\text{start}}$ is the publication count in the first year (2010) and $N_{\text{end}}$
+where $N_{\text{start}}$ is the publication count in the first year (2000) and $N_{\text{end}}$
 is the count in the last year (2023). The mean year-over-year growth rate
 $\bar{g}$ is the arithmetic mean of annual ratios. The doubling time is
 $t_d = \ln(2) / \ln(1 + \text{CAGR})$. These metrics are stored in `temporal_analysis.json`
@@ -27,7 +27,7 @@ and injected into the manuscript at render time.
 Subfield classification assigns each record to one of 4 configurable buckets
 (Observational Methods, Atmospheric Molecules, Jwst Instruments, and Theoretical Modeling) by priority-aware keyword matching; the taxonomy is defined entirely
 in configuration (`project_config.subfield_keywords`). The largest bucket is
-**Observational Methods** at 50.0\% of the classified corpus. A per-subfield
+**Observational Methods** at 51.4\% of the classified corpus. A per-subfield
 temporal breakdown (`subfield_timeline.json`) tracks how each sub-area has grown over
 time, enabling identification of emerging or declining research threads.
 

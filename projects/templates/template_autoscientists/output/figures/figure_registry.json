@@ -4,19 +4,28 @@
       "caption": "Champion metric trajectory under a matched experiment budget.",
       "filename": "search_comparison.png",
       "generated_by": "scripts/run_search_comparison.py",
-      "label": "fig:comparison"
+      "label": "fig:comparison",
+      "metadata": {
+        "alt_text": "Champion-metric trajectories under a matched sequential experiment budget. The solid coordinated-teams line contains 36 points, starting at -8.6627 and ending at 0.0012; The dashed single-thread baseline line contains 60 points, starting at -8.6627 and ending at 0.0012. Values are reported noisy champion metrics; line length can reflect early stopping and does not encode wall-clock speed."
+      }
     },
     {
       "caption": "Reported versus clean champion metric by coordination mechanism ablation.",
       "filename": "ablation.png",
       "generated_by": "scripts/run_ablation.py",
-      "label": "fig:ablation"
+      "label": "fig:ablation",
+      "metadata": {
+        "alt_text": "Paired horizontal bars compare final reported and clean metrics for 5 configurations: full coordination: reported 0.0012, clean 0.0000; no confirmation: reported 0.0156, clean 0.0000; no dead-end registry: reported 0.0012, clean 0.0000; no effect-size ranking: reported 0.0012, clean 0.0000; no reorganization: reported 0.0012, clean 0.0000. The largest absolute reported-minus-clean gap is 0.0156 for no confirmation. These are outcomes on this synthetic objective, not evidence of general agent performance."
+      }
     },
     {
       "caption": "Experiment use and redundant re-probes by coordination mechanism ablation.",
       "filename": "ablation_efficiency.png",
       "generated_by": "scripts/run_ablation.py",
-      "label": "fig:ablation_efficiency"
+      "label": "fig:ablation_efficiency",
+      "metadata": {
+        "alt_text": "Paired horizontal bars compare sequential experiment use and redundant re-probes for 5 configurations: full coordination: 36 used, 0 redundant; no confirmation: 36 used, 0 redundant; no dead-end registry: 60 used, 36 redundant; no effect-size ranking: 36 used, 0 redundant; no reorganization: 36 used, 0 redundant. The largest redundant count is 36 for no dead-end registry. Counts do not encode parallel throughput or wall-clock timing."
+      }
     }
   ],
   "schema_version": "template-autoscientists-figure-registry-v1"

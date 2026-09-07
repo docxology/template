@@ -18,7 +18,8 @@
     },
     "logging": {
       "enabled": true,
-      "path": "output/logs/pymdp_runs.jsonl"
+      "path": "output/logs/pymdp_runs.jsonl",
+      "timestamped": false
     },
     "comparison": {
       "horizons": [
@@ -34,7 +35,7 @@
       ]
     }
   },
-  "config_hash": "81eb061f43b7bfd7",
+  "config_hash": "133a13df72cfd8d8",
   "mode": "state_inference",
   "seed": 0,
   "policy_len": 2,

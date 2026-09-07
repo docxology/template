@@ -1,9 +1,13 @@
 """LaTeX compilation utilities."""
 
+import stat
 import subprocess
+import sys
+import tempfile
 import time
 from pathlib import Path
 
+from infrastructure.core.determinism import deterministic_subprocess_env, resolve_source_date_epoch
 from infrastructure.core.exceptions import CompilationError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
@@ -22,6 +26,7 @@ _STALE_AUX_EXTENSIONS = (
     ".toc",
     ".vrb",
 )
+_TEXT_SIDECAR_EXTENSIONS = (*_STALE_AUX_EXTENSIONS, ".log")
 
 _SIGPIPE_RETURNCODES = {-13, 141}
 
@@ -33,6 +38,8 @@ _SIGPIPE_RETURNCODES = {-13, 141}
 # when the produced PDF exists and passes structural validation. Any other
 # error signature, a missing PDF, or a structurally invalid PDF still fails.
 _BEAMER_RESERVED_A_SIGNATURE = r"Illegal parameter number in definition of \reserved@a"
+_PDF_CANONICALIZATION_TIMEOUT_SECONDS = 300
+_PDF_CANONICALIZATION_WORKER = "infrastructure.rendering._pdf_canonicalization_worker"
 
 
 def _is_tolerable_beamer_reserved_a(
@@ -66,6 +73,107 @@ def _clean_stale_aux_files(output_dir: Path, tex_stem: str) -> None:
         if stale_file.exists():
             stale_file.unlink()
             logger.debug(f"Removed stale LaTeX sidecar: {stale_file.name}")
+
+
+def normalize_latex_sidecars(output_dir: Path, tex_stem: str) -> None:
+    """Remove trailing horizontal whitespace from generated LaTeX text files.
+
+    TeX may leave spaces immediately before newlines in ``.aux`` and related
+    sidecars. They are semantically redundant, but make deterministic
+    publication snapshots fail repository whitespace checks. Normalize only
+    the named compilation's UTF-8 text sidecars; PDFs and unrelated files are
+    never touched.
+    """
+    for extension in _TEXT_SIDECAR_EXTENSIONS:
+        sidecar = output_dir / f"{tex_stem}{extension}"
+        if not sidecar.exists():
+            continue
+        try:
+            content = sidecar.read_text(encoding="utf-8", errors="replace")
+            normalized = "\n".join(line.rstrip(" \t") for line in content.splitlines())
+            if content:
+                normalized += "\n"
+            if normalized != content:
+                sidecar.write_text(normalized, encoding="utf-8")
+        except OSError as exc:
+            logger.debug("LaTeX sidecar normalization skipped for %s: %s", sidecar, exc)
+
+
+def canonicalize_pdf_for_determinism(pdf_path: Path, *, repo_root: Path | None = None) -> Path:
+    """Canonicalize compiler-random PDF metadata when a build epoch is pinned.
+
+    TeX Live's current XeTeX/xdvipdfmx stack honors ``SOURCE_DATE_EPOCH`` for
+    ``/CreationDate`` but still varies the PDF identifier, Creator timestamp,
+    and six-letter font-subset prefixes. Rewriting those narrow fields through
+    the pinned rendering dependency makes the full PDF byte-stable while
+    leaving page content and layout unchanged.
+    """
+    epoch = resolve_source_date_epoch(repo_root=repo_root)
+    if epoch is None:
+        return pdf_path
+
+    temporary_path: Path | None = None
+    try:
+        source_mode = stat.S_IMODE(pdf_path.stat().st_mode)
+        with tempfile.NamedTemporaryFile(
+            prefix=f".{pdf_path.name}.",
+            suffix=".deterministic",
+            dir=pdf_path.parent,
+            delete=False,
+        ) as temporary:
+            temporary_path = Path(temporary.name)
+
+        source_root = Path(__file__).resolve().parents[2]
+        command = [
+            sys.executable,
+            "-m",
+            _PDF_CANONICALIZATION_WORKER,
+            str(pdf_path),
+            str(temporary_path),
+            str(epoch),
+        ]
+        result = subprocess.run(  # noqa: S603 - fixed internal worker module and argument vector
+            command,
+            cwd=source_root,
+            env=deterministic_subprocess_env(repo_root=repo_root),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_PDF_CANONICALIZATION_TIMEOUT_SECONDS,
+        )
+        if result.returncode != 0:
+            raise CompilationError(
+                "Deterministic PDF canonicalization worker failed",
+                context={
+                    "pdf": str(pdf_path),
+                    "returncode": result.returncode,
+                    "stderr": result.stderr[-2000:],
+                },
+            )
+        if not temporary_path.is_file() or not validate_pdf_structure(temporary_path):
+            raise CompilationError(
+                "Deterministic PDF canonicalization worker produced an invalid PDF",
+                context={"pdf": str(pdf_path), "temporary": str(temporary_path)},
+            )
+        temporary_path.chmod(source_mode)
+        temporary_path.replace(pdf_path)
+    except subprocess.TimeoutExpired as exc:
+        raise CompilationError(
+            "Deterministic PDF canonicalization worker timed out",
+            context={"pdf": str(pdf_path), "timeout": _PDF_CANONICALIZATION_TIMEOUT_SECONDS},
+        ) from exc
+    except OSError as exc:
+        context = {"pdf": str(pdf_path)}
+        if temporary_path is not None:
+            context["temporary"] = str(temporary_path)
+        raise CompilationError(
+            "Deterministic PDF canonicalization could not replace the compiled PDF",
+            context=context,
+        ) from exc
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
+    return pdf_path
 
 
 def _is_recoverable_compile_failure(
@@ -154,6 +262,7 @@ def compile_latex(
                 text=True,
                 timeout=timeout,
                 cwd=tex_path.parent,  # Run in file directory for imports
+                env=deterministic_subprocess_env(repo_root=tex_path.parent),
             )
 
             pass_duration = time.time() - pass_start
@@ -180,6 +289,7 @@ def compile_latex(
                         text=True,
                         timeout=timeout,
                         cwd=tex_path.parent,
+                        env=deterministic_subprocess_env(repo_root=tex_path.parent),
                     )
                     log_content = log_file.read_text(encoding="utf-8", errors="replace") if log_file.exists() else ""
                     pdf_exists = pdf_file_temp.exists()
@@ -270,6 +380,8 @@ def compile_latex(
         if not validate_pdf_structure(pdf_file):
             raise CompilationError("PDF generated but failed structural validation", context={"pdf": str(pdf_file)})
 
+        canonicalize_pdf_for_determinism(pdf_file, repo_root=tex_path.parent)
+        normalize_latex_sidecars(out_dir, tex_path.stem)
         total_duration = time.time() - start_time
         logger.info(f"LaTeX compilation completed in {total_duration:.2f}s")
 

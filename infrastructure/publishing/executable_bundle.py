@@ -2,14 +2,18 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import shutil
 import sys
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Any
 
 import yaml
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rendering.dockerfile_gen import (
     DockerfileConfig,
     build_compose_yaml,
@@ -20,15 +24,31 @@ from infrastructure.rendering.manifest import build_manifest
 logger = get_logger(__name__)
 
 _COMBINED_PDF_SUFFIX = "_combined.pdf"
+BUNDLE_RECEIPT_SCHEMA = "template-executable-bundle/v2"
+_BUNDLE_RECEIPT_NAME = "bundle_receipt.json"
+_BUNDLE_EXCLUDED_DIRECTORY_NAMES = frozenset(
+    {".git", ".venv", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+)
+_BUNDLE_EXCLUDED_FILE_SUFFIXES = frozenset({".pyc", ".pyo"})
+# Payload trees copied from the project directory itself.
+_BUNDLE_PROJECT_SUBTREES = ("src", "scripts", "manuscript", "tests")
+# Layer-1 trees vendored from the template repository root so the bundle is
+# self-contained: project ``src`` modules legitimately import
+# ``infrastructure.*``, so an offline container without them dies at collection
+# with a bare ``ModuleNotFoundError`` (EXECUTABLE-BUNDLE-MAJ-2).
+_BUNDLE_REPO_VENDORED_SUBTREES = ("infrastructure",)
 
 
 def _resolve_combined_pdf(repo_root: Path, project_name: str, project_dir: Path) -> Path | None:
     """Return the first existing combined PDF path, or ``None`` if not built yet."""
+    project_slug = Path(project_name).name
     candidates = (
-        repo_root / "output" / project_name / "pdf" / f"{project_name}{_COMBINED_PDF_SUFFIX}",
-        project_dir / "output" / "pdf" / f"{project_name}{_COMBINED_PDF_SUFFIX}",
+        repo_root / "output" / project_name / "pdf" / f"{project_slug}{_COMBINED_PDF_SUFFIX}",
+        project_dir / "output" / "pdf" / f"{project_slug}{_COMBINED_PDF_SUFFIX}",
     )
     for path in candidates:
+        if path.is_symlink():
+            raise ValueError(f"executable bundle refuses symlinked PDF artifact: {path}")
         if path.is_file():
             return path
     return None
@@ -75,10 +95,11 @@ def _copy_pdf_artifact(
 
 
 def _write_bundle_readme(output_dir: Path, project_name: str, *, pdf_copied: bool) -> None:
+    display_name = Path(project_name).name
     pdf_section = (
         "## Delivered PDF\n\n"
         f"The rendered manuscript snapshot lives at "
-        f"``artifacts/pdf/{project_name}{_COMBINED_PDF_SUFFIX}``.\n\n"
+        f"``artifacts/pdf/{display_name}{_COMBINED_PDF_SUFFIX}``.\n\n"
         if pdf_copied
         else "## Delivered PDF\n\n"
         "No combined PDF was bundled — run the render stage before Stage 10 "
@@ -86,12 +107,18 @@ def _write_bundle_readme(output_dir: Path, project_name: str, *, pdf_copied: boo
     )
     reproduce_section = (
         "## Reproduce\n\n"
-        "The bundled Dockerfile copies project ``source/`` only. Full pipeline "
-        "reproduction still requires this template repository root "
-        "(``infrastructure/``, root ``scripts/``, and ``uv.lock``).\n\n"
+        "The payload is self-contained for its vendored scope: ``source/`` "
+        "carries the project (src/scripts/manuscript/tests) plus a vendored "
+        "``infrastructure/`` copy, so the compose ``tests`` and ``verify`` "
+        "services run directly against it offline:\n\n"
         "```\n"
-        "docker compose run reproduce\n"
-        "```\n"
+        "docker compose run tests\n"
+        "docker compose run verify\n"
+        "```\n\n"
+        "Full-pipeline services (``reproduce``, ``render``) intentionally FAIL "
+        "CLOSED with an unavailable-dependency receipt: they require the "
+        "template repository root itself (root ``scripts/``, ``run.sh``, "
+        "``tests/regression/``), which no single-project bundle carries.\n"
     )
     (output_dir / "README.md").write_text(
         f"# Executable Bundle — {project_name}\n\n"
@@ -111,6 +138,9 @@ def bundle_project(
     python_version: str = "3.12",
 ) -> Path:
     """Build executable bundle under output/<project>/executable_bundle/."""
+    repo_root = repo_root.resolve()
+    if project_name not in PUBLIC_PROJECT_NAMES:
+        raise ValueError(f"executable bundles are limited to canonical public projects: {project_name}")
     project_dir = repo_root / "projects" / project_name
     if not project_dir.exists():
         logger.warning(
@@ -118,11 +148,19 @@ def bundle_project(
             project_dir,
         )
         sys.exit(2)
+    _reject_symlink_components(repo_root, project_dir)
+    _reject_symlinks(project_dir)
 
     output_dir = repo_root / "output" / project_name / "executable_bundle"
+    _reject_symlink_components(repo_root, output_dir)
+    if output_dir.is_symlink():
+        raise ValueError(f"refusing to replace symlinked bundle output: {output_dir}")
+    if output_dir.exists():
+        shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    pinned_path = repo_root / "tests" / "regression" / "pinned_values" / f"{project_name}.json"
+    project_slug = Path(project_name).name
+    pinned_path = repo_root / "tests" / "regression" / "pinned_values" / f"{project_slug}.json"
     publication_doi = _load_publication_doi(project_dir)
     archival_receipts: dict[str, str] = {}
     if publication_doi:
@@ -144,23 +182,238 @@ def bundle_project(
     )
 
     lockfile_src = repo_root / "uv.lock"
-    if lockfile_src.exists():
-        lockfile_dst = output_dir / "lockfile"
-        lockfile_dst.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(lockfile_src, lockfile_dst / "uv.lock")
-        pyproject_src = repo_root / "pyproject.toml"
-        if pyproject_src.exists():
-            shutil.copy2(pyproject_src, lockfile_dst / "pyproject.toml")
+    pyproject_src = repo_root / "pyproject.toml"
+    if not lockfile_src.is_file() or not pyproject_src.is_file():
+        raise ValueError("executable bundle requires both root uv.lock and pyproject.toml")
+    lockfile_dst = output_dir / "lockfile"
+    lockfile_dst.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(lockfile_src, lockfile_dst / "uv.lock")
+    shutil.copy2(pyproject_src, lockfile_dst / "pyproject.toml")
+    shutil.copy2(lockfile_src, output_dir / "uv.lock")
+    shutil.copy2(pyproject_src, output_dir / "pyproject.toml")
 
     source_dst = output_dir / "source"
     if source_dst.exists():
         shutil.rmtree(source_dst)
     source_dst.mkdir(parents=True, exist_ok=True)
-    for sub in ("src", "scripts", "manuscript", "tests"):
+    for sub in _BUNDLE_PROJECT_SUBTREES:
         sub_src = project_dir / sub
         if sub_src.exists():
-            shutil.copytree(sub_src, source_dst / sub, dirs_exist_ok=True)
+            shutil.copytree(
+                sub_src,
+                source_dst / sub,
+                dirs_exist_ok=True,
+                ignore=_bundle_copy_ignore,
+            )
+
+    # Vendor Layer-1 (currently ``infrastructure/``) from the template root so
+    # the offline container can import everything the bundled code imports.
+    for vendored_tree in _BUNDLE_REPO_VENDORED_SUBTREES:
+        vendored_src = repo_root / vendored_tree
+        if vendored_src.is_symlink() or not vendored_src.is_dir():
+            raise ValueError(
+                f"executable bundle requires a real {vendored_tree}/ tree at the repo root: {vendored_src}"
+            )
+        shutil.copytree(
+            vendored_src,
+            source_dst / vendored_tree,
+            dirs_exist_ok=True,
+            ignore=_bundle_copy_ignore,
+        )
 
     pdf_dst = _copy_pdf_artifact(repo_root, project_name, project_dir, output_dir)
     _write_bundle_readme(output_dir, project_name, pdf_copied=pdf_dst is not None)
+    _write_bundle_receipt(output_dir)
+    verify_bundle_receipt(output_dir)
     return output_dir
+
+
+def _reject_symlinks(root: Path) -> None:
+    """Reject symlinks in the source trees that the bundle actually copies.
+
+    Excluded local tooling such as a project ``.venv`` is intentionally not
+    part of the bundle payload and may contain interpreter symlinks.  The
+    copied ``src``, ``scripts``, ``manuscript``, and ``tests`` trees remain
+    strictly symlink-free.
+    """
+    if root.is_symlink():
+        raise ValueError(f"executable bundle refuses symlinked project root: {root}")
+    paths: list[Path] = []
+    for subdirectory in (*_BUNDLE_PROJECT_SUBTREES, *_BUNDLE_REPO_VENDORED_SUBTREES):
+        candidate = root / subdirectory
+        if candidate.exists():
+            paths.extend(path for path in (candidate, *candidate.rglob("*")) if not _is_excluded_bundle_name(path.name))
+    for path in paths:
+        if path.is_symlink():
+            raise ValueError(f"executable bundle refuses symlinked source: {path}")
+
+
+def _is_excluded_bundle_name(name: str) -> bool:
+    """Return whether a local generated/tooling name is outside the payload."""
+    return (
+        name in _BUNDLE_EXCLUDED_DIRECTORY_NAMES
+        or name.endswith(".egg-info")
+        or Path(name).suffix.lower() in _BUNDLE_EXCLUDED_FILE_SUFFIXES
+    )
+
+
+def _bundle_copy_ignore(_directory: str, names: list[str]) -> set[str]:
+    """Tell ``copytree`` to omit generated caches and package build metadata."""
+    return {name for name in names if _is_excluded_bundle_name(name)}
+
+
+def _reject_symlink_components(root: Path, candidate: Path) -> None:
+    """Reject symlinked parent components before bundle cleanup/copying."""
+    root = root.resolve()
+    try:
+        relative = candidate.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"executable bundle path escapes repository root: {candidate}") from exc
+    current = root
+    for component in relative.parts:
+        current = current / component
+        if current.is_symlink():
+            raise ValueError(f"executable bundle path contains symlink component: {current}")
+
+
+def _write_bundle_receipt(output_dir: Path) -> None:
+    """Write an immutable file manifest after bundle assembly."""
+    payload = _bundle_receipt_payload(output_dir)
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    payload["manifest_sha256"] = hashlib.sha256(canonical).hexdigest()
+    (output_dir / _BUNDLE_RECEIPT_NAME).write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+
+
+def _bundle_receipt_payload(output_dir: Path) -> dict[str, object]:
+    """Build the canonical unsigned payload used by bundle receipts."""
+    if output_dir.is_symlink() or not output_dir.is_dir():
+        raise ValueError(f"executable bundle directory is missing or symlinked: {output_dir}")
+    entries: list[dict[str, object]] = []
+    for path in sorted(output_dir.rglob("*"), key=lambda item: item.relative_to(output_dir).as_posix()):
+        if path == output_dir / _BUNDLE_RECEIPT_NAME:
+            continue
+        _reject_bundle_path_symlinks(output_dir, path)
+        if not path.is_file():
+            continue
+        content = path.read_bytes()
+        entries.append(
+            {
+                "path": path.relative_to(output_dir).as_posix(),
+                "bytes": len(content),
+                "sha256": hashlib.sha256(content).hexdigest(),
+            }
+        )
+    return {
+        "schema_version": BUNDLE_RECEIPT_SCHEMA,
+        "file_count": len(entries),
+        "files": entries,
+    }
+
+
+def _reject_bundle_path_symlinks(output_dir: Path, path: Path) -> None:
+    """Reject symlinked bundle entries and parent components."""
+    if path.is_symlink():
+        raise ValueError(f"executable bundle contains symlinked payload: {path}")
+    try:
+        relative = path.relative_to(output_dir)
+    except ValueError as exc:
+        raise ValueError(f"executable bundle path escapes its root: {path}") from exc
+    current = output_dir
+    for component in relative.parts:
+        current /= component
+        if current.is_symlink():
+            raise ValueError(f"executable bundle contains symlinked path component: {current}")
+
+
+def _safe_bundle_relative_path(value: object) -> bool:
+    """Return whether a receipt path is canonical and confined to the bundle."""
+    if not isinstance(value, str) or not value or value.startswith("/") or "\\" in value:
+        return False
+    path = PurePosixPath(value)
+    return path.as_posix() == value and "." not in path.parts and ".." not in path.parts
+
+
+def verify_bundle_receipt(bundle_dir: Path | str) -> None:
+    """Verify a built bundle's receipt, paths, and payload hashes.
+
+    The verifier is intentionally strict and credential-free.  It rejects a
+    tampered receipt, duplicate or traversal path, symlink escape, missing or
+    unexpected payload, and any changed file content.  ``bundle_receipt.json``
+    is the only file excluded from its own payload manifest.
+    """
+    bundle_dir = Path(bundle_dir)
+    if bundle_dir.is_symlink() or not bundle_dir.is_dir():
+        raise ValueError(f"executable bundle directory is missing or symlinked: {bundle_dir}")
+    receipt_path = bundle_dir / _BUNDLE_RECEIPT_NAME
+    if receipt_path.is_symlink() or not receipt_path.is_file():
+        raise ValueError("executable bundle receipt is missing or symlinked")
+    raw = json.loads(receipt_path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        raise ValueError("executable bundle receipt must be a JSON object")
+    if raw.get("schema_version") != BUNDLE_RECEIPT_SCHEMA:
+        raise ValueError(f"executable bundle receipt schema must be {BUNDLE_RECEIPT_SCHEMA}")
+    files = raw.get("files")
+    file_count = raw.get("file_count")
+    manifest_sha256 = raw.get("manifest_sha256")
+    if not isinstance(files, list) or not isinstance(file_count, int) or isinstance(file_count, bool):
+        raise ValueError("executable bundle receipt must contain files and an integer file_count")
+    if file_count != len(files):
+        raise ValueError("executable bundle receipt file_count does not match files")
+    if not isinstance(manifest_sha256, str) or len(manifest_sha256) != 64:
+        raise ValueError("executable bundle receipt manifest_sha256 must be a SHA-256 digest")
+
+    expected: dict[str, dict[str, object]] = {}
+    for entry in files:
+        if not isinstance(entry, dict):
+            raise ValueError("executable bundle receipt entries must be objects")
+        relative = entry.get("path")
+        size = entry.get("bytes")
+        digest = entry.get("sha256")
+        if not isinstance(relative, str) or not _safe_bundle_relative_path(relative):
+            raise ValueError(f"executable bundle receipt contains an unsafe path: {relative!r}")
+        if relative in expected:
+            raise ValueError(f"executable bundle receipt contains a duplicate path: {relative}")
+        if not isinstance(size, int) or isinstance(size, bool) or size < 0:
+            raise ValueError(f"executable bundle receipt has invalid byte count: {relative}")
+        if not isinstance(digest, str) or len(digest) != 64:
+            raise ValueError(f"executable bundle receipt has invalid SHA-256 for: {relative}")
+        try:
+            int(digest, 16)
+        except ValueError as exc:
+            raise ValueError(f"executable bundle receipt has invalid SHA-256 for: {relative}") from exc
+        expected[relative] = {"bytes": size, "sha256": digest}
+
+    unsigned = {
+        "schema_version": raw["schema_version"],
+        "file_count": raw["file_count"],
+        "files": files,
+    }
+    canonical = json.dumps(unsigned, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    if hashlib.sha256(canonical).hexdigest() != manifest_sha256:
+        raise ValueError("executable bundle receipt manifest_sha256 does not match its contents")
+
+    actual: dict[str, Path] = {}
+    for path in sorted(bundle_dir.rglob("*"), key=lambda item: item.relative_to(bundle_dir).as_posix()):
+        if path == receipt_path:
+            continue
+        _reject_bundle_path_symlinks(bundle_dir, path)
+        if not path.is_file():
+            continue
+        relative = path.relative_to(bundle_dir).as_posix()
+        if relative in actual:
+            raise ValueError(f"executable bundle contains a duplicate path: {relative}")
+        actual[relative] = path
+    missing = sorted(set(expected) - set(actual))
+    unexpected = sorted(set(actual) - set(expected))
+    if missing or unexpected:
+        raise ValueError(f"executable bundle payload differs from receipt: missing={missing}, unexpected={unexpected}")
+    for relative, path in actual.items():
+        content = path.read_bytes()
+        metadata = expected[relative]
+        if len(content) != metadata["bytes"] or hashlib.sha256(content).hexdigest() != metadata["sha256"]:
+            raise ValueError(f"executable bundle payload content changed: {relative}")
+
+
+__all__ = ["BUNDLE_RECEIPT_SCHEMA", "bundle_project", "verify_bundle_receipt"]

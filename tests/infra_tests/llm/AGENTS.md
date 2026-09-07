@@ -27,7 +27,7 @@ flowchart LR
     T --> CFG[conftest.py<br/>ollama_test_server ·<br/>patch_llm_client_for_tests<br/>OLLAMA_HOST → stub]
     T --> STUB[ollama_stub_server.py<br/>POST /api/chat handler rules<br/>models · prompts · stream shapes]
     T --> REAL[real_ollama_client.py<br/>Real daemon helpers · requires_ollama]
-    T --> TESTS[test_*.py<br/>66 modules · core client · streaming ·<br/>review · validation · CLI · ...]
+    T --> TESTS[test_*.py<br/>54 modules · core client · streaming ·<br/>review · validation · CLI · ...]
     T --> AG[AGENTS.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff

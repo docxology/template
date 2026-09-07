@@ -1,6 +1,6 @@
 # The core pipeline, stage by stage
 
-*Slide 12 of 37 — template_template pitch, medium deck — kind: `diagram`*
+*Slide 12 of 38 — template_template pitch, medium deck — kind: `diagram`*
 
 *(no body content — section/title slide)*
 

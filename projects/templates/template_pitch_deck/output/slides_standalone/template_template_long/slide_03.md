@@ -1,6 +1,6 @@
 # Why this is a science-integrity problem, not just a tooling problem
 
-*Slide 3 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 3 of 57 — template_template pitch, long deck — kind: `content`*
 
 - A stale claim about infrastructure is a form of unverified evidence, structurally similar to an uncheckable statistic in a results section.
 - Peer review rarely re-derives a paper's own infrastructure description; it is trusted by default.

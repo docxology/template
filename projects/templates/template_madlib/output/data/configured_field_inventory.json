@@ -211,6 +211,12 @@
   },
   {
     "origin": "explicit",
+    "path": "madlib.schema_version",
+    "scope": "schema",
+    "summary": "configured field"
+  },
+  {
+    "origin": "explicit",
     "path": "madlib.section_conditions",
     "scope": "schema",
     "summary": "configured field"

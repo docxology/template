@@ -63,7 +63,7 @@ two names for the same operation.
 
 - `audit/lint_docs.py`, `audit/audit_documentation.py`, `audit/verify_no_mocks.py`
 - `audit/audit_filepaths.py`, `audit/check_template_drift.py`
-- `audit/check_tracked_*` guards, `audit/copy_exemplar.py`
+- `audit/check_tracked_*` guards, `audit/check_mirror_symlinks.py`, `audit/copy_exemplar.py`
 - `audit/check_tracked_secrets.py` scans every tracked blob for high-confidence
   credential formats without printing matched values.
 - `audit/check_staged_secrets.py` scans staged A/C/M/R index blobs without
@@ -91,6 +91,10 @@ The canonical pipeline-stage table (rendered from
 [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml)
 by `scripts/docgen/stage_table.py`):
 
+<!-- BEGIN:STAGE_SUMMARY -->
+The default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default full runs execute **10** core+LLM stages; `--core-only` executes **8**. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of those default runs unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
+<!-- END:STAGE_SUMMARY -->
+
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->
 
@@ -99,19 +103,20 @@ by `scripts/docgen/stage_table.py`):
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
 | **1** Environment Setup | `scripts/pipeline/stage_00_setup.py` | `core` | hard fail |
 | **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable test-failure tolerance; zero-test, project-local coverage, verifier-receipt/evidence, and internal runner failures hard fail |
 | **4** Project Analysis | `scripts/pipeline/stage_02_analysis.py` | `core` | hard fail |
 | **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
 | **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
 | **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
-| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | PDF/bookends and artifact/provenance failures block; optional-format structure remains a warning + report |
+| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | enabled-format, enabled-PDF bookend, and artifact/provenance failures block; markdown, general output structure, and prose-quality checks remain advisory |
 | **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
 | **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | soft fail |
-| **13** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
-| **14** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
-| **15** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
+| **13** docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | `core`, `docxplus` | soft fail |
+| **14** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
+| **15** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
+| **16** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 `runner/execute_pipeline.py` supports single-stage execution with stage keys such as `setup`, `infra_tests`, `project_tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, `executive_report`, `ebook_generation`, and `metadata_package`.
@@ -148,12 +153,12 @@ orchestrator:
 
 | Script invocation | Delegates to | Notes |
 | --- | --- | --- |
-| `pipeline/stage_01_test.py` | `infrastructure.reporting.pipeline_test_runner.execute_test_pipeline` | Default path: infra-then-project for one selected project. |
+| `pipeline/stage_01_test.py` | `infrastructure.reporting.pipeline_test_runner.execute_test_pipeline` | Default path: infra-then-project for one selected project. The project phase uses generic pytest unless that project's `pyproject.toml` explicitly declares a structured `project_test_command`; custom success requires exact workspace runner versions, a fresh receipt, project-local coverage, real outcome/warning/discovery counts, and independently verified declared-floor coverage. |
 | `pipeline/stage_01_test.py --project-only --all-projects` | `infrastructure.core.test_runner.run_per_project_pytest` | One pytest process and isolated coverage datafile per discovered project (avoids `tests/conftest.py` plugin-name collision and parent coverage contamination), followed by a combined union `coverage report --fail-under=75` (`DEFAULT_FAIL_UNDER`). Add `--public-projects` for the public release/all-project lane; it restricts the loop to `infrastructure.project.public_scope`, so local rotating symlinks do not affect public-repo validation. CI `test-project` instead runs one isolated matrix job per public exemplar. **`./run.sh --all-projects --pipeline`** still runs the **per-project 90%** gate inside each project's own pytest invocation; the **75% union** gate applies only via this orchestrator path. |
 | `pipeline/stage_02_analysis.py` | `infrastructure.core.runtime._python_env.build_analysis_script_cmd_and_env` | |
-| `pipeline/stage_03_render.py` | `infrastructure.rendering.pipeline` | |
-| `pipeline/stage_04_validate.py` | `infrastructure.validation.cli` | |
-| `pipeline/stage_05_copy.py` | `infrastructure.reporting.output_organizer` | |
+| `pipeline/stage_03_render.py` | `infrastructure.rendering.pipeline` | Renders and verifies every format enabled by the effective YAML/environment configuration. |
+| `pipeline/stage_04_validate.py` | `infrastructure.validation.output.pipeline`, `infrastructure.validation.publication.rendered_provenance` | Exact enabled-format validation plus blocking release-evidence and rendered-provenance checks. |
+| `pipeline/stage_05_copy.py` | `infrastructure.core.files`, `infrastructure.validation.output.render_formats`, `infrastructure.validation.output.validator`, `infrastructure.reporting.output_statistics` | Fresh canonical copy, disabled-format filtering, exact enabled-deliverable validation, and copy reporting. |
 | `pipeline/stage_06_llm_review.py` | `infrastructure.llm.review` | Skipped when Ollama is absent. |
 | `pipeline/stage_07_executive_report.py` | `infrastructure.reporting.multi_project_reporter.generate_multi_project_report`, `infrastructure.reporting.output_organizer.OutputOrganizer.copy_combined_pdfs` | Multi-project only; skips when one project discovered. |
 | `pipeline/stage_11_ebook.py` | `infrastructure.rendering.ebook_stage.run_ebook_generation` | Opt-in ebook stage; gracefully skips (exit 2) when combined markdown absent. |

@@ -3,16 +3,16 @@
 from __future__ import annotations
 
 import os
-import shutil
 from pathlib import Path
 
 from infrastructure.doctor.models import Finding, RepairLevel, Severity, TherapyLevel
+from infrastructure.core.runtime._tools import find_uv
 
 
 def detect_uv_available(repo_root: Path) -> list[Finding]:
     """Verify ``uv`` is on PATH — required for every doctor remediation
     that touches dependencies."""
-    uv_path = shutil.which("uv")
+    uv_path = find_uv()
     if uv_path is None:
         return [
             Finding(
@@ -22,7 +22,8 @@ def detect_uv_available(repo_root: Path) -> list[Finding]:
                 healthy=False,
                 description=(
                     "The repository's setup, testing, and rendering all run "
-                    "via ``uv``. Install via `curl -LsSf https://astral.sh/uv/install.sh | sh`."
+                    "via ``uv``. Install the pinned 0.12.0 release with the "
+                    "checksum-verified command in ``docs/operational/build/dependency-management.md``."
                 ),
                 evidence={"PATH": os.environ.get("PATH", "")},
                 # No automatic fixer — installing system tooling is out of

@@ -18,6 +18,8 @@ a real file/policy — see the node labels' source comments below).
 
 Deterministic: re-running with unchanged diagram source is a no-op (the
 renderer skips re-invoking ``mmdc`` when the ``.mmd`` sidecar already matches).
+The producer fails closed if any configured diagram cannot be regenerated;
+tracked PNGs must never make a missing local renderer look successful.
 """
 
 from __future__ import annotations
@@ -107,9 +109,9 @@ INTEGRITY_STACK_MERMAID = """flowchart TB
 """
 
 DIAGRAMS: dict[str, str] = {
-    "two_layer_architecture.png": TWO_LAYER_ARCHITECTURE_MERMAID,
-    "pipeline_stages.png": PIPELINE_STAGES_MERMAID,
-    "integrity_stack.png": INTEGRITY_STACK_MERMAID,
+    "two_layer_architecture.png": TWO_LAYER_ARCHITECTURE_MERMAID.rstrip("\n"),
+    "pipeline_stages.png": PIPELINE_STAGES_MERMAID.rstrip("\n"),
+    "integrity_stack.png": INTEGRITY_STACK_MERMAID.rstrip("\n"),
 }
 
 
@@ -119,14 +121,15 @@ def main(argv: list[str] | None = None) -> int:
     root = project_root()
     figures_dir = root / "output" / "figures"
 
+    failures: list[str] = []
     for filename, source in DIAGRAMS.items():
         output_path = figures_dir / filename
         try:
             render_mermaid_png(source, output_path)
-        except Exception as exc:  # noqa: BLE001 - mmdc/Chrome absence is environment-dependent, not a code bug
-            logger.warning(
-                "Could not render %s (mmdc/Chrome unavailable in this environment) — "
-                "diagram slides referencing it will render without a figure: %s",
+        except Exception as exc:  # noqa: BLE001 - report every required diagram before failing the producer
+            failures.append(filename)
+            logger.error(
+                "Could not render required diagram %s (mmdc/Chrome unavailable or failed): %s",
                 filename,
                 exc,
             )
@@ -134,7 +137,10 @@ def main(argv: list[str] | None = None) -> int:
         logger.info("Wrote diagram: %s", output_path)
         print(output_path)
 
-    return 0  # environment-dependent mmdc/Chrome absence is never a hard failure
+    if failures:
+        logger.error("Required Mermaid producer failed for %d diagram(s): %s", len(failures), ", ".join(failures))
+        return 1
+    return 0
 
 
 if __name__ == "__main__":

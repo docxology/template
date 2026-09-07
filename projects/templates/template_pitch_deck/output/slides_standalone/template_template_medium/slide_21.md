@@ -1,8 +1,9 @@
-# Scientific integrity, by construction
+# Governance and confidentiality
 
-*Slide 21 of 37 — template_template pitch, medium deck — kind: `section`*
+*Slide 21 of 38 — template_template pitch, medium deck — kind: `content`*
 
-*(no body content — section/title slide)*
+- Only projects/templates/ is public and CI-gated; private working projects render locally through the same pipeline without ever being tracked.
+- A dedicated audit (scripts/audit/check_tracked_all.py) fails CI if any private project path is accidentally committed.
 
 ---
 

@@ -43,9 +43,6 @@ CONDITIONAL_PHRASES: tuple[str, ...] = (
     "absent",
     "may rotate",
     "no longer",
-    "for example",
-    "e.g.",
-    "e.g ",
     "guard",
     "skipping",
     "skipped",
@@ -56,7 +53,6 @@ CONDITIONAL_PHRASES: tuple[str, ...] = (
     "when the working tree",
     "when this tree",
     "is present",
-    "when ",
     "only when",
     "only if",
     "conditional on",
@@ -89,14 +85,18 @@ class Inconsistency:
         return f"{self.file}:{self.line}: [{self.category}] {self.detail}"
 
 
+def blank_content(match: re.Match[str]) -> str:
+    """Blank a matched span with same-shape whitespace, preserving newlines.
+
+    Replaces every non-newline character with a space so line and column
+    offsets stay stable for documentation diagnostics.
+    """
+    return "".join("\n" if ch == "\n" else " " for ch in match.group(0))
+
+
 def blank_fences(text: str) -> str:
     """Replace fenced code blocks with same-shape whitespace so line numbers stay stable."""
-
-    def _blank(match: re.Match[str]) -> str:
-        s = match.group(0)
-        return "".join("\n" if ch == "\n" else " " for ch in s)
-
-    return FENCE_RE.sub(_blank, text)
+    return FENCE_RE.sub(blank_content, text)
 
 
 def line_has_noqa(line: str) -> bool:
@@ -134,8 +134,7 @@ def iter_long_lived_docs(
         if candidate.is_dir():
             roots.append(candidate)
     if repo_root.is_dir():
-        for md in repo_root.glob(MD_GLOB):
-            roots.append(md)
+        roots.extend(repo_root.glob(MD_GLOB))
     if extra_roots:
         roots.extend(Path(p) for p in extra_roots)
 

@@ -10,3 +10,9 @@ __pycache__/
 
 # Project-local virtualenvs (root .venv is shared)
 .venv/
+# Local artifacts (aligned with template_textbook convention)
+htmlcov/
+coverage_project.json
+.DS_Store
+.mypy_cache/
+.ruff_cache/

@@ -24,7 +24,7 @@ The `template_contacts` fond holds a registry of research collaborators, advisor
 
 The `template_datasets` fond catalogs dataset metadata: provenance, licensing, format, size, access URLs, and research tasks. It intentionally stores *metadata only* — no actual data binaries are committed to the repository. This design aligns with the principle that version control systems should track configuration and metadata rather than large binary artefacts [@Kluyver2016jupyter]. Dataset entries require `id`, `name`, `version`, and `license` fields. Exemplar entries reference classic benchmarks such as MNIST (introduced in [@LeCun1998gradient]) and large-scale corpora used in language-model research [@Brown2020gpt3].
 
-## The `fonds.yaml` Manifest
+## Fond Manifest Contract
 
 Every fond root must contain a `fonds.yaml` manifest with at minimum three fields:
 
@@ -37,7 +37,7 @@ tags: [curated, exemplar]
 
 The `type` field governs which reader function is appropriate and what schema the `data/` directory is expected to follow. The `version` field is incremented whenever the schema changes, enabling consumers to detect and handle schema drift without silent failures.
 
-## The `fonds_reader` Module
+## Fond Reader Module
 
 The `src/fonds_reader.py` module provides three reader functions — one per fond type — plus a convenience aggregator:
 

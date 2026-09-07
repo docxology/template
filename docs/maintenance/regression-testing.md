@@ -45,6 +45,18 @@ A reproducibility template that claims to make science *reproducible* needs to b
 > whole-repo-introspection test — the repo's default 10s pytest timeout is too
 > tight for a full `rglob("*.py")` walk of this ~17k-file monorepo.
 
+> **Current release contract (2026-08-09):** the live public roster and claim
+> states are generated from `infrastructure.project.public_scope` and
+> `tests/regression/claim_bindings.json`. Every canonical exemplar has an
+> explicit `bound`, `not_applicable`, or `external_data` state; omission is a
+> failure. Do not copy the historical fifteen-project/55-test baseline into
+> current guidance. Re-derive with:
+>
+> ```bash
+> uv run python scripts/audit/check_claim_bindings.py --json
+> uv run pytest tests/regression/ --collect-only -q --no-cov
+> ```
+
 Every quantitative claim in a manuscript figure or table — a coefficient, a p-value, an effect size, a count, a percentage, a ratio — **should** have a corresponding **pinned regression test** in `tests/regression/` that:
 
 1. **Re-derives the value** from the deterministic pipeline (same code, same data, same seed)
@@ -194,9 +206,12 @@ When a new figure or table is added:
 
 ## Status
 
-This directory is **partially populated** as of 2026-06-13. See [`STATUS.md`](../../STATUS.md) — row `Regression tests`: 🟡 first pins live; expand beyond canonical optimizer claims.
-
-Next step: expand from the canonical optimizer claims into the remaining `template_code_project` figure/table claims and then the other public exemplar manuscripts.
+The roster-level claim-binding contract is complete: all canonical public
+exemplars have an explicit state, bound lanes have source-derived pins, and the
+regression suite includes producer-mutation negative controls. Remaining
+quantitative lanes are future work only when a project is currently
+`not_applicable` or requires external licensed data; those states must remain
+visible in the generated receipt and must not be promoted by shape-only tests.
 
 ## Related
 

@@ -1,6 +1,6 @@
 # What template_template is
 
-*Slide 5 of 37 — template_template pitch, medium deck — kind: `content`*
+*Slide 5 of 38 — template_template pitch, medium deck — kind: `content`*
 
 - A manuscript that is generated FROM the repository it describes, not written ABOUT it from memory.
 - Every metric in the paper — module counts, test counts, pipeline stages — is computed live by template_template's own introspection code.

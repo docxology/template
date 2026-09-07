@@ -4,6 +4,7 @@ Covers:
 - Defaults preserve historical behavior (PDF + HTML + slides on; DOCX + EPUB off).
 - ``from_env`` honors ``ENABLE_<FORMAT>`` env vars (case-insensitive).
 - ``from_project_config`` honors a ``render.formats`` block in config.yaml.
+- Explicit env values override YAML independently for each format.
 - An unrecognized ``render.formats`` shape (string instead of mapping) falls
   back to defaults rather than raising.
 """
@@ -65,6 +66,56 @@ def test_from_project_config_reads_render_block() -> None:
     assert cfg.enable_epub is True
 
 
+def test_from_project_config_environment_overrides_yaml_per_format() -> None:
+    """Explicit env values win without hiding YAML values for other formats."""
+    yaml_mapping = {
+        "render": {
+            "formats": {
+                "pdf": True,
+                "html": False,
+                "docx": False,
+                "epub": True,
+            }
+        }
+    }
+    env = {
+        "ENABLE_PDF": "0",
+        "ENABLE_DOCX": "yes",
+    }
+
+    cfg = RenderingConfig.from_project_config(yaml_mapping, env=env)
+
+    assert cfg.enable_pdf is False  # explicit false from env overrides YAML true
+    assert cfg.enable_html is False  # explicit false from YAML is preserved
+    assert cfg.enable_slides is True  # absent from both sources: dataclass default
+    assert cfg.enable_docx is True  # explicit true from env overrides YAML false
+    assert cfg.enable_epub is True  # YAML-only value remains active
+
+
+def test_from_project_config_ambient_environment_overrides_yaml(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The production path reads an explicitly set process environment value."""
+    monkeypatch.setenv("ENABLE_HTML", "off")
+
+    cfg = RenderingConfig.from_project_config(
+        {"render": {"formats": {"html": True}}},
+    )
+
+    assert cfg.enable_html is False
+
+
+def test_from_project_config_none_input_preserves_env_values() -> None:
+    """The YAML-aware constructor retains both toggle and non-toggle env input."""
+    cfg = RenderingConfig.from_project_config(
+        None,
+        env={"ENABLE_EPUB": "false", "OUTPUT_DIR": "custom-output"},
+    )
+
+    assert cfg.enable_epub is False
+    assert cfg.output_dir == "custom-output"
+
+
 def test_from_project_config_missing_block_returns_defaults() -> None:
     cfg = RenderingConfig.from_project_config({}, env={})
     assert cfg.enable_pdf is True
@@ -93,6 +144,15 @@ def test_from_project_config_rejects_string_boolean() -> None:
         )
 
 
+def test_from_project_config_rejects_invalid_yaml_even_when_env_overrides() -> None:
+    """An env override must not conceal an invalid project configuration."""
+    with pytest.raises(ValueError, match="must be a YAML boolean"):
+        RenderingConfig.from_project_config(
+            {"render": {"formats": {"pdf": "false"}}},
+            env={"ENABLE_PDF": "1"},
+        )
+
+
 def test_new_dirs_default_paths() -> None:
     cfg = RenderingConfig()
     assert cfg.docx_dir == "output/docx"
@@ -116,7 +176,7 @@ def test_pipeline_skip_branches_present() -> None:
 
 def test_combined_html_skips_missing_transmission_bookends(tmp_path) -> None:
     """Combined HTML should survive PDF-side cleanup of generated bookends."""
-    from infrastructure.publishing.transmission_bookends import BEGIN_FILENAME, END_FILENAME
+    from infrastructure.transmission.transmission_bookends import BEGIN_FILENAME, END_FILENAME
     from infrastructure.rendering.pipeline import _html_combined_source_files
 
     body = tmp_path / "01_body.md"

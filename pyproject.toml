@@ -18,7 +18,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "research-project-template"
-version = "3.6.0"
+version = "3.7.0"
 description = "A comprehensive template for research projects with test-driven development, automated PDF generation, and professional documentation structure"
 authors = [{ name = "Research Template Team" }]
 readme = "README.md"
@@ -34,6 +34,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering",
     "Topic :: Software Development :: Documentation",
     "Topic :: Text Processing :: Markup",
@@ -68,11 +69,15 @@ research-template = "infrastructure.orchestration.cli:main"
 [project.optional-dependencies]
 scientific = ["pandas>=2.0.0", "rdflib>=7.0.0", "wordcloud>=1.9.0", "scikit-learn>=1.3.0"]
 llm = ["requests>=2.31.0"]
-rendering = ["reportlab>=4.0.0", "pypdf>=6.14.2", "pdfplumber>=0.11.0"]
+rendering = ["reportlab>=4.0.0", "pypdf>=6.16.1", "pdfplumber>=0.11.0"]
 rendering-pptx = ["python-pptx>=1.0.0"]
 dashboard = ["plotly>=5.0.0"]
 dotenv = ["python-dotenv>=1.2.2"]
-steganography = ["cryptography>=48.0.1", "qrcode[pil]>=8.2", "python-barcode>=0.15"]
+steganography = ["cryptography>=50.0.0", "qrcode[pil]>=8.2", "python-barcode>=0.15"]
+# Imported from upstream rather than vendored: the container format is the
+# docxplus project's to specify, and this repository stays the rendering engine.
+# Pinned to the released tag so an export is reproducible.
+docxplus = ["docxplus @ git+https://github.com/docxology/docxplus@v1.0.1"]
 monitoring = ["psutil>=5.9.0"]
 publishing = ["huggingface-hub>=0.35.0", "twine>=5.0.0"]
 deep-research = ["google-genai>=1.0", "openai>=1.60", "python-dotenv>=1.2.2"]
@@ -97,7 +102,7 @@ llm = [
 # Optional rendering enhancements (lazily imported in manuscript_overview.py and pdf_validator.py)
 rendering = [
   "reportlab>=4.0.0",
-  "pypdf>=6.14.2",  # >=6.14.2 fixes CVE-2026-59935/59936/59937/59938 (pip-audit gate)
+  "pypdf>=6.16.1",  # >=6.16.1 fixes CVE-2026-84309/84310/84311 (pip-audit gate)
   "pdfplumber>=0.11.0",
 ]
 # Optional dashboard generation (lazily imported in dashboard_generator.py)
@@ -116,7 +121,7 @@ dotenv = [
 ]
 # Optional barcode generation for steganography module (gracefully absent)
 steganography = [
-  "cryptography>=48.0.1",  # >=48.0.1 fixes GHSA-537c-gmf6-5ccf (pip-audit gate)
+  "cryptography>=50.0.0",  # >=50.0.0 fixes PYSEC-2026-3552 (pip-audit gate)
   "qrcode[pil]>=8.2",
   "python-barcode>=0.15",
 ]
@@ -169,7 +174,7 @@ dev = [
     "types-pyyaml>=6.0.12.20250915",
     "ruff>=0.15.21",
     # Code-health scanner (Python 3.11+ only; template still supports 3.10 for projects)
-    "desloppify @ git+https://github.com/peteromallet/desloppify.git; python_version >= '3.11'",
+    "desloppify @ git+https://github.com/peteromallet/desloppify.git@19b9ebebcf449dd7074f30a7bdfdcd327d53cff6; python_version >= '3.11'",
     "pytest-xdist>=3.5",
 ]
 deep-research = [
@@ -216,7 +221,7 @@ default-groups = [
 # pip-api (via pip-audit) pins an older pip; keep the installer above its
 # published security floor as well as the runtime dependency set.
 override-dependencies = [
-    "pip>=26.1.2",
+    "pip>=26.2",
     "msgpack>=1.2.1",
 ]
 
@@ -229,6 +234,13 @@ exclude = [
     "projects/*/*/output",
     "output"
 ]
+
+[tool.hatch.metadata]
+# The `docxplus` extra points at a git tag rather than PyPI, because docxplus is
+# published on GitHub and Zenodo and not (yet) on the index. Hatchling refuses a
+# PEP 508 direct reference by default — a sensible guard for anything destined for
+# PyPI, and one that has to be waived explicitly rather than worked around.
+allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["infrastructure"]
@@ -250,11 +262,11 @@ testpaths = ["tests", "tests/integration"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "--tb=short --strict-markers -W ignore::pytest.PytestDeprecationWarning --durations=10"
+addopts = "--import-mode=importlib --tb=short --strict-markers -W ignore::pytest.PytestDeprecationWarning --durations=10 -m \"not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance and not long_running and not private_project and not external_fixture\""
 timeout = 10  # Timeout individual tests after 10 seconds to prevent hanging
 timeout_method = "thread"  # Use thread-based timeout (safer for network operations)
 markers = [
-    "requires_ollama: requires running Ollama server (auto-started first; FAILS with setup guidance if unavailable, by design). Opt out: -m 'not requires_ollama'. See docs/development/optional-dependencies.md",
+    "requires_ollama: requires a live Ollama server and model; excluded by default and explicitly opt in with -m requires_ollama. See docs/development/optional-dependencies.md",
     "requires_latex: requires a LaTeX engine (xelatex/pdflatex); SKIPS via skip_if_no_latex when absent. Opt out: -m 'not requires_latex'. See docs/development/optional-dependencies.md",
     "slow: mark test as slow running",
     "integration: mark test as integration test",
@@ -262,6 +274,7 @@ markers = [
     "bench: performance benchmark tests",
     "private_project: tests for private sidecar project tooling",
     "external_fixture: tests requiring downloaded external fixture trees",
+    "requires_gate_artifacts: tests that consume a hydrated project gate-artifact cache",
 ]
 # pytest-asyncio configuration
 asyncio_mode = "strict"
@@ -376,7 +389,7 @@ ignore = [
 # ============================================================================
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.14"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false  # Will tighten per-module as types are narrowed

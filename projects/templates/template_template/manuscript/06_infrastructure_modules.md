@@ -94,7 +94,7 @@ Stability probing, benchmarking hooks—consumed heavily by optimization exempla
 
 ### `infrastructure.search` (${module_search_python_file_count} files)
 
-Two-tier search architecture: the `literature/` client stack (client.py, backends, caches) powers literature search with arXiv, Crossref, local, and Paperclip backends. `connectors/` exposes the built-in scientific database adapters through a uniform `ConnectorRegistry`; OpenAlex, UniProt, PDB, Semantic Scholar, European PMC, bioRxiv, and other registered adapters share list/search CLI commands with HTTP timeout, retry, and TTL caching. The live registry, not this prose, is authoritative for connector count.
+Two-tier search architecture: the `literature/` client stack (client.py, backends, caches) powers literature search with arXiv, Crossref, local, and Paperclip backends. `connectors/` exposes the built-in scientific database adapters through a uniform `ConnectorRegistry`; OpenAlex, UniProt, PDB, Semantic Scholar, European PMC, bioRxiv, and other registered adapters share list/search CLI commands with HTTP timeout, retry, and TTL caching. `monid/` provides an opt-in paid gateway (`discover` / `inspect` / `run`) with offline USD/1k pricing reference in `monid/PRICING.md`. `deep_research/` dispatches long-horizon provider-neutral manuscript research (PAID, opt-in). The live registry, not this prose, is authoritative for connector count.
 
 ### `infrastructure.sia` (${module_sia_python_file_count} files)
 

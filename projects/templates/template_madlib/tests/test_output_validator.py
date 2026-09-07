@@ -100,6 +100,7 @@ def _write_minimal_outputs(root: Path) -> None:
             "label": "fig:" + filename.removesuffix(".png").replace("_", "-"),
             "section": "Results",
             "generated_by": "tests",
+            "metadata": {"alt_text": f"Generated test figure for {filename}."},
         }
         for filename in DECLARED_FIGURE_FILES
         if filename != "figure_registry.json"
@@ -146,6 +147,15 @@ def test_write_validation_report_roundtrip(tmp_path: Path) -> None:
     assert report.is_file()
 
 
+def test_write_validation_report_reuses_precomputed_result(tmp_path: Path) -> None:
+    """Passing an already-computed `result` must skip re-running validation."""
+    _write_minimal_outputs(tmp_path)
+    precomputed = validate_generated_outputs(tmp_path)
+    report = write_validation_report(tmp_path, result=precomputed)
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload == precomputed.to_dict()
+
+
 # ---------------------------------------------------------------------------
 # Hydrated placeholder and manuscript surface
 # ---------------------------------------------------------------------------
@@ -190,6 +200,12 @@ def test_contract_file_missing_reported(tmp_path: Path) -> None:
     assert "contract-file-missing" in _codes(validate_generated_outputs(tmp_path))
 
 
+def test_evaluation_file_missing_reported(tmp_path: Path) -> None:
+    _write_minimal_outputs(tmp_path)
+    (tmp_path / "output" / "manuscript" / "06_evaluation.md").unlink()
+    assert "evaluation-file-missing" in _codes(validate_generated_outputs(tmp_path))
+
+
 # ---------------------------------------------------------------------------
 # Token provenance bindings
 # ---------------------------------------------------------------------------
@@ -199,6 +215,23 @@ def test_token_inventory_missing_reported(tmp_path: Path) -> None:
     _write_minimal_outputs(tmp_path)
     (tmp_path / "output" / "data" / "token_inventory.json").unlink()
     assert "token-inventory-missing" in _codes(validate_generated_outputs(tmp_path))
+
+
+def test_token_inventory_schema_reported(tmp_path: Path) -> None:
+    """token_inventory.json must be a JSON list, not any other JSON shape."""
+    _write_minimal_outputs(tmp_path)
+    (tmp_path / "output" / "data" / "token_inventory.json").write_text(json.dumps({"not": "a list"}), encoding="utf-8")
+    assert "token-inventory-schema" in _codes(validate_generated_outputs(tmp_path))
+
+
+def test_token_row_schema_reported(tmp_path: Path) -> None:
+    """Rows missing a required key (e.g. `source_key`) must be flagged."""
+    _write_minimal_outputs(tmp_path)
+    path = tmp_path / "output" / "data" / "token_inventory.json"
+    rows = json.loads(path.read_text(encoding="utf-8"))
+    del rows[0]["source_key"]
+    path.write_text(json.dumps(rows), encoding="utf-8")
+    assert "token-row-schema" in _codes(validate_generated_outputs(tmp_path))
 
 
 def test_token_count_mismatch_reported(tmp_path: Path) -> None:
@@ -248,6 +281,16 @@ def test_trace_provenance_gap_reported(tmp_path: Path) -> None:
     assert "trace-provenance-gap" in _codes(validate_generated_outputs(tmp_path))
 
 
+def test_trace_provenance_missing_reported(tmp_path: Path) -> None:
+    """`provenance` must be a JSON mapping, not a list or other non-dict shape."""
+    _write_minimal_outputs(tmp_path)
+    trace_path = tmp_path / "output" / "reports" / "injection_trace.json"
+    trace = json.loads(trace_path.read_text(encoding="utf-8"))
+    trace["provenance"] = ["not", "a", "mapping"]
+    trace_path.write_text(json.dumps(trace), encoding="utf-8")
+    assert "trace-provenance-missing" in _codes(validate_generated_outputs(tmp_path))
+
+
 def test_section_plan_missing_reported(tmp_path: Path) -> None:
     _write_minimal_outputs(tmp_path)
     (tmp_path / "output" / "data" / "section_plan.json").unlink()
@@ -261,6 +304,15 @@ def test_section_token_count_mismatch_reported(tmp_path: Path) -> None:
     plan["section_token_counts"]["abstract"] += 1
     plan_path.write_text(json.dumps(plan), encoding="utf-8")
     assert "section-token-count-mismatch" in _codes(validate_generated_outputs(tmp_path))
+
+
+def test_section_key_unknown_reported(tmp_path: Path) -> None:
+    _write_minimal_outputs(tmp_path)
+    plan_path = tmp_path / "output" / "data" / "section_plan.json"
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    plan["section_token_counts"]["appendix"] = 1
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+    assert "section-key-unknown" in _codes(validate_generated_outputs(tmp_path))
 
 
 # ---------------------------------------------------------------------------
@@ -280,6 +332,22 @@ def test_registry_file_missing_reported(tmp_path: Path) -> None:
     codes = _codes(validate_generated_outputs(tmp_path))
     assert "registry-file-missing" in codes
     assert "figure-set-incomplete" in codes
+
+
+def test_registry_missing_or_blank_alt_text_reported(tmp_path: Path) -> None:
+    _write_minimal_outputs(tmp_path)
+    path = tmp_path / "output" / "figures" / "figure_registry.json"
+    registry = json.loads(path.read_text(encoding="utf-8"))
+    registry["fig:token-density"].pop("metadata")
+    registry["fig:quality-gate-matrix"]["metadata"]["alt_text"] = "   "
+    path.write_text(json.dumps(registry, indent=2), encoding="utf-8")
+
+    result = validate_generated_outputs(tmp_path)
+
+    assert "registry-alt-missing" in _codes(result)
+    issue = next(issue for issue in result.issues if issue.code == "registry-alt-missing")
+    assert "fig:token-density" in issue.message
+    assert "fig:quality-gate-matrix" in issue.message
 
 
 def test_figure_ref_unregistered_reported(tmp_path: Path) -> None:

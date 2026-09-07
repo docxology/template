@@ -70,12 +70,28 @@ def aggregate_check_results(
     return all_passed, lines
 
 
+def _fallback_workspace_dependencies(
+    *,
+    dependency_checker: Callable[[], tuple[bool, list[str]]],
+    package_installer: Callable[[list[str]], bool],
+) -> bool:
+    """Check installed packages, installing only the ones that are actually missing."""
+    all_present, missing = dependency_checker()
+    if not all_present and missing:
+        return package_installer(missing)
+    return all_present
+
+
 def sync_workspace_dependencies(
     repo_root: Path,
     *,
     process_runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+    dependency_checker: Callable[[], tuple[bool, list[str]]] | None = None,
+    package_installer: Callable[[list[str]], bool] | None = None,
 ) -> bool:
     """Run ``uv sync`` with fallback to per-package install."""
+    check = dependency_checker or check_dependencies
+    install = package_installer or install_missing_packages
     logger.info("Checking for uv package manager...")
     try:
         result = process_runner(
@@ -92,26 +108,16 @@ def sync_workspace_dependencies(
             return True
         logger.warning("uv sync failed (exit code %s): %s", result.returncode, result.stderr)
         logger.info("Falling back to individual dependency checking...")
-        all_present, missing = check_dependencies()
-        if not all_present and missing:
-            return install_missing_packages(missing)
-        return all_present
+        return _fallback_workspace_dependencies(dependency_checker=check, package_installer=install)
     except FileNotFoundError:
         logger.info("uv not found in PATH, using fallback dependency checking")
-        all_present, missing = check_dependencies()
-        if not all_present and missing:
-            return install_missing_packages(missing)
-        return all_present
+        return _fallback_workspace_dependencies(dependency_checker=check, package_installer=install)
     except subprocess.TimeoutExpired:
-        logger.warning("uv sync timed out after 30s - dependencies likely already available in venv")
-        log_success("Workspace dependencies synced successfully with uv", logger)
-        return True
+        logger.warning("uv sync timed out after 30s — falling back to individual dependency checking")
+        return _fallback_workspace_dependencies(dependency_checker=check, package_installer=install)
     except subprocess.SubprocessError as exc:
         logger.error("Subprocess error during uv sync: %s", exc, exc_info=True)
-        all_present, missing = check_dependencies()
-        if not all_present and missing:
-            return install_missing_packages(missing)
-        return all_present
+        return _fallback_workspace_dependencies(dependency_checker=check, package_installer=install)
 
 
 def validate_project_discovery(

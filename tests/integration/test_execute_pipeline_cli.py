@@ -44,7 +44,7 @@ def test_execute_pipeline_unknown_stage_is_error(repo_root: Path) -> None:
 
 
 def test_execute_pipeline_missing_project_is_error(repo_root: Path) -> None:
-    """Invoking without --project should produce a non-zero exit or usage message."""
+    """Invoking without --project should fail through argparse's required flag."""
     script = repo_root / "scripts" / "runner" / "execute_pipeline.py"
     result = subprocess.run(
         ["python3", str(script)],
@@ -53,9 +53,10 @@ def test_execute_pipeline_missing_project_is_error(repo_root: Path) -> None:
         capture_output=True,
         text=True,
     )
-    # Either exits with error or prints usage; must not silently succeed
     combined = (result.stdout or "") + (result.stderr or "")
-    assert result.returncode != 0 or "usage" in combined.lower() or "--project" in combined
+    assert result.returncode == 2
+    assert "usage:" in combined.lower()
+    assert "--project" in combined
 
 
 def test_execute_pipeline_help_mentions_core_only(repo_root: Path) -> None:

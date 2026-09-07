@@ -195,6 +195,24 @@ def test_validate_tool_scripts_exist_missing_entrypoint(tmp_path: pathlib.Path) 
     assert result["valid"] is False
 
 
+def test_validate_tool_scripts_exist_rejects_traversal_entrypoint(tmp_path: pathlib.Path) -> None:
+    """An entrypoint must be a regular file confined to its tool directory."""
+    from src.tools_invoker import validate_tool_scripts_exist
+
+    tools_dir = tmp_path / "tools"
+    tool_dir = tools_dir / "partial_tool"
+    tool_dir.mkdir(parents=True)
+    (tmp_path / "outside.sh").write_text("#!/bin/sh\n", encoding="utf-8")
+    absolute_entrypoint = str(tmp_path / "escape.sh")
+    (tool_dir / "tools.yaml").write_text(
+        yaml.dump({"entrypoints": ["../outside.sh", absolute_entrypoint]}),
+        encoding="utf-8",
+    )
+    result = validate_tool_scripts_exist("partial_tool", templates_root=tools_dir)
+    assert result["missing"] == ["../outside.sh", absolute_entrypoint]
+    assert result["valid"] is False
+
+
 def test_count_summary_with_explicit_fonds() -> None:
     from src.fonds_reader import count_summary
     from src.type_defs import AllFondsResult, BibliographyFondResult, ContactsFondResult

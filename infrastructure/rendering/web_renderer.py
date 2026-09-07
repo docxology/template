@@ -1,93 +1,41 @@
 """Web/HTML rendering module."""
 
+import os
 import re
+import secrets
 import shutil
+import stat
 import subprocess
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import yaml
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
 from infrastructure.rendering.manuscript_composition import write_manuscript_composition
 from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.security import subprocess_options
 import infrastructure.rendering._web_postprocess as web_postprocess
+from infrastructure.rendering._web_markdown_preprocess import (
+    html_safe_markdown,
+    html_theorem_blocks,
+)
 
 logger = get_logger(__name__)
 
 _MATHJAX_URL = web_postprocess.MATHJAX_URL
-_MATHJAX_INTEGRITY = web_postprocess._MATHJAX_INTEGRITY
-_MATHJAX_FONT_URL = web_postprocess._MATHJAX_FONT_URL
-_MATHJAX_DYNAMIC_PREFIX = web_postprocess._MATHJAX_DYNAMIC_PREFIX
+_MATHJAX_INTEGRITY = web_postprocess.MATHJAX_INTEGRITY
+_MATHJAX_FONT_URL = web_postprocess.MATHJAX_FONT_URL
+_MATHJAX_DYNAMIC_PREFIX = web_postprocess.MATHJAX_DYNAMIC_PREFIX
 
 
 class WebRenderer:
     """Handles HTML generation."""
-
-    _RAW_LATEX_INLINE_RE = re.compile(r"`([^`]+)`\{=latex\}")
-    _CITE_RE = re.compile(
-        r"\\cite(?:p|t|alp|alt|author|year|yearpar)?"
-        r"(?:\[[^\]]*\]\s*){0,2}\{([^{}]+)\}"
-    )
-    _HYPERREF_RE = re.compile(r"\\hyperref\[[^\]]+\]\{([^{}]+)\}")
-    _HREF_RE = re.compile(r"\\href\{[^{}]+\}\{([^{}]+)\}")
-    _LABEL_RE = re.compile(r"\\(?:phantomsection\s*)?\\?label\{[^{}]+\}")
-    _REF_RE = re.compile(r"\\(?:eqref|ref|autoref)\{([^{}]+)\}")
-    # Pandoc-style citations ``[@key]`` / ``[@key1; @key2]`` / ``[-@key]``.
-    # The PDF path resolves these via ``--citeproc``; the HTML writer leaves them
-    # raw, so this web-only pass renders them as readable ``[key1; key2]`` text
-    # (mirroring the ``\citep{...}`` handling) instead of emitting literal
-    # ``[@key]`` markdown into the rendered page.
-    _PANDOC_CITATION_RE = re.compile(r"\[(?P<body>[^\]]*?@[A-Za-z0-9_][^\]]*?)\]")
-    _PANDOC_CITEKEY_RE = re.compile(r"-?@([A-Za-z0-9_][A-Za-z0-9_:.#$%&+?<>~/-]*)")
-    #: Reference prefixes a filter resolves later, so the citation pre-pass must
-    #: not strip their ``@``. The first four belong to pandoc-crossref; the rest
-    #: are the formalism kinds ``formalism.lua`` numbers. Stripping a formalism
-    #: ``@`` left the per-section pages showing raw ``[def:registry]`` with the
-    #: block above it unlabelled.
-    _PANDOC_CROSSREF_PREFIXES = (
-        "fig:",
-        "tbl:",
-        "sec:",
-        "eq:",
-        "def:",
-        "prop:",
-        "thm:",
-        "lem:",
-        "cor:",
-        "rem:",
-        "ax:",
-    )
-    # Raw-LaTeX theorem-like environments. Pandoc's HTML writer silently DROPS
-    # these blocks (the ``\newtheorem`` definitions live in the LaTeX-only
-    # preamble), so a manuscript's Theorems/Definitions vanish from the web page.
-    # WebRenderer rewrites them (web-only) into numbered ``.theorem-box`` Divs.
-    # The display names share one running counter, mirroring the conventional
-    # ``\newtheorem{lemma}[theorem]{Lemma}`` shared-counter linkage so the web
-    # numbers match the PDF's.
-    _THEOREM_ENVS = {
-        "theorem": "Theorem",
-        "lemma": "Lemma",
-        "proposition": "Proposition",
-        "corollary": "Corollary",
-        "definition": "Definition",
-    }
-    _THEOREM_BLOCK_RE = re.compile(
-        r"\\begin\{(theorem|lemma|proposition|corollary|definition)\}"
-        r"(?:\[([^\]]*)\])?"
-        r"(?:[ \t]*\\label\{([^}]*)\})?[ \t]*\n(.*?)\n\\end\{\1\}",
-        re.DOTALL,
-    )
-    # Theorem-body-only cleanups (see _clean_theorem_body). Pandoc's markdown
-    # reader treats ``\texttt{...}`` as raw inline LaTeX (dropped by the HTML
-    # writer) and does not enable ``tex_math_single_backslash``, so ``\(...\)``
-    # math degrades to bare parens. Applied ONLY inside theorem bodies.
-    _THEOREM_TEXTTT_RE = re.compile(r"\\texttt\{([^{}]*)\}")
-    _THEOREM_INLINE_MATH_RE = re.compile(r"\\\((.+?)\\\)", re.DOTALL)
-    _THEOREM_DISPLAY_MATH_RE = re.compile(r"\\\[(.+?)\\\]", re.DOTALL)
 
     def __init__(self, config: RenderingConfig):
         """Initialize the web renderer with configuration."""
@@ -107,57 +55,82 @@ class WebRenderer:
         # per-section HTML resolves Pandoc ``[@key]`` citations and raw-LaTeX
         # spans instead of emitting them literally (the HTML writer, unlike the
         # citeproc PDF path, leaves them untouched).
-        safe_source = source_file.with_suffix(source_file.suffix + ".web.tmp")
-        try:
-            safe_source.write_text(
-                self._html_safe_markdown(
-                    source_file.read_text(encoding="utf-8"),
-                    preserve_crossrefs=True,
-                ),
-                encoding="utf-8",
-            )
-        except OSError:
-            safe_source = source_file
+        with TemporaryDirectory(prefix=".web-source-", dir=output_dir) as temporary_dir:
+            safe_source = Path(temporary_dir) / (source_file.name + ".web.tmp")
+            try:
+                safe_source.write_text(
+                    self._html_safe_markdown(
+                        source_file.read_text(encoding="utf-8"),
+                        preserve_crossrefs=True,
+                    ),
+                    encoding="utf-8",
+                )
+            except OSError as exc:
+                raise RenderingError(
+                    f"Failed to prepare HTML source: {exc}",
+                    context={"source": str(source_file)},
+                ) from exc
 
-        cmd = [
-            self.config.pandoc_path,
-            str(safe_source),
-            "-t",
-            "html5",
-            "-o",
-            str(output_file),
-            "--standalone",
-            f"--mathjax={_MATHJAX_URL}",
-            # A per-section page is rendered alone, so numbering here is
-            # section-local: correct for the section that declares the blocks
-            # (manuscripts keep them together), and unresolvable for a reference
-            # made from a different section, which the filter then leaves visible
-            # and reports. The combined ``index.html`` is the authoritative HTML
-            # edition and numbers the whole document.
-            *formalism_filter_args(),
-        ]
+            # Pandoc writes the final published page directly; render to an
+            # exclusive temporary target and publish by rename so a crash or
+            # a planted symlink cannot leave truncated or redirected output.
+            render_target = output_dir / f".{output_file.stem}.{secrets.token_hex(12)}.html.tmp"
+            cmd = [
+                self.config.pandoc_path,
+                str(safe_source),
+                "-t",
+                "html5",
+                "-o",
+                str(render_target),
+                "--standalone",
+                f"--mathjax={_MATHJAX_URL}",
+                # A per-section page is rendered alone, so numbering here is
+                # section-local: correct for the section that declares the blocks
+                # (manuscripts keep them together), and unresolvable for a reference
+                # made from a different section, which the filter then leaves visible
+                # and reports. The combined ``index.html`` is the authoritative HTML
+                # edition and numbers the whole document.
+                *formalism_filter_args(),
+            ]
 
-        logger.info(f"Generating HTML from {source_file}")
+            logger.info(f"Generating HTML from {source_file}")
 
-        try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True, **subprocess_options(profile, 600))
-            if output_file.exists():
-                self._harden_mathjax_script(output_file)
-                self._embed_favicon(output_file)
-                self._write_favicon_file(output_file.parent)
-                self._normalize_figure_paths_in_file(output_file)
-                self._enhance_accessibility(output_file)
-                self._add_responsive_image_variants(output_file)
-            return output_file
+            try:
+                try:
+                    subprocess.run(cmd, check=True, capture_output=True, text=True, **subprocess_options(profile, 600))
+                    if output_file.exists():
+                        os.chmod(render_target, stat.S_IMODE(output_file.stat().st_mode))
+                    try:
+                        os.replace(render_target, output_file)
+                    except OSError as exc:
+                        raise RenderingError(
+                            f"Failed to publish rendered page: {exc}",
+                            context={"source": str(source_file), "target": str(output_file)},
+                        ) from exc
+                finally:
+                    render_target.unlink(missing_ok=True)
+                if output_file.exists():
+                    self._harden_mathjax_script(output_file)
+                    self._embed_favicon(output_file)
+                    self._write_favicon_file(output_file.parent)
+                    # Per-section pages must receive the same reading-width and
+                    # figure-detail styling as the combined publication page.
+                    self._embed_css(output_file)
+                    self._normalize_figure_paths_in_file(output_file)
+                    self._enhance_accessibility(
+                        output_file,
+                        registry_path=Path(self.config.figures_dir) / "figure_registry.json",
+                    )
+                    self._add_full_resolution_figure_links(output_file)
+                    self._add_responsive_image_variants(output_file)
+                    self._rewrite_repository_links(output_file, {source_file: output_file.name})
+                return output_file
 
-        except subprocess.CalledProcessError as e:
-            raise RenderingError(
-                f"Failed to render HTML: {e.stderr}",
-                context={"source": str(source_file)},
-            ) from e
-        finally:
-            if safe_source != source_file:
-                safe_source.unlink(missing_ok=True)
+            except subprocess.CalledProcessError as e:
+                raise RenderingError(
+                    f"Failed to render HTML: {e.stderr}",
+                    context={"source": str(source_file)},
+                ) from e
 
     def _output_file_for_source(self, source_file: Path) -> Path:
         """Return a collision-resistant HTML path for an individual section."""
@@ -224,13 +197,7 @@ class WebRenderer:
             self._combine_markdown_files(source_files),
             render_citations=False,
         )
-        _tmp = combined_md.with_suffix(combined_md.suffix + ".tmp")
-        try:
-            _tmp.write_text(combined_content, encoding="utf-8")
-            _tmp.replace(combined_md)
-        except OSError:
-            _tmp.unlink(missing_ok=True)
-            raise
+        atomic_write_text_confined(output_dir, combined_md, combined_content)
         logger.debug(f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)")
         write_manuscript_composition(
             output_dir.parents[1],
@@ -240,16 +207,19 @@ class WebRenderer:
         )
 
         # Build pandoc command for HTML conversion
-        figures_dir = manuscript_dir.parent / "output" / "figures"
+        figures_dir = Path(self.config.figures_dir)
         lua_filter = Path(__file__).parent / "convert_latex_images.lua"
 
+        # The combined page is the authoritative HTML edition; publish the
+        # pandoc output by rename from an exclusive temporary target.
+        render_target = output_dir / f".{output_file.stem}.{secrets.token_hex(12)}.html.tmp"
         cmd = [
             self.config.pandoc_path,
             str(combined_md),
             "-t",
             "html5",
             "-o",
-            str(output_file),
+            str(render_target),
             "--standalone",
             f"--mathjax={_MATHJAX_URL}",
             "--toc",
@@ -287,15 +257,26 @@ class WebRenderer:
                 "Install: https://github.com/lierdakil/pandoc-crossref (e.g. brew install pandoc-crossref)"
             )
 
-        bibliography = manuscript_dir / "references.bib"
-        if bibliography.exists():
-            cmd.extend(["--citeproc", "--bibliography", str(bibliography), "--metadata=link-citations:true"])
+        bibliographies = resolve_bibliography(manuscript_dir)
+        if bibliographies:
+            cmd.append("--citeproc")
+            cmd.extend(pandoc_bibliography_args(bibliographies))
+            cmd.append("--metadata=link-citations:true")
 
         logger.info("Converting combined markdown to HTML...")
         logger.debug(f"Combined markdown file: {combined_md}")
 
         try:
             subprocess.run(cmd, check=True, capture_output=True, text=True, **subprocess_options(profile, 600))
+            if output_file.exists():
+                os.chmod(render_target, stat.S_IMODE(output_file.stat().st_mode))
+            try:
+                os.replace(render_target, output_file)
+            except OSError as exc:
+                raise RenderingError(
+                    f"Failed to publish combined HTML: {exc}",
+                    context={"source": str(combined_md), "target": str(output_file)},
+                ) from exc
         except subprocess.CalledProcessError as e:
             error_msg = "Failed to convert markdown to HTML"
             all_output = ""
@@ -316,6 +297,8 @@ class WebRenderer:
                     f"Review Pandoc command: {' '.join(cmd)}",
                 ],
             ) from e
+        finally:
+            render_target.unlink(missing_ok=True)
 
         # Embed CSS styling in the generated HTML
         if output_file.exists():
@@ -327,8 +310,24 @@ class WebRenderer:
             self._enhance_accessibility(
                 output_file,
                 language=self._manuscript_language(manuscript_dir),
+                registry_path=figures_dir / "figure_registry.json",
             )
+            self._add_full_resolution_figure_links(output_file)
             self._add_responsive_image_variants(output_file)
+            rendered_sources = {
+                source_file: self._output_file_for_source(source_file).name for source_file in source_files
+            }
+            if self._rewrite_repository_links(output_file, rendered_sources):
+                for source_file in source_files:
+                    section_file = self._output_file_for_source(source_file)
+                    if section_file.is_file() and section_file != output_file:
+                        self._rewrite_repository_links(section_file, rendered_sources)
+                link_issues = web_postprocess.deployed_web_link_issues(output_dir)
+                if link_issues:
+                    raise RenderingError(
+                        "Combined web rendering produced invalid deployed links",
+                        context={"web_dir": str(output_dir), "issues": list(link_issues)},
+                    )
             logger.info(f"✓ Embedded CSS styling in {output_file.name}")
 
         logger.info(f"✅ Generated combined HTML: {output_file.name}")
@@ -488,155 +487,17 @@ class WebRenderer:
         render_citations: bool = True,
         preserve_crossrefs: bool = True,
     ) -> str:
-        """Convert PDF-only raw-LaTeX inline spans into readable HTML text.
-
-        The canonical manuscript uses Pandoc raw-LaTeX spans such as
-        ``\\citep{...}`` and ``\\hyperref[label]{visible text}`` because those
-        are the right primitives for the PDF build.  Pandoc's HTML writer drops
-        raw LaTeX, which can turn prose like "NumPy \\citep{...}, SciPy
-        \\citep{...}" into "NumPy , SciPy".  This web-only pass preserves the
-        visible text while leaving the source manuscript and PDF path unchanged.
-        """
-
-        def _citation_text(keys_csv: str) -> str:
-            keys = [key.strip() for key in keys_csv.split(",") if key.strip()]
-            return "[" + "; ".join(keys) + "]" if keys else ""
-
-        def _visible_ref(label: str) -> str:
-            return label.replace("_", " ")
-
-        def _clean_latex_text(text: str) -> str:
-            text = text.replace(r"\S", "§")
-            text = text.replace(r"\%", "%")
-            text = text.replace(r"\&", "&")
-            text = text.replace(r"\_", "_")
-            text = text.replace(r"~", " ")
-            text = text.replace(r"\ ", " ")
-            return re.sub(r"\s+", " ", text).strip()
-
-        def _replace_raw_span(match: re.Match[str]) -> str:
-            latex = match.group(1).strip()
-            latex = cls._HYPERREF_RE.sub(
-                lambda m: _clean_latex_text(m.group(1)),
-                latex,
-            )
-            latex = cls._HREF_RE.sub(
-                lambda m: _clean_latex_text(m.group(1)),
-                latex,
-            )
-            latex = cls._CITE_RE.sub(
-                lambda m: _citation_text(m.group(1)),
-                latex,
-            )
-            latex = cls._LABEL_RE.sub("", latex)
-            latex = latex.replace(r"\phantomsection", "")
-            latex = cls._REF_RE.sub(lambda m: _visible_ref(m.group(1)), latex)
-            return _clean_latex_text(latex)
-
-        # Rewrite raw-LaTeX theorem blocks into numbered Divs BEFORE the inline
-        # raw-span pass strips them; the Div body then flows through citation /
-        # ref handling like any other prose.
-        content = cls._html_theorem_blocks(content)
-        if render_citations:
-            content = cls._render_pandoc_citations(content, preserve_crossrefs=preserve_crossrefs)
-        return cls._normalize_figure_paths(cls._RAW_LATEX_INLINE_RE.sub(_replace_raw_span, content))
+        """Convert PDF-only raw-LaTeX inline spans into readable HTML text."""
+        return html_safe_markdown(
+            content,
+            render_citations=render_citations,
+            preserve_crossrefs=preserve_crossrefs,
+        )
 
     @classmethod
     def _html_theorem_blocks(cls, content: str) -> str:
-        """Rewrite raw-LaTeX theorem-like environments into numbered ``.theorem-box`` Divs.
-
-        Web-only. Each ``\\begin{theorem}[optional name]...\\end{theorem}`` block (for
-        theorem / lemma / proposition / corollary / definition) becomes a Pandoc
-        fenced Div ``::: {.theorem-box .<env>}`` led by a bold ``**Theorem N**``
-        label (the optional name follows, with its math left outside the bold so it
-        renders). A same-line ``\\label{...}`` after the name (the standard amsthm
-        idiom) is consumed and becomes the Div's anchor id. The environments share
-        one running counter so the web numbers match the PDF's shared-counter
-        convention. The PDF path never sees this — it consumes the original
-        ``\\begin{theorem}`` against the LaTeX preamble.
-
-        Theorem bodies are additionally cleaned via ``_clean_theorem_body`` so
-        content that pandoc's HTML path would otherwise drop or degrade survives:
-        ``\\texttt{X}`` becomes a markdown code span (``\\_`` unescaped) and
-        ``\\(...\\)`` / ``\\[...\\]`` math delimiters become ``$...$`` /
-        ``$$...$$`` so the HTML+MathJax path renders them. ``\\label{eq:...}``
-        lines and ``\\ref{...}`` are left to the existing downstream passes.
-
-        Known limitation (web-only, cosmetic): other raw-LaTeX macros inside
-        theorem bodies (e.g. ``\\emph{...}``, custom preamble macros) still pass
-        through pandoc's raw-inline-LaTeX drop; the PDF surface is unaffected.
-        """
-        counter = {"n": 0}
-
-        def _replace(match: re.Match[str]) -> str:
-            env, name, anchor, body = (
-                match.group(1),
-                match.group(2),
-                match.group(3),
-                match.group(4),
-            )
-            counter["n"] += 1
-            label = f"**{cls._THEOREM_ENVS[env]} {counter['n']}**"
-            if name and name.strip():
-                label += f" ({name.strip()})"
-            attrs = f".theorem-box .{env}"
-            if anchor and anchor.strip():
-                attrs += f" #{anchor.strip()}"
-            body = cls._clean_theorem_body(body.strip())
-            return f"\n\n::: {{{attrs}}}\n{label}. {body}\n:::\n\n"
-
-        return cls._THEOREM_BLOCK_RE.sub(_replace, content)
-
-    @classmethod
-    def _clean_theorem_body(cls, body: str) -> str:
-        """Make a theorem-Div body survive pandoc's HTML path (web-only).
-
-        Conservative, theorem-body-scoped rewrites only:
-
-        - ``\\texttt{X}`` → markdown code span `` `X` `` with ``\\_`` unescaped,
-          so filenames like ``expected_free_energy.py`` surface instead of
-          vanishing with the raw-LaTeX drop.
-        - ``\\(...\\)`` → ``$...$`` and ``\\[...\\]`` → ``$$...$$`` so pandoc's
-          HTML+MathJax pipeline renders the math instead of degrading it.
-
-        ``\\label{...}`` / ``\\ref{...}`` are deliberately untouched — the
-        existing raw-span and crossref passes own those.
-        """
-        body = cls._THEOREM_TEXTTT_RE.sub(
-            lambda m: "`" + m.group(1).replace(r"\_", "_") + "`",
-            body,
-        )
-        body = cls._THEOREM_DISPLAY_MATH_RE.sub(
-            lambda m: f"$${m.group(1).strip()}$$",
-            body,
-        )
-        body = cls._THEOREM_INLINE_MATH_RE.sub(
-            lambda m: f"${m.group(1).strip()}$",
-            body,
-        )
-        return body
-
-    @classmethod
-    def _render_pandoc_citations(cls, content: str, *, preserve_crossrefs: bool = True) -> str:
-        """Render Pandoc ``[@key]`` citation groups as readable ``[key]`` text.
-
-        The HTML writer (unlike the citeproc-driven PDF path) leaves Pandoc
-        citation syntax untouched, which would surface literal ``[@key]`` markup
-        on the page and trip publication validators. Bracket groups that contain
-        only bibliographic citekeys are rewritten to ``[key1; key2]``; pandoc-
-        crossref keys such as ``[@fig:plot]`` are preserved so the crossref
-        filter can resolve them during combined HTML rendering.
-        """
-
-        def _replace(match: re.Match[str]) -> str:
-            keys = cls._PANDOC_CITEKEY_RE.findall(match.group("body"))
-            if not keys:
-                return match.group(0)
-            if preserve_crossrefs and any(key.startswith(cls._PANDOC_CROSSREF_PREFIXES) for key in keys):
-                return match.group(0)
-            return "[" + "; ".join(keys) + "]"
-
-        return cls._PANDOC_CITATION_RE.sub(_replace, content)
+        """Rewrite raw-LaTeX theorem-like environments into numbered Divs."""
+        return html_theorem_blocks(content)
 
     @staticmethod
     def _normalize_figure_paths(content: str) -> str:
@@ -647,16 +508,46 @@ class WebRenderer:
         web_postprocess.normalize_figure_paths_in_file(html_file)
 
     @staticmethod
-    def _enhance_accessibility(html_file: Path, *, language: str = "en") -> None:
-        web_postprocess.enhance_accessibility(html_file, language=language)
+    def _enhance_accessibility(
+        html_file: Path,
+        *,
+        language: str = "en",
+        registry_path: Path | None = None,
+    ) -> None:
+        web_postprocess.enhance_accessibility(
+            html_file,
+            language=language,
+            registry_path=registry_path,
+        )
 
     @staticmethod
-    def _replace_figure_alts(content: str) -> str:
-        return web_postprocess.replace_figure_alts(content)
+    def _replace_figure_alts(content: str, *, registry_path: Path | None = None) -> str:
+        return web_postprocess.replace_figure_alts(content, registry_path=registry_path)
 
     @staticmethod
     def _add_responsive_image_variants(html_file: Path) -> None:
         web_postprocess.add_responsive_image_variants(html_file)
+
+    @staticmethod
+    def _add_full_resolution_figure_links(html_file: Path) -> None:
+        web_postprocess.add_full_resolution_figure_links(html_file)
+
+    @staticmethod
+    def _rewrite_repository_links(html_file: Path, rendered_sources: dict[Path, str]) -> bool:
+        """Rewrite public-checkout links and skip private/isolated renders."""
+        try:
+            repository_root = web_postprocess.repository_root_for(html_file)
+            for source_file in rendered_sources:
+                source_file.resolve(strict=True).relative_to(repository_root)
+        except (OSError, RenderingError, ValueError) as exc:
+            logger.debug("Skipping public repository-link rewrite for %s: %s", html_file, exc)
+            return False
+        web_postprocess.rewrite_repository_links(
+            html_file,
+            repository_root=repository_root,
+            rendered_sources=rendered_sources,
+        )
+        return True
 
     @staticmethod
     def _write_if_changed(path: Path, content: str) -> None:

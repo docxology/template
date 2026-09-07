@@ -124,6 +124,7 @@ def run_and_persist(
         project_root,
         relative_path=cfg.logging.path,
         enabled=cfg.logging.enabled,
+        timestamped=cfg.logging.timestamped,
     )
     logger.fresh()
     result = run_si_tmaze(project_root, config=cfg, logger=logger)

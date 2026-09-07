@@ -131,6 +131,19 @@ def test_vendored_digest_drift_fails_closed(tmp_path: Path) -> None:
     assert any("digest" in issue for issue in status["issues"])
 
 
+def test_vendored_source_rejects_unlocked_skill_directory(tmp_path: Path) -> None:
+    """A separately sourced skill cannot be absorbed into the one-source lock."""
+    repo = _fixture_repo(tmp_path)
+    _write_skill(repo / ".agents" / "skills", "separate-upstream")
+
+    status = validate_vendored_source(repo)
+
+    assert status["ok"] is False
+    assert status["skill_count"] == 3
+    assert any("skill count mismatch" in issue for issue in status["issues"])
+    assert any("digest" in issue for issue in status["issues"])
+
+
 def test_vendored_source_rejects_symlink(tmp_path: Path) -> None:
     repo = _fixture_repo(tmp_path)
     target = repo / "outside.txt"

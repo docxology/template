@@ -66,6 +66,7 @@ Every fix flows through `infrastructure.doctor.safety.mutate(plan, state)`. That
 | DOC201 | project layout                      | —                                                  |
 | DOC202 | per-project pyproject.toml          | —                                                  |
 | DOC203 | manuscript/config.yaml integrity    | —                                                  |
+| DOC204 | manuscript preamble & bib integrity | —                                                  |
 | DOC301 | __pycache__ / pytest / mypy / ruff  | `fix_clean_pycache` (conservative, fully reversible) |
 | DOC302 | stale .coverage / coverage_*.json   | `fix_clean_coverage_files` (conservative)          |
 | DOC303 | orphan output/<name>/ dirs          | `fix_remove_orphan_output_dirs` (radical, reversible) |

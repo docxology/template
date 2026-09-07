@@ -1,0 +1,26 @@
+{
+  "schema_version": "advanced-literature-review/llm-filter-calibration/1",
+  "claim_boundary": "Calibration labels are a filter-behavior fixture, not empirical evidence.",
+  "cases": [
+    {
+      "id": "positive-1",
+      "abstract": "A retrieval study reports a measured atmospheric signal with a stated uncertainty.",
+      "expected": "yes"
+    },
+    {
+      "id": "positive-2",
+      "abstract": "The paper evaluates the configured observational method on a named target.",
+      "expected": "yes"
+    },
+    {
+      "id": "negative-1",
+      "abstract": "This perspective discusses future work and reports no observational result.",
+      "expected": "no"
+    },
+    {
+      "id": "negative-2",
+      "abstract": "The abstract contains no information about the requested method.",
+      "expected": "no"
+    }
+  ]
+}

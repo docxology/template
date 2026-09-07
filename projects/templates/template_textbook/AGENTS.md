@@ -141,4 +141,5 @@ quick reference commands, and pitfalls.
 
 ## Publishing
 
+- Forward backlog: [`TODO.md`](TODO.md) · standalone fork/publish guide: [`STANDALONE.md`](STANDALONE.md) · docs index: [`docs/README.md`](docs/README.md)
 - [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)

@@ -2,7 +2,9 @@
 
 ## Overview
 
-Five deterministic analysis modules (plus subfield keyword/registry helpers) computing all bibliometric, temporal, and semantic metrics
+Seven deterministic analysis modules (`citation_network.py`, `descriptive_stats.py`,
+`embeddings.py`, `entities.py`, `temporal_analysis.py`, `text_processing.py`,
+`topic_modeling.py`; plus subfield keyword/registry helpers) computing all bibliometric, temporal, and semantic metrics
 required for the manuscript. Orchestration: `analysis/pipeline_runner.py`
 (`scripts/02_meta_analysis_pipeline.py`). No scripts-level logic belongs here — all computation lives in these
 modules and is imported by `scripts/02_meta_analysis_pipeline.py`.

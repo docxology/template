@@ -63,3 +63,4 @@ def test_fallback_invokes_uv_precommit_and_full_confidentiality_guard() -> None:
     assert "uv run pre-commit run --hook-stage pre-push --all-files" in source
     assert "uv run python scripts/audit/check_tracked_all.py" in source
     assert "check_tracked_projects.py" not in source
+    assert "uv run python scripts/audit/check_mirror_symlinks.py" in source

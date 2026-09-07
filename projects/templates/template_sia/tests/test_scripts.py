@@ -8,6 +8,8 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
+import pytest
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPO_ROOT = PROJECT_ROOT.parents[2]
 
@@ -18,6 +20,7 @@ def _script_env() -> dict[str, str]:
     return env
 
 
+@pytest.mark.slow
 def test_run_sia_loop_script(tmp_path: Path):
     import shutil
 

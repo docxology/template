@@ -80,6 +80,117 @@ FIGURE_CAPTIONS = {
     "entity_bar_chart.png": "Top named entities extracted from abstracts.",
 }
 
+# Alt text describes the visual encoding and the information available in each
+# plot.  Keep it separate from the shorter print caption: renderers and
+# accessibility audits consume this field when the image itself is unavailable.
+FIGURE_ALT_TEXT = {
+    "field_summary.png": (
+        "Horizontal bars run from zero to each configured subfield's paper count; "
+        "labels at the bar ends give both the count and its percentage of the "
+        "current corpus, while the title reports the corpus total."
+    ),
+    "subfield_distribution.png": (
+        "Donut chart partitions the current corpus by configured subfield. Each "
+        "slice is labelled with its percentage, the centre reports total N, and "
+        "subfields below two percent are pooled into an Other slice."
+    ),
+    "growth_curve.png": (
+        "Dual-axis time series with annual publication counts as bars, a dashed "
+        "moving-average line, and cumulative publications as a marked line. "
+        "Annotations identify the peak year, median year, total N, span, and CAGR."
+    ),
+    "subfield_timeline.png": (
+        "Stacked area chart of publication counts by year. Coloured bands identify "
+        "configured subfields, and their combined height at each year gives the "
+        "annual corpus total; an inset reports total N across all bands."
+    ),
+    "citation_network.png": (
+        "Directed spring-layout citation graph in which arrows represent citation "
+        "links, node area increases with in-degree, and node colour denotes detected "
+        "community when available. The five highest-in-degree papers are labelled."
+    ),
+    "degree_distribution.png": (
+        "Histogram of paper in-degree in the directed citation graph, with the "
+        "horizontal axis giving citations received and the vertical axis giving the "
+        "number of papers; logarithmic axes are used when the degree range is large."
+    ),
+    "hypothesis_dashboard.png": (
+        "Horizontal evidence-score bars for the configured hypotheses on a scale "
+        "from minus one to plus one. Orange bars extend left for contradictory "
+        "evidence, green bars extend right for supportive evidence, and zero is marked."
+    ),
+    "evidence_timeline.png": (
+        "One marked line per configured hypothesis traces cumulative evidence score "
+        "by publication year on a minus-one-to-plus-one scale. A dashed zero line and "
+        "a shaded near-neutral band distinguish support from contradiction."
+    ),
+    "word_cloud.png": (
+        "Term cloud derived from topic-term weights: more heavily weighted corpus "
+        "terms appear in larger type, with a fixed layout seed and a cividis colour "
+        "scale; word position and colour do not encode additional quantities."
+    ),
+    "topic_term_bars.png": (
+        "Grid of horizontal bar charts, one panel per NMF topic. Each panel lists up "
+        "to ten leading terms on the vertical axis, and bar length represents that "
+        "term's weight in the topic."
+    ),
+    "pca_embeddings.png": (
+        "Scatter plot projecting document TF-IDF vectors onto the first two principal "
+        "components. Points are coloured by configured subfield, axes state explained "
+        "variance, and arrows label the strongest well-separated term loadings."
+    ),
+    "term_heatmap.png": (
+        "Heatmap with configured subfields as rows and the twenty terms with greatest "
+        "between-subfield variance as columns. Cell colour from pale yellow to dark red "
+        "encodes the subfield's mean TF-IDF weight for each term."
+    ),
+    "dendrogram.png": (
+        "Ward-linkage dendrogram clustering configured subfields by their mean TF-IDF "
+        "vectors. Leaves name subfields, branch height gives Ward distance, and an inset "
+        "reports the cophenetic correlation of the hierarchy."
+    ),
+    "cooccurrence_matrix.png": (
+        "Symmetric square matrix for the thirty most frequent document-level terms. "
+        "Rows and columns list the same terms; increasingly dark blue cells indicate "
+        "larger normalized within-document co-occurrence, with a zero diagonal."
+    ),
+    "assertion_breakdown.png": (
+        "Stacked horizontal bars compare extracted assertions for each hypothesis. "
+        "Green, orange, and blue segments encode supportive, contradictory, and neutral "
+        "counts, and each bar-end label gives total assertions and support percentage."
+    ),
+    "assertion_summary.png": (
+        "Two-panel assertion summary: a pie chart on the left partitions all extracted "
+        "assertions into supportive, contradictory, and neutral types, while horizontal "
+        "bars on the right compare total assertion counts across hypotheses."
+    ),
+    "citation_distribution.png": (
+        "Vertical bars show how many retained papers fall in each citation-count bucket; "
+        "bar-top labels give bucket counts, and the title reports the corpus size, total "
+        "citations, and Gini concentration coefficient."
+    ),
+    "top_venues.png": (
+        "Descending horizontal bars rank up to fifteen publication venues by the number "
+        "of retained corpus papers. Venue names appear on the vertical axis and bar "
+        "length measures the paper count represented in the current evidence snapshot."
+    ),
+    "author_productivity.png": (
+        "Descending horizontal bars rank up to twenty authors by their number of retained "
+        "corpus publications. Author names appear on the vertical axis and bar length "
+        "encodes publication count after the pipeline's record deduplication."
+    ),
+    "similarity_heatmap.png": (
+        "Ranked horizontal bars, despite the legacy heatmap filename, compare up to "
+        "fifteen document pairs. Each label identifies a pair of paper IDs and bar length "
+        "gives cosine similarity on a fixed zero-to-one axis."
+    ),
+    "entity_bar_chart.png": (
+        "Descending horizontal bars rank up to twenty named entities extracted from "
+        "abstracts. Entity labels appear on the vertical axis and bar length represents "
+        "the number of extracted occurrences in the current corpus."
+    ),
+}
+
 
 def _load_json(path: Path, logger: logging.Logger) -> Any:
     if not path.exists():
@@ -264,19 +375,26 @@ def _register_figures(generated_paths: list[str], output_dir: Path, logger: logg
         return
 
     registry_file = output_dir / "figure_registry.json"
-    figure_manager = FigureManager(str(registry_file))
-    for path_str in generated_paths:
-        path = Path(path_str)
-        filename = path.name
-        caption = FIGURE_CAPTIONS.get(
-            filename,
-            f"Figure showing {filename.replace('.png', '').replace('_', ' ')}.",
-        )
-        label = f"fig:{path.stem}"
-        if not figure_manager.get_figure(label):
+    build_file = output_dir / ".figure_registry.build.json"
+    build_file.unlink(missing_ok=True)
+    try:
+        figure_manager = FigureManager(str(build_file))
+        for path_str in generated_paths:
+            path = Path(path_str)
+            filename = path.name
+            try:
+                caption = FIGURE_CAPTIONS[filename]
+                alt_text = FIGURE_ALT_TEXT[filename]
+            except KeyError as exc:
+                raise ValueError(f"Missing caption or alt-text specification for generated figure: {filename}") from exc
+            label = f"fig:{path.stem}"
             figure_manager.register_figure(
                 filename=filename,
                 caption=caption,
                 label=label,
                 generated_by="04_generate_figures.py",
+                metadata={"alt_text": alt_text},
             )
+        build_file.replace(registry_file)
+    finally:
+        build_file.unlink(missing_ok=True)

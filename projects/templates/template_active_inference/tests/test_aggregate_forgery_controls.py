@@ -6,7 +6,7 @@ validator passes every one of these; the hardened validators recompute the
 aggregate from rows exactly as the builders derive it and require
 stored == recomputed, so each mutation must surface an issue.
 
-Complements test_track_consolidation.py::test_canonical_sheaf_row_only_forgeries_are_caught
+Complements test_track_consolidation_negative.py::test_canonical_sheaf_row_only_forgeries_are_caught
 (sheaf-track surfaces) and test_roadmap_promotion.py (integration-audit surfaces).
 """
 
@@ -15,7 +15,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from gate_support import ensure_gate_artifacts, temporary_json_mutation
+
+
+pytestmark = [pytest.mark.requires_gate_artifacts]
 
 
 def _assert_forgery_caught(path: Path, mutate, validator, expected_issue: str, project_root: Path) -> None:
@@ -31,6 +36,7 @@ def _assert_forgery_caught(path: Path, mutate, validator, expected_issue: str, p
         )
 
 
+@pytest.mark.long_running
 def test_validation_spine_provenance_record_forgeries_are_caught(project_root: Path) -> None:
     from validation_spine import validate_artifact_provenance
 
@@ -60,6 +66,7 @@ def test_validation_spine_provenance_record_forgeries_are_caught(project_root: P
     )
 
 
+@pytest.mark.long_running
 def test_toy_sweep_row_only_forgeries_are_caught(project_root: Path) -> None:
     from roadmap_tracks import validate_toy_sweep_artifacts
 
@@ -103,6 +110,7 @@ def test_toy_sweep_row_only_forgeries_are_caught(project_root: Path) -> None:
         _assert_forgery_caught(path, mutate, validate_toy_sweep_artifacts, expected, project_root)
 
 
+@pytest.mark.long_running
 def test_animation_static_frame_forgery_is_caught(project_root: Path) -> None:
     from visualizations.animation import validate_animation_frame_deltas
 
@@ -118,6 +126,7 @@ def test_animation_static_frame_forgery_is_caught(project_root: Path) -> None:
     )
 
 
+@pytest.mark.long_running
 def test_semantic_certificate_obligation_forgery_is_caught(project_root: Path) -> None:
     from manuscript.sheaf.semantic import validate_semantic_gluing
 
@@ -139,6 +148,7 @@ def test_semantic_certificate_obligation_forgery_is_caught(project_root: Path) -
     )
 
 
+@pytest.mark.long_running
 def test_semantic_certificate_lane_summary_forgery_is_caught(project_root: Path) -> None:
     from manuscript.sheaf.semantic import validate_semantic_gluing
 
@@ -161,6 +171,7 @@ def test_semantic_certificate_lane_summary_forgery_is_caught(project_root: Path)
     )
 
 
+@pytest.mark.long_running
 def test_staleness_row_forgeries_are_caught(project_root: Path) -> None:
     from roadmap_tracks import validate_integration_audit_artifacts, write_integration_audit_artifacts
 
@@ -187,6 +198,7 @@ def test_staleness_row_forgeries_are_caught(project_root: Path) -> None:
     )
 
 
+@pytest.mark.long_running
 def test_artifact_contract_interop_hash_forgery_is_caught(project_root: Path) -> None:
     from roadmap_tracks import validate_sheaf_track_artifacts, write_sheaf_track_artifacts
 

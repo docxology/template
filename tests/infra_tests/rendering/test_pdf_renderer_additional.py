@@ -1,95 +1,123 @@
-"""Additional tests for infrastructure/rendering/pdf_renderer.py.
+"""Focused contract tests for :mod:`infrastructure.rendering.pdf_renderer`.
 
-Tests PDF rendering functionality using real implementations.
-Follows No Mocks Policy - all tests use real data and real execution.
+The canonical renderer suite covers the transformation helpers and combined
+manuscript paths. These tests cover the public dispatch boundary and the
+engine-resolution behavior with a real temporary executable, so missing local
+toolchains produce explicit errors instead of silently passing.
 """
 
-from infrastructure.rendering import pdf_renderer
+from __future__ import annotations
+
+import stat
+import subprocess
+from pathlib import Path
+
+import pytest
+
+from infrastructure.core.exceptions import CompilationError, RenderingError
+from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering.pdf_renderer import PDFRenderer
 
 
-class TestPdfRendererHelpers:
-    """Test helper functions."""
-
-    def test_check_xelatex(self):
-        """Test checking XeLaTeX availability."""
-        if hasattr(pdf_renderer, "check_xelatex"):
-            result = pdf_renderer.check_xelatex()
-            assert isinstance(result, bool)
-
-    def test_check_pdflatex(self):
-        """Test checking pdflatex availability."""
-        if hasattr(pdf_renderer, "check_pdflatex"):
-            result = pdf_renderer.check_pdflatex()
-            assert isinstance(result, bool)
-
-    def test_get_latex_engine(self):
-        """Test getting LaTeX engine."""
-        if hasattr(pdf_renderer, "get_latex_engine"):
-            engine = pdf_renderer.get_latex_engine()
-            assert engine is not None or True
+def _config(tmp_path: Path) -> RenderingConfig:
+    output = tmp_path / "output"
+    return RenderingConfig(
+        output_dir=str(output),
+        pdf_dir=str(output / "pdf"),
+        manuscript_dir=str(tmp_path / "manuscript"),
+        figures_dir=str(output / "figures"),
+    )
 
 
-class TestPdfRendererConfig:
-    """Test configuration functionality."""
-
-    def test_default_config(self):
-        """Test default configuration."""
-        if hasattr(pdf_renderer, "PDFRenderConfig"):
-            config = pdf_renderer.PDFRenderConfig()
-            assert config is not None
-
-    def test_custom_config(self):
-        """Test custom configuration."""
-        if hasattr(pdf_renderer, "PDFRenderConfig"):
-            try:
-                config = pdf_renderer.PDFRenderConfig(engine="xelatex")
-                assert config is not None
-            except TypeError:
-                pass
+def _write_executable(path: Path, body: str) -> Path:
+    path.write_text(body, encoding="utf-8")
+    path.chmod(path.stat().st_mode | stat.S_IXUSR)
+    return path
 
 
-class TestPdfRendererOutput:
-    """Test output handling."""
+class TestPdfRendererDispatch:
+    """Test format dispatch and deterministic engine selection."""
 
-    def test_output_path_generation(self, tmp_path):
-        """Test output path generation."""
-        tex = tmp_path / "test.tex"
-        tex.write_text("\\documentclass{article}")
+    def test_render_rejects_unsupported_source_format(self, tmp_path: Path) -> None:
+        source = tmp_path / "document.txt"
+        source.write_text("not a renderable document", encoding="utf-8")
 
-        if hasattr(pdf_renderer, "get_output_path"):
-            output = pdf_renderer.get_output_path(str(tex))
-            assert output is not None
+        with pytest.raises(RenderingError, match="Unsupported file format"):
+            PDFRenderer(_config(tmp_path)).render(source)
 
-    def test_cleanup_temp_files(self, tmp_path):
-        """Test cleanup of temporary files."""
-        # Create temp files
-        (tmp_path / "test.aux").write_text("")
-        (tmp_path / "test.log").write_text("")
+    def test_render_missing_tex_reports_compilation_error(self, tmp_path: Path) -> None:
+        with pytest.raises(CompilationError, match="LaTeX file not found"):
+            PDFRenderer(_config(tmp_path)).render(tmp_path / "missing.tex")
 
-        if hasattr(pdf_renderer, "cleanup_temp_files"):
-            pdf_renderer.cleanup_temp_files(tmp_path)
-            # Should not raise
+    def test_markdown_engine_candidates_are_deduplicated(self, tmp_path: Path) -> None:
+        config = _config(tmp_path)
+        config.latex_compiler = "xelatex"
+
+        def resolve(executable: str) -> str | None:
+            return f"/toolchain/{executable}" if executable in {"xelatex", "lualatex"} else None
+
+        renderer = PDFRenderer(config, executable_resolver=resolve)
+
+        assert renderer._markdown_pdf_engines() == ["xelatex", "lualatex"]
+
+    def test_markdown_render_requires_pandoc(self, tmp_path: Path) -> None:
+        source = tmp_path / "document.md"
+        source.write_text("# Document\n", encoding="utf-8")
+        config = _config(tmp_path)
+        config.pandoc_path = "missing-pandoc"
+
+        with pytest.raises(RenderingError, match="Pandoc not found"):
+            PDFRenderer(config, executable_resolver=lambda _name: None).render_markdown(source)
+
+    def test_markdown_render_uses_available_engine_and_writes_output(self, tmp_path: Path) -> None:
+        source = tmp_path / "document.md"
+        source.write_text("# Document\n", encoding="utf-8")
+        pandoc = _write_executable(
+            tmp_path / "pandoc-stub",
+            "#!/bin/sh\n"
+            "output=''\n"
+            "previous=''\n"
+            'for arg in "$@"; do\n'
+            '  if [ "$previous" = "-o" ]; then output="$arg"; fi\n'
+            '  previous="$arg"\n'
+            "done\n"
+            ': > "$output"\n',
+        )
+        config = _config(tmp_path)
+        config.pandoc_path = str(pandoc)
+
+        def resolve(executable: str) -> str | None:
+            if executable == str(pandoc):
+                return executable
+            return "/toolchain/xelatex" if executable == "xelatex" else None
+
+        output = PDFRenderer(config, executable_resolver=resolve).render_markdown(source)
+
+        assert output == Path(config.pdf_dir) / "document.pdf"
+        assert output.is_file()
+
+    def test_markdown_render_propagates_process_failure(self, tmp_path: Path) -> None:
+        source = tmp_path / "document.md"
+        source.write_text("# Document\n", encoding="utf-8")
+        config = _config(tmp_path)
+        config.pandoc_path = "pandoc"
+
+        def fail(_args: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+            raise subprocess.CalledProcessError(1, "pandoc", stderr="invalid markdown")
+
+        def resolve(executable: str) -> str | None:
+            return "/toolchain/" + executable
+
+        with pytest.raises(RenderingError, match="Failed to render markdown"):
+            PDFRenderer(config, executable_resolver=resolve, process_runner=fail).render_markdown(source)
 
 
-class TestPdfRendererErrors:
-    """Test error handling."""
+class TestPdfRendererConfiguration:
+    """Test the real rendering configuration contract."""
 
-    def test_handle_latex_error(self, tmp_path):
-        """Test handling LaTeX errors with real execution."""
-        tex = tmp_path / "bad.tex"
-        tex.write_text("\\invalid")
+    def test_default_config_uses_xelatex(self) -> None:
+        assert RenderingConfig().latex_compiler == "xelatex"
 
-        if hasattr(pdf_renderer, "render_pdf"):
-            # Use real execution - may fail if LaTeX not available, which is expected
-            try:
-                pdf_renderer.render_pdf(str(tex))
-            except Exception:
-                pass  # Expected to fail with invalid LaTeX
-
-    def test_handle_missing_file(self, tmp_path):
-        """Test handling missing file."""
-        if hasattr(pdf_renderer, "render_pdf"):
-            try:
-                pdf_renderer.render_pdf(str(tmp_path / "missing.tex"))
-            except Exception:
-                pass  # Expected to fail
+    def test_custom_config_preserves_explicit_compiler(self) -> None:
+        config = RenderingConfig(latex_compiler="pdflatex")
+        assert config.latex_compiler == "pdflatex"

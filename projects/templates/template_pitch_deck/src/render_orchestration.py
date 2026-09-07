@@ -17,7 +17,13 @@ from diligence_audit import uncited_fact_slides
 from standalone_slides import attach_qr_urls, write_standalone_slides
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering.slide_deck import DeckTheme, SlideBudget, filter_deck_for_budget, render_pdf
+from infrastructure.rendering.slide_deck import (
+    DeckTheme,
+    SlideBudget,
+    filter_deck_for_budget,
+    render_pdf,
+    validate_deck_layout,
+)
 
 DECK_LENGTHS: tuple[str, ...] = ("short", "medium", "long")
 _BUDGETS = {"short": SlideBudget.SHORT, "medium": SlideBudget.MEDIUM, "long": SlideBudget.LONG}
@@ -54,7 +60,7 @@ def _resolve_theme(deck_config: dict) -> DeckTheme:
 
 
 def _try_import_render_pptx():
-    """Return `render_pptx` if the opt-in `python-pptx` group is installed, else `None`.
+    """Return ``render_pptx`` when the project runtime dependency is available.
 
     Importing `infrastructure.rendering.pptx_deck` itself never raises
     `ImportError` (that module catches the `pptx` import internally so
@@ -65,6 +71,32 @@ def _try_import_render_pptx():
     from infrastructure.rendering.pptx_deck import is_pptx_available, render_pptx
 
     return render_pptx if is_pptx_available() else None
+
+
+def _configured_formats(deck_config: dict) -> tuple[str, ...]:
+    """Return the validated project-owned deck formats in declaration order."""
+    raw_formats = deck_config.get("formats", ["pdf", "pptx"])
+    if not isinstance(raw_formats, list) or not raw_formats or any(not isinstance(item, str) for item in raw_formats):
+        raise RenderingError("deck.formats must be a non-empty list of format names")
+    formats = tuple(dict.fromkeys(raw_formats))
+    unsupported = sorted(set(formats) - {"pdf", "pptx"})
+    if unsupported:
+        raise RenderingError(f"Unsupported declared deck format(s): {', '.join(unsupported)}")
+    if "pdf" not in formats:
+        raise RenderingError("template_pitch_deck requires the declared pdf format")
+    return formats
+
+
+def _select_pptx_renderer(formats: tuple[str, ...], candidate):
+    """Fail closed when configuration requires PPTX but its renderer is absent."""
+    if "pptx" not in formats:
+        return None
+    if candidate is None:
+        raise RenderingError(
+            "deck.formats declares pptx, but python-pptx is unavailable in the project runtime; "
+            "sync projects/templates/template_pitch_deck before running Stage 02"
+        )
+    return candidate
 
 
 def render_one_length(
@@ -81,6 +113,7 @@ def render_one_length(
     source_base_url: str,
     render_pptx_fn,
     logger: logging.Logger,
+    content_prefix: str = "deck_content",
 ) -> list[Path]:
     """Audit, resolve, budget-filter, and render one deck length. Returns written paths.
 
@@ -93,7 +126,7 @@ def render_one_length(
     `DiligenceAuditFailure` on a fact-bearing slide with no `source` citation
     — both before any PDF/PPTX bytes are written.
     """
-    content_path = manuscript_dir / f"deck_content_{length}.yaml"
+    content_path = manuscript_dir / f"{content_prefix}_{length}.yaml"
     raw = load_deck_yaml(content_path)
 
     result = audit_deck(length, raw, tokens)
@@ -109,6 +142,7 @@ def render_one_length(
 
     resolved_deck = build_deck_content(raw, tokens, figures_dir=figures_dir)
     budgeted_deck = filter_deck_for_budget(resolved_deck, _BUDGETS[length])
+    validate_deck_layout(budgeted_deck)
     pitch_subject = tokens["PITCH_SUBJECT_NAME"]
 
     standalone_paths = write_standalone_slides(
@@ -138,26 +172,71 @@ def render_one_length(
     return written
 
 
-def render_all_decks(project_root: Path, repo_root: Path, logger: logging.Logger) -> list[Path]:
+def _subject_content_prefix(deck_config: dict, pitch_subject: str) -> str:
+    """Resolve a configured subject to a safe local deck-content prefix."""
+    subjects = deck_config.get("subjects", {})
+    if isinstance(subjects, dict):
+        subject_config = subjects.get(pitch_subject, {})
+        if isinstance(subject_config, dict):
+            prefix = subject_config.get("content_prefix", "deck_content")
+            if isinstance(prefix, str) and prefix and "/" not in prefix and "\\" not in prefix:
+                return prefix
+    return "deck_content"
+
+
+def _preflight_all_lengths(
+    *,
+    manuscript_dir: Path,
+    repo_root: Path,
+    tokens: dict[str, str],
+    content_prefix: str,
+    figures_dir: Path | None = None,
+) -> None:
+    """Audit and layout-check every length before generated output is touched."""
+    for length in DECK_LENGTHS:
+        raw = load_deck_yaml(manuscript_dir / f"{content_prefix}_{length}.yaml")
+        result = audit_deck(length, raw, tokens)
+        if not result.ok:
+            raise DeckAuditFailure(f"[{length}] audit failed: {result.unresolved_error or result.cliche_hits}")
+        uncited = uncited_fact_slides(raw, repo_root)
+        if uncited:
+            titles = ", ".join(row["title"] or f"slide {row['index']}" for row in uncited)
+            raise DiligenceAuditFailure(
+                f"[{length}] {len(uncited)} fact-bearing slide(s) with no source citation: {titles}"
+            )
+        resolved_deck = build_deck_content(raw, tokens, figures_dir=figures_dir)
+        validate_deck_layout(filter_deck_for_budget(resolved_deck, _BUDGETS[length]))
+
+
+def render_all_decks(
+    project_root: Path,
+    repo_root: Path,
+    logger: logging.Logger,
+    pitch_subject: str | None = None,
+) -> list[Path]:
     """Render all three lengths. Raises `DeckAuditFailure`/`RenderingError` on any failure."""
     manuscript_dir = project_root / "manuscript"
     figures_dir = project_root / "output" / "figures"
     pdf_dir = project_root / "output" / "pdf"
     pptx_dir = project_root / "output" / "pptx"
-    pdf_dir.mkdir(parents=True, exist_ok=True)
-    pptx_dir.mkdir(parents=True, exist_ok=True)
-
     deck_config = load_deck_config(project_root)
     theme = _resolve_theme(deck_config)
     source_base_url = deck_config.get("source_base_url", "")
-    tokens = build_deck_tokens(repo_root)
+    selected_subject = pitch_subject or str(deck_config.get("pitch_subject", "template_template"))
+    tokens = build_deck_tokens(repo_root, pitch_subject=selected_subject)
+    content_prefix = _subject_content_prefix(deck_config, selected_subject)
+    _preflight_all_lengths(
+        manuscript_dir=manuscript_dir,
+        repo_root=repo_root,
+        tokens=tokens,
+        content_prefix=content_prefix,
+        figures_dir=figures_dir,
+    )
 
-    render_pptx_fn = _try_import_render_pptx()
-    if render_pptx_fn is None:
-        logger.warning(
-            "python-pptx not installed — skipping PPTX rendering. "
-            "Install with `uv sync --group rendering-pptx` for all six artifacts."
-        )
+    formats = _configured_formats(deck_config)
+    render_pptx_fn = _select_pptx_renderer(formats, _try_import_render_pptx())
+    pdf_dir.mkdir(parents=True, exist_ok=True)
+    pptx_dir.mkdir(parents=True, exist_ok=True)
 
     written: list[Path] = []
     for length in DECK_LENGTHS:
@@ -175,10 +254,11 @@ def render_all_decks(project_root: Path, repo_root: Path, logger: logging.Logger
                 source_base_url=source_base_url,
                 render_pptx_fn=render_pptx_fn,
                 logger=logger,
+                content_prefix=content_prefix,
             )
         )
 
-    expected = 6 if render_pptx_fn is not None else 3
+    expected = len(DECK_LENGTHS) * len(formats)
     if len(written) != expected:
         raise RenderingError(f"Expected {expected} artifacts, wrote {len(written)}")
 
@@ -189,6 +269,10 @@ __all__ = [
     "DECK_LENGTHS",
     "DeckAuditFailure",
     "DiligenceAuditFailure",
+    "_configured_formats",
+    "_preflight_all_lengths",
+    "_select_pptx_renderer",
+    "_subject_content_prefix",
     "load_deck_config",
     "render_one_length",
     "render_all_decks",

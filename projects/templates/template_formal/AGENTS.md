@@ -91,7 +91,7 @@ flowchart TB
     P --> PY[pyproject.toml<br/>Pytest/coverage/mypy config]
 
     SRC --> SRC_F[types/ids.py · types/result.py · types/phase.py ·<br/>storage/schema.py · storage/db.py · storage/transaction.py ·<br/>protocol/session.py · protocol/errors.py · network/bus.py ·<br/>agent/agent.py · colony/pheromone.py · colony/experiment.py ·<br/>colony/stats.py · colony/nullmodel.py · colony/sweep.py ·<br/>colony/demo.py · colony/visualization.py · colony/analysis.py]
-    SC --> SC_F[00_setup_environment.py · 02_run_analysis.py]
+    SC --> SC_F[00_setup_environment.py · 02_run_analysis.py ·<br/>zz_generate_cover_art.py · check_formal_specs.sh]
     T --> T_F[mypy_fixtures/ · storage/ · protocol/ · network/ · agent/ · colony/ ·<br/>test_mypy_oracle.py · test_types_ids.py · test_types_result.py]
     M --> M_F[00_abstract → 05_results_discussion.md ·<br/>config.yaml · config.yaml.example ·<br/>preamble.md · references.bib]
 
@@ -119,8 +119,11 @@ uv run python projects/templates/template_formal/scripts/02_run_analysis.py
 # Run tests with coverage
 uv run pytest projects/templates/template_formal/tests/ --cov=projects/templates/template_formal/src --cov-fail-under=90
 
-# mypy --strict oracle
-uv run mypy --strict projects/templates/template_formal/src
+# mypy --strict oracle (authoritative form; the bare invocation can spuriously
+# fail under this src-layout -- see README "Prerequisites & verification")
+MYPYPATH=projects/templates/template_formal/src \
+  uv run mypy --strict --explicit-package-bases --namespace-packages \
+  projects/templates/template_formal/src
 ```
 
 ## Adding a mypy-oracle fixture

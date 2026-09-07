@@ -32,7 +32,9 @@ from infrastructure.rendering._pdf_title_page_config import (
     _load_render_config as _load_render_config,
 )
 from infrastructure.rendering._pdf_title_page_images import (
+    _cover_image_alt as _cover_image_alt,
     _cover_image_block,
+    _cover_image_path as _cover_image_path,
     _has_available_paper_cover,
 )
 from infrastructure.rendering._pdf_title_page_latex import (
@@ -67,6 +69,7 @@ def generate_title_page_preamble(manuscript_dir: Path) -> str:
 
         title = _latex_text(metadata["title"])
         date = metadata["date"]
+        rendering = _rendering_options(config)
         doi_line = _publication_doi_line(config)
 
         preamble_lines = [
@@ -116,10 +119,12 @@ def generate_title_page_preamble(manuscript_dir: Path) -> str:
 
                 preamble_lines.append(f"\\author{{{author_str}}}")
 
-        if date:
+        if rendering["include_date"] and date:
             preamble_lines.append(f"\\date{{{date}}}")
-        else:
+        elif rendering["include_date"]:
             preamble_lines.append(r"\date{\today}")
+        else:
+            preamble_lines.append(r"\date{}")
 
         logger.debug(f"Generated title page preamble with {len(preamble_lines)} commands")
         return "\n".join(preamble_lines)

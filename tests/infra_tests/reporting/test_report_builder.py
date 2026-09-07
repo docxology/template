@@ -165,3 +165,17 @@ class TestDiscoverActiveProjects:
         (tmp_path / "projects").mkdir()
         result = discover_active_projects(tmp_path)
         assert result == []
+
+    def test_qualified_name_when_bare_names_would_collide(self, tmp_path):
+        """A templates/<name> tree must not collapse onto a flat sibling name."""
+        for rel in ("projects/demo", "projects/templates/demo"):
+            proj = tmp_path / rel
+            (proj / "src").mkdir(parents=True)
+            (proj / "src" / "__init__.py").write_text("")
+            (proj / "src" / "mod.py").write_text("x = 1\n")
+            (proj / "tests").mkdir()
+            (proj / "tests" / "__init__.py").write_text("")
+        result = discover_active_projects(tmp_path)
+        assert "demo" in result
+        assert "templates/demo" in result
+        assert result.count("demo") == 1

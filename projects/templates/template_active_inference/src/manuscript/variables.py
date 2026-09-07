@@ -5,11 +5,11 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import yaml
 
 from analytical.hyperparameters import load_hyperparameters
 from contracts.artifact_contract import VARIABLE_ARTIFACTS
 from json_io import load_json
+from yaml_io import load_yaml
 from analytical.sweep_io import read_parameter_sweep
 from gnn.concordance import BERNOULLI_EXPECTED_TERMS
 from manuscript.invariant_counts import load_invariant_counts
@@ -67,11 +67,9 @@ def _policy_goal_counts_by_mode(policy_data: dict[str, Any]) -> dict[str, int]:
 def _pipeline_track_count(project_root: Path) -> int:
     """Required pipeline tracks from ``tracks.yaml`` (distinct from ``sheaf_track_count``)."""
     tracks_path = project_root / "tracks.yaml"
-    if not tracks_path.is_file():
-        return 0
-    raw = yaml.safe_load(tracks_path.read_text(encoding="utf-8")) or {}
+    raw = load_yaml(tracks_path)
     tracks = raw.get("tracks") or []
-    return sum(1 for track in tracks if track.get("required", True))
+    return sum(1 for t in tracks if t.get("required", True))
 
 
 def _gnn_spec_version(project_root: Path) -> str:

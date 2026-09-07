@@ -69,7 +69,8 @@ def test_generate_assets_writes_valid_registry_in_temp_tree(tmp_path: Path) -> N
         "fig:product_space",
         "fig:coverage_by_module",
     }
-    ok, issues = validate_figure_registry(registry, manuscript)
+    assert all(record["metadata"]["alt_text"].strip() for record in payload["figures"])
+    ok, issues = validate_figure_registry(registry, manuscript, require_accessibility=True)
     assert ok, issues
 
 

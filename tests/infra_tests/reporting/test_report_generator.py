@@ -36,6 +36,12 @@ class TestGenerateTestReport:
         assert "timestamp" in report
         assert "T" in report["timestamp"]
 
+    def test_timestamp_is_byte_stable_without_source_date_epoch(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
+        first = generate_test_report({}, {}, tmp_path, include_coverage_details=False)
+        second = generate_test_report({}, {}, tmp_path, include_coverage_details=False)
+        assert first["timestamp"] == second["timestamp"]
+
     def test_coverage_details_from_json_files(self, tmp_path):
         # Create mock coverage JSON files
         infra_cov = {
@@ -202,6 +208,25 @@ class TestGenerateTestReportFromReportGenerator:
         project = {"passed": 5, "failed": 0, "total": 5, "exit_code": 0}
         report = generate_test_report(infra, project, tmp_path, include_coverage_details=True)
         assert "coverage_details" in report
+
+    def test_project_identity_never_falls_back_to_stale_repo_coverage(self, tmp_path):
+        stale = tmp_path / "coverage_project.json"
+        stale.write_text(
+            json.dumps({"totals": {"percent_covered": 100.0}, "files": {"other.py": {"summary": {}}}}),
+            encoding="utf-8",
+        )
+        current_project = tmp_path / "projects" / "current"
+        current_project.mkdir(parents=True)
+
+        report = generate_test_report(
+            {},
+            {"passed": 0, "failed": 1, "total": 1, "exit_code": 1},
+            tmp_path,
+            include_coverage_details=True,
+            project_root=current_project,
+        )
+
+        assert "coverage_details" not in report
 
     def test_empty_results(self, tmp_path):
         report = generate_test_report({}, {}, tmp_path, include_coverage_details=False)

@@ -27,7 +27,7 @@ edit config.yaml  ->  scaffold_chapter.py  ->  fill <!-- STUB --> blocks
 ## Step 1 — Decide the Structure in `config.yaml`
 
 Open [`config.yaml`](../config.yaml). To add or rename a chapter, edit the
-`parts:` tree (each chapter has a `stem` and a `title`); to add a lab or
+`units:` tree (each chapter has a `stem` and a `title`); to add a lab or
 question bank, add an entry under `appendices.labs` / `appendices.questions`
 for the matching part. The stem drives every downstream name:
 

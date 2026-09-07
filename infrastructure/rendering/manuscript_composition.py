@@ -17,6 +17,7 @@ SCHEMA_VERSION = "template-manuscript-composition-v1"
 COMPOSITION_RELATIVE_PATH = Path("output/reports/manuscript_composition.json")
 COMBINED_RELATIVE_PATH = Path("output/web/_combined_manuscript.md")
 _SHA256_RE = re.compile(r"[0-9a-f]{64}\Z")
+_SUPPORTED_ALGORITHMS = {"web-renderer-combine-v1", "shared-combined-markdown-v1"}
 
 
 @dataclass(frozen=True)
@@ -92,8 +93,12 @@ def build_manuscript_composition(
     project: str,
     ordered_inputs: list[Path],
     combined_path: Path,
+    *,
+    algorithm: str = "web-renderer-combine-v1",
 ) -> ManuscriptComposition:
     """Build render-boundary evidence from the exact inputs just consumed."""
+    if algorithm not in _SUPPORTED_ALGORITHMS:
+        raise ValueError(f"composition algorithm is unsupported: {algorithm}")
     expected_combined = project_root / COMBINED_RELATIVE_PATH
     if combined_path.absolute() != expected_combined.absolute():
         raise ValueError(f"combined composition path must be {COMBINED_RELATIVE_PATH.as_posix()}")
@@ -129,6 +134,7 @@ def build_manuscript_composition(
         combined_size_bytes=combined_path.stat().st_size,
         combined_sha256=combined_digest,
         binding_sha256=_binding_digest(ordered_digest, combined_relative, combined_digest),
+        algorithm=algorithm,
     )
 
 
@@ -137,9 +143,17 @@ def write_manuscript_composition(
     project: str,
     ordered_inputs: list[Path],
     combined_path: Path,
+    *,
+    algorithm: str = "web-renderer-combine-v1",
 ) -> ManuscriptComposition:
-    """Write deterministic evidence at the actual web composition boundary."""
-    composition = build_manuscript_composition(project_root, project, ordered_inputs, combined_path)
+    """Write deterministic evidence at an actual combined-render boundary."""
+    composition = build_manuscript_composition(
+        project_root,
+        project,
+        ordered_inputs,
+        combined_path,
+        algorithm=algorithm,
+    )
     target = project_root / COMPOSITION_RELATIVE_PATH
     content = json.dumps(composition.to_dict(), indent=2, sort_keys=True) + "\n"
     atomic_write_text_confined(project_root, target, content)
@@ -189,7 +203,7 @@ def read_manuscript_composition(path: Path) -> ManuscriptComposition:
         raise ValueError("composition evidence has missing or unknown fields")
     if payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(f"composition schema_version must be {SCHEMA_VERSION}")
-    if payload.get("algorithm") != "web-renderer-combine-v1":
+    if payload.get("algorithm") not in _SUPPORTED_ALGORITHMS:
         raise ValueError("composition algorithm is unsupported")
     root_kind = payload.get("input_root_kind")
     if root_kind not in {"source", "hydrated"}:
@@ -227,6 +241,7 @@ def read_manuscript_composition(path: Path) -> ManuscriptComposition:
         combined_size_bytes=combined_size_bytes,
         combined_sha256=_required_sha256(payload, "combined_sha256"),
         binding_sha256=_required_sha256(payload, "binding_sha256"),
+        algorithm=_required_string(payload, "algorithm"),
     )
     prefixes = (
         ("output/manuscript/",) if composition.input_root_kind == "hydrated" else ("manuscript/", "docs/manuscript/")

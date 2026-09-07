@@ -205,6 +205,8 @@ both the math and the manuscript contract with real data and no mocks.
 | --- | --- |
 | **This file (`README.md`)** | Overview, directory map, quick-start commands, how to grow the book |
 | [`AGENTS.md`](AGENTS.md) | Agent-facing reference: invariants, editing checklist, frozen vs. fillable files |
+| [`STANDALONE.md`](STANDALONE.md) | Fork/publish guide: publication identity, clean-copy command, standalone vs. monorepo boundary |
+| [`docs/`](docs/README.md) | Deeper guides: architecture, manuscript/authoring/visualization/testing (`docs/README.md` is the index) |
 | [`manuscript/config.yaml`](manuscript/config.yaml) | The single source of truth for book structure |
 | Monorepo [`README.md`](https://github.com/docxology/template/blob/main/README.md) / [`CLAUDE.md`](https://github.com/docxology/template/blob/main/CLAUDE.md) / [`AGENTS.md`](https://github.com/docxology/template/blob/main/AGENTS.md) | Pipeline semantics, CI parity, two-layer architecture |
 

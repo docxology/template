@@ -979,127 +979,90 @@ figure(s) with validity `false`.
 
 ![File-backed AutoResearch closure from program through review, with 6 supported claims and readiness passed; review remains a deferred human decision and the provenance path remains inspectable. Generation method: File-backed process-flow diagram from final loop state. Registry metadata records the generation method, source artifact, and claim boundary for validation.](../figures/autoresearch_closure_flow.png){#fig:autoresearch_closure_flow width="0.95\textwidth"}
 
-| Artifact | Role | Bytes |
-| --- | --- | --- |
-| output/data/autoresearch_claims.json | Loop artifact | 1766 |
-| output/data/autoresearch_evidence_overview.json | Evidence registry | 4436 |
-| output/data/autoresearch_integrity_attestation.json | Security evidence | 22755 |
-| output/data/autoresearch_inventory_export.json | Security evidence | 20155 |
-| output/data/autoresearch_loop.json | Loop artifact | 16085 |
-| output/data/autoresearch_phase_ledger.json | Run or candidate ledger | 3779 |
-| output/data/autoresearch_plan.json | Loop artifact | 19262 |
-| output/data/autoresearch_review_packet.json | Review packet | 16204 |
-| output/data/autoresearch_schema_manifest.json | Loop artifact | 7226 |
-| output/data/autoresearch_security_profile.json | Security evidence | 1537 |
-| output/data/autoresearch_stage_matrix.csv | Loop artifact | 749 |
-| output/data/autoresearch_supply_chain_inventory.json | Security evidence | 21411 |
-| output/data/autoresearch_threat_model.json | Security evidence | 6370 |
-| output/data/benchmark_boundary.json | Benchmark grading | 2363 |
-| output/data/benchmark_scores.json | Benchmark grading | 621 |
-| output/data/figure_quality_report.json | Loop artifact | 16040 |
-| output/data/figure_style.json | Loop artifact | 1117 |
-| output/data/idea_ledger.json | Run or candidate ledger | 5233 |
-| output/data/manuscript_figure_blocks.json | Manuscript hydration | 13062 |
-| output/data/manuscript_variable_provenance.json | Manuscript hydration | 30891 |
-| output/data/manuscript_variables.json | Manuscript hydration | 54968 |
-| output/data/ml_bootstrap_intervals.json | Loop artifact | 615 |
-| output/data/ml_calibration_bin_intervals.json | Loop artifact | 2879 |
-| output/data/ml_calibration_report.json | Loop artifact | 2201 |
-| output/data/ml_candidate_intervals.json | Loop artifact | 1577 |
-| output/data/ml_candidate_ledger.json | Run or candidate ledger | 570872 |
-| output/data/ml_candidate_rank_stability.json | Loop artifact | 3135 |
-| output/data/ml_candidate_selection_audit.json | Loop artifact | 2145 |
-| output/data/ml_class_balance.json | Loop artifact | 2393 |
-| output/data/ml_classification_diagnostics.json | Loop artifact | 4246 |
-| output/data/ml_confusion_matrix.csv | Loop artifact | 271 |
-| output/data/ml_diagnostic_boundary.json | Loop artifact | 2064 |
-| output/data/ml_error_examples.json | Loop artifact | 989 |
-| output/data/ml_paired_comparison.json | Loop artifact | 470 |
-| output/data/ml_prediction_records.json | Loop artifact | 989913 |
-| output/data/ml_probability_diagnostics.json | Loop artifact | 3045 |
-| output/data/ml_robustness_report.json | Loop artifact | 3758 |
-| output/data/ml_statistical_summary.json | Loop artifact | 3032 |
-| output/data/ml_task_results.json | Loop artifact | 703566 |
-| output/data/ml_training_diagnostics.json | Loop artifact | 2968 |
-| output/data/ml_training_history.csv | Loop artifact | 6775 |
-| output/data/mnist_task_config.json | Loop artifact | 3926 |
-| output/data/publication_ledger.json | Run or candidate ledger | 1005 |
-| output/data/research_object_manifest.json | Loop artifact | 20789 |
-| output/data/research_program.json | Loop artifact | 965 |
-| output/data/review_decisions.json | Review packet | 669 |
-| output/data/run_ledger.json | Run or candidate ledger | 328 |
-| output/data/transmission_manifest.json | Loop artifact | 503 |
-| ../figures/autoresearch_candidate_lifecycle.png | Generated figure | 28053 |
-| ../figures/autoresearch_closure_flow.png | Generated figure | 40410 |
-| ../figures/autoresearch_integrity_chain.png | Generated figure | 48256 |
-| ../figures/autoresearch_security_control_matrix.png | Generated figure | 86574 |
-| ../figures/autoresearch_stage_matrix.png | Generated figure | 23476 |
-| ../figures/figure_registry.json | Loop artifact | 30674 |
-| ../figures/ml_bootstrap_intervals.png | Generated figure | 21834 |
-| ../figures/ml_calibration_reliability.png | Generated figure | 73889 |
-| ../figures/ml_candidate_rank_stability.png | Generated figure | 43692 |
-| ../figures/ml_candidate_scores.png | Generated figure | 59953 |
-| ../figures/ml_classification_metrics_heatmap.png | Generated figure | 55092 |
-| ../figures/ml_complexity_accuracy.png | Generated figure | 35135 |
-| ../figures/ml_confusion_matrix.png | Generated figure | 65820 |
-| ../figures/ml_confusion_pairs.png | Generated figure | 33982 |
-| ../figures/ml_generalization_gap.png | Generated figure | 48512 |
-| ../figures/ml_learning_curves.png | Generated figure | 59258 |
-| ../figures/ml_paired_correctness.png | Generated figure | 43309 |
-| ../figures/ml_per_class_accuracy.png | Generated figure | 34800 |
-| ../figures/ml_probability_margin_distribution.png | Generated figure | 41754 |
-| ../figures/ml_probability_quality.png | Generated figure | 38071 |
-| ../figures/ml_robustness_matrix.png | Generated figure | 51332 |
-| ../figures/ml_selective_accuracy.png | Generated figure | 48274 |
-| ../figures/ml_training_dynamics.png | Generated figure | 51004 |
-| ../figures/mnist_class_balance.png | Generated figure | 27059 |
-| ../figures/mnist_error_examples.png | Generated figure | 28431 |
-| ../figures/mnist_subset_contact_sheet.png | Generated figure | 23617 |
-| ../figures/transmission_integrity_strip.png | Generated figure | 18348 |
-| ../figures/transmission_pairing.png | Generated figure | 11286 |
-| output/manuscript/00_00_transmission_begin.md | Manuscript hydration | 1554 |
-| output/manuscript/00_abstract.md | Manuscript hydration | 1451 |
-| output/manuscript/01_introduction.md | Manuscript hydration | 14774 |
-| output/manuscript/02_methodology.md | Manuscript hydration | 21097 |
-| output/manuscript/03_results.md | Manuscript hydration | 39363 |
-| output/manuscript/04_conclusion.md | Manuscript hydration | 2642 |
-| output/manuscript/99_references.md | Manuscript hydration | 58 |
-| output/manuscript/99_zz_transmission_end.md | Manuscript hydration | 543 |
-| output/manuscript/config.yaml | Manuscript hydration | 3233 |
-| output/manuscript/preamble.md | Manuscript hydration | 137 |
-| output/manuscript/references.bib | Manuscript hydration | 23228 |
-| output/pdf/template_autoresearch_project_combined.pdf | Loop artifact | 1342096 |
-| output/release/swh_repo_url.txt | Loop artifact | 59 |
-| output/release/upload_receipts.json | Loop artifact | 2004 |
-| output/reports/autoresearch_evidence_overview.md | Evidence registry | 1136 |
-| output/reports/autoresearch_loop.json | Loop artifact | 16085 |
-| output/reports/autoresearch_loop.md | Loop artifact | 1982 |
-| output/reports/autoresearch_review_packet.md | Review packet | 912 |
-| output/reports/autoresearch_security_review.md | Review packet | 1104 |
-| output/reports/autoresearch_summary.md | Loop artifact | 255 |
-| output/reports/benchmark_readiness_smoke.json | Benchmark grading | 778 |
-| output/reports/manuscript_composition.json | Manuscript hydration | 2149 |
-| output/reports/ml_benchmark_score.json | Benchmark grading | 382 |
-| output/reports/ml_experiment_report.md | Loop artifact | 1687 |
-| output/reports/test_results.json | Loop artifact | 616 |
-| output/reports/test_results.md | Loop artifact | 293 |
-| output/slides/00_abstract_slides.pdf | Loop artifact | 15419 |
-| output/slides/01_introduction_slides.pdf | Loop artifact | 30739 |
-| output/slides/02_methodology_slides.pdf | Loop artifact | 191202 |
-| output/slides/03_results_slides.pdf | Loop artifact | 1060056 |
-| output/slides/04_conclusion_slides.pdf | Loop artifact | 15939 |
-| output/slides/99_references_slides.pdf | Loop artifact | 7623 |
-| output/web/_combined_manuscript.md | Manuscript hydration | 81389 |
-| output/web/favicon.ico | Loop artifact | 121 |
-| output/web/index.html | Loop artifact | 127633 |
-| output/web/manuscript__00_abstract.html | Manuscript hydration | 5627 |
-| output/web/manuscript__01_introduction.html | Manuscript hydration | 19028 |
-| output/web/manuscript__02_methodology.html | Manuscript hydration | 32746 |
-| output/web/manuscript__03_results.html | Manuscript hydration | 69087 |
-| output/web/manuscript__04_conclusion.html | Manuscript hydration | 6574 |
-| output/web/manuscript__99_references.html | Manuscript hydration | 3942 |
+| Artifact | Role |
+| --- | --- |
+| output/data/autoresearch_claims.json | Loop artifact |
+| output/data/autoresearch_evidence_overview.json | Evidence registry |
+| output/data/autoresearch_integrity_attestation.json | Security evidence |
+| output/data/autoresearch_inventory_export.json | Security evidence |
+| output/data/autoresearch_loop.json | Loop artifact |
+| output/data/autoresearch_phase_ledger.json | Run or candidate ledger |
+| output/data/autoresearch_plan.json | Loop artifact |
+| output/data/autoresearch_review_packet.json | Review packet |
+| output/data/autoresearch_schema_manifest.json | Loop artifact |
+| output/data/autoresearch_security_profile.json | Security evidence |
+| output/data/autoresearch_stage_matrix.csv | Loop artifact |
+| output/data/autoresearch_supply_chain_inventory.json | Security evidence |
+| output/data/autoresearch_threat_model.json | Security evidence |
+| output/data/benchmark_boundary.json | Benchmark grading |
+| output/data/benchmark_scores.json | Benchmark grading |
+| output/data/figure_quality_report.json | Loop artifact |
+| output/data/figure_style.json | Loop artifact |
+| output/data/idea_ledger.json | Run or candidate ledger |
+| output/data/ml_bootstrap_intervals.json | Loop artifact |
+| output/data/ml_calibration_bin_intervals.json | Loop artifact |
+| output/data/ml_calibration_report.json | Loop artifact |
+| output/data/ml_candidate_intervals.json | Loop artifact |
+| output/data/ml_candidate_ledger.json | Run or candidate ledger |
+| output/data/ml_candidate_rank_stability.json | Loop artifact |
+| output/data/ml_candidate_selection_audit.json | Loop artifact |
+| output/data/ml_class_balance.json | Loop artifact |
+| output/data/ml_classification_diagnostics.json | Loop artifact |
+| output/data/ml_confusion_matrix.csv | Loop artifact |
+| output/data/ml_diagnostic_boundary.json | Loop artifact |
+| output/data/ml_error_examples.json | Loop artifact |
+| output/data/ml_paired_comparison.json | Loop artifact |
+| output/data/ml_prediction_records.json | Loop artifact |
+| output/data/ml_probability_diagnostics.json | Loop artifact |
+| output/data/ml_robustness_report.json | Loop artifact |
+| output/data/ml_statistical_summary.json | Loop artifact |
+| output/data/ml_task_results.json | Loop artifact |
+| output/data/ml_training_diagnostics.json | Loop artifact |
+| output/data/ml_training_history.csv | Loop artifact |
+| output/data/mnist_task_config.json | Loop artifact |
+| output/data/research_object_manifest.json | Loop artifact |
+| output/data/research_program.json | Loop artifact |
+| output/data/review_decisions.json | Review packet |
+| output/data/run_ledger.json | Run or candidate ledger |
+| ../figures/autoresearch_candidate_lifecycle.png | Generated figure |
+| ../figures/autoresearch_closure_flow.png | Generated figure |
+| ../figures/autoresearch_integrity_chain.png | Generated figure |
+| ../figures/autoresearch_security_control_matrix.png | Generated figure |
+| ../figures/autoresearch_stage_matrix.png | Generated figure |
+| ../figures/figure_registry.json | Loop artifact |
+| ../figures/ml_bootstrap_intervals.png | Generated figure |
+| ../figures/ml_calibration_reliability.png | Generated figure |
+| ../figures/ml_candidate_rank_stability.png | Generated figure |
+| ../figures/ml_candidate_scores.png | Generated figure |
+| ../figures/ml_classification_metrics_heatmap.png | Generated figure |
+| ../figures/ml_complexity_accuracy.png | Generated figure |
+| ../figures/ml_confusion_matrix.png | Generated figure |
+| ../figures/ml_confusion_pairs.png | Generated figure |
+| ../figures/ml_generalization_gap.png | Generated figure |
+| ../figures/ml_learning_curves.png | Generated figure |
+| ../figures/ml_paired_correctness.png | Generated figure |
+| ../figures/ml_per_class_accuracy.png | Generated figure |
+| ../figures/ml_probability_margin_distribution.png | Generated figure |
+| ../figures/ml_probability_quality.png | Generated figure |
+| ../figures/ml_robustness_matrix.png | Generated figure |
+| ../figures/ml_selective_accuracy.png | Generated figure |
+| ../figures/ml_training_dynamics.png | Generated figure |
+| ../figures/mnist_class_balance.png | Generated figure |
+| ../figures/mnist_error_examples.png | Generated figure |
+| ../figures/mnist_subset_contact_sheet.png | Generated figure |
+| output/reports/autoresearch_evidence_overview.md | Evidence registry |
+| output/reports/autoresearch_loop.json | Loop artifact |
+| output/reports/autoresearch_loop.md | Loop artifact |
+| output/reports/autoresearch_review_packet.md | Review packet |
+| output/reports/autoresearch_security_review.md | Review packet |
+| output/reports/autoresearch_summary.md | Loop artifact |
+| output/reports/benchmark_readiness_smoke.json | Benchmark grading |
+| output/reports/ml_benchmark_score.json | Benchmark grading |
+| output/reports/ml_experiment_report.md | Loop artifact |
+| output/reports/test_results.json | Loop artifact |
+| output/reports/test_results.md | Loop artifact |
 
-: Generated artifact manifest from `output/reports/artifact_manifest.json`. {#tbl:autoresearch-loop}
+: Reviewed upstream analysis and evidence paths from `output/reports/artifact_manifest.json`; unreviewed paths are omitted, and that terminal manifest remains the complete byte authority. {#tbl:autoresearch-loop}
 
 | Gate | Required | Decision | Rationale |
 | --- | --- | --- | --- |
@@ -1138,18 +1101,18 @@ figure(s) with validity `false`.
 
 | Figure | Pixels | Variance | Source exists | Nonblank |
 | --- | --- | --- | --- | --- |
-| fig:autoresearch_candidate_lifecycle | 1184x480 | 0.083 | True | True |
+| fig:autoresearch_candidate_lifecycle | 1184x480 | 0.082 | True | True |
 | fig:autoresearch_closure_flow | 1664x448 | 0.015 | True | True |
-| fig:autoresearch_integrity_chain | 1440x734 | 0.040 | True | True |
-| fig:autoresearch_security_control_matrix | 1470x734 | 0.014 | True | True |
-| fig:autoresearch_stage_matrix | 1120x416 | 0.080 | True | True |
+| fig:autoresearch_integrity_chain | 1440x736 | 0.040 | True | True |
+| fig:autoresearch_security_control_matrix | 1472x736 | 0.014 | True | True |
+| fig:autoresearch_stage_matrix | 1120x416 | 0.079 | True | True |
 | fig:ml_bootstrap_intervals | 1152x448 | 0.009 | True | True |
 | fig:ml_calibration_reliability | 1152x832 | 0.015 | True | True |
 | fig:ml_candidate_rank_stability | 1408x608 | 0.053 | True | True |
 | fig:ml_candidate_scores | 1376x688 | 0.013 | True | True |
 | fig:ml_classification_metrics_heatmap | 928x832 | 0.092 | True | True |
 | fig:ml_complexity_accuracy | 1120x608 | 0.010 | True | True |
-| fig:ml_confusion_matrix | 896x768 | 0.046 | True | True |
+| fig:ml_confusion_matrix | 896x768 | 0.045 | True | True |
 | fig:ml_confusion_pairs | 1152x576 | 0.129 | True | True |
 | fig:ml_generalization_gap | 1184x864 | 0.059 | True | True |
 | fig:ml_learning_curves | 1216x608 | 0.018 | True | True |
@@ -1161,8 +1124,8 @@ figure(s) with validity `false`.
 | fig:ml_selective_accuracy | 1088x608 | 0.016 | True | True |
 | fig:ml_training_dynamics | 1408x608 | 0.072 | True | True |
 | fig:mnist_class_balance | 1216x544 | 0.071 | True | True |
-| fig:mnist_error_examples | 1280x734 | 0.234 | True | True |
-| fig:mnist_subset_contact_sheet | 1216x544 | 0.228 | True | True |
+| fig:mnist_error_examples | 1280x736 | 0.234 | True | True |
+| fig:mnist_subset_contact_sheet | 1216x544 | 0.230 | True | True |
 
 : Figure-quality checks from `output/data/figure_quality_report.json`; 25 registered figure(s) were checked. {#tbl:figure-quality}
 

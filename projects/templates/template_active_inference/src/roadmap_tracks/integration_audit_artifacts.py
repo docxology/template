@@ -11,7 +11,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import yaml
+from yaml_io import load_yaml
+
 
 from .integration_audit_builders import (
     LATE_HYDRATION_PRODUCER,
@@ -125,7 +126,7 @@ def build_artifact_diffoscope(project_root: Path) -> dict[str, Any]:
     rows = []
     cycle_producers = {SELF_PRODUCER, LATE_HYDRATION_PRODUCER, SHEAF_TRACK_PRODUCER}
     for row in provenance.get("rows") or list((provenance.get("artifacts") or {}).values()):
-        rel = str(row.get("artifact") or "")
+        rel = str(row.get("artifact") or row.get("path") or "")
         if row.get("cycle_excluded") or row.get("producer") in cycle_producers:
             continue
         path = root / rel
@@ -171,11 +172,11 @@ def build_artifact_license_audit(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
     provenance = _load_json(root / "output" / "data" / "artifact_provenance.json")
     project_license = "MIT"
-    config = yaml.safe_load((root / "manuscript" / "config.yaml").read_text(encoding="utf-8")) or {}
+    config = load_yaml(root / "manuscript" / "config.yaml")
     project_license = str((config.get("metadata") or {}).get("license") or project_license)
     rows = []
     for row in provenance.get("rows") or list((provenance.get("artifacts") or {}).values()):
-        rel = str(row.get("artifact") or "")
+        rel = str(row.get("artifact") or row.get("path") or "")
         generated = rel.startswith("output/")
         rows.append(
             {
@@ -199,7 +200,6 @@ def build_release_notes_evidence(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
     release_bundle = _load_json(root / "output" / "reports" / "release_bundle_manifest.json")
     semantic = _load_json(root / "output" / "data" / "sheaf_gluing_certificate.json")
-    validation_path = root / "output" / "reports" / "validation_report.json"
     semantic_path = root / "output" / "data" / "sheaf_gluing_certificate.json"
     rows = [
         {
@@ -207,7 +207,10 @@ def build_release_notes_evidence(project_root: Path) -> dict[str, Any]:
             "source": "output/reports/validation_report.json",
             "claim": "The final saved validation report is a release source; this row is explicitly deferred until the validation stage writes it.",
             "passed": True,
-            "deferred_until_validation": not validation_path.exists(),
+            # Stage 4 is downstream of semantic settlement.  Its prior receipt
+            # must never change the pre-render release-note bytes.
+            "deferred_until_validation": True,
+            "authority": "stage_04_validate",
         },
         {
             "note_id": "release_bundle_sources_present",

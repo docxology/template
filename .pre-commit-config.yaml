@@ -39,6 +39,7 @@ repos:
             projects/templates/.*\.svg|
             projects/templates/.*\.pdf|
             projects/templates/.*\.epub|
+            projects/templates/[^/]+/output/arxiv_submission_[0-9]{8}\.tar\.gz|
             output/templates/.*\.png|
             output/templates/.*\.svg|
             output/templates/.*\.pdf|
@@ -132,7 +133,7 @@ repos:
         verbose: true
 
       - id: pre-push-quick
-        name: generated-artifact guard + strict no-stand-ins policy + hook smoke pytest
+        name: generated-artifact + mirror-shape guards + strict no-stand-ins policy + hook smoke pytest
         entry: bash
         args:
           - -eo
@@ -144,6 +145,7 @@ repos:
             uv run python scripts/audit/check_tracked_generated_artifacts.py &&
             uv run python scripts/audit/check_tracked_secrets.py &&
             uv run python scripts/audit/check_tracked_all.py &&
+            uv run python scripts/audit/check_mirror_symlinks.py &&
             uv run python scripts/audit/verify_no_mocks.py &&
             uv run python scripts/audit/verify_no_mocks.py
             --inventory --max-dependency-replacements 0 &&
@@ -172,6 +174,8 @@ repos:
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             export PYTHONDONTWRITEBYTECODE=1 &&
             uv run python scripts/audit/check_template_drift.py --strict &&
+            uv run python scripts/audit/check_backlog.py &&
+            uv run python scripts/audit/check_claim_bindings.py &&
             uv run python scripts/docgen/api_reference.py --check &&
             uv run python scripts/docgen/exemplar_roster.py --check &&
             uv run python scripts/docgen/counts.py --check &&

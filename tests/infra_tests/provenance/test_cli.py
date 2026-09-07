@@ -159,6 +159,23 @@ class TestReview:
         rc = main(["--dag-path", str(dag), "review"])
         assert rc in (0, 1)
 
+    def test_validate_empty_store_passes(self, tmp_path, capsys):
+        """validate on empty store returns 0."""
+        dag = tmp_path / "dag.json"
+        rc = main(["--dag-path", str(dag), "validate"])
+        captured = capsys.readouterr()
+        assert rc == 0
+        assert "PASS" in captured.out
+
+    def test_validate_json_output(self, tmp_path, capsys):
+        """validate --json prints valid JSON report."""
+        dag = tmp_path / "dag.json"
+        rc = main(["--dag-path", str(dag), "validate", "--json"])
+        captured = capsys.readouterr()
+        assert rc == 0
+        data = json.loads(captured.out)
+        assert data.get("is_valid") is True
+
 
 class TestMainNoCommand:
     """Tests for main() with no subcommand."""
@@ -169,3 +186,15 @@ class TestMainNoCommand:
         captured = capsys.readouterr()
         assert rc == 0
         assert "usage:" in captured.out.lower() or "provenance" in captured.out.lower()
+
+
+def test_malformed_store_returns_actionable_cli_error(tmp_path, capsys):
+    dag = tmp_path / "dag.json"
+    dag.write_text("{not valid json", encoding="utf-8")
+
+    rc = main(["--dag-path", str(dag), "list"])
+    captured = capsys.readouterr()
+
+    assert rc == 2
+    assert captured.out == ""
+    assert "provenance store error:" in captured.err

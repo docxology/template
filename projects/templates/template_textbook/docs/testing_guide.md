@@ -41,6 +41,8 @@ uv run --extra dev python -m pytest --cov=src --cov-report=term-missing
 | [`test_models.py`](../tests/test_models.py) | The worked formalisms (logistic growth, saturating response, decay, half-life, linear fit, stats, normalization). |
 | [`test_analysis.py`](../tests/test_analysis.py) | `textbook.analysis.build_worked_model_summary` (deterministic worked-model JSON). |
 | [`test_audit.py`](../tests/test_audit.py) | `textbook.audit.run_manuscript_audit` (structural gate, `--require-complete` CLI). |
+| [`test_contracts.py`](../tests/test_contracts.py) | Config-shape parity vs. `config.yaml.example`, numeric-facts registry, diagram inventory, deterministic cover art. |
+| [`test_gallery.py`](../tests/test_gallery.py) | Format-gallery specs loading and deterministic rendering. |
 | [`test_visualization.py`](../tests/test_visualization.py) | Deterministic figure generation and the `<part_id>_<stem>.png` filename contract. |
 | [`test_mermaid.py`](../tests/test_mermaid.py) | Spec loading, source building, PNG/`.mmd` fallback. |
 | [`test_paths_io.py`](../tests/test_paths_io.py) | Path resolution and atomic file I/O helpers. |
@@ -91,6 +93,7 @@ number) fails CI immediately.
 
 [`scripts/audit_textbook_quality.py`](../scripts/audit_textbook_quality.py) is a
 structural gate you can run as CI or before publication. It validates the config,
+A missing chapter or a contract violation fails the audit and blocks passage toward publication.
 checks every declared chapter exists and passes the contract, confirms each
 lab + question file is present, and prints a per-chapter stub-count / word-count
 progress table.

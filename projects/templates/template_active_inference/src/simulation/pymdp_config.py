@@ -9,7 +9,8 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Literal
 
-import yaml
+from yaml_io import load_yaml
+
 
 SimulationMode = Literal["state_inference", "policy_inference"]
 
@@ -39,6 +40,7 @@ class LoggingConfig:
 
     enabled: bool = True
     path: str = "output/logs/pymdp_runs.jsonl"
+    timestamped: bool = False
 
 
 @dataclass(frozen=True)
@@ -160,6 +162,7 @@ def _parse_raw(raw: dict[str, Any]) -> PymdpConfig:
         logging=LoggingConfig(
             enabled=bool(logging_raw.get("enabled", True)),
             path=str(logging_raw.get("path", "output/logs/pymdp_runs.jsonl")),
+            timestamped=bool(logging_raw.get("timestamped", False)),
         ),
         comparison=ComparisonConfig(
             horizons=comparison_horizons,
@@ -188,7 +191,7 @@ def load_pymdp_config(
     path = config_path or pymdp_config_path(project_root)
     if not path.is_file():
         return default_pymdp_config()
-    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    raw = load_yaml(path)
     return _parse_raw(raw)
 
 
@@ -239,6 +242,7 @@ def config_snapshot(config: PymdpConfig) -> dict[str, Any]:
         "logging": {
             "enabled": config.logging.enabled,
             "path": config.logging.path,
+            "timestamped": config.logging.timestamped,
         },
         "comparison": {
             "horizons": list(config.comparison.horizons),

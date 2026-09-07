@@ -85,11 +85,10 @@ class TestSecurityValidator:
         assert "<script>" not in result
         assert "&lt;" in result
 
-    # -- _normalize_whitespace --
+    # -- normalize_whitespace (module-level; the private wrapper was removed) --
 
-    def test_normalize_whitespace_method(self):
-        result = self.v._normalize_whitespace("  hello   world  ")
-        assert result == "hello world"
+    def test_normalize_whitespace(self):
+        assert normalize_whitespace("  hello   world  ") == "hello world"
 
     # -- dangerous_patterns --
 

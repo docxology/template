@@ -14,6 +14,7 @@ from src.dashboard import (
     cli_main as dashboard_main,
     parse_dashboard_args as _parse_args,
 )
+from src.dashboard_payload import validate_dashboard_payload
 from src.experiment_config import ExperimentConfig, load_experiment_config
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -79,6 +80,15 @@ class TestDashboardPayload:
         payload = _compute_payload(args)
         assert any(payload["alpha_sweep"]["diverged"])
         assert any(d > 1e3 for d in payload["alpha_sweep"]["final_dist"])
+
+    def test_dashboard_schema_rejects_missing_chart_field(self):
+        args = _parse_args(["--step-sizes", "0.1", "--A", "1.0", "--b", "1.0", "--x0", "0.0"])
+        payload = _compute_payload(args)
+        del payload["alpha_sweep"]["final_obj"]
+
+        issues = validate_dashboard_payload(payload)
+
+        assert any("alpha_sweep" in issue for issue in issues)
 
     def test_compute_payload_records_sweep_exception(self):
         from src.invariants import OptimizerSweepConfig

@@ -7,7 +7,9 @@ Syntax conventions for manuscript and project documentation in
 
 Use descriptive Markdown links. Prefer repository-root paths in commands and
 prose, for example
-`projects/templates/template_advanced_literature_review/src/multi_phase/search.py`.
+`projects/templates/template_advanced_literature_review/src/multi_phase/search.py`
+(the orchestration façade; phase records live in `models.py` and optional LLM
+filtering lives in `llm_filter.py`).
 
 ## Citations And Cross-References
 

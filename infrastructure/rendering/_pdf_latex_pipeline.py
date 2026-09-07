@@ -21,15 +21,21 @@ from infrastructure.rendering._pdf_latex_validation import (
     repair_truncated_aux,
     validate_pdf_structure,
 )
+from infrastructure.rendering.latex_utils import canonicalize_pdf_for_determinism, normalize_latex_sidecars
 
 logger = get_logger(__name__)
 
 # Constants for LaTeX compilation
 LATEX_CMD_OPTIONS = ["-interaction=nonstopmode", "-no-shell-escape"]
 STALE_AUX_EXTENSIONS = [".aux", ".bbl", ".blg", ".toc", ".out", ".lof", ".lot"]
-SIGPIPE_EXIT = 141
+# ``subprocess`` exposes SIGPIPE as ``-13`` on POSIX, while some wrappers and
+# shell environments normalize the same condition to ``141`` (128 + 13).
+# Both are benign for this pipeline when XeLaTeX has already produced its
+# output and should be treated identically across hosts.
+SIGPIPE_EXITS = frozenset({-13, 141})
 MAX_LATEX_PASSES = 4
 MAX_CONSECUTIVE_FAILURES = 2
+_LUAMML_MATHML_CACHE_NAME = "_combined_manuscript-luamml-mathml.html"
 
 
 def _normalize_latex_log(path: Path) -> None:
@@ -61,6 +67,23 @@ def _clean_stale_aux_files(output_dir: Path, tex_stem: str) -> None:
             logger.debug(f"  Cleaned stale auxiliary file: {stale_file.name}")
 
 
+def _remove_luamml_mathml_cache(output_dir: Path) -> None:
+    """Remove LuaLaTeX's tagged-math cache after the PDF is complete.
+
+    ``luamml`` writes an HTML/MathML cache beside the combined PDF while
+    compiling tagged mathematics.  It is useful during compilation but is
+    neither a reader-facing HTML surface nor a stable project snapshot
+    artifact.  Remove it only after all LaTeX passes and PDF canonicalization
+    have succeeded so a failed build cannot hide its diagnostic state.
+    """
+    cache = output_dir / _LUAMML_MATHML_CACHE_NAME
+    try:
+        cache.unlink(missing_ok=True)
+    except OSError as exc:
+        raise RenderingError(f"could not remove transient LuaLaTeX cache: {cache}") from exc
+    logger.debug("  Removed transient LuaLaTeX cache: %s", cache.name)
+
+
 def _run_latex_pass(
     cmd: list[str], output_dir: Path, tex_stem: str, pass_num: int, timeout: int
 ) -> subprocess.CompletedProcess[bytes]:
@@ -86,6 +109,7 @@ def _run_latex_pass(
     _normalize_latex_log(latex_stdout_log)
     _normalize_latex_log(output_dir / f"{tex_stem}.log")
     repair_truncated_aux(aux_file)
+    normalize_latex_sidecars(output_dir, tex_stem)
     return result
 
 
@@ -110,7 +134,7 @@ def _check_fatal_error(
         "TeX capacity exceeded",
     )
     has_fatal_marker = any(marker in log_content for marker in fatal_markers)
-    is_fatal_exit = result.returncode not in (0, SIGPIPE_EXIT)
+    is_fatal_exit = result.returncode not in (0, *SIGPIPE_EXITS)
 
     if has_fatal_marker or (is_fatal_exit and (final_pass and "Output written on" not in log_content)):
         if log_file.exists():
@@ -175,6 +199,7 @@ def _recover_invalid_pdf(output_dir: Path, cmd: list[str], temp_pdf: Path, combi
         )
     _normalize_latex_log(latex_stdout_log)
     _normalize_latex_log(output_dir / f"{combined_tex.stem}.log")
+    normalize_latex_sidecars(output_dir, combined_tex.stem)
 
     if not validate_pdf_structure(temp_pdf):
         logger.warning("PDF still invalid after recovery pass. Best-effort output.")
@@ -213,7 +238,11 @@ def compile_latex_manuscript(
     cmd = [latex_compiler, *LATEX_CMD_OPTIONS, combined_tex.name]
     start_time = time.time()
     tex_stem = combined_tex.stem
-    latex_timeout = 8 if os.environ.get("PYTEST_CURRENT_TEST") else 600
+    # Test mode keeps a bounded-but-realistic ceiling: xelatex cold start alone
+    # can take several seconds and the suite marks these renders
+    # ``@pytest.mark.timeout(90)``, so an 8 s cap made the pipeline flaky on
+    # slower machines while still bounding runaway compiles.
+    latex_timeout = 60 if os.environ.get("PYTEST_CURRENT_TEST") else 600
 
     logger.info(f"Rendering combined manuscript to PDF: {output_file.name}")
     logger.info(f"  Source files: {len(source_files)}")
@@ -244,8 +273,12 @@ def compile_latex_manuscript(
         )
         final_pass_num = 1
 
-        if result.returncode == SIGPIPE_EXIT:
-            logger.debug(f"  {latex_compiler} exited with {SIGPIPE_EXIT} (SIGPIPE) — expected")
+        if result.returncode in SIGPIPE_EXITS:
+            logger.debug(
+                "  %s exited with %s (SIGPIPE) — expected",
+                latex_compiler,
+                result.returncode,
+            )
 
         # Phase 3: Bibliography processing
         if bib_exists:
@@ -293,10 +326,14 @@ def compile_latex_manuscript(
                 _recover_invalid_pdf(output_dir, cmd, temp_pdf, combined_tex)
             temp_pdf.rename(output_file)
             if output_file.exists():
+                canonicalize_pdf_for_determinism(output_file, repo_root=output_dir)
                 log_pdf_success(output_file, source_files, start_time)
+                _remove_luamml_mathml_cache(output_dir)
             return output_file
         elif output_file.exists():
+            canonicalize_pdf_for_determinism(output_file, repo_root=output_dir)
             log_pdf_success(output_file, source_files, start_time)
+            _remove_luamml_mathml_cache(output_dir)
             return output_file
         else:
             raise RenderingError(

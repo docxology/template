@@ -57,6 +57,7 @@ class FigureSpec:
     label: str
     path: str
     caption: str
+    alt_text: str
     generated_by: str
     data_sources: tuple[str, ...]
     visual_encoding: str
@@ -69,6 +70,7 @@ class FigureSpec:
     def registry_record(self) -> dict[str, Any]:
         """Process registry record."""
         record = asdict(self)
+        record["alt"] = record.pop("alt_text")
         record["svg_path"] = self.svg_path
         return record
 
@@ -79,6 +81,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:purity_progression",
         "purity_progression.png",
         "Purity progression across the five refinery stages from ore (9K) to nine-nines certification.",
+        (
+            "Bars and a cumulative line rise monotonically across ore, smelting, assaying, "
+            "cupellation, and certification, ending at nine-nines purity."
+        ),
         "src/figures/charts.py::generate_purity_progression",
         ("src/refinery.py::run_refinery", "src/purity.py::purity_to_nines"),
         "bars encode stage gain; line encodes cumulative purity; inset encodes nines gained",
@@ -88,6 +94,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:karat_grading",
         "karat_grading.png",
         "Gold karat grading scale (9K–24K + nine-nines) with refinery stage markers.",
+        (
+            "A horizontal purity scale spans 9K through 24K and 99.999 percent, with markers "
+            "showing where each successive refinery stage lands."
+        ),
         "src/figures/charts.py::generate_karat_grading_chart",
         ("src/purity.py::KARAT_GRADES", "src/refinery.py::run_refinery"),
         "horizontal threshold bands with refinery-stage markers",
@@ -97,6 +107,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:token_density",
         "token_density.png",
         "Mega-madlib token distribution across manuscript sections and lexicon categories.",
+        (
+            "Ordered bars compare the number of injected manuscript tokens across sections "
+            "and lexicon categories, exposing where the template concentrates configurable prose."
+        ),
         "src/figures/charts.py::generate_token_density_chart",
         ("output/reports/token_plan.json", "src/composition.py::generate_token_plan"),
         "ordered bars encode token counts by section and lexicon category",
@@ -106,6 +120,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:provenance_sankey",
         "provenance_sankey.png",
         "Provenance trace: ore → stages → certification purity flow.",
+        (
+            "A directed left-to-right flow links ore through four refining stages to certification; "
+            "edge widths increase with each stage's purity gain."
+        ),
         "src/figures/diagrams.py::generate_provenance_sankey",
         ("src/refinery.py::run_refinery",),
         "directed stage graph with edge widths proportional to purity gain",
@@ -115,6 +133,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:purity_claim_scatter",
         "purity_claim_scatter.png",
         "Stage purity plotted against the single project-level claim-support assay.",
+        (
+            "Five stage points progress rightward with increasing purity while sharing one vertical "
+            "claim-support value, separating stage refinement from the project-level evidence assay."
+        ),
         "src/figures/diagrams.py::generate_purity_claim_scatter",
         ("output/reports/claim_support_registry.json", "src/refinery.py::run_refinery"),
         "x positions encode stage output purity; the shared y position encodes the project-level claim-support rate",
@@ -124,6 +146,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:token_heatmap",
         "token_heatmap.png",
         "Token selection heatmap: seed × category → selected index.",
+        (
+            "A heatmap crosses deterministic seeds with lexicon categories; each cell color and label "
+            "identify the selected inventory index for that seed-category pair."
+        ),
         "src/figures/diagrams.py::generate_token_heatmap",
         ("manuscript/config.yaml#gold_refinement.lexicon", "src/composition.py::generate_token_plan"),
         "heatmap cells encode deterministic selected inventory index across seeds",
@@ -133,6 +159,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:integrity_gate_matrix",
         "integrity_gate_matrix.png",
         "Integrity-gate matrix linking audit rules to tests, manuscript surfaces, and generated artifacts.",
+        (
+            "Rows of integrity rules cross columns for tests, manuscript, and artifacts; categorical "
+            "cells distinguish missing, partial, and complete gate coverage."
+        ),
         "src/figures/diagrams.py::generate_integrity_gate_matrix",
         ("manuscript/config.yaml#gold_refinement.audit_rules",),
         "categorical matrix encodes missing, partial, and full coverage by gate surface",
@@ -142,6 +172,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:formalism_traceability",
         "formalism_traceability.png",
         "Formalism traceability from source-owned equation identifiers to source evidence.",
+        (
+            "A bipartite network connects each named formalism to its equation label and then to the "
+            "source module that owns the supporting definition."
+        ),
         "src/figures/diagrams.py::generate_formalism_traceability",
         ("src/formalisms.py::FORMALISMS",),
         "bipartite graph links formalisms to equation labels and source owners",
@@ -151,6 +185,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:implementation_circuit",
         "implementation_circuit.png",
         "Implementation circuit from config-owned ore through generated manuscript artifacts and validation feedback.",
+        (
+            "A layered directed graph routes configuration and source modules into generated data, figures, "
+            "and manuscript artifacts, then through validation feedback to publication."
+        ),
         "src/figures/diagrams.py::generate_implementation_circuit",
         (
             "manuscript/config.yaml",
@@ -166,6 +204,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:claim_evidence_assay",
         "claim_evidence_assay.png",
         "Claim-evidence assay showing supported contribution claims, evidence surfaces, and boundary classifications.",
+        (
+            "Support bars summarize each contribution claim while a companion topology links claims to concrete "
+            "evidence surfaces and explicit boundary classifications."
+        ),
         "src/figures/diagrams.py::generate_claim_evidence_assay",
         ("manuscript/config.yaml#gold_refinement.contribution_claims", "src/evidence.py::build_evidence_registry"),
         "support bars plus claim to evidence to boundary graph topology",
@@ -175,6 +217,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:integrity_risk_matrix",
         "integrity_risk_matrix.png",
         "Scientific-integrity risk matrix plotting severity, detectability, residual risk, and owning evidence surface.",
+        (
+            "A scatter matrix positions integrity risks by severity and detectability; marker size encodes residual "
+            "risk and color identifies the evidence-source tier."
+        ),
         "src/figures/diagrams.py::generate_integrity_risk_matrix",
         ("src/integrity.py::build_integrity_dimensions",),
         "scatter positions encode severity and detectability; marker size encodes residual risk; color encodes source tier",
@@ -184,6 +230,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "fig:evidence_tier_ladder",
         "evidence_tier_ladder.png",
         "Evidence-tier ladder summarizing source tiers available to the shared template evidence registry.",
+        (
+            "Ordered horizontal bars form a ladder from weaker to stronger evidence-source tiers, with each bar "
+            "annotated by its registry count and percentage."
+        ),
         "src/figures/diagrams.py::generate_evidence_tier_ladder",
         ("output/reports/evidence_registry.json", "src/integrity.py::build_evidence_tiers"),
         "ordered horizontal bars encode counts and percentages by evidence source tier",

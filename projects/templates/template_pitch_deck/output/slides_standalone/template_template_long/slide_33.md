@@ -1,8 +1,10 @@
-# Scientific integrity, by construction
+# How you would verify this deck's own claims
 
-*Slide 33 of 56 — template_template pitch, long deck — kind: `section`*
+*Slide 33 of 57 — template_template pitch, long deck — kind: `content`*
 
-*(no body content — section/title slide)*
+- Clone the monorepo, run the same pipeline command shown in this project's README, and regenerate this exact deck.
+- Diff the regenerated PDF/PPTX against the committed output — a token-honesty test already does this as part of the project's own CI gate.
+- Nothing in this pitch requires trusting the presenter; it requires running the pipeline.
 
 ---
 

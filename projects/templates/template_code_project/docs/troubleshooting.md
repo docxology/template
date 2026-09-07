@@ -118,7 +118,7 @@ before compilation.
 
 ```bash
 # macOS / Linux
-curl -LsSf https://astral.sh/uv/install.sh | sh
+Follow the [checksum-verified uv installation instructions](../../../../docs/operational/build/dependency-management.md#installing-uv).
 
 # Homebrew (macOS)
 brew install uv
@@ -241,7 +241,8 @@ zero collected tests is not a pass.**
 `source`/`omit` are *project-relative* and do not resolve when pytest runs
 from the repo root; the canonical command and the runner both measure
 against the **repo-root** `pyproject.toml` config — that is the number the
-90% gate enforces (≈99% for this exemplar; `src/analysis/` and
+90% gate enforces (missing-cells coverage below the floor fails pytest itself via `--cov-fail-under`, it never warns) (≈99% for this exemplar; `src/analysis/` and
+Dropping below it fails the gate outright; deliberate omissions are recorded in the repo-root coverage configuration.
 `src/dashboard.py` are intentionally omitted there).
 
 ## See also

@@ -63,8 +63,25 @@ class DocsLintReport:
         return 1 if self.failed else 0
 
 
-def doc_roots(repo_root: Path) -> list[Path]:
-    """Return the public template documentation roots for repo-wide linting."""
+def doc_roots(repo_root: Path, paths: list[str] | None = None) -> list[Path]:
+    """Return the public template documentation roots for repo-wide linting.
+
+    With *paths* (repo-relative files or directories), return only those
+    scoped roots; a path outside the repo or nonexistent raises ``ValueError``
+    so a typo cannot silently shrink the lint scope (fail closed).
+    """
+    if paths:
+        scoped: list[Path] = []
+        for raw in paths:
+            candidate = (repo_root / raw).resolve()
+            if not candidate.exists():
+                raise ValueError(f"--paths entry does not exist: {raw!r} (repo root: {repo_root})")
+            try:
+                candidate.relative_to(repo_root.resolve())
+            except ValueError as exc:
+                raise ValueError(f"--paths entry escapes the repo root: {raw!r} (repo root: {repo_root})") from exc
+            scoped.append(candidate)
+        return scoped
     roots: list[Path] = []
     for sub in ("docs", "infrastructure", ".github", "scripts", "tests"):
         candidate = repo_root / sub
@@ -89,9 +106,9 @@ def _is_rel(path: Path, root: Path) -> bool:
     return True
 
 
-def run_mermaid_lint(repo_root: Path, *, quiet: bool) -> list[ValidationFailure]:
-    """Run mermaid lint."""
-    blocks = find_mermaid_blocks(doc_roots(repo_root))
+def run_mermaid_lint(repo_root: Path, *, quiet: bool, roots: list[Path] | None = None) -> list[ValidationFailure]:
+    """Run mermaid lint. *roots* overrides the default discovery scope."""
+    blocks = find_mermaid_blocks(roots if roots is not None else doc_roots(repo_root))
     if not quiet:
         logger.info("mermaid: discovered %d blocks", len(blocks))
     mmdc_bin = resolve_mmdc_executable(repo_root)
@@ -106,9 +123,9 @@ def run_mermaid_lint(repo_root: Path, *, quiet: bool) -> list[ValidationFailure]
     return validate_blocks(blocks, mmdc_path=mmdc_bin)
 
 
-def run_links_lint(repo_root: Path, *, quiet: bool) -> list[BrokenLink]:
-    """Run links lint."""
-    broken = find_broken_links(doc_roots(repo_root))
+def run_links_lint(repo_root: Path, *, quiet: bool, roots: list[Path] | None = None) -> list[BrokenLink]:
+    """Run links lint. *roots* overrides the default discovery scope."""
+    broken = find_broken_links(roots if roots is not None else doc_roots(repo_root))
     if not quiet:
         logger.info("cross-links: %d broken", len(broken))
     return broken
@@ -214,15 +231,15 @@ def run_docs_lint(
     doc_pairs_only: bool = False,
     quiet: bool = False,
     strict_mermaid: bool = False,
+    paths: list[str] | None = None,
 ) -> DocsLintReport:
-    """Run docs lint."""
+    """Run docs lint. *paths* scopes the scan to repo-relative files/dirs."""
     only_flags = sum(1 for f in (mermaid_only, links_only, consistency_only, doc_pairs_only) if f)
     if only_flags > 1:
         raise ValueError("pass at most one of mermaid_only, links_only, consistency_only, doc_pairs_only")
 
-    from infrastructure.validation.docs.scan_scope import iter_markdown_files
-
-    if not iter_markdown_files([repo_root]):
+    roots = doc_roots(repo_root, paths=paths)
+    if not roots:
         # Every linter below rides this discovery; a zero-file scan means the
         # scope itself is broken (it once silently excluded whole worktree
         # checkouts) and each linter would return a vacuous pass. Fail loud.
@@ -245,7 +262,7 @@ def run_docs_lint(
     mermaid_strict = bool(strict_mermaid or os.environ.get("CI"))
     if run_mermaid:
         try:
-            mermaid_failures = run_mermaid_lint(repo_root, quiet=quiet)
+            mermaid_failures = run_mermaid_lint(repo_root, quiet=quiet, roots=roots)
         except RuntimeError as exc:
             mermaid_failures = []
             if mermaid_strict:
@@ -258,7 +275,7 @@ def run_docs_lint(
                     exc,
                 )
     if run_links:
-        broken_links = run_links_lint(repo_root, quiet=quiet)
+        broken_links = run_links_lint(repo_root, quiet=quiet, roots=roots)
     if run_consistency:
         consistency = run_consistency_lint(repo_root, quiet=quiet)
     if run_doc_pairs:

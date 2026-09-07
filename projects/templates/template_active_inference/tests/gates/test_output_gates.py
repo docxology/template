@@ -15,7 +15,7 @@ from gates.validation import validate_outputs
 
 from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
 
-pytestmark = [pytest.mark.timeout(300)]
+pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(300)]
 
 
 @pytest.fixture
@@ -38,9 +38,6 @@ def test_log_check_passes_when_logging_is_not_expected(tmp_path: Path) -> None:
     add_log_check(tmp_path, checks)
     assert checks["si_log_present"] is True
 
-
-# Regenerates heavy sheaf/roadmap gate artifacts; ~57-59s locally and can exceed the
-# CI-wide --timeout=120 on slower runners. The per-module marker overrides the CLI value.
 
 EXPECTED_DERIVED_OUTPUT_CHECK_KEYS = {
     "ablation_sensitivity_report_schema",
@@ -127,7 +124,6 @@ SELF_REFERENTIAL_STABILITY_EXEMPT_OUTPUTS = {
 }
 
 
-@pytest.mark.slow
 def test_validate_outputs_after_analysis() -> None:
     root = Path(__file__).resolve().parents[2]
     from analysis import run_analysis
@@ -157,6 +153,12 @@ def test_validate_outputs_key_surface_is_stable(
     assert set(checks) == set(REQUIRED_OUTPUTS) | EXPECTED_DERIVED_OUTPUT_CHECK_KEYS
 
 
+# This stability control intentionally forces semantic settlement through two
+# consecutive stable passes and then validates the complete output surface twice.
+# It measured 244.9s locally after registry-cache hardening, so retain the 300s
+# module bound for ordinary gate tests while giving only this control enough
+# bounded headroom for slower hosted runners.
+@pytest.mark.timeout(600)
 @pytest.mark.long_running
 @pytest.mark.slow
 def test_validate_outputs_no_regression_on_stable_artifact_tree(prepared_output_gate_artifacts: Path) -> None:
@@ -287,7 +289,6 @@ def test_validate_outputs_negative_missing_sweep(project_root: Path, tmp_path: P
             sweep.write_bytes(backup.read_bytes())
 
 
-@pytest.mark.slow
 def test_figures_nonblank_passes_on_real_tree(
     project_root: Path,
     prepared_output_gate_artifacts: Path,
@@ -347,7 +348,6 @@ def test_figures_nonblank_validates_small_fixtures(tmp_path: Path) -> None:
     )
 
 
-@pytest.mark.slow
 def test_reproducibility_replay_rebuild_passes_on_real_tree(
     project_root: Path,
     prepared_output_gate_artifacts: Path,

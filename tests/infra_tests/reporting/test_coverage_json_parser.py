@@ -28,8 +28,8 @@ class TestParseCoverageJson:
         assert result["total_executed"] == 8
         assert result["total_missing"] == 2
         assert result["total_excluded"] == 1
-        assert result["total_lines"] == 11
-        assert 70.0 < result["overall_coverage"] < 75.0
+        assert result["total_lines"] == 10
+        assert result["overall_coverage"] == 80.0
 
     def test_file_coverage_details(self, tmp_path):
         data = {
@@ -134,8 +134,8 @@ class TestParseCoverageJsonFromCoverageJsonParser:
         assert result["total_executed"] == 8
         assert result["total_missing"] == 2
         assert result["total_excluded"] == 1
-        assert result["total_lines"] == 11
-        assert abs(result["overall_coverage"] - (8 / 11 * 100)) < 0.1
+        assert result["total_lines"] == 10
+        assert result["overall_coverage"] == 80.0
 
         # Check file-level
         assert "module_a.py" in result["file_coverage"]
@@ -185,3 +185,36 @@ class TestParseCoverageJsonFromCoverageJsonParser:
         result = parse_coverage_json(cov_file)
         assert result is not None
         assert result["file_coverage"]["empty.py"]["coverage_percent"] == 0.0
+
+    def test_coverage_py_summary_is_authoritative_for_branch_coverage(self, tmp_path):
+        cov_file = tmp_path / "coverage.json"
+        cov_file.write_text(
+            json.dumps(
+                {
+                    "files": {
+                        "branchy.py": {
+                            "executed_lines": list(range(1, 9)),
+                            "missing_lines": [9, 10],
+                            "excluded_lines": [11],
+                            "summary": {
+                                "num_statements": 10,
+                                "percent_covered": 75.0,
+                            },
+                        }
+                    },
+                    "totals": {
+                        "num_statements": 10,
+                        "percent_covered": 75.0,
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        result = parse_coverage_json(cov_file)
+
+        assert result is not None
+        assert result["total_lines"] == 10
+        assert result["total_excluded"] == 1
+        assert result["overall_coverage"] == 75.0
+        assert result["file_coverage"]["branchy.py"]["coverage_percent"] == 75.0

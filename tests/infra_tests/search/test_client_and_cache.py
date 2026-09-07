@@ -12,7 +12,12 @@ from infrastructure.search.literature.backends import (
     LocalBackend,
     SearchBackend,
 )
-from infrastructure.search.literature.cache import SearchCache
+from infrastructure.search.literature.cache import (
+    SEARCH_CACHE_SCHEMA_VERSION,
+    SearchCache,
+    query_cache_key,
+    validate_cache_payload,
+)
 from infrastructure.search.literature.client import LiteratureClient
 from infrastructure.search.literature.models import (
     Paper,
@@ -177,6 +182,10 @@ class TestSearchCache:
         )
         path = cache.put(result)
         assert path.exists()
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        assert payload["_schema_version"] == SEARCH_CACHE_SCHEMA_VERSION
+        assert payload["_cache_key"] == query_cache_key(q)
+        assert validate_cache_payload(payload, q) == []
         recovered = cache.get(q)
         assert recovered is not None
         assert len(recovered.papers) == 1
@@ -217,6 +226,17 @@ class TestSearchCache:
         q = SearchQuery(text="x")
         cache.path_for(q).parent.mkdir(parents=True, exist_ok=True)
         cache.path_for(q).write_text("{not json", encoding="utf-8")
+        assert cache.get(q) is None
+
+    def test_identity_drift_is_rejected(self, tmp_path: Path):
+        cache = SearchCache(tmp_path)
+        q = SearchQuery(text="convex")
+        cache.put(SearchResult(query=q))
+        path = cache.path_for(q)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["query"]["max_results"] = 999
+        assert validate_cache_payload(payload, q)
+        path.write_text(json.dumps(payload), encoding="utf-8")
         assert cache.get(q) is None
 
     def test_client_uses_cache_when_provided(self, tmp_path: Path):

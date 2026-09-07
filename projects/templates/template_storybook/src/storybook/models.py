@@ -49,6 +49,7 @@ class StorybookSpec:
     page_height: int
     characters: tuple[Character, ...]
     pages: tuple[PageSpec, ...]
+    trim_size: str = "custom"
 
     @property
     def page_count(self) -> int:

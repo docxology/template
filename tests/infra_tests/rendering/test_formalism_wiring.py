@@ -17,6 +17,7 @@ from __future__ import annotations
 import os
 import stat
 import subprocess
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -52,17 +53,62 @@ def _fake_pandoc(tmp_path: Path) -> tuple[Path, Path]:
     bin_dir = tmp_path / "fakebin"
     bin_dir.mkdir(parents=True, exist_ok=True)
     argv_log = tmp_path / "argv.log"
+    epub_writer = bin_dir / "write-valid-epub.py"
+    epub_writer.write_text(
+        """import sys
+import zipfile
+
+output = sys.argv[1]
+identifier = "urn:uuid:00000000-0000-5000-8000-000000000000"
+container = ('<container xmlns="urn:oasis:names:tc:opendocument:xmlns:container">'
+             '<rootfiles><rootfile full-path="EPUB/content.opf" '
+             'media-type="application/oebps-package+xml"/></rootfiles></container>')
+package = ('<package xmlns="http://www.idpf.org/2007/opf" version="3.0" '
+           'unique-identifier="book-id"><metadata '
+           'xmlns:dc="http://purl.org/dc/elements/1.1/">'
+           f'<dc:identifier id="book-id">{identifier}</dc:identifier>'
+           '<dc:title>Fixture</dc:title><dc:language>en</dc:language></metadata><manifest>'
+           '<item id="chapter" href="text/chapter.xhtml" media-type="application/xhtml+xml"/>'
+           '<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>'
+           '</manifest><spine toc="ncx"><itemref idref="chapter"/></spine></package>')
+chapter = ('<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Fixture</title></head>'
+           '<body><p>Fixture</p></body></html>')
+ncx = ('<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">'
+       f'<head><meta name="dtb:uid" content="{identifier}"/></head>'
+       '<docTitle><text>Fixture</text></docTitle><navMap/></ncx>')
+with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+    # Explicit timestamps do not reinterpret SOURCE_DATE_EPOCH in local time.
+    archive.writestr(zipfile.ZipInfo("mimetype"), "application/epub+zip", compress_type=zipfile.ZIP_STORED)
+    for name, payload in (
+        ("META-INF/container.xml", container),
+        ("EPUB/content.opf", package),
+        ("EPUB/toc.ncx", ncx),
+        ("EPUB/text/chapter.xhtml", chapter),
+    ):
+        archive.writestr(zipfile.ZipInfo(name), payload, compress_type=zipfile.ZIP_DEFLATED)
+""",
+        encoding="utf-8",
+    )
     script = bin_dir / "pandoc"
     script.write_text(
         f"""#!/bin/sh
+set -eu
 for a in "$@"; do printf '%s\\n' "$a" >> '{argv_log}'; done
 printf '%s\\n' '--END--' >> '{argv_log}'
 out=""
+writer=""
 while [ $# -gt 0 ]; do
   if [ "$1" = "-o" ]; then out="$2"; fi
+  if [ "$1" = "-t" ]; then writer="$2"; fi
   shift
 done
-if [ -n "$out" ]; then mkdir -p "$(dirname "$out")"; printf 'stub' > "$out"; fi
+if [ -n "$out" ]; then
+  mkdir -p "$(dirname "$out")"
+  case "$writer" in
+    epub) '{sys.executable}' '{epub_writer}' "$out" ;;
+    *) printf 'stub' > "$out" ;;
+  esac
+fi
 exit 0
 """,
         encoding="utf-8",
@@ -95,6 +141,18 @@ def _assert_filter_ordering(argv: list[str], writer: str) -> None:
         assert index < position, f"{writer}: formalism filter must precede pandoc-crossref"
 
 
+def _assert_bibliography_union(argv: list[str], manuscript_dir: Path, writer: str) -> None:
+    """Assert citeproc receives every bibliography in deterministic order."""
+    expected = [
+        f"--bibliography={manuscript_dir / 'references.bib'}",
+        f"--bibliography={manuscript_dir / 'z_supplemental.bib'}",
+    ]
+    positions = [argv.index(argument) for argument in expected]
+    assert positions == sorted(positions), f"{writer}: bibliography order drifted: {argv}"
+    assert "--citeproc" in argv, f"{writer}: citeproc missing from pandoc command: {argv}"
+    assert argv.index("--citeproc") < positions[0]
+
+
 def _make_manager(tmp_path: Path) -> RenderManager:
     cfg = RenderingConfig(
         pdf_dir=str(tmp_path / "output/pdf"),
@@ -123,6 +181,8 @@ def _manuscript(tmp_path: Path) -> Path:
     combined = project_root / "output" / "pdf" / "_combined_manuscript.md"
     combined.parent.mkdir(parents=True, exist_ok=True)
     combined.write_text(MANUSCRIPT_BODY, encoding="utf-8")
+    (manuscript_dir / "references.bib").write_text("@article{alpha,title={Alpha}}\n", encoding="utf-8")
+    (manuscript_dir / "z_supplemental.bib").write_text("@article{omega,title={Omega}}\n", encoding="utf-8")
     return manuscript_dir
 
 
@@ -162,7 +222,9 @@ def test_combined_docx_command_carries_the_filter(tmp_path: Path) -> None:
 
     render_combined_docx(manager, manuscript_dir, "proj", DiagnosticReporter("proj"))
 
-    _assert_filter_ordering(_recorded_argv(argv_log), "combined DOCX")
+    argv = _recorded_argv(argv_log)
+    _assert_filter_ordering(argv, "combined DOCX")
+    _assert_bibliography_union(argv, manuscript_dir, "combined DOCX")
 
 
 # ---------------------------------------------------------------------------
@@ -192,6 +254,7 @@ def test_combined_epub_command_carries_the_filter(tmp_path: Path) -> None:
     extra_args = captured["extra_args"]
     assert isinstance(extra_args, list)
     _assert_filter_ordering(extra_args, "combined EPUB")
+    _assert_bibliography_union(extra_args, manuscript_dir, "combined EPUB")
 
 
 # ---------------------------------------------------------------------------
@@ -209,16 +272,18 @@ def test_combined_html_command_carries_the_filter(tmp_path: Path) -> None:
     section.write_text("# Intro\n\n::: {.definition #def:a}\nBody.\n:::\n", encoding="utf-8")
 
     cfg = RenderingConfig(
-        web_dir=str(tmp_path / "output/web"),
-        output_dir=str(tmp_path / "output"),
-        figures_dir=str(tmp_path / "output/figures"),
+        web_dir=str(tmp_path / "proj/output/web"),
+        output_dir=str(tmp_path / "proj/output"),
+        figures_dir=str(tmp_path / "proj/output/figures"),
     )
     cfg.pandoc_path = str(bin_dir / "pandoc")
     renderer = WebRenderer(config=cfg)
 
     renderer.render_combined([section], manuscript_dir)
 
-    _assert_filter_ordering(_recorded_argv(argv_log), "combined HTML")
+    argv = _recorded_argv(argv_log)
+    _assert_filter_ordering(argv, "combined HTML")
+    _assert_bibliography_union(argv, manuscript_dir, "combined HTML")
 
 
 # ---------------------------------------------------------------------------
@@ -226,7 +291,8 @@ def test_combined_html_command_carries_the_filter(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_ebook_stage_command_carries_the_filter(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("timezone", ["UTC", "America/Los_Angeles"])
+def test_ebook_stage_command_carries_the_filter(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, timezone: str) -> None:
     """The ebook stage's EPUB/MOBI/DOCX renders apply formalism.lua.
 
     The stage imports its renderers at module scope and does not accept a
@@ -235,12 +301,16 @@ def test_ebook_stage_command_carries_the_filter(tmp_path: Path, monkeypatch: pyt
     """
     from infrastructure.rendering import ebook_stage
 
+    monkeypatch.setenv("TZ", timezone)
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "315532800")
     bin_dir, argv_log = _fake_pandoc(tmp_path)
     monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
 
     repo_root = tmp_path / "repo"
     project_root = repo_root / "projects" / "working" / "proj"
     (project_root / "manuscript").mkdir(parents=True)
+    (project_root / "manuscript" / "references.bib").write_text("@article{alpha,title={Alpha}}\n", encoding="utf-8")
+    (project_root / "manuscript" / "z_supplemental.bib").write_text("@article{omega,title={Omega}}\n", encoding="utf-8")
     combined = project_root / "output" / "pdf" / "_combined_manuscript.md"
     combined.parent.mkdir(parents=True, exist_ok=True)
     combined.write_text(MANUSCRIPT_BODY, encoding="utf-8")
@@ -248,7 +318,9 @@ def test_ebook_stage_command_carries_the_filter(tmp_path: Path, monkeypatch: pyt
     exit_code = ebook_stage.run_ebook_generation(repo_root, "proj", skip_formats_arg="mobi,docx")
     assert exit_code == 0
 
-    _assert_filter_ordering(_recorded_argv(argv_log), "ebook stage")
+    argv = _recorded_argv(argv_log)
+    _assert_filter_ordering(argv, "ebook stage")
+    _assert_bibliography_union(argv, project_root / "manuscript", "ebook stage")
 
 
 # ---------------------------------------------------------------------------

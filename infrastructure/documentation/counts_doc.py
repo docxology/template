@@ -22,11 +22,13 @@ back out via the markers ``Last refreshed count: **N**`` and
 Per-exemplar collection totals are derived live with ``pytest --collect-only``.
 Coverage remains a separately labelled measured snapshot because recomputing all
 24 coverage gates during every documentation check would be prohibitively slow.
+The snapshot verifier uses the shared ``release`` test profile (slow tests are
+included; long-running, benchmark, and live-service tests remain explicit) so
+its method matches the public release matrix and has a bounded subprocess.
 """
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import re
@@ -36,73 +38,68 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
-from infrastructure.core.pytest_orchestration import build_project_pytest_command, parse_project_workers
+from infrastructure.core.pytest_orchestration import (
+    build_project_pytest_command,
+    parse_project_workers,
+)
 from infrastructure.core.runtime.environment import get_subprocess_env
+from infrastructure.documentation.counts_coverage import (
+    COVERAGE_MEASUREMENT_TIMEOUT_SECONDS,
+    COVERAGE_PROVENANCE_RELATIVE_PATH,
+    COVERAGE_PROVENANCE_SCHEMA_VERSION,
+    COVERAGE_SOURCE_INVENTORY_MODE,
+    CoverageVerificationResult,
+    EXEMPLAR_SNAPSHOT,
+    EXEMPLAR_SNAPSHOT_DATE,
+    ExemplarSnapshot,
+    _coverage_measurement_command,
+    _coverage_measurement_data_file,
+    _rewrite_exemplar_snapshot,
+    build_coverage_provenance,
+    exemplar_source_hash,
+    measure_exemplar_coverage,
+    validate_coverage_provenance,
+    verify_exemplar_coverage,
+    verify_exemplar_coverage_result,
+    write_coverage_provenance,
+)
 from infrastructure.project.public_scope import public_project_names
 
+__all__ = [
+    "COVERAGE_MEASUREMENT_TIMEOUT_SECONDS",
+    "COVERAGE_PROVENANCE_RELATIVE_PATH",
+    "COVERAGE_PROVENANCE_SCHEMA_VERSION",
+    "COVERAGE_SOURCE_INVENTORY_MODE",
+    "DOC_RELATIVE_PATH",
+    "EXEMPLAR_SNAPSHOT",
+    "EXEMPLAR_SNAPSHOT_DATE",
+    "CoverageVerificationResult",
+    "ExemplarSnapshot",
+    "CountsFacts",
+    "_coverage_measurement_command",
+    "_coverage_measurement_data_file",
+    "_rewrite_exemplar_snapshot",
+    "build_coverage_provenance",
+    "check_counts_doc",
+    "collect_facts",
+    "exemplar_source_hash",
+    "infrastructure_packages",
+    "measure_exemplar_coverage",
+    "project_test_count",
+    "publishing_test_count",
+    "render_counts_doc",
+    "tracked_infra_python_count",
+    "validate_coverage_provenance",
+    "verify_exemplar_coverage",
+    "verify_exemplar_coverage_result",
+    "write_counts_doc",
+    "write_coverage_provenance",
+]
+
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
-COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
-COVERAGE_PROVENANCE_SCHEMA_VERSION = 2
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-07-22"
-
-# Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-07-22"
-
-
-@dataclass(frozen=True)
-class ExemplarSnapshot:
-    """One measured coverage row; collection count is always derived live."""
-
-    name: str
-    coverage_pct: str  # rendered as-is, e.g. "96.96 %"
-
-
-# Measured per-exemplar coverage snapshot. Collection totals are intentionally
-# absent here and are derived in isolated project environments on every run.
-EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    # template_active_inference coverage is re-derived in its OWN environment
-    # (its project-local .venv pins a numpy/Python ABI the repo-root interpreter
-    # cannot exercise). It is the only exemplar carrying `long_running` tests, so
-    # it is also the only one where test SELECTION moves the number, and the two
-    # readings must not be confused:
-    #   whole suite (what `--verify-coverage` runs, and what every other row
-    #     here is measured with)                          -> 93.23 %
-    #   routine gate with long_running deselected
-    #     (`stage_01_test.py --project-only`)             -> ~90.35 %
-    # The whole-suite figure is recorded so all 24 rows share one method and the
-    # value is reproducible with the shipped verifier; expect the day-to-day gate
-    # to report the lower number.
-    ExemplarSnapshot("template_active_inference", "93.23 %"),
-    ExemplarSnapshot("template_advanced_literature_review", "93.07 %"),
-    ExemplarSnapshot("template_autopoiesis", "97.84 %"),
-    ExemplarSnapshot("template_autoresearch_project", "96.46 %"),
-    ExemplarSnapshot("template_autoscientists", "99.28 %"),
-    ExemplarSnapshot("template_code_project", "96.98 %"),
-    ExemplarSnapshot("template_data_descriptor", "98.75 %"),
-    ExemplarSnapshot("template_eda_notebook", "98.97 %"),
-    ExemplarSnapshot("template_formal", "95.28 %"),
-    ExemplarSnapshot("template_gold_refinement", "92.64 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "94.10 %"),
-    ExemplarSnapshot("template_madlib", "99.67 %"),
-    ExemplarSnapshot("template_methods_paper", "98.98 %"),
-    # Reverified 2026-07-20 after strict manifest/page-loader hardening:
-    # 150 tests, 99.70 % line+branch coverage in the project lane.
-    ExemplarSnapshot("template_newspaper", "99.70 %"),
-    ExemplarSnapshot("template_pitch_deck", "97.73 %"),
-    ExemplarSnapshot("template_pools_rules_tools", "94.88 %"),
-    ExemplarSnapshot("template_prose_project", "99.57 %"),
-    # Reverified 2026-07-20 in the Python 3.12 public-readiness matrix:
-    # 113 tests, 97.53 % line+branch coverage.
-    ExemplarSnapshot("template_redacted_report", "97.53 %"),
-    ExemplarSnapshot("template_registered_report", "96.42 %"),
-    ExemplarSnapshot("template_search_project", "97.69 %"),
-    ExemplarSnapshot("template_sia", "99.69 %"),
-    ExemplarSnapshot("template_storybook", "94.40 %"),
-    ExemplarSnapshot("template_template", "99.14 %"),
-    ExemplarSnapshot("template_textbook", "96.19 %"),
-)
+GENERATED_DATE = "2026-09-06"
 
 
 def tracked_infra_python_count(repo_root: Path) -> int:
@@ -278,259 +275,6 @@ def _exemplar_table(exemplar_tests: dict[str, int]) -> str:
     return "\n".join(rows)
 
 
-def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
-    """Run one exemplar's canonical standalone coverage gate and return its total.
-
-    The canonical measurement is the STANDALONE one — pytest invoked from inside
-    the project directory, so the project's own ``[tool.coverage.run]`` applies.
-    Measuring from the repo root gives a different, wrong number: the root config
-    omits nothing while each exemplar omits ``*/__init__.py``, and a root-cwd
-    ``--cov=<path>`` can sweep a far larger statement set (measured 2026-07-27:
-    ``template_advanced_literature_review`` reports 38 % over 3489 statements from
-    the root versus 93.07 % over 423 standalone).
-
-    Percentages are re-read through ``coverage report --precision=2`` because
-    several exemplars set ``precision = 0`` and would otherwise report a rounded
-    whole percent.
-
-    Returns a string like ``"93.07 %"``. Raises ``RuntimeError`` if the run fails.
-    """
-    project_dir = repo_root / "projects" / "templates" / name
-    if not project_dir.is_dir():
-        raise RuntimeError(f"exemplar not checked out: {name}")
-    data_file = project_dir / f".coverage.measure_{name}"
-    env = dict(get_subprocess_env())
-    env["COVERAGE_FILE"] = str(data_file)
-    try:
-        run = subprocess.run(  # noqa: S603 - fixed argv, no shell
-            ["uv", "run", "--directory", str(project_dir), "pytest", "tests/", "--cov=src", "--cov-report=", "-q"],
-            capture_output=True,
-            text=True,
-            env=env,
-            check=False,
-        )
-        if run.returncode != 0:
-            tail = "\n".join((run.stdout + run.stderr).splitlines()[-8:])
-            raise RuntimeError(f"coverage run failed for {name} (exit {run.returncode}):\n{tail}")
-        report = subprocess.run(  # noqa: S603 - fixed argv, no shell
-            ["uv", "run", "--directory", str(project_dir), "coverage", "report", "--precision=2"],
-            capture_output=True,
-            text=True,
-            env=env,
-            check=False,
-        )
-        for line in report.stdout.splitlines():
-            if line.startswith("TOTAL"):
-                return f"{line.split()[-1].rstrip('%')} %"
-        raise RuntimeError(f"no TOTAL row in coverage report for {name}")
-    finally:
-        data_file.unlink(missing_ok=True)
-
-
-def verify_exemplar_coverage(repo_root: Path, *, rewrite: bool = False) -> tuple[bool, str]:
-    """Re-measure every exemplar's coverage and compare against the recorded value.
-
-    This is the missing half of the coverage provenance system.
-    :func:`validate_coverage_provenance` only proves the *source has not changed
-    since the number was recorded* — it never re-derives the number itself, so a
-    percentage that was wrong when written stays wrong forever. Measured
-    2026-07-27: ``template_search_project`` recorded 96.40 % against an actual
-    97.69 %, and ``template_advanced_literature_review`` recorded 92.48 % against
-    an actual 93.07 %; neither gap was visible to any gate.
-
-    With ``rewrite=True`` the measured values are written back into this module's
-    ``EXEMPLAR_SNAPSHOT`` block, so refreshing them is one command rather than a
-    hand-edit per exemplar.
-
-    Returns ``(all_match, report_text)``. Deliberately not wired into CI: it runs
-    every exemplar's suite and takes minutes.
-    """
-    measured: dict[str, str] = {}
-    failures: list[str] = []
-    for row in EXEMPLAR_SNAPSHOT:
-        try:
-            measured[row.name] = measure_exemplar_coverage(repo_root, row.name)
-        except RuntimeError as exc:
-            failures.append(f"{row.name}: {exc}")
-
-    lines = [f"{'exemplar':44} {'recorded':>10} {'measured':>10}  status"]
-    mismatched: list[tuple[str, str, str]] = []
-    for row in EXEMPLAR_SNAPSHOT:
-        actual = measured.get(row.name)
-        if actual is None:
-            lines.append(f"{row.name:44} {row.coverage_pct:>10} {'-':>10}  NOT MEASURED")
-            continue
-        ok = actual.replace(" ", "") == row.coverage_pct.replace(" ", "")
-        if not ok:
-            mismatched.append((row.name, row.coverage_pct, actual))
-        lines.append(f"{row.name:44} {row.coverage_pct:>10} {actual:>10}  {'ok' if ok else 'DRIFTED'}")
-
-    if rewrite and measured:
-        _rewrite_exemplar_snapshot(measured)
-        lines.append(f"\nrewrote EXEMPLAR_SNAPSHOT with {len(measured)} measured values")
-
-    for failure in failures:
-        lines.append(f"MEASUREMENT FAILED — {failure}")
-    lines.append(f"\n{len(mismatched)} drifted, {len(failures)} failed, {len(measured)} measured")
-    return (not mismatched and not failures), "\n".join(lines)
-
-
-def _rewrite_exemplar_snapshot(measured: dict[str, str], source_path: Path | None = None) -> None:
-    """Rewrite an ``EXEMPLAR_SNAPSHOT`` tuple with measured percentages.
-
-    ``source_path`` defaults to this module and exists so the rewrite can be
-    exercised against a scratch file — the repo forbids dependency replacement in
-    tests, so the seam is a real parameter rather than a patched ``__file__``.
-    """
-    source_path = source_path or Path(__file__)
-    text = source_path.read_text(encoding="utf-8")
-
-    def _replace(match: re.Match[str]) -> str:
-        name = match.group("name")
-        actual = measured.get(name)
-        return match.group(0) if actual is None else f'ExemplarSnapshot("{name}", "{actual}")'
-
-    updated = re.sub(
-        r'ExemplarSnapshot\(\s*"(?P<name>[^"]+)"\s*,\s*"[^"]*"\s*\)',
-        _replace,
-        text,
-    )
-    if updated != text:
-        source_path.write_text(updated, encoding="utf-8")
-
-
-def exemplar_source_hash(repo_root: Path, name: str) -> str:
-    """Hash tracked source and tests that determine one exemplar's coverage."""
-    project_root = repo_root / "projects" / "templates" / name
-    digest = hashlib.sha256()
-    relative_roots = [(project_root / root_name).relative_to(repo_root).as_posix() for root_name in ("src", "tests")]
-    tracked = subprocess.run(  # noqa: S603 - fixed git command and paths
-        ["git", "ls-files", "--", *relative_roots],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if tracked.returncode == 0:
-        files = sorted((repo_root / relative, repo_root / relative) for relative in tracked.stdout.splitlines())
-    else:
-        # Unit callers may supply a temporary non-Git tree. Production
-        # repositories always take the tracked-file branch above so ignored
-        # build metadata cannot contaminate cross-platform provenance.
-        files = sorted(
-            (path, path)
-            for root_name in ("src", "tests")
-            for path in (project_root / root_name).rglob("*")
-            if path.is_file() and "__pycache__" not in path.parts
-        )
-    for logical_path, physical_path in files:
-        # Git records directory symlinks as a path without a trailing slash.
-        # The advanced literature exemplar intentionally reuses sibling source
-        # directories, so hash the in-repository target files under the symlink's
-        # logical project path.
-        if physical_path.is_symlink() and physical_path.is_dir():
-            for child_logical, child_physical in _tracked_symlink_children(repo_root, logical_path, physical_path):
-                digest.update(child_logical.relative_to(project_root).as_posix().encode("utf-8"))
-                digest.update(b"\0")
-                digest.update(child_physical.read_bytes())
-                digest.update(b"\0")
-            continue
-        if not physical_path.is_file():
-            continue
-        digest.update(logical_path.relative_to(project_root).as_posix().encode("utf-8"))
-        digest.update(b"\0")
-        digest.update(physical_path.read_bytes())
-        digest.update(b"\0")
-    return digest.hexdigest()
-
-
-def _tracked_symlink_children(repo_root: Path, logical_path: Path, symlink_path: Path) -> list[tuple[Path, Path]]:
-    """Return tracked regular files reached through an in-repository directory symlink."""
-    repo_root = repo_root.resolve()
-    target_root = symlink_path.resolve()
-    try:
-        target_rel = target_root.relative_to(repo_root).as_posix()
-    except ValueError:
-        return []
-    tracked = subprocess.run(  # noqa: S603 - fixed git command and repo-local path
-        ["git", "ls-files", "--", target_rel],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if tracked.returncode == 0:
-        physical_files = sorted((repo_root / relative).resolve() for relative in tracked.stdout.splitlines())
-    else:
-        physical_files = sorted(path for path in target_root.rglob("*") if path.is_file())
-    return [
-        (logical_path / physical.relative_to(target_root), physical)
-        for physical in physical_files
-        if physical.is_file()
-    ]
-
-
-def build_coverage_provenance(repo_root: Path) -> dict[str, object]:
-    """Build provenance for the checked-in coverage percentages."""
-    source_commit = subprocess.run(  # noqa: S603 - fixed git command
-        ["git", "rev-parse", "HEAD"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=True,
-    ).stdout.strip()
-    return {
-        "schema_version": COVERAGE_PROVENANCE_SCHEMA_VERSION,
-        "measured_at": EXEMPLAR_SNAPSHOT_DATE,
-        "source_commit": source_commit,
-        "projects": {
-            row.name: {
-                "coverage_pct": row.coverage_pct,
-                "source_hash": exemplar_source_hash(repo_root, row.name),
-            }
-            for row in EXEMPLAR_SNAPSHOT
-        },
-    }
-
-
-def write_coverage_provenance(repo_root: Path) -> Path:
-    """Write coverage source provenance after coverage gates have run."""
-    target = repo_root / COVERAGE_PROVENANCE_RELATIVE_PATH
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(
-        json.dumps(build_coverage_provenance(repo_root), indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    return target
-
-
-def validate_coverage_provenance(repo_root: Path) -> None:
-    """Fail closed when a coverage percentage is stale for its source tree."""
-    path = repo_root / COVERAGE_PROVENANCE_RELATIVE_PATH
-    if not path.is_file():
-        raise RuntimeError(f"missing coverage provenance: {COVERAGE_PROVENANCE_RELATIVE_PATH}")
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise RuntimeError("coverage provenance root must be a mapping")
-    if payload.get("schema_version") != COVERAGE_PROVENANCE_SCHEMA_VERSION:
-        raise RuntimeError(f"coverage provenance schema mismatch: expected {COVERAGE_PROVENANCE_SCHEMA_VERSION}")
-    projects = payload.get("projects")
-    if not isinstance(projects, dict):
-        raise RuntimeError("coverage provenance has no projects mapping")
-    expected_names = {row.name for row in EXEMPLAR_SNAPSHOT}
-    if set(projects) != expected_names:
-        raise RuntimeError("coverage provenance project roster does not match the public snapshot")
-    for row in EXEMPLAR_SNAPSHOT:
-        record = projects.get(row.name)
-        if not isinstance(record, dict) or record.get("coverage_pct") != row.coverage_pct:
-            raise RuntimeError(f"coverage provenance percentage mismatch: {row.name}")
-        if record.get("source_hash") != exemplar_source_hash(repo_root, row.name):
-            raise RuntimeError(
-                f"stale coverage snapshot for {row.name}: source hash changed; "
-                "rerun its coverage gate, then refresh coverage provenance"
-            )
-
-
 def render_counts_doc(facts: CountsFacts) -> str:
     """Render the full COUNTS.md content from derived facts + measured snapshot."""
     roster = _roster_block(facts.public_projects)
@@ -560,7 +304,7 @@ This file aggregates verifiable facts from discovery scripts, CI configuration, 
 
 ## Project Roster
 
-Private lifecycle projects live outside this public repo in a separate external repository (location set via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`). The simplified sidecar defaults to `working/` and `archive/`; optional `ongoing/` (long-lived projects with no publication target) plus legacy `active/`, `published/`, and `other/` folders are still recognized when present. `run.sh`/`infrastructure.orchestration` symlinks existing private lifecycle folders into same-named typed subfolders under `template/projects/` (`working/*` → `projects/working/*`, `ongoing/*` → `projects/ongoing/*`, `archive/*` → `projects/archive/*`, optional `active/*` → `projects/active/*`, …) before discovery/rendering; only `projects/templates/` and optional `projects/active/` are default-rendered, while `working/`, `ongoing/`, and `archive/` are non-rendered mirrors for explicit targeted work. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
+Private lifecycle projects live outside this public repo in a separate external repository (location set via `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`). The simplified sidecar defaults to `working/` and `archive/`; optional `ongoing/` (long-lived projects with no publication target) and legacy `active/` folders are still recognized when present. `run.sh`/`infrastructure.orchestration` symlinks existing private lifecycle folders into same-named typed subfolders under `template/projects/` (`working/*` → `projects/working/*`, `ongoing/*` → `projects/ongoing/*`, `archive/*` → `projects/archive/*`, optional `active/*` → `projects/active/*`, …) before discovery/rendering; only `projects/templates/` and optional `projects/active/` are default-rendered, while `working/`, `ongoing/`, and `archive/` are non-rendered mirrors for explicit targeted work. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 
 **Public CI/documentation project scope** (`projects/`, filtered through `infrastructure.project.public_scope`; authoritative snapshot → [`active_projects.md`](active_projects.md)):
 
@@ -572,7 +316,7 @@ Private lifecycle projects live outside this public repo in a separate external 
 
 **Ongoing projects** (`projects/ongoing/`, not discovered/rendered): local-only symlinks to the private repo's `ongoing/` projects — long-lived work with no publication target, roster omitted from public docs; render explicitly via the qualified name `ongoing/<name>`; list with `ls projects/ongoing/`.
 
-**Archived projects** (`projects/archive/`, preserved but not executed): local-only symlinks to the private repo's `archive/` projects (roster omitted from public docs) — list with `ls projects/archive/`. `projects/published/` and `projects/other/` are optional legacy non-rendered lifecycle mirrors.
+**Archived projects** (`projects/archive/`, preserved but not executed): local-only symlinks to the private repo's `archive/` projects (roster omitted from public docs) — list with `ls projects/archive/`. When present, `projects/active/` is the hot-seat rendered set (same default discovery as `templates/`).
 
 Regenerate [`active_projects.md`](active_projects.md) with:
 
@@ -620,11 +364,11 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **{facts.project_tests}** project-scope infrastructure tests collected and **{facts.publishing_tests}** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated {EXEMPLAR_SNAPSHOT_DATE}; `template_active_inference` coverage was re-derived in its project-local environment — see note below):
+**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated {EXEMPLAR_SNAPSHOT_DATE}; coverage values use the shared `release` test profile in each project's environment):
 
 {_exemplar_table(facts.exemplar_tests)}
 
-Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs; coverage values come from the latest per-project coverage gates (`uv run pytest projects/templates/<name>/tests/ --cov=projects/templates/<name>/src`). After changing project `src/` or tests, rerun that project's coverage gate and then explicitly refresh provenance with `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails when source hashes no longer match. `template_active_inference` pins its own `.venv`/toolchain, so its coverage is re-derived in that environment, not from the repo-root interpreter. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
+Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs; coverage values come from `uv run python scripts/docgen/counts.py --verify-coverage`, which invokes each project's own `uv` environment with the shared `release` marker profile and a bounded subprocess. After changing an inventoried project coverage input—including source, tests, scripts, configuration, data, manuscript content, or dependency locks—rerun the coverage verifier and then explicitly refresh provenance with `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails when coverage-input hashes no longer match. Generated output plus runtime, build, cache, and environment artifacts are excluded from that versioned inventory. `template_active_inference` pins its own `.venv`/toolchain, so its release-profile coverage is re-derived in that environment, not from the repo-root interpreter. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
 Drift-checker coverage: `uv run python scripts/audit/check_template_drift.py --strict`. Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** through the thin-orchestrator detectors. Per-exemplar detectors include function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead links, oversize `src/*.py`, blanket `except Exception`, mocks in tests, and canonical-file presence.
 
@@ -725,9 +469,17 @@ def write_counts_doc(
     facts: CountsFacts | None = None,
     project_workers: str | int | None = None,
 ) -> Path:
-    """Render and write COUNTS.md; returns the written path."""
-    validate_coverage_provenance(repo_root)
+    """Render and write COUNTS.md; returns the written path.
+
+    The canonical generated document is always provenance-gated.  An explicit
+    alternate output path is a rendering API for caller-supplied facts (used by
+    real-I/O tests and previews), so it must not rescan every public exemplar or
+    imply that the alternate file is a certified repository snapshot.
+    """
     target = out_path if out_path is not None else repo_root / DOC_RELATIVE_PATH
+    canonical_target = repo_root / DOC_RELATIVE_PATH
+    if target.resolve() == canonical_target.resolve():
+        validate_coverage_provenance(repo_root)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(
         render_counts_doc(facts or collect_facts(repo_root, project_workers=project_workers)),

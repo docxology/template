@@ -19,7 +19,7 @@ Check these before running anything. The pipeline will fail at specific, known s
 pandoc --version        # need 2.x or 3.x
 xelatex --version       # need any version
 uv --version            # need 0.4.x or later
-python3 --version       # 3.10–3.13; managed by uv, not required on PATH  # noqa: docs-lint
+python3 --version       # 3.10–3.14; managed by uv, not required on PATH  # noqa: docs-lint
 pre-commit --version    # installed via uv; check after uv sync
 ```
 
@@ -28,7 +28,9 @@ pre-commit --version    # installed via uv; check after uv sync
 **macOS:**
 ```bash
 # uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# Follow the checksum-verified instructions in
+# docs/operational/build/dependency-management.md, or use Homebrew:
+brew install uv
 # OR: brew install uv
 
 # pandoc
@@ -47,7 +49,8 @@ brew install --cask mactex
 ```bash
 sudo apt-get update
 sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended fonts-dejavu
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# Install uv with your distribution package manager or pipx; see
+# docs/operational/build/dependency-management.md for the pinned installer.
 ```
 
 **Verify LaTeX packages:**
@@ -101,14 +104,14 @@ uv run python scripts/runner/execute_pipeline.py --project templates/template_co
 
 **Expected stage log (abbreviated):**
 ```
-[0/9] Clean Output Directories     ✅
-[1/9] Environment Setup            ✅
-[2/9] Infrastructure Tests         ✅
-[3/9] Project Tests                ✅
-[4/9] Project Analysis             ✅
-[5/9] PDF Rendering                ✅
-[6/9] Output Validation            ✅
-[9/9] Copy Outputs                 ✅
+[1/8] Clean Output Directories     ✅
+[2/8] Environment Setup            ✅
+[3/8] Infrastructure Tests         ✅
+[4/8] Project Tests                ✅
+[5/8] Project Analysis             ✅
+[6/8] PDF Rendering                ✅
+[7/8] Output Validation            ✅
+[8/8] Copy Outputs                 ✅
 ```
 
 **Wall-clock time:** 2–5 minutes on a typical laptop (dominated by PDF rendering).

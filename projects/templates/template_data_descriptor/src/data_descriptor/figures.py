@@ -2,16 +2,16 @@
 
 These functions compute *plot-ready* data structures (table rows, ordered
 steps, severity counts) from a descriptor mapping but never import matplotlib.
-Rendering happens in the thin script under ``scripts/`` — keeping plotting out
-of ``src/`` is the thin-orchestrator contract and makes every preparer
-trivially testable without a display backend.
+The sibling :mod:`data_descriptor.figure_pipeline` module renders these values;
+keeping preparation separate makes every data transformation directly testable
+without a display backend while the script remains a genuine thin entry point.
 """
 
 from __future__ import annotations
 
 import copy
 from collections.abc import Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any
 
 from data_descriptor.descriptor import summarize_field_constraints, validate_descriptor
@@ -75,6 +75,7 @@ class DescriptorFigureSpec:
     filename: str
     caption: str
     generated_by: str
+    alt_text: str
 
 
 FIGURE_REGISTRY_SCHEMA = "template-data-descriptor-figure-registry-v1"
@@ -84,30 +85,50 @@ DESCRIPTOR_FIGURE_SPECS: tuple[DescriptorFigureSpec, ...] = (
         filename="schema_overview.png",
         caption="Field schema and data dictionary generated from the descriptor.",
         generated_by="scripts.generate_figures.generate_figures",
+        alt_text=(
+            "Data-dictionary table encoding each declared field's type, nullability, unit, and constraint; "
+            "the table describes metadata rather than observed values."
+        ),
     ),
     DescriptorFigureSpec(
         label="fig:file_inventory",
         filename="file_inventory.png",
         caption="Declared row counts for every file in the descriptor inventory.",
         generated_by="scripts.generate_figures.generate_figures",
+        alt_text=(
+            "Horizontal bars encode descriptor-declared row counts by file; declared counts alone do not "
+            "establish that the corresponding bytes are present or verified."
+        ),
     ),
     DescriptorFigureSpec(
         label="fig:provenance_flow",
         filename="provenance_flow.png",
         caption="Ordered provenance steps and their responsible agents.",
         generated_by="scripts.generate_figures.generate_figures",
+        alt_text=(
+            "Connected boxes encode descriptor-declared provenance steps and responsible agents from left to "
+            "right; the diagram records the claim and does not independently verify execution."
+        ),
     ),
     DescriptorFigureSpec(
         label="fig:quality_gate",
         filename="quality_gate.png",
         caption="Validation findings for the clean fixture and deliberately broken control.",
         generated_by="scripts.generate_figures.generate_figures",
+        alt_text=(
+            "Grouped bars compare descriptor-validation error and warning counts for the supplied descriptor "
+            "and an explicitly synthetic broken control."
+        ),
     ),
     DescriptorFigureSpec(
         label="fig:checksum_verification",
         filename="checksum_verification.png",
         caption="Declared and recomputed row counts and checksum status by file.",
         generated_by="scripts.generate_figures.generate_figures",
+        alt_text=(
+            "Verification table encoding declared versus recomputed row counts, checksum agreement, and status "
+            "for each file; readiness is a descriptor-validation score, not a scientific quality score."
+        ),
     ),
 )
 _FIGURE_SPEC_BY_LABEL = {spec.label: spec for spec in DESCRIPTOR_FIGURE_SPECS}
@@ -119,6 +140,110 @@ def descriptor_figure_spec(label: str) -> DescriptorFigureSpec:
         return _FIGURE_SPEC_BY_LABEL[label]
     except KeyError as exc:
         raise KeyError(f"unknown descriptor figure label: {label!r}") from exc
+
+
+def descriptor_figure_specs_for_data(
+    descriptor: dict[str, Any],
+    checks: Iterable[FileVerification],
+    *,
+    readiness_score: float,
+) -> tuple[DescriptorFigureSpec, ...]:
+    """Bind registry descriptions to the descriptor and verification run.
+
+    Args:
+        descriptor: The same parsed descriptor used to render the figures.
+        checks: The byte-level verification results rendered in the table.
+        readiness_score: Descriptor report score shown in the table title.
+
+    Returns:
+        A complete specification tuple with data-derived alternate text.
+    """
+    check_rows = tuple(checks)
+    clean = severity_counts(descriptor)
+    broken = severity_counts(demo_broken_descriptor(descriptor))
+    alt_by_label = {
+        "fig:schema_overview": _schema_alt_text(schema_table_rows(descriptor)),
+        "fig:file_inventory": _inventory_alt_text(file_inventory_rows(descriptor)),
+        "fig:provenance_flow": _provenance_alt_text(provenance_steps(descriptor)),
+        "fig:quality_gate": _quality_alt_text(clean, broken),
+        "fig:checksum_verification": _verification_alt_text(check_rows, readiness_score),
+    }
+    return tuple(replace(spec, alt_text=alt_by_label[spec.label]) for spec in DESCRIPTOR_FIGURE_SPECS)
+
+
+def _schema_alt_text(rows: tuple[SchemaRow, ...]) -> str:
+    if not rows:
+        return (
+            "Empty data-dictionary table: the descriptor contains no renderable field entries, so no schema "
+            "structure can be described."
+        )
+    fields = []
+    for row in rows:
+        details = [row.field_type or "type unspecified", f"nullable {row.nullable}"]
+        if row.unit:
+            details.append(f"unit {row.unit}")
+        if row.constraint:
+            details.append(f"constraint {row.constraint}")
+        fields.append(f"{row.name or '(unnamed)'} ({', '.join(details)})")
+    return (
+        f"{len(rows)}-row data dictionary: {'; '.join(fields)}. The table describes declared metadata, not "
+        "observed values."
+    )
+
+
+def _inventory_alt_text(rows: tuple[FileInventoryRow, ...]) -> str:
+    if not rows:
+        return (
+            "Empty file-inventory bar chart: the descriptor contains no renderable file entries, so no "
+            "declared row counts are available."
+        )
+    bars = "; ".join(f"{row.path or '(unnamed)'}: {row.rows}" for row in rows)
+    largest = max(row.rows for row in rows)
+    largest_paths = [row.path or "(unnamed)" for row in rows if row.rows == largest]
+    return (
+        f"{len(rows)} horizontal bars encode descriptor-declared row counts: {bars}. Largest declared count "
+        f"{largest} occurs for {', '.join(largest_paths)}. Declared counts alone do not verify file bytes."
+    )
+
+
+def _provenance_alt_text(steps: tuple[ProvenanceStep, ...]) -> str:
+    if not steps:
+        return (
+            "Empty provenance-flow panel: the descriptor contains no renderable provenance steps, so no "
+            "processing chain is claimed."
+        )
+    nodes = " to ".join(f"{step.step or '(unnamed)'} ({step.agent or 'agent unspecified'})" for step in steps)
+    return (
+        f"{len(steps)} connected boxes run left to right: {nodes}. This is the descriptor-declared chain and "
+        "does not independently verify that the steps ran."
+    )
+
+
+def _quality_alt_text(clean: dict[str, int], broken: dict[str, int]) -> str:
+    return (
+        "Grouped bars compare validation findings. Supplied descriptor: "
+        f"{clean.get('error', 0)} errors and {clean.get('warning', 0)} warnings. Deliberately perturbed "
+        f"control: {broken.get('error', 0)} errors and {broken.get('warning', 0)} warnings. The control is "
+        "synthetic and demonstrates gate sensitivity; it is not an empirical data-quality estimate."
+    )
+
+
+def _verification_alt_text(checks: tuple[FileVerification, ...], readiness_score: float) -> str:
+    if not checks:
+        return (
+            "Empty descriptor-to-file verification table: no file checks were available. Descriptor readiness "
+            f"is {readiness_score:.3f}; that score does not establish byte integrity or scientific quality."
+        )
+    rows = verification_table_rows(checks)
+    descriptions = [
+        f"{path}: declared rows {declared}, actual rows {actual}, checksum {checksum}, status {status}"
+        for path, declared, actual, checksum, status in rows
+    ]
+    return (
+        f"{len(rows)}-row descriptor-to-file verification table: {'; '.join(descriptions)}. Descriptor "
+        f"readiness is {readiness_score:.3f}; this is release-readiness evidence, not a scientific quality "
+        "score."
+    )
 
 
 def schema_table_rows(descriptor: dict[str, Any]) -> tuple[SchemaRow, ...]:

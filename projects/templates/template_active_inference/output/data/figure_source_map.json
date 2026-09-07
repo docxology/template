@@ -35,11 +35,11 @@
         "semantic"
       ],
       "dimensions": {
-        "height": 3670,
+        "height": 3708,
         "width": 2285
       },
       "figure_id": "artifact_contract_map",
-      "image_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
+      "image_sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98",
       "mapped": true,
       "pixel_provenance_ok": true,
       "renderer": "visualizations.figures.generate_all_figures",

@@ -33,6 +33,7 @@ projects/templates/template_template/
 │   ├── viz_palette.py             # Shared palette + drawing helpers
 │   ├── paths.py                   # Repository root discovery (`locate_repo_root`)
 │   ├── metrics.py                 # Metric formatting utilities
+│   ├── contracts.py               # Receipts, lockstep, deterministic-default validation
 │   └── inject_metrics.py          # ${variable} → value substitution
 ├── scripts/                       # Thin Orchestrators (Stage 02)
 │   ├── generate_architecture_viz.py   # Figure generation orchestrator
@@ -44,6 +45,7 @@ projects/templates/template_template/
 │   ├── test_architecture_viz.py   # Visualization output tests
 │   ├── test_metrics.py            # Metric formatting + table builder tests
 │   ├── test_confidentiality.py    # Public/private discovery boundary (negative controls)
+│   ├── test_contracts.py          # Receipt schema, matrix lockstep, deterministic defaults
 │   ├── test_evidence_contract.py  # Executable policy binding + evidence fail-closed controls
 │   ├── test_script_entrypoints.py # Sandboxed subprocess execution of the metrics orchestrator
 │   ├── test_stale_metrics_control.py  # Stale-metric negative controls

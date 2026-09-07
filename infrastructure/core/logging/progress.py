@@ -1,4 +1,10 @@
-"""Progress bars, spinners, and ETA calculations for logging."""
+"""Progress bars, spinners, and ETA calculations for logging.
+
+Name-collision note: ``infrastructure.core.progress`` is a different
+API (ProgressBar/SubStageProgress/LLMProgressTracker — work-loop bars
+with ETA accounting). Use THIS module for Spinner, StreamingProgress,
+and log_progress_bar presentation inside logging; use that one for
+computation progress."""
 
 import logging
 import sys

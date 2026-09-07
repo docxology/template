@@ -68,8 +68,14 @@ The project is governed by a strict zero-mock policy, evaluated by running
    that every name imported `from src` exists in the library's public surface,
    and that no cell defines its own `def`/`class`.
 4. **Coverage gate**: CI enforces a ≥90% statement-coverage gate on
-   `projects/templates/template_eda_notebook/src/`; the live figure is tracked in
-   [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
+Falling below that floor fails the gate outright (`--cov-fail-under` enforces it).
+   `projects/templates/template_eda_notebook/src/`; because the threshold is
+   wired through `--cov-fail-under`, any drop below the floor fails the test
+   process itself rather than producing a warning. The live figure is tracked in
+   [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md). Negative
+   control: `tests/test_cleaning.py::TestCleanDataset::test_all_rows_missing_yields_empty`
+   feeds an all-invalid input frame and asserts the documented empty-frame result,
+   so the measured coverage exercises failure behavior, not only happy paths.
 
 ## Figure generation contract
 

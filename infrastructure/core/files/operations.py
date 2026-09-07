@@ -23,6 +23,8 @@ class CopyStats(TypedDict):
     pdf_files: int
     web_files: int
     slides_files: int
+    docx_files: int
+    epub_files: int
     figures_files: int
     data_files: int
     reports_files: int
@@ -39,6 +41,8 @@ CopyStatsCountKey = Literal[
     "pdf_files",
     "web_files",
     "slides_files",
+    "docx_files",
+    "epub_files",
     "figures_files",
     "data_files",
     "reports_files",
@@ -51,6 +55,8 @@ _SUBDIR_STATS_KEYS: dict[str, CopyStatsCountKey] = {
     "pdf": "pdf_files",
     "web": "web_files",
     "slides": "slides_files",
+    "docx": "docx_files",
+    "epub": "epub_files",
     "figures": "figures_files",
     "data": "data_files",
     "reports": "reports_files",
@@ -181,6 +187,8 @@ def copy_final_deliverables(
     - pdf/ - Complete PDF directory with manuscript and metadata
     - web/ - HTML web outputs
     - slides/ - Beamer slides and metadata
+    - docx/ - Combined Microsoft Word deliverables
+    - epub/ - Combined EPUB deliverables
     - figures/ - Generated figures and visualizations
     - data/ - Data files (CSV, NPZ, etc.)
     - reports/ - Generated analysis and simulation reports
@@ -214,6 +222,8 @@ def copy_final_deliverables(
         "pdf_files": 0,
         "web_files": 0,
         "slides_files": 0,
+        "docx_files": 0,
+        "epub_files": 0,
         "figures_files": 0,
         "data_files": 0,
         "reports_files": 0,

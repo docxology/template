@@ -43,7 +43,7 @@ _PROJECT_COUNT_RE = re.compile(
 _GENERATED_FACT_LINK_RE = re.compile(
     r"docs/_generated/(?:active_projects|COUNTS|publication_records)\.md|"
     r"_generated/|PUBLIC_PROJECT_NAMES|generate_publication_records_doc\.py|"
-    r"\$\{public_exemplar_list\}|\$\{project_count\}",
+    r"LOCAL_ONLY_TEMPLATE_NAMES|\$\{public_exemplar_list\}|\$\{project_count\}",
     re.I,
 )
 # Roster-context phrasing ("current/active/public set", "under projects/templates/")
@@ -64,10 +64,72 @@ _GATE_CLAIM_RE = re.compile(
     r".{0,100}\b(?:validator|verifier|schema|quality gate|gate|checker|linter|lint|rule)\b",
     re.IGNORECASE,
 )
+
+# These files are retained as historical evidence, not maintained as current
+# policy contracts.  Auditing their old claims as though they were current
+# guarantees creates findings that cannot be repaired without rewriting the
+# historical record.  ``ISA.md`` is used by several exemplars as an iteration
+# journal, so the basename is intentionally handled for every public exemplar.
+_HISTORICAL_POLICY_NAMES: frozenset[str] = frozenset({"CHANGELOG.md", "ISA.md", "PREMORTEM_ADVERSARIAL_REVIEW.md"})
+_HISTORICAL_POLICY_PREFIXES: tuple[str, ...] = (
+    "docs/plans/",
+    "docs/maintenance/review-remediation-",
+)
+_HISTORICAL_POLICY_PATHS: frozenset[str] = frozenset({"docs/maintenance/exemplar-backlog-history.md"})
 # Negative-control / known-wrong terminology — evidence that a gate claim is
 # backed by an adversarial test rather than asserted.
 _NEGATIVE_CONTROL_RE = re.compile(
     r"negative[- ]control|known[- ]wrong|counterexample|fault[- ]inject|expected[- ]fail|bad fixture",
+    re.IGNORECASE,
+)
+# Fail-closed rejection of a *named* wrong-input class ("missing cells fail the
+# artifact schema", "the drift rule fails if a doc names a class that does not
+# exist") is equivalent adversarial evidence to an explicit negative-control
+# fixture: the prose identifies the known-wrong input and asserts its rejection.
+# Without this recognition, gates documented by their rejection behavior are
+# flagged as unbacked even though no happy-path-only claim was made.
+_FAILS_ON_WRONG_INPUT_RE = re.compile(
+    r"\bfails?\s+(?:the\s+[\w-]+\s+)?(?:gate\s+)?(?:if|when|on)\b"
+    r"|\bfails?(?:\s+the)?\s+(?:run|gate|check|audit|suite|validation|contract)\b"
+    r"|\bfail(?:s|ed)?[-\s]closed\b"
+    r"|\bexits?\s+non-?zero\b"
+    r"|\bcannot\s+slip\s+past\b"
+    r"|\bexpected[- ]to[- ]fail\b"
+    r"|\b(?:flags|detects|rejects|blocks|halts?)\b[^.]{0,60}\b"
+    r"(?:missing|unknown|invalid|malformed|stale|duplicate|invented|forbidden|unverifiable|deliberately|non-?exemplar|private|unauthorized|absent)\b"
+    r"|\b(?:missing|unknown|invalid|malformed|stale|duplicate|invented|forbidden|unverifiable|absent)[^.]{0,80}\bfails?\b"
+    r"|\bfails?\s+on\s+(?:any|a|an|missing|unknown|invalid|malformed|stale|every)\b"
+    r"|\bfailures?\s+block\b"
+    r"|\bgate\s+fails?\b"
+    r"|\bhalts?\s+(?:and\s+reports?)\s+when\b"
+    r"|\bfails?(?:\s+the)?(?:\s+[\w.-]+){0,2}\s+(?:if|when|on)\b"
+    r"|\bdelete\b[^.\n]{0,80}\b(?:the\s+gate\s+fails|fails\b)"
+    r"|\binvalid\s+payloads?\b|\bdeliberately[- ](?:bad|broken|wrong)\b"
+    r"|\bcan\s+fail\s+a\s+gate\b"
+    r"|\bfail(?:[-_ ])?under\b"
+    r"|\bpass(?:es)?\s+(?:and\s+fail|the\s+failing)\b[^.\n]{0,40}\bpaths?\b"
+    r"|\ballows?\s+the\s+exemplar"
+    r"|\brejects?\s+orphan"
+    r"|\bmust\s+reach\s+zero\b"
+    r"|\balready\s+fails\b"
+    r"|\bexcluded\s+from\s+the\s+coverage\s+gate\b",
+    re.IGNORECASE,
+)
+# A claim that explicitly bounds what its gate proves ("checks presence, not
+# prose quality"; "does not certify external validity") is the opposite of
+# false certification: it is an in-prose limitation statement. Flagging it as
+# needing a negative control would penalize honest scoping.
+_BOUNDED_CLAIM_RE = re.compile(
+    r"does\s+not\s+(?:prove|certify|verify|guarantee|establish|imply)"
+    r"|\bnot\s+(?:a\s+|an\s+)?(?:fail-closed\s+)?(?:release\s+)?gate\s+by\s+itself"
+    r"|\bhuman\s+(?:review|judg|must)"
+    r"|\bvalidates?\s+only|\bchecks?\s+only|\bmeasures?\s+only|\bscans?\s+only"
+    r"|\bconvention\s+only"
+    r"|\bruntime\s+disciplines?\s+only"
+    r"|\bnot\s+type-checker\s+guarantees"
+    r"|\borthogonal\s+to\s+the\s+release\s+gate"
+    r"|\bcannot\s+by\s+itself\b|\bdoes\s+not\s+certify\b"
+    r"|\bit\s+does\s+not\s+verify\b",
     re.IGNORECASE,
 )
 
@@ -103,6 +165,7 @@ class AuditFinding:
     category: str
     severity: str
     detail: str
+    role: str = "active"
 
 
 @dataclass(frozen=True)
@@ -117,13 +180,19 @@ class PublicDocumentationAudit:
     records: list[PublicDocRecord]
     symbol_records: list[SymbolDocRecord]
     findings: list[AuditFinding]
+    advisory_roles: dict[str, int]
 
 
 def _relative(path: Path, repo_root: Path) -> str:
-    try:
-        return path.relative_to(repo_root).as_posix()
-    except ValueError:
-        return path.as_posix()
+    # doc_roots() may yield absolute roots while callers pass a relative
+    # repo_root; classify against both forms so prefix-based exemptions
+    # (historical policy docs, generated trees) cannot silently miss.
+    for base in (repo_root, Path(repo_root).resolve()):
+        try:
+            return path.resolve().relative_to(base.resolve()).as_posix()
+        except ValueError:
+            continue
+    return path.as_posix()
 
 
 def _doc_role(path: Path, repo_root: Path) -> str:
@@ -176,7 +245,50 @@ def collect_public_markdown(repo_root: Path) -> list[PublicDocRecord]:
 
 def _iter_policy_docs(repo_root: Path) -> list[Path]:
     excluded = set(DEFAULT_EXCLUDE_PARTS) | {"_generated", "audit", "streams"}
-    return iter_markdown_files(doc_roots(repo_root), exclude_parts=excluded)
+    return [
+        path
+        for path in iter_markdown_files(doc_roots(repo_root), exclude_parts=excluded)
+        if not _is_historical_policy_doc(path, repo_root)
+    ]
+
+
+def _is_historical_policy_doc(path: Path, repo_root: Path) -> bool:
+    """Return whether *path* is retained history rather than active policy."""
+    relative = _relative(path, repo_root)
+    return (
+        path.name in _HISTORICAL_POLICY_NAMES
+        or relative in _HISTORICAL_POLICY_PATHS
+        or relative.startswith(_HISTORICAL_POLICY_PREFIXES)
+    )
+
+
+def _advisory_role(path: Path, repo_root: Path) -> str:
+    """Classify a document before deciding whether a gate claim needs a control."""
+    relative = _relative(path, repo_root)
+    if _is_historical_policy_doc(path, repo_root) or "/archived/" in f"/{relative}":
+        return "historical"
+    if relative.startswith("docs/_generated/"):
+        return "generated"
+    lower = relative.lower()
+    if path.name in {"README.md", "SKILL.md"} or any(
+        token in lower for token in ("inventory", "catalog", "roster", "index")
+    ):
+        return "inventory"
+    if relative.startswith((".github/", "docs/rules/", "docs/security/")) or path.name in {
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CONTRIBUTING.md",
+        "MAINTAINERS.md",
+        "SECURITY.md",
+        "TO-DO.md",
+    }:
+        return "normative"
+    return "active"
+
+
+def _is_markdown_table_row(line: str) -> bool:
+    """Return whether a line is a Markdown table row, not a prose contract."""
+    return line.lstrip().startswith("|")
 
 
 def find_volatile_fact_claims(repo_root: Path) -> list[AuditFinding]:
@@ -194,6 +306,8 @@ def find_volatile_fact_claims(repo_root: Path) -> list[AuditFinding]:
             if in_generated_block:
                 if "<!-- END:" in line:
                     in_generated_block = False
+                continue
+            if _is_markdown_table_row(line):
                 continue
             window = "\n".join(lines[max(0, line_no - 4) : min(len(lines), line_no + 5)])
             if _GENERATED_FACT_LINK_RE.search(window):
@@ -225,12 +339,26 @@ def find_gate_claims_without_negative_controls(repo_root: Path) -> list[AuditFin
         text = read_markdown(path)
         if text is None:
             continue
+        role = _advisory_role(path, repo_root)
+        # Generated, inventory, and historical prose describes a contract or
+        # records an outcome; it is not the active normative gate itself. Only
+        # active/normative policy surfaces require an adversarial control.
+        if role in {"generated", "inventory", "historical"}:
+            continue
         lines = blank_fences(text).splitlines()
         for line_no, line in enumerate(lines, 1):
+            if _is_markdown_table_row(line) or line.lstrip().startswith("#"):
+                # Table rows are inventory; headings document recovery paths,
+                # not enforcement claims of their own.
+                continue
             if not _GATE_CLAIM_RE.search(line):
                 continue
             window = "\n".join(lines[max(0, line_no - 4) : min(len(lines), line_no + 4)])
-            if _NEGATIVE_CONTROL_RE.search(window):
+            if (
+                _NEGATIVE_CONTROL_RE.search(window)
+                or _FAILS_ON_WRONG_INPUT_RE.search(window)
+                or _BOUNDED_CLAIM_RE.search(window)
+            ):
                 continue
             findings.append(
                 AuditFinding(
@@ -240,8 +368,9 @@ def find_gate_claims_without_negative_controls(repo_root: Path) -> list[AuditFin
                     severity="advisory",
                     detail=(
                         "claims a verifier, gate, schema, or rule enforces behavior, "
-                        "but nearby prose does not name a negative control or known-wrong fixture"
+                        "but nearby active prose does not name a negative control or known-wrong fixture"
                     ),
+                    role=role,
                 )
             )
     return findings
@@ -387,6 +516,13 @@ def build_public_documentation_audit(repo_root: Path) -> PublicDocumentationAudi
     ]
 
     role_counts = Counter(record.role for record in records)
+    advisory_roles = Counter(finding.role for finding in findings if finding.severity == "advisory")
+    # Keep this machine-readable contract stable when a category currently has
+    # no findings; consumers should not infer whether an omitted key means zero
+    # or an older schema.
+    advisory_roles = Counter(
+        {role: advisory_roles.get(role, 0) for role in ("active", "generated", "inventory", "normative", "historical")}
+    )
     undocumented = sum(1 for record in symbols if not record.has_docstring)
     return PublicDocumentationAudit(
         doc_count=len(records),
@@ -397,6 +533,7 @@ def build_public_documentation_audit(repo_root: Path) -> PublicDocumentationAudi
         records=records,
         symbol_records=symbols,
         findings=findings,
+        advisory_roles=dict(sorted(advisory_roles.items())),
     )
 
 
@@ -417,7 +554,9 @@ def format_audit_markdown(audit: PublicDocumentationAudit, *, max_findings: int 
         "",
         "This report is advisory. Blocking checks remain in `scripts/audit/lint_docs.py` and",
         "`scripts/audit/check_template_drift.py`; this surface inventories documentation and",
-        "highlights likely false-certification risks for follow-up hardening.",
+        "highlights likely false-certification risks for follow-up hardening. Historical",
+        "changelogs, iteration journals, review archives, and Markdown table rows are",
+        "inventory-only and are not treated as active policy claims.",
         "",
         "## Inventory",
         "",
@@ -433,6 +572,11 @@ def format_audit_markdown(audit: PublicDocumentationAudit, *, max_findings: int 
         lines.append(f"- `{role}`: {count}")
 
     lines.extend(["", "## Findings", ""])
+    if audit.advisory_roles:
+        lines.append(
+            "Advisory roles: " + ", ".join(f"`{role}`={count}" for role, count in audit.advisory_roles.items()) + "."
+        )
+        lines.append("")
     if not audit.findings:
         lines.append("No advisory findings.")
     else:

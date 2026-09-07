@@ -14,6 +14,7 @@ Technical specification for the template project test infrastructure.
 | `test_evidence_contract.py` | Executable policy binding, evidence completeness, and an invented-result negative control |
 | `test_script_entrypoints.py` | Sandboxed subprocess execution of the manuscript-metrics orchestrator |
 | `test_stale_metrics_control.py` | Negative controls for stale generated metrics (key presence, positive counts, generated-vs-live consistency, private-path absence) |
+| `test_contracts.py` | Metrics/steganography receipt schema + determinism, comparative-matrix lockstep validation, stale-payload rejection |
 
 Do not hand-maintain counts here. Re-derive live test and coverage values through
 the commands above and the repository's generated counts report.

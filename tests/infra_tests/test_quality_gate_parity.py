@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import yaml
@@ -55,6 +56,15 @@ def test_ci_workflow_carries_cross_surface_gates() -> None:
         assert command in workflow
 
 
+def test_ci_public_matrix_uses_current_stage_cli_contract() -> None:
+    workflow = (REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+
+    assert "--project-only --all-projects --public-projects" in workflow
+    assert "--project-workers 2" in workflow
+    assert "--public-scope" not in workflow
+    assert "--workers 2" not in workflow
+
+
 def test_pre_push_carries_cross_surface_gates() -> None:
     hooks = _local_hooks()
     quick = _hook_command(hooks["pre-push-quick"])
@@ -71,3 +81,13 @@ def test_pre_push_carries_cross_surface_gates() -> None:
         "scripts/docgen/publication_records.py --check",
     ):
         assert command in docs
+
+
+def test_large_file_hook_allows_only_named_public_arxiv_archives() -> None:
+    config = yaml.safe_load((REPO_ROOT / ".pre-commit-config.yaml").read_text(encoding="utf-8"))
+    hook = next(hook for repo in config["repos"] for hook in repo["hooks"] if hook["id"] == "check-added-large-files")
+    excluded = re.compile(str(hook["exclude"]), re.VERBOSE)
+
+    assert excluded.search("projects/templates/template_active_inference/output/arxiv_submission_20260814.tar.gz")
+    assert not excluded.search("projects/templates/template_active_inference/output/arbitrary.tar.gz")
+    assert not excluded.search("projects/working/private/output/arxiv_submission_20260814.tar.gz")

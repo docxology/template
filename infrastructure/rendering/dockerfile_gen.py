@@ -12,6 +12,7 @@ floating on ``latest``).
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Final
 
@@ -21,16 +22,26 @@ __all__ = [
     "DEFAULT_BASE_IMAGE",
     "DEFAULT_LATEX_PACKAGES",
     "DEFAULT_UV_VERSION",
+    "DEFAULT_UV_INSTALL_SHA256",
 ]
 
 
 DEFAULT_BASE_IMAGE: Final[str] = "ubuntu:24.04"
+
+# The CPython minor version each supported base image ships natively in its
+# default apt repositories. Requesting any other version requires the
+# deadsnakes PPA (see ``build_dockerfile``).
+_BASE_IMAGE_NATIVE_PYTHON: Final[dict[str, str]] = {
+    "ubuntu:24.04": "3.12",
+    "ubuntu:22.04": "3.10",
+}
 
 # Pinned uv version for reproducible bundles. A concrete pin (not the floating
 # ``latest``) is what makes the default Stage-10 bundle reproducible: the same
 # project state always resolves the same uv toolchain. Bump deliberately when
 # the repo's toolchain moves; pass ``uv_version="latest"`` explicitly to opt out.
 DEFAULT_UV_VERSION: Final[str] = "0.12.0"
+DEFAULT_UV_INSTALL_SHA256: Final[str] = "b67e385074fddc9b99cd152b838fd91046d9fbc261b2c45f448a983ad23b8764"
 
 # LaTeX packages this template's PDF rendering depends on at minimum.
 # Mirror of the troubleshooting list in docs/operational/troubleshooting/.
@@ -63,6 +74,9 @@ class DockerfileConfig:
     latex_packages: tuple[str, ...] = DEFAULT_LATEX_PACKAGES
     tlmgr_packages: tuple[str, ...] = DEFAULT_TLMGR_PACKAGES
     uv_version: str = DEFAULT_UV_VERSION  # pinned by default; pass "latest" to opt out
+    # A custom concrete version must provide its own digest.  The default
+    # version receives the repository-pinned digest in ``build_dockerfile``.
+    uv_sha256: str | None = None
 
 
 def build_dockerfile(config: DockerfileConfig) -> str:
@@ -83,13 +97,41 @@ def build_dockerfile(config: DockerfileConfig) -> str:
     latex_pkg_line = " \\\n    ".join(config.latex_packages)
     tlmgr_pkg_line = " ".join(config.tlmgr_packages)
 
-    # Pin the uv installer URL when a concrete version is requested; only the
-    # floating "latest" alias uses the unversioned install endpoint. This keeps
-    # the generated Dockerfile reproducible without a wall-clock timestamp.
+    # A non-native Python version cannot be installed from the base image's
+    # default apt repositories; bootstrap the deadsnakes PPA for it so the
+    # generated Dockerfile actually builds (a bare ``apt-get install
+    # python3.14`` exits 100 on ubuntu:24.04, which ships 3.12).
+    base_native_python = _BASE_IMAGE_NATIVE_PYTHON.get(config.base_image, "3.12")
+    needs_deadsnakes = py_version_tag != base_native_python
+    deadsnakes_lines = (
+        [
+            "",
+            "# Non-native Python version: bootstrap the deadsnakes PPA first.",
+            "RUN apt-get update \\",
+            "    && apt-get install -y --no-install-recommends software-properties-common gpg-agent \\",
+            "    && add-apt-repository -y ppa:deadsnakes/ppa \\",
+            "    && rm -rf /var/lib/apt/lists/*",
+        ]
+        if needs_deadsnakes
+        else []
+    )
+
+    # Pin the uv installer URL and verify its digest when a concrete version is
+    # requested; only the floating "latest" alias uses the unversioned install
+    # endpoint. This keeps the default generated Dockerfile reproducible without
+    # a wall-clock timestamp.
+    uv_install_sha256: str | None = None
     if config.uv_version == "latest":
         uv_install_url = "https://astral.sh/uv/install.sh"
     else:
         uv_install_url = f"https://astral.sh/uv/{config.uv_version}/install.sh"
+        uv_install_sha256 = config.uv_sha256
+        if config.uv_version == DEFAULT_UV_VERSION and uv_install_sha256 is None:
+            uv_install_sha256 = DEFAULT_UV_INSTALL_SHA256
+        if not uv_install_sha256:
+            raise ValueError("uv_sha256 is required for a concrete uv_version")
+        if re.fullmatch(r"[0-9a-fA-F]{64}", uv_install_sha256) is None:
+            raise ValueError("uv_sha256 must be exactly 64 hexadecimal characters")
 
     lines = [
         f"# Auto-generated Dockerfile for executable-bundle of project {config.project_name!r}.",
@@ -97,6 +139,7 @@ def build_dockerfile(config: DockerfileConfig) -> str:
         "# See docs/maintenance/stage-10-executable-bundle.md for rationale.",
         "",
         f"FROM {config.base_image}",
+        *deadsnakes_lines,
         "",
         "ENV DEBIAN_FRONTEND=noninteractive \\",
         "    PYTHONDONTWRITEBYTECODE=1 \\",
@@ -118,7 +161,20 @@ def build_dockerfile(config: DockerfileConfig) -> str:
         f"RUN tlmgr init-usertree || true && tlmgr install {tlmgr_pkg_line} || true",
         "",
         f"# Install uv ({config.uv_version})",
-        f"RUN curl -LsSf {uv_install_url} | sh",
+        *(
+            [
+                f"RUN curl -fsSL {uv_install_url} -o /tmp/uv-install.sh",
+                (
+                    f"RUN echo '{uv_install_sha256}  /tmp/uv-install.sh' | sha256sum -c - "
+                    "&& sh /tmp/uv-install.sh && rm -f /tmp/uv-install.sh"
+                ),
+            ]
+            if config.uv_version != "latest"
+            else [
+                "# Explicit opt-out: latest is intentionally floating and is not digest-verified.",
+                f"RUN curl -fsSL {uv_install_url} | sh",
+            ]
+        ),
         'ENV PATH="/root/.local/bin:${PATH}"',
         "",
         "WORKDIR /workspace",
@@ -135,28 +191,44 @@ def build_dockerfile(config: DockerfileConfig) -> str:
 
 
 def build_compose_yaml(project_name: str) -> str:
-    """Return a minimal docker-compose.yml for the bundle.
+    """Return a docker-compose.yml for the self-contained bundle payload.
 
-    Provides four named services matching the manifest's entry_points so the
-    bundle is self-describing.
+    The bundle is a single-project payload: project trees plus a vendored
+    ``infrastructure/`` copy live under ``source/``. Services that only need
+    that payload (``tests``, ``verify``) run directly against it. Services that
+    would need the absent template-repository root (full pipeline
+    reproduction, rendering orchestration) FAIL CLOSED with an explicit
+    unavailable-dependency receipt and exit 3 — never a bare
+    ``ModuleNotFoundError`` (EXECUTABLE-BUNDLE-MAJ-2 negative control).
     """
 
+    image_name = project_name.replace("/", "-").replace("\\", "-")
+    unavailable_receipt = (
+        "echo 'EXECUTABLE-BUNDLE UNAVAILABLE-DEPENDENCY RECEIPT: this bundle "
+        "payload is single-project; full-pipeline reproduction requires the "
+        "template repository root (scripts/, run.sh, tests/regression/). "
+        "Failing closed instead of raising ModuleNotFoundError.' >&2; exit 3"
+    )
     return (
         "# Auto-generated docker-compose.yml — see manifest.json entry_points.\n"
         "services:\n"
         "  reproduce:\n"
         "    build:\n"
         "      context: .\n"
-        f"    image: template-bundle-{project_name}:latest\n"
+        f"    image: template-bundle-{image_name}:latest\n"
         "    environment:\n"
         "      - MPLBACKEND=Agg\n"
+        f'    command: ["bash", "-lc", "{unavailable_receipt}"]\n'
         "  tests:\n"
-        f"    image: template-bundle-{project_name}:latest\n"
-        f'    command: ["bash", "-lc", "uv run python scripts/pipeline/stage_01_test.py --project {project_name}"]\n'
+        f"    image: template-bundle-{image_name}:latest\n"
+        '    command: ["bash", "-lc", '
+        '"cd /workspace/source && uv run --project /workspace python -m pytest tests -q"]\n'
         "  render:\n"
-        f"    image: template-bundle-{project_name}:latest\n"
-        f'    command: ["bash", "-lc", "uv run python scripts/pipeline/stage_03_render.py --project {project_name}"]\n'
+        f"    image: template-bundle-{image_name}:latest\n"
+        f'    command: ["bash", "-lc", "{unavailable_receipt}"]\n'
         "  verify:\n"
-        f"    image: template-bundle-{project_name}:latest\n"
-        f'    command: ["bash", "-lc", "uv run pytest tests/regression/projects/{project_name} -v"]\n'
+        f"    image: template-bundle-{image_name}:latest\n"
+        '    command: ["bash", "-lc", '
+        '"cd /workspace/source && uv run --project /workspace pytest --collect-only -q >/dev/null'
+        ' && echo payload-tests-collect-cleanly"]\n'
     )

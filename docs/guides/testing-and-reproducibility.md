@@ -224,7 +224,7 @@ This template enforces:
 - ✅ **Project code coverage**: ≥90% (enforced by CI)
 - ✅ **Infrastructure coverage**: ≥60% (enforced by CI)
 - ✅ **No mocks**: data only
-- ✅ **Deterministic**: Fixed seeds for reproducibility
+- ✅ **Controlled randomness**: Explicit local RNG streams, recorded environment, and a tested comparison contract
 
 
 ---
@@ -507,122 +507,112 @@ if __name__ == '__main__':
 
 ## Level 9: Reproducible Research
 
-**Goal**: Ensure reproducibility
+**Goal**: Make results independently traceable and rerunnable within a declared
+scope. A fixed seed or readable PDF alone is not a reproducibility result.
 
 **Time**: 2-3 days
 
-### Deterministic Results
+### Randomness and Numerical Scope
 
-**Always set random seeds**:
+Pass local RNG state into tested source code; do not reset process-wide random
+state inside a function. Treat the seed, generator/algorithm, stream partition,
+sample count, and stopping rule as analysis inputs.
 
 ```python
 import numpy as np
-import random
 
-# At start of script
-np.random.seed(42)
-random.seed(42)
 
-# In functions that use randomness
-def monte_carlo_simulation(n_samples, seed=42):
-    np.random.seed(seed)
-    samples = np.random.normal(0, 1, n_samples)
-    return samples
+def monte_carlo_simulation(*, n_samples: int, seed: int) -> np.ndarray:
+    """Draw a declared number of values from one local RNG stream."""
+    if n_samples <= 0:
+        raise ValueError("n_samples must be positive")
+    rng = np.random.default_rng(seed)
+    return rng.normal(0.0, 1.0, n_samples)
 ```
 
-### Data Versioning
+For parallel work, derive and record independent streams rather than reusing a
+seed in every worker. Bitwise equality may depend on library version, hardware,
+threading, compiler, and numeric backend. State whether the contract is byte
+identity, tolerance-bounded numeric agreement, statistical equivalence, or
+qualitative replication, and test the declared contract.
 
-**Save metadata with data**:
+### Source-Bound Analysis and Statistics
 
-```python
-import json
-import hashlib
-from datetime import datetime
+Before rendering, preserve enough information to reconstruct each reported
+quantity:
 
-def save_with_metadata(data, filename, description=""):
-    """Save data with metadata."""
-    import numpy as np
-    import sys
-    import platform
+- immutable input identifiers and hashes, acquisition dates, inclusion and
+  exclusion decisions, and missing-data policy;
+- configuration/schema version, software revision, dependency lock, execution
+  environment, and RNG identity;
+- estimand, estimator, population/sample, units, denominator, transformations,
+  multiplicity handling, interval/error-bar definition, and uncertainty;
+- raw or minimally processed analysis tables plus a machine-readable summary;
+- figure specifications and registry records with caption, `generated_by`,
+  source identifier, and distinct `metadata.alt_text`; and
+- `manuscript_variables.json` generated from the analysis summary, with tests
+  proving every result-bearing token is produced and no token remains.
 
-    # Save data
-    np.savez(filename, data=data)
+Missing, unavailable, excluded, not run, and zero are distinct states. Preserve
+them explicitly. Keep exploratory, confirmatory, benchmark, and simulation
+claims separate; do not generalize beyond the data and model contract.
 
-    # Calculate hash for integrity
-    with open(filename, 'rb') as f:
-        file_hash = hashlib.sha256(f.read()).hexdigest()
+### Provenance Producer Order
 
-    # Create metadata
-    metadata = {
-        'filename': filename,
-        'description': description,
-        'timestamp': datetime.now().isoformat(),
-        'sha256': file_hash,
-        'shape': data.shape if hasattr(data, 'shape') else len(data),
-        'python_version': sys.version,
-        'numpy_version': np.__version__,
-        'platform': platform.platform(),
-    }
+The order matters because a checksum over a stale derivative is still stale:
 
-    # Save metadata
-    meta_file = filename.replace('.npz', '_metadata.json')
-    with open(meta_file, 'w') as f:
-        json.dump(metadata, f, indent=2)
+1. resolve and hash source inputs/configuration;
+2. run tests and analysis, then write tables and figures;
+3. derive manuscript variables, captions, and figure registry metadata;
+4. hydrate `output/manuscript/`;
+5. render PDF/HTML and inspect semantics/accessibility; and
+6. validate, then write provenance and release receipts over the exact
+   candidate artifacts.
 
-    print(filename)
-    print(meta_file)
+Never edit hydrated manuscript files, generated figures, registries, or
+receipts to make a gate pass. Fix the producer and regenerate downstream.
 
-    return metadata
-```
+### Data and Environment Manifests
 
-### Environment Management
+At minimum, pair each citable dataset/result bundle with a deterministic
+manifest. Use project source code or the repository provenance utilities rather
+than a one-off script that records an unexplained wall-clock timestamp. A useful
+record includes:
 
-**Lock dependencies**:
+- path or stable identifier, media/schema type, byte size, and SHA-256;
+- producer name/version and repository revision;
+- source/config hashes and parent artifact identifiers;
+- deterministic generation mode plus an explicit time-source policy;
+- row/column dimensions and semantic schema, not only an array shape; and
+- status, warnings, and failed/unavailable inputs.
+
+Check, then install from, the committed lock:
+
 
 ```bash
-# Using uv (recommended)
-uv lock --frozen
-
-# Or pip
-pip freeze > requirements.txt
+uv lock --check
+uv sync --frozen
 ```
 
-**Document environment**:
-
-```python
-# scripts/capture_environment.py
-import sys
-import platform
-import json
-
-env_info = {
-    'python_version': sys.version,
-    'platform': platform.platform(),
-    'machine': platform.machine(),
-    'processor': platform.processor(),
-}
-
-# Add package versions
-import numpy, matplotlib, pytest
-env_info['packages'] = {
-    'numpy': numpy.__version__,
-    'matplotlib': matplotlib.__version__,
-    'pytest': pytest.__version__,
-}
-
-with open('output/environment.json', 'w') as f:
-    json.dump(env_info, f, indent=2)
-```
+Do not substitute an ad hoc `pip freeze` for the repository's reviewed lock.
+Capture runtime facts that can change numerical results (Python/packages,
+platform, CPU/GPU, BLAS/backend, locale/time zone, thread settings, containers,
+and external service/model versions) without publishing secrets or private
+paths.
 
 ### Automated Integrity Verification
 
-Use the infrastructure validation module to verify output integrity programmatically:
+Use the infrastructure validation module to detect missing, unreadable, empty,
+or structurally invalid outputs:
 
 ```python
 from infrastructure.validation import verify_output_integrity
 from pathlib import Path
 
-report = verify_output_integrity(Path("output/templates/template_code_project"))
+report = verify_output_integrity(
+    Path("projects/templates/template_code_project/output"),
+    Path("projects/templates/template_code_project/manuscript"),
+)
 if report.overall_integrity:
     print("All integrity checks passed")
 else:
@@ -630,17 +620,37 @@ else:
         print(f"  Issue: {issue}")
 ```
 
-See the [Validation Module Guide](../modules/guides/validation-module.md) for full integrity checking capabilities.
+This check is necessary but does not prove source freshness, scientific
+correctness, claim support, semantic accessibility, or release authority. Run
+the source and rendered gates as separate checks:
+
+```bash
+uv run python -m infrastructure.validation.cli prerender \
+  projects/<subfolder>/<name>/manuscript --repo-root .
+uv run python -m infrastructure.validation.cli evidence \
+  projects/<subfolder>/<name> --fail-on-issues
+uv run python -m infrastructure.validation.cli publication-audit \
+  --project <qualified-name> --rendered --strict \
+  --require-figure-accessibility --format markdown
+```
+
+See the [Validation Module Guide](../modules/guides/validation-module.md) for
+the individual checks and their boundaries.
 
 ### Cryptographic Provenance
 
-For publication-grade provenance, the steganography module embeds SHA-256 hashes and watermarks directly into your PDFs:
+The secure pipeline can embed hashes/watermarks into emitted PDFs:
 
 ```bash
-./secure_run.sh --project template_code_project
+./secure_run.sh --project <qualified-name> --core-only --deterministic
 ```
 
-This creates a tamper-detectable PDF with embedded provenance metadata. See the [Secure Research Guide](secure-research-guide.md) for details.
+This helps identify byte changes and associate a document with recorded
+metadata. It does not prove that the analysis is correct, that a timestamp was
+witnessed externally, that the named author created the work, or that the
+artifact is approved for release. Keep scientific review, provenance,
+accessibility, owner approval, and publication authority as explicit separate
+gates. See the [Secure Research Guide](secure-research-guide.md) for details.
 
 ---
 

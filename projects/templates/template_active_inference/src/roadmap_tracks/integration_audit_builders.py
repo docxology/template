@@ -13,11 +13,11 @@ import re
 from pathlib import Path
 from typing import Any
 
-import yaml
 
 from json_io import load_json as _load_json
 from json_io import write_json as _write_json  # noqa: F401  (re-exported for integration_audit)
 from roadmap_tracks.row_aggregates import all_rows
+from yaml_io import load_yaml
 
 TOKEN_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)(?::\.[0-9]+f)?\}\}")
 TOKEN_MATCH_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)(?::\.(\d+)f)?\}\}")
@@ -35,7 +35,7 @@ def _sha256(path: Path) -> str:
 
 
 def _analysis_scripts(root: Path) -> list[str]:
-    data = yaml.safe_load((root / "manuscript" / "config.yaml").read_text(encoding="utf-8")) or {}
+    data = load_yaml(root / "manuscript" / "config.yaml")
     return [str(script) for script in ((data.get("analysis") or {}).get("scripts") or [])]
 
 
@@ -373,7 +373,13 @@ def build_manuscript_staleness_report(project_root: Path) -> dict[str, Any]:
                 }
             )
             continue
-        resolved_text = resolved_path.read_text(encoding="utf-8") if resolved_path.is_file() else ""
+        try:
+            resolved_text = resolved_path.read_text(encoding="utf-8") if resolved_path.is_file() else ""
+        except FileNotFoundError:
+            # Hydration phases legitimately unlink and rewrite these copies
+            # between the existence probe and the read; treat the transient
+            # window as "not yet hydrated" rather than crashing the audit.
+            resolved_text = ""
         seen: set[tuple[str, str | None]] = set()
         for match in TOKEN_MATCH_RE.finditer(source_text):
             token = match.group(1)
@@ -400,7 +406,13 @@ def build_manuscript_staleness_report(project_root: Path) -> dict[str, Any]:
         if row["token"] == "manuscript_staleness_row_count":
             row["expected"] = str(len(rows))
             resolved_path = root / str(row["resolved_path"])
-            resolved_text = resolved_path.read_text(encoding="utf-8") if resolved_path.is_file() else ""
+            try:
+                resolved_text = resolved_path.read_text(encoding="utf-8") if resolved_path.is_file() else ""
+            except FileNotFoundError:
+                # Hydration phases legitimately unlink and rewrite these copies
+                # between the existence probe and the read; treat the transient
+                # window as "not yet hydrated" rather than crashing the audit.
+                resolved_text = ""
             row["fresh"] = resolved_path.is_file() and row["expected"] in resolved_text
     return {
         "schema": "template_active_inference.manuscript_staleness_report.v1",

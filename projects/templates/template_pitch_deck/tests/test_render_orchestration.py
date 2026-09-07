@@ -8,14 +8,20 @@ from pathlib import Path
 
 import pytest
 import yaml
+from hypothesis import given, settings, strategies as st
 from pypdf import PdfReader
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.slide_deck import Slide
 
 from paths import locate_repo_root, project_root
 from render_orchestration import (
     DeckAuditFailure,
     DiligenceAuditFailure,
+    _configured_formats,
     load_deck_config,
+    _preflight_all_lengths,
+    _select_pptx_renderer,
+    _subject_content_prefix,
     render_all_decks,
     render_one_length,
 )
@@ -30,6 +36,23 @@ def test_load_deck_config_reads_real_config():
     config = load_deck_config(project_root())
     assert config["pitch_subject"] == "template_template"
     assert "theme" in config
+    assert config["subjects"]["template_methods_paper"]["content_prefix"] == "deck_content_methods"
+    assert _configured_formats(config) == ("pdf", "pptx")
+
+
+def test_declared_pptx_format_fails_closed_without_renderer():
+    from infrastructure.core.exceptions import RenderingError
+
+    with pytest.raises(RenderingError, match="declares pptx"):
+        _select_pptx_renderer(("pdf", "pptx"), None)
+
+
+@pytest.mark.parametrize("formats", ([], ["pdf", 7], ["pdf", "keynote"], ["pptx"]))
+def test_configured_formats_reject_invalid_or_incomplete_contract(formats):
+    from infrastructure.core.exceptions import RenderingError
+
+    with pytest.raises(RenderingError):
+        _configured_formats({"formats": formats})
 
 
 def test_load_deck_config_prefers_nested_schema_and_supports_legacy(tmp_path: Path):
@@ -49,6 +72,45 @@ def test_load_deck_config_prefers_nested_schema_and_supports_legacy(tmp_path: Pa
 
     config_path.write_text(yaml.safe_dump({"deck": {"pitch_subject": "legacy"}}), encoding="utf-8")
     assert load_deck_config(tmp_path)["pitch_subject"] == "legacy"
+
+
+def test_subject_content_prefix_returns_configured_prefix_for_known_subject():
+    deck_config = {"subjects": {"template_methods_paper": {"content_prefix": "deck_content_methods"}}}
+    assert _subject_content_prefix(deck_config, "template_methods_paper") == "deck_content_methods"
+
+
+def test_subject_content_prefix_defaults_when_subject_unconfigured():
+    deck_config = {"subjects": {"template_methods_paper": {"content_prefix": "deck_content_methods"}}}
+    assert _subject_content_prefix(deck_config, "template_template") == "deck_content"
+
+
+def test_subject_content_prefix_defaults_when_no_subjects_key_at_all():
+    assert _subject_content_prefix({}, "template_template") == "deck_content"
+
+
+def test_subject_content_prefix_rejects_path_traversal_prefix():
+    """Real reproduction of the documented safety guard: a configured
+    `content_prefix` containing a path separator must fall back to the safe
+    default rather than being threaded into a filesystem path unchecked —
+    this is the exact "safe local deck-content prefix" claim in the
+    function's own docstring, previously unverified by any test."""
+    deck_config = {"subjects": {"evil": {"content_prefix": "../../../../etc/passwd"}}}
+    assert _subject_content_prefix(deck_config, "evil") == "deck_content"
+
+
+def test_subject_content_prefix_rejects_backslash_prefix():
+    deck_config = {"subjects": {"evil": {"content_prefix": "..\\..\\windows"}}}
+    assert _subject_content_prefix(deck_config, "evil") == "deck_content"
+
+
+def test_subject_content_prefix_rejects_non_string_prefix():
+    deck_config = {"subjects": {"weird": {"content_prefix": 42}}}
+    assert _subject_content_prefix(deck_config, "weird") == "deck_content"
+
+
+def test_subject_content_prefix_handles_malformed_subjects_shapes():
+    assert _subject_content_prefix({"subjects": "not-a-dict"}, "x") == "deck_content"
+    assert _subject_content_prefix({"subjects": {"x": "not-a-dict-either"}}, "x") == "deck_content"
 
 
 def test_render_one_length_writes_real_pdf(tmp_path: Path, repo_root):
@@ -152,24 +214,149 @@ def test_render_one_length_raises_on_uncited_fact_slide(tmp_path: Path, repo_roo
     assert not (tmp_path / "pdf").exists() or not list((tmp_path / "pdf").glob("*.pdf"))
 
 
-def test_render_all_decks_writes_real_artifacts(repo_root):
-    """Six artifacts (PDF+PPTX) when python-pptx is installed, three (PDF-only)
-    when it isn't — PPTX is an opt-in dependency (`uv sync --group rendering-pptx`),
-    not a hard requirement, so this project's own isolated venv (as used by
-    `execute_pipeline.py --core-only`) legitimately may not have it."""
-    try:
-        import pptx  # noqa: F401
+def test_render_one_length_supports_second_configured_subject(tmp_path: Path, repo_root):
+    from deck_tokens import build_deck_tokens
+    from infrastructure.rendering.slide_deck import DeckTheme
 
-        pptx_available = True
-    except ImportError:
-        pptx_available = False
+    tokens = build_deck_tokens(repo_root, pitch_subject="template_methods_paper")
+    written = render_one_length(
+        "short",
+        project_root=tmp_path,
+        repo_root=repo_root,
+        manuscript_dir=project_root() / "manuscript",
+        figures_dir=tmp_path / "figures",
+        pdf_dir=tmp_path / "pdf",
+        pptx_dir=tmp_path / "pptx",
+        tokens=tokens,
+        theme=DeckTheme(),
+        source_base_url="",
+        render_pptx_fn=None,
+        logger=logging.getLogger("test"),
+        content_prefix="deck_content_methods",
+    )
+    assert written and written[0].is_file()
+
+
+def test_preflight_rejects_later_length_before_any_render(tmp_path: Path, repo_root):
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    for length in ("short", "medium", "long"):
+        slides = [{"title": "Plain", "bullets": ["No live fact"]}]
+        if length == "medium":
+            slides = [{"title": "Fact", "bullets": ["{{EXEMPLAR_COUNT}} missing citation"]}]
+        (manuscript / f"deck_content_{length}.yaml").write_text(
+            yaml.safe_dump({"title": "Deck", "slides": slides}), encoding="utf-8"
+        )
+    with pytest.raises(DiligenceAuditFailure, match="Fact"):
+        _preflight_all_lengths(
+            manuscript_dir=manuscript,
+            repo_root=repo_root,
+            tokens={"EXEMPLAR_COUNT": "24"},
+            content_prefix="deck_content",
+        )
+    assert not (tmp_path / "pdf").exists()
+
+
+def test_current_decks_pass_shared_layout_preflight(repo_root):
+    from deck_tokens import build_deck_tokens
+
+    _preflight_all_lengths(
+        manuscript_dir=project_root() / "manuscript",
+        repo_root=repo_root,
+        tokens=build_deck_tokens(repo_root),
+        content_prefix="deck_content",
+        figures_dir=project_root() / "output" / "figures",
+    )
+
+
+@pytest.mark.parametrize(
+    ("slide_payload", "error_match"),
+    (
+        (
+            {
+                "kind": "content",
+                "title": "Overflow",
+                "bullets": [("many words " * 200).strip()],
+            },
+            "protected footer/QR band",
+        ),
+        (
+            {
+                "kind": "diagram",
+                "title": "W" * 500,
+            },
+            "minimum font size",
+        ),
+    ),
+)
+def test_render_one_length_layout_failure_preserves_standalone_and_targets(
+    tmp_path: Path,
+    repo_root,
+    slide_payload: dict[str, object],
+    error_match: str,
+):
+    from infrastructure.rendering.pptx_deck import render_pptx
+    from infrastructure.rendering.slide_deck import DeckTheme
+
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    (manuscript_dir / "deck_content_short.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "title": "Deck",
+                "slides": [slide_payload],
+            }
+        ),
+        encoding="utf-8",
+    )
+    standalone = tmp_path / "output" / "slides_standalone" / "template_template_short"
+    standalone.mkdir(parents=True)
+    marker = standalone / "existing.md"
+    marker.write_bytes(b"standalone-sentinel")
+    pdf_dir = tmp_path / "pdf"
+    pptx_dir = tmp_path / "pptx"
+    pdf_dir.mkdir()
+    pptx_dir.mkdir()
+    pdf_target = pdf_dir / "template_template_pitch_short.pdf"
+    pptx_target = pptx_dir / "template_template_pitch_short.pptx"
+    pdf_target.write_bytes(b"pdf-sentinel")
+    pptx_target.write_bytes(b"pptx-sentinel")
+
+    with pytest.raises(RenderingError, match=error_match):
+        render_one_length(
+            "short",
+            project_root=tmp_path,
+            repo_root=repo_root,
+            manuscript_dir=manuscript_dir,
+            figures_dir=tmp_path / "figures",
+            pdf_dir=pdf_dir,
+            pptx_dir=pptx_dir,
+            tokens={"PITCH_SUBJECT_NAME": "template_template"},
+            theme=DeckTheme(),
+            source_base_url="",
+            render_pptx_fn=render_pptx,
+            logger=logging.getLogger("test"),
+        )
+
+    assert marker.read_bytes() == b"standalone-sentinel"
+    assert pdf_target.read_bytes() == b"pdf-sentinel"
+    assert pptx_target.read_bytes() == b"pptx-sentinel"
+
+
+@pytest.mark.slow
+def test_render_all_decks_writes_real_artifacts(repo_root):
+    """The isolated project runtime must produce all declared PDF+PPTX decks."""
+    from pptx import Presentation
 
     logger = logging.getLogger("test")
     written = render_all_decks(project_root(), repo_root, logger)
-    assert len(written) == (6 if pptx_available else 3)
+    assert len(written) == 6
+    assert {path.suffix for path in written} == {".pdf", ".pptx"}
     for path in written:
         assert path.is_file()
         assert path.stat().st_size > 1000
+        if path.suffix == ".pptx":
+            assert len(Presentation(path).slides) > 0
 
 
 def test_rendered_output_actually_reflects_token_value_not_a_cached_default(tmp_path: Path, repo_root):
@@ -218,6 +405,16 @@ def test_budget_filter_is_prefix_preserving_and_non_mutating(slide_count):
         filtered = filter_deck_for_budget(deck, budget)
         assert filtered.slides == original[: budget.max_slides]
         assert deck.slides == original
+
+
+@settings(max_examples=20, deadline=None)
+@given(st.integers(min_value=0, max_value=80))
+def test_budget_filter_property_is_prefix_preserving(slide_count: int):
+    from infrastructure.rendering.slide_deck import DeckContent, SlideBudget, filter_deck_for_budget
+
+    deck = DeckContent(title="Hypothesis", slides=tuple(Slide(title=str(i)) for i in range(slide_count)))
+    for budget in SlideBudget:
+        assert filter_deck_for_budget(deck, budget).slides == deck.slides[: budget.max_slides]
 
 
 @pytest.mark.parametrize(

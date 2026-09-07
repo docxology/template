@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "first_section": {
+    "role": "transmission_begin",
+    "path": "manuscript/00_000_transmission_begin.md",
+    "sha256": "5a0aa3dad4f7bcdc76651716679d34a0b6b3988dc1af4b5d85341f90e13c2848",
+    "bytes": 222
+  },
+  "last_section": {
+    "role": "transmission_end",
+    "path": "manuscript/99_999_transmission_end.md",
+    "sha256": "1f13ce76106b3adefd3220fd34cafa3bbcd436d15f8a07ac3db770c1d4538303",
+    "bytes": 231
+  },
+  "section_count": 12
+}

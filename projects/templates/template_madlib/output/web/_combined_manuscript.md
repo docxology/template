@@ -54,7 +54,7 @@ The governing constraint is publication claims stay local until release. The sou
 
 The configured method moves are validate config before composition, declare review scenario and method invariants, separate explicit YAML fields from loader defaults, govern lexicon categories as reviewable data, expand slots through seeded digest selection, allocate slot choices to enabled manuscript sections, compose conditional section bodies, assemble method evidence tables and visual audit figures, align generated claims with the claim ledger, emit evidence artifacts before rendering, verify that no unresolved placeholders remain, assemble a reviewer packet from regenerated artifacts, and preserve human review before publication claims. The protocol sequence is Ingest declared manuscript schema produces `MadlibConfig`; Declare review scenario produces `review scenario`; Track field origin produces `explicit/default path inventory`; Govern lexicon categories produces `validated lexicon`; Construct digest selection material produces `digest input records`; Record selection invariants produces `selection invariant set`; Expand slot declarations produces `TokenPlan`; Apply section conditions produces `enabled section set`; Compose conditional IMRAD bodies produces `section variables`; Assemble evidence tables produces `Markdown evidence tables`; Align claims with evidence ledger produces `claim-aligned evidence surface`; Generate visual audit surface produces `registered figure set`; Emit machine-readable artifacts produces `output/data, output/reports, and output/figures`; Hydrate manuscript shell produces `output/manuscript`; Render and validate deliverables produces `validated project output`; Assemble reviewer packet produces `review packet`; Copy review surface produces `copied publication-review bundle`; Document fork migration produces `fork migration notes`. These steps make the method auditable from three directions: tests inspect the Python behavior, generated artifacts expose the token plan, and manuscript validation confirms that no unresolved placeholder survives into rendered outputs.
 
-The config-origin inventory currently separates 125 explicit YAML path(s) from 11 loader-defaulted path(s). Treating origin as method evidence prevents a rendered field from looking equally authored when it was actually inherited from the loader. The same inventory drives configured-field tables and figures, so reviewers can inspect which schema blocks were intentionally set before judging the generated prose.
+The config-origin inventory currently separates 126 explicit YAML path(s) from 11 loader-defaulted path(s). Treating origin as method evidence prevents a rendered field from looking equally authored when it was actually inherited from the loader. The same inventory drives configured-field tables and figures, so reviewers can inspect which schema blocks were intentionally set before judging the generated prose.
 
 Method invariants are reviewed as their own artifact. Token choices are allowed to change when the seed, slot name, category, ordinal, or ordered category inventory changes; they are not allowed to change because PDF rendering, HTML rendering, file-copy order, or hand-edited output changed. This separates generation logic from presentation logic.
 
@@ -287,7 +287,7 @@ Configuration owns more than vocabulary. It also owns section titles, narrative 
 
 The tables in this section expose the declared surface that controls rendering. They are useful during review because a title change, slot expansion, or disabled section appears as a small config diff and a regenerated artifact diff rather than as scattered prose edits.
 
-The configured-field inventory separates 125 explicit YAML path(s) from 11 loader-defaulted path(s). That distinction matters for forks: a field that appears in the rendered manuscript may be intentionally authored in `config.yaml`, or it may be a documented default inherited from the template.
+The configured-field inventory separates 126 explicit YAML path(s) from 11 loader-defaulted path(s). That distinction matters for forks: a field that appears in the rendered manuscript may be intentionally authored in `config.yaml`, or it may be a documented default inherited from the template.
 
 ![Configured field origin matrix](../figures/configured_field_matrix.png){#fig:configured-field-matrix}
 
@@ -324,7 +324,7 @@ The configured-field inventory separates 125 explicit YAML path(s) from 11 loade
 - Pipeline phases: `17`
 - Quality probes: `14`
 - Authoring obligations: `8`
-- Explicit configured paths: `125`
+- Explicit configured paths: `126`
 - Defaulted configured paths: `11`
 - Enabled visualization flags: `7`
 - Section-level configured paths: `33`
@@ -338,15 +338,15 @@ The configured-field inventory separates 125 explicit YAML path(s) from 11 loade
 
 | Measure | Count |
 | --- | ---: |
-| Total tracked field paths | 136 |
-| Explicit YAML paths | 125 |
+| Total tracked field paths | 137 |
+| Explicit YAML paths | 126 |
 | Loader-defaulted paths | 11 |
 | Enabled visualization flags | 7 |
 | Section-level paths | 33 |
 | Lexicon-level paths | 10 |
 | Slot-level paths | 66 |
 | Visualization-control paths | 9 |
-| Top-level schema paths | 18 |
+| Top-level schema paths | 19 |
 
 ## Configured Field Inventory
 
@@ -387,6 +387,7 @@ The configured-field inventory separates 125 explicit YAML path(s) from 11 loade
 | `madlib.narrative_moves.scope` | explicit | section | 4 moves |
 | `madlib.pipeline_phases` | explicit | schema | 17 entries |
 | `madlib.quality_probes` | explicit | schema | 14 entries |
+| `madlib.schema_version` | explicit | schema | configured field |
 | `madlib.section_conditions` | explicit | schema | configured field |
 | `madlib.section_conditions.abstract` | explicit | section | enabled |
 | `madlib.section_conditions.authoring_contract` | explicit | section | enabled |
@@ -552,11 +553,11 @@ The protocol emits MadlibConfig, review scenario, explicit/default path inventor
 
 The copied root output is therefore a consequence of local source and config. Generated files remain disposable; the durable contract is the ability to regenerate them from the tracked project tree and to observe the same validation gates passing.
 
-- Config hash: `f40365faffaeb743`
-- Generated: `not-recorded (set SOURCE_DATE_EPOCH)` (derived from `SOURCE_DATE_EPOCH`; an
+- Config hash: `1af3356c12013333`
+- Generated: `2026-08-14T14:20:53Z` (derived from `SOURCE_DATE_EPOCH`; an
   explicit `not-recorded` marker is emitted when the reproducible timestamp is
   not supplied)
-- Python: `3.12.13`
+- Python: `3.12.12`
 - Platform: `Darwin arm64`
 
 

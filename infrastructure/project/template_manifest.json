@@ -6,7 +6,7 @@
       "qualified_name": "templates/template_active_inference",
       "title": "template_active_inference",
       "use_when": "Use this template when **several independent research tracks must compose into one manuscript whose claims stay consistent where the tracks overlap** — here: a closed-form analytical oracle, a pymdp simulation harness, a Lean formalization boundary, and shared GNN/ontology notation.",
-      "test_file_count": 78,
+      "test_file_count": 79,
       "coverage_floor": 90
     },
     {
@@ -22,7 +22,7 @@
       "qualified_name": "templates/template_autoresearch_project",
       "title": "template_autoresearch_project",
       "use_when": "Use this template when you need a **bounded, offline AutoResearch loop**: deterministic ML candidate evaluation over a fixed local dataset, with evidence-linked claims, machine-readable ledgers, artifact-integrity manifests, and deferred human-review gates.",
-      "test_file_count": 20,
+      "test_file_count": 21,
       "coverage_floor": 90
     },
     {
@@ -30,7 +30,7 @@
       "qualified_name": "templates/template_autopoiesis",
       "title": "template_autopoiesis",
       "use_when": "Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater.",
-      "test_file_count": 28,
+      "test_file_count": 29,
       "coverage_floor": 90
     },
     {
@@ -46,7 +46,7 @@
       "qualified_name": "templates/template_data_descriptor",
       "title": "template_data_descriptor",
       "use_when": "Use this template when the contribution is a **published dataset or data paper**: a schema contract, file inventory, data dictionary, provenance chain, license boundary, quality checks, and machine-readable descriptor must all stay consistent before publication.",
-      "test_file_count": 5,
+      "test_file_count": 7,
       "coverage_floor": 90
     },
     {
@@ -54,7 +54,7 @@
       "qualified_name": "templates/template_eda_notebook",
       "title": "EDA Notebook — Exploratory Data Analysis Exemplar",
       "use_when": "Use this template for **exploratory data analysis on tabular data**: load a dataset, surface missingness, compute descriptive statistics and per-group means, rank features by correlation, and produce a few diagnostic figures.",
-      "test_file_count": 9,
+      "test_file_count": 10,
       "coverage_floor": 90
     },
     {
@@ -62,7 +62,7 @@
       "qualified_name": "templates/template_formal",
       "title": "Formal — Strongly-Typed Multiagent Ant-Robot Colony Exemplar",
       "use_when": "Use this template when the research subject *is* the type architecture itself: illegal-state-unrepresentable design, session-typed protocols, affine/linear resource-handle discipline, or a decentralized (no-shared-global-state) multiagent simulation that needs its own local storage and local networking per agent.",
-      "test_file_count": 25,
+      "test_file_count": 29,
       "coverage_floor": 90
     },
     {
@@ -70,7 +70,7 @@
       "qualified_name": "templates/template_literature_meta_analysis",
       "title": "Literature Meta-Analysis Template",
       "use_when": "Use it whenever the research object is *a body of literature about a topic* and you want every reported number to trace to committed, regenerable artifacts.",
-      "test_file_count": 66,
+      "test_file_count": 71,
       "coverage_floor": 90
     },
     {
@@ -78,7 +78,7 @@
       "qualified_name": "templates/template_madlib",
       "title": "Template Madlib — Deterministic Token-Injection Exemplar",
       "use_when": "Use this template when you need **configuration-driven manuscript generation with auditable token provenance, conditional section structure, explicit/default field visibility, failure-boundary reporting, and a reviewer-visible authoring contract**: lexicon categories, section titles, narrative moves, method steps, design principles, pipeline phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, and slots are declared in YAML; `src/` deterministically expands those declarations; and the manuscript receives large-grain `{{TOKEN}}` bodies only after the source code has generated the supporting artifacts.",
-      "test_file_count": 5,
+      "test_file_count": 7,
       "coverage_floor": 90
     },
     {
@@ -94,7 +94,7 @@
       "qualified_name": "templates/template_pools_rules_tools",
       "title": "template_pools_rules_tools",
       "use_when": "Use this project when you need to: - **Demonstrate** how a research project integrates multiple resource directories (fonds, tools, rules) in a single pipeline - **Validate** that your fonds, tools, and rule infrastructure modules are correctly wired and discoverable - **Onboard** new teams to the three-resource architecture with a concrete, runnable example - **Test** cross-cutting concern integration where fonds supply data, rules govern validation, and tools execute transforms - **Extend** the architecture by adding new resource types; copy this project as a starting point for integration testing This template is ideal for platform teams, CI engineers, and infrastructure maintainers who need a self-validating meta-project that exercises all three resource layers without coupling to a specific domain science.",
-      "test_file_count": 10,
+      "test_file_count": 11,
       "coverage_floor": 90
     },
     {
@@ -102,7 +102,7 @@
       "qualified_name": "templates/template_prose_project",
       "title": "template_prose_project",
       "use_when": "Use this template for **manuscript-focused editorial pipelines**: readability gates (Flesch-Kincaid bands), structural checking, citation/BibTeX validation, and prose-quality review workflows where the document itself is the artifact under test.",
-      "test_file_count": 10,
+      "test_file_count": 12,
       "coverage_floor": 90
     },
     {
@@ -110,7 +110,7 @@
       "qualified_name": "templates/template_autoscientists",
       "title": "AutoScientists — Coordination-Mechanism Testbed Exemplar",
       "use_when": "Use this template when you need to **isolate and measure agent-coordination mechanisms**: coordinated teams vs single-thread baselines under matched budgets, deterministic ablation studies, and honest per-mechanism effect reporting (including nulls).",
-      "test_file_count": 11,
+      "test_file_count": 12,
       "coverage_floor": 90
     },
     {
@@ -118,7 +118,7 @@
       "qualified_name": "templates/template_gold_refinement",
       "title": "Gold Refinement — Metallurgical Manuscript Composition Exemplar",
       "use_when": "Use this template for **analogical manuscript composition research**: projects that map a scientific domain onto a refinement pipeline and generate the manuscript through deterministic mega-madlib token injection.",
-      "test_file_count": 23,
+      "test_file_count": 25,
       "coverage_floor": 90
     },
     {
@@ -126,7 +126,7 @@
       "qualified_name": "templates/template_methods_paper",
       "title": "A Domain Language for Specifying Controlled Methods — Methods Paper Exemplar",
       "use_when": "Use this template when the paper you are writing **describes a methodology** rather than reports results: a procedure, protocol, or specification language, where the contribution is the controlled vocabulary and its guarantees (dimensional safety, staged validation, deterministic compilation) rather than a numeric outcome.",
-      "test_file_count": 11,
+      "test_file_count": 12,
       "coverage_floor": 90
     },
     {
@@ -142,7 +142,7 @@
       "qualified_name": "templates/template_registered_report",
       "title": "template_registered_report",
       "use_when": "Use this template when the core method is a **registered report or preregistered replication**: hypotheses, outcomes, exclusion rules, analysis plan, power or sensitivity rationale, deviation ledger, and confirmatory-versus-exploratory claim boundaries must be locked before results are interpreted.",
-      "test_file_count": 4,
+      "test_file_count": 5,
       "coverage_floor": 90
     },
     {
@@ -158,7 +158,7 @@
       "qualified_name": "templates/template_sia",
       "title": "template_sia",
       "use_when": "Use this template when you need a **self-improvement-agent evaluation harness**: Meta → Target → Feedback generation loops, public/private task splits to detect overfitting, deterministic fixture replay for testability, and fail-closed loop validation.",
-      "test_file_count": 13,
+      "test_file_count": 15,
       "coverage_floor": 90
     },
     {
@@ -174,7 +174,7 @@
       "qualified_name": "templates/template_template",
       "title": "Template: Meta-Research Project",
       "use_when": "Use this template when your research subject is **the repository itself** — programmatic introspection of architecture, pipeline DAGs, module inventories, and security layers, rendered as a manuscript whose every metric is computed live (autopoietic: the paper regenerates itself from the code it describes).",
-      "test_file_count": 8,
+      "test_file_count": 9,
       "coverage_floor": 90
     },
     {
@@ -182,7 +182,7 @@
       "qualified_name": "templates/template_textbook",
       "title": "The Template Textbook — Modular, Fillable Book Scaffold",
       "use_when": "Use this template for **book-length manuscripts**: parts → chapters → labs → question banks declared in a single `config.yaml`, with auto-numbering, deterministic figure/diagram generation, and structural-contract tests that keep hundreds of pages from drifting.",
-      "test_file_count": 11,
+      "test_file_count": 13,
       "coverage_floor": 90
     },
     {
@@ -190,7 +190,7 @@
       "qualified_name": "templates/template_pitch_deck",
       "title": "Template: Pitch Deck",
       "use_when": "Use this template when you need a pitch, grant report, or recurring stakeholder update treated as a build artifact — bound to live repository facts, validated for unresolved tokens and pitch-deck cliché, and regenerable byte-for-byte from source rather than hand-maintained in a proprietary slide tool.",
-      "test_file_count": 12,
+      "test_file_count": 13,
       "coverage_floor": 90
     }
   ]

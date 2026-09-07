@@ -1,48 +1,37 @@
 # template_storybook TODO
 
-Forward-only backlog for the full-page illustrated storybook exemplar.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-- Project tests and coverage (2026-08-02):
-  `uv run pytest projects/templates/template_storybook/tests/ --cov=projects/templates/template_storybook/src --cov-fail-under=90`
-  → 21 passed, 0 failed, 0 skipped; coverage 95.68% (pytest) / 94.4% (stage-01
-  project-tests run, `scripts/pipeline/stage_01_test.py --project-only --project templates/template_storybook`).
-- Pre-render validation:
-  `uv run python -m infrastructure.validation.cli prerender projects/templates/template_storybook/manuscript --repo-root .`
-  → no render-blocking pitfalls or undefined citations.
-- Stage-02 storybook render: 15/15 analysis scripts passed; primary PDF
-  `output/pdf/the-shape-between.pdf` (14 pages) + contact sheet + manifest
-  regenerated.
-- Stage-03 manuscript render: `template_storybook_combined.pdf` (8 pages) plus
-  HTML and 6 Beamer slide decks; 0 `^! ` lines in `output/pdf/*.log`, 0 `??`
-  in both PDFs.
-- Stage-04 validation: all checks passed; rendered provenance receipt written.
-- Stage-05 copy: outputs copied to repo `output/templates/template_storybook/`.
-- Template drift (2026-08-02):
-  `uv run python scripts/audit/check_template_drift.py --project templates/template_storybook --strict`
-  → no drift detected.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
 - Keep story text in `content/story.yaml` and rendering behavior in `src/storybook/`.
 - Keep every story page as a full-page illustration; no manuscript-style partial
   figures for the primary artifact.
-- Page-level accessibility alt text is now generated in
+- Page-level accessibility alt text is generated in
   `output/data/storybook_manifest.json`; keep it descriptive when page content
   changes.
-- 2026-08-02 pass: enumerated the actual script and test files in
-  `scripts/AGENTS.md` and `tests/AGENTS.md` so the listings can be compared
-  against disk; completed the `docs/README.md` index (added `style_guide.md`
-  and `agent_instructions.md`); added `.agents/README.md` and
-  `.agents/skills/README.md` orientation files to complete the shared
-  `.agents/` skill-catalog surface.
+- Keep script, test, documentation, and `.agents/` catalog listings generated
+  or checked against disk so future forks cannot silently omit a surface.
 
-## Configurable-surface gaps
+## Current configurable-surface contract
 
-- Add optional page trim sizes beyond the current letter-ratio PNG and PDF.
-- Add per-page text placement controls if future forks need top, middle, and
-  bottom caption zones.
+- `trim_size` supports the current configured and custom page dimensions; a
+  future trim variant must add a schema value and a rendering/negative-control
+  test in one scoped row.
+- Per-page caption placement supports the current top and bottom zones; future
+  zones require a schema, accessibility, and raster-contrast contract.
 
 ## Documentation and signposting gaps
 
@@ -53,16 +42,27 @@ Forward-only backlog for the full-page illustrated storybook exemplar.
 
 ## Test and validator gaps
 
-- Add a small raster contrast audit for direct text overlays. **Shipped:**
-  `tests/test_contrast_audit.py` implements WCAG 2.1 contrast-ratio checks
-  using real pixel math on rendered storybook pages; the Stage-02 PDF builder
-  runs the same audit for every rendered page and records the results in the
-  manifest. Extend the palette contract if future forks add new overlay modes.
+- Keep a raster contrast audit for direct text overlays, using real pixel math
+  and recording per-page results in the manifest; extend the palette contract
+  before adding new overlay modes.
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Keep deterministic page rendering and PDF assembly green.
-2. Add trim-size variants.
-3. Keep contact-sheet generation and page-level accessibility metadata aligned
-   with content changes.
-4. Keep the raster contrast audit aligned with any new overlay modes.
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `BOOK-TESTS-1` | open | Minor | none | tests/ has 3 modules for 6 src modules; add direct unit tests for characters.py, text_layout.py and models.py (rendering is already exercised by the unmarked rendering suite). | tests/test_characters.py + tests/test_text_layout.py | `uv run pytest tests -q --cov=src --cov-fail-under=90` | a character palette edit that breaks text-contrast invariants must fail the new unit tests |
+
+## Medium upcoming
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+
+## Major upcoming
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked row is a deliberate boundary, not a skipped success.

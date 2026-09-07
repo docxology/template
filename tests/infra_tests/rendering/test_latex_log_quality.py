@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+import shutil
+import subprocess
+
+import pytest
+
 from infrastructure.rendering.latex_log_quality import (
     collect_latex_log_findings,
     format_latex_findings,
@@ -9,7 +14,9 @@ from infrastructure.rendering.latex_log_quality import (
     summarize_latex_findings,
 )
 from infrastructure.rendering.latex_texttt import (
+    LONG_TEXTTT_BREAK_MIN_CHARACTERS,
     constrain_includegraphics_textheight,
+    long_texttt_source_is_breakable,
     make_known_literals_breakable,
     make_long_texttt_breakable,
     make_pandoc_reference_tokens_breakable,
@@ -109,6 +116,135 @@ def test_long_camelcase_identifier_is_breakable_short_is_not():
     assert count == 1  # only the 19-char identifier, not the 8-char one
     assert "\\breaktt{SingletonAccessRule}" in tex
     assert "\\texttt{NodeKind}" in tex  # short span untouched
+
+
+def test_long_texttt_source_and_latex_rewrite_share_the_exact_threshold() -> None:
+    below = "a" * (LONG_TEXTTT_BREAK_MIN_CHARACTERS - 1)
+    at = "a" * LONG_TEXTTT_BREAK_MIN_CHARACTERS
+    escaped_at = "a_b_c_d_e_f_g_hi"
+    escaped_latex = escaped_at.replace("_", r"\_")
+
+    assert len(escaped_at) == LONG_TEXTTT_BREAK_MIN_CHARACTERS
+    assert not long_texttt_source_is_breakable(below)
+    assert long_texttt_source_is_breakable(at)
+    assert long_texttt_source_is_breakable(escaped_at)
+
+    tex = rf"\begin{{document}}\texttt{{{below}}}\texttt{{{at}}}\texttt{{{escaped_latex}}}\end{{document}}"
+    updated, count = make_long_texttt_breakable(tex)
+
+    assert count == 2
+    assert rf"\texttt{{{below}}}" in updated
+    assert rf"\breaktt{{{at}}}" in updated
+    assert rf"\breaktt{{{escaped_latex}}}" in updated
+
+
+def test_long_texttt_braced_literal_serializations_remain_indivisible() -> None:
+    unsafe_sources = [
+        "abcdefghijklmnop{",
+        "abcdefghijklmnop\\",
+        "abcdefghijklmnop~",
+        "abcdefghijklmnop<",
+    ]
+    for source in unsafe_sources:
+        assert not long_texttt_source_is_breakable(source)
+
+    tex = (
+        r"\begin{document}"
+        r"\texttt{abcdefghijklmnop\{}"
+        r"\texttt{abcdefghijklmnop\textbackslash{}}"
+        r"\texttt{abcdefghijklmnop\textasciitilde{}}"
+        r"\texttt{abcdefghijklmnop\textless{}}"
+        r"\end{document}"
+    )
+    updated, count = make_long_texttt_breakable(tex)
+
+    assert count == 0
+    assert updated == tex
+
+
+@pytest.mark.parametrize(
+    ("literal", "latex_literal"),
+    [
+        ("'", r"\textquotesingle{}"),
+        ("[", "{[}"),
+        ("]", "{]}"),
+    ],
+)
+def test_long_texttt_non_simple_printable_ascii_stays_indivisible_across_threshold(
+    literal: str,
+    latex_literal: str,
+) -> None:
+    below = "a" * (LONG_TEXTTT_BREAK_MIN_CHARACTERS - 2) + literal
+    at = "a" * (LONG_TEXTTT_BREAK_MIN_CHARACTERS - 1) + literal
+    assert len(below) == LONG_TEXTTT_BREAK_MIN_CHARACTERS - 1
+    assert len(at) == LONG_TEXTTT_BREAK_MIN_CHARACTERS
+    assert not long_texttt_source_is_breakable(below)
+    assert not long_texttt_source_is_breakable(at)
+
+    serialized_below = r"\texttt{" + "a" * (LONG_TEXTTT_BREAK_MIN_CHARACTERS - 2) + latex_literal + "}"
+    serialized_at = r"\texttt{" + "a" * (LONG_TEXTTT_BREAK_MIN_CHARACTERS - 1) + latex_literal + "}"
+    tex = r"\begin{document}" + serialized_below + serialized_at + r"\end{document}"
+    updated, count = make_long_texttt_breakable(tex)
+
+    assert count == 0
+    assert updated == tex
+
+
+def test_long_texttt_control_space_shares_source_and_latex_rewrite_contract() -> None:
+    below = "a" * (LONG_TEXTTT_BREAK_MIN_CHARACTERS - 2) + " "
+    at = "a" * (LONG_TEXTTT_BREAK_MIN_CHARACTERS - 1) + " "
+    assert not long_texttt_source_is_breakable(below)
+    assert long_texttt_source_is_breakable(at)
+
+    serialized_below = r"\texttt{" + "a" * (LONG_TEXTTT_BREAK_MIN_CHARACTERS - 2) + r"\ }"
+    serialized_at = r"\texttt{" + "a" * (LONG_TEXTTT_BREAK_MIN_CHARACTERS - 1) + r"\ }"
+    tex = r"\begin{document}" + serialized_below + serialized_at + r"\end{document}"
+    updated, count = make_long_texttt_breakable(tex)
+
+    assert count == 1
+    assert serialized_below in updated
+    assert rf"\breaktt{{{'a' * (LONG_TEXTTT_BREAK_MIN_CHARACTERS - 1)}\ }}" in updated
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_long_texttt_control_space_wraps_in_real_archive_latex(tmp_path) -> None:
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None or shutil.which("kpsewhich") is None:
+        pytest.skip("A LaTeX compiler and kpsewhich are required")
+    seqsplit = subprocess.run(
+        ["kpsewhich", "seqsplit.sty"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if seqsplit.returncode != 0 or not seqsplit.stdout.strip():
+        pytest.skip("seqsplit.sty is required for the real wrapping regression")
+    token = "a" * 100 + r"\ " + "b" * 100
+    tex = (
+        r"\documentclass{article}"
+        "\n"
+        r"\usepackage[paperwidth=10cm,paperheight=5cm,margin=1cm]{geometry}"
+        "\n"
+        r"\begin{document}\noindent\parbox{3cm}{\texttt{" + token + r"}}\end{document}"
+        "\n"
+    )
+    updated, count = make_long_texttt_breakable(tex)
+    tex_path = tmp_path / "control-space.tex"
+    tex_path.write_text(updated, encoding="utf-8")
+
+    result = subprocess.run(
+        [compiler, "-interaction=nonstopmode", "-halt-on-error", tex_path.name],
+        cwd=tmp_path,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert count == 1
+    assert result.returncode == 0, result.stdout + result.stderr
+    log = tex_path.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert "Overfull \\hbox" not in log
 
 
 def test_make_pandoc_reference_tokens_breakable():

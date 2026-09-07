@@ -13,11 +13,13 @@ from src.models import AutoResearchLoopResult, LoopStageResult
 from src.reports import (
     build_evidence_overview,
     build_review_packet,
+    build_review_packet_v2,
     render_evidence_overview_markdown,
     render_loop_markdown,
     render_ml_experiment_report,
     render_review_packet_markdown,
     render_stage_matrix_csv,
+    validate_review_packet,
 )
 from src.writers.benchmark import build_benchmark_boundary
 from src.writers import write_json, write_text
@@ -121,6 +123,14 @@ def test_review_packet_distinguishes_ready_from_publication_approval() -> None:
     markdown = render_review_packet_markdown(result)
     assert "Ready for review: `true`" in markdown
     assert "Publication approved: `false`" in markdown
+
+    packet_v2 = build_review_packet_v2(result)
+    assert packet_v2["schema"] == "template-autoresearch-review-packet-v2"
+    assert validate_review_packet(packet_v2) == []
+    human_review_v2 = packet_v2["human_review"]
+    assert isinstance(human_review_v2, dict)
+    human_review_v2["publication_approved"] = True
+    assert any("human decision source" in issue for issue in validate_review_packet(packet_v2))
 
 
 def test_review_packet_copies_only_manual_publication_approval() -> None:

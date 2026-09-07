@@ -87,8 +87,8 @@ uv run python scripts/runner/execute_pipeline.py --project template_code_project
 ### Validating Outputs
 
 ```bash
-uv run python -m infrastructure.validation.cli.main markdown projects/templates/template_code_project/manuscript/
-uv run python -m infrastructure.validation.cli.main pdf output/templates/template_code_project/pdf/
+uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
+uv run python -m infrastructure.validation.cli pdf output/templates/template_code_project/pdf/
 ```
 
 ## Submodule Skills

@@ -144,6 +144,30 @@ def _bs(project_root: Path, d: str) -> int:
     return len(os.listdir(project_root / d))
 
 
+def _stable_report_timestamp() -> str:
+    """Return a reproducible report timestamp from ``SOURCE_DATE_EPOCH``.
+
+    A missing epoch is represented explicitly instead of consulting the wall
+    clock, so two offline report generations remain byte-identical by default.
+    """
+    raw_epoch = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
+    if not raw_epoch:
+        return "SOURCE_DATE_EPOCH unset (deterministic build)"
+    try:
+        epoch = int(raw_epoch)
+    except ValueError:
+        return "invalid SOURCE_DATE_EPOCH (deterministic build)"
+    return datetime.datetime.fromtimestamp(epoch, tz=datetime.timezone.utc).isoformat(timespec="seconds")
+
+
+def _stable_project_label(project_root: Path, template_root: Path) -> str:
+    """Return a portable project label without leaking local absolute paths."""
+    try:
+        return project_root.resolve().relative_to(template_root.resolve()).as_posix()
+    except ValueError:
+        return "fixture-project"
+
+
 def generate_review_report(project_root: Path, template_root: Path, review_dir: Path) -> int:
     """Run the review subprocess (if needed), audit the project, and write
     ``output/review/REVIEW_REPORT.md``. Also prints a short summary block.
@@ -164,9 +188,10 @@ def generate_review_report(project_root: Path, template_root: Path, review_dir: 
     lines: list[str] = []
 
     lines.append(H("TEMPLATE SEARCH PROJECT — DEEP REVIEW REPORT", 1))
-    lines.append(f"**Generated:** {datetime.datetime.now():%Y-%m-%d %H:%M:%S}")
-    lines.append(f"**Project root:** {project_root}")
-    lines.append(f"**Repository root:** {template_root}")
+    project_label = _stable_project_label(project_root, template_root)
+    lines.append(f"**Generated:** {_stable_report_timestamp()}")
+    lines.append(f"**Project root:** `{project_label}`")
+    lines.append("**Repository root:** `.` (portable report label)")
     lines.append("**Review orchestrator:** `scripts/review`")
     if review_notes:
         lines.append(f"**Review subprocess notes:** `{review_notes[:500]}`")

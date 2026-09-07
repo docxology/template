@@ -1,6 +1,13 @@
 # 🌟 Examples Showcase
 
-This showcase demonstrates how the Research Project Template can be used for various types of projects. Each example shows the template's flexibility and power in real-world scenarios. For related information, see **[`examples.md`](../usage/examples.md)**, **[`README.md`](README.md)**, and **[`../core/architecture.md`](../core/architecture.md)**.
+This showcase lists application patterns for the Research Project Template.
+These are design sketches, not empirical case studies or claims that the named
+projects have been built and validated. For tracked, runnable exemplars and
+their current status, use
+[`docs/_generated/active_projects.md`](../_generated/active_projects.md) and
+each exemplar's own evidence. For related information, see
+**[`examples.md`](../usage/examples.md)**, **[`README.md`](README.md)**, and
+**[`../core/architecture.md`](../core/architecture.md)**.
 
 ## 🎓 **Academic Research Papers**
 
@@ -185,7 +192,8 @@ This showcase demonstrates how the Research Project Template can be used for var
 ## 🌟 **Key Benefits Demonstrated**
 
 ### ✅ **Professional Output**
-- **Publication-ready documents** with proper formatting
+- **Publication-oriented documents** subject to format, accessibility,
+  evidence, and release validation
 - **Embedded figures and tables** generated from code
 - **Consistent styling** across all outputs
 - **Professional appearance** suitable for any audience
@@ -194,7 +202,8 @@ This showcase demonstrates how the Research Project Template can be used for var
 - **Automated testing** ensures code quality
 - **Version-controlled** development process
 - **Documented procedures** for all workflows
-- **Consistent results** across different environments
+- **Explicit environments and provenance** that make differences detectable;
+  reproducibility still requires rerunning and comparing evidence
 
 ### 🚀 **Efficiency Gains**
 - **Automated processes** reduce manual work
@@ -206,7 +215,8 @@ This showcase demonstrates how the Research Project Template can be used for var
 - **Adaptable structure** for any project type
 - **Modular architecture** allows customization
 - **Extensible design** supports future growth
-- **Cross-platform compatibility** works everywhere
+- **Cross-platform intent** verified only on the operating systems and tool
+  versions exercised by the project's tests/CI
 
 ## 🤝 **Share Your Examples**
 

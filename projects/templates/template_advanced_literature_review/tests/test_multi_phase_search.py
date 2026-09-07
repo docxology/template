@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -15,6 +16,15 @@ import yaml
 
 from literature.corpus import Corpus
 from literature.models import Paper
+from multi_phase.contracts import (
+    build_cross_phase_conflict_report,
+    score_llm_calibration,
+    validate_cross_phase_conflicts,
+    validate_llm_calibration,
+    validate_phase_artifact_manifest,
+    validate_phase_boundaries,
+    validate_phase_provenance,
+)
 from multi_phase.search import (
     LLMFilterEngine,
     MultiPhaseSearchRunner,
@@ -242,6 +252,213 @@ def test_phase_configuration_validation_rejects_invalid_temporal_bounds(tmp_path
         runner.replay_fixture(tmp_path / "missing.jsonl")
 
 
+def test_phase_boundary_contract_rejects_non_numeric_and_empty_queries() -> None:
+    issues = validate_phase_boundaries(
+        {
+            "phase": {
+                "queries": [""],
+                "temporal_boundary": {"min_year": "recent", "max_year": 2020},
+            }
+        }
+    )
+    assert {issue["code"] for issue in issues} == {"invalid_queries", "invalid_temporal_bound"}
+
+
+def test_phase_boundary_contract_rejects_malformed_phase_shapes() -> None:
+    """Malformed phase containers fail at the phase boundary, not in search code."""
+    assert validate_phase_boundaries([])[0]["code"] == "phases_not_mapping"
+    issues = validate_phase_boundaries(
+        {
+            "not-a-phase": "text",
+            "bad-filters": {"queries": ["q"], "deterministic_filters": []},
+            "bad-boundary": {"queries": ["q"], "temporal_boundary": []},
+            "none-filters": {"queries": ["q"], "deterministic_filters": None},
+            "bad-year": {"queries": ["q"], "temporal_boundary": {"max_year": 2020.5}},
+        }
+    )
+    assert {issue["code"] for issue in issues} == {
+        "phase_not_mapping",
+        "invalid_filters",
+        "invalid_temporal_boundary",
+        "invalid_temporal_bound",
+    }
+
+
+def test_cross_phase_conflict_contract_requires_explicit_polarity() -> None:
+    assert validate_cross_phase_conflicts(
+        [
+            {"paper_id": "p1", "claim_id": "c1", "polarity": "support"},
+            {"paper_id": "p1", "claim_id": "c1", "polarity": "contradict"},
+        ]
+    ) == ["conflicting polarity for p1/c1: support and contradict"]
+    assert validate_cross_phase_conflicts([{"paper_id": "p1", "claim_id": "c1"}])
+
+
+def test_cross_phase_conflict_contract_rejects_malformed_collections() -> None:
+    """Non-mapping and malformed assertions remain visible diagnostics."""
+    issues = validate_cross_phase_conflicts(["bad", {"paper_id": "p1", "claim_id": "c1", "polarity": "other"}])
+    assert len(issues) == 2
+    assert validate_cross_phase_conflicts({}) == ["assertions must be a list"]
+
+
+def test_phase_provenance_requires_source_and_rejects_duplicate_rows() -> None:
+    records = [
+        {"phase": "phase_1", "artifact": "phase_1.jsonl", "producer": "runner", "source": "fixture"},
+        {"phase": "phase_1", "artifact": "phase_1.jsonl", "producer": "runner", "source": "fixture"},
+        {"phase": "phase_2", "artifact": "../private.jsonl", "producer": "", "source": ""},
+    ]
+    issues = validate_phase_provenance(records, ["phase_1", "phase_2"])
+    assert any("duplicate phase provenance" in issue for issue in issues)
+    assert any("unsafe" in issue for issue in issues)
+    assert any("requires a producer" in issue for issue in issues)
+    assert any("requires a source" in issue for issue in issues)
+
+
+def test_cross_phase_conflict_report_is_review_not_scientific_support() -> None:
+    report = build_cross_phase_conflict_report(
+        [
+            {"phase": "phase_1", "paper_id": "p1", "claim_id": "c1", "polarity": "support", "source": "a"},
+            {
+                "phase": "phase_2",
+                "paper_id": "p1",
+                "claim_id": "c1",
+                "polarity": "contradict",
+                "source": "b",
+            },
+        ],
+        ["phase_1", "phase_2"],
+    )
+    assert report["status"] == "review"
+    assert report["conflicts"]
+    assert build_cross_phase_conflict_report(None, ["phase_1"])["status"] == "not_configured"
+
+
+def test_llm_calibration_contract_scores_offline_fixture() -> None:
+    cases = [
+        {"id": "yes-1", "abstract": "measured signal", "expected": "yes"},
+        {"id": "no-1", "abstract": "future work", "expected": "no"},
+    ]
+    assert validate_llm_calibration(cases) == []
+    assert score_llm_calibration(cases, {"yes-1": "yes", "no-1": "no"})["accuracy"] == 1.0
+    assert score_llm_calibration(cases, {"yes-1": "yes"})["status"] == "review"
+
+
+def test_llm_calibration_contract_rejects_bad_fixture_and_predictions() -> None:
+    """Calibration fixtures require unique IDs, text, and known labels."""
+    cases = [
+        {"id": "duplicate", "abstract": "text", "expected": "yes"},
+        {"id": "duplicate", "abstract": "", "expected": "maybe"},
+        "not-a-case",
+    ]
+    issues = validate_llm_calibration(cases)
+    assert any("duplicate" in issue for issue in issues)
+    assert any("abstract" in issue for issue in issues)
+    assert any("expected" in issue for issue in issues)
+    assert any("mapping" in issue for issue in issues)
+    assert score_llm_calibration([], {})["status"] == "invalid"
+
+
+def test_tracked_llm_filter_calibration_fixture_is_valid_and_scorable() -> None:
+    """data/llm_filter_calibration.json is a tracked fixture with no prior
+    parser or integration test (data/AGENTS.md requires one for every fixture
+    in this directory). Load it through the real calibration contract used by
+    the LLM-filter pipeline (``src/multi_phase/contracts.py``).
+    """
+    project_root = Path(__file__).resolve().parent.parent
+    fixture_path = project_root / "data" / "llm_filter_calibration.json"
+    payload = json.loads(fixture_path.read_text(encoding="utf-8"))
+
+    assert payload["schema_version"] == "advanced-literature-review/llm-filter-calibration/1"
+    cases = payload["cases"]
+    assert validate_llm_calibration(cases) == []
+
+    perfect_predictions = {case["id"]: case["expected"] for case in cases}
+    result = score_llm_calibration(cases, perfect_predictions)
+    assert result["status"] == "pass"
+    assert result["accuracy"] == 1.0
+    assert result["n"] == len(cases) == 4
+
+    partial = score_llm_calibration(cases, {"positive-1": "yes"})
+    assert partial["status"] == "review"
+    assert "missing predictions" in partial["issues"][0]
+
+
+def test_phase_artifact_manifest_contract_rejects_duplicate_and_unknown_paths() -> None:
+    manifest = {
+        "phase_order": ["phase_1"],
+        "artifacts": [
+            {"path": "phase_1.jsonl", "phases": ["phase_1"]},
+            {"path": "phase_1.jsonl", "phases": ["phase_2"]},
+        ],
+    }
+    issues = validate_phase_artifact_manifest(manifest)
+    assert any("duplicate artifact path" in issue for issue in issues)
+    assert any("unknown phase" in issue for issue in issues)
+
+
+def test_phase_artifact_manifest_contract_rejects_unsafe_and_malformed_rows() -> None:
+    """Artifact manifests reject traversal, empty attribution, and bad roots."""
+    assert validate_phase_artifact_manifest([]) == ["manifest must be a mapping"]
+    assert validate_phase_artifact_manifest({"phase_order": ["p", "p"], "artifacts": []}) == [
+        "phase_order must be a list of unique phase IDs"
+    ]
+    assert validate_phase_artifact_manifest({"phase_order": ["p"], "artifacts": "bad"}) == ["artifacts must be a list"]
+    issues = validate_phase_artifact_manifest(
+        {
+            "phase_order": ["p"],
+            "artifacts": [
+                "bad",
+                {"path": "../escape.json", "phases": []},
+                {"path": "empty.json", "phases": []},
+            ],
+        }
+    )
+    assert any("mapping" in issue for issue in issues)
+    assert any("unsafe path" in issue for issue in issues)
+    assert any("at least one phase" in issue for issue in issues)
+    assert any(
+        "sha256" in issue
+        for issue in validate_phase_artifact_manifest(
+            {
+                "phase_order": ["p"],
+                "artifacts": [{"path": "p.jsonl", "phases": ["p"], "sha256": "bad", "size_bytes": -1}],
+            }
+        )
+    )
+
+
+def test_phase_artifact_manifest_verifies_current_bytes_and_rejects_symlink_escape(tmp_path: Path) -> None:
+    """A passing manifest must describe the files that are actually present."""
+    artifact = tmp_path / "phase.jsonl"
+    artifact.write_text('{"paper": "p1"}\n', encoding="utf-8")
+    manifest = {
+        "phase_order": ["phase_1"],
+        "artifacts": [
+            {
+                "path": artifact.name,
+                "phases": ["phase_1"],
+                "sha256": hashlib.sha256(artifact.read_bytes()).hexdigest(),
+                "size_bytes": artifact.stat().st_size,
+            }
+        ],
+    }
+    assert validate_phase_artifact_manifest(manifest, artifact_root=tmp_path) == []
+
+    artifact.write_text('{"paper": "changed"}\n', encoding="utf-8")
+    assert any(
+        "sha256 does not match" in issue for issue in validate_phase_artifact_manifest(manifest, artifact_root=tmp_path)
+    )
+
+    outside = tmp_path.parent / "outside-phase.jsonl"
+    outside.write_text("private\n", encoding="utf-8")
+    escaped = dict(manifest)
+    escaped["artifacts"] = [{**manifest["artifacts"][0], "path": "escaped.jsonl"}]
+    (tmp_path / "escaped.jsonl").symlink_to(outside)
+    assert any(
+        "must not be a symlink" in issue for issue in validate_phase_artifact_manifest(escaped, artifact_root=tmp_path)
+    )
+
+
 def test_llm_phase_filter_records_retained_provenance(
     config_path: Path,
     llm_server: str,
@@ -430,6 +647,9 @@ def test_phase_pipeline_writes_phase_provenance(tmp_path: Path) -> None:
         "phase_metadata.json",
         "cross_phase_analysis.json",
     }
+    assert all(len(entry["sha256"]) == 64 for entry in manifest["artifacts"])
+    assert all(isinstance(entry["size_bytes"], int) for entry in manifest["artifacts"])
+    assert all(row["producer_revision"] == "working-tree" for row in manifest["provenance"])
     analysis = json.loads((output_dir / "cross_phase_analysis.json").read_text(encoding="utf-8"))
     assert analysis["hypothesis_scoring"]["status"] == "pending_knowledge_graph"
 
@@ -476,6 +696,7 @@ def test_fixture_replay_writes_deterministic_phase_artifacts(tmp_path: Path) -> 
     manifest = json.loads((output_dir / "phase_artifact_manifest.json").read_text(encoding="utf-8"))
     assert manifest["execution_mode"] == "fixture"
     assert manifest["phase_order"] == ["phase_1", "phase_2"]
+    assert all(len(entry["sha256"]) == 64 for entry in manifest["artifacts"])
 
 
 def test_unknown_phase_fails_before_network(config_path: Path, tmp_path: Path) -> None:
@@ -502,7 +723,9 @@ def test_thin_cli_runs_from_outside_project(tmp_path: Path) -> None:
         check=False,
         capture_output=True,
         text=True,
-        timeout=10,
+        timeout=120,
     )
     assert completed.returncode == 0, completed.stderr
     assert (output_dir / "phase_metadata.json").is_file()
+    manifest = json.loads((output_dir / "phase_artifact_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["execution_mode"] == "fixture"

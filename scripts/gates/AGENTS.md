@@ -13,7 +13,8 @@ states which surfaces are wired into unified health or remain explicit.
 | `methods_plan_check.py` | `infrastructure.methods.audit_methods_projects` | All-public or single-project source/rendered methods audit. Source mode runs in unified health; rendered mode remains an explicit publication gate. |
 | `public_capabilities.py` | `infrastructure.project.public_capabilities.audit_public_capabilities` | Deterministic fail-closed syntax, structure, package/Python, render, hydration, analysis, and skip-contract manifest for every canonical public exemplar. |
 | `check_private_project_promotion.py` | `infrastructure.project.promotion.main` | Compatibility entrypoint for candidate security scanning and composite promotion evaluation. |
-| `module_line_count_check.py` | `infrastructure.validation.line_count.scan_infrastructure_and_scripts`, `scan_project_scripts` | Line-count gate: infra/scripts warn ≥800 fail ≥950; project scripts warn ≥150 fail ≥250 |
+| `module_line_count_check.py` | `infrastructure.validation.line_count.scan_infrastructure_and_scripts`, `scan_project_scripts` | Line-count gate: infra/scripts warn ≥800 fail ≥950; project scripts warn ≥150 fail ≥250; current oversized source modules use expiring downward-only ratchets |
+| `status_freshness.py` | `parse_status_rows`, `freshness_findings` | Fail-closed six-month freshness check for every dated `STATUS.md` subsystem row and its ledger header |
 | `security_scan.py` | `infrastructure.validation.security_gate.run_security_scan` | Security scanning (bandit, safety, pip-audit) |
 | `plugin_export_check.py` | `infrastructure.validation.plugin_export.run_plugin_export_check` | Hermes plugin export verification (opt-in) |
 | `exemplar_export_smoke.py` | `infrastructure.project.export_smoke.smoke_public_exemplars` | Clean-install and import-smoke every public exemplar export (acceptance/release gate) |

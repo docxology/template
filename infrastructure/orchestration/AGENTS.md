@@ -14,7 +14,7 @@ This package coordinates existing Layer-1 modules (`infrastructure.core.pipeline
 | `parser.py` | Pure argparse construction for non-interactive commands. |
 | `commands.py` | Non-interactive command handlers and dispatch table. |
 | `interactive.py` | TTY-only menu loop and project prompting. |
-| `discovery.py` | `validate_project_slug`, `select_project_interactive`, `discover_qualified_names` — wraps `discover_projects()`. When `writer` is set, the picker lists projects and prints `Choice [index / a=all / q=quit]: ` before reading input. |
+| `discovery.py` | `validate_project_slug`, `resolve_project_info`, `select_project_interactive`, `discover_qualified_names` — one `discover_projects()` pass is shared by slug validation and lookup (`validate_project_slug(..., projects=)`). When `writer` is set, the picker lists projects and prints `Choice [index / a=all / q=quit]: ` before reading input. |
 | `menu.py` | `MENU_OPTIONS`, `render_menu`, `_menu_row` — deterministic, ANSI-free menu text. Framing and section rules use ASCII (`+`, `=`, `-`, `|`) for TTY compatibility; option rows stay column-aligned. [`tests/infra_tests/orchestration/test_menu.py`](../../tests/infra_tests/orchestration/test_menu.py) asserts stable legend substrings and each `_menu_row` line. Used by `_interactive` and the `menu` subcommand. |
 | `pipeline_runner.py` | `PipelineRunner` — thin adapter over `PipelineExecutor`. |
 | `stage_logger.py` | `setup_stage_log`, `stage_log_path` — append-only banners under project log paths. |

@@ -8,7 +8,7 @@ documents the internal seams.
 
 ```mermaid
 flowchart LR
-    MODELS[models.py<br/>Paper · SearchQuery · SearchResult] --> BACKENDS[backends.py<br/>SearchBackend ABC]
+    MODELS[models.py<br/>Paper · SearchQuery · SearchResult] --> BACKENDS[base.py + *_backend.py<br/>SearchBackend ABC]
     BACKENDS --> CLIENT[client.py<br/>LiteratureClient]
     CLIENT --> CACHE[cache.py<br/>SearchCache]
     BACKENDS --> FULL[fulltext.py<br/>AbstractFetcher · FulltextFetcher]

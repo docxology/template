@@ -18,6 +18,7 @@ from typing import Any, Protocol, runtime_checkable
 
 from infrastructure.core.exceptions import PublishingError, UploadError
 from infrastructure.publishing._adapter_http import iter_bundle_files, lazy_session
+from infrastructure.publishing.preflight import PublicationPayloadManifest
 from infrastructure.publishing.zenodo.client import ZenodoClient
 from infrastructure.publishing.zenodo.config import ZenodoConfig
 
@@ -51,7 +52,13 @@ class ArchivalProvider(Protocol):
 
     """Deposit a payload to the archival service."""
 
-    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+    def deposit(
+        self,
+        bundle: Path,
+        *,
+        dry_run: bool,
+        manifest: PublicationPayloadManifest | None = None,
+    ) -> ArchivalReceipt:
         """Deposit a bundle to the archival service, returning a receipt."""
         ...
 
@@ -84,8 +91,16 @@ class ZenodoProvider:
         self._token = token
         self._base_url = base_url.rstrip("/")
 
-    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+    def deposit(
+        self,
+        bundle: Path,
+        *,
+        dry_run: bool,
+        manifest: PublicationPayloadManifest | None = None,
+    ) -> ArchivalReceipt:
         """Deposit a payload to the archival service."""
+        if manifest is not None:
+            manifest.validate_current(bundle)
         sha = _bundle_sha256(bundle)
 
         if dry_run:
@@ -172,8 +187,16 @@ class IPFSPinataProvider:
         self._session_arg = session  # None → lazily created on first network call
         self._timeout = timeout
 
-    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+    def deposit(
+        self,
+        bundle: Path,
+        *,
+        dry_run: bool,
+        manifest: PublicationPayloadManifest | None = None,
+    ) -> ArchivalReceipt:
         """Deposit a payload to the archival service."""
+        if manifest is not None:
+            manifest.validate_current(bundle)
         sha = _bundle_sha256(bundle)
 
         if dry_run:
@@ -262,8 +285,16 @@ class IPFSWeb3StorageProvider:
         self._session_arg = session
         self._timeout = timeout
 
-    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+    def deposit(
+        self,
+        bundle: Path,
+        *,
+        dry_run: bool,
+        manifest: PublicationPayloadManifest | None = None,
+    ) -> ArchivalReceipt:
         """Deposit a payload to the archival service."""
+        if manifest is not None:
+            manifest.validate_current(bundle)
         sha = _bundle_sha256(bundle)
 
         if dry_run:
@@ -362,8 +393,16 @@ class SoftwareHeritageProvider:
         self._session_arg = session
         self._timeout = timeout
 
-    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+    def deposit(
+        self,
+        bundle: Path,
+        *,
+        dry_run: bool,
+        manifest: PublicationPayloadManifest | None = None,
+    ) -> ArchivalReceipt:
         """Deposit a payload to the archival service."""
+        if manifest is not None:
+            manifest.validate_current(bundle)
         sha = _bundle_sha256(bundle)
         repo_url = self._resolve_repo_url(bundle)
 
@@ -432,6 +471,124 @@ class SoftwareHeritageProvider:
                 bundle_sha256=sha,
                 error=f"Software Heritage HTTP error: {exc}",
             )
+
+    def check_status(self, repo_url: str) -> ArchivalReceipt:
+        """Read-only refresh of Software Heritage's public archival state.
+
+        Queries the credential-free ``GET`` endpoints — the save-code-now
+        queue entry and the origin visit history — and records the observed
+        state with an as-of timestamp. Never posts: a save request cannot be
+        triggered from here, so this is the evidence-only half of the
+        archival contract.
+
+        Software Heritage keys origins by exact URL, and Git remotes usually
+        carry a trailing ``.git`` while the archived origin does not. Both
+        variants are queried when they differ and the strongest evidence
+        wins (verified > accepted > pending > excluded > unavailable).
+
+        The recorded ``extra["state"]`` uses the tracker taxonomy:
+        ``verified`` (a full visit or any visit exists), ``accepted`` /
+        ``pending`` (queued, not yet archived), ``excluded`` (rejected or
+        failed), ``unavailable`` (no save request and no visits), and
+        ``rate-limited`` (the API answered 429). ``status`` stays ``ok``
+        whenever all observations completed; only transport failures yield
+        ``status = "error"``.
+        """
+        candidates = [repo_url]
+        if repo_url.endswith(".git"):
+            stripped = repo_url[: -len(".git")]
+            if stripped and stripped not in candidates:
+                candidates.append(stripped)
+
+        import requests  # noqa: PLC0415 — deferred; see module docstring
+
+        extra: dict[str, str] = {"repo_url": repo_url}
+        states: list[str] = []
+        try:
+            session = lazy_session(self)
+            for index, candidate in enumerate(candidates):
+                suffix = "" if index == 0 else f"_normalized_{index}"
+                save_url = f"{self._base_url}/origin/save/git/url/{candidate}/"
+                visits_url = f"{self._base_url}/origin/{candidate}/visits/"
+                save_resp = session.get(save_url, timeout=self._timeout)
+                visits_resp = session.get(visits_url, timeout=self._timeout)
+                if save_resp.status_code == 429 or visits_resp.status_code == 429:
+                    return ArchivalReceipt(
+                        provider=self.name,
+                        status="ok",
+                        identifier=repo_url,
+                        url=save_url,
+                        timestamp_utc=_now_utc_iso(),
+                        bundle_sha256=None,
+                        extra={**extra, "state": "rate-limited"},
+                    )
+
+                save_payload: dict = {}
+                if save_resp.status_code == 200:
+                    try:
+                        raw_save = save_resp.json()
+                    except ValueError:
+                        raw_save = None
+                    # SWH's save endpoint answers with a single object or a
+                    # list of requests; the most recent entry carries the
+                    # current state.
+                    if isinstance(raw_save, list):
+                        save_payload = next((e for e in raw_save if isinstance(e, dict)), {})
+                    elif isinstance(raw_save, dict):
+                        save_payload = raw_save
+                visits: list = []
+                if visits_resp.status_code == 200:
+                    try:
+                        raw_visits = visits_resp.json()
+                    except ValueError:
+                        raw_visits = None
+                    visits = [e for e in raw_visits if isinstance(e, dict)] if isinstance(raw_visits, list) else []
+
+                request_status = str(save_payload.get("save_request_status") or "")
+                extra.update(
+                    {
+                        f"save_request_status{suffix}": request_status
+                        or ("none" if save_resp.status_code == 404 else f"http_{save_resp.status_code}"),
+                        f"save_task_status{suffix}": str(save_payload.get("save_task_status") or ""),
+                        f"visit_status{suffix}": str(save_payload.get("visit_status") or ""),
+                        f"visit_count{suffix}": str(len(visits))
+                        if visits_resp.status_code == 200
+                        else f"http_{visits_resp.status_code}",
+                    }
+                )
+                if str(save_payload.get("visit_status") or "") == "full" or visits:
+                    states.append("verified")
+                elif request_status in {"rejected", "failed"}:
+                    states.append("excluded")
+                elif request_status == "pending":
+                    states.append("pending")
+                elif request_status == "accepted":
+                    states.append("accepted")
+                else:
+                    states.append("unavailable")
+        except requests.RequestException as exc:
+            return ArchivalReceipt(
+                provider=self.name,
+                status="error",
+                identifier=repo_url,
+                url=f"{self._base_url}/origin/save/git/url/{repo_url}/",
+                timestamp_utc=_now_utc_iso(),
+                bundle_sha256=None,
+                error=f"Software Heritage HTTP error: {exc}",
+            )
+
+        precedence = {"verified": 0, "accepted": 1, "pending": 2, "excluded": 3, "unavailable": 4}
+        state = min(states, key=lambda value: precedence[value])
+        return ArchivalReceipt(
+            provider=self.name,
+            status="ok",
+            identifier=repo_url,
+            url=f"{self._base_url}/origin/save/git/url/{candidates[0]}/",
+            timestamp_utc=_now_utc_iso(),
+            bundle_sha256=None,
+            error=None,
+            extra={**extra, "state": state},
+        )
 
     @staticmethod
     def _resolve_repo_url(bundle: Path) -> str | None:

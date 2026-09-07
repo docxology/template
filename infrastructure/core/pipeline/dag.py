@@ -11,6 +11,7 @@ It performs:
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, cast
@@ -21,6 +22,21 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.types import StageContract, StageHooks
 
 logger = get_logger(__name__)
+
+
+def opt_in_tags_from_mapping(data: Mapping[str, Any] | None) -> frozenset[str]:
+    """Return the YAML ``opt_in_tags`` set, or empty when the key is absent."""
+    raw = (data or {}).get("opt_in_tags") or ()
+    return frozenset(str(tag) for tag in raw)
+
+
+def load_opt_in_tags(yaml_path: Path) -> frozenset[str]:
+    """Read ``opt_in_tags`` from a pipeline YAML file."""
+    raw = yaml.safe_load(yaml_path.read_text(encoding="utf-8")) or {}
+    if not isinstance(raw, dict):
+        return frozenset()
+    return opt_in_tags_from_mapping(raw)
+
 
 _CONTRACT_KEYS = frozenset(
     {
@@ -43,6 +59,32 @@ _HOOK_KEYS = frozenset(
         "run_in_ci",
     }
 )
+
+
+def _definition_from_entry(entry: Any, index: int, source: Path) -> "StageDefinition":
+    """Parse one stage entry, failing closed with the source location.
+
+    Shared by ``PipelineDAG.from_yaml`` and ``PipelineDAG.from_dict`` so both
+    construction paths validate identically.
+    """
+    if not isinstance(entry, dict):
+        raise ValueError(f"Each pipeline stage entry must be a mapping (stage #{index} in {source})")
+    name = entry.get("name")
+    if not isinstance(name, str) or not name.strip():
+        raise ValueError(f"Pipeline stage #{index} in {source} is missing a non-empty 'name'")
+    return StageDefinition(
+        name=name,
+        key=entry.get("key"),
+        script=entry.get("script"),
+        method=entry.get("method"),
+        args=entry.get("args", []),
+        allow_skip=entry.get("allow_skip", False),
+        depends_on=entry.get("depends_on", []),
+        tags=entry.get("tags", []),
+        failure_mode=entry.get("failure_mode"),
+        contract=_parse_contract(entry.get("contract"), name),
+        hooks=_parse_hooks(entry.get("hooks"), name),
+    )
 
 
 @dataclass
@@ -77,8 +119,14 @@ class PipelineDAG:
         specs = dag.to_stage_specs(executor)
     """
 
-    def __init__(self, stages: list[StageDefinition]) -> None:
+    def __init__(
+        self,
+        stages: list[StageDefinition],
+        *,
+        opt_in_tags: frozenset[str] | None = None,
+    ) -> None:
         self.stages = list(stages)
+        self.opt_in_tags = frozenset(opt_in_tags) if opt_in_tags is not None else frozenset()
         # ``(stage, missing_dep)`` edges dropped by the most recent
         # ``sorted_stages()`` call — see the property of the same name.
         self._dropped_dependency_edges: list[tuple[str, str]] = []
@@ -95,48 +143,25 @@ class PipelineDAG:
             raise ValueError(f"pipeline.yaml must have a top-level 'stages' list: {yaml_path}")
 
         definitions: list[StageDefinition] = []
-        for entry in raw["stages"]:
-            if not isinstance(entry, dict):
-                raise ValueError("Each pipeline stage entry must be a mapping")
-            definitions.append(
-                StageDefinition(
-                    name=entry["name"],
-                    key=entry.get("key"),
-                    script=entry.get("script"),
-                    method=entry.get("method"),
-                    args=entry.get("args", []),
-                    allow_skip=entry.get("allow_skip", False),
-                    depends_on=entry.get("depends_on", []),
-                    tags=entry.get("tags", []),
-                    failure_mode=entry.get("failure_mode"),
-                    contract=_parse_contract(entry.get("contract"), entry["name"]),
-                    hooks=_parse_hooks(entry.get("hooks"), entry["name"]),
-                )
-            )
+        for index, entry in enumerate(raw["stages"], start=1):
+            definitions.append(_definition_from_entry(entry, index, yaml_path))
         logger.debug(f"Parsed {len(definitions)} stage definition(s) from {yaml_path.name}")
-        return cls(definitions)
+        return cls(definitions, opt_in_tags=opt_in_tags_from_mapping(raw))
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "PipelineDAG":
-        """Construct from an in-memory dict (useful for tests)."""
+        """Construct from an in-memory dict (useful for tests).
+
+        Applies the same fail-closed validation as :meth:`from_yaml` so a
+        malformed in-memory definition raises instead of silently yielding
+        an empty or partially-parsed DAG.
+        """
+        if not isinstance(data, dict) or "stages" not in data:
+            raise ValueError("pipeline definition must have a top-level 'stages' list")
         definitions: list[StageDefinition] = []
-        for entry in data.get("stages", []):
-            definitions.append(
-                StageDefinition(
-                    name=entry["name"],
-                    key=entry.get("key"),
-                    script=entry.get("script"),
-                    method=entry.get("method"),
-                    args=entry.get("args", []),
-                    allow_skip=entry.get("allow_skip", False),
-                    depends_on=entry.get("depends_on", []),
-                    tags=entry.get("tags", []),
-                    failure_mode=entry.get("failure_mode"),
-                    contract=_parse_contract(entry.get("contract"), entry["name"]),
-                    hooks=_parse_hooks(entry.get("hooks"), entry["name"]),
-                )
-            )
-        return cls(definitions)
+        for index, entry in enumerate(data["stages"], start=1):
+            definitions.append(_definition_from_entry(entry, index, Path("<memory>")))
+        return cls(definitions, opt_in_tags=opt_in_tags_from_mapping(data))
 
     # ── Filtering ────────────────────────────────────────────────────────
 

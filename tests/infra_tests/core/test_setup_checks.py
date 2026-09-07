@@ -78,12 +78,23 @@ class TestSyncWorkspaceDependencies:
     """Tests for the sync_workspace_dependencies function."""
 
     def test_success_path_zero_exit_code(self, tmp_path: Path) -> None:
-        """Returns True when uv sync exits with code 0 in the repo root."""
-        # Use the real repo root — uv sync should succeed in a properly set-up env.
-        repo_root = Path(__file__).resolve().parents[4]
-        result = sync_workspace_dependencies(repo_root)
-        # We accept True or False depending on environment, but must return a bool.
-        assert isinstance(result, bool)
+        """Returns True when a real ``uv sync`` exits 0 in a synthetic workspace."""
+        # A zero-dependency project keeps the real uv subprocess while never
+        # mutating the shared checkout environment or requiring the network.
+        workspace = tmp_path / "workspace"
+        workspace.mkdir()
+        (workspace / "pyproject.toml").write_text(
+            "[project]\n"
+            'name = "setup-checks-fixture"\n'
+            'version = "0.0.0"\n'
+            'requires-python = ">=3.10"\n'
+            "dependencies = []\n"
+            "\n"
+            "[tool.uv]\n"
+            "package = false\n",
+            encoding="utf-8",
+        )
+        assert sync_workspace_dependencies(workspace) is True
 
     def test_returns_bool(self, tmp_path: Path) -> None:
         """sync_workspace_dependencies always returns a bool regardless of path."""
@@ -109,15 +120,27 @@ class TestSyncWorkspaceDependencies:
         # Should be True (all default deps are installed) — deterministic in CI.
         assert result is True
 
-    def test_timeout_branch_returns_true(self, tmp_path: Path) -> None:
-        """TimeoutExpired during uv sync causes the function to return True."""
+    def test_timeout_falls_back_instead_of_claiming_success(self, tmp_path: Path) -> None:
+        """TimeoutExpired during uv sync must check packages, not log a false success."""
         import subprocess as sp
 
         def _raise_timeout(*args, **kwargs):
             raise sp.TimeoutExpired(cmd=["uv", "sync"], timeout=30)
 
-        result = sync_workspace_dependencies(tmp_path, process_runner=_raise_timeout)
-        assert result is True
+        def _missing() -> tuple[bool, list[str]]:
+            return False, ["definitely_not_installed_xyz"]
+
+        def _install_fails(packages: list[str]) -> bool:
+            assert packages == ["definitely_not_installed_xyz"]
+            return False
+
+        result = sync_workspace_dependencies(
+            tmp_path,
+            process_runner=_raise_timeout,
+            dependency_checker=_missing,
+            package_installer=_install_fails,
+        )
+        assert result is False
 
     def test_file_not_found_fallback(self, tmp_path: Path) -> None:
         """FileNotFoundError (uv not in PATH) triggers fallback to check_dependencies."""

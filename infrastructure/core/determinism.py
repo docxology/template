@@ -44,6 +44,7 @@ __all__ = [
     "TEMPLATE_DETERMINISTIC_ENV",
     "deterministic_subprocess_env",
     "is_deterministic_requested",
+    "now_utc_iso",
     "resolve_build_timestamp",
     "resolve_source_date_epoch",
 ]
@@ -52,6 +53,19 @@ TEMPLATE_DETERMINISTIC_ENV = "TEMPLATE_DETERMINISTIC"
 _SOURCE_DATE_EPOCH_ENV = "SOURCE_DATE_EPOCH"
 _TRUTHY = {"1", "true", "yes", "on"}
 _ISO_Z = "%Y-%m-%dT%H:%M:%SZ"
+
+
+def now_utc_iso() -> str:
+    """Return the current wall-clock UTC as a strict ISO-8601 ``Z`` string.
+
+    This is the canonical ``YYYY-MM-DDTHH:MM:SSZ`` wall-clock timestamp, used
+    by publishing providers that stamp human-facing receipt ``timestamp_utc``
+    fields. It intentionally does not consult ``SOURCE_DATE_EPOCH`` — those
+    receipt stamps reflect the moment the operation ran, not a pinned build
+    epoch; deterministic output (renders, manifests) should use
+    :func:`resolve_build_timestamp` instead.
+    """
+    return datetime.now(timezone.utc).strftime(_ISO_Z)
 
 
 def is_deterministic_requested(deterministic: bool | None = None) -> bool:

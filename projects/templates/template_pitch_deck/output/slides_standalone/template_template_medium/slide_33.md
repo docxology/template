@@ -1,10 +1,12 @@
-# Roadmap
+# infrastructure/, by subpackage
 
-*Slide 33 of 37 — template_template pitch, medium deck — kind: `section`*
+*Slide 33 of 38 — template_template pitch, medium deck — kind: `diagram`*
 
 *(no body content — section/title slide)*
 
 ---
+
+**Source:** [projects/templates/template_pitch_deck/src/infra_facts.py](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/src/infra_facts.py)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_medium.pdf) · [PPTX](../../pptx/template_template_pitch_medium.pptx)
 **Deck content source:** [manuscript/deck_content_medium.yaml](../../../manuscript/deck_content_medium.yaml)

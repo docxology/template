@@ -121,3 +121,13 @@ report:
   include_per_file_table: true   # words/sentences/FRE/FKGL/Fog per file
   include_outline: true          # heading outline per file
   include_quality_flags: true    # long sentences, passive candidates, hedges
+
+# Optional language-model review. Disabled by default: the public exemplar
+# never contacts a provider or requires a network connection. Enable only
+# with a local, schema-checked transcript receipt.
+llm:
+  review:
+    enabled: false
+    provider: local_transcript
+    model: ""
+    transcript_path: output/llm_review.json

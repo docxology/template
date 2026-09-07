@@ -50,7 +50,7 @@ uv run python scripts/pipeline/stage_03_render.py --project working/my_review
 canonical exemplars under `projects/templates/` (see
 [`../../../docs/_generated/active_projects.md`](../../../../docs/_generated/active_projects.md)).
 Your fork under `projects/working/my_review/` is local-only and won't be pushed
-even with `git add -f` — `scripts/audit/check_tracked_projects.py` blocks it in
+even with `git add -f` — `scripts/audit/check_tracked_all.py` blocks it in
 `pre-push-quick`. See the root [`CLAUDE.md`](../../../../CLAUDE.md) "CONFIDENTIALITY INVARIANT".
 
 ## The single control surface: `manuscript/config.yaml`

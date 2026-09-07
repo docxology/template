@@ -6,17 +6,65 @@ from pathlib import Path
 
 import pytest
 
-from src.grammar import KNOWN_DOMAINS, force_domain, parse_grammar
+from src.grammar import KNOWN_DOMAINS, force_domain, load_grammar, parse_grammar
 from src.expand import expand
 from src.materialize import materialize
 from src.realize import (
     _project_slug,
     _gate_python,
+    clear_generated_children,
     run_child_stage,
     run_analysis_stage,
     render_child_manuscript,
+    select_full_child,
     validate_child,
 )
+
+
+def test_clear_generated_children_removes_only_owned_directories(tmp_path):
+    children = tmp_path / "children"
+    stale_a = children / "child_alpha_deadbeef"
+    stale_b = children / "child_beta_deadbeef"
+    unrelated_dir = children / "notes"
+    unrelated_file = children / "README.txt"
+    for directory in (stale_a, stale_b, unrelated_dir):
+        directory.mkdir(parents=True)
+        (directory / "payload.txt").write_text(directory.name)
+    unrelated_file.write_text("preserve me")
+
+    removed = clear_generated_children(children)
+
+    assert [path.name for path in removed] == [stale_a.name, stale_b.name]
+    assert not stale_a.exists()
+    assert not stale_b.exists()
+    assert (unrelated_dir / "payload.txt").read_text() == "notes"
+    assert unrelated_file.read_text() == "preserve me"
+
+
+def test_clear_generated_children_rejects_symlink(tmp_path):
+    children = tmp_path / "children"
+    children.mkdir()
+    external = tmp_path / "external"
+    external.mkdir()
+    link = children / "child_external"
+    link.symlink_to(external, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="must not be a symlink"):
+        clear_generated_children(children)
+
+    assert external.is_dir()
+
+
+def test_select_full_child_uses_grammar_identity_not_directory_order(tmp_path, template_root):
+    children = tmp_path / "children"
+    grammar = load_grammar(template_root)
+    expected = materialize(expand(grammar), out_root=children, template_root=template_root)
+    (children / "child_zzzz_decoy").mkdir()
+
+    selected = select_full_child(template_root, children)
+
+    assert selected == expected.root
+    assert selected.name != "child_zzzz_decoy"
 
 
 def _make_grammar(domain="optimization"):

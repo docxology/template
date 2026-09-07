@@ -17,7 +17,11 @@ produce the same manuscript.
 | `ising_mi_saturation` | max closed-form MI on `parameter_sweep.csv` |
 | `invariants_*`, `si_tmaze_*`, `sweep_*`, `pymdp_*` | analysis artifacts (`generate_variables`) |
 
-Compose emits `{{token}}` placeholders. `scripts/z_generate_manuscript_variables.py` resolves them into `output/manuscript/` (fail-closed).
+Compose emits `{{token}}` placeholders. `scripts/z_generate_manuscript_variables.py`
+is the sole final hydration owner: it resolves them into `output/manuscript/`
+and atomically writes resolved alt/caption values to
+`output/figures/figure_registry.json` from the same final canonical variables
+snapshot (fail-closed).
 
 ## Refresh pipeline
 

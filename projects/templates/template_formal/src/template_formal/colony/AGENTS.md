@@ -1,6 +1,6 @@
 # `src/template_formal/colony/` — Agent Guide
 
-Nine files, one distinct responsibility each — see `README.md`'s module
+Ten files, one distinct responsibility each — see `README.md`'s module
 table before touching any of them; this package has grown across three
 adversarial rounds and it is easy to put new logic in the wrong file.
 
@@ -12,7 +12,8 @@ consensus definition), `stats.py` (stdlib-only closed-form statistics),
 figures), `nullmodel.py` (structurally-isolated random-choice baseline),
 `sweep.py` (generic parameter-sweep runner), `cover_art.py` (deterministic
 seeded title-page cover generator + its fail-closed `require_cover_art`
-wrapper).
+wrapper), `experiment_plan.py` (typed validation of the declared ablation
+plan in `experiment_plan.yaml`).
 
 **Contract.**
 
@@ -50,4 +51,4 @@ wrapper).
   for the pattern the pre-registered analyses already follow (ISC-87–ISC-113).
 
 See the project [`AGENTS.md`](../../../AGENTS.md) and [`ISA.md`](../../../ISA.md)
-for the full map and ISC-1..122 criteria.
+for the full map and ISC-1..123 criteria.

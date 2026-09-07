@@ -1,10 +1,8 @@
-# What comes next for this exemplar
+# Roadmap
 
-*Slide 49 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 49 of 57 — template_template pitch, long deck — kind: `section`*
 
-- Extend token-sourced facts beyond one pitch subject to any exemplar in the roster, so a new deck for a different project needs only new content YAML, not new code.
-- Add a second validated pitch (a broader meta-science-group deck) reusing the same rendering and audit pipeline.
-- Track deck-generation coverage and drift in the same CI gates that already watch every other public exemplar.
+*(no body content — section/title slide)*
 
 ---
 

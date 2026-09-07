@@ -7,14 +7,15 @@ protection checklist ([`branch-protection-checklist.md`](branch-protection-check
 ## Purpose
 
 This is the operator runbook for the moment a credential is detected by the
-secret scanners. The two scanners cover the full lifecycle of a credential in
-git history:
+secret scanners. The two scanners cover the staged index and the files tracked
+in the current checkout; neither is a full Git-history scanner:
 
-- `scripts/audit/check_tracked_secrets.py` — full-history scan of every tracked
-  blob (`infrastructure.project.git_guards.tracked_secret_findings`).
+- `scripts/audit/check_tracked_secrets.py` — scan of every file tracked in the
+  current checkout (`infrastructure.project.git_guards.tracked_secret_findings`).
 - `scripts/audit/check_staged_secrets.py` — pre-commit scan of staged added or
-  modified files, reading worktree bytes so a credential is caught before it
-  enters history (`infrastructure.project.git_guards.staged_diff_secret_findings`).
+  modified files, reading stage-zero index blobs so partially staged worktree
+  edits cannot hide a credential or create a false finding
+  (`infrastructure.project.git_guards.staged_diff_secret_findings`).
 
 Both scanners report `path:line:kind` metadata only and never print the matched
 value. Kinds are `github-token`, `aws-access-key`, `openai-token`, and
@@ -33,14 +34,17 @@ credentials are not hidden behind a broad test exclusion.
    Exits non-zero on any staged file containing a high-confidence credential
    format. Fix the finding here, before the commit lands.
 
-2. **Tracked scan (history audit).** Run in CI and pre-push to catch anything
-   that slipped past the staged scan:
+2. **Tracked-current scan.** Run in CI and pre-push to catch anything in the
+   currently tracked tree that slipped past the staged scan:
 
    ```bash
    uv run python scripts/audit/check_tracked_secrets.py
    ```
 
-   A non-zero exit means a credential is already in tracked history.
+   A non-zero exit means the current tracked file contains a credential. A
+   clean result does not prove older commits, forks, logs, or release artifacts
+   are clean; use an approved history-scanning/incident process when exposure
+   may predate the current tree.
 
 ## Immediate Containment
 
@@ -67,9 +71,11 @@ matched line by hand before acting):
 
 ## Secret Rotation
 
-Rotate at the issuing provider, not in this repository. Order matters: rotate
-first, then remove from history, so the window during which the old value is
-both invalid and removed is minimal.
+Rotate at the issuing provider, not in this repository. Stop affected workflows
+and follow the provider's incident procedure. A confirmed compromised secret
+should be disabled or revoked as soon as operationally safe; service-continuity
+tradeoffs and any brief replacement overlap require an accountable operator,
+not an automated assumption.
 
 1. **Identify the issuer.**
    - `github-token` → GitHub personal access token / fine-grained token / app
@@ -80,13 +86,15 @@ both invalid and removed is minimal.
    - `private-key` → SSH / TLS / signing private key. Reissue the keypair and
      revoke the public half everywhere it was trusted.
 
-2. **Provision a replacement.** Create a new credential with the minimum
-   scope needed (least privilege, short expiry, scoped audience). Store it in
-   the intended secret store only — see [`../reference/`](../reference/) and
-   `infrastructure/core/credentials.py` for the runtime credential surface.
+2. **Disable or revoke the exposed credential.** For a confirmed active leak,
+   prioritize containment. If continuity policy requires a replacement first,
+   keep the overlap bounded, monitored, and explicitly owner-approved.
 
-3. **Revoke the old credential.** Do this immediately after the replacement is
-   deployed, not before, to avoid an outage window.
+3. **Provision a replacement if still needed.** Create a new credential with
+   the minimum scope needed (least privilege, short expiry, scoped audience).
+   Store it in the intended secret store only — see
+   [`../reference/`](../reference/) and `infrastructure/core/credentials.py`
+   for the runtime credential surface.
 
 4. **Remove the leaked value from this checkout.** If it was staged, drop it
    from the index and the worktree. If it was committed, decide whether history

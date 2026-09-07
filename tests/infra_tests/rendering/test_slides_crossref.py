@@ -15,11 +15,20 @@ real aux-format lines (samples mirror an actual
 
 from __future__ import annotations
 
+import subprocess
+import shutil
+from pathlib import Path
+
+import pytest
+
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._slides_crossref import (
     COMBINED_AUX_BASENAME,
+    bind_displayed_equation_numbers,
     parse_aux_label_numbers,
     resolve_cross_deck_references,
 )
+from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 
 # Real hyperref five-group aux lines, including a caption field with heavy
@@ -39,6 +48,95 @@ _REAL_AUX = "\n".join(
         r"\newlabel{sec:appendix-proofs}{{A.2}{41}{Proofs}{appendix.A.2}{}}",
     ]
 )
+
+
+def test_displayed_equation_numbers_preserve_literals_and_nested_math():
+    literal = (
+        "% \\begin{equation}\\label{eq:comment}x=0\\end{equation}\n"
+        r"\begin{verbatim}\begin{equation}\label{eq:code}x=0\end{equation}\end{verbatim}"
+        r"\verb|\begin{equation}\label{eq:inline}x=0\end{equation}|"
+    )
+    equation = (
+        "\\begin{equation}% retained comment\n"
+        r"\protect\phantomsection\label{eq:model}{\begin{aligned}x&=1\\y&=2\end{aligned}}"
+        r"\end{equation}"
+    )
+    result = bind_displayed_equation_numbers(literal + equation, {"eq:model": "A.7"})
+    assert result == literal + equation.replace(r"\begin{equation}", r"\begin{equation}\tag{A.7}", 1)
+    assert bind_displayed_equation_numbers(result, {"eq:model": "A.7"}) == result
+
+
+@pytest.mark.parametrize(
+    "body,numbers",
+    [
+        (r"\label{eq:missing}x=1", {}),
+        (r"\label{eq:a}\label{eq:b}x=1", {"eq:a": "2", "eq:b": "3"}),
+        (r"\label{eq:a}\tag{1}x=1", {"eq:a": "2"}),
+        (r"\label{eq:a}x=1", {"eq:a": r"\unsafe"}),
+    ],
+)
+def test_displayed_equation_numbers_reject_missing_or_conflicting_authority(body, numbers):
+    with pytest.raises(RenderingError):
+        bind_displayed_equation_numbers(r"\begin{equation}" + body + r"\end{equation}", numbers)
+
+
+def test_displayed_equation_numbers_leave_unnumbered_and_unlabeled_math():
+    tex = r"\begin{equation*}\label{eq:a}x=1\end{equation*}\begin{equation}y=2\end{equation}"
+    assert bind_displayed_equation_numbers(tex, {}) == tex
+
+
+def test_displayed_equation_numbers_preserve_matching_authored_tag_style():
+    tex = r"\begin{equation}\label{eq:a}\tag*{A.7}x=1\end{equation}"
+    assert bind_displayed_equation_numbers(tex, {"eq:a": "A.7"}) == tex
+
+
+@pytest.mark.parametrize("profile,strict", [("archive", True), ("accessible", False)])
+def test_noncanonical_render_keeps_native_equation_numbering(tmp_path, profile, strict):
+    pdf_dir = tmp_path / "pdf"
+    pdf_dir.mkdir()
+    (pdf_dir / COMBINED_AUX_BASENAME).write_text(r"\newlabel{eq:a}{{7}{1}}", encoding="utf-8")
+    renderer = SlidesRenderer(RenderingConfig(pdf_dir=str(pdf_dir), slides_profile=profile))
+    tex = r"\begin{equation}\label{eq:a}x=1\end{equation} See \eqref{eq:a}."
+    assert renderer._resolve_cross_deck_refs(tex, strict_cross_deck_refs=strict) == tex
+
+
+@pytest.mark.slow
+def test_canonical_equation_tags_match_references_in_real_beamer_pdf(tmp_path):
+    """A standalone deck must not print (1) while its prose points to (7)."""
+    if shutil.which("xelatex") is None or shutil.which("pdftotext") is None:
+        pytest.skip("xelatex and pdftotext are required for the real PDF regression")
+    tex = (
+        r"\documentclass{beamer}\usepackage{amsmath}\begin{document}"
+        r"\begin{frame}{Canonical numbering}"
+        r"\begin{equation}\label{eq:first}x=1\end{equation}"
+        r"See first \eqref{eq:first}."
+        r"\begin{equation}\label{eq:second}y=2\end{equation}"
+        r"See second \eqref{eq:second}.\end{frame}\end{document}"
+    )
+    numbers = {"eq:first": "7", "eq:second": "12"}
+    tex = bind_displayed_equation_numbers(tex, numbers)
+    tex, _, unresolved = resolve_cross_deck_references(tex, numbers, resolve_local=True)
+    assert not unresolved
+    path = tmp_path / "canonical.tex"
+    path.write_text(tex, encoding="utf-8")
+    subprocess.run(
+        ["xelatex", "-halt-on-error", "-interaction=nonstopmode", path.name],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    result = subprocess.run(
+        ["pdftotext", str(path.with_suffix(".pdf")), "-"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.stdout.count("(7)") == 2
+    assert result.stdout.count("(12)") == 2
+    assert "(1)" not in result.stdout and "(2)" not in result.stdout
 
 
 class TestParseAuxLabelNumbers:
@@ -130,6 +228,46 @@ class TestResolveCrossDeckReferences:
         assert updated == "as shown in (1)."
         assert replaced == 1
 
+    def test_pandoc_escaped_reference_join_becomes_nonbreaking_space(self):
+        tex = r"Section\textasciitilde{}\ref{sec:intro-visual-map}."
+
+        updated, replaced, unresolved = resolve_cross_deck_references(tex, self.LABEL_MAP)
+
+        assert updated == r"Section~2.3.1."
+        assert replaced == 1
+        assert unresolved == []
+
+    @pytest.mark.parametrize("command", ["ref", "eqref"])
+    def test_pandoc_escaped_join_with_authored_parentheses_has_one_pair(self, command):
+        tex = rf"Equation\textasciitilde{{}}(\{command}{{eq:gen-bayes}})."
+
+        updated, replaced, unresolved = resolve_cross_deck_references(tex, self.LABEL_MAP)
+
+        assert updated == r"Equation~(1)."
+        assert r"\textasciitilde{}" not in updated
+        assert "((1))" not in updated
+        assert replaced == 1
+        assert unresolved == []
+
+    def test_literal_and_commented_references_are_not_rewritten_or_reported(self):
+        tex = "\n".join(
+            [
+                r"Prose \ref{def:generalized-bayes} and \ref{lem:missing}.",
+                r"% Comment \ref{def:generalized-bayes} and \ref{lem:comment}.",
+                r"\begin{verbatim}Use \ref{def:generalized-bayes} and \ref{lem:code}.\end{verbatim}",
+                r"\begin{Verbatim}Use \eqref{eq:gen-bayes}.\end{Verbatim}",
+                r"\begin{lstlisting}Use \ref{sec:intro-visual-map}.\end{lstlisting}",
+                r"\begin{minted}{tex}Use \ref{def:generalized-bayes}.\end{minted}",
+                r"Inline \verb|\ref{def:generalized-bayes}| remains literal.",
+            ]
+        )
+
+        updated, replaced, unresolved = resolve_cross_deck_references(tex, self.LABEL_MAP)
+
+        assert updated.replace("Prose 1", r"Prose \ref{def:generalized-bayes}") == tex
+        assert replaced == 1
+        assert unresolved == ["lem:missing"]
+
     def test_within_deck_ref_preserved_for_native_numbering(self):
         tex = "\n".join(
             [
@@ -155,6 +293,27 @@ class TestResolveCrossDeckReferences:
         assert "Theorem 5." in updated
         assert replaced == 1
         assert unresolved == ["lem:not-in-aux"]
+
+    def test_strict_renderer_rejects_nonlocal_label_missing_from_current_aux(self, test_config):
+        renderer = SlidesRenderer(test_config)
+
+        with pytest.raises(RenderingError, match="cannot resolve post-Pandoc") as exc_info:
+            renderer._resolve_cross_deck_refs(
+                r"Equation \eqref{eq:foreign}.",
+                strict_cross_deck_refs=True,
+            )
+
+        assert exc_info.value.context["unresolved_labels"] == ["eq:foreign"]
+
+    def test_strict_renderer_keeps_section_visible_label_fallback(self, test_config):
+        renderer = SlidesRenderer(test_config)
+
+        updated = renderer._resolve_cross_deck_refs(
+            r"See \ref{sec:foreign_section}.",
+            strict_cross_deck_refs=True,
+        )
+
+        assert updated == r"See \texttt{sec:foreign\_section}."
 
     def test_other_ref_commands_untouched(self):
         tex = r"\pageref{sec:intro-visual-map} \autoref{sec:intro-visual-map} \cref{sec:intro-visual-map}"
@@ -185,3 +344,170 @@ class TestSlidesRendererHook:
         tex = r"Theorem \ref{thm:belief-sharing-recovery} stands."
 
         assert renderer._resolve_cross_deck_refs(tex) == tex
+
+    def test_section_reference_escapes_underscores_for_latex(self, test_config):
+        renderer = SlidesRenderer(test_config)
+
+        tex = r"See \ref{sec:experimental_setup} for the run configuration."
+
+        assert renderer._resolve_cross_deck_refs(tex) == (
+            r"See \texttt{sec:experimental\_setup} for the run configuration."
+        )
+
+    def test_accessible_profile_resolves_local_section_from_combined_aux(self, tmp_path):
+        pdf_dir = tmp_path / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / COMBINED_AUX_BASENAME).write_text(
+            r"\newlabel{sec:experimental_setup}{{2.3}{7}{Setup}{subsection.2.3}{}}" + "\n",
+            encoding="utf-8",
+        )
+        renderer = SlidesRenderer(RenderingConfig(pdf_dir=str(pdf_dir), slides_profile="accessible"))
+        tex = (
+            r"\section{Setup}\label{sec:experimental_setup}"
+            "\n"
+            r"See Section \ref{sec:experimental_setup}."
+        )
+
+        updated = renderer._resolve_cross_deck_refs(tex, strict_cross_deck_refs=True)
+
+        assert r"\label{sec:experimental_setup}" in updated
+        assert "See Section 2.3." in updated
+        assert r"\ref{sec:experimental_setup}" not in updated
+
+    def test_accessible_profile_restores_pandoc_escaped_section_join(self, tmp_path):
+        pdf_dir = tmp_path / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / COMBINED_AUX_BASENAME).write_text(
+            r"\newlabel{sec:experimental_setup}{{2.3}{7}{Setup}{subsection.2.3}{}}" + "\n",
+            encoding="utf-8",
+        )
+        renderer = SlidesRenderer(RenderingConfig(pdf_dir=str(pdf_dir), slides_profile="accessible"))
+
+        updated = renderer._resolve_cross_deck_refs(
+            r"See Section\textasciitilde{}\ref{sec:experimental_setup}.",
+            strict_cross_deck_refs=True,
+        )
+
+        assert updated == r"See Section~2.3."
+        assert r"\textasciitilde{}" not in updated
+
+    def test_accessible_profile_preserves_literal_section_references(self, tmp_path):
+        pdf_dir = tmp_path / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / COMBINED_AUX_BASENAME).write_text(
+            r"\newlabel{sec:experimental_setup}{{2.3}{7}{Setup}{subsection.2.3}{}}" + "\n",
+            encoding="utf-8",
+        )
+        renderer = SlidesRenderer(RenderingConfig(pdf_dir=str(pdf_dir), slides_profile="accessible"))
+        tex = (
+            r"See Section\textasciitilde{}(\ref{sec:experimental_setup}). "
+            r"\begin{verbatim}Section\textasciitilde{}\ref{sec:experimental_setup}\end{verbatim}"
+        )
+
+        updated = renderer._resolve_cross_deck_refs(tex, strict_cross_deck_refs=True)
+
+        assert updated.startswith(r"See Section~(2.3).")
+        assert updated.endswith(r"\begin{verbatim}Section\textasciitilde{}\ref{sec:experimental_setup}\end{verbatim}")
+
+    def test_accessible_strict_profile_resolves_local_equation_from_combined_aux(self, tmp_path):
+        """Local Beamer and Reveal references use one combined-PDF number."""
+
+        pdf_dir = tmp_path / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / COMBINED_AUX_BASENAME).write_text(
+            r"\newlabel{eq:model}{{7}{9}{Model}{equation.7}{}}" + "\n",
+            encoding="utf-8",
+        )
+        renderer = SlidesRenderer(RenderingConfig(pdf_dir=str(pdf_dir), slides_profile="accessible"))
+        tex = r"\begin{equation}\label{eq:model}x=1\end{equation} See Equation \eqref{eq:model}."
+
+        updated = renderer._resolve_cross_deck_refs(tex, strict_cross_deck_refs=True)
+
+        assert r"\label{eq:model}" in updated
+        assert "See Equation (7)." in updated
+        assert r"\tag{7}" in updated
+        assert r"\eqref{eq:model}" not in updated
+
+    def test_accessible_strict_profile_rejects_section_missing_from_aux(self, tmp_path):
+        renderer = SlidesRenderer(
+            RenderingConfig(
+                pdf_dir=str(tmp_path / "output" / "pdf"),
+                slides_profile="accessible",
+            )
+        )
+
+        with pytest.raises(RenderingError, match="cannot resolve post-Pandoc") as exc_info:
+            renderer._resolve_cross_deck_refs(
+                r"\section{Setup}\label{sec:experimental_setup} See \ref{sec:experimental_setup}.",
+                strict_cross_deck_refs=True,
+            )
+
+        assert exc_info.value.context["unresolved_labels"] == ["sec:experimental_setup"]
+
+    def test_accessible_first_pass_humanizes_section_without_leaking_internal_label(self, tmp_path):
+        renderer = SlidesRenderer(
+            RenderingConfig(
+                pdf_dir=str(tmp_path / "output" / "pdf"),
+                slides_profile="accessible",
+            )
+        )
+
+        updated = renderer._resolve_cross_deck_refs(r"See \ref{sec:experimental_setup}.")
+
+        assert updated == r"See \emph{experimental setup section}."
+        assert "sec:" not in updated
+
+    def test_strict_beamer_render_resolves_canonical_pandoc_crossref_after_conversion(self, tmp_path):
+        """The strict second pass evaluates generated TeX, not Markdown syntax."""
+        pdf_dir = tmp_path / "output" / "pdf"
+        slides_dir = tmp_path / "output" / "slides"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / COMBINED_AUX_BASENAME).write_text(
+            "\\relax\n"
+            "\\newlabel{fig:foreign}{{2}{2}{Foreign figure}{figure.2}{}}\n"
+            "\\newlabel{eq:foreign}{{7}{3}{Foreign equation}{equation.7}{}}\n"
+            "\\newlabel{tbl:foreign}{{3}{4}{Foreign table}{table.3}{}}\n"
+            "\\newlabel{sec:foreign}{{4}{5}{Foreign section}{section.4}{}}\n",
+            encoding="utf-8",
+        )
+        source = tmp_path / "01_intro.md"
+        source.write_text(
+            "# Intro\n\nSee [@fig:foreign], [@eq:foreign], [@tbl:foreign], and [@sec:foreign].\n",
+            encoding="utf-8",
+        )
+
+        def post_pandoc_runner(command, *args, **kwargs):
+            tex_path = Path(command[command.index("-o") + 1])
+            tex_path.write_text(
+                r"\documentclass{beamer}\begin{document}"
+                r"Figure \ref{fig:foreign}, Equation \eqref{eq:foreign}, "
+                r"Table \ref{tbl:foreign}, Section \ref{sec:foreign}."
+                r"\end{document}",
+                encoding="utf-8",
+            )
+            return subprocess.CompletedProcess(args=command, returncode=0, stdout="", stderr="")
+
+        def inspect_then_compile(tex_path: Path, output_dir: Path, **kwargs) -> Path:
+            resolved_tex = tex_path.read_text(encoding="utf-8")
+            assert "Figure 2, Equation (7), Table 3, Section 4." in resolved_tex
+            assert "foreign}" not in resolved_tex
+            output = output_dir / f"{tex_path.stem}.pdf"
+            output.write_bytes(b"%PDF-1.7\n")
+            return output
+
+        renderer = SlidesRenderer(
+            RenderingConfig(
+                pdf_dir=str(pdf_dir),
+                slides_dir=str(slides_dir),
+                output_dir=str(tmp_path / "output"),
+                pandoc_path="pandoc",
+                latex_compiler="xelatex",
+            ),
+            process_runner=post_pandoc_runner,
+            latex_compile=inspect_then_compile,
+        )
+
+        result = renderer.render(source, output_format="beamer", strict_cross_deck_refs=True)
+
+        assert result == slides_dir / "01_intro_slides.pdf"
+        assert result.is_file()

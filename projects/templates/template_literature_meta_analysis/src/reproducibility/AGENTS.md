@@ -192,17 +192,17 @@ layer would silently drop.
   failure mode is visible rather than silently conflated with plain
   unavailability — but the underlying PDF-parsing failure itself is never
   surfaced with a reason (which page, which pypdf exception).
-- **First scripts/ orchestrator to consume the `fulltext` config block.**
-  Per `config_loader.load_fulltext_config()`'s own docstring: prior to
-  `reproducibility.runner.run_reproducibility_pipeline`, no `scripts/`
-  orchestrator read `project_config.fulltext` (`enabled`, `download_dir`,
-  `unpaywall_email`) at all. `download_and_extract_fulltext()` itself
-  (`literature/fulltext_download.py`) still has zero callers anywhere under
-  `scripts/` — this module only *reads* `.txt` files that some other,
-  currently-unbuilt orchestrator would need to have populated via that
-  function. Until `project_config.fulltext.enabled` is `true` in
-  `manuscript/config.yaml` (or `--fulltext-dir` is passed explicitly
-  pointing at a directory someone else populated), `run_reproducibility_pipeline`
-  is a true no-op: it logs a loud warning and still writes a valid,
-  well-formed but empty set of outputs (graceful degradation, never a
-  silent skip and never a crash).
+- **This module only reads `.txt` files someone else populated.**
+  `reproducibility.runner.run_reproducibility_pipeline` itself never
+  downloads anything — it only *reads* `<fulltext_dir>/<id>.txt` files.
+  Populating that directory is `scripts/11_fulltext_download.py`'s job (via
+  `literature.fulltext_download_cli.run_fulltext_download`, which is the
+  orchestrator that actually calls `download_and_extract_fulltext()` from
+  `literature/fulltext_download.py`). Per `AGENTS.md`'s Regeneration Order,
+  script 11 is an opt-in stage that must run *before* script 10 for this
+  module to have anything to score. Until `project_config.fulltext.enabled`
+  is `true` in `manuscript/config.yaml` (or `--fulltext-dir` is passed
+  explicitly pointing at a directory someone else populated),
+  `run_reproducibility_pipeline` is a true no-op: it logs a loud warning and
+  still writes a valid, well-formed but empty set of outputs (graceful
+  degradation, never a silent skip and never a crash).

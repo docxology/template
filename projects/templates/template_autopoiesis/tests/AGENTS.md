@@ -12,7 +12,7 @@ uv run pytest projects/templates/template_autopoiesis/tests/ \
 
 ## Files on disk
 
-This is the complete current test-module inventory (512 collected test
+This is the complete current test-module inventory (528 collected test
 items, including parametrized cases):
 
 | Test module | Collected items |
@@ -23,10 +23,11 @@ items, including parametrized cases):
 | `test_deps_vendoring.py` | 16 |
 | `test_emit_templates.py` | 32 |
 | `test_figures.py` | 23 |
-| `test_grammar_and_expand.py` | 57 |
+| `test_grammar_and_expand.py` | 67 |
 | `test_honesty.py` | 17 |
 | `test_integrity_and_verify.py` | 32 |
 | `test_manuscript_assets_script.py` | 3 |
+| `test_manuscript_contract.py` | 3 |
 | `test_manuscript_figures.py` | 9 |
 | `test_manuscript_mermaid.py` | 6 |
 | `test_manuscript_variables.py` | 14 |
@@ -40,7 +41,7 @@ items, including parametrized cases):
 | `test_primitives_statistics.py` | 13 |
 | `test_project_paths.py` | 7 |
 | `test_property_invariants.py` | 28 |
-| `test_realize.py` | 16 |
+| `test_realize.py` | 19 |
 | `test_realize_pure.py` | 7 |
 | `test_seal_child.py` | 7 |
 | `test_sealing.py` | 26 |

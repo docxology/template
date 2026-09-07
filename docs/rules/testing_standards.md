@@ -12,7 +12,7 @@ self-documenting.
 
 ### Mandatory Standards
 
-- **Infrastructure modules**: 60% minimum coverage (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
+- **Infrastructure modules**: 60% minimum coverage (current % — see [COUNTS.md](../_generated/COUNTS.md))
 - **Project code**: 90% minimum coverage (current % — see [COUNTS.md](../_generated/COUNTS.md))
 - **Integration tests**: All critical workflows covered
 - **Edge cases**: All error paths tested

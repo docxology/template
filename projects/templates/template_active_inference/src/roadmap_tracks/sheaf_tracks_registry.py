@@ -10,6 +10,40 @@ SEMANTIC_SCHEMA = "template_active_inference.semantic_gluing.v2"
 DEPENDENCY_SCHEMA = "template_active_inference.validation_dependency_graph.v1"
 VERSIONED_TRACK_RE = re.compile(r"(?:^|_)v[2-9]$")
 
+# Only artifacts whose live byte digests would re-enter the pre-render metadata
+# fixed point are excluded from pre-render hashing.  Producer-wide waivers would
+# unnecessarily weaken exact provenance for scientific tables, figures, and
+# hydrated evidence.
+HASH_CYCLE_EXCLUDED_PRODUCERS: frozenset[str] = frozenset()
+HASH_CYCLE_AUTHORITY = "output/reports/artifact_manifest.json"
+HASH_CYCLE_EXCLUDED_PATHS: frozenset[str] = frozenset(
+    {
+        # These three records inventory/hash their own producer cohort.
+        "output/data/artifact_contract_index.json",
+        "output/data/artifact_provenance.json",
+        # Hydrated manuscript variables embed live P/C/R/S/B/N/A aggregate
+        # predicates, so metadata records bind this presentation surface
+        # structurally and leave its exact bytes to the terminal manifest.
+        "output/data/manuscript_variables.json",
+        "output/reports/replay_matrix.json",
+        # The semantic certificate intentionally embeds the live P/C/R/B/N/A
+        # release predicates.  Those records therefore bind its producer,
+        # existence, claims, and gates structurally here; Stage 4's terminal
+        # artifact manifest remains the exact-byte authority.
+        "output/data/sheaf_gluing_certificate.json",
+        # Rendered deliverables consume the settled manuscript and therefore
+        # belong to the downstream Stage-3/Stage-4 receipt boundary.
+        "output/pdf/template_active_inference_combined.pdf",
+        "output/web/index.html",
+    }
+)
+
+
+def hash_cycle_excluded(rel: str, producer: str = "") -> bool:
+    """Return whether ``rel`` is structurally, not cryptographically, bound here."""
+    return producer in HASH_CYCLE_EXCLUDED_PRODUCERS or rel in HASH_CYCLE_EXCLUDED_PATHS
+
+
 CANONICAL_TRACKS: tuple[str, ...] = (
     "provenance",
     "replay_matrix",

@@ -12,11 +12,22 @@ from pathlib import Path
 from infrastructure.core.public_matrix_receipt import (
     PublicMatrixLaneResult,
     PublicMatrixReceipt,
+    build_public_matrix_cache_key,
     build_public_matrix_receipt,
     determine_worker_info,
 )
 
 ROSTER = ("templates/template_a", "templates/template_b", "templates/template_c")
+
+
+def _lane_metadata() -> dict:
+    """Return the required execution metadata for a synthetic lane."""
+    return {
+        "duration_seconds": 1.0,
+        "cache_key": "lane-cache",
+        "output_isolation_digest": "digest",
+        "resource_limits": {"timeout_seconds": 120},
+    }
 
 
 def _passing_lane(name: str, coverage: float = 95.0, floor: int = 90) -> PublicMatrixLaneResult:
@@ -27,20 +38,28 @@ def _passing_lane(name: str, coverage: float = 95.0, floor: int = 90) -> PublicM
         timed_out=False,
         coverage_percent=coverage,
         output_isolation_ok=True,
+        collection_count=1,
+        **_lane_metadata(),
     )
 
 
 def _receipt(lanes: tuple[PublicMatrixLaneResult, ...], **overrides) -> PublicMatrixReceipt:
+    fields = {
+        "phase_durations": {"project_matrix": 1.0, "coverage_combine": 1.0, "coverage_gate": 1.0},
+        "cache_key": "receipt-cache",
+        "cache_inputs": {"revision": "abc123"},
+        "combined_coverage_percent": 94.0,
+        "combined_floor": 75,
+        "overall_exit": 0,
+    }
+    fields.update(overrides)
     return build_public_matrix_receipt(
         roster_revision="abc123",
         profile="quick",
         marker_expression="not slow and not long_running",
         worker_info="outer=serial, inner=none",
         lanes=lanes,
-        combined_coverage_percent=94.0,
-        combined_floor=75,
-        overall_exit=0,
-        **overrides,
+        **fields,
     )
 
 
@@ -57,6 +76,7 @@ def test_receipt_round_trip_is_deterministic(tmp_path: Path) -> None:
     loaded = PublicMatrixReceipt.read(path)
     assert loaded == receipt
     assert loaded.lanes == receipt.lanes
+    assert loaded.schema_version == "template-public-matrix/v3"
 
 
 def test_receipt_digest_ignores_generated_at_and_tracks_content(tmp_path: Path) -> None:
@@ -71,6 +91,9 @@ def test_receipt_digest_ignores_generated_at_and_tracks_content(tmp_path: Path) 
         combined_coverage_percent=base.combined_coverage_percent,
         combined_floor=base.combined_floor,
         overall_exit=base.overall_exit,
+        phase_durations=base.phase_durations,
+        cache_key=base.cache_key,
+        cache_inputs=base.cache_inputs,
     )
     assert base.digest() == different_time.digest(), "generated_at must not enter the digest"
 
@@ -115,6 +138,7 @@ def test_validate_rejects_timeout_and_nonzero_exit() -> None:
         timed_out=True,
         coverage_percent=None,
         output_isolation_ok=True,
+        **_lane_metadata(),
     )
     failed = PublicMatrixLaneResult(
         project_name="templates/template_b",
@@ -123,6 +147,7 @@ def test_validate_rejects_timeout_and_nonzero_exit() -> None:
         timed_out=False,
         coverage_percent=90.0,
         output_isolation_ok=True,
+        **_lane_metadata(),
     )
     receipt = _receipt((timed_out, failed, _passing_lane("templates/template_c")))
     errors = receipt.validate(ROSTER)
@@ -139,6 +164,8 @@ def test_validate_rejects_output_tree_drift() -> None:
         timed_out=False,
         coverage_percent=95.0,
         output_isolation_ok=False,
+        collection_count=1,
+        **_lane_metadata(),
     )
     receipt = _receipt(
         (
@@ -151,8 +178,8 @@ def test_validate_rejects_output_tree_drift() -> None:
     assert receipt.validate(ROSTER) == ["OUTPUT-ISOLATION: project 'templates/template_b' changed output/"]
 
 
-def test_validate_ignores_missing_floor_or_missing_coverage() -> None:
-    """No floor or no measured coverage must not produce a floor error."""
+def test_validate_allows_lane_without_floor_but_requires_combined_coverage() -> None:
+    """A lane may omit a floor, but a passing receipt needs combined coverage."""
     no_floor = PublicMatrixLaneResult(
         project_name="templates/template_a",
         declared_floor=None,
@@ -160,6 +187,8 @@ def test_validate_ignores_missing_floor_or_missing_coverage() -> None:
         timed_out=False,
         coverage_percent=80.0,
         output_isolation_ok=True,
+        collection_count=1,
+        **_lane_metadata(),
     )
     no_coverage = PublicMatrixLaneResult(
         project_name="templates/template_b",
@@ -168,9 +197,29 @@ def test_validate_ignores_missing_floor_or_missing_coverage() -> None:
         timed_out=False,
         coverage_percent=None,
         output_isolation_ok=True,
+        collection_count=1,
+        **_lane_metadata(),
     )
     receipt = _receipt((no_floor, no_coverage, _passing_lane("templates/template_c")))
     assert receipt.validate(ROSTER) == []
+
+    missing_combined = _receipt(
+        (no_floor, no_coverage, _passing_lane("templates/template_c")),
+        combined_coverage_percent=None,
+    )
+    assert any("MISSING-COMBINED-COVERAGE" in error for error in missing_combined.validate(ROSTER))
+
+
+def test_validate_rejects_overall_exit_combined_floor_and_unexpected_lane() -> None:
+    receipt = _receipt(
+        tuple(_passing_lane(name) for name in ROSTER) + (_passing_lane("templates/extra"),),
+        overall_exit=1,
+        combined_coverage_percent=74.0,
+    )
+    errors = receipt.validate(ROSTER)
+    assert any("OVERALL-EXIT" in error for error in errors)
+    assert any("COMBINED-COVERAGE-FLOOR" in error for error in errors)
+    assert any("UNEXPECTED-PROJECT" in error for error in errors)
 
 
 def test_determine_worker_info_describes_concurrency() -> None:
@@ -190,6 +239,80 @@ def test_receipt_accepts_unknown_roster_revision() -> None:
         combined_coverage_percent=94.0,
         combined_floor=75,
         overall_exit=0,
+        phase_durations={"project_matrix": 1.0},
+        cache_key="receipt-cache",
+        cache_inputs={"revision": "unknown"},
     )
     assert receipt.validate(ROSTER) == []
     assert receipt.roster_revision == "unknown"
+
+
+def test_receipt_records_phase_and_cache_metadata() -> None:
+    receipt = _receipt(
+        tuple(_passing_lane(name) for name in ROSTER),
+        phase_durations={"project_matrix": 12.5},
+        collection_counts={"templates/template_a": 10},
+        skip_reasons={"templates/optional": "tool unavailable"},
+        cache_key="abc",
+    )
+    assert receipt.phase_durations == {"project_matrix": 12.5}
+    assert receipt.collection_counts["templates/template_a"] == 10
+    assert receipt.skip_reasons["templates/optional"] == "tool unavailable"
+    assert receipt.cache_key == "abc"
+
+
+def test_validate_rejects_non_vacuous_zero_collection() -> None:
+    lane = PublicMatrixLaneResult(
+        project_name="templates/template_a",
+        declared_floor=90,
+        exit_code=0,
+        timed_out=False,
+        coverage_percent=95.0,
+        output_isolation_ok=True,
+        collection_count=0,
+        **_lane_metadata(),
+    )
+    receipt = _receipt((lane, _passing_lane("templates/template_b"), _passing_lane("templates/template_c")))
+    assert receipt.validate(ROSTER) == [
+        "EMPTY-COLLECTION: project 'templates/template_a' reported zero collected tests"
+    ]
+
+
+def test_validate_accepts_explicit_skip_reason_metadata() -> None:
+    lane = PublicMatrixLaneResult(
+        project_name="templates/template_a",
+        declared_floor=None,
+        exit_code=0,
+        timed_out=False,
+        coverage_percent=None,
+        output_isolation_ok=True,
+        skip_reason="optional tool unavailable",
+    )
+    receipt = _receipt((lane, _passing_lane("templates/template_b"), _passing_lane("templates/template_c")))
+    assert receipt.validate(ROSTER) == []
+
+
+def test_matrix_cache_key_is_order_independent_but_plan_bound() -> None:
+    first = build_public_matrix_cache_key(
+        roster_revision="abc",
+        profile="quick",
+        marker_expression="not slow",
+        worker_info="outer=serial, inner=none",
+        project_names=("templates/b", "templates/a"),
+    )
+    reordered = build_public_matrix_cache_key(
+        roster_revision="abc",
+        profile="quick",
+        marker_expression="not slow",
+        worker_info="outer=serial, inner=none",
+        project_names=("templates/a", "templates/b"),
+    )
+    changed = build_public_matrix_cache_key(
+        roster_revision="abc",
+        profile="release",
+        marker_expression="not slow",
+        worker_info="outer=serial, inner=none",
+        project_names=("templates/a", "templates/b"),
+    )
+    assert first == reordered
+    assert first != changed

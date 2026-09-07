@@ -97,14 +97,16 @@ artifacts. Each stage writes to `projects/<name>/output/`:
 | PDF rendering (`stage_03_render.py`) | `output/pdf/` | `<name>_combined.pdf` |
 | EPUB/MOBI (`stage_11_ebook.py`, opt-in) | `output/ebook/` | `<name>.epub`, `<name>.mobi` |
 | Metadata package (`stage_12_metadata.py`, opt-in) | `output/metadata/` | `onix.xml`, `metadata.json`, `content.opf` |
+| docxplus export (`stage_13_docxplus.py`, opt-in) | `output/docxplus/` | `<name>.docx`, `<name>.docxplus` |
 
-EPUB and metadata are opt-in stages (tagged `ebook` and `metadata`
-respectively; both are filtered out of default pipeline runs — see
+EPUB, metadata, and docxplus are opt-in stages (tagged `ebook`, `metadata`, and `docxplus`
+respectively; all are filtered out of default pipeline runs — see
 `infrastructure/core/pipeline/pipeline.yaml`). Invoke them explicitly:
 
 ```bash
 uv run python scripts/pipeline/stage_11_ebook.py --project templates/<name>
 uv run python scripts/pipeline/stage_12_metadata.py --project templates/<name>
+uv run python scripts/pipeline/stage_13_docxplus.py --project templates/<name>
 ```
 
 (The executable bundle and archival publication — tagged `bundle` and
@@ -280,7 +282,7 @@ The pipeline has not been run, or outputs were cleaned. Run:
 ./run.sh --project templates/<name> --pipeline --core-only
 ```
 
-For EPUB/MOBI (Stage 10):
+For EPUB/MOBI (YAML stage 12; script prefix `stage_11`):
 ```bash
 uv run python scripts/pipeline/stage_11_ebook.py --project templates/<name>
 ```
@@ -338,7 +340,7 @@ uv run docpub distribute --platform gumroad --update
 
 - [`scripts/publish/export_for_publishing.py`](../../scripts/publish/export_for_publishing.py) — the bridge script
 - [`scripts/publish/README.md`](../../scripts/publish/README.md) — quick-start guide
-- [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) — Stage 12 design (file kept its original name)
-- [`archival-targets.md`](archival-targets.md) — long-horizon archival (Stage 13)
+- [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) — Stage 14 design (file kept its original name)
+- [`archival-targets.md`](archival-targets.md) — long-horizon archival (Stage 15)
 - [`private-projects-repo.md`](private-projects-repo.md) — private-projects sidecar contract
 - [`infrastructure/publishing/AGENTS.md`](../../infrastructure/publishing/AGENTS.md) — publishing infrastructure

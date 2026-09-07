@@ -20,12 +20,12 @@ This document provides detailed performance analysis extracted from the build sy
 
 **Result:** ✅ **ALL TESTS PASSING**
 
-**Coverage Breakdown:** *dated benchmark snapshot — live % → [`../../development/coverage-gaps.md`](../../development/coverage-gaps.md)*
+**Coverage Breakdown:** *dated benchmark snapshot — live % → [`../../_generated/COUNTS.md`](../../_generated/COUNTS.md)*
 
 | Module | Notes |
 |--------|-------|
 | `projects/{name}/src/` | Per-exemplar gates → [`../../_generated/COUNTS.md`](../../_generated/COUNTS.md) |
-| `infrastructure/*` | Per-module % → [`../../development/coverage-gaps.md`](../../development/coverage-gaps.md) |
+| `infrastructure/*` | Per-module notes (historical) → [`../../development/coverage-gaps.md`](../../development/coverage-gaps.md); live aggregate → [`../../_generated/COUNTS.md`](../../_generated/COUNTS.md) |
 
 ### Project Analysis — Script Execution (6 seconds)
 
@@ -68,7 +68,7 @@ Current renderer behavior:
 
 - Manuscript sections are discovered from `projects/{name}/manuscript/*.md`.
 - Working render artifacts are written under `projects/{name}/output/`.
-- Stage 07 copies final deliverables to `output/{name}/`.
+- Copy Outputs copies final deliverables to `output/{name}/`.
 - The primary combined PDF is available at `output/{name}/pdf/{name}_combined.pdf`;
   a root convenience copy may also exist at `output/{name}/{name}_combined.pdf`.
 - Web output is under `output/{name}/web/`.

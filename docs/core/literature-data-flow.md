@@ -25,7 +25,7 @@ flowchart TB
 
     RESULT --> ABS[4a - AbstractFetcher<br/>arXiv → Paper.abstract]
     RESULT --> FULL[4b - FulltextFetcher<br/>PDF → pypdf → Paper.fulltext]
-    RESULT --> CORPUS[4c - write_corpus<br/>→ output/corpus.json]
+    RESULT --> CORPUS[4c - write_corpus<br/>→ project output/corpus.json]
 
     ABS --> EXPORT[5 - paper_to_bibentry<br/>BibEntry · BibDatabase]
     FULL --> EXPORT
@@ -35,8 +35,8 @@ flowchart TB
     ABS --> LLM[6b - LLM synthesis<br/>abstracts + fulltext<br/>→ output/llm/*.md]
     FULL --> LLM
 
-    BIB --> PDF[7 - Pandoc --natbib<br/>→ output/&lt;project&gt;/pdf/]
-    LLM --> REPORT[7 - Reading report<br/>→ output/reading_report.md]
+    BIB --> PDF[7 - Pandoc --natbib<br/>→ project output/pdf/]
+    LLM --> REPORT[7 - Reading report<br/>→ project output/reading_report.md]
 
     classDef stage fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef io fill:#0f766e,stroke:#0f172a,color:#fff
@@ -71,7 +71,7 @@ flowchart TB
     LLM_DIR --> SYNTH[synthesis.md<br/>cross-corpus narrative]
     LLM_DIR --> PER_PAPER[per_paper/SAFE_ID.md]
 
-    PDF_DIR --> FINAL[template_search_project.pdf]
+    PDF_DIR --> FINAL[template_search_project_combined.pdf]
 
     MANUSCRIPT --> BIBF[references.bib<br/>auto-populated · Pandoc-ready]
 
@@ -89,7 +89,7 @@ flowchart TB
 | 4a. Abstract fetch | only on cache miss | `AbstractFetcher.cache_dir` |
 | 4b. Fulltext fetch | only on cache miss | `FulltextFetcher.cache_dir` |
 | 5. BibTeX export | always (fast, in-memory) | n/a |
-| 6b. LLM synthesis | always unless `seed=` pinned and cache layered above | callers' responsibility |
+| 6b. LLM synthesis | yes, unless the caller supplies a separate result cache or disables the stage | callers' responsibility; a seed alone is not a cache |
 | 7. PDF render | always; reads `references.bib` + figures | infrastructure pipeline |
 
 ## Failure Surfaces

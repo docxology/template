@@ -75,9 +75,11 @@ def _scaffold_repo(tmp_path: Path) -> Path:
                 "stage_num": 2,
                 "stage_name": "Project Analysis",
                 "contract_match": True,
+                "timestamp": "",
             }
         ],
         "issues": [],
+        "inventory_mode": "stable-local-output-v1",
     }
     (project / "output" / "reports").mkdir(parents=True, exist_ok=True)
     (project / "output" / "reports" / "artifact_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")

@@ -15,8 +15,9 @@ of matplotlib figure:
    - `plot_saturating_response`
    - `plot_exponential_decay`
    - `plot_linear_fit`
-2. **Chapter placeholders** — `generate_chapter_placeholders()` emits one neutral
-   titled placeholder per chapter in `config.yaml`, via `placeholder_overview()`.
+2. **Chapter figures** — `generate_chapter_figures()` emits one uniquely named
+   figure per chapter. Filled chapters can own source-bound plots; unfinished
+   chapters receive a neutral `<part_id>_<stem>.png` placeholder.
 
 `generate_all_figures(output_dir, config=None)` produces all of them. The shared
 helpers [`src/visualization/_scaffold.py`](../src/visualization/_scaffold.py)
@@ -31,7 +32,7 @@ is itself a deterministic, tested artifact: regenerate it by calling
 
 ### The filename contract
 
-Each chapter placeholder is named **`<part_id>_<stem>.png`** — for example
+Each chapter figure is named **`<part_id>_<stem>.png`** — for example
 `part_0_orientation.png`, `part_I_first_principles.png`. This exactly matches the
 image path the scaffolded chapter already references:
 
@@ -90,8 +91,7 @@ To replace a chapter's generated placeholder with a real, data-driven figure:
 2. **Add a plot function** in `plots.py` that imports the model function, builds
    the figure with `_scaffold.new_figure`, and saves it with `save_figure` under
    the **same filename** the chapter references: `<part_id>_<stem>.png`. Override
-   the placeholder by registering it in `generate_all_figures` (or replacing the
-   corresponding `generate_chapter_placeholders` entry).
+   the placeholder by registering it in `generate_chapter_figures`.
 3. **Regenerate** with `uv run python scripts/generate_figures.py` and confirm
    `output/figures/<part_id>_<stem>.png` exists.
 4. **Update the chapter** so the figure caption and the `<!-- alt: ... -->`

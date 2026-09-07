@@ -1,124 +1,45 @@
-# API Reference — Project Modules
+# API reference — project modules
 
-> **API documentation** for project-specific scientific modules (`projects/{name}/src/`)
+> Source-grounded entry point for Layer 2 APIs under
+> `projects/<qualified-name>/src/`.
 
-**Quick Reference:** [Infrastructure API](api-reference.md) | [Modules Guide](../modules/modules-guide.md) | [Getting Started](../guides/getting-started.md)
+**Quick reference:** [Infrastructure API](api-reference.md) |
+[public project roster](../_generated/active_projects.md) |
+[control-positive source](../../projects/templates/template_code_project/src/README.md)
 
-This document provides API reference for public functions and classes in `projects/{name}/src/`. These are project-specific (Layer 2) modules — for infrastructure modules, see [api-reference.md](api-reference.md).
+Project APIs are deliberately project-specific; there is no universal
+`example.py`, `statistics.py`, or `visualization.py` surface. Treat the source,
+tests, and each project's `src/README.md`/`src/AGENTS.md` as authoritative. The
+examples below use the public control-positive exemplar and should be checked
+against source when its API changes.
 
----
+## Import context
 
-## Module: example
-
-### Functions
-
-#### `add_numbers(a: float, b: float) -> float`
-
-Add two numbers together.
-
-**Parameters:**
-
-- `a` (float): First number
-- `b` (float): Second number
-
-**Returns:** `float` — Sum of a and b
-
-**Example:**
+From the repository root, the public exemplar can be imported by its full
+namespace:
 
 ```python
-from example import add_numbers
-result = add_numbers(3.5, 2.5)  # Returns 6.0
+from projects.templates.template_code_project.src.optimizer import (
+    compute_gradient,
+    gradient_descent,
+    make_quadratic_problem,
+    quadratic_function,
+)
 ```
 
----
+Project scripts commonly add their own project root to `sys.path` and then use
+`from src.optimizer import ...`; follow the convention exercised by that
+project's tests and scripts. The obsolete namespace
+`projects.template_code_project` is not valid for the typed `projects/`
+layout.
 
-#### `multiply_numbers(a: float, b: float) -> float`
+## `optimizer.py`
 
-Multiply two numbers together.
+Source: [`optimizer.py`](../../projects/templates/template_code_project/src/optimizer.py)
 
-**Parameters:**
+Behavior tests: [`test_optimizer.py`](../../projects/templates/template_code_project/tests/test_optimizer.py)
 
-- `a` (float): First number
-- `b` (float): Second number
-
-**Returns:** `float` — Product of a and b
-
-**Example:**
-
-```python
-from example import multiply_numbers
-result = multiply_numbers(3.0, 4.0)  # Returns 12.0
-```
-
----
-
-#### `calculate_average(numbers: List[float]) -> Optional[float]`
-
-Calculate the average of a list of numbers.
-
-**Parameters:**
-
-- `numbers` (List[float]): List of numbers to average
-
-**Returns:** `Optional[float]` — Average of the numbers, or None if list is empty
-
-**Example:**
-
-```python
-from example import calculate_average
-result = calculate_average([1.0, 2.0, 3.0, 4.0])  # Returns 2.5
-result = calculate_average([])  # Returns None
-```
-
----
-
-#### `find_maximum(numbers: List[float]) -> Optional[float]`
-
-Find the maximum value in a list of numbers.
-
-**Parameters:**
-
-- `numbers` (List[float]): List of numbers to search
-
-**Returns:** `Optional[float]` — Maximum value, or None if list is empty
-
----
-
-#### `find_minimum(numbers: List[float]) -> Optional[float]`
-
-Find the minimum value in a list of numbers.
-
-**Parameters:**
-
-- `numbers` (List[float]): List of numbers to search
-
-**Returns:** `Optional[float]` — Minimum value, or None if list is empty
-
----
-
-#### `is_even(number: int) -> bool`
-
-Check if a number is even.
-
-**Returns:** `bool` — True if number is even, False otherwise
-
----
-
-#### `is_odd(number: int) -> bool`
-
-Check if a number is odd.
-
-**Returns:** `bool` — True if number is odd, False otherwise
-
----
-
-## Control-Positive Exemplar: projects/templates/template_code_project/src/optimizer.py
-
-The canonical control-positive project uses `projects/templates/template_code_project/src/optimizer.py` for all Layer 2 examples. Fictional modules (data_generator, statistics, visualization) are **not** present in the exemplar and have been removed from documentation.
-
-### Real API (from optimizer.py)
-
-#### OptimizationResult (dataclass)
+### `OptimizationResult`
 
 ```python
 @dataclass
@@ -129,102 +50,85 @@ class OptimizationResult:
     converged: bool
     gradient_norm: float
     objective_history: list[float] | None = None
+    termination_reason: str = "unknown"
 ```
 
-#### gradient_descent (function)
+`termination_reason` distinguishes convergence, the iteration cap, and a
+non-finite state. The optimizer retains the last finite iterate when an update
+would become non-finite.
+
+### Core functions
 
 ```python
-def gradient_descent(
-    initial_point: np.ndarray,
-    objective_func: Callable[[np.ndarray], float],
-    gradient_func: Callable[[np.ndarray], np.ndarray],
-    max_iterations: int = 1000,
-    tolerance: float = 1e-6,
-    step_size: float = 0.01,
-    verbose: bool = False,
-) -> OptimizationResult:
-    """Perform gradient descent optimization with fixed step size.
-    """
+quadratic_function(x, A=None, b=None) -> float
+compute_gradient(x, A=None, b=None) -> np.ndarray
+quadratic_optimum(A=None, b=None) -> tuple[np.ndarray, float]
+make_quadratic_problem(A=None, b=None) -> tuple[Callable, Callable]
+gradient_descent(
+    initial_point,
+    objective_func,
+    gradient_func,
+    max_iterations=1000,
+    tolerance=1e-6,
+    step_size=0.01,
+    verbose=False,
+) -> OptimizationResult
 ```
 
-**Usage in scripts (thin orchestrator pattern):**
+The default objective is
+$f(x)=\tfrac{1}{2}x^\mathsf{T}Ax-b^\mathsf{T}x$, with identity `A` and an
+all-ones `b`. Inputs must be finite, one-dimensional, and shape-compatible;
+`gradient_descent()` also requires positive finite tolerance and step size and
+a positive integer iteration cap.
 
 ```python
-from projects.template_code_project.src.optimizer import gradient_descent, quadratic_function, compute_gradient
-from infrastructure.core.logging.utils import get_logger
+import numpy as np
 
-logger = get_logger(__name__)
-
+objective, gradient = make_quadratic_problem()
 result = gradient_descent(
     initial_point=np.array([5.0]),
-    objective_func=quadratic_function,
-    gradient_func=compute_gradient,
+    objective_func=objective,
+    gradient_func=gradient,
     step_size=0.1,
-    tolerance=1e-6
+    tolerance=1e-6,
 )
-logger.info("Solution: %s, Converged: %s", result.solution, result.converged)
+
+assert result.termination_reason in {"converged", "max_iterations", "non_finite"}
 ```
 
-See `projects/templates/template_code_project/src/optimizer.py` for the full implementation and `projects/templates/template_code_project/scripts/optimization_analysis.py` for orchestration.
+`simulate_trajectory(...)` is the figure/diagnostic convenience surface; see
+its source docstring for the current return mapping and defaults.
 
-All other Layer 2 documentation defaults to this exemplar. See `docs/_generated/active_projects.md` for discovery.
+## `invariants.py`
 
----
+Source: [`invariants.py`](../../projects/templates/template_code_project/src/invariants.py)
 
-## Module: figure_manager
+Behavior tests: [`test_invariants.py`](../../projects/templates/template_code_project/tests/test_invariants.py)
 
-Automatic figure numbering, caption generation, and cross-referencing.
+The invariant surface evaluates real numerical behavior without infrastructure
+imports or I/O:
 
-### Classes
+- `InvariantResult` — typed witness record with comparison kind, actual and
+  expected values, tolerance, description, and extra metadata.
+- `OptimizerSweepConfig` — immutable matrix/vector, initial-point, step-size,
+  iteration, and tolerance configuration.
+- `convergence_invariants(config)` — stable-step convergence, objective, and
+  monotonicity checks.
+- `gradient_consistency_invariants(config, eps=..., seed=...)` — analytical vs
+  finite-difference gradient agreement.
+- `trajectory_invariants(config, max_iter=...)` — trajectory behavior for
+  stable step sizes.
+- `all_invariants(config)` — aggregate project invariant set.
 
-#### `FigureManager`
+## Figure and manuscript APIs are infrastructure services
 
-Manages figures with automatic numbering and cross-referencing.
+`FigureManager` is an infrastructure utility, not a project module, and it
+emits legacy raw-LaTeX blocks. New manuscript pipelines should use Pandoc image
+syntax plus the deterministic generated-figure registry. See the
+[Visualization Guide](../usage/visualization-guide.md) and
+[Manuscript Semantics](../guides/manuscript-semantics.md).
 
-**Methods:**
-
-- `register_figure(filename, caption, label, section, ...)` - Register a new figure
-- `get_figure(label)` - Get figure metadata by label
-- `generate_latex_figure_block(label)` - Generate LaTeX figure block
-- `generate_reference(label)` - Generate LaTeX reference
-
-**Example:**
-
-```python
-from infrastructure.documentation import FigureManager
-manager = FigureManager()
-fig_meta = manager.register_figure("convergence.png", "Convergence analysis", "fig:convergence")
-latex_block = manager.generate_latex_figure_block("fig:convergence")
-```
-
----
-
-## Additional Modules
-
-For full per-module details, see:
-
-- **[Infrastructure Documentation](../../infrastructure/AGENTS.md)** — Infrastructure module descriptions
-- **[Project Source Documentation](../../projects/templates/template_code_project/src/AGENTS.md)** — Project-specific module descriptions
-- **[Scientific Simulation Guide](../modules/scientific-simulation-guide.md)** — Simulation and analysis modules
-- **[Visualization Guide](../usage/visualization-guide.md)** — Visualization and figure management
-
-**Key project modules (illustrative; `projects/{name}/src/` names vary by project):**
-
-| Module | Purpose |
-|--------|---------|
-| `data_processing.py` | Data cleaning, normalization, outlier detection |
-| `metrics.py` | Performance metrics, convergence metrics, quality metrics |
-| `validation.py` | Result validation framework |
-| `simulation.py` | Core simulation framework |
-| `parameters.py` | Parameter management and sweeps |
-| `performance_analysis.py` | Convergence and scalability analysis (example module name) |
-| `reporting.py` | Automated report generation |
-| `plots.py` | Plot type implementations |
-
----
-
-**Related Documentation:**
-
-- [Infrastructure API Reference](api-reference.md) — Infrastructure module API docs
-- [Modules Guide](../modules/modules-guide.md) — Usage examples
-- [Best Practices](../best-practices/best-practices.md) — Usage recommendations
+For infrastructure exports, use the generated
+[Infrastructure API Reference](api-reference.md). For another project's Layer
+2 API, inspect that project's own `src/` documentation and tests rather than
+assuming the control-positive optimizer surface applies.

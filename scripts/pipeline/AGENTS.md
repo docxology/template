@@ -14,9 +14,9 @@ belongs here.
 | `stage_00_setup.py` | 00 | Environment setup (Python, deps, dirs) | `core` |
 | `stage_01_test.py` | 01 | Infrastructure + project test orchestration | `core`, `tests` |
 | `stage_02_analysis.py` | 02 | Project-script discovery and execution | `core` |
-| `stage_03_render.py` | 03 | Manuscript PDF rendering | `core` |
-| `stage_04_validate.py` | 04 | Output validation | `core` |
-| `stage_05_copy.py` | 05 | Copy outputs to final destination while preserving publication sidecars | `core` |
+| `stage_03_render.py` | 03 | Current-input rendering of every enabled manuscript format; accessible slides are emitted as exact Beamer/Reveal pairs, while archive mode retains Beamer-only requirements | `core` |
+| `stage_04_validate.py` | 04 | Exact enabled-format and release-evidence validation | `core` |
+| `stage_05_copy.py` | 05 | Fresh complete local mirror, disabled-format filtering, stable enabled-deliverable validation, and byte-identical source/copy statistics while preserving publication sidecars. The console distinguishes the physical mirror count from the stable/shippable inventory count. | `core` |
 | `stage_06_llm_review.py` | 06 | LLM review and translation | `llm` |
 | `stage_07_executive_report.py` | 07 | Multi-project executive reporting | `core` |
 | `stage_08_connector_search.py` | 08 | Connector-backed search (opt-in) | `connector_search` |
@@ -24,6 +24,7 @@ belongs here.
 | `stage_10_research_workflow.py` | 10 | Research workflow orchestration (opt-in) | `research_workflow` |
 | `stage_11_ebook.py` | 11 | Ebook generation (EPUB/MOBI/DOCX; opt-in) | `core`, `ebook` |
 | `stage_12_metadata.py` | 12 | Metadata package (ONIX/OPF/JSON; opt-in) | `core`, `metadata` |
+| `stage_13_docxplus.py` | 13 | docxplus intelligent-document export (conforming `.docx` carrying its source tree; opt-in) | `core`, `docxplus` |
 
 ## Bootstrap pattern
 

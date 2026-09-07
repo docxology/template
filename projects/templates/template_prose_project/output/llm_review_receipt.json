@@ -1,0 +1,5 @@
+{
+  "schema_version": "template-prose/llm-review/1",
+  "status": "skipped",
+  "reason": "disabled_by_config"
+}

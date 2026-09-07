@@ -1,103 +1,77 @@
-# Repo TO-DO - upcoming cross-cutting work
+# Repo TO-DO — future cross-cutting work
 
 > **Design ethos:** modular, intelligent, functional, logged, tested, and
 > documented. Real methods only; never mocks or fakes. Every release ships with
-> green tests and accurate docs.
+> green tests, source-bound evidence, and accurate documentation.
 
-This file contains only future work for the template repository as a whole.
-Completed work belongs in [`CHANGELOG.md`](CHANGELOG.md); generated facts belong
-to their generators; project-specific future work remains in each public
-exemplar's local `TODO.md`. The root backlog is intentionally named
-`TO-DO.md`.
+This is the root repository backlog and contains future work only: cross-cutting
+infrastructure, CI, documentation, release, security, and reproducibility
+improvements. Completed work is preserved in [`CHANGELOG.md`](CHANGELOG.md) or
+the dated maintenance records; generated facts remain owned by their
+generators; exemplar-specific work belongs in the relevant public
+`projects/templates/*/TODO.md`.
 
-## Current baseline
+Every active row has a stable ID and the complete contract
+`ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control`.
+Active work is decomposed into Minor or Medium slices. A missing owner,
+external receipt, or optional tool is a blocker, never an implicit success.
 
-- Public scope is generated from `infrastructure.project.public_scope` and
-  currently contains 24 canonical exemplars. Consult
-  [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)
-  rather than copying the roster here.
-- The deterministic advanced-literature release lane has been repaired and
-  regenerated from source. Its fixture phase replay is now part of the normal
-  project analysis sequence; live retrieval remains an explicit opt-in path.
-- Generated checks for counts, coverage provenance, exemplar roster, and
-  publication records were refreshed on 2026-07-30.
-- The bounded public matrix was rerun across all 24 canonical exemplars on
-  2026-07-30. Twenty-three lanes passed their declared project floors; the
-  `template_active_inference` lane ran 683 tests with 1 skipped and 51
-  deselected, but measured 89.35% against its 90% floor. The combined matrix
-  coverage was 94.47%.
-- The receipt module is shipped (`infrastructure/core/public_matrix_receipt.py`);
-  a full matrix run with `--receipt` is the remaining step.
-- Configured mypy passes with zero errors across 1,476 source files; the
-  public-scope ratchet remains a separate gate.
-- Roadmap, status, contribution-map, regression-testing, and threat-model
-  surfaces were reconciled against the current generated facts and active IDs;
-  historical changelog entries remain unchanged.
-- The root release boundary is explicit: package/tag `3.6.0`/`v3.6.0` is the
-  last root release, the current checkout remains `[Unreleased]`, and the
-  separately published standalone `v1.0.1` release is not treated as root
-  changelog parity. See [`docs/maintenance/release-boundary.md`](docs/maintenance/release-boundary.md).
-- The external GitHub branch-protection requirement for the `Regression Tier`
-  check remains an administrator-owned acceptance item; repository files alone
-  cannot prove that setting. The branch-protection checklist is now documented
-  at [`docs/security/branch-protection-checklist.md`](docs/security/branch-protection-checklist.md).
-- The health sweep now has a bounded four-worker implementation with a serial
-  diagnostic mode; the final-tree benchmark reduced wall time from 104.45s
-  serial to 70.02s parallel for the same 22 gates. A clean-checkout benchmark
-  remains the final acceptance evidence.
-- Publication, LLM-boundary, hostile-render, and provenance-metadata controls
-  are now shipped and covered by offline negative tests; ownership and private-
-  sidecar promotion governance follow-ups remain externally dependent.
-- Python 3.10 remains the declared floor through the 3.6.x minor line; Python
-  3.13 now has an infrastructure readiness lane. The breaking-release rule is
-  recorded in [`docs/maintenance/python-runtime-support.md`](docs/maintenance/python-runtime-support.md).
-- All four root backlog items (`SECURITY-OWNERSHIP-1`,
-  `SECURITY-PRIVATE-PROMOTION-1`, `COVERAGE-BASELINE-1`, `CI-ERGONOMICS-1`)
-  have their repository-side deliverables shipped as of 2026-07-24. Only
-  external administrator/operator action remains for the two security items;
-  the coverage and CI-ergonomics items are fully complete.
+## Live baseline and constraints
 
-## Completed cross-cutting work (2026-07-31)
+The public roster is authoritative in
+[`docs/_generated/active_projects.md`](docs/_generated/active_projects.md), and
+measured facts are authoritative in
+[`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md). Re-derive them before
+editing this file or closing a row.
 
-The following items from the prior Mahakala adversarial review and all-exemplar
-audit have been shipped. Each item's acceptance evidence exists on disk and has
-been verified.
+The deterministic default is offline and one-process-per-project. Network,
+LLM, live-data, container, formal-tool, raster, and publication paths are
+explicitly opt-in and fail closed when unavailable. Private sidecars,
+rotating projects, branch protection, CODEOWNERS review, and owner-authorized
+promotion are outside the evidence a local checkout can establish.
 
-| ID | Problem and scope | Acceptance evidence |
-| --- | --- | --- |
-| `PUBLIC-MATRIX-1` | Public matrix receipt module with fail-closed output-drift detection; post-coverage output isolation; CLI arg; real-subprocess negative controls. 90% floor pending gate rebuild. | `public_matrix_receipt.py` shipped; 23/24 lanes pass; test output-churn controls verified. |
-| `RENDERED-PROVENANCE-1` | Rendered provenance: stage/source/config/output fingerprints plus strict rendered publication validation. Atomic confined writes via `secure_write.py`. Snapshots walk source/config/output with symlink confinement and Git-cache filtering. Wired into Stage 04 validation, publication audit (`check_rendered_provenance`), and CI preflight. | 32 rendered provenance tests + 47 artifact-finalization/web-renderer tests pass. Rendered strict audit returns zero review-required findings on canonical exemplars. |
-| `CONFIG-FAIL-CLOSED-1` | Placeholder-token and unconsumed-markdown checkers in publication audit, wired into SOURCE/RENDERED_CHECKERS. | `{{TOKEN}}`, `${token}`, stale chapters, unconsumed Markdown fail release command. |
-| `SECRET-SCAN-1` | Index-blob scanner: reads exact A/C/M/R blobs from Git index; verified-gitlink handling; fail-closed unreadable-blob behavior; pre-commit/manual hook; tracked pre-push defense; rotation handoff. | Real-Git partial-stage controls pass in both directions; findings contain only path, line, and kind. |
-| `PUBLIC-CAPABILITY-PARITY-1` | Versioned 24-project capability manifest; 48 exact CI lanes; normalized unique package identity; full-minor Python checks; confined hydration smoke; declared-feature probes. | `test_public_capabilities.py` — 34 tests pass in 98s. |
-| `MODULARITY-1` | Module line-count compliance: `checks_publication.py` split 932→748 via `checks_publication_validators.py`. | `module_line_count_check.py` reports zero advisory warnings; API and behavior tests green. |
+## Active root backlog
 
-## Open cross-cutting work (2026-07-31)
+These are the prioritized scoped improvements and remaining root-level actions, classified by Minor, Medium, and Major categories.
 
-The following items remain open. Shipped fixes are recorded in the completed
-section above and in [`CHANGELOG.md`](CHANGELOG.md); project-local improvements
-remain in each canonical exemplar's `TODO.md`.
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `CLEAN-CHECKOUT-MAJ-1` | blocked-external | Medium | Local disposable rehearsal and hosted Linux runner | Run two deterministic hosted-Linux rehearsals and attach the owner/platform receipt; local generated render output is restored only inside the disposable clone after path-boundary validation. | clean-checkout rehearsal receipt | `uv run python scripts/maintenance/release_rehearsal.py --execute --receipt /tmp/template-clean-checkout.json` | non-generated mutation, dirty final tree, changed revision, or unequal deterministic runs must fail |
+| `SECURITY-PRIVATE-PROMOTION-1` | blocked-external | Medium | Owner authorization, redaction, and export evidence | Obtain an owner-approved private-sidecar promotion record before any promotion; keep the public tree and generated receipts free of private paths and content. | owner promotion receipt | `uv run python scripts/audit/check_tracked_all.py` | private path, sidecar content, credential, or unredacted export must fail public guards |
+| `TEST-ISOLATION-SYSPATH-1` | open | Medium | Root and infra `conftest.py` sys.path loaders | Execution-ready recipe (2026-09-06 exploration): adopt the nested unique package per exemplar — move each `src/*.py` module into `src/<exemplar-name>/` while KEEPING the `src/` directory (all layout consumers stay valid: `public_capabilities`, `public_scope`, `project_info`, `working_render`, `export_smoke`, `stage_01_test` discovery) and keeping `src/__init__.py` as an empty namespace shim (the forkability contract is drift-gated by `checks_exemplar.py`); rewrite the ~480 `from src.`/`import src` sites to the unique package; delete all 24 `tests/__init__.py` (importlib groundwork landed); retarget the 11 regression alias loaders (`_PKG_ALIAS` registration) at `src/<name>/__init__.py`; give `checks_exemplar.check_all_export_drift` a package-init resolver; drop `tests/__init__.py` from required files; madlib `pythonpath ["."]`→`["src"]` + helpers→conftest fixtures; methods_paper pinned contract test rewrite; search_project explicit `packages`+`package-dir`; sia/autoresearch pythonpath cleanup; rebase the advanced→literature cross-exemplar symlinks (+1 `../`); note 9 exemplars are already pre-nested and textbook/literature have multi-package `src/` roots (only their flat `from src.` modules move; top-level packages stay). Verify: per-exemplar pytest ×24, the two-tree single-process acceptance below, regression manifest gate, full infra suite, exemplar matrix + provenance refresh. | isolation restructure record | `uv run pytest projects/templates/template_autopoiesis/tests projects/templates/template_sia/tests --collect-only -q` | two exemplar trees collected in one process must not resolve another tree's modules |
+| `RENDERING-LAYERING-1` | partial | Medium | Compat-alias re-export pattern | Phase 1 landed 2026-09-07: the five `transmission_*` modules moved to `infrastructure/transmission/` with publishing-side re-export shims, every rendering consumer retargeted, and an import-lint guard (``tests/infra_tests/rendering/test_layering.py``) now fails on any new rendering→publishing edge (two pre-existing metadata edges are explicitly allowlisted and tracked here). Remaining: decouple the four flat publishing prefix families (`metadata_*`, `release_*`) as subpackages and retire the two allowlisted metadata edges (`ebook_bundle.py` -> `metadata_package`, `_pdf_title_page_publishing.py` -> `repository_metadata`). | layering record | `uv run pytest tests/infra_tests/rendering/ tests/infra_tests/publishing/ -q` | an import-lint rule forbidding rendering→publishing imports must pass |
+| `REHEARSAL-ANALYSIS-EXIT-1` | partial | Medium | Hosted re-dispatch of the quick-profile public matrix | Root cause found and fixed 2026-09-07 (local probe with the exact all-projects flags): (1) the deterministic exit 1 behind an all-green receipt was the receipt's output-isolation check — every exemplar's declared Stage-01 verifier legitimately regenerates manifest-declared outputs (``artifact_provenance.json`` re-pins ``source_commit`` to the current HEAD), so the before/after digest flipped on any fresh clone at a newer commit; the isolation comparison now excludes each project's ``output/reports/artifact_manifest.json``-declared paths (negative control preserved: undeclared output mutations still fail; see ``test_receipt_rejects_test_generated_output_drift``). (2) The probe also surfaced storybook's quick-profile floor gap — resolved 2026-09-07 by unmarking the 7 slow-marked rendering tests (16.6s of real PIL rendering; the 90% floor now holds in every profile, quick lane exit 0 verified). Remaining: re-dispatch the hosted quick-profile matrix and close ``CLEAN-CHECKOUT-MAJ-1`` with the green receipt. | changelog 2026-09-07 entry + local probe receipt | `uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --profile quick --project-workers 2 --receipt /tmp/rr.json` (exit 0) | a silent exit 1 with all tests passing must not be treated as a green rehearsal |
 
-| ID | Priority | Problem and impact | Smallest next step | Acceptance evidence | Status / Scope |
-| --- | --- | --- | --- | --- | --- |
-| `PROJECT-EXECUTION-BOUNDARY-1` | High | Direct stage/library calls need symlink policy and subprocess environment/network boundary. `secure_write.py` ships symlink-confined atomic writes; the remaining gap is lifecycle-link classification and project-hook execution with explicit policy assertions. | Centralize lifecycle-link classification; run project hooks with explicit traversal, symlink, secret, egress, hook-root policy. | Traversal, symlink, secret, egress, hook-root negative controls pass. | Does not remove intentional lifecycle links or live research. |
-| `SECURE-RUN-1` | High | Secure-run needs distinct output and hash evidence, but hooks run in caller's process boundary. The snapshot diffing and confined-write primitives ship in this cycle; the subprocess executor boundary, secret stripping, and process-group cleanup remain. | Add subprocess boundary with secret stripping, root confinement, cleanup. | Hostile hook cannot read credentials, escape project, or outlive failed run. | Subprocess boundary and secure orchestration only. |
-| `RELEASE-METADATA-1` | Medium | DOI/GitHub metadata freshness, installer pinning, live branch protection not fully provable by repo-only gates. | Add credential-free external metadata receipts; pin mutable installers with checksums. | Release preflight records external checks or operator blocker; no mutable curl|sh remains. | External services operator-owned; not simulated locally. |
-| `REPRODUCIBLE-PDF-1` | Medium | LaTeX PDF builds embed runner timestamps (`\today`, `/CreationDate`, intermediate `.log`) which vary run-to-run on the same commit. The deterministic pipeline claims byte-for-byte reproducibility but lacks `SOURCE_DATE_EPOCH` propagation to the TeX build chain. | Export `SOURCE_DATE_EPOCH` in the composite CI setup action; add a rendered-output snapshot-diff test that fails on byte drift. | Two `--core-only` runs on the same commit produce byte-identical PDFs. | SHIPPED: `SOURCE_DATE_EPOCH` propagated from git commit timestamp in `.github/actions/setup-python-env/action.yml`; rendered-snapshot fingerprint infrastructure exists; full two-run LaTeX byte-diff remains a manual verification. |
-| `RELEASE-TEST-GATE-1` | Medium | The release workflow ran only static contracts (root contract, capability manifest, export smoke, rendered audit) — a release tag could be cut while the commit's test matrix was red. | Add a bounded executable test gate to the release workflow; wire the public-matrix receipt into CI. | Release runs pipeline-smoke infra lane + no-mocks gate on the exact tagged SHA before publishing; receipt produced by scheduled CI job. | SHIPPED: release.yml gained "Verify core test contract on tagged SHA" step; CI lint gained strict template-drift gate; regression tier now asserts non-empty collection (55 tests); new scheduled `public-matrix-receipt` CI job uploads the receipt artifact. |
-| `NO-MOCK-CLAIM-1` | Medium | The "No mocks or fakes" README claim is lexically true but semantically weak against hand-rolled stubs. | Add a hand-rolled-fake heuristic to the advisory inventory; reword the README claim. | `verify_no_mocks.py --inventory` reports hand-rolled fakes; README uses scoped wording. | SHIPPED: `scan_hand_rolled_fakes()` heuristic (Fake*/Stub*/Dummy* patterns) wired into `verify_no_mocks.py --inventory`; README scoped. |
-| `TRACKED-OUTPUT-BUDGET-1` | Minor | The generated-artifacts guard has a 50MB blind spot per file and relies on a path allowlist that may not cover new exemplars. | Add per-file advisory ceiling; make budget check fail-closed on any tracked binary approaching the hard cap. | `check_tracked_generated_artifacts.py` flags single files near the cap. | SHIPPED: `PUBLIC_TEMPLATE_OUTPUT_MAX_SINGLE_FILE_BYTES = 20MB` advisory ceiling wired into `public_template_output_budget_findings()`; test added. |
-| `NO-MOCK-WORDING-1` | Minor | The README "No mocks" claim uses `pytest-httpserver` as an example of a permitted mock, which contradicts the headline. | Reword `README.md:525` to `README.md:535` to say "No unit-level mock frameworks; HTTP boundaries use an in-process test server." | README phrasing is scoped and the contradiction is resolved. | Minor documentation accuracy. |
+## Verification order
 
-## Backlog conventions
+Run the bounded deterministic gates before any optional authority or provider
+work:
 
-- IDs are stable and are never silently reused. Each active item must retain a
-  problem, impact, smallest next step, acceptance command/evidence, and scope
-  boundary.
-- Retire an item only after its command, diff, generated artifact, and relevant
-  regression evidence exist on disk in the same verification pass.
-- Re-baseline measured facts instead of copying old numbers into this file.
-- Keep private or rotating project names out of public docs; link to the
-  generated active-project roster.
-- Preserve the no-mocks policy, project coverage floors, confidentiality
-  guards, and generated-artifact guard when closing work.
+```bash
+uv run pytest tests/infra_tests/documentation/ tests/infra_tests/publishing/ -q --no-cov --timeout=120
+uv run pytest tests/regression/ -q --no-cov --timeout=120
+uv run python scripts/audit/check_backlog.py --strict
+uv run python scripts/docgen/counts.py --check
+uv run python scripts/audit/check_claim_bindings.py --json
+uv run python scripts/audit/check_public_template_contract.py --strict
+uv run python scripts/audit/check_template_drift.py --strict
+uv run python scripts/audit/check_tracked_all.py
+uv run python scripts/audit/check_tracked_generated_artifacts.py
+uv run python scripts/audit/check_tracked_secrets.py
+```
+
+Then run the isolated public matrix, infrastructure coverage gate, Ruff,
+mypy, Bandit, no-mocks, generated-document, manuscript/render, and
+accessibility checks. Optional paths must emit `skipped` or `blocked` receipts
+when their tools or external authority are unavailable.
+
+## Backlog operating rules
+
+- Re-derive measured facts instead of copying old counts into prose.
+- Keep private or rotating project names out of public docs; use the generated roster.
+- Prefer real files, subprocesses, deterministic fixtures, and negative controls.
+- Keep business logic in `infrastructure/` or project `src/`; scripts remain thin orchestrators.
+- Preserve project coverage floors, confidentiality, generated-artifact guards,
+  provenance boundaries, and explicit optional-tool skips.
+- When an item is complete, move its dated evidence to the changelog or review
+  record and remove it from this file in the same change.

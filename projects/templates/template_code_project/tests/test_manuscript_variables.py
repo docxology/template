@@ -18,6 +18,10 @@ import pytest
 import yaml
 
 from src.manuscript_variables import (
+    _ANALYSIS_DATA_FILENAMES,
+    _ANALYSIS_FIGURE_FILENAMES,
+    _ANALYSIS_REPORT_FILENAMES,
+    _count_output_artifacts,
     _format_sci,
     _step_agency_label,
     generate_variables,
@@ -30,6 +34,79 @@ from src.manuscript_variables import (
 
 _DOC_ONLY = frozenset({"AGENTS.md", "README.md", "SYNTAX.md"})
 _TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
+_COUNTED_ANALYSIS_FIGURES = frozenset(
+    {
+        "algorithm_complexity.png",
+        "benchmark_timings.png",
+        "convergence_plot.png",
+        "convergence_rate_comparison.png",
+        "performance_benchmark.png",
+        "stability_analysis.png",
+        "step_size_sensitivity.png",
+    }
+)
+_COUNTED_ANALYSIS_DATA = frozenset(
+    {
+        "convergence_plot.json",
+        "dashboard_payload.json",
+        "optimization_results.csv",
+    }
+)
+_COUNTED_ANALYSIS_REPORTS = frozenset(
+    {
+        "benchmark_report.json",
+        "dashboard_invariants.txt",
+        "dashboard_summary.txt",
+        "output_validation.json",
+        "performance_benchmark.json",
+        "stability_analysis.json",
+    }
+)
+_DOWNSTREAM_REPORTS = frozenset(
+    {
+        "artifact_manifest.json",
+        "evidence_registry.json",
+        "manuscript_composition.json",
+        "output_statistics.json",
+        "output_statistics.txt",
+        "rendered_provenance.json",
+        "test_results.json",
+        "test_results.md",
+        "validation_report.json",
+        "validation_report.md",
+    }
+)
+_DOWNSTREAM_FIGURES = frozenset(
+    {
+        "transmission_integrity_strip.png",
+        "transmission_pairing.png",
+    }
+)
+_DOWNSTREAM_DATA = frozenset(
+    {
+        "manuscript_variables.json",
+        "transmission_manifest.json",
+    }
+)
+_COUNTED_ANALYSIS_ARTIFACTS = {
+    "figures": _COUNTED_ANALYSIS_FIGURES,
+    "data": _COUNTED_ANALYSIS_DATA,
+    "reports": _COUNTED_ANALYSIS_REPORTS,
+}
+_DOWNSTREAM_ARTIFACTS = {
+    "figures": _DOWNSTREAM_FIGURES,
+    "data": _DOWNSTREAM_DATA,
+    "reports": _DOWNSTREAM_REPORTS,
+}
+
+
+def _write_artifacts(root: Path, artifacts: dict[str, frozenset[str]]) -> None:
+    """Write real files for an artifact-category fixture."""
+    for category, filenames in artifacts.items():
+        category_dir = root / "output" / category
+        category_dir.mkdir(parents=True, exist_ok=True)
+        for filename in filenames:
+            (category_dir / filename).write_text("{}\n", encoding="utf-8")
 
 
 def _make_minimal_project(tmp_path: Path, *, with_results: bool = True) -> Path:
@@ -218,6 +295,72 @@ def test_provenance_keys_populated(tmp_path):
     assert re.match(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", v["GENERATION_TIMESTAMP"])
     assert re.match(r"\d+\.\d+\.\d+", v["PYTHON_VERSION"])
     assert len(v["CONFIG_HASH"]) == 16
+
+
+def test_output_artifact_eligibility_is_exact(tmp_path: Path) -> None:
+    """Only registered producer-owned Stage 02 artifacts are counted."""
+    _write_artifacts(tmp_path, _COUNTED_ANALYSIS_ARTIFACTS)
+    _write_artifacts(tmp_path, _DOWNSTREAM_ARTIFACTS)
+    _write_artifacts(
+        tmp_path,
+        {
+            "figures": frozenset({"unregistered.svg"}),
+            "data": frozenset({"scratch.parquet"}),
+            "reports": frozenset({"notes.html"}),
+        },
+    )
+    for category, counted_names in _COUNTED_ANALYSIS_ARTIFACTS.items():
+        nested_dir = tmp_path / "output" / category / "nested"
+        nested_dir.mkdir()
+        (nested_dir / sorted(counted_names)[0]).write_text("{}\n", encoding="utf-8")
+
+    assert _ANALYSIS_FIGURE_FILENAMES == _COUNTED_ANALYSIS_FIGURES
+    assert _ANALYSIS_DATA_FILENAMES == _COUNTED_ANALYSIS_DATA
+    assert _ANALYSIS_REPORT_FILENAMES == _COUNTED_ANALYSIS_REPORTS
+    assert _count_output_artifacts(tmp_path) == {
+        "figures": len(_COUNTED_ANALYSIS_FIGURES),
+        "data": len(_COUNTED_ANALYSIS_DATA),
+        "reports": len(_COUNTED_ANALYSIS_REPORTS),
+    }
+
+
+def test_downstream_artifacts_do_not_change_manuscript_counts(tmp_path: Path) -> None:
+    """Hydration and later-stage artifacts cannot feed back into counts."""
+    root = _make_minimal_project(tmp_path)
+    before = generate_variables(root)
+
+    _write_artifacts(root, _DOWNSTREAM_ARTIFACTS)
+    after = generate_variables(root)
+
+    assert before["ARTIFACT_FIGURES"] == "0"
+    assert before["ARTIFACT_DATA_FILES"] == "1"
+    assert before["ARTIFACT_REPORTS"] == "1"
+    assert before["ARTIFACT_TOTAL"] == "2"
+    for key in (
+        "ARTIFACT_FIGURES",
+        "ARTIFACT_DATA_FILES",
+        "ARTIFACT_REPORTS",
+        "ARTIFACT_TOTAL",
+    ):
+        assert after[key] == before[key]
+
+
+def test_cold_bootstrap_ignores_self_and_terminal_artifacts(tmp_path: Path) -> None:
+    """A cold draft remains at zero when only downstream artifacts appear."""
+    root = _make_minimal_project(tmp_path, with_results=False)
+    before = generate_variables(root)
+
+    _write_artifacts(root, _DOWNSTREAM_ARTIFACTS)
+    after = generate_variables(root)
+
+    for key in (
+        "ARTIFACT_FIGURES",
+        "ARTIFACT_DATA_FILES",
+        "ARTIFACT_REPORTS",
+        "ARTIFACT_TOTAL",
+    ):
+        assert before[key] == "0"
+        assert after[key] == before[key]
 
 
 # ---------------------------------------------------------------------------

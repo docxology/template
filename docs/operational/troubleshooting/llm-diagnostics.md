@@ -127,7 +127,7 @@ cat projects/{name}/output/llm/quality_review.md
 ```bash
 # Enable debug logging
 export LOG_LEVEL=0
-uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only 2>&1 | tee llm_review.log
+uv run python scripts/pipeline/stage_06_llm_review.py --project templates/template_code_project --reviews-only 2>&1 | tee llm_review.log
 
 # Review log file
 cat llm_review.log | grep -i error

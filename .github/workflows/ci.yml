@@ -168,6 +168,11 @@ jobs:
       - name: Confidentiality guard — only public template resources tracked
         run: uv run python scripts/audit/check_tracked_all.py
 
+      # No-op on a clean CI clone (projects/ has no mirror); it is the local
+      # developer checkout this catches, and CI asserts the guard still runs.
+      - name: Mirror guard — projects/<lifecycle>/ holds managed symlinks only
+        run: uv run python scripts/audit/check_mirror_symlinks.py
+
       # Publication audit is source-only in CI because project output trees are
       # disposable/ignored. Release jobs and local sign-off add --rendered to
       # require artifact manifests, evidence registries, and figure bindings.
@@ -177,16 +182,20 @@ jobs:
       # XML parser policy (DEP-DEFUSEDXML-1): enforced by Bandit B313-B320 in
       # the security job, but this AST-level guard is explicit and independent.
       - name: XML parser policy — defusedxml only
-        run: >-
-          uv run python -c "
-          from pathlib import Path;
-          from infrastructure.validation.xml_parser_policy import validate_xml_parser_policy;
-          import sys;
-          violations = validate_xml_parser_policy(Path('.') / 'infrastructure', Path('.'));
+        run: |
+          uv run python - <<'PY'
+          import sys
+          from pathlib import Path
+
+          from infrastructure.validation.xml_parser_policy import (
+              validate_xml_parser_policy,
+          )
+
+          violations = validate_xml_parser_policy(Path('.') / 'infrastructure', Path('.'))
           if violations:
-            print('XML parser policy violations:', *violations, sep='\\n');
-            sys.exit(1)
-          "
+              print('XML parser policy violations:', *violations, sep='\n')
+              sys.exit(1)
+          PY
 
       # Enforce the module-size composability budget as a hard gate (fails at
       # >=950 infra / >=250 project-script lines). It also runs inside the
@@ -304,7 +313,7 @@ jobs:
           --timeout=120
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Job 3 — Infrastructure Tests (matrix: ubuntu + macos × Python 3.10–3.13)
+# Job 3 — Infrastructure Tests (matrix: ubuntu + macos × Python 3.10–3.14)
 # ─────────────────────────────────────────────────────────────────────────────
   test-infra:
     name: "Infra Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
@@ -320,14 +329,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # ubuntu covers all four Python versions; macOS runs only the 3.12
+        # ubuntu covers all five Python versions; macOS runs only the 3.14
         # smoke (macOS legs are ~10x cost and rarely surface OS-specific project
         # breakage beyond what the 3.12 cell catches).
         os: [ubuntu-latest]
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         include:
           - os: macos-latest
-            python-version: "3.12"
+            python-version: "3.14"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -352,7 +361,7 @@ jobs:
 
       # TeX Live so the xelatex/bibtex-gated rendering tests run instead of
       # skipping (they assert a real PDF lands on disk). Linux lanes only:
-      # MacTeX is a multi-GB install and macOS breadth is a 3.12 smoke lane.
+      # MacTeX is a multi-GB install and macOS breadth is a 3.14 smoke lane.
       - name: Cache TeX Live packages
         if: runner.os == 'Linux'
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -395,8 +404,19 @@ jobs:
           -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance"
           --timeout=120
 
+      - name: Verify completed MathJax equations across live viewport changes
+        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest'
+        run: |
+          export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+          npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
+          .tmp/playwright-node/node_modules/.bin/playwright install --with-deps chromium
+          NODE_PATH="$PWD/.tmp/playwright-node/node_modules" \
+            .tmp/playwright-node/node_modules/.bin/playwright test \
+            tests/infra_tests/rendering/mathjax_reflow.spec.cjs \
+            --workers=1 --output=.tmp/mathjax-browser
+
       - name: Upload infrastructure coverage to Codecov
-        if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
+        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest'
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           files: coverage-infra.xml
@@ -421,7 +441,7 @@ jobs:
 
       - uses: ./.github/actions/setup-python-env
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group public-exemplars
@@ -433,7 +453,7 @@ jobs:
       # collection-order-sensitive (see docs/maintenance/regression-testing.md).
       - name: Run claim-binding regression tier
         run: >-
-          uv run pytest tests/regression/ -q --no-cov --timeout=120
+          uv run pytest tests/regression/ --no-cov --timeout=120
           --collect-only -q | tee /tmp/regression-collect.txt
           && uv run pytest tests/regression/ -q --no-cov --timeout=120
 
@@ -460,15 +480,19 @@ jobs:
     # sum of all public exemplars. Each job enforces that project's own 90% floor via
     # ``scripts/pipeline/stage_01_test.py --project`` (authoritative per CLAUDE.md), which
     # also removes the old code_project/fep_lean conftest plugin-name collision
-    # (every project is already isolated in its own job). py3.10 (floor) + py3.12
+    # (every project is already isolated in its own job). py3.10 (floor) + py3.14
     # (ceiling) give cross-version coverage; macOS breadth is handled by test-infra.
-    # 60 min backstop — active_inference on py3.10 has exceeded 45 min on loaded runners.
-    timeout-minutes: 60
+    # 135 min backstop — the directly invoked Stage-01 application owns one
+    # 115-minute generic-or-declared project budget. The hosted path does not
+    # have the full pipeline's separate 120-minute stage wrapper; 20 minutes of
+    # job margin remain for setup, descendant cleanup, and uploads. This is
+    # capacity, not evidence of success.
+    timeout-minutes: 135
     needs: [verify-no-mocks, detect-projects]
     permissions:
       contents: read
     env:
-      # .python-version requests 3.12 by default; bind uv to this exact matrix
+      # .python-version requests 3.14 by default; bind uv to this exact matrix
       # minor so the capability contract covers the interpreter actually used.
       UV_PYTHON: ${{ matrix.python-version }}
     strategy:
@@ -495,9 +519,17 @@ jobs:
           uv run python -c \
             'import sys; expected=tuple(map(int, "${{ matrix.python-version }}".split("."))); assert sys.version_info[:2] == expected, (sys.version, expected)'
 
+      # Public exemplar suites may exercise real DOCX/EPUB render paths even
+      # though this job runs Stage 1 only. Keep the converter provisioned for
+      # every capability-manifest lane so those regressions never degrade into
+      # missing-tool failures or skips.
+      - name: Install pandoc
+        uses: pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e # v1.1.1
+
       # scripts/pipeline/stage_01_test.py --project runs pytest with cwd=<project> and enforces that
       # project's own --cov-fail-under=90 internally, writing coverage into the
-      # project dir (projects/<name>/.coverage.project + coverage_project.json).
+      # project dir (generic pytest: .coverage.project; declared verifier:
+      # .coverage; both produce coverage_project.json).
       # The gate is therefore authoritative here; no repo-root coverage step.
       - name: Run project tests
         env:
@@ -508,7 +540,7 @@ jobs:
             --project "${{ matrix.project }}" --project-only --include-slow
 
       - name: Upload project coverage to Codecov
-        if: matrix.python-version == '3.12'
+        if: matrix.python-version == '3.14'
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           files: projects/${{ matrix.project }}/coverage_project.json
@@ -754,15 +786,35 @@ jobs:
             [ -z "$line" ] && continue
             PIP_AUDIT_ARGS+=(--ignore-vuln "$line")
           done < "$IGNORE_FILE"
-          for attempt in 1 2 3; do
-            if uv run pip-audit --requirement "$LOCK_REQUIREMENTS" \
-              --no-deps --disable-pip "${PIP_AUDIT_ARGS[@]}"; then
-              exit 0
-            fi
-            echo "pip-audit attempt ${attempt} failed; retrying in 15s..." >&2
-            sleep 15
+          audit_requirements() {
+            local requirement_file="$1"
+            for attempt in 1 2 3; do
+              if uv run pip-audit --requirement "$requirement_file" \
+                --no-deps --disable-pip "${PIP_AUDIT_ARGS[@]}"; then
+                return 0
+              fi
+              if [[ "$attempt" -lt 3 ]]; then
+                echo "pip-audit attempt ${attempt} failed for ${requirement_file}; retrying in 15s..." >&2
+                sleep 15
+              fi
+            done
+            return 1
+          }
+
+          # Audit the complete root export and every canonical public exemplar
+          # export. A clean root environment does not prove that an isolated
+          # project's own lockfile is safe.
+          audit_requirements "$LOCK_REQUIREMENTS"
+          PUBLIC_REQUIREMENTS_DIR="${RUNNER_TEMP}/template-public-requirements"
+          mkdir -p "$PUBLIC_REQUIREMENTS_DIR"
+          for project in ${{ steps.security-scope.outputs.names }}; do
+            slug="${project//\//-}"
+            requirement_file="$PUBLIC_REQUIREMENTS_DIR/${slug}.txt"
+            uv export --project "projects/$project" --all-extras --frozen \
+              --no-hashes --no-emit-project --output-file "$requirement_file"
+            echo "Auditing public exemplar export: $project"
+            audit_requirements "$requirement_file"
           done
-          exit 1
 
       - name: Code security scan (Bandit MEDIUM+ severity)
         run: |
@@ -964,7 +1016,7 @@ jobs:
 
       - uses: ./.github/actions/setup-python-env
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group public-exemplars
@@ -972,8 +1024,8 @@ jobs:
       - name: Run receipt-bearing public matrix
         run: >-
           uv run python scripts/pipeline/stage_01_test.py
-          --project-only --all-projects --public-scope
-          --workers 2
+          --project-only --all-projects --public-projects
+          --project-workers 2
           --receipt public_matrix_receipt.json
 
       - name: Upload public-matrix receipt
@@ -982,3 +1034,46 @@ jobs:
           name: public-matrix-receipt
           path: public_matrix_receipt.json
           if-no-files-found: error
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Final gate — single static check name for branch protection
+  # ─────────────────────────────────────────────────────────────────────────────
+  # GitHub cannot require dynamic matrix jobs by name, so branch protection on
+  # main requires this one static job. It succeeds only when every upstream
+  # job succeeded or was intentionally skipped by its own `if:` (e.g. the
+  # schedule-only public-matrix-receipt on push/PR events).
+  ci-gate:
+    name: CI Gate
+    if: always()
+    needs:
+      - detect
+      - detect-projects
+      - actionlint
+      - lint
+      - health
+      - verify-no-mocks
+      - setup-hook-windows-smoke
+      - test-infra
+      - test-regression
+      - test-project
+      - fep-lean
+      - validate
+      - security
+      - docs-lint
+      - performance
+      - public-matrix-receipt
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Evaluate upstream job results
+        env:
+          NEEDS_JSON: ${{ toJson(needs) }}
+        run: |
+          echo "$NEEDS_JSON"
+          if ! echo "$NEEDS_JSON" | jq -e 'to_entries | all(.value.result == "success" or .value.result == "skipped")' > /dev/null; then
+            echo "::error::One or more required CI jobs failed or were cancelled"
+            exit 1
+          fi
+          echo "All required CI jobs succeeded (or were intentionally skipped)."

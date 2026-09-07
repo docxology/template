@@ -46,6 +46,14 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_lit
 - **Run from the repo root.** Commands assume the template monorepo root
   as working directory unless the child `AGENTS.md` states otherwise.
 
+## Optional gap-filler search (Monid)
+
+Use MCP connectors and configured retrieval keys first. For uncovered endpoints,
+Monid (`infrastructure/search/monid/`) is infrastructure-only — pricing table:
+[`PRICING.md`](../../../../../infrastructure/search/monid/PRICING.md). Offline
+`deep_research` replay (`scripts/08_deep_research_dispatch.py`) remains the
+exemplar's default long-form synthesis path.
+
 ## Cross-refs
 
 - Project contract: [`AGENTS.md`](../../../AGENTS.md)

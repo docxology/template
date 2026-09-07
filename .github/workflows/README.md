@@ -27,7 +27,7 @@ flowchart TB
     LINT --> SEC[security<br/>pip-audit + bandit -c bandit.yaml]
     LINT --> DL[docs-lint<br/>mermaid + links + consistency]
     VNM --> SHW[setup-hook-windows-smoke<br/>conditional · Windows]
-    VNM --> TI[test-infra<br/>ubuntu × py310–313 + macOS × py312<br/>≥ 60% coverage]
+    VNM --> TI[test-infra<br/>ubuntu × py310–314 + macOS × py314<br/>≥ 60% coverage]
     VNM --> TR[test-regression<br/>claim-binding pins]
     VNM --> TP[test-project<br/>validated capability matrix<br/>each ≥ 90% own src/]
     VNM --> FL[fep-lean optional<br/>gauss + lake · timeout 60m]
@@ -62,6 +62,16 @@ flowchart TB
 | Bandit MEDIUM+ (`bandit.yaml`) | zero findings |
 | Docs lint | mermaid + cross-links + consistency + doc-pair coverage clean |
 | Import time | ≤ 5 s total |
+
+Each `test-project` cell has a 135-minute hosted-job backstop. Within that job,
+the directly invoked Stage-01 application gives generic pytest one total
+6,900-second subprocess-wait and retry-admission deadline, or gives an
+explicitly declared verifier one 6,900-second attempt. Post-timeout process-tree
+cleanup may complete outside that inner boundary. The hosted command does not
+pass through the full pipeline's separate 7,200-second stage wrapper; the
+remaining 1,200 seconds are setup, descendant-cleanup, and upload margin. These
+ceilings are capacity controls, not evidence that tests passed, coverage met
+its floor, or a structured verifier receipt was produced.
 
 ### Local CI Simulation
 

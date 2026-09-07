@@ -1,6 +1,6 @@
 # Proof, not adjectives
 
-*Slide 20 of 56 — template_template pitch, long deck — kind: `section`*
+*Slide 20 of 57 — template_template pitch, long deck — kind: `section`*
 
 *(no body content — section/title slide)*
 

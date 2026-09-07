@@ -38,7 +38,7 @@ missing file in exactly the right shape.
 
 | You change in `config.yaml`… | …and this updates automatically |
 | --- | --- |
-| `parts:` (add/remove a chapter) | Table of contents, chapter numbers, integrity tests |
+| `units:` (add/remove a chapter) | Table of contents, chapter numbers, integrity tests |
 | `appendices.labs` / `.questions` | Which labs and banks are included and titled |
 | `front_matter.files` | Front-matter order and titles |
 | `rendering.number_*` | Whether chapters/figures/equations/tables are numbered |

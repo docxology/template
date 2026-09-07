@@ -122,6 +122,7 @@ def _sync_standalone_blocks(records: list[PublicationRecord]) -> None:
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.slow
 def test_write_writes_generated_markdown_without_readme(tmp_path: Path) -> None:
     """``write_publication_records_doc`` writes the generated publication matrix."""
     _scaffold_all_public_projects(tmp_path)

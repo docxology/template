@@ -11,117 +11,33 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-import requests
 import yaml
 
 from config_loader import _load_yaml
 from literature.corpus import Corpus
 from literature.models import Paper
 from literature.search_runner import run_literature_search
+from multi_phase.contracts import (
+    build_cross_phase_conflict_report,
+    validate_phase_artifact_manifest,
+    validate_phase_boundaries,
+)
+from multi_phase.llm_filter import LLMFilterEngine
+from multi_phase.models import PhasedPaper, PhaseMetadata
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PHASE_ARTIFACT_MANIFEST_SCHEMA = "advanced-literature-review/phase-artifact-manifest/1"
 CROSS_PHASE_ANALYSIS_SCHEMA = "advanced-literature-review/cross-phase-analysis/1"
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class PhaseMetadata:
-    """Metadata for a search phase execution."""
-
-    phase_id: str
-    name: str
-    description: str
-    start_time: float
-    end_time: float | None = None
-    queries_executed: list[str] = field(default_factory=list)
-    papers_discovered: int = 0
-    papers_after_deterministic_filters: int = 0
-    papers_after_llm_filters: int = 0
-    papers_final: int = 0
-    deterministic_filters_applied: dict[str, Any] = field(default_factory=dict)
-    llm_filters_applied: list[str] = field(default_factory=list)
-    depends_on: list[str] = field(default_factory=list)
-
-
-@dataclass
-class PhasedPaper:
-    """A paper plus the phase-level provenance accumulated for it."""
-
-    paper: Paper
-    discovered_in_phase: str
-    phases_found_in: list[str] = field(default_factory=list)
-    deterministic_filters_passed: dict[str, bool] = field(default_factory=dict)
-    llm_filters_passed: dict[str, str] = field(default_factory=dict)
-    cross_phase_citations: dict[str, int] = field(default_factory=dict)
-
-    def __post_init__(self) -> None:
-        """Ensure the discovery phase is always present in provenance."""
-        if self.discovered_in_phase not in self.phases_found_in:
-            self.phases_found_in.insert(0, self.discovered_in_phase)
-
-
-class LLMFilterEngine:
-    """Engine for applying LLM-based content filters to papers."""
-
-    def __init__(self, llm_config: dict[str, Any]):
-        """Initialize the LLM filter engine from a config dict.
-
-        Args:
-            llm_config: Configuration with optional keys ``model``,
-                ``base_url``, ``temperature``, ``timeout_seconds``, and
-                ``max_retries``.
-        """
-        self.model: str = llm_config.get("model", "gemma3:4b")
-        self.base_url: str = llm_config.get("base_url", "http://localhost:11434")
-        self.temperature: float = llm_config.get("temperature", 0.1)
-        self.timeout: int = llm_config.get("timeout_seconds", 120)
-        self.max_retries: int = llm_config.get("max_retries", 3)
-
-    def apply_filter(self, paper: Paper, filter_config: dict[str, Any]) -> str:
-        """Apply an LLM filter to a paper's abstract. Returns the classification."""
-        if not paper.abstract or not paper.abstract.strip():
-            return "no_abstract"
-
-        prompt = filter_config["prompt"].format(abstract=paper.abstract)
-
-        for attempt in range(self.max_retries):
-            try:
-                response = requests.post(
-                    f"{self.base_url}/api/generate",
-                    json={
-                        "model": self.model,
-                        "prompt": prompt,
-                        "stream": False,
-                        "options": {"temperature": self.temperature},
-                    },
-                    timeout=self.timeout,
-                )
-                response.raise_for_status()
-                result = response.json()
-                answer = str(result.get("response", "")).strip().lower()
-
-                # Clean up common single-label response punctuation without
-                # altering punctuation inside a legitimate category name.
-                answer = answer.strip(" \t\r\n\"'.")
-
-                return answer
-
-            except (requests.RequestException, ValueError, TypeError) as exc:
-                logger.warning("LLM filter attempt %d failed: %s", attempt + 1, exc)
-                if attempt == self.max_retries - 1:
-                    return "error"
-                time.sleep(2**attempt)
-
-        return "error"
 
 
 class MultiPhaseSearchRunner:
@@ -149,6 +65,7 @@ class MultiPhaseSearchRunner:
         self.project_config = self.config.get("project_config", {})
         self.search_phases: dict[str, Any] = self.project_config.get("search_phases", {})
         self.llm_filters: dict[str, Any] = self.project_config.get("llm_filters", {})
+        self.llm_phase_status: dict[str, str] = {}
 
         self.phase_metadata: dict[str, PhaseMetadata] = {}
         self.all_phased_papers: dict[str, PhasedPaper] = {}
@@ -192,6 +109,7 @@ class MultiPhaseSearchRunner:
     def apply_llm_filters(self, papers: list[Paper], phase_id: str) -> list[Paper]:
         """Apply LLM filters relevant to a specific phase."""
         if not self.llm_engine or not self.llm_filters:
+            self.llm_phase_status[phase_id] = "skipped_provider_unavailable" if self.llm_filters else "not_configured"
             return papers
 
         filtered = []
@@ -202,6 +120,8 @@ class MultiPhaseSearchRunner:
         else:
             iterator = tqdm(papers, desc=f"LLM filtering {phase_id}")
 
+        error_count = 0
+        applied_count = 0
         for paper in iterator:
             keep_paper = True
             llm_results: dict[str, str] = {}
@@ -212,6 +132,8 @@ class MultiPhaseSearchRunner:
 
                 result = self.llm_engine.apply_filter(paper, filter_config)
                 llm_results[filter_id] = result
+                applied_count += 1
+                error_count += result == "error"
 
                 # Check if this paper should be kept
                 keep_values = filter_config.get("keep_values", [])
@@ -233,6 +155,9 @@ class MultiPhaseSearchRunner:
             if keep_paper:
                 filtered.append(paper)
 
+        self.llm_phase_status[phase_id] = (
+            "completed_with_errors" if error_count else ("completed" if applied_count else "not_applicable")
+        )
         return filtered
 
     @staticmethod
@@ -361,6 +286,7 @@ class MultiPhaseSearchRunner:
         # Apply LLM filters
         llm_filtered_papers = self.apply_llm_filters(filtered_papers, phase_id)
         metadata.papers_after_llm_filters = len(llm_filtered_papers)
+        metadata.llm_filter_status = self.llm_phase_status.get(phase_id, "not_configured")
 
         # Track papers
         self._record_phase_papers(llm_filtered_papers, phase_id)
@@ -460,6 +386,8 @@ class MultiPhaseSearchRunner:
                 if all(result["papers_without_sufficient_citations"] == [] for result in citation_validation.values())
                 else "review"
             )
+        configured_assertions = self.project_config.get("cross_phase_assertions")
+        conflict_validation = build_cross_phase_conflict_report(configured_assertions, phase_ids)
         return {
             "schema_version": CROSS_PHASE_ANALYSIS_SCHEMA,
             "analysis_scope": [
@@ -478,6 +406,7 @@ class MultiPhaseSearchRunner:
                 "status": citation_status,
                 "results": citation_validation,
             },
+            "conflict_validation": conflict_validation,
             "hypothesis_scoring": {
                 "status": "pending_knowledge_graph",
                 "artifact": "hypothesis_scores.json",
@@ -521,18 +450,6 @@ class MultiPhaseSearchRunner:
             config = raw_config if isinstance(raw_config, dict) else {}
             if "queries" not in config:
                 issues.append({"phase": phase_id, "code": "missing_queries", "message": "phase has no queries"})
-            filters = config.get("deterministic_filters", {})
-            if isinstance(filters, dict):
-                min_year = filters.get("min_year")
-                max_year = filters.get("max_year")
-                if min_year is not None and max_year is not None and int(min_year) > int(max_year):
-                    issues.append(
-                        {
-                            "phase": phase_id,
-                            "code": "invalid_year_bounds",
-                            "message": f"min_year {min_year} is greater than max_year {max_year}",
-                        }
-                    )
             dependencies = config.get("depends_on", [])
             if not isinstance(dependencies, list):
                 dependencies = [dependencies]
@@ -557,6 +474,7 @@ class MultiPhaseSearchRunner:
                             "message": f"dependency {dependency!r} must be declared before this phase",
                         }
                     )
+        issues.extend(validate_phase_boundaries(self.search_phases))
         return {
             "schema_version": "advanced-literature-review/phase-validation/1",
             "status": "pass" if not issues else "fail",
@@ -602,12 +520,37 @@ class MultiPhaseSearchRunner:
                 {"path": "cross_phase_analysis.json", "phases": all_phases},
             ]
         )
+        for artifact in artifacts:
+            artifact_path = output_dir / str(artifact["path"])
+            if not artifact_path.is_file():
+                raise ValueError(f"phase artifact is missing before manifest write: {artifact_path}")
+            artifact["sha256"] = hashlib.sha256(artifact_path.read_bytes()).hexdigest()
+            artifact["size_bytes"] = artifact_path.stat().st_size
+        provenance: list[dict[str, str]] = []
+        for artifact in artifacts:
+            phases = artifact.get("phases")
+            if not isinstance(phases, list):
+                continue
+            for phase_id in phases:
+                provenance.append(
+                    {
+                        "phase": str(phase_id),
+                        "artifact": str(artifact["path"]),
+                        "producer": "MultiPhaseSearchRunner",
+                        "source": execution_mode,
+                        "producer_revision": "working-tree",
+                    }
+                )
         manifest = {
             "schema_version": PHASE_ARTIFACT_MANIFEST_SCHEMA,
             "execution_mode": execution_mode,
             "phase_order": all_phases,
             "artifacts": artifacts,
+            "provenance": provenance,
         }
+        manifest_issues = validate_phase_artifact_manifest(manifest, artifact_root=output_dir)
+        if manifest_issues:
+            raise ValueError(f"Invalid phase artifact manifest: {manifest_issues}")
         (output_dir / "phase_artifact_manifest.json").write_text(
             json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
@@ -656,6 +599,7 @@ class MultiPhaseSearchRunner:
             "phase_validation": phase_validation,
             "phases": {pid: asdict(meta) for pid, meta in self.phase_metadata.items()},
             "citation_validation": citation_validation,
+            "conflict_validation": cross_phase_analysis["conflict_validation"],
             "total_papers": len(all_paper_list),
             "total_unique_papers": len(self.all_phased_papers),
             "phase_overlap": self._calculate_phase_overlap(),
@@ -684,7 +628,7 @@ class MultiPhaseSearchRunner:
         print(f"  Total unique papers: {len(all_paper_list)}")
         print(f"  Combined corpus: {combined_path}")
 
-    def replay_fixture(self, corpus_path: Path) -> None:
+    def replay_fixture(self, corpus_path: Path, specific_phase: str | None = None) -> None:
         """Build phase artifacts from the committed corpus without network access.
 
         The public exemplar keeps a deterministic corpus snapshot so the normal
@@ -699,7 +643,13 @@ class MultiPhaseSearchRunner:
         self.phase_metadata.clear()
         self.all_phased_papers.clear()
 
-        phases = list(self.search_phases.items())
+        if specific_phase is not None and specific_phase not in self.search_phases:
+            raise ValueError(f"Phase '{specific_phase}' not found in configuration")
+        phases = [
+            (phase_id, phase_config)
+            for phase_id, phase_config in self.search_phases.items()
+            if specific_phase is None or phase_id == specific_phase
+        ]
         for index, (phase_id, phase_config) in enumerate(phases):
             queries = [str(query) for query in phase_config.get("queries", [])]
             if index == 0:
@@ -730,6 +680,7 @@ class MultiPhaseSearchRunner:
                 papers_after_llm_filters=len(filtered),
                 papers_final=len(filtered),
                 deterministic_filters_applied=phase_config.get("deterministic_filters", {}),
+                llm_filter_status="skipped_fixture_replay",
                 depends_on=phase_config.get("depends_on", []),
             )
 
@@ -752,6 +703,7 @@ class MultiPhaseSearchRunner:
             "phase_validation": phase_validation,
             "phases": {phase_id: asdict(meta) for phase_id, meta in self.phase_metadata.items()},
             "citation_validation": citation_validation,
+            "conflict_validation": cross_phase_analysis["conflict_validation"],
             "total_papers": len(combined),
             "total_unique_papers": len(self.all_phased_papers),
             "phase_overlap": self._calculate_phase_overlap(),
@@ -809,6 +761,17 @@ def main() -> None:  # pragma: no cover - exercised through the thin CLI script
         default=PROJECT_ROOT / "output" / "data",
         help="Output directory for results",
     )
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="Opt into live retrieval; the default replays the committed offline fixture",
+    )
+    parser.add_argument(
+        "--fixture-corpus",
+        type=Path,
+        default=PROJECT_ROOT / "output" / "data" / "corpus.jsonl",
+        help="Fixture corpus used by the offline default",
+    )
 
     args = parser.parse_args()
 
@@ -819,7 +782,12 @@ def main() -> None:  # pragma: no cover - exercised through the thin CLI script
     )
 
     runner = MultiPhaseSearchRunner(args.config_path, output_dir=args.output_dir)
-    runner.run(specific_phase=args.phase)
+    if args.live:
+        runner.run(specific_phase=args.phase)
+    else:
+        if not args.fixture_corpus.is_file():
+            parser.error(f"offline fixture corpus not found: {args.fixture_corpus}")
+        runner.replay_fixture(args.fixture_corpus, specific_phase=args.phase)
 
 
 if __name__ == "__main__":

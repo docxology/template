@@ -27,6 +27,8 @@ resource directories without writing back to them:
 | `src/rules_applier.py` | Loads soft/strong rules; returns typed dicts |
 | `src/tools_invoker.py` | Discovers tool manifests; returns typed dicts |
 | `src/integration.py` | Orchestrates all three; adds `generate_figure_data()` |
+| `src/strong_rule_evaluator.py`, `src/resource_schema.py`, `src/manuscript_variables.py` | Strong-rule evaluation, schema receipts, manuscript variables |
+| `src/figure_support.py`, `src/figures.py`, `src/cover_figure.py`, `src/rule_hierarchy_figure.py` | Figure specs, façade, and renderers |
 | `src/__init__.py` | Re-exports all public symbols |
 
 ---
@@ -97,7 +99,7 @@ reports rather than relying on exceptions.
 - **Repo-root resolution** uses `pathlib.Path(__file__).resolve().parents[4]`.
   This is correct for the nested path
   `projects/templates/template_pools_rules_tools/src/<module>.py`.
-  Do not change this without updating all four modules.
+  Do not change this without updating all modules that use it (`fonds_reader.py`, `rules_applier.py`, `tools_invoker.py`).
 - **`pathlib.Path` objects in TypedDicts** (`ToolEntry.path`) are not JSON-
   serialisable. Convert to `str` before serialising to JSON.
 - **YAML `safe_load` returns `None`** for empty files. The code guards with

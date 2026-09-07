@@ -35,7 +35,12 @@ from .models import (
     ArchivalRun,
     DEFAULT_CREDENTIALS_PATH,
 )
-from .orchestrate import archive_publication, load_credentials
+from .orchestrate import (
+    archive_publication,
+    check_publication_status,
+    load_credentials,
+    resolve_git_origin_url,
+)
 from .providers import (
     ArchivalProvider,
     IPFSPinataProvider,
@@ -55,6 +60,8 @@ __all__ = [
     "SoftwareHeritageProvider",
     "ArchivalCredentials",
     "archive_publication",
+    "check_publication_status",
     "load_credentials",
+    "resolve_git_origin_url",
     "DEFAULT_CREDENTIALS_PATH",
 ]

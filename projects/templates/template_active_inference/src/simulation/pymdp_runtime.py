@@ -1,4 +1,11 @@
-"""Scoped pymdp/JAX runtime diagnostics for agent construction."""
+"""Scoped pymdp/JAX runtime diagnostics for agent construction.
+
+The lockfile deliberately selects different pinned JAX/JAXLIB builds for
+different supported Python versions.  Tracked diagnostics therefore record the
+lockfile marker contract for those packages instead of embedding the selected
+wheel version and making a valid matrix lane rewrite shared evidence hashes.
+The exact per-interpreter selections remain source-bound in ``uv.lock``.
+"""
 
 from __future__ import annotations
 
@@ -14,6 +21,8 @@ from simulation.pymdp_config import PymdpConfig, config_hash
 
 KNOWN_JAX_STATIC_WARNING = "A JAX array is being set as static"
 RUNTIME_DIAGNOSTICS_SCHEMA = "template_active_inference.pymdp_runtime_diagnostics.v1"
+RUNTIME_VERSION_CONTRACT = "uv.lock Python-marker selection"
+_PYTHON_MARKER_SELECTED_PACKAGES = frozenset({"jax", "jaxlib"})
 
 
 def _package_version(name: str) -> str:
@@ -21,6 +30,15 @@ def _package_version(name: str) -> str:
         return importlib.metadata.version(name)
     except importlib.metadata.PackageNotFoundError:
         return "unknown"
+
+
+def _portable_versions(versions: dict[str, Any]) -> dict[str, Any]:
+    """Normalize interpreter-dependent package versions for tracked evidence."""
+    normalized = dict(versions)
+    for package in _PYTHON_MARKER_SELECTED_PACKAGES:
+        if package in normalized:
+            normalized[package] = RUNTIME_VERSION_CONTRACT
+    return normalized
 
 
 def _backend_flags() -> dict[str, Any]:
@@ -83,11 +101,13 @@ def construct_agent_with_diagnostics(
     diagnostic = {
         "context": context,
         "config_hash": config_hash(config),
-        "versions": {
-            "inferactively_pymdp": _package_version("inferactively-pymdp"),
-            "jax": _package_version("jax"),
-            "jaxlib": _package_version("jaxlib"),
-        },
+        "versions": _portable_versions(
+            {
+                "inferactively_pymdp": _package_version("inferactively-pymdp"),
+                "jax": _package_version("jax"),
+                "jaxlib": _package_version("jaxlib"),
+            }
+        ),
         "backend_flags": _backend_flags(),
         "known_warning_count": len(known),
         "unexpected_warning_count": len(unexpected),
@@ -99,12 +119,18 @@ def construct_agent_with_diagnostics(
 
 def build_runtime_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any]:
     """Build runtime diagnostics."""
-    known_count = sum(int(record.get("known_warning_count", 0) or 0) for record in records)
-    unexpected_count = sum(int(record.get("unexpected_warning_count", 0) or 0) for record in records)
-    versions = records[-1].get("versions", {}) if records else {}
-    backend_flags = records[-1].get("backend_flags", {}) if records else {}
+    portable_records = []
+    for record in records:
+        portable_record = dict(record)
+        if isinstance(record.get("versions"), dict):
+            portable_record["versions"] = _portable_versions(record["versions"])
+        portable_records.append(portable_record)
+    known_count = sum(int(record.get("known_warning_count", 0) or 0) for record in portable_records)
+    unexpected_count = sum(int(record.get("unexpected_warning_count", 0) or 0) for record in portable_records)
+    versions = portable_records[-1].get("versions", {}) if portable_records else {}
+    backend_flags = portable_records[-1].get("backend_flags", {}) if portable_records else {}
     phase_rows: list[dict[str, Any]] = []
-    for index, record in enumerate(records):
+    for index, record in enumerate(portable_records):
         context = str(record.get("context") or f"record_{index}")
         inference_step_count = int(record.get("inference_step_count", 1) or 0)
         fallback_count = int(record.get("policy_fallback_count", 0) or 0)
@@ -182,27 +208,29 @@ def build_runtime_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any]:
     )
     return {
         "schema": RUNTIME_DIAGNOSTICS_SCHEMA,
-        "records": records,
+        "records": portable_records,
         "phase_rows": phase_rows,
         "phase_count": len(phase_rows),
         "phase_types": phase_types,
         "required_phases": sorted(required_phases),
         "all_phase_rows_ok": all_phase_rows_ok,
-        "construction_count": len(records),
-        "config_hashes": sorted({str(record.get("config_hash")) for record in records if record.get("config_hash")}),
+        "construction_count": len(portable_records),
+        "config_hashes": sorted(
+            {str(record.get("config_hash")) for record in portable_records if record.get("config_hash")}
+        ),
         "versions": versions,
         "backend_flags": backend_flags,
         "known_warning_count": known_count,
         "unexpected_warning_count": unexpected_count,
-        "inference_step_count": sum(int(record.get("inference_step_count", 1) or 0) for record in records),
-        "policy_fallback_count": sum(int(record.get("policy_fallback_count", 0) or 0) for record in records),
+        "inference_step_count": sum(int(record.get("inference_step_count", 1) or 0) for record in portable_records),
+        "policy_fallback_count": sum(int(record.get("policy_fallback_count", 0) or 0) for record in portable_records),
         "policy_fallback_reasons": sorted(
-            {str(reason) for record in records for reason in record.get("policy_fallback_reasons", []) or []}
+            {str(reason) for record in portable_records for reason in record.get("policy_fallback_reasons", []) or []}
         ),
         "policy_posterior_available_count": sum(
-            int(record.get("policy_posterior_available_count", 0) or 0) for record in records
+            int(record.get("policy_posterior_available_count", 0) or 0) for record in portable_records
         ),
-        "ok": bool(records) and unexpected_count == 0,
+        "ok": bool(portable_records) and unexpected_count == 0,
     }
 
 
@@ -240,8 +268,16 @@ def validate_runtime_diagnostics(project_root: Path) -> list[str]:
         issues.append("pymdp_runtime_diagnostics.json captured unexpected warning")
     if not payload.get("config_hashes"):
         issues.append("pymdp_runtime_diagnostics.json lacks config hashes")
-    if not payload.get("versions"):
+    versions = payload.get("versions") or {}
+    if not versions:
         issues.append("pymdp_runtime_diagnostics.json lacks package versions")
+    else:
+        required_versions = {"inferactively_pymdp", "jax", "jaxlib"}
+        if not required_versions.issubset(versions):
+            issues.append("pymdp_runtime_diagnostics.json lacks the complete package version contract")
+        for package in _PYTHON_MARKER_SELECTED_PACKAGES:
+            if versions.get(package) != RUNTIME_VERSION_CONTRACT:
+                issues.append(f"pymdp_runtime_diagnostics.json has a non-portable {package} version")
     if not payload.get("backend_flags"):
         issues.append("pymdp_runtime_diagnostics.json lacks backend flags")
     phase_rows = payload.get("phase_rows") or []

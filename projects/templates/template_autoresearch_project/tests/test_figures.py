@@ -268,6 +268,7 @@ def test_closure_flow_covers_pending_and_passed_states(project_root, autoresearc
         assert _image_stats(path)[0] > 0.0
 
 
+@pytest.mark.slow
 def test_full_quality_report_valid_for_all_registered(
     project_root, autoresearch_loop_result, ml_result, diagnostics, tmp_path
 ):

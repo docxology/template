@@ -1,0 +1,10 @@
+{
+  "schema_version": "template-autoscientists/transcript/1",
+  "revision": "fixture-2026-08-09-v1",
+  "mode": "offline",
+  "entries": [
+    {"role": "proposer", "content": "Try increasing axis 0 by 0.5."},
+    {"role": "evaluator", "content": "The deterministic objective returned a non-improving metric."},
+    {"role": "confirmation", "content": "The result remains unconfirmed and does not update the champion."}
+  ]
+}

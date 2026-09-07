@@ -100,8 +100,9 @@ publication time. The licence and edition are declared in config.yaml. -->
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Preface
@@ -162,8 +163,9 @@ figures and numbers — see [`README.md`](README.md) for the build commands.
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Part 0: Orientation and Methods {#sec:part_0_intro}
@@ -179,8 +181,9 @@ This part covers **orientation and methods**. It contains the following chapters
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Orientation to the Field {#sec:part_0_orientation}
@@ -247,13 +250,13 @@ in [@tbl:part_0_orientation_parameters].
 
 A concept map of how the pieces fit together:
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0001_5e8a5ecbb8db.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 > **Note**
 >
@@ -285,8 +288,9 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Core Methods and Tools {#sec:part_0_core_methods}
@@ -353,13 +357,13 @@ in [@tbl:part_0_core_methods_parameters].
 
 A concept map of how the pieces fit together:
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0002_5e8a5ecbb8db.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 > **Note**
 >
@@ -391,8 +395,9 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Quantitative Foundations {#sec:part_0_quantitative_foundations}
@@ -459,13 +464,13 @@ in [@tbl:part_0_quantitative_foundations_parameters].
 
 A concept map of how the pieces fit together:
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0003_5e8a5ecbb8db.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 > **Note**
 >
@@ -497,8 +502,9 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Part I: Fundamentals {#sec:part_I_intro}
@@ -514,8 +520,9 @@ This part covers **fundamentals**. It contains the following chapters:
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # First Principles {#sec:part_I_first_principles}
@@ -648,13 +655,13 @@ the test suite, so the prose and the code cannot silently disagree.
 
 ## How the pieces connect
 
-```mermaid
-graph TD
-  A[Choose state variables] --> B[Write a rate rule]
-  B --> C[Solve or simulate]
-  C --> D[Predict long-run behaviour]
-  D -->|compare to data| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0004_29eae841232d.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 This loop — choose, write, solve, predict, compare — is the first principle the
 rest of the book elaborates. Foundational treatments of model-building include
@@ -689,8 +696,9 @@ and correct by construction.
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Building Blocks {#sec:part_I_building_blocks}
@@ -757,13 +765,13 @@ in [@tbl:part_I_building_blocks_parameters].
 
 A concept map of how the pieces fit together:
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0005_5e8a5ecbb8db.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 > **Note**
 >
@@ -795,8 +803,9 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Structure and Form {#sec:part_I_structure_and_form}
@@ -863,13 +872,13 @@ in [@tbl:part_I_structure_and_form_parameters].
 
 A concept map of how the pieces fit together:
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0006_5e8a5ecbb8db.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 > **Note**
 >
@@ -901,8 +910,9 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Part II: Core Systems {#sec:part_II_intro}
@@ -918,8 +928,9 @@ This part covers **core systems**. It contains the following chapters:
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Systems Overview {#sec:part_II_systems_overview}
@@ -986,13 +997,13 @@ in [@tbl:part_II_systems_overview_parameters].
 
 A concept map of how the pieces fit together:
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0007_5e8a5ecbb8db.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 > **Note**
 >
@@ -1024,8 +1035,9 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Dynamics and Change {#sec:part_II_dynamics_and_change}
@@ -1092,13 +1104,13 @@ in [@tbl:part_II_dynamics_and_change_parameters].
 
 A concept map of how the pieces fit together:
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0008_5e8a5ecbb8db.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 > **Note**
 >
@@ -1130,8 +1142,9 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Regulation and Control {#sec:part_II_regulation_and_control}
@@ -1198,13 +1211,13 @@ in [@tbl:part_II_regulation_and_control_parameters].
 
 A concept map of how the pieces fit together:
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0009_5e8a5ecbb8db.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 > **Note**
 >
@@ -1236,8 +1249,9 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Part III: Applications and Synthesis {#sec:part_III_intro}
@@ -1253,8 +1267,9 @@ This part covers **applications and synthesis**. It contains the following chapt
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Applied Models {#sec:part_III_applied_models}
@@ -1321,13 +1336,13 @@ in [@tbl:part_III_applied_models_parameters].
 
 A concept map of how the pieces fit together:
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0010_5e8a5ecbb8db.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 > **Note**
 >
@@ -1359,19 +1374,19 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Case Studies {#sec:part_III_case_studies}
 
-![Group means with standard-error bars across six synthetic conditions,
-generated by `visualization.gallery.errorbar_plot`. In a real case study you would
-replace this gallery placeholder with your own measured group means.](../figures/gallery/gallery_errorbar.png){#fig:part_III_case_studies width=75%}
+![Pilot measurements with standard-error bars across the control, low-treatment,
+and high-treatment conditions, generated directly from
+`manuscript/assets/data/sample_dataset.csv`.](../figures/part_III_case_studies.png){#fig:part_III_case_studies width=75%}
 
-<!-- alt: A plot of six conditions on the x-axis against a measured response on
-the y-axis, each point carrying a vertical standard-error bar; the response rises
-monotonically across the six conditions. -->
+<!-- alt: Six pilot measurements increase across control, low-treatment, and
+high-treatment conditions; each point has a vertical standard-error interval. -->
 
 <!-- chapter-metadata-badge -->
 > Level 2/3 · 30 min read · 45 min lecture · Prerequisites: First Principles
@@ -1478,14 +1493,13 @@ dose–response curves usually saturate (recall the
 [@sec:appendix_math_review]); a straight line will overpredict once the system
 approaches its ceiling.
 
-```mermaid
-graph LR
-  A[Raw measurements] --> B[Group + average]
-  B --> C[Fit a trend]
-  C --> D{Within data range?}
-  D -->|yes| E[Interpolate: defensible]
-  D -->|no| F[Extrapolate: flag the risk]
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0011_258c2154784d.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 > **Warning.** A linear fit through three averaged points reports $R^2 = 0.999$,
 > but that number describes how well the line passes through three dots — not how
@@ -1521,8 +1535,9 @@ summarise, fit, then state the limits.
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Frontiers and Open Problems {#sec:part_III_frontiers}
@@ -1589,13 +1604,13 @@ in [@tbl:part_III_frontiers_parameters].
 
 A concept map of how the pieces fit together:
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0012_5e8a5ecbb8db.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 > **Note**
 >
@@ -1627,8 +1642,9 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — Orientation to the Field {#sec:lab_part_0_orientation}
@@ -1667,8 +1683,9 @@ from textbook.models import logistic_growth
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — Core Methods and Tools {#sec:lab_part_0_core_methods}
@@ -1707,8 +1724,9 @@ from textbook.models import logistic_growth
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — Quantitative Foundations {#sec:lab_part_0_quantitative_foundations}
@@ -1747,8 +1765,9 @@ from textbook.models import logistic_growth
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — First Principles {#sec:lab_part_I_first_principles}
@@ -1813,8 +1832,9 @@ for r in (0.4, 0.8, 1.2):
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — Building Blocks {#sec:lab_part_I_building_blocks}
@@ -1853,8 +1873,9 @@ from textbook.models import logistic_growth
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — Structure and Form {#sec:lab_part_I_structure_and_form}
@@ -1893,8 +1914,9 @@ from textbook.models import logistic_growth
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — Systems Overview {#sec:lab_part_II_systems_overview}
@@ -1933,8 +1955,9 @@ from textbook.models import logistic_growth
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — Dynamics and Change {#sec:lab_part_II_dynamics_and_change}
@@ -1973,8 +1996,9 @@ from textbook.models import logistic_growth
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — Regulation and Control {#sec:lab_part_II_regulation_and_control}
@@ -2013,8 +2037,9 @@ from textbook.models import logistic_growth
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — Applied Models {#sec:lab_part_III_applied_models}
@@ -2053,8 +2078,9 @@ from textbook.models import logistic_growth
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — Case Studies {#sec:lab_part_III_case_studies}
@@ -2121,8 +2147,9 @@ print(models.linear_fit(dose, response))
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Lab — Frontiers and Open Problems {#sec:lab_part_III_frontiers}
@@ -2161,8 +2188,9 @@ from textbook.models import logistic_growth
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — Orientation to the Field {#sec:q_part_0_orientation}
@@ -2185,8 +2213,9 @@ Linked chapter: [@sec:part_0_orientation].
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — Core Methods and Tools {#sec:q_part_0_core_methods}
@@ -2209,8 +2238,9 @@ Linked chapter: [@sec:part_0_core_methods].
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — Quantitative Foundations {#sec:q_part_0_quantitative_foundations}
@@ -2233,8 +2263,9 @@ Linked chapter: [@sec:part_0_quantitative_foundations].
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — First Principles {#sec:q_part_I_first_principles}
@@ -2275,8 +2306,9 @@ italics; in a print build, move them to an answer key if you prefer.
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — Building Blocks {#sec:q_part_I_building_blocks}
@@ -2299,8 +2331,9 @@ Linked chapter: [@sec:part_I_building_blocks].
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — Structure and Form {#sec:q_part_I_structure_and_form}
@@ -2323,8 +2356,9 @@ Linked chapter: [@sec:part_I_structure_and_form].
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — Systems Overview {#sec:q_part_II_systems_overview}
@@ -2347,8 +2381,9 @@ Linked chapter: [@sec:part_II_systems_overview].
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — Dynamics and Change {#sec:q_part_II_dynamics_and_change}
@@ -2371,8 +2406,9 @@ Linked chapter: [@sec:part_II_dynamics_and_change].
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — Regulation and Control {#sec:q_part_II_regulation_and_control}
@@ -2395,8 +2431,9 @@ Linked chapter: [@sec:part_II_regulation_and_control].
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — Applied Models {#sec:q_part_III_applied_models}
@@ -2419,8 +2456,9 @@ Linked chapter: [@sec:part_III_applied_models].
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — Case Studies {#sec:q_part_III_case_studies}
@@ -2466,8 +2504,9 @@ italics.
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Question Bank — Frontiers and Open Problems {#sec:q_part_III_frontiers}
@@ -2490,8 +2529,9 @@ Linked chapter: [@sec:part_III_frontiers].
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Appendix A — Authoring Guide: Filling the Stubs {#sec:appendix_authoring_guide}
@@ -2635,8 +2675,9 @@ See also: [Appendix B — Notation](appendix_notation.md),
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Appendix B — Notation and Symbols {#sec:appendix_notation}
@@ -2678,8 +2719,9 @@ See also: [Appendix C — Mathematical Review](appendix_math_review.md).
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Appendix C — Mathematical Review {#sec:appendix_math_review}
@@ -2732,8 +2774,9 @@ See also: [Appendix B — Notation](appendix_notation.md) and the
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Appendix — Formalisms {#sec:appendix_formalisms}
@@ -2877,8 +2920,9 @@ glossary.
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Appendix — Format Gallery {#sec:appendix_format_gallery}
@@ -2905,8 +2949,8 @@ subscript, E = mc^2^ with a superscript, and a footnote.[^demo]
 [^demo]: Footnotes collect at the end of the document (or page, in PDF). Use them
 for asides that would interrupt the sentence.
 
-You can hard-break a line with an explicit `<br>` element,<br>
-or separate paragraphs with a blank line. Escape
+You can hard-break a line with a backslash at the line end.\
+The next line begins after that break; separate paragraphs with a blank line. Escape
 literal Markdown with a backslash: \*not italic\*.
 
 ---
@@ -3076,52 +3120,53 @@ builders in `src/mermaid/diagrams.py` support:
 
 Flowchart:
 
-```mermaid
-graph TD
-  A[Inputs] --> B[Model]
-  B --> C[Predictions]
-  C -->|revise| A
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0013_0c47d0ecfd54.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 Sequence:
 
-```mermaid
-sequenceDiagram
-  participant Author
-  participant Engine
-  Author ->> Engine: edit config.yaml
-  Engine -->> Author: rendered PDF
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0014_292217dd39b3.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 State:
 
-```mermaid
-stateDiagram-v2
-  [*] --> Stub
-  Stub --> Drafted: fill
-  Drafted --> Reviewed: review
-  Reviewed --> [*]: publish
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0015_988c820acb70.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 Class:
 
-```mermaid
-classDiagram
-  class ChapterRef {
-    +str part_id
-    +str file
-    +stem() str
-  }
-  ChapterRef --> TocEntry : numbered as
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0016_cfcd765b5afa.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 Entity-relationship:
 
-```mermaid
-erDiagram
-  PART ||--o{ CHAPTER : contains
-  CHAPTER ||--|| LAB : has
-```
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio,alt={Mermaid diagram}]{../figures/mermaid_inline/inline_mermaid_0017_7df2b5706613.png}
+\caption{Mermaid diagram}
+\end{figure}
+
 
 Pie, Gantt, mindmap, timeline, quadrant, and user-journey diagrams are also
 supported — see `src/mermaid/diagram_specs.yaml` for a worked spec of each.
@@ -3235,8 +3280,9 @@ in equations.
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Master Glossary
@@ -3294,8 +3340,9 @@ ones as the book is written; add new terms here AND in constants.py. -->
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Appendix E — Index of Key Terms {#sec:appendix_index}

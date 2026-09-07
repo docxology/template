@@ -19,11 +19,14 @@ from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._output_text import (
+    _process_output_text,
+    _truncate_error_context,
+)
 
 logger = get_logger(__name__)
 
 _TIMEOUT_SECONDS = 120
-_ERROR_CONTEXT_LIMIT = 500
 
 
 @dataclass(frozen=True)
@@ -33,23 +36,6 @@ class DocxRenderResult:
     output_path: Path
     size_bytes: int
     duration_seconds: float
-
-
-def _truncate_error_context(stderr_text: str) -> str:
-    """Return bounded stderr/stdout context for RenderingError messages."""
-    stripped = stderr_text.strip()
-    if not stripped:
-        return "no stderr captured"
-    return stripped[:_ERROR_CONTEXT_LIMIT]
-
-
-def _process_output_text(value: bytes | str | None) -> str:
-    """Normalize subprocess stdout/stderr values to text for diagnostics."""
-    if isinstance(value, bytes):
-        return value.decode("utf-8", errors="replace")
-    if isinstance(value, str):
-        return value
-    return ""
 
 
 def render_docx(
@@ -130,7 +116,7 @@ def render_docx(
     except subprocess.TimeoutExpired as exc:
         stderr_text = _process_output_text(exc.stderr) or _process_output_text(exc.stdout) or str(exc)
         raise RenderingError(
-            f"pandoc DOCX render timed out after 120s: {_truncate_error_context(stderr_text)}"
+            f"pandoc DOCX render timed out after {_TIMEOUT_SECONDS}s: {_truncate_error_context(stderr_text)}"
         ) from exc
 
     duration = time.monotonic() - start

@@ -434,3 +434,21 @@ def test_detect_manuscript_config_skips_projects_without_manuscript(tmp_path: Pa
     findings = detect_manuscript_config(tmp_path)
     doc203 = [f for f in findings if "DOC203" in f.code]
     assert not doc203, f"Should produce no DOC203 findings; got: {doc203}"
+
+
+def test_detect_manuscript_preamble_and_bib(tmp_path: Path):
+    """DOC204 detects presence and consistency of preamble.md and references.bib."""
+    from infrastructure.doctor.detectors.layout import detect_manuscript_preamble_and_bib
+
+    projects_dir = tmp_path / "projects" / "templates"
+    projects_dir.mkdir(parents=True)
+    proj = _make_project_with_manuscript(projects_dir, "bib_test")
+    ms_dir = proj / "manuscript"
+    (ms_dir / "preamble.md").write_text("# Preamble\n")
+    (ms_dir / "references.bib").write_text("@article{test, title={Test}}\n")
+
+    findings = detect_manuscript_preamble_and_bib(tmp_path)
+    doc204 = [f for f in findings if "DOC204" in f.code]
+    assert doc204
+    assert doc204[0].healthy is True
+    assert "present" in doc204[0].title

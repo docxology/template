@@ -175,6 +175,7 @@ def test_run_projects_in_parallel_empty_returns_zero_elapsed() -> None:
     assert result == ParallelRunResult(succeeded=[], failed=[], elapsed_seconds=0.0)
 
 
+@pytest.mark.slow
 def test_parallel_run_succeeds_and_beats_serial(
     synthetic_repo: tuple[Path, list[_WorkerSpec]],
 ) -> None:

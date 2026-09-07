@@ -11,13 +11,19 @@ from types import ModuleType
 from typing import Any, cast
 
 import pytest
+from registered_report.figures import plot_permutation_result
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = PROJECT_ROOT / "scripts" / "generate_figures.py"
 FIGURE_LABEL_RE = re.compile(r"\{#(fig:[A-Za-z0-9_:-]+)\}")
 
 
-def _validate_registry(registry_path: Path, manuscript_dir: Path) -> tuple[bool, list[str]]:
+def _validate_registry(
+    registry_path: Path,
+    manuscript_dir: Path,
+    *,
+    require_accessibility: bool = False,
+) -> tuple[bool, list[str]]:
     """Validate this exemplar's registry without monorepo-only dependencies."""
     payload = json.loads(registry_path.read_text(encoding="utf-8"))
     records = {str(record["label"]): record for record in payload.get("figures", []) if isinstance(record, dict)}
@@ -28,9 +34,17 @@ def _validate_registry(registry_path: Path, manuscript_dir: Path) -> tuple[bool,
 
     issues = [f"Unregistered figure reference: {label}" for label in sorted(references - set(records))]
     for label in sorted(references & set(records)):
-        filename = records[label].get("filename")
+        record = records[label]
+        filename = record.get("filename")
         if isinstance(filename, str) and filename and not (registry_path.parent / filename).is_file():
             issues.append(f"Registered generated figure file is missing for {label}: {filename}")
+        metadata = record.get("metadata")
+        if require_accessibility and (
+            not isinstance(metadata, dict)
+            or not isinstance(metadata.get("alt_text"), str)
+            or not metadata["alt_text"].strip()
+        ):
+            issues.append(f"Referenced figure is missing accessibility alt text: {label}")
     return not issues, issues
 
 
@@ -70,8 +84,59 @@ def test_generate_assets_writes_validator_compatible_registry(tmp_path: Path) ->
         "fig:deviation_timeline",
         "fig:permutation_result",
     }
-    ok, issues = _validate_registry(registry, project / "manuscript")
+    permutation = next(record for record in payload["figures"] if record["label"] == "fig:permutation_result")
+    permutation_alt = permutation["metadata"]["alt_text"]
+    assert f"{summary['n_permutations']:,}" in permutation_alt
+    assert f"{summary['observed_difference']:.3f}" in permutation_alt
+    assert f"p={summary['p_value']:.4f}" in permutation_alt
+    ok, issues = _validate_registry(
+        registry,
+        project / "manuscript",
+        require_accessibility=True,
+    )
     assert ok, issues
+
+
+def test_accessibility_specs_follow_alternate_analysis_summary() -> None:
+    module = _load_script_module()
+    registration = cast(
+        "dict[str, Any]",
+        json.loads((PROJECT_ROOT / "data" / "example_registration.json").read_text(encoding="utf-8")),
+    )
+    frozen = module.freeze_registration(registration)
+    alternate = module.run_registered_analysis(
+        frozen,
+        n_per_group=12,
+        effect=-0.25,
+        n_permutations=17,
+    )
+
+    specs = module.build_accessible_figure_specs(frozen, alternate)
+    alt = next(spec.alt_text for spec in specs if spec.label == "fig:permutation_result")
+
+    assert "17 seeded permutation differences" in alt
+    assert f"{alternate['observed_difference']:.3f}" in alt
+    assert f"p={alternate['p_value']:.4f}" in alt
+    expected_decision = "crosses" if alternate["significant"] else "does not cross"
+    assert expected_decision in alt
+    assert "2,000" not in alt
+
+
+def test_accessibility_and_plot_fail_on_inconsistent_analysis_summary(tmp_path: Path) -> None:
+    module = _load_script_module()
+    registration = cast(
+        "dict[str, Any]",
+        json.loads((PROJECT_ROOT / "data" / "example_registration.json").read_text(encoding="utf-8")),
+    )
+    frozen = module.freeze_registration(registration)
+    summary = module.run_registered_analysis(frozen)
+    inconsistent = {**summary, "p_value": 0.9, "significant": False}
+
+    with pytest.raises(ValueError, match="seeded permutation replay: p_value, significant"):
+        module.build_accessible_figure_specs(frozen, inconsistent)
+    with pytest.raises(ValueError, match="seeded permutation replay: p_value, significant"):
+        plot_permutation_result(inconsistent, tmp_path / "must-not-render.png")
+    assert not (tmp_path / "must-not-render.png").exists()
 
 
 def test_incomplete_render_set_cannot_publish_registry(tmp_path: Path) -> None:

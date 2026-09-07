@@ -55,7 +55,7 @@
 |---|---------|--------:|-------|------------------|
 | 1 | Hook | ~3 | Why “reproducibility” fails without enforced invariants | Chat: *“What failed last time you tried to reproduce a paper?”* |
 | 2 | Design | ~8 | Two-layer architecture; thin orchestrators; `projects/` vs `projects_in_progress/` | *“Guess: where does business logic live — `scripts/` or `src/`?”* |
-| 3 | **Demo — `run.sh`** | ~12 | Interactive menu vs `./run.sh --pipeline`; logs `[0/9]` clean then `[1/9]`–`[9/9]` | *“Pause: tests, LaTeX, or validation — which breaks first on a dirty laptop?”* |
+| 3 | **Demo — `run.sh`** | ~12 | Interactive menu vs `./run.sh --pipeline`; logs `[1/10]`–`[10/10]` (clean included) | *“Pause: tests, LaTeX, or validation — which breaks first on a dirty laptop?”* |
 | 4 | **Demo — `secure_run.sh`** | ~10 | Pipeline via Python runner + stego phase; `--steganography-only` shortcut | Side-by-side: original PDF vs `*_steganography.pdf`; show `.hashes.json` |
 | 5 | Quality | ~7 | Coverage, no-mock policy, validation CLI; what actually fails the build | Quick: open a failing log path from chat |
 | 6 | Docs + agents | ~7 | README + AGENTS “duality”; `SKILL.md` on **major** infrastructure subpackages | *“Where would you point an agent first?”* |
@@ -83,7 +83,7 @@ Adjust spacing if you run **`uv run python scripts/runner/execute_pipeline.py --
 ### Act 1 — `./run.sh` (the standard front door)
 
 - **Interactive:** Running `./run.sh` with no pipeline flags opens the **menu** (environment, tests, analysis, render, validate, copy, optional LLM operations, full pipeline). Good for *showing* how operators slice the workflow.
-- **Non-interactive full pipeline:** `./run.sh --pipeline` runs the **full** sequence. Progress logs use **`[0/9]`** for the clean pre-step and **`[1/9]` … `[9/9]`** for the numbered stages (see [run.sh](../../run.sh) comments and help).
+- **Non-interactive full pipeline:** `./run.sh --pipeline` runs the **full** sequence. Progress logs are generic **`[i/N]`** banners over the 10 default-run stages, clean included (`[1/10]` … `[10/10]`; see [run.sh](../../run.sh) help and the root `AGENTS.md` STAGE_SUMMARY).
 - **Resume:** `./run.sh --pipeline --resume` continues from checkpoint (mention if you hit a long build).
 - **Core-only + steganography:** `./secure_run.sh --project <name> --core-only` runs the core DAG (no LLM stages), then the steganography pass. **`--project` is required** whenever the pipeline phase runs.
 

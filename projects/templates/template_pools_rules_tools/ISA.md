@@ -213,7 +213,7 @@ fonds/rules/tools contract intact.
 
 | name | description | satisfies | depends_on | parallelizable |
 |---|---|---|---|---|
-| new-figure-functions | 6 new `generate_*` functions in `src/figures.py` | ISC-1..8 | none | no (single file) |
+| new-figure-functions | 6 new `generate_*` functions exposed by the `src/figures.py` façade, with shared specs in `src/figure_support.py` | ISC-1..8 | none | no (split support + façade) |
 | figure-generation-script | `scripts/05_generate_figures.py` orchestrator | ISC-9..15 | new-figure-functions | no |
 | config-wiring | `config.yaml` figure registry + cover + typography metadata | ISC-16..23 | figure-generation-script | yes (independent of prose) |
 | preamble-typography | `preamble.md` margin reduction | ISC-24 | none | yes |

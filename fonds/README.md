@@ -79,8 +79,8 @@ $EDITOR fonds/my_bibliography/fonds.yaml
 # 3. Populate data/
 # ...
 
-# 4. Reference from a project
-#    See projects/README.md for the fonds_ref convention
+# 4. Consume from a project
+#    See projects/templates/template_pools_rules_tools/src/fonds_reader.py for the reading pattern
 ```
 
 ---

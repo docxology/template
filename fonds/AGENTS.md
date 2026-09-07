@@ -92,5 +92,5 @@ cp -r fonds/templates/template_bibliography fonds/templates/template_<name>
 
 ## Cross-references
 
-- `projects/AGENTS.md` — how projects reference fonds via `fonds_ref`
+- `projects/templates/template_pools_rules_tools/` — project exemplar that reads fonds via `src/fonds_reader.py` (no `fonds_ref` front-matter mechanism; projects consume fonds directly from `fonds/templates/`)
 - `fonds/templates/` — canonical exemplars for each fond type

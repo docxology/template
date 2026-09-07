@@ -1,6 +1,6 @@
 # This deck is an instance of the same claim
 
-*Slide 23 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 23 of 57 — template_template pitch, long deck — kind: `content`*
 
 - Every number on the previous two slides was read live from template_template's own manuscript/config.yaml and this monorepo's generated coverage report — not typed into this YAML file by hand.
 - src/deck_tokens.py::build_deck_tokens is the function that did the reading; you can run it yourself and get the same numbers.

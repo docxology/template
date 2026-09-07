@@ -1,10 +1,14 @@
-# Questions
+# Citation and contact
 
-*Slide 56 of 56 — template_template pitch, long deck — kind: `title`*
+*Slide 56 of 57 — template_template pitch, long deck — kind: `content`*
 
-*(no body content — section/title slide)*
+- Concept DOI: 10.5281/zenodo.20419007.
+- Repository: docxology/template_template, licensed Apache-2.0.
+- This deck itself: projects/templates/template_pitch_deck in the same monorepo.
 
 ---
+
+**Source:** [projects/templates/template_template/manuscript/config.yaml](https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/config.yaml)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_long.pdf) · [PPTX](../../pptx/template_template_pitch_long.pptx)
 **Deck content source:** [manuscript/deck_content_long.yaml](../../../manuscript/deck_content_long.yaml)

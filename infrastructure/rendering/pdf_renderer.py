@@ -25,16 +25,20 @@ from infrastructure.rendering._pdf_combined_renderer import (
     run_pandoc_conversion,
     verify_figure_references,
 )
-from infrastructure.publishing.transmission_bookends import transmission_bookends_enabled
+from infrastructure.transmission.transmission_bookends import transmission_bookends_enabled
 from infrastructure.rendering._pdf_tex_transforms import fix_figure_paths
 from infrastructure.rendering._pdf_latex_pipeline import (
     compile_latex_manuscript,
 )
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
+from infrastructure.rendering._pdf_figure_alts import apply_pdf_figure_alts
 from infrastructure.rendering._pdf_title_page_config import _load_render_config, _rendering_options
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 from infrastructure.rendering.security import subprocess_options
+from infrastructure.validation.content.figure_validator import (
+    validate_configured_cover_accessibility,
+)
 
 logger = get_logger(__name__)
 
@@ -227,6 +231,21 @@ class PDFRenderer:
             profile.validate_source(source_file)
         profile.validate_output(output_file)
 
+        project_config, project_config_file = _load_render_config(manuscript_dir)
+        tagged_pdf, language = _pdf_tagging_options(manuscript_dir)
+        cover_accessibility_issues = validate_configured_cover_accessibility(
+            project_config,
+            required=tagged_pdf,
+        )
+        if cover_accessibility_issues:
+            raise RenderingError(
+                "; ".join(cover_accessibility_issues),
+                context={
+                    "config": str(project_config_file or manuscript_dir / "config.yaml"),
+                    "tagged_pdf": tagged_pdf,
+                },
+            )
+
         # Remove existing output file to ensure fresh compilation
         if output_file.exists():
             output_file.unlink()
@@ -240,7 +259,6 @@ class PDFRenderer:
 
         combined_tex = output_dir / "_combined_manuscript.tex"
         combined_md = output_dir / "_combined_manuscript.md"
-        project_config, _ = _load_render_config(manuscript_dir)
         rendering_options = _rendering_options(project_config)
         combined_content = combine_manuscript_markdown_sections(
             source_files,
@@ -283,7 +301,6 @@ class PDFRenderer:
 
         # Step 4: Post-process LaTeX (lmodern, hidelinks, math delimiters)
         tex_content = combined_tex.read_text(encoding="utf-8")
-        tagged_pdf, language = _pdf_tagging_options(manuscript_dir)
         latex_compiler = _combined_latex_compiler(
             self.config.latex_compiler,
             tagged_pdf=tagged_pdf,
@@ -303,6 +320,11 @@ class PDFRenderer:
 
         # Step 5: Fix figure paths for LaTeX compilation
         tex_content = fix_figure_paths(tex_content, manuscript_dir, output_dir)
+        tex_content = apply_pdf_figure_alts(
+            tex_content,
+            Path(self.config.figures_dir) / "figure_registry.json",
+            tagged_pdf=tagged_pdf,
+        )
 
         # Step 6: Inject preamble and title page
         config_path = manuscript_dir / "config.yaml"

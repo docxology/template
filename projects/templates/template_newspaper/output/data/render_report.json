@@ -2,5 +2,260 @@
   "output_path": "output/pdf/the-triplicate.pdf",
   "page_count": 12,
   "all_pages_fit": true,
-  "oversets": {}
+  "oversets": {},
+  "layout_issues": {},
+  "layout_audit": {
+    "1": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 1,
+      "template": "front",
+      "main_columns": 4,
+      "main_left": 159.12,
+      "main_right": 756.0,
+      "column_width": 140.58,
+      "gutter": 11.52,
+      "body_top": 871.87,
+      "body_bottom": 71.6,
+      "glyph_well_height": 800.27,
+      "rail": true,
+      "lead": {
+        "present": true,
+        "consumed_points": 175.0,
+        "descender_clearance_points": 7,
+        "minimum_descender_clearance_points": 6
+      },
+      "issues": []
+    },
+    "2": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 2,
+      "template": "standard",
+      "main_columns": 4,
+      "main_left": 36.0,
+      "main_right": 756.0,
+      "column_width": 171.36,
+      "gutter": 11.52,
+      "body_top": 988.88,
+      "body_bottom": 71.6,
+      "glyph_well_height": 917.28,
+      "rail": false,
+      "lead": {
+        "present": true,
+        "consumed_points": 175.0,
+        "descender_clearance_points": 7,
+        "minimum_descender_clearance_points": 6
+      },
+      "issues": []
+    },
+    "3": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 3,
+      "template": "standard",
+      "main_columns": 4,
+      "main_left": 36.0,
+      "main_right": 756.0,
+      "column_width": 171.36,
+      "gutter": 11.52,
+      "body_top": 988.88,
+      "body_bottom": 71.6,
+      "glyph_well_height": 917.28,
+      "rail": false,
+      "lead": {
+        "present": true,
+        "consumed_points": 175.0,
+        "descender_clearance_points": 7,
+        "minimum_descender_clearance_points": 6
+      },
+      "issues": []
+    },
+    "4": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 4,
+      "template": "feature",
+      "main_columns": 4,
+      "main_left": 36.0,
+      "main_right": 756.0,
+      "column_width": 171.36,
+      "gutter": 11.52,
+      "body_top": 988.88,
+      "body_bottom": 71.6,
+      "glyph_well_height": 917.28,
+      "rail": false,
+      "lead": {
+        "present": true,
+        "consumed_points": 175.0,
+        "descender_clearance_points": 7,
+        "minimum_descender_clearance_points": 6
+      },
+      "issues": []
+    },
+    "5": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 5,
+      "template": "opinion",
+      "main_columns": 4,
+      "main_left": 36.0,
+      "main_right": 756.0,
+      "column_width": 171.36,
+      "gutter": 11.52,
+      "body_top": 1007.88,
+      "body_bottom": 71.6,
+      "glyph_well_height": 936.28,
+      "rail": false,
+      "lead": {
+        "present": true,
+        "consumed_points": 156.0,
+        "descender_clearance_points": 7,
+        "minimum_descender_clearance_points": 6
+      },
+      "issues": []
+    },
+    "6": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 6,
+      "template": "standard",
+      "main_columns": 4,
+      "main_left": 36.0,
+      "main_right": 756.0,
+      "column_width": 171.36,
+      "gutter": 11.52,
+      "body_top": 988.88,
+      "body_bottom": 71.6,
+      "glyph_well_height": 917.28,
+      "rail": false,
+      "lead": {
+        "present": true,
+        "consumed_points": 175.0,
+        "descender_clearance_points": 7,
+        "minimum_descender_clearance_points": 6
+      },
+      "issues": []
+    },
+    "7": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 7,
+      "template": "standard",
+      "main_columns": 4,
+      "main_left": 36.0,
+      "main_right": 756.0,
+      "column_width": 171.36,
+      "gutter": 11.52,
+      "body_top": 988.88,
+      "body_bottom": 71.6,
+      "glyph_well_height": 917.28,
+      "rail": false,
+      "lead": {
+        "present": true,
+        "consumed_points": 175.0,
+        "descender_clearance_points": 7,
+        "minimum_descender_clearance_points": 6
+      },
+      "issues": []
+    },
+    "8": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 8,
+      "template": "standard",
+      "main_columns": 4,
+      "main_left": 36.0,
+      "main_right": 756.0,
+      "column_width": 171.36,
+      "gutter": 11.52,
+      "body_top": 988.88,
+      "body_bottom": 71.6,
+      "glyph_well_height": 917.28,
+      "rail": false,
+      "lead": {
+        "present": true,
+        "consumed_points": 175.0,
+        "descender_clearance_points": 7,
+        "minimum_descender_clearance_points": 6
+      },
+      "issues": []
+    },
+    "9": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 9,
+      "template": "standard",
+      "main_columns": 4,
+      "main_left": 36.0,
+      "main_right": 756.0,
+      "column_width": 171.36,
+      "gutter": 11.52,
+      "body_top": 988.88,
+      "body_bottom": 71.6,
+      "glyph_well_height": 917.28,
+      "rail": false,
+      "lead": {
+        "present": true,
+        "consumed_points": 175.0,
+        "descender_clearance_points": 7,
+        "minimum_descender_clearance_points": 6
+      },
+      "issues": []
+    },
+    "10": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 10,
+      "template": "standard",
+      "main_columns": 4,
+      "main_left": 36.0,
+      "main_right": 756.0,
+      "column_width": 171.36,
+      "gutter": 11.52,
+      "body_top": 1163.88,
+      "body_bottom": 71.6,
+      "glyph_well_height": 1092.28,
+      "rail": false,
+      "lead": {
+        "present": false,
+        "consumed_points": 0.0,
+        "descender_clearance_points": null,
+        "minimum_descender_clearance_points": null
+      },
+      "issues": []
+    },
+    "11": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 11,
+      "template": "classified",
+      "main_columns": 6,
+      "main_left": 36.0,
+      "main_right": 756.0,
+      "column_width": 110.4,
+      "gutter": 11.52,
+      "body_top": 1163.88,
+      "body_bottom": 71.6,
+      "glyph_well_height": 1092.28,
+      "rail": false,
+      "lead": {
+        "present": false,
+        "consumed_points": 0.0,
+        "descender_clearance_points": null,
+        "minimum_descender_clearance_points": null
+      },
+      "issues": []
+    },
+    "12": {
+      "schema_version": "template-newspaper/layout-audit/1",
+      "page": 12,
+      "template": "feature",
+      "main_columns": 4,
+      "main_left": 36.0,
+      "main_right": 756.0,
+      "column_width": 171.36,
+      "gutter": 11.52,
+      "body_top": 988.88,
+      "body_bottom": 71.6,
+      "glyph_well_height": 917.28,
+      "rail": false,
+      "lead": {
+        "present": true,
+        "consumed_points": 175.0,
+        "descender_clearance_points": 7,
+        "minimum_descender_clearance_points": 6
+      },
+      "issues": []
+    }
+  }
 }

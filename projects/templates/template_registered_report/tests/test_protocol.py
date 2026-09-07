@@ -9,9 +9,12 @@ import pytest
 
 from registered_report import (
     build_deviation_ledger,
+    build_publication_receipt,
     build_review_packet,
     compare_analysis_to_registration,
     freeze_registration,
+    migrate_registration,
+    REGISTRATION_SCHEMA_VERSION,
     registration_hash,
     validate_sensitivity_table,
     validate_registration,
@@ -39,6 +42,34 @@ def test_freeze_registration_adds_content_hash_without_mutating_source() -> None
     supplied = unhashed.pop("registration_hash")
     assert supplied == registration_hash(unhashed)
     assert validate_registration(frozen) == ()
+    assert frozen["schema_version"] == REGISTRATION_SCHEMA_VERSION
+
+
+def test_legacy_registration_migrates_without_filling_dropped_fields() -> None:
+    legacy = load_registration()
+    migrated = migrate_registration(legacy)
+    assert migrated["schema_version"] == REGISTRATION_SCHEMA_VERSION
+    assert migrated["hypotheses"] == legacy["hypotheses"]
+    broken = dict(legacy)
+    broken.pop("outcomes")
+    assert any(f.code == "missing_section" for f in validate_registration(migrate_registration(broken)))
+
+
+def test_publication_receipt_requires_owner_authority_and_matching_payload() -> None:
+    with pytest.raises(ValueError, match="owner authority"):
+        build_publication_receipt({}, artifact_digest="a" * 64)
+    authority = {
+        "status": "approved",
+        "authority": "owner",
+        "receipt_id": "receipt-1",
+        "repository": "example/repo",
+        "payload_digest": "a" * 64,
+    }
+    receipt = build_publication_receipt({}, artifact_digest="a" * 64, authority_receipt=authority)
+    assert receipt["status"] == "approved"
+    authority["payload_digest"] = "b" * 64
+    with pytest.raises(ValueError, match="payload digest"):
+        build_publication_receipt({}, artifact_digest="a" * 64, authority_receipt=authority)
 
 
 def test_registered_execution_scores_as_valid() -> None:

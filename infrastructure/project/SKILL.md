@@ -70,7 +70,7 @@ untracked.
 ## Rendered vs Non-Rendered Subfolders
 
 - **Rendered:** `projects/templates/` (public exemplars) and optional `projects/active/` (hot-seat) — discovered and executed by infrastructure when present.
-- **Non-rendered:** `projects/working/` and `projects/archive/` in the simplified sidecar; optional legacy `projects/published/` and `projects/other/` are also preserved but not executed.
+- **Non-rendered:** `projects/working/` and `projects/archive/` in the simplified sidecar; the optional legacy `projects/active/` is also preserved but not executed.
 
 ```bash
 # Retire a sidecar working project

@@ -17,6 +17,7 @@ src/
     ├── __init__.py
     ├── introspection.py
     ├── metrics.py
+    ├── contracts.py
     ├── inject_metrics.py
     ├── architecture_viz.py
     ├── viz_palette.py

@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import yaml
 
 from json_io import load_json as _load_json
 from ontology.bindings import (
@@ -16,6 +15,7 @@ from ontology.bindings import (
 from manuscript.sheaf.coverage import load_sheaf_coverage_context
 from manuscript.sheaf.semantic_maps import ARTIFACT_GATES, ARTIFACT_PRODUCERS
 from manuscript.sheaf.semantic_restrictions import _configured_analysis_scripts, _gnn_symbols
+from yaml_io import load_yaml
 
 
 def _section_records(project_root: Path) -> list[dict[str, Any]]:
@@ -46,9 +46,7 @@ def _section_records(project_root: Path) -> list[dict[str, Any]]:
 
 def _claim_records(root: Path) -> list[dict[str, Any]]:
     path = root / "data" / "claim_ledger.yaml"
-    if not path.is_file():
-        return []
-    ledger = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    ledger = load_yaml(path)
     records: list[dict[str, Any]] = []
     for claim in ledger.get("claims") or []:
         records.append(

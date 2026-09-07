@@ -23,12 +23,13 @@ flowchart TB
     T --> PIPE[Pipeline / Orchestration<br/>test_checkpoint · test_pipeline · test_pipeline_summary ·<br/>test_multi_project · test_retry]
     T --> DISC[Discovery<br/>test_project_discovery · test_script_discovery]
     T --> CLI[CLI<br/>test_cli]
+    T --> SUB[Subprocess / impact contracts<br/>test_subprocess_policy · test_test_impact]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef cat fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class CFG,EXC,LOG,FILES,MENU,PIPE,DISC,CLI,CFG_DIR,PIPE_DIR,TEL_DIR cat
+    class CFG,EXC,LOG,FILES,MENU,PIPE,DISC,CLI,SUB,CFG_DIR,PIPE_DIR,TEL_DIR cat
     class META doc
 ```
 

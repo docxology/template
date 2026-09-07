@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from seal_child import seal_child
 from src.project_paths import project_output_dirs
+from src.realize import select_full_child
 
 PROJECT_ROOT = Path(__file__).parent.parent
 
@@ -23,12 +24,15 @@ def main():
     """CLI entry point."""
     dirs = project_output_dirs(PROJECT_ROOT)
     child_dir = dirs["children"]
-    children = sorted(child_dir.iterdir()) if child_dir.exists() else []
-    if not children:
+    if not child_dir.exists():
         print("No children found. Run realize_child_full.py first.", file=sys.stderr)
         sys.exit(1)
-    latest = children[-1]
-    seal_child(latest)
+    try:
+        full_child = select_full_child(PROJECT_ROOT, child_dir)
+    except (FileNotFoundError, ValueError) as exc:
+        print(str(exc), file=sys.stderr)
+        sys.exit(1)
+    seal_child(full_child)
 
 
 if __name__ == "__main__":

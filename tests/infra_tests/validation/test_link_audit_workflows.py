@@ -221,29 +221,22 @@ class TestCheckLinksIntegrationRelativePaths:
 
 
 class TestBulkLinkChecking:
-    """Test bulk link checking functionality."""
+    """Test the public bulk link-audit entry point."""
 
-    def test_check_all_links(self, tmp_path):
-        """Test checking all links in a file."""
+    def test_run_link_audit_valid_document(self, tmp_path):
+        """A document whose file references resolve should pass the audit."""
         doc = tmp_path / "doc.md"
         target = tmp_path / "target.md"
         target.write_text("# Target")
         doc.write_text("[Link](target.md)")
 
-        if hasattr(check_links, "check_all_links"):
-            results = check_links.check_all_links(doc, tmp_path)
-            assert results is not None
+        assert check_links.run_link_audit(tmp_path) == 0
 
-    def test_check_directory_links(self, tmp_path):
-        """Test checking links in entire directory."""
-        docs = tmp_path / "docs"
-        docs.mkdir()
-        (docs / "a.md").write_text("[Link](b.md)")
-        (docs / "b.md").write_text("# B")
+    def test_run_link_audit_broken_document(self, tmp_path):
+        """A document with a missing file reference should fail the audit."""
+        (tmp_path / "doc.md").write_text("[Missing](missing.md)")
 
-        if hasattr(check_links, "check_directory_links"):
-            results = check_links.check_directory_links(docs)
-            assert results is not None
+        assert check_links.run_link_audit(tmp_path) == 1
 
 
 class TestCheckLinksIntegration:
@@ -270,8 +263,7 @@ class TestCheckLinksIntegration:
         readme = tmp_path / "README.md"
         readme.write_text("# README")
 
-        # Module should work
-        assert check_links is not None
+        assert check_links.run_link_audit(tmp_path) == 0
 
 
 class TestMainFunctionReporting:

@@ -15,6 +15,7 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 | [`modules-guide.md`](modules-guide.md) | Guide for infrastructure modules | Developers |
 | [`scientific-simulation-guide.md`](scientific-simulation-guide.md) | Scientific simulation and analysis system | Researchers |
 | [`pdf-validation.md`](pdf-validation.md) | PDF validation system documentation | Developers |
+| [`literature-search-and-references.md`](literature-search-and-references.md) | Literature search and reference management module | Researchers |
 
 ### Per-Module Guides (`guides/`)
 

@@ -7,8 +7,10 @@ verify_pdf_outputs with real PDFs and real directory structures.
 
 from __future__ import annotations
 
+import zipfile
 from pathlib import Path
 
+import pytest
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
@@ -20,6 +22,7 @@ from infrastructure.rendering._pipeline_summary import (
     generate_rendering_summary,
     log_rendering_summary,
     verify_pdf_outputs,
+    verify_render_outputs,
 )
 
 
@@ -38,6 +41,167 @@ def _make_pdf(path: Path, pages: int = 1, text: str = "test") -> None:
 def _make_valid_combined_pdf(path: Path, text: str = "combined manuscript") -> None:
     """Create a PDF large enough to pass the >0.01 MB size check in verify_pdf_outputs."""
     _make_pdf(path, pages=12, text=text)
+
+
+def _make_docx(path: Path) -> None:
+    """Write a minimal well-formed DOCX package."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr("[Content_Types].xml", "<Types/>")
+        archive.writestr("word/document.xml", "<document/>")
+
+
+def _make_epub(path: Path, *, chapter: str | None = None) -> None:
+    """Write a minimal well-formed EPUB package."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    container = (
+        '<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">'
+        '<rootfiles><rootfile full-path="EPUB/content.opf" '
+        'media-type="application/oebps-package+xml"/></rootfiles></container>'
+    )
+    package = (
+        '<package xmlns="http://www.idpf.org/2007/opf" version="3.0">'
+        '<manifest><item id="chapter" href="chapter.xhtml" '
+        'media-type="application/xhtml+xml"/></manifest>'
+        '<spine><itemref idref="chapter"/></spine></package>'
+    )
+    chapter = chapter or '<html xmlns="http://www.w3.org/1999/xhtml"><body><p>Current.</p></body></html>'
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr("mimetype", "application/epub+zip", compress_type=zipfile.ZIP_STORED)
+        archive.writestr("META-INF/container.xml", container)
+        archive.writestr("EPUB/content.opf", package)
+        archive.writestr("EPUB/chapter.xhtml", chapter)
+
+
+def test_verify_render_outputs_validates_enabled_docx_and_epub_packages(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Non-PDF package verification uses their real container contracts."""
+
+    for env_name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(env_name, raising=False)
+    project = tmp_path / "projects" / "templates" / "test_proj"
+    manuscript = project / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+    (manuscript / "config.yaml").write_text(
+        "render:\n  formats:\n    pdf: false\n    html: false\n    slides: false\n    docx: true\n    epub: true\n",
+        encoding="utf-8",
+    )
+
+    docx = project / "output" / "docx" / "test_proj_combined.docx"
+    _make_docx(docx)
+
+    epub = project / "output" / "epub" / "test_proj_combined.epub"
+    _make_epub(epub)
+
+    assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is True
+
+
+def test_verify_render_outputs_rejects_nested_legacy_docx_and_epub_packages(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Stage 3 rejects reserved combined packages anywhere below format roots."""
+
+    for env_name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(env_name, raising=False)
+    project = tmp_path / "projects" / "templates" / "test_proj"
+    manuscript = project / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+    (manuscript / "config.yaml").write_text(
+        "render:\n  formats:\n    pdf: false\n    html: false\n    slides: false\n    docx: true\n    epub: true\n",
+        encoding="utf-8",
+    )
+    _make_docx(project / "output" / "docx" / "test_proj_combined.docx")
+    _make_epub(project / "output" / "epub" / "test_proj_combined.epub")
+
+    legacy_docx = project / "output" / "docx" / "templates" / "old_project_combined.docx"
+    _make_docx(legacy_docx)
+    assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is False
+    legacy_docx.unlink()
+
+    legacy_epub = project / "output" / "epub" / "templates" / "old_project_combined.epub"
+    _make_epub(legacy_epub)
+    assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is False
+    legacy_epub.unlink()
+
+    assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is True
+
+
+def test_verify_render_outputs_rejects_malformed_epub_xhtml(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Stage 3 applies the same XML-safe EPUB policy as later gates."""
+
+    for env_name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(env_name, raising=False)
+    project = tmp_path / "projects" / "templates" / "test_proj"
+    manuscript = project / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+    (manuscript / "config.yaml").write_text(
+        "render:\n  formats:\n    pdf: false\n    html: false\n    slides: false\n    docx: false\n    epub: true\n",
+        encoding="utf-8",
+    )
+    _make_epub(
+        project / "output" / "epub" / "test_proj_combined.epub",
+        chapter=(
+            '<html xmlns="http://www.w3.org/1999/xhtml"><body><p>Line break<br>is malformed XHTML.</p></body></html>'
+        ),
+    )
+
+    assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is False
+
+
+def test_verify_render_outputs_rejects_slides_enabled_with_zero_decks(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An all-skipped manuscript cannot satisfy an enabled slides format."""
+
+    for env_name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(env_name, raising=False)
+    project = tmp_path / "projects" / "templates" / "test_proj"
+    manuscript = project / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "01_intro.md").write_text(
+        "<!-- render:skip-beamer -->\n# Intro\n",
+        encoding="utf-8",
+    )
+    (manuscript / "config.yaml").write_text(
+        "render:\n  formats:\n    pdf: false\n    html: false\n    slides: true\n    docx: false\n    epub: false\n",
+        encoding="utf-8",
+    )
+
+    assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is False
+
+
+def test_verify_render_outputs_rejects_deck_for_deleted_source(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A structurally valid old deck cannot ride along with current slides."""
+
+    for env_name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(env_name, raising=False)
+    project = tmp_path / "projects" / "templates" / "test_proj"
+    manuscript = project / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "01_current.md").write_text("# Current\n", encoding="utf-8")
+    (manuscript / "config.yaml").write_text(
+        "render:\n  formats:\n    pdf: false\n    html: false\n    slides: true\n    docx: false\n    epub: false\n",
+        encoding="utf-8",
+    )
+    _make_pdf(project / "output" / "slides" / "01_current_slides.pdf")
+    _make_pdf(project / "output" / "slides" / "00_deleted_slides.pdf")
+
+    assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is False
 
 
 class TestStrictLatexWarningPolicy:

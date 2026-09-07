@@ -158,3 +158,58 @@ def detect_manuscript_config(repo_root: Path) -> list[Finding]:
                 )
             )
     return findings
+
+
+def detect_manuscript_preamble_and_bib(repo_root: Path) -> list[Finding]:
+    """Each project with manuscript should declare valid preamble.md and references.bib if referenced."""
+    try:
+        from infrastructure.project.discovery import discover_projects
+    except Exception:  # pragma: no cover — covered by DOC201
+        return []
+
+    findings: list[Finding] = []
+    for project in discover_projects(repo_root):
+        if not project.has_manuscript:
+            continue
+        ms_dir = project.path / "manuscript"
+        preamble = ms_dir / "preamble.md"
+        bib = ms_dir / "references.bib"
+
+        has_preamble = preamble.is_file()
+        has_bib = bib.is_file()
+
+        if has_preamble and has_bib:
+            findings.append(
+                Finding(
+                    code=f"DOC204[{project.qualified_name}]",
+                    title=f"{project.qualified_name}: manuscript preamble and bibliography present",
+                    severity=Severity.INFO,
+                    healthy=True,
+                    description="Both preamble.md and references.bib are present.",
+                    evidence={"preamble": str(preamble), "references": str(bib)},
+                )
+            )
+        elif not has_preamble and not has_bib:
+            findings.append(
+                Finding(
+                    code=f"DOC204[{project.qualified_name}]",
+                    title=f"{project.qualified_name}: manuscript preamble and references absent (optional)",
+                    severity=Severity.INFO,
+                    healthy=True,
+                    description="Preamble and references not configured for this project.",
+                )
+            )
+        else:
+            present = "preamble.md" if has_preamble else "references.bib"
+            missing = "references.bib" if has_preamble else "preamble.md"
+            findings.append(
+                Finding(
+                    code=f"DOC204[{project.qualified_name}]",
+                    title=f"{project.qualified_name}: manuscript {present} present but {missing} missing",
+                    severity=Severity.INFO,
+                    healthy=True,
+                    description=f"{present} is configured; verify if {missing} is also required.",
+                    evidence={"present": present, "missing": missing},
+                )
+            )
+    return findings

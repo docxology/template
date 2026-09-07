@@ -116,10 +116,9 @@ def only_changed_artifact_manifest_issues(report: AutoResearchReport) -> bool:
     )
 
 
-def write_readiness_manifest(project_root: Path, output_paths: list[Path]) -> Path:
-    """Refresh the pre-readiness manifest after generated artifacts settle."""
-    manifest_path = write_artifact_manifest(project_root, output_paths, exclude_volatile=True)
-    return write_artifact_manifest(project_root, [*output_paths, manifest_path], exclude_volatile=True)
+def write_readiness_manifest(project_root: Path, repo_root: Path) -> Path:
+    """Refresh the exact lifecycle-aware manifest after artifacts settle."""
+    return write_artifact_manifest(project_root, repo_root=repo_root)
 
 
 def run_provisional_payload_phase(ctx: LoopRunContext, result: AutoResearchLoopResult) -> None:
@@ -167,9 +166,9 @@ def run_pre_readiness_visual_phase(ctx: LoopRunContext, result: AutoResearchLoop
 
 def run_pre_readiness_settlement_phase(ctx: LoopRunContext, result: AutoResearchLoopResult) -> None:
     """Refresh manifests, run settlement pass 2, and refresh manifests again."""
-    append_paths(ctx, write_readiness_manifest(ctx.project_root, ctx.output_paths))
+    append_paths(ctx, write_readiness_manifest(ctx.project_root, ctx.repo_root))
     run_settlement_manifest_phase(ctx, result, settlement_pass_count=2, write_final_manifest=False)
-    append_paths(ctx, write_readiness_manifest(ctx.project_root, ctx.output_paths))
+    append_paths(ctx, write_readiness_manifest(ctx.project_root, ctx.repo_root))
 
 
 def resolve_extrinsic_readiness(
@@ -181,7 +180,7 @@ def resolve_extrinsic_readiness(
     """Validate extrinsic readiness and refresh manifests when only checksums drift."""
     readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
     if only_changed_artifact_manifest_issues(readiness_post):
-        append_paths(ctx, write_readiness_manifest(ctx.project_root, ctx.output_paths))
+        append_paths(ctx, write_readiness_manifest(ctx.project_root, ctx.repo_root))
         readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
     readiness_valid = readiness_pre.valid and readiness_post.valid
     readiness_report = combine_readiness_reports(readiness_pre, readiness_post, plan.project_name)
@@ -237,7 +236,7 @@ def run_settlement_manifest_phase(
         write_research_object_manifest(ctx.project_root, ctx.output_paths, generated_at=ctx.generated_at),
     )
     if write_final_manifest:
-        append_paths(ctx, write_artifact_manifest(ctx.project_root, ctx.output_paths))
+        append_paths(ctx, write_artifact_manifest(ctx.project_root, repo_root=ctx.repo_root))
 
 
 def run_post_readiness_final_phases(ctx: LoopRunContext, final: AutoResearchLoopResult) -> None:

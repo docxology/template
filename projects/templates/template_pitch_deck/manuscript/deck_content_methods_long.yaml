@@ -1,0 +1,35 @@
+title: "{{PITCH_SUBJECT_TITLE}}"
+subtitle: "A controlled-method specification pitch for reproducible research teams"
+slides:
+  - kind: title
+    title: "{{PITCH_SUBJECT_TITLE}}"
+  - kind: section
+    title: "Audience and failure mode"
+  - kind: content
+    title: "Methods are interfaces"
+    bullets:
+      - "A method is an interface between a question, its inputs, and the claims its outputs can support."
+      - "When that interface is implicit, later changes can silently alter the meaning of a result."
+  - kind: content
+    title: "A small controlled language"
+    bullets:
+      - "The DSL names stages, dependencies, units, and exports as data that can be parsed and validated."
+      - "Compilation remains deterministic and offline by default, with no hidden network or LLM path."
+    source: "projects/templates/template_methods_paper/src"
+  - kind: content
+    title: "Negative controls carry the argument"
+    bullets:
+      - "Malformed stages, changed literals, and invalid units must fail before a receipt can be treated as current."
+      - "The focused tests exercise those failures without repeating the full refresh path."
+    source: "projects/templates/template_methods_paper/tests"
+  - kind: content
+    title: "What the receipt means"
+    bullets:
+      - "It binds a local source revision, method plan, output schema, and deterministic compiler result."
+      - "It does not substitute for a domain comparator, real data provenance, or owner-authorized publication."
+    source: "projects/templates/template_methods_paper/README.md"
+  - kind: content
+    title: "A bounded next step"
+    bullets:
+      - "Encode one production method and review the diff with its domain owner."
+      - "Promote only the claims whose evidence and acceptance predicates are explicit."

@@ -88,7 +88,11 @@ checked out.
 model shared by both renderers:
 
 - `Slide` — one slide's title, bullets, an optional speaker-notes string, an
-  optional local figure path, and a `kind` (`title`, `section`, or `content`).
+  optional local figure path, and a `kind` — one of six layout hints:
+  `title` (deck opener/closer), `section` (section-divider), `content`
+  (default: title + bullets), `stat` (one large highlighted number +
+  label), `quote` (a pull-quote + attribution), or `diagram` (title + a
+  large full-bleed figure, e.g. a rendered Mermaid diagram).
 - `DeckContent` — a deck title/subtitle plus an ordered tuple of `Slide`.
 - `SlideBudget` — the three published maximum lengths (`SHORT` ≤ 11 slides,
   `MEDIUM` ≤ 38, `LONG` ≤ 58) and `filter_deck_for_budget`, a pure function
@@ -108,11 +112,16 @@ column geometry — is a reusable output shape any future project can consume.
 `infrastructure/rendering/pptx_deck.render_pptx` builds the identical slide
 sequence with `python-pptx` (an opt-in dependency:
 `uv sync --group rendering-pptx`), matching title/section/content slide
-handling 1:1 with the PDF path. Both renderers are exercised by
+handling 1:1 with the PDF path. Both paths consume one exact Helvetica
+glyph-width fitter and one precomputed content-line layout from
+`slide_deck.py`; neither independently estimates title width or body wrapping.
+The shared preflight rejects an unfit title or content entering the protected
+QR/source-footer band before an existing artifact is replaced. Both renderers
+are exercised by
 `tests/infra_tests/rendering/test_slide_deck.py` and
 `test_pptx_deck.py`, including a direct parity test that renders the same
-`DeckContent` through both paths and asserts the PDF page count equals the
-PPTX slide count.
+`DeckContent` through both paths and asserts matching PDF/PPTX title sizes,
+body line breaks, and slide counts.
 
 ## Project-side content
 
@@ -124,6 +133,12 @@ loading, token resolution, cliché linting, and the two infra renderers
 together into the six published artifacts under
 `output/{pdf,pptx}/`.
 
+Medium and long split the public roster into one source-cited names-only slide
+and one identically cited contract slide. The split preserves every live name
+and all three original claims without shrinking presentation body text;
+executable tests derive the exact roster dynamically and bind each authored
+deck to its declared budget.
+
 
 
 ---
@@ -131,9 +146,6 @@ together into the six published artifacts under
 
 
 # Content and Validation {#sec:validation}
-
-## Methods
-
 
 ## The flagship pitch
 
@@ -147,7 +159,18 @@ under-tooled), the solution (a two-layer, thin-orchestrator monorepo with a
 proof (real, currently-measured facts: exemplar count, coverage floors, the
 publishing surface `template_template` itself already reaches), and an ask.
 Medium and long variants add landscape, architecture, and roadmap detail;
-long adds a full governance/confidentiality walkthrough and an appendix.
+long adds a full governance/confidentiality walkthrough and an appendix. In
+both variants, the complete live public roster occupies its own cited slide and
+the two original concrete-instance/uniform-contract claims occupy the next
+slide with the same citation. Executable tests derive the exact names from
+`PUBLIC_PROJECT_NAMES` and bind each authored deck to its declared budget.
+
+The infrastructure subpackage donut also treats percentage contrast as a
+validated content property. `src/chart_rendering.py` composites each real
+wedge artist over the white canvas, chooses theme-black or theme-white by WCAG
+relative luminance, compares the result with the executable method constant
+`4.5:1`, and fails closed below that threshold. Outside slice labels remain
+black on the white background.
 
 ## Token resolution
 
@@ -157,7 +180,7 @@ long adds a full governance/confidentiality walkthrough and an appendix.
 instead of `manuscript/*.md`. `resolve_tokens` raises if any token in the
 content has no matching key in the live token set from `src/deck_tokens.py` — mirroring
 `template_madlib`'s `test_all_manuscript_tokens_are_generated` pre-substitution
-coverage check, adapted to deck content. `scripts/audit_deck_content.py`
+coverage check, adapted to deck content. `scripts/10_audit_deck_content.py`
 runs this check plus the cliché lint in one pass and exits non-zero on either
 class of failure; both failure modes are proven to actually fire (a
 deliberately-broken fixture triggers each) before the real content is
@@ -190,14 +213,14 @@ only place a generation time is recorded is deck metadata, following the
 repository for reproducible builds.
 
 ```bash
-uv run python scripts/20_render_decks.py
+uv run python projects/templates/template_pitch_deck/scripts/20_render_decks.py
 # → output/pdf/template_template_pitch_{short,medium,long}.pdf
 # → output/pptx/template_template_pitch_{short,medium,long}.pptx
 
 uv run pytest projects/templates/template_pitch_deck/tests/ \
   --cov=projects/templates/template_pitch_deck/src --cov-fail-under=90
 
-uv run python scripts/audit/check_template_drift.py
+uv run python scripts/audit/check_template_drift.py --project templates/template_pitch_deck --strict
 ```
 
 This project participates in the standard multi-project pipeline like any
@@ -205,6 +228,41 @@ other public exemplar (`./run.sh --project templates/template_pitch_deck --pipel
 and requires no LLM/Ollama stage — deck content is authored and
 token-resolved, not generated at render time by a model call, which keeps
 the artifact deterministic and the core pipeline Ollama-optional.
+
+
+
+---
+
+
+
+# Methodology {#sec:methodology}
+
+The deck is generated deterministically from a structured content model rather
+than authored slide-by-slide.
+
+## Deck construction
+
+`manuscript/deck_content_{short,medium,long}.yaml` are the single source of
+truth for slide content across three lengths. `src/deck_tokens.py` resolves
+live repository facts (`{{TOKEN}}` placeholders) from `template_template`'s own
+`manuscript/config.yaml` and the public exemplar roster — never hand-typed
+literals. `src/render_orchestration.py` then renders the resolved model into
+PDF (via reportlab) and PPTX (via python-pptx) through `scripts/20_render_decks.py`,
+with both renderers consuming one shared content model.
+
+## Validation
+
+Three offline audits run as real gates before the deck ships:
+
+| Check | Tool | Failure mode |
+| --- | --- | --- |
+| Token resolution | `src/token_resolution.py` | any unresolved `{{TOKEN}}` fails the run |
+| Cliché lint | `src/cliche_lint.py` | any stock pitch phrase fails the run |
+| Diligence citations | `src/diligence_audit.py` | any fact-bearing slide lacking a source fails |
+
+`scripts/10_audit_deck_content.py` runs the token and cliché checks in one pass;
+`scripts/30_audit_diligence.py` enforces 100% fact-citation coverage across all
+three lengths. PowerPoint/PDF slide-count parity is verified for every render.
 
 
 

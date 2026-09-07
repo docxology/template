@@ -46,8 +46,9 @@ flowchart TB
   covers log rotation, dependency updates, and backups.
 - **Pipeline orchestration** → [`docs/RUN_GUIDE.md`](../RUN_GUIDE.md) (stages,
   flags, common invocations).
-- **Project paths in commands**: use `--project template_code_project` in
-  examples unless documenting placeholders; active names →
+- **Project paths in commands**: prefer the qualified public name
+  `--project templates/template_code_project` in examples unless documenting
+  placeholders; public names →
   [`_generated/active_projects.md`](../_generated/active_projects.md).
 - **Build / dependencies / CI patterns** → [`build/`](build/)
   (`build-system.md`, `dependency-management.md`, `ci-cd-integration.md`); CI/CD
@@ -76,17 +77,17 @@ flowchart TB
 
 # Install deps and validate workspace
 uv sync
-uv run python scripts/pipeline/stage_00_setup.py --project template_code_project
+uv run python scripts/pipeline/stage_00_setup.py --project templates/template_code_project
 
 # Full / core pipeline
-uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only
 
 # Individual stages
-uv run python scripts/pipeline/stage_01_test.py
-uv run python scripts/pipeline/stage_03_render.py
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
 
 # Debug with verbose logging
-LOG_LEVEL=0 uv run python scripts/pipeline/stage_03_render.py
+LOG_LEVEL=0 uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
 
 # Docker (from repo root; compose file is under infrastructure/docker/)
 docker compose -f infrastructure/docker/docker-compose.yml --profile dev up -d

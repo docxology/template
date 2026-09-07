@@ -15,11 +15,11 @@ as verified success.
 | Multi-project summaries | `multi_project_reporter.py`, `multi_project_report.py` | Terminal and last-run multi-project summaries. |
 | Executive reports | `executive_reporter.py`, `_executive_*`, `_dashboard_*`, `_csv_*` | Dashboard, CSV, HTML, image, and markdown report generation. |
 | Evidence/release | `evidence_graph.py`, `release_readiness.py` | Local evidence graph and no-network release-readiness dashboard. `evidence_graph.py` graphs this repo's own `pipeline.yaml` stage DAG (producer/consumer/validator/artifact/claim) — a structurally-similar-but-different-domain analog to `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s paper-content workflow graphs; cross-reference only, the two are not merged. |
-| Error/test helpers | `error_aggregator.py`, `suite_runner.py`, `pipeline_test_runner.py`, `pytest_output_parser.py` | Test orchestration and failure aggregation. |
+| Error/test helpers | `error_aggregator.py`, `suite_runner.py`, `pipeline_test_runner.py`, `project_verifier.py`, `pytest_output_parser.py` | Test orchestration and failure aggregation. `project_verifier.py` owns the nonce-bound receipt, confined argv, timeout, real-count, and independent coverage contract for explicitly declared single-project verifiers. |
 | Coverage parsing | `coverage_json_parser.py` | `parse_coverage_json` reads pytest-cov `coverage.json` into per-file and overall coverage stats. |
 | Coverage analysis | `coverage_analysis.py` | `format_coverage_status`, `analyze_coverage_gaps`, and `format_failure_suggestions` render coverage against thresholds and derive gap and failure hints. |
 | Coverage facade | `coverage_reporter.py` | Backwards-compatible re-export of `parse_coverage_json`, `parse_pytest_output`, `generate_test_report`, `save_test_report_to_files`, and the coverage-analysis helpers. |
-| Test summary builder | `report_builder.py` | `discover_active_projects` and `generate_summary_report` aggregate infrastructure and project suite results into one weighted summary structure. |
+| Test summary builder | `report_builder.py` | `discover_active_projects` returns `ProjectInfo.qualified_name` (so `templates/<name>` does not collide with a flat sibling) and `generate_summary_report` aggregates infrastructure and project suite results into one weighted summary structure. |
 | Test result loaders | `result_loaders.py` | `load_test_results` and `load_infrastructure_results` read runner JSON into the `InfraResults` shape. |
 | Stage 01 reporting | `pipeline_test_reporting.py` | `report_results` and `report_infra_only_results` log the Stage 01 test-execution summary in human-readable form. |
 | Executive output layout | `executive_outputs.py` | `organize_executive_summary` and `ExecutiveOutputOptions` sort `output/executive_summary` files by type via `OutputOrganizer`. |
@@ -27,7 +27,7 @@ as verified success.
 | Log summaries | `log_analysis.py` | `generate_log_summary` tallies log-level counts and error/warning samples into a human-readable log report. |
 | Run lessons | `run_lessons.py` | `collect_run_lessons` and `write_run_lessons` capture per-run pipeline lessons (`RunLesson`) to JSONL, Markdown, and next-run context files. |
 | Interactive dashboards | `interactive_dashboard.py`, `_interactive_models.py`, `_interactive_html.py` | `InteractiveDashboard` builder API, the `Panel`/`Control`/`Invariant` data types, and page assembly for self-contained Plotly dashboards. See [Interactive simulation dashboard](#interactive-simulation-dashboard-interactive_dashboardpy). |
-| Output organization | `output_organizer.py`, `output_statistics.py`, `page_grid.py`, `page_rendering.py` | Final report file layout and page grids. |
+| Output organization | `output_organizer.py`, `output_statistics.py`, `page_grid.py`, `page_rendering.py` | Final report file layout and page grids. `output_statistics.py` consumes the artifact layer's complete stable inventory rather than raw disk state. Public exemplars use `stable-shippable-output-v1`; explicitly resolved non-template projects may use `stable-local-output-v1`. Dynamic categories and root bundles are retained; Stage 5 declares `stage5-delivery-mirror` scope and writes byte-identical source/copy receipts. |
 
 ## Interactive simulation dashboard (`interactive_dashboard.py`)
 
@@ -82,6 +82,19 @@ uv run pytest tests/infra_tests/reporting -q
 For changes that touch project test execution, also run the relevant
 `scripts/pipeline/stage_01_test.py` mode because `pipeline_test_runner.py` controls the
 project output lock used by pipeline stages.
+
+The ordinary project path remains the generic pytest runner. A project may
+opt into a stateful/chunked command with
+`[tool.template].project_test_command`; the single-project lane accepts it only
+when `project_verifier.py` validates a fresh run-bound receipt and independently
+regenerates the project's CI-uploadable `coverage_project.json` from a new
+coverage database at or above the unchanged project floor. The verifier runs
+with the workspace's exact runner dependency versions, and the receipt carries
+real JUnit outcomes plus pytest-produced discovery and warning counts; absent
+project-local coverage never falls back to a repository-level file from another
+run. The all-project union runner deliberately does not use
+this hook; GitHub's isolated per-project matrix invokes the single-project lane
+and does.
 
 ## Change Checklist
 

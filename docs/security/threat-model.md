@@ -12,21 +12,21 @@ enter public git history or generated public artifacts, release/publishing tools
 must not accidentally publish the wrong payload, and CI/security gates must keep
 the reusable Layer-1 infrastructure honest as templates are added.
 
-The strongest current controls are:
+The strongest repository-visible controls are:
 
-- Public scope is centralized in `infrastructure/project/public_scope.py:19`.
+- Public scope is centralized in `infrastructure/project/public_scope.py`.
 - Git-index confidentiality guards derive allowed public project paths from that
-  roster in `infrastructure/project/git_guards.py:14`.
+  roster in `infrastructure/project/git_guards.py`.
 - Generated/local artifacts and oversized public-template outputs are rejected by
-  `infrastructure/project/git_guards.py:102` and
-  `infrastructure/project/git_guards.py:202`.
-- CI runs with `contents: read` for normal jobs in `.github/workflows/ci.yml:14`
+  `infrastructure/project/git_guards.py`.
+- CI runs with `contents: read` for normal jobs in `.github/workflows/ci.yml`
   and includes Ruff, mypy, tracked-artifact, confidentiality, pip-audit, Bandit,
   and shell-injection sweeps.
-- Publishing and archival paths are dry-run by default in
-  `scripts/publish/publish_project_release.py:104`,
-  `scripts/runner/archive_publication.py:7`, and
-  `infrastructure/publishing/upload_runner.py:8`.
+- Publishing tools share payload and metadata preflight controls. Their commit
+  semantics are deliberately not uniform: `archive_publication.py` and the
+  upload runner require `--commit`, while `publish_project_release.py` performs
+  real publication unless the operator supplies `--dry-run` (Zenodo uses its
+  sandbox unless `--production` is also selected).
 
 The main residual risks are:
 
@@ -39,7 +39,7 @@ The main residual risks are:
   `projects/templates/*` roster is generated/parity-checked against the current
   `PUBLIC_PROJECT_NAMES` list.
 - Publication, archival, and upload tools accept real credentials from env or
-  local config; dry-run defaults lower risk, and the shared payload/metadata
+  local config; explicit rehearsals lower risk, and the shared payload/metadata
   preflight now runs before provider invocation. Hostile rendering and the
   offline promotion validator are shipped; private-sidecar promotion wiring
   and external ownership enforcement remain open.
@@ -142,15 +142,15 @@ flowchart TB
 
 | Asset | Objective | Evidence |
 | --- | --- | --- |
-| Local/private project contents | Never tracked, published, indexed, or exposed through generated docs/manifests | `infrastructure/project/git_guards.py:122`, `scripts/audit/check_tracked_all.py:27`, `.github/SECURITY.md:19` |
-| Public project roster | One authoritative source for CI, docs, guards, and publishing | `infrastructure/project/public_scope.py:19` |
-| Credentials and tokens | Load only from intended local/env sources, never log or commit values | `infrastructure/core/credentials.py:64`, `scripts/publish/publish_project_release.py:47`, `scripts/runner/archive_publication.py:7` |
-| Release artifacts | Publish only intended files from public scope, with repeatable metadata | `scripts/publish/publish_project_release.py:170`, `infrastructure/publishing/_adapter_http.py:39` |
-| CI/security gates | Enforce formatting, typing, dependency, secret/confidentiality, generated-artifact, and security scans | `.github/workflows/ci.yml:143`, `.github/workflows/ci.yml:649`, `.pre-commit-config.yaml:72` |
-| LLM/search inputs | Avoid prompt/data exfiltration and sanitize user-facing prompt paths | `infrastructure/llm/core/sanitization.py:37`, `infrastructure/llm/core/client.py:163`, `infrastructure/llm/core/client.py:224` |
-| Rendering subprocesses | Avoid shell injection, resource hangs, unsafe generated HTML, and unbounded local file reads | `infrastructure/rendering/pdf_renderer.py:117`, `infrastructure/rendering/pdf_renderer.py:131`, `infrastructure/rendering/web_renderer.py:160` |
-| Provenance metadata | Prove origin without leaking recipient secrets or overclaiming tamper resistance | `infrastructure/steganography/THREAT_MODEL.md:15`, `infrastructure/steganography/THREAT_MODEL.md:66`, `infrastructure/steganography/core.py:99` |
-| Ownership continuity | Sensitive surfaces have explicit reviewers, and single-owner areas carry a documented exception | `.github/CODEOWNERS:6`, `.github/sensitive-ownership.yaml:1`, `tests/infra_tests/project/test_codeowners_parity.py:51` |
+| Local/private project contents | Never tracked, published, indexed, or exposed through generated docs/manifests | `infrastructure/project/git_guards.py`, `scripts/audit/check_tracked_all.py`, `.github/SECURITY.md` |
+| Public project roster | One authoritative source for CI, docs, guards, and publishing | `infrastructure/project/public_scope.py` |
+| Credentials and tokens | Load only from intended local/env sources, never log or commit values | `infrastructure/core/credentials.py`, `scripts/publish/publish_project_release.py`, `scripts/runner/archive_publication.py` |
+| Release artifacts | Publish only intended files from public scope, with repeatable metadata | `scripts/publish/publish_project_release.py`, `infrastructure/publishing/_adapter_http.py` |
+| CI/security gates | Enforce formatting, typing, dependency, secret/confidentiality, generated-artifact, and security scans | `.github/workflows/ci.yml`, `.pre-commit-config.yaml` |
+| LLM/search inputs | Avoid prompt/data exfiltration and sanitize user-facing prompt paths | `infrastructure/llm/core/sanitization.py`, `infrastructure/llm/core/client.py` |
+| Rendering subprocesses | Avoid shell injection, resource hangs, unsafe generated HTML, and unbounded local file reads | `infrastructure/rendering/security.py`, `slides_renderer.py`, `_slides_accessibility_limits.py`, `_slides_accessibility_image_io.py`, `_slides_accessibility_raw_tex.py`, PDF/web renderers |
+| Provenance metadata | Prove origin without leaking recipient secrets or overclaiming tamper resistance | `infrastructure/steganography/THREAT_MODEL.md`, `infrastructure/steganography/core.py` |
+| Ownership continuity | Sensitive surfaces have explicit reviewers, and single-owner areas carry a documented exception | `.github/CODEOWNERS`, `.github/sensitive-ownership.yaml`, `tests/infra_tests/project/test_codeowners_parity.py` |
 
 ## Attacker Model
 
@@ -187,9 +187,9 @@ Non-capabilities assumed:
 | Git guards | `check_tracked_all.py`, `git_guards.py` | Git index vs ignored/private work | Four resource-pool confidentiality checks plus generated-artifact checks | New top-level resource pools need explicit coverage |
 | CI | `.github/workflows/ci.yml` | PR content into runner | Pinned checkout, read-only normal permissions, lint/type/security/docs gates | Branch-protection requirements and repo settings are external to code |
 | Release | `.github/workflows/release.yml` | Manual dispatch/tag into write-permission release | Existing tag verification and pinned release action | Release job has `contents: write`; branch/tag protections must be enforced outside repo |
-| Publish/archive | `scripts/publish/*`, `scripts/runner/archive_publication.py`, `upload_runner.py` | Local artifacts and tokens into external services | Dry-run defaults, explicit token checks | Need stronger path manifest and local-only refusal before commit mode |
+| Publish/archive | `scripts/publish/*`, `scripts/runner/archive_publication.py`, `upload_runner.py` | Local artifacts and tokens into external services | Shared preflight, explicit token checks, documented command-specific commit semantics | A missing `--dry-run` on the unified release publisher can cause real external writes |
 | Credentials | `CredentialManager`, `.env`, env vars, local credential JSON | Secret stores into runtime | Optional dotenv, safe YAML load, env substitution, bearer header helper | Logging and receipt objects must never include token values or credentialed URLs |
-| Rendering | Pandoc, LaTeX, web/slides renderers | Manuscript content into subprocesses/HTML/PDF | List-based subprocess calls, timeouts, HTML hardening helpers | Renderer toolchains are large; untrusted content should be isolated for hostile inputs |
+| Rendering | Pandoc, LaTeX, web/slides renderers | Manuscript content, Pandoc ASTs, preambles, and image paths into subprocesses/HTML/PDF | Exact process-profile validation; list-based calls; credential-stripped child environment; redirected `HOME`/`TMPDIR`; process-group timeouts; output-root confinement; lexical source and TeX preflight; bounded Pandoc JSON/AST; confined no-follow raster inspection; HTML hardening | These controls are not chroot/container isolation, network denial, general filesystem isolation, or a complete hostile-content sandbox |
 | LLM/search | LLM clients and search connectors | Manuscript/content into models and external APIs | Prompt sanitization default and raw-query warning | `query_raw` and opt-out sanitization rely on caller discipline |
 | Steganography | Metadata, hashes, barcodes, encryption | Project/recipient metadata into PDF outputs | Existing steganography threat model and standard primitives | Per-recipient secrets and embedded metadata can become privacy risk if misconfigured |
 | Ownership | CODEOWNERS and actual git history | Review intent vs actual control | Default CODEOWNERS catch-all, security policy | Explicit template roster drift and all sensitive categories have single-owner history |
@@ -208,9 +208,10 @@ Non-capabilities assumed:
 
 2. Accidental real publication of wrong payload.
    - Path: maintainer runs a publish/archive/upload command with credentials and
-     `--commit` or non-dry-run options against a bundle containing private or
-     stale generated files.
-   - Current controls: dry-run defaults and provider-specific token checks.
+     a commit-enabled archive/upload command, or omits `--dry-run` from the
+     unified release publisher, against private or stale generated files.
+   - Current controls: shared preflight, provider-specific token checks, and
+     explicit command-specific rehearsal guidance.
    - Current status: archive and upload dispatch now require the shared exact
      payload/credential-source preflight before provider invocation; the full
      offline publishing suite covers local-only paths, duplicates, metadata
@@ -237,11 +238,18 @@ Non-capabilities assumed:
    - Path: malicious Markdown/LaTeX/SVG/Mermaid/HTML content triggers a Pandoc,
      LaTeX, browser, or filter behavior that reads local files, hangs, or emits
      unsafe HTML.
-   - Current controls: list-based subprocess calls, timeouts, HTML hardening and
-     path normalization.
-   - Current status: the explicit untrusted-render profile isolates environment,
-     credentials, time, and output roots; active-content/file-inclusion fixtures
-     fail before tool invocation and process-group timeout cleanup is tested.
+   - Current controls: exact `trusted-local`/`untrusted` profile validation;
+     list-based subprocess calls; credential-stripped child-environment
+     allowlisting; redirected `HOME`/`TMPDIR`; process-group timeouts;
+     untrusted-output-root confinement; lexical active-content and inclusion
+     rejection; bounded Pandoc JSON/AST; TeX lexical-translation preflight; and
+     confined, no-follow local-raster metadata reads.
+   - Current status: an `untrusted` profile without its required temporary root
+     and every unknown profile name fail during configuration. Hostile fixtures
+     fail before the relevant writer or TeX invocation, and descendant timeout
+     cleanup is tested. The profile does not provide chroot/container isolation,
+     network denial, or general filesystem isolation; external material still
+     requires caller-controlled tooling and operating-system boundaries.
 
 6. Provenance metadata privacy failure.
    - Path: per-recipient or project identifiers are embedded into PDFs and later
@@ -256,7 +264,7 @@ Non-capabilities assumed:
    - Path: new templates are added to `PUBLIC_PROJECT_NAMES`; default `*` still
      covers them, but explicit project ownership lines do not communicate the
      intended review owner.
-   - Current controls: `.github/CODEOWNERS:6` catch-all.
+   - Current controls: `.github/CODEOWNERS` catch-all.
    - Current status: generated roster parity is enforced by the CODEOWNERS
      generator and its regression gate; external branch protection remains an
      administrator-owned control.
@@ -283,18 +291,18 @@ Non-capabilities assumed:
 
 | ID | Threat | Likelihood | Impact | Severity | Evidence | Recommended mitigation |
 | --- | --- | --- | --- | --- | --- | --- |
-| TM-001 | Private/local project names or content leak into public docs/manifests/published artifacts | Medium | Critical | Critical | `git_guards.py:122`, `public_scope.py:19`, `scripts/audit/check_tracked_all.py` | Keep tracked/public-scope invariant tests close to every discovery and manifest generator; active follow-up is tracked in `TO-DO.md` |
-| TM-002 | Real publish/deposit uploads wrong payload or local-only files | Medium | High | High | `publish_project_release.py:104`, `archive_publication.py:66`, `_adapter_http.py:39` | Keep the shared redacted payload/metadata preflight mandatory before every non-dry-run provider invocation |
-| TM-003 | Credential value or credentialed URL leaks in logs, receipts, config display, or generated reports | Low-Medium | High | High | `credentials.py:64`, `publish_project_release.py:47` | Add reusable secret-redaction helper to publish receipts/logging and test token-shaped URL redaction |
-| TM-004 | CI/release workflow modified to weaken security gates or run with excess permissions | Medium | High | High | `.github/workflows/ci.yml:14`, `.github/workflows/release.yml:13`, `.pre-commit-config.yaml:115` | Protect workflow files through CODEOWNERS and branch protection; audit `permissions` deltas in CI |
-| TM-005 | Dependency/action supply chain compromise | Medium | High | High | `.github/workflows/ci.yml:45`, `.github/workflows/ci.yml:649`, `bandit.yaml:44` | Keep action pins immutable, keep pip-audit ignore file time-bounded, and require review for lockfile/security config deltas |
-| TM-006 | LLM prompt injection or raw-query misuse leaks hidden context/private content | Medium | High | High | `sanitization.py:37`, `client.py:163`, `client.py:224`, `core/bypass.py` | Keep `query_raw()` and sanitization opt-outs restricted to named callers, and expand offline tests preventing raw calls on project/manuscript text |
-| TM-007 | Rendering hostile manuscripts causes local file disclosure, command execution, unsafe HTML, or denial of service | Medium | High | High | `pdf_renderer.py:117`, `pdf_renderer.py:131`, `web_renderer.py:160`, `rendering/security.py` | Keep hostile inputs on the untrusted render profile with process, environment, path, and timeout isolation |
-| TM-008 | Provenance/watermark metadata leaks recipient/operator identifiers or keys | Low-Medium | High | High | `THREAT_MODEL.md:66`, `encryption.py:50`, `core.py:128`, `publishing/preflight.py` | Keep metadata classification in publication preflight and preserve its secure-render/publish negative coverage |
-| TM-009 | CODEOWNERS explicit project roster drifts from public roster | High | Medium | Medium | `.github/CODEOWNERS:23`, `public_scope.py:19`, `tests/infra_tests/project/test_codeowners_parity.py` | Keep generated CODEOWNERS project stanza and parity test in the release gate |
+| TM-001 | Private/local project names or content leak into public docs/manifests/published artifacts | Medium | Critical | Critical | `infrastructure/project/git_guards.py`, `infrastructure/project/public_scope.py`, `scripts/audit/check_tracked_all.py` | Keep tracked/public-scope invariant tests close to every discovery and manifest generator; active follow-up is tracked in `TO-DO.md` |
+| TM-002 | Real publish/deposit uploads wrong payload or local-only files | Medium | High | High | `scripts/publish/publish_project_release.py`, `scripts/runner/archive_publication.py`, `infrastructure/publishing/_adapter_http.py` | Keep the shared redacted payload/metadata preflight mandatory and require an explicit dry-run rehearsal for the unified release publisher |
+| TM-003 | Credential value or credentialed URL leaks in logs, receipts, config display, or generated reports | Low-Medium | High | High | `infrastructure/core/credentials.py`, `scripts/publish/publish_project_release.py` | Keep secret-redaction coverage for publish receipts/logging and token-shaped URLs |
+| TM-004 | CI/release workflow modified to weaken security gates or run with excess permissions | Medium | High | High | `.github/workflows/ci.yml`, `.github/workflows/release.yml`, `.pre-commit-config.yaml` | Protect workflow files through CODEOWNERS and branch protection; audit `permissions` deltas in CI |
+| TM-005 | Dependency/action supply chain compromise | Medium | High | High | `.github/workflows/ci.yml`, `bandit.yaml`, `uv.lock` | Keep action pins immutable, keep pip-audit exceptions time-bounded, and require review for lockfile/security config deltas |
+| TM-006 | LLM prompt injection or raw-query misuse leaks hidden context/private content | Medium | High | High | `infrastructure/llm/core/sanitization.py`, `infrastructure/llm/core/client.py`, `infrastructure/llm/core/bypass.py` | Keep `query_raw()` and sanitization opt-outs restricted to named callers, and expand offline tests preventing raw calls on project/manuscript text |
+| TM-007 | Rendering hostile manuscripts causes local file disclosure, command execution, unsafe HTML, or denial of service | Medium | High | High | `infrastructure/rendering/security.py`, `slides_renderer.py`, `_slides_accessibility_limits.py`, `_slides_accessibility_image_io.py`, `_slides_accessibility_raw_tex.py`, PDF/web renderers | Keep hostile inputs on the exact untrusted profile with its required temp root; retain child-environment allowlisting, output confinement, timeouts, AST/TeX/raster preflight, and separate OS isolation where the threat requires filesystem or network denial |
+| TM-008 | Provenance/watermark metadata leaks recipient/operator identifiers or keys | Low-Medium | High | High | `infrastructure/steganography/THREAT_MODEL.md`, `infrastructure/steganography/encryption.py`, `infrastructure/steganography/core.py`, `infrastructure/publishing/preflight.py` | Keep metadata classification in publication preflight and preserve its secure-render/publish negative coverage |
+| TM-009 | CODEOWNERS explicit project roster drifts from public roster | High | Medium | Medium | `.github/CODEOWNERS`, `infrastructure/project/public_scope.py`, `tests/infra_tests/project/test_codeowners_parity.py` | Keep generated CODEOWNERS project stanza and parity test in the release gate |
 | TM-010 | Security-sensitive ownership has bus factor 1 | High | Medium-High | High | `.github/sensitive-ownership.yaml`, `docs/security/ownership-and-promotion.md` | Maintain sole-owner exceptions, required Regression Tier review, and external branch-protection acceptance |
-| TM-011 | Generated artifacts or oversized outputs are force-added | Low-Medium | High | High | `git_guards.py:102`, `git_guards.py:202`, `.pre-commit-config.yaml:72` | Keep generated-artifact guard required in CI and pre-push; extend patterns when new output roots appear |
-| TM-012 | Private control-plane auth/policy/export gaps become in-scope without a promotion gate | Medium if promoted | Critical | Conditional Critical | `TO-DO.md` `SECURITY-PRIVATE-PROMOTION-1` | Add a generic promotion checklist requiring identity, policy, redaction, secret-store, route, and protocol test closure before active/public/deployed status |
+| TM-011 | Generated artifacts or oversized outputs are force-added | Low-Medium | High | High | `infrastructure/project/git_guards.py`, `.pre-commit-config.yaml` | Keep generated-artifact guard required in CI and pre-push; extend patterns when new output roots appear |
+| TM-012 | Private control-plane auth/policy/export gaps become in-scope without owner authorization | Medium if promoted | Critical | Conditional Critical | `TO-DO.md` `SECURITY-PRIVATE-PROMOTION-1`, `infrastructure/project/promotion/` | Keep the two promotion evidence contracts and exact-revision composite gate, then require an external owner promotion receipt before active/public/deployed status |
 
 ## TODO Scope
 

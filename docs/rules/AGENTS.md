@@ -40,7 +40,7 @@ This directory contains development standards, coding guidelines, and best pract
 - Location: `infrastructure/` (root level)
 - Domain-independent tools
 - Reusable across projects
-- 60% minimum test coverage required (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
+- 60% minimum test coverage required (current % — see [COUNTS.md](../_generated/COUNTS.md))
 
 **Layer 2: Project** (Specific, customizable)
 
@@ -72,7 +72,7 @@ The template provides **two pipeline orchestrators** with different scope:
 **Interactive Menu (`./run.sh`)**
 
 - **Use for**: Full pipeline with optional LLM stages
-- **Stages**: 1-9 (displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
+- **Stages**: default full run is 10 stages (displayed as [1/10] to [10/10]; clean included). `--core-only` runs 8 ([1/8] to [8/8]). Counts come from the generated STAGE_SUMMARY in the root AGENTS.md.
 - **Features**: Interactive menu, research templates, LLM reviews, translations
 - **When to use**: Full builds, LLM features needed
 
@@ -181,7 +181,7 @@ See [infrastructure_modules.md](infrastructure_modules.md)
 **Key Points**:
 
 - Generic and domain-independent only
-- 60% minimum test coverage required (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
+- 60% minimum test coverage required (current % — see [COUNTS.md](../_generated/COUNTS.md))
 - AGENTS.md + README.md
 - Public API in `__init__.py`
 - Type hints on all functions
@@ -243,7 +243,7 @@ As shown in \eqref{eq:objective}, the objective function...
 
 ### Coverage Requirements
 
-- **Infrastructure**: 60% minimum (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
+- **Infrastructure**: 60% minimum (current % — see [COUNTS.md](../_generated/COUNTS.md))
 - **Project code**: 90% minimum (current % — see [COUNTS.md](../_generated/COUNTS.md))
 - **Integration tests**: All critical workflows covered
 

@@ -11,6 +11,10 @@ from data_descriptor import (
     FileVerification,
     compute_file_digest,
     count_csv_rows,
+    count_jsonl_rows,
+    count_rows,
+    STATUS_UNSAFE_PATH,
+    STATUS_UNSUPPORTED_MEDIA,
     verification_summary,
     verify_descriptor_files,
 )
@@ -59,6 +63,22 @@ class TestCountCsvRows:
         target = tmp_path / "empty.csv"
         target.write_text("", encoding="utf-8")
         assert count_csv_rows(target) == 0
+
+    def test_counts_json_records(self, tmp_path: Path) -> None:
+        target = tmp_path / "rows.json"
+        target.write_text('{"data": [{"x": 1}, {"x": 2}]}', encoding="utf-8")
+        assert count_rows(target, "application/json") == 2
+
+    def test_counts_quoted_csv_records_by_parsed_rows(self, tmp_path: Path) -> None:
+        target = tmp_path / "quoted.csv"
+        target.write_text('id,note\n1,"line one\nline two"\n2,ok\n', encoding="utf-8")
+        assert count_csv_rows(target) == 2
+
+    def test_counts_and_validates_json_lines(self, tmp_path: Path) -> None:
+        target = tmp_path / "rows.jsonl"
+        target.write_text('{"x": 1}\n\n{"x": 2}\n', encoding="utf-8")
+        assert count_jsonl_rows(target) == 2
+        assert count_rows(target, "application/x-ndjson") == 2
 
 
 class TestVerifyDescriptorFiles:
@@ -122,6 +142,81 @@ class TestVerifyDescriptorFiles:
         results = verify_descriptor_files({"files": ["not-a-mapping", {"path": "x.csv"}]}, tmp_path)
         assert len(results) == 1
         assert results[0].status == "absent"
+
+    def test_non_csv_without_a_real_reader_fails_closed(self, tmp_path: Path) -> None:
+        target = tmp_path / "rows.bin"
+        target.write_bytes(b"binary")
+        descriptor = {
+            "files": [
+                {
+                    "path": "rows.bin",
+                    "media_type": "application/parquet",
+                    "checksum": compute_file_digest(target),
+                    "rows": 2,
+                }
+            ]
+        }
+        result = verify_descriptor_files(descriptor, tmp_path)[0]
+        assert result.status == STATUS_UNSUPPORTED_MEDIA
+
+    def test_path_traversal_is_not_read(self, tmp_path: Path) -> None:
+        outside = tmp_path.parent / "outside.csv"
+        outside.write_text("h\n1\n", encoding="utf-8")
+        descriptor = {"files": [{"path": "../outside.csv", "media_type": "text/csv", "checksum": "", "rows": 1}]}
+        assert verify_descriptor_files(descriptor, tmp_path)[0].status == STATUS_UNSAFE_PATH
+
+    def test_symlinked_file_is_not_promoted_to_verified_data(self, tmp_path: Path) -> None:
+        source = tmp_path / "source.csv"
+        source.write_text("h\n1\n", encoding="utf-8")
+        link = tmp_path / "link.csv"
+        link.symlink_to(source)
+        descriptor = {
+            "files": [
+                {
+                    "path": "link.csv",
+                    "media_type": "text/csv",
+                    "checksum": compute_file_digest(source),
+                    "rows": 1,
+                }
+            ]
+        }
+        assert verify_descriptor_files(descriptor, tmp_path)[0].status == STATUS_UNSAFE_PATH
+
+    def test_symlinked_parent_is_not_promoted_to_verified_data(self, tmp_path: Path) -> None:
+        source_dir = tmp_path / "source"
+        source_dir.mkdir()
+        source = source_dir / "data.csv"
+        source.write_text("h\n1\n", encoding="utf-8")
+        link_dir = tmp_path / "linked"
+        link_dir.symlink_to(source_dir, target_is_directory=True)
+        descriptor = {
+            "files": [
+                {
+                    "path": "linked/data.csv",
+                    "media_type": "text/csv",
+                    "checksum": compute_file_digest(source),
+                    "rows": 1,
+                }
+            ]
+        }
+        assert verify_descriptor_files(descriptor, tmp_path)[0].status == STATUS_UNSAFE_PATH
+
+    def test_invalid_declared_row_type_fails_closed(self, tmp_path: Path) -> None:
+        target = tmp_path / "rows.csv"
+        target.write_text("h\n1\n", encoding="utf-8")
+        descriptor = {
+            "files": [
+                {
+                    "path": "rows.csv",
+                    "media_type": "text/csv",
+                    "checksum": compute_file_digest(target),
+                    "rows": "one",
+                }
+            ]
+        }
+        result = verify_descriptor_files(descriptor, tmp_path)[0]
+        assert result.status == "row_mismatch"
+        assert result.declared_rows == -1
 
 
 class TestVerificationSummary:

@@ -25,7 +25,7 @@ from textbook.constants import (
     REQUIRED_TOKENS,
     STUB_MARKERS,
 )
-from textbook.toc import lab_label, question_label, section_label, unit_intro_label
+from textbook.toc import lab_label, lab_title, question_bank_title, question_label, section_label, unit_intro_label
 
 
 def _rotate(items: tuple[str, ...], seed: str, count: int) -> list[str]:
@@ -166,7 +166,7 @@ tables, equations, and subsections may repeat as needed. --> See the overview in
 
 def scaffold_lab(chapter: ChapterRef) -> str:
     """Return a stub lab activity bound to ``chapter``."""
-    return f"""# Lab — {chapter.title} {{#{lab_label(chapter)}}}
+    return f"""# {lab_title(chapter.title)} {{#{lab_label(chapter)}}}
 
 <!-- chapter-metadata-badge -->
 > Lab · 60 min · Materials: notebook, calculator (or `textbook.models`)
@@ -204,7 +204,7 @@ from textbook.models import logistic_growth
 
 def scaffold_question_bank(chapter: ChapterRef) -> str:
     """Return a stub question bank (recall -> application -> synthesis)."""
-    return f"""# Question Bank — {chapter.title} {{#{question_label(chapter)}}}
+    return f"""# {question_bank_title(chapter.title)} {{#{question_label(chapter)}}}
 
 Linked chapter: [@{section_label(chapter)}].
 

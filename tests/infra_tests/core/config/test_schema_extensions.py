@@ -227,3 +227,64 @@ def test_generate_manuscript_config_schema_includes_registered_extension() -> No
     assert "analysis" in schema["properties"]
     assert "scripts" in schema["properties"]["analysis"]["properties"]
     assert "alpha_block" in schema["properties"]
+
+
+def test_generated_schema_describes_tagged_cover_accessibility_fields() -> None:
+    """Editor schema accepts boolean tagging plus paper/book cover alt strings."""
+    from jsonschema import Draft202012Validator
+    from jsonschema.exceptions import ValidationError
+
+    schema = generate_manuscript_config_schema()
+    validator = Draft202012Validator(schema)
+    config = {
+        "paper": {
+            "title": "Tagged paper",
+            "cover": {"image": "cover.png", "alt": "A source-bound cover."},
+        },
+        "book": {
+            "title": "Tagged book",
+            "cover": {"image": "book.png", "alt": "Nested modules."},
+        },
+        "metadata": {"language": "en", "tagged_pdf": True},
+    }
+
+    validator.validate(config)
+
+    with pytest.raises(ValidationError):
+        validator.validate({"metadata": {"tagged_pdf": "true"}})
+    with pytest.raises(ValidationError):
+        validator.validate({"paper": {"cover": {"image": "cover.png", "alt": ["not", "text"]}}})
+
+    assert schema["properties"]["paper"]["properties"]["cover"]["properties"]["alt"]["type"] == "string"
+    assert schema["properties"]["book"]["properties"]["cover"]["properties"]["alt"]["type"] == "string"
+    assert schema["properties"]["metadata"]["properties"]["tagged_pdf"]["type"] == "boolean"
+
+
+def test_generated_schema_describes_strict_accessible_slide_policy() -> None:
+    """Editor schema exposes the non-weakenable semantic slide contract."""
+
+    from jsonschema import Draft202012Validator
+    from jsonschema.exceptions import ValidationError
+
+    validator = Draft202012Validator(generate_manuscript_config_schema())
+    valid = {
+        "render": {
+            "slides": {
+                "profile": "accessible",
+                "max_prose_words": 80,
+                "max_table_rows": 8,
+                "min_figure_area_percent": 70,
+                "title_font_pt": 28,
+                "body_font_pt": 20,
+                "figure_label_font_pt": 16,
+                "reader_href": "../web/index.html",
+            }
+        }
+    }
+
+    validator.validate(valid)
+
+    with pytest.raises(ValidationError):
+        validator.validate({"render": {"slides": {"profile": "accessible", "max_prose_words": 81}}})
+    with pytest.raises(ValidationError):
+        validator.validate({"render": {"slides": {"profile": "accessible", "extra": True}}})

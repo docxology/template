@@ -42,7 +42,9 @@ The two scientific tracks instantiate this deliberately small:
   mutual information that saturates toward log 2 as the streams entangle.
   The track never merely plots the closed form: an independent
   total-correlation recomputation must agree (zero residual is asserted by a
-  gate), and the Theorem-5.1 free-energy decomposition must cancel exactly
+  gate; negative control `tests/test_free_energy.py::test_kl_divergence_shape_mismatch_raises`
+  feeds mismatched shapes and asserts the gate raises), and the Theorem-5.1
+  free-energy decomposition must cancel exactly
   (the invariant suite gates on every check passing). Values and grids live
   in `output/data/` (e.g. `parameter_sweep.csv`, the invariant reports), not
   in this file.
@@ -129,10 +131,12 @@ mitigate it here:
 
 - **Generalized Notation Notation (GNN)** (Smekal & Friedman 2023): the
   generative models are written as structured markdown
-  (`gnn/*.gnn.md` — state-space blocks, connections), and an interop gate
+  (`gnn/*.gnn.md` — state-space blocks, connections), and an interop gate rejects malformed state-space or connection blocks; a known-wrong fixture with a broken block is asserted to fail in the concordance tests, so an unparseable model cannot slip past the gate
   round-trips those declarations against the live Python variables
   (`gnn_roundtrip_report.json`) — the model description is a contract, not
-  documentation.
+  documentation. Negative control:
+  `tests/test_gnn.py::test_gnn_roundtrip_detects_lossy_payload` deliberately
+  corrupts a payload and asserts the round trip detects the loss.
 - **Active Inference Ontology (AIO) concordance**: local symbols bind to
   ontology terms (couplings, policy vectors, posteriors, belief entropy) in
   an ontology profile matrix rendered into the manuscript; an unapproved

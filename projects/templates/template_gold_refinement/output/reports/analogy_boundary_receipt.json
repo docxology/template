@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "scope": "local source-owned analogy boundary",
+  "stage_count": 5,
+  "metric_count": 6,
+  "limits": [
+    "It does not certify domain truth without domain-specific validators.",
+    "A purity score is not a substitute for evidence."
+  ],
+  "non_claims": [
+    "The analogy is universal.",
+    "The purity scale can replace expert review."
+  ]
+}

@@ -20,9 +20,13 @@ import matplotlib.pyplot as plt  # noqa: E402
 from src.agents import DeterministicProposer  # noqa: E402
 from src.figures import (  # noqa: E402
     AblationRow,
+    ablation_alt_text,
     build_ablation_figure,
     build_comparison_figure,
     build_efficiency_figure,
+    comparison_alt_text,
+    efficiency_alt_text,
+    figure_specs_for_results,
     write_ablation_figure,
     write_comparison_figure,
     write_efficiency_figure,
@@ -148,9 +152,16 @@ def test_figure_registry_validates_manuscript_references(tmp_path: Path) -> None
     write_ablation_figure(_rows(), tmp_path / "ablation.png")
     write_efficiency_figure(_rows(), tmp_path / "ablation_efficiency.png")
     write_comparison_figure(coordinated, baseline, tmp_path / "search_comparison.png")
-    registry = write_figure_registry(tmp_path)
+    registry = write_figure_registry(
+        tmp_path,
+        figure_specs_for_results(coordinated, baseline, _rows()),
+    )
 
-    ok, issues = validate_figure_registry(registry, Path(__file__).resolve().parent.parent / "manuscript")
+    ok, issues = validate_figure_registry(
+        registry,
+        Path(__file__).resolve().parent.parent / "manuscript",
+        require_accessibility=True,
+    )
 
     assert ok, issues
 
@@ -163,6 +174,7 @@ def test_write_figure_registry_schema_version(tmp_path: Path) -> None:
     payload = json.loads(path.read_text())
     assert payload["schema_version"] == "template-autoscientists-figure-registry-v1"
     assert len(payload["figures"]) == 3  # comparison + ablation + ablation_efficiency
+    assert all(record["metadata"]["alt_text"].strip() for record in payload["figures"])
 
 
 def test_ablation_row_none_experiments_to_target_is_serializable(tmp_path: Path) -> None:
@@ -182,3 +194,38 @@ def test_ablation_row_none_experiments_to_target_is_serializable(tmp_path: Path)
     path = tmp_path / "ablation_none.png"
     write_ablation_figure(rows, path)
     _assert_png(path)
+
+
+def test_alt_text_changes_with_real_alternate_results() -> None:
+    objective = SyntheticObjective(dimensions=4, noise_scale=0.02)
+    proposer = DeterministicProposer()
+    coordinated_long = run_search(objective, proposer, SearchConfig(budget=30))
+    baseline_long = run_search(objective, proposer, SearchConfig.single_thread_baseline(budget=30))
+    coordinated_short = run_search(objective, proposer, SearchConfig(budget=8))
+    baseline_short = run_search(objective, proposer, SearchConfig.single_thread_baseline(budget=8))
+    alternate_rows: list[AblationRow] = [row.copy() for row in _rows()]
+    alternate_rows[0]["reported_metric"] = 0.5
+    alternate_rows[0]["experiments_used"] = 17
+    alternate_rows[0]["redundant_experiments"] = 4
+
+    original = {spec.label: spec for spec in figure_specs_for_results(coordinated_long, baseline_long, _rows())}
+    alternate = {
+        spec.label: spec
+        for spec in figure_specs_for_results(
+            coordinated_short,
+            baseline_short,
+            alternate_rows,
+        )
+    }
+
+    assert all(alternate[label].alt_text != original[label].alt_text for label in alternate)
+    assert "solid coordinated-teams line contains 8 points" in alternate["fig:comparison"].alt_text
+    assert "reported 0.5000" in alternate["fig:ablation"].alt_text
+    assert "17 used, 4 redundant" in alternate["fig:ablation_efficiency"].alt_text
+    assert "not evidence of general agent performance" in alternate["fig:ablation"].alt_text
+
+
+def test_empty_alt_text_controls_make_no_snapshot_claims() -> None:
+    assert "neither" in comparison_alt_text((), ())
+    assert "no configuration rows" in ablation_alt_text(())
+    assert "no configuration rows" in efficiency_alt_text(())

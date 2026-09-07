@@ -2,8 +2,8 @@
   "title": "Literature Search Coverage Dashboard",
   "subtitle": "6 papers · 6 years · 1 sources · every floor and filter is CLI-configurable.",
   "project": "template_search_project",
-  "generated_utc": "2026-08-03T00:32:42Z",
-  "git_rev": "80735407f",
+  "generated_utc": "2026-08-15T12:47:20Z",
+  "git_rev": "634333692",
   "git_dirty": true,
   "hyperparameters": {
     "corpus_path": "<repo-root>/projects/templates/template_search_project/output/corpus.json",
@@ -386,6 +386,30 @@
       "tolerance": 0.0,
       "witness": "100 >= 1 - 0.0e+00",
       "description": "avg papers per keyword = 100.0 ≥ 1"
+    },
+    {
+      "name": "deep_search_keywords_present",
+      "passed": true,
+      "kind": "ge",
+      "tolerance": 0.0,
+      "witness": "3 >= 1 - 0.0e+00",
+      "description": "deep-search aggregate contains 3 keyword(s)"
+    },
+    {
+      "name": "deep_search_keywords_unique",
+      "passed": true,
+      "kind": "equal",
+      "tolerance": 0.0,
+      "witness": "|0 - 0| = 0.000e+00 (tol=0.0e+00)",
+      "description": "duplicate deep-search keywords: 0"
+    },
+    {
+      "name": "deep_search_citation_keys_complete",
+      "passed": true,
+      "kind": "equal",
+      "tolerance": 0.0,
+      "witness": "|0 - 0| = 0.000e+00 (tol=0.0e+00)",
+      "description": "papers without citation keys: []"
     }
   ],
   "tables": {},

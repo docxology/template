@@ -139,6 +139,8 @@ def test_valid_experiment_plan_loads_condition_roles_and_metrics(tmp_path: Path)
 conditions:
   - name: baseline
     role: reference
+  - name: variant
+    role: variant
   - name: proposed
     role: proposed
   - name: ablation
@@ -161,7 +163,12 @@ ablations: [ablation]
 
     assert plan is not None
     assert result.valid is True
-    assert [condition.role for condition in plan.conditions] == ["reference", "proposed", "variant"]
+    assert [condition.role for condition in plan.conditions] == [
+        "reference",
+        "variant",
+        "proposed",
+        "variant",
+    ]
     assert plan.primary_metric.name == "accuracy"
     assert plan.baselines == ("baseline",)
     assert plan.ablations == ("ablation",)
@@ -201,6 +208,35 @@ def test_unknown_experiment_plan_key_raises(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="unsupported experiment_plan key"):
         load_experiment_plan(project)
+
+
+def test_typed_ablation_extension_is_accepted_by_generic_plan_loader(tmp_path: Path) -> None:
+    """Typed project-owned ablations do not invalidate shared plan fields."""
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "experiment_plan.yaml").write_text(
+        """schema_version: 1
+conditions:
+  - name: baseline
+    role: reference
+  - name: ablation
+    role: variant
+metrics:
+  primary:
+    name: score
+    direction: maximize
+protocol: deterministic fixture replay
+ablation_axes:
+  - name: score-axis
+    parameter: score
+    values: [0, 1]
+    negative_control: changed score fails
+""",
+        encoding="utf-8",
+    )
+    plan = load_experiment_plan(project)
+    assert plan is not None
+    assert validate_experiment_plan(plan).valid
 
 
 @pytest.mark.parametrize("project_name", PUBLIC_PROJECT_NAMES)

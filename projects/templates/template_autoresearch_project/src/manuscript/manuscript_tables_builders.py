@@ -20,6 +20,92 @@ from .manuscript_tokens_format import (
 )
 
 
+_ARTIFACT_TABLE_UPSTREAM_PATHS = frozenset(
+    {
+        "output/data/autoresearch_claims.json",
+        "output/data/autoresearch_evidence_overview.json",
+        "output/data/autoresearch_integrity_attestation.json",
+        "output/data/autoresearch_inventory_export.json",
+        "output/data/autoresearch_loop.json",
+        "output/data/autoresearch_phase_ledger.json",
+        "output/data/autoresearch_plan.json",
+        "output/data/autoresearch_review_packet.json",
+        "output/data/autoresearch_schema_manifest.json",
+        "output/data/autoresearch_security_profile.json",
+        "output/data/autoresearch_stage_matrix.csv",
+        "output/data/autoresearch_supply_chain_inventory.json",
+        "output/data/autoresearch_threat_model.json",
+        "output/data/benchmark_boundary.json",
+        "output/data/benchmark_scores.json",
+        "output/data/figure_quality_report.json",
+        "output/data/figure_style.json",
+        "output/data/idea_ledger.json",
+        "output/data/ml_bootstrap_intervals.json",
+        "output/data/ml_calibration_bin_intervals.json",
+        "output/data/ml_calibration_report.json",
+        "output/data/ml_candidate_intervals.json",
+        "output/data/ml_candidate_ledger.json",
+        "output/data/ml_candidate_rank_stability.json",
+        "output/data/ml_candidate_selection_audit.json",
+        "output/data/ml_class_balance.json",
+        "output/data/ml_classification_diagnostics.json",
+        "output/data/ml_confusion_matrix.csv",
+        "output/data/ml_diagnostic_boundary.json",
+        "output/data/ml_error_examples.json",
+        "output/data/ml_paired_comparison.json",
+        "output/data/ml_prediction_records.json",
+        "output/data/ml_probability_diagnostics.json",
+        "output/data/ml_robustness_report.json",
+        "output/data/ml_statistical_summary.json",
+        "output/data/ml_task_results.json",
+        "output/data/ml_training_diagnostics.json",
+        "output/data/ml_training_history.csv",
+        "output/data/mnist_task_config.json",
+        "output/data/research_object_manifest.json",
+        "output/data/research_program.json",
+        "output/data/review_decisions.json",
+        "output/data/run_ledger.json",
+        "output/figures/autoresearch_candidate_lifecycle.png",
+        "output/figures/autoresearch_closure_flow.png",
+        "output/figures/autoresearch_integrity_chain.png",
+        "output/figures/autoresearch_security_control_matrix.png",
+        "output/figures/autoresearch_stage_matrix.png",
+        "output/figures/figure_registry.json",
+        "output/figures/ml_bootstrap_intervals.png",
+        "output/figures/ml_calibration_reliability.png",
+        "output/figures/ml_candidate_rank_stability.png",
+        "output/figures/ml_candidate_scores.png",
+        "output/figures/ml_classification_metrics_heatmap.png",
+        "output/figures/ml_complexity_accuracy.png",
+        "output/figures/ml_confusion_matrix.png",
+        "output/figures/ml_confusion_pairs.png",
+        "output/figures/ml_generalization_gap.png",
+        "output/figures/ml_learning_curves.png",
+        "output/figures/ml_paired_correctness.png",
+        "output/figures/ml_per_class_accuracy.png",
+        "output/figures/ml_probability_margin_distribution.png",
+        "output/figures/ml_probability_quality.png",
+        "output/figures/ml_robustness_matrix.png",
+        "output/figures/ml_selective_accuracy.png",
+        "output/figures/ml_training_dynamics.png",
+        "output/figures/mnist_class_balance.png",
+        "output/figures/mnist_error_examples.png",
+        "output/figures/mnist_subset_contact_sheet.png",
+        "output/reports/autoresearch_evidence_overview.md",
+        "output/reports/autoresearch_loop.json",
+        "output/reports/autoresearch_loop.md",
+        "output/reports/autoresearch_review_packet.md",
+        "output/reports/autoresearch_security_review.md",
+        "output/reports/autoresearch_summary.md",
+        "output/reports/benchmark_readiness_smoke.json",
+        "output/reports/ml_benchmark_score.json",
+        "output/reports/ml_experiment_report.md",
+        "output/reports/test_results.json",
+        "output/reports/test_results.md",
+    }
+)
+
+
 def candidate_ledger_table(candidate_ledger: dict[str, Any]) -> str:
     """Process candidate ledger table."""
     baseline = mapping(candidate_ledger.get("baseline"))
@@ -112,18 +198,18 @@ def class_balance_table(class_balance: dict[str, Any]) -> str:
 def artifact_manifest_table(artifact_manifest: dict[str, Any]) -> str:
     """Process artifact manifest table."""
     entries = mapping_list(artifact_manifest.get("entries"))
-    rows = [
-        (
-            string_value(entry.get("path", "N/A")),
-            artifact_role(string_value(entry.get("path", ""))),
-            string_value(entry.get("size_bytes", "N/A")),
-        )
-        for entry in entries
-    ]
+    rows = []
+    for entry in entries:
+        path = string_value(entry.get("path", "N/A"))
+        if path not in _ARTIFACT_TABLE_UPSTREAM_PATHS:
+            continue
+        rows.append((path, artifact_role(path)))
     return markdown_table(
-        ("Artifact", "Role", "Bytes"),
+        ("Artifact", "Role"),
         rows,
-        "Generated artifact manifest from `output/reports/artifact_manifest.json`. {#tbl:autoresearch-loop}",
+        "Reviewed upstream analysis and evidence paths from `output/reports/artifact_manifest.json`; "
+        "unreviewed paths are omitted, and that terminal manifest remains the complete byte authority. "
+        "{#tbl:autoresearch-loop}",
     )
 
 

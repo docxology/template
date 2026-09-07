@@ -20,9 +20,14 @@ Derived documentation generator scripts.
 ```bash
 # Run from repo root
 uv run python scripts/docgen/counts.py --write
+uv run python scripts/docgen/counts.py --verify-coverage --write
 uv run python scripts/docgen/api_reference.py --check
 uv run python scripts/docgen/exemplar_roster.py
 uv run python scripts/docgen/publication_records.py --refresh-external
 ```
+
+`--verify-coverage --write` updates the coverage snapshot only after every
+public exemplar was measured successfully. Any missing or failed measurement
+exits nonzero without publishing a partial refresh.
 
 Output goes to `docs/_generated/`.

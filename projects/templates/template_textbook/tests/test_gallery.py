@@ -49,3 +49,16 @@ def test_load_specs_reads_yaml_catalogue():
 def test_render_gallery_entry_unknown_name(tmp_path):
     with pytest.raises(ValueError, match="unknown gallery plot name"):
         gallery.render_gallery_entry({"name": "not_a_plot"}, tmp_path)
+
+
+def test_render_gallery_entry_happy_path(tmp_path):
+    path = gallery.render_gallery_entry({"name": "line"}, tmp_path)
+    _assert_png(path)
+    assert path.name == "gallery_line.png"
+
+
+def test_load_specs_rejects_scalar_plots(tmp_path):
+    bad = tmp_path / "specs.yaml"
+    bad.write_text("plots: not-a-list\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="'plots' must be a list"):
+        gallery.load_specs(bad)

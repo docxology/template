@@ -250,6 +250,7 @@ class TestMain:
         rc = main(["--no-infra-tests", "--no-llm"], repo_root=tmp_path)
         assert rc == 1
 
+    @pytest.mark.slow
     def test_with_scaffolded_project(self, tmp_path: Path) -> None:
         """A repo with a valid scaffolded project returns 0 or 1.
 

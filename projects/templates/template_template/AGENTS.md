@@ -17,6 +17,7 @@ template_template/
 ├── src/template_template/        # Core modules
 │   ├── introspection.py          # YAML + filesystem repository analysis
 │   ├── metrics.py                # Manuscript metrics + token dict
+│   ├── contracts.py              # Receipts, lockstep, deterministic-default validation
 │   ├── inject_metrics.py         # ${variable} substitution
 │   ├── architecture_viz.py       # Figure orchestrator (calls figure_* modules)
 │   ├── figure_architecture_overview.py  # Architecture overview figure

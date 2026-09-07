@@ -10,6 +10,7 @@ from src.artifact_manifest import (
     collect_run_artifact_paths,
     compute_sha256,
     write_artifact_manifest,
+    validate_artifact_manifest,
 )
 from src.loop import run_sia_loop_project
 
@@ -79,4 +80,18 @@ def test_artifact_manifest_entry_timestamp_set() -> None:
         contract_match=True,
     )
     assert entry.timestamp  # non-empty
-    assert "T" in entry.timestamp  # ISO format contains T separator
+    assert entry.timestamp == "not-recorded (set SOURCE_DATE_EPOCH)" or "T" in entry.timestamp
+
+
+def test_artifact_manifest_rejects_path_traversal_and_duplicate_rows() -> None:
+    payload = {
+        "entries": [
+            {"path": "../secret", "size_bytes": 1, "sha256": "0" * 64},
+            {"path": "../secret", "size_bytes": 1, "sha256": "0" * 64},
+        ]
+    }
+
+    issues = validate_artifact_manifest(payload)
+
+    assert any("unsafe path" in issue for issue in issues)
+    assert any("duplicates" in issue for issue in issues)

@@ -4,14 +4,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
 
 from manuscript.sheaf.models import TrackRegistry, TrackSpec
+from yaml_io import load_yaml
 
 
 def load_track_registry(registry_path: Path) -> TrackRegistry:
     """Load track registry from a file."""
-    raw = yaml.safe_load(registry_path.read_text(encoding="utf-8")) or {}
+    raw = load_yaml(registry_path)
     tracks_raw = raw.get("tracks") or {}
     specs: dict[str, TrackSpec] = {}
     for track_id, meta in tracks_raw.items():

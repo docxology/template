@@ -93,6 +93,9 @@ project_config:
           - sha256
           - merkle
     deps: []
+    # Optional fail-closed subset of the grammar product. Leave empty to
+    # enumerate every cell; values must match declared slot options exactly.
+    archetype_filters: {}
 publication:
   doi: "10.5281/zenodo.21227869"
   version_doi: "10.5281/zenodo.21229620"

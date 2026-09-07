@@ -1,18 +1,8 @@
-# Stage 10 — Executable Bundle (opt-in stage)
+# Executable Bundle (opt-in stage)
 
-> Created 2026-05-20. Design document for an opt-in long-horizon artifact path. The stage contract is declared in `pipeline.yaml` for traceability, but `PipelineExecutor` filters `bundle` / `archival` tags out of default runs; invoke `scripts/runner/bundle_executable.py` directly when intentionally producing this artifact. Addresses World-Threat-Model findings at the 5-15-year horizon where PDF-as-primary-deliverable becomes legacy and executable-artifact-as-primary becomes the norm.
+> Created 2026-05-20. Design document for an opt-in long-horizon artifact path. The stage contract is declared in `pipeline.yaml` for traceability, but `PipelineExecutor` filters `opt_in_tags` (including `bundle` / `archival`) out of default runs; invoke `scripts/runner/bundle_executable.py` directly when intentionally producing this artifact. Addresses World-Threat-Model findings at the 5-15-year horizon where PDF-as-primary-deliverable becomes legacy and executable-artifact-as-primary becomes the norm.
 >
-> **Naming note:** this guide and its filename predate the later insertion of
-> the Ebook Generation, Metadata Package, Connector Search, and Provenance
-> Record stages into `pipeline.yaml`
-> (`docs/maintenance/publishing-export-pipeline.md` was fixed for the same
-> drift in a prior pass). In the *current* `pipeline.yaml` numbering,
-> Executable Bundle is **Stage 14** and Archival Publication is **Stage 15**
-> (see CLAUDE.md's stage table); "Stage 10" in this filename/prose is the
-> historical name kept for URL/reference stability, not the live stage index.
-> Do not trust any stage index in this file's prose without checking the
-> CLAUDE.md table — this note has already gone stale once (it said 12/13
-> after the ebook/metadata insertion and missed the science/provenance one).
+> **Naming note:** this guide's filename (`stage-10-executable-bundle.md`) is a historical URL. Use the generated `STAGE_TABLE` in `CLAUDE.md` for live YAML indices; refer to this stage by the name **Executable Bundle**.
 
 ## Why this stage exists
 
@@ -22,26 +12,34 @@ The World Threat Model run identified that:
 - At 10-year horizon (~2036): static PDF is a compatibility output, not the primary deliverable
 - At 15+ year horizon: PDF is the citation fossil; the unit-of-research is a container + code + data + claim graph
 
-The default core pipeline ends with output validation and copy-output delivery. There is no default stage that produces a **container + lockfile + agent-runnable manifest** as a parallel artifact. This is the gap Stage 10 fills when invoked explicitly.
+The default core pipeline ends with output validation and copy-output delivery. There is no default stage that produces a **container + lockfile + agent-runnable manifest** as a parallel artifact. This is the gap Executable Bundle fills when invoked explicitly.
 
-## What Stage 10 produces
+## What Executable Bundle produces
 
 For each project, a single `output/<project>/executable_bundle/` directory containing:
 
 ```
 executable_bundle/
-├── Dockerfile                       # Reproducible build environment
-├── docker-compose.yml               # One-command run
-├── lockfile/
-│   ├── uv.lock                      # Pinned Python deps
-│   ├── apt-packages.lock            # Pinned OS packages
-│   └── tlmgr-packages.lock          # Pinned LaTeX packages
-├── manifest.json                    # Agent-runnable manifest (see schema below)
-├── data/                            # Snapshot of input data (or pointers + SHA-256s)
-├── source/                          # Snapshot of projects/<project>/{src,scripts,manuscript}
-├── README.md                        # "How to reproduce this publication"
-└── PROVENANCE.json                  # Build environment + commit hash + deterministic seeds
+├── Dockerfile                       # Reproducible build environment definition
+├── docker-compose.yml               # One-command run definitions
+├── lockfile/                         # Root dependency/config copies
+│   ├── uv.lock
+│   └── pyproject.toml
+├── uv.lock                           # Convenience copy used by bundle tooling
+├── pyproject.toml                    # Convenience copy used by bundle tooling
+├── manifest.json                     # Agent-runnable claim and entry-point manifest
+├── source/                           # source snapshot; local caches/build metadata excluded
+├── artifacts/pdf/                    # Optional pre-rendered combined PDF
+├── README.md                         # Reproduction guidance
+└── bundle_receipt.json               # Immutable payload paths, sizes, and SHA-256s
 ```
+
+The current implementation does not silently invent a data snapshot,
+OS-package lock, LaTeX lock, or provenance file. External data records must be
+provided as source-bound manifest inputs, and unavailable artifacts are
+omitted with an explicit README note. The receipt is verified immediately
+after assembly and can be rechecked with `verify_bundle_receipt()` before a
+publication provider receives the payload.
 
 ## Manifest schema
 
@@ -104,13 +102,13 @@ The manifest is **the contract** between this template and any future agentic ve
 | Stage 6: Provenance record | content-addressed provenance entries | opt-in (`provenance` tag) |
 | Stage 7: PDF rendering | static PDF (archival artifact) | existing |
 | Stage 8: Validation | quality report | existing |
-| Stage 9: LLM scientific review | LLM-aided review | existing |
-| Stage 10: LLM translations | zh/hi/ru abstracts | existing |
-| Stage 11: Copy outputs | final deliverables to output/ | existing |
-| Stage 12: Ebook generation | EPUB/MOBI/DOCX | opt-in (`ebook` tag) |
-| Stage 13: Metadata package | ONIX/metadata.json/content.opf | opt-in (`metadata` tag) |
-| **Stage 14: Executable bundle** | **container + lockfile + manifest** | **implemented as an opt-in stage** |
-| **Stage 15: Archival publication** | **dry-run or committed archival manifest/deposits** | **implemented as an opt-in stage** |
+| LLM Scientific Review | LLM-aided review | default-full (tag `llm`) |
+| LLM Translations | zh/hi/ru abstracts | default-full (tag `llm`) |
+| Copy Outputs | final deliverables to output/ | default |
+| Ebook Generation | EPUB/MOBI/DOCX | opt-in (`ebook` tag) |
+| Metadata Package | ONIX/metadata.json/content.opf | opt-in (`metadata` tag) |
+| **Executable Bundle** | **container + lockfile + manifest** | **opt-in (`bundle` tag)** |
+| **Archival Publication** | **dry-run or committed archival manifest/deposits** | **opt-in (`archival` tag)** |
 
 The declared Executable Bundle stage depends on PDF rendering and is filtered out of default runs by its `bundle` tag. Archival Publication depends on Executable Bundle and is filtered out by its `archival` tag. The default full run still ends with Copy Outputs; invoke these long-horizon stages directly when intentionally producing bundles or archival records.
 
@@ -126,11 +124,15 @@ The declared Executable Bundle stage depends on PDF rendering and is filtered ou
 
 Implemented pieces:
 
-1. `scripts/runner/bundle_executable.py` builds `output/<project>/executable_bundle/`.
+1. `scripts/runner/bundle_executable.py` builds `output/<project>/executable_bundle/`
+   only for the canonical public roster, rejects source and path-component
+   symlinks, requires the root lockfile, clears stale generated bundle content,
+   writes a deterministic `bundle_receipt.json` payload manifest, and verifies
+   every listed path and content hash before returning.
 2. `infrastructure/rendering/manifest.py` reads `tests/regression/pinned_values/<project>.json` when present and writes `manifest.json`.
-3. `infrastructure/rendering/dockerfile_gen.py` writes a Dockerfile and `docker-compose.yml`.
+3. `infrastructure/rendering/dockerfile_gen.py` writes a Dockerfile and `docker-compose.yml`. The Dockerfile pins `ubuntu:24.04` and installs Python 3.12 (Noble's native version) by default; requesting any other Python tag makes the generator bootstrap the deadsnakes PPA first, since a bare `apt-get install python3.<newer>` fails on Noble's repositories (verified 2026-08-22: default 3.14 image build exited 100 with `Unable to locate package python3.14`).
 4. `pipeline.yaml` declares the `Executable Bundle` stage with tag `bundle`; default runs filter it out.
-5. `scripts/runner/archive_publication.py` and the `Archival Publication` stage provide the downstream opt-in archival path.
+5. `scripts/runner/archive_publication.py` and the `Archival Publication` stage provide the downstream opt-in archival path. The archival command remains dry-run by default and must receive the verified Executable Bundle.
 
 Remaining hardening:
 
@@ -138,6 +140,14 @@ Remaining hardening:
 2. Cross-test the public canonical exemplars in CI with the generated container.
 3. Decide whether reproducibility should be byte-identical or content-equivalent when timestamps are present.
 4. Add a dedicated CI job once container runtime availability is stable.
+
+The bundle remains opt-in and dry-run by default. Before any external
+publication, use `uv run python scripts/runner/bundle_executable.py --project
+templates/<name>` and review `bundle_receipt.json`; the command performs no
+upload. A provider preflight must validate the same immutable payload after
+assembly. Fresh-checkout release rehearsal is separately discoverable through
+`uv run python scripts/maintenance/release_rehearsal.py` and is also a dry-run
+unless `--execute` is supplied.
 
 ## Out of scope for v1
 
@@ -164,4 +174,4 @@ These need decisions before treating the bundle as a release gate.
 - [`README.md`](README.md) — guide hub
 - [`regression-testing.md`](regression-testing.md) — the `pinned_values/` source for the manifest's claims section
 - [`archival-targets.md`](archival-targets.md) — the archival receipts captured in the manifest
-- [`infrastructure/core/pipeline/pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) — declared Stage 14 (Executable Bundle) and Stage 15 (Archival Publication) contracts
+- [`infrastructure/core/pipeline/pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) — declared Executable Bundle and Archival Publication contracts

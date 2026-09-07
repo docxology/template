@@ -534,6 +534,13 @@ def validate_academic_standards(document, standards):
 - File readability and permission testing
 - Directory completeness assessment
 
+**Render-format Contract Tests (`test_render_formats.py`)**
+- Effective YAML/environment format selection shared by Stage 4 and Stage 5
+- HTML-only success without a PDF and fail-closed stale-PDF rejection
+- Exact canonical combined-PDF enforcement when PDF is enabled
+- Disabled-format copied-tree filtering without deleting authored web content
+- Real filesystem layouts; no mock framework or semantic dependency replacement
+
 **PDF Location Requirements:**
 - PDFs must be located in `output_dir/pdf/{project_name}_combined.pdf`
 - Tests create realistic output directory structures

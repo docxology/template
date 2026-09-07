@@ -9,10 +9,9 @@
   "per_paper_notes_integrated": 300,
   "bibtex_path": "<repo-root>/manuscript/references_deep.bib",
   "bibtex_keys": 300,
-  "missing_citation_keys": [
-    "anon2019replication",
-    "bu2026nonstationary",
-    "gong2026comparative",
-    "singer1980minimization"
+  "missing_citation_keys": [],
+  "retrieval_sources": [
+    "arxiv",
+    "crossref"
   ]
 }

@@ -27,6 +27,7 @@ from .eda import (
     correlation_matrix,
     default_dataset_path,
     eda_figure_spec,
+    eda_figure_specs_for_data,
     group_count_data,
     group_means,
     histogram_data,
@@ -66,4 +67,5 @@ __all__ = [
     "correlation_heatmap_data",
     "group_count_data",
     "eda_figure_spec",
+    "eda_figure_specs_for_data",
 ]

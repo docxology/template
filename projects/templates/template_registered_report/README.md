@@ -78,7 +78,7 @@ uv run pytest projects/templates/template_registered_report/tests --cov=projects
 
 ## Outputs and validation
 
-The core validator freezes plans with a deterministic hash, verifies required preregistration sections, compares executed analyses to registered outcomes, and reports deviations before publication. It now also builds a review packet with confirmatory outcomes, exploratory outcomes, a deviation ledger, ethics/stage metadata checks, and sensitivity-analysis table validation.
+The core validator freezes plans with a deterministic hash, verifies required preregistration sections, compares executed analyses to registered outcomes, and reports deviations before publication. Registration schema `v2` is backward-compatible with the prior frozen fixture through an explicit migration that adds no invented values. It also builds a review packet with confirmatory outcomes, exploratory outcomes, a deviation ledger, ethics/stage metadata checks, sensitivity-analysis table validation, and an owner-gated publication receipt bound to the review artifact digest.
 
 ## Publication and boundaries
 

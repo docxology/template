@@ -317,6 +317,10 @@ GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md` [@gnn2023
 
 <!-- sheaf-track:ontology -->
 
+```{=latex}
+\begin{samepage}
+```
+
 ### Ontology bindings
 
 - `belief_entropy` → **BeliefEntropy**
@@ -325,6 +329,10 @@ GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md` [@gnn2023
 - `observation` → **ObservationLikelihood**
 - `policy` → **PolicyPosterior**
 - `sheaf_track` → **SheafFragment**
+
+```{=latex}
+\end{samepage}
+```
 
 
 <!-- sheaf-track:animation -->

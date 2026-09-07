@@ -83,7 +83,9 @@ project_config:
     cache_ttl_seconds: null
 
   enrichment:
-    fetch_abstracts: true
+    # Network-backed enrichment is opt-in; the bundled local corpus already
+    # carries deterministic fixture metadata.
+    fetch_abstracts: false
     fetch_fulltext: false
     abstract_cache_dir: "output/cache/abs"
     fulltext_cache_dir: "output/cache/pdf"
@@ -92,25 +94,24 @@ project_config:
 
   references_path: "manuscript/references.bib"
 
-  # Multi-keyword deep-search mode. Network and local-LLM work is explicit;
+  # Multi-keyword deep-search mode is disabled by default. Enable it only
+  # after selecting a provenance-backed source and, separately, any LLM.
   # Paperclip stays absent unless PAPERCLIP_API_KEY is configured.
   deep_search:
-    enabled: true
+    enabled: false
     keywords:
       - "convex optimization"
       - "stochastic gradient descent"
       - "reproducible research"
     max_results_per_keyword: 100
-    sources:
-      - "arxiv"
-      - "crossref"
+    sources: []
     year_min: null
     year_max: null
     crossref_mailto: "you@example.org"
-    fetch_abstracts: true
-    fetch_fulltext: true
+    fetch_abstracts: false
+    fetch_fulltext: false
     max_fulltext_chars: 400000
-    llm_per_paper: true
+    llm_per_paper: false
     llm_model: "gemma3:4b"
     llm_seed: 42
     llm_temperature: 0.0

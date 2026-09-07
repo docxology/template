@@ -30,7 +30,10 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `transmission_page_check.py` | PDF page-span gate (BEGIN page 1, END last page only) |
 | `zenodo_urls.py` | `zenodo_record_url_from_doi` (no rendering import cycle) |
 | `announcement.py`, `checklist.py`, `readiness.py` | Pre-publication helpers. `readiness.py`'s `completeness_score` is manuscript PUBLICATION readiness (heading/PDF/citation/figure presence), distinct from `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s paper CONTENT reproducibility score — cross-reference only. |
-| `executable_bundle.py` | Stage 12 executable bundle |
+| `executable_bundle.py` | Stage 14 executable bundle with public-roster, path, lock, and deterministic-manifest gates |
+| `preflight.py` | Publication payload and credential/path preflight |
+| `release_receipts.py` | Versioned command, release-authority, coverage-gap, and clean-checkout receipts |
+| `rehearsal.py` | Offline-by-default two-run clean-checkout release rehearsal |
 | `registry.py` | `PLATFORM_REGISTRY`, `list_platforms()`, `get_platform()`, `PublishingTier` — central adapter registry |
 | `status_report.py` | `compile_publishing_status`, `render_status_markdown`, `render_status_block`, `update_readme_block`, `status_report_is_current` — registry + `config.yaml` → regenerable README publishing-status block |
 | `reachability.py` | Opt-in live repository/DOI reachability probes used by publishing-status diagnostics; ordinary CI remains offline |
@@ -42,9 +45,25 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `metadata_package.py` | `EbookPublicationMetadata`, `generate_onix_xml`, `generate_metadata_json`, `generate_epub_opf`, `generate_metadata_package`, `ebook_metadata_from_config` — ONIX 3.0, `metadata.json`, and EPUB 3.0 OPF metadata artefacts for ebook / retail-platform ingestion |
 | `metadata_stage.py` | `run_metadata_package` — thin stage orchestrator: resolve project, load config, build ebook metadata, write the package into `output/metadata/` |
 | `export_bundle.py` | `export_for_publishing`, `main` — bundle a project's `output/` PDFs / ebooks / metadata into a timestamped import package with `manifest.json` and a `latest` symlink for the `docxology/publishing` repo |
-| `repro_bundle.py` | `build_repro_bundle`, `build_public_repro_bundles`, `verify_repro_bundle`, `collect_entries`, `build_manifest_dict`, `BundleEntry`, `VerifyReport` — hermetic reproduction-bundle builder/verifier emitting a deterministic `repro_manifest.json`; verification fails closed on any missing or changed file. This is artifact-hash byte-reproducibility (a build/CI concept), distinct from `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s methodological/workflow completeness scoring (a paper-content concept) — cross-reference only. |
+| `repro_bundle.py` | `build_repro_bundle`, `build_public_repro_bundles`, `verify_repro_bundle`, `collect_entries`, `build_manifest_dict`, `BundleEntry`, `VerifyReport` — hermetic reproduction-bundle builder/verifier emitting a deterministic `repro_manifest.json`; bundle construction first validates the source artifact manifest against its lifecycle-authorized stable inventory, and verification fails closed on any missing or changed file. `verify_repro_bundle` is implemented in `_repro_bundle_verify.py` (`collect_schema_findings`, `collect_expected_kinds`, `collect_entry_findings`, `collect_cardinality_findings`) and re-exported from `repro_bundle`. This is artifact-hash byte-reproducibility (a build/CI concept), distinct from `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s methodological/workflow completeness scoring (a paper-content concept) — cross-reference only. |
 | `http_constants.py` | `REQUEST_TIMEOUT` — shared default outbound HTTP timeout (30s) for publishing platform clients |
 | `cli.py`, `publish_cli.py`, `archival_cli.py` | CLI entry points |
+
+### Local publishing exports
+
+`export_for_publishing()` accepts bare or qualified project names and preserves
+managed project leaf links. Project-name traversal, intermediate directory
+escapes, and output/config/artifact links outside the selected project are
+rejected. Confined source reads use held directory descriptors and no-follow
+opens, including during copying, so a source symlink swap cannot redirect the
+read. This requires OS support for no-follow descriptor-relative opens and fails
+closed when unavailable.
+
+Each export allocates a fresh bundle even when timestamps collide. Manifest
+hashes and sizes describe the copied bytes, and `latest` is replaced atomically
+only after a complete bundle exists. The caller selects a trusted destination;
+this contract does not sandbox hostile concurrent mutation of destination
+ancestors. No remote publication occurs through this export helper.
 
 ### Platform subpackages
 
@@ -307,6 +326,9 @@ Prefer `infrastructure.publishing.zenodo` (and sibling subpackages) for new code
 | `credential_check.py` | `PROBES`, `run_probe`, `check_all`, `format_results`, `PlatformProbe`, `ProbeResult` | per-platform tokens (read-only probes) |
 | `upload_runner.py` | `UploadTargets`, `UploadRun`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs`, `run_uploads` | `PINATA_JWT`, `HUGGINGFACE_TOKEN`/`HF_TOKEN`, `OSF_TOKEN`, `TESTPYPI_TOKEN`, `GITHUB_TOKEN`, `NETLIFY_AUTH_TOKEN`, `CLOUDFLARE_API_TOKEN` |
 | `executable_bundle.py` | `bundle_project` | — |
+| `preflight.py` | `publishing_preflight` | — |
+| `release_receipts.py` | `ReleaseMetadataReceipt`, `CommandReceipt`, `CleanCheckoutReceipt`, `CoverageGapSnapshot`, `SubprocessPolicyReceipt` | — |
+| `rehearsal.py` | `build_clean_checkout_plan`, `run_clean_checkout_rehearsal` | — |
 | `cli.py` | `main`, `publish_zenodo_command`, `extract_metadata_command`, ... | `--token`, `ZENODO_PROD_TOKEN`, `ZENODO_TOKEN` |
 | `publish_cli.py` | `main` | `--token`, `--repo`, `--tag`, `--name` |
 | `scripts/publish/publish_project_release.py` | `run_release_workflow` (via thin script) | `--project`, `--tag`, `--repo`, GitHub + Zenodo tokens |

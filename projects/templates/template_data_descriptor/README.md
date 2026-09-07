@@ -53,7 +53,7 @@ Primary configuration lives in `manuscript/config.yaml`; forkable defaults live 
 
 ## Figures and manuscript
 
-The manuscript embeds five figures generated deterministically from the descriptor and fixture bytes by the thin script [`scripts/generate_figures.py`](scripts/generate_figures.py) (schema data dictionary, file inventory, provenance flow, quality gate, and descriptor↔file checksum verification). All computation lives in the tested `src/data_descriptor/` package (`descriptor.py`, `figures.py`, `verification.py`); the script only plots and prints paths. Figures are written to and embedded from [`manuscript/figures/`](manuscript/figures/README.md). Regenerate with:
+The manuscript embeds five figures generated deterministically from the descriptor and fixture bytes by the thin script [`scripts/generate_figures.py`](scripts/generate_figures.py) (schema data dictionary, file inventory, provenance flow, quality gate, and descriptor↔file checksum verification). All computation, rendering, and fail-closed registry publication lives in the tested `src/data_descriptor/` package (`descriptor.py`, `figures.py`, `figure_pipeline.py`, `registry.py`, `verification.py`); the script only selects the project root, delegates, and prints paths. Figures are written to and embedded from [`manuscript/figures/`](manuscript/figures/README.md). Regenerate with:
 
 ```bash
 uv run python projects/templates/template_data_descriptor/scripts/generate_figures.py
@@ -69,7 +69,7 @@ uv run pytest projects/templates/template_data_descriptor/tests --cov=projects/t
 
 ## Outputs and validation
 
-The core validation output is a descriptor report containing schema fingerprint, field counts, file inventory checks, license status, field-level constraint checks, and quality-gate findings. Byte-level verification (`verify_descriptor_files`) recomputes each declared file's sha256 checksum and row count and reconciles them against the descriptor. The package also builds a deterministic metadata-only release manifest with file checksums, schema fingerprint, provenance steps, and unit/bounds/enumeration summaries for pre-publication review, written under `output/reports/` by `scripts/generate_release_artifacts.py`. Stage 04 validation checks the rendered manuscript and publication boundary once outputs exist.
+The core validation output is a descriptor report containing schema fingerprint, field counts, file inventory checks, license status, field-level constraint checks, and quality-gate findings. Byte-level verification (`verify_descriptor_files`) recomputes each declared file's sha256 checksum and row count and reconciles them against the descriptor; JSON is supported, while other media require an explicit justification. The package also builds a deterministic metadata-only release manifest with file checksums, schema fingerprint, provenance steps, and unit/bounds/enumeration summaries for pre-publication review, written under `output/reports/` by `scripts/generate_release_artifacts.py`. A publication receipt additionally requires a real repository identity, matching descriptor digest, and explicit owner attestation. Stage 04 validation checks the rendered manuscript and publication boundary once outputs exist.
 
 ## Publication and boundaries
 

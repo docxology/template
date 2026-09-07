@@ -1,4 +1,11 @@
-"""Deterministic majority-vote target agent for mini_classify."""
+"""Deterministic feature_0-threshold target agent for mini_classify.
+
+Mirrors ``tasks/mini_classify/reference/reference_target_agent.py``'s
+threshold rule so the prediction path counts toward this exemplar's
+``src/`` coverage gate. ``majority_label`` is a standalone helper (not
+called by ``write_predictions``/``run_agent``/``main``) kept for callers
+that need a majority-class fallback.
+"""
 
 from __future__ import annotations
 

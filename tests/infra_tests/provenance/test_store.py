@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,7 @@ from infrastructure.provenance import (
     EdgeRelation,
     NodeKind,
     Provenance,
+    ProvenanceStoreError,
     RunNode,
     SourceNode,
     node_from_dict,
@@ -293,8 +295,29 @@ class TestProvenance:
         prov = Provenance.with_path(tmp_path)
         assert isinstance(prov.path, Path)
 
-    def test_corrupted_json_loads_empty(self, tmp_path):
+    def test_corrupted_json_fails_closed(self, tmp_path):
         dag = tmp_path / "dag.json"
         dag.write_text("{not valid json")
-        prov = Provenance(dag)
-        assert len(prov) == 0
+        with pytest.raises(ProvenanceStoreError, match="Invalid JSON"):
+            Provenance(dag)
+
+    @pytest.mark.parametrize(
+        "payload, message",
+        [
+            ([], "root must be an object"),
+            ({"nodes": {}, "edges": []}, "nodes and edges must be lists"),
+            (
+                {"nodes": [{"node_id": "x", "kind": "unknown", "label": "bad"}], "edges": []},
+                "Invalid provenance node",
+            ),
+            (
+                {"nodes": [], "edges": [{"from_id": "x", "to_id": "y", "relation": "unknown"}]},
+                "Invalid provenance edge relation",
+            ),
+        ],
+    )
+    def test_malformed_store_entries_fail_closed(self, tmp_path, payload, message):
+        dag = tmp_path / "dag.json"
+        dag.write_text(json.dumps(payload), encoding="utf-8")
+        with pytest.raises(ProvenanceStoreError, match=message):
+            Provenance(dag)

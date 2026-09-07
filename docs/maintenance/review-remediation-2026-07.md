@@ -261,9 +261,10 @@ a near-complete inventory.
   states its curation scope.
 
 ### R15 · Pin the `uv` bootstrap installer — ✅ SHIPPED
-`scripts/shell/shell_bootstrap.sh` pipes an unpinned `https://astral.sh/uv/install.sh`
-to `sh` automatically from `run.sh`/`secure_run.sh` — a floating remote installer
-against the repo's pin-everything posture.
+At the time of that review, `scripts/shell/shell_bootstrap.sh` used a floating
+remote uv installer from `run.sh`/`secure_run.sh`, against the repo's
+pin-everything posture. The current bootstrap downloads a version-pinned
+installer and verifies its SHA-256 digest before execution.
 - **Acceptance**: the installer URL is version-pinned (e.g. `UV_VERSION`), or
   the auto-install prompts before piping remote script to a shell.
 

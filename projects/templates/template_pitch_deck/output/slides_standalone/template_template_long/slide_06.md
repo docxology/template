@@ -1,6 +1,6 @@
 # Adjacent practice this builds on
 
-*Slide 6 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 6 of 57 — template_template pitch, long deck — kind: `content`*
 
 - Ten Simple Rules for Reproducible Computational Research (Sandve et al., 2013) — the base discipline of tracking exactly what produced each result.
 - Good Enough Practices in Scientific Computing (Wilson et al., 2017) — version control, testing, and modular code as baseline hygiene.

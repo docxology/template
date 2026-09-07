@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import json
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 from infrastructure.core.exceptions import BuildError, ValidationError
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 
 from .context_ledger import append_generation, init_context
 from .evaluation_runner import read_results_json, run_evaluation
@@ -176,25 +176,32 @@ def _live_target(state: GenerationState, gen_dir: Path) -> tuple[Path, Path]:
         "--working_dir",
         str(working_dir),
     ]
-    proc = subprocess.run(
+    proc = run_with_policy(
         cmd,
-        cwd=str(gen_dir),
-        capture_output=True,
-        text=True,
-        timeout=state.config.target_timeout_sec,
-        check=False,
+        cwd=gen_dir,
+        env=None,
+        policy=SubprocessPolicy(
+            policy_id="sia-live-target",
+            source_path="infrastructure/sia/loop_runner.py",
+            timeout_seconds=state.config.target_timeout_sec,
+            capture_output=True,
+            credential_free=True,
+        ),
     )
     execution_path = gen_dir / "agent_execution.json"
     payload = {
         "returncode": proc.returncode,
         "stdout": proc.stdout,
         "stderr": proc.stderr,
+        "timed_out": proc.timed_out,
+        "command_error": proc.command_error,
         "dataset_dir": str(dataset_dir),
         "working_dir": str(working_dir),
     }
     execution_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    if proc.returncode != 0:
-        raise BuildError(f"Target agent failed (exit {proc.returncode}): {proc.stderr.strip()}")
+    if proc.returncode != 0 or proc.timed_out:
+        detail = proc.command_error or proc.stderr.strip() or proc.stdout.strip() or "no diagnostic output"
+        raise BuildError(f"Target agent failed (exit {proc.returncode}, timeout={proc.timed_out}): {detail[-1000:]}")
     load_agent_execution(execution_path)
     return target, execution_path
 

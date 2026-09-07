@@ -26,11 +26,37 @@ from __future__ import annotations
 
 import logging
 import pathlib
-from dataclasses import dataclass
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-from .cover_figure import generate_cover_art
-from .rule_hierarchy_figure import generate_rule_hierarchy
+from .cover_figure import generate_cover_art as generate_cover_art
+from .figure_support import (
+    BG,
+    BLUE,
+    BLUE_LIGHT,
+    COVER_FIGURE_FILENAMES,
+    GRID,
+    NEUTRAL,
+    NEUTRAL_LIGHT,
+    STATUS_COLORS,
+    STATUS_LABELS,
+    TEAL,
+    TEAL_LIGHT,
+    WHITE,
+)
+from .figure_support import (
+    FIGURE_REGISTRY_SCHEMA as _FIGURE_REGISTRY_SCHEMA,
+)
+from .figure_support import (
+    INTEGRATION_FIGURE_SPECS as _INTEGRATION_FIGURE_SPECS,
+)
+from .rule_hierarchy_figure import generate_rule_hierarchy as generate_rule_hierarchy
+
+# Registry metadata is re-exported from this compatibility façade because the
+# figure publisher and downstream project scripts historically import the
+# complete figure contract from ``src.figures``.
+FIGURE_REGISTRY_SCHEMA = _FIGURE_REGISTRY_SCHEMA
+INTEGRATION_FIGURE_SPECS = _INTEGRATION_FIGURE_SPECS
 
 logger = logging.getLogger(__name__)
 
@@ -57,118 +83,6 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
 # ---------------------------------------------------------------------------
-# Theme (matches docxology/template brand)
-# ---------------------------------------------------------------------------
-BLUE = "#1e3a8a"
-BLUE_LIGHT = "#3b82f6"
-TEAL = "#0f766e"
-TEAL_LIGHT = "#14b8a6"
-NEUTRAL = "#64748b"
-NEUTRAL_LIGHT = "#94a3b8"
-WHITE = "#ffffff"
-BG = "#f8fafc"
-GRID = "#e2e8f0"
-
-STATUS_COLORS: dict[str, str] = {
-    "ok": "#16a34a",
-    "partial": "#d97706",
-    "missing": "#dc2626",
-}
-
-STATUS_LABELS: dict[str, str] = {
-    "ok": "Pass",
-    "partial": "Partial",
-    "missing": "Missing",
-}
-
-
-@dataclass(frozen=True)
-class IntegrationFigureSpec:
-    """Registry metadata for one generated integration figure."""
-
-    label: str
-    filename: str
-    caption: str
-    generated_by: str
-    alt_text: str
-
-
-FIGURE_REGISTRY_SCHEMA = "template-pools-rules-tools-figure-registry-v1"
-INTEGRATION_FIGURE_SPECS: tuple[IntegrationFigureSpec, ...] = (
-    IntegrationFigureSpec(
-        label="fig:architecture",
-        filename="architecture_overview.png",
-        caption="Three-layer resource architecture with the integration layer.",
-        generated_by="src.figures.generate_architecture_overview",
-        alt_text="Diagram showing fonds, rules, and tools feeding a shared integration layer.",
-    ),
-    IntegrationFigureSpec(
-        label="fig:counts",
-        filename="resource_counts.png",
-        caption="Runtime counts for discovered fonds, rules, and tools.",
-        generated_by="src.figures.generate_resource_counts",
-        alt_text="Bar chart comparing the runtime counts discovered for fonds, rules, and tools.",
-    ),
-    IntegrationFigureSpec(
-        label="fig:pipeline",
-        filename="status_dashboard.png",
-        caption="Per-resource integration status dashboard.",
-        generated_by="src.figures.generate_status_dashboard",
-        alt_text=(
-            "Status dashboard showing pass, partial, or missing state for each resource category."
-        ),
-    ),
-    IntegrationFigureSpec(
-        label="fig:taxonomy",
-        filename="fond_taxonomy.png",
-        caption="Schema taxonomy across bibliography, contacts, and dataset fonds.",
-        generated_by="src.figures.generate_fond_taxonomy",
-        alt_text=(
-            "Taxonomy diagram comparing shared manifest fields and "
-            "category-specific schemas for three fond types."
-        ),
-    ),
-    IntegrationFigureSpec(
-        label="fig:rulehier",
-        filename="rule_hierarchy.png",
-        caption="Soft and strong branches of the template rule hierarchy.",
-        generated_by="src.figures.generate_rule_hierarchy",
-        alt_text=(
-            "Hierarchy diagram separating guidance-oriented soft rules from "
-            "machine-enforced strong rules."
-        ),
-    ),
-    IntegrationFigureSpec(
-        label="fig:toolcontract",
-        filename="tool_contract.png",
-        caption="Input, behavior, output, and exit-code contracts for template tools.",
-        generated_by="src.figures.generate_tool_contract",
-        alt_text="Contract diagram comparing tool inputs, behavior, outputs, and exit codes.",
-    ),
-    IntegrationFigureSpec(
-        label="fig:resilience",
-        filename="resilience_layers.png",
-        caption="Three-level graceful-degradation design for shared resources.",
-        generated_by="src.figures.generate_resilience_layers",
-        alt_text=(
-            "Layered flow showing resource absence, malformed data, and missing "
-            "scripts with bounded fallback responses."
-        ),
-    ),
-    IntegrationFigureSpec(
-        label="fig:pipelineflow",
-        filename="pipeline_flow.png",
-        caption="Thin-script pipeline from source validation through publication rendering.",
-        generated_by="src.figures.generate_pipeline_flow",
-        alt_text=(
-            "Left-to-right pipeline from source validation through integration, "
-            "figure generation, variable hydration, "
-            "and publication rendering."
-        ),
-    ),
-)
-
-# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
@@ -186,7 +100,7 @@ def _resolve_output(
     output_dir: str | pathlib.Path | None,
     filename: str,
     *,
-    default_output_dir=_default_output_dir,
+    default_output_dir: Callable[[], pathlib.Path] = _default_output_dir,
 ) -> pathlib.Path:
     if output_dir is None:
         output_dir = default_output_dir()
@@ -211,7 +125,7 @@ def generate_architecture_overview(
     output_dir: str | pathlib.Path | None = None,
     filename: str = "architecture_overview.png",
     *,
-    default_output_dir=_default_output_dir,
+    default_output_dir: Callable[[], pathlib.Path] = _default_output_dir,
 ) -> pathlib.Path | None:
     """Generate a three-panel figure showing fonds → rules → tools architecture."""
     if not _MPL_AVAILABLE:
@@ -712,7 +626,14 @@ def generate_pipeline_flow(
         ("02_run_integration.py", "run_integration_demo() → JSON summary", TEAL),
         ("03_generate_manuscript.py", "Write manuscript_variables.json", BLUE),
         ("04_validate_strong_rules.py", "Semantic strong-rule evaluation", NEUTRAL_LIGHT),
-        ("05_generate_figures.py", "Render 8 figures + cover art", TEAL_LIGHT),
+        (
+            "05_generate_figures.py",
+            (
+                f"Render {len(INTEGRATION_FIGURE_SPECS)} content + "
+                f"{len(COVER_FIGURE_FILENAMES)} cover"
+            ),
+            TEAL_LIGHT,
+        ),
         ("z_generate_manuscript_...py", "Hydrate + inject {{TOKENS}}", BLUE_LIGHT),
         ("PDF render", "4-pass xelatex + bibtex", NEUTRAL),
     ]
@@ -751,7 +672,7 @@ def generate_pipeline_flow(
             )
 
     ax.set_title(
-        "Script Pipeline: Six Scripts, Each One Job, Ending in the Combined PDF",
+        "Script Pipeline: One Job per Stage, Ending in the Combined PDF",
         fontsize=12,
         fontweight="bold",
         color="#0f172a",
@@ -797,7 +718,10 @@ def all_figures(
     tool_contract = generate_tool_contract(output_dir=output_dir)
     resilience = generate_resilience_layers(output_dir=output_dir)
     pipeline = generate_pipeline_flow(output_dir=output_dir)
-    cover = generate_cover_art(output_dir=output_dir)
+    covers = {
+        pathlib.Path(filename).stem: generate_cover_art(output_dir=output_dir, filename=filename)
+        for filename in COVER_FIGURE_FILENAMES
+    }
 
     return {
         "architecture_overview": arch,
@@ -808,7 +732,7 @@ def all_figures(
         "tool_contract": tool_contract,
         "resilience_layers": resilience,
         "pipeline_flow": pipeline,
-        "cover_art": cover,
+        **covers,
     }
 
 

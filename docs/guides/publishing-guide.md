@@ -200,6 +200,16 @@ tarball = prepare_arxiv_submission(output_dir, metadata)
 print(f"Submission package: {tarball}")
 ```
 
+Run this only after the final render. The packager prefers the persisted
+`output/pdf/_combined_manuscript.tex`, includes its stem-matched `.bbl`,
+rendered bibliography and figures, and fails rather than creating a
+references-only archive. Pin `SOURCE_DATE_EPOCH` for a byte-reproducible UTC
+date name and archive. A public tracked package changes the stable output tree,
+so refresh its artifact manifest and rerun Stage 4 afterward; Stage 4 refreshes
+both validation and rendered provenance. See
+[`infrastructure/publishing/arxiv/README.md`](../../infrastructure/publishing/arxiv/README.md)
+for the exact producer order and Active Inference example.
+
 ---
 
 ## GitHub Releases
@@ -323,7 +333,7 @@ should produce or point at a Zenodo software version under that concept DOI.
    ```bash
    rg -n "version =|version:" pyproject.toml CITATION.cff
    uv run python scripts/docgen/counts.py --check
-   uv run python scripts/audit/check_tracked_projects.py
+   uv run python scripts/audit/check_tracked_all.py
    uv run python scripts/audit/check_tracked_generated_artifacts.py
    ```
 
@@ -512,6 +522,12 @@ flowchart LR
 
 Abstract source is **`manuscript/00_abstract.md`** (not a config key). The workflow prefers the hydrated copy under `output/manuscript/00_abstract.md` when the analysis stage has run.
 
+That preference is a lookup rule, not a freshness proof. Before depositing,
+rerun the analysis → variable generation → hydration → render → validation
+chain, reject unresolved `{{TOKEN}}` values, and compare the plaintext abstract
+to the current source-bound analysis. A syntactically normalized abstract can
+still contain stale statistics or claims.
+
 ### Transmission bookends (optional)
 
 When `publication.transmission_bookends.enabled: true`, the render pipeline writes two generated sections into `output/manuscript/`:
@@ -641,6 +657,21 @@ uv run python -m infrastructure.publishing.transmission_page_check \
 ```
 
 
+## Optional Export: docxplus (opt-in stage 13)
+
+Export the project as a conforming `.docx` and `.docxplus` intelligent document that carries its own source tree in a signed, tamper-evident manifest ([`docxology/docxplus`](https://github.com/docxology/docxplus)):
+
+```bash
+# Install the optional extra
+uv sync --extra docxplus
+
+# Run stage 13 for a project
+uv run python scripts/pipeline/stage_13_docxplus.py --project templates/template_code_project
+```
+
+Outputs are written to `projects/{name}/output/docxplus/` (`{name}.docx`, `{name}.docxplus`, and `docxplus_export.json`).
+
+
 ## Executable bundle (opt-in stage)
 
 ```bash
@@ -688,6 +719,11 @@ infrastructure.orchestration` CLI does) — pass the qualified slug
 missing path and the stage gracefully skips.
 
 Add `--commit` to perform real deposits (requires credentials — see [`archival/README.md`](../../infrastructure/publishing/archival/README.md)).
+
+Use a curated executable or format-specific release bundle as `--bundle`; do
+not point the archival CLI at the complete Stage 5 root mirror. That mirror is
+a local debugging copy and may retain ignored logs, telemetry, or renderer
+intermediates beyond its separately validated stable/shippable inventory.
 
 ---
 
@@ -828,6 +864,13 @@ uv run python -m infrastructure.publishing.status_report \
 
 ## Publication Readiness
 
+`validate_publication_readiness()` is a packaging-completeness helper. Its
+boolean/score does **not** establish scientific correctness, statistical
+validity, citation support or retraction status, source freshness, figure/table
+accessibility, owner approval, or release authority. Run the preflight in the
+[publication runbook](publication-runbook.md) and record these outcomes
+separately before any external write.
+
 ```python
 from infrastructure.publishing import (
     validate_publication_readiness,
@@ -862,7 +905,8 @@ package = create_publication_package(
 from infrastructure.publishing import validate_doi
 
 is_valid = validate_doi("10.5281/zenodo.12345678")
-# True — valid DOI format
+# True means the string has a valid DOI form; it does not prove that the DOI
+# resolves, identifies the intended work, or supports a manuscript claim.
 ```
 
 ---

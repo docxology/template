@@ -4,13 +4,17 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 from zipfile import ZipFile
+
+import pytest
 
 from infrastructure.core.pipeline.dag import PipelineDAG
 from infrastructure.core.pipeline.executor import PipelineConfig, PipelineExecutor
 
 
+@pytest.mark.slow
 def test_built_wheel_contains_canonical_pipeline_yaml(tmp_path: Path) -> None:
     """Installed-wheel fallback data must exist, not merely work in a checkout."""
     repo_root = Path(__file__).parents[4]
@@ -39,7 +43,7 @@ def test_missing_repository_yaml_uses_packaged_canonical_dag(tmp_path: Path) -> 
     assert resolved == Path(__file__).parents[4] / "infrastructure/core/pipeline/pipeline.yaml"
 
     expected = PipelineDAG.from_yaml(resolved)
-    expected.filter_tags(exclude={"llm", "ebook", "metadata", "bundle", "archival", "science", "provenance"})
+    expected.filter_tags(exclude=set(expected.opt_in_tags) | {"llm"})
     expected_names = [stage.name for stage in expected.sorted_stages()]
     actual_names = [stage.name for stage in executor._build_stage_list(include_llm=False, skip_clean=False)]
     assert actual_names == expected_names
@@ -89,7 +93,14 @@ def test_removed_root_entrypoints_are_absent() -> None:
 
 
 def test_canonical_entrypoints_remain_directly_executable() -> None:
-    """Canonical entrypoints remain directly executable after consolidation."""
+    """Canonical entrypoints remain directly executable after consolidation.
+
+    Invoked through ``sys.executable`` (the project's Python) rather than the
+    raw ``#!/usr/bin/env python3`` shebang, so the check is robust to hosts
+    whose *system* ``python3`` is below the project's ``>=3.10`` floor (the
+    venv interpreter CI runs under is always honored). Mirrors the sibling
+    ``test_incremental_cli_flag`` subprocess contract.
+    """
     repo_root = Path(__file__).parents[4]
     for relative in (
         "scripts/runner/execute_pipeline.py",
@@ -99,7 +110,7 @@ def test_canonical_entrypoints_remain_directly_executable() -> None:
         script = repo_root / relative
         assert script.stat().st_mode & 0o111, f"{relative} lost its executable bit"
         result = subprocess.run(
-            [str(script), "--help"],
+            [sys.executable, str(script), "--help"],
             cwd=repo_root,
             check=False,
             capture_output=True,

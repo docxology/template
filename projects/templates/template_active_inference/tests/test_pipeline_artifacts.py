@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 from analysis import run_analysis
 from visualizations.figures import generate_all_figures
 from simulation.si_runner import pymdp_available, run_and_persist

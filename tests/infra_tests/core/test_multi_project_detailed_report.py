@@ -12,7 +12,7 @@ from pathlib import Path
 from infrastructure.core.pipeline.multi_project import MultiProjectResult
 from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.project.project_info import ProjectInfo
-from infrastructure.reporting.multi_project_report import format_multi_project_detailed_report
+from infrastructure.reporting.multi_project_report import format_multi_project_detailed_report, write_last_run_summary
 
 
 def _p(name: str) -> ProjectInfo:
@@ -138,3 +138,12 @@ def test_detailed_report_handles_empty_project_list() -> None:
     text = "\n".join(lines)
     assert "MULTI-PROJECT EXECUTION SUMMARY" in text
     assert "0 projects" in text
+
+
+def test_last_run_summary_is_explicitly_historical(tmp_path: Path) -> None:
+    """The generated receipt must not be mistaken for current health evidence."""
+    artifact = write_last_run_summary(["MULTI-PROJECT EXECUTION SUMMARY"], tmp_path)
+    assert artifact is not None
+    content = artifact.read_text(encoding="utf-8")
+    assert "Last Recorded Pipeline Run" in content
+    assert "historical evidence, not a current health claim" in content

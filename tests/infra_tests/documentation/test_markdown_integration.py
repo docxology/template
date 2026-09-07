@@ -1,6 +1,14 @@
 """Comprehensive tests for src/markdown_integration.py to ensure 100% coverage."""
 
+import pytest
+
 from infrastructure.documentation.markdown_integration import MarkdownIntegration
+
+
+@pytest.fixture(autouse=True)
+def _isolate_default_figure_registry(tmp_path, monkeypatch):
+    """Keep default FigureManager state out of the repository output tree."""
+    monkeypatch.chdir(tmp_path)
 
 
 class TestMarkdownIntegration:
@@ -12,6 +20,7 @@ class TestMarkdownIntegration:
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
         assert integration.manuscript_dir == manuscript_dir
+        assert integration.figure_manager.registry_file.resolve() == tmp_path / "output/figures/figure_registry.json"
 
     def test_initialization_default_manuscript_dir(self, tmp_path, monkeypatch):
         """Test initialization with default manuscript directory."""

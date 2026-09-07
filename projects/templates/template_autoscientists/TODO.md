@@ -1,23 +1,18 @@
 # template_autoscientists TODO
 
-Forward-only backlog for the deterministic coordination-mechanism testbed exemplar (arXiv:2605.28655 primitives: proposer, dead-end registry, confirmation band, reorganization).
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-- Pre-render validation passed with no render-blocking pitfalls or undefined citations.
-- Project test gate: **114 passed, 1 skipped** (`requires_ollama`), **99.29%** isolated source coverage.
-- Full core pipeline (8 stages) completed green; single-stage analysis/render/validate/copy all exit 0 with Stage-04 validation passing every check (PDF, transmission bookends, Markdown, output structure, figure registry, evidence registry, project design overlays, artifact manifest, rendered provenance).
-- Combined PDF: **14 pages**, **0** `^! ` LaTeX error lines, **0** unresolved `??` markers.
-- Qualified template-drift gate: `template_drift: no drift detected.`
-
-## Fixes completed in this pass
-
-- Corrected claim-ledger `confirmation-noise-seeds` from 5 to the measured `SearchConfig.confirm_seeds` count of 3 and bound its source to `src/search.py`.
-- Expanded `tests/AGENTS.md` to list every test file and identify the opt-in Ollama test.
-- Synchronized `manuscript/config.yaml.example` with live publication shape (`repository_url`, `published_artifacts`).
-- Documented `ablation_efficiency.png` output and corrected troubleshooting guidance to `SearchConfig.confirm_seeds`.
-- Repaired manuscript champion notation with `$p^{\ast}$`, eliminating invalid escaped-star LaTeX (`Missing {`/`Missing }` recoverable errors).
-- Regenerated figures, data, PDF/HTML manuscript outputs, validation reports, output statistics, composition, and provenance evidence; refreshed the artifact manifest snapshot.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
@@ -27,7 +22,8 @@ Forward-only backlog for the deterministic coordination-mechanism testbed exempl
 ## Configurable-surface gaps
 
 - Keep `manuscript/config.yaml.example` aligned when `SearchConfig` or `SyntheticObjective` defaults change.
-- Add a script-level config summary only if analysis scripts begin reading YAML directly.
+- A script-level config summary is unnecessary while analysis scripts remain
+  config-free; if that boundary changes, add the summary and a scoped row first.
 
 ## Documentation and signposting gaps
 
@@ -36,10 +32,28 @@ Forward-only backlog for the deterministic coordination-mechanism testbed exempl
 ## Test and validator gaps
 
 - Keep deterministic fixture replay covered by the project coverage gate.
-- Promote the live agent path only with offline transcript fixtures, stale-transcript detection, and a no-network default validation.
+- The live agent path remains opt-in; promotion requires offline transcript
+  fixtures, stale-transcript detection, and no-network default validation.
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Keep the deterministic fixture-replay baseline green and coverage-gated (integrity).
-2. Keep `manuscript/config.yaml.example` shape-synced with live `SearchConfig` defaults (configurable surface).
-3. Promote the live agent path only when offline fixtures + no-network default validation exist (test/validator boundary).
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
+
+## Medium upcoming
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
+
+## Major upcoming
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked row is a deliberate boundary, not a skipped success.

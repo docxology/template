@@ -41,6 +41,11 @@ def _palette(record: Mapping[str, object]) -> tuple[str, str, str, str]:
 
 
 VALID_CAPTION_POSITIONS = frozenset({"top", "bottom"})
+TRIM_SIZES: dict[str, tuple[int, int]] = {
+    "portrait": (1275, 1650),
+    "square": (900, 900),
+    "widescreen": (1600, 900),
+}
 
 
 def _caption_position(record: Mapping[str, object]) -> str:
@@ -88,15 +93,47 @@ def load_storybook(project_root: Path | str) -> StorybookSpec:
         raise ValueError("pages must be numbered contiguously from 0")
 
     output_pdf = Path(_require_text(storybook, "output_pdf"))
-    return StorybookSpec(
+    page_width = _require_int(storybook, "page_width")
+    page_height = _require_int(storybook, "page_height")
+    trim_size = storybook.get("trim_size", "custom")
+    if not isinstance(trim_size, str) or not trim_size.strip():
+        raise ValueError("storybook.trim_size must be a non-empty string")
+    trim_size = trim_size.strip().lower()
+    if trim_size in TRIM_SIZES and (page_width, page_height) != TRIM_SIZES[trim_size]:
+        raise ValueError(f"storybook page dimensions do not match trim_size={trim_size!r}")
+    if page_width < 1 or page_height < 1:
+        raise ValueError("storybook page dimensions must be positive")
+    spec = StorybookSpec(
         title=_require_text(storybook, "title"),
         subtitle=_require_text(storybook, "subtitle"),
         output_pdf=output_pdf,
-        page_width=_require_int(storybook, "page_width"),
-        page_height=_require_int(storybook, "page_height"),
+        page_width=page_width,
+        page_height=page_height,
         characters=characters,
         pages=pages,
+        trim_size=trim_size,
     )
+    accessibility_issues = validate_accessibility_metadata(spec)
+    if accessibility_issues:
+        raise ValueError("storybook accessibility metadata failed: " + "; ".join(accessibility_issues))
+    return spec
+
+
+def validate_accessibility_metadata(spec: StorybookSpec) -> tuple[str, ...]:
+    """Validate title/alt-text/caption metadata before rendering."""
+    issues: list[str] = []
+    if not spec.title.strip() or not spec.subtitle.strip():
+        issues.append("title and subtitle must be non-empty")
+    slugs: set[str] = set()
+    for page in spec.pages:
+        if page.slug in slugs:
+            issues.append(f"duplicate page slug: {page.slug}")
+        slugs.add(page.slug)
+        if not page.title.strip() or not page.scene.strip() or not page.text.strip():
+            issues.append(f"page {page.number} lacks title, scene, or text metadata")
+        if page.caption_position not in VALID_CAPTION_POSITIONS:
+            issues.append(f"page {page.slug} has an invalid caption position")
+    return tuple(issues)
 
 
 def storybook_variables(spec: StorybookSpec) -> dict[str, Any]:
@@ -104,6 +141,7 @@ def storybook_variables(spec: StorybookSpec) -> dict[str, Any]:
     return {
         "title": spec.title,
         "subtitle": spec.subtitle,
+        "trim_size": spec.trim_size,
         "page_count": spec.page_count,
         "characters": [
             {
@@ -123,6 +161,7 @@ def storybook_variables(spec: StorybookSpec) -> dict[str, Any]:
                 "scene": page.scene,
                 "overlay_box": page.overlay_box,
                 "caption_position": page.caption_position,
+                "caption_zone": {"position": page.caption_position, "minimum_height": 120},
                 "alt_text": (f"Full-page illustrated scene '{page.title}' ({page.scene}). Story text: {page.text}"),
             }
             for page in spec.pages

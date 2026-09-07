@@ -12,7 +12,18 @@ under-tooled), the solution (a two-layer, thin-orchestrator monorepo with a
 proof (real, currently-measured facts: exemplar count, coverage floors, the
 publishing surface `template_template` itself already reaches), and an ask.
 Medium and long variants add landscape, architecture, and roadmap detail;
-long adds a full governance/confidentiality walkthrough and an appendix.
+long adds a full governance/confidentiality walkthrough and an appendix. In
+both variants, the complete live public roster occupies its own cited slide and
+the two original concrete-instance/uniform-contract claims occupy the next
+slide with the same citation. Executable tests derive the exact names from
+`PUBLIC_PROJECT_NAMES` and bind each authored deck to its declared budget.
+
+The infrastructure subpackage donut also treats percentage contrast as a
+validated content property. `src/chart_rendering.py` composites each real
+wedge artist over the white canvas, chooses theme-black or theme-white by WCAG
+relative luminance, compares the result with the executable method constant
+`4.5:1`, and fails closed below that threshold. Outside slice labels remain
+black on the white background.
 
 ## Token resolution
 

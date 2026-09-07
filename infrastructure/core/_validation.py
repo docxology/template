@@ -120,9 +120,6 @@ class SecurityValidator:
     def _sanitize_html(self, text: str) -> str:
         return html.escape(text, quote=True)
 
-    def _normalize_whitespace(self, text: str) -> str:
-        return normalize_whitespace(text)
-
 
 def normalize_whitespace(text: str) -> str:
     """Collapse runs of spaces and blank lines; strip leading/trailing whitespace."""

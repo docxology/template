@@ -41,8 +41,6 @@ _EXCLUDED_DIRS = frozenset(
         "ongoing",
         "active",
         "archive",
-        "published",
-        "other",
     }
 )
 
@@ -50,6 +48,38 @@ _EXCLUDED_DIRS = frozenset(
 def _is_excluded_path(p: Path) -> bool:
     """Return True if path contains any excluded directory segment."""
     return any(part in _EXCLUDED_DIRS for part in p.parts)
+
+
+def _iter_matching_files(base: Path, pattern: str) -> "list[Path]":
+    """Walk ``base`` without descending into excluded directory segments.
+
+    Equivalent to ``[p for p in base.rglob(pattern) if not _is_excluded_path(p)]``
+    but prunes excluded subtrees during traversal instead of filtering after a
+    full filesystem walk. Measured on a fleet-loaded external-drive checkout:
+    pruned traversal 1.3s vs unpruned ``rglob`` 30.9s; the unpruned walk
+    exceeded the regression tier's 30-second test policies even though the
+    excluded subtrees were filtered afterwards.
+    """
+    parts = pattern.split("*")
+    assert len(parts) == 2, f"unsupported pattern (single glob star only): {pattern}"
+    prefix, suffix = parts
+    found: list[Path] = []
+    stack = [base]
+    while stack:
+        current = stack.pop()
+        try:
+            entries = list(current.iterdir())
+        except OSError:
+            continue
+        for entry in entries:
+            if entry.is_dir() and not entry.is_symlink():
+                # pathlib.rglob does not follow directory symlinks; the pruned
+                # walk must match that behavior to keep counts identical.
+                if entry.name not in _EXCLUDED_DIRS:
+                    stack.append(entry)
+            elif entry.name.startswith(prefix) and entry.name.endswith(suffix):
+                found.append(entry)
+    return found
 
 
 @dataclass
@@ -121,6 +151,11 @@ class InfrastructureReport:
     total_python_files: int
     total_test_files: int
 
+    #: Tags that make a stage opt-in, read from the same pipeline.yaml the stages
+    #: come from. Previously restated here as a literal that mirrored a comment in
+    #: that file, which drifted the moment a new opt-in stage was declared.
+    opt_in_tags: frozenset[str] = frozenset()
+
     @property
     def pipeline_stages_declared(self) -> int:
         """Return the declared pipeline stages."""
@@ -135,13 +170,12 @@ class InfrastructureReport:
         # "Opt-in science/provenance stages (skipped in --core-only and default
         # runs)". All six tags are excluded from the default full-run count.
         """Return the default full pipeline stages."""
-        opt_in_tags = {"bundle", "archival", "ebook", "metadata", "science", "provenance"}
-        return sum(1 for stage in self.pipeline_stages if opt_in_tags.isdisjoint(stage.tags))
+        return sum(1 for stage in self.pipeline_stages if self.opt_in_tags.isdisjoint(stage.tags))
 
     @property
     def pipeline_stages_core_only(self) -> int:
         """Return the core-only pipeline stages."""
-        opt_in_tags = {"bundle", "archival", "ebook", "metadata", "science", "provenance"}
+        opt_in_tags = self.opt_in_tags
         return sum(
             1
             for stage in self.pipeline_stages
@@ -262,10 +296,10 @@ def _project_analysis_from_workspace(child: Path) -> ProjectAnalysis | None:
 
 #: Typed program subfolders under ``projects/``. The public exemplars are
 #: git-tracked under ``projects/templates/``; ``active/`` holds the hot-seat
-#: rendered set; ``working``/``published``/``archive``/``other`` hold non-rendered
+#: rendered set; ``working``/``ongoing``/``archive`` hold non-rendered
 #: rotating work (symlinked from the private lifecycle repo). Keep in sync with
 #: ``infrastructure.project.discovery.NON_RENDERED_SUBDIRS`` (the latter four).
-_TYPED_PROJECT_SUBDIRS = frozenset({"templates", "active", "working", "published", "archive", "other"})
+_TYPED_PROJECT_SUBDIRS = frozenset({"templates", "active", "working", "archive"})
 
 #: On-disk directory name (leaf) of this meta-project's workspace. It is now
 #: git-tracked at ``projects/templates/template_template/``, so the leaf matches
@@ -302,7 +336,7 @@ def discover_projects(repo_root: Path, *, public_only: bool = True) -> list[Proj
     The layout is uniform program-prefix: public exemplars live under
     ``projects/templates/<name>``, the hot-seat rendered set under
     ``projects/active/<name>``, and non-rendered rotating work under
-    ``projects/{working,published,archive,other}/<name>``. Discovery returns the
+    ``projects/{working,ongoing,archive}/<name>``. Discovery returns the
     bare leaf name (e.g. ``template_code_project``) so metric keys remain
     ``project_<leaf>_*``.
 
@@ -375,6 +409,21 @@ def enumerate_numbered_scripts(scripts_dir: Path) -> list[PipelineStage]:
 count_pipeline_stages = enumerate_numbered_scripts
 
 
+def _load_opt_in_tags(repo_root: Path) -> frozenset[str]:
+    """Read the opt-in tag set declared in pipeline.yaml.
+
+    The DAG declares which tags make a stage opt-in; this exemplar must not restate
+    that set, and by the two-layer rule it cannot import the infrastructure copy
+    either. Reading the same YAML is the one option that keeps a single source.
+    """
+    yaml_path = repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+    try:
+        data = yaml.safe_load(yaml_path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError):
+        return frozenset()
+    return frozenset(data.get("opt_in_tags") or ())
+
+
 def load_pipeline_stages_from_yaml(repo_root: Path) -> list[PipelineStage]:
     """Load declared pipeline stages from ``infrastructure/core/pipeline/pipeline.yaml``."""
     yaml_path = repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
@@ -439,8 +488,8 @@ def build_infrastructure_report(repo_root: Path) -> InfrastructureReport:
     numbered_scripts = enumerate_numbered_scripts(repo_root / "scripts")
     pipeline_stages = load_pipeline_stages_from_yaml(repo_root)
 
-    total_py = len([p for p in repo_root.rglob("*.py") if not _is_excluded_path(p)])
-    total_tests = len([p for p in repo_root.rglob("test_*.py") if not _is_excluded_path(p)])
+    total_py = len(_iter_matching_files(repo_root, "*.py"))
+    total_tests = len(_iter_matching_files(repo_root, "test_*.py"))
 
     version = "unknown"
     try:
@@ -456,6 +505,7 @@ def build_infrastructure_report(repo_root: Path) -> InfrastructureReport:
         modules=modules,
         projects=projects,
         pipeline_stages=pipeline_stages,
+        opt_in_tags=_load_opt_in_tags(repo_root),
         numbered_scripts=numbered_scripts,
         total_python_files=total_py,
         total_test_files=total_tests,

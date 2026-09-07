@@ -1,343 +1,251 @@
-# Maintenance Procedures
+# Maintenance procedures
 
-This document covers routine maintenance tasks for the Research Project Template infrastructure.
+These procedures maintain a public template checkout without conflating local
+housekeeping, source changes, generated evidence, remote synchronization, or
+release authority. Always inspect the current checkout and the relevant
+`AGENTS.md` before acting.
 
-## Table of Contents
+## Maintenance status vocabulary
 
-- [Log Rotation](#log-rotation)
-- [Dependency Updates](#dependency-updates)
-- [Database & Storage](#database--storage)
-- [Backup Strategy](#backup-strategy)
-- [Scheduled Maintenance Calendar](#scheduled-maintenance-calendar)
+Use only `passed`, `failed`, `blocked`, `not run`, `not applicable`, and
+`unavailable` for gates. Optional-tool output that says `skipped` stays
+`skipped`; it is not a clean result. Record command, revision, scope, exit code,
+and limitations for every cited result.
 
----
+## Log rotation
 
-## Log Rotation
+The tracked helper
+[`scripts/rotate-logs.sh`](scripts/rotate-logs.sh) currently has two policies:
 
-### Overview
+| Target | Implemented action |
+| --- | --- |
+| `~/.hermes/logs/*.log` older than 30 days | gzip and move to `~/.hermes/logs/archive/` |
+| Any `*/output/logs/*.log` older than 90 days beneath the checkout | delete |
 
-The system generates logs in multiple locations:
-
-| Log Type | Location | Retention |
-|----------|----------|-----------|
-| Pipeline logs | `projects/*/output/logs/` | Deleted after 90 days (`DAYS_PROJECT` in `rotate-logs.sh`) — no intermediate archive step |
-| Hermes agent logs | `~/.hermes/logs/` | Compressed + moved to `~/.hermes/logs/archive/` after 30 days (`DAYS_HERMES`); archived logs are kept indefinitely unless manually pruned |
-| Docker logs | `docker compose logs` | Managed by Docker daemon (configure log driver) |
-
-### Rotation Configuration
-
-A logrotate configuration is provided at `infrastructure/logrotate.d/template`:
-
-```
-~/.template/logs/*.log {
-    daily
-    missingok
-    rotate 30
-    compress
-    delaycompress
-    notifempty
-    copytruncate
-    dateext
-    dateformat -%Y%m%d-%s
-}
-```
-
-**Installation (system-level, optional):**
+The second action is destructive. Preview exact targets before running it:
 
 ```bash
-sudo cp infrastructure/logrotate.d/template /etc/logrotate.d/
-sudo logrotate -d /etc/logrotate.d/template  # test dry-run
+find "$HOME/.hermes/logs" -name '*.log' -type f -mtime +30 -print 2>/dev/null
+find . -path '*/output/logs/*.log' -type f -mtime +90 -print
 ```
 
-### Manual Rotation
-
-If system logrotate is unavailable, use the provided script:
+Confirm that no live producer is writing those files and that retention or
+incident requirements allow removal. Then, if authorized:
 
 ```bash
 bash docs/operational/scripts/rotate-logs.sh
 ```
 
-**Script behavior:**
-- Compresses `.log` files older than 30 days with `gzip`
-- Moves archived logs to `~/.hermes/logs/archive/`
-- Deletes project logs older than 90 days
-- Preserves recent logs for active debugging
+The separate `infrastructure/logrotate.d/template` configuration applies to
+`~/.template/logs/*.log`, not Hermes or project pipeline logs. Installing it
+under `/etc/logrotate.d/` is a privileged system change; use `logrotate -d`
+against a reviewed copy before installation.
 
-### Monitoring
+## Dependency maintenance
 
-Ensure rotation runs successfully by checking cron logs or script output:
-
-```bash
-# View rotation logs (if script outputs to syslog or a file)
-tail -20 /var/log/syslog | grep rotate-logs
-```
-
----
-
-## Dependency Updates
-
-### Using `uv` for Dependency Management
-
-The project uses `uv` as the Python package manager and resolver. All dependencies are declared in `pyproject.toml` and locked in `uv.lock`.
-
-### Update Workflow
-
-**1. Check for outdated packages:**
+`pyproject.toml` owns declared requirements and `uv.lock` owns the resolved
+environment. Start with read-only or lock-preserving checks:
 
 ```bash
+git status --short --branch
+uv lock --check
 uv pip list --outdated
+uv run pip-audit --locked .
 ```
 
-**2. Upgrade dependencies (all at once, or a single package):**
+`uv pip list --outdated` and `pip-audit` depend on current index/advisory
+access. Network failure is `unavailable`, not evidence that dependencies are
+current or vulnerability-free.
+
+Make upgrades on a dedicated branch with a preserved recovery path:
 
 ```bash
-# Upgrade everything, ignoring pinned versions in uv.lock — use cautiously
-uv sync --upgrade
+# Narrow upgrade preferred
+uv lock --upgrade-package <package>
+uv sync --frozen
 
-# Upgrade just one package
-uv sync --upgrade-package <name>
+# Inspect exactly what changed
+git diff -- pyproject.toml uv.lock
 ```
 
-**3. Regenerate lock file:**
+Use `uv lock --upgrade` only for a deliberately broad update. Do not blindly
+commit a regenerated lockfile; review source, version, platform, and transitive
+changes, then run the applicable Python matrix, package/build, security,
+project, and render gates. Hosted CI remains the evidence for all supported
+interpreters and OSes.
+
+Security advisories require prompt triage, not an automatic unrestricted
+upgrade. Confirm applicability, patched versions, compatibility, and the
+time-bounded ignore policy in `.github/pip-audit-ignore.txt`.
+
+## Storage inspection
+
+The core pipeline writes file-backed checkpoints, logs, reports, and artifacts,
+but individual projects or optional modules may use additional stores. Discover
+current paths rather than relying on copied size estimates:
 
 ```bash
-uv lock
+du -sh .venv .cache output projects/*/output 2>/dev/null | sort -h
+df -h .
+find output projects -type f -size +100M -print 2>/dev/null
+docker system df 2>/dev/null
 ```
 
-**4. Commit changes:**
+Do not write local audit snapshots under `docs/`; that tree is public source.
+Store operator-only measurements outside the repository or in a declared,
+gitignored run directory. Before deleting caches, models, Docker data, or
+outputs, resolve exact targets and confirm they are not the only copy of
+unpublished evidence.
+
+## Backup helpers and acceptance boundary
+
+The shell helpers under `scripts/shell/` are site-specific examples. They
+assume an SSH-configured host named `backup`, transmit potentially sensitive
+Hermes/cache/output content, and do not implement encryption, retention,
+credential provisioning, or provider-independent verification.
+
+| Script | Current documentation status |
+| --- | --- |
+| `backup-daily.sh` | Operator-configured rsync of `~/.hermes`; not a repository release gate. |
+| `backup-weekly.sh` | Operator-configured rsync of `.cache`; not a repository release gate. |
+| `backup-full.sh` | Available as an operator-configured helper. Creates a write-once-by-cooperating-helper snapshot with fixed `.hermes`, `.cache`, and `output` labels; `--dry-run` performs no network or filesystem writes. |
+| `restore-test.sh` | Available for non-destructive transfer verification. `--list` is read-only; restore uses a private control directory, validates snapshot metadata, compares the current snapshot with its restored copy, and emits a restricted receipt. |
+
+The full pair now uses one layout contract:
+`backups/full/<snapshot>/{.hermes,.cache,output}` relative to the remote login
+directory, plus `.template-full-backup` metadata. `ssh` receives only that
+remote filesystem path; rsync alone receives `host:path`. Backup refuses to
+overwrite an existing snapshot, uses an atomic per-name directory lock across
+staging and finalization, retains explicitly named partial and lock paths on
+failure, and records every present or absent source label. Restore never removes
+a prior scratch tree, keeps its restored tree/diagnostics/receipt together under
+one mode-`0700` control directory, rejects a local scratch parent inside the
+backup namespace, and fails closed on undeclared layout or malformed metadata.
 
 ```bash
-git add pyproject.toml uv.lock
-git commit -m "chore(deps): update dependencies via uv sync --upgrade"
+# Resolve and inspect mappings without connecting or writing
+bash scripts/shell/backup-full.sh --dry-run backup pre-upgrade-2026-08-14
+
+# Create, list, then verify a write-once-by-helper remote snapshot
+bash scripts/shell/backup-full.sh backup pre-upgrade-2026-08-14
+bash scripts/shell/restore-test.sh --list backup pre-upgrade-2026-08-14
+bash scripts/shell/restore-test.sh backup pre-upgrade-2026-08-14
 ```
 
-### Pin Strategy
-
-- Direct dependencies: flexible within major version (`package>=1.2,<2.0`)
-- Transitive dependencies: pinned by `uv.lock` for reproducible builds
-- Review `uv.lock` changes before merging to avoid supply-chain surprises
-
-### Frequency
-
-| Dependency Type | Update Cadence | Notes |
-|-----------------|----------------|-------|
-| Security fixes | **Immediately** | Apply via `uv sync --upgrade` as soon as CVE is disclosed |
-| Minor/patch releases | Monthly (routine) | Scheduled in Monthly Maintenance |
-| Major version upgrades | Quarterly | Require testing; bump version constraints |
-
----
-
-## Database & Storage {#database--storage}
-
-### Architecture Note
-
-**There is no traditional database.** All persistent data is stored as files across three key directories:
-
-| Directory | Purpose | Size Typical | Backup Priority |
-|-----------|---------|--------------|-----------------|
-| `~/.hermes/` | Hermes config, LLM cache, agent state | < 2 GB | **Critical** |
-| `.cache/` | Downloaded models, intermediate data | 5–20 GB (models) | **High** |
-| `output/` | Generated reports, figures, PDFs | Variable per project | **Medium** |
-
-### Storage Health Checks
-
-**Check filesystem integrity:**
+For a disposable real-rsync round trip without SSH, pass the same absolute
+local root to both scripts:
 
 ```bash
-# Verify no corrupted files (basic check — uses fsck if needed on unmounted volume)
-# On macOS:
-diskutil verifyVolume /Volumes/YourBackupDrive
-
-# Check for disk errors in system logs
-log show --predicate 'eventMessage contains "I/O error"' --last 7d
+BACKUP_SCRATCH_ROOT="$(mktemp -d)"
+bash scripts/shell/backup-full.sh \
+  --local-root "${BACKUP_SCRATCH_ROOT}/backups/full" local-contract-test
+bash scripts/shell/restore-test.sh \
+  --local-root "${BACKUP_SCRATCH_ROOT}/backups/full" \
+  --scratch-parent "${BACKUP_SCRATCH_ROOT}" local-contract-test
 ```
 
-**Monitor growth trends:**
+The local transport establishes the script and layout contract, not remote
+availability. Run the remote `--list` and restore against the operator's actual
+SSH host before treating a snapshot as recoverable there.
+
+### Implemented checks and remaining operator controls
+
+Implemented by the pair:
+
+1. Explicit repository/home sources and a validated destination/snapshot name.
+2. Non-writing `--dry-run` and read-only `--list` modes.
+3. A newly created scratch restore, never the checkout or a reused directory.
+4. Versioned layout metadata that records the repository revision when
+   available and classifies every expected source label as present or absent.
+5. A post-restore comparison of the current stored snapshot with its restored
+   copy using rsync checksums, symlinks, permissions, file timestamps,
+   additions, and deletions.
+6. A mode-`0600` receipt binding snapshot, recorded repository revision,
+   source, scratch target, command, exit status, file counts, missing labels,
+   verification result, and known limitations.
+
+Still owned by the operator or backup provider:
+
+1. encryption at rest/in transit beyond SSH and access-control policy for
+   Hermes secrets, private manuscripts, caches, and outputs;
+2. credential provisioning, host authenticity, storage quotas, monitoring,
+   and a versioned retention/deletion policy;
+3. a successful receipt from the actual remote host and independent review of
+   the restored files;
+4. Git/source recovery and `uv sync --frozen` plus a focused pipeline from a
+   restored checkout—the full helper preserves `.hermes`, repository `.cache`,
+   and `output`, not the Git working tree itself;
+5. creation-time content digests and at-rest tamper/corruption detection—the
+   current checksum pass cannot detect bad bytes already present when restore
+   begins;
+6. a quiesced point-in-time source view and filesystem metadata outside rsync
+   archive semantics: hard-link relationships, ACLs, extended attributes, and
+   macOS resource forks are not preserved or verified.
+
+File existence or one successful rsync exit code alone does not establish a
+complete disaster-recovery system. Use an independently managed product for
+controls the repository helper does not provide.
+
+## Remote synchronization
+
+Fetch before claiming synchronization:
 
 ```bash
-# Monthly: log directory sizes for trend analysis
-mkdir -p docs/operational/audit
-du -sh ~/.hermes .cache output > docs/operational/audit/disk-usage-$(date +%Y-%m).txt
+git status --short --branch
+git remote -v
+git fetch origin
+git rev-list --left-right --count HEAD...origin/main
+git rev-parse HEAD
+git rev-parse origin/main
 ```
 
-**Cleanup guidelines:**
-- `~/.ollama/models/`: Keep only models you actively use. Remove obsolete models with `ollama rm <model>`.
-- `output/figures/`: Archive old figures to cold storage; keep only current deliverables.
-- `~/.hermes/chat_history/`: Periodically prune if storage constrained.
+Fetching does not merge. If local work exists, inspect overlap and preserve a
+recoverable copy before integrating upstream. Prefer a fast-forward when the
+history permits; do not reset or discard unrelated work to force equality.
+After any push, verify the remote ref SHA independently before reporting it as
+published. A local commit and a successful test run are not a push.
 
----
+## Generated artifacts and public boundaries
 
-## Backup Strategy
-
-### Backup Scope
-
-| Source | Destination | Method | Frequency |
-|--------|-------------|--------|-----------|
-| `~/.hermes` | `backup:~/.hermes` | `rsync -a` | Daily (cron) |
-| `.cache` | `backup:.cache` | `rsync -a --exclude='tmp/*'` | Weekly |
-| `output` | `backup:output` | `rsync -a --delete` | After each major release |
-
-### Backup Commands
-
-**Daily backup script (`scripts/shell/backup-daily.sh`):**
+Before staging or pushing:
 
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-REMOTE="backup"
-DATE=$(date +%Y-%m-%d)
-LOG="/tmp/backup-$DATE.log"
-
-echo "Starting daily backup ($DATE)" | tee "$LOG"
-
-# Hermes config — critical
-rsync -av --progress \
-    ~/.hermes/ \
-    $REMOTE:~/.hermes/ \
-    2>&1 | tee -a "$LOG"
-
-echo "Backup completed: $(date)" | tee -a "$LOG"
+uv run python scripts/audit/check_tracked_all.py
+uv run python scripts/audit/check_tracked_generated_artifacts.py
+uv run python scripts/audit/check_mirror_symlinks.py
+uv run python scripts/audit/check_staged_secrets.py
+uv run python scripts/audit/check_tracked_secrets.py
 ```
 
-**Weekly backup (includes caches):**
+Only the declared public `templates/` surfaces of `projects/`, `fonds/`,
+`rules/`, and `tools/` may be tracked. Runtime links under lifecycle folders
+remain local-only. Regenerate public evidence through its producer; do not add
+logs, `.pipeline` state, local snapshots, telemetry, caches, or build
+intermediates merely because they helped diagnosis.
 
-```bash
-rsync -av --exclude='tmp/*' \
-    .cache/ \
-    backup:.cache/ \
-    2>&1 | tee -a /tmp/backup-weekly.log
-```
+## Suggested cadence
 
-**On-demand full backup:**
+Cadence is operator policy, not a claim that an automated service exists:
 
-```bash
-./scripts/shell/backup-full.sh  # includes all three dirs with snapshots
-```
+| Frequency | Suggested review |
+| --- | --- |
+| Per change | Dirty state, focused tests, docs/contracts, confidentiality, generated artifacts, secret scan. |
+| Weekly or before release | Hosted CI state, dependency advisories, public project matrix, source-current render/publication audit for affected artifacts. |
+| Monthly | Log-retention preview, dependency update review, disk growth, external backup restore evidence. |
+| Quarterly | Supported-runtime matrix, branch-protection settings, credential inventory/expiry, archival reachability, disaster-recovery drill. |
 
-### Retention & Rotation
+External CI, branch protection, credentials, archive/provider state, owner
+approval, tags, releases, and deposits must be recaptured at decision time.
 
-Backups are retained according to:
+## Disaster-recovery drill
 
-| Age | Action |
-|-----|--------|
-| 0–7 days | Keep daily |
-| 8–30 days | Keep weekly summaries |
-| 31–365 days | Keep monthly snapshots |
-| > 1 year | Archive to cold storage (offline HDD or S3 Glacier) |
+1. Select a known snapshot in the operator's verified backup system.
+2. Restore to a new scratch location.
+3. Compare inventories/hashes and review secret permissions.
+4. Run `uv lock --check`, `uv sync --frozen`, and a focused project pipeline.
+5. Record exact passed/failed/blocked/unavailable lanes and restore time.
+6. Do not promote the scratch restore over the working checkout until the owner
+   reviews the comparison and preservation plan.
 
-**Prune old backups (on remote):**
-
-```bash
-# Keep last 30 days of daily backups
-find /backups/daily -type f -mtime +30 -delete
-
-# Keep last 12 monthly snapshots
-find /backups/monthly -type f -mtime +365 -delete
-```
-
-### Verification {#backup-verification}
-
-Run verification monthly (see [Runbook - Monthly Operations](#monthly-operations)).
-
----
-
-## Scheduled Maintenance Calendar
-
-| Frequency | Task | Owner | Runbook Reference |
-|-----------|------|-------|-------------------|
-| Daily | `./run.sh --help` + audit log review | Dev on-call | [Daily](#daily-operations) |
-| Daily | Health check script | CI / pre-commit | [Health Check](#health-check-script) |
-| Weekly | `./run.sh --all-projects --pipeline` | Team lead | [Weekly](#weekly-operations) |
-| Weekly | Gate duration monitoring | Perf engineer | [Weekly](#gate-duration-monitoring) |
-| Weekly | Security scan (`uv pip audit`) | Security | [Weekly](#security-scan-review) |
-| Monthly | Audit log rotation | Ops | [Log Rotation](#log-rotation) |
-| Monthly | Dependency updates (`uv sync --upgrade`) | Dev team | [Dependency Updates](#dependency-updates) |
-| Monthly | Backup verification + restore test | Ops | [Backup Verification](#backup-verification) |
-| Quarterly | Disaster recovery drill | All hands | [Disaster Recovery Drill](#disaster-recovery-drill) |
-| Yearly | Full architecture review | Architects | — |
-
----
-
-## Maintenance Scripts Index
-
-All maintenance scripts live in `scripts/` or `docs/operational/scripts/`:
-
-| Script | Purpose | Frequency |
-|--------|---------|-----------|
-| `scripts/shell/health-check.sh` | Quick system readiness check | Daily |
-| `scripts/shell/backup-daily.sh` | Daily `~/.hermes` backup | Daily (cron) |
-| `scripts/shell/backup-weekly.sh` | Weekly `.cache` backup | Weekly (cron) |
-| `docs/operational/scripts/rotate-logs.sh` | Log rotation | Monthly (cron) |
-| `scripts/shell/restore-test.sh` | Validate backup restorability | Monthly |
-
----
-
-## Daily Operations {#daily-operations}
-
-For detailed procedures, see [Runbook - Daily Operations](../operational/runbook.md#daily-operations).
-
-### Quick Reference
-
-- Run `./run.sh --help` to verify the environment
-- Review audit logs in `projects/*/output/logs/`
-- Check for ERROR or CRITICAL level entries
-
----
-
-## Health Check Script {#health-check-script}
-
-For detailed procedures and the full script, see [Runbook - Health Check Script](../operational/runbook.md#health-check-script).
-
-### Quick Reference — Verification
-
-```bash
-./run.sh --help && echo "OK" || echo "FAIL"
-```
-
----
-
-## Weekly Operations {#weekly-operations}
-
-Run once per week (typically at the start of the work week).
-
-- **Full multi-project pipeline:** `./run.sh --all-projects --pipeline` (or `uv run python scripts/runner/execute_multi_project.py`) to confirm every active project still builds end-to-end.
-
-### Gate Duration Monitoring {#gate-duration-monitoring}
-
-Track how long the test and pipeline gates take so build-time regressions surface early.
-
-- Review per-stage timings in `output/<project>/reports/` and the multi-project executive report.
-- Investigate any stage whose wall-clock time grows materially week over week.
-
-### Security Scan Review {#security-scan-review}
-
-- Dependency advisories: `uv run pip-audit` (ignore IDs from `.github/pip-audit-ignore.txt`; triage any reported CVEs).
-- Static analysis: `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/`.
-- Optional deeper scan: `uv run python scripts/gates/security_scan.py` (missing tools report `skipped`, not clean).
-
----
-
-## Monthly Operations {#monthly-operations}
-
-For detailed procedures, see [Runbook - Monthly Operations](../operational/runbook.md#monthly-operations).
-
-### Verification Quick Reference
-
-- Audit log rotation (see [Log Rotation](#log-rotation))
-- Dependency updates via `uv sync --upgrade`
-- Backup verification and restore testing
-
----
-
-## Disaster Recovery Drill {#disaster-recovery-drill}
-
-Run quarterly to verify that backups can actually be restored — not merely that they exist.
-
-1. Restore the most recent backup (see [Backup Strategy](#backup-strategy) and [Verification](#backup-verification)) into a scratch location.
-2. Run the health check (`./run.sh --help && echo OK`) and a smoke pipeline (`uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only`) against the restored tree.
-3. Record restore time and any gaps; file follow-ups for anything that did not restore cleanly.
-
----
-
-*Last updated: 2026-05-27*
+See the [operations runbook](runbook.md) and
+[recovery procedures](troubleshooting/recovery-procedures.md).

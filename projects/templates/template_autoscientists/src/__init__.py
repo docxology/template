@@ -22,6 +22,7 @@ from .ranking import axis_effect_sizes, rank_axes
 from .search import SearchConfig, SearchResult, run_search
 from .stagnation import StagnationDetector, reorganize_axes
 from .state import Champion, ExperimentOutcome, Proposal, SharedState
+from .transcript import TRANSCRIPT_SCHEMA, replay_transcript, transcript_digest, validate_transcript
 
 
 def __getattr__(name: str):  # pragma: no cover - lazy script-layer export
@@ -47,9 +48,13 @@ __all__ = [
     "SharedState",
     "StagnationDetector",
     "SyntheticObjective",
+    "TRANSCRIPT_SCHEMA",
     "axis_effect_sizes",
     "confirm_improvement",
     "rank_axes",
     "reorganize_axes",
     "run_search",
+    "replay_transcript",
+    "transcript_digest",
+    "validate_transcript",
 ]

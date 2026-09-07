@@ -25,7 +25,13 @@ from infrastructure.search.literature.backends import (
     SearchBackend,
     UrllibHttpClient,
 )
-from infrastructure.search.literature.cache import SearchCache
+from infrastructure.search.literature.cache import (
+    SEARCH_CACHE_SCHEMA_VERSION,
+    SearchCache,
+    query_cache_key,
+    query_identity,
+    validate_cache_payload,
+)
 from infrastructure.search.literature.client import LiteratureClient
 from infrastructure.search.literature.fulltext import (
     AbstractFetcher,
@@ -61,6 +67,10 @@ __all__ = [
     # Aggregator + cache
     "LiteratureClient",
     "SearchCache",
+    "SEARCH_CACHE_SCHEMA_VERSION",
+    "query_cache_key",
+    "query_identity",
+    "validate_cache_payload",
     # Fulltext + enrichment
     "AbstractFetcher",
     "FulltextFetcher",

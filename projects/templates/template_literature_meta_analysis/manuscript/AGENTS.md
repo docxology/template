@@ -56,6 +56,10 @@ All computation lives in `src/manuscript/variables/` (see `compute.py` and `extr
 - `99_` — references (always last)
 - `S01_`, `S02_` … — supplemental sections (not in main body flow)
 
+The LaTeX preamble uses a kernel command hook to flush queued floats before
+each new section. This keeps figures within their originating section without
+requiring an additional float-barrier package.
+
 ## config.yaml as Single Source of Truth
 
 Add new hypotheses, subfield keywords, or search queries only in `config.yaml`. The Python modules load configuration via `configure_hypotheses()` and `configure_subfields()` at runtime — no Python source edits needed.

@@ -11,7 +11,7 @@
 | **Correspondence** | daniel@activeinference.institute |
 | **ORCID** | [0000-0001-6232-9096](https://orcid.org/0000-0001-6232-9096) |
 | **Version** | 1.0.0 |
-| **Date** | 2026-07-05 |
+| **Date** | 2026-07-10 |
 | **License** | CC-BY-4.0 |
 | **Repository** | [Public template repository](https://github.com/docxology/template) |
 | **DOI** | 10.5281/zenodo.21298888 |
@@ -45,9 +45,9 @@ This exemplar targets full computational reproducibility for every quantitative 
 | Manuscript variable tokens | `scripts/03_generate_manuscript.py` | Rendered PDF contains no unresolved `{{...}}` tokens |
 | All 9 figures (8 content + 1 cover) | `scripts/05_generate_figures.py` | `tests/test_figures.py` (per-function file-existence checks) |
 | ≥90% `src/` line coverage | `uv run pytest … --cov-fail-under=90` | CI + local pre-push gate |
-| Combined PDF | full project pipeline, Stage 6 (4-pass xelatex + bibtex) | `pdftotext` scan for unresolved-reference markers and page-scale raster read |
+| Combined PDF | full project pipeline, PDF rendering stage (4-pass xelatex + bibtex) | `pdftotext` scan for unresolved-reference markers and page-scale raster read |
 
-A reader who clones the repository and runs the five commands above, in order, reproduces every number and image in this document without manual intervention. Every quantitative claim in this document — fond/rule/tool counts, test counts, coverage percentages, and both bar-chart figures (@fig:counts, @fig:pipeline) — is generated from the same `run_integration_demo()` call at render time. None of these numbers are hand-typed; a `test_reflects_changed_integration_result` negative control in `tests/test_manuscript_variables.py` proves the token-generation function actually tracks its source rather than emitting a fixed constant.
+A reader who clones the repository and runs the listed commands in order reproduces every number and image in this document without manual intervention. Quantitative claims in this document — fond/rule/tool counts, project inventory counts, and the runtime bar-chart figures (@fig:counts, @fig:pipeline) — are derived from the integration result, declared figure contracts, or the project filesystem at render time. None of these values are hand-typed; negative controls in `tests/test_manuscript_variables.py` change both integration inputs and a real temporary project tree to prove that token generation tracks its sources rather than emitting fixed constants.
 
 
 
@@ -59,11 +59,11 @@ A reader who clones the repository and runs the five commands above, in order, r
 
 Research software repositories in monorepo configurations accumulate three categories of shared resources that individual projects must consume without re-implementing discovery logic: **data pools** (bibliographies, contacts, datasets), **governance rules** (style guides, coverage thresholds, citation schemas), and **executable tools** (code executors, validators, skill invocations). Without a canonical integration pattern, projects either duplicate discovery logic or silently ignore resources that fail to load — both outcomes degrade reproducibility and collaborative cohesion [@Wilson2014best; @Taschuk2017ten].
 
-This paper presents `template_pools_rules_tools`, a meta-project exemplar that demonstrates how a single project can programmatically discover, validate, and exercise all three resource categories with zero tight coupling to any specific resource instance. The exemplar comprises eight Python modules — three resource readers (`fonds_reader`, `rules_applier`, `tools_invoker`), an orchestrator (`integration`), a semantic rule evaluator (`strong_rule_evaluator`), a figure generator (`figures`), a manuscript-token generator (`manuscript_variables`), and shared type definitions (`type_defs`) — plus six thin orchestration scripts and a fully token-injected manuscript pipeline.
+This paper presents `template_pools_rules_tools`, a meta-project exemplar that demonstrates how a single project can programmatically discover, validate, and exercise all three resource categories with zero tight coupling to any specific resource instance. The exemplar comprises 12 Python modules, including resource readers, an integration orchestrator, semantic rule evaluation, figure generation, manuscript-token generation, resource-schema validation, and shared type definitions, plus 6 thin orchestration scripts and a fully token-injected manuscript pipeline.
 
-The architecture (@fig:architecture) separates *resource ownership* from *resource consumption*. Resources live in top-level `fonds/`, `rules/`, and `tools/` directories and are never modified by consumers. Each resource exposes a typed manifest (`fonds.yaml`, `rules.yaml`, `tools.yaml`) that the corresponding reader module uses for discovery and validation. All readers implement graceful fallbacks: they return `None` or empty collections when a resource is absent, log a warning via the standard library `logging` module, and allow the integration pipeline to continue. This revision extends the original three-figure presentation to eight content figures plus a cover illustration — a fond taxonomy (@fig:taxonomy), a rule hierarchy (@fig:rulehier), a tool invocation contract (@fig:toolcontract), a three-level resilience diagram (@fig:resilience), and a script pipeline flow (@fig:pipelineflow) — so that every structural claim in the prose has a corresponding visual.
+The architecture (@fig:architecture) separates *resource ownership* from *resource consumption*. Resources live in top-level `fonds/`, `rules/`, and `tools/` directories and are never modified by consumers. Each resource exposes a typed manifest (`fonds.yaml`, `rules.yaml`, `tools.yaml`) that the corresponding reader module uses for discovery and validation. All readers implement graceful fallbacks: they return `None` or empty collections when a resource is absent, log a warning via the standard library `logging` module, and allow the integration pipeline to continue. This revision extends the original three-figure presentation to 8 content figures plus 1 cover illustration — a fond taxonomy (@fig:taxonomy), a rule hierarchy (@fig:rulehier), a tool invocation contract (@fig:toolcontract), a three-level resilience diagram (@fig:resilience), and a script pipeline flow (@fig:pipelineflow) — so that every structural claim in the prose has a corresponding visual.
 
-In a representative pipeline run, the integration demo loaded 3 fonds, validated 2 rule sets, discovered 4 tools, and processed 8 bibliography entries — all reported as structured JSON that populates manuscript variable tokens at render time. Tests covering the eight `src/` modules (across nine test files) achieve well above the required ≥90% combined line coverage and use real file paths rather than mocks, ensuring that reported counts are genuine — run `uv run pytest … --cov-report=term` for the current test count and coverage percentage rather than trusting a number printed here.
+In a representative pipeline run, the integration demo loaded 3 fonds, validated 2 rule sets, discovered 4 tools, and processed 8 bibliography entries — all reported as structured JSON that populates manuscript variable tokens at render time. Tests covering the 12 `src/` modules across 11 test files achieve above the required ≥90% combined line coverage and use real file paths rather than mocks; rerun the project pytest command for current measured coverage.
 
 The `template_pools_rules_tools` exemplar provides a reference implementation that any project in the template repository can consult when designing its own resource-consumption layer.
 
@@ -160,7 +160,7 @@ The `template_contacts` fond holds a registry of research collaborators, advisor
 
 The `template_datasets` fond catalogs dataset metadata: provenance, licensing, format, size, access URLs, and research tasks. It intentionally stores *metadata only* — no actual data binaries are committed to the repository. This design aligns with the principle that version control systems should track configuration and metadata rather than large binary artefacts [@Kluyver2016jupyter]. Dataset entries require `id`, `name`, `version`, and `license` fields. Exemplar entries reference classic benchmarks such as MNIST (introduced in [@LeCun1998gradient]) and large-scale corpora used in language-model research [@Brown2020gpt3].
 
-## The `fonds.yaml` Manifest
+## Fond Manifest Contract
 
 Every fond root must contain a `fonds.yaml` manifest with at minimum three fields:
 
@@ -173,7 +173,7 @@ tags: [curated, exemplar]
 
 The `type` field governs which reader function is appropriate and what schema the `data/` directory is expected to follow. The `version` field is incremented whenever the schema changes, enabling consumers to detect and handle schema drift without silent failures.
 
-## The `fonds_reader` Module
+## Fond Reader Module
 
 The `src/fonds_reader.py` module provides three reader functions — one per fond type — plus a convenience aggregator:
 
@@ -287,7 +287,7 @@ This rule set governs research manuscripts. Its strong rules comprise:
 
 In the current pipeline run, **2 of 2 rule sets** validated successfully (@fig:counts).
 
-## The `rules_applier` Module
+## Rule Application Module
 
 The `src/rules_applier.py` module exposes three functions:
 
@@ -310,7 +310,7 @@ result = validate_against_rules("template_project_rules")
 
 Strong rule validation counts are injected into the manuscript through the token system. The token `2` expands to the count of rule sets that returned `status="ok"` during the integration run. This creates a verifiable link between the pipeline's actual behaviour and the manuscript's claims — the manuscript cannot assert successful validation without the pipeline having actually succeeded.
 
-## Beyond Structural Validation: The `strong_rule_evaluator` Module
+## Beyond Structural Validation: Semantic Rule Evaluation
 
 `validate_against_rules()` (described above) performs *structural* validation only: it confirms that `rules.yaml` and every file in `soft/`/`strong/` parse as YAML. It does not check whether the constraints those strong-rule files declare are actually satisfied by the current project. That semantic layer lives in a separate module, `src/strong_rule_evaluator.py`, exposed via `scripts/04_validate_strong_rules.py`:
 
@@ -349,7 +349,7 @@ A **tool** in the template repository is a directory under `tools/<scope>/<name>
 
 The tools layer deliberately mirrors the Unix philosophy of small, composable utilities that communicate through standard interfaces [@Raymond2003art]. Each tool declares its entrypoints (shell scripts), its invocation contract (stdin/stdout/exit-code semantics), and its capabilities (type, version, tags) in a single manifest file. Consumers invoke tools through the `tools_invoker` module without needing to understand the tool's implementation details — a textbook application of the Facade pattern [@Gamma1994design].
 
-## The `tools.yaml` Manifest
+## Tool Manifest Contract
 
 Every tool root must contain a `tools.yaml` manifest with the following fields:
 
@@ -365,11 +365,11 @@ entrypoints:
   - scripts/validate.sh
 ```
 
-The `type` field determines the invocation contract the consumer should expect. The `entrypoints` list names the scripts that must exist on disk; the `tools_invoker` module validates their presence at discovery time rather than at invocation time, making failures visible early in the pipeline rather than at runtime. @fig:toolcontract visualises the stdin/stdout/exit-code contract for all three template tools side by side; note that the *shape* of stdin and stdout differs per tool while the *presence* of a well-defined contract does not — this is what makes `tools_invoker` able to discover and validate any tool generically without knowing its payload schema.
+The `type` field determines the invocation contract the consumer should expect. The `entrypoints` list names the files that must exist on disk; the `tools_invoker` module validates their presence at discovery time rather than at invocation time, making failures visible early in the pipeline rather than at runtime. @fig:toolcontract visualises the stdin/stdout/exit-code contract for all 4 discovered template tools side by side. Note that the *shape* of stdin and stdout differs per tool while the *presence* of a well-defined contract does not — this is what makes `tools_invoker` able to discover and validate any tool generically without knowing its payload schema.
 
-![Invocation contract for the three template tools: stdin payload, tool behaviour, and stdout/exit-code shape.](figures/tool_contract.png){#fig:toolcontract width=90%}
+![Invocation contract for the 4 discovered template tools: stdin payload, tool behaviour, and stdout/exit-code shape.](figures/tool_contract.png){#fig:toolcontract width=90%}
 
-## The Three Template Tools
+## Discovered Template Tools
 
 ### `template_code_executor`
 
@@ -384,15 +384,19 @@ The code executor exemplifies tools that wrap a computational capability. The JS
 
 ### `template_validator`
 
-A JSON Schema validation tool. It reads a target document and a schema from disk and reports validation results in human-readable form. The entrypoint `scripts/validate.sh` exits 0 when the document is valid and non-zero with a detailed error message otherwise. The validator tool is used in the project pipeline to validate `manuscript_variables.json` against its expected schema before manuscript rendering.
+A JSON Schema validation tool. It reads a target document and a schema from disk and reports validation results in human-readable form. The entrypoint `scripts/validate.sh` exits 0 when the document is valid and non-zero with a detailed error message otherwise. its `scripts/schema.json` requires `name` and `version`, and the test suite exercises both valid and invalid payloads with real subprocesses.
 
 ### `template_skill`
 
 An agent skill invocation tool that wraps a Hermes-compatible skill definition. The entrypoint `scripts/invoke.sh` accepts a prompt string on standard input and returns the agent response as text. This tool type bridges the repository's tool architecture with external agent frameworks, demonstrating that the same manifest-and-entrypoint pattern applies equally to computational tools and AI agents.
 
-Unlike the two tools above, `scripts/invoke.sh` requires a real `OPENAI_API_KEY` and makes a paid network call to `api.openai.com` — it is therefore never invoked by this project's tests or pipeline, by design. Offline reproducibility is a stated requirement of this exemplar (see the front-matter Reproducibility Checklist), and no CI job in this repository injects `OPENAI_API_KEY` into this project's test run. `template_code_executor` and `template_validator`, by contrast, are fully local and deterministic — see the Execution-Proof Testing subsection below for how this project actually exercises them.
+Unlike the two tools above, `scripts/invoke.sh` requires a real `OPENAI_API_KEY` and makes a paid network call to `api.openai.com` — it is therefore never invoked by this project's tests or pipeline, by design. Offline reproducibility is a stated requirement of this exemplar (see the front-matter Reproducibility Checklist), and no CI job in this repository injects `OPENAI_API_KEY` into this project's test run. `template_code_executor`, `template_validator`, and `template_model` are fully local and deterministic.
 
-## The `tools_invoker` Module
+### `template_model`
+
+A pre-trained linear-regression model exemplar. It predicts a numeric target from `hours_studied` using fixed coefficients in `model_weights.json`; `scripts/predict.sh` reads `{"hours_studied": number}` and returns a JSON prediction. The manifest declares the weights file as an entrypoint, so the same discovery and existence-validation contract covers both executable scripts and model data.
+
+## Tool Discovery Module
 
 The `src/tools_invoker.py` module provides three public functions:
 
@@ -486,7 +490,7 @@ This table is itself token-injected: the values shown are those produced by the 
 
 ## Methods: The Script Pipeline
 
-Six thin orchestration scripts govern the integration workflow (@fig:pipeline, @fig:pipelineflow):
+6 thin orchestration scripts govern the integration workflow (@fig:pipeline, @fig:pipelineflow):
 
 | Script | Purpose | Key output |
 |---|---|---|
@@ -494,10 +498,10 @@ Six thin orchestration scripts govern the integration workflow (@fig:pipeline, @
 | `scripts/02_run_integration.py` | Run `run_integration_demo()` and print JSON summary | Console JSON |
 | `scripts/03_generate_manuscript.py` | Write `output/data/manuscript_variables.json` | JSON file |
 | `scripts/04_validate_strong_rules.py` | Semantic evaluation of strong-rule constraints (@sec:rules) against this project's own tree | Console report, non-zero exit on violation |
-| `scripts/05_generate_figures.py` | Render all 8 content figures plus the cover illustration | 9 PNG files under `manuscript/figures/` |
+| `scripts/05_generate_figures.py` | Render all 8 content figures plus 1 cover illustration | 9 PNG files under `manuscript/figures/` |
 | `scripts/z_generate_manuscript_variables.py` | Hydrate declared manuscript-variable placeholders and inject them into `output/manuscript/` immediately before rendering | JSON file + resolved manuscript tree |
 
-![The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step.](figures/pipeline_flow.png){#fig:pipelineflow width=95%}
+![The 6-script pipeline from source validation through token hydration, ending at the combined-PDF render step.](figures/pipeline_flow.png){#fig:pipelineflow width=95%}
 
 ![Integration status dashboard showing per-resource validation results. Green indicates ok, amber indicates partial, red indicates missing.](figures/status_dashboard.png){#fig:pipeline width=85%}
 
@@ -525,7 +529,7 @@ The resilience design above trades a small, constant amount of I/O overhead for 
 
 ## Test Coverage
 
-The eight `src/` modules — `fonds_reader`, `rules_applier`, `tools_invoker`, `integration`, `figures`, `strong_rule_evaluator`, `manuscript_variables`, and `type_defs` — are covered by tests across nine test files in `tests/`, including property-based tests (`test_property_based.py`) and coverage-extras tests targeting previously-uncovered branches (`test_coverage_extras.py`). Tests use real file paths, real YAML files, and real BibTeX content rather than mocks, ensuring that coverage numbers reflect genuine code paths through the resource-discovery logic. The current coverage report shows combined line coverage comfortably above the project's 90% floor; `strong_rule_evaluator.py`, the newest and most branch-heavy module, has the most room for additional edge-case tests, while the remaining seven modules are at or near 100%. These exact test/coverage counts drift as the suite grows — treat the figures above as a snapshot, not a frozen claim, and re-run `uv run pytest … --cov-report=term` for the current numbers. The `tests/test_integration.py` suite includes an end-to-end test that calls `run_integration_demo()` and asserts that the `summary` dict contains the expected keys with non-negative integer values — a contract test that verifies the token injection pipeline's data source. `tests/test_manuscript_variables.py` adds a negative control: it monkeypatches `run_integration_demo()`'s return value and asserts the derived tokens actually change, proving the token-generation function is live-wired to its source rather than emitting a hard-coded constant.
+The 12 `src/` modules — including the readers, orchestrator, evaluator, figure modules, token generator, resource-schema validator, and type definitions — are covered by tests across 11 test files in `tests/`, including property-based tests (`test_property_based.py`) and coverage-extras tests targeting previously-uncovered branches (`test_coverage_extras.py`). Tests use real file paths, real YAML files, and real BibTeX content rather than mocks, ensuring that coverage numbers reflect genuine code paths through the resource-discovery logic. The current coverage report shows combined line coverage comfortably above the project's 90% floor; exact test and coverage totals drift as the suite grows, so re-run `uv run pytest … --cov-report=term` for the current measurements. The `tests/test_integration.py` suite includes an end-to-end test that calls `run_integration_demo()` and asserts that the `summary` dict contains the expected keys with non-negative integer values — a contract test that verifies the token injection pipeline's data source. `tests/test_manuscript_variables.py` adds negative controls that change both integration results and a real temporary project tree, proving the token generator tracks runtime and filesystem sources rather than emitting fixed constants.
 
 
 
@@ -567,7 +571,7 @@ This exemplar makes several deliberate simplifications that a reader adopting th
 - **No concurrency handling.** All readers assume a single-process, single-read invocation. If a parallel agent is actively writing a fond's `data/` file while another process reads it, the reader may observe a partially-written file and report a spurious parse error rather than a clean "not yet available" signal. The architecture tolerates *absence* gracefully; it does not guarantee *atomicity* against concurrent writers.
 - **Small-scale assumption.** As discussed in @sec:integration's Performance and Overhead subsection, the design is tuned for a curated, human-reviewed set of resources (single-digit to low-double-digit counts per category), not a resource catalogue at data-lake scale.
 - **English-language, code-review-oriented soft rules.** Soft rules are Markdown prose intended for human reviewers and AI coding agents; they are not evaluated by any automated tool in this exemplar, unlike strong rules. A project that wants soft-rule compliance checked automatically would need to promote the relevant guideline to a strong rule with a corresponding evaluator function.
-- **`strong_rule_evaluator.py` had the thinnest test coverage of any `src/` module, historically.** As measured in an earlier coverage run this session, it required more negative-control tests (malformed rule files, real violations, type-mismatched context values) than the other seven modules, concentrated in its `section_schema`, `reference_schema`, and `module_structure` evaluators and its context loader. That gap has since been closed with real negative-control fixtures — run `uv run pytest … --cov-report=term-missing` for the current per-module breakdown, since these numbers, like the ones above, drift as the suite grows.
+- **`strong_rule_evaluator.py` had the thinnest test coverage of any `src/` module, historically.** As measured in an earlier coverage run, it required more negative-control tests (malformed rule files, real violations, type-mismatched context values) than the other source modules, concentrated in its `section_schema`, `reference_schema`, and `module_structure` evaluators and its context loader. That gap has since been closed with real negative-control fixtures — run `uv run pytest … --cov-report=term-missing` for the current per-module breakdown, since coverage changes as the suite grows.
 
 **The no-concurrency-handling limitation above is not merely theoretical**: this exemplar is itself designed to be populated by parallel agents authoring `fonds/`, `rules/`, and `tools/` concurrently, which is precisely the scenario where a torn read is most likely. Adopters running this pattern in a genuinely concurrent write environment should add file locking or an atomic-rename write pattern at the resource-authoring layer — this exemplar deliberately does not, to keep the reader-side code minimal.
 

@@ -6,9 +6,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-import yaml
 
 from .models import CoverageMatrix, ImradBlock, SheafManifest
+from yaml_io import load_yaml
 
 
 @dataclass(frozen=True)
@@ -69,7 +69,7 @@ def load_coverage_config(path: Path, *, project_root: Path | None = None) -> Cov
     if not path.is_file():
         base = CoverageConfig()
     else:
-        raw: dict[str, Any] = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        raw: dict[str, Any] = load_yaml(path)
         report_raw = raw.get("report") or {}
         heatmap_raw = raw.get("heatmap") or {}
         colors_raw = raw.get("colors") or {}

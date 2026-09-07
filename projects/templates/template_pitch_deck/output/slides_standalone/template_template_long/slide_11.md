@@ -1,6 +1,6 @@
 # Metrics
 
-*Slide 11 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 11 of 57 — template_template pitch, long deck — kind: `content`*
 
 - metrics.py turns the introspection scan into a dictionary of ${variable} values — the same token convention used across every exemplar's manuscript.
 - build_manuscript_metrics_dict computes counts directly; nothing is copy-pasted from a prior run.

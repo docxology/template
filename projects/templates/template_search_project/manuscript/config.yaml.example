@@ -83,7 +83,8 @@ project_config:
     cache_ttl_seconds: null
 
   enrichment:
-    fetch_abstracts: true
+    # Network-backed enrichment is opt-in; enable only with a provenance plan.
+    fetch_abstracts: false
     fetch_fulltext: false
     abstract_cache_dir: "output/cache/abs"
     fulltext_cache_dir: "output/cache/pdf"
@@ -97,16 +98,14 @@ project_config:
       - "your first keyword"
       - "your second keyword"
     max_results_per_keyword: 100
-    sources:
-      - "arxiv"
-      - "crossref"
+    sources: []
     year_min: null
     year_max: null
     crossref_mailto: "you@example.org"
-    fetch_abstracts: true
-    fetch_fulltext: true
+    fetch_abstracts: false
+    fetch_fulltext: false
     max_fulltext_chars: 400000
-    llm_per_paper: true
+    llm_per_paper: false
     llm_model: "gemma3:4b"
     llm_seed: 42
     llm_temperature: 0.0

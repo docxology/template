@@ -10,8 +10,11 @@ from infrastructure.rendering.core import RenderManager
 
 
 @pytest.mark.requires_latex
+@pytest.mark.timeout(180)
 def test_render_all_tex(render_manager, tmp_path, skip_if_no_latex):
     """Test rendering all formats from LaTeX source with real compilation."""
+    # Real xelatex/pandoc subprocess chain; can exceed the 10s global budget
+    # under machine load. 180s matches other real-render tests.
     # Create a minimal valid LaTeX file
     tex_file = tmp_path / "test.tex"
     tex_file.write_text(
@@ -126,6 +129,56 @@ def test_render_all_md_honors_disabled_html(tmp_path):
     results = manager.render_all(md_file)
 
     assert results == [slides_file]
+
+
+def test_render_all_accessible_profile_uses_one_canonical_slide_pair(tmp_path: Path) -> None:
+    """Accessible mode routes one source through the paired renderer surface."""
+
+    source = tmp_path / "section.md"
+    source.write_text("# Section\n\n## Result\n\nBounded evidence.\n", encoding="utf-8")
+    slides_dir = tmp_path / "slides"
+    pdf = slides_dir / "section_slides.pdf"
+    html = slides_dir / "section_slides.html"
+
+    class RecordingSlidesRenderer:
+        def __init__(self) -> None:
+            self.pair_calls: list[Path] = []
+
+        def render(self, *_args, **_kwargs):
+            raise AssertionError("accessible render_all must not invoke the single-format renderer")
+
+        def render_accessible_pair(self, source_file, **_kwargs):
+            self.pair_calls.append(source_file)
+            return pdf, html
+
+    renderer = RecordingSlidesRenderer()
+    config = RenderingConfig(
+        enable_html=False,
+        output_dir=str(tmp_path),
+        slides_dir=str(slides_dir),
+        slides_profile="accessible",
+    )
+
+    results = RenderManager(config, slides_renderer=renderer).render_all(source)
+
+    assert results == [pdf, html]
+    assert renderer.pair_calls == [source]
+
+
+def test_render_all_allows_combined_only_formats(tmp_path: Path) -> None:
+    """DOCX/EPUB/PDF-only configurations have no required per-section output."""
+
+    source = tmp_path / "section.md"
+    source.write_text("# Section\n", encoding="utf-8")
+    config = RenderingConfig(
+        enable_pdf=False,
+        enable_html=False,
+        enable_slides=False,
+        enable_docx=True,
+        enable_epub=False,
+    )
+
+    assert RenderManager(config).render_all(source) == []
 
 
 def test_render_all_missing_source_raises_template_error(tmp_path: Path) -> None:

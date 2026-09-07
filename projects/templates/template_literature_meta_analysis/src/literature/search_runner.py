@@ -12,6 +12,7 @@ from typing import Callable, TypedDict
 from config_loader import load_search_config
 from config_validation import require_valid_search_config
 from literature.corpus import Corpus
+from literature.http import build_politeness_receipt
 from literature.models import Paper
 from literature.engine_dispatch import dispatch_ordered
 from literature.query_router import QueryRouter
@@ -78,6 +79,32 @@ def _write_retrieval_report(
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     temporary.replace(path)
+    manifest = {
+        "schema_version": "template-literature-retrieval-run-manifest-v1",
+        "query": query,
+        "max_results_per_engine": max_results,
+        "corpus_records": corpus_records,
+        "run_mode": run_mode,
+        "route": route or {},
+        "politeness": build_politeness_receipt(timeout_seconds=30.0, max_retries=3),
+        "engines": [
+            {
+                "source": observation.get("source", ""),
+                "status": observation.get("status", ""),
+                "fetched": int(observation.get("fetched", 0) or 0),
+                "new_records": int(observation.get("new_records", 0) or 0),
+                "duplicates": int(observation.get("duplicates", 0) or 0),
+                "detail": observation.get("detail", ""),
+                "rate_limit_hits": int(observation.get("rate_limit_hits", 0) or 0),
+                "retries": int(observation.get("retries", 0) or 0),
+            }
+            for observation in observations
+        ],
+    }
+    manifest_path = path.with_name("retrieval_run_manifest.json")
+    manifest_temporary = manifest_path.with_suffix(manifest_path.suffix + ".tmp")
+    manifest_temporary.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    manifest_temporary.replace(manifest_path)
     return path
 
 

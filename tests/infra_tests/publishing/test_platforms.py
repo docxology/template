@@ -76,6 +76,7 @@ class TestPrepareArxivSubmission:
         output_dir.mkdir()
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
+        (manuscript_dir / "main.tex").write_text(r"\includegraphics{figures/fig1.png}")
         figures_dir = manuscript_dir / "figures"
         figures_dir.mkdir()
         (figures_dir / "fig1.png").write_bytes(b"\x89PNG")
@@ -93,6 +94,7 @@ class TestPrepareArxivSubmission:
         output_dir.mkdir()
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
+        (manuscript_dir / "main.tex").write_text(r"\documentclass{article}")
 
         # Create pre-existing submission dir with stale content
         old_dir = output_dir / "arxiv_submission"
@@ -107,14 +109,18 @@ class TestPrepareArxivSubmission:
             names = tar.getnames()
             assert not any("old_file" in n for n in names)
 
-    def test_no_manuscript_dir(self, tmp_path: Path):
-        """If no manuscript dir exists, tarball should still be created."""
+    def test_no_manuscript_dir_fails_closed(self, tmp_path: Path):
+        """A source-free request must not masquerade as an uploadable package."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
+        stale = output_dir / "arxiv_submission_19990101.tar.gz"
+        stale.write_bytes(b"stale")
 
         metadata = _make_metadata()
-        result = prepare_arxiv_submission(output_dir, metadata)
-        assert result.exists()
+        with pytest.raises(PublishingError, match="No LaTeX root found"):
+            prepare_arxiv_submission(output_dir, metadata)
+        assert not stale.exists()
+        assert not (output_dir / "arxiv_submission").exists()
 
     def test_non_tex_files_excluded(self, tmp_path: Path):
         """Non-tex/bib/cls/bst files should not be included."""
@@ -140,6 +146,7 @@ class TestPrepareArxivSubmission:
         output_dir.mkdir()
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
+        (manuscript_dir / "main.tex").write_text(r"\documentclass{custom}")
         (manuscript_dir / "custom.cls").write_text("\\NeedsTeXFormat{LaTeX2e}")
         (manuscript_dir / "style.bst").write_text("FUNCTION {format.names}")
 
@@ -170,8 +177,8 @@ class TestPrepareArxivSubmission:
         assert any(n.endswith("Test_Paper.tex") for n in names)
         assert any(n.endswith("references.bib") for n in names)
 
-    def test_markdown_only_manuscript_is_references_only(self, tmp_path: Path):
-        """With no .tex anywhere, the tarball is a references-only partial package (documented promise)."""
+    def test_markdown_only_manuscript_fails_closed(self, tmp_path: Path):
+        """References without a TeX root are not emitted as a submission."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
         manuscript_dir = tmp_path / "manuscript"
@@ -180,14 +187,141 @@ class TestPrepareArxivSubmission:
         (manuscript_dir / "references.bib").write_text("@article{x, title={X}}")
 
         metadata = _make_metadata()
-        result = prepare_arxiv_submission(output_dir, metadata)
+        with pytest.raises(PublishingError, match="No LaTeX root found"):
+            prepare_arxiv_submission(output_dir, metadata)
+        assert not list(output_dir.glob("arxiv_submission_*.tar.gz"))
+
+    def test_canonical_rendered_tree_includes_matching_bbl_references_and_figures(self, tmp_path: Path):
+        """Renderer-owned names and paths become one compilable arXiv root."""
+        output_dir = tmp_path / "output"
+        pdf_dir = output_dir / "pdf"
+        figures_dir = output_dir / "figures"
+        manuscript_dir = tmp_path / "manuscript"
+        pdf_dir.mkdir(parents=True)
+        figures_dir.mkdir()
+        manuscript_dir.mkdir()
+        rendered_tex = "\\includegraphics{../figures/result.png}\n\\bibliography{references}\n"
+        (pdf_dir / "_combined_manuscript.tex").write_text(rendered_tex)
+        (pdf_dir / "_combined_manuscript.bbl").write_text(r"\begin{thebibliography}{1}")
+        (pdf_dir / "references.bib").write_text("@article{x, title={X}}")
+        (pdf_dir / "Test_Paper.bbl").write_text("wrong title-derived companion")
+        (figures_dir / "result.png").write_bytes(b"PNG")
+        (figures_dir / "runtime.json").write_text("{}")
+        (figures_dir / "animation.gif").write_bytes(b"GIF")
+
+        result = prepare_arxiv_submission(output_dir, _make_metadata())
 
         with tarfile.open(result, "r:gz") as tar:
             names = tar.getnames()
-        # References ship, but no LaTeX source — must be completed by hand before upload.
-        assert any(n.endswith("references.bib") for n in names)
-        assert not any(n.endswith(".tex") for n in names)
-        assert not any(n.endswith(".md") for n in names)
+            packaged_tex = tar.extractfile("_combined_manuscript.tex")
+            assert packaged_tex is not None
+            tex_text = packaged_tex.read().decode("utf-8")
+        assert names == sorted(names)
+        assert "_combined_manuscript.tex" in names
+        assert "_combined_manuscript.bbl" in names
+        assert "references.bib" in names
+        assert "figures/result.png" in names
+        assert "figures/runtime.json" not in names
+        assert "figures/animation.gif" not in names
+        assert "Test_Paper.bbl" not in names
+        assert r"\includegraphics{figures/result.png}" in tex_text
+
+    def test_canonical_rendered_root_excludes_other_stale_tex(self, tmp_path: Path):
+        """A stale output TeX file cannot collide with the canonical renderer root."""
+        output_dir = tmp_path / "output"
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / "_combined_manuscript.tex").write_text(r"\documentclass{article}")
+        (pdf_dir / "stale.tex").write_text(r"\documentclass{book}")
+
+        result = prepare_arxiv_submission(output_dir, _make_metadata())
+
+        with tarfile.open(result, "r:gz") as tar:
+            names = tar.getnames()
+        assert "_combined_manuscript.tex" in names
+        assert "stale.tex" not in names
+
+    def test_ambiguous_noncanonical_rendered_roots_fail(self, tmp_path: Path):
+        output_dir = tmp_path / "output"
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / "one.tex").write_text(r"\documentclass{article}")
+        (pdf_dir / "two.tex").write_text(r"\documentclass{article}")
+
+        with pytest.raises(PublishingError, match="Multiple rendered TeX roots"):
+            prepare_arxiv_submission(output_dir, _make_metadata())
+        assert not list(output_dir.glob("arxiv_submission_*.tar.gz"))
+
+    def test_manuscript_relative_paths_do_not_flatten_or_collide(self, tmp_path: Path):
+        output_dir = tmp_path / "output"
+        manuscript_dir = tmp_path / "manuscript"
+        output_dir.mkdir()
+        (manuscript_dir / "chapters").mkdir(parents=True)
+        (manuscript_dir / "main.tex").write_text(r"\input{chapters/main}")
+        (manuscript_dir / "chapters" / "main.tex").write_text("chapter")
+
+        result = prepare_arxiv_submission(output_dir, _make_metadata())
+
+        with tarfile.open(result, "r:gz") as tar:
+            assert tar.getnames() == ["chapters/main.tex", "main.tex"]
+
+    def test_source_date_epoch_makes_name_and_bytes_stable(self, tmp_path: Path, monkeypatch) -> None:
+        output_dir = tmp_path / "output"
+        manuscript_dir = tmp_path / "manuscript"
+        output_dir.mkdir()
+        manuscript_dir.mkdir()
+        source = manuscript_dir / "main.tex"
+        source.write_text(r"\documentclass{article}")
+        epoch = 1_704_067_200  # 2024-01-01T00:00:00Z
+        monkeypatch.setenv("SOURCE_DATE_EPOCH", str(epoch))
+
+        first = prepare_arxiv_submission(output_dir, _make_metadata())
+        first_bytes = first.read_bytes()
+        source.touch()
+        second = prepare_arxiv_submission(output_dir, _make_metadata())
+
+        assert first.name == "arxiv_submission_20240101.tar.gz"
+        assert second == first
+        assert second.read_bytes() == first_bytes
+        with tarfile.open(second, "r:gz") as tar:
+            members = tar.getmembers()
+        assert [member.name for member in members] == sorted(member.name for member in members)
+        assert all(member.mtime == epoch for member in members)
+        assert all((member.uid, member.gid, member.uname, member.gname) == (0, 0, "", "") for member in members)
+
+    def test_old_date_named_archives_are_removed(self, tmp_path: Path, monkeypatch) -> None:
+        output_dir = tmp_path / "output"
+        manuscript_dir = tmp_path / "manuscript"
+        output_dir.mkdir()
+        manuscript_dir.mkdir()
+        (manuscript_dir / "main.tex").write_text(r"\documentclass{article}")
+        (output_dir / "arxiv_submission_19990101.tar.gz").write_bytes(b"old")
+        (output_dir / "arxiv_submission_20000101.tar.gz").write_bytes(b"old")
+        monkeypatch.setenv("SOURCE_DATE_EPOCH", "1704067200")
+
+        result = prepare_arxiv_submission(output_dir, _make_metadata())
+
+        assert list(output_dir.glob("arxiv_submission_*.tar.gz")) == [result]
+
+    @pytest.mark.parametrize("invalid_epoch", ["", "   ", "not-an-epoch", "-1"])
+    def test_invalid_source_date_epoch_fails_closed(
+        self,
+        tmp_path: Path,
+        monkeypatch,
+        invalid_epoch: str,
+    ) -> None:
+        output_dir = tmp_path / "output"
+        manuscript_dir = tmp_path / "manuscript"
+        output_dir.mkdir()
+        manuscript_dir.mkdir()
+        (manuscript_dir / "main.tex").write_text(r"\documentclass{article}")
+        monkeypatch.setenv("SOURCE_DATE_EPOCH", invalid_epoch)
+
+        with pytest.raises(PublishingError, match="SOURCE_DATE_EPOCH must be a non-negative integer"):
+            prepare_arxiv_submission(output_dir, _make_metadata())
+
+        assert not list(output_dir.glob("arxiv_submission_*.tar.gz"))
+        assert not (output_dir / "arxiv_submission").exists()
 
 
 class TestPrepareArxivSubmissionFromPlatforms:
@@ -225,6 +359,9 @@ class TestPrepareArxivSubmissionFromPlatforms:
         sub = output / "arxiv_submission"
         sub.mkdir()
         (sub / "old_file.txt").write_text("old")
+        manuscript = project / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "main.tex").write_text(r"\documentclass{article}")
 
         meta = _make_metadata()
         result = prepare_arxiv_submission(output, meta)
@@ -235,19 +372,22 @@ class TestPrepareArxivSubmissionFromPlatforms:
         output = tmp_path / "output"
         output.mkdir()
         meta = _make_metadata()
-        result = prepare_arxiv_submission(output, meta)
-        assert result.exists()
+        with pytest.raises(PublishingError, match="No LaTeX root found"):
+            prepare_arxiv_submission(output, meta)
 
     def test_bbl_file_copied(self, tmp_path):
         project = tmp_path / "project"
         output = project / "output"
         pdf_dir = output / "pdf"
         pdf_dir.mkdir(parents=True)
-        (pdf_dir / "Test_Paper.bbl").write_text("\\begin{thebibliography}{}")
+        (pdf_dir / "_combined_manuscript.tex").write_text(r"\documentclass{article}")
+        (pdf_dir / "_combined_manuscript.bbl").write_text("\\begin{thebibliography}{}")
 
         meta = _make_metadata()
         result = prepare_arxiv_submission(output, meta)
         assert result.exists()
+        with tarfile.open(result, "r:gz") as tar:
+            assert "_combined_manuscript.bbl" in tar.getnames()
 
 
 class TestCreateGithubRelease:

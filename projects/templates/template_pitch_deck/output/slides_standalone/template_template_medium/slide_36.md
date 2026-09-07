@@ -1,10 +1,10 @@
-# Funding & consulting
+# The ask
 
-*Slide 36 of 37 — template_template pitch, medium deck — kind: `content`*
+*Slide 36 of 38 — template_template pitch, medium deck — kind: `content`*
 
-- The code itself is available to adopt directly today — real, tested, and licensed for reuse, no engagement required to start.
-- Open to funding conversations for a dedicated integration (a new pitch subject, a distinct theme, a deeper introspection surface) — no such engagement exists yet, this is an invitation to scope one, not an established program.
-- Open to scoping a consulting engagement on request — pairing through a first regeneration cycle, or adapting the two-layer architecture to an existing codebase outside this monorepo. No such engagement has happened yet; this is an invitation, not a track record.
+- Adopt this pattern for your own methods papers: bind every reported number to the code that produced it, not to a hand-typed table.
+- Pilot it on one existing manuscript in your group before committing to a full rewrite.
+- Happy to pair with your team through a first regeneration cycle and help define your own introspection surface, if useful — no prior engagements to point to yet, this pattern is newly forkable.
 
 ---
 

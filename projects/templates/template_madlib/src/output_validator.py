@@ -300,6 +300,21 @@ def _validate_figure_registry(result: OutputValidationResult, figures_dir: Path,
             result, "registry-file-missing", "registry entries reference missing figures: " + ", ".join(missing_files)
         )
 
+    missing_alt = sorted(
+        str(label)
+        for label, entry in registry.items()
+        if not isinstance(entry, dict)
+        or not isinstance(entry.get("metadata"), dict)
+        or not isinstance(entry["metadata"].get("alt_text"), str)
+        or not entry["metadata"]["alt_text"].strip()
+    )
+    if missing_alt:
+        _issue(
+            result,
+            "registry-alt-missing",
+            "registry entries require non-empty metadata.alt_text: " + ", ".join(missing_alt),
+        )
+
     if manuscript_dir.is_dir():
         refs: set[str] = set()
         for path in manuscript_dir.glob("*.md"):

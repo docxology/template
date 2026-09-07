@@ -13,6 +13,11 @@ from typing import Any
 
 import yaml
 
+try:
+    from .purity import PURITY_VECTOR_DIMENSIONS
+except ImportError:
+    from purity import PURITY_VECTOR_DIMENSIONS  # type: ignore[no-redef]
+
 PROJECT_SCHEMA_EXTENSION = {"gold_refinement": dict}
 
 REQUIRED_LEXICON_CATEGORIES: tuple[str, ...] = (
@@ -69,6 +74,8 @@ GOLD_REFINEMENT_SCHEMA_FIELDS: tuple[str, ...] = (
     "pipeline_phases",
     "audit_rules",
     "security_assay",
+    "reverse_assay",
+    "purity_vector",
 )
 
 REQUIRED_ROW_FIELDS: dict[str, tuple[str, ...]] = {
@@ -177,6 +184,9 @@ class GoldRefinementConfig:
     pipeline_phases: list[dict[str, str]] = field(default_factory=list)
     audit_rules: list[dict[str, str]] = field(default_factory=list)
     security_assay: list[dict[str, str]] = field(default_factory=list)
+    reverse_assay_target: float = 0.9167
+    reverse_assay_report_path: str = "output/reports/reverse_assay.json"
+    purity_vector_dimensions: tuple[str, ...] = PURITY_VECTOR_DIMENSIONS
 
     @property
     def enabled_sections(self) -> tuple[str, ...]:
@@ -364,6 +374,37 @@ def _parse_config(gr: dict[str, Any]) -> GoldRefinementConfig:
             if k in narrative_moves and isinstance(v, (list, tuple)):
                 narrative_moves[k] = tuple(str(m) for m in v)
 
+    reverse_raw = gr.get("reverse_assay", {})
+    if reverse_raw is None:
+        reverse_raw = {}
+    if not isinstance(reverse_raw, dict):
+        raise GoldRefinementConfigError("reverse_assay must be a mapping")
+    raw_target = reverse_raw.get("target_purity", 0.9167)
+    if isinstance(raw_target, bool) or not isinstance(raw_target, (int, float)):
+        raise GoldRefinementConfigError("reverse_assay.target_purity must be numeric")
+    reverse_target = float(raw_target)
+    if not 0.0 <= reverse_target <= 1.0:
+        raise GoldRefinementConfigError("reverse_assay.target_purity must be in [0, 1]")
+    reverse_report_path = str(reverse_raw.get("report_path", "output/reports/reverse_assay.json"))
+    report_path = Path(reverse_report_path)
+    if report_path.is_absolute() or ".." in report_path.parts or report_path.suffix != ".json":
+        raise GoldRefinementConfigError("reverse_assay.report_path must be a relative .json path")
+
+    vector_raw = gr.get("purity_vector", {})
+    if vector_raw is None:
+        vector_raw = {}
+    if not isinstance(vector_raw, dict):
+        raise GoldRefinementConfigError("purity_vector must be a mapping")
+    raw_dimensions = vector_raw.get("dimensions", list(PURITY_VECTOR_DIMENSIONS))
+    if isinstance(raw_dimensions, (str, bytes)) or not isinstance(raw_dimensions, (list, tuple)):
+        raise GoldRefinementConfigError("purity_vector.dimensions must be a list")
+    dimensions = tuple(str(dimension) for dimension in raw_dimensions)
+    if not dimensions or len(set(dimensions)) != len(dimensions):
+        raise GoldRefinementConfigError("purity_vector.dimensions must be non-empty and unique")
+    unknown_dimensions = sorted(set(dimensions) - set(PURITY_VECTOR_DIMENSIONS))
+    if unknown_dimensions:
+        raise GoldRefinementConfigError(f"unknown purity-vector dimension(s): {', '.join(unknown_dimensions)}")
+
     return GoldRefinementConfig(
         seed=seed,
         composition_depth=depth,
@@ -391,6 +432,9 @@ def _parse_config(gr: dict[str, Any]) -> GoldRefinementConfig:
         pipeline_phases=_load_required_rows(gr, "pipeline_phases", REQUIRED_ROW_FIELDS["pipeline_phases"]),
         audit_rules=_load_required_rows(gr, "audit_rules", REQUIRED_ROW_FIELDS["audit_rules"]),
         security_assay=_load_required_rows(gr, "security_assay", REQUIRED_ROW_FIELDS["security_assay"]),
+        reverse_assay_target=reverse_target,
+        reverse_assay_report_path=reverse_report_path,
+        purity_vector_dimensions=dimensions,
     )
 
 

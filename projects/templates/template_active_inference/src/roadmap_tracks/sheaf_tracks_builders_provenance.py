@@ -14,7 +14,7 @@ from roadmap_tracks.sheaf_tracks_io import (
     _load_json,
     _sha256,
 )
-from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS, CANONICAL_SCHEMA
+from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS, CANONICAL_SCHEMA, hash_cycle_excluded
 
 
 def build_artifact_provenance(project_root: Path, *, context: _ProvenanceContext | None = None) -> dict[str, Any]:
@@ -32,7 +32,8 @@ def build_artifact_provenance(project_root: Path, *, context: _ProvenanceContext
             "input_artifact_lineage": row["consumers"],
             "artifact_hash": row["sha256"],
             "complete": bool(
-                row["source_commit"]
+                row["exists"]
+                and row["source_commit"]
                 and row["config_digest"]
                 and isinstance(row["deterministic_seed"], int)
                 and row["producer"]
@@ -51,6 +52,8 @@ def build_artifact_provenance(project_root: Path, *, context: _ProvenanceContext
             "deterministic_seed": row["deterministic_seed"],
             "config_digest": row["config_digest"],
             "source_commit": row["source_commit"],
+            "cycle_excluded": row["cycle_excluded"],
+            "hash_authority": row["hash_authority"],
         }
         for row in rows
     }
@@ -69,9 +72,9 @@ def build_artifact_provenance(project_root: Path, *, context: _ProvenanceContext
         "bundles": bundles,
         "bundle_count": len(bundles),
         "all_bundles_complete": all(bundle["complete"] for bundle in bundles),
-        "all_records_complete": all(row["complete"] or row["cycle_excluded"] for row in rows),
+        "all_records_complete": all(row["complete"] for row in rows),
         "all_field_provenance_complete": bool(field_rows) and all(row["complete"] for row in field_rows),
-        "all_hashed": all((row["exists"] and row["sha256"]) or row["cycle_excluded"] for row in rows),
+        "all_hashed": all(row["exists"] and (row["sha256"] or row["cycle_excluded"]) for row in rows),
         "all_seeded": all(isinstance(row.get("deterministic_seed"), int) for row in rows),
         "all_config_digests": all(bool(row.get("config_digest")) for row in rows),
         "all_source_commits": all(bool(row.get("source_commit")) for row in rows),
@@ -143,12 +146,21 @@ def _artifact_bundles(root: Path, rows: list[dict[str, Any]]) -> list[dict[str, 
         missing = []
         for rel in artifacts:
             row = by_artifact.get(rel, {"artifact": rel, "exists": (root / rel).is_file(), "producer": ""})
-            digest = _sha256(root / rel)
-            if not (root / rel).is_file():
+            exists = (root / rel).is_file()
+            producer = str(row.get("producer") or "")
+            cycle_excluded = hash_cycle_excluded(rel, producer)
+            digest = "" if cycle_excluded else _sha256(root / rel)
+            if not exists:
                 missing.append(rel)
-            digest_parts.append(f"{rel}:{digest}")
+            digest_parts.append(f"{rel}:{'hash-cycle-excluded' if cycle_excluded else digest}")
             bundle_rows.append(
-                {"artifact": rel, "exists": (root / rel).is_file(), "sha256": digest, "producer": row["producer"]}
+                {
+                    "artifact": rel,
+                    "exists": exists,
+                    "sha256": digest,
+                    "producer": producer,
+                    "hash_cycle_excluded": cycle_excluded,
+                }
             )
         bundles.append(
             {
@@ -157,7 +169,7 @@ def _artifact_bundles(root: Path, rows: list[dict[str, Any]]) -> list[dict[str, 
                 "artifact_count": len(bundle_rows),
                 "missing": missing,
                 "bundle_hash": hashlib.sha256("\n".join(digest_parts).encode("utf-8")).hexdigest(),
-                "complete": not missing and all(row["sha256"] for row in bundle_rows),
+                "complete": not missing and all(row["sha256"] or row["hash_cycle_excluded"] for row in bundle_rows),
             }
         )
     return bundles
@@ -170,14 +182,6 @@ def build_replay_matrix(project_root: Path) -> dict[str, Any]:
     producers, _, _ = _artifact_maps()
     replay = _load_json(root / "output" / "reports" / "reproducibility_replay.json")
     replay_by_artifact = {row.get("artifact"): row for row in replay.get("checks") or []}
-    cycle_excluded = {
-        CANONICAL_ARTIFACTS["provenance"],
-        CANONICAL_ARTIFACTS["semantic"],
-        CANONICAL_ARTIFACTS["dependency"],
-        CANONICAL_ARTIFACTS["track_improvement_scope"],
-        CANONICAL_ARTIFACTS["replay_matrix"],
-        CANONICAL_ARTIFACTS["artifact_diffoscope"],
-    }
     rows = []
     for script in scripts:
         outputs = sorted(rel for rel, producer in producers.items() if producer == script)
@@ -186,20 +190,20 @@ def build_replay_matrix(project_root: Path) -> dict[str, Any]:
                 path.relative_to(root).as_posix() for path in sorted((root / "manuscript").glob("[0-9][0-9]_*.md"))
             ]
         method = "subprocess_replay" if any(rel in replay_by_artifact for rel in outputs) else "artifact_fingerprint"
-        checked_outputs = [rel for rel in outputs if rel not in cycle_excluded]
+        excluded_outputs = [rel for rel in outputs if hash_cycle_excluded(rel, producers.get(rel, ""))]
+        checked_outputs = [rel for rel in outputs if rel not in excluded_outputs]
         replay_rows = [replay_by_artifact[rel] for rel in outputs if rel in replay_by_artifact]
-        matched = (
-            all(row.get("passed") is True for row in replay_rows)
-            if replay_rows
-            else all(_sha256(root / rel) for rel in checked_outputs)
-        )
+        outputs_present = all((root / rel).is_file() for rel in outputs)
+        hashes_present = all(_sha256(root / rel) for rel in checked_outputs)
+        replay_passed = all(row.get("passed") is True for row in replay_rows)
+        matched = outputs_present and hashes_present and replay_passed
         rows.append(
             {
                 "producer_script": script,
                 "replay_method": method,
                 "artifact_count": len(outputs),
                 "artifacts": outputs,
-                "cycle_excluded_artifacts": sorted(rel for rel in outputs if rel in cycle_excluded),
+                "cycle_excluded_artifacts": sorted(excluded_outputs),
                 "hash_checked_artifacts": checked_outputs,
                 "input_config_hash": _sha256(root / "manuscript" / "config.yaml"),
                 "output_hashes": {rel: _sha256(root / rel) for rel in checked_outputs},

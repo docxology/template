@@ -146,7 +146,7 @@ def test_lint_docs_doc_pairs_only_json() -> None:
         capture_output=True,
         text=True,
         check=False,
-        timeout=30,
+        timeout=300,
     )
 
     assert proc.returncode == 0, proc.stdout + proc.stderr

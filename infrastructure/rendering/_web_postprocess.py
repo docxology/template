@@ -1,100 +1,62 @@
-"""Deterministic post-processing for rendered HTML artifacts."""
+"""HTML transformations and compatibility exports for web post-processing.
+
+Asset injection and repository link resolution live in narrow leaf modules;
+existing web and slide renderers retain their imports through this module.
+"""
 
 from __future__ import annotations
 
-import base64
 import html
 import re
 from pathlib import Path
 
-from infrastructure.core.logging.utils import get_logger
-
-logger = get_logger(__name__)
-
-MATHJAX_URL = "https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-_MATHJAX_INTEGRITY = "sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz"
-_MATHJAX_FONT_URL = "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2"
-_MATHJAX_DYNAMIC_PREFIX = "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
-_MATHJAX_CONFIG_MARKER = "data-template-mathjax-config"
-_MATHJAX_CONFIG_SCRIPT = f"""<script {_MATHJAX_CONFIG_MARKER}>
-window.MathJax = window.MathJax || {{}};
-window.MathJax.chtml = Object.assign({{}}, window.MathJax.chtml, {{
-  fontURL: "{_MATHJAX_FONT_URL}",
-  dynamicPrefix: "{_MATHJAX_DYNAMIC_PREFIX}"
-}});
-window.normalizeTemplateMathJaxAria = function () {{
-  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {{
-    var roleDescription = node.getAttribute("aria-roledescription") || "";
-    if (/[\u0080-\u009f]/.test(roleDescription)) {{
-      node.setAttribute("aria-roledescription", "mathematical expression");
-    }}
-  }});
-}};
-window.MathJax.startup = Object.assign({{}}, window.MathJax.startup, {{
-  ready: function () {{
-    window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
-  }}
-}});
-</script>"""
-_FAVICON_MARKER = "data-template-favicon"
-_FAVICON_LINK = f'<link {_FAVICON_MARKER} rel="icon" href="favicon.ico">'
-_FAVICON_PNG = base64.b64decode(
-    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAALUlEQVR4nGNgGAWjYBSMglEwCkbBqBkFo2AUjIJRMApGwSgYBaNgFIwCABj7ABHX+aOtAAAAAElFTkSuQmCC"
+from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering._figure_alt_registry import (
+    FigureAltRecord,
+    FigureAltRegistry,
+    rendered_figure_filename,
+    require_record_alt,
 )
-_FAVICON_ICO = (
-    b"\x00\x00\x01\x00\x01\x00"
-    + bytes([16, 16, 0, 0])
-    + b"\x01\x00\x20\x00"
-    + len(_FAVICON_PNG).to_bytes(4, "little")
-    + (22).to_bytes(4, "little")
-    + _FAVICON_PNG
+from infrastructure.rendering._html_attributes import (
+    html_attribute_assignment_pattern as _html_attribute_assignment_pattern,
 )
-
-SHARED_DESIGN_TOKENS_CSS = """:root {
-  --brand-1: #5b6ee0;
-  --web-bg: #f8f8f8;
-  --web-surface: #ffffff;
-  --web-text: #2c3e50;
-  --web-border: #bdc3c7;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --brand-1: #7e8ce8;
-    --web-bg: #0f1420;
-    --web-surface: #161c2b;
-    --web-text: #e6eaf2;
-    --web-border: #2a3447;
-  }
-}
-.theorem-box {
-  border-left: 4px solid var(--brand-1);
-  background: var(--web-surface);
-  padding: 0.6em 1em;
-  margin: 1.1em 0;
-  border-radius: 0 4px 4px 0;
-}
-.theorem-box.definition { border-left-style: dashed; }
-.theorem-box > p:first-child { margin-top: 0; }
-.theorem-box > p:last-child { margin-bottom: 0; }"""
-
-
-def write_if_changed(path: Path, content: str) -> None:
-    """Write ``content`` to ``path`` only when it differs from the current file content.
-
-    Writes via a temporary file and atomic ``replace`` so the output is never
-    left in a partially-written state. No-op when the content is unchanged,
-    preserving mtime and avoiding spurious diffs.
-    """
-    if content == path.read_text(encoding="utf-8"):
-        return
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    try:
-        temporary.write_text(content, encoding="utf-8")
-        temporary.replace(path)
-    except OSError:
-        temporary.unlink(missing_ok=True)
-        raise
+from infrastructure.rendering._web_figure_details import apply_figure_long_description
+from infrastructure.rendering._web_io import write_if_changed as write_if_changed
+from infrastructure.rendering._web_assets import (
+    MATHJAX_URL as MATHJAX_URL,
+    MATHJAX_INTEGRITY as MATHJAX_INTEGRITY,
+    MATHJAX_FONT_URL as MATHJAX_FONT_URL,
+    MATHJAX_DYNAMIC_PREFIX as MATHJAX_DYNAMIC_PREFIX,
+    _MATHJAX_INTEGRITY as _MATHJAX_INTEGRITY,
+    _MATHJAX_FONT_URL as _MATHJAX_FONT_URL,
+    _MATHJAX_DYNAMIC_PREFIX as _MATHJAX_DYNAMIC_PREFIX,
+    _MATHJAX_CONFIG_MARKER as _MATHJAX_CONFIG_MARKER,
+    _MATHJAX_CONFIG_SCRIPT as _MATHJAX_CONFIG_SCRIPT,
+    _FAVICON_MARKER as _FAVICON_MARKER,
+    _FAVICON_LINK as _FAVICON_LINK,
+    _FAVICON_PNG as _FAVICON_PNG,
+    _FAVICON_ICO as _FAVICON_ICO,
+    SHARED_DESIGN_TOKENS_CSS as SHARED_DESIGN_TOKENS_CSS,
+    harden_mathjax_script as harden_mathjax_script,
+    embed_favicon as embed_favicon,
+    write_favicon_file as write_favicon_file,
+    embed_css as embed_css,
+)
+from infrastructure.rendering._web_links import (
+    _ANCHOR_HREF_RE as _ANCHOR_HREF_RE,
+    _PASSTHROUGH_HREF_SCHEMES as _PASSTHROUGH_HREF_SCHEMES,
+    _PUBLIC_POOL_ROOTS as _PUBLIC_POOL_ROOTS,
+    repository_root_for as repository_root_for,
+    _repository_code_url as _repository_code_url,
+    _url_suffix as _url_suffix,
+    _reject_non_public_pool_target as _reject_non_public_pool_target,
+    _resolve_repository_href_target as _resolve_repository_href_target,
+    _quoted_relative_path as _quoted_relative_path,
+    _web_relative_target as _web_relative_target,
+    _renderer_figure_asset_target as _renderer_figure_asset_target,
+    rewrite_repository_links as rewrite_repository_links,
+    deployed_web_link_issues as deployed_web_link_issues,
+)
 
 
 def normalize_figure_paths(content: str) -> str:
@@ -112,60 +74,207 @@ def normalize_figure_paths_in_file(html_file: Path) -> None:
     write_if_changed(html_file, normalize_figure_paths(content))
 
 
-def replace_figure_alts(content: str) -> str:
-    """Replace generated image alt text with a concise plain-text caption."""
+_FIGURE_RE = re.compile(
+    r"<figure\b(?P<attrs>[^>]*)>(?P<body>.*?)</figure>",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+_IMAGE_RE = re.compile(r"<img\b(?P<attrs>[^>]*)>", flags=re.IGNORECASE | re.DOTALL)
+_TABLE_RE = re.compile(
+    r"<table\b(?P<attrs>[^>]*)>(?P<body>.*?)</table>",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+
+
+def _html_attribute(attributes: str, name: str) -> str | None:
+    match = _html_attribute_assignment_pattern(name).search(attributes)
+    if match is None:
+        return None
+    return html.unescape(match.group("double") or match.group("single") or match.group("bare") or "")
+
+
+def _has_html_attribute(attributes: str, name: str) -> bool:
+    return _html_attribute_assignment_pattern(name).search(attributes) is not None
+
+
+def _replace_html_attribute(tag: str, name: str, value: str) -> str:
+    """Replace or insert an HTML attribute with a literal escaped value.
+
+    ``re.sub`` treats string replacements as backreference templates; LaTeX
+    fragments such as ``\\Omega`` in alt text raise ``re.error: bad escape``
+    unless the replacement is a callable.
+    """
+    escaped = html.escape(value, quote=True)
+    pattern = _html_attribute_assignment_pattern(name)
+
+    def literal(_match: re.Match[str]) -> str:
+        return f'{name}="{escaped}"'
+
+    if pattern.search(tag):
+        return pattern.sub(literal, tag, count=1)
+    if name == "alt":
+        insert_at = tag.rfind("/>")
+        if insert_at < 0:
+            insert_at = tag.rfind(">")
+        return tag[:insert_at].rstrip() + f' alt="{escaped}" ' + tag[insert_at:]
+    raise RenderingError(f"Rendered registry figure is missing an image {name}")
+
+
+def _set_image_alt(image_tag: str, alt_text: str) -> str:
+    return _replace_html_attribute(image_tag, "alt", alt_text)
+
+
+def _set_image_source(image_tag: str, source: str) -> str:
+    return _replace_html_attribute(image_tag, "src", source)
+
+
+def _exact_render_record(
+    registry: FigureAltRegistry,
+    *,
+    label: str | None,
+    filename: str | None,
+) -> FigureAltRecord | None:
+    filename_records = registry.by_filename(filename)
+    if len(filename_records) > 1:
+        raise RenderingError(
+            f"Rendered figure path maps to multiple registry records: {filename}",
+            context={"registry": str(registry.path)},
+        )
+    if label is None:
+        if not filename_records:
+            return None
+        raise RenderingError(
+            f"Rendered figure label/path mismatch: unlabeled != {filename_records[0].label}",
+            context={"registry": str(registry.path), "rendered_filename": filename},
+        )
+    label_record = registry.by_label(label)
+    if label_record is not None:
+        if label_record.filename != filename:
+            raise RenderingError(
+                f"Rendered figure path does not match registry record for {label_record.label}",
+                context={
+                    "registry": str(registry.path),
+                    "registry_filename": label_record.filename,
+                    "rendered_filename": filename,
+                },
+            )
+        return label_record
+    if not filename_records:
+        return None
+    filename_record = filename_records[0]
+    if label != filename_record.label:
+        raise RenderingError(
+            f"Rendered figure label/path mismatch: {label} != {filename_record.label}",
+            context={"registry": str(registry.path), "rendered_filename": filename},
+        )
+    return filename_record
+
+
+def replace_figure_alts(content: str, *, registry_path: Path | None = None) -> str:
+    """Apply exact registry alt text without deriving alternatives from captions.
+
+    A registry record is consumed only when the rendered ``figure`` label and
+    image path agree with it. Present-but-blank registry alternatives and
+    label/path disagreements raise instead of silently retaining Pandoc's
+    caption-derived ``alt``. Unregistered figures retain a non-empty authored
+    alternative. A cross-reference-labelled figure with a blank alternative is
+    non-decorative by construction and therefore also fails closed.
+    """
+    registry = FigureAltRegistry.load_optional(registry_path or Path("__absent_figure_registry__.json"))
 
     def _figure(match: re.Match[str]) -> str:
-        block = match.group(0)
-        caption_match = re.search(
-            r"<figcaption\b[^>]*>(?P<caption>.*?)</figcaption>",
-            block,
-            flags=re.IGNORECASE | re.DOTALL,
+        figure_attrs = match.group("attrs")
+        body = match.group("body")
+        image_match = _IMAGE_RE.search(body)
+        if image_match is None:
+            return match.group(0)
+        image_tag = image_match.group(0)
+        label = _html_attribute(figure_attrs, "id")
+        source = _html_attribute(image_match.group("attrs"), "src")
+        filename = rendered_figure_filename(source) if source is not None else None
+        record = _exact_render_record(registry, label=label, filename=filename)
+        if record is not None:
+            alt_text = require_record_alt(record, rendered_target=str(registry.path))
+            updated_image = _set_image_alt(image_tag, alt_text)
+            if record.filename is None:  # Defensive: registry parsing requires this.
+                raise RenderingError(f"Figure registry record is missing a filename: {record.label}")
+            updated_image = _set_image_source(updated_image, f"../figures/{record.filename}")
+            updated_image, disclosure = apply_figure_long_description(updated_image, record)
+            updated_body = body[: image_match.start()] + updated_image + body[image_match.end() :]
+            if disclosure and "figure-long-description" not in updated_body:
+                updated_body += disclosure
+            return f"<figure{figure_attrs}>{updated_body}</figure>"
+
+        authored_alt = _html_attribute(image_match.group("attrs"), "alt")
+        if label is not None and label.startswith("fig:") and not (authored_alt and authored_alt.strip()):
+            raise RenderingError(
+                f"Rendered non-decorative figure has blank authored alt text: {label}",
+                context={"registry": str(registry.path), "rendered_filename": filename},
+            )
+        return match.group(0)
+
+    content = _FIGURE_RE.sub(_figure, content)
+
+    def _explicit_image_alt(match: re.Match[str]) -> str:
+        attributes = match.group("attrs")
+        if _has_html_attribute(attributes, "alt"):
+            return match.group(0)
+        source = _html_attribute(attributes, "src")
+        filename = rendered_figure_filename(source) if source is not None else None
+        records = registry.by_filename(filename)
+        if len(records) > 1:
+            raise RenderingError(
+                f"Unlabelled rendered image maps to multiple registry records: {filename}",
+                context={"registry": str(registry.path)},
+            )
+        if len(records) == 1 and records[0].filename is not None:
+            # Markdown ``![](...)`` is an explicitly decorative reuse. Pandoc
+            # omits the attribute entirely, so restore the authored empty-alt
+            # semantic without repeating the canonical labelled figure's long
+            # description to screen-reader users.
+            image_tag = _set_image_alt(match.group(0), "")
+            return _set_image_source(image_tag, f"../figures/{records[0].filename}")
+        raise RenderingError(
+            "Rendered image is missing authored alt text and has no exact registry record",
+            context={"registry": str(registry.path), "rendered_filename": filename},
         )
-        if caption_match is None:
-            return block
-        caption = re.sub(r"<[^>]+>", " ", caption_match.group("caption"))
-        caption = html.unescape(caption)
-        replacements = {
-            "delta": "delta",
-            "pi": "pi",
-            "sqrt": "square root",
-            "approx": "approximately",
-            "times": "times",
-        }
-        caption = re.sub(r"\\([A-Za-z]+)", lambda tex: replacements.get(tex.group(1), tex.group(1)), caption)
-        caption = re.sub(r"\\[()\[\]]", "", caption)
-        caption = re.sub(r"[${}]+", "", caption)
-        caption = re.sub(r"\s+", " ", caption).strip()
-        sentence = re.split(r"(?<=[.!?])\s+", caption, maxsplit=1)[0]
-        concise = sentence[:240].rstrip()
-        if len(sentence) > 240:
-            concise = concise.rsplit(" ", 1)[0] + "…"
-        escaped = html.escape(concise, quote=True)
-        return re.sub(
-            r"(<img\b[^>]*\balt=)(?:\"[^\"]*\"|'[^']*')",
-            rf'\1"{escaped}"',
-            block,
-            count=1,
-            flags=re.IGNORECASE | re.DOTALL,
-        )
 
-    return re.sub(r"<figure\b[^>]*>.*?</figure>", _figure, content, flags=re.IGNORECASE | re.DOTALL)
+    return _IMAGE_RE.sub(_explicit_image_alt, content)
 
 
-def enhance_accessibility(html_file: Path, *, language: str = "en") -> None:
+def enhance_accessibility(
+    html_file: Path,
+    *,
+    language: str = "en",
+    registry_path: Path | None = None,
+) -> None:
     """Apply accessibility enhancements to ``html_file`` in place.
 
     Sets the ``<html lang>`` attribute when missing, removes ``aria-hidden``
-    from ``<figcaption>`` elements, replaces figure alt text with concise
-    captions, wraps body content in a ``<main>`` landmark with a skip link,
-    and writes the result only if the content changed.
+    from ``<figcaption>`` elements, applies exact source-owned figure-registry
+    alt text where available, wraps body content in a ``<main>`` landmark with
+    a skip link, and writes the result only if the content changed.
     """
     content = html_file.read_text(encoding="utf-8")
-    if not re.search(r"<html\b[^>]*\blang=", content, flags=re.IGNORECASE):
+    lang_match = re.search(
+        r"<html\b[^>]*?\blang=(?P<q>[\"'])(?P<value>.*?)(?P=q)",
+        content,
+        flags=re.IGNORECASE,
+    )
+    if lang_match is None:
         content = re.sub(
             r"<html\b",
             f'<html lang="{html.escape(language, quote=True)}"',
+            content,
+            count=1,
+            flags=re.IGNORECASE,
+        )
+    elif not lang_match.group("value").strip():
+        # An empty lang attribute defeats the invariant this check exists
+        # for; replace the empty value instead of injecting a duplicate.
+        replacement = html.escape(language, quote=True)
+        content = re.sub(
+            r"(<html\b[^>]*?\blang=)([\"'])[\"']",
+            lambda match: f"{match.group(1)}{match.group(2)}{replacement}{match.group(2)}",
             content,
             count=1,
             flags=re.IGNORECASE,
@@ -176,7 +285,8 @@ def enhance_accessibility(html_file: Path, *, language: str = "en") -> None:
         content,
         flags=re.IGNORECASE,
     )
-    content = replace_figure_alts(content)
+    content = replace_figure_alts(content, registry_path=registry_path)
+    content = wrap_responsive_tables(content)
     if not re.search(r"<main\b", content, flags=re.IGNORECASE):
         main_open = '<main id="main-content" tabindex="-1">'
         toc_pattern = r'(?P<toc><nav\b[^>]*\bid=["\']TOC["\'][^>]*>.*?</nav>)'
@@ -202,16 +312,48 @@ def enhance_accessibility(html_file: Path, *, language: str = "en") -> None:
     write_if_changed(html_file, content)
 
 
+def wrap_responsive_tables(content: str) -> str:
+    """Confine wide tables to labelled keyboard-scrollable containers."""
+
+    def _table(match: re.Match[str]) -> str:
+        attributes = match.group("attrs")
+        if _has_html_attribute(attributes, "data-responsive-table"):
+            return match.group(0)
+        body = match.group("body")
+        if re.search(r"<table\b", body, flags=re.IGNORECASE):
+            # The non-greedy container match would close on the inner
+            # table and leave the outer remainder dangling outside the
+            # wrapper; leave authored nested tables untouched.
+            return match.group(0)
+        caption_match = re.search(
+            r"<caption\b[^>]*>(?P<caption>.*?)</caption>",
+            body,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+        caption = html.unescape(re.sub(r"<[^>]+>", " ", caption_match.group("caption"))) if caption_match else ""
+        context = " ".join(caption.split())
+        if len(context) > 120:
+            context = context[:117].rstrip() + "…"
+        accessible_name = f"Scrollable table: {context}" if context else "Scrollable data table"
+        table = f'<table{attributes} data-responsive-table="true">{body}</table>'
+        return (
+            '<div class="table-scroll" role="region" tabindex="0" '
+            f'aria-label="{html.escape(accessible_name, quote=True)}">{table}</div>'
+        )
+
+    return _TABLE_RE.sub(_table, content)
+
+
 def add_responsive_image_variants(html_file: Path) -> None:
     """Wrap images with available ``_mobile`` companion files in ``<picture>`` responsive sources, in place."""
     content = html_file.read_text(encoding="utf-8")
 
     def _image(match: re.Match[str]) -> str:
         tag = match.group(0)
-        src_match = re.search(r'\bsrc="([^"]+)"', tag, flags=re.IGNORECASE)
-        if src_match is None:
+        source = _html_attribute(tag, "src")
+        if source is None:
             return tag
-        source_path = Path(src_match.group(1))
+        source_path = Path(source)
         if source_path.stem.endswith("_mobile"):
             return tag
         mobile_source = str(source_path.with_name(source_path.stem + "_mobile" + source_path.suffix))
@@ -225,61 +367,80 @@ def add_responsive_image_variants(html_file: Path) -> None:
     write_if_changed(html_file, re.sub(r"<img\b[^>]*>", _image, content, flags=re.IGNORECASE))
 
 
-def harden_mathjax_script(html_file: Path) -> None:
-    """Add SRI integrity and crossorigin attributes to the MathJax CDN script tag and inject the config script."""
+def add_full_resolution_figure_links(html_file: Path) -> None:
+    """Make each rendered figure image a visible, keyboard-accessible full-size link.
+
+    Publication figures are intentionally high-resolution so axes, annotations,
+    and uncertainty marks remain inspectable.  A responsive HTML layout can
+    legitimately reduce them to a reading-column width, however.  This
+    post-processing pass preserves that in-page layout while giving every
+    ``<figure>`` image an explicit route to the original asset.  It is
+    idempotent and leaves author-supplied image links alone.
+    """
+
     content = html_file.read_text(encoding="utf-8")
-    if MATHJAX_URL not in content:
-        return
-    script_re = re.compile(r'(<script(?=[^>]*\bsrc="' + re.escape(MATHJAX_URL) + r'")[^>]*)></script>')
+    figure_re = re.compile(
+        r"(?P<open><figure\b[^>]*>)(?P<body>.*?)(?P<close></figure>)",
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    image_re = re.compile(r"<img\b(?P<attrs>[^>]*)>", flags=re.IGNORECASE | re.DOTALL)
 
-    def _replace(match: re.Match[str]) -> str:
-        tag = match.group(1)
-        if "integrity=" not in tag:
-            tag += f' integrity="{_MATHJAX_INTEGRITY}"'
-        if "crossorigin=" not in tag:
-            tag += ' crossorigin="anonymous"'
-        script = f"{tag}></script>"
-        return script if _MATHJAX_CONFIG_MARKER in content else f"{_MATHJAX_CONFIG_SCRIPT}\n{script}"
+    def _link_name(figure_body: str, image_attributes: str) -> str:
+        caption_match = re.search(
+            r"<figcaption\b[^>]*>(?P<caption>.*?)</figcaption>",
+            figure_body,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+        caption = html.unescape(re.sub(r"<[^>]+>", " ", caption_match.group("caption"))) if caption_match else ""
+        accessible_context = " ".join(caption.split()) or (_html_attribute(image_attributes, "alt") or "").strip()
+        accessible_context = re.sub(r"\\(?:\(|\)|\[|\])", "", accessible_context)
+        if not accessible_context:
+            raise RenderingError(
+                "Rendered figure cannot receive a contextual full-size link without a caption or alternative",
+            )
+        numbered_caption = re.match(
+            r"Figure\s+(?P<number>[^:]+):\s*(?P<title>.+)",
+            accessible_context,
+            flags=re.IGNORECASE,
+        )
+        number = numbered_caption.group("number").strip() if numbered_caption is not None else None
+        title_source = numbered_caption.group("title").strip() if numbered_caption is not None else accessible_context
+        sentence = re.match(r"(?P<title>.+?[.!?])(?:\s|$)", title_source)
+        title = sentence.group("title").strip() if sentence is not None else title_source
+        if len(title) > 88:
+            boundary = re.search(r"(?:;|\s+—|\s+while\b|\s+and\b|\s+for\b|\s+\()", title[36:])
+            if boundary is not None:
+                title = title[: 36 + boundary.start()].rstrip(" ,.;:")
+        if len(title) > 96:
+            title = title[:93].rsplit(" ", 1)[0].rstrip(" ,;:") + "…"
+        prefix = f"Open full-size Figure {number}" if number is not None else "Open full-size figure"
+        return f"{prefix}, {title}"
 
-    write_if_changed(html_file, script_re.sub(_replace, content, count=1))
+    def _figure(match: re.Match[str]) -> str:
+        figure_body = match.group("body")
+        if "figure-full-size-link" in figure_body:
+            return match.group(0)
+        # Do not introduce a nested link when the author already supplied a
+        # destination for the figure image.
+        if re.search(r"<a\b[^>]*>.*?<img\b", figure_body, flags=re.IGNORECASE | re.DOTALL):
+            return match.group(0)
 
+        def _image(image_match: re.Match[str]) -> str:
+            source = _html_attribute(image_match.group("attrs"), "src")
+            if not source:
+                return image_match.group(0)
+            href = html.escape(source, quote=True)
+            link_name = _link_name(figure_body, image_match.group("attrs"))
+            escaped_link_name = html.escape(link_name, quote=True)
+            return (
+                '<a class="figure-full-size-link" '
+                f'href="{href}" target="_blank" rel="noopener" '
+                f'aria-label="{escaped_link_name}">'
+                f"{image_match.group(0)}"
+                '<span class="figure-full-size-label" aria-hidden="true">'
+                "Open full-size figure</span></a>"
+            )
 
-def embed_favicon(html_file: Path) -> None:
-    """Insert a marked ``<link>`` favicon reference before ``</head>`` in ``html_file`` if absent."""
-    content = html_file.read_text(encoding="utf-8")
-    if _FAVICON_MARKER in content:
-        return
-    if "</head>" not in content:
-        logger.warning("Could not find </head> tag in HTML, favicon not embedded")
-        return
-    write_if_changed(html_file, content.replace("</head>", f"\n{_FAVICON_LINK}\n</head>", 1))
+        return match.group("open") + image_re.sub(_image, figure_body) + match.group("close")
 
-
-def write_favicon_file(output_dir: Path) -> None:
-    """Write the embedded ``favicon.ico`` file into ``output_dir``, logging a warning on failure."""
-    try:
-        (output_dir / "favicon.ico").write_bytes(_FAVICON_ICO)
-    except OSError as exc:
-        logger.warning("Failed to write favicon.ico: %s", exc)
-
-
-def embed_css(html_file: Path, css_file: Path) -> None:
-    """Embed the shared design tokens and renderer CSS into ``html_file``."""
-    try:
-        if not css_file.exists():
-            logger.warning("CSS file not found: %s, skipping CSS embedding", css_file)
-            return
-        css_content = SHARED_DESIGN_TOKENS_CSS + "\n" + css_file.read_text(encoding="utf-8")
-        content = html_file.read_text(encoding="utf-8")
-        style_tag = f"\n<style>\n{css_content}\n</style>\n"
-        if "</head>" in content:
-            updated = content.replace("</head>", style_tag + "</head>", 1)
-        elif "<head>" in content:
-            updated = content.replace("<head>", "<head>" + style_tag, 1)
-        else:
-            logger.warning("Could not find <head> tag in HTML, CSS not embedded")
-            return
-        write_if_changed(html_file, updated)
-        logger.debug("Embedded CSS from %s into %s", css_file.name, html_file.name)
-    except OSError as exc:
-        logger.warning("Failed to embed CSS: %s", exc)
+    write_if_changed(html_file, figure_re.sub(_figure, content))

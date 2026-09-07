@@ -56,7 +56,8 @@ def test_gate_passes_for_fully_specified_project(tmp_path: Path) -> None:
         (
             '{"entries": [{"contract_match": true, "path": "output/data/result.csv", '
             f'"sha256": "{compute_sha256(artifact)}", "size_bytes": {artifact.stat().st_size}, '
-            '"stage_name": "Project Analysis", "stage_num": 1}], "issues": []}\n'
+            '"stage_name": "Project Analysis", "stage_num": 1, "timestamp": ""}], '
+            '"inventory_mode": "stable-local-output-v1", "issues": []}\n'
         ),
     )
     write_doc(reports / "evidence_registry.json", '{"claims": []}\n')

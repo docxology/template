@@ -11,6 +11,7 @@ from typing import Any, Set, cast
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.validation.content.discovery import _LINK_AUDIT_EXCLUDE_PARTS
 from infrastructure.validation.docs.accuracy import extract_headings
+from infrastructure.validation.docs.scan_scope import submodule_paths
 from infrastructure.validation.integrity.check_links import generate_comprehensive_report
 from infrastructure.validation.integrity.link_extract import (
     LinkCheckResult,
@@ -76,11 +77,12 @@ def discover_link_audit_files(repo_root: Path) -> list[Path]:
     """
     root = Path(repo_root).resolve()
     skip = set(_LINK_AUDIT_EXCLUDE_PARTS) | _gitignored_top_level_dirs(root)
+    submodules = submodule_paths(root)
     out: list[Path] = []
     for dirpath, dirnames, filenames in os.walk(root):
         # Prune excluded/gitignored directories in place BEFORE descending.
-        dirnames[:] = [d for d in dirnames if d not in skip]
         base = Path(dirpath)
+        dirnames[:] = [d for d in dirnames if d not in skip and (base / d).resolve() not in submodules]
         for name in filenames:
             if name.lower().endswith(".md"):
                 out.append(base / name)
@@ -192,11 +194,13 @@ def run_link_audit(repo_root: Path) -> int:
                         ).as_dict()
                     )
 
-            issues["code_block_paths"].extend(validate_file_paths_in_code(content, md_file, repo_root_resolved))
-            issues["directory_structures"].extend(validate_directory_structures(content, md_file, repo_root_resolved))
-            issues["python_imports"].extend(validate_python_imports(content, md_file, repo_root_resolved))
+            issues["code_block_paths"].extend(validate_file_paths_in_code(cached_content, md_file, repo_root_resolved))
+            issues["directory_structures"].extend(
+                validate_directory_structures(cached_content, md_file, repo_root_resolved)
+            )
+            issues["python_imports"].extend(validate_python_imports(cached_content, md_file, repo_root_resolved))
             issues["placeholder_consistency"].extend(
-                validate_placeholder_consistency(content, md_file, repo_root_resolved)
+                validate_placeholder_consistency(cached_content, md_file, repo_root_resolved)
             )
 
         except (OSError, UnicodeDecodeError) as exc:

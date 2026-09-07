@@ -20,6 +20,7 @@ from infrastructure.core.project_pyproject import project_declared_coverage_floo
 from infrastructure.project.public_scope import public_project_names
 
 from .introspection import ModuleInfo, build_infrastructure_report
+from .contracts import METRICS_SCHEMA_VERSION, validate_metrics_payload
 from .viz_palette import FIGURE_DPI, FONT_FLOOR
 
 logger = get_logger(__name__)
@@ -160,14 +161,14 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
         }
 
     # CONFIDENTIALITY: there is intentionally NO scan of the non-rendered typed
-    # subfolders (``projects/{working,published,archive,other}/``) here. Those
+    # subfolders (``projects/{working,ongoing,archive}/``) here. Those
     # symlink private/rotating projects (retired research workspaces, client work)
     # whose names must never reach this public meta-template's metrics, figures, or
     # rendered manuscript. The only project metrics that may exist are those produced
     # by ``build_infrastructure_report`` → ``discover_projects``, which is public-only
     # (``PUBLIC_PROJECT_NAMES``, matched by leaf name) and additionally admits this
     # meta-project under its ``template_template`` name for self-introspection.
-    # Re-introducing a working/published/archive/other walk here would leak private
+    # Re-introducing a working/ongoing/archive walk here would leak private
     # names into a public DOI; ``tests/test_confidentiality.py`` is the negative
     # control that keeps this closed.
 
@@ -238,6 +239,7 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
         },
         "module_inventory_table": build_module_inventory_table(report.modules),
         "generated_at": _generated_timestamp(os.environ.get("SOURCE_DATE_EPOCH")),
+        "metrics_schema_version": METRICS_SCHEMA_VERSION,
     }
 
     logger.info(
@@ -247,6 +249,7 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
         total_infra_py,
         sum(len(v) for v in project_metrics.values()),
     )
+    validate_metrics_payload(metrics)
     return metrics
 
 

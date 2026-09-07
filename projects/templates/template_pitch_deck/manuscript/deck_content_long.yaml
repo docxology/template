@@ -1,4 +1,4 @@
-# Long pitch (56 slides — within SlideBudget.LONG) — template_template, for a meta-science /
+# Long pitch (57 slides — within SlideBudget.LONG) — template_template, for a meta-science /
 # science-integrity audience. Builds on the medium deck's arc with a full
 # architecture walkthrough, an expanded governance/confidentiality section,
 # reproducibility guarantees, and an appendix (glossary + citation info).
@@ -152,6 +152,11 @@ slides:
     title: "The full roster, not one cherry-picked example"
     bullets:
       - "projects/templates/ holds all {{EXEMPLAR_COUNT}} public exemplars: {{EXEMPLAR_ROSTER}}."
+    source: "docs/_generated/active_projects.md"
+
+  - kind: content
+    title: "One contract across all public exemplars"
+    bullets:
       - "{{SECOND_EXEMPLAR_NAME}} is called out here only as one concrete instance to point to — every name in that list is an independently-built exemplar following the identical two-layer architecture, not a hand-picked best case."
       - "Neither exemplar's coverage gate or drift check required any special-casing to add — the contract is uniform across all {{EXEMPLAR_COUNT}} projects, and the folder itself is the evidence, not a claim about it."
     source: "docs/_generated/active_projects.md"
@@ -280,7 +285,7 @@ slides:
       - "{{INFRA_SUBPACKAGE_COUNT}} importable subpackages, {{INFRA_PYTHON_FILE_COUNT}} tracked Python files total under infrastructure/ — a real inventory anyone can `git ls-files` themselves, not a claimed abstraction."
       - "The largest single subpackage, {{INFRA_LARGEST_SUBPACKAGE}}, holds {{INFRA_LARGEST_SUBPACKAGE_COUNT}} files — still a minority of the whole, not a monolith wearing a modular label."
       - "Every number on this slide is computed live by src/infra_facts.py at render time, reusing the exact same counters docs/_generated/COUNTS.md is built from."
-      - "The chart on the next slide shows a slightly narrower total — it only counts files inside an importable subpackage, excluding {{INFRA_UNATTRIBUTED_FILE_COUNT}} top-level file(s) (infrastructure/__init__.py, mcp_server.py) that do not belong to any subpackage."
+      - "The next chart narrows the total to importable subpackages, excluding {{INFRA_UNATTRIBUTED_FILE_COUNT}} top-level file(s): infrastructure/__init__.py and mcp_server.py."
     source: "projects/templates/template_pitch_deck/src/infra_facts.py"
 
   - kind: diagram

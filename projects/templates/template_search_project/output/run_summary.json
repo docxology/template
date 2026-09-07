@@ -5,8 +5,9 @@
     "local": 6
   },
   "errors": {},
-  "bibtex": "<repo-root>/projects/templates/template_search_project/manuscript/references.bib",
-  "corpus": "<repo-root>/projects/templates/template_search_project/output/corpus.json",
-  "report": "<repo-root>/projects/templates/template_search_project/output/reading_report.md",
-  "llm_used": false
+  "bibtex": "<repo-root>/manuscript/references.bib",
+  "corpus": "<repo-root>/output/corpus.json",
+  "report": "<repo-root>/output/reading_report.md",
+  "llm_used": false,
+  "evidence_scope": "bundled_deterministic_fixture"
 }

@@ -1,0 +1,36 @@
+{
+  "schema_version": "template-clean-checkout-evidence/v1",
+  "revision": "d676d67a0e419b5d553765821eaadd5fb8a0d895",
+  "platform": "darwin",
+  "runs": 2,
+  "required_phase_status": {
+    "locked_dependency_setup": "pass",
+    "root_health": "pass",
+    "generated_documents": "pass",
+    "status_evidence": "pass",
+    "claim_bindings": "pass",
+    "backlog": "pass",
+    "public_contract": "pass",
+    "public_release_matrix": "pass",
+    "representative_render": "pass",
+    "final_clean_status": "blocked"
+  },
+  "determinism": {
+    "required_phase_statuses_equal": true,
+    "matrix_status_equal": true,
+    "render_status_equal": true,
+    "clean_status_equal": true
+  },
+  "output_clean": false,
+  "status": "blocked",
+  "blocker": "representative render changes tracked canonical output files",
+  "hosted_linux": "blocked-external",
+  "optional_bundle_verification": "skipped",
+  "raw_receipt_sha256": "e3ed676727af37a7929193534562253901f9db1d16daf11147f69397dd0b9f70",
+  "verification_mode": "offline local disposable checkouts; no credentials or publication",
+  "notes": [
+    "Both serial public matrices completed all 24 canonical project lanes.",
+    "Tracked output drift is intentionally fail-closed and is not normalized away.",
+    "Hosted Linux and owner or administrator authority receipts require external execution."
+  ]
+}

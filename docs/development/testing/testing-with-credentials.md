@@ -1,427 +1,174 @@
-# Testing with External Service Credentials
+# Testing external and credentialed integrations
 
-This guide explains how to configure and run tests that require external service credentials (Zenodo, GitHub, arXiv) and local tools (LaTeX).
+Credentialed provider calls are a separate, explicitly authorized lane. The
+default test suite is hermetic: it uses temporary files, local HTTP servers,
+dry-run adapters, and deterministic fixtures wherever possible. An ordinary
+request to run tests does not authorize GitHub releases, Zenodo deposits,
+uploads, deployments, account changes, or cleanup of remote resources.
 
-## Overview
+## Current source contract
 
-The default suite keeps credential-free coverage hermetic with local HTTP servers where possible. Tests that truly make real API calls to external services are marked with special pytest markers and should be selected only in environments where those credentials are configured.
-
-## Quick Start
-
-1. **Create the credential files at the repository root:**
-
-   ```bash
-   # Copy the non-secret env template that ships with the repo
-   cp infrastructure/config/.env.template .env
-   # Optionally create test_credentials.yaml directly (no committed example;
-   # see the YAML Configuration section below for the schema)
-   ```
-
-2. **Add your credentials** to `.env` (see sections below)
-
-3. **Run all tests** (external service tests will be skipped if credentials not configured):
-
-   ```bash
-   uv run pytest tests/
-   ```
-
-4. **Run only tests that don't require external services:**
-
-   ```bash
-   uv run pytest tests/ -m "not requires_credentials"
-   ```
-
-## Credential Configuration
-
-### Environment Variables (.env file)
-
-Create a `.env` file in the repository root with your credentials:
+The root test configuration registers capability markers such as
+`requires_ollama`, `requires_latex`, `requires_zenodo`, `requires_github`,
+`requires_arxiv`, `requires_network`, and `requires_credentials`. Registration
+does not prove that a collected test currently uses a marker. Check the exact
+checkout before planning a live lane:
 
 ```bash
-# Zenodo Sandbox (recommended for testing)
-ZENODO_SANDBOX_TOKEN=your_sandbox_token_here
-
-# GitHub
-GITHUB_TOKEN=your_github_pat_here
-GITHUB_REPO=username/test-repository
-
-# arXiv (optional)
-ARXIV_USERNAME=your_username
-ARXIV_PASSWORD=your_password
+uv run pytest tests/ --collect-only -q -m requires_credentials
+uv run pytest tests/ --collect-only -q -m requires_zenodo
+uv run pytest tests/ --collect-only -q -m requires_github
 ```
 
-### YAML Configuration (test_credentials.yaml)
+A zero-test collection is `not applicable`, not a passed live integration
+test. The authoritative hosted jobs and marker selection are in
+[`../../../.github/workflows/ci.yml`](../../../.github/workflows/ci.yml) and
+[`../../../pyproject.toml`](../../../pyproject.toml).
 
-Optionally, create `test_credentials.yaml` for additional configuration:
+## Default credential-free validation
+
+Use the repository's maintained test contracts:
+
+```bash
+# Coverage-bearing infrastructure lane; excludes live/network/service lanes.
+uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full
+
+# One public project in its own pytest process.
+uv run python scripts/pipeline/stage_01_test.py \
+  --project templates/template_code_project --project-only
+```
+
+Run one project suite per process. Do not collect several project test trees in
+one pytest process because their `tests.conftest` package names can collide.
+
+Dry-run adapter tests establish request construction and failure behavior; they
+do not establish credential validity, provider availability, account policy, or
+permission to publish.
+
+## Authorization checklist for a live lane
+
+Before any external write, record all of the following:
+
+1. The operator explicitly authorized the provider, target repository/account,
+   payload, and write operation.
+2. The target is a disposable sandbox or dedicated test resource. Production
+   is not an acceptable default.
+3. The exact payload and metadata passed local preflight and contain no
+   local-only paths, secrets, stale generated evidence, or unintended files.
+4. Credentials are least-privilege, short-lived where possible, and scoped to
+   that target. Repository deletion or organization-wide administration is not
+   needed for release tests.
+5. The run has a unique, collision-resistant remote identifier and a bounded
+   timeout.
+6. Cleanup is an explicit, separately verified step. A test failure does not
+   prove cleanup ran.
+7. The result will be reported as `passed`, `failed`, `blocked`, `not run`,
+   `not applicable`, or `unavailable`; a skip is never reported as a pass.
+
+## Credential handling
+
+Prefer provider-managed secret stores or environment variables supplied only
+to the process that needs them. A repo-root `.env` is supported by some
+publishing commands and is gitignored, but it remains plaintext local secret
+material: restrict permissions and never copy it into fixtures, reports, or
+generated artifacts.
+
+```bash
+chmod 600 .env
+uv run python scripts/audit/check_staged_secrets.py
+uv run python scripts/audit/check_tracked_secrets.py
+```
+
+Do not verify a secret with `echo`, include it on a command line, paste it into
+a URL, or print a credentialed response. Command-line token flags can be
+visible in process listings and shell history; prefer a narrowly scoped
+environment variable.
+
+Common publishing variables include:
+
+| Provider | Variable | Boundary |
+| --- | --- | --- |
+| GitHub | `GITHUB_TOKEN`, `GITHUB_REPO` | Use a fine-grained token limited to a dedicated test repository. Do not grant repository deletion. |
+| Zenodo sandbox | `ZENODO_SANDBOX_TOKEN` | Sandbox only unless production deposit authority is explicit. |
+| Zenodo production | `ZENODO_PROD_TOKEN` | Production deposit; owner approval and release evidence required. |
+| Pinata | `PINATA_JWT` | Scope to the intended pinning account and payload. |
+| Hugging Face | `HUGGINGFACE_TOKEN` or `HF_TOKEN` | Write scope only for the target repository. |
+| OSF | `OSF_TOKEN` | Limit to the intended project when the provider supports it. |
+
+Consult the live CLI and publishing documentation for the exact variable used
+by a provider. Never infer that a similarly named variable is accepted.
+
+## Dry run before any provider call
+
+The archival and multi-platform upload entry points are dry-run by default and
+require `--commit` for writes:
+
+```bash
+uv run python scripts/runner/archive_publication.py \
+  --project templates/template_code_project --providers software_heritage
+
+uv run python scripts/publish/upload_gold_refinement.py --only testpypi
+```
+
+The unified GitHub/Zenodo release command is different: it performs real
+provider work by default (against Zenodo sandbox unless `--production` is
+given). Always pass `--dry-run` during rehearsal:
+
+```bash
+uv run python scripts/publish/publish_project_release.py \
+  --project templates/template_code_project \
+  --tag v0.0.0-rehearsal \
+  --repo owner/dedicated-test-repository \
+  --dry-run
+```
+
+Removing `--dry-run`, adding `--commit`, or adding `--production` is a material
+authority change. Reconfirm the target, payload hashes, source revision, and
+operator approval immediately before doing so.
+
+## CI secrets
+
+Credentialed CI should be a dedicated, protected workflow or environment, not
+part of pull-request validation from untrusted forks. Bind secrets directly to
+the one step that needs them:
 
 ```yaml
-zenodo:
-  use_sandbox: true  # Always use sandbox for tests!
-
-github:
-  test_tag_prefix: "test-release-"
-
-cleanup:
-  auto_cleanup: true  # Automatically delete test artifacts
+- name: Authorized sandbox integration
+  if: github.event_name == 'workflow_dispatch'
+  env:
+    ZENODO_SANDBOX_TOKEN: ${{ secrets.ZENODO_SANDBOX_TOKEN }}
+  run: uv run pytest tests/path/to/explicit_live_test.py -v
 ```
 
-## Obtaining Credentials
-
-### Zenodo Sandbox Token
-
-1. Create account at [https://sandbox.zenodo.org/](https://sandbox.zenodo.org/)
-2. Navigate to: Account Settings → Applications → Personal access tokens
-3. Create new token with scopes: `deposit:write`, `deposit:actions`
-4. Copy token to `.env` as `ZENODO_SANDBOX_TOKEN`
-
-**Important:** Use the *sandbox* environment for testing, not production Zenodo!
-
-### GitHub Personal Access Token
-
-1. Go to [https://github.com/settings/tokens/new](https://github.com/settings/tokens/new)
-2. Create token with scopes:
-   - `repo` (full repository access)
-   - `write:packages` (for release assets)
-   - `delete_repo` (optional, for test cleanup)
-3. Set expiration and create token
-4. Copy token to `.env` as `GITHUB_TOKEN`
-
-**Repository Setup:**
-
-- Create a test repository on GitHub (e.g., `username/test-automation`)
-- Add repository name to `.env` as `GITHUB_REPO=username/test-automation`
-- Tests will create and delete releases in this repository
-
-### arXiv Credentials (Optional)
-
-arXiv submission tests are optional and require SWORD API credentials:
-
-1. Register for arXiv account
-2. Contact arXiv to enable SWORD API access (not available by default)
-3. Add credentials to `.env`
-
-Most users can skip arXiv tests as they're not required for the core test suite.
-
-### Ollama Setup
-
-Ollama tests require a running Ollama server with at least one model installed:
-
-1. **Install Ollama:**
-
-   ```bash
-   # macOS
-   brew install ollama
-
-   # Linux
-   curl -fsSL https://ollama.ai/install.sh | sh
-
-   # Windows
-   # Download from https://ollama.ai/download
-   ```
-
-2. **Start Ollama server:**
-
-   ```bash
-   ollama serve
-   ```
-
-3. **Install at least one model:**
-
-   ```bash
-   # Recommended models for testing
-   ollama pull llama3.1:latest    # 4.7GB, good quality
-   ollama pull llama3-gradient    # 4.7GB, 256K context
-   ollama pull gemma2:2b         # 2GB, fast and lightweight
-
-   # Verify models are available
-   ollama list
-   ```
-
-4. **Optional: Configure Ollama host** (if not using default):
-
-   ```bash
-   export OLLAMA_HOST=http://localhost:11434
-   ```
-
-**Note:** Ollama tests use the local Ollama installation and do not require external credentials. Tests marked `requires_ollama` trigger the session harness in `tests/conftest.py`; the harness starts Ollama when possible, pulls `smollm2` by default when no small/fast model is present, and fails with setup guidance if it cannot provide a runnable daemon/model.
-
-## Test Markers
-
-Tests are marked with the following markers:
-
-| Marker | Description | Default handling |
-|--------|-------------|----------------|
-| `requires_ollama` | Needs local Ollama | Harness starts/pulls or fails with setup guidance |
-| `requires_zenodo` | Needs Zenodo API access | Opt-in when real Zenodo credentials are configured |
-| `requires_github` | Needs GitHub API access | Opt-in when `GITHUB_TOKEN` / `GITHUB_REPO` are configured |
-| `requires_arxiv` | Needs arXiv API access | Opt-in when arXiv credentials are configured |
-| `requires_latex` | Needs LaTeX installed | Runs only on LaTeX-capable jobs |
-| `requires_network` | Needs internet access | Runs only in network-enabled environments |
-| `requires_credentials` | Needs any external credentials | Opt-in credentialed integration marker |
-| `private_project` | Needs a private sidecar project checkout | Deselected by default; opt in when that project is present |
-| `external_fixture` | Needs downloaded external fixture trees | Deselected by default; opt in after fixture setup |
-
-## Running Tests Selectively
-
-### Run the default test selection
-
-```bash
-uv run pytest tests/
-```
-
-### Run only tests that don't need credentials
-
-```bash
-uv run pytest tests/ -m "not requires_credentials"
-```
-
-### Run only Zenodo tests
-
-```bash
-uv run pytest tests/ -m requires_zenodo
-```
-
-### Run only GitHub tests
-
-```bash
-uv run pytest tests/ -m requires_github
-```
-
-### Run only Ollama tests
-
-```bash
-# Ensure Ollama server is running first
-ollama serve
-
-# Then run tests
-uv run pytest tests/ -m requires_ollama
-```
-
-### Run only local tests (no network)
-
-```bash
-uv run pytest tests/ -m "not requires_network"
-```
-
-### Run tests without LaTeX
-
-```bash
-uv run pytest tests/ -m "not requires_latex"
-```
-
-### Combine markers
-
-```bash
-# Run tests that need neither credentials nor LaTeX
-uv run pytest tests/ -m "not requires_credentials and not requires_latex"
-
-# Run all external service tests
-uv run pytest tests/ -m "requires_zenodo or requires_github"
-```
-
-## Test Cleanup
-
-Tests automatically clean up after themselves:
-
-- **Zenodo:** Test depositions are deleted after test completion
-- **GitHub:** Test releases and tags are deleted after test completion
-- **Files:** Temporary files are cleaned up using pytest's `tmp_path` fixtures
-
-If cleanup fails (e.g., network error), you may need to manually delete test artifacts:
-
-### Manual Zenodo Cleanup
-
-```bash
-# Visit Zenodo sandbox and delete test depositions
-https://sandbox.zenodo.org/deposit
-```
-
-### Manual GitHub Cleanup
-
-```bash
-# Delete test releases via GitHub web UI or CLI
-gh release delete test-release-12345678 --repo username/test-repo
-
-# Delete test tags
-git push --delete origin test-release-12345678
-```
-
-## Security Best Practices
-
-1. **Never commit credentials:**
-   - `.env` and `test_credentials.yaml` are in `.gitignore`
-   - Always use `infrastructure/config/.env.template` for templates
-
-2. **Use sandbox environments:**
-   - Always use Zenodo *sandbox*, not production
-   - Create dedicated test repositories on GitHub
-
-3. **Rotate tokens regularly:**
-   - GitHub tokens: Set expiration dates
-   - Zenodo tokens: Regenerate periodically
-   - Delete unused tokens
-
-4. **Limit token scopes:**
-   - Only grant minimum required permissions
-   - Use separate tokens for different purposes
-
-5. **Protect your `.env` file:**
-
-   ```bash
-   chmod 600 .env  # Owner read/write only
-   ```
-
-## Troubleshooting
-
-### Tests are skipped
-
-**Problem:** Tests marked with `requires_*` are being skipped
-
-**Solution:**
-
-- Check `.env` file exists and has correct credentials
-- Verify environment variables are loaded: `echo $ZENODO_SANDBOX_TOKEN`
-- Run with `-v` to see skip reasons: `uv run pytest tests/ -v`
-
-### Zenodo API errors
-
-**Problem:** Zenodo tests fail with authentication errors
-
-**Solutions:**
-
-- Verify token is for *sandbox*, not production
-- Check token has `deposit:write` and `deposit:actions` scopes
-- Ensure token hasn't expired
-- Test token manually: `curl -H "Authorization: Bearer YOUR_TOKEN" https://sandbox.zenodo.org/api/deposit/depositions`
-
-### GitHub API rate limiting
-
-**Problem:** Tests fail with rate limit errors
-
-**Solutions:**
-
-- Authenticated requests have higher rate limits
-- Wait for rate limit reset (check `X-RateLimit-Reset` header)
-- Use a dedicated test account to avoid conflicts with personal usage
-
-### LaTeX compilation failures
-
-**Problem:** Rendering tests fail
-
-**Solutions:**
-
-- Install LaTeX: `sudo apt-get install texlive-latex-base texlive-xetex` (Ubuntu) or `brew install mactex` (macOS)
-- Verify installation: `which xelatex`
-- Skip LaTeX tests: `uv run pytest tests/ -m "not requires_latex"`
-
-### Cleanup failures
-
-**Problem:** Test artifacts not being deleted
-
-**Solutions:**
-
-- Check token permissions include deletion rights
-- Manually delete via web UI
-- Check cleanup logs for specific errors
-
-## Environment Setup Examples
-
-### Ubuntu/Debian
-
-```bash
-# Install LaTeX
-sudo apt-get update
-sudo apt-get install -y texlive-latex-base texlive-xetex pandoc
-
-# Install Python dependencies
-uv sync
-
-# Configure credentials
-cp infrastructure/config/.env.template .env
-nano .env  # Add your credentials
-
-# Run tests
-uv run pytest tests/
-```
-
-### macOS
-
-```bash
-# Install LaTeX
-brew install --cask mactex
-brew install pandoc
-
-# Install Python dependencies
-uv sync
-
-# Configure credentials
-cp infrastructure/config/.env.template .env
-nano .env  # Add your credentials
-
-# Run tests
-uv run pytest tests/
-```
-
-### Windows
-
-```powershell
-# Install MiKTeX or TeX Live
-# Install pandoc from https://pandoc.org/
-
-# Install Python dependencies
-uv sync
-
-# Configure credentials
-copy infrastructure\config\.env.template .env
-notepad .env  # Add your credentials
-
-# Run tests
-uv run pytest tests/
-```
-
-## CI/CD Integration
-
-For continuous integration, store credentials as secrets:
-
-### GitHub Actions
-
-```yaml
-name: Tests
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Setup credentials
-        run: |
-          echo "ZENODO_SANDBOX_TOKEN=${{ secrets.ZENODO_SANDBOX_TOKEN }}" >> .env
-          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> .env
-          echo "GITHUB_REPO=${{ secrets.GITHUB_REPO }}" >> .env
-
-      - name: Install LaTeX
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y texlive-latex-base pandoc
-
-      - name: Run tests
-        run: uv run pytest tests/
-```
-
-## Support
-
-For issues or questions:
-
-1. Check this documentation
-2. Review test output with `-v` flag for detailed skip reasons
-3. Verify credentials are correctly configured
-4. Check external service status pages
-5. File an issue with details of the problem
-
-## See Also
-
-- [tests/AGENTS.md](../../../tests/AGENTS.md) - Test suite documentation
-- [tests/infra_tests/AGENTS.md](../../../tests/infra_tests/AGENTS.md) - Infrastructure test suite layout
-- [AGENTS.md](../AGENTS.md) - System documentation
+Do not write secrets to `.env` with shell `echo`, upload `.env` as an artifact,
+or expose secrets to arbitrary pull-request code. Use GitHub environments and
+required reviewers for production credentials.
+
+## Local optional tools
+
+Ollama and LaTeX are capability-gated but are not credentials. Their missing
+tool behavior, explicit opt-out commands, and timeout policy are documented in
+[`../optional-dependencies.md`](../optional-dependencies.md). Ollama can pull
+large model data and execute local model code, so installation and model pulls
+still require operator intent.
+
+## Cleanup and incident handling
+
+- Record every remote identifier created by a live run before attempting
+  cleanup.
+- Use provider-native listing/read APIs to verify the exact target before a
+  delete operation.
+- Do not run wildcard, account-wide, or repository-delete cleanup commands.
+- If a credential may have appeared in output, logs, git history, or a URL,
+  rotate it at the provider. Deleting the local value is not sufficient.
+- Follow
+  [`../../security/credential-rotation-handoff.md`](../../security/credential-rotation-handoff.md)
+  for a confirmed leak.
+
+## See also
+
+- [`../../../tests/AGENTS.md`](../../../tests/AGENTS.md) — test-suite policy
+- [`../../../.github/AGENTS.md`](../../../.github/AGENTS.md) — hosted CI jobs
+- [`../optional-dependencies.md`](../optional-dependencies.md) — local capability gates
+- [`../../security/threat-model.md`](../../security/threat-model.md) — publication and credential boundaries
+- [`../../guides/publication-runbook.md`](../../guides/publication-runbook.md) — owner-operated release flow

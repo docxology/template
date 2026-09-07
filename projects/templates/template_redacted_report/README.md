@@ -51,8 +51,9 @@ The canonical renderer is https://github.com/docxology/template with `--project 
 
 Primary configuration lives in `manuscript/config.yaml`; forkable defaults live in `manuscript/config.yaml.example`. Public example segments, redaction decisions, release-policy name, and invented review records live in `data/example_segments.json`; they contain invented fixture text only.
 
-`manuscript/config.yaml` declares a single normal Stage 02 analysis script,
-`scripts/01_generate_release_artifacts.py`. It loads the fixture through the
+`manuscript/config.yaml` declares two normal Stage 02 analysis scripts, run in
+order: `scripts/01_generate_release_artifacts.py`, then
+`scripts/02_build_figures.py`. The first loads the fixture through the
 typed `src/redacted_report/artifacts.py` contract, applies
 `intelligence_release_review` and `build_comprehensive_release_packet`, then
 writes two deterministic public projections:
@@ -64,8 +65,11 @@ writes two deterministic public projections:
 
 The full sanitized packet exists only in memory during analysis. The public
 projections deliberately omit segment text, reviewer rationales, and reviewer
-identities. Development PDF variants remain explicit opt-in proof artifacts and
-are not part of the normal Stage 02 order.
+identities. The second Stage 02 script, `scripts/02_build_figures.py`, writes
+the deterministic exemplar figures and `figure_registry.json` to
+`output/figures/` via `src/redacted_report/figures.py`. Development PDF
+variants remain explicit opt-in proof artifacts and are not part of the
+normal Stage 02 order.
 
 `render.redaction_visual` declares the proofing surface: redaction styles `blackout`, `whiteout`, `grayout`, and `blur`; PDF backgrounds `white`, `gray`, `black`, and `blur`; and near-zero left/right PDF margins for the minimal report style. The blur background is a review mode that blurs non-redacted context while leaving redaction spans visibly treated by the selected style.
 
@@ -87,7 +91,7 @@ uv run pytest projects/templates/template_redacted_report/tests --cov=projects/t
 
 ## Outputs and validation
 
-The validator checks classification ceilings, source-control coverage, redaction bounds, residual sensitive markers, release authority, orphan redaction decisions, reviewer approvals, and mosaic-risk accumulation. It builds sanitized release packets in memory, paragraph-level audit tables, source-safe redaction ledgers, segment hash manifests, residual-risk reports, review-gate reports, and organization-specific classification taxonomy adapters, including an intelligence-style taxonomy for `TOP SECRET//SCI`-style markings in invented fixtures. The Stage 02 writer projects those results into deterministic, text-free JSON evidence; Stage 04 validation checks the rendered public report once generated.
+The validator checks classification ceilings, source-control coverage, redaction bounds, residual sensitive markers, release authority, orphan redaction decisions, reviewer approvals, and mosaic-risk accumulation. It builds sanitized release packets in memory, paragraph-level audit tables, source-safe redaction ledgers, segment hash manifests, residual-risk reports, review-gate reports, and organization-specific classification taxonomy adapters, including an intelligence-style taxonomy for `TOP SECRET//SCI`-style markings in invented fixtures. A manuscript/audit binding receipt prevents source or audit drift. The optional pixel-regression gate is fail-closed: it reports `unavailable` when a pinned raster tool or baseline is absent rather than treating missing visual evidence as a pass. The Stage 02 writer projects those results into deterministic, text-free JSON evidence; Stage 04 validation checks the rendered public report once generated.
 
 ## Publication and boundaries
 

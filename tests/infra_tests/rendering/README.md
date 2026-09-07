@@ -47,12 +47,53 @@ uv run pytest tests/infra_tests/rendering/test_web_renderer.py -v
 - Cross-reference handling
 - Style application
 
-### Slide Renderer Tests (`test_slides_renderer_core.py`)
+The real Chromium regression in `mathjax_reflow.spec.cjs` typesets an equation
+through the shared pinned MathJax configuration, then changes the viewport from
+desktop to 200% and 400% equivalent widths and back. It checks visible equation
+numbers, unchanged input mathematics, and document width after asynchronous
+typesetting completes. It runs in the Ubuntu/Python 3.14 infrastructure CI cell.
+Run it locally from the repository root with:
+
+```bash
+npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
+.tmp/playwright-node/node_modules/.bin/playwright install chromium
+NODE_PATH="$PWD/.tmp/playwright-node/node_modules" \
+  .tmp/playwright-node/node_modules/.bin/playwright test \
+  tests/infra_tests/rendering/mathjax_reflow.spec.cjs \
+  --workers=1 --output=.tmp/mathjax-browser
+```
+
+The probe requires the pinned MathJax CDN assets; it is not an offline test.
+
+### Slide Renderer Tests
+
+The slide contract is partitioned across `test_slides_bibliography.py`,
+`test_slides_frame_splitting.py`, `test_slides_math_header.py`,
+`test_slides_module_contract.py`, `test_slides_render_executions.py`,
+`test_slides_tex_figures.py`,
+`test_slides_accessibility.py`, `test_slides_accessibility_reveal_regressions.py`,
+`test_slides_beamer_accessibility.py`, `test_slides_beamer_safe_area.py`,
+`test_slides_crossref.py`, `test_slides_figure_area.py`,
+`test_slides_formal_content.py`, and `test_slides_identifier_integrity.py`.
 
 Presentation slide generation:
 
 ```bash
-uv run pytest tests/infra_tests/rendering/test_slides_renderer_core.py -v
+uv run pytest \
+  tests/infra_tests/rendering/test_slides_bibliography.py \
+  tests/infra_tests/rendering/test_slides_frame_splitting.py \
+  tests/infra_tests/rendering/test_slides_math_header.py \
+  tests/infra_tests/rendering/test_slides_module_contract.py \
+  tests/infra_tests/rendering/test_slides_render_executions.py \
+  tests/infra_tests/rendering/test_slides_tex_figures.py \
+  tests/infra_tests/rendering/test_slides_accessibility.py \
+  tests/infra_tests/rendering/test_slides_accessibility_reveal_regressions.py \
+  tests/infra_tests/rendering/test_slides_beamer_accessibility.py \
+  tests/infra_tests/rendering/test_slides_beamer_safe_area.py \
+  tests/infra_tests/rendering/test_slides_crossref.py \
+  tests/infra_tests/rendering/test_slides_figure_area.py \
+  tests/infra_tests/rendering/test_slides_formal_content.py \
+  tests/infra_tests/rendering/test_slides_identifier_integrity.py -v
 ```
 
 **Test Coverage:**
@@ -60,6 +101,14 @@ uv run pytest tests/infra_tests/rendering/test_slides_renderer_core.py -v
 - Reveal.js HTML slides
 - Slide structure
 - Content formatting
+- Archive-profile backwards compatibility
+- Semantic block-boundary composition and stable density diagnostics
+- 80-word prose, eight-row table, 70% figure-area, and 28/20/16-point contracts
+- Reveal.js headings, landmarks, keyboard support, figure alternatives, long descriptions, and manuscript links
+- Beamer typography floors and explicit untagged-derivative boundary
+- Post-compile Beamer glyph/rule safe areas and the fail-loud `pdfplumber` capability boundary
+- Figure max-fit allocation, authored-style rejection, and intrinsic raster geometry
+- Raw formal-content parity and contiguous identifier preservation
 
 ## Test Categories
 

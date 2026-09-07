@@ -42,3 +42,23 @@ except ImportError:
     )
 
     assert scan_python_310_compatibility([source], repo_root=tmp_path) == ()
+
+
+def test_scanner_reports_repo_relative_display_paths(tmp_path: Path) -> None:
+    """Reported ``path`` is repo-relative after the resolve-once optimization.
+
+    Guard: the display path must stay identical to a `path.resolve()`
+    relative-to `repo_root.resolve()` rendering even though the scanner now
+    resolves each source file only once.
+    """
+    repo = tmp_path / "repo"
+    (repo / "pkg").mkdir(parents=True)
+    bad = repo / "pkg" / "bad.py"
+    bad.write_text("import tomllib\n", encoding="utf-8")
+
+    issues = scan_python_310_compatibility([repo / "pkg"], repo_root=repo)
+
+    assert issues
+    assert {issue.rule for issue in issues} == {"PY310.API"}
+    assert all(issue.path == "pkg/bad.py" for issue in issues)
+    assert all(not Path(issue.path).is_absolute() for issue in issues)

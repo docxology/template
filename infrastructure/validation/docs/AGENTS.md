@@ -68,6 +68,8 @@ Shared via [`scan_scope.py`](scan_scope.py) (`DEFAULT_EXCLUDE_PARTS`, `SKILL_EVA
 | Path component | Rationale |
 | --- | --- |
 | `output/`, `projects/archive/`, `projects/working/` | Regenerated or non-executed trees |
+| `.agents/`, `.cursor/` | Tracked agent/IDE distribution metadata; validated by their own manifest/reachability gates |
+| Declared Git submodules | Third-party source trees owned by their upstream repository |
 | `_generated/` | Machine-generated snippets |
 | `_skill-eval/` | Regenerated skill-eval harness fixtures under `docs/prompts/_skill-eval/` |
 
@@ -88,7 +90,8 @@ reduces subprocess churn; a repo-wide total timeout caps wall time on large doc 
 | Environment variable | Default | Purpose |
 | --- | --- | --- |
 | `TEMPLATE_MERMAID_LINT_TIMEOUT` | `30` | Per-file `mmdc` timeout (seconds) |
-| `TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT` | `300` | Total budget across all files in one lint run |
+| `TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT` | `300` | Total-budget floor across all files in one lint run; without an explicit caller value the default budget scales with discovered block count (`scaled_total_timeout`, ~2s/block, floored at 300s and capped at 3600s). An explicit `total_timeout_seconds` argument always wins verbatim. |
+| `TEMPLATE_MERMAID_LINT_SECONDS_PER_BLOCK` | `2.0` | Per-block seconds used by the scaled default total budget (see above) |
 | `TEMPLATE_MERMAID_LINT_BATCH_SIZE` | `10` | Max diagrams per batch `mmdc` invocation |
 | `CHROME_EXECUTABLE_PATH` | unset | Explicit Chrome/Chromium binary for puppeteer (overrides detection) |
 

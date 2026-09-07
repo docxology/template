@@ -20,7 +20,7 @@ and render checkout.
 
 ## Active Projects
 
-Paths under `projects/` are organized as **typed subfolders** (`templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) and **change over time** as projects rotate between lifecycle folders. The set guaranteed to remain as **permanent canonical exemplars** — git-tracked under `projects/templates/` — is mirrored in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md):
+Paths under `projects/` are organized as **typed subfolders** (`templates/`, `active/`, `working/`, `ongoing/`, `archive/`) and **change over time** as projects rotate between lifecycle folders. The set guaranteed to remain as **permanent canonical exemplars** — git-tracked under `projects/templates/` — is mirrored in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md):
 
 - [`templates/template_code_project/`](templates/template_code_project/) — code-centric exemplar (numerical optimization, dashboards, JSON-backed invariants)
 - [`templates/template_data_descriptor/`](templates/template_data_descriptor/) — dataset descriptor/data-paper exemplar (schema, inventory, provenance, quality checks, license boundary)
@@ -71,10 +71,10 @@ local private symlinks and is intentionally broader.
 | [`template_code_project`](templates/template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | see canonical facts | see canonical facts |
 | [`template_data_descriptor`](templates/template_data_descriptor/) | Dataset descriptor/data-paper contract | yes (`src/data_descriptor/*`) | no (curated) | no | see canonical facts | see canonical facts |
 | [`template_gold_refinement`](templates/template_gold_refinement/) | Metallurgical gold-refining analogy for manuscript composition | yes (`src/refinery.py`, `src/composition.py`) | no (curated) | no (planned) | see canonical facts | see canonical facts |
-| [`template_literature_meta_analysis`](templates/template_literature_meta_analysis/) | Generic literature meta-analysis (multi-engine retrieval + de-dup + full-text + embeddings + bibliometrics) | yes (`src/retrieval.py`) | no (curated) | yes (bibliometric figures) | see canonical facts | see canonical facts |
+| [`template_literature_meta_analysis`](templates/template_literature_meta_analysis/) | Generic literature meta-analysis (multi-engine retrieval + de-dup + full-text + embeddings + bibliometrics) | yes (`src/literature/*`, `src/analysis/*`) | no (curated) | yes (bibliometric figures) | see canonical facts | see canonical facts |
 | [`template_prose_project`](templates/template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
 | [`template_autoresearch_project`](templates/template_autoresearch_project/) | Deterministic AutoResearch loop | yes (`src/loop.py`) | no (read-only validation) | no | see canonical facts | see canonical facts |
-| [`template_autoscientists`](templates/template_autoscientists/) | Coordination-mechanism testbed | yes (`src/coordination/*`) | no (curated) | no | see canonical facts | see canonical facts |
+| [`template_autoscientists`](templates/template_autoscientists/) | Coordination-mechanism testbed | yes (`src/agents.py`, `src/comparison.py`) | no (curated) | no | see canonical facts | see canonical facts |
 | [`template_active_inference`](templates/template_active_inference/) | Active Inference multi-track research | yes (multiple tracks) | no (curated) | yes | see canonical facts | see canonical facts |
 | [`template_advanced_literature_review`](templates/template_advanced_literature_review/) | Advanced multi-phase literature review | yes (`src/multi_phase/*`) | fixture-backed | yes | see canonical facts | see canonical facts |
 | [`template_eda_notebook`](templates/template_eda_notebook/) | Exploratory data analysis notebook | yes (`src/eda/*`) | n/a | yes (analysis figures) | see canonical facts | see canonical facts |
@@ -166,7 +166,7 @@ Projects under `projects/templates/` (the tracked exemplars) and `projects/activ
 
 #### 📦 **Non-Rendered Projects (`working/`, `archive/`, optional legacy mirrors)**
 
-Projects under `projects/working/` and `projects/archive/` are **preserved but not executed by default**. Optional legacy `projects/published/` and `projects/other/` mirrors are treated the same way when present:
+Projects under `projects/working/` and `projects/archive/` are **preserved but not executed by default**:
 
 - **NOT discovered** by infrastructure discovery functions
 - **NOT listed** in `run.sh` menu
@@ -186,7 +186,7 @@ mv ../projects/working/myproject ../projects/active/myproject
 
 For confidential work, prefer the configured external private lifecycle repo:
 the simplified sidecar uses `working/` and `archive/` by default; optional
-legacy `active/`, `published/`, and `other/` folders are linked when present.
+legacy `active/` folder is linked when present.
 Only `templates/` and optional `active/` are discovered/rendered by default; the
 other mirrors are for inspection or explicit targeted work. Move private work
 between lifecycle folders instead of committing it here.
@@ -828,7 +828,7 @@ mv ../projects/working/myproject ../projects/active/myproject
 
 **Solution:**
 
-1. Check if project exists in `projects/archive/` (or `working/`, `other/`)
+1. Check if project exists in `projects/archive/` (or `working/`, `ongoing/`)
 2. Render it explicitly with a qualified name (`archive/<name>` or `working/<name>`) when you do not want default discovery
 3. Validate project structure (must have `src/` and `tests/`)
 4. Move through optional sidecar `active/` only when it should appear in the normal menu and all-project runs

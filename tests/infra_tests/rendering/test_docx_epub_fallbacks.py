@@ -18,7 +18,9 @@ from __future__ import annotations
 
 import shutil
 from pathlib import Path
+from zipfile import ZipFile
 
+import defusedxml.ElementTree as safe_et
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
@@ -57,6 +59,32 @@ A second chapter with **bold** and *italic* text.
 """
 
 _MINIMAL_MD = "# Title\n\nSome content.\n"
+
+
+def _ebook_archive_text(path: Path) -> str:
+    """Return decoded XML/XHTML text from a DOCX or EPUB archive."""
+    with ZipFile(path) as archive:
+        members = [name for name in archive.namelist() if name.endswith((".xml", ".xhtml", ".html", ".opf"))]
+        return "\n".join(archive.read(name).decode("utf-8", errors="ignore") for name in members)
+
+
+def _epub_package_identifiers(path: Path) -> tuple[str, str]:
+    """Return the OPF and NCX identifiers from one real ebook-stage EPUB."""
+
+    with ZipFile(path) as archive:
+        opf_name = next(name for name in archive.namelist() if name.endswith(".opf"))
+        ncx_name = next(name for name in archive.namelist() if name.endswith(".ncx"))
+        opf = safe_et.fromstring(archive.read(opf_name))
+        ncx = safe_et.fromstring(archive.read(ncx_name))
+    package_identifier = opf.find(".//{http://purl.org/dc/elements/1.1/}identifier")
+    assert package_identifier is not None and package_identifier.text is not None
+    navigation_identifier = next(
+        node.get("content")
+        for node in ncx.findall(".//{http://www.daisy.org/z3986/2005/ncx/}meta")
+        if node.get("name") == "dtb:uid"
+    )
+    assert navigation_identifier is not None
+    return package_identifier.text, navigation_identifier
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -312,30 +340,39 @@ class TestMobiRendererFallbacks:
             )
 
     @needs_pandoc
-    @pytest.mark.skipif(_CALIBRE is not None, reason="calibre is installed — test the absence path only")
-    def test_calibre_absent_in_environment_raises_rendering_error(self, tmp_path: Path) -> None:
-        """When calibre is genuinely absent from the environment, render_mobi fails.
+    def test_missing_ebook_convert_raises_rendering_error(self, tmp_path: Path) -> None:
+        """An unavailable ebook-convert binary fails closed with the install hint.
 
-        This asserts the real fallback: pandoc is present, but calibre is not,
-        so the MOBI render raises RenderingError with the calibre installation hint.
+        Exercises the real ``shutil.which`` resolution with an explicitly
+        unresolvable binary name, so the contract holds in every environment
+        regardless of whether calibre is installed.
         """
         src = tmp_path / "combined.md"
         src.write_text(_MINIMAL_MD, encoding="utf-8")
         out = tmp_path / "out.mobi"
         with pytest.raises(RenderingError, match="calibre ebook-convert binary not found"):
-            render_mobi(src, out)
+            render_mobi(src, out, calibre_path="ebook-convert-not-installed-fixture")
 
     @needs_pandoc
-    @pytest.mark.skipif(_CALIBRE is None, reason="calibre not installed — cannot test full pipeline")
-    def test_successful_mobi_render_when_calibre_present(self, tmp_path: Path) -> None:
-        """When both pandoc and calibre are present, render_mobi succeeds."""
+    def test_mobi_render_environment_contract(self, tmp_path: Path) -> None:
+        """render_mobi succeeds with calibre present and fails closed without it.
+
+        Both branches are real production behavior: with calibre installed the
+        full pandoc→EPUB→MOBI pipeline runs; without it the typed absence
+        error fires. The test asserts whichever contract this environment
+        supports, so the suite never skips.
+        """
         src = tmp_path / "combined.md"
         src.write_text(SAMPLE_MD, encoding="utf-8")
         out = tmp_path / "out.mobi"
-        result = render_mobi(src, out, title="Mobi Test", author="Author")
-        assert isinstance(result, MobiRenderResult)
-        assert out.exists()
-        assert result.size_bytes > 0
+        if _CALIBRE is not None:
+            result = render_mobi(src, out, title="Mobi Test", author="Author")
+            assert isinstance(result, MobiRenderResult)
+            assert out.exists()
+            assert result.size_bytes > 0
+        else:
+            with pytest.raises(RenderingError, match="calibre ebook-convert binary not found"):
+                render_mobi(src, out)
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -558,6 +595,22 @@ class TestEbookStageFallbacks:
         exit_code = run_ebook_generation(repo_root, "myproject", skip_formats_arg="epub,mobi,docx")
         assert exit_code == 0
 
+    def test_duplicate_citation_key_returns_failure_before_render(self, tmp_path: Path) -> None:
+        """Ambiguous multi-file keys fail the stage even when Pandoc is unavailable."""
+        repo_root = tmp_path / "repo"
+        project_root = repo_root / "projects" / "working" / "myproject"
+        (project_root / "src").mkdir(parents=True)
+        (project_root / "src" / "__init__.py").write_text("", encoding="utf-8")
+        manuscript_dir = project_root / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "a.bib").write_text("@article{shared,title={A}}\n", encoding="utf-8")
+        (manuscript_dir / "b.bib").write_text("@book{shared,title={B}}\n", encoding="utf-8")
+        combined = project_root / "output" / "pdf" / "_combined_manuscript.md"
+        combined.parent.mkdir(parents=True)
+        combined.write_text("# Evidence\n\nSee [@shared].\n", encoding="utf-8")
+
+        assert run_ebook_generation(repo_root, "working/myproject", skip_formats_arg="mobi,docx") == 1
+
     def test_missing_pandoc_with_source_produces_partial_or_failure(self, tmp_path: Path) -> None:
         """When pandoc is absent, ebook stage returns 0 (partial) or 1 (all failed).
 
@@ -615,9 +668,106 @@ class TestEbookStageFallbacks:
         assert exit_code in (0, 1)
 
     @needs_pandoc
-    @pytest.mark.skipif(_CALIBRE is None, reason="calibre not installed")
-    def test_full_pipeline_with_calibre_present(self, tmp_path: Path) -> None:
-        """When both pandoc and calibre are present, all formats succeed (exit 0)."""
+    def test_multi_bibliography_citations_resolve_in_epub_and_docx(self, tmp_path: Path) -> None:
+        """The stage's real Pandoc outputs consume every top-level ``.bib`` file."""
+        repo_root = tmp_path / "repo"
+        project_root = repo_root / "projects" / "working" / "myproject"
+        (project_root / "src").mkdir(parents=True)
+        (project_root / "src" / "__init__.py").write_text("", encoding="utf-8")
+        manuscript_dir = project_root / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "references.bib").write_text(
+            "@article{alpha2020primary,\n"
+            "  author={Alpha, Ada},\n"
+            "  title={Primary Source},\n"
+            "  journal={Journal One},\n"
+            "  year={2020}\n"
+            "}\n",
+            encoding="utf-8",
+        )
+        (manuscript_dir / "z_supplemental.bib").write_text(
+            "@article{omega2021supplement,\n"
+            "  author={Omega, Orla},\n"
+            "  title={Supplemental Source},\n"
+            "  journal={Journal Two},\n"
+            "  year={2021}\n"
+            "}\n",
+            encoding="utf-8",
+        )
+        combined = project_root / "output" / "pdf" / "_combined_manuscript.md"
+        combined.parent.mkdir(parents=True)
+        combined.write_text(
+            "# Evidence\n\nBoth sources matter [@alpha2020primary; @omega2021supplement].\n",
+            encoding="utf-8",
+        )
+
+        exit_code = run_ebook_generation(repo_root, "working/myproject", skip_formats_arg="mobi")
+
+        assert exit_code == 0
+        ebook_dir = project_root / "output" / "ebook"
+        for artifact in (ebook_dir / "myproject.docx", ebook_dir / "myproject.epub"):
+            archive_text = _ebook_archive_text(artifact)
+            assert "Primary Source" in archive_text
+            assert "Supplemental Source" in archive_text
+            assert "[@alpha2020primary" not in archive_text
+            assert "@omega2021supplement]" not in archive_text
+
+    @needs_pandoc
+    def test_epub_identifier_tracks_effective_body_media(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """The production ebook stage binds packaged media bytes into its UUID."""
+
+        monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+        repo_root = tmp_path / "repo"
+        project_root = repo_root / "projects" / "working" / "myproject"
+        (project_root / "src").mkdir(parents=True)
+        (project_root / "src" / "__init__.py").write_text("", encoding="utf-8")
+        figures_dir = project_root / "output" / "figures"
+        figures_dir.mkdir(parents=True)
+        figure = figures_dir / "identity.svg"
+        figure.write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">'
+            '<title>First media revision</title><rect width="10" height="10" fill="red"/></svg>\n',
+            encoding="utf-8",
+        )
+        combined = project_root / "output" / "pdf" / "_combined_manuscript.md"
+        combined.parent.mkdir(parents=True)
+        combined.write_text(
+            "# Media evidence\n\n![Accessible identity fixture](figures/identity.svg)\n",
+            encoding="utf-8",
+        )
+        output = project_root / "output" / "ebook" / "myproject.epub"
+
+        assert run_ebook_generation(repo_root, "working/myproject", skip_formats_arg="mobi,docx") == 0
+        first_package_id, first_navigation_id = _epub_package_identifiers(output)
+        assert first_package_id == first_navigation_id
+
+        figure.write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">'
+            '<title>Second media revision</title><rect width="10" height="10" fill="blue"/></svg>\n',
+            encoding="utf-8",
+        )
+        assert run_ebook_generation(repo_root, "working/myproject", skip_formats_arg="mobi,docx") == 0
+        changed_package_id, changed_navigation_id = _epub_package_identifiers(output)
+
+        assert changed_package_id == changed_navigation_id
+        assert changed_package_id != first_package_id
+        with ZipFile(output) as archive:
+            svg_payloads = [archive.read(name) for name in archive.namelist() if name.endswith(".svg")]
+        assert any(b"Second media revision" in payload for payload in svg_payloads)
+
+    @needs_pandoc
+    def test_full_pipeline_ebook_generation_contract(self, tmp_path: Path) -> None:
+        """The ebook stage degrades per-format and the suite never skips.
+
+        With calibre installed, all three formats succeed (exit 0). Without
+        it, EPUB and DOCX still render via pandoc, MOBI fails closed, and
+        the stage reports partial success (exit 0) — the documented
+        per-format isolation contract of ``run_ebook_generation``.
+        """
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
         project_root = repo_root / "projects" / "active" / "myproject"
@@ -635,7 +785,10 @@ class TestEbookStageFallbacks:
         assert ebook_dir.is_dir()
         assert (ebook_dir / "myproject.epub").exists()
         assert (ebook_dir / "myproject.docx").exists()
-        assert (ebook_dir / "myproject.mobi").exists()
+        if _CALIBRE is not None:
+            assert (ebook_dir / "myproject.mobi").exists()
+        else:
+            assert not (ebook_dir / "myproject.mobi").exists()
 
 
 # ════════════════════════════════════════════════════════════════════════════════

@@ -26,7 +26,7 @@ class TestRepoScannerAdditional:
         scanner.src_modules = {"alpha", "beta"}
         scanner._find_documented_modules()
 
-        assert "alpha" in scanner.documented_modules
+        assert scanner.documented_modules == {"alpha", "beta"}
 
     def test_check_code_accuracy_no_scripts(self, tmp_path):
         """Test code accuracy with no scripts."""
@@ -34,7 +34,7 @@ class TestRepoScannerAdditional:
         scanner.script_files = []
         scanner._check_code_accuracy()
 
-        assert scanner.results is not None
+        assert scanner.results.accuracy_issues == []
 
     def test_thin_orchestrator_empty_script(self, tmp_path):
         """Test thin orchestrator check with empty script."""
@@ -46,7 +46,9 @@ class TestRepoScannerAdditional:
         scanner.script_files = [scripts / "empty.py"]
         scanner._check_thin_orchestrator_pattern()
 
-        assert scanner.results is not None
+        architecture_issues = [issue for issue in scanner.results.accuracy_issues if issue.category == "architecture"]
+        assert len(architecture_issues) == 1
+        assert "thin orchestrator" in architecture_issues[0].message
 
     def test_discover_repo_utilities(self, tmp_path):
         """Test discovering scripts in repo_utilities."""
@@ -57,19 +59,25 @@ class TestRepoScannerAdditional:
         scanner = RepositoryScanner(tmp_path)
         scanner._discover_structure()
 
-        # Should find script in repo_utilities
-        assert len(scanner.script_files) >= 0
+        assert scanner.script_files == [utilities / "helper.py"]
 
 
 class TestRepoScannerStatistics:
     """Test statistics generation."""
 
     def test_statistics_after_scan(self, tmp_path):
-        """Test that statistics are generated after scan."""
+        """A completed scan exposes useful aggregate counts."""
         (tmp_path / "src").mkdir()
         (tmp_path / "src" / "mod.py").write_text("# Module")
 
         scanner = RepositoryScanner(tmp_path)
         results = scanner.scan_all()
 
-        assert results.statistics is not None or True
+        assert results.statistics == {
+            "repo_modules": 1,
+            "script_files": 0,
+            "test_files": 0,
+            "documented_modules": 0,
+            "accuracy_issues": 0,
+            "completeness_gaps": 2,
+        }

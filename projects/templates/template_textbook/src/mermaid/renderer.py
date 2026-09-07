@@ -24,15 +24,25 @@ class RenderResult:
     rendered_png: bool  # True if mmdc produced a PNG; False if .mmd fallback
 
 
-def _resolve_mmdc() -> str | None:
-    """Resolve ``mmdc`` from PATH or a repository-local Node install."""
-    candidate = shutil.which("mmdc")
-    if candidate:
-        return candidate
-    for parent in Path(__file__).resolve().parents:
+def _resolve_mmdc(start: Path | None = None) -> str | None:
+    """Resolve ``mmdc`` from a repository-local Node install or PATH.
+
+    The repository-local install is preferred over whatever happens to be on
+    PATH so the canonical checkout renders deterministically against the
+    version pinned in the repo's own ``package.json`` (a global ``mmdc`` on
+    PATH would silently shadow it).
+
+    ``start`` defaults to this module file. Tests pass a file under a temporary
+    tree so the walk-up does not depend on a developer or CI Node install.
+    """
+    origin = Path(__file__) if start is None else start
+    for parent in origin.resolve().parents:
         local_candidate = parent / "node_modules" / ".bin" / "mmdc"
         if local_candidate.exists():
             return str(local_candidate)
+    candidate = shutil.which("mmdc")
+    if candidate:
+        return candidate
     return None
 
 

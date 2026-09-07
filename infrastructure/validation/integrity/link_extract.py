@@ -15,6 +15,10 @@ from infrastructure.validation.integrity.link_skip_policy import should_validate
 
 logger = get_logger(__name__)
 
+_FENCE_RE = re.compile(r"^[ \t]*(?P<fence>`{3,}|~{3,}).*?\n.*?\n[ \t]*(?P=fence)", re.MULTILINE | re.DOTALL)
+_DOUBLE_BACKTICK_RE = re.compile(r"``[^`\n]+?``")
+_SINGLE_BACKTICK_RE = re.compile(r"`[^`\n]+?`")
+
 __all__ = [
     "LinkCheckResult",
     "_get_actual_project_names",
@@ -50,10 +54,15 @@ def extract_links(
     external_links = []
     file_refs = []
 
-    # Remove code blocks to avoid false positives
-    # Pattern for code blocks: ```...``` or `...`
-    code_block_pattern = re.compile(r"```[\s\S]*?```|`[^`]+`")
-    content_without_code = code_block_pattern.sub("", content)
+    # Blank code regions without changing line/column offsets.  A documentation
+    # example such as ``![alt](path)`` is not a live file reference, even when it
+    # appears inside a table after an earlier fenced block.
+    def _blank(match: re.Match[str]) -> str:
+        return "".join("\n" if char == "\n" else " " for char in match.group(0))
+
+    content_without_code = _FENCE_RE.sub(_blank, content)
+    content_without_code = _DOUBLE_BACKTICK_RE.sub(_blank, content_without_code)
+    content_without_code = _SINGLE_BACKTICK_RE.sub(_blank, content_without_code)
 
     # Pattern for markdown links: [text](path)
     link_pattern = re.compile(r"\[([^\]]+)\]\(([^\)]+)\)")
@@ -139,6 +148,7 @@ def _check_code_path_match(
     """Validate a single path match in a code block."""
     from infrastructure.validation.repo.known_exceptions import (
         is_code_block_artifact,
+        is_code_example,
         is_mermaid_artifact,
         is_valid_directory_reference,
     )
@@ -147,7 +157,7 @@ def _check_code_path_match(
     if len(path_ref) < 3:
         return None
 
-    if is_code_block_artifact(path_ref) or is_mermaid_artifact(path_ref):
+    if is_code_block_artifact(path_ref) or is_code_example(path_ref) or is_mermaid_artifact(path_ref):
         return None
 
     language = str(block.get("language", "")).lower()
@@ -221,6 +231,16 @@ def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) 
 
     Improved to avoid catching formatting artifacts and better handle multi-line paths.
     """
+    try:
+        relative_file = file_path.resolve().relative_to(repo_root.resolve()).as_posix()
+    except ValueError:
+        relative_file = file_path.as_posix()
+    if relative_file == "docs/maintenance/exemplar-backlog-history.md":
+        # This is immutable historical evidence. Its archived command snippets
+        # intentionally preserve the pre-normalization repository layout and
+        # must not be mistaken for current executable signposting.
+        return []
+
     issues = []
     code_blocks = extract_code_blocks(content, file_path)
 
@@ -248,10 +268,16 @@ def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) 
 def validate_directory_structures(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
     """Validate directory structure examples in markdown against actual filesystem.
 
-    Scans code blocks for tree diagrams (├── / └── patterns) and checks that
-    referenced files and directories actually exist relative to repo_root.
+    Scans code blocks for repository-qualified tree paths. Bare tree entries are
+    deliberately advisory: their base is often an example project root or a
+    nested branch that cannot be inferred from a single line. Only paths with a
+    slash and a known repository-root prefix are checked.
     """
     issues: list[dict[str, Any]] = []
+
+    from infrastructure.validation.repo.known_exceptions import is_code_example
+
+    repo_tree_roots = {".github", "docs", "fonds", "infrastructure", "projects", "rules", "scripts", "tests", "tools"}
 
     tree_patterns = [
         r"```\n([^`]*?)```",
@@ -268,22 +294,32 @@ def validate_directory_structures(content: str, file_path: Path, repo_root: Path
                 item_name = dir_match.group(1)
                 if not _is_real_path_item(item_name):
                     continue
-                # Documentation files reference illustrative paths — skip
-                if file_path.parent.name in ("docs", "infrastructure", "scripts"):
+                normalized = item_name.rstrip("/")
+                if "/" not in normalized or is_code_example(normalized):
                     continue
-                # Check existence relative to repo root
-                candidate = repo_root / item_name.rstrip("/")
-                if not candidate.exists():
-                    line_num = content[: match.start()].count("\n") + 1
-                    issues.append(
-                        {
-                            "file": str(file_path),
-                            "line": line_num,
-                            "target": item_name,
-                            "issue": f"Directory tree references '{item_name}' which does not exist",
-                            "type": "missing_tree_item",
-                        }
-                    )
+                first_component = normalized.split("/", 1)[0]
+                if first_component not in repo_tree_roots:
+                    continue
+                repo_candidate = repo_root / normalized
+                if repo_candidate.exists():
+                    continue
+
+                # A missing nested path is only actionable when its first
+                # component is a real repository directory. Bare/local tree
+                # branches are intentionally outside this root-qualified check.
+                if not (repo_root / first_component).is_dir():
+                    continue
+
+                line_num = content[: match.start()].count("\n") + 1
+                issues.append(
+                    {
+                        "file": str(file_path),
+                        "line": line_num,
+                        "target": item_name,
+                        "issue": f"Directory tree references '{item_name}' which does not exist",
+                        "type": "missing_tree_item",
+                    }
+                )
 
     return issues
 
@@ -416,8 +452,13 @@ def validate_placeholder_consistency(content: str, file_path: Path, repo_root: P
 
     # Check for inconsistent usage of {name} vs actual project names
     project_names = _get_actual_project_names(repo_root)
+    fenced_ranges = [(match.start(), match.end()) for match in _FENCE_RE.finditer(content)]
 
     for match in placeholder_pattern.finditer(content):
+        if any(start <= match.start() < end for start, end in fenced_ranges):
+            # Command blocks intentionally use generic project placeholders so
+            # the instructions remain reusable after forking this repository.
+            continue
         placeholder = match.group(1)
         if placeholder == "name":
             # Get context around the placeholder

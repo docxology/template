@@ -1,5 +1,11 @@
 """CLI interface for core infrastructure modules.
 
+This module is a compatibility/test surface: the production pipeline entry
+point is ``infrastructure.orchestration`` (invoked by ``run.sh``), while this
+surface is exercised by ``tests/infra_tests/core/test_cli.py`` and pinned in
+``.cursor/operations_manifest.json``. Keep its handlers aligned with the
+orchestration-issued arguments so the two surfaces cannot drift silently.
+
 This module provides command-line interfaces for core pipeline functionality,
 extracted from bash scripts into testable Python CLI.
 

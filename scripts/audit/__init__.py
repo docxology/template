@@ -12,6 +12,7 @@ Modules:
     audit_filepaths                  – repository filepath audit
     check_template_drift             – exemplar doc/code drift check
     check_tracked_projects           – confidentiality guard
+    check_mirror_symlinks            – lifecycle-mirror shape guard
     check_tracked_fonds              – fonds resource-pool git guard
     check_tracked_rules              – rules resource-pool git guard
     check_tracked_tools              – tools resource-pool git guard
@@ -27,6 +28,7 @@ __all__ = [
     "audit_filepaths",
     "check_template_drift",
     "check_tracked_projects",
+    "check_mirror_symlinks",
     "check_tracked_fonds",
     "check_tracked_rules",
     "check_tracked_tools",

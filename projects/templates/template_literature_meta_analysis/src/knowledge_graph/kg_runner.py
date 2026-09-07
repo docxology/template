@@ -73,6 +73,7 @@ def _run_llm_extraction(papers, args, nanopub_path, kg_cfg, logger):
 def run_knowledge_graph_pipeline(args: argparse.Namespace, *, project_root: Path) -> None:
     """Build knowledge graph artifacts and score hypotheses."""
     logger = logging.getLogger("build_knowledge_graph")
+    explicit_options: frozenset[str] = getattr(args, "_explicit_options", frozenset())
     config_path = Path(args.config) if args.config else project_root / "manuscript" / "config.yaml"
     if args.config and not config_path.exists():
         raise FileNotFoundError(f"Configuration file does not exist: {config_path}")
@@ -85,15 +86,15 @@ def run_knowledge_graph_pipeline(args: argparse.Namespace, *, project_root: Path
 
     if config_path.exists() and not args.config:
         logger.info("Auto-loaded config: %s", config_path)
-    if kg_cfg.get("checkpoint_interval") is not None:
+    if kg_cfg.get("checkpoint_interval") is not None and "checkpoint_interval" not in explicit_options:
         args.checkpoint_interval = kg_cfg["checkpoint_interval"]
-    if kg_cfg.get("clear_assertions") is not None:
+    if kg_cfg.get("clear_assertions") is not None and "clear_assertions" not in explicit_options:
         args.clear_assertions = kg_cfg["clear_assertions"]
     if kg_cfg.get("max_papers") is not None and args.max_papers is None:
         args.max_papers = kg_cfg["max_papers"]
-    if kg_cfg.get("llm_model"):
+    if kg_cfg.get("llm_model") and "llm_model" not in explicit_options:
         args.llm_model = kg_cfg["llm_model"]
-    if kg_cfg.get("llm_url"):
+    if kg_cfg.get("llm_url") and "llm_url" not in explicit_options:
         args.llm_url = kg_cfg["llm_url"]
     if args.max_papers is not None and args.max_papers < 0:
         raise ValueError("max_papers must be non-negative")

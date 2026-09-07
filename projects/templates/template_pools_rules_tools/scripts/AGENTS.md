@@ -1,8 +1,11 @@
 # Scripts — template_pools_rules_tools
 
-Thin orchestrators: validate sources, run integration, generate manuscript
-variables, validate strong-rule compliance, and generate figures. Business
-logic lives in `src/`.
+Thin orchestrators: they run source checks, integration, manuscript-variable
+generation, strong-rule compliance checks, and figure generation. Business
+logic lives in `src/`. Source validation fails closed: non-compliant sources
+stop the run before any figures generate rather than shipping contradictions
+(negative control: `tests/test_strong_rule_evaluator.py::test_section_schema_flags_missing_section`
+proves the validator fires on a missing section).
 
 ## Files
 

@@ -48,9 +48,9 @@ The pipeline automatically identifies bottlenecks:
 time ./run.sh --pipeline
 
 # Check individual stage times
-uv run python scripts/pipeline/stage_00_setup.py
-time uv run python scripts/pipeline/stage_01_test.py
-time uv run python scripts/pipeline/stage_02_analysis.py
+uv run python scripts/pipeline/stage_00_setup.py --project templates/template_code_project
+time uv run python scripts/pipeline/stage_01_test.py --project templates/template_code_project
+time uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_code_project
 ```
 
 ## Optimization Strategies
@@ -146,7 +146,7 @@ Monitor CPU utilization:
 top -p $(pgrep -f "python3 scripts")
 
 # Profile CPU-intensive operations
-uv run python -m cProfile -o profile.stats scripts/pipeline/stage_03_render.py
+uv run python -m cProfile -o profile.stats scripts/pipeline/stage_03_render.py --project templates/template_code_project
 ```
 
 ### Disk I/O
@@ -201,7 +201,7 @@ uv run python -m pstats pipeline.prof
 
 ```bash
 # Profile specific stage
-uv run python -m cProfile -o stage.prof scripts/pipeline/stage_03_render.py
+uv run python -m cProfile -o stage.prof scripts/pipeline/stage_03_render.py --project templates/template_code_project
 ```
 
 ### Memory Profiling

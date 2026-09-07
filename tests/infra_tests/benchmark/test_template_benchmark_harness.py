@@ -105,6 +105,26 @@ def test_score_project_against_manifest_passes_grounded_project(tmp_path: Path) 
     assert all(result.passed for result in score.check_results)
 
 
+def test_public_benchmark_rejects_local_inventory_manifest(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "template_code_project"
+    _write_project_outputs(project)
+    manifest_path = project / "output" / "reports" / "artifact_manifest.json"
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["inventory_mode"] = "stable-local-output-v1"
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+    benchmark = BenchmarkManifest(
+        name="template-smoke",
+        projects=("template_code_project",),
+        required_outputs=(),
+        checks=("artifact_manifest",),
+    )
+
+    score = score_project_against_manifest(project, benchmark)
+
+    assert score.passed is False
+    assert any("artifact inventory mode mismatch" in issue for issue in score.issues)
+
+
 def test_scores_to_markdown_accepts_integer_runtime_scores() -> None:
     """Python 3.10 integers lack ``is_integer``; score rendering remains portable."""
     markdown = scores_to_markdown((BenchmarkScore(project="demo", passed=True, score=1, max_score=2),))

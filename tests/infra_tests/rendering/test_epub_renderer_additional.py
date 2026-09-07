@@ -7,11 +7,14 @@ missing cover image, non-zero exit, empty output, timeout.
 from __future__ import annotations
 
 import shutil
+import zipfile
 from pathlib import Path
 
+import defusedxml.ElementTree as safe_et
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering._epub_cover_accessibility import apply_epub_cover_accessibility
 from infrastructure.rendering.epub_renderer import (
     EpubRenderResult,
     _process_output_text,
@@ -20,6 +23,7 @@ from infrastructure.rendering.epub_renderer import (
 )
 
 SAMPLE_MD = "# Chapter 1\n\nA paragraph of text.\n"
+_COVER_ALT = "A blue square cover representing the compact renderer fixture."
 
 pytestmark = pytest.mark.skipif(
     shutil.which("pandoc") is None,
@@ -78,9 +82,53 @@ def test_render_epub_with_cover_image(tmp_path: Path) -> None:
     src = tmp_path / "combined.md"
     src.write_text("# Title\n\nContent.\n", encoding="utf-8")
     out = tmp_path / "out.epub"
-    result = render_epub(src, out, cover_image=cover, title="Cover Test", author="Author")
+    result = render_epub(
+        src,
+        out,
+        cover_image=cover,
+        cover_alt=_COVER_ALT,
+        title="Cover Test",
+        author="Author",
+    )
     assert isinstance(result, EpubRenderResult)
     assert out.exists()
+
+    with zipfile.ZipFile(out) as archive:
+        cover_member = next(name for name in archive.namelist() if name.endswith("cover.xhtml"))
+        cover_root = safe_et.fromstring(archive.read(cover_member))
+    svg_namespace = "http://www.w3.org/2000/svg"
+    svg = cover_root.find(f".//{{{svg_namespace}}}svg")
+    assert svg is not None
+    assert svg.get("role") == "img"
+    title = svg.find(f"{{{svg_namespace}}}title")
+    assert title is not None
+    assert title.text == _COVER_ALT
+    assert svg.get("aria-labelledby") == title.get("id")
+    image = svg.find(f".//{{{svg_namespace}}}image")
+    assert image is not None
+    assert image.get("aria-hidden") == "true"
+    assert image.get("focusable") == "false"
+
+    first_render = out.read_bytes()
+    apply_epub_cover_accessibility(out, _COVER_ALT)
+    assert out.read_bytes() == first_render
+
+
+@pytest.mark.parametrize("cover_alt", [None, "", "   "])
+def test_render_epub_rejects_cover_without_nonblank_alt(tmp_path: Path, cover_alt: str | None) -> None:
+    """A real cover image cannot create Pandoc's unnamed SVG cover shape."""
+
+    cover = tmp_path / "cover.png"
+    cover.write_bytes(
+        b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
+        b"\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\nIDATx\x9cc\x00\x01"
+        b"\x00\x00\x05\x00\x01\r\n-\xb4\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+    src = tmp_path / "combined.md"
+    src.write_text(SAMPLE_MD, encoding="utf-8")
+
+    with pytest.raises(RenderingError, match="non-empty cover_alt"):
+        render_epub(src, tmp_path / "out.epub", cover_image=cover, cover_alt=cover_alt)
 
 
 def test_render_epub_creates_parent_dir(tmp_path: Path) -> None:

@@ -1,30 +1,103 @@
 {
-  "timestamp": "2026-08-02T17:16:43.866263",
+  "timestamp": "2026-08-14T14:20:53+00:00",
   "infrastructure": {},
   "project": {
-    "passed": 150,
+    "passed": 153,
     "failed": 0,
     "skipped": 0,
-    "total": 150,
+    "total": 153,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 150,
+    "discovery_count": 153,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 9.78,
-      "collection": 9.78,
-      "execution": 9.78
+      "setup": 10.36,
+      "execution": 10.36
     },
     "test_categories": {},
-    "coverage_percent": 99.23,
+    "coverage_percent": 99.2463768115942,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 150,
+    "total_passed": 153,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 150,
+    "total_tests": 153,
     "all_passed": true,
-    "project_coverage": 99.23
+    "project_coverage": 99.2463768115942
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 99.2463768115942,
+      "total_executed": 1330,
+      "total_missing": 7,
+      "total_excluded": 13,
+      "total_lines": 1337,
+      "file_coverage": {
+        "src/newspaper/components.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 227,
+          "missing_lines": 0,
+          "excluded_lines": 2,
+          "total_lines": 227
+        },
+        "src/newspaper/config.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 66,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 66
+        },
+        "src/newspaper/content.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 270,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 270
+        },
+        "src/newspaper/engine.py": {
+          "coverage_percent": 97.22222222222223,
+          "executed_lines": 61,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 62
+        },
+        "src/newspaper/figures.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 308,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 308
+        },
+        "src/newspaper/furniture.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 151,
+          "missing_lines": 0,
+          "excluded_lines": 8,
+          "total_lines": 151
+        },
+        "src/newspaper/geometry.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 63,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 63
+        },
+        "src/newspaper/layout.py": {
+          "coverage_percent": 94.48275862068965,
+          "executed_lines": 101,
+          "missing_lines": 4,
+          "excluded_lines": 3,
+          "total_lines": 105
+        },
+        "src/newspaper/typography.py": {
+          "coverage_percent": 96.7032967032967,
+          "executed_lines": 83,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 85
+        }
+      }
+    }
   }
 }

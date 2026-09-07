@@ -17,7 +17,9 @@ computations and fixed seeds rather than mocks.
   row/contract negative controls. Generated-artifact mutation tests use
   `gate_support.temporary_json_mutation()` so negative controls restore touched JSON
   even when the assertion path fails.
-- `test_figures.py`, `test_figure_style.py` — figure registry parity, PNG dimensions, sheaf heatmaps.
+- `test_figures.py`, `test_figure_style.py`, `test_visualization_audit_direct.py` —
+  figure registry parity, PNG dimensions, sheaf heatmaps, and compression-invariant
+  auxiliary-image freshness controls.
 - `test_sheaf_compose.py`, `test_sheaf_manifest.py`, `test_sheaf_registry.py`,
   `test_sheaf_coverage.py`, `test_sheaf_laws.py`, `test_layers_report.py` —
   compose, coverage matrix, manifest validation, finite sheaf laws, and generated
@@ -87,13 +89,20 @@ in `tests/test_manuscript_variables.py`.
 For a reproducible complete run, prefer:
 
 ```bash
-uv run python scripts/run_full_verification.py
+uv run --extra dev python scripts/run_full_verification.py
 ```
 
 Runtime is dominated by generated-artifact gates, but the verification script
 runs coverage in separate pytest processes and appends the coverage data into
 one final 90% gate. Use `--monolithic-coverage` only when diagnosing behavior
 that specifically needs the legacy single pytest process.
+
+This command is explicitly declared as the project's single-project Stage-01
+verifier in `pyproject.toml`. Under that adapter it emits a fresh structured
+receipt only after all producers, chunked coverage groups, and postflight gates
+pass; the template runner independently reads the new coverage database before
+writing `output/reports/test_results.{json,md}`. Ordinary direct runs do not
+emit a receipt.
 
 The fixed-point direct tests share one isolated module copy. Authored GNN
 contract defects fail before generated writers run, while missing formal-interop

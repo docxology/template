@@ -135,6 +135,12 @@ def _is_public_root_agent_skill_path(path: Path) -> bool:
     return len(parts) >= 4 and parts[0] == ".agents" and parts[1] == "skills" and parts[-1] == "SKILL.md"
 
 
+def _is_public_cursor_skill_path(path: Path) -> bool:
+    """Return True for explicitly configured root Cursor skill descriptors."""
+    parts = path.parts
+    return len(parts) >= 4 and parts[0] == ".cursor" and parts[1] == "skills" and parts[-1] == "SKILL.md"
+
+
 def _is_registered_public_template_path(path: Path) -> bool:
     """Return whether a path under ``projects/templates`` belongs to the public roster.
 
@@ -160,9 +166,11 @@ def _search_bases(repo_root: Path, relative_root: str) -> tuple[Path, ...]:
 
 
 def _is_allowed_agent_tree_path(path: Path) -> bool:
-    """Return whether an excluded ``.agents`` subtree is a public skill lane."""
+    """Return whether an excluded agent/editor subtree is a public skill lane."""
     parts = path.parts
     if len(parts) >= 2 and parts[:2] == (".agents", "skills"):
+        return True
+    if len(parts) >= 2 and parts[:2] == (".cursor", "skills"):
         return True
     if len(parts) < 4 or parts[:2] != ("projects", "templates") or parts[3] != ".agents":
         return False
@@ -216,6 +224,7 @@ def iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]:
                     should_exclude_path(rel_path, DEFAULT_EXCLUDE_PARTS)
                     and not _is_public_template_agent_skill_path(rel_path)
                     and not _is_public_root_agent_skill_path(rel_path)
+                    and not _is_public_cursor_skill_path(rel_path)
                 ):
                     continue
                 yield p

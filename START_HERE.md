@@ -6,9 +6,20 @@
 
 A test-driven research operating system for computational research: write code, run tests, generate PDFs, publish to Zenodo. The canonical exemplar for all setup validation is `projects/templates/template_code_project/` (optimization + dashboard research).
 
+## Current state (verify, don't trust)
+
+- Per-subsystem verification freshness: [STATUS.md](STATUS.md) — each row records when a maintainer last verified that subsystem end-to-end, with the exact command.
+- Open backlog and next actions: [TO-DO.md](TO-DO.md) — the single authoritative backlog; everything else links to it.
+- Measured counts and roster facts: [docs/_generated/COUNTS.md](docs/_generated/COUNTS.md) and [docs/_generated/active_projects.md](docs/_generated/active_projects.md) — regenerated from source; never copy their numbers into prose. Refresh with `uv run python scripts/docgen/counts.py --check`.
+
 Honest framing: this is Daniel Ari Friedman's research OS, Apache 2.0-licensed. It is opinionated (Python + pytest + LaTeX + uv). If your workflow matches (TDD on research code, Markdown→PDF, optional local-LLM drafts, Zenodo publishing), it will save you time.
 
 ---
+
+## What to do next
+
+- The backlog is [TO-DO.md](TO-DO.md) — the single authoritative list of remaining work; every open row carries an acceptance command. This file does not track work.
+- For a broader role-based entry map, see "Choose your path" below.
 
 ## Step 0: Install prerequisites
 
@@ -27,10 +38,7 @@ git --version       # need any recent version
 
 `uv` manages Python itself, all dependencies, and virtualenvs. It replaces pip, pipenv, pyenv, and conda for this repo.
 
-**macOS / Linux (recommended — installs or upgrades to latest):**
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+**macOS / Linux:** follow the [checksum-verified uv installation instructions](docs/operational/build/dependency-management.md#installing-uv).
 
 **macOS via Homebrew:**
 ```bash
@@ -44,12 +52,11 @@ brew upgrade uv
 uv --version   # should print 0.4.x or later
 ```
 
-**Already have uv but it's old?** Run the installer again — it upgrades in place:
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+**Already have uv but it's old?** Upgrade it with Homebrew on macOS, your OS
+package manager on Linux, or the pinned installer in the dependency-management
+guide.
 
-You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.12 via `.python-version`, and the supported range is 3.10–3.13 (`requires-python = ">=3.10"` in `pyproject.toml`, CI matrix 3.10/3.11/3.12/3.13).
+You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.14 via `.python-version`, and the supported range is Python 3.10+ (`requires-python = ">=3.10"` in `pyproject.toml`; infrastructure CI is 3.10–3.14, public-project matrix is 3.10 and 3.14).
 
 ### Install `pandoc` (document converter — required)
 
@@ -148,7 +155,7 @@ These run Ruff, mypy, Bandit, and smoke tests automatically on every commit and 
 ./run.sh --pipeline --project templates/template_code_project --core-only
 ```
 
-This runs 8 stages (clean → setup → infra tests → project tests → analysis → render PDF → validate → copy). No LLM or network required. Wall-clock: 2–5 minutes.
+This runs 8 stages (clean → setup → infra tests → project tests → analysis → render PDF → validate → copy). No LLM or network required. Wall-clock: 2–5 minutes on a quiet machine; measured 28–44+ minutes on an external-drive checkout under concurrent load (see `docs/audit/AUDIT_2026-08-30.md` for the measurement context).
 
 **Expected success signals:**
 - All pipeline stages show ✅ (exit 0)
@@ -188,6 +195,7 @@ For the machine-readable agent skill, see [`docs/prompts/startup/SKILL.md`](docs
 | Role | Start here |
 |------|-----------|
 | **AI agent / automation** | [`docs/prompts/startup/SKILL.md`](docs/prompts/startup/SKILL.md) → follow the startup workflow |
+| **What's broken / what's next** | [`TO-DO.md`](TO-DO.md) (backlog) · [`STATUS.md`](STATUS.md) (subsystem health) |
 | **New human user** | [`docs/guides/getting-started.md`](docs/guides/getting-started.md) |
 | **Developer** | [`docs/core/architecture.md`](docs/core/architecture.md) + [`docs/core/workflow.md`](docs/core/workflow.md) |
 | **Contributor** | [`docs/development/contributing.md`](docs/development/contributing.md) |
@@ -216,7 +224,8 @@ tests/              Infrastructure test suite
 projects/templates/ Public canonical exemplars (tracked in git)
 projects/working/   Private working projects (local-only, symlinked from sidecar)
 output/             Generated deliverables (disposable, not committed)
-docs/               Documentation corpus (300+ files, hierarchy in docs/AGENTS.md)
+docs/               Documentation corpus (hierarchy and index in docs/AGENTS.md
+                    and docs/documentation-index.md)
 ```
 
 ---
@@ -225,7 +234,7 @@ docs/               Documentation corpus (300+ files, hierarchy in docs/AGENTS.m
 
 | Symptom | Fix |
 |---------|-----|
-| `uv: command not found` | `curl -LsSf https://astral.sh/uv/install.sh \| sh` then restart terminal |
+| `uv: command not found` | Follow the [checksum-verified uv installation instructions](docs/operational/build/dependency-management.md#installing-uv), then restart the terminal |
 | `uv` is outdated / install fails | Run the installer again — it upgrades in place |
 | `xelatex: command not found` | `brew install --cask basictex` then `sudo tlmgr install multirow cleveref doi newunicodechar` |
 | `pandoc: command not found` | `brew install pandoc` or `sudo apt-get install pandoc` |
@@ -237,3 +246,7 @@ docs/               Documentation corpus (300+ files, hierarchy in docs/AGENTS.m
 | Pipeline stage fails | See [`docs/guides/startup-and-setup.md`](docs/guides/startup-and-setup.md) §Triage |
 
 Full troubleshooting: [`docs/operational/troubleshooting/README.md`](docs/operational/troubleshooting/README.md)
+
+## Agent orientation ladder
+
+If you are an agent that just arrived: (1) what this is — read the top of this file; (2) what state is it in right now — [STATUS.md](STATUS.md), verified by `uv run python scripts/docgen/status_evidence.py --check`; (3) what to do next — [TO-DO.md](TO-DO.md), the single authoritative backlog, verified by `uv run python scripts/audit/check_backlog.py --strict`; (4) how to verify anything you touch — the commands in [CLAUDE.md](CLAUDE.md) and the doc gates in [docs/AGENTS.md](docs/AGENTS.md). Claims without a verification path in the docs are stale by definition — re-derive or remove.

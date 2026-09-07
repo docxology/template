@@ -254,6 +254,7 @@ class TestPublishingExtended:
         assert summary.startswith("# Optimization Analysis Publication Summary")
 
 
+@pytest.mark.slow
 class TestMainBranches:
     def _copy_manuscript(self, tmp_path: Path) -> None:
         shutil.copytree(PROJECT_ROOT / "manuscript", tmp_path / "manuscript")

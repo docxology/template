@@ -75,7 +75,7 @@ Every public exemplar now ships:
 
 The copied path under `projects/working/` is local-only. Only public exemplars
 under `projects/templates/` are tracked in this public repository; the guard in
-[`scripts/audit/check_tracked_projects.py`](../../scripts/audit/check_tracked_projects.py)
+[`scripts/audit/check_tracked_all.py`](../../scripts/audit/check_tracked_all.py)
 blocks accidental commits of non-template project trees.
 
 ## Validate the fork

@@ -36,7 +36,7 @@ claims:
     artifact_path: tests/test_manuscript_integrity.py
   - claim_id: required-section-headings
     kind: number
-    value: 9
+    value: 5
     source: projects/templates/template_textbook/src/textbook/constants.py REQUIRED_SECTION_HEADINGS
     source_tier: project_source
     freshness: active

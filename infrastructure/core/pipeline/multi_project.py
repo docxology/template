@@ -232,7 +232,6 @@ class MultiProjectOrchestrator:
                         projects_dir=_projects_dir_for_project(self.config.repo_root, project.path),
                         skip_infra=True,  # Always skip infra tests for individual projects in multi-project mode  # noqa: E501
                         skip_llm=not run_llm,
-                        total_stages=10 if run_llm else 8,
                     )
 
                     # Execute pipeline

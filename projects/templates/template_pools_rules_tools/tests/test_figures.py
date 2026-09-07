@@ -191,18 +191,14 @@ class TestAllFigures:
 
     def test_expected_keys(self, tmp_path: pathlib.Path):
         result = all_figures(output_dir=tmp_path)
+        from src.figure_support import COVER_FIGURE_FILENAMES, INTEGRATION_FIGURE_SPECS
+
         expected = {
-            "architecture_overview",
-            "resource_counts",
-            "status_dashboard",
-            "fond_taxonomy",
-            "rule_hierarchy",
-            "tool_contract",
-            "resilience_layers",
-            "pipeline_flow",
-            "cover_art",
+            *(pathlib.Path(spec.filename).stem for spec in INTEGRATION_FIGURE_SPECS),
+            *(pathlib.Path(filename).stem for filename in COVER_FIGURE_FILENAMES),
         }
         assert set(result.keys()) == expected
+        assert len(result) == len(INTEGRATION_FIGURE_SPECS) + len(COVER_FIGURE_FILENAMES)
 
     def test_all_values_are_paths(self, tmp_path: pathlib.Path):
         result = all_figures(output_dir=tmp_path)

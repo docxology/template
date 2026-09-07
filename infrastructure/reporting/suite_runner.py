@@ -5,6 +5,7 @@ loop used by both infrastructure and project test suites.
 """
 
 import collections
+import contextlib
 import os
 import select
 import subprocess
@@ -12,9 +13,22 @@ import sys
 from contextlib import nullcontext
 from dataclasses import dataclass
 from pathlib import Path
+from time import monotonic
 from typing import Any
 
+from infrastructure.core._bounded_run_guardian import (
+    start_bounded_run_guardian as _start_bounded_run_guardian,
+)
+from infrastructure.core.execution_boundary import (
+    _complete_bounded_run_cleanup,
+    build_bounded_env,
+    build_bounded_run_env,
+    terminate_process_tree,
+)
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
+from infrastructure.core.pytest_profiles import (
+    DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS as DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+)
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.logging.progress import log_with_spinner
 from infrastructure.reporting.coverage_parser import (
@@ -25,6 +39,8 @@ from infrastructure.reporting.coverage_parser import (
 from infrastructure.reporting.coverage_reporter import parse_pytest_output
 
 logger = get_logger(__name__)
+
+DEFAULT_TEST_SUITE_TIMEOUT_SECONDS = 1800.0
 
 # Stack-trace patterns from pytest internals / urllib3 that clutter output
 _INTERNAL_STACK_PATTERNS = [
@@ -88,29 +104,78 @@ def _passes_quiet_filter(char: str, line: str, quiet: bool) -> bool:
     return False
 
 
-def run_pytest_stream(cmd: list[str], repo_root: Path, env: dict[str, str], quiet: bool) -> tuple[int, str, str]:
-    """Run pytest streaming output to console while capturing logs for reporting."""
+def _terminate_stream_process(process: subprocess.Popen[bytes]) -> None:
+    """Terminate a streaming subprocess and descendants across sessions.
+
+    A nested project runner may deliberately start its own sessions for
+    per-command timeouts. Killing only the outer process group would then leave
+    those detached descendants alive after the project output lock is released.
+    On POSIX, freeze the root, discover descendants from the process table until
+    stable, then kill every PID as well as the original group. Windows uses
+    ``taskkill /T`` for the equivalent tree operation.
+    """
+    terminate_process_tree(process.pid, group_id=process.pid)
+
+
+def run_pytest_stream(
+    cmd: list[str],
+    repo_root: Path,
+    env: dict[str, str],
+    quiet: bool,
+    *,
+    timeout_seconds: float = DEFAULT_TEST_SUITE_TIMEOUT_SECONDS,
+) -> tuple[int, str, str]:
+    """Run pytest with streaming output, a real deadline, and group cleanup."""
+    if timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive")
     stdout_buf: list[str] = []
     recent_lines: collections.deque[str] = collections.deque(maxlen=10)
 
-    process = subprocess.Popen(
-        cmd,
-        cwd=str(repo_root),
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=False,  # Use binary mode for non-blocking IO
-        bufsize=0,
-    )
+    base_env = build_bounded_env(env)
+    process_env, run_token = build_bounded_run_env(base_env)
+    guardian = _start_bounded_run_guardian(base_env)
+    try:
+        process = subprocess.Popen(
+            cmd,
+            cwd=str(repo_root),
+            env=process_env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=False,  # Use binary mode for non-blocking IO
+            bufsize=0,
+            start_new_session=(os.name != "nt"),
+        )
+    except BaseException:
+        if guardian is not None:
+            guardian.close()
+        raise
+    if guardian is not None:
+        try:
+            guardian.arm(root_pid=process.pid, run_token=run_token)
+        except BaseException as exc:
+            _terminate_stream_process(process)
+            guardian.close()
+            with contextlib.suppress(OSError, subprocess.TimeoutExpired):
+                process.wait(timeout=5)
+            if isinstance(exc, (OSError, RuntimeError)):
+                raise RuntimeError(f"failed to arm bounded-run guardian: {exc}") from exc
+            raise
 
     assert process.stdout is not None
     fd = process.stdout.fileno()
     os.set_blocking(fd, False)
 
+    timed_out = False
+    deadline = monotonic() + timeout_seconds
+    cleanup_error = ""
     try:
         current_line = ""
         while True:
-            reads, _, _ = select.select([fd], [], [], 0.1)
+            remaining = deadline - monotonic()
+            if remaining <= 0:
+                timed_out = True
+                break
+            reads, _, _ = select.select([fd], [], [], min(0.1, remaining))
 
             if fd in reads:
                 raw_chunk = process.stdout.read(4096)
@@ -145,15 +210,27 @@ def run_pytest_stream(cmd: list[str], repo_root: Path, env: dict[str, str], quie
                 sys.stdout.flush()
 
         try:
-            process.wait(timeout=1800)  # 30-minute hard ceiling for any test suite
+            process.wait(timeout=max(0.0, deadline - monotonic()))
         except subprocess.TimeoutExpired:
-            process.kill()
-            process.wait()
+            timed_out = True
     finally:
+        if timed_out:
+            _terminate_stream_process(process)
+        elif process.poll() is None:
+            _terminate_stream_process(process)
+        cleanup_error = _complete_bounded_run_cleanup(guardian, run_token)
+        if process.poll() is None:
+            process.wait()
+        if timed_out:
+            stderr_text = f"streaming subprocess timed out after {timeout_seconds:g}s"
+        else:
+            stderr_text = ""
         if process.stdout is not None:
             process.stdout.close()
 
-    return process.returncode, "".join(stdout_buf), ""
+    if cleanup_error:
+        raise RuntimeError(cleanup_error)
+    return (124 if timed_out else process.returncode), "".join(stdout_buf), stderr_text
 
 
 @dataclass
@@ -171,14 +248,30 @@ class TestSuiteConfig:
     quiet: bool = True
     spinner_label: str = ""
     streaming_subprocess: bool = False
-    """If True, the wrapped operation streams its stdout to the same TTY (e.g.,
-    pytest -v). In that case skip the spinner — its \r animation interleaves
-    with the streamed lines and produces visible garble. Default False preserves
-    spinner behavior for non-streaming operations (Ollama model load, etc.)."""
+    timeout_seconds: float = DEFAULT_TEST_SUITE_TIMEOUT_SECONDS
+    total_timeout_seconds: float | None = None
+    coverage_cleanup_scope_dir: Path | None = None
+    coverage_cleanup_recursive: bool = True
 
     def __post_init__(self) -> None:
+        """Populate display defaults and validate opt-in total capacity."""
         if not self.spinner_label:
             self.spinner_label = f"Running {self.label.lower()} tests"
+        if self.total_timeout_seconds is not None and self.total_timeout_seconds <= 0:
+            raise ValueError("total_timeout_seconds must be positive when provided")
+
+
+def _remaining_attempt_timeout_seconds(
+    per_attempt_timeout_seconds: float,
+    total_deadline_seconds: float | None,
+    *,
+    now_seconds: float | None = None,
+) -> float:
+    """Return the next subprocess budget under an optional absolute deadline."""
+    if total_deadline_seconds is None:
+        return per_attempt_timeout_seconds
+    current_time = monotonic() if now_seconds is None else now_seconds
+    return max(0.0, min(per_attempt_timeout_seconds, total_deadline_seconds - current_time))
 
 
 def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
@@ -196,20 +289,43 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
     Returns:
         Tuple of (exit_code, test_results_dict).
     """
+    if config.timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive")
+
     max_retries = 1
     retry_count = 0
+    total_deadline_seconds = (
+        monotonic() + config.total_timeout_seconds if config.total_timeout_seconds is not None else None
+    )
 
     exit_code = 1
     stdout_text = ""
     stderr_text = ""
     while retry_count <= max_retries:
+        attempt_timeout_seconds = _remaining_attempt_timeout_seconds(
+            config.timeout_seconds,
+            total_deadline_seconds,
+        )
+        if attempt_timeout_seconds <= 0:
+            exit_code = 124
+            total_timeout_message = (
+                f"{config.label.lower()} test suite exhausted its "
+                f"{config.total_timeout_seconds:g}s total timeout before retry attempt {retry_count + 1}"
+            )
+            stderr_text = f"{stderr_text}\n{total_timeout_message}" if stderr_text else total_timeout_message
+            logger.error(total_timeout_message)
+            break
         try:
             spinner_ctx = (
                 nullcontext() if config.streaming_subprocess else log_with_spinner(config.spinner_label, logger)
             )
             with spinner_ctx:
                 exit_code, stdout_text, stderr_text = run_pytest_stream(
-                    config.cmd, config.repo_root, config.env, config.quiet
+                    config.cmd,
+                    config.repo_root,
+                    config.env,
+                    config.quiet,
+                    timeout_seconds=attempt_timeout_seconds,
                 )
 
             combined_output = stdout_text + "\n" + stderr_text
@@ -227,7 +343,11 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
                         retry_count,
                         max_retries,
                     )
-                    clean_coverage_files(config.repo_root)
+                    clean_coverage_files(
+                        config.repo_root,
+                        scope_dir=config.coverage_cleanup_scope_dir,
+                        recursive=config.coverage_cleanup_recursive,
+                    )
                     continue
                 else:
                     logger.error(
@@ -247,7 +367,11 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
                         retry_count,
                         max_retries,
                     )
-                    clean_coverage_files(config.repo_root)
+                    clean_coverage_files(
+                        config.repo_root,
+                        scope_dir=config.coverage_cleanup_scope_dir,
+                        recursive=config.coverage_cleanup_recursive,
+                    )
                     continue
                 else:
                     logger.error(

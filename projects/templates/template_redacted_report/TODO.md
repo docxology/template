@@ -1,9 +1,18 @@
 # template_redacted_report TODO
 
-## Current validation evidence
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-- Tests cover classification ceilings, redaction bounds, overlap rejection, orphan decisions, sensitive-marker coverage, release authority, taxonomy adapters, sanitized in-memory packets, source-safe ledgers, segment hash manifests, reviewer approval gates, paragraph audit tables, mosaic-risk scoring, typed fixture loading, malformed/missing input failures, two-run artifact byte equality, source-canary non-disclosure, visual redaction styles, background modes, Kmyth requested/available matrix semantics, and the full 16-variant development matrix.
-- Canonical Stage 02 analysis is shipped: `01_generate_release_artifacts.py` writes deterministic, text-free `output/reports/redaction_audit.json` and hashed `output/data/release_ledger.json` through the source-owned artifact contract.
+## Backlog operating rules
+
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
@@ -11,84 +20,39 @@
 
 ## Configurable-surface gaps
 
-- Add additional organization-specific marking taxonomies and review-role policies only as cleared, invented fixtures.
+- Organization-specific marking taxonomies and review-role policies are intentionally limited to cleared, invented fixtures; a real policy needs a separately scoped owner-approved row.
 
 ## Documentation and signposting gaps
 
 - Keep public safety boundaries visible in README, AGENTS, and manuscript prose.
 
-## Test and validator gaps
+## Current test and validator contract
 
 - Bind manuscript tables to the canonical audit JSON only if rendering can preserve the text-free projection and fails closed when the audit schema changes.
-- Add pixel-level visual regression only if the repo adopts stable screenshot/PDF raster tooling for exemplar outputs.
-- Year-stable ISO-date residual detection and complete `s4` collection-platform span coverage shipped with negative controls on 2026-07-13. Keep the PDF proof-matrix scan synchronized with future fixture changes; contextual labels in explicitly public explanatory prose must remain distinguished from source-segment residuals.
+- Pixel-level visual regression remains the explicit blocked-tool row below until the repo adopts stable screenshot/PDF raster tooling for exemplar outputs.
+- Keep year-stable ISO-date residual detection and complete collection-platform
+  span coverage under negative controls; contextual labels in explicitly public
+  explanatory prose must remain distinct from source-segment residuals.
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Keep redaction validator tests green.
-2. Sanitized release-packet export — shipped in source/tests.
-3. Policy taxonomy adapters — shipped in source/tests.
-4. Source-safe ledgers, segment hashes, residual-risk reports, and approval gates — shipped in source/tests.
-5. Add rendered public report examples — shipped in output generation.
-6. Visual redaction/background proof matrix with provenance PDFs — shipped in source/script/tests.
-7. Typed canonical audit/ledger generation in the normal Stage 02 order — shipped in source/script/tests/output.
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
-## Log
+## Medium upcoming
 
-### 2026-08-02 — Publication pass
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `REDACTED-VISUAL-1` | blocked-tool | Medium | Stable raster toolchain | Install or pin the required tool, or record its unavailable status; run the explicit visual gate only when tooling is pinned and attach a pixel regression manifest. | pixel regression manifest | `uv run pytest projects/templates/template_redacted_report/tests -q --no-cov --timeout=120` | missing raster tool must report unavailable, not pass |
 
-- Accuracy: corrected `manuscript/02_results.md` redaction-decision count from
-  "Twenty-one" to "Twenty-two" to match `data/example_segments.json` and the
-  canonical `output/reports/redaction_audit.json` (`decision_count: 22`);
-  split the residual-risk table's conflated "Sensitive markers / `2026-`" row
-  into the actual year-stable ISO-date regex (`\b20\d{2}-\d{2}-\d{2}\b`) and
-  the literal sensitive-marker list.
-- Docs: `scripts/AGENTS.md` and `tests/AGENTS.md` now enumerate every on-disk
-  script/test file with roles; `.agents/` catalog completed
-  (`.agents/README.md`, `.agents/skills/README.md` added; `.agents/AGENTS.md`
-  expanded to the sibling table convention).
-- Config: `manuscript/config.yaml.example` paper date synced to the live
-  config (`2026-07-10`).
-- Verified gates: 113 passed / 97.53% coverage; prerender clean; Stage 02
-  deterministic (audit/ledger byte-identical across runs); render 8 pages,
-  0 LaTeX errors, 0 `??`; Stage 04/05 green; project drift clean.
-- Remaining: the `02_results.md` Kmyth claim ("verified run ... thirty-two
-  `.ski` files") records a development-time swtpm verification; tracked
-  `output/dev/redaction_variants/` intentionally ships no `.ski` sidecars
-  (`.gitignore` contract) — regenerate and re-verify that claim only on a
-  TPM/swtpm-enabled machine. A transient repo-wide drift warning about
-  `template_storybook/tests/AGENTS.md` was observed during this pass and
-  resolved by its owning exemplar.
+## Major upcoming
 
-### 2026-08-02 — Comprehensive research pass
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
-- Research directions shipped:
-  - Organization-specific release policies: `law_enforcement_release_policy`,
-    `public_records_release_policy`, `health_privacy_release_policy`, and the
-    `declared_release_policies()` registry (all invented fixtures, exported by
-    the package facade) — closes the configurable-surface gap for additional
-    marking taxonomies and review-role policies.
-  - Deterministic figures: `redaction_flow` and `disclosure_control_matrix`
-    (PNG + accessible SVG companions) with `output/figures/figure_registry.json`,
-    generated by the new allowlisted Stage 02 script `scripts/02_build_figures.py`
-    — matches `domain_profile.yaml` figure_types and the experiment-plan
-    `fig:redaction_flow` expectation. SVG ids pinned via `svg.hashsalt` and the
-    live `<dc:date>` stripped for byte-determinism; the committed evidence is
-    asserted byte-equal to a fresh build.
-  - Manuscript↔audit binding: the results table's measured values are re-derived
-    from a fresh canonical audit by `tests/test_manifest_binding.py`
-    (`tests/test_manuscript_binding.py`), which fails closed on
-    `AUDIT_SCHEMA`/`LEDGER_SCHEMA` drift — closes the manuscript-table binding
-    gap.
-  - Fix: `_redaction_coverage` is policy-aware (public-tier policies no longer
-    miscount coverage); manuscript now renders 10 pages with two figures.
-  - Docs: `CHANGELOG.md`, `docs/AGENTS.md` + `docs/README.md`, and doc sync
-    across README/AGENTS/scripts/tests/manuscript/.agents skill,
-    `experiment_plan.yaml`, `domain_profile.yaml`.
-- Verified gates: 143 passed / 97.31% coverage; prerender clean; Stage 02 (2
-  scripts) green; render 10 pages, 0 LaTeX errors, 0 `??`; Stage 04/05 green;
-  ruff + ruff format + mypy clean; project drift clean.
-- Remaining: pixel-level visual regression stays deferred until the repo adopts
-  stable PDF raster tooling; the Kmyth `.ski` claim remains a development-time
-  swtpm verification (tracked dev evidence ships without sidecars by
-  `.gitignore` design).
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked row is a deliberate boundary, not a skipped success.

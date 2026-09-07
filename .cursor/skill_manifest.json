@@ -272,8 +272,8 @@
       "path": "docs/prompts/comprehensive-assessment/SKILL.md",
       "cursor_at": "docs/prompts/comprehensive-assessment/SKILL.md",
       "metadata": {
-        "version": "1.0.0",
-        "last_updated": "2026-05-27",
+        "version": "1.0.1",
+        "last_updated": "2026-08-13",
         "status": "active",
         "data_access_level": "raw",
         "task_type": "open-ended",
@@ -724,7 +724,7 @@
     },
     {
       "name": "provenance-dag",
-      "description": "Content-addressed provenance DAG for research lineage tracking. Use for: recording which pipeline stage produced which artifact, querying edges between recorded nodes, running a DAG-wide review pass. CLI: python -m infrastructure.provenance {list,record-artifact,review}. Library: infrastructure.provenance.Provenance (record/link/get/list/query). Orchestrator: scripts/pipeline/stage_09_provenance_record.py --project {name} --stage NAME",
+      "description": "Content-addressed provenance DAG for research lineage tracking. Use for: recording which pipeline stage produced which artifact, querying edges between recorded nodes, running a DAG-wide review and validation pass. CLI: python -m infrastructure.provenance {list,record-artifact,review,validate}. Library: infrastructure.provenance.Provenance (record/link/get/list/query). Orchestrator: scripts/pipeline/stage_09_provenance_record.py --project {name} --stage NAME",
       "path": "infrastructure/provenance/SKILL.md",
       "cursor_at": "infrastructure/provenance/SKILL.md"
     },
@@ -784,7 +784,7 @@
     },
     {
       "name": "infrastructure-search",
-      "description": "Discovery utilities. Hosts three subpackages — `literature` for Paperclip-style multi-source academic search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API, with deterministic JSON caching, a `LiteratureClient` aggregator, normalised `Paper` records, and a CLI; `exa` for Exa-backed general web search, content extraction, grounded answers, and find-similar via `ExaClient` (search/contents/answer/find_similar) and a CLI; and `deep_research` for provider-neutral long-running deep research over OpenAI (`o3-deep-research`) and Gemini, packaging a project's manuscript/outputs into the prompt and saving full reports with citations (PAID — ≈$2/report OpenAI, ≈$25 Gemini; see its README cost model). Use when the user wants to find papers, build reading lists, populate references.bib from a query, replay a prior search reproducibly, run general web search / content extraction / grounded answers, or dispatch a manuscript for a deep-research review with new citations and fix suggestions. Designed to host additional discovery workflows without breaking the public API.",
+      "description": "Discovery utilities. Hosts subpackages — `literature` for Paperclip-style multi-source academic search; `exa` for Exa-backed web search, contents, answers, and find-similar; `monid` for the Monid gateway (discover/inspect/run) plus offline USD-per-1k search API pricing; and `deep_research` for provider-neutral long-running research over OpenAI and Gemini (PAID). Use when finding papers, running web search, comparing search API costs, routing agent tasks through Monid, or dispatching manuscript deep-research reviews.",
       "path": "infrastructure/search/SKILL.md",
       "cursor_at": "infrastructure/search/SKILL.md"
     },
@@ -799,6 +799,12 @@
       "description": "Paperclip-style multi-source literature search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API. Provides Paper/SearchQuery/SearchResult data models, a LiteratureClient aggregator with per-backend failure isolation, DOI/arXiv-aware deduplication via merge_papers, deterministic JSON caching via SearchCache, an HttpClient protocol for test injection, and a CLI (search/to-bibtex). Use when finding papers by topic, building reading lists, populating references.bib from a query, or replaying a prior search reproducibly.",
       "path": "infrastructure/search/literature/SKILL.md",
       "cursor_at": "infrastructure/search/literature/SKILL.md"
+    },
+    {
+      "name": "infrastructure-search-monid",
+      "description": "Monid HTTP API client for discovering, inspecting, and running hundreds of data endpoints through one wallet (discover/inspect/run/poll/balance). Includes an offline USD-per-1k comparison table for direct search APIs (Exa, Brave, Tavily, Serper, SerpAPI) versus Monid's per-endpoint gateway pricing. Use when the user needs Monid programmatically, wants to compare search API costs, or must route agent tasks through Monid only after checking the user's existing MCP/API keys. PAID — Monid runs debit prepaid balance; inspect pricing first.",
+      "path": "infrastructure/search/monid/SKILL.md",
+      "cursor_at": "infrastructure/search/monid/SKILL.md"
     },
     {
       "name": "infrastructure-sia",
@@ -1042,7 +1048,7 @@
     },
     {
       "name": "template-docgen",
-      "description": "Derived documentation generators for the template research framework. Scripts that write to docs/_generated/ and update in-place doc blocks. Currently at scripts/ root; this directory is the planned migration target.\n",
+      "description": "Derived documentation generators for the template research framework. Scripts that write to docs/_generated/ and update in-place doc blocks.\n",
       "path": "scripts/docgen/SKILL.md",
       "cursor_at": "scripts/docgen/SKILL.md"
     },
@@ -1066,7 +1072,7 @@
     },
     {
       "name": "template-pipeline",
-      "description": "Numbered pipeline stage orchestrators (stages 00–12) for the template research framework.  Each stage_NN_*.py is a thin orchestrator that wires the repo root onto sys.path and delegates to infrastructure/ modules.\n",
+      "description": "Numbered pipeline stage orchestrators (stages 00–13) for the template research framework.  Each stage_NN_*.py is a thin orchestrator that wires the repo root onto sys.path and delegates to infrastructure/ modules.\n",
       "path": "scripts/pipeline/SKILL.md",
       "cursor_at": "scripts/pipeline/SKILL.md"
     },
@@ -1084,7 +1090,7 @@
     },
     {
       "name": "template-shell",
-      "description": "Shell helper scripts for the template research framework. Covers system health checks, local CI reproduction, uv bootstrap, and rsync backup tiers.  Scripts live at scripts/ root level.\n",
+      "description": "Shell helper scripts for the template research framework. Covers system health checks, local CI reproduction, uv bootstrap, and rsync backup/restore contracts under scripts/shell/.\n",
       "path": "scripts/shell/SKILL.md",
       "cursor_at": "scripts/shell/SKILL.md"
     }

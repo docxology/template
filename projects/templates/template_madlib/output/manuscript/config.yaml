@@ -74,6 +74,7 @@ analysis:
     - 02_validate_outputs.py
 
 madlib:
+  schema_version: 2
   seed: 431
   composition_depth: "deep"
   hypothesis: "Deterministic lexical injection can generate a complete conditional IMRAD manuscript while preserving token provenance, section intent, and audit-ready method evidence."

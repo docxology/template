@@ -1,8 +1,10 @@
-# Roadmap
+# Why partition it this way
 
-*Slide 48 of 56 — template_template pitch, long deck — kind: `section`*
+*Slide 48 of 57 — template_template pitch, long deck — kind: `content`*
 
-*(no body content — section/title slide)*
+- Each subpackage boundary matches a real reuse boundary: rendering/, validation/, publishing/, provenance/ each solve one generic problem every exemplar needs, independent of any project's domain logic.
+- A change inside one subpackage cannot silently reach into another without an explicit import — the boundary is enforced by the drift check, not just convention.
+- This is the same two-layer split described earlier in this deck, now shown at the resolution of individual subpackages instead of the whole layer.
 
 ---
 

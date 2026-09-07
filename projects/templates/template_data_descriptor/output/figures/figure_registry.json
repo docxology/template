@@ -4,31 +4,46 @@
       "caption": "Declared and recomputed row counts and checksum status by file.",
       "filename": "checksum_verification.png",
       "generated_by": "scripts.generate_figures.generate_figures",
-      "label": "fig:checksum_verification"
+      "label": "fig:checksum_verification",
+      "metadata": {
+        "alt_text": "2-row descriptor-to-file verification table: fixtures/measurements.csv: declared rows 12, actual rows 12, checksum match, status verified; fixtures/subjects.csv: declared rows 6, actual rows 6, checksum match, status verified. Descriptor readiness is 1.000; this is release-readiness evidence, not a scientific quality score."
+      }
     },
     {
       "caption": "Declared row counts for every file in the descriptor inventory.",
       "filename": "file_inventory.png",
       "generated_by": "scripts.generate_figures.generate_figures",
-      "label": "fig:file_inventory"
+      "label": "fig:file_inventory",
+      "metadata": {
+        "alt_text": "2 horizontal bars encode descriptor-declared row counts: fixtures/measurements.csv: 12; fixtures/subjects.csv: 6. Largest declared count 12 occurs for fixtures/measurements.csv. Declared counts alone do not verify file bytes."
+      }
     },
     {
       "caption": "Ordered provenance steps and their responsible agents.",
       "filename": "provenance_flow.png",
       "generated_by": "scripts.generate_figures.generate_figures",
-      "label": "fig:provenance_flow"
+      "label": "fig:provenance_flow",
+      "metadata": {
+        "alt_text": "4 connected boxes run left to right: collect (synthetic fixture generator) to clean (template_data_descriptor) to validate (template_data_descriptor) to package (template_data_descriptor). This is the descriptor-declared chain and does not independently verify that the steps ran."
+      }
     },
     {
       "caption": "Validation findings for the clean fixture and deliberately broken control.",
       "filename": "quality_gate.png",
       "generated_by": "scripts.generate_figures.generate_figures",
-      "label": "fig:quality_gate"
+      "label": "fig:quality_gate",
+      "metadata": {
+        "alt_text": "Grouped bars compare validation findings. Supplied descriptor: 0 errors and 0 warnings. Deliberately perturbed control: 3 errors and 3 warnings. The control is synthetic and demonstrates gate sensitivity; it is not an empirical data-quality estimate."
+      }
     },
     {
       "caption": "Field schema and data dictionary generated from the descriptor.",
       "filename": "schema_overview.png",
       "generated_by": "scripts.generate_figures.generate_figures",
-      "label": "fig:schema_overview"
+      "label": "fig:schema_overview",
+      "metadata": {
+        "alt_text": "6-row data dictionary: sample_id (string, nullable no, constraint pattern ^S[0-9]{3}$); subject_id (string, nullable no, constraint pattern ^P[0-9]{3}$); group (category, nullable no, constraint {control, treatment}); value (number, nullable no, unit normalized_score, constraint [0, 1]); collected_on (date, nullable no); instrument (category, nullable no, constraint {sensor_a, sensor_b}). The table describes declared metadata, not observed values."
+      }
     }
   ],
   "schema_version": "template-data-descriptor-figure-registry-v1"

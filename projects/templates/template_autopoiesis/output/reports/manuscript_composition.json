@@ -1,21 +1,21 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "3b1fa841782cfb6399d37ea992f34060dca7cbf71dbc38faf4530576eb3c18ff",
+  "binding_sha256": "51a2396afb6a9dcb4b8f41489c1b8a6607c4de8bbef1afa81f583d4a83e37dd4",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "7f44e802cc828c1e234012d0c1ccef2eac543a39012089ae4716d23b5944e101",
-  "combined_size_bytes": 82666,
+  "combined_sha256": "514e227b1ff49dfacce766c8859f01df0e53b6a4976b1f06312e8c5579edb681",
+  "combined_size_bytes": 82640,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {
       "ordinal": 1,
       "path": "output/manuscript/00_abstract.md",
-      "sha256": "629ee38e3713a4b5dc91da3c312e13d8ef1e9dd6127224afd0fb2d30d568d9db",
+      "sha256": "3ca922b5b9f41febcafc7cb2167d129ae0abb361cfa7faba9efe8ade2e46ffe9",
       "size_bytes": 2714
     },
     {
       "ordinal": 2,
       "path": "output/manuscript/01_introduction.md",
-      "sha256": "32a9a1153de60c2a099d7978466d24ce2552d7c0d0074b5d3b372916aeb36165",
+      "sha256": "5aeb94ac8658eb62ccc6112f0755c59ffc646b484c895bf3f88637749fdb4f2d",
       "size_bytes": 11133
     },
     {
@@ -27,25 +27,25 @@
     {
       "ordinal": 4,
       "path": "output/manuscript/03_results.md",
-      "sha256": "f82a2190ed331a225399e4d1add69a223cf3a4655a8e818d2bde8ac0f6ba6962",
-      "size_bytes": 14556
+      "sha256": "628fad3c58eb0fbd985f1b6031fe1e5f1738b941777e2bc1d530e30b104dff7c",
+      "size_bytes": 14526
     },
     {
       "ordinal": 5,
       "path": "output/manuscript/04_honesty.md",
-      "sha256": "db08df662915de3bdcdeb39601b0be7bb91eae2a8987fa0af3118796b67e379b",
+      "sha256": "4b4a3eadd1f096a6b6115b71068a6ffc1aacc4a23bdfa0c317bce296a0c94f55",
       "size_bytes": 12958
     },
     {
       "ordinal": 6,
       "path": "output/manuscript/05_reproducibility.md",
-      "sha256": "5533552858a098d9edda445fee3fca7acac9dafafa087c1836311790e8c46b9e",
-      "size_bytes": 12175
+      "sha256": "a775581b8c8d91f11f20a8fbc65a6ed61650f45dfcf1986910d9bf5ad55b2a49",
+      "size_bytes": 12179
     },
     {
       "ordinal": 7,
       "path": "output/manuscript/06_limitations.md",
-      "sha256": "806c6e53c464390d759b69b743009aef033f92a576c7b1dcaad13ea5bd7f23f9",
+      "sha256": "2e09b8d6b7957bc86f3baad9015c0a61df426a96dbe3dec2d8a317b1970c70f0",
       "size_bytes": 9645
     },
     {
@@ -55,7 +55,7 @@
       "size_bytes": 2465
     }
   ],
-  "ordered_inputs_sha256": "401b9805113f5b4af0a9dcd4a037f49bbc019a41ec5b01cce40b134046f3ac00",
+  "ordered_inputs_sha256": "5017a470669873ec76f737ae03e84b5b12302cffdca9890c6697bbe23510d5d3",
   "project": "templates/template_autopoiesis",
   "schema_version": "template-manuscript-composition-v1"
 }

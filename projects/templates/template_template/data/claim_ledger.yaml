@@ -83,3 +83,17 @@ claims:
     source_tier: claim_ledger
     freshness: active
     artifact_path: manuscript/05c_comparison.md
+  - claim_id: steganography-overlay-subtle-bound
+    kind: number
+    value: 0.02
+    source: infrastructure/config/secure_config.yaml — documented lower bound for overlay_opacity
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: ../../../infrastructure/config/secure_config.yaml
+  - claim_id: steganography-overlay-strong-bound
+    kind: number
+    value: 0.30
+    source: infrastructure/config/secure_config.yaml — documented upper bound for overlay_opacity
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: ../../../infrastructure/config/secure_config.yaml

@@ -15,12 +15,12 @@ orchestrator that only parses CLI arguments and dispatches here.
 """
 
 import shlex
-import subprocess  # nosec B404
 import time
 from pathlib import Path
 
 from infrastructure.core.analysis_timeout import parse_analysis_script_timeout_sec
 from infrastructure.core.exceptions import ScriptExecutionError
+from infrastructure.core.execution_boundary import run_bounded_subprocess
 from infrastructure.core.logging.utils import (
     get_logger,
     log_operation,
@@ -80,20 +80,28 @@ def run_analysis_script(
 
     started = time.monotonic()
     try:
+        # Stream output to the parent (capture_output=False) while still
+        # running in an isolated process group so a script timeout kills the
+        # whole tree rather than orphaning descendants (SECURE-RUN-1).
         with log_operation(f"Execute {script_path.name}", logger):
-            result = subprocess.run(  # nosec B603
+            result = run_bounded_subprocess(
                 cmd,
-                cwd=str(repo_root),
-                capture_output=False,
-                check=False,
+                cwd=repo_root,
                 env=env,
-                timeout=timeout_sec,
+                timeout=timeout_sec if timeout_sec is not None else float("inf"),
+                capture_output=False,
             )
     except Exception as e:  # noqa: BLE001 — wrap as ScriptExecutionError for callers
         raise ScriptExecutionError(
             f"Failed to execute {script_path.name}",
             context={"script": str(script_path), "error": str(e)},
         ) from e
+
+    if result.command_error:
+        raise ScriptExecutionError(
+            f"Failed to execute {script_path.name}",
+            context={"script": str(script_path), "error": result.command_error},
+        )
 
     elapsed = time.monotonic() - started
     log_fn = logger.info if result.returncode == 0 else logger.error

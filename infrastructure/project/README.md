@@ -132,7 +132,7 @@ Implements the private-projects sidecar symlink sync described in root
 `python -m infrastructure.orchestration` unless `TEMPLATE_SKIP_LINK_SYNC=1`.
 `LIFECYCLE_LINK_DIRS` maps each private sidecar subdir to its `projects/<subfolder>/`
 link target (`working/*` → `projects/working/*`, `archive/*` → `projects/archive/*`,
-optional `active/`/`published/`/`other/`). Root override: `TEMPLATE_PRIVATE_PROJECTS_ROOT`
+optional `active/`). Root override: `TEMPLATE_PRIVATE_PROJECTS_ROOT`
 or `.private_projects_root`.
 
 ### Public Capability Inventory (`public_capabilities.py`)

@@ -19,10 +19,10 @@ def _render_ontology(path: Path) -> str:
     from ontology.bindings import load_section_ontology
 
     entries = load_section_ontology(path)
-    lines = ["### Ontology bindings", ""]
+    lines = ["```{=latex}", r"\begin{samepage}", "```", "", "### Ontology bindings", ""]
     for symbol, term in sorted(entries.items()):
         lines.append(f"- `{symbol}` → **{term}**")
-    lines.append("")
+    lines.extend(["", "```{=latex}", r"\end{samepage}", "```", ""])
     return "\n".join(lines)
 
 

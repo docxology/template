@@ -10,7 +10,17 @@ from pathlib import Path
 os.environ.setdefault("MPLBACKEND", "Agg")
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-for _path in (PROJECT_ROOT, PROJECT_ROOT / "src", PROJECT_ROOT.parents[2]):
+
+
+def _template_repo_root(project_root: Path) -> Path | None:
+    """Return the template repository root when this project is inside one."""
+    for parent in project_root.parents:
+        if (parent / "infrastructure").is_dir() and (parent / "pyproject.toml").is_file():
+            return parent
+    return None
+
+
+for _path in (PROJECT_ROOT, PROJECT_ROOT / "src", *[_p for _p in [_template_repo_root(PROJECT_ROOT)] if _p]):
     path_text = str(_path)
     if path_text not in sys.path:
         sys.path.insert(0, path_text)

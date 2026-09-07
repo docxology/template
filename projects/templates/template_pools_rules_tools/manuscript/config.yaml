@@ -41,8 +41,9 @@ publication:
 
 # Project-owned settings are namespaced so the generic renderer can distinguish
 # them from infrastructure configuration. Figure provenance lives in
-# `src/figures.py::FIGURE_SPECS`; integration inputs are discovered from the
-# public resource pools rather than duplicated here.
+# `src/figure_support.py::INTEGRATION_FIGURE_SPECS`; the layout-only cover lives
+# in the separate `COVER_FIGURE_FILENAMES` contract. Integration inputs are
+# discovered from the public resource pools rather than duplicated here.
 project_config:
   strong_rules:
     canonical_sections:

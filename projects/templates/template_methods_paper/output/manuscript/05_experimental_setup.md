@@ -47,7 +47,7 @@ evaluations a method's steps satisfy.
 
 ## Computational environment
 
-- **Language**: Python 3.12.13 on Darwin arm64 (see root
+- **Language**: Python 3.12.12 on Darwin arm64 (see root
   `pyproject.toml` for the supported version range).
 - **Core dependencies**: `pyyaml`, `matplotlib` (declared in
   `domain_profile.yaml::required_packages`); the DSL library itself

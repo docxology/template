@@ -40,7 +40,9 @@ flowchart LR
 
 ### Job Graph
 
-`health` depends on **`lint`** only and is blocking. `validate`, `security`, and `docs-lint` depend on **`lint` only** (parallel with the `verify-no-mocks` subtree). `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is **skipped** unless `needs.detect.outputs.setup_hook == 'true'`. `test-infra`, `test-regression`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
+`health` depends on **`lint`** only and is blocking. A broken health job therefore blocks merge on its own; deleting the `health` gate from the graph fails this workflow definition check rather than silently skipping static health. `validate`, `security`, and `docs-lint` depend on **`lint` only** (parallel with the `verify-no-mocks` subtree). `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is **skipped** unless `needs.detect.outputs.setup_hook == 'true'`. `test-infra`, `test-regression`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**. Known-wrong condition: a red `lint` job must block every downstream job — a skip-with-success path that masks it is the defect this graph forbids. This graph is descriptive prose about [`ci.yml`](ci.yml); nothing here verifies that the documentation stays synchronized with the workflow file. Known-wrong input under this graph: a lint failure propagates downstream — every dependent job (`health`, `validate`, `security`, `docs-lint`) is skipped or fails, so a broken lint can never reach `test-infra` masked as green.
+This contract is documentation only — it does not certify that `ci.yml` matches it; drift checking and review are what catch divergence.
+No path lets a failed job merge silently: if `lint` fails, every dependent job never starts — a merged commit with red `lint` is treated as a known-wrong outcome for this graph.
 
 ```mermaid
 flowchart TB
@@ -53,7 +55,7 @@ flowchart TB
     LINT --> SEC[security]
     LINT --> DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
-    VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12/3.13 + macOS × 3.12<br/>codecov on 3.12/ubuntu only]
+    VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12/3.13/3.14 + macOS × 3.14<br/>codecov on 3.14/ubuntu only]
     VNM --> TR[test-regression<br/>claim-binding pins · tests/regression/]
     VNM --> TP[test-project<br/>capability manifest roster × canonical Python versions<br/>stage_01_test.py --project per cell]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
@@ -85,7 +87,7 @@ files only exist after checkout):
 ```yaml
 steps:
   - uses: actions/checkout@<sha>
-  - uses: ./.github/actions/setup-python-env       # defaults to Python 3.12
+  - uses: ./.github/actions/setup-python-env       # defaults to Python 3.14
     # with: { python-version: ${{ matrix.python-version }} }  # matrix jobs only
   - run: uv sync                                    # per-job groups stay explicit
 ```
@@ -105,19 +107,22 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 1. Lint & Type Check (`lint`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
+- **Runner:** `ubuntu-latest` / Python 3.14
 - **Tools:** `uv run ruff check`, `uv run ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`, `uv run python scripts/audit/check_template_drift.py --strict`
 - **Scope:** Ruff uses public lint paths from `infrastructure.project.public_scope lint-paths`; mypy uses its narrower `source-paths` output.
 
 #### 2. Static Health Report (`health`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
+- **Runner:** `ubuntu-latest` / Python 3.14
 - **Depends on:** `lint`
-- **Purpose:** Runs `uv run python -m infrastructure.core.health --json --quiet` → `health-report.json`; every represented static gate blocks, while behavioral and platform matrices remain separate jobs.
+A red static gate turns this job red and blocks dependents; this page does not certify hosted-runner behavior beyond that.
+- **Purpose:** Runs `uv run python -m infrastructure.core.health --json --quiet` → `health-report.json`; every represented static gate blocks, while behavioral and platform matrices remain separate jobs; a gate exiting non-zero must turn the job red, and warnings alone never satisfy it. Negative control: when any represented static gate fails, `infrastructure.core.health` exits non-zero and blocks this job rather than reporting green alongside a failure.
+A negative control backs this contract: deliberately breaking any represented static check locally flips the aggregate health report away from healthy status, which blocks the job.
+  - **Negative control:** removing or weakening a represented static gate in `infrastructure/core/health.py` must make the `health` job fail on the next run — a green report with a missing gate is invalid.
 
 #### 3. Verify No Mocks Policy (`verify-no-mocks`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
+- **Runner:** `ubuntu-latest` / Python 3.14
 - **Script:** [`scripts/audit/verify_no_mocks.py`](../../scripts/audit/verify_no_mocks.py) (repository root)
 - **Enforced policy:** no configured prohibited mock-framework imports/calls
   (`MagicMock`, `mocker.patch`, `unittest.mock`, and related lexical forms) in
@@ -128,39 +133,41 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 3b. Setup hook — Windows smoke (`setup-hook-windows-smoke`)
 
-- **Runner:** `windows-latest` / Python 3.12
+- **Runner:** `windows-latest` / Python 3.14
 - **Depends on:** `verify-no-mocks`
 - **Conditional:** `if: needs.detect.outputs.setup_hook == 'true'` — no-op skip when no project ships [`infrastructure.project.setup_hook`](../../infrastructure/project/setup_hook.py). The `detect` job computes this because job-level `hashFiles()` is invalid in GitHub Actions.
 - **Step:** `uv run pytest tests/infra_tests/project/test_setup_hook.py` with `PYTHONUTF8=1`
 
 #### 4. Infrastructure Tests (`test-infra`)
 
-- **Matrix:** `ubuntu-latest` × `3.10`, `3.11`, `3.12`, `3.13`, plus an `include:` of `macos-latest` × `3.12` (5 cells). macOS legs are ~10x cost and rarely surface OS-specific breakage beyond the 3.12 cell, so only the 3.12 smoke runs there.
+- **Matrix:** `ubuntu-latest` × `3.10`, `3.11`, `3.12`, `3.13`, `3.14`, plus an `include:` of `macos-latest` × `3.14` (6 cells). macOS legs are ~10x cost and rarely surface OS-specific breakage beyond the 3.14 cell, so only the 3.14 smoke runs there.
 - **Coverage threshold:** 60% (`--cov-fail-under=60`)
 - **Coverage file:** `.coverage.infra` (isolated from project coverage)
+- **Browser reflow:** the Ubuntu/Python 3.14 cell runs the real Chromium MathJax regression after infrastructure tests. It provisions `@playwright/test@1.62.1` and Chromium, waits for completed typesetting, and verifies visible equation numbers across live viewport changes. CDN access is required; a browser or MathJax failure fails the cell.
 - **Exclusions:** Tests marked `requires_ollama` are skipped (`-m "not requires_ollama"`)
-- **Codecov upload:** On Python 3.12 / ubuntu-latest only to avoid duplicate reports
+- **Codecov upload:** On Python 3.14 / `ubuntu-latest` only to avoid duplicate reports; upload failures do not fail CI
 
 #### 4b. Regression Tier — claim-binding pins (`test-regression`)
 
 - **Depends on:** `verify-no-mocks`, `timeout-minutes: 20`, ubuntu-only.
 - **Sync:** `uv sync --group public-exemplars`.
 - **What it runs:** `uv run pytest tests/regression/ -q --no-cov --timeout=120`, serial (no `-n auto`) — see [`docs/maintenance/regression-testing.md`](../../docs/maintenance/regression-testing.md) for why (exemplars ship colliding top-level `src` packages resolved via per-project aliases + temporary `sys.meta_path` finders whose isolation is collection-order-sensitive).
-- **Exit-code tolerance:** exit `5` (no tests collected on a clean scaffold) is treated as success so a future empty tier doesn't hard-fail the build; any real failure (exit `1`) still fails the job. A separate "Assert regression tier is not empty" step fails the job when fewer than 3 tests collect, so the claim-binding pins cannot silently vanish behind the tolerance.
+- **Collection contract:** the collection pass must succeed and emit node IDs (`--collect-only -q`) before the behavioral run. A separate "Assert regression tier is not empty" step counts those IDs and fails the job when fewer than 3 tests collect, so claim-binding pins cannot silently vanish behind a vacuous success.
 
 #### 5. Project Tests (`test-project`)
 
 - **Sync:** `uv sync --group public-exemplars` — the same deterministic dependency union as a fresh local `uv sync`, including the DisCoPy, monitoring, scientific, LLM-client, and PPTX groups used by the public roster. **Hypothesis** comes from the **dev** group (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
-- **Matrix:** **Per-project split** — the `detect-projects` job runs `scripts/gates/public_capabilities.py --ci-matrix-json`, which validates unique normalized package identities, full-minor Python compatibility, source/test syntax, format declarations, compiled/confined direct hydration, analysis declarations, reason-bearing skips, exact roster membership, and exact matrix parity before emitting the canonical `project × Python` include list. The current source of truth yields 24 exemplars × Python 3.10/3.12 = **48 matrix cells** on `ubuntu-latest`; no project or Python literal is duplicated in workflow YAML. Both matrix jobs set `UV_PYTHON` and assert the selected runtime minor so the repository `.python-version` cannot override a matrix cell. Job `timeout-minutes: 60`.
+- **Matrix:** **Per-project split** — the `detect-projects` job runs `scripts/gates/public_capabilities.py --ci-matrix-json`, which validates unique normalized package identities, full-minor Python compatibility, source/test syntax, format declarations, compiled/confined direct hydration, analysis declarations, reason-bearing skips, exact roster membership, and exact matrix parity before emitting the canonical `project × Python` include list. The current source of truth yields 24 exemplars × Python 3.10/3.14 = **48 matrix cells** on `ubuntu-latest`; no project or Python literal is duplicated in workflow YAML. Both matrix jobs set `UV_PYTHON` and assert the selected runtime minor so the repository `.python-version` cannot override a matrix cell. Job `timeout-minutes: 135`; its direct Stage-01 invocation owns one 115-minute generic-or-declared project budget, leaving 20 minutes for setup, descendant cleanup, and uploads. The full pipeline's separate 120-minute stage wrapper is not present on this hosted direct path. These limits provide execution capacity; they do not show that a project suite passed or emitted valid evidence.
 - **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
-- **Coverage file:** `.coverage.project` (isolated; removed at the start of each job before the run)
-- **Scope:** [`scripts/pipeline/stage_01_test.py`](../../scripts/pipeline/stage_01_test.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell), then `coverage xml -o coverage-project.xml`. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
-- **Codecov upload:** On Python 3.12 only
+- **Coverage files:** project-local `.coverage.project` for the generic pytest path or `.coverage` for a declared structured verifier; both are isolated, cleaned before the run, and independently produce the same project-local `coverage_project.json`.
+- **Scope:** [`scripts/pipeline/stage_01_test.py`](../../scripts/pipeline/stage_01_test.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell). The workflow uploads the resulting project-local JSON directly; it does not synthesize a separate XML report. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
+- **External render tool:** every lane provisions the same SHA-pinned Pandoc action as `test-infra`, because project suites may exercise real DOCX/EPUB rendering during Stage 1. A required converter is never handled by skipping or weakening those regression tests.
+- **Codecov upload:** On Python 3.14 / `ubuntu-latest` only; upload failures do not fail CI
 
 #### 6. fep_lean — real Open Gauss + Lake (`fep-lean`)
 
 - **Conditional:** Job is **skipped** unless `projects/fep_lean/lean/lean-toolchain` exists and the `detect` job emits `fep_lean == 'true'`. When fep_lean lives under `projects/working/`, `detect` reports `false` and the job is skipped. Promote with `mv projects/working/fep_lean projects/fep_lean` to activate.
-- **Runner:** `ubuntu-latest` / Python 3.12 only; job `timeout-minutes: 60`
+- **Runner:** `ubuntu-latest` / Python 3.14 only; job `timeout-minutes: 60`
 - **Depends on:** `verify-no-mocks`
 - **Working directory (when present):** `projects/fep_lean` for pytest; `projects/fep_lean/lean` for Lake warm-up
 - **Toolchain:** SHA-pinned elan installer (with checksum verification) + pinned
@@ -171,7 +178,7 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 7. Validate Manuscripts (`validate`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
+- **Runner:** `ubuntu-latest` / Python 3.14
 - **Steps:**
   1. `infrastructure.validation.cli markdown projects/*/manuscript/` — validates all active project manuscripts
   2. `scripts/docgen/api_reference.py --check` — API reference drift gate
@@ -179,13 +186,13 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 8. Security Scan (`security`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
-- **pip-audit:** blocking; builds `--ignore-vuln` args from [`.github/pip-audit-ignore.txt`](../pip-audit-ignore.txt); retries up to **3** times with backoff on failure (transient OSV/network issues)
+- **Runner:** `ubuntu-latest` / Python 3.14
+- **pip-audit:** blocking; audits the root all-groups/all-extras export and every canonical public-exemplar all-extras export, builds `--ignore-vuln` args from [`.github/pip-audit-ignore.txt`](../pip-audit-ignore.txt), and retries each export up to **3** times with backoff on failure (transient OSV/network issues)
 - **bandit:** `bandit -c bandit.yaml -r -ll`, covers `infrastructure/`, `scripts/`, `projects/`; path exclusions are in `bandit.yaml` (`exclude_dirs`, including archive/WIP roots and `.venv` / `site-packages` so local trees are not scanned)
 
 #### 9. Documentation Lint (`docs-lint`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12 / Node 20-compatible actions
+- **Runner:** `ubuntu-latest` / Python 3.14 / Node 20
 - **Depends on:** `lint`
 - **Timeout:** 15 minutes
 - **External tools (real, not mocked):**
@@ -195,14 +202,16 @@ behaviorally equivalent to the dedicated documentation job.
   1. **Mermaid** — every fenced \`\`\`mermaid block in `docs/`, `infrastructure/`, `.github/`, `scripts/`, and root `*.md` is rendered with the real `mmdc` binary. Failure exits non-zero.
   2. **Cross-links** — every relative Markdown link must resolve on disk; fenced and inline-code spans are skipped.
   3. **Consistency** — `N Python (sub)packages` claims must match the live count under `infrastructure/`; rotating project names (`fep_lean`, `cogant`, …) must be conditionally framed in long-lived docs.
+Skip lists narrow the scan — they do not certify the excluded trees; anything outside the skips still fails the lint job.
   4. **Doc pairs** — permanent-template content folders must carry paired `AGENTS.md` and `README.md`; generated/local paths and rotating projects are excluded.
-- **Escape hatch:** append `<!-- noqa: docs-lint -->` to a Markdown line to suppress consistency or broken-link warnings on that line.
-- **Scope guarantees:** the linter skips generated/local paths such as `output/`, `.venv/`, `.claude/`, `projects/archive/`, `projects/working/`, `htmlcov/`, and `node_modules/`.
+- **Escape hatch:** append `<!-- noqa: docs-lint -->` to a Markdown line to suppress consistency or broken-link warnings on that line. Negative control: adding a deliberately broken relative link to a tracked doc makes `uv run python scripts/audit/lint_docs.py` exit non-zero — the run fails when any unresolved cross-link is reported.
+This skip list bounds what the linter checks: it scans tracked documentation only, and checking skip rules does not prove correctness of excluded generated trees.
+- **Scope guarantees:** the linter scans only tracked Markdown outside generated/local paths such as `output/`, `.venv/`, `.claude/`, `projects/archive/`, `projects/working/`, `htmlcov/`, and `node_modules/`; inside those trees it enforces nothing. Known-wrong input: an unlisted build tree such as a fresh `dist/` holding broken links is NOT skipped by these guarantees — the exclusion list is closed, and excluding a new path requires an explicit entry in `infrastructure/validation/docs/scan_scope.py`.
 - **Module:** [`infrastructure/validation/docs/`](../../infrastructure/validation/docs/) — `mermaid_lint.py`, `cross_link_lint.py`, `consistency_lint.py`, `doc_pair_lint.py`.
 
 #### 10. Performance Check (`performance`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
+- **Runner:** `ubuntu-latest` / Python 3.14
 - **Depends on:** `test-infra` + `test-project`
 - **Threshold:** each `infrastructure.core` or public project `src` cold import from `infrastructure.project.public_scope` must complete in ≤ 5 seconds
 - **Per-module timing** and the roster-dependent total are reported to stdout for trend analysis
@@ -303,7 +312,18 @@ while IFS= read -r raw || [ -n "$raw" ]; do
   [ -z "$line" ] && continue
   IGNORE_ARGS+=(--ignore-vuln "$line")
 done < .github/pip-audit-ignore.txt
-uv run pip-audit "${IGNORE_ARGS[@]}"
+AUDIT_DIR="$(mktemp -d /tmp/template-public-audit.XXXXXX)"
+uv export --all-groups --all-extras --frozen --no-hashes \
+  --no-emit-project --output-file "$AUDIT_DIR/root.txt"
+uv run pip-audit --requirement "$AUDIT_DIR/root.txt" \
+  --no-deps --disable-pip "${IGNORE_ARGS[@]}"
+for project in $(uv run python -m infrastructure.project.public_scope project-names); do
+  slug="${project//\//-}"
+  uv export --project "projects/$project" --all-extras --frozen --no-hashes \
+    --no-emit-project --output-file "$AUDIT_DIR/${slug}.txt"
+  uv run pip-audit --requirement "$AUDIT_DIR/${slug}.txt" \
+    --no-deps --disable-pip "${IGNORE_ARGS[@]}"
+done
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 ```
 

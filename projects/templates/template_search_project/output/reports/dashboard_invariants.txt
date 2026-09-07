@@ -1,31 +1,37 @@
 Invariants for Literature Search Coverage Dashboard
 ===================================================
-generated:    2026-08-03T00:32:43Z
+generated:    2026-08-15T12:47:20Z
 project:      template_search_project
-git rev:      80735407f
+git rev:      634333692
 git status:   dirty (uncommitted changes)
 
-summary:      11/11 passed, 0 failed
+summary:      14/14 passed, 0 failed
 
-  [PASS] paper_field_present_id         equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
+  [PASS] paper_field_present_id              equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
          every paper has a non-empty `id`; missing at indices []
-  [PASS] paper_field_present_title      equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
+  [PASS] paper_field_present_title           equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
          every paper has a non-empty `title`; missing at indices []
-  [PASS] paper_id_unique                equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
+  [PASS] paper_id_unique                     equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
          paper IDs must be unique; duplicates: []
-  [PASS] doi_coverage_above_floor       ge     0.666667 >= 0.5 - 0.0e+00
+  [PASS] doi_coverage_above_floor            ge     0.666667 >= 0.5 - 0.0e+00
          |papers with DOI| / N = 66.67% ≥ 50%
-  [PASS] abstract_coverage_above_floor  ge     1 >= 0.5 - 0.0e+00
+  [PASS] abstract_coverage_above_floor       ge     1 >= 0.5 - 0.0e+00
          |papers with abstract| / N = 100.00% ≥ 50%
-  [PASS] year_coverage_above_floor      ge     1 >= 0.7 - 0.0e+00
+  [PASS] year_coverage_above_floor           ge     1 >= 0.7 - 0.0e+00
          |papers with year| / N = 100.00% ≥ 70%
-  [PASS] year_min_plausible             ge     2004 >= 1900 - 0.0e+00
+  [PASS] year_min_plausible                  ge     2004 >= 1900 - 0.0e+00
          earliest paper year = 2004
-  [PASS] year_max_plausible             le     2018 <= 2027 + 0.0e+00
+  [PASS] year_max_plausible                  le     2018 <= 2027 + 0.0e+00
          latest paper year = 2018
-  [PASS] keywords_nonempty              ge     3 >= 1 - 0.0e+00
+  [PASS] keywords_nonempty                   ge     3 >= 1 - 0.0e+00
          deep search ran with 3 keywords
-  [PASS] unique_papers_nonempty         ge     300 >= 1 - 0.0e+00
+  [PASS] unique_papers_nonempty              ge     300 >= 1 - 0.0e+00
          unique papers list has 300 entries
-  [PASS] unique_papers_min_per_keyword  ge     100 >= 1 - 0.0e+00
+  [PASS] unique_papers_min_per_keyword       ge     100 >= 1 - 0.0e+00
          avg papers per keyword = 100.0 ≥ 1
+  [PASS] deep_search_keywords_present        ge     3 >= 1 - 0.0e+00
+         deep-search aggregate contains 3 keyword(s)
+  [PASS] deep_search_keywords_unique         equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
+         duplicate deep-search keywords: 0
+  [PASS] deep_search_citation_keys_complete  equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
+         papers without citation keys: []

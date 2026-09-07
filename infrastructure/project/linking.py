@@ -14,10 +14,12 @@ from pathlib import Path
 from infrastructure.core.project_paths import find_repo_root
 from infrastructure.core.sidecar_linking import (
     LinkSyncResult,
+    MirrorOffender,
     SidecarLinkConfig,
     is_managed_symlink as _is_managed_symlink,
     resolve_private_root,
     sync_private_links,
+    unmanaged_mirror_entries as _unmanaged_mirror_entries,
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
@@ -25,25 +27,19 @@ PROTECTED_NAMES: frozenset[str] = frozenset(Path(name).name for name in PUBLIC_P
 ACTIVE_SUBDIR = "active"
 WORKING_SUBDIR = "working"
 ONGOING_SUBDIR = "ongoing"
-PUBLISHED_SUBDIR = "published"
 ARCHIVE_SUBDIR = "archive"
-OTHER_SUBDIR = "other"
 LIFECYCLE_SUBDIRS = (
     ACTIVE_SUBDIR,
     WORKING_SUBDIR,
     ONGOING_SUBDIR,
-    PUBLISHED_SUBDIR,
     ARCHIVE_SUBDIR,
-    OTHER_SUBDIR,
 )
 REQUIRED_PRIVATE_ROOT_SUBDIRS = (WORKING_SUBDIR, ARCHIVE_SUBDIR)
 LIFECYCLE_LINK_DIRS: dict[str, str] = {
     ACTIVE_SUBDIR: "projects/active",
     WORKING_SUBDIR: "projects/working",
     ONGOING_SUBDIR: "projects/ongoing",
-    PUBLISHED_SUBDIR: "projects/published",
     ARCHIVE_SUBDIR: "projects/archive",
-    OTHER_SUBDIR: "projects/other",
 }
 CONFIG_FILENAME = ".private_projects_root"
 ENV_VAR = "TEMPLATE_PRIVATE_PROJECTS_ROOT"
@@ -70,6 +66,22 @@ def private_projects_root(repo_root: Path) -> Path | None:
 def is_managed_symlink(path: Path, private_root: Path) -> bool:
     """Check whether managed symlink."""
     return _is_managed_symlink(path, private_root, PROJECT_LINK_CONFIG)
+
+
+def unmanaged_project_mirror_entries(
+    repo_root: Path,
+    private_root: Path | None = None,
+) -> list[MirrorOffender]:
+    """Return ``projects/<lifecycle>/`` entries the link syncer does not manage.
+
+    Returns an empty list when no private root is configured — a clean public
+    clone has no mirror to police, so the guard is a no-op in CI and only bites
+    on a developer checkout that has drifted.
+    """
+    root = private_root or private_projects_root(repo_root)
+    if root is None:
+        return []
+    return _unmanaged_mirror_entries(repo_root, root, PROJECT_LINK_CONFIG)
 
 
 def sync_private_project_links(

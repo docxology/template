@@ -1,0 +1,12 @@
+[project]
+name = "child_statistics"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["numpy", "matplotlib", "pyyaml"]
+# spec_hash: 28bdf9d5951b0b1d  grammar_hash: 1142e011a7d4b835
+# seed: 42  track: analytical  section_set: standard
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-v --tb=short"

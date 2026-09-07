@@ -10,7 +10,7 @@ For a copy-paste LLM scaffold anchored on that exemplar, see [new-project-one-sh
 > the discovery predicate by itself. No infrastructure changes are needed for a
 > structurally valid project.
 >
-> **Typed-subfolder Lifecycle**: Projects live in typed subfolders under `projects/`: `projects/templates/` (the git-tracked public exemplars, rendered), `projects/active/` (hot-seat render set, symlinked from the private repo, rendered), and the non-rendered mirrors `projects/working/`, `projects/ongoing/` (long-lived, no publication target), `projects/published/`, `projects/archive/`, and `projects/other/`. Only `projects/templates/*` and `projects/active/*` are discovered and rendered. See [_generated/COUNTS.md](../_generated/COUNTS.md).
+> **Typed-subfolder Lifecycle**: Projects live in typed subfolders under `projects/`: `projects/templates/` (the git-tracked public exemplars, rendered), `projects/active/` (hot-seat render set, symlinked from the private repo, rendered), and the non-rendered mirrors `projects/working/`, `projects/ongoing/` (long-lived, no publication target), and `projects/archive/`. Only `projects/templates/*` and `projects/active/*` are discovered and rendered. See [_generated/COUNTS.md](../_generated/COUNTS.md).
 >
 > **Decision memory**: Follow [`docs/rules/memory_and_decision_records.md`](../rules/memory_and_decision_records.md). Use `WHY:` comments for surprising local choices, project `TODO.md` / `ISA.md` for active plans and invariants, ADRs for structural template rules, generated docs for volatile counts/rosters, and negative-control tests for new verifier-like gates.
 
@@ -27,9 +27,12 @@ or has no Python files under `src/`. Missing `manuscript/config.yaml` does not
 prevent low-level discovery, but it leaves metadata and render configuration
 incomplete for normal pipeline use.
 
-**Solution**: Put the project under `projects/<name>/`, create `src/` and
-`tests/`, add at least one `.py` file under `src/`, and add
-`manuscript/config.yaml` before rendering.
+**Solution**: Put a deliberately public exemplar under
+`projects/templates/<name>/`, or sync a private sidecar `active/<name>/` into
+`projects/active/<name>/`. Create `src/` and `tests/`, add at least one `.py`
+file under `src/`, and add `manuscript/config.yaml` before rendering. Ordinary
+sidecar `working/`, `ongoing/`, and `archive/` projects are targetable by a
+qualified name but are not in default discovery.
 
 ### Test Import Errors
 
@@ -164,6 +167,9 @@ paper:
   title: "Your Paper Title"
   version: "1.0"
   date: "2026-03-07"
+  cover:
+    image: "figures/cover.png"
+    alt: "Concise plain-text description of the cover artwork."
 
 authors:
   - name: "Author Name"
@@ -173,6 +179,10 @@ testing:
   max_test_failures: 0
   max_infra_test_failures: 3
   max_project_test_failures: 0
+
+metadata:
+  language: "en"
+  tagged_pdf: false  # true requires LuaLaTeX and nonblank cover alt metadata
 
 # Per-format render toggles. PDF/HTML/Slides default on; DOCX/EPUB default
 # off. See docs/usage/output-formats.md for the full reference.
@@ -186,6 +196,43 @@ render:
 ```
 
 > Public template exemplars ship with this block populated. New projects should mirror the structure; omitting the block falls back to defaults (PDF/HTML/Slides on, DOCX/EPUB off).
+
+### Result-Bearing Manuscript Contract
+
+If the manuscript reports computed values, do not type those values into
+Markdown, captions, tables, abstract, title-page metadata, or supplements.
+Mirror the control-positive exemplar's producer chain:
+
+1. tested analysis code under `src/` writes source-bound tables/summaries and
+   figures;
+2. `src/manuscript_variables.py` maps typed analysis/configuration fields to
+   uppercase `{{TOKEN_NAME}}` values without fabricating absent results;
+3. `scripts/z_generate_manuscript_variables.py` calls that source module,
+   writes `output/data/manuscript_variables.json`, and hydrates
+   `output/manuscript/` (use a clearly labelled draft escape only before
+   analysis exists);
+4. the figure producer writes `output/figures/figure_registry.json` with a
+   stable label, filename, visible caption, `generated_by`, source metadata,
+   and separately authored `metadata.alt_text`; and
+5. tests scan result-bearing manuscript files, prove that every token is
+   generated, reject unknown/missing source fields, and fail if unresolved
+   tokens remain.
+
+The shared injector warns about unresolved tokens; it is not by itself a
+fail-closed completeness proof. Keep the project test and pre-render scan:
+
+```bash
+rg -n '\{\{[A-Z][A-Z0-9_]*\}\}' \
+  projects/<subfolder>/<name>/output/manuscript
+uv run python -m infrastructure.validation.cli prerender \
+  projects/<subfolder>/<name>/manuscript --repo-root .
+```
+
+Captions and prose must state the relevant population/sample, units,
+denominator, estimator, uncertainty/error-bar definition, exclusions, and
+transformations. Cite the primary source next to externally supported claims;
+identifier resolution does not prove claim support or current correction/
+retraction status.
 
 ---
 
@@ -315,7 +362,9 @@ dependencies = [
 
 **Symptom**: Pipeline prints 6+ `WARNING: Unknown config key 'X' in .../config.yaml` lines on every test and setup stage.
 
-**Root cause**: The infrastructure's config loader validates keys against a known schema. Project-specific keys (e.g., `search`, `knowledge_graph`, `pipeline_stages`, `llm_extraction`, `hypothesis_definitions`, `subfield_keywords`) that are not in the shared schema trigger warnings.
+**Root cause**: The infrastructure's config loader validates keys against a known schema. Project-specific keys (e.g., `search`, `knowledge_graph`, `pipeline_stages`, `llm_extraction`, `hypothesis_definitions`, `subfield_keywords`) that are not in the shared schema trigger warnings (negative control: `tests/infra_tests/core/test_config_loader.py::test_unknown_key_logs_warning` loads config containing the misspelled key `papr` and asserts the warning fires with the `paper` suggestion).
+Passing key validation does not guarantee correct values — matching the schema proves only that the keys are recognized.
+As a negative control, introducing a misspelled top-level key reproduces the documented WARNING on every run rather than being silently accepted, so the symptom cannot occur without the corresponding misconfiguration.
 
 **Fix options**:
 
@@ -366,9 +415,9 @@ Every directory must have:
 | Coverage threshold | ≥90% for project code |
 | Zero-Mock policy | No `unittest.mock`, no `MagicMock`, no `@patch` |
 | Markers | `@pytest.mark.requires_ollama` for service-dependent tests |
-| Timeouts | 60s+ for integration tests |
-| Path computation | `REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent` |
-| Assertions | Use minimum-count checks (`≥N`) for forward compatibility |
+| Timeouts | Bound integration work according to the declared service/runtime contract |
+| Path computation | Resolve from a known project/repository marker; do not copy a fixed parent count between layouts |
+| Assertions | Assert exact semantic invariants; use minimum counts only when extras are genuinely allowed |
 
 ---
 
@@ -378,16 +427,24 @@ After creating your project, verify each pipeline stage:
 
 ```bash
 # 1. Tests pass
-uv run python scripts/pipeline/stage_01_test.py --project <name>
+uv run python scripts/pipeline/stage_01_test.py --project <qualified-name>
 
 # 2. Analysis scripts execute
-uv run python scripts/pipeline/stage_02_analysis.py --project <name>
+uv run python scripts/pipeline/stage_02_analysis.py --project <qualified-name>
 
-# 3. Full pipeline
-./run.sh  # Select your project, then option 9
+# 3. Source and rendered scholarly gates
+uv run python -m infrastructure.validation.cli evidence \
+  projects/<subfolder>/<name> --fail-on-issues
+uv run python -m infrastructure.validation.cli publication-audit \
+  --project <qualified-name> --rendered --strict \
+  --require-figure-accessibility --format markdown
 
-# 4. With steganography
-./secure_run.sh --project <name>
+# 4. Full core pipeline, then optional deterministic PDF watermarking
+uv run python scripts/runner/execute_pipeline.py \
+  --project <qualified-name> --core-only
+./secure_run.sh --project <qualified-name> --core-only --deterministic
 ```
 
-> **Lesson**: Always test each stage independently before running the full pipeline. A failure in Stage 4 (Analysis) will mask issues in later stages.
+> **Lesson**: Validate producers before consumers. A failed or stale analysis
+> invalidates downstream variables, figures, hydrated manuscripts, renders, and
+> receipts even if those files remain readable.

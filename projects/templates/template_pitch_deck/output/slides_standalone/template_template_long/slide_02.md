@@ -1,6 +1,6 @@
 # The problem
 
-*Slide 2 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 2 of 57 — template_template pitch, long deck — kind: `content`*
 
 - Research groups publish claims about their own tools and pipelines that no one outside the team can re-check.
 - Manuscripts describing infrastructure go stale the moment the infrastructure changes underneath them.

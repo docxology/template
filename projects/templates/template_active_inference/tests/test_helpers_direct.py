@@ -111,13 +111,13 @@ class TestSheafTracksHelpersPortableRepoPath:
         result = _portable_repo_path(target, proj)
         assert result == "<repo-root>/projects/my_proj/src/mod.py"
 
-    def test_outside_repo_falls_back_to_absolute(self, tmp_path: Path) -> None:
+    def test_outside_repo_is_redacted(self, tmp_path: Path) -> None:
         isolated = tmp_path / "isolated"
         isolated.mkdir()
         target = isolated / "data.txt"
         target.touch()
         result = _portable_repo_path(target, isolated)
-        assert result == target.as_posix()
+        assert result == "<external-path>"
 
 
 # ---------------------------------------------------------------------------
@@ -228,6 +228,28 @@ class TestSheafTracksIOSourceCommit:
         from roadmap_tracks.sheaf_tracks_io import _source_commit
 
         assert _source_commit(tmp_path, process_runner=_fake_runner) == "unknown"
+
+
+def test_provenance_comparison_allows_commit_after_producer_run() -> None:
+    from roadmap_tracks.sheaf_track_validation import _provenance_payloads_equal
+
+    saved = {
+        "schema": "template_active_inference.artifact_provenance.v1",
+        "artifacts": {"output/data/result.json": {"sha256": "abc", "source_commit": "producer-commit"}},
+        "rows": [{"artifact": "output/data/result.json", "source_commit": "producer-commit"}],
+        "field_provenance_rows": [{"artifact": "output/data/result.json", "source_commit": "producer-commit"}],
+    }
+    live = {
+        **saved,
+        "artifacts": {"output/data/result.json": {"sha256": "abc", "source_commit": "validation-commit"}},
+        "rows": [{"artifact": "output/data/result.json", "source_commit": "validation-commit"}],
+        "field_provenance_rows": [{"artifact": "output/data/result.json", "source_commit": "validation-commit"}],
+    }
+
+    assert _provenance_payloads_equal(saved, live) is True
+
+    cast(dict[str, Any], live["artifacts"])["output/data/result.json"]["sha256"] = "stale"
+    assert _provenance_payloads_equal(saved, live) is False
 
 
 # ---------------------------------------------------------------------------

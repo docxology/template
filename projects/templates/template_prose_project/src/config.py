@@ -34,6 +34,7 @@ _KNOWN_TOP_LEVEL_KEYS: frozenset[str] = frozenset(
         "prose",
         "bibliography",
         "report",
+        "llm",
         "render",  # accepted-but-ignored (parsed by infrastructure.rendering.config)
     }
 )
@@ -77,6 +78,8 @@ _KNOWN_BIBLIOGRAPHY_KEYS: frozenset[str] = frozenset({"references_path", "fail_o
 _KNOWN_REPORT_KEYS: frozenset[str] = frozenset(
     {"output_path", "include_per_file_table", "include_outline", "include_quality_flags"}
 )
+_KNOWN_LLM_KEYS: frozenset[str] = frozenset({"review"})
+_KNOWN_LLM_REVIEW_KEYS: frozenset[str] = frozenset({"enabled", "provider", "model", "transcript_path"})
 
 
 def _validate_keys(section: str, raw: dict[str, Any], allowed: frozenset[str]) -> None:
@@ -157,6 +160,34 @@ class ReportConfig:
 
 
 @dataclass
+class LLMReviewConfig:
+    """Opt-in, transcript-backed language-model review configuration.
+
+    The base exemplar never invokes a network client. An enabled review is
+    accepted only when a fork supplies a local, schema-checked transcript
+    receipt; this keeps the default pipeline deterministic and offline while
+    making an explicitly configured review auditable.
+    """
+
+    enabled: bool = False
+    provider: str = ""
+    model: str = ""
+    transcript_path: str = "output/llm_review.json"
+
+    def __post_init__(self) -> None:
+        if not self.enabled:
+            return
+        providers = {"local_transcript", "ollama", "openai_compatible"}
+        if self.provider not in providers:
+            raise ValueError(f"Unsupported LLM review provider {self.provider!r}. Allowed: {sorted(providers)}")
+        if not self.model.strip():
+            raise ValueError("enabled LLM review requires a non-empty model")
+        candidate = Path(self.transcript_path)
+        if candidate.is_absolute() or ".." in candidate.parts:
+            raise ValueError(f"LLM transcript_path must be relative and traversal-free, got {self.transcript_path!r}")
+
+
+@dataclass
 class ProjectConfig:
     """Top-level prose-project configuration."""
 
@@ -167,6 +198,7 @@ class ProjectConfig:
     prose: ProseAnalysisConfig = field(default_factory=ProseAnalysisConfig)
     bibliography: BibliographyConfig = field(default_factory=BibliographyConfig)
     report: ReportConfig = field(default_factory=ReportConfig)
+    llm: LLMReviewConfig = field(default_factory=LLMReviewConfig)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ProjectConfig":
@@ -176,9 +208,13 @@ class ProjectConfig:
         prose_raw = data.get("prose", {}) or {}
         bib_raw = data.get("bibliography", {}) or {}
         report_raw = data.get("report", {}) or {}
+        llm_raw = data.get("llm", {}) or {}
+        review_raw = llm_raw.get("review", {}) or {}
         _validate_keys("prose", prose_raw, _KNOWN_PROSE_KEYS)
         _validate_keys("bibliography", bib_raw, _KNOWN_BIBLIOGRAPHY_KEYS)
         _validate_keys("report", report_raw, _KNOWN_REPORT_KEYS)
+        _validate_keys("llm", llm_raw, _KNOWN_LLM_KEYS)
+        _validate_keys("llm.review", review_raw, _KNOWN_LLM_REVIEW_KEYS)
 
         return cls(
             title=str(paper.get("title") or "Prose Review Project"),
@@ -196,6 +232,12 @@ class ProjectConfig:
                 include_per_file_table=bool(report_raw.get("include_per_file_table", True)),
                 include_outline=bool(report_raw.get("include_outline", True)),
                 include_quality_flags=bool(report_raw.get("include_quality_flags", True)),
+            ),
+            llm=LLMReviewConfig(
+                enabled=bool(review_raw.get("enabled", False)),
+                provider=str(review_raw.get("provider", "")),
+                model=str(review_raw.get("model", "")),
+                transcript_path=str(review_raw.get("transcript_path", "output/llm_review.json")),
             ),
         )
 

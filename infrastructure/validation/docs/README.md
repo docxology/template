@@ -29,7 +29,9 @@ See [`AGENTS.md`](AGENTS.md) for the delegation table (`docs_lint`, `markdown_va
 Use `uv run python scripts/audit/audit_documentation.py --format markdown` for a
 source-backed advisory report over public docs, generated-fact grounding,
 verifier negative-control claims, and Python `def` / `class` documentation
-coverage. This does not replace the blocking `lint_docs.py` gate.
+coverage. Historical changelogs, iteration journals, review archives, and
+Markdown table rows are inventory-only rather than active policy claims. This
+does not replace the blocking `lint_docs.py` gate.
 
 ## See Also
 

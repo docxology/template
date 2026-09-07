@@ -94,6 +94,11 @@ gold_refinement:
   seed: 431
   composition_depth: "deep"
   hypothesis: "Gold-refining metallurgy provides a load-bearing pipeline for scientific manuscript composition: each stage (ore, smelting, assaying, cupellation, certification) maps to a real template-infrastructure operation, and purity increases monotonically from 9K to nine-nines."
+  reverse_assay:
+    target_purity: 0.9167
+    report_path: "output/reports/reverse_assay.json"
+  purity_vector:
+    dimensions: [stage_completion, claim_support, token_provenance, figure_quality]
   section_conditions:
     abstract: true
     introduction: true

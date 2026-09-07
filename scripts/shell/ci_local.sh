@@ -38,7 +38,7 @@ Direct-command fallback lanes (when act is unavailable):
   - security         Bandit MEDIUM+ on the tracked public scope
   - tests            canonical template project test stage
   - precommit        all pre-commit and pre-push hooks via uv
-  - confid           scripts/audit/check_tracked_all.py
+  - confid           scripts/audit/check_tracked_all.py + check_mirror_symlinks.py
   - public-readiness all 24 public exemplar tests in isolated subprocesses
 
 The fallback is intentionally described as a subset: workflow matrices,
@@ -172,6 +172,7 @@ if [[ -z "$JOB" || "$JOB" == "lint" ]]; then
   uv run python -m infrastructure.skills operations-check
   uv run python scripts/audit/check_tracked_generated_artifacts.py
   uv run python scripts/audit/check_tracked_all.py
+  uv run python scripts/audit/check_mirror_symlinks.py
   uv run python scripts/gates/module_line_count_check.py
 fi
 
@@ -211,6 +212,7 @@ fi
 if [[ -z "$JOB" || "$JOB" == "confid" ]]; then
   echo "[ci_local] === Confidentiality check ==="
   uv run python scripts/audit/check_tracked_all.py
+  uv run python scripts/audit/check_mirror_symlinks.py
 fi
 
 if [[ -z "$JOB" || "$JOB" == "public-readiness" ]]; then

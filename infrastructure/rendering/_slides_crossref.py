@@ -7,7 +7,7 @@ defining label. The combined manuscript PDF *does* resolve every label,
 and its retained ``.aux`` file (``output/pdf/_combined_manuscript.aux``)
 carries the ground-truth ``\\newlabel{label}{{number}{page}...}`` map.
 
-This module provides a fail-open pre-pass for
+This module provides the parsing and substitution pass used by
 :class:`infrastructure.rendering.slides_renderer.SlidesRenderer`:
 
 * :func:`parse_aux_label_numbers` parses the combined build's ``.aux``
@@ -17,23 +17,29 @@ This module provides a fail-open pre-pass for
 * :func:`resolve_cross_deck_references` rewrites ``\\ref{L}`` to the
   literal printed number (and ``\\eqref{L}`` to ``(N)``) for every label
   ``L`` that is **not** defined inside the deck's own ``.tex`` source.
-  Within-deck references are left alone so Beamer numbers them natively;
+  Within-deck references are left alone by default. Canonical accessible
+  refreshes resolve them from the same AUX and bind displayed, labeled
+  ``equation`` environments to that number with an explicit amsmath tag;
   labels absent from the aux map are left untouched and reported back to
-  the caller for the render log. The slide build never fails because of
-  this pass.
+  the caller. Direct standalone renders remain fail-open, while the canonical
+  post-combined refresh rejects unresolved non-section labels in strict mode.
 
 The numbers substituted here match the combined PDF exactly because they
-come *from* the combined PDF's own auxiliary file. Note the aux is a
-retained artefact of the most recent combined build: on the very first
-render of a project (no aux yet) every cross-deck ref stays as "??"
-until the next render pass, consistent with fail-open behavior.
+come *from* the combined PDF's own auxiliary file. Direct standalone slide
+renders remain fail-open when no AUX is available. The canonical rendering
+pipeline instead clears any stale combined AUX before the combined build,
+validates the newly produced label map, and then refreshes each Beamer deck;
+it therefore does not require a second pipeline invocation to resolve
+cross-deck references.
 """
 
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from pathlib import Path
 
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -46,9 +52,17 @@ COMBINED_AUX_BASENAME = "_combined_manuscript.aux"
 # \newlabel{<label>}{  — the label itself never contains braces.
 _NEWLABEL_RE = re.compile(r"\\newlabel\{([^{}]+)\}\{")
 
-# \ref{L} / \eqref{L}. The leading backslash keeps \pageref / \autoref /
-# \nameref / \cref tails from matching ("...ref" without its own backslash).
-_REF_RE = re.compile(r"\\(eqref|ref)\{([^{}]+)\}")
+# ``Section~\ref{L}`` reaches post-Pandoc Beamer as
+# ``Section\textasciitilde{}\ref{L}``.  Capture that escaped nonbreaking
+# join with the reference so successful numeric substitution can restore a
+# real TeX nonbreaking space rather than project a visible tilde.  The leading
+# reference backslash still keeps \pageref / \autoref / \nameref / \cref
+# tails from matching ("...ref" without their own backslash).
+_REF_RE = re.compile(
+    r"(?P<escaped_join>\\textasciitilde\{\})?"
+    r"(?P<authored_open>\()?"
+    r"\\(?P<command>eqref|ref)\{(?P<label>[^{}]+)\}"
+)
 
 # \label{L} occurrences inside the deck's own generated .tex source.
 _LABEL_RE = re.compile(r"\\label\{([^{}]+)\}")
@@ -58,6 +72,94 @@ _LABEL_RE = re.compile(r"\\label\{([^{}]+)\}")
 #: containing macros (e.g. hyperref's ``\M@TitleReference`` wrapping) is
 #: skipped so we never inject unexpanded TeX into a slide deck.
 _SAFE_NUMBER_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9.\-]*$")
+
+_LITERAL_ENVIRONMENT_START_RE = re.compile(r"\\begin\{(?P<environment>verbatim\*?|Verbatim|lstlisting|minted)\}")
+_INLINE_VERB_START_RE = re.compile(r"\\verb\*?(?P<delimiter>[^A-Za-z0-9\s])")
+
+
+def _is_escaped_character(text: str, index: int) -> bool:
+    """Return whether ``text[index]`` follows an odd backslash run."""
+
+    backslashes = 0
+    cursor = index - 1
+    while cursor >= 0 and text[cursor] == "\\":
+        backslashes += 1
+        cursor -= 1
+    return backslashes % 2 == 1
+
+
+def _tex_literal_ranges(tex_content: str) -> tuple[tuple[int, int], ...]:
+    """Locate comments and verbatim-like TeX regions in source order.
+
+    Cross-reference rewriting is a prose transformation.  Literal examples
+    inside comments, ``\\verb``, or code-listing environments must remain
+    byte-identical and must not become strict-render findings.
+    """
+
+    ranges: list[tuple[int, int]] = []
+    cursor = 0
+    length = len(tex_content)
+    while cursor < length:
+        character = tex_content[cursor]
+        if character == "%" and not _is_escaped_character(tex_content, cursor):
+            end = tex_content.find("\n", cursor)
+            end = length if end < 0 else end
+            ranges.append((cursor, end))
+            cursor = end
+            continue
+
+        if character == "\\" and not _is_escaped_character(tex_content, cursor):
+            environment = _LITERAL_ENVIRONMENT_START_RE.match(tex_content, cursor)
+            if environment is not None:
+                end_token = rf"\end{{{environment.group('environment')}}}"
+                end_start = tex_content.find(end_token, environment.end())
+                end = length if end_start < 0 else end_start + len(end_token)
+                ranges.append((cursor, end))
+                cursor = end
+                continue
+
+            inline_verb = _INLINE_VERB_START_RE.match(tex_content, cursor)
+            if inline_verb is not None:
+                delimiter = inline_verb.group("delimiter")
+                line_end = tex_content.find("\n", inline_verb.end())
+                search_end = length if line_end < 0 else line_end
+                delimiter_end = tex_content.find(delimiter, inline_verb.end(), search_end)
+                end = search_end if delimiter_end < 0 else delimiter_end + 1
+                ranges.append((cursor, end))
+                cursor = end
+                continue
+        cursor += 1
+    return tuple(ranges)
+
+
+def transform_tex_prose(tex_content: str, transform: Callable[[str], str]) -> str:
+    """Apply ``transform`` only outside TeX comments and literal code.
+
+    The helper is shared by the generic resolver and the section-reference
+    fallback in :mod:`slides_renderer`, ensuring that both passes preserve
+    authored teaching examples and comments exactly.
+    """
+
+    pieces: list[str] = []
+    cursor = 0
+    for start, end in _tex_literal_ranges(tex_content):
+        pieces.append(transform(tex_content[cursor:start]))
+        pieces.append(tex_content[start:end])
+        cursor = end
+    pieces.append(transform(tex_content[cursor:]))
+    return "".join(pieces)
+
+
+def tex_prose_content(tex_content: str) -> str:
+    """Return only transformable TeX prose, excluding literal regions."""
+
+    pieces: list[str] = []
+    cursor = 0
+    for start, end in _tex_literal_ranges(tex_content):
+        pieces.append(tex_content[cursor:start])
+        cursor = end
+    pieces.append(tex_content[cursor:])
+    return "".join(pieces)
 
 
 def _read_brace_group(text: str, start: int) -> tuple[str, int] | None:
@@ -126,33 +228,91 @@ def parse_aux_label_numbers(aux_path: Path) -> dict[str, str]:
 def resolve_cross_deck_references(
     tex_content: str,
     label_numbers: dict[str, str],
+    *,
+    resolve_local: bool = False,
 ) -> tuple[str, int, list[str]]:
     """Substitute cross-deck ``\\ref``/``\\eqref`` with combined-PDF numbers.
 
     A reference is *cross-deck* when its label is not defined by any
     ``\\label{...}`` in ``tex_content`` itself. Cross-deck refs found in
     ``label_numbers`` become the literal printed number (``\\eqref``
-    additionally parenthesized, matching amsmath's rendering); within-deck
-    refs are preserved for Beamer's native numbering; cross-deck refs
-    missing from the map are left untouched and returned for logging.
+    additionally parenthesized, matching amsmath's rendering). Within-deck
+    refs are preserved for Beamer's native numbering by default. The
+    canonical accessible refresh sets ``resolve_local`` so local and foreign
+    references both use the combined manuscript's exact numbering; this keeps
+    Beamer and Reveal derivatives in parity. Any reference selected for
+    resolution but missing from the map is left untouched and returned for
+    logging.
 
     Returns ``(updated_tex, replaced_count, sorted_unresolved_labels)``.
     """
-    local_labels = set(_LABEL_RE.findall(tex_content))
+    local_labels = set(_LABEL_RE.findall(tex_prose_content(tex_content)))
     replaced = 0
     unresolved: set[str] = set()
 
-    def _substitute(match: re.Match[str]) -> str:
-        nonlocal replaced
-        command, label = match.group(1), match.group(2)
-        if label in local_labels:
-            return match.group(0)  # within-deck: Beamer numbers it natively
-        number = label_numbers.get(label)
-        if number is None:
-            unresolved.add(label)
-            return match.group(0)  # fail open: leave the ref untouched
-        replaced += 1
-        return f"({number})" if command == "eqref" else number
+    def _resolve_segment(segment: str) -> str:
+        def _substitute(match: re.Match[str]) -> str:
+            nonlocal replaced
+            command, label = match.group("command"), match.group("label")
+            if label in local_labels and not resolve_local:
+                return match.group(0)  # within-deck: Beamer numbers it natively
+            number = label_numbers.get(label)
+            if number is None:
+                unresolved.add(label)
+                return match.group(0)  # fail open: leave the ref untouched
+            replaced += 1
+            join = "~" if match.group("escaped_join") else ""
+            authored_open = match.group("authored_open") or ""
+            authored_pair = bool(authored_open and segment[match.end() :].startswith(")"))
+            resolved_number = number if command == "ref" or authored_pair else f"({number})"
+            return join + authored_open + resolved_number
 
-    updated = _REF_RE.sub(_substitute, tex_content)
+        return _REF_RE.sub(_substitute, segment)
+
+    updated = transform_tex_prose(tex_content, _resolve_segment)
     return updated, replaced, sorted(unresolved)
+
+
+def bind_displayed_equation_numbers(tex_content: str, label_numbers: dict[str, str]) -> str:
+    """Bind labeled single-number equations to the canonical manuscript AUX.
+
+    Strict accessible decks resolve prose references against the combined PDF.
+    Their displayed equations must use the same numbers instead of restarting
+    at one in each standalone Beamer build. Only numbered ``equation``
+    environments are transformed; unnumbered mathematics remains unchanged.
+    Literal examples and comments are excluded without losing source offsets.
+    Missing or conflicting labels and authored tags fail closed.
+    """
+    masked = list(tex_content)
+    for start, end in _tex_literal_ranges(tex_content):
+        masked[start:end] = " " * (end - start)
+    prose = "".join(masked)
+    equation_re = re.compile(r"\\begin\{equation\}(?P<body>.*?)\\end\{equation\}", re.DOTALL)
+    tag_re = re.compile(r"\\tag(?P<star>\*)?\{(?P<number>[^{}]*)\}")
+    insertions: list[tuple[int, str]] = []
+    for equation in equation_re.finditer(prose):
+        body = equation.group("body")
+        labels = _LABEL_RE.findall(body)
+        if not labels:
+            continue
+        numbers = {label_numbers.get(label) for label in labels}
+        if len(numbers) != 1 or None in numbers:
+            raise RenderingError(
+                "Current combined-manuscript AUX cannot bind displayed slide equation",
+                context={"equation_labels": labels},
+            )
+        number = next(iter(numbers))
+        if number is None or not _SAFE_NUMBER_RE.fullmatch(number):
+            raise RenderingError("Unsafe canonical slide equation number", context={"equation_labels": labels})
+        tags = list(tag_re.finditer(body))
+        if tags:
+            if len(tags) != 1 or tags[0].group("number") != number:
+                raise RenderingError(
+                    "Authored slide equation tag conflicts with canonical manuscript numbering",
+                    context={"equation_labels": labels},
+                )
+            continue
+        insertions.append((equation.start("body"), rf"\tag{{{number}}}"))
+    for position, text in reversed(insertions):
+        tex_content = tex_content[:position] + text + tex_content[position:]
+    return tex_content

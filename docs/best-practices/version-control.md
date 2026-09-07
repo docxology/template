@@ -58,7 +58,7 @@ git push origin feature/new-feature
 
 ```mermaid
 gitGraph
-    commit id: "main · production-ready"
+    commit id: "main · protected integration"
     branch develop
     commit id: "develop · integration"
     branch feature/new-feature

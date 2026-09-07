@@ -12,7 +12,11 @@ repo_root = Path(__file__).resolve().parent.parent.parent
 if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
 
-from infrastructure.core.pipeline.artifacts import snapshot_current_artifact_manifest  # noqa: E402
+from infrastructure.core.pipeline.artifacts import (  # noqa: E402
+    output_inventory_mode_for_project,
+    snapshot_current_artifact_manifest,
+)
+from infrastructure.core.project_paths import resolve_project_root  # noqa: E402
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES  # noqa: E402
 from infrastructure.rendering.pipeline import execute_render_pipeline  # noqa: E402
 from infrastructure.validation.output.pipeline import execute_validation_pipeline  # noqa: E402
@@ -53,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
     names = list(PUBLIC_PROJECT_NAMES if args.all_public else args.projects)
     failed = False
     for name in names:
-        project_root = root / "projects" / name
+        project_root = resolve_project_root(root, name)
         old_manifest = project_root / "output" / "reports" / "artifact_manifest.json"
         old_paths: set[str] = set()
         try:
@@ -70,7 +74,10 @@ def main(argv: list[str] | None = None) -> int:
             failed = True
             continue
         try:
-            manifest = snapshot_current_artifact_manifest(project_root / "output")
+            manifest = snapshot_current_artifact_manifest(
+                project_root / "output",
+                inventory_mode=output_inventory_mode_for_project(root, project_root),
+            )
             if execute_validation_pipeline(name, repo_root=root) != 0:
                 print(f"FAIL {name} [VALIDATION_FAILED]: canonical Stage 4 validation failed", file=sys.stderr)
                 failed = True

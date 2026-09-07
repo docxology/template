@@ -55,9 +55,7 @@ def is_placeholder_name(name: str) -> bool:
 #: like ``projects/<type>/`` are structural and always allowed; the project name
 #: to validate is the segment *after* the type prefix. Keep ``archive`` in sync
 #: with discovery.NON_RENDERED_SUBDIRS plus the rendered ``active``/``templates``.
-TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset(
-    {"active", "working", "ongoing", "published", "archive", "other", "templates"}
-)
+TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset({"active", "working", "ongoing", "archive", "templates"})
 
 
 def check_no_ghost_projects(
@@ -69,8 +67,8 @@ def check_no_ghost_projects(
 
     Recognizes the typed-subfolder layout: ``projects/<type>/<name>/`` references
     are checked against ``<name>`` (the type prefix itself is structural). The
-    non-rendered typed subfolders (``working``/``published``/``archive``/
-    ``other``) hold rotating private work, so any name beneath them is allowed.
+    non-rendered typed subfolders (``working``/``ongoing``/``archive``) hold
+    rotating private work, so any name beneath them is allowed.
     """
     active_qualified_names = {p.qualified_name for p in discover_projects(repo_root)}
     if extra_active:
@@ -97,7 +95,7 @@ def check_no_ghost_projects(
                 prefix = match.group("type")
                 # Non-rendered typed subfolders hold rotating private work — any
                 # name beneath them is allowed (they are not ghost references).
-                if prefix in {"working", "ongoing", "published", "archive", "other"}:
+                if prefix in {"working", "ongoing", "archive"}:
                     continue
                 name = match.group("name")
                 # A bare ``projects/<subfolder>/`` reference (no project name after

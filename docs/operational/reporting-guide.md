@@ -116,13 +116,35 @@ for the full env-var contract.
 
 **Formats**: TXT, JSON
 
+These deterministic reports describe a canonical stable inventory, not every
+physical file in the local Stage 5 mirror. Public exemplars use
+`stable-shippable-output-v1`, which excludes Git-ignored files as well as
+runtime/build residue, logs, telemetry/history, hidden paths, and
+self-referential control reports. An explicitly resolved non-template lifecycle
+project may use `stable-local-output-v1`: static runtime/control/hidden-path
+exclusions still apply, but the report does not claim those local deliverables
+are tracked or Git-shippable. The collector never infers this authorization from
+an ignore rule, so an accidental blanket ignore in a public exemplar fails
+closed.
+
+Dynamic subdirectories and root-level release bundles remain included. Stage 5
+writes byte-identical JSON and text receipts to the source project output and
+the copied mirror. Those JSON receipts declare
+`inventory_scope: stage5-delivery-mirror` and identify the filtered copied tree
+in `inventory_root`; a direct project-tree collector declares
+`inventory_scope: project-output`. This explains the intentional one-file
+difference when Stage 5 promotes the combined PDF to the delivery root. The
+console summary separately reports the larger physical mirror count when local
+debugging files were copied.
+
 **Contents**:
-- File counts by directory
-- File sizes by directory
-- Largest files (top 10)
+- Stable/shippable file counts by directory, including dynamic/root categories
+- Stable/shippable file sizes by directory
+- Largest stable files by exact byte size (top 10 in JSON; the concise text
+  report shows the first 5)
 - Missing expected files
 - File type distributions
-- Total output size
+- Total stable output size plus `inventory_mode`, `inventory_scope`, and `inventory_root`
 
 **Usage**:
 ```bash
@@ -234,14 +256,21 @@ uv run python scripts/pipeline/stage_07_executive_report.py
 ### Output Statistics
 
 **Key Metrics**:
-- `total_files`: Total number of generated files
-- `total_size_mb`: Total output size in MB
-- `largest_files`: Top 10 largest files
+- `inventory_mode`: `stable-shippable-output-v1` for public exemplars or the
+  explicitly authorized `stable-local-output-v1` for non-template lifecycle projects
+- `inventory_scope`: `project-output` for a direct source-tree report or
+  `stage5-delivery-mirror` for Stage 5's filtered copy
+- `inventory_root`: release-safe relative identity of the tree being counted
+- `total_files`: Total number of stable/shippable inventory files, not raw files on disk
+- `total_size_mb`: Total stable/shippable inventory size in MB
+- `largest_files`: Top 10 stable files, ordered by exact `size_bytes`
+- `directories`: Every stable category, including dynamic subdirectories and root bundles
 
 **Red Flags**:
 - Non-empty `missing_expected_files` list
 - Unusually large files (> 100 MB)
-- Zero files in expected directories
+- Zero stable files in an enabled/expected directory
+- A mismatch between source and copied Stage 5 report bytes
 
 ### Multi-Project Summary
 

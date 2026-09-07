@@ -6,17 +6,18 @@ and provides subprocess environment configuration.
 
 import os
 import platform
-import re
 import subprocess  # nosec B404
 import sys
 from pathlib import Path
 
+from infrastructure.core.secrets import is_secret_env_name, strip_secret_env
+from infrastructure.core.runtime._tools import find_uv
 from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
 
-_SECRET_ENV_NAME = re.compile(r"(?:API[_-]?KEY|TOKEN|SECRET|PASSWORD|PRIVATE[_-]?KEY|CREDENTIAL)", re.IGNORECASE)
-_ANALYSIS_SECRET_OPT_IN = "ANALYSIS_ALLOW_SECRETS"
+# Public environment-variable name, never a credential value.
+_ANALYSIS_SECRET_OPT_IN = "ANALYSIS_ALLOW_SECRETS"  # nosec B105
 
 
 def validate_analysis_script_path(script_path: Path, project_root: Path) -> Path:
@@ -166,9 +167,7 @@ def get_subprocess_env(
     """
     env = dict(os.environ if base_env is None else base_env)
     if redact_secrets:
-        for key in tuple(env):
-            if _SECRET_ENV_NAME.search(key):
-                env.pop(key, None)
+        env = strip_secret_env(env)
     # Unset VIRTUAL_ENV when using uv to avoid warnings about absolute paths
     if check_uv_available() and "VIRTUAL_ENV" in env:
         env.pop("VIRTUAL_ENV", None)
@@ -198,7 +197,6 @@ def build_analysis_script_cmd_and_env(
     Returns:
         A (cmd, env) tuple ready for ``subprocess.run(cmd, env=env, ...)``.
     """
-    import shutil
     import tempfile
 
     script_path = validate_analysis_script_path(script_path, project_root)
@@ -213,7 +211,7 @@ def build_analysis_script_cmd_and_env(
     # dependencies (e.g. discopy), use uv run from the project directory.
     project_venv = project_root / ".venv"
     if project_venv.is_dir():
-        uv_path = shutil.which("uv")
+        uv_path = find_uv()
         if uv_path:
             cmd: list[str] = [uv_path, "run", "--directory", str(project_root), "python", str(script_path)]
         else:
@@ -260,7 +258,7 @@ def build_analysis_script_cmd_and_env(
     )
     for key, val in os.environ.items():
         if (any(key.startswith(p) for p in _PASSTHROUGH_PREFIXES) or key in _PASSTHROUGH_KEYS) and (
-            allow_secret_env or not _SECRET_ENV_NAME.search(key)
+            allow_secret_env or not is_secret_env_name(key)
         ):
             env[key] = val
 

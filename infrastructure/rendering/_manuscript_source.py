@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import os
+import re
+import stat
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -12,23 +15,144 @@ from infrastructure.core.logging.diagnostic import DiagnosticReporter, Diagnosti
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.core.progress import SubStageProgress
-from infrastructure.publishing.transmission_bookends import is_transmission_bookend
+from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering.latex_package_validator import validate_preamble_packages
 from infrastructure.rendering.latex_validation import ValidationReport
 
 logger = get_logger(__name__)
 
+_ACCESSIBLE_BEAMER_OVERFLOW_CODE = "slides.density.beamer-overflow"
+
+
+def _is_provisional_pre_aux_slide_overflow(manager: RenderManager, error: TemplateError) -> bool:
+    """Return whether the canonical post-AUX slide refresh owns this failure.
+
+    In the full render pipeline, an accessible section deck is first composed
+    before the current combined-manuscript AUX exists.  Unresolved section
+    references therefore use readable fallback prose; the mandatory strict
+    refresh later replaces it with canonical numbers.  A layout overflow in
+    that preliminary slide pair is not the publication result.  Defer only
+    this exact slide-only diagnostic when the combined-PDF refresh is enabled.
+    Every other first-pass failure remains immediately fatal, and a failing
+    strict refresh still propagates from ``render_combined_outputs``.
+    """
+
+    config = manager.config
+    if not (config.enable_pdf and config.enable_slides and config.slides_profile == "accessible"):
+        return False
+    failures = error.context.get("format_failures")
+    if not isinstance(failures, list) or len(failures) != 1:
+        return False
+    failure = failures[0]
+    return bool(
+        isinstance(failure, dict)
+        and failure.get("format") == "accessible slide pair"
+        and failure.get("diagnostic_code") == _ACCESSIBLE_BEAMER_OVERFLOW_CODE
+    )
+
+
+GENERATED_ORDERING_MARKER = "# Generated manuscript ordering"
+"""Marker a generator writes when it owns the injected manuscript ordering."""
+
+PROJECT_RESOLVED_MARKER = "# Project-resolved config"
+"""Explicit opt-in marker: this injected config is the project's own artifact."""
+
+# ``{{UPPER_SNAKE}}`` is the canonical project hydration token, the same shape
+# as :data:`infrastructure.rendering.manuscript_injection._TOKEN_RE`.
+_CONFIG_TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
+
+# A token inside a backtick code span is prose *about* the token syntax, not a
+# hydration target — ``template_gold_refinement``'s config documents "Resolve
+# `{{TOKEN}}` placeholders into output/manuscript/". Those spans are stripped
+# before scanning so documenting the contract can never fail a render. Same
+# rationale as ``manuscript_injection.EXCLUDED_DOC_FILENAMES`` for markdown.
+_CODE_SPAN_RE = re.compile(r"`[^`\n]*`")
+
 
 def has_generated_manuscript_ordering(config_path: Path) -> bool:
     """Return True when an injected config owns generated manuscript ordering."""
     if not config_path.is_file():
         return False
-    return "# Generated manuscript ordering" in config_path.read_text(encoding="utf-8")
+    return GENERATED_ORDERING_MARKER in config_path.read_text(encoding="utf-8")
+
+
+def unresolved_config_tokens(config_path: Path) -> list[str]:
+    """Return the sorted unique ``{{UPPER_SNAKE}}`` tokens still present in *config_path*.
+
+    Backtick code spans are stripped first (see :data:`_CODE_SPAN_RE`), so a
+    config that *documents* the token syntax reports no unresolved tokens.
+    """
+    if not config_path.is_file():
+        return []
+    text = _CODE_SPAN_RE.sub("", config_path.read_text(encoding="utf-8"))
+    return sorted({match.group(1) for match in _CONFIG_TOKEN_RE.finditer(text)})
+
+
+def is_project_resolved(config_path: Path, source_config_path: Path | None = None) -> bool:
+    """Return whether the injected ``config.yaml`` is a project-owned artifact.
+
+    A project generator may substitute ``{{TOKEN}}`` values into
+    ``output/manuscript/config.yaml``; that resolved file is authoritative and
+    must not be clobbered by the tracked source template. Three branches claim
+    ownership:
+
+    1. :data:`GENERATED_ORDERING_MARKER` — the original marker behaviour,
+       unchanged;
+    2. :data:`PROJECT_RESOLVED_MARKER` — an explicit opt-in for generators that
+       do not reorder the manuscript;
+    3. inference — the tracked source still carries hydration tokens that the
+       injected copy has resolved.
+
+    Branch 3 is deliberately narrow: it fires only when the source itself is a
+    token template, so a project that merely hand-edits its injected config
+    still receives the source refresh it has always received.
+    """
+    if not config_path.is_file():
+        return False
+    text = config_path.read_text(encoding="utf-8")
+    if GENERATED_ORDERING_MARKER in text or PROJECT_RESOLVED_MARKER in text:
+        return True
+    if source_config_path is None:
+        return False
+    source_tokens = set(unresolved_config_tokens(source_config_path))
+    if not source_tokens:
+        return False
+    return bool(source_tokens - set(unresolved_config_tokens(config_path)))
+
+
+def verify_config_tokens_resolved(config_path: Path) -> None:
+    """Fail closed when a hydration token survives into the config the render consumes.
+
+    ``config.yaml`` supplies the PDF title page (title, subtitle, authors,
+    DOI), so an unresolved ``{{TOKEN}}`` there prints verbatim on the published
+    title page. The template already refuses unresolved tokens in manuscript
+    markdown; this extends the same guarantee to the configuration, whichever
+    copy of it won.
+
+    Raises:
+        ValidationError: when at least one ``{{UPPER_SNAKE}}`` token survives.
+    """
+    tokens = unresolved_config_tokens(config_path)
+    if not tokens:
+        return
+    raise ValidationError(
+        "unresolved {{TOKEN}} placeholder(s) in the config.yaml this render consumes: " + ", ".join(tokens),
+        context={"config": str(config_path), "tokens": ", ".join(tokens)},
+        suggestions=[
+            "Run the project's manuscript-variable generator so every config token is substituted.",
+            f"Then confirm no {{{{TOKEN}}}} remains in {config_path}.",
+        ],
+    )
 
 
 def resolve_manuscript_dir(project_root: Path) -> Path:
-    """Return the manuscript directory to render from."""
+    """Return the manuscript directory to render from.
+
+    Raises:
+        ValidationError: when an unresolved ``{{TOKEN}}`` survives into the
+            ``config.yaml`` of the directory this render will consume.
+    """
     import shutil as _shutil
 
     source_dir = resolve_source_manuscript_dir(project_root)
@@ -38,9 +162,9 @@ def resolve_manuscript_dir(project_root: Path) -> Path:
             cfg_src = source_dir / "config.yaml"
             cfg_dst = injected_dir / "config.yaml"
             if cfg_src.is_file():
-                if has_generated_manuscript_ordering(cfg_dst):
+                if is_project_resolved(cfg_dst, cfg_src):
                     logger.info(
-                        "Preserved generated config.yaml ordering in injected manuscript: %s",
+                        "Preserved project-resolved config.yaml in injected manuscript: %s",
                         cfg_dst,
                     )
                 else:
@@ -56,7 +180,9 @@ def resolve_manuscript_dir(project_root: Path) -> Path:
                 _shutil.copy2(bib, bib_dst)
                 logger.info(f"Refreshed {bib.name} in injected manuscript: {bib_dst}")
         logger.info(f"Rendering from injected manuscript directory: {injected_dir}")
+        verify_config_tokens_resolved(injected_dir / "config.yaml")
         return injected_dir
+    verify_config_tokens_resolved(source_dir / "config.yaml")
     return source_dir
 
 
@@ -189,32 +315,141 @@ def load_project_config_yaml(manuscript_dir: Path) -> dict[str, Any] | None:
 
 
 def _clean_stale_web_artifacts(manager: RenderManager) -> None:
-    """Remove generated web artifacts before a fresh per-file HTML render.
+    """Remove generated web artifacts before deciding whether HTML will render.
 
     Only removes files this renderer itself produces (the combined
     ``index.html`` and per-section ``{parent}__{stem}.html`` pages, per
-    ``WebRenderer._output_file_for_source``) — a blanket ``*.html`` glob would
-    also delete unrelated hand-authored web artifacts (e.g. a project's own
-    ``dashboard.html``) that happen to live in the same ``output/web/`` dir.
+    ``WebRenderer._output_file_for_source``) plus renderer-owned publish
+    targets (``.<stem>.<hex>.html.tmp``), the shared combined markdown, and
+    the favicon — a blanket ``*.html`` glob would also delete unrelated
+    hand-authored web artifacts (e.g. a project's own ``dashboard.html``)
+    that happen to live in the same ``output/web/`` dir.
     """
-    if not getattr(manager.config, "enable_html", False):
-        return
     web_dir = Path(manager.config.web_dir)
     if not web_dir.exists():
         return
     stale_files = [path for path in sorted(web_dir.glob("*.html")) if path.name == "index.html" or "__" in path.stem]
-    combined_markdown = web_dir / "_combined_manuscript.md"
-    if combined_markdown.exists():
-        stale_files.append(combined_markdown)
+    stale_files.extend(sorted(web_dir.glob(".*.html.tmp")))
+    for renderer_owned in (web_dir / "_combined_manuscript.md", web_dir / "favicon.ico"):
+        if renderer_owned.exists() or renderer_owned.is_symlink():
+            stale_files.append(renderer_owned)
     removed = 0
     for stale in stale_files:
         try:
             stale.unlink()
             removed += 1
         except OSError as exc:
-            logger.debug("Could not remove stale web artifact %s: %s", stale, exc)
+            logger.error("Could not remove stale web artifact %s: %s", stale, exc)
+            raise
     if removed:
         logger.info("Removed %d stale web artifact(s) from %s", removed, web_dir)
+
+
+def _reject_unsafe_combined_output_root(format_dir: Path, output_dir: Path) -> None:
+    """Require a real format-root hierarchy beneath the configured output root."""
+
+    output_root = Path(os.path.abspath(output_dir))
+    format_root = Path(os.path.abspath(format_dir))
+    try:
+        relative_format = format_root.relative_to(output_root)
+    except ValueError as exc:
+        raise ValueError(
+            f"refusing stale combined-output cleanup outside configured output directory: {format_root}"
+        ) from exc
+
+    candidates = [output_root]
+    candidate = output_root
+    for part in relative_format.parts:
+        candidate /= part
+        candidates.append(candidate)
+    for path in candidates:
+        try:
+            mode = path.lstat().st_mode
+        except FileNotFoundError:
+            continue
+        if stat.S_ISLNK(mode):
+            raise ValueError(f"refusing stale combined-output cleanup through symlinked output hierarchy: {path}")
+
+
+def clean_stale_render_deliverables(
+    manager: RenderManager,
+    source_files: list[Path],
+    project_name: str,
+) -> None:
+    """Remove canonical deliverables that could be mistaken for this run.
+
+    Targets are limited to filenames owned by the renderers inside their
+    configured output directories. Reserved ``*_slides`` and ``*_combined``
+    names are cleared across prior source names so a renamed/deleted section
+    cannot survive. Reserved combined DOCX and EPUB names are owned recursively
+    below their real format directories. Each format root must remain lexically
+    below the configured output root, and symlinks from that output root through
+    the format root are rejected before any cleanup. ``Path.rglob`` leaves
+    deeper symlinked directories untraversed. Unrelated project artifacts are
+    preserved. A standalone LaTeX PDF is treated as renderer-owned only when a
+    compiler sidecar with the same stem identifies it.
+    """
+
+    output_dir = Path(manager.config.output_dir)
+    docx_dir = Path(manager.config.docx_dir)
+    epub_dir = Path(manager.config.epub_dir)
+    _reject_unsafe_combined_output_root(docx_dir, output_dir)
+    _reject_unsafe_combined_output_root(epub_dir, output_dir)
+    _clean_stale_web_artifacts(manager)
+    project_basename = Path(project_name).name
+    targets = {
+        Path(manager.config.pdf_dir) / f"{project_basename}_combined.pdf",
+        Path(manager.config.docx_dir) / f"{project_basename}_combined.docx",
+        Path(manager.config.epub_dir) / f"{project_basename}_combined.epub",
+        Path(manager.config.output_dir) / "tex" / "_combined_manuscript.md",
+        Path(manager.config.output_dir) / "reports" / "manuscript_composition.json",
+    }
+    pdf_dir = Path(manager.config.pdf_dir)
+    if pdf_dir.is_dir():
+        targets.update(pdf_dir.glob("_combined_manuscript.*"))
+        targets.update(pdf_dir.glob("*_combined.pdf"))
+        latex_sidecar_suffixes = {
+            ".aux",
+            ".bbl",
+            ".blg",
+            ".lof",
+            ".log",
+            ".lot",
+            ".nav",
+            ".out",
+            ".snm",
+            ".toc",
+            ".vrb",
+        }
+        for sidecar in pdf_dir.iterdir():
+            if sidecar.is_file() and sidecar.suffix in latex_sidecar_suffixes:
+                targets.add(sidecar)
+                targets.add(pdf_dir / f"{sidecar.stem}.pdf")
+
+    slides_dir = Path(manager.config.slides_dir)
+    if slides_dir.is_dir():
+        targets.update(slides_dir.glob("*_slides.*"))
+    if docx_dir.is_dir():
+        targets.update(docx_dir.rglob("*_combined.docx"))
+        targets.add(docx_dir / "_docx_metadata.yaml")
+    if epub_dir.is_dir():
+        targets.update(epub_dir.rglob("*_combined.epub"))
+    for source_file in source_files:
+        if source_file.suffix == ".tex":
+            targets.add(Path(manager.config.pdf_dir) / f"{source_file.stem}.pdf")
+        elif source_file.suffix == ".md":
+            slide_stem = f"{source_file.stem}_slides"
+            targets.add(Path(manager.config.slides_dir) / f"{slide_stem}.pdf")
+            targets.add(Path(manager.config.slides_dir) / f"{slide_stem}.html")
+
+    removed = 0
+    for target in sorted(targets):
+        if not target.exists() and not target.is_symlink():
+            continue
+        target.unlink()
+        removed += 1
+    if removed:
+        logger.info("Removed %d stale render deliverable(s) before the current run", removed)
 
 
 def render_individual_files(
@@ -248,9 +483,16 @@ def render_individual_files(
             # RenderingError and all other template-domain failures carry the
             # same diagnostic contract. Record a per-section failure instead
             # of aborting before the combined-render summary is written.
-            logger.warning(f"  ❌ Rendering error for {source_file.name}: {render_error.message}")
-            reporter.record(render_error.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
-            failed_files.append(source_file.name)
+            if _is_provisional_pre_aux_slide_overflow(manager, render_error):
+                logger.info(
+                    "  Preliminary accessible Beamer overflow for %s is deferred to the mandatory "
+                    "strict post-AUX refresh",
+                    source_file.name,
+                )
+            else:
+                logger.warning(f"  ❌ Rendering error for {source_file.name}: {render_error.message}")
+                reporter.record(render_error.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
+                failed_files.append(source_file.name)
         except (OSError, subprocess.SubprocessError, ValueError) as e:
             logger.warning(f"  ❌ Unexpected error rendering {source_file.name}: {e}")
             reporter.record_error(

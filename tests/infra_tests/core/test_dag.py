@@ -10,7 +10,11 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.pipeline.dag import PipelineDAG, StageDefinition
+from infrastructure.core.pipeline.dag import (
+    PipelineDAG,
+    StageDefinition,
+    opt_in_tags_from_mapping,
+)
 
 
 class TestStageDefinition:
@@ -58,6 +62,7 @@ class TestPipelineDAGFromYAML:
         """Test loading a custom YAML."""
         yaml_file = tmp_path / "pipeline.yaml"
         yaml_file.write_text("""
+opt_in_tags: [experimental]
 stages:
   - name: A
     method: do_a
@@ -69,6 +74,17 @@ stages:
 """)
         dag = PipelineDAG.from_yaml(yaml_file)
         assert len(dag.stages) == 2
+        assert dag.opt_in_tags == frozenset({"experimental"})
+
+    def test_from_dict_reads_opt_in_tags(self):
+        dag = PipelineDAG.from_dict(
+            {
+                "opt_in_tags": ["ebook", "docxplus"],
+                "stages": [{"name": "A", "method": "do_a", "tags": ["core"]}],
+            }
+        )
+        assert dag.opt_in_tags == frozenset({"ebook", "docxplus"})
+        assert opt_in_tags_from_mapping({"opt_in_tags": ["ebook"]}) == frozenset({"ebook"})
 
     def test_invalid_yaml_raises(self, tmp_path):
         """Test that missing stages key raises ValueError."""
@@ -247,3 +263,32 @@ class TestPipelineDAGSorting:
         )
         sorted_ = dag.sorted_stages()
         assert [s.name for s in sorted_] == ["C", "A", "B"]
+
+
+def test_from_yaml_missing_stage_name_raises_valueerror_with_source(tmp_path):
+    """A stage entry without 'name' raises ValueError naming the source."""
+    yaml_file = tmp_path / "pipeline.yaml"
+    yaml_file.write_text(
+        "stages:\n  - script: scripts/run.py\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="pipeline.yaml"):
+        PipelineDAG.from_yaml(yaml_file)
+
+
+def test_from_dict_rejects_non_mapping_stage_entries():
+    """from_dict applies the same per-entry validation as from_yaml."""
+    with pytest.raises(ValueError, match="mapping"):
+        PipelineDAG.from_dict({"stages": ["not-a-mapping"]})
+
+
+def test_from_dict_rejects_missing_stage_name():
+    """from_dict fails closed on a stage entry without a name."""
+    with pytest.raises(ValueError, match="name"):
+        PipelineDAG.from_dict({"stages": [{"script": "scripts/run.py"}]})
+
+
+def test_from_dict_rejects_missing_stages_key():
+    """from_dict requires the top-level 'stages' key like from_yaml."""
+    with pytest.raises(ValueError, match="stages"):
+        PipelineDAG.from_dict({})

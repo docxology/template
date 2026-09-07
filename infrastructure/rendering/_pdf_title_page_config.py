@@ -57,6 +57,9 @@ def _rendering_options(config: dict[str, Any] | None) -> dict[str, Any]:
         "section_breaks": rendering.get("section_breaks", True)
         if isinstance(rendering.get("section_breaks", True), bool)
         else True,
+        "include_date": rendering.get("include_date", True)
+        if isinstance(rendering.get("include_date", True), bool)
+        else True,
         "figure_height_fraction": fraction("figure_height_fraction", 0.50),
         "cover_height_fraction": fraction("cover_height_fraction", 0.60),
         "front_matter_figure_height_fraction": fraction("front_matter_figure_height_fraction", 0.50),
@@ -167,9 +170,10 @@ def _author_blocks(config: dict[str, Any]) -> list[dict[str, str]]:
             authors.append(
                 {
                     "name": str(author.get("name", "")),
-                    "affiliation": str(affil),
-                    "email": str(author.get("email", "")),
-                    "orcid": str(author.get("orcid", "")),
+                    "affiliation": str(affil or ""),
+                    "email": str(author.get("email") or ""),
+                    "orcid": str(author.get("orcid") or ""),
+                    "orcid_status": str(author.get("orcid_status") or "not-provided"),
                 }
             )
     if authors:
@@ -182,7 +186,8 @@ def _author_blocks(config: dict[str, Any]) -> list[dict[str, str]]:
                 "name": str(book.get("author", "")),
                 "affiliation": "",
                 "email": "",
-                "orcid": str(book.get("orcid", "")),
+                "orcid": str(book.get("orcid") or ""),
+                "orcid_status": str(book.get("orcid_status") or "not-provided"),
             }
         )
     return authors

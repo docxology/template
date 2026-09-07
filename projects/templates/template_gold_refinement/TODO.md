@@ -1,51 +1,18 @@
 # template_gold_refinement TODO
 
-Forward-only backlog for the metallurgical gold-refining analogy exemplar:
-manuscript composition modeled as ore → smelting → assaying → cupellation →
-nine-nines certification, with karat grading and deterministic mega-madlib
-token composition.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-- Project tests and coverage (read live counts from
-  [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not a
-  pinned number here):
-  `uv run pytest projects/templates/template_gold_refinement/tests/ --cov=projects/templates/template_gold_refinement/src --cov-fail-under=90`
-- Stage-02 refinery analysis (figures, token injection, evidence/figure registries):
-  `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_gold_refinement`
-- Stage-03 manuscript render (ore → nine-nines certification, zero unresolved `{{TOKEN}}` vars):
-  `uv run python scripts/pipeline/stage_03_render.py --project templates/template_gold_refinement`
-- Confidentiality and drift guards:
-  `uv run python scripts/audit/check_tracked_all.py` and
-  `uv run python scripts/audit/check_template_drift.py --strict`
-
-## 2026-08-02 review-and-render pass
-
-- Validation evidence (measured on this pass): 328 project tests passing,
-  coverage ≥ 90% project gate; pre-render CLI reports no render-blocking
-  pitfalls; drift check reports no drift; combined PDF renders with 0 `^! `
-  log lines and 0 unresolved `??` markers (41 pages); stage-04 output
-  validation passes all checks.
-- Added the two missing `.agents/` catalog READMEs (`.agents/README.md`,
-  `.agents/skills/README.md`) so every exemplar catalog level carries
-  AGENTS.md + README.md per the shared template contract.
-- Synchronized `manuscript/config.yaml.example` with the live config shape:
-  both files carry `publication.repository_url`, `publication.repository_label`,
-  a placeholder `publication.published_artifacts` map, and
-  `gold_refinement.narrative_moves` covering all ten configured sections
-  (`evaluation` and `authoring_contract` added to the live config so
-  `narrative_moves` matches `section_conditions`/`section_titles` and the fork
-  template). Outputs were regenerated through stages 02-05 after the config
-  change.
-- Replaced placeholder cross-reference examples in `manuscript/SYNTAX.md` and
-  `docs/syntax_guide.md` with real project labels (`eq:purity_functional`,
-  `eq:monotone_refinery`, `fig:purity_progression`, `tbl:formalism_registry`).
-- Verified the full surface programmatically: every relative Markdown link
-  resolves; scripts/tests AGENTS listings match the files on disk; version
-  markers agree across pyproject.toml, config.yaml, CITATION.cff,
-  codemeta.json, .zenodo.json, and the figure registry; all documented
-  `src/`/`scripts/` symbols exist; manuscript tokens all resolve to generated
-  variables.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
@@ -56,21 +23,21 @@ token composition.
   (lexicon in config, no hardcoded selections).
 - Keep `src/evidence.py` cross-checking every manuscript contribution claim
   against its evidence source, including dotted Python member paths.
-- Add transmission bookends (`transmission_begin` / `transmission_end`
-  manuscript sections) framing the certified output.
+- Transmission bookends (`transmission_begin` / `transmission_end`) frame the
+  certified output and remain validated as a pair.
 - Preserve the no-mocks / deterministic-seed policy for any new refinery stage
   or assay probe.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` aligned with the shipped config blocks
+- Keep `manuscript/config.yaml.example` aligned with the declared config blocks
   (`contribution_claims`, `pipeline_phases`, `audit_rules`, `steganography`,
   `evaluation`, `authoring_contract`, and explicit LLM-review gates) when code
   defaults change.
-- Extend the implemented prefix-constrained reverse assay with an optional
-  config-selected target and generated report surface.
-- Extend the implemented noncompensatory `PurityVector` with domain-selected
-  dimensions only after a fork supplies evidence for those dimensions.
+- The prefix-constrained reverse assay uses the config-selected target and
+  generated report surface; forks must preserve ordered-prefix semantics.
+- The noncompensatory `PurityVector` remains domain-selectable only when a fork
+  supplies evidence for the added dimensions.
 
 ## Documentation and signposting gaps
 
@@ -83,23 +50,33 @@ token composition.
 
 ## Test and validator gaps
 
-- Add references (published or recorded) for the planned documented
-  commercial/book platforms — `amazon_kdp`, `google_play_books`, `gumroad`,
-  `leanpub`, `lulu`, `draft2digital`, `stripe`, `ingramspark` — so the
-  publishing-status block is verifiable rather than aspirational.
-- Add a validator for the analogy-break boundary formalized as a theorem: for
-  what class of manuscript quality processes does the refining analogy hold?
-- Connect the refinery to real manuscript validation infrastructure
-  (`infrastructure.validation`) and measure actual purity on a real paper.
+- Platform references remain an external-evidence concern; do not promote the
+  publishing-status block without source-bound records for each platform.
+- The analogy-boundary theorem is a local design predicate, not evidence of
+  manuscript quality or a substitute for domain validation infrastructure.
+- Integration with real manuscript validation and real-paper measurement is
+  outside this deterministic toy exemplar until a licensed, owner-approved
+  source and claim ledger are supplied.
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Keep the refinery pipeline, deterministic token injection, and evidence
-   registry green under the 90% project coverage gate.
-2. Add transmission bookend manuscript sections.
-3. Publish or record references for the planned documented platforms.
-4. Expose the implemented reverse assay (target purity → shortest ordered prefix) through config and a generated report.
-5. Add config selection for the implemented multi-objective purity vector without introducing an unvalidated aggregate score.
-6. Formalize the analogy-break boundary as a theorem with a matching validator.
-7. Wire the refinery to `infrastructure.validation` and measure purity on a
-   real manuscript.
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
+
+## Medium upcoming
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
+
+## Major upcoming
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked row is a deliberate boundary, not a skipped success.

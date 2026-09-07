@@ -19,7 +19,7 @@ import yaml
 
 from src.agents import DeterministicProposer
 from src.ablation import AblationRow, build_ablation_payload, run_ablations
-from src.comparison import build_objective, run_comparison
+from src.comparison import build_comparison_payload, build_objective, run_comparison, summarize_run
 from src.objective import SyntheticObjective
 from src.search import SearchConfig, run_search
 
@@ -119,6 +119,45 @@ def test_comparison_helpers_are_the_persisted_experiment_path() -> None:
     coordinated, baseline = run_comparison(objective, budget=BUDGET)
     assert len(coordinated.trajectory) == 36
     assert len(baseline.trajectory) == BUDGET
+
+
+def test_summarize_run_reports_clean_metric_not_reported_metric() -> None:
+    """AGENTS.md#Honest instrumentation: summarize_run must not conflate the
+    reported (noisy) and clean (ground-truth) metrics it records side by side."""
+    objective = build_objective()
+    coordinated, baseline = run_comparison(objective, budget=BUDGET)
+
+    summary = summarize_run(objective, coordinated)
+
+    assert summary["reported_metric"] == coordinated.champion.metric
+    assert summary["clean_metric"] == objective.clean(coordinated.champion.params)
+    assert summary["clean_metric"] == 0.0
+    assert summary["reported_metric"] != summary["clean_metric"]
+    assert summary["confirmed_improvements"] == coordinated.num_confirmed_improvements
+    assert summary["retired_dead_ends"] == len(coordinated.retired_dead_ends)
+    assert summary["experiments_used"] == len(coordinated.trajectory) == 36
+    assert summary["experiments_to_target"] == coordinated.experiments_to_target == 16
+    assert summary["redundant_experiments"] == coordinated.redundant_experiments == 0
+
+    baseline_summary = summarize_run(objective, baseline)
+    assert baseline_summary["experiments_used"] == len(baseline.trajectory) == BUDGET
+    assert baseline_summary["redundant_experiments"] == 36
+
+
+def test_build_comparison_payload_is_the_persisted_report_shape() -> None:
+    """scripts/run_search_comparison.py writes exactly this payload to
+    ``search_comparison.json`` — pin its shape and the headline
+    clean_metric_advantage (README.md#what-it-honestly-shows: "exactly 0.0")."""
+    objective = build_objective()
+    coordinated, baseline = run_comparison(objective, budget=BUDGET)
+
+    payload = build_comparison_payload(objective, coordinated, baseline, budget=BUDGET)
+
+    assert payload["budget"] == BUDGET
+    assert payload["coordinated"] == summarize_run(objective, coordinated)
+    assert payload["baseline"] == summarize_run(objective, baseline)
+    assert payload["clean_metric_advantage"] == 0.0
+    assert "not a parallel-compute" in payload["note"]
 
 
 def test_reported_metric_full_precision_is_pinned() -> None:

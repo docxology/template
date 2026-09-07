@@ -27,9 +27,11 @@
 | `dashboard` | `parse_dashboard_args` | function | Parse CLI arguments for the dashboard builder. |
 | `dashboard_panels` | `build_dashboard` | function | Build dashboard. |
 | `dashboard_panels` | `to_dashboard_invariant` | function | Convert this object to dashboard invariant. |
+| `dashboard_payload` | `DashboardPayloadError` | class | Raised when a dashboard payload is structurally incomplete. |
 | `dashboard_payload` | `compute_payload` | function | Process compute payload. |
 | `dashboard_payload` | `load_yaml_defaults` | function | Load experiment defaults from ``manuscript/config.yaml``. |
 | `dashboard_payload` | `to_diagonal_A` | function | Convert this object to diagonal A. |
+| `dashboard_payload` | `validate_dashboard_payload` | function | Return schema findings for a dashboard payload. |
 | `documentation` | `build_api_reference_markdown` | function | Return markdown API reference for the optimization exemplar. |
 | `experiment_config` | `ExperimentConfig` | class | Frozen experiment parameters from ``config.yaml`` → ``experiment:``. |
 | `experiment_config` | `load_experiment_config` | function | Load experiment parameters from ``manuscript/config.yaml``. |

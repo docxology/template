@@ -1,8 +1,11 @@
 # Multi-Phase Search — Agent Directives
 
-`search.py` owns phase-aware retrieval, deterministic and optional LLM filtering,
-deduplication, cross-phase citation checks, and provenance output. Keep
-`scripts/01_multi_phase_search.py` as a thin CLI entrypoint.
+`search.py` is the public phase-aware orchestration façade. `models.py` owns
+`PhaseMetadata`/`PhasedPaper`, and `llm_filter.py` owns the optional
+`LLMFilterEngine`; keep those focused contracts independent of the façade.
+`search.py` still owns deterministic filtering, deduplication, cross-phase
+citation checks, and provenance output. Keep `scripts/01_multi_phase_search.py`
+as a thin CLI entrypoint.
 
 ## Contracts
 

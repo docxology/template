@@ -158,8 +158,8 @@ class TestFlipTestSyntheticPrivateDirIsInvisible:
     This is the strongest proof: we build a real (Zero-Mock) synthetic repo layout
     under ``tmp_path`` containing BOTH a public-allowed exemplar (under
     ``projects/templates/``) and synthetic private projects planted under the
-    non-rendered typed subfolders (``projects/working/``, ``projects/other/``,
-    ``projects/archive/``). The published, public-only discovery must surface the
+    non-rendered typed subfolders (``projects/working/``,
+    ``projects/ongoing/``, ``projects/archive/``). The published, public-only discovery must surface the
     public exemplar and never the synthetic private ones.
     """
 
@@ -179,7 +179,7 @@ class TestFlipTestSyntheticPrivateDirIsInvisible:
         self._write_project(tmp_path, "projects/templates", "template_code_project")
         # ...and synthetic PRIVATE projects planted in the non-rendered typed subfolders.
         self._write_project(tmp_path, "projects/working", "SECRET_LEAK_PROJECT")
-        self._write_project(tmp_path, "projects/other", "ANOTHER_PRIVATE_ONE")
+        self._write_project(tmp_path, "projects/ongoing", "ANOTHER_PRIVATE_ONE")
         self._write_project(tmp_path, "projects/archive", "RETIRED_PRIVATE_ONE")
 
         discovered = {p.name for p in discover_projects(tmp_path)}

@@ -8,10 +8,16 @@ and the boundary between private work and public or deployed scope.
 The authoritative sensitive-area map is
 [`../../.github/sensitive-ownership.yaml`](../../.github/sensitive-ownership.yaml).
 Its generated rules are the final rule-bearing block in
-[`../../.github/CODEOWNERS`](../../.github/CODEOWNERS). A sole-owner exception
+CODEOWNERS routes review requests but is not a review-enforcing gate by itself; authority lives in remote branch protection.
+Recording the mapping does not prove protection is active: CODEOWNERS content alone does not imply branch protection, which needs administrator-side evidence (see SECURITY-OWNERSHIP-1).
+[`../../.github/CODEOWNERS`](../../.github/CODEOWNERS); parity is machine-checked
+and rejects any CODEOWNERS file with an untrusted rule appended after the
+generated block: the known-wrong fixture
+`tests/infra_tests/project/test_codeowners_parity.py::test_codeowners_rejects_rule_after_generated_policy`
+feeds exactly that stale file and asserts parity judges it not current. A sole-owner exception
 is explicitly recorded for each current sensitive area because a second
 maintainer is not presently available. That exception documents residual risk
-and requires green blocking CI plus a recorded independent adversarial review;
+and requires green blocking CI plus a recorded independent adversarial review — merging a sensitive-path change without that receipt must block;
 it does not claim that the sole CODEOWNER supplies two-party approval.
 
 External GitHub branch protection must require:
@@ -24,60 +30,35 @@ External GitHub branch protection must require:
 The external setting is not asserted as complete by repository files. Verify it
 in GitHub repository settings before treating the release gate as closed.
 
-## Private-project promotion attestation
+## Private-project promotion boundary
 
-Private work remains in the separate sidecar repository. Promotion into
-`projects/active/`, a public exemplar set, or a deployment/archive transport
-requires an operator to complete this attestation in the private project’s
-change record:
+Private work remains in the separate sidecar repository. A local link under
+`projects/active/` remains private and must never be tracked; it is not a public
+promotion. A sanitized copy under `projects/templates/`, a deployment, an
+archive deposit, and a publication are each separate boundaries with separate
+owner authority.
 
-```yaml
-promotion:
-  project: "<qualified private project name>"
-  source_commit: "<immutable source revision>"
-  identity_verified: false
-  authorization_verified: false
-  redaction_reviewed: false
-  secrets_externalized: false
-  routes_reviewed: false
-  mcp_boundaries_reviewed: false
-  export_tests_passed: false
-  risk_acceptance: null
-  reviewer: "<operator or independent reviewer>"
-```
+The implementation has two independent evidence contracts:
 
-Every boolean must be `true`, or `risk_acceptance` must contain an explicit
-owner, rationale, and expiry. Before promotion, run the confidentiality,
-generated-artifact, publication-preflight, and export tests against the exact
-source revision. This template intentionally does not implement private-project
-authentication or move private credentials into public configuration.
+- `promotion.yaml` binds the qualified project name and source commit to the
+  orchestration review.
+- `promotion-security.yaml` records candidate-specific security checks and any
+  time-bounded risk acceptance.
 
-Validate the offline attestation alone, preserving the historical positional
-form:
+The `attestation` CLI validates only the first schema. The `candidate` CLI
+validates only the second schema and scans the candidate for security TODOs and
+unsafe symlinks; it does not verify Git `HEAD` or general repository gates. The
+library-only `evaluate_promotion_candidate(...)` composite binds both contracts
+to the candidate name, `HEAD`, and clean working-tree state. None of these
+read-only checks authenticates an operator or grants permission to copy,
+deploy, archive, push, release, or publish.
 
-```bash
-uv run python -m infrastructure.project.promotion attestation promotion.yaml \
-  --as-of 2026-07-20
-uv run python -m infrastructure.project.promotion promotion.yaml
-```
-
-Validate a candidate checkout and compose its security scan with the
-candidate-security attestation:
-
-```bash
-uv run python -m infrastructure.project.promotion candidate \
-  --project-root /path/to/private/candidate \
-  --attestation /path/to/private/candidate/promotion-security.yaml \
-  --as-of 2026-07-20 --json
-```
-
-Both commands are read-only. Passing `--as-of` makes expiry decisions
-deterministic for fixtures and release evidence.
-Call `evaluate_promotion_candidate(...)` when one typed report must combine
-the orchestration attestation and candidate-security decisions. Callers must
-provide the qualified `project_name`; the composite rejects a mismatched
-attestation project, a `source_commit` different from candidate `HEAD`, or
-uncommitted candidate changes outside the attestation files.
+Use the complete schemas, commands, and boundary-specific checklist in
+[`promotion-runbook.md`](promotion-runbook.md). Before any public promotion,
+run the applicable confidentiality, generated-artifact, tests, scholarship,
+publication-preflight, rendering, and accessibility gates against the exact
+reviewed revision. Record skipped or unavailable checks honestly rather than
+converting them to passes.
 
 See [`TO-DO.md`](../../TO-DO.md) for the remaining ownership, promotion, and
 external branch-protection follow-up.

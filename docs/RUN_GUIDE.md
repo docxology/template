@@ -5,7 +5,7 @@
 The Research Project Template provides **two main entry points** for pipeline operations:
 
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (interactive menu and flags)
-2. **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged and opt-in stages removed**. The default full run executes **10** core+LLM stages, while the YAML declares **16** stages including the opt-in science, provenance, ebook, metadata, bundle, and archival contracts.
+2. **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): `llm`-tagged and opt-in stages removed. Live counts are in the generated `STAGE_SUMMARY` below.
 
 ## Thin Orchestration Architecture
 
@@ -150,7 +150,7 @@ in the normal menu.
 
 Private work normally lives in the sibling repo configured by
 `$TEMPLATE_PRIVATE_PROJECTS_ROOT`. The simplified sidecar uses `working/` and
-`archive/` by default; optional legacy `active/`, `published/`, and `other/`
+`archive/` by default; optional legacy `active/`
 folders are still linked when present. `run.sh` auto-syncs existing lifecycle
 folders into matching `template/projects/<subfolder>/` symlinks before
 discovery. Use
@@ -274,6 +274,8 @@ The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.p
   Steganography only  | ./secure_run.sh --steganography-only        (re-watermark, no re-render)
   Ebook formats       | uv run python scripts/pipeline/stage_11_ebook.py --project <name>
   Metadata package    | uv run python scripts/pipeline/stage_12_metadata.py --project <name>
+  docxplus export     | uv run python scripts/pipeline/stage_13_docxplus.py --project <name>
+  Research workflow   | uv run python scripts/pipeline/stage_10_research_workflow.py --project <name> --describe
   Executable bundle   | uv run python scripts/runner/bundle_executable.py --project <name>
   Archival deposit    | uv run python scripts/runner/archive_publication.py --project <name>  (dry-run by default)
   Full release        | uv run python scripts/publish/publish_project_release.py --project <name> --tag vX --repo owner/repo
@@ -285,7 +287,7 @@ The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.p
 
 After the menu, the interactive loop prints a one-line key legend, a blank line, then `Choice: ` before reading input. Choosing **p** prints the project list to stdout and then `Choice [index / a=all / q=quit]: ` before reading the picker line.
 
-Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps in the default core+LLM path (see `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml), which declares 16 stages total: 8 core, 2 science/provenance, 2 optional LLM, 2 opt-in ebook/metadata, and 2 opt-in bundle/archival stages.
+Progress logs use `[0/N]` for Clean Output Directories and `[1/N]`–`[N/N]` for the numbered default-run stages (`STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). Live declared / default-full / core-only counts are in the generated `STAGE_SUMMARY` below.
 
 ### Manuscript Menu Options
 
@@ -323,20 +325,24 @@ Executes project analysis scripts with progress tracking.
 
 #### Option 3: Render PDF
 
-Generates manuscript PDFs with progress tracking.
+Runs the historically named `PDF Rendering` stage with progress tracking. It
+renders every format enabled by the effective `render.formats` YAML plus
+`ENABLE_<FORMAT>` environment configuration.
 
 - Processes `projects/{name}/manuscript/` markdown files
-- Converts to LaTeX via pandoc
-- Compiles to PDF via xelatex
-- Also runs analysis scripts first (option 2)
+- Produces PDF/HTML/Beamer outputs by default and opt-in DOCX/EPUB outputs
+- Builds fresh combined sources from the current ordered manuscript inputs
+- Hydrates manuscript variables when the project provides the canonical producer;
+  run Stage 2 first whenever analysis-derived inputs need regeneration
 
-**Output**: `projects/{name}/output/pdf/`
+**Output**: format-specific directories under `projects/{name}/output/`; see
+[`usage/output-formats.md`](usage/output-formats.md).
 
 #### Option 4: Validate Output
 
 Validates build quality with reporting.
 
-- Checks generated PDFs for issues
+- Validates every enabled canonical render format (and PDF bookends when PDF is enabled)
 - Validates markdown references
 - Checks figure integrity
 - Generates validation reports (JSON, Markdown)
@@ -378,7 +384,7 @@ Runs `execute_pipeline.py` with **`--core-only`** (default [`pipeline.yaml`](../
 Runs the **full** default DAG (**10** stages in `pipeline.yaml`, including clean, both LLM stages, and copy).
 
 - LLM stages are optional at runtime (exit code 2 skip) if Ollama is unavailable
-- Bash progress lines use `[0/9]` for clean, then `[1/9]`–`[9/9]` for the nine entries in `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py) (see menu block above)
+- Progress banners are generic `[i/N]` lines from the resolved DAG: the default full run is **10** stages (clean included), `--core-only` is **8** (see the `STAGE_SUMMARY` in the root [`AGENTS.md`](../AGENTS.md))
 
 #### Menu `f`: Full Pipeline (fast)
 
@@ -388,11 +394,11 @@ Same as full pipeline but **skips infrastructure tests** (`--skip-infra` / fast 
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Default full run (10 executed stages; pipeline.yaml declares 16 total)
+./run.sh --pipeline          # Default full run (see STAGE_SUMMARY)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 uv run python scripts/pipeline/stage_01_test.py --infra-only          # Run infrastructure tests only
 uv run python scripts/pipeline/stage_01_test.py --project-only        # Run project tests only
-uv run python scripts/pipeline/stage_03_render.py --project {name}      # Render PDF manuscript only
+uv run python scripts/pipeline/stage_03_render.py --project {name}      # Render configured manuscript formats
 
 # LLM Operations (requires Ollama)
 uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only        # LLM manuscript review only (English)
@@ -413,7 +419,7 @@ uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 **Features**:
 
-- **Eight** DAG stages by default: clean → setup → infrastructure tests → project tests → analysis → PDF → validation → copy. Omit infrastructure tests with `--skip-infra` (**seven** stages).
+- **Eight** DAG stages by default: clean → setup → infrastructure tests → project tests → analysis → configured-format rendering (historical stage label: `PDF Rendering`) → validation → copy. Omit infrastructure tests with `--skip-infra` (**seven** stages).
 - No LLM-tagged stages (`scripts/pipeline/stage_06_llm_review.py` / `scripts/pipeline/stage_07_executive_report.py` are not part of `--core-only`; the executive stage is for multi-project reporting)
 - No LLM dependencies required for `--core-only`
 - Suitable for automated environments
@@ -423,6 +429,10 @@ uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 The canonical pipeline-stage table (rendered from `pipeline.yaml`):
 
+<!-- BEGIN:STAGE_SUMMARY -->
+The default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default full runs execute **10** core+LLM stages; `--core-only` executes **8**. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of those default runs unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
+<!-- END:STAGE_SUMMARY -->
+
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->
 
@@ -431,19 +441,20 @@ The canonical pipeline-stage table (rendered from `pipeline.yaml`):
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
 | **1** Environment Setup | `scripts/pipeline/stage_00_setup.py` | `core` | hard fail |
 | **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable test-failure tolerance; zero-test, project-local coverage, verifier-receipt/evidence, and internal runner failures hard fail |
 | **4** Project Analysis | `scripts/pipeline/stage_02_analysis.py` | `core` | hard fail |
 | **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
 | **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
 | **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
-| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | PDF/bookends and artifact/provenance failures block; optional-format structure remains a warning + report |
+| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | enabled-format, enabled-PDF bookend, and artifact/provenance failures block; markdown, general output structure, and prose-quality checks remain advisory |
 | **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
 | **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | soft fail |
-| **13** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
-| **14** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
-| **15** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
+| **13** docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | `core`, `docxplus` | soft fail |
+| **14** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
+| **15** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
+| **16** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 The table above lists pipeline-position indices (0-based, as the executor sees them); the table below maps script *filename* prefixes to their high-level purpose:
@@ -537,7 +548,7 @@ uv run python scripts/pipeline/stage_00_setup.py            # Setup environment
 uv run python scripts/pipeline/stage_01_test.py --project {name}   # Run tests only
 uv run python scripts/pipeline/stage_01_test.py --project {name} --verbose  # Run tests with verbose output
 uv run python scripts/pipeline/stage_02_analysis.py --project {name}       # Run project scripts
-uv run python scripts/pipeline/stage_03_render.py --project {name}         # Render PDFs only
+uv run python scripts/pipeline/stage_03_render.py --project {name}         # Render configured formats
 uv run python scripts/pipeline/stage_04_validate.py --project {name}    # Validate outputs only
 uv run python scripts/pipeline/stage_05_copy.py --project {name}       # Copy final deliverables
 uv run python scripts/pipeline/stage_06_llm_review.py --project {name}         # LLM manuscript review
@@ -584,12 +595,18 @@ override per-run via env (env precedence beats yaml):
 |----------|------|---------|--------|
 | `ENABLE_PDF` | `0/1`,`true/false`,`yes/no` | `1` | Combined PDF + per-section LaTeX/PDF |
 | `ENABLE_HTML` | same | `1` | Combined HTML index + per-section HTML |
-| `ENABLE_SLIDES` | same | `1` | Per-section Beamer PDFs |
+| `ENABLE_SLIDES` | same | `1` | Archive profile: required per-section Beamer PDFs. Accessible profile: transactional Beamer-PDF/Reveal-HTML pairs. |
 | `ENABLE_DOCX` | same | `0` | Combined Word document (`output/<project>/docx/`) |
 | `ENABLE_EPUB` | same | `0` | Combined EPUB (`output/<project>/epub/`) |
 
 See [`usage/output-formats.md`](usage/output-formats.md) for the full
 configuration matrix.
+
+The opt-in `SLIDES_PROFILE=accessible` uses the source-owned density and
+typography settings documented there and removes both presentation derivatives
+when either member of a section pair fails. Renderer subprocess policy is
+separate: `RENDER_SECURITY_PROFILE` accepts only `trusted-local` or
+`untrusted`, and the latter requires `RENDER_UNTRUSTED_TEMP_ROOT`.
 
 ### LLM Review Variables
 

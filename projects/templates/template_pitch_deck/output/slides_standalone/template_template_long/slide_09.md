@@ -1,6 +1,6 @@
 # How it works
 
-*Slide 9 of 56 — template_template pitch, long deck — kind: `section`*
+*Slide 9 of 57 — template_template pitch, long deck — kind: `section`*
 
 *(no body content — section/title slide)*
 

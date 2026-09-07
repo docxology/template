@@ -130,3 +130,8 @@ def test_run_project_tests_real_subprocess(repo_root: Path) -> None:
     threshold = declared if declared is not None else 90.0
     coverage = results.get("coverage_percent", 0.0)
     assert coverage >= threshold or results.get("passed", 0) > 0
+    resolved_project = repo_root / "projects" / "active" / "demo"
+    assert (resolved_project / "coverage_project.json").is_file()
+    assert (resolved_project / ".coverage.project").is_file()
+    assert not (repo_root / "coverage_project.json").exists()
+    assert not (repo_root / ".coverage.project").exists()

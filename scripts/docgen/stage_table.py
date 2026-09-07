@@ -5,9 +5,8 @@ Stage NN. Thin orchestrator over
 :mod:`infrastructure.documentation.stage_table`.
 
 The single source of truth is ``infrastructure/core/pipeline/pipeline.yaml``.
-This script renders a Markdown stage table from it and injects the result
-between ``<!-- BEGIN:STAGE_TABLE -->`` / ``<!-- END:STAGE_TABLE -->``
-markers in each target file.
+This script renders a Markdown stage table and a one-line ``STAGE_SUMMARY``
+from it and injects both between their marker pairs in each target file.
 
 Usage:
     uv run python scripts/docgen/stage_table.py            # preview only

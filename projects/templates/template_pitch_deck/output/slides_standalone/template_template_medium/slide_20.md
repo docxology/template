@@ -1,9 +1,10 @@
-# Governance and confidentiality
+# Two-layer architecture
 
-*Slide 20 of 37 — template_template pitch, medium deck — kind: `content`*
+*Slide 20 of 38 — template_template pitch, medium deck — kind: `content`*
 
-- Only projects/templates/ is public and CI-gated; private working projects render locally through the same pipeline without ever being tracked.
-- A dedicated audit (scripts/audit/check_tracked_all.py) fails CI if any private project path is accidentally committed.
+- Layer 1 (infrastructure/): generic, reusable — rendering, validation, publishing, provenance, testing utilities.
+- Layer 2 (projects/{name}/src/): domain-specific — each exemplar's own algorithms, kept out of infrastructure/ by convention and enforced by drift checks.
+- Thin orchestrator scripts (projects/{name}/scripts/) coordinate the two layers but implement no business logic themselves.
 
 ---
 

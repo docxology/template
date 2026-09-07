@@ -41,25 +41,26 @@ Forwarded by `./secure_run.sh` to the Python `secure` subcommand (including `--d
 
 ```bash
 # Pipeline + steganography for one project
-./secure_run.sh --project template_code_project
+./secure_run.sh --project templates/template_code_project
 
 # Core DAG (no LLM stages) + steganography
-./secure_run.sh --project template_code_project --core-only
+./secure_run.sh --project templates/template_code_project --core-only
 
 # Resume checkpoint after pipeline phase
-./secure_run.sh --project template_code_project --resume
+./secure_run.sh --project templates/template_code_project --resume
 
 # Only harden existing PDFs (single project)
-./secure_run.sh --steganography-only --project template_code_project
+./secure_run.sh --steganography-only \
+  --project templates/template_code_project
 
 # Harden PDFs for every discovered project (pipeline skipped)
 ./secure_run.sh --steganography-only
 
 # Skip infrastructure tests during pipeline phase (passed through to runner)
-./secure_run.sh --project template_code_project --skip-infra
+./secure_run.sh --project templates/template_code_project --skip-infra
 
 # Validate optional Kmyth/TPM tooling only; no rendering or sealing
-./secure_run.sh --validate-kmyth --project template_code_project
+./secure_run.sh --validate-kmyth --project templates/template_code_project
 ```
 
 There is **no** `--pipeline` flag on the `secure` subcommand — omitting `--steganography-only` already runs the pipeline before steganography.
@@ -79,8 +80,9 @@ There is **no** `--pipeline` flag on the `secure` subcommand — omitting `--ste
 ### Deterministic / reproducible mode
 
 ```bash
-./secure_run.sh --deterministic --project template_code_project
-STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh --project template_code_project
+./secure_run.sh --deterministic --project templates/template_code_project
+STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh \
+  --project templates/template_code_project
 ```
 
 Trade-offs and internals: [steganography.md § Deterministic mode](steganography.md#deterministic-mode).

@@ -75,6 +75,7 @@ class TestFigureSpecContract:
             "path",
             "svg_path",
             "caption",
+            "alt",
             "generated_by",
             "data_sources",
             "visual_encoding",
@@ -83,6 +84,7 @@ class TestFigureSpecContract:
             assert required <= set(record)
             assert record["path"].endswith(".png")
             assert record["svg_path"].endswith(".svg")
+            assert str(record["alt"]).strip()
             # Provenance points into the figures/ subpackage (split from the
             # former single-file figures.py); every generator names its module.
             assert record["generated_by"].startswith("src/figures/")

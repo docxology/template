@@ -33,6 +33,9 @@ without autonomous research execution.
 - `AutoResearchPlan`
 - `AutoResearchIssue`
 - `AutoResearchReport`
+- `AutoResearchOrchestrator`
+- `OrchestrationEvent`
+- `OrchestrationResult`
 - `INTRINSIC_QUALITY_CHECKS` / `EXTRINSIC_QUALITY_CHECKS`
 - `load_autoresearch_config(project_root)`
 - `parse_metric_lines(output)`
@@ -41,7 +44,15 @@ without autonomous research execution.
 - `parse_string_sequence(value, *, default)`
 - `build_autoresearch_plan(repo_root, project_name, projects_dir="projects")`
 - `validate_autoresearch_plan(plan, project_root, *, phase="all")`
-- `write_autoresearch_report(project_root, report)`
+- `write_autoresearch_report(project_root, report)` — serializes readiness paths
+  without machine-local checkout prefixes
+
+`AutoResearchOrchestrator` is a readiness validator, not an experiment runner:
+`candidate_budget` records the configured allowance while
+`candidates_processed` remains zero. When report writing is requested, a write
+failure is fatal and is recorded as a finalization error; a successful report
+write is exposed as `reports_written` in the result. Orchestration events carry
+UTC timestamps for an auditable event sequence.
 
 Implementation split: [`validation.py`](validation.py) orchestrates;
 [`validation_checks.py`](validation_checks.py) holds per-check validators.

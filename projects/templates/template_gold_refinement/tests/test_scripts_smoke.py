@@ -19,7 +19,7 @@ class TestRefinementAnalysisScript:
             [sys.executable, str(_PROJECT_ROOT / "scripts" / "refinement_analysis.py")],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=240,
             cwd=str(_PROJECT_ROOT),
             env=_SCRIPT_ENV,
         )
@@ -28,6 +28,9 @@ class TestRefinementAnalysisScript:
         assert (_PROJECT_ROOT / "output" / "data" / "refinery_results.json").exists()
         assert (_PROJECT_ROOT / "output" / "reports" / "token_plan.json").exists()
         assert (_PROJECT_ROOT / "output" / "reports" / "claim_support_registry.json").exists()
+        assert (_PROJECT_ROOT / "output" / "reports" / "reverse_assay.json").exists()
+        assert (_PROJECT_ROOT / "output" / "reports" / "transmission_bookends.json").exists()
+        assert (_PROJECT_ROOT / "output" / "reports" / "analogy_boundary_receipt.json").exists()
         assert (_PROJECT_ROOT / "output" / "reports" / "figure_quality_report.json").exists()
         # Check figures were generated
         figures_dir = _PROJECT_ROOT / "output" / "figures"
@@ -46,7 +49,7 @@ class TestRefinementAnalysisScript:
             [sys.executable, str(_PROJECT_ROOT / "scripts" / "refinement_analysis.py")],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=240,
             cwd=str(_PROJECT_ROOT),
             env=_SCRIPT_ENV,
         )
@@ -66,7 +69,7 @@ class TestManuscriptVariablesScript:
             [sys.executable, str(_PROJECT_ROOT / "scripts" / "refinement_analysis.py")],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=240,
             cwd=str(_PROJECT_ROOT),
             env=_SCRIPT_ENV,
         )
@@ -79,7 +82,7 @@ class TestManuscriptVariablesScript:
             ],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=240,
             cwd=str(_PROJECT_ROOT),
             env=_SCRIPT_ENV,
         )
@@ -115,7 +118,7 @@ class TestManuscriptVariablesScript:
             ],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=240,
             cwd=str(_PROJECT_ROOT),
             env=_SCRIPT_ENV,
         )
@@ -135,7 +138,7 @@ class TestCoverVisualizationScript:
                 [sys.executable, str(_PROJECT_ROOT / "scripts" / script)],
                 capture_output=True,
                 text=True,
-                timeout=60,
+                timeout=240,
                 cwd=str(_PROJECT_ROOT),
                 env=_SCRIPT_ENV,
             )

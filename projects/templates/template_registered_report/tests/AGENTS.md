@@ -15,6 +15,10 @@ never mock the validators, the demonstration analysis, or the figure renderers.
 - `test_generate_figures_script.py` — script-level asset generation, figure
   registry publication provenance, and validator rejection of incomplete or
   deleted registered figures.
+- `test_generate_review_artifacts_script.py` — script-level review-artifact
+  generation via `main()`/argparse (not just the library functions it calls),
+  parity between the written packet and direct library computation, and a
+  negative control for a missing registration file.
 
 Run one project directory per pytest invocation from the repository root:
 

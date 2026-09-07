@@ -15,6 +15,7 @@ requires-python = ">=3.10"
 dependencies = [
     "pyyaml>=6.0",
     "matplotlib>=3.7",
+    "pillow>=12.3.0",
     "numpy>=1.24",
 ]
 

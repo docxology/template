@@ -33,6 +33,11 @@ def _parse_args() -> argparse.Namespace:
         default=None,
         help="Path to a cover image file to embed in the EPUB/MOBI output",
     )
+    parser.add_argument(
+        "--cover-alt",
+        default=None,
+        help="Non-empty alternative text required when --cover-image is used for EPUB output",
+    )
     return parser.parse_args()
 
 
@@ -44,6 +49,7 @@ def main() -> int:
         args.project,
         skip_formats_arg=args.skip_formats,
         cover_image_arg=args.cover_image,
+        cover_alt_arg=args.cover_alt,
     )
 
 

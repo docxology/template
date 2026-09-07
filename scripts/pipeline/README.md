@@ -9,9 +9,9 @@ Numbered pipeline stage orchestrators (stages 00–12).
 | 00 | `stage_00_setup.py` | Environment + deps |
 | 01 | `stage_01_test.py` | Run tests |
 | 02 | `stage_02_analysis.py` | Project analysis |
-| 03 | `stage_03_render.py` | Render PDF |
-| 04 | `stage_04_validate.py` | Validate outputs |
-| 05 | `stage_05_copy.py` | Copy outputs |
+| 03 | `stage_03_render.py` | Render every enabled manuscript format |
+| 04 | `stage_04_validate.py` | Validate enabled formats and release evidence |
+| 05 | `stage_05_copy.py` | Create a complete local mirror, filter disabled formats, and validate/byte-match its stable publication inventory/statistics |
 | 06 | `stage_06_llm_review.py` | LLM review |
 | 07 | `stage_07_executive_report.py` | Executive report |
 | 08 | `stage_08_connector_search.py` | Connector search (opt-in) |
@@ -19,6 +19,7 @@ Numbered pipeline stage orchestrators (stages 00–12).
 | 10 | `stage_10_research_workflow.py` | Research workflow (opt-in) |
 | 11 | `stage_11_ebook.py` | Ebook generation (opt-in) |
 | 12 | `stage_12_metadata.py` | Metadata package (opt-in) |
+| 13 | `stage_13_docxplus.py` | docxplus export: a `.docx` carrying the project (opt-in) |
 
 ## Usage
 

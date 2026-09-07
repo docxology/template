@@ -9,7 +9,7 @@
 > forward into Parts I–III.
 
 This part is **data-driven from [`../config.yaml`](../config.yaml)**. Its title,
-label (`0`), directory, and the chapter list below all come from the `parts:`
+label (`0`), directory, and the chapter list below all come from the `units:`
 block of that file. To change the structure, edit the config and run
 [`scripts/scaffold_chapter.py`](../../scripts/scaffold_chapter.py) to materialise
 any missing stub files in the correct shape — do not add chapters by hand.

@@ -45,6 +45,7 @@ class FigureSpec:
     label: str
     filename: str
     caption: str
+    alt_text: str
     generated_by: str
 
 
@@ -53,18 +54,30 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         label="fig:papers_per_source",
         filename="papers_per_source.png",
         caption="Per-source paper counts before cross-backend deduplication.",
+        alt_text=(
+            "A vertical bar chart compares the raw paper contributions from each configured "
+            "search backend before duplicate records are merged, with counts printed above the bars."
+        ),
         generated_by="src.figures.plot_papers_per_source",
     ),
     FigureSpec(
         label="fig:year_histogram",
         filename="year_histogram.png",
         caption="Publication-year distribution for the deduplicated paper roster.",
+        alt_text=(
+            "A one-bin-per-year histogram shows how the deduplicated papers are distributed "
+            "across their observed publication years; records without a year are omitted."
+        ),
         generated_by="src.figures.plot_year_histogram",
     ),
     FigureSpec(
         label="fig:score_distribution",
         filename="score_distribution.png",
         caption="Backend-reported relevance scores ranked by paper.",
+        alt_text=(
+            "Horizontal bars rank papers from highest to lowest backend-reported relevance "
+            "score, while unscored local-backend records appear as zero-length bars."
+        ),
         generated_by="src.figures.plot_score_distribution",
     ),
 )

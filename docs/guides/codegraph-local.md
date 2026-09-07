@@ -79,13 +79,13 @@ scope verifier; it delegates all behavior to the package module.
 - `.gitignore` ignores `.codegraph/` at the root and nested project levels.
 - `scripts/audit/check_tracked_generated_artifacts.py` rejects tracked
   `.codegraph/*` files even if someone force-adds them.
-- `scripts/audit/check_tracked_projects.py` remains the separate confidentiality
-  guard for tracked project paths.
+- `scripts/audit/check_tracked_all.py` remains the separate confidentiality
+  guard for non-template projects.
 
-Run the relevant guard slice after changing this integration:
+Run the relevant guard slice after changing this guide or local-index policy:
 
 ```bash
-uv run pytest tests/infra_tests/project/test_codegraph.py tests/infra_tests/project/test_git_guards.py -q
+uv run pytest tests/infra_tests/project/test_git_guards.py -q
 uv run python scripts/audit/check_tracked_generated_artifacts.py
-uv run python scripts/audit/check_tracked_projects.py
+uv run python scripts/audit/check_tracked_all.py
 ```

@@ -89,16 +89,14 @@ icon, stage number, name, and duration line up vertically so a stack of
 projects in a multi-project run remains visually scannable.
 
 ```
-[0/9] Clean Output Directories      ✅  0.0s
-[1/9] Environment Setup             ✅  9.8s
-[2/9] Infrastructure Tests          ⏭   skipped (multi-project mode)
-[3/9] Project Tests                 ✅  2m 41s
-[4/9] Project Analysis              ✅  10m 14s
-[5/9] PDF Rendering                 ✅  3m 02s
-[6/9] Output Validation             ✅  0.6s
-[7/9] LLM Scientific Review         ⏭   skipped (--core-only)
-[8/9] LLM Translations              ⏭   skipped (--core-only)
-[9/9] Copy Outputs                  ✅  0.5s
+[1/8] Clean Output Directories      ✅  0.0s
+[2/8] Environment Setup             ✅  9.8s
+[3/8] Infrastructure Tests          ⏭   skipped (multi-project mode)
+[4/8] Project Tests                 ✅  2m 41s
+[5/8] Project Analysis              ✅  10m 14s
+[6/8] PDF Rendering                 ✅  3m 02s
+[7/8] Output Validation             ✅  0.6s
+[8/8] Copy Outputs                  ✅  0.5s
 ```
 
 Within the render stage, `log_rendering_summary` in

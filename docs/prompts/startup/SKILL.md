@@ -83,7 +83,7 @@ apt-get install pandoc       # Linux
 
 **If `uv` missing:**
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
+Follow the [checksum-verified uv installation instructions](../../operational/build/dependency-management.md#installing-uv).
 ```
 
 **Gate:** All three tools on PATH → continue.
@@ -96,7 +96,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 ```
 
-**Gate:** Exit 0, no errors → continue. On failure: check a supported Python 3.10–3.13 interpreter is available and re-run.
+**Gate:** Exit 0, no errors → continue. On failure: check a supported Python 3.10–3.14 interpreter is available and re-run.
 
 ---
 

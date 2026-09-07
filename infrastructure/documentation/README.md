@@ -213,7 +213,7 @@ for md_path, errors in validation_results.items():
 | **generate_glossary_cli.py** | CLI for glossary generation | `main()` | Pipeline integration script |
 | **architecture_overview.py** | Architecture diagram plus accessible topology summary from live repo state | `build_architecture_mermaid()`, `build_architecture_summary()`, `render_architecture_svg()` | Driven by `scripts/docgen/architecture_overview.py` |
 | **active_projects_doc.py** | Render the authoritative public active-projects doc | `render_active_projects_doc()`, `write_active_projects_doc()` | Generates `docs/_generated/active_projects.md` |
-| **publication_records.py** | Load/render project publication metadata (DOIs, archives) | `PublicationRecord`, `load_publication_records()`, `render_publication_records_doc()`, `refresh_external_records()` | Publication doc + GitHub README block |
+| **publication_records.py** | Load/render project publication metadata (DOIs, archives). Implementation lives in `_publication_records_{types,load,render,external,check}.py`; this module re-exports the public API. | `PublicationRecord`, `load_publication_records()`, `render_publication_records_doc()`, `refresh_external_records()` | Publication doc + GitHub README block |
 | **publication_standalone.py** | Render and update source-owned publication identity blocks | `render_standalone_publication_block()`, `replace_standalone_publication_block()`, `extract_standalone_publication_block()` | Every canonical exemplar's `STANDALONE.md` |
 
 ## Figure Management
@@ -667,6 +667,8 @@ For detailed function signatures and API documentation, see [AGENTS.md](AGENTS.m
   (4 columns: Stage | Script | Tags | Failure mode)
 - `stage_table.inject_stage_table(md_path, table)` - Replace the block
   between `<!-- BEGIN:STAGE_TABLE -->` / `<!-- END:STAGE_TABLE -->`
+  and the count line between `<!-- BEGIN:STAGE_SUMMARY -->` /
+  `<!-- END:STAGE_SUMMARY -->`
   in a Markdown file (idempotent)
 - Driver: [`scripts/docgen/stage_table.py`](../../scripts/docgen/stage_table.py)
   updates `README.md`, `.github/README.md`, `scripts/AGENTS.md`,

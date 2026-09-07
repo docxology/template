@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+from infrastructure.core.project_pyproject import project_declared_test_command
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.git_guards import ALLOWED_PROJECT_DIRS
 from infrastructure.project.public_scope import public_project_names
@@ -70,6 +71,14 @@ def test_required_project_layout() -> None:
     assert (root / "data" / "claim_ledger.yaml").is_file()
     pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
     assert "skip_combined_pytest" not in pyproject
+    assert project_declared_test_command(root) == (
+        "uv",
+        "run",
+        "--extra",
+        "dev",
+        "python",
+        "scripts/run_full_verification.py",
+    )
 
 
 def test_compose_manuscript_validate_only_strict() -> None:
@@ -122,6 +131,7 @@ def test_full_sheaf_appendix_binds_registry_tracks() -> None:
     assert required <= found, f"missing required track markers in appendix: {required - found!r}"
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(60)
 def test_coverage_json_schema_on_clean_tree(isolated_project: Path) -> None:
     root = isolated_project
@@ -161,6 +171,7 @@ def test_methods_sheaf_layers_in_composed_manuscript() -> None:
     assert "<!-- sheaf-layers:legend -->" in text
 
 
+@pytest.mark.slow
 def test_build_lean_when_present_must_succeed(isolated_project: Path) -> None:
     """Build the Lean package when lake is installed and the project ships one.
 
@@ -178,6 +189,7 @@ def test_build_lean_when_present_must_succeed(isolated_project: Path) -> None:
     assert code == 0, msg
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(60)
 def test_z_generate_writes_resolved_manuscript_without_tokens(isolated_project: Path) -> None:
     root = isolated_project

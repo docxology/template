@@ -168,7 +168,7 @@
       },
       "id": "track_lane_promotion_map_figure",
       "path": "output/figures/track_lane_promotion_map.png",
-      "producer": "manual",
+      "producer": "generate_figures.py",
       "section": "methods_sheaf",
       "statement": "Track-lane promotion map figure is generated from the canonical promotion matrix and Lean promotion-proof boundary.",
       "tracks": [
@@ -178,7 +178,8 @@
         "lean"
       ],
       "validation_gates": [
-        "validate_outputs"
+        "validate_outputs",
+        "figure_registry"
       ]
     },
     {

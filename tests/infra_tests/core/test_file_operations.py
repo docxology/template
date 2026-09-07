@@ -131,6 +131,25 @@ class TestCleanOutputDirectory:
         assert len(list(output_dir.iterdir())) == 0
 
     @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+    def test_unlinks_directory_symlink_child_without_following(self, tmp_path):
+        """A symlink child must be removed as a link, never rmtree'd through."""
+        from infrastructure.core.files.cleanup import clean_output_directory
+
+        external = tmp_path / "external"
+        external.mkdir()
+        secret = external / "keep.txt"
+        secret.write_text("must survive", encoding="utf-8")
+        output_dir = tmp_path / "output"
+        output_dir.mkdir()
+        (output_dir / "alias").symlink_to(external, target_is_directory=True)
+
+        clean_output_directory(output_dir)
+
+        assert output_dir.exists()
+        assert list(output_dir.iterdir()) == []
+        assert secret.read_text(encoding="utf-8") == "must survive"
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
     def test_refuses_symlinked_output_directory(self, tmp_path):
         """Cleanup may remove a link entry, but never follow a linked root."""
         external = tmp_path / "external"

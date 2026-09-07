@@ -23,7 +23,19 @@ from pathlib import Path
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT))
-sys.path.insert(0, str(_PROJECT_ROOT.parents[2]))
+
+
+def _template_repo_root(project_root: Path) -> Path | None:
+    """Return the template repository root when this project is inside one."""
+    for parent in project_root.parents:
+        if (parent / "infrastructure").is_dir() and (parent / "pyproject.toml").is_file():
+            return parent
+    return None
+
+
+_REPO_ROOT = _template_repo_root(_PROJECT_ROOT)
+if _REPO_ROOT is not None and str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 
 def main() -> int:

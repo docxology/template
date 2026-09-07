@@ -223,6 +223,7 @@ def draw_column_rules(c: Canvas, grid: ColumnGrid, top: float, bottom: float) ->
 LEAD_HEAD_LEADING = 54  # fontSize 44 * ~1.23
 LEAD_HEAD_GAP = 7  # explicit gap after the headline, before the deck
 LEAD_DECK_LEADING = 19  # fontSize 13.5 * ~1.41
+LEAD_MIN_DESCENDER_CLEARANCE = 6
 
 
 def draw_lead_headline(
@@ -272,4 +273,5 @@ __all__ = [
     "draw_column_rules",
     "draw_lead_headline",
     "draw_draft_grid",
+    "LEAD_MIN_DESCENDER_CLEARANCE",
 ]

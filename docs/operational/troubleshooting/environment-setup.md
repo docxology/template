@@ -99,7 +99,7 @@ uv sync
 
 ```bash
 # Install uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
+Follow the [checksum-verified uv installation instructions](../build/dependency-management.md#installing-uv).
 
 # Add to PATH
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -119,7 +119,7 @@ uv --version
 ```bash
 export MPLBACKEND=Agg
 export MPLCONFIGDIR=/tmp/matplotlib
-uv run python scripts/pipeline/stage_02_analysis.py
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_code_project
 ```
 
 ---

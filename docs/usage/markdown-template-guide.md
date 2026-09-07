@@ -34,13 +34,12 @@ Markdown filename link (see [Manuscript Semantics](../guides/manuscript-semantic
 The methodology described in [@sec:methodology] shows...
 ```
 
-**Available section labels:**
+Labels are project-owned. Discover the current set instead of copying this
+guide's examples:
 
-- `{#sec:introduction}` - Introduction
-- `{#sec:methodology}` - Methodology
-- `{#sec:experimental_results}` - Experimental Results
-- `{#sec:discussion}` - Discussion
-- `{#sec:conclusion}` - Conclusion
+```bash
+rg -n '\{#sec:' projects/templates/template_code_project/manuscript/
+```
 
 ### Equation References
 
@@ -54,19 +53,8 @@ $$ {#eq:convergence}
 The convergence rate [@eq:convergence] shows...
 ```
 
-**Key equations in the template:**
-
-- `eq:objective` - Main objective function
-- `eq:optimization` - Optimization problem
-- `eq:update` - Algorithm update rule
-- `eq:convergence` - Convergence bound
-- `eq:adaptive_step` - Adaptive step size
-- `eq:memory` - Memory scaling
-- `eq:accuracy` - Accuracy metric
-- `eq:advantage_metric` - Performance advantage
-- `eq:robustness_metric` - Robustness measure
-- `eq:complexity_bound` - Complexity bound
-- `eq:final_improvement` - Overall improvement
+Equation labels are likewise project-owned. Inspect them with
+`rg -n '\{#eq:|\\label\{eq:' projects/<qualified-name>/manuscript/`.
 
 ### Figure References
 
@@ -78,14 +66,9 @@ Use `[@fig:figure_name]` to reference figures — never raw `\ref{}`:
 [@fig:experimental_setup] shows the pipeline...
 ```
 
-**Available figures:**
-
-- `fig:example_figure` - Basic example function plot
-- `fig:convergence_plot` - Algorithm convergence comparison
-- `fig:experimental_setup` - Experimental pipeline diagram
-- `fig:scalability_analysis` - Performance scaling analysis
-- `fig:ablation_study` - Component ablation results
-- `fig:hyperparameter_sensitivity` - Parameter sensitivity surface
+Figure labels are declared by each manuscript and its generated figure
+registry. Inspect both before adding a reference; do not assume an illustrative
+label exists.
 
 ### Table References
 
@@ -94,7 +77,7 @@ Use `[@tbl:table_name]` to reference tables — never raw `\ref{}`:
 ```markdown
 | Metric | Value | Unit |
 |--------|-------|------|
-| Performance | 23.7% | improvement |
+| Performance | {{PERFORMANCE_VALUE}} | {{PERFORMANCE_UNIT}} |
 
 : Performance summary. {#tbl:performance_summary}
 
@@ -157,27 +140,29 @@ Scripts in the `scripts/` directory are **thin orchestrators** that:
 **Example integration:**
 
 ```python
-# Import projects/{name}/src/ methods for computation
-from project.src.example import add_numbers, calculate_average
+# When the script adds its project root to sys.path, import the project package.
+from src.optimizer import compute_gradient, quadratic_function
 
 def generate_figure():
     # Use projects/{name}/src/ methods for all computation
-    data = [1, 2, 3, 4, 5]
-    avg = calculate_average(data)  # From projects/{name}/src/example.py
+    data = [-2.0, -1.0, 0.0, 1.0, 2.0]
+    gradients = [compute_gradient([value])[0] for value in data]
+    objectives = [quadratic_function([value]) for value in data]
 
     # Script handles visualization and output
     fig, ax = plt.subplots()
-    ax.plot(data)
-    ax.set_title(f"Average: {avg}")
+    ax.plot(data, objectives, label="Objective")
+    ax.plot(data, gradients, label="Gradient")
+    ax.legend()
     return fig
 ```
 
 ### Output Structure
 
-Figures are automatically saved to:
+Project analysis scripts save outputs to:
 
-- `output/figures/` - PNG files
-- `output/data/` - NPZ and CSV data files
+- `projects/<qualified-name>/output/figures/` - figure files and registry
+- `projects/<qualified-name>/output/data/` - data, manifests, and manuscript variables
 
 ### Integration
 
@@ -188,6 +173,35 @@ and a `{#fig:name}` attribute:
 ![Figure caption.](../output/figures/figure_name.png){#fig:figure_name width=80%}
 ```
 
+## Source-injected manuscript variables
+
+Any value that can change when data, configuration, code, or analysis changes
+must be a `{{TOKEN}}` in source manuscript files. This includes statistics in
+prose, tables, visible captions, annotations, and accessibility descriptions.
+The canonical flow is:
+
+```text
+tested project src + config + analysis outputs
+  -> project manuscript-variable producer
+  -> output/data/manuscript_variables.json
+  -> write_resolved_manuscript_tree(...)
+  -> output/manuscript/*.md
+  -> enabled renderers
+```
+
+The pipeline normally hydrates this render tree before rendering. The
+control-positive exemplar's producer is
+`projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py`;
+its default mode fails if required analysis outputs are missing. Use its
+`--allow-draft` option only for an intentional early draft.
+
+Do not hand-edit `manuscript_variables.json` or hydrated files under
+`output/manuscript/`. Extend the project-owned producer, regenerate, and fail
+validation if a required token is unresolved. Keep visible captions distinct
+from concise registry alt text, with longer descriptions in nearby prose when
+the visualization is complex. See
+[Manuscript Semantics](../guides/manuscript-semantics.md).
+
 ## Validation System
 
 ### Manuscript Validation
@@ -195,7 +209,8 @@ and a `{#fig:name}` attribute:
 Markdown validation is performed via the infrastructure validation module:
 
 ```bash
-uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown \
+  projects/templates/template_code_project/manuscript/
 ```
 
 This checks:
@@ -224,22 +239,23 @@ This:
 
 ### Pipeline
 
-The pipeline orchestrator (`scripts/runner/execute_pipeline.py`):
+The pipeline orchestrator (`./run.sh pipeline` or the compatibility entry point
+`scripts/runner/execute_pipeline.py`):
 
 1. **Runs tests** with coverage requirements (90% project, 60% infra)
 2. **Executes scripts** to generate figures and data (validating projects/{name}/src/ integration)
-3. **Validates manuscript** for references and images
-4. **Builds individual PDFs** for each manuscript file
-5. **Creates combined PDF** with all sections
-6. **Exports LaTeX** source files
+3. **Hydrates manuscript variables** into the output render tree
+4. **Validates manuscript** for references and images
+5. **Builds enabled formats** from the hydrated sources
+6. **Validates and copies** deliverables and evidence
 
 ### Output Files
 
 Generated outputs include:
 
-- Individual PDFs for each section
-- Combined PDF with all sections
-- LaTeX source files
+- Enabled PDF, HTML, slide, DOCX, and EPUB artifacts (see
+  [Output formats](output-formats.md))
+- Intermediate LaTeX and combined markdown used by renderers
 - Figures and data files
 - Coverage reports
 
@@ -260,9 +276,9 @@ Generated outputs include:
 
 ### Creating Figures
 
-1. **Generate with scripts**: Use scripts in `projects/{name}/scripts/` directory
-2. **Use projects/{name}/src/ methods**: Import and use tested methods from `projects/{name}/src/` modules
-3. **Save to output**: Place in `output/figures/`
+1. **Generate with scripts**: Use scripts in the selected project's `scripts/` directory
+2. **Use project `src/` methods**: Import and use tested methods from the selected project's `src/` modules
+3. **Save to project output**: Place in the selected project's `output/figures/`
 4. **Reference properly**: Use `[@fig:name]` in markdown — never `\ref{}`
 5. **Include data**: Save both figures and data files
 
@@ -301,7 +317,8 @@ Generated outputs include:
 ### Common Issues
 
 1. **Missing references**: Check that labels exist and are spelled correctly
-2. **Figure not found**: Verify figure file exists in `output/figures/`
+2. **Figure not found**: Verify the figure and registry exist in the selected
+   project's `output/figures/`
 3. **Equation numbering**: Ensure unique labels across all files
 4. **Build failures**: Check markdown validation output
 5. **Script import errors**: Ensure `projects/{name}/src/` modules exist and are properly tested

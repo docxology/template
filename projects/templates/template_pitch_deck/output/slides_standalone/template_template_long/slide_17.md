@@ -1,6 +1,6 @@
 # Layer 1 — infrastructure/
 
-*Slide 17 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 17 of 57 — template_template pitch, long deck — kind: `content`*
 
 - Generic, reusable modules: rendering (PDF/HTML/PPTX/DOCX/EPUB), validation, publishing, provenance, security.
 - No project-specific logic lives here — a change to infrastructure/ affects every exemplar identically.

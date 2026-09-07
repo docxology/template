@@ -7,9 +7,9 @@ import re
 from pathlib import Path
 from typing import Any
 
-import yaml
 
 from json_io import write_json as _write_json
+from yaml_io import load_yaml as _load_yaml
 
 SCHOLARSHIP_SCHEMA = "template_active_inference.scholarship_source_matrix.v1"
 
@@ -244,13 +244,6 @@ SCHOLARSHIP_SOURCES: tuple[dict[str, Any], ...] = (
         "claim_boundary": "connects deterministic toy statistics to figure provenance without claiming population inference",
     },
 )
-
-
-def _load_yaml(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {}
-    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-    return data if isinstance(data, dict) else {}
 
 
 def _bib_entries(root: Path) -> dict[str, str]:

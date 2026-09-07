@@ -24,7 +24,7 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
 from dataclasses import dataclass
-from typing import Any, Mapping, TypedDict
+from typing import Any, Literal, Mapping, TypedDict
 
 
 class AuthorConfig(TypedDict, total=False):
@@ -36,10 +36,33 @@ class AuthorConfig(TypedDict, total=False):
     email: str
 
 
+class _CoverConfig(TypedDict, total=False):
+    """Configured title-page artwork and its plain-text alternative."""
+
+    image: str
+    alt: str
+
+
 class PaperConfig(TypedDict, total=False):
     """Configuration for a paper's base metadata."""
 
     title: str
+    cover: _CoverConfig
+
+
+class _BookConfig(TypedDict, total=False):
+    """Configuration for book-specific title-page metadata."""
+
+    title: str
+    cover: _CoverConfig
+
+
+class _MetadataConfig(TypedDict, total=False):
+    """Cross-format manuscript metadata and PDF accessibility opt-ins."""
+
+    language: str
+    license: str
+    tagged_pdf: bool
 
 
 class PublicationConfig(TypedDict, total=False):
@@ -119,10 +142,24 @@ class RenderFormatsConfig(TypedDict, total=False):
     epub: bool
 
 
+class RenderSlidesConfig(TypedDict, total=False):
+    """YAML schema for semantic presentation composition."""
+
+    profile: Literal["archive", "accessible"]
+    max_prose_words: int
+    max_table_rows: int
+    min_figure_area_percent: int
+    title_font_pt: int
+    body_font_pt: int
+    figure_label_font_pt: int
+    reader_href: str
+
+
 class RenderConfig(TypedDict, total=False):
     """YAML schema for the ``render:`` section of config.yaml."""
 
     formats: RenderFormatsConfig
+    slides: RenderSlidesConfig
 
 
 class AnalysisConfig(TypedDict, total=False):
@@ -158,7 +195,7 @@ class ManuscriptConfig(TypedDict, total=False):
     prose: dict[str, Any]
     bibliography: dict[str, Any]
     report: dict[str, Any]
-    book: dict[str, Any]
+    book: _BookConfig
     layout: dict[str, Any]
     typography: dict[str, Any]
     front_matter: dict[str, Any]
@@ -170,7 +207,7 @@ class ManuscriptConfig(TypedDict, total=False):
     chapter_metadata: dict[str, Any]
     export: dict[str, Any]
     keywords: list[str]
-    metadata: dict[str, str]
+    metadata: _MetadataConfig
     project_config: dict[str, Any]  # passthrough for project-specific config sections
     experiment: dict[str, Any]  # passthrough for project experimental parameters
     sheaf: dict[str, Any]  # manifest-indexed manuscript composition configuration
@@ -192,6 +229,17 @@ def generate_manuscript_config_schema(
             "type": "object",
             "properties": {
                 "title": {"type": "string"},
+                "cover": {
+                    "type": "object",
+                    "properties": {
+                        "image": {"type": "string"},
+                        "alt": {
+                            "type": "string",
+                            "description": "Plain-text alternative for meaningful title-page artwork",
+                        },
+                    },
+                    "additionalProperties": True,
+                },
             },
             "additionalProperties": True,
         },
@@ -232,6 +280,20 @@ def generate_manuscript_config_schema(
                     },
                     "additionalProperties": False,
                 },
+                "slides": {
+                    "type": "object",
+                    "properties": {
+                        "profile": {"type": "string", "enum": ["archive", "accessible"]},
+                        "max_prose_words": {"type": "integer", "minimum": 1, "maximum": 80},
+                        "max_table_rows": {"type": "integer", "minimum": 1, "maximum": 8},
+                        "min_figure_area_percent": {"type": "integer", "minimum": 70, "maximum": 100},
+                        "title_font_pt": {"type": "integer", "minimum": 28, "maximum": 96},
+                        "body_font_pt": {"type": "integer", "minimum": 20, "maximum": 72},
+                        "figure_label_font_pt": {"type": "integer", "minimum": 16, "maximum": 48},
+                        "reader_href": {"type": "string", "minLength": 1},
+                    },
+                    "additionalProperties": False,
+                },
             },
             "additionalProperties": True,
         },
@@ -247,7 +309,24 @@ def generate_manuscript_config_schema(
         "prose": {"type": "object", "additionalProperties": True},
         "bibliography": {"type": "object", "additionalProperties": True},
         "report": {"type": "object", "additionalProperties": True},
-        "book": {"type": "object", "additionalProperties": True},
+        "book": {
+            "type": "object",
+            "properties": {
+                "title": {"type": "string"},
+                "cover": {
+                    "type": "object",
+                    "properties": {
+                        "image": {"type": "string"},
+                        "alt": {
+                            "type": "string",
+                            "description": "Plain-text alternative for meaningful title-page artwork",
+                        },
+                    },
+                    "additionalProperties": True,
+                },
+            },
+            "additionalProperties": True,
+        },
         "layout": {"type": "object", "additionalProperties": True},
         "typography": {"type": "object", "additionalProperties": True},
         "front_matter": {"type": "object", "additionalProperties": True},
@@ -259,7 +338,19 @@ def generate_manuscript_config_schema(
         "chapter_metadata": {"type": "object", "additionalProperties": True},
         "export": {"type": "object", "additionalProperties": True},
         "keywords": {"type": "array", "items": {"type": "string"}},
-        "metadata": {"type": "object", "additionalProperties": {"type": "string"}},
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "language": {"type": "string"},
+                "license": {"type": "string"},
+                "tagged_pdf": {
+                    "type": "boolean",
+                    "default": False,
+                    "description": "Opt into the compatible LuaLaTeX tagged-PDF path",
+                },
+            },
+            "additionalProperties": {"type": "string"},
+        },
         "project_config": {"type": "object", "additionalProperties": True},
         "experiment": {"type": "object", "additionalProperties": True},
         "sheaf": {"type": "object", "additionalProperties": True},
@@ -351,6 +442,7 @@ __all__ = [
     "PublicationConfig",
     "RenderConfig",
     "RenderFormatsConfig",
+    "RenderSlidesConfig",
     "ResolvedTestingConfig",
     "ReviewsConfig",
     "SteganographyConfigYAML",

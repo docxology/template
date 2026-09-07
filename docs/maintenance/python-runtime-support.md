@@ -3,9 +3,9 @@
 ## Current contract
 
 The root package keeps `requires-python = ">=3.10"` throughout the `3.6.x`
-minor-release line. Python 3.10 is the compatibility floor, Python 3.12 is the
-default local and release interpreter, and Python 3.13 is an explicit
-infrastructure readiness lane in CI.
+minor-release line. Python 3.10 is the compatibility floor, Python 3.14 is the
+default local and release interpreter, and Python 3.14 is the newest
+infrastructure lane in CI (3.10–3.14 are all exercised).
 
 The floor will not move in a minor release. Dropping Python 3.10 requires an
 explicit breaking release boundary (normally `4.0.0`), coordinated changes to
@@ -16,9 +16,9 @@ the package contract.
 
 ## Enforcement
 
-- Ubuntu infrastructure tests run on Python 3.10, 3.11, 3.12, and 3.13.
-- The public-project matrix retains Python 3.10 floor and Python 3.12 default
-  lanes; the full infrastructure 3.13 lane provides forward-readiness evidence.
+- Ubuntu infrastructure tests run on Python 3.10, 3.11, 3.12, 3.13, and 3.14.
+- The public-project matrix retains Python 3.10 floor and Python 3.14 default
+  lanes; the full infrastructure 3.14 lane provides forward-readiness evidence.
 - `infrastructure.core.runtime.python_compatibility` parses the public source
   surface with the Python 3.10 grammar and rejects unguarded standard-library
   APIs introduced in Python 3.11.

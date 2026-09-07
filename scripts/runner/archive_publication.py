@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Archival publication stage orchestrator (Stage 11 — opt-in via [archival] tag).
+"""Archival publication stage orchestrator (Stage 15 — opt-in via [archival] tag).
 
-Thin orchestrator that mirrors the executable bundle (produced by Stage 10)
+Thin orchestrator that mirrors the executable bundle (produced by Stage 14)
 to multiple independent archival providers (Zenodo, Software Heritage, IPFS).
 
 Defaults to dry-run for safety — pass --commit to actually deposit. Reads
@@ -17,6 +17,10 @@ or run standalone:
 
     uv run python scripts/runner/archive_publication.py --project <name>
 
+Pass ``--check-status`` for a read-only refresh of the project origin's
+public archival state from credential-free evidence (software_heritage
+only; no bundle, no deposit).
+
 Exit codes:
     0: All requested providers returned ok (or dry-run)
     1: At least one provider failed
@@ -26,6 +30,7 @@ Exit codes:
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import json
 import sys
 from pathlib import Path
@@ -43,7 +48,9 @@ from infrastructure.publishing.archival import (  # noqa: E402
     SoftwareHeritageProvider,
     ZenodoProvider,
     archive_publication,
+    check_publication_status,
     load_credentials,
+    resolve_git_origin_url,
 )
 
 logger = get_logger(__name__)
@@ -67,7 +74,23 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Actually perform deposits. Without this flag, runs in dry-run mode.",
     )
+    parser.add_argument(
+        "--check-status",
+        action="store_true",
+        help=(
+            "Read-only refresh of the project origin's public archival state "
+            "(software_heritage only; no bundle and no deposit)."
+        ),
+    )
+    parser.add_argument(
+        "--base-url",
+        default="https://archive.softwareheritage.org/api/1",
+        help="Status-check API base (software_heritage). Tests point this at a local server.",
+    )
     args = parser.parse_args(argv)
+
+    if args.check_status:
+        return _run_status_check(args)
 
     repo_root = Path(__file__).resolve().parents[2]
     bundle_dir = repo_root / "output" / args.project / "executable_bundle"
@@ -118,6 +141,24 @@ def main(argv: list[str] | None = None) -> int:
 
     logger.error("Failed providers: %s", [r.provider for r in run.failed])
     return 1
+
+
+def _run_status_check(args: argparse.Namespace) -> int:
+    """Read-only archival status refresh for one project's origin remote."""
+    if args.commit:
+        raise SystemExit("--check-status performs no deposits; --commit is not valid")
+    if args.providers != ["software_heritage"]:
+        raise SystemExit("--check-status currently supports only: --providers software_heritage")
+
+    repo_root = Path(__file__).resolve().parents[2]
+    project_dir = repo_root / "projects" / args.project
+    repo_url = resolve_git_origin_url(project_dir)
+    if repo_url is None:
+        raise SystemExit(f"Could not resolve an origin remote URL for {project_dir}")
+
+    receipt = check_publication_status(repo_url, base_url=args.base_url)
+    print(json.dumps(dataclasses.asdict(receipt), indent=2, sort_keys=True))
+    return 0 if receipt.status == "ok" else 1
 
 
 if __name__ == "__main__":  # pragma: no cover

@@ -99,7 +99,7 @@ graph TD
     end
 
     subgraph Archival["Long-horizon Archival"]
-        BUNDLE[bundle_project<br/>Stage 12 executable bundle]
+        BUNDLE[bundle_project<br/>Stage 14 executable bundle]
         ARCHIVE[archive_publication<br/>Multi-target mirror]
     end
 
@@ -191,7 +191,7 @@ uv run python -m infrastructure.publishing.cli publish-zenodo output/ --token $Z
 uv run python -m infrastructure.publishing.publish_cli \
   --token $GITHUB_TOKEN --repo owner/repo --tag v1.0.0 --name "Release 1.0.0"
 
-# Archival dry-run (Stage 13; default is safe -- no real deposits)
+# Archival dry-run (Stage 15; default is safe -- no real deposits)
 uv run python -m infrastructure.publishing.archival_cli \
   --bundle output/templates/template_code_project/executable_bundle \
   --providers zenodo software_heritage ipfs_pinata ipfs_web3storage

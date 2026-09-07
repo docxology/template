@@ -52,7 +52,7 @@ class InputSanitizer:
         prompt = self._remove_control_characters(prompt)
         self._check_dangerous_patterns(prompt)
         prompt = self._escape_html_entities(prompt)
-        prompt = self._normalize_whitespace(prompt)
+        prompt = normalize_whitespace(prompt)
         prompt = self._limit_length(prompt)
 
         logger.debug(f"Sanitized prompt: {len(prompt)} characters")
@@ -145,9 +145,6 @@ class InputSanitizer:
         receive the escaped form; callers should not unescape the result.
         """
         return html.escape(text, quote=True)
-
-    def _normalize_whitespace(self, text: str) -> str:
-        return normalize_whitespace(text)
 
     def _limit_length(self, text: str, max_length: int = 500000) -> str:
         """Limit text length to prevent resource exhaustion."""

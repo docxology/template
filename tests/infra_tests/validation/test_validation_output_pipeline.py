@@ -8,6 +8,7 @@ Follows No Mocks Policy — real files and monkeypatch for repo-root isolation o
 from __future__ import annotations
 
 import json
+import subprocess
 
 from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactManifestEntry, compute_sha256
 import infrastructure.validation.output.pipeline as mod
@@ -232,7 +233,13 @@ stages:
 
     assert result is False
     assert any("AUTORESEARCH.QUALITY_CHECK_UNKNOWN" in issue for issue in issues)
-    assert (project / "output" / "reports" / "autoresearch_readiness.json").exists()
+    readiness_path = project / "output" / "reports" / "autoresearch_readiness.json"
+    payload = json.loads(readiness_path.read_text(encoding="utf-8"))
+    plan = payload["plan"]
+    assert plan["repo_root"] == "."
+    assert plan["project_root"] == "projects/active/demo"
+    assert plan["config"]["source_path"] == "projects/active/demo/autoresearch.yaml"
+    assert payload["issues"][0]["source_path"] == "projects/active/demo/autoresearch.yaml"
 
 
 class TestGenerateValidationReport:
@@ -363,6 +370,23 @@ class TestExecuteValidationPipeline:
         result = mod.execute_validation_pipeline("test", repo_root=tmp_path)
         assert isinstance(result, int)
 
+    def test_summary_logs_the_persisted_report_timestamp(self, tmp_path, caplog):
+        project_dir = tmp_path / "projects" / "active" / "test"
+        (project_dir / "output").mkdir(parents=True)
+        expected_timestamp = "1970-01-01T00:00:00Z"
+
+        def write_report(*args, **kwargs):
+            return {"timestamp": expected_timestamp}
+
+        with caplog.at_level("INFO"):
+            mod.execute_validation_pipeline(
+                "test",
+                repo_root=tmp_path,
+                report_writer=write_report,
+            )
+
+        assert f"Timestamp: {expected_timestamp}" in caplog.text
+
     def test_with_valid_pdfs(self, tmp_path, monkeypatch):
         project_dir = tmp_path / "projects" / "active" / "test"
         pdf_dir = project_dir / "output" / "pdf"
@@ -474,6 +498,88 @@ class TestExecuteValidationPipeline:
         assert selected is not None
         assert selected.entries[0].stage_name == "project contract"
 
+    def test_stage4_report_payload_is_invariant_to_ignored_runtime_state(self, tmp_path):
+        """Rerunning Stage 4 must not bind local build residue into evidence."""
+        project_dir = tmp_path / "projects" / "active" / "test"
+        output_dir = project_dir / "output"
+        stable_files = {
+            "pdf/test_combined.pdf": _minimal_structural_pdf() + b"x" * 120_000,
+            "web/index.html": b"<html></html>\n",
+            "figures/trace.png": b"pixels",
+            "data/result.json": b"{}\n",
+            "reports/quality.json": b"{}\n",
+            "manuscript/01_intro.md": b"# Injected intro\n",
+            "submission.tar.gz": b"archive",
+        }
+        for relative, payload in stable_files.items():
+            path = output_dir / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload)
+        manuscript = project_dir / "manuscript"
+        manuscript.mkdir(parents=True)
+        (manuscript / "01_intro.md").write_text("# Intro\n\nContent.\n", encoding="utf-8")
+        (manuscript / "config.yaml").write_text(
+            "render:\n  formats:\n    pdf: true\n    html: false\n    slides: false\n",
+            encoding="utf-8",
+        )
+
+        subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True)
+        (tmp_path / ".gitignore").write_text(
+            "projects/active/test/output/pdf/*.bbl\nprojects/active/test/output/data/*.scratch\n",
+            encoding="utf-8",
+        )
+        report_payloads: list[str] = []
+
+        def capture_report(results, figure_issues, output_statistics, project, *args, **kwargs):
+            report_payloads.append(
+                json.dumps(
+                    {
+                        "checks": results,
+                        "figure_issues": figure_issues,
+                        "output_statistics": output_statistics,
+                        "project": project,
+                    },
+                    sort_keys=True,
+                )
+            )
+            return {"timestamp": "1970-01-01T00:00:00Z"}
+
+        mod.execute_validation_pipeline("test", repo_root=tmp_path, report_writer=capture_report)
+
+        ignored_files = {
+            "pdf/test_combined.aux": b"aux",
+            "pdf/test_combined.bbl": b"bibliography",
+            "data/cache.scratch": b"cache",
+            "reports/.history/telemetry.json": b"{}\n",
+            "reports/snapshots/stage.json": b"{}\n",
+            "logs/pipeline.log": b"log\n",
+            "figures/.trace.png": b"partial",
+        }
+        for relative, payload in ignored_files.items():
+            path = output_dir / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload)
+        for relative in ("slides", "simulations", "llm"):
+            (output_dir / relative).mkdir(parents=True, exist_ok=True)
+
+        mod.execute_validation_pipeline("test", repo_root=tmp_path, report_writer=capture_report)
+
+        assert report_payloads[1] == report_payloads[0]
+        payload = json.loads(report_payloads[1])
+        statistics = payload["output_statistics"]
+        assert statistics["inventory_mode"] == "stable-local-output-v1"
+        assert statistics["pdf"]["files"] == 1
+        assert statistics["detailed_validation"]["directories"]["logs"]["exists"] is False
+        stable = statistics["stable_inventory"]
+        assert stable["total_files"] == len(stable_files)
+        assert sum(category["files"] for category in stable["categories"].values()) == len(stable_files)
+        assert stable["categories"]["manuscript"]["files"] == 1
+        assert stable["categories"]["root"]["files"] == 1
+
+        (output_dir / "data" / "new-public-result.json").write_text("{}\n", encoding="utf-8")
+        mod.execute_validation_pipeline("test", repo_root=tmp_path, report_writer=capture_report)
+        assert report_payloads[2] != report_payloads[1]
+
 
 class TestProseQualityGate:
     """PROSE-GATE-WIRE-1: opt-in, report-only AI-writing prose gate."""
@@ -487,6 +593,7 @@ class TestProseQualityGate:
         if enabled is not None:
             (ms_dir / "config.yaml").write_text(
                 "paper:\n  title: Test\n"
+                "render:\n  formats:\n    pdf: true\n    html: false\n    slides: false\n"
                 "validation:\n  prose_quality:\n    enabled: " + ("true" if enabled else "false") + "\n",
                 encoding="utf-8",
             )
@@ -576,7 +683,7 @@ class TestProseQualityGate:
         project_dir = self._scaffold(tmp_path, enabled=True, prose=ai_prose)
         pdf_dir = project_dir / "output" / "pdf"
         pdf_dir.mkdir(parents=True, exist_ok=True)
-        (pdf_dir / "p.pdf").write_bytes(_minimal_structural_pdf())
+        (pdf_dir / "test_combined.pdf").write_bytes(_minimal_structural_pdf())
 
         rc, results = self._run_capturing_check_results(tmp_path)
         assert rc == 0
@@ -589,7 +696,7 @@ class TestProseQualityGate:
         (project_dir / "manuscript" / "bad.md").write_bytes(b"\xff\xfe not utf-8 \x80\x81")
         pdf_dir = project_dir / "output" / "pdf"
         pdf_dir.mkdir(parents=True, exist_ok=True)
-        (pdf_dir / "p.pdf").write_bytes(_minimal_structural_pdf())
+        (pdf_dir / "test_combined.pdf").write_bytes(_minimal_structural_pdf())
 
         assert mod.validate_prose_quality("test", repo_root=tmp_path) is True
         rc, _ = self._run_capturing_check_results(tmp_path)
@@ -620,12 +727,14 @@ class TestClaimVerificationGate:
     def _scaffold(self, tmp_path):
         project_dir = tmp_path / "projects" / "active" / "test"
         (project_dir / "output" / "pdf").mkdir(parents=True)
-        (project_dir / "output" / "pdf" / "test.pdf").write_bytes(_minimal_structural_pdf())
+        (project_dir / "output" / "pdf" / "test_combined.pdf").write_bytes(_minimal_structural_pdf())
         ms_dir = project_dir / "manuscript"
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("We observed 12 participants in the cohort.", encoding="utf-8")
         (ms_dir / "config.yaml").write_text(
-            "paper:\n  title: Test\nvalidation:\n  claim_verification:\n    enabled: true\n",
+            "paper:\n  title: Test\n"
+            "render:\n  formats:\n    pdf: true\n    html: false\n    slides: false\n"
+            "validation:\n  claim_verification:\n    enabled: true\n",
             encoding="utf-8",
         )
         return project_dir

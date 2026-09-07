@@ -10,9 +10,9 @@ The `tests/infra_tests/rendering/` directory contains tests for the multi-format
 flowchart TB
     T[tests/infra_tests/rendering/]
     T --> META[AGENTS.md · __init__.py · conftest.py]
-    T --> CORE[Core<br/>test_core · test_config · test_renderers]
+    T --> CORE[Core<br/>test_core · test_config · test_renderers ·<br/>test_render_cache]
     T --> PDF[PDF renderer<br/>test_pdf_renderer_additional / _combined ·<br/>_coverage / _fixes / _full]
-    T --> SLIDES[Slides renderer<br/>test_slides_renderer_comprehensive ·<br/>_coverage]
+    T --> SLIDES[Slides renderer<br/>core · accessibility · Reveal regressions ·<br/>Beamer safe area · figure area · formal content ·<br/>identifier integrity]
     T --> WEB[Web renderer<br/>test_web_renderer]
     T --> LATEX[LaTeX<br/>test_latex_package_validator · test_latex_utils]
     T --> MAN[Manuscript<br/>test_manuscript_discovery]
@@ -83,6 +83,10 @@ def test_pdf_renderer_cross_references():
 - Reveal.js HTML slide creation
 - Slide structure and navigation
 - Content layout and formatting
+- Opt-in semantic composition, density diagnostics, typography floors, figure allocation, and table excerpts
+- Reveal.js long-description/keyboard/landmark semantics and the explicit untagged Beamer boundary
+- Canonical accessible-profile Beamer/Reveal pair generation, shared-AST routing,
+  partial-pair cleanup, and archive-mode compatibility
 
 ### CLI and Configuration Tests
 

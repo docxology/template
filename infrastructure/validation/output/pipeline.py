@@ -7,21 +7,22 @@ This module coordinates the validation stage by:
 4. Generating validation reports
 """
 
-import json
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from infrastructure.core.determinism import resolve_build_timestamp
-from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.core.pipeline.artifacts import (
+    STABLE_OUTPUT_INVENTORY_MODE,
     ArtifactManifest,
+    OutputInventoryMode,
     aggregate_artifact_manifests,
+    collect_stable_output_inventory,
+    output_inventory_mode_for_project,
     validate_artifact_manifest,
 )
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
@@ -50,11 +51,18 @@ from infrastructure.validation.output.prose_quality import (
     prose_quality_enabled as _is_prose_quality_enabled,
     validate_prose_quality as _validate_prose_quality,
 )
+from infrastructure.validation.output.render_formats import (
+    enabled_render_formats,
+    load_effective_rendering_config,
+    render_config_manuscript_dir,
+    validate_enabled_render_outputs,
+)
 from infrastructure.validation.output.claim_verification import (
     claim_verification_enabled as _is_claim_verification_enabled,
     verify_project_claims as _verify_project_claims,
 )
 from infrastructure.validation.output.validator import ValidationResultDict, collect_detailed_validation_results
+from infrastructure.validation.output.report import generate_validation_report
 
 logger = get_logger(__name__)
 
@@ -82,17 +90,45 @@ def _build_core_checks(
     repo_root: Path = _REPO_ROOT,
     prose_validator: Callable[[str], bool] | None = None,
 ) -> list[PipelineCheck]:
-    checks = [
-        PipelineCheck("PDF validation", lambda: validate_pdfs(project_name, repo_root=repo_root)),
-        PipelineCheck(
-            "Transmission bookends",
-            lambda: validate_transmission_bookends(project_name, repo_root=repo_root),
-        ),
+    project_root = _project_root(project_name, repo_root=repo_root)
+    inventory_mode = output_inventory_mode_for_project(repo_root, project_root)
+    try:
+        render_config = load_effective_rendering_config(project_root)
+    except (OSError, TypeError, ValueError) as exc:
+        logger.error("Could not determine enabled render formats: %s", exc)
+        checks = [PipelineCheck("Render configuration", lambda: False)]
+    else:
+        formats = enabled_render_formats(render_config)
+        checks = []
+        if render_config.enable_pdf:
+            checks.extend(
+                [
+                    PipelineCheck("PDF validation", lambda: validate_pdfs(project_name, repo_root=repo_root)),
+                    PipelineCheck(
+                        "Transmission bookends",
+                        lambda: validate_transmission_bookends(project_name, repo_root=repo_root),
+                    ),
+                ]
+            )
+        checks.append(
+            PipelineCheck(
+                "Enabled render outputs",
+                lambda: validate_enabled_render_outputs(
+                    project_root / "output",
+                    project_name,
+                    formats,
+                    manuscript_dir=render_config_manuscript_dir(project_root),
+                    inventory_mode=inventory_mode,
+                    slides_profile=render_config.slides_profile,
+                ),
+            )
+        )
+    checks.append(
         PipelineCheck(
             "Markdown validation",
             lambda: validate_manuscript_output_markdown(project_name, repo_root=repo_root),
-        ),
-    ]
+        )
+    )
     if _prose_quality_enabled(project_name, repo_root=repo_root):
         validate = prose_validator or (lambda name: validate_prose_quality(name, repo_root=repo_root))
         checks.append(PipelineCheck("Prose quality", lambda: validate(project_name)))
@@ -168,12 +204,21 @@ def validate_manuscript_output_markdown(project_name: str = "project", *, repo_r
 
 
 def verify_outputs_exist(
-    project_name: str = "project", *, repo_root: Path = _REPO_ROOT
+    project_name: str = "project",
+    *,
+    repo_root: Path = _REPO_ROOT,
+    require_pdf: bool = True,
+    enabled_formats: Collection[str] | None = None,
 ) -> tuple[bool, ValidationResultDict]:
     """Verify all expected output files exist.
 
     Args:
         project_name: Name of project in projects/ directory (default: "project")
+        repo_root: Repository root containing the resolved project.
+        require_pdf: Whether detailed structure validation requires a combined
+            PDF for the effective render configuration.
+        enabled_formats: Effective publication formats for required-category
+            diagnostics. ``None`` preserves legacy behavior.
 
     Returns:
         Tuple of (validation_passed, detailed_validation_results)
@@ -181,8 +226,17 @@ def verify_outputs_exist(
     log_substep("Verifying output structure...", logger)
 
     output_dir = _project_output_dir(project_name, repo_root=repo_root)
+    inventory_mode = output_inventory_mode_for_project(
+        repo_root,
+        _project_root(project_name, repo_root=repo_root),
+    )
 
-    detailed_validation = collect_detailed_validation_results(output_dir)
+    detailed_validation = collect_detailed_validation_results(
+        output_dir,
+        require_pdf=require_pdf,
+        enabled_formats=enabled_formats,
+        inventory_mode=inventory_mode,
+    )
     structure_valid = detailed_validation["structure"]["valid"]
 
     if structure_valid:
@@ -206,7 +260,12 @@ def verify_outputs_exist(
     return structure_valid, detailed_validation
 
 
-def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tuple[bool, list[str]]:
+def validate_evidence_registry(
+    project_root: Path,
+    manuscript_dir: Path,
+    *,
+    output_inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+) -> tuple[bool, list[str]]:
     """Validate manuscript evidence tokens against project artifact provenance."""
     log_substep("Validating evidence registry...", logger)
 
@@ -219,7 +278,10 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
         logger.warning("No manuscript markdown files found for evidence registry validation")
         return True, []
 
-    registry = build_project_evidence_registry(project_root)
+    registry = build_project_evidence_registry(
+        project_root,
+        output_inventory_mode=output_inventory_mode,
+    )
     write_evidence_registry_report(project_root / "output", registry)
     error_issues: list[str] = []
     warning_issues: list[str] = []
@@ -260,183 +322,18 @@ def _read_artifact_manifest(path: Path) -> ArtifactManifest:
     return _read_manifest(path)
 
 
-def _current_project_manifest_if_valid(output_dir: Path, project_root: Path) -> ArtifactManifest | None:
-    """Return the project-authored manifest when it is current."""
-    return _current_manifest_if_valid(output_dir, project_root)
-
-
-def generate_validation_report(
-    check_results: list[tuple[str, bool]],
-    figure_issues: list[str],
-    output_statistics: dict[str, Any],
-    project_name: str = "project",
+def _current_project_manifest_if_valid(
+    output_dir: Path,
+    project_root: Path,
     *,
-    repo_root: Path = _REPO_ROOT,
-    bind_rendered_inputs: bool = False,
-) -> dict[str, Any]:
-    """Generate validation report with structured output."""
-    log_substep("Generating validation report...", logger)
-
-    output_dir = _project_output_dir(project_name, repo_root=repo_root) / "reports"
-
-    validation_results: dict[str, Any] = {
-        "timestamp": resolve_build_timestamp(
-            deterministic=True if bind_rendered_inputs else None,
-            repo_root=repo_root,
-        ),
-        "checks": {name: result for name, result in check_results},
-        "figure_issues": figure_issues,
-        "output_statistics": output_statistics,
-        "summary": {
-            "total_checks": len(check_results),
-            "passed": sum(1 for _, result in check_results if result),
-            "failed": sum(1 for _, result in check_results if not result),
-            "figure_issues_count": len(figure_issues),
-            "all_passed": all(result for _, result in check_results) and len(figure_issues) == 0,
-        },
-    }
-
-    recommendations: list[dict[str, str]] = []
-    for check_name, result in check_results:
-        if not result:
-            if check_name == "PDF validation":
-                recommendations.append(
-                    {
-                        "priority": "high",
-                        "issue": "PDF validation failed",
-                        "action": "Check PDF generation logs and LaTeX compilation errors",
-                        "file": "output/pdf/*_compile.log",
-                    }
-                )
-            elif check_name == "Transmission bookends":
-                recommendations.append(
-                    {
-                        "priority": "high",
-                        "issue": "Transmission bookend page-span validation failed",
-                        "action": "Compact bookend content or reduce QR strip so BEGIN/END each fit one page",
-                        "file": _project_relative_path(
-                            project_name, f"output/pdf/{project_name}_combined.pdf", repo_root=repo_root
-                        ),
-                    }
-                )
-            elif check_name == "Markdown validation":
-                recommendations.append(
-                    {
-                        "priority": "medium",
-                        "issue": "Markdown validation issues found",
-                        "action": "Review markdown validation output for formatting issues",
-                        "file": _project_relative_path(project_name, "manuscript", repo_root=repo_root),
-                    }
-                )
-            elif check_name == "Output structure":
-                recommendations.append(
-                    {
-                        "priority": "high",
-                        "issue": "Missing output directories",
-                        "action": "Ensure all analysis scripts completed successfully",
-                        "file": _project_relative_path(project_name, "output", repo_root=repo_root),
-                    }
-                )
-            elif check_name == "Figure registry":
-                recommendations.append(
-                    {
-                        "priority": "high",
-                        "issue": "Figure registry validation failed",
-                        "action": "Regenerate the figure registry and repair missing or unbound figures",
-                        "file": _project_relative_path(
-                            project_name, "output/figures/figure_registry.json", repo_root=repo_root
-                        ),
-                    }
-                )
-            elif check_name == "Evidence registry":
-                recommendations.append(
-                    {
-                        "priority": "medium",
-                        "issue": "Evidence registry reported unsupported manuscript facts",
-                        "action": "Register generated facts or replace unsupported hard-coded claims",
-                        "file": _project_relative_path(
-                            project_name, "output/reports/evidence_registry.json", repo_root=repo_root
-                        ),
-                    }
-                )
-            elif check_name == "Artifact manifest":
-                recommendations.append(
-                    {
-                        "priority": "medium",
-                        "issue": "Artifact manifest reported drift or missing declared outputs",
-                        "action": "Regenerate declared outputs or update the stage contract",
-                        "file": _project_relative_path(
-                            project_name, "output/reports/artifact_manifest.json", repo_root=repo_root
-                        ),
-                    }
-                )
-            elif check_name == "Project design overlays":
-                recommendations.append(
-                    {
-                        "priority": "high",
-                        "issue": "Domain profile or experiment plan validation failed",
-                        "action": "Fix domain_profile.yaml or experiment_plan.yaml schema and design declarations",
-                        "file": _project_relative_path(project_name, repo_root=repo_root),
-                    }
-                )
-
-    if figure_issues:
-        recommendations.append(
-            {
-                "priority": "medium",
-                "issue": f"{len(figure_issues)} figure reference issue(s)",
-                "action": "Register missing figures or remove unused references",
-                "file": _project_relative_path(
-                    project_name, "output/figures/figure_registry.json", repo_root=repo_root
-                ),
-            }
-        )
-
-    validation_results["recommendations"] = recommendations
-    if bind_rendered_inputs:
-        from infrastructure.validation.rendered_snapshot import build_current_rendered_snapshot
-
-        snapshot = build_current_rendered_snapshot(repo_root, project_name)
-        validation_results["validated_inputs"] = snapshot.validated_inputs_dict()
-
-    if bind_rendered_inputs:
-        from infrastructure.reporting.pipeline_io import generate_validation_markdown
-
-        project_root = _project_root(project_name, repo_root=repo_root)
-        json_path = output_dir / "validation_report.json"
-        markdown_path = output_dir / "validation_report.md"
-        atomic_write_text_confined(
-            project_root,
-            json_path,
-            json.dumps(validation_results, indent=2, sort_keys=True) + "\n",
-        )
-        atomic_write_text_confined(
-            project_root,
-            markdown_path,
-            generate_validation_markdown(validation_results),
-        )
-        logger.info(f"Validation reports saved: {json_path}, {markdown_path}")
-    else:
-        try:
-            from infrastructure.reporting import save_validation_report as gen_validation_report
-
-            saved_files = gen_validation_report(validation_results, output_dir)
-            logger.info(f"Validation reports saved: {', '.join(str(p) for p in saved_files.values())}")
-        except (ImportError, OSError, TypeError, AttributeError) as e:
-            logger.warning(f"Failed to generate structured validation report: {e}")
-            report_file = output_dir / "validation_report.json"
-            output_dir.mkdir(parents=True, exist_ok=True)
-
-            with open(report_file, "w") as f:
-                json.dump(validation_results, f, indent=2)
-            logger.info(f"Validation report saved: {report_file}")
-
-    # Print final diagnostic telemetry report (end of pipeline run)
-    reporter = DiagnosticReporter(project_name=project_name, output_dir=output_dir.parent)
-    if reporter.events:
-        reporter.print_report()
-
-    return validation_results
+    expected_inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+) -> ArtifactManifest | None:
+    """Return the project-authored manifest when it is current."""
+    return _current_manifest_if_valid(
+        output_dir,
+        project_root,
+        expected_inventory_mode=expected_inventory_mode,
+    )
 
 
 def _load_project_config_yaml(manuscript_dir: Path) -> dict[str, Any] | None:
@@ -499,6 +396,7 @@ def execute_validation_pipeline(
     detailed_validation = None
 
     project_root = _project_root(project_name, repo_root=repo_root)
+    inventory_mode = output_inventory_mode_for_project(repo_root, project_root)
     manuscript_dir = resolve_source_manuscript_dir(project_root)
 
     claim_report = None
@@ -512,7 +410,13 @@ def execute_validation_pipeline(
             results.append(("Claim verification", False))
 
     try:
-        structure_result, detailed_validation = verify_outputs_exist(project_name, repo_root=repo_root)
+        render_config = load_effective_rendering_config(project_root)
+        structure_result, detailed_validation = verify_outputs_exist(
+            project_name,
+            repo_root=repo_root,
+            require_pdf=render_config.enable_pdf,
+            enabled_formats=enabled_render_formats(render_config),
+        )
         results.append(("Output structure", structure_result))
     except Exception as e:
         logger.error(f"Error during output structure validation: {e}", exc_info=True)
@@ -529,7 +433,11 @@ def execute_validation_pipeline(
 
     output_statistics: dict[str, Any]
     try:
-        evidence_result, evidence_issues = validate_evidence_registry(project_root, manuscript_dir)
+        evidence_result, evidence_issues = validate_evidence_registry(
+            project_root,
+            manuscript_dir,
+            output_inventory_mode=inventory_mode,
+        )
         results.append(("Evidence registry", evidence_result))
         if evidence_issues:
             output_statistics = {"evidence_issues": evidence_issues}
@@ -555,10 +463,21 @@ def execute_validation_pipeline(
         results.append(("Project design overlays", False))
 
     try:
-        artifact_manifest = _current_project_manifest_if_valid(output_dir, project_root)
+        artifact_manifest = _current_project_manifest_if_valid(
+            output_dir,
+            project_root,
+            expected_inventory_mode=inventory_mode,
+        )
         if artifact_manifest is None:
-            artifact_manifest = aggregate_artifact_manifests(output_dir)
-        artifact_report = validate_artifact_manifest(artifact_manifest, project_dir=project_root)
+            artifact_manifest = aggregate_artifact_manifests(
+                output_dir,
+                inventory_mode=inventory_mode,
+            )
+        artifact_report = validate_artifact_manifest(
+            artifact_manifest,
+            project_dir=project_root,
+            expected_inventory_mode=inventory_mode,
+        )
         results.append(("Artifact manifest", artifact_report.valid))
         if artifact_report.issues:
             output_statistics["artifact_manifest_issues"] = list(artifact_report.issues)
@@ -569,11 +488,35 @@ def execute_validation_pipeline(
     if detailed_validation:
         output_statistics["detailed_validation"] = detailed_validation
 
+    inventory = collect_stable_output_inventory(
+        output_dir,
+        inventory_mode=inventory_mode,
+    )
+    if inventory.issues:
+        raise ValueError("unstable output inventory: " + "; ".join(inventory.issues))
+    output_statistics["inventory_mode"] = inventory.mode
+    files_by_category: dict[str, list[Path]] = {}
+    for path in inventory.files:
+        relative = path.relative_to(output_dir)
+        category = relative.parts[0] if len(relative.parts) > 1 else "root"
+        files_by_category.setdefault(category, []).append(path)
+    if sum(len(paths) for paths in files_by_category.values()) != len(inventory.files):
+        raise ValueError("stable output inventory grouping is incomplete")
+    stable_categories: dict[str, dict[str, int]] = {}
+    for category, file_list in sorted(files_by_category.items()):
+        stable_categories[category] = {
+            "files": len(file_list),
+            "size_bytes": sum(path.stat().st_size for path in file_list),
+        }
+    output_statistics["stable_inventory"] = {
+        "mode": inventory.mode,
+        "total_files": len(inventory.files),
+        "total_size_bytes": sum(path.stat().st_size for path in inventory.files),
+        "categories": stable_categories,
+    }
     for subdir in ["pdf", "figures", "data"]:
-        subdir_path = output_dir / subdir
-        if subdir_path.exists():
-            files = list(subdir_path.glob("*"))
-            file_list = [f for f in files if f.is_file()]
+        file_list = files_by_category.get(subdir, [])
+        if file_list:
             total_size = sum(f.stat().st_size for f in file_list)
             size_mb = total_size / (1024 * 1024)
             output_statistics[subdir] = {
@@ -581,11 +524,12 @@ def execute_validation_pipeline(
                 "size_mb": size_mb,
             }
 
+    report_timestamp: str | None = None
     if report_writer is None:
         from infrastructure.validation.rendered_snapshot import RenderedSnapshotError
 
         try:
-            generate_validation_report(
+            validation_report = generate_validation_report(
                 results,
                 figure_issues,
                 output_statistics,
@@ -593,6 +537,7 @@ def execute_validation_pipeline(
                 repo_root=repo_root,
                 bind_rendered_inputs=True,
             )
+            report_timestamp = validation_report.get("timestamp")
         except RenderedSnapshotError as exc:
             logger.error("Cannot bind validation report to rendered inputs [%s]: %s", exc.code, exc)
             results.append(("Rendered provenance inputs", False))
@@ -600,7 +545,7 @@ def execute_validation_pipeline(
                 "code": exc.code,
                 "message": str(exc),
             }
-            generate_validation_report(
+            validation_report = generate_validation_report(
                 results,
                 figure_issues,
                 output_statistics,
@@ -608,14 +553,25 @@ def execute_validation_pipeline(
                 repo_root=repo_root,
                 bind_rendered_inputs=False,
             )
+            report_timestamp = validation_report.get("timestamp")
     else:
-        report_writer(results, figure_issues, output_statistics, project_name, repo_root=repo_root)
+        validation_report = report_writer(
+            results,
+            figure_issues,
+            output_statistics,
+            project_name,
+            repo_root=repo_root,
+        )
+        report_timestamp = validation_report.get("timestamp")
+
+    if not isinstance(report_timestamp, str) or not report_timestamp:
+        report_timestamp = resolve_build_timestamp(repo_root=repo_root)
 
     logger.info("\n" + "=" * BANNER_WIDTH)
     logger.info("VALIDATION SUMMARY")
     logger.info("=" * BANNER_WIDTH)
     logger.info(f"Project: {project_name}")
-    logger.info(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    logger.info(f"Timestamp: {report_timestamp}")
     logger.info("")
 
     all_passed = True

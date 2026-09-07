@@ -34,6 +34,10 @@ src/textbook/
   models.py      # the worked formalisms (logistic_growth, saturating_response,
                  # exponential_decay, half_life, linear_fit,
                  # descriptive_statistics, normalize_unit_interval)
+  analysis.py    # deterministic worked-example summary (build_worked_model_summary)
+  audit.py       # run_manuscript_audit — the shared structural gate (CLI + tests)
+  contracts.py   # source-bound contracts (config-shape parity, numeric facts,
+                 # diagram inventory)
 ```
 
 - **`constants.py`** encodes the contract every chapter must satisfy:
@@ -54,13 +58,23 @@ src/textbook/
   text; `count_stub_markers()` / `count_words()` report fill progress.
 - **`models.py`** holds the worked formalisms the book teaches and that the
   figures plot — tested numerical functions, not toy code in scripts.
+- **`analysis.py`** assembles a deterministic worked-example summary
+  (`build_worked_model_summary`) that the analysis script writes to
+  `output/data/` as JSON.
+- **`audit.py`** implements `run_manuscript_audit` — the shared structural gate
+  (missing/contract-violating chapters, unit intros, orphan part markdown, and
+  configured appendices) used by both `scripts/audit_textbook_quality.py` and
+  the test suite.
+- **`contracts.py`** keeps configuration and generated teaching evidence from
+  drifting: config-shape parity vs. `config.yaml.example`, the source-bound
+  numeric-facts registry, and the generated-diagram inventory.
 
 ## Visualization and diagrams
 
 - [`src/visualization/plots.py`](../src/visualization/plots.py) produces every
   matplotlib figure deterministically: four **worked** figures (driven by
   `models.py`) plus one **placeholder** per chapter, named `<part_id>_<stem>.png`
-  to match the `![...](../output/figures/<part_id>_<stem>.png)` path the scaffolded
+  to match the `![...](../../output/figures/<part_id>_<stem>.png)` path the scaffolded
   chapters already reference.
 - [`src/mermaid/`](../src/mermaid) reads
   [`diagram_specs.yaml`](../src/mermaid/diagram_specs.yaml) and emits Mermaid
@@ -78,7 +92,7 @@ argument parsing, and printing output paths for the pipeline manifest:
 - `generate_diagrams.py` → `mermaid.diagrams.generate_all_diagrams`
 - `analysis.py` → numerical demonstrations from `textbook.models`
 - `scaffold_chapter.py` → `textbook.content` (author tool; not in the render path)
-- `audit_textbook_quality.py` → `textbook.content` / `textbook.config` (gate)
+- `audit_textbook_quality.py` → `textbook.audit.run_manuscript_audit` (gate)
 
 `config.yaml`'s `analysis.scripts` lists only the **build-producing** scripts
 (`generate_figures.py`, `generate_diagrams.py`, `analysis.py`) so a render is

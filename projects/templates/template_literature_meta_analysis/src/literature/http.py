@@ -14,6 +14,31 @@ DEFAULT_MAX_RETRIES = 3
 DEFAULT_RETRY_BASE_SECONDS = 1.0
 
 
+def build_politeness_receipt(
+    *,
+    timeout_seconds: float,
+    max_retries: int,
+    retry_base_seconds: float = DEFAULT_RETRY_BASE_SECONDS,
+    jitter_max_seconds: float = 0.5,
+) -> dict[str, Any]:
+    """Return a deterministic receipt for the bounded HTTP retry policy."""
+    if timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive")
+    if max_retries < 0:
+        raise ValueError("max_retries must be non-negative")
+    if retry_base_seconds < 0 or jitter_max_seconds < 0:
+        raise ValueError("backoff values must be non-negative")
+    return {
+        "schema_version": "template-literature-politeness-v1",
+        "timeout_seconds": float(timeout_seconds),
+        "max_retries": int(max_retries),
+        "retryable_statuses": sorted(RETRYABLE_STATUS),
+        "backoff": "bounded-exponential-with-jitter",
+        "retry_base_seconds": float(retry_base_seconds),
+        "jitter_max_seconds": float(jitter_max_seconds),
+    }
+
+
 def request_with_retry(
     http: requests.Session,
     method: str,
@@ -28,6 +53,7 @@ def request_with_retry(
     **kwargs: Any,
 ) -> requests.Response:
     """Perform an HTTP request with retry on 429/5xx and RequestException backoff."""
+    build_politeness_receipt(timeout_seconds=timeout, max_retries=max_retries)
     sleep_fn = delay_override or time.sleep
     response: requests.Response | None = None
     last_exc: requests.RequestException | None = None
@@ -62,3 +88,6 @@ def request_with_retry(
     if last_exc is not None:
         raise last_exc
     raise requests.HTTPError("HTTP retries exhausted")
+
+
+__all__ = ["build_politeness_receipt", "request_with_retry"]

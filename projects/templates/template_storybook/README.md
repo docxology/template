@@ -23,6 +23,7 @@ research manuscript.
   or story page
 - `output/figures/storybook_contact_sheet.png` - deterministic visual inspection sheet
 - `output/pdf/the-shape-between.pdf` - the primary fourteen-page storybook PDF
+  (cover plus thirteen story pages)
 - `output/data/storybook_manifest.json` - validated cast, page alt text, and render paths
 - `output/reports/storybook_summary.md` - compact render summary
 

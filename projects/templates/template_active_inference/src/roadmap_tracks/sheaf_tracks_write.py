@@ -190,23 +190,7 @@ def _write_final_canonical_pass(root: Path, paths: dict[str, Path], context: _Pr
     paths.update(write_sheaf_status_outputs(root))
     _write_semantic_artifacts(root, paths)
     _write_supplemental_phase(root, paths)
-    paths["artifact_contract_index"] = _write_json(
-        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
-        build_artifact_contract_index(root),
-    )
-    for _ in range(2):
-        _write_integration_audit_phase(root, paths)
-        paths["release_bundle"] = _write_json(
-            root / CANONICAL_ARTIFACTS["release_bundle"],
-            build_release_bundle_manifest(root),
-        )
-        paths["artifact_contract_index"] = _write_json(
-            root / CANONICAL_ARTIFACTS["artifact_contract_index"],
-            build_artifact_contract_index(root),
-        )
-        _write_semantic_artifacts(root, paths)
-        _write_supplemental_phase(root, paths)
-    _write_semantic_artifacts(root, paths)
+    _write_integration_audit_phase(root, paths)
     paths["security_posture"] = write_security_posture_audit(root)
     paths["track_lane_matrix"] = _write_json(
         root / CANONICAL_ARTIFACTS["track_lane_matrix"],
@@ -216,27 +200,6 @@ def _write_final_canonical_pass(root: Path, paths: dict[str, Path], context: _Pr
         root / CANONICAL_ARTIFACTS["release_bundle"],
         build_release_bundle_manifest(root),
     )
-    paths["artifact_contract_index"] = _write_json(
-        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
-        build_artifact_contract_index(root),
-    )
-    provenance = build_artifact_provenance(root, context=context)
-    paths["dependency"] = _write_json(
-        root / CANONICAL_ARTIFACTS["dependency"],
-        build_validation_dependency_graph(root, provenance=provenance, provenance_context=context),
-    )
-    paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], provenance)
-    _write_integration_audit_phase(root, paths)
-    _write_supplemental_phase(root, paths)
-    paths["security_posture"] = write_security_posture_audit(root)
-    paths["release_bundle"] = _write_json(
-        root / CANONICAL_ARTIFACTS["release_bundle"],
-        build_release_bundle_manifest(root),
-    )
-    paths["artifact_contract_index"] = _write_json(
-        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
-        build_artifact_contract_index(root),
-    )
     provenance = build_artifact_provenance(root, context=context)
     paths["dependency"] = _write_json(
         root / CANONICAL_ARTIFACTS["dependency"],
@@ -245,12 +208,12 @@ def _write_final_canonical_pass(root: Path, paths: dict[str, Path], context: _Pr
     paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], provenance)
     _refresh_hydrated_manuscript(root)
     paths.update(write_sheaf_status_outputs(root))
-    paths["artifact_contract_index"] = _write_json(
-        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
-        build_artifact_contract_index(root),
-    )
     _write_semantic_artifacts(root, paths)
     _write_supplemental_phase(root, paths)
+    paths["release_bundle"] = _write_json(
+        root / CANONICAL_ARTIFACTS["release_bundle"],
+        build_release_bundle_manifest(root),
+    )
     paths["artifact_contract_index"] = _write_json(
         root / CANONICAL_ARTIFACTS["artifact_contract_index"],
         build_artifact_contract_index(root),

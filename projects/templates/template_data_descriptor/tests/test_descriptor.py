@@ -4,7 +4,10 @@ import json
 from pathlib import Path
 from typing import Any, cast
 
+import pytest
+
 from data_descriptor import (
+    build_publication_receipt,
     build_descriptor_report,
     build_release_bundle_manifest,
     descriptor_fingerprint,
@@ -72,6 +75,12 @@ class TestNegativeControls:
         assert report.valid is False
         assert report.readiness_score < 1.0
 
+    def test_non_integer_rows_are_a_structural_error(self) -> None:
+        descriptor = load_fixture()
+        descriptor["files"][0]["rows"] = "twelve"
+        findings = validate_descriptor(descriptor)
+        assert any(finding.code == "bad_row_count" and finding.severity == "error" for finding in findings)
+
     def test_descriptor_reports_constraint_and_path_gaps(self) -> None:
         descriptor = load_fixture()
         descriptor["files"][0]["path"] = "../private/measurements.csv"
@@ -87,6 +96,14 @@ class TestNegativeControls:
         assert "bad_allowed_values" in codes
         assert "missing_unit" in codes
         assert "invalid_numeric_range" in codes
+
+    def test_non_csv_media_requires_justification(self) -> None:
+        descriptor = load_fixture()
+        descriptor["files"][0]["media_type"] = "application/json"
+        codes = {finding.code for finding in validate_descriptor(descriptor)}
+        assert "media_justification_missing" in codes
+        descriptor["files"][0]["justification"] = "Real JSON API payload required by the forked dataset."
+        assert "media_justification_missing" not in {finding.code for finding in validate_descriptor(descriptor)}
 
     def test_descriptor_reports_missing_sections_and_file_key_gaps(self) -> None:
         empty = {"name": "broken", "version": "0.1.0", "license": "", "files": [], "fields": [], "provenance": []}
@@ -168,6 +185,24 @@ class TestNegativeControls:
 
 class TestReleaseManifest:
     """Field constraints flow through into the metadata-only release manifest."""
+
+    def test_publication_receipt_requires_real_owner_attestation(self) -> None:
+        descriptor = load_fixture()
+        with pytest.raises(ValueError, match="owner authority"):
+            build_publication_receipt(descriptor, artifact_digest="a" * 64)
+        authority = {
+            "status": "approved",
+            "authority": "dataset-owner",
+            "receipt_id": "owner-1",
+            "repository": "example/real-fork",
+            "payload_digest": "a" * 64,
+            "evidence_type": "owner_attestation",
+        }
+        receipt = build_publication_receipt(descriptor, artifact_digest="a" * 64, authority_receipt=authority)
+        assert receipt["status"] == "approved"
+        authority["repository"] = "synthetic-fixture"
+        with pytest.raises(ValueError, match="synthetic"):
+            build_publication_receipt(descriptor, artifact_digest="a" * 64, authority_receipt=authority)
 
     def test_field_constraints_are_summarized_and_exported_to_release_manifest(self) -> None:
         descriptor = load_fixture()

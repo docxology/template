@@ -25,10 +25,12 @@ from .figures import (
     HistogramFigureData,
     correlation_heatmap_data,
     eda_figure_spec,
+    eda_figure_specs_for_data,
     group_count_data,
     histogram_data,
 )
 from .statistics import ColumnSummary, group_means, summary_statistics
+from .notebook_binding import build_binding_receipt, validate_binding
 
 __all__ = [
     # dataset
@@ -44,6 +46,9 @@ __all__ = [
     "ColumnSummary",
     "summary_statistics",
     "group_means",
+    # notebook binding
+    "build_binding_receipt",
+    "validate_binding",
     # correlation
     "correlation_matrix",
     "strongest_pairs",
@@ -59,4 +64,5 @@ __all__ = [
     "correlation_heatmap_data",
     "group_count_data",
     "eda_figure_spec",
+    "eda_figure_specs_for_data",
 ]

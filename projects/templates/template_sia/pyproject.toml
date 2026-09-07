@@ -12,6 +12,7 @@ requires-python = ">=3.10"
 dependencies = [
     "pyyaml>=6.0",
     "matplotlib>=3.7",
+    "pillow>=12.3.0",
 ]
 
 [project.optional-dependencies]
@@ -31,6 +32,7 @@ python_functions = ["test_*"]
 addopts = "-v --tb=short --strict-markers -m 'not requires_ollama'"
 markers = [
     "requires_ollama: needs local Ollama daemon",
+    "slow: script and artifact integration checks kept for release profiles",
 ]
 
 [tool.coverage.run]

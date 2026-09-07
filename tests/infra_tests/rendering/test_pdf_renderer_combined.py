@@ -13,6 +13,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._pdf_latex_helpers import (
     generate_title_page_body,
     generate_title_page_preamble,
@@ -27,6 +28,34 @@ from infrastructure.rendering.pdf_renderer import PDFRenderer, _combined_latex_c
 def test_tagged_combined_pdf_requires_lualatex() -> None:
     assert _combined_latex_compiler("xelatex", tagged_pdf=True) == "lualatex"
     assert _combined_latex_compiler("xelatex", tagged_pdf=False) == "xelatex"
+
+
+def test_tagged_pdf_rejects_cover_without_alt_before_replacing_existing_pdf(tmp_path: Path) -> None:
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    source = manuscript_dir / "01_intro.md"
+    source.write_text("# Introduction\n", encoding="utf-8")
+    (manuscript_dir / "config.yaml").write_text(
+        "paper:\n  title: Tagged paper\n  cover:\n    image: cover.png\nmetadata:\n  tagged_pdf: true\n",
+        encoding="utf-8",
+    )
+    (manuscript_dir / "cover.png").write_bytes(b"configured cover")
+    pdf_dir = tmp_path / "output" / "pdf"
+    pdf_dir.mkdir(parents=True)
+    previous_pdf = pdf_dir / "tagged-paper_combined.pdf"
+    previous_pdf.write_bytes(b"previous candidate")
+    renderer = PDFRenderer(
+        RenderingConfig(
+            manuscript_dir=str(manuscript_dir),
+            figures_dir=str(tmp_path / "output" / "figures"),
+            pdf_dir=str(pdf_dir),
+        )
+    )
+
+    with pytest.raises(RenderingError, match=r"paper\.cover\.alt"):
+        renderer.render_combined([source], manuscript_dir, "tagged-paper")
+
+    assert previous_pdf.read_bytes() == b"previous candidate"
 
 
 def test_pandoc_tex_command_enables_linked_references(tmp_path: Path) -> None:

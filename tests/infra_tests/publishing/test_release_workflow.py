@@ -206,6 +206,10 @@ class TestReleaseWorkflow:
         found = resolve_combined_pdf(tmp_path, qualified)
         assert found == pdf_path
 
+    def test_resolve_combined_pdf_rejects_traversal_project_name(self, tmp_path: Path) -> None:
+        with pytest.raises(ValueError, match="relative path without traversal"):
+            resolve_combined_pdf(tmp_path, "../outside")
+
     def test_validate_release_tag_rejects_spaces(self) -> None:
         with pytest.raises(PublishingError):
             validate_release_tag("bad tag")

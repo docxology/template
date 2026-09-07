@@ -15,7 +15,8 @@ related modules.
 | `architecture_overview.py` | Architecture `.md`/`.mmd`/`.svg` from live state |
 | `coverage_history.py` | Coverage-history page from CI artefacts |
 | `counts.py` | Line/module count stats (`docs/_generated/COUNTS.md`) |
-| `stage_table.py` | Canonical pipeline stage table (marker block) |
+| `status_evidence.py` | Typed `STATUS.md` evidence receipt and freshness validation |
+| `stage_table.py` | Canonical pipeline stage table and `STAGE_SUMMARY` (marker blocks) |
 | `exemplar_roster.py` | Public exemplar roster doc |
 | `publication_records.py` | Publication-records doc, GitHub README table, and per-exemplar `STANDALONE.md` identity blocks |
 
@@ -36,8 +37,14 @@ uv run python scripts/docgen/stage_table.py
 uv run python scripts/docgen/api_reference.py --check
 uv run python scripts/docgen/active_projects.py
 uv run python scripts/docgen/counts.py --write
+uv run python scripts/docgen/counts.py --verify-coverage --write
 uv run python scripts/docgen/publication_records.py --check
 ```
+
+Coverage refresh is transactional at the exemplar-set level: any measurement
+failure exits nonzero and leaves `EXEMPLAR_SNAPSHOT` unchanged. A complete run
+may refresh drifted percentages, after which provenance must be refreshed
+explicitly.
 
 The removed root-level `scripts/generate_*.py` wrappers are not part of the
 public interface. Use the canonical paths above in docs, CI, and automation;

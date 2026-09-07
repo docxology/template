@@ -278,10 +278,10 @@ flowchart TB
     S1 --> S1C[Decision: split into two files]
 
     S1 --> S2[2 - Create infrastructure first]
-    S2 --> S2A[infrastructure/scientific/benchmarking.py<br/>Generic timing/measurement ·<br/>Reusable benchmark/report helpers ·<br/>100% tested]
+    S2 --> S2A[infrastructure/scientific/benchmarking.py<br/>Generic timing/measurement ·<br/>Reusable benchmark/report helpers ·<br/>tested to the infrastructure gate]
 
     S2 --> S3[3 - Use infrastructure in project code]
-    S3 --> S3A[projects/&lt;name&gt;/src/analysis.py<br/>Import from infrastructure ·<br/>Add domain-specific logic ·<br/>100% tested]
+    S3 --> S3A[projects/&lt;name&gt;/src/analysis.py<br/>Import from infrastructure ·<br/>Add domain-specific logic ·<br/>tested to the project gate]
 
     S3 --> S4[4 - Use project code in scripts]
     S4 --> S4A[projects/&lt;name&gt;/scripts/analyze_results.py<br/>Import from project.src ·<br/>Orchestrate execution ·<br/>Generate outputs]

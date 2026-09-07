@@ -37,16 +37,32 @@ class RenderManager:
             Path to generated PDF
         """
 
-    def render_slides(self, source_file: Path, output_format: str = "beamer") -> Path:
+    def render_slides(
+        self,
+        source_file: Path,
+        output_format: str = "beamer",
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> Path:
         """Render presentation slides.
 
         Args:
             source_file: Path to source manuscript
             output_format: Slide format ("beamer" or "revealjs")
+            strict_cross_deck_refs: Require post-Pandoc foreign references to
+                resolve from the current combined-manuscript AUX map.
 
         Returns:
             Path to generated slides
         """
+
+    def render_accessible_slide_pair(
+        self,
+        source_file: Path,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> tuple[Path, Path]:
+        """Render one transactional Beamer-PDF/Reveal-HTML pair."""
 
     def render_web(self, source_file: Path) -> Path:
         """Render to web HTML format.
@@ -278,19 +294,53 @@ class SlidesRenderer:
             config: Rendering configuration
         """
 
-    def render(self, source_path: Path, output_format: str = "beamer") -> Path:
+    def render(
+        self,
+        source_path: Path,
+        output_format: str = "beamer",
+        manuscript_dir: Optional[Path] = None,
+        figures_dir: Optional[Path] = None,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> Path:
         """Render manuscript to presentation slides.
 
         Args:
             source_path: Path to source manuscript
             output_format: Slide format ("beamer" or "revealjs")
+            manuscript_dir: Manuscript directory for resource paths
+            figures_dir: Figure directory for resource paths
+            strict_cross_deck_refs: Fail when post-Pandoc foreign references
+                cannot resolve from the current combined-manuscript AUX map
 
         Returns:
             Path to generated slides
         """
 
-    def _render_beamer_with_paths(self, source_file: Path, output_file: Path,
-                                   manuscript_dir: Optional[Path], figures_dir: Optional[Path]) -> Path:
+    def render_accessible_pair(
+        self,
+        source_file: Path,
+        manuscript_dir: Optional[Path] = None,
+        figures_dir: Optional[Path] = None,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> tuple[Path, Path]:
+        """Render both accessible derivatives from one composed Pandoc AST.
+
+        A failure in either renderer removes both public outputs. This method
+        requires ``slides_profile="accessible"``; the single-format ``render``
+        method remains available for compatibility and direct format requests.
+        """
+
+    def _render_beamer_with_paths(
+        self,
+        source_file: Path,
+        output_file: Path,
+        manuscript_dir: Optional[Path],
+        figures_dir: Optional[Path],
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> Path:
         """Render beamer slides with error reporting.
 
         error handling includes:
@@ -304,6 +354,8 @@ class SlidesRenderer:
             output_file: Desired PDF output path
             manuscript_dir: Manuscript directory for resource paths
             figures_dir: Figures directory for image paths
+            strict_cross_deck_refs: Require post-Pandoc foreign references to
+                resolve from the current combined-manuscript AUX map
 
         Returns:
             Path to generated PDF
@@ -404,7 +456,7 @@ preamble (geometry, hyperref, titlepage) is intentionally bypassed —
 those packages would clash with Beamer's document class. Only the
 math-font subset is propagated, via
 [`extract_math_font_preamble`](../_pdf_latex_helpers.py) and
-`SlidesRenderer._maybe_write_math_header`, which write a minimal
+[`write_slides_math_header`](../_slides_math_header.py), which write a minimal
 `_slides_math_header.tex` next to the slide deck and pass it to Pandoc
 through `-H header.tex`. This gives slides the same `\mid` / `\ll` /
 `\gg` rendering as the combined PDF without the rest of the preamble.
@@ -422,10 +474,10 @@ thousands of points; xelatex then aborts with driver code 256 and
 leaves a 15-byte PDF stub on disk. `SlidesRenderer._render_beamer_with_paths`
 defends against this on two complementary axes:
 
-1. **`--slide-level=2`**: forces every h2 heading to start its own frame
-   (h1 becomes a section divider). A single h1 with several h2
-   subsections renders as several slides instead of one massive
-   overflowing frame.
+1. **Adaptive `--slide-level` (2–4)**: chooses the deepest useful heading
+   level present in the source, capped at h4. This gives dense sections real
+   frame boundaries while preserving the legacy level-2 behavior for shallow
+   sources.
 2. **`--lua-filter _beamer_allowframebreaks.lua`**: the filter tags
    every h1/h2 with the `allowframebreaks` class, so Pandoc emits
    `\begin{frame}[allowframebreaks]` and Beamer splits any remaining

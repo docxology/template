@@ -17,7 +17,7 @@ orchestrators.
 
 from __future__ import annotations
 
-from .config import ProjectConfig, load_project_config
+from .config import LLMReviewConfig, ProjectConfig, load_project_config
 from .figures import (
     generate_all_figures,
     plot_citation_density,
@@ -30,16 +30,20 @@ from .manuscript_variables import (
     substitute_in_text,
     write_variables,
 )
+from .llm_review import build_llm_review_receipt, validate_transcript
 from .pipeline import ProseRunArtifacts, run_prose_pipeline
 from .report import write_review_report
 
 __all__ = [
     # Config
     "ProjectConfig",
+    "LLMReviewConfig",
     "load_project_config",
     # Pipeline
     "ProseRunArtifacts",
     "run_prose_pipeline",
+    "build_llm_review_receipt",
+    "validate_transcript",
     # Figures
     "generate_all_figures",
     "plot_readability_metrics",

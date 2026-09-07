@@ -4,6 +4,9 @@
     "filename": "configured_field_matrix.png",
     "generated_by": "scripts/01_generate_madlib_artifacts.py",
     "label": "fig:configured-field-matrix",
+    "metadata": {
+      "alt_text": "Five-by-two heatmap of tracked config-field paths by scope and origin: schema: 19 explicit, 0 defaulted; section: 33 explicit, 0 defaulted; lexicon: 10 explicit, 0 defaulted; slot: 55 explicit, 11 defaulted; visualization: 9 explicit, 0 defaulted. Counts describe configuration provenance and do not establish schema completeness."
+    },
     "section": "Configuration"
   },
   "fig:field-origin-summary": {
@@ -11,6 +14,9 @@
     "filename": "field_origin_summary.png",
     "generated_by": "scripts/01_generate_madlib_artifacts.py",
     "label": "fig:field-origin-summary",
+    "metadata": {
+      "alt_text": "Two horizontal bars summarize configured-field provenance: 126 explicit paths and 11 defaulted paths, out of 137 tracked paths. The counts identify origin and do not indicate validation status or research quality."
+    },
     "section": "Configuration"
   },
   "fig:madlib-cover-overview": {
@@ -18,6 +24,9 @@
     "filename": "madlib_cover_overview.png",
     "generated_by": "scripts/01_generate_madlib_artifacts.py",
     "label": "fig:madlib-cover-overview",
+    "metadata": {
+      "alt_text": "Left-to-right configuration-to-publication overview with five boxes: Config (126 explicit paths and 10 lexicon lists), TokenPlan (40 choices at seed 431), IMRAD (11 of 11 sections enabled), Evidence (18 method steps and 14 QA probes), and Outputs (PDF, HTML, slides, and copy). Four lower panels summarize field origins, token density, sections, and gates. This is a local generated audit view and does not imply external validation or reader quality."
+    },
     "section": "Cover"
   },
   "fig:provenance-trace-map": {
@@ -25,6 +34,9 @@
     "filename": "provenance_trace_map.png",
     "generated_by": "scripts/01_generate_madlib_artifacts.py",
     "label": "fig:provenance-trace-map",
+    "metadata": {
+      "alt_text": "Heatmap crossing 11 manuscript sections with 10 lexicon categories. 40 token choices occupy 22 nonzero cells; the largest cell count is 4 at introduction/nouns, introduction/verbs. Cell counts trace generated choices and do not validate the truth of substituted prose."
+    },
     "section": "Results"
   },
   "fig:quality-gate-matrix": {
@@ -32,6 +44,9 @@
     "filename": "quality_gate_matrix.png",
     "generated_by": "scripts/01_generate_madlib_artifacts.py",
     "label": "fig:quality-gate-matrix",
+    "metadata": {
+      "alt_text": "Three declaration panels list configured review surfaces. Evaluation criteria (7): Placeholder resolution, Token provenance coverage, Figure registry integrity, Evidence registry cleanliness, Copied-output readiness, Reviewer packet completeness, Method-invariant traceability. QA probes (14): Method row completeness, Field-origin visibility, Placeholder survival, Provenance completeness, Section-switch observability, Figure registry coverage, Method-figure alignment, Evidence cleanliness, Fork readiness, Copied-output parity, Digest invariant review, Claim-ledger alignment, Review packet completeness, Fork migration sufficiency. Failure modes (13): Unresolved placeholder, Overclaimed generated prose, Config-source drift, Figure provenance gap, Domain misuse, Method row drift, Field-origin opacity, Visual-method mismatch, Fork without validators, Digest invariant drift, Claim ledger omission, Review packet incompleteness, Fork migration ambiguity. These are configured gates and failure boundaries, not results showing that the gates passed."
+    },
     "section": "Evaluation"
   },
   "fig:section-configuration-heatmap": {
@@ -39,6 +54,9 @@
     "filename": "section_configuration_heatmap.png",
     "generated_by": "scripts/01_generate_madlib_artifacts.py",
     "label": "fig:section-configuration-heatmap",
+    "metadata": {
+      "alt_text": "11-row heatmap with columns for section switch, title, narrative moves, and slot count: abstract: switch explicit, title explicit, moves explicit, 3 slots; introduction: switch explicit, title explicit, moves explicit, 8 slots; methods: switch explicit, title explicit, moves explicit, 6 slots; results: switch explicit, title explicit, moves explicit, 5 slots; discussion: switch explicit, title explicit, moves explicit, 3 slots; configuration: switch explicit, title explicit, moves explicit, 1 slots; evaluation: switch explicit, title explicit, moves explicit, 5 slots; reproducibility: switch explicit, title explicit, moves explicit, 2 slots; limitations: switch explicit, title explicit, moves explicit, 3 slots; scope: switch explicit, title explicit, moves explicit, 2 slots; authoring_contract: switch explicit, title explicit, moves explicit, 2 slots. The matrix records configuration coverage, not manuscript quality."
+    },
     "section": "Configuration"
   },
   "fig:section-token-allocation": {
@@ -46,6 +64,9 @@
     "filename": "section_token_allocation.png",
     "generated_by": "scripts/01_generate_madlib_artifacts.py",
     "label": "fig:section-token-allocation",
+    "metadata": {
+      "alt_text": "11 horizontal bars encode selected token choices and section enablement: abstract: 3 (enabled); introduction: 8 (enabled); methods: 6 (enabled); results: 5 (enabled); discussion: 3 (enabled); configuration: 1 (enabled); evaluation: 5 (enabled); reproducibility: 2 (enabled); limitations: 3 (enabled); scope: 2 (enabled); authoring_contract: 2 (enabled). Muted rows are disabled; allocation counts do not measure prose quality."
+    },
     "section": "Results"
   },
   "fig:token-density": {
@@ -53,6 +74,9 @@
     "filename": "token_density.png",
     "generated_by": "scripts/01_generate_madlib_artifacts.py",
     "label": "fig:token-density",
+    "metadata": {
+      "alt_text": "10 horizontal bars encode selected token choices by lexicon category: methods: 1; adjectives: 2; constraints: 3; failures: 3; qualities: 3; audiences: 4; nouns: 5; verbs: 5; measures: 6; artifacts: 8. Counts come from the seeded token plan; they are not vocabulary-size or prose-quality scores."
+    },
     "section": "Results"
   },
   "fig:token-injection-flow": {
@@ -60,6 +84,9 @@
     "filename": "token_injection_flow.png",
     "generated_by": "scripts/01_generate_madlib_artifacts.py",
     "label": "fig:token-injection-flow",
+    "metadata": {
+      "alt_text": "Five-stage left-to-right token-injection flow: schema parse; slot expansion (22 rules and 40 choices); section composition (11 enabled sections); artifact writing; and render gates. Guard labels name parser tests, seed-stability tests, placeholder scanning, figure registry, and evidence registry. The diagram describes the configured method and does not assert that a particular render passed those gates."
+    },
     "section": "Methods"
   }
 }

@@ -54,3 +54,4 @@ project_config:
     live: false
     target_timeout_sec: 60
     llm_model: ""
+    approval_mode: fixture_replay

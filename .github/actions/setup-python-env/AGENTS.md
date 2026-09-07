@@ -8,7 +8,7 @@ Composite action wrapping the shared CI Python setup. See
 1. `astral-sh/setup-uv` — SHA-pinned; `enable-cache: true`,
    `prune-cache: true`, `cache-dependency-glob: "**/uv.lock"`.
 2. `actions/setup-python` — SHA-pinned; `python-version` from the input
-   (default `"3.12"`).
+   (default `"3.14"`).
 
 It deliberately does **not** run `actions/checkout` (the caller does, first) and
 does **not** run `uv sync` (kept explicit per job so dependency groups stay

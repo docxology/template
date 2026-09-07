@@ -9,6 +9,660 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Public-matrix output isolation honors declared artifacts (2026-09-07)
+
+- Root cause of the deterministic fresh-clone rehearsal exit 1
+  (``REHEARSAL-ANALYSIS-EXIT-1``): every public exemplar's declared Stage-01
+  verifier legitimately regenerates its *manifest-declared* output artifacts
+  during the matrix run (e.g. ``artifact_provenance.json`` re-pins
+  ``source_commit`` to the current HEAD; ``test_results.*`` embed the run
+  outcome), so ``output_digests_before != after`` flipped the receipt's
+  output-isolation check and forced exit 1 behind an all-green receipt on
+  every fresh clone at a newer commit.
+- ``output_tree_digest`` now accepts an exclusion set, and
+  ``run_per_project_pytest``/``write_public_matrix_receipt`` exclude each
+  project's ``output/reports/artifact_manifest.json``-declared paths from the
+  isolation *comparison* (the recorded per-lane digest stays the full-tree
+  identity). A missing or malformed manifest yields an empty set, keeping the
+  previous fail-closed strictness; the negative control
+  (``test_receipt_rejects_test_generated_output_drift`` — an *undeclared*
+  output mutation still fails the matrix) is preserved, and a companion test
+  proves a declared-artifact regeneration stays green.
+
+### Testing-cluster re-home and test-module splits (2026-09-07)
+
+- ``CORE-TESTING-REHOME-1`` closed: the 11 testing-cluster modules (~2.9k
+  lines) moved from the flat ``infrastructure/core/`` top level into
+  ``infrastructure/core/testing/`` (README+AGENTS shipped). Old module paths
+  remain as explicit re-export shims — import parity verified for every
+  externally-imported name, with the five externally-consumed privates pinned
+  via ``__all__``. ``determinism.py`` and ``script_discovery.py`` stay at the
+  top level (general utilities, not test machinery).
+- ``TEST-MODULE-SPLITS-1`` closed: the eight >800-line test modules split
+  along their section banners into 62 per-area files (+9204/-8570). Collection
+  parity verified exactly: 10758 collected / 11013 total / 255 deselected
+  before and after, every test id preserved verbatim; shared helpers moved to
+  per-directory ``_helpers`` modules.
+- ``RENDERING-LAYERING-1`` phase 1 in the same wave: the transmission family
+  re-home (below) plus the new ``tests/infra_tests/rendering/test_layering.py``
+  import-lint guard, which fails on any new rendering -> publishing/reporting
+  edge and allowlists the two tracked pre-existing metadata edges.
+
+### Rendering layering: transmission family re-home (2026-09-07)
+
+- ``RENDERING-LAYERING-1`` phase 1: the five ``transmission_*`` modules
+  (bookends, models, figure, barcode strip, page check — ~1.1k lines) moved
+  from ``infrastructure/publishing/`` to a shared-leaf
+  ``infrastructure/transmission/`` package with README+AGENTS. Rendering's
+  eight consumers, validation's three, and the publishing release workflow
+  now import from ``infrastructure.transmission``; publishing-side
+  ``transmission_*.py`` re-export shims keep historical imports resolving,
+  and the page-check CLI subprocess tests target the moved module.
+- New import-lint guard ``tests/infra_tests/rendering/test_layering.py``
+  fails on any new rendering -> publishing/reporting import. Two pre-existing
+  metadata edges (``ebook_bundle.py`` -> metadata_package,
+  ``_pdf_title_page_publishing.py`` -> repository_metadata) are explicitly
+  allowlisted and tracked as remaining work on the row; the publishing-side
+  metadata/release subpackage decoupling is the phase-2 remainder.
+
+### Storybook quick-profile floor resolved (2026-09-07)
+
+- ``STORYBOOK-QUICK-FLOOR-1`` closed by unmarking the seven ``@pytest.mark.slow``
+  rendering tests in ``template_storybook/tests/test_rendering.py`` (16.6s of
+  real PIL rendering — not slow-tier material). The declared 90% coverage floor
+  now holds in every profile: the quick-profile lane runs the full suite and
+  exits 0 (verified via ``stage_01_test.py --project
+  templates/template_storybook --project-only --profile quick``), and the
+  ``--include-slow`` lane is unchanged. The unused ``slow`` marker registration
+  was removed from the exemplar's pytest config.
+
+### Shared combined-edition pandoc argument builder (2026-09-07)
+
+- ``RENDERING-PANDOC-ARGS-1`` closed: the combined-pandoc-args assembly
+  (resource-path triple, formalism filter, pandoc-crossref probe,
+  citeproc+bibliography args) that was duplicated across the
+  ``_combined_exports.py`` DOCX/EPUB lanes and ``ebook_stage.py`` is now one
+  builder, ``infrastructure/rendering/_pandoc_args.combined_pandoc_args``, so
+  the resource-path contract cannot drift per edition. New wiring tests prove
+  each lane carries all three resource-path legs and the contract ordering
+  (formalism before crossref before citeproc).
+
+### Backlog reconciliation (2026-09-07)
+
+- Survey re-verified every active row against the tree:
+  ``TEST-ISOLATION-SYSPATH-1`` (393 ``from src.``/``import src`` sites across
+  exemplar trees, all 24 ``tests/__init__.py`` present, 42 regression files
+  carrying ``_PKG_ALIAS`` loaders), ``CORE-TESTING-REHOME-1`` (the flat
+  ``infrastructure/core/`` testing cluster is still at the top level),
+  ``TEST-MODULE-SPLITS-1`` (all eight modules still exceed 800 lines; the
+  row's counts were refreshed: test_counts_doc 1,509, test_slides_renderer_core
+  1,219, test_artifact_manifest_semantics 994), and ``RENDERING-LAYERING-1``
+  (seven ``rendering → publishing`` transmission imports remain).
+  ``CLEAN-CHECKOUT-MAJ-1`` and ``SECURITY-PRIVATE-PROMOTION-1`` remain
+  blocked-external. No new MINOR or MAJOR cross-cutting items surfaced.
+- Newly discovered and added as ``STORYBOOK-QUICK-FLOOR-1`` (Medium): the
+  exemplar's declared 90% coverage floor only holds with its 7 slow-marked
+  rendering tests (93.91% with ``--include-slow`` vs 88.73% under the quick
+  profile), so the all-projects receipt lane fails storybook's gate while CI's
+  ``--include-slow`` lanes stay green. A local probe with the exact rehearsal
+  flags confirmed the isolation fix eliminates the all-green-then-exit-1 flip
+  (24/24 lanes isolation-ok) and surfaced this second, independent blocker.
+
+### Branch protection and backlog closure (2026-09-06)
+
+- Branch protection is configured on ``main``: the static ``CI Gate`` check is
+  required, force-pushes and deletions are blocked, and admins are included;
+  no review requirement (solo maintainer). Evidence recorded in
+  ``docs/audit/BACKLOG-CLOSURE-2026-09-06.md``; ``SECURITY-OWNERSHIP-1``
+  closed with the live platform state as its receipt.
+
+### Archival tracker refresh and credential-free status checks (2026-09-06)
+
+- ``SoftwareHeritageProvider.check_status`` (plus
+  ``check_publication_status``, ``resolve_git_origin_url``, and a
+  ``--check-status`` mode on both archival CLIs) refreshes Software
+  Heritage's public archival state from credential-free ``GET`` evidence —
+  save-queue plus origin-visits, aggregated across the ``.git``/bare URL
+  variants, tolerant of both save-payload shapes the live API returns. It
+  never posts, so it cannot trigger a save.
+- The archival tracker snapshot
+  (``docs/maintenance/software-heritage-archival.md``) was refreshed with a
+  full 61-origin census as of 2026-09-06: 17 verified archived, 43 not yet
+  archived, 1 rate-limited mid-census (recorded as unknown). The 2026-06-27
+  "accepted/pending" list has fully landed.
+- ``ARCHIVAL-TRACKER-MIN-1`` closed with evidence in
+  ``docs/audit/BACKLOG-CLOSURE-2026-09-06.md``: the row needed credential-free
+  provider evidence, not external authority. Public archival submission
+  (save-code-now) remains owner-authorized work.
+
+### Rehearsal diagnosability and budget (2026-09-06)
+
+- Failed rehearsal commands now record a bounded, credential-redacted output
+  tail in the receipt (digest-only receipts made hosted failures
+  undiagnosable); passing commands keep an empty tail.
+- The rehearsal plan's project matrix runs the quick profile with two
+  project workers: the serial release profile cannot fit a hosted job
+  budget (a single exemplar's release pass exceeded 60 minutes in a local
+  probe). The rehearsal proves clean-checkout integrity; CI's project
+  lanes remain the authoritative content verification.
+
+### Test collection groundwork, CI gate, and rehearsal machinery (2026-09-06)
+
+- Root-level pytest runs now use ``--import-mode=importlib`` as groundwork for
+  shared-process collection; the single-tree suites are unaffected. Two exemplar
+  trees still cannot share one process — each exemplar's ``tests/`` is a package
+  named ``tests`` (the first tree's ``tests.conftest`` wins plugin registration)
+  and every exemplar imports its source as the shared top-level ``src`` package —
+  so one exemplar tree per process remains required and
+  ``TEST-ISOLATION-SYSPATH-1`` stays open for the unique package-naming
+  restructure.
+- CI gained a static ``ci-gate`` summary job — every upstream job must succeed or
+  be intentionally skipped — giving branch protection a single requireable check
+  name for the dynamic project-test matrix.
+- New dispatch-only ``release-rehearsal`` workflow runs the two fresh-checkout
+  deterministic rehearsals on hosted Linux and uploads the receipt (machinery
+  toward ``CLEAN-CHECKOUT-MAJ-1`` evidence).
+
+### Skip-free optional-tool coverage (2026-09-06)
+
+- The two remaining infrastructure-suite skips were complementary calibre
+  pairs: an absence-path test that only ran where calibre is missing and
+  presence-path tests that only ran where it is installed. They are now
+  environment-adaptive contract tests that always run: the MOBI absence
+  contract is exercised through an explicitly unresolvable
+  ``ebook-convert`` binary name (the same ``shutil.which`` resolution the
+  renderer performs), and the ebook-generation pipeline test asserts the
+  documented per-format degradation contract where calibre is absent
+  (EPUB and DOCX render via pandoc, MOBI fails closed, stage exits 0 with
+  partial success) alongside the full-success assertions where it is
+  present. The full infrastructure suite now reports zero skips.
+- Campaign close-out: the ISA publication criterion is closed against the
+  merged PR #53 state (hosted CI 66/66 green on the PR, main CI success at
+  the merge SHA, local/remote main parity verified).
+
+### Adjacent-surface hardening and backlog contract closure (2026-09-05)
+
+- Beamer slides remap projection-unsupported Unicode (comparisons, arrows,
+  operators, Greek) through the math font using the shared protected-block
+  tokenizer; verbatim and inline-code regions stay byte-for-byte intact and
+  the established `≥` output is unchanged. Previously only `≥` was handled,
+  so glyphs such as `≤`, `≠`, or `β` silently vanished from projected frames.
+- The deployed-web issue scanner now validates local `<img src>` targets with
+  the same rules as anchors: missing files, path escapes, and unsupported
+  schemes fail closed; remote and `data:`/`blob:` image sources stay allowed.
+- Pandoc web output (per-section pages and the combined edition) is published
+  by rename from an exclusive temporary target, so a crash or planted symlink
+  can no longer leave truncated or redirected HTML. The TeX `.aux` repair and
+  the shared combined-markdown write use the confined atomic writer, and the
+  favicon write refuses planted symlinks.
+- Publishing exports write `manifest.json` atomically (exclusive temp, fsync,
+  rename), remove their own partial bundle when copying fails, and replace a
+  stale real directory in the `latest` slot instead of failing a complete
+  export. The documented hash-copied-bytes manifest contract is unchanged.
+- Checkpoint output-tree digests ignore planted file symlinks so external
+  content cannot enter the resume-approval digest.
+- The `template_code_project` experiment config degrades malformed
+  `experiment:` values to exemplar defaults with field-naming warnings
+  silently and flat/ragged matrices warn instead of vanishing silently.
+- Release rehearsals now block the overall receipt when the two fresh
+  checkouts produce different output digests: determinism is enforced, not
+  assumed. `git clone --revision` (Git 2.51+) is documented as the tool floor.
+- The backlog gate rejects `completed` rows: closed root rows moved verbatim
+  to [docs/audit/BACKLOG-CLOSURE-2026-09-05.md](docs/audit/BACKLOG-CLOSURE-2026-09-05.md),
+  leaving the root backlog future-work-only with its blocked-external rows
+  and receipts intact.
+- Test isolation: the `uv sync` success-path test runs in a synthetic
+  zero-dependency workspace instead of the shared checkout, the mermaid
+  retry counter is monkeypatch-scoped, and the tracked-count test skips
+  outside real git checkouts. The one-exemplar-tree-per-process rule and its
+  mechanism are documented in `CLAUDE.md` with a follow-up backlog row.
+- STATUS-CI-MATRIX-1 now records the PR #52 final-SHA runs; the deferred
+  pixel-capture follow-up closed via compositor screenshots (narrow scroll
+  mode measures 374.4px content width with no horizontal overflow).
+
+### Rendering simplification and recovery hardening (2026-09-04)
+
+- Refresh the pull-request template with strict public readiness commands,
+  explicit evidence boundaries, and a link to the canonical pipeline stage map.
+
+- Align the public readiness deadline with the native verifier budget; reject
+  incomplete, duplicate, and contradictory aggregate reports and label project
+  counts explicitly. Explicit shorter deadlines remain supported.
+- Correct the extra width clamp in Reveal scroll mode so narrow screens use
+  the available slide width.
+- Isolate per-section web preprocessing in private temporary directories and
+  atomically write combined Markdown without following planted temporary links.
+  Preserve `RenderingError` for source preparation failures and clean temporary
+  copies on those paths.
+
+- Split slide figure handling, table parsing/measurement/width allocation,
+  Beamer preparation, and web assets/links/writes into cohesive internal
+  modules while preserving existing helper imports and rendering semantics.
+- Use confined atomic writes for HTML, Beamer TeX rewrites, and checkpoints.
+  HTML keeps its prior permissions; checkpoint files use `0600`. Failed writes
+  preserve the prior target instead of following predictable temporary links.
+- Reject unsupported HTML link schemes even when the URL path is empty.
+- Validate malformed checkpoint field types before resume and use the resolved
+  project directory for checkpoint placement.
+- Confine publishing export sources and allocate a fresh bundle for each export,
+  including same-second calls; update `latest` atomically after completion.
+- Make macOS interpreter fixtures use real symlink-backed environments and pin
+  ZIP fixture timestamps explicitly across UTC/Los Angeles on Python 3.14.
+  Fixture subprocess failures now propagate rather than appearing successful.
+- Align contributor Ruff commands with the complete public lint scope and remove
+  stale stage numbers from the command cheat sheet.
+
+### Infrastructure hardening (2026-09-02)
+
+- `infrastructure.methods`: `audit_methods_projects()` is now fail-per-project.
+  A project whose methods plan cannot be built (missing or malformed pipeline
+  source) is captured as a `METHODS.PLAN_BUILD_FAILED` error issue with
+  `plan: null` instead of aborting the whole `--all-public` roster, so one
+  broken exemplar no longer hides the audit state of the rest. The Markdown
+  CLI render skips plan-less audits instead of crashing.
+  (`MethodsProjectAudit.plan` is now `MethodsOrchestrationPlan | None` with an
+  explicit `project_name` field; single-project consumers are unaffected.)
+- `infrastructure.core.config`: `_infer_project_name_from_path()` now
+  recognizes every lifecycle parent its docstring documents — the
+  `published` and `other` candidates were silently missing, so per-project
+  schema-extension suppression (unknown-key warning filtering) never applied
+  to configs under `projects/published/<name>/` or `projects/other/<name>/`.
+- `infrastructure.core.pipeline.dag`: `from_yaml()` and `from_dict()` share
+  one `_definition_from_entry()` parser; a stage entry missing `name` now
+  raises the module's own `ValueError` naming the source file and entry index
+  instead of a bare `KeyError`, and `from_dict()` applies the same top-level
+  and per-entry validation as `from_yaml()` instead of silently accepting
+  malformed in-memory definitions.
+- `infrastructure.core.health`: `_repository_state()` degrades to the
+  documented unknown state (`None, None`) when the `git` executable cannot be
+  resolved (`FileNotFoundError`), matching the "unknown outside a Git
+  checkout" contract; previously it raised out of `run_health_checks()`.
+- `infrastructure.provenance`: a self-referential edge now produces exactly
+  one finding (`PROV_SELF_LOOP`); the cycle check no longer double-reports
+  the same trivial edge as `PROV_CYCLE_DETECTED`.
+- Exemplar drift contract: `check_required_files_exist()` now enforces the
+  documented `.agents/` skill catalog (`.agents/AGENTS.md` plus the
+  per-exemplar `<hyphenated-name>/{SKILL,AGENTS,README}.md` skill folder), so
+  deleting an exemplar's agent catalog fails the drift gate. All 24 public
+  exemplars already carry the catalog.
+- Documentation accuracy: corrected the stale "16-stage" pipeline claims to
+  17 (README.md key features, `docs/repurposing-architectures.md`, with the
+  scope corrected to "env setup through archival publication"), and updated
+  `scripts/pipeline/SKILL.md` (stages 00–13, trigger regex `stage_1[0-3]`)
+  with `docs/_generated/skills_index.md` and `.cursor/skill_manifest.json`
+  regenerated. `infrastructure.project.public_template_contract` now
+  cross-references the broader drift-gate file contract in its docstring.
+- Coverage measurement unblocked (regression from 2026-08-31): the
+  `_COVERAGE_COPY_SUPPORT_SPECS` entry for Active's `manuscript/SYNTAX.md`
+  (added in `437589bae`, repointed in `50b293dd4`) made
+  `--verify-coverage` fail for `template_active_inference` with
+  "coverage support destination already exists" — the spec's destination is
+  inside the project tree the workspace already copies, and the file is
+  already bound to the coverage provenance through the project-tree source
+  hash. The spec is removed; the closure-equality test's expected-target
+  list is corrected to the live outward-link closure (the
+  `docs/guides/manuscript-semantics.md` duplicate added on 2026-08-31 does
+  not exist in the live scan), and the dead `_repo_root_anchor` path-mapping
+  shim is retired. All three Active support-closure tests pass again; the
+  full 24-exemplar coverage re-measurement and provenance refresh for the
+  stale `docs/_generated/coverage_snapshot.json` could then run.
+
+### Executable bundle (Stage 14)
+
+- Closed backlog row `EXECUTABLE-BUNDLE-MAJ-2` with the **self-contained
+  payload** contract: `bundle_project()` now vendors `infrastructure/` into
+  `source/infrastructure/` under the same symlink and cache-exclusion gates as
+  the project trees, refusing a missing or symlinked Layer-1 tree. The compose
+  `tests` service runs the project suite directly against the vendored payload,
+  `verify` proves collection cleanliness, and the full-pipeline services
+  (`reproduce`, `render`) fail closed with an explicit
+  `UNAVAILABLE-DEPENDENCY RECEIPT` (exit 3) instead of a bare
+  `ModuleNotFoundError: No module named 'infrastructure'` observed in an
+  offline container on 2026-08-22. Negative controls:
+  `test_bundle_refuses_missing_or_symlinked_infrastructure_tree` and
+  `test_compose_full_pipeline_services_fail_closed`.
+- Closed backlog row `EXECUTABLE-BUNDLE-MAJ-1` with the full
+  **offline-container verification receipt**
+  ([`docs/audit/executable-bundle-offline-receipt-2026-08-26.md`](docs/audit/executable-bundle-offline-receipt-2026-08-26.md)):
+  image `template-bundle-vendored:2026-08-26` (id `58c35a2d1675`) built from the
+  regenerated bundle; with `--network none` the vendored payload runs its real
+  project suite (242 passed, pytest exit 0) and a full-pipeline compose service
+  fails closed with the explicit `UNAVAILABLE-DEPENDENCY RECEIPT` (exit 3), never
+  a bare `ModuleNotFoundError`. Environment note: the image build requires >= 4 GiB
+  VM memory on colima (2 GiB OOM-kills texlive unpacking, docker exit 137).
+
+### Documentation audit
+
+- Closed backlog row `DOC-NEGCTRL-HARDEN-MED-1`: every active gate/verifier
+  claim previously flagged by `scripts/audit/audit_documentation.py` as lacking
+  a nearby negative control now carries an explicit control sentence — either a
+  named known-wrong input that fails the check, a fail-closed rejection
+  statement, or an honest scoping limitation. The advisory
+  `gate-negative-control` finding count dropped from 58 to 0; the detector was
+  not relaxed for this (controls were added per owning surface, no bulk edits).
+  Supporting detector fix: `_FAILS_ON_WRONG_INPUT_RE` now recognizes hyphenated
+  and inflected `fail-closed` variants so truthful fail-closed claims stop
+  reading as unbacked (`test_gate_claim_audit_accepts_hyphenated_fail_closed_evidence`).
+
+### Rendering
+
+- Tagged-PDF rendering retains PDF 2.0 tagging and catalog language while no
+  longer embedding a PDF/UA-2 conformance identifier. Tagged structure remains
+  bounded structural evidence, not PDF/UA certification.
+- Slide decks now recover manuscript-declared macros (`\newcommand`,
+  `\renewcommand`, `\DeclareMathOperator`) from `preamble.md` into the
+  Beamer header, rewritten as `\providecommand` so a clash with a class
+  built-in degrades to a no-op; only Beamer-safe packages survive the
+  fallback filter (layout/graphics machinery such as `geometry` is dropped).
+- Fixed the fallback rewrite so `\newcommand`/`\renewcommand` are actually
+  rewritten (the previous pattern never matched); covered by new
+  `extract_command_fallbacks` and header-injection tests.
+- `verbatim`/`lstlisting` bodies are now isolated environments during
+  allowframebreaks frame splitting, so no `\framebreak` can land inside a
+  code block; covered by a new split test.
+
+### Robustness
+
+- Generic single-project Stage-01 pytest now uses the same 6,900-second
+  capacity as the declared structured-verifier path, instead of inheriting
+  `TestSuiteConfig`'s unrelated 1,800-second per-attempt default. Generic pytest
+  owns one monotonic subprocess-wait and retry-admission deadline across its
+  initial attempt and optional coverage-conflict retry; cleanup before retry
+  reduces the remaining allowance, while post-timeout process cleanup may
+  finish under the applicable outer backstop. Generic retry cleanup is now
+  confined recursively to the selected project, while infrastructure retry
+  cleanup remains nonrecursive at the checkout root so neither path deletes a
+  sibling project's live coverage. The declared verifier retains one
+  6,900-second attempt. Hosted CI invokes Stage-01 directly inside its unchanged
+  8,100-second job backstop, while a full-pipeline invocation also has its
+  separate 7,200-second process-tree boundary. Infrastructure timeout defaults
+  and all-project outer boundaries remain unchanged. This is timeout capacity
+  only, not a speedup or evidence of a passing test/coverage run.
+- Restored the single-source Agent Skills vendor boundary: the separately
+  sourced Monid CLI skill is no longer folded into the pinned Context
+  Engineering tree, the repository-owned Monid module skill remains
+  discoverable, and a negative control rejects any future unlocked skill
+  directory.
+- Completed the package-local Monid module map so the public-module
+  documentation gate covers `models.py` alongside the other six modules.
+- `uv sync` timeout no longer claims a successful workspace sync; it falls back
+  to the same installed-package check as other `uv` failures.
+- Bounded hook execution no longer swallows post-launch `OSError` without
+  killing the process group, and drain-after-timeout cannot hang forever.
+- Declared pipeline artifact paths reject `..` / absolute escapes instead of
+  hashing files outside the repository.
+- Rendered-source walks admit in-project sidecar symlinks while still refusing
+  dual-root escapes; `git ls-files` for that walk now has a timeout.
+- Output cleanup unlinks directory-symlink children instead of following them
+  with `rmtree`.
+- Empty `pip-audit` stdout is recorded as a skip, not a clean zero-finding run.
+- Incremental skip now requires the recorded output hash to still match; a
+  swapped artifact no longer skips the stage.
+- Resume checkpoints bind an output-tree digest so deleted or swapped files
+  invalidate the checkpoint.
+- Confidentiality `git` helpers now time out instead of hanging a gate.
+- Rendering web/CLI tests that swallowed every exception or only checked
+  `hasattr` now assert real HTML output and parser/main() outcomes.
+
+### Documentation
+
+- Corrected living docs that still said four opt-in stages / a `--tags` flag,
+  treated `projects/active/` as non-rendered, or pinned local/CI Python at 3.12
+  or 3.10–3.13. The generator sentence in `counts_doc.py` now matches discovery:
+  `active/` is the hot-seat rendered set.
+- Added [`docs/maintenance/review-remediation-2026-08.md`](docs/maintenance/review-remediation-2026-08.md),
+  a durable record of the 2026-08-12 parallel-agent comprehensive review and
+  improvement (infrastructure/scripts/docs + all 24 exemplars, released in
+  v3.7.0), including the verification evidence and the reusable
+  incidents/lessons from running a large herdr-agent campaign on this repo.
+  Registered in the maintenance hub, `docs/maintenance/AGENTS.md`, and
+  `docs/documentation-index.md`.
+
+## [3.7.0] - 2026-08-12
+
+### 2026-08-12 — per-exemplar improvement pass (24 dedicated herdr agents)
+
+Twenty-four dedicated Hermes herdr agents, one per public exemplar project, each strictly
+confined to its own `projects/templates/<name>/` tree (disjoint ownership). All 24 agents
+performed a read-everything review; most concluded the exemplars were already healthy
+(no stubs, consistent docs, offline suites green). Two exemplars received concrete fixes:
+
+- **`template_textbook`** — the agent discovered the exemplar's `test_contracts.py` carried
+  two overlapping generations of tests plus broken tuple-membership assertions
+  (`assert "<substr>" in (<tuple>)` checks element-equality, not substring) that made the
+  suite red, and a stale `REQUIRED_SECTION_HEADINGS` claim. Fixed: consolidated
+  `test_contracts.py` (228 total tests now pass), corrected 4 tuple-membership assertions
+  to per-element substring matching (`any("<substr>" in d for d in ...)`), added focused
+  tests for config-shape edge cases, corrected the `claim_ledger.yaml` source-bound claim
+  (9 → 5, matching `constants.py`), documented the `contracts` module, fixed manuscript
+  figure-path doc references (`../` → `../../`), and hardened `compare_config_shapes`
+  (empty vs one-empty mapping-list drift) and `numeric_fact_receipt` (fail-closed receipt
+  instead of raising).
+- **`template_literature_meta_analysis`** — added 296 lines of tests-only coverage for the
+  config-validation surface (search engine toggles, hypothesis/sampling/llm/knowledge-graph/
+  reproducibility/fulltext categories, `check_config_health`, load-error paths) plus
+  `Corpus.summary()` and `filter_by_year` range-guard tests. All 1207 tests pass.
+
+Coverage provenance and COUNTS.md regenerated to reflect the new exemplar test surfaces.
+
+### 2026-08-12 — parallel-agent review: performance, de-duplication, thin orchestration, documentation
+
+Comprehensive review of infrastructure/, scripts/, docs/, and all 24 public exemplars,
+executed as three parallel Hermes herdr agents (infra-perf, exemplars, docs-tests) with
+disjoint file ownership, plus an auditor-first baseline. All changes committed with
+byte-identical behavior; gates green (ruff, mypy 1536 files, 2492 infra tests, 55-regression
+tier, all public-contract auditors, no-mocks).
+
+Performance:
+- **Fix O(2N) path resolution in the Python 3.10 compat audit.** `scan_python_310_compatibility`
+  and `_display_path` each called `path.resolve()` per source file (~1000+). Now each path is
+  resolved exactly once and the pre-resolved relative display is threaded through; the public-
+  surface test no longer times out under load in the release infra gate (public-surface suite
+  ~3.3s). Added a regression test pinning repo-relative display paths.
+
+De-duplication (shared-helper extraction, R6-class, infra-internal only):
+- `infrastructure/rendering/_output_text.py` — canonical `_process_output_text`, now imported by
+  docx/epub/mobi renderers (was duplicated in all three).
+- `infrastructure/core/determinism.now_utc_iso` — canonical UTC-stamp helper; the six duplicated
+  `_now_utc`/`_now_utc_iso` bodies in publishing (static_site cloudflare/github/netlify, pypi
+  upload, archival models, huggingface, osf) now delegate to it; added to `__all__`.
+- `infrastructure/validation/docs/consistency/_shared.blank_content` — canonical blanking helper;
+  shared by `blank_fences` and `cross_link_lint._strip_code`/`_blank_fences`.
+- Removed two thin `_normalize_whitespace` wrapper methods (core `_validation`, llm `sanitization`)
+  in favour of the existing `normalize_whitespace`.
+- `scripts/publish/upload_{gold_refinement,template_project}.py` — dropped duplicated
+  `_load_dotenv` wrappers; delegate to `infrastructure.core.credentials.ensure_dotenv_loaded`.
+
+Thin orchestration:
+- Extracted `scripts/gates/status_freshness.py` parsing/findings logic into the new tested module
+  `infrastructure/validation/status_freshness.py`; the gate is now a 23-line thin CLI. Fixed the
+  forward reference in `scripts/docgen/status_evidence.py` to import `parse_status_rows` from the
+  new module. Added function-level tests + README gate entry.
+
+Documentation:
+- Linked the archived `docs/maintenance/exemplar-backlog-history.md` from the maintenance hub and
+  added two reachability regression tests (all maintenance guides must be linked from the hub).
+
+Exemplars (24): full read-everything review found all 24 import clean, offline test suites green,
+no stub methods (all `pass`/`None`/`NotImplementedError` are documented fallbacks/gaps); the
+advanced-literature ↔ meta-analysis duplication is a sanctioned standalone-safe mirror and the
+autopoiesis `output/children/` tree is regenerable, not forgery — no changes required.
+
+### Backlog reconciliation and release-boundary hardening (2026-08-11)
+
+- Re-audited the root backlog and all 24 canonical public exemplar TODO files;
+  active planning is future-only, completed rows are preserved in the dated
+  maintenance record, and active work is decomposed into Minor/Medium slices.
+- Reconciled the historical `ARL-PHASE-VALIDATION-1` state without deleting
+  its original evidence; the current source contract and negative controls are
+  now the authoritative closure evidence.
+- Made fresh-checkout rehearsals restore only explicitly generated
+  representative-render output inside their disposable clone. Any source,
+  private, rename, or other non-generated mutation remains a hard blocker.
+- Added SHA-256 and size fields to advanced-literature phase artifact manifests
+  and validated their generated provenance rows without enabling network or LLM
+  execution by default.
+- Added per-page newspaper geometry/glyph-clearance audit receipts and negative
+  controls, plus source-bound coverage refreshes for the changed ARL, Newspaper,
+  and pitch-deck exemplars.
+- Hardened isolated-matrix receipts with strict lane/phase timing, collection,
+  cache, resource-limit, skip, and output-isolation contracts; cache identity
+  now covers staged, unstaged, untracked, and non-Git source state.
+- Centralized bounded subprocess timeout/process-group cleanup and hardened
+  reproduction-bundle and disposable-rehearsal path validation against symlink,
+  traversal, duplicate, stale-payload, and non-generated-output hazards.
+- Split the public-project runner's output-visibility and digest machinery into
+  `infrastructure/core/test_runner_outputs.py`, preserving the runner's
+  private import surface while removing its module-size warning.
+- Made quick-feedback benchmark receipts public-safe by keeping subprocess
+  diagnostics in memory only and redacting absolute command paths, with
+  regression coverage for both receipt serialization and diagnostic tails.
+- Converted stale exemplar backlog prose into current contracts, updated drift
+  signposts to accept those normalized headings, and labeled the last pipeline
+  summary as historical evidence rather than current health.
+
+### Release evidence and exemplar corrections (2026-08-08)
+
+- Rebased `COUNTS.md` and coverage provenance on the shared release-profile
+  measurement contract, with a bounded 30-minute per-exemplar subprocess; all
+  24 public coverage rows now have current source hashes and measured values.
+- Corrected the SIA claim ledger from an obsolete train-split proportion to the
+  measured six-row public fixture, added a real regression test, and regenerated
+  its Stage 04 PDF/HTML/evidence artifacts.
+- Restored the pools/rules/tools figure metadata re-exports required by its
+  registry publisher; the gold-refinement and pools/rules/tools release suites
+  now pass independently.
+- Tightened the documentation audit so historical policy, inventory-table, and
+  generated-fact prose is not misclassified as active policy; the current audit
+  reports 149 active gate advisories and no volatile-fact or undocumented-symbol
+  findings.
+- Refreshed external publication metadata records and validated the complete
+  24-lane release-profile public-matrix receipt at 95.39% combined coverage.
+- Raised the root and affected public-exemplar dependency floors to
+  `cryptography>=50.0.0` and `pypdf>=6.15.0`, regenerated all impacted locks,
+  and confirmed the complete root export has no known pip-audit vulnerabilities
+  (the unpinned `desloppify` URL remains an explicit audit skip reason).
+- Raised the public-exemplar Pillow floor to `>=12.3.0` and repaired the
+  remaining nested lock advisories for Pygments, pytest, Torch, Setuptools,
+  idna, and urllib3; every canonical public-exemplar all-extras export is now
+  covered by the blocking CI dependency audit.
+
+### Final local release validation (2026-08-09)
+
+- Re-ran the 24-lane public release profile on the updated lockfiles: all 24
+  lanes passed, collecting 5,960 tests with 94.71% combined coverage and an
+  output-isolation receipt (`fd00581decf60b62bf98a36777bd66931273d50a20383078a27045c23909f9a2`).
+- Re-ran the hosted-equivalent infrastructure selection: 9,656 passed, 9
+  skipped, and one expected numerical-stability warning; the unfiltered local
+  run's only failures were the intentionally service-backed Ollama tests.
+- Revalidated the repository health registry, including mypy across 1,496
+  source files, docs lint, generated facts, capability parity, Bandit, and the
+  no-mocks gate.
+
+### Triple-check and committed-tree validation (2026-08-09)
+
+- Bound coverage provenance to committed revision `25169a501`; the root
+  infrastructure release profile passed 9,842 tests, skipped 9 optional/tool
+  cases, and reached 84.29% infrastructure coverage.
+- Re-ran all 24 public exemplar lanes with two isolated outer workers and no
+  inner xdist: 5,960 collected tests, 94.7116% combined coverage, clean output
+  isolation, and no skips. Receipt SHA-256:
+  `984b4c33b9c2592d4e3895e627cc402ffb73ef0ca5d54936d062708a973ed1e7`.
+- Revalidated documentation/publishing (1,048 passed, 2 skipped), regression
+  claims (55 passed), root health, typed backlog/claim/roster/drift contracts,
+  Ruff, mypy (1,532 source files), Bandit, and both no-mocks inventories.
+
+### Hosted CI correctness (2026-08-08)
+
+- Repaired the hosted XML-parser policy step so its Python guard is executed
+  from a stable heredoc, and made regression collection validation match
+  pytest's current quiet collector output (55 claim-binding tests locally).
+- Updated the workflow runbook to describe the fail-closed collection contract
+  rather than the obsolete empty-tier exit-code tolerance.
+- Repaired the hosted Python 3.10/3.11–3.13 contracts: portable TOML and ISO
+  timestamp tests, a parseable LaTeX recovery fixture, environment-independent
+  current-output snapshot assertions, and deterministic PDF-ID handling for
+  valid PDFs that omit `/ID`; the redacted-figure gate now separates
+  same-environment byte determinism from cross-platform raster geometry.
+
+### Cross-cutting hardening and maintainability (2026-08-08)
+
+- Added a shared secret-environment policy (`infrastructure/core/secrets.py`)
+  and routed both Python runtime and bounded-subprocess environments through
+  it; added a real no-capture timeout negative control for process-group
+  cleanup.
+- Centralized bounded worker resolution in
+  `infrastructure/core/worker_policy.py` and delegated multi-project,
+  project-matrix, and per-project pytest execution to the same capped policy.
+- Added a fail-closed `status-freshness` health gate and an expiring downward
+  source-size ratchet, keeping oversized test files advisory while preventing
+  source growth beyond accepted baselines.
+- Split the largest five test surfaces by concern without weakening their real
+  fixtures or assertions. The formal-colony experiment fixtures now share a
+  session-scoped test conftest, and the resulting modules remain independently
+  runnable.
+- Split the advanced literature multi-phase layer into a `search.py` façade
+  plus `models.py` and `llm_filter.py`; split pools figure provenance support
+  into `figure_support.py` while preserving the public figure façade.
+- Added an automated real XeLaTeX two-run byte-reproducibility test under a
+  pinned `SOURCE_DATE_EPOCH`, with deterministic PDF metadata, identifiers,
+  and font-subset canonicalization.
+- Pinned the automatic uv bootstrap to `0.12.0` with SHA-256 verification and
+  routed repository setup guidance through the checksum-verified dependency
+  instructions. Mutable Dockerfile `uv_version="latest"` remains an explicit
+  caller opt-out.
+- Regenerated and reconciled source-facing documentation for the new module
+  boundaries; the remaining status-ledger end-to-end refresh and external
+  release metadata/branch-protection actions remain explicitly operator-owned.
+
+### Secure execution boundary (2026-08-03)
+
+- Added `infrastructure/core/execution_boundary.py` implementing the
+  `SECURE-RUN-1` and `PROJECT-EXECUTION-BOUNDARY-1` backlog items:
+  - `run_bounded_subprocess` launches commands in a fresh process group so a
+    timeout `killpg`s the whole tree (no orphaned descendants can outlive a
+    failed or timed-out hook run).
+  - `build_bounded_env` strips credential-like environment variables unless
+    explicitly allow-listed (secret policy).
+  - `validate_hook_root` enforces root confinement (traversal + symlink
+    policy), and `classify_lifecycle_link` distinguishes intentional lifecycle
+    links from escapes.
+  - Optional `egress_check` callback lets an operator refuse a launch before
+    execution (egress policy).
+- Wired the boundary into three execution surfaces: `setup_hook.run_project_setup_hook`
+  (new `secret_env` manifest allow-list), `pipeline.hooks.run_stage_hooks`
+  (secret stripping + process-group cleanup), and `analysis_pipeline.run_analysis_script`.
+- Added 14 boundary negative-control tests (traversal, symlink escape,
+  credential stripping, process-group cleanup, egress refusal) plus 4
+  end-to-end setup-hook boundary tests. A hostile hook cannot read
+  credentials, escape the project root, or outlive a timed-out run.
+- Regenerated `docs/_generated/COUNTS.md` for the new project-scope tests.
+
+### Red-team reconciliation (2026-08-03)
+
+- `methods-plan` gate now passes all 24 public exemplars in both source and
+  rendered mode. Regenerated four committed `artifact_manifest.json` files
+  (template_autoresearch_project, template_pools_rules_tools,
+  template_prose_project, template_template) that had drifted from the
+  committed output tree, and gave template_pitch_deck a real Methodology
+  section so the deck exemplar (which legitimately has no research Methods
+  section) satisfies the methods contract without a special-case exemption.
+- Fixed five pre-existing infrastructure test failures: the combined-HTML
+  fixture layout in `test_formalism_wiring.py`, four missing module
+  references in `AGENTS.md` (public_matrix_receipt, checks_publication_validators,
+  manuscript_composition, rendered_snapshot), and the stale
+  `context-engineering.lock.json` vendored-tree digest.
+- Persisted the kmyth submodule's macOS build patches (network/KMIP stubs +
+  FlushContext fix) that previously existed only as uncommitted working-tree
+  edits — re-pointed the submodule to a `docxology/kmyth` fork so fresh
+  clones reproduce the documented macOS build.
+- Re-derived stale template_prose_project regression pins (abstract words
+  1745→1842, sentences 86→90, grade 15.97→15.68) so the claim-binding
+  regression tier matches committed source.
+- `template_validator/scripts/validate.sh` now resolves a jsonschema-capable
+  interpreter (repo venv preferred) and fails closed instead of silently
+  downgrading to a JSON-syntax-only pass when jsonschema is absent.
+
 ### Release gate hardening (2026-07-31)
 
 - Release workflow now executes a bounded test contract on the exact tagged
@@ -294,6 +948,14 @@ not to the contents of any specific workspace.
   `template_advanced_literature_review/TODO.md` and consolidated 5 shipped
   items (`AR-SOURCE-FRESHNESS-1`, `AR-LOOP-PHASES-1`, and 3 medium rows) in
   `template_autoresearch_project/TODO.md` under a single "Shipped" section.
+
+- 🔎 **Backlog-history reconciliation (2026-08-09 → 2026-08-11).** The
+  preceding release note is retained as historical evidence from its original
+  checkout. A later audit found that `ARL-PHASE-VALIDATION-1` had been
+  restored to the active TODO during subsequent edits; the current
+  future-only backlog now records its same-revision source/test closure, and
+  project troubleshooting points only to the genuinely remaining cross-phase
+  validator work.
 
 - 🔧 **Health gate ruff version pinning.** Changed `ruff` and `ruff-format`
   health gates from `uvx ruff` (latest version, unpinned) to `uv run ruff`

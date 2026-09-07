@@ -99,6 +99,7 @@ def test_simulate_cli_help(project_root) -> None:
 
 
 @pytest.mark.requires_pymdp
+@pytest.mark.requires_pymdp
 def test_run_and_persist(project_root) -> None:
     if not pymdp_available():
         pytest.skip("pymdp not installed")

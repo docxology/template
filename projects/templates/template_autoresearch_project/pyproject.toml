@@ -12,8 +12,15 @@ requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.26",
     "matplotlib>=3.7",
+    "pillow>=12.3.0",
     "pyyaml>=6.0",
     "tomli>=2.0; python_version < '3.11'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
 ]
 
 [tool.pytest.ini_options]
@@ -25,8 +32,12 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short --strict-markers"
+markers = [
+    "slow: full-loop and generated-figure integration checks kept for release profiles",
+]
 
 [tool.coverage.run]
+source = ["src"]
 branch = true
 omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
 

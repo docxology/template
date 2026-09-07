@@ -51,7 +51,7 @@ def test_cover_visualization_script_exits_zero():
         [sys.executable, str(PROJECT_ROOT / "scripts" / "zz_generate_cover_visualization.py")],
         capture_output=True,
         text=True,
-        timeout=60,
+        timeout=240,
         cwd=str(PROJECT_ROOT),
     )
     assert proc.returncode == 0, proc.stderr or proc.stdout

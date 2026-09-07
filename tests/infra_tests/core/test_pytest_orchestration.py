@@ -15,6 +15,7 @@ import pytest
 
 from infrastructure.core.pytest_orchestration import (
     DEFAULT_TEST_PROFILE,
+    ENV_DISCOVERY_PREFLIGHT,
     ENV_XDIST_WORKERS,
     PIPELINE_SMOKE_INFRA_TEST_PATHS,
     TEST_PROFILE_NAMES,
@@ -22,11 +23,14 @@ from infrastructure.core.pytest_orchestration import (
     build_project_pytest_command,
     build_profile_marker_expression,
     build_union_pytest_command,
+    discovery_preflight_enabled,
     enforce_project_suite_guards,
     log_discovered_tests,
     parse_discovery_count,
+    parse_test_summary_count,
     parse_project_workers,
     project_declared_coverage_floor,
+    project_declared_test_command,
     project_has_test_files,
     resolve_coverage_file,
     resolve_test_profile,
@@ -58,6 +62,40 @@ def test_project_declared_coverage_floor_missing_file_returns_none(tmp_path: Pat
     project = tmp_path / "projects" / "demo"
     project.mkdir(parents=True)
     assert project_declared_coverage_floor(project) is None
+
+
+def test_project_declared_test_command_is_explicit_argv(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "demo"
+    project.mkdir(parents=True)
+    (project / "pyproject.toml").write_text(
+        dedent(
+            """
+            [tool.template]
+            project_test_command = ["uv", "run", "python", "scripts/verify.py", "--strict"]
+            """
+        ).lstrip(),
+        encoding="utf-8",
+    )
+
+    assert project_declared_test_command(project) == (
+        "uv",
+        "run",
+        "python",
+        "scripts/verify.py",
+        "--strict",
+    )
+
+
+def test_project_declared_test_command_rejects_malformed_value(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "demo"
+    project.mkdir(parents=True)
+    (project / "pyproject.toml").write_text(
+        "[tool.template]\nproject_test_command = []\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="non-empty TOML array"):
+        project_declared_test_command(project)
 
 
 def test_resolve_project_cov_config_reads_run_section(tmp_path: Path) -> None:
@@ -104,6 +142,20 @@ def test_resolve_coverage_file_default_when_env_unset(monkeypatch: pytest.Monkey
 def test_test_profile_registry_names_are_stable() -> None:
     assert DEFAULT_TEST_PROFILE == "quick"
     assert TEST_PROFILE_NAMES == ("quick", "release", "exhaustive")
+
+
+def test_discovery_preflight_is_disabled_by_default() -> None:
+    assert discovery_preflight_enabled(env={}) is False
+
+
+@pytest.mark.parametrize("raw", ["1", "true", "YES", "on"])
+def test_discovery_preflight_accepts_explicit_true_values(raw: str) -> None:
+    assert discovery_preflight_enabled(env={ENV_DISCOVERY_PREFLIGHT: raw}) is True
+
+
+@pytest.mark.parametrize("raw", ["0", "false", "off", "", "unexpected"])
+def test_discovery_preflight_rejects_false_or_unknown_values(raw: str) -> None:
+    assert discovery_preflight_enabled(env={ENV_DISCOVERY_PREFLIGHT: raw}) is False
 
 
 def test_quick_profile_matches_current_default_lane() -> None:
@@ -162,6 +214,12 @@ def test_parse_discovery_count_variants() -> None:
     assert parse_discovery_count("no tests here") is None
 
 
+def test_parse_test_summary_count_sums_selected_outcomes() -> None:
+    summary = "================ 4 passed, 1 skipped, 2 xfailed in 0.42s ================"
+    assert parse_test_summary_count(summary) == 7
+    assert parse_test_summary_count("pytest output without a summary") is None
+
+
 def test_parse_project_workers_accepts_auto_serial_and_positive_ints() -> None:
     assert parse_project_workers() == 1
     assert parse_project_workers("serial") == 1
@@ -211,6 +269,7 @@ def test_validate_coverage_parallel_allows_linux_worker_count() -> None:
     validate_coverage_parallel(4, platform_name="Linux")
 
 
+@pytest.mark.slow
 def test_discovery_with_parallel_execution_command_does_not_run_tests(tmp_path: Path) -> None:
     """The count preflight must not execute a suite when xdist is enabled."""
     sentinel = tmp_path / "executed"

@@ -4,6 +4,12 @@ This index lists documentation files in the Research Project Template by categor
 
 **Project layout:** `projects/` is a **rotating** set of workspaces. The only path **guaranteed** for documentation examples is [`projects/templates/template_code_project/`](../projects/templates/template_code_project/). Authoritative current names: [`_generated/active_projects.md`](_generated/active_projects.md).
 
+## Repo status and navigation
+
+- **[START_HERE.md](../START_HERE.md)** - Agent entry point: orientation ladder, install, first pipeline run
+- **[STATUS.md](../STATUS.md)** - Per-subsystem verification ledger (single source for current state)
+- **[TO-DO.md](../TO-DO.md)** - Authoritative backlog
+
 ## Quick start by persona
 
 ### New user / content creator
@@ -104,7 +110,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
 - **[how-to-use.md](how-to-use.md)** - Signpost stub redirecting to the canonical `core/how-to-use.md`
 - **[core/literature-data-flow.md](core/literature-data-flow.md)** - Literature search and data pipeline overview
-- **[accessibility.md](accessibility.md)** - Accessibility notes for generated documentation and diagrams
+- **[accessibility.md](accessibility.md)** - Source checks, figure/alt-text contract, rendered HTML/PDF/DOCX/EPUB review, and explicit non-certification boundaries
 
 ### Quick Reference
 
@@ -171,7 +177,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[usage/style-guide.md](usage/style-guide.md)** - Equations, figures, tables
 - **[usage/image-management.md](usage/image-management.md)** - Image handling
 - **[usage/visualization-guide.md](usage/visualization-guide.md)** - Publication-quality figures
-- **[usage/output-formats.md](usage/output-formats.md)** - Per-format render toggles (PDF, HTML, slides, DOCX, EPUB)
+- **[usage/output-formats.md](usage/output-formats.md)** - Per-format render toggles plus the accessible presentation profile, paired-output contract, and failure semantics
 
 ### Scientific Computing
 
@@ -196,17 +202,18 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[development/code-review-checklist.md](development/code-review-checklist.md)** - Eight-criterion review checklist (clarity, composability, functionality/SSOT, testability, validation, documentation, conventions, reproducibility)
 - **[development/optional-dependencies.md](development/optional-dependencies.md)** - Optional dependency + capability matrix (which extras unlock which features)
 - **[maintenance/README.md](maintenance/README.md)** - Maintenance hub index
-- **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (required `working/` + `archive/`, optional legacy `active/`, `published/`, `other/`) and symlink sync into `projects/`
+- **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (required `working/` + `archive/`, optional legacy `active/`) and symlink sync into `projects/`
 - **[maintenance/toolchain-migration.md](maintenance/toolchain-migration.md)** - Toolchain migration notes
 - **[maintenance/regression-testing.md](maintenance/regression-testing.md)** - Regression testing workflow
 - **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Archival providers for the opt-in archival stage (stage index: see the generated stage table)
 - **[maintenance/ci-local.md](maintenance/ci-local.md)** - Local CI reproduction (`scripts/shell/ci_local.sh`)
 - **[maintenance/release-boundary.md](maintenance/release-boundary.md)** - Root package, tag, changelog, and GitHub release boundary
-- **[maintenance/python-runtime-support.md](maintenance/python-runtime-support.md)** - Supported-Python contract (`requires-python = ">=3.10"` floor, 3.12 default, 3.13 readiness lane)
+- **[maintenance/python-runtime-support.md](maintenance/python-runtime-support.md)** - Supported-Python contract (`requires-python = ">=3.10"` floor, 3.14 default)
 - **[maintenance/stage-10-executable-bundle.md](maintenance/stage-10-executable-bundle.md)** - Executable bundle design for the opt-in bundle stage (file predates the Ebook/Metadata stage insertion; kept its original name, and stage indices live only in the generated stage table)
 - **[maintenance/local-only-template-exemplars.md](maintenance/local-only-template-exemplars.md)** - Local-only exemplar policy (`LOCAL_ONLY_TEMPLATE_NAMES`)
 - **[maintenance/doc-mega-decomposition.md](maintenance/doc-mega-decomposition.md)** - Policy for splitting oversized documentation mega-files
 - **[maintenance/review-remediation-2026-07.md](maintenance/review-remediation-2026-07.md)** - Multi-lens review remediation plan (R1–R18 items with acceptance lines)
+- **[maintenance/review-remediation-2026-08.md](maintenance/review-remediation-2026-08.md)** - Parallel-agent comprehensive review + improvement record (infra/scripts/docs + 24 exemplars, v3.7.0) — changes, evidence, incidents/lessons
 
 ---
 
@@ -379,6 +386,7 @@ subpackage.
 
 ### Prompt reference deep-dives (`prompts/*/references/`)
 
+- **[prompts/comprehensive-assessment/references/comprehensive-research-software-manuscript-review-prompt.md](prompts/comprehensive-assessment/references/comprehensive-research-software-manuscript-review-prompt.md)** - Copy-paste, audit-gated prompt for comprehensive research-software, manuscript-variable, statistical, visualization, accessibility, and scholarship remediation
 - **[prompts/code-development/references/patterns.md](prompts/code-development/references/patterns.md)** - Code-development prompt patterns
 - **[prompts/feature-addition/references/checklist.md](prompts/feature-addition/references/checklist.md)** - Feature-addition checklist
 - **[prompts/literature-synthesis/references/prompt-blocks.md](prompts/literature-synthesis/references/prompt-blocks.md)** - Literature-synthesis prompt blocks
@@ -426,9 +434,35 @@ flowchart TB
 
 ## Documentation maintenance notes
 
-- Documentation is intended to be evergreen; when behaviour changes, we may include dated notes so it’s clear which guidance is newer.
-- Each sub-directory has a `README.md` (user-facing) and `AGENTS.md` (technical guide).
-- Documentation is verified for accuracy and completeness on an ongoing basis.
+- Documentation is intended to be evergreen. Dated plans, audits, streams, and
+  historical notes must identify themselves as snapshots and link current
+  normative guidance when behavior has moved on.
+- Each governed subdirectory has a `README.md` (user-facing index) and
+  `AGENTS.md` (technical guide); the doc-pair linter owns the exact exclusions.
+- Runtime behavior comes from code, schemas, and focused tests. Volatile repo
+  facts come from [`_generated/`](_generated/README.md). Manuscript results come
+  from analysis-owned `output/data/manuscript_variables.json`, not hand-copied
+  literals. See the [docs hub evidence contract](README.md#evidence-and-freshness).
+- Claims that a gate “enforces” a property should name the executable verifier
+  and its known-wrong negative control. Advisory audits must be labeled as
+  advisory rather than promoted to release gates.
+
+Validate the complete documentation surface from the repository root:
+
+```bash
+uv run python scripts/audit/lint_docs.py --json --repo-root .
+uv run python scripts/audit/audit_documentation.py --format markdown
+uv run python scripts/audit/check_template_drift.py --strict
+uv run python scripts/docgen/counts.py --check
+uv run python scripts/docgen/exemplar_roster.py --check
+uv run python scripts/docgen/status_evidence.py --check
+uv run python scripts/docgen/api_reference.py --check
+uv run python -m infrastructure.skills check
+uv run python -m infrastructure.skills check-contracts
+```
+
+The RedTeam audit emits heuristic advisories for human disposition; the linter,
+drift checker, generator checks, and skill checks are concrete pass/fail gates.
 
 For the most up-to-date information, see the individual documentation files linked above.
 

@@ -6,13 +6,17 @@ import re
 from pathlib import Path
 from typing import Any
 
-import yaml
 
 from json_io import load_json as _load_json
 from json_io import write_json as _write_json
 
 from .integration_audit_artifacts import ALLOWED_CLAIM_LANES
-from .visualization_contract import build_auxiliary_visualization_inventory, build_style_contract
+from .visualization_contract import (
+    auxiliary_visualization_rows_match,
+    build_auxiliary_visualization_inventory,
+    build_style_contract,
+)
+from yaml_io import load_yaml
 
 VISUALIZATION_AUDIT_SCHEMA = "template_active_inference.visualization_quality_audit.v1"
 STATISTICAL_VISUALIZATION_BRIDGE_SCHEMA = "template_active_inference.statistical_visualization_bridge.v1"
@@ -72,13 +76,7 @@ def _all_sources_present(root: Path, sources: list[str]) -> bool:
 
 
 def _figure_section_bindings(root: Path) -> dict[str, list[str]]:
-    path = root / "figures.yaml"
-    if not path.is_file():
-        return {}
-    try:
-        payload = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-    except yaml.YAMLError:
-        return {}
+    payload = load_yaml(root / "figures.yaml")
     bindings: dict[str, set[str]] = {}
     for section_id, entries in (payload.get("section_figures") or {}).items():
         if not isinstance(entries, list):
@@ -130,12 +128,7 @@ def _figure_reference_sections(root: Path, figure_id: str, *, files: list[tuple[
 
 def _manifest_section_tracks(root: Path) -> dict[str, list[str]]:
     path = root / "manuscript" / "sheaf" / "manifest.yaml"
-    if not path.is_file():
-        return {}
-    try:
-        payload = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-    except yaml.YAMLError:
-        return {}
+    payload = load_yaml(path)
     section_tracks: dict[str, list[str]] = {}
     for section in payload.get("sections") or []:
         section_id = section.get("id")
@@ -572,7 +565,7 @@ def validate_visualization_quality_audit(project_root: Path) -> list[str]:
         issues.append("visualization_quality_audit.json has stale or weak style-token evidence")
     auxiliary_rows = payload.get("auxiliary_visualizations") or []
     if (
-        auxiliary_rows != expected_auxiliary_inventory["rows"]
+        not auxiliary_visualization_rows_match(auxiliary_rows, expected_auxiliary_inventory["rows"])
         or payload.get("auxiliary_visualization_count") != expected_auxiliary_inventory["auxiliary_visualization_count"]
         or payload.get("all_auxiliary_outputs_classified")
         != expected_auxiliary_inventory["all_auxiliary_outputs_classified"]

@@ -1,6 +1,6 @@
-# Test volume and coverage aren't a tradeoff
+# Per-exemplar coverage, measured live
 
-*Slide 26 of 37 — template_template pitch, medium deck — kind: `diagram`*
+*Slide 26 of 38 — template_template pitch, medium deck — kind: `diagram`*
 
 *(no body content — section/title slide)*
 

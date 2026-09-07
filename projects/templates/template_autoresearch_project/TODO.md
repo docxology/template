@@ -1,48 +1,26 @@
 # AutoResearch Project TODO
 
-> Project-level roadmap for `template_autoresearch_project` after the survey
-> integration, RedTeam hardening, and `v3.1.0` template release. Keep this
-> exemplar deterministic, offline, evidence-governed, and explicitly
-> unapproved by default.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current best move
+## Backlog operating rules
 
-Consolidate maintainability and interpretation boundaries before adding broader
-research behavior. The exemplar already demonstrates bounded ML execution,
-machine-readable artifacts, citation source ledgers, deferred review gates,
-local security evidence, and manuscript hydration. The next wave should make
-those surfaces easier to maintain and harder to misread.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
-## Current validation evidence
+## Current scope
 
-Current validation is the monorepo public-template gate set: per-project pytest
-with 90% `src/` coverage, strict template drift, prerender validation, and the
-normal analysis/render/validate/copy pipeline. This TODO records future work
-only; shipped evidence belongs in generated artifacts, reports, tests, and the
-README/AGENTS contract.
-
-Validation snapshot from the 2026-08 publication pass (measured, observed):
-
-- Project-only gate (`scripts/pipeline/stage_01_test.py --project-only`):
-  370/370 tests passed, 96.5% `src/` coverage (≥ 90% required).
-- Manuscript prerender (`infrastructure.validation.cli prerender`): clean, no
-  render-blocking pitfalls or undefined citations.
-- Analysis (stage_02): both declared scripts (`run_autoresearch_loop.py`,
-  `z_generate_manuscript_variables.py`) exited 0.
-- Render (stage_03): combined PDF generated; 0 `^! ` LaTeX errors in logs;
-  0 unresolved `??` in extracted text; 38 pages.
-- Validation (stage_04): 8/8 checks green (PDF, transmission bookends,
-  markdown, output structure, figure registry, evidence registry, project
-  design overlays, artifact manifest), with a rendered-provenance receipt.
-- Template drift (`check_template_drift.py --strict`): no drift detected.
-- Manifest: 117 attested stable outputs, including transmission figures,
-  `manuscript_composition.json`, and `output/web/favicon.ico`.
-
-Live test counts and coverage are read from
-[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned
-here. Edge-case coverage lives in `tests/test_edge_{config,ledger,loop,gates}.py`
-and manuscript-token/format helpers in `tests/test_format_helpers.py`; keep both
-green as the loop surfaces evolve.
+This exemplar remains an offline, deterministic starter for bounded ML-loop
+orchestration. The active contract is review readiness without publication
+approval, source-ledger traceability, benchmark-boundary honesty, and local
+security evidence. New adapters or review schema versions require a separately
+scoped Minor or Medium row with its own fixture and negative control.
 
 ## Invariants to keep
 
@@ -101,91 +79,25 @@ and a negative-control gate for hollow evidence, self-approval, stale source
 ledger entries, or benchmark-boundary overclaiming. Avoid mocks for core loop
 behavior; use tiny local fixtures instead.
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Preserve review/publication separation and offline deterministic execution.
-2. Keep source-ledger, evidence-overview, benchmark-boundary, and module-size
-   gates green while refactoring.
-3. Add a second task adapter only after current schemas and review packets stay
-   stable through another full public-template verification pass.
-4. Version reusable review-packet schemas before exposing downstream tooling.
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
-## Minor
+## Medium upcoming
 
-### AR-REVIEW-BOUNDARY-1 - Keep manual approval impossible to fake
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
-- **Problem:** future report or writer changes could accidentally collapse review
-  readiness into publication approval.
-- **Why it matters:** this exemplar must never imply autonomous publication
-  authority.
-- **Smallest next step:** add one focused regression whenever a new review output
-  is introduced, proving generated artifacts stay unapproved without
-  `human_review.yaml`.
-- **Acceptance:** generated review outputs remain distinct from human approval,
-  and the validator reports a blocking issue for self-approval.
-- **Out of scope:** building an external review workflow.
+## Major upcoming
 
-### AR-MODULE-WATCH-1 - Keep split modules below drift thresholds
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
-- **Problem:** future table, diagnostics, or ML additions can re-create the large
-  hubs that were just split.
-- **Why it matters:** AutoResearch is the most logic-heavy public exemplar; small
-  modules keep reviews and tests tractable.
-- **Smallest next step:** add a short TODO closure note whenever a source module
-  crosses the warning threshold and name the intended split target.
-- **Acceptance:** `uv run python scripts/audit/check_template_drift.py --strict`
-  stays clean for the exemplar.
-- **Out of scope:** splitting modules preemptively when they are still coherent.
+## Backlog status
 
-### Shipped
-
-`AR-SOURCE-FRESHNESS-1` (source-ledger freshness gate) and `AR-LOOP-PHASES-1`
-(declarative pre-extrinsic phase table) are shipped and closed. The medium rows
-`AR-REPORT-ERGONOMICS-1`, `AR-BENCHMARK-ERGONOMICS-1`, and `AR-SOURCE-LEDGER-2`
-are also implemented.
-
-## Medium
-
-No active medium rows remain from this pass. `AR-REPORT-ERGONOMICS-1`,
-`AR-BENCHMARK-ERGONOMICS-1`, and `AR-SOURCE-LEDGER-2` are implemented in the
-generated evidence overview, benchmark boundary artifact, and source-ledger
-contract tests. Keep this section empty until a new medium verifier improvement
-has a proving artifact, gate, and negative control.
-
-## Major
-
-### AR-METHOD-ADAPTER-1 - Add a second deterministic research task adapter
-
-- **Problem:** the exemplar proves one bounded ML-loop shape, but the adapter
-  boundary would be clearer with a second tiny offline task.
-- **Why it matters:** a second adapter can prove that AutoResearch orchestration
-  is not hard-coded to the current fixture.
-- **Smallest next step:** design a toy offline task with a small fixture, clear
-  baseline, deterministic candidate family, and the same approval boundaries.
-- **Acceptance:** both tasks run through the same evidence/reporting contract and
-  preserve project coverage at or above the public gate.
-- **Out of scope:** network datasets, generated-code execution, or live LLM
-  research.
-
-### AR-REVIEW-PACKET-V2 - Make review packets schema-versioned artifacts
-
-- **Problem:** review packets are machine-readable but not yet a versioned
-  compatibility surface.
-- **Why it matters:** downstream review tools need stable schemas if this
-  exemplar becomes a reusable project pattern.
-- **Smallest next step:** define `template-autoresearch-review-packet-v2` with
-  explicit compatibility notes and a migration test from the current packet.
-- **Acceptance:** v1 and v2 packets validate, and v2 remains unapproved unless
-  backed by the human-authored review file.
-- **Out of scope:** changing the default publication policy.
-
-## Suggested order
-
-1. Keep `AR-REVIEW-BOUNDARY-1` and `AR-SOURCE-FRESHNESS-1` green whenever the
-   manuscript, reports, or source ledger changes.
-2. Do not add new evidence types until the evidence overview remains stable
-   through another full project test run.
-3. Do not add benchmark-adjacent claims unless they cite
-   `output/data/benchmark_boundary.json` or a successor boundary artifact.
-4. Attempt `AR-METHOD-ADAPTER-1` only after the current module-size and review
-   boundaries stay clean through another release.
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked row is a deliberate boundary, not a skipped success.

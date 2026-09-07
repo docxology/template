@@ -30,7 +30,7 @@ renderer = RenderManager(
 renderer.render_pdf(source_file)
 renderer.render_web(source_file)        # standalone HTML
 renderer.render_slides(source_file)     # beamer (PDF) by default
-renderer.render_all(source_file)        # md → slides + web; tex → PDF
+renderer.render_all(source_file)        # archive md → Beamer + web; tex → PDF
 
 # Render combined manuscript from multiple ordered source files
 renderer.render_combined_pdf(source_files, manuscript_dir, project_name="my_project")
@@ -44,6 +44,71 @@ from infrastructure.rendering import RenderingConfig
 config = RenderingConfig()
 # Configure PDF, HTML, slides options
 ```
+
+For projection-scale slides, explicitly select the accessible profile. The
+archive profile remains the default for backwards compatibility:
+
+```python
+config = RenderingConfig(
+    slides_profile="accessible",
+    slides_max_prose_words=80,
+    slides_max_table_rows=8,
+    slides_min_figure_area_percent=70,
+    slides_title_font_pt=28,
+    slides_body_font_pt=20,
+    slides_figure_label_font_pt=16,
+    slides_reader_href="../web/index.html",
+)
+```
+
+Accessible mode splits only at Pandoc semantic block boundaries, isolates
+figures/tables/equations/code/evidence, and fails with a coded `slides.*`
+diagnostic when an indivisible block cannot fit. Treat Reveal.js and the linked
+manuscript HTML as the accessibility-enhanced reader surfaces. Beamer output is
+an untagged presentation derivative; successful rendering is not a WCAG or
+PDF/UA conformance verdict. Reveal core, theme, and plugin assets use one
+version-pinned CDN release and therefore remain network-dependent; that version
+pin is not an offline or byte-pinned guarantee. The MathJax executable path is
+separately normalized to one loader with the repository's exact SRI digest.
+
+With `slides_profile="accessible"`, the canonical `render_all()` path emits a
+transactional Beamer/Reveal pair for each eligible Markdown source. Both files
+consume one composed Pandoc AST; any pair-member failure removes both outputs.
+Use `render_accessible_slide_pair()` for the same explicit programmatic
+contract. Archive mode keeps the historical Beamer-required behavior.
+
+During the canonical post-combined refresh, accessible Beamer decks resolve
+local and cross-deck references against the current combined-manuscript AUX.
+Labeled `equation` environments receive matching explicit number tags; missing
+canonical numbers or conflicting authored tags fail rendering. Standalone
+authoring and archive mode retain their existing local numbering behavior.
+
+For dense manuscript figures, use the explicit `data-slide-manifest`
+[panel contract](README.md#source-bound-presentation-panels) to select ordered,
+source-bound presentation rasters. The producer supplies each raster digest,
+concise alternative, and measured smallest label in pixels; the final Beamer
+scale gate requires at least 16 points after embedding. Do not lower the floor
+or substitute higher DPI for a semantic reflow.
+
+For external or otherwise hostile manuscript material, also set the distinct
+renderer process boundary:
+
+```python
+config = RenderingConfig(
+    slides_profile="accessible",
+    security_profile="untrusted",
+    untrusted_temp_root="/absolute/caller-owned/temp-root",
+)
+```
+
+Only the exact security-profile names `trusted-local` and `untrusted` are
+accepted, and the untrusted profile requires its temporary root at
+configuration time. It strips inherited credentials from child environments,
+redirects child `HOME`/`TMPDIR`, confines outputs, and bounds subprocesses.
+Accessible composition separately bounds the Pandoc AST and local raster
+inspection and rejects unsupported TeX. Neither boundary is a chroot,
+container, network-denial mechanism, or complete hostile-content sandbox; see
+the [renderer boundary reference](README.md#opt-in-to-accessible-presentation-composition).
 
 ## Manuscript Discovery
 
@@ -145,8 +210,39 @@ render_docx(combined_md: Path, output_path: Path, *, bibliography: Path | None =
             reference_doc: Path | None = None, pandoc_path: str = "pandoc",
             extra_args: list[str] | None = None) -> DocxRenderResult
 render_epub(combined_md: Path, output_path: Path, *, bibliography: Path | None = None,
-            cover_image: Path | None = None, pandoc_path: str = "pandoc",
+            cover_image: Path | None = None, cover_alt: str | None = None,
+            title: str | None = None, author: str | None = None, language: str = "en",
+            pandoc_path: str = "pandoc",
             extra_args: list[str] | None = None) -> EpubRenderResult
+```
+
+EPUB rendering supplies Pandoc with a stable placeholder, preflights archive
+bounds before payload reads, then derives UUIDv5 from canonical package member
+names and uncompressed bytes with the OPF/NCX identifier fields normalized out.
+Effective bibliography, body-media, filter, metadata, and tool changes are thus
+bound when they change package content; identifier overrides are rejected. A
+valid caller `SOURCE_DATE_EPOCH` controls packaged `dcterms:modified` and hence
+participates in identity. Missing or invalid values use the fixed ZIP-safe epoch
+`1980-01-01T00:00:00Z`; ambient Git and wall-clock state are not consulted. A
+fresh temporary Pandoc target prevents stale-output acceptance, and atomic ZIP
+normalization retains the required first/uncompressed `mimetype` member, order,
+compression, comments, and permissions while fixing member timestamps.
+
+## docxplus Export (`docxplus_export.py`, `docxplus_stage.py`)
+
+Optional export: produces a conforming `.docx` and `.docxplus` document carrying the project's source tree under a signed manifest. Requires the `docxplus` optional extra (`uv sync --extra docxplus`):
+
+```python
+from pathlib import Path
+from infrastructure.rendering import export_project, is_docxplus_available, run_docxplus_export
+
+# Programmatic project export
+if is_docxplus_available():
+    res = export_project(
+        Path("projects/templates/template_code_project"),
+        Path("projects/templates/template_code_project/output/docxplus"),
+        project="template_code_project",
+    )
 ```
 
 ## Supporting Files
@@ -164,10 +260,14 @@ Only these are re-exported at package level:
 | `RenderingConfig` | Class |
 | `DocxRenderResult` | Class |
 | `EpubRenderResult` | Class |
+| `ExportResult` | Class |
 | `discover_manuscript_files` | Function |
+| `export_project` | Function |
+| `is_docxplus_available` | Function |
 | `verify_figures_exist` | Function |
 | `render_docx` | Function |
 | `render_epub` | Function |
+| `run_docxplus_export` | Function |
 | `substitute_manuscript_text` | Function |
 | `write_resolved_manuscript_tree` | Function |
 | `EXCLUDED_DOC_FILENAMES` | Constant |
