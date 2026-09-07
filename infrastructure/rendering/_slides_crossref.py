@@ -17,7 +17,9 @@ This module provides the parsing and substitution pass used by
 * :func:`resolve_cross_deck_references` rewrites ``\\ref{L}`` to the
   literal printed number (and ``\\eqref{L}`` to ``(N)``) for every label
   ``L`` that is **not** defined inside the deck's own ``.tex`` source.
-  Within-deck references are left alone so Beamer numbers them natively;
+  Within-deck references are left alone by default. Canonical accessible
+  refreshes resolve them from the same AUX and bind displayed, labeled
+  ``equation`` environments to that number with an explicit amsmath tag;
   labels absent from the aux map are left untouched and reported back to
   the caller. Direct standalone renders remain fail-open, while the canonical
   post-combined refresh rejects unresolved non-section labels in strict mode.
@@ -37,6 +39,7 @@ import re
 from collections.abc import Callable
 from pathlib import Path
 
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -268,3 +271,48 @@ def resolve_cross_deck_references(
 
     updated = transform_tex_prose(tex_content, _resolve_segment)
     return updated, replaced, sorted(unresolved)
+
+
+def bind_displayed_equation_numbers(tex_content: str, label_numbers: dict[str, str]) -> str:
+    """Bind labeled single-number equations to the canonical manuscript AUX.
+
+    Strict accessible decks resolve prose references against the combined PDF.
+    Their displayed equations must use the same numbers instead of restarting
+    at one in each standalone Beamer build. Only numbered ``equation``
+    environments are transformed; unnumbered mathematics remains unchanged.
+    Literal examples and comments are excluded without losing source offsets.
+    Missing or conflicting labels and authored tags fail closed.
+    """
+    masked = list(tex_content)
+    for start, end in _tex_literal_ranges(tex_content):
+        masked[start:end] = " " * (end - start)
+    prose = "".join(masked)
+    equation_re = re.compile(r"\\begin\{equation\}(?P<body>.*?)\\end\{equation\}", re.DOTALL)
+    tag_re = re.compile(r"\\tag(?P<star>\*)?\{(?P<number>[^{}]*)\}")
+    insertions: list[tuple[int, str]] = []
+    for equation in equation_re.finditer(prose):
+        body = equation.group("body")
+        labels = _LABEL_RE.findall(body)
+        if not labels:
+            continue
+        numbers = {label_numbers.get(label) for label in labels}
+        if len(numbers) != 1 or None in numbers:
+            raise RenderingError(
+                "Current combined-manuscript AUX cannot bind displayed slide equation",
+                context={"equation_labels": labels},
+            )
+        number = next(iter(numbers))
+        if number is None or not _SAFE_NUMBER_RE.fullmatch(number):
+            raise RenderingError("Unsafe canonical slide equation number", context={"equation_labels": labels})
+        tags = list(tag_re.finditer(body))
+        if tags:
+            if len(tags) != 1 or tags[0].group("number") != number:
+                raise RenderingError(
+                    "Authored slide equation tag conflicts with canonical manuscript numbering",
+                    context={"equation_labels": labels},
+                )
+            continue
+        insertions.append((equation.start("body"), rf"\tag{{{number}}}"))
+    for position, text in reversed(insertions):
+        tex_content = tex_content[:position] + text + tex_content[position:]
+    return tex_content
