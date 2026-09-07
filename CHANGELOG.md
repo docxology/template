@@ -9,6 +9,14 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Branch protection and backlog closure (2026-09-06)
+
+- Branch protection is configured on ``main``: the static ``CI Gate`` check is
+  required, force-pushes and deletions are blocked, and admins are included;
+  no review requirement (solo maintainer). Evidence recorded in
+  ``docs/audit/BACKLOG-CLOSURE-2026-09-06.md``; ``SECURITY-OWNERSHIP-1``
+  closed with the live platform state as its receipt.
+
 ### Archival tracker refresh and credential-free status checks (2026-09-06)
 
 - ``SoftwareHeritageProvider.check_status`` (plus
