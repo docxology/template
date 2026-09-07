@@ -310,6 +310,7 @@ def write_public_matrix_receipt(
     specs: Sequence[Any],
     results: Sequence[Any],
     output_digests_before: dict[str, str],
+    declared_output_relpaths_by_project: Mapping[str, frozenset[str]] | None = None,
     profile: str,
     marker_expr: str | None,
     project_workers: str | int | None,
@@ -326,6 +327,8 @@ def write_public_matrix_receipt(
     if receipt_path is None:
         return overall_exit
 
+    declared_outputs = declared_output_relpaths_by_project or {}
+
     lane_context: list[tuple[Any, Any, float | None]] = []
     for result in results:
         spec = next(s for s in specs if s.index == result.index)
@@ -335,10 +338,18 @@ def write_public_matrix_receipt(
     output_isolation: dict[int, bool] = {}
     for spec in specs:
         before = output_digests_before[spec.project_name]
-        output_isolation[spec.index] = before == output_tree_digest(spec.project_root)
+        # The recorded digest stays the full-tree identity; the *comparison*
+        # ignores the project's declared output-artifact set so a legitimate
+        # in-lane regeneration of those files cannot fail an all-green matrix.
+        after = output_tree_digest(
+            spec.project_root,
+            exclude=declared_outputs.get(spec.project_name, frozenset()),
+        )
+        output_isolation[spec.index] = before == after
         if not output_isolation[spec.index]:
             logger.error(
-                "Project '%s' changed its output/ tree during the public-matrix run",
+                "Project '%s' changed its output/ tree outside its declared "
+                "output artifacts during the public-matrix run",
                 spec.project_name,
             )
             overall_exit = 1
