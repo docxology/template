@@ -52,7 +52,7 @@ flowchart TB
 ### CI Pipeline (`workflows/ci.yml`)
 
 **Triggers:** push to `main`, pull requests targeting `main`, weekly scheduled run (Sunday midnight UTC), manual **`workflow_dispatch`** (no inputs).
-**Concurrency:** Running builds for the same ref are cancelled when a new commit arrives.
+**Concurrency:** Superseded PR runs are cancelled by PR ref. Main pushes, scheduled runs, and manual runs each retain a unique run group so later commits cannot cancel exact-commit verification.
 
 **Pipeline jobs** (job ids in `ci.yml`; display names differ — use `name:` for branch protection):
 

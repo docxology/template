@@ -34,7 +34,7 @@ flowchart LR
 | `schedule` | Weekly Sunday midnight UTC (CVE catch-up) |
 | `workflow_dispatch` | Manual trigger (no inputs) |
 
-**Concurrency:** `cancel-in-progress: true` — stale runs are cancelled automatically when a new commit is pushed.
+**Concurrency:** PR runs share a group by PR ref and cancel superseded runs. Push, scheduled, and manual runs use their unique `github.run_id` and do not cancel other runs, preserving exact-commit post-merge evidence while `main` advances. GitHub runner availability still bounds job execution; this policy does not guarantee completion or permit a cancelled run to count as green. Historical reruns retain their original workflow and concurrency group: avoid running two old-policy main workflows concurrently during exact-commit certification. The first new-policy PR run also has a different group from any pre-policy run of that PR.
 
 **Global env:** `UV_FROZEN=true`, `MPLBACKEND=Agg` (non-interactive matplotlib backend).
 
