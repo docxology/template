@@ -652,7 +652,11 @@ unsafe paths, malformed or mismatched identifiers, and then adds a contextual
 link to the source-generated Markdown table. This makes the numerical fallback
 discoverable without copying values into rendering code. In manuscript HTML,
 wide tables are wrapped in labelled, keyboard-focusable scroll regions; code
-and displayed mathematics retain their own scroll regions. The page body uses
+wraps and displayed mathematics uses MathJax line breaking. The shared MathJax
+configuration recalculates container metrics after viewport-width changes,
+including zoom after the first render, and serializes asynchronous reflows.
+Browser checks must await initial typesetting, pending reflow, fonts, and images
+before measuring geometry. The page body uses
 no horizontal scroll at reflow zoom, and every full-size figure link is named
 from its numbered caption or concise alternative.
 
