@@ -15,8 +15,10 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: true
+  # Preserve completed-SHA evidence even while other main commits arrive.
+  # Only superseded runs of the same pull request cancel each other.
+  group: ci-${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   UV_FROZEN: "true"
