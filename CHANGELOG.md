@@ -29,6 +29,25 @@ not to the contents of any specific workspace.
   output mutation still fails the matrix) is preserved, and a companion test
   proves a declared-artifact regeneration stays green.
 
+### Testing-cluster re-home and test-module splits (2026-09-07)
+
+- ``CORE-TESTING-REHOME-1`` closed: the 11 testing-cluster modules (~2.9k
+  lines) moved from the flat ``infrastructure/core/`` top level into
+  ``infrastructure/core/testing/`` (README+AGENTS shipped). Old module paths
+  remain as explicit re-export shims — import parity verified for every
+  externally-imported name, with the five externally-consumed privates pinned
+  via ``__all__``. ``determinism.py`` and ``script_discovery.py`` stay at the
+  top level (general utilities, not test machinery).
+- ``TEST-MODULE-SPLITS-1`` closed: the eight >800-line test modules split
+  along their section banners into 62 per-area files (+9204/-8570). Collection
+  parity verified exactly: 10758 collected / 11013 total / 255 deselected
+  before and after, every test id preserved verbatim; shared helpers moved to
+  per-directory ``_helpers`` modules.
+- ``RENDERING-LAYERING-1`` phase 1 in the same wave: the transmission family
+  re-home (below) plus the new ``tests/infra_tests/rendering/test_layering.py``
+  import-lint guard, which fails on any new rendering -> publishing/reporting
+  edge and allowlists the two tracked pre-existing metadata edges.
+
 ### Rendering layering: transmission family re-home (2026-09-07)
 
 - ``RENDERING-LAYERING-1`` phase 1: the five ``transmission_*`` modules
