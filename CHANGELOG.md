@@ -9,6 +9,58 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Public-matrix output isolation honors declared artifacts (2026-09-07)
+
+- Root cause of the deterministic fresh-clone rehearsal exit 1
+  (``REHEARSAL-ANALYSIS-EXIT-1``): every public exemplar's declared Stage-01
+  verifier legitimately regenerates its *manifest-declared* output artifacts
+  during the matrix run (e.g. ``artifact_provenance.json`` re-pins
+  ``source_commit`` to the current HEAD; ``test_results.*`` embed the run
+  outcome), so ``output_digests_before != after`` flipped the receipt's
+  output-isolation check and forced exit 1 behind an all-green receipt on
+  every fresh clone at a newer commit.
+- ``output_tree_digest`` now accepts an exclusion set, and
+  ``run_per_project_pytest``/``write_public_matrix_receipt`` exclude each
+  project's ``output/reports/artifact_manifest.json``-declared paths from the
+  isolation *comparison* (the recorded per-lane digest stays the full-tree
+  identity). A missing or malformed manifest yields an empty set, keeping the
+  previous fail-closed strictness; the negative control
+  (``test_receipt_rejects_test_generated_output_drift`` — an *undeclared*
+  output mutation still fails the matrix) is preserved, and a companion test
+  proves a declared-artifact regeneration stays green.
+
+### Shared combined-edition pandoc argument builder (2026-09-07)
+
+- ``RENDERING-PANDOC-ARGS-1`` closed: the combined-pandoc-args assembly
+  (resource-path triple, formalism filter, pandoc-crossref probe,
+  citeproc+bibliography args) that was duplicated across the
+  ``_combined_exports.py`` DOCX/EPUB lanes and ``ebook_stage.py`` is now one
+  builder, ``infrastructure/rendering/_pandoc_args.combined_pandoc_args``, so
+  the resource-path contract cannot drift per edition. New wiring tests prove
+  each lane carries all three resource-path legs and the contract ordering
+  (formalism before crossref before citeproc).
+
+### Backlog reconciliation (2026-09-07)
+
+- Survey re-verified every active row against the tree:
+  ``TEST-ISOLATION-SYSPATH-1`` (393 ``from src.``/``import src`` sites across
+  exemplar trees, all 24 ``tests/__init__.py`` present, 42 regression files
+  carrying ``_PKG_ALIAS`` loaders), ``CORE-TESTING-REHOME-1`` (the flat
+  ``infrastructure/core/`` testing cluster is still at the top level),
+  ``TEST-MODULE-SPLITS-1`` (all eight modules still exceed 800 lines; the
+  row's counts were refreshed: test_counts_doc 1,509, test_slides_renderer_core
+  1,219, test_artifact_manifest_semantics 994), and ``RENDERING-LAYERING-1``
+  (seven ``rendering → publishing`` transmission imports remain).
+  ``CLEAN-CHECKOUT-MAJ-1`` and ``SECURITY-PRIVATE-PROMOTION-1`` remain
+  blocked-external. No new MINOR or MAJOR cross-cutting items surfaced.
+- Newly discovered and added as ``STORYBOOK-QUICK-FLOOR-1`` (Medium): the
+  exemplar's declared 90% coverage floor only holds with its 7 slow-marked
+  rendering tests (93.91% with ``--include-slow`` vs 88.73% under the quick
+  profile), so the all-projects receipt lane fails storybook's gate while CI's
+  ``--include-slow`` lanes stay green. A local probe with the exact rehearsal
+  flags confirmed the isolation fix eliminates the all-green-then-exit-1 flip
+  (24/24 lanes isolation-ok) and surfaced this second, independent blocker.
+
 ### Branch protection and backlog closure (2026-09-06)
 
 - Branch protection is configured on ``main``: the static ``CI Gate`` check is
