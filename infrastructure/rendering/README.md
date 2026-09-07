@@ -583,6 +583,14 @@ the Stage 04/05 enabled-output gates require the complete pair in accessible
 mode. The default archive profile retains its historical required-Beamer and
 optional-Reveal behavior.
 
+The post-combined accessible refresh uses the current manuscript AUX for both
+local and cross-deck references. Labeled single-number `equation` environments
+also receive that canonical number as an explicit amsmath tag, preventing a
+standalone deck from printing `(1)` next to prose that refers to `(7)`. Missing
+canonical equation labels or conflicting authored tags fail the refresh.
+Unnumbered mathematics, standalone authoring, and archive numbering retain
+their existing behavior.
+
 Reveal postprocessing replaces every input viewport declaration with one
 zoom-permitting viewport, contains document-level horizontal overflow, and
 reserves nonoverlapping fixed lanes for the skip link, companion navigation,

@@ -16,6 +16,7 @@ real aux-format lines (samples mirror an actual
 from __future__ import annotations
 
 import subprocess
+import shutil
 from pathlib import Path
 
 import pytest
@@ -23,6 +24,7 @@ import pytest
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._slides_crossref import (
     COMBINED_AUX_BASENAME,
+    bind_displayed_equation_numbers,
     parse_aux_label_numbers,
     resolve_cross_deck_references,
 )
@@ -46,6 +48,95 @@ _REAL_AUX = "\n".join(
         r"\newlabel{sec:appendix-proofs}{{A.2}{41}{Proofs}{appendix.A.2}{}}",
     ]
 )
+
+
+def test_displayed_equation_numbers_preserve_literals_and_nested_math():
+    literal = (
+        "% \\begin{equation}\\label{eq:comment}x=0\\end{equation}\n"
+        r"\begin{verbatim}\begin{equation}\label{eq:code}x=0\end{equation}\end{verbatim}"
+        r"\verb|\begin{equation}\label{eq:inline}x=0\end{equation}|"
+    )
+    equation = (
+        "\\begin{equation}% retained comment\n"
+        r"\protect\phantomsection\label{eq:model}{\begin{aligned}x&=1\\y&=2\end{aligned}}"
+        r"\end{equation}"
+    )
+    result = bind_displayed_equation_numbers(literal + equation, {"eq:model": "A.7"})
+    assert result == literal + equation.replace(r"\begin{equation}", r"\begin{equation}\tag{A.7}", 1)
+    assert bind_displayed_equation_numbers(result, {"eq:model": "A.7"}) == result
+
+
+@pytest.mark.parametrize(
+    "body,numbers",
+    [
+        (r"\label{eq:missing}x=1", {}),
+        (r"\label{eq:a}\label{eq:b}x=1", {"eq:a": "2", "eq:b": "3"}),
+        (r"\label{eq:a}\tag{1}x=1", {"eq:a": "2"}),
+        (r"\label{eq:a}x=1", {"eq:a": r"\unsafe"}),
+    ],
+)
+def test_displayed_equation_numbers_reject_missing_or_conflicting_authority(body, numbers):
+    with pytest.raises(RenderingError):
+        bind_displayed_equation_numbers(r"\begin{equation}" + body + r"\end{equation}", numbers)
+
+
+def test_displayed_equation_numbers_leave_unnumbered_and_unlabeled_math():
+    tex = r"\begin{equation*}\label{eq:a}x=1\end{equation*}\begin{equation}y=2\end{equation}"
+    assert bind_displayed_equation_numbers(tex, {}) == tex
+
+
+def test_displayed_equation_numbers_preserve_matching_authored_tag_style():
+    tex = r"\begin{equation}\label{eq:a}\tag*{A.7}x=1\end{equation}"
+    assert bind_displayed_equation_numbers(tex, {"eq:a": "A.7"}) == tex
+
+
+@pytest.mark.parametrize("profile,strict", [("archive", True), ("accessible", False)])
+def test_noncanonical_render_keeps_native_equation_numbering(tmp_path, profile, strict):
+    pdf_dir = tmp_path / "pdf"
+    pdf_dir.mkdir()
+    (pdf_dir / COMBINED_AUX_BASENAME).write_text(r"\newlabel{eq:a}{{7}{1}}", encoding="utf-8")
+    renderer = SlidesRenderer(RenderingConfig(pdf_dir=str(pdf_dir), slides_profile=profile))
+    tex = r"\begin{equation}\label{eq:a}x=1\end{equation} See \eqref{eq:a}."
+    assert renderer._resolve_cross_deck_refs(tex, strict_cross_deck_refs=strict) == tex
+
+
+@pytest.mark.slow
+def test_canonical_equation_tags_match_references_in_real_beamer_pdf(tmp_path):
+    """A standalone deck must not print (1) while its prose points to (7)."""
+    if shutil.which("xelatex") is None or shutil.which("pdftotext") is None:
+        pytest.skip("xelatex and pdftotext are required for the real PDF regression")
+    tex = (
+        r"\documentclass{beamer}\usepackage{amsmath}\begin{document}"
+        r"\begin{frame}{Canonical numbering}"
+        r"\begin{equation}\label{eq:first}x=1\end{equation}"
+        r"See first \eqref{eq:first}."
+        r"\begin{equation}\label{eq:second}y=2\end{equation}"
+        r"See second \eqref{eq:second}.\end{frame}\end{document}"
+    )
+    numbers = {"eq:first": "7", "eq:second": "12"}
+    tex = bind_displayed_equation_numbers(tex, numbers)
+    tex, _, unresolved = resolve_cross_deck_references(tex, numbers, resolve_local=True)
+    assert not unresolved
+    path = tmp_path / "canonical.tex"
+    path.write_text(tex, encoding="utf-8")
+    subprocess.run(
+        ["xelatex", "-halt-on-error", "-interaction=nonstopmode", path.name],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    result = subprocess.run(
+        ["pdftotext", str(path.with_suffix(".pdf")), "-"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.stdout.count("(7)") == 2
+    assert result.stdout.count("(12)") == 2
+    assert "(1)" not in result.stdout and "(2)" not in result.stdout
 
 
 class TestParseAuxLabelNumbers:
@@ -334,6 +425,7 @@ class TestSlidesRendererHook:
 
         assert r"\label{eq:model}" in updated
         assert "See Equation (7)." in updated
+        assert r"\tag{7}" in updated
         assert r"\eqref{eq:model}" not in updated
 
     def test_accessible_strict_profile_rejects_section_missing_from_aux(self, tmp_path):

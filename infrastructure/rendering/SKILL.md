@@ -77,6 +77,12 @@ consume one composed Pandoc AST; any pair-member failure removes both outputs.
 Use `render_accessible_slide_pair()` for the same explicit programmatic
 contract. Archive mode keeps the historical Beamer-required behavior.
 
+During the canonical post-combined refresh, accessible Beamer decks resolve
+local and cross-deck references against the current combined-manuscript AUX.
+Labeled `equation` environments receive matching explicit number tags; missing
+canonical numbers or conflicting authored tags fail rendering. Standalone
+authoring and archive mode retain their existing local numbering behavior.
+
 For dense manuscript figures, use the explicit `data-slide-manifest`
 [panel contract](README.md#source-bound-presentation-panels) to select ordered,
 source-bound presentation rasters. The producer supplies each raster digest,

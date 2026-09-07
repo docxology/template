@@ -36,6 +36,7 @@ from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._slides_crossref import (
     COMBINED_AUX_BASENAME,
+    bind_displayed_equation_numbers,
     parse_aux_label_numbers,
     resolve_cross_deck_references,
     transform_tex_prose,
@@ -666,7 +667,7 @@ class SlidesRenderer:
         (``{pdf_dir}/_combined_manuscript.aux``); this pre-pass replaces
         each cross-deck reference with the literal number that aux
         recorded — the same number the combined PDF prints. Within-deck
-        references are untouched (Beamer numbers them natively), labels
+        references are untouched by default (Beamer numbers them natively), labels
         missing from the aux are left as-is and noted in the render log,
         and a missing aux (e.g. first-ever render, before any combined
         build) skips only the numeric lookup. In the accessible profile,
@@ -677,10 +678,14 @@ class SlidesRenderer:
         The default standalone pass remains fail-open. The producer-ordered
         refresh sets ``strict_cross_deck_refs`` and, in accessible mode, fails
         when any reference (including a local section reference) is absent
-        from the current combined-manuscript AUX.
+        from the current combined-manuscript AUX. That strict accessible pass
+        also tags labeled single-number equations with their canonical numbers
+        so the visible equation and its prose references agree.
         """
         aux_path = Path(self.config.pdf_dir) / COMBINED_AUX_BASENAME
         label_numbers = parse_aux_label_numbers(aux_path)
+        if self.config.slides_profile == "accessible" and strict_cross_deck_refs:
+            tex_content = bind_displayed_equation_numbers(tex_content, label_numbers)
         missing_accessible_sections: set[str] = set()
         accessible_section_replacements = 0
         if self.config.slides_profile == "accessible":
