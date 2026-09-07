@@ -54,7 +54,10 @@ from infrastructure.core.logging.utils import (
 from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
 from infrastructure.core.public_matrix_receipt import write_public_matrix_receipt
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
-from infrastructure.core.test_runner_outputs import output_tree_digest as _output_tree_digest
+from infrastructure.core.test_runner_outputs import (
+    declared_output_relpaths as _declared_output_relpaths,
+    output_tree_digest as _output_tree_digest,
+)
 from infrastructure.core.pytest_orchestration import (
     DEFAULT_TEST_PROFILE,
     TestProfileName,
@@ -480,8 +483,22 @@ def run_per_project_pytest(
         )
 
     output_digests_before: dict[str, str] = {}
+    declared_outputs_by_project: dict[str, frozenset[str]] = {}
     if receipt_path is not None:
-        output_digests_before = {spec.project_name: _output_tree_digest(spec.project_root) for spec in specs}
+        # Isolation compares everything *outside* the project's declared
+        # output-artifact set: the manifest-declared files are the project's
+        # own regeneration surface (their declared Stage-01 verifier refreshes
+        # e.g. artifact_provenance.json's commit pin on every run), so a
+        # fresh-clone lane must not fail isolation for refreshing them.
+        declared_outputs_by_project = {
+            spec.project_name: _declared_output_relpaths(spec.project_root) for spec in specs
+        }
+        output_digests_before = {
+            spec.project_name: _output_tree_digest(
+                spec.project_root, exclude=declared_outputs_by_project[spec.project_name]
+            )
+            for spec in specs
+        }
 
     matrix_started = monotonic()
     results = _execute_project_pytest_matrix(
@@ -540,6 +557,7 @@ def run_per_project_pytest(
         specs=specs,
         results=results,
         output_digests_before=output_digests_before,
+        declared_output_relpaths_by_project=declared_outputs_by_project,
         profile=profile,
         marker_expr=resolved_markers,
         project_workers=project_workers,

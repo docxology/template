@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 from pathlib import Path
 
@@ -10,6 +11,41 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 
 logger = get_logger(__name__)
+
+
+def declared_output_relpaths(project_root: Path) -> frozenset[str]:
+    """Return the project-relative paths the artifact manifest declares as outputs.
+
+    A project's ``output/reports/artifact_manifest.json`` is the authoritative
+    declaration of which output files its own pipeline (including its declared
+    Stage-01 test/verifier stage) regenerates. Lane isolation must not treat a
+    regeneration of those declared artifacts as a leak: the exemplar contract
+    explicitly refreshes them per run (e.g. ``artifact_provenance.json`` pins
+    the producing commit, ``test_results`` embed the run outcome), so a fresh
+    clone at a newer commit would otherwise deterministically flip the digest
+    and fail an all-green matrix.
+
+    This reader is deliberately tolerant: a missing or malformed manifest
+    yields an empty set, which keeps full strict isolation (fail closed). The
+    authoritative manifest model and validation live in
+    ``infrastructure.validation.output.artifacts``; core must not import
+    upward, so this mirrors only the ``entries[].path`` projection.
+    """
+    manifest_path = project_root / "output" / "reports" / "artifact_manifest.json"
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return frozenset()
+    if not isinstance(payload, dict):
+        return frozenset()
+    entries = payload.get("entries")
+    if not isinstance(entries, list):
+        return frozenset()
+    paths: set[str] = set()
+    for entry in entries:
+        if isinstance(entry, dict) and isinstance(entry.get("path"), str):
+            paths.add(entry["path"])
+    return frozenset(paths)
 
 
 def _fallback_output_files(output_dir: Path) -> list[Path]:
@@ -91,13 +127,25 @@ def _visible_output_files(project_root: Path) -> list[Path]:
     return sorted(files, key=lambda path: path.as_posix())
 
 
-def output_tree_digest(project_root: Path) -> str:
+def output_tree_digest(project_root: Path, *, exclude: frozenset[str] | None = None) -> str:
     """Return a content digest of visible files in a project's ``output/`` tree.
 
     Git-ignored caches, logs, and build intermediates are excluded to match
     the repository's clean-status contract. A missing output tree uses the
     SHA-256 digest of the empty tree so every executed lane carries an explicit
     output-isolation identity.
+
+    Args:
+        project_root: Root of the project whose ``output/`` tree is digested.
+        exclude: Optional project-relative paths (as declared by the project's
+            artifact manifest) to skip. Declared output artifacts are the
+            project's own regeneration surface; lane isolation compares trees
+            *outside* that declared set so a legitimate in-lane regeneration
+            cannot fail an otherwise-green matrix, while any undeclared
+            mutation still changes the digest.
+
+    Returns:
+        Hex SHA-256 over the sorted, filtered visible-file listing.
     """
     output_dir = project_root / "output"
     if not output_dir.is_dir():
@@ -105,6 +153,8 @@ def output_tree_digest(project_root: Path) -> str:
     digest = hashlib.sha256()
     for path in _visible_output_files(project_root):
         relative = path.relative_to(project_root)
+        if exclude is not None and relative.as_posix() in exclude:
+            continue
         digest.update(relative.as_posix().encode("utf-8"))
         digest.update(b"\0")
         if path.is_symlink():
@@ -116,4 +166,4 @@ def output_tree_digest(project_root: Path) -> str:
     return digest.hexdigest()
 
 
-__all__ = ["output_tree_digest"]
+__all__ = ["declared_output_relpaths", "output_tree_digest"]
