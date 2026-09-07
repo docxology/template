@@ -29,6 +29,17 @@ not to the contents of any specific workspace.
   output mutation still fails the matrix) is preserved, and a companion test
   proves a declared-artifact regeneration stays green.
 
+### Storybook quick-profile floor resolved (2026-09-07)
+
+- ``STORYBOOK-QUICK-FLOOR-1`` closed by unmarking the seven ``@pytest.mark.slow``
+  rendering tests in ``template_storybook/tests/test_rendering.py`` (16.6s of
+  real PIL rendering — not slow-tier material). The declared 90% coverage floor
+  now holds in every profile: the quick-profile lane runs the full suite and
+  exits 0 (verified via ``stage_01_test.py --project
+  templates/template_storybook --project-only --profile quick``), and the
+  ``--include-slow`` lane is unchanged. The unused ``slow`` marker registration
+  was removed from the exemplar's pytest config.
+
 ### Shared combined-edition pandoc argument builder (2026-09-07)
 
 - ``RENDERING-PANDOC-ARGS-1`` closed: the combined-pandoc-args assembly
