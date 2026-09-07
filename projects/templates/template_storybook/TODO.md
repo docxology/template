@@ -50,19 +50,17 @@ keeps a capability blocked rather than silently promoting it.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-No active rows are currently scoped at this size.
+| `BOOK-TESTS-1` | open | Minor | none | tests/ has 3 modules for 6 src modules; add direct unit tests for characters.py, text_layout.py and models.py (rendering is already exercised by the unmarked rendering suite). | tests/test_characters.py + tests/test_text_layout.py | `uv run pytest tests -q --cov=src --cov-fail-under=90` | a character palette edit that breaks text-contrast invariants must fail the new unit tests |
 
 ## Medium upcoming
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-No active rows are currently scoped at this size.
 
 ## Major upcoming
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-No active rows are currently scoped at this size.
 
 ## Backlog status
 
