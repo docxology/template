@@ -25,6 +25,8 @@ from infrastructure.rendering.config import RenderingConfig
 
 pytestmark = pytest.mark.timeout(120)
 
+_CROSSREF_STUB = "/usr/bin/pandoc-crossref"
+
 
 def _resource_paths(args: list[str]) -> list[str]:
     """Return the values of every ``--resource-path=`` argument, in order."""
@@ -59,10 +61,13 @@ def test_combined_pandoc_args_emits_contract_order(tmp_path: Path) -> None:
     bib.parent.mkdir(parents=True)
     bib.write_text("@article{test, title={Test}}\n", encoding="utf-8")
 
+    # Pin the crossref-present branch: CI installs pandoc but not
+    # pandoc-crossref, so the real resolver is environment-dependent.
     args = combined_pandoc_args(
         [manuscript_dir, figures_dir, figures_dir.parent],
         [bib],
         edition="DOCX",
+        which=lambda _name: _CROSSREF_STUB,
     )
 
     assert _resource_paths(args) == [str(manuscript_dir), str(figures_dir), str(figures_dir.parent)]
@@ -75,10 +80,11 @@ def test_combined_pandoc_args_emits_contract_order(tmp_path: Path) -> None:
 
 def test_combined_pandoc_args_without_bibliographies_omits_citeproc(tmp_path: Path) -> None:
     """No resolved bibliography means no citeproc machinery is appended."""
-    args = combined_pandoc_args([tmp_path], [], edition="ebook")
+    args = combined_pandoc_args([tmp_path], [], edition="ebook", which=lambda _name: _CROSSREF_STUB)
 
     assert "--citeproc" not in args
     assert not [arg for arg in args if arg.startswith("--bibliography=")]
+    assert "--filter" in args
 
 
 def test_combined_pandoc_args_warns_by_edition_without_crossref(
