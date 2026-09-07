@@ -227,9 +227,9 @@ def render_combined_docx(
             extra_args=extra_args,
         )
         logger.info(f"✅ Generated combined DOCX: {result.output_path.name} ({result.size_bytes / 1024:.1f} KB)")
-    except RenderingError as re:
-        logger.warning(f"⚠️  Rendering error generating combined DOCX: {re.message}")
-        reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
+    except RenderingError as rendering_exc:
+        logger.warning(f"⚠️  Rendering error generating combined DOCX: {rendering_exc.message}")
+        reporter.record(rendering_exc.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
     except (OSError, subprocess.SubprocessError, ValueError, FileNotFoundError) as e:
         logger.warning(f"⚠️  Unexpected error generating combined DOCX: {e}")
 
@@ -331,9 +331,9 @@ def render_combined_epub(
             extra_args=extra_args,
         )
         logger.info(f"✅ Generated combined EPUB: {result.output_path.name} ({result.size_bytes / 1024:.1f} KB)")
-    except RenderingError as re:
-        logger.warning(f"⚠️  Rendering error generating combined EPUB: {re.message}")
-        reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
+    except RenderingError as rendering_exc:
+        logger.warning(f"⚠️  Rendering error generating combined EPUB: {rendering_exc.message}")
+        reporter.record(rendering_exc.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
     except (OSError, subprocess.SubprocessError, ValueError, FileNotFoundError) as e:
         logger.warning(f"⚠️  Unexpected error generating combined EPUB: {e}")
 
@@ -359,9 +359,9 @@ def render_combined_outputs(
             combined_pdf = manager.render_combined_pdf(combined_source_files(md_files), manuscript_dir, project_name)
             logger.info(f"✅ Generated combined PDF: {combined_pdf.name}")
             combined_pdf_succeeded = True
-        except RenderingError as re:
-            logger.error(f"❌ Rendering error generating combined PDF: {re.message}")
-            reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
+        except RenderingError as rendering_exc:
+            logger.error(f"❌ Rendering error generating combined PDF: {rendering_exc.message}")
+            reporter.record(rendering_exc.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
             if rendered_count > 0:
                 logger.info(f"ℹ️  Note: {rendered_count} individual PDF(s) were generated despite combined PDF failure.")
         except (OSError, subprocess.SubprocessError, ValueError, TypeError) as e:
@@ -406,9 +406,9 @@ def render_combined_outputs(
         logger.info("Generating combined HTML manuscript...")
         try:
             manager.render_combined_web(combined_source_files(md_files), manuscript_dir, project_name)
-        except RenderingError as re:
-            logger.warning(f"⚠️  Rendering error generating combined HTML: {re.message}")
-            reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
+        except RenderingError as rendering_exc:
+            logger.warning(f"⚠️  Rendering error generating combined HTML: {rendering_exc.message}")
+            reporter.record(rendering_exc.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
         except (OSError, subprocess.SubprocessError, ValueError) as e:
             logger.warning(f"⚠️  Unexpected error generating combined HTML: {e}")
     else:

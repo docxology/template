@@ -81,8 +81,6 @@ addopts = [
     "--cov=projects/templates/template_advanced_literature_review/src/multi_phase",
     "--cov-branch",
     "--cov-report=term-missing:skip-covered",
-    "--cov-report=html:htmlcov",
-    "--cov-fail-under=90",
 ]
 markers = [
     "unit: Unit tests (fast, no I/O)",

@@ -37,6 +37,7 @@ markers = [
 ]
 
 [tool.coverage.run]
+source = ["src"]
 branch = true
 omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
 

@@ -7,3 +7,6 @@
 /build/
 *.egg-info/
 __pycache__/
+# Local artifacts (aligned with template_textbook convention)
+coverage_project.json
+.DS_Store

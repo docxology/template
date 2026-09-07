@@ -7,7 +7,8 @@ markdown manuscript using the infrastructure rendering module:
 3. Copies generated ebook files to output/ebook/ under the project's output
 4. Reports results with file sizes
 
-Stage 07 of the pipeline orchestration (opt-in ebook stage).
+Stage 11 of the pipeline orchestration (opt-in ebook stage; script
+``stage_11_ebook.py``).
 
 Exit codes:
     0: All requested ebook formats generated successfully

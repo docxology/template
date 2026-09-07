@@ -1,5 +1,11 @@
 """Progress reporting utilities for pipeline operations.
 
+Name-collision note: ``infrastructure.core.logging.progress`` is a
+different API (Spinner/StreamingProgress/log_progress_bar — terminal
+decoration inside the logging stack). Use THIS module for work-loop
+bars with ETA/step accounting (ProgressBar, SubStageProgress,
+LLMProgressTracker); use that one for log-line presentation.
+
 This module provides utilities for displaying progress bars, ETA calculations,
 and sub-stage progress tracking for long-running operations.
 

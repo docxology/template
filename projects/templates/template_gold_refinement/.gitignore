@@ -5,3 +5,8 @@ __pycache__/
 *.pyc
 .codegraph/
 .leann/
+# Local artifacts (aligned with template_textbook convention)
+htmlcov/
+coverage_project.json
+.DS_Store
+.mypy_cache/

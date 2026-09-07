@@ -28,6 +28,17 @@ not to the contents of any specific workspace.
   provider evidence, not external authority. Public archival submission
   (save-code-now) remains owner-authorized work.
 
+### Rehearsal diagnosability and budget (2026-09-06)
+
+- Failed rehearsal commands now record a bounded, credential-redacted output
+  tail in the receipt (digest-only receipts made hosted failures
+  undiagnosable); passing commands keep an empty tail.
+- The rehearsal plan's project matrix runs the quick profile with two
+  project workers: the serial release profile cannot fit a hosted job
+  budget (a single exemplar's release pass exceeded 60 minutes in a local
+  probe). The rehearsal proves clean-checkout integrity; CI's project
+  lanes remain the authoritative content verification.
+
 ### Test collection groundwork, CI gate, and rehearsal machinery (2026-09-06)
 
 - Root-level pytest runs now use ``--import-mode=importlib`` as groundwork for

@@ -129,3 +129,42 @@ def test_rehearsal_blocks_when_runs_produce_unequal_digests(tmp_path: Path) -> N
     assert len(passing_digests) == plan.runs
     assert receipt.validate() == []
     assert _rehearsal_exit_code(receipt) == 1
+
+
+def test_failed_command_receipt_carries_output_tail(tmp_path: Path) -> None:
+    """A failing rehearsal command records a bounded diagnostic tail for triage."""
+    from infrastructure.publishing.rehearsal import _run_command
+
+    receipt = _run_command(
+        [
+            "python",
+            "-c",
+            "import sys; print('stdout-marker'); sys.stderr.write('boom-detail-line'); sys.exit(3)",
+        ],
+        tmp_path,
+    )
+    assert receipt.status == "blocked"
+    assert receipt.exit_code == 3
+    assert "boom-detail-line" in receipt.output_tail
+    assert "stdout-marker" in receipt.output_tail
+    assert len(receipt.output_tail) <= 4000
+
+
+def test_passing_command_receipt_has_empty_output_tail(tmp_path: Path) -> None:
+    from infrastructure.publishing.rehearsal import _run_command
+
+    receipt = _run_command(["python", "-c", "print('fine')"], tmp_path)
+    assert receipt.status == "pass"
+    assert receipt.output_tail == ""
+
+
+def test_failure_tail_redacts_credential_like_output(tmp_path: Path) -> None:
+    from infrastructure.publishing.rehearsal import _run_command
+
+    receipt = _run_command(
+        ["python", "-c", "import sys; sys.stderr.write('token=supersecret123'); sys.exit(2)"],
+        tmp_path,
+    )
+    assert receipt.status == "blocked"
+    assert "supersecret123" not in receipt.output_tail
+    assert "redacted" in receipt.output_tail

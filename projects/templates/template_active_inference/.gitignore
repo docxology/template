@@ -7,3 +7,8 @@ __pycache__/
 lean/.lake/
 lean/lake-packages/
 lean/build/
+# Local artifacts (aligned with template_textbook convention)
+coverage_project.json
+.DS_Store
+.mypy_cache/
+.ruff_cache/
