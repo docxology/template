@@ -13,8 +13,8 @@ renderers without owning validation policy or project analysis.
 | Facade | `core.py`, `config.py` | `RenderManager` and rendering configuration. |
 | Security profile | `security.py` | Trusted-local and isolated untrusted subprocess options, credential-free environments, and bounded output roots. |
 | PDF pipeline | `pdf_renderer.py`, `_pdf_combined_*.py`, `_pdf_title_page.py`, `_pdf_latex_helpers.py` | Combined PDF assembly, title/publishing pages, LaTeX helpers. |
-| Format renderers | `slides_renderer.py`, `_slides_accessibility.py`, `_slides_accessibility_ast.py`, `_slides_accessibility_composition.py`, `_slides_accessibility_contracts.py`, `_slides_accessibility_tables.py`, `_slides_accessibility_text_geometry.py`, `_slides_math_header.py`, `_slides_tex_figures.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_markdown_preprocess.py`, `_web_postprocess.py`, `_web_figure_details.py`, `docx_renderer.py`, `epub_renderer.py`, `pptx_deck.py`, `slide_deck.py`, `_slide_draw.py`, `mermaid_figure.py` | Slides, opt-in semantic accessible-slide composition and fail-closed geometry, Beamer math-header and figure-path helpers, profile-aware captioned listings and archive frame splitting, HTML orchestration, web-only Markdown preprocessing (citations/theorems), deterministic HTML post-processing and structured figure-detail association, dedicated DOCX and EPUB rendering, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
-| Pandoc filters | `_pandoc_filters.py`, `formalism.lua`, `convert_latex_images.lua`, `_beamer_allowframebreaks.lua` | `_pandoc_filters.py` resolves the repo-shipped Lua filters for every writer; `formalism.lua` numbers Definition/Proposition/Theorem blocks and resolves `[@def:...]`. |
+| Format renderers | `slides_renderer.py`, `_slides_accessibility.py`, `_slides_accessibility_ast.py`, `_slides_accessibility_composition.py`, `_slides_accessibility_contracts.py`, `_slides_accessibility_figures.py`, `_slides_accessibility_image_io.py`, `_slides_accessibility_limits.py`, `_slides_presentation_variants.py`, `_slides_accessibility_tables.py`, `_slides_accessibility_text_geometry.py`, `_slides_accessibility_raw_tex.py`, `_slides_accessibility_reveal.py`, `_slides_accessibility_reveal_controls.py`, `_slides_math_header.py`, `_slides_tex_figures.py`, `_slides_tex_tables.py`, `_slides_beamer_geometry.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_markdown_preprocess.py`, `_web_postprocess.py`, `_web_figure_details.py`, `docx_renderer.py`, `epub_renderer.py`, `pptx_deck.py`, `slide_deck.py`, `_slide_draw.py`, `mermaid_figure.py` | Slides, opt-in semantic accessible-slide composition and fail-closed geometry, bounded Pandoc trees, confined local-raster inspection, figure allocation and intrinsic-raster checks, writer-specific formal-content fallback, Reveal navigation/zoom controls, Beamer math-header and figure/table safe-area helpers, rendered Beamer coordinate validation, profile-aware captioned listings and archive frame splitting, HTML orchestration, web-only Markdown preprocessing (citations/theorems), deterministic HTML post-processing and structured figure-detail association, dedicated DOCX and EPUB rendering, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
+| Pandoc filters | `_pandoc_filters.py`, `_pandoc_args.py`, `formalism.lua`, `convert_latex_images.lua`, `_beamer_allowframebreaks.lua` | `_pandoc_filters.py` resolves the repo-shipped Lua filters for every writer; `formalism.lua` numbers Definition/Proposition/Theorem blocks and resolves `[@def:...]`. `_pandoc_args.combined_pandoc_args` assembles the shared combined-edition extra args (resource-path triple, formalism filter, crossref probe, citeproc+bibliography) for the DOCX/EPUB/ebook lanes. |
 | Bibliographies | `_bibliography.py`, `_pdf_combined_bibliography.py` | Shared sorted `manuscript/*.bib` discovery, repeated/symlink-path deduplication, duplicate-key rejection, Pandoc arguments, and PDF bibliography injection. |
 | Manuscript source | `manuscript_discovery.py`, `manuscript_injection.py`, `_manuscript_source.py`, `manuscript_composition.py`, `render_cache.py` | Section ordering, substitutions, resolved manuscript trees, render-boundary composition evidence (`manuscript_composition.py`), and modular section caching (`render_cache.py`). |
 | LaTeX support | `latex_utils.py`, `latex_package_validator.py`, `preflight.py` | Compilation and package checks. |
@@ -132,17 +132,17 @@ Unsupported URI schemes fail validation even when their URL path is empty.
 - `render.slides.profile: accessible` is opt-in; `archive` remains the default
   and retains the historical renderer. Accessible mode composes both Reveal.js
   and Beamer from one Pandoc JSON AST, splits only between semantic blocks,
-  bounds prose at 80 words and displayed tables at eight body rows, allocates
-  at least 70% of a figure-led frame to the figure, and enforces native
+  bounds prose at 80 words and displayed tables at eight body rows, reserves
+  at least 70% of a figure-led frame for the figure, independently max-fits it
+  within the measured 80% one-line-title safe envelope, and enforces native
   title/body/figure-label floors of 28/20/16 points on an explicit 16:9 Beamer
   projection canvas. A source block that cannot
   satisfy those bounds fails with a stable `slides.*` diagnostic instead of
   shrinking or character-count splitting. Dense tables retain a contiguous
   whole-row excerpt when geometry permits. Before line-height pricing, ordinary
   prose tokens receive wide-glyph-aware physical-column minima at real TeX
-  whitespace/hyphen break points. Long inline code is discounted only when its
-  source serializes to the simple brace-free `texttt` body the downstream
-  `breaktt` pass rewrites; braced literal encodings stay indivisible. Overlapping
+  whitespace/hyphen break points. Authored inline code and shell-command tokens
+  stay indivisible; shell commands may reflow only at source whitespace. Overlapping
   contiguous spans are solved jointly. If those minima exceed the frame,
   `slides.density.indivisible-table-width` fails before LaTeX with the first
   offending token and exact required/available width units. When even one
@@ -168,16 +168,46 @@ Unsupported URI schemes fail validation even when their URL path is empty.
   canonical HTML retains the complete source caption. Width diagnostics prefer
   an individually impossible column over an unrelated active span, then report
   exact span provenance when the joint constraint is the cause.
-  Long-code discounts additionally require an installed `seqsplit.sty`; archive
-  mode retains its historical graceful fallback, including Pandoc's brace-free
-  `\ ` control-space rewrite. The 20-point accessible body
+  Generated recurring display literals and unresolved cross-deck reference
+  tokens require an installed `seqsplit.sty` when they need `breakseq`; archive
+  mode retains its historical long-code fallback. The 20-point accessible body
   floor applies to nested lists, quotes, code listings, and algorithm stand-ins,
   not only top-level prose.
-  Reveal.js is the keyboard-operable,
-  long-description-bearing presentation reader; dense captions and complete
+  The Beamer footer owns one fixed 25-point reservation (a 19-point line plus
+  six-point bottom skip), independent of caller-selected figure-label sizing.
+  Rendered geometry establishes seven regular 24-point-leading body lines at
+  the 20-point floor beneath a one-line title. Compact longtable rows/rules use
+  a separately calibrated eight-unit table budget, and figure percentages use
+  their own title-adjusted reference envelope; neither enlarges prose capacity.
+  The public 80-word and eight-row values remain ceilings, not promises that
+  unusually wide prose or wrapped table rows fit. Generated
+  `longtable` column widths are evaluated against the pre-environment frame-body
+  width and centered there; cell-local `\\linewidth` values remain column-local.
+  After compilation, accessible mode uses the rendering extra's `pdfplumber` to
+  reject visible glyphs or horizontal rules that enter the declared side or
+  bottom safe area. Archive mode retains its historical footer, table, and
+  post-compile behavior.
+  Reveal.js is the keyboard-operable, long-description-bearing presentation
+  reader. Its postprocessor emits one zoom-permitting viewport, keeps skip and
+  companion-navigation lanes clear at 400-percent-equivalent reflow widths,
+  and prevents Space on native or ARIA button controls from also advancing a
+  slide. The rendered-output gate rejects non-divider title-only frames even
+  when notes, hidden content, or empty figures are present. Allowlisted raw-TeX
+  formal statements retain their original Beamer source and receive an
+  HTML-only semantic fallback, so neither writer silently loses the statement.
+  Dense captions and complete
   tables link to the canonical manuscript HTML. Beamer remains an explicitly
   labelled untagged presentation derivative. Neither a successful render nor
   these design constraints establish WCAG or PDF/UA conformance.
+- Accessible single-image figures may select a bounded, source-bound panel
+  manifest through `data-slide-manifest`. `_slides_presentation_variants.py`
+  owns unique-key schema validation, ordered panel expansion, and the final
+  embedded PDF label-size gate; `_slides_accessibility_image_io.py` owns all
+  confined resource reads. Canonical manuscript figures and archive mode retain
+  their original sources. Keep producer label measurements bound to exact
+  raster hashes, require the 16-point minimum after embedding, and preserve
+  paired-output cleanup on a failed scale check. This proves declared integrity
+  and scale, not semantic completeness or accessibility conformance.
 - Canonical Stage 03 rendering emits one exact `*_slides.pdf` and
   `*_slides.html` pair per eligible source only in `accessible` mode. The pair
   is transactional: both derivatives consume the same composed AST, and a
@@ -195,7 +225,8 @@ Unsupported URI schemes fail validation even when their URL path is empty.
   character-count or text-box-height estimates. Diagram figures likewise use
   one aspect-preserving fit inside the shared header/footer-safe content box;
   section-divider title and rule bands must remain structurally disjoint in
-  both formats; rendering fails when title fit is missing or slide text enters
+  both formats. Overlapping bands are invalid geometry and fail layout
+  validation. Rendering also fails when title fit is missing or slide text enters
   the protected footer band, raising `RenderingError` before any deck is
   written. Overlapping divider bands are the known-wrong layout the slide
   layout tests assert neither format can emit.
@@ -207,6 +238,9 @@ Unsupported URI schemes fail validation even when their URL path is empty.
   and the filter has to consume its `[@def:...]` citations before `--natbib`
   turns them into `\citep` and ships "[?]". Add it through
   `_pandoc_filters.formalism_filter_args()`, never by hand-writing the path;
+  the combined DOCX/EPUB/ebook lanes get it through
+  `_pandoc_args.combined_pandoc_args`, which also carries the shared
+  resource-path triple and citeproc wiring;
   `tests/infra_tests/rendering/test_formalism_wiring.py` reads the constructed
   command line of each writer and fails if one drops it.
 - `pandoc-crossref` is an optional external binary, so a missing one warns and

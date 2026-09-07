@@ -6,13 +6,14 @@ capabilities layer on top only when an optional dependency is installed. The
 default `public-exemplars` group is the deterministic exception: it covers the
 runtime surface needed to test every canonical public exemplar. This page documents
 **which optional dependency gates which tests and features**, **how the gate
-behaves when the dependency is missing** (skip vs. fail-loud), **how to opt out**,
-and **how to install** each one.
+behaves when the dependency is missing** (skip vs. fail-loud), **whether the
+gate is selected by a test marker or a runtime profile**, **how to opt out when
+that is meaningful**, and **how to install** each one.
 
 ## How gating works
 
-Each optional dependency is associated with a pytest marker. Two distinct gate
-policies are used on purpose:
+Optional capabilities are selected either by a pytest marker or by an explicit
+runtime/profile choice. Two distinct gate policies are used on purpose:
 
 - **fail-loud** — when the dependency is absent, the marked tests **fail** (not
   skip) with an actionable setup message. This is deliberate for Ollama: a silent
@@ -22,8 +23,10 @@ policies are used on purpose:
   with a reason. This is used for LaTeX/PDF rendering, which most contributors do
   not have locally and which CI provides on demand.
 
-Either way the behaviour is **opt-out by marker**, so a contributor can carve the
-optional surface out of a run with one flag.
+Marker-gated test surfaces can be excluded with a pytest expression. A
+runtime-selected capability such as accessible Beamer must instead be avoided
+by choosing the compatible profile (`archive`); requesting the capability and
+lacking its dependency fails loudly.
 
 ## Capability matrix
 
@@ -32,6 +35,7 @@ optional surface out of a run with one flag.
 | **Ollama** (local LLM server) | `requires_ollama` | **fail-loud when selected** (the harness tries to start Ollama, then fails with setup guidance) | `tests/infra_tests/llm/` real-daemon smoke tests, `tests/integration/test_module_interoperability.py` | Pipeline stage keys `llm_reviews` and `llm_translations`; `scripts/pipeline/stage_06_llm_review.py` | `pytest -m "not requires_ollama"` | Install from <https://ollama.ai>, then `ollama serve` and `ollama pull smollm2` (or the configured model). See env vars below. |
 | **LaTeX / xelatex** (TeX engine) | `requires_latex` | **skip-if-absent** (via `skip_if_no_latex` fixture) | `tests/infra_tests/rendering/` LaTeX/PDF tests (`test_latex_utils.py`, `test_renderers.py`, `test_core.py`, `test_slides_renderer_core.py`, …) | Pipeline stage key `render_pdf` (`scripts/pipeline/stage_03_render.py`); Beamer slide generation | `pytest -m "not requires_latex"` | Install TeX Live / MacTeX. Package requirements are defined by the current CI/container setup; do not assume a copied `tlmgr` list is complete. |
 | **pandoc** (document converter) | _(no dedicated marker; covered by `requires_latex` PDF tests + format-toggle tests)_ | **skip-if-absent** (rendering config sets `pandoc_path=None` when `pandoc` is not on `PATH`; format toggles guard on availability) | `tests/infra_tests/rendering/` markdown→PDF/DOCX/EPUB conversion paths | DOCX/EPUB export and the pandoc-backed markdown→LaTeX combine step | run a non-rendering subset, e.g. `pytest -m "not requires_latex"`, or target non-rendering dirs | Install pandoc: `brew install pandoc` (macOS) or your distro package; CI installs it in the rendering job. |
+| **pdfplumber** (rendered-PDF geometry inspection) | _(runtime capability; no skip marker)_ | **fail-loud when accessible Beamer is requested** with `slides.capability.pdf-geometry-required` | Accessible-slide safe-area and installed-capability probes in `tests/infra_tests/rendering/` | Post-compile glyph/rule clearance verification for `slides_profile="accessible"`; archive slides remain available | Use `slides_profile="archive"` only when the accessible presentation contract is not required | Source checkout: `uv sync --group rendering`. Installed package: `python -m pip install 'research-project-template[rendering]'`. |
 
 Markers compose: to skip every optional-dependency surface in one run use
 
@@ -92,6 +96,27 @@ To check what is available on the current machine:
 ```bash
 python -c "import shutil; print('xelatex:', bool(shutil.which('xelatex'))); print('pandoc:', bool(shutil.which('pandoc')))"
 ```
+
+## Accessible Beamer geometry: fail-loud installed capability
+
+The accessible slide profile inspects the compiled Beamer PDF after LaTeX has
+finished. That inspection is not a best-effort enhancement: it is what detects
+glyphs or table rules that enter the protected page-edge and footer clearances.
+Consequently, requesting accessible Beamer without `pdfplumber` raises the
+stable `slides.capability.pdf-geometry-required` diagnostic and removes the
+unverified derivative. Install the capability explicitly:
+
+```bash
+# Source checkout / contributor environment
+uv sync --group rendering
+
+# Published or locally built installable distribution
+python -m pip install 'research-project-template[rendering]'
+```
+
+The historical `archive` profile neither imports nor requires `pdfplumber`.
+Choosing archive mode is a scope decision, not evidence that the accessible
+safe-area contract passed.
 
 ## See also
 

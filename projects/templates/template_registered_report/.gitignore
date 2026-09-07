@@ -10,3 +10,7 @@ __pycache__/
 htmlcov/
 coverage_project.json
 .coverage*
+# Local artifacts (aligned with template_textbook convention)
+.DS_Store
+.mypy_cache/
+.ruff_cache/

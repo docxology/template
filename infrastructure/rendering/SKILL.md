@@ -77,6 +77,39 @@ consume one composed Pandoc AST; any pair-member failure removes both outputs.
 Use `render_accessible_slide_pair()` for the same explicit programmatic
 contract. Archive mode keeps the historical Beamer-required behavior.
 
+During the canonical post-combined refresh, accessible Beamer decks resolve
+local and cross-deck references against the current combined-manuscript AUX.
+Labeled `equation` environments receive matching explicit number tags; missing
+canonical numbers or conflicting authored tags fail rendering. Standalone
+authoring and archive mode retain their existing local numbering behavior.
+
+For dense manuscript figures, use the explicit `data-slide-manifest`
+[panel contract](README.md#source-bound-presentation-panels) to select ordered,
+source-bound presentation rasters. The producer supplies each raster digest,
+concise alternative, and measured smallest label in pixels; the final Beamer
+scale gate requires at least 16 points after embedding. Do not lower the floor
+or substitute higher DPI for a semantic reflow.
+
+For external or otherwise hostile manuscript material, also set the distinct
+renderer process boundary:
+
+```python
+config = RenderingConfig(
+    slides_profile="accessible",
+    security_profile="untrusted",
+    untrusted_temp_root="/absolute/caller-owned/temp-root",
+)
+```
+
+Only the exact security-profile names `trusted-local` and `untrusted` are
+accepted, and the untrusted profile requires its temporary root at
+configuration time. It strips inherited credentials from child environments,
+redirects child `HOME`/`TMPDIR`, confines outputs, and bounds subprocesses.
+Accessible composition separately bounds the Pandoc AST and local raster
+inspection and rejects unsupported TeX. Neither boundary is a chroot,
+container, network-denial mechanism, or complete hostile-content sandbox; see
+the [renderer boundary reference](README.md#opt-in-to-accessible-presentation-composition).
+
 ## Manuscript Discovery
 
 ```python

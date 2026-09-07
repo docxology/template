@@ -28,7 +28,6 @@ from infrastructure.rendering._slides_accessibility import (
     enhance_accessible_reveal,
 )
 from infrastructure.rendering._slides_accessibility_tables import (
-    _table_column_character_capacities,
     _table_column_minima,
 )
 from infrastructure.rendering._slides_accessibility_contracts import (
@@ -409,12 +408,12 @@ def test_semantic_composer_rejects_geometry_overflow_without_written_boundary() 
             source="manuscript/results.md",
         )
 
-    assert exc_info.value.context["maximum_lines"] == 8
+    assert exc_info.value.context["maximum_lines"] == 7
 
 
 def test_semantic_composer_counts_authored_hard_lines_at_the_physical_boundary() -> None:
     composition = compose_accessible_pandoc_document(
-        _document([_header("Hard lines"), _hard_line_paragraph(8)]),
+        _document([_header("Hard lines"), _hard_line_paragraph(7)]),
         policy=AccessibleSlidePolicy(),
         source="manuscript/hard-lines.md",
     )
@@ -422,13 +421,13 @@ def test_semantic_composer_counts_authored_hard_lines_at_the_physical_boundary()
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose\]") as exc_info:
         compose_accessible_pandoc_document(
-            _document([_header("Hard lines"), _hard_line_paragraph(9)]),
+            _document([_header("Hard lines"), _hard_line_paragraph(8)]),
             policy=AccessibleSlidePolicy(),
             source="manuscript/hard-lines.md",
         )
 
-    assert exc_info.value.context["estimated_lines"] == 9
-    assert exc_info.value.context["maximum_lines"] == 8
+    assert exc_info.value.context["estimated_lines"] == 8
+    assert exc_info.value.context["maximum_lines"] == 7
 
 
 def test_semantic_composer_fails_closed_on_pandoc_notes() -> None:
@@ -679,9 +678,10 @@ def test_semantic_composer_accepts_allowlisted_theorem_raw_tex() -> None:
 
 
 def test_semantic_composer_accepts_allowlisted_raw_reference_inline() -> None:
+    raw_reference = {"t": "RawInline", "c": ["tex", r"\ref{thm:bounded}"]}
     paragraph = {
         "t": "Para",
-        "c": [*_inlines("See theorem"), {"t": "RawInline", "c": ["tex", r"\ref{thm:bounded}"]}],
+        "c": [*_inlines("See theorem"), raw_reference],
     }
 
     composition = compose_accessible_pandoc_document(
@@ -691,6 +691,33 @@ def test_semantic_composer_accepts_allowlisted_raw_reference_inline() -> None:
     )
 
     assert composition.frame_count == 1
+    rendered = next(block for block in composition.document["blocks"] if block.get("t") == "Para")
+    assert rendered["c"][-2] == raw_reference
+    assert rendered["c"][-1] == {
+        "t": "RawInline",
+        "c": [
+            "html",
+            '<span class="citation formal-reference" data-cites="thm:bounded">(<strong>thm:bounded?</strong>)</span>',
+        ],
+    }
+
+
+@pytest.mark.parametrize(("node_type", "source_format"), [("RawBlock", "html"), ("RawInline", "openxml")])
+def test_semantic_composer_rejects_authored_writer_specific_raw_content(
+    node_type: str,
+    source_format: str,
+) -> None:
+    raw = {"t": node_type, "c": [source_format, "<style>section{height:200vh}</style>"]}
+    block = raw if node_type == "RawBlock" else {"t": "Para", "c": [raw]}
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.unsupported-raw-geometry\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Writer-specific raw content"), block]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/raw-content.md",
+        )
+
+    assert exc_info.value.context["unsupported_command"] == f"raw-format:{source_format}"
 
 
 @pytest.mark.parametrize(
@@ -778,7 +805,7 @@ def test_semantic_composer_treats_aligned_row_break_as_control_symbol() -> None:
 
 @pytest.mark.parametrize(
     ("kind", "passing_rows", "failing_rows", "passing_lines", "failing_lines"),
-    [("aligned", 6, 7, 8, 9), ("substack", 14, 15, 8, 9)],
+    [("aligned", 5, 6, 7, 8), ("substack", 12, 13, 7, 8)],
 )
 def test_semantic_composer_prices_supported_multiline_math_geometry(
     kind: str,
@@ -821,11 +848,11 @@ def test_semantic_composer_prices_supported_multiline_math_geometry(
 
     assert exc_info.value.context["math_source"] == failing_source
     assert exc_info.value.context["estimated_lines"] == failing_lines
-    assert exc_info.value.context["maximum_lines"] == 8
+    assert exc_info.value.context["maximum_lines"] == 7
 
 
 def test_semantic_composer_models_display_and_table_math_height() -> None:
-    passing_math = {"t": "Math", "c": [{"t": "DisplayMath"}, _nested_fraction_source(16)]}
+    passing_math = {"t": "Math", "c": [{"t": "DisplayMath"}, _nested_fraction_source(14)]}
     passing_equation = {"t": "Para", "c": [passing_math]}
     composition = compose_accessible_pandoc_document(
         _document([_header("Fraction depth"), passing_equation]),
@@ -834,7 +861,7 @@ def test_semantic_composer_models_display_and_table_math_height() -> None:
     )
     assert composition.frame_count == 1
 
-    failing_source = _nested_fraction_source(17)
+    failing_source = _nested_fraction_source(15)
     failing_equation = {"t": "Para", "c": [{"t": "Math", "c": [{"t": "DisplayMath"}, failing_source]}]}
     with pytest.raises(RenderingError, match=r"\[slides\.density\.math-height\]") as equation_error:
         compose_accessible_pandoc_document(
@@ -842,7 +869,7 @@ def test_semantic_composer_models_display_and_table_math_height() -> None:
             policy=AccessibleSlidePolicy(),
             source="manuscript/math.md",
         )
-    assert equation_error.value.context["estimated_lines"] == 9
+    assert equation_error.value.context["estimated_lines"] == 8
 
     table = _table_values(["Expression"], [["placeholder"]])
     table["c"][4][0][3][0][1][0][4][0]["c"] = [{"t": "Math", "c": [{"t": "InlineMath"}, failing_source]}]
@@ -852,7 +879,7 @@ def test_semantic_composer_models_display_and_table_math_height() -> None:
             policy=AccessibleSlidePolicy(),
             source="manuscript/math.md",
         )
-    assert table_error.value.context["first_row_lines"] == 9
+    assert table_error.value.context["first_row_lines"] == 8
 
 
 def test_semantic_composer_prices_list_indent_and_nested_item_lines() -> None:
@@ -878,7 +905,7 @@ def test_semantic_composer_prices_list_indent_and_nested_item_lines() -> None:
         return {"t": "BulletList", "c": [[_paragraph("parent"), children]]}
 
     nested_composition = compose_accessible_pandoc_document(
-        _document([_header("Nested list"), nested(7)]),
+        _document([_header("Nested list"), nested(6)]),
         policy=AccessibleSlidePolicy(),
         source="manuscript/lists.md",
     )
@@ -886,11 +913,11 @@ def test_semantic_composer_prices_list_indent_and_nested_item_lines() -> None:
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-list\]") as height_error:
         compose_accessible_pandoc_document(
-            _document([_header("Nested list"), nested(8)]),
+            _document([_header("Nested list"), nested(7)]),
             policy=AccessibleSlidePolicy(),
             source="manuscript/lists.md",
         )
-    assert height_error.value.context["estimated_lines"] == 9
+    assert height_error.value.context["estimated_lines"] == 8
 
 
 def test_semantic_composer_models_definition_list_entry_geometry() -> None:
@@ -913,7 +940,7 @@ def test_semantic_composer_models_definition_list_entry_geometry() -> None:
             policy=AccessibleSlidePolicy(),
             source="manuscript/definitions.md",
         )
-    assert exc_info.value.context["estimated_lines"] == 9
+    assert exc_info.value.context["estimated_lines"] == 8
 
 
 def test_semantic_composer_recursively_prices_one_definition_with_many_paragraphs() -> None:
@@ -924,7 +951,7 @@ def test_semantic_composer_recursively_prices_one_definition_with_many_paragraph
         }
 
     composition = compose_accessible_pandoc_document(
-        _document([_header("One definition"), definition_list(8)]),
+        _document([_header("One definition"), definition_list(7)]),
         policy=AccessibleSlidePolicy(),
         source="manuscript/definitions.md",
     )
@@ -932,14 +959,14 @@ def test_semantic_composer_recursively_prices_one_definition_with_many_paragraph
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-definition-list\]") as exc_info:
         compose_accessible_pandoc_document(
-            _document([_header("One definition"), definition_list(10)]),
+            _document([_header("One definition"), definition_list(8)]),
             policy=AccessibleSlidePolicy(),
             source="manuscript/definitions.md",
         )
-    assert exc_info.value.context["estimated_lines"] == 10
+    assert exc_info.value.context["estimated_lines"] == 8
 
 
-def test_semantic_composer_debits_loose_list_paragraph_spacing() -> None:
+def test_semantic_composer_prices_loose_list_paragraph_boundaries() -> None:
     def loose_list(paragraph_count: int) -> dict[str, Any]:
         return {"t": "BulletList", "c": [[_paragraph("x") for _ in range(paragraph_count)]]}
 
@@ -956,7 +983,7 @@ def test_semantic_composer_debits_loose_list_paragraph_spacing() -> None:
             policy=AccessibleSlidePolicy(),
             source="manuscript/lists.md",
         )
-    assert exc_info.value.context["estimated_lines"] == 9
+    assert exc_info.value.context["estimated_lines"] == 8
 
 
 def test_semantic_composer_recursively_prices_evidence_block_paragraphs() -> None:
@@ -964,7 +991,7 @@ def test_semantic_composer_recursively_prices_evidence_block_paragraphs() -> Non
         return {"t": "BlockQuote", "c": [_paragraph("x") for _ in range(paragraph_count)]}
 
     composition = compose_accessible_pandoc_document(
-        _document([_header("Evidence"), evidence(9)]),
+        _document([_header("Evidence"), evidence(8)]),
         policy=AccessibleSlidePolicy(),
         source="manuscript/evidence.md",
     )
@@ -972,11 +999,11 @@ def test_semantic_composer_recursively_prices_evidence_block_paragraphs() -> Non
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-evidence\]") as exc_info:
         compose_accessible_pandoc_document(
-            _document([_header("Evidence"), evidence(10)]),
+            _document([_header("Evidence"), evidence(9)]),
             policy=AccessibleSlidePolicy(),
             source="manuscript/evidence.md",
         )
-    assert exc_info.value.context["estimated_lines"] == 9
+    assert exc_info.value.context["estimated_lines"] == 8
 
 
 def test_semantic_composer_preserves_evidence_div_block_geometry() -> None:
@@ -993,7 +1020,7 @@ def test_semantic_composer_preserves_evidence_div_block_geometry() -> None:
         )
 
     assert exc_info.value.context["estimated_lines"] == 19
-    assert exc_info.value.context["maximum_lines"] == 8
+    assert exc_info.value.context["maximum_lines"] == 7
 
 
 def test_semantic_composer_fails_on_an_indivisible_dense_block() -> None:
@@ -1167,8 +1194,8 @@ def test_semantic_composer_rejects_overwide_ordinary_prose_tokens(glyph: str, co
 
 
 def test_semantic_composer_prices_aggregate_proportional_prose_width() -> None:
-    passing = _paragraph(" ".join(["WW"] * 72))
-    failing = _paragraph(" ".join(["WW"] * 80))
+    passing = _paragraph(" ".join(["WW"] * 63))
+    failing = _paragraph(" ".join(["WW"] * 64))
 
     composition = compose_accessible_pandoc_document(
         _document([_header("Wide prose pass"), passing]),
@@ -1184,16 +1211,16 @@ def test_semantic_composer_prices_aggregate_proportional_prose_width() -> None:
             source="manuscript/discussion.md",
         )
 
-    assert exc_info.value.context["estimated_lines"] == 9
-    assert exc_info.value.context["maximum_lines"] == 8
+    assert exc_info.value.context["estimated_lines"] == 8
+    assert exc_info.value.context["maximum_lines"] == 7
 
 
 @pytest.mark.parametrize("literal", ["'", "[", "{"])
-def test_semantic_composer_rejects_long_code_outside_exact_breaktt_contract(literal: str) -> None:
+def test_semantic_composer_rejects_every_overwide_indivisible_code_token(literal: str) -> None:
     code = "a" * 80 + literal
     paragraph = {"t": "Para", "c": [{"t": "Code", "c": [["", [], []], code]}]}
 
-    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose-token\]") as exc_info:
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-code-token\]") as exc_info:
         compose_accessible_pandoc_document(
             _document([_header("Code token"), paragraph]),
             policy=AccessibleSlidePolicy(),
@@ -1202,6 +1229,34 @@ def test_semantic_composer_rejects_long_code_outside_exact_breaktt_contract(lite
 
     assert exc_info.value.context["first_offending_token"] == code
     assert exc_info.value.context["required_width_units"] > 43
+
+
+@pytest.mark.parametrize(("surface", "length", "capacity"), [("body", 34, 43), ("title", 27, 35)])
+def test_code_token_guard_owns_the_exact_safety_debit_boundary(
+    surface: str,
+    length: int,
+    capacity: int,
+) -> None:
+    code = "a" * length
+    code_node = {"t": "Code", "c": [["", [], []], code]}
+    header = {
+        "t": "Header",
+        "c": [2, ["code-boundary", [], []], [code_node] if surface == "title" else _inlines("Code boundary")],
+    }
+    blocks = [header]
+    if surface == "body":
+        blocks.append({"t": "Para", "c": [code_node]})
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-code-token\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document(blocks),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/discussion.md",
+        )
+
+    assert exc_info.value.context["first_offending_token"] == code
+    assert exc_info.value.context["available_width_units"] == capacity
+    assert exc_info.value.context["required_width_units"] == capacity + 1
 
 
 def test_semantic_composer_splits_before_unresolved_crossrefs_overflow_beamer() -> None:
@@ -1228,8 +1283,9 @@ def test_semantic_composer_splits_before_unresolved_crossrefs_overflow_beamer() 
     prose = [block for block in composition.document["blocks"] if block["t"] == "Para"]
     assert composition.frame_count == 2
     assert len(prose) == 2
-    assert "sec:results-3level" in json.dumps(prose[0])
-    assert "sec:results-sensitivity" not in json.dumps(prose[0])
+    assert "sec:results-hierarchical" in json.dumps(prose[0])
+    assert "sec:results-3level" not in json.dumps(prose[0])
+    assert "sec:results-3level" in json.dumps(prose[1])
     assert "sec:results-sensitivity" in json.dumps(prose[1])
     assert "sec:results-parameter-recovery" in json.dumps(prose[1])
 
@@ -1357,8 +1413,8 @@ def test_genuinely_unequal_authored_table_widths_are_preserved() -> None:
     assert widths == pytest.approx([0.25, 0.75])
 
 
-def test_table_widths_honor_prose_hyphen_and_breakable_code_minima() -> None:
-    long_code = "canonical_parameter_identifier_that_becomes_breakable"
+def test_table_widths_reject_an_indivisible_code_token_that_cannot_fit() -> None:
+    long_code = "canonical_parameter_identifier_that_must_remain_contiguous"
     table = _table_values(
         ["Symbol", "Meaning", "Code term"],
         [["y_t", "Observation/outcome rank-biserial-derived index", long_code]],
@@ -1366,23 +1422,15 @@ def test_table_widths_honor_prose_hyphen_and_breakable_code_minima() -> None:
     code_inline = {"t": "Code", "c": [["", [], []], long_code]}
     table["c"][4][0][3][0][1][2][4][0]["c"] = [code_inline]
 
-    composition = compose_accessible_pandoc_document(
-        _document([_header("Notation mapping"), table]),
-        policy=AccessibleSlidePolicy(),
-        source="manuscript/notation.md",
-    )
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Notation mapping"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/notation.md",
+        )
 
-    rendered = next(block for block in composition.document["blocks"] if block["t"] == "Table")
-    widths = [float(colspec[1]["c"]) for colspec in rendered["c"][2]]
-    minima, tokens = _table_column_minima(rendered["c"], 3)
-    capacities = _table_column_character_capacities(widths, AccessibleSlidePolicy(), minima)
-    assert len(rendered["c"][2]) == 3
-    assert all(capacity >= minimum for capacity, minimum in zip(capacities, minima, strict=True))
-    assert minima[1] == 19
-    assert minima[1] > len("biserial-") + 1
-    assert minima[2] < len(long_code)
-    assert tokens[1] == "Observation/outcome"
-    assert tokens[2] == "Code"
+    assert exc_info.value.context["first_offending_token"] == long_code
+    assert exc_info.value.context["required_width_units"] > exc_info.value.context["available_width_units"]
 
 
 def test_overlapping_colspans_share_their_common_column_minimum() -> None:
@@ -1925,7 +1973,7 @@ def test_captioned_listing_keeps_source_caption_but_projects_counter_only() -> N
         "t": "CodeBlock",
         "c": [
             ["lst:test", ["python"], [["caption", caption]]],
-            "\n".join(f"x_{index} = {index}" for index in range(8)),
+            "\n".join(f"x_{index} = {index}" for index in range(7)),
         ],
     }
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-code\]") as exc_info:
@@ -1935,10 +1983,10 @@ def test_captioned_listing_keeps_source_caption_but_projects_counter_only() -> N
             source="manuscript/listing.md",
         )
     assert exc_info.value.context["projected_caption_lines"] == 1
-    assert exc_info.value.context["estimated_lines"] == 9
+    assert exc_info.value.context["estimated_lines"] == 8
 
 
-def test_shell_code_reflows_only_tokens_supported_by_breakable_monospace_contract() -> None:
+def test_shell_code_reflows_only_at_whitespace_and_never_inside_tokens() -> None:
     fitting = {"t": "CodeBlock", "c": [["", ["bash"], []], "W" * 33 + "'"]}
     fitting_composition = compose_accessible_pandoc_document(
         _document([_header("Fitting shell token"), fitting]),
@@ -1947,16 +1995,16 @@ def test_shell_code_reflows_only_tokens_supported_by_breakable_monospace_contrac
     )
     assert any(block.get("t") == "CodeBlock" for block in fitting_composition.document["blocks"])
 
-    reflowable = {"t": "CodeBlock", "c": [["", ["bash"], []], "W" * 35]}
+    reflowable = {"t": "CodeBlock", "c": [["", ["bash"], []], "W" * 20 + " " + "W" * 20]}
     reflowed_composition = compose_accessible_pandoc_document(
-        _document([_header("Reflowable shell token"), reflowable]),
+        _document([_header("Whitespace-reflowable shell command"), reflowable]),
         policy=AccessibleSlidePolicy(),
         source="manuscript/shell.md",
     )
     reflowed = next(block for block in reflowed_composition.document["blocks"] if block.get("t") == "Para")
     assert reflowed["c"][0]["t"] == "Code"
 
-    for unsafe_token in ("W" * 34 + "'", "W" * 34 + "{"):
+    for unsafe_token in ("W" * 35, "W" * 34 + "'", "W" * 34 + "{"):
         unsafe = {"t": "CodeBlock", "c": [["", ["bash"], []], unsafe_token]}
         with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-code-line\]") as exc_info:
             compose_accessible_pandoc_document(
@@ -2000,7 +2048,8 @@ def test_semantic_composer_isolates_figures_equations_code_and_evidence() -> Non
     assert rendered_figure["c"][1] == [None, []]
     rendered_image = rendered_figure["c"][2][0]["c"][0]
     assert ["width", "98%"] in rendered_image["c"][0][2]
-    assert ["height", "70%"] in rendered_image["c"][0][2]
+    assert ["height", "80%"] in rendered_image["c"][0][2]
+    assert ["data-slide-figure-min-allocation-percent", "70"] in rendered_image["c"][0][2]
 
 
 def test_semantic_composer_drops_page_break_and_keeps_crossref_suffixed_equation_atomic() -> None:
@@ -2067,7 +2116,8 @@ def test_long_title_figure_allocation_uses_title_adjusted_body_geometry() -> Non
     # The compact continuation title fits one projected title line while the
     # complete authored heading remains its accessible name.
     assert ["width", "98%"] in rendered_image["c"][0][2]
-    assert ["height", "70%"] in rendered_image["c"][0][2]
+    assert ["height", "80%"] in rendered_image["c"][0][2]
+    assert ["data-slide-figure-min-allocation-percent", "70"] in rendered_image["c"][0][2]
 
 
 @pytest.mark.parametrize("authored_title", ["W" * 22, "unbreakable_identifier_" + "x" * 64])
@@ -2108,7 +2158,8 @@ def test_multi_panel_figure_preserves_one_bounded_authored_row() -> None:
         [["width", "45%"]],
         [["width", "45%"]],
     ]
-    assert all(["height", "70%"] in image["c"][0][2] for image in images)
+    assert all(["height", "80%"] in image["c"][0][2] for image in images)
+    assert all(["data-slide-figure-min-allocation-percent", "70"] in image["c"][0][2] for image in images)
     assert all("accessible-multi-image-panel" in image["c"][0][1] for image in images)
 
 
@@ -2160,7 +2211,7 @@ def test_multi_panel_figure_requires_declared_minimum_usable_width() -> None:
         ],
     }
 
-    with pytest.raises(RenderingError, match=r"\[slides\.density\.multi-image-layout\]") as exc_info:
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.figure-area\]") as exc_info:
         compose_accessible_pandoc_document(
             _document([_header("Panel comparison"), figure]),
             policy=AccessibleSlidePolicy(min_figure_area_percent=70),
@@ -2246,7 +2297,8 @@ def test_image_only_paragraph_receives_allocation_and_mixed_image_prose_fails_cl
     )
     rendered = next(block for block in composition.document["blocks"] if block["t"] == "Para")
     assert ["width", "98%"] in rendered["c"][0]["c"][0][2]
-    assert ["height", "70%"] in rendered["c"][0]["c"][0][2]
+    assert ["height", "80%"] in rendered["c"][0]["c"][0][2]
+    assert ["data-slide-figure-min-allocation-percent", "70"] in rendered["c"][0]["c"][0][2]
 
     mixed = {"t": "Para", "c": [_image("trend.png"), {"t": "Space"}, *_inlines("Peer prose")]}
     with pytest.raises(RenderingError, match=r"\[slides\.density\.mixed-image-frame\]"):
@@ -2267,7 +2319,8 @@ def test_linked_and_classed_image_wrappers_preserve_targets_and_allocation() -> 
     rendered_link = next(block for block in composition.document["blocks"] if block["t"] == "Para")["c"][0]
     assert rendered_link["c"][2] == ["full.png", "Open full-size figure"]
     assert ["width", "98%"] in rendered_link["c"][1][0]["c"][0][2]
-    assert ["height", "70%"] in rendered_link["c"][1][0]["c"][0][2]
+    assert ["height", "80%"] in rendered_link["c"][1][0]["c"][0][2]
+    assert ["data-slide-figure-min-allocation-percent", "70"] in rendered_link["c"][1][0]["c"][0][2]
 
     row = {
         "t": "Plain",
@@ -2480,6 +2533,21 @@ def test_reveal_raw_inline_math_references_use_aux_numbers_and_consume_tex_join(
     assert 'identity (<span class="cross-reference">7</span>)' in resolved
     assert "~" not in resolved
     assert r"\ref{" not in resolved
+
+
+def test_reveal_deduplicates_raw_reference_html_fallback_after_crossref_filter() -> None:
+    content = (
+        '<section id="eq:model"><p>Equation '
+        '<span class="math inline">\\(\\ref{eq:model}\\)</span>'
+        '<span class="citation formal-reference" data-cites="eq:model">'
+        "(<strong>eq:model?</strong>)</span>.</p></section>"
+    )
+
+    resolved = resolve_reveal_cross_references(content, {"eq:model": "7"}, strict=True)
+    visible = " ".join(re.sub(r"<[^>]+>", "", resolved).split())
+
+    assert visible == "Equation 7."
+    assert resolved.count('href="#eq:model"') == 1
 
 
 def test_reveal_inline_equation_references_have_one_parenthesis_pair() -> None:
@@ -2864,11 +2932,15 @@ def test_real_accessible_reveal_preserves_multi_image_widths_in_final_css(tmp_pa
     image_tags = re.findall(r"<img\b[^>]+(?:left|right)\.png[^>]*>", rendered)
 
     assert len(image_tags) == 2
-    assert all('class="accessible-multi-image-panel"' in tag for tag in image_tags)
+    assert all(re.search(r'class="[^"]*\baccessible-multi-image-panel\b[^"]*"', tag) for tag in image_tags)
+    assert all(re.search(r'class="[^"]*\baccessible-max-fit-image\b[^"]*"', tag) for tag in image_tags)
     assert all(re.search(r'style="[^"]*width:\s*45(?:\.0)?%', tag) for tag in image_tags)
-    assert ".reveal section.figure-led img:not(.accessible-multi-image-panel)" in rendered
-    assert ".reveal section.figure-led img.accessible-multi-image-panel" in rendered
-    universal_rule = re.search(r"\.reveal section\.figure-led img \{(?P<body>[^}]*)\}", rendered)
+    assert ".reveal section.figure-led img.accessible-max-fit-image:not(.accessible-multi-image-panel)" in rendered
+    assert ".reveal section.figure-led img.accessible-max-fit-image.accessible-multi-image-panel" in rendered
+    universal_rule = re.search(
+        r"\.reveal section\.figure-led img\.accessible-max-fit-image \{(?P<body>[^}]*)\}",
+        rendered,
+    )
     assert universal_rule is not None
     assert "width: 100% !important" not in universal_rule.group("body")
     assert accessible_reveal_output_issues(output) == ()
@@ -3017,8 +3089,9 @@ def test_real_accessible_reveal_render_has_semantics_long_description_and_reader
     assert "theme/metropolis.css" not in rendered
     assert "keyboard: true" in rendered
     assert "main#main-content { inline-size: 100%; block-size: 100vh; min-block-size: 100vh; }" in rendered
-    assert "min-height: 70vh" in rendered
-    assert "height: calc(70vh - 5.5rem)" in rendered
+    assert "max-block-size: 560px" in rendered
+    assert "height: var(--template-figure-safe-max-height) !important" in rendered
+    assert "--template-figure-min-allocation-height:392px" in rendered
     assert 'alt="A dashed line with square markers rises from left to right."' in rendered
     assert 'class="figure-long-description"' in rendered
     assert 'aria-details="fig-trend-long-description"' in rendered
@@ -3153,7 +3226,7 @@ def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: 
     assert r"\setbeamerfont{caption}{size*={16pt}{19pt}}" in header
     assert "Untagged PDF derivative" in header
     assert "HTML reader" in header
-    assert r"height=0.7\textheight" in tex
+    assert r"height=0.8\textheight" in tex
     assert r"width=0.98\linewidth" in tex
     assert "keepaspectratio" in tex
     assert r"\caption{}" not in tex
@@ -3445,7 +3518,7 @@ def test_real_pandoc_long_nonrewritable_prose_code_fails_preflight(tmp_path: Pat
         )
     )
 
-    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose-token\]") as exc_info:
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-code-token\]") as exc_info:
         renderer.render_accessible_pair(source, manuscript_dir=manuscript)
 
     assert exc_info.value.context["first_offending_token"] == code
@@ -3455,7 +3528,7 @@ def test_real_pandoc_long_nonrewritable_prose_code_fails_preflight(tmp_path: Pat
 
 @pytest.mark.slow
 @pytest.mark.requires_latex
-def test_real_pandoc_hard_line_boundary_passes_eight_and_rejects_nine(tmp_path: Path) -> None:
+def test_real_pandoc_hard_line_boundary_passes_seven_and_rejects_eight(tmp_path: Path) -> None:
     if not shutil.which("pandoc"):
         pytest.skip("Pandoc not installed")
     compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
@@ -3467,11 +3540,11 @@ def test_real_pandoc_hard_line_boundary_passes_eight_and_rejects_nine(tmp_path: 
     passing_source = manuscript / "hard-lines-pass.md"
     failing_source = manuscript / "hard-lines-fail.md"
     passing_source.write_text(
-        "## Hard lines pass\n\n" + "  \n".join("x" for _ in range(8)) + "\n",
+        "## Hard lines pass\n\n" + "  \n".join("x" for _ in range(7)) + "\n",
         encoding="utf-8",
     )
     failing_source.write_text(
-        "## Hard lines fail\n\n" + "  \n".join("x" for _ in range(9)) + "\n",
+        "## Hard lines fail\n\n" + "  \n".join("x" for _ in range(8)) + "\n",
         encoding="utf-8",
     )
     renderer = SlidesRenderer(
@@ -3492,7 +3565,7 @@ def test_real_pandoc_hard_line_boundary_passes_eight_and_rejects_nine(tmp_path: 
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose\]") as exc_info:
         renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
-    assert exc_info.value.context["estimated_lines"] == 9
+    assert exc_info.value.context["estimated_lines"] == 8
     assert not (slides / "hard-lines-fail_slides.pdf").exists()
     assert not (slides / "hard-lines-fail_slides.html").exists()
 
@@ -3509,7 +3582,7 @@ def test_real_proportional_prose_and_title_widths_fail_before_latex(tmp_path: Pa
     slides = tmp_path / "output" / "slides"
     manuscript.mkdir()
     passing_source = manuscript / "wide-prose-pass.md"
-    passing_source.write_text("## Wide prose\n\n" + " ".join(["WW"] * 72) + "\n", encoding="utf-8")
+    passing_source.write_text("## Wide prose\n\n" + " ".join(["WW"] * 63) + "\n", encoding="utf-8")
     renderer = SlidesRenderer(
         RenderingConfig(
             output_dir=str(tmp_path / "output"),
@@ -3527,11 +3600,11 @@ def test_real_proportional_prose_and_title_widths_fail_before_latex(tmp_path: Pa
     assert "Overfull \\vbox" not in log
 
     wide_prose = manuscript / "wide-prose-fail.md"
-    wide_prose.write_text("## Wide prose\n\n" + " ".join(["WW"] * 80) + "\n", encoding="utf-8")
+    wide_prose.write_text("## Wide prose\n\n" + " ".join(["WW"] * 64) + "\n", encoding="utf-8")
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose\]") as prose_error:
         renderer.render_accessible_pair(wide_prose, manuscript_dir=manuscript)
-    assert prose_error.value.context["estimated_lines"] == 9
-    assert prose_error.value.context["maximum_lines"] == 8
+    assert prose_error.value.context["estimated_lines"] == 8
+    assert prose_error.value.context["maximum_lines"] == 7
 
     titles = {
         "wide-title": "W" * 22,
@@ -3680,7 +3753,7 @@ def test_real_pandoc_raw_table_spacing_fails_before_derivatives(tmp_path: Path) 
 
 @pytest.mark.slow
 @pytest.mark.requires_latex
-def test_real_nested_fraction_depth_sixteen_passes_and_seventeen_fails_preflight(tmp_path: Path) -> None:
+def test_real_nested_fraction_depth_fourteen_passes_and_fifteen_fails_preflight(tmp_path: Path) -> None:
     if not shutil.which("pandoc"):
         pytest.skip("Pandoc not installed")
     compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
@@ -3692,11 +3765,11 @@ def test_real_nested_fraction_depth_sixteen_passes_and_seventeen_fails_preflight
     passing_source = manuscript / "fraction-depth-pass.md"
     failing_source = manuscript / "fraction-depth-fail.md"
     passing_source.write_text(
-        "## Fraction depth pass\n\n$$" + _nested_fraction_source(16) + "$$\n",
+        "## Fraction depth pass\n\n$$" + _nested_fraction_source(14) + "$$\n",
         encoding="utf-8",
     )
     failing_source.write_text(
-        "## Fraction depth fail\n\n$$" + _nested_fraction_source(17) + "$$\n",
+        "## Fraction depth fail\n\n$$" + _nested_fraction_source(15) + "$$\n",
         encoding="utf-8",
     )
     renderer = SlidesRenderer(
@@ -3717,7 +3790,7 @@ def test_real_nested_fraction_depth_sixteen_passes_and_seventeen_fails_preflight
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.math-height\]") as exc_info:
         renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
-    assert exc_info.value.context["estimated_lines"] == 9
+    assert exc_info.value.context["estimated_lines"] == 8
     assert not (slides / "fraction-depth-fail_slides.pdf").exists()
     assert not (slides / "fraction-depth-fail_slides.html").exists()
 
@@ -3746,8 +3819,8 @@ def test_real_supported_multiline_math_rows_pass_then_fail_preflight(tmp_path: P
     unspaced_rows = aligned(2, separator=r"\\")
     passing_source.write_text(
         f"## Row separator\n\n$${unspaced_rows}$$\n\n"
-        f"## Aligned six\n\n$${aligned(6)}$$\n\n"
-        f"## Substack fourteen\n\n$${substack(14)}$$\n",
+        f"## Aligned five\n\n$${aligned(5)}$$\n\n"
+        f"## Substack twelve\n\n$${substack(12)}$$\n",
         encoding="utf-8",
     )
     renderer = SlidesRenderer(
@@ -3767,8 +3840,8 @@ def test_real_supported_multiline_math_rows_pass_then_fail_preflight(tmp_path: P
     assert "Overfull \\vbox" not in log
 
     failing_cases = {
-        "aligned-seven": aligned(7),
-        "substack-fifteen": substack(15),
+        "aligned-six": aligned(6),
+        "substack-thirteen": substack(13),
     }
     for stem, math_source in failing_cases.items():
         source = manuscript / f"{stem}.md"
@@ -3776,8 +3849,8 @@ def test_real_supported_multiline_math_rows_pass_then_fail_preflight(tmp_path: P
         with pytest.raises(RenderingError, match=r"\[slides\.density\.math-height\]") as exc_info:
             renderer.render_accessible_pair(source, manuscript_dir=manuscript)
         assert exc_info.value.context["math_source"] == math_source
-        assert exc_info.value.context["estimated_lines"] == 9
-        assert exc_info.value.context["maximum_lines"] == 8
+        assert exc_info.value.context["estimated_lines"] == 8
+        assert exc_info.value.context["maximum_lines"] == 7
         assert not (slides / f"{stem}_slides.pdf").exists()
         assert not (slides / f"{stem}_slides.html").exists()
 
@@ -3798,7 +3871,7 @@ def test_real_accessible_pair_renders_ordinary_three_five_and_six_column_tables(
         "## Notation mapping\n\n"
         "| Symbol | Meaning | Code term |\n"
         "|---|---|---|\n"
-        "| $o$ | Observation/outcome index | `observation_or_outcome_index` |\n\n"
+        "| $o$ | Observation/outcome index | `outcome_ix` |\n\n"
         "## Robustness onset\n\n"
         "| Mechanism | Onset rate | Naive @ worst | Robust @ worst | Robust method @ worst |\n"
         "|---|---:|---:|---:|---|\n"
@@ -3827,7 +3900,8 @@ def test_real_accessible_pair_renders_ordinary_three_five_and_six_column_tables(
     log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
     assert tex.count(r"\begin{longtable}") == 3
     assert "Observation/outcome" in tex
-    assert r"\breaktt{observation\_or\_outcome\_index}" in tex
+    assert r"\breaktt{" not in tex
+    assert r"\texttt{outcome\_ix}" in tex
     assert "Overfull \\hbox" not in log
     assert "Overfull \\vbox" not in log
 
@@ -3974,7 +4048,7 @@ def test_accessible_seqsplit_probe_uses_injected_credential_free_process_boundar
 
 
 @pytest.mark.slow
-def test_accessible_long_code_requires_seqsplit_before_latex(
+def test_accessible_long_code_fails_before_seqsplit_or_derivative_writing(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -3999,13 +4073,11 @@ def test_accessible_long_code_requires_seqsplit_before_latex(
         )
     )
 
-    with pytest.raises(RenderingError, match=r"\[slides\.capability\.seqsplit-required\]") as exc_info:
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table-width\]") as exc_info:
         renderer.render_accessible_pair(source, manuscript_dir=manuscript)
 
-    assert exc_info.value.context == {
-        "diagnostic_code": "slides.capability.seqsplit-required",
-        "required_latex_package": "seqsplit",
-    }
+    assert exc_info.value.context["diagnostic_code"] == "slides.density.indivisible-table-width"
+    assert exc_info.value.context["first_offending_token"] == "a" * 64
     assert not (slides / "seqsplit-required_slides.pdf").exists()
     assert not (slides / "seqsplit-required_slides.html").exists()
 
@@ -4048,9 +4120,10 @@ def test_real_pandoc_grid_table_list_width_and_height_boundaries(tmp_path: Path)
     height_fail = manuscript / "list-height-fail.md"
     write_grid(width_pass, ["a" * 40])
     write_grid(width_fail, ["a" * 42])
-    # One header line, two longtable rule/strut lines, and five list lines
-    # exactly consume the eight-line 16:9 frame budget. A sixth list line is
-    # therefore the first fail-closed boundary at the 20-point body floor.
+    # One header unit, two longtable rule/strut units, and five list units
+    # exactly consume the separate eight-unit compact-table budget. A sixth
+    # list line is therefore the first fail-closed table boundary at the
+    # 20-point body floor; this does not enlarge regular prose capacity.
     write_grid(height_pass, [f"item-{index}" for index in range(5)])
     write_grid(height_fail, [f"item-{index}" for index in range(6)])
     renderer = SlidesRenderer(
@@ -4099,11 +4172,11 @@ def test_real_general_list_width_nested_height_and_font_floor_boundaries(tmp_pat
     width_pass.write_text("## List width pass\n\n- " + "a" * 40 + "\n", encoding="utf-8")
     width_fail.write_text("## List width fail\n\n- " + "a" * 42 + "\n", encoding="utf-8")
     nested_pass.write_text(
-        "## Nested list pass\n\n- parent\n" + "".join(f"  - child {index}\n" for index in range(7)),
+        "## Nested list pass\n\n- parent\n" + "".join(f"  - child {index}\n" for index in range(6)),
         encoding="utf-8",
     )
     nested_fail.write_text(
-        "## Nested list fail\n\n- parent\n" + "".join(f"  - child {index}\n" for index in range(8)),
+        "## Nested list fail\n\n- parent\n" + "".join(f"  - child {index}\n" for index in range(7)),
         encoding="utf-8",
     )
     renderer = SlidesRenderer(
@@ -4139,13 +4212,13 @@ def test_real_general_list_width_nested_height_and_font_floor_boundaries(tmp_pat
         for node in ET.parse(bbox_xml).getroot().iter()
         if node.tag.endswith("word") and (node.text or "") in {"parent", "child"}
     ]
-    assert len(words) == 8
+    assert len(words) == 7
     glyph_heights = [float(node.attrib["yMax"]) - float(node.attrib["yMin"]) for node in words]
     assert min(glyph_heights) >= 18.0
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-list\]") as height_error:
         renderer.render_accessible_pair(nested_fail, manuscript_dir=manuscript)
-    assert height_error.value.context["estimated_lines"] == 9
+    assert height_error.value.context["estimated_lines"] == 8
     assert not (slides / "nested-list-fail_slides.pdf").exists()
     assert not (slides / "nested-list-fail_slides.html").exists()
 
@@ -4190,14 +4263,14 @@ def test_real_definition_list_seven_entries_pass_and_eight_fail_preflight(tmp_pa
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-definition-list\]") as exc_info:
         renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
-    assert exc_info.value.context["estimated_lines"] == 9
+    assert exc_info.value.context["estimated_lines"] == 8
     assert not (slides / "definitions-fail_slides.pdf").exists()
     assert not (slides / "definitions-fail_slides.html").exists()
 
 
 @pytest.mark.slow
 @pytest.mark.requires_latex
-def test_real_one_definition_eight_paragraphs_pass_and_ten_fail_preflight(tmp_path: Path) -> None:
+def test_real_one_definition_seven_paragraphs_pass_and_eight_fail_preflight(tmp_path: Path) -> None:
     if not shutil.which("pandoc"):
         pytest.skip("Pandoc not installed")
     compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
@@ -4216,8 +4289,8 @@ def test_real_one_definition_eight_paragraphs_pass_and_ten_fail_preflight(tmp_pa
 
     passing_source = manuscript / "one-definition-pass.md"
     failing_source = manuscript / "one-definition-fail.md"
-    definition_source(passing_source, 8)
-    definition_source(failing_source, 10)
+    definition_source(passing_source, 7)
+    definition_source(failing_source, 8)
     renderer = SlidesRenderer(
         RenderingConfig(
             output_dir=str(tmp_path / "output"),
@@ -4236,7 +4309,7 @@ def test_real_one_definition_eight_paragraphs_pass_and_ten_fail_preflight(tmp_pa
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-definition-list\]") as exc_info:
         renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
-    assert exc_info.value.context["estimated_lines"] == 10
+    assert exc_info.value.context["estimated_lines"] == 8
     assert not (slides / "one-definition-fail_slides.pdf").exists()
     assert not (slides / "one-definition-fail_slides.html").exists()
 
@@ -4282,14 +4355,14 @@ def test_real_loose_list_seven_paragraphs_pass_and_eight_fail_preflight(tmp_path
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-list\]") as exc_info:
         renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
-    assert exc_info.value.context["estimated_lines"] == 9
+    assert exc_info.value.context["estimated_lines"] == 8
     assert not (slides / "loose-list-fail_slides.pdf").exists()
     assert not (slides / "loose-list-fail_slides.html").exists()
 
 
 @pytest.mark.slow
 @pytest.mark.requires_latex
-def test_real_evidence_quote_nine_paragraphs_pass_and_ten_fail_preflight(tmp_path: Path) -> None:
+def test_real_evidence_quote_eight_paragraphs_pass_and_nine_fail_preflight(tmp_path: Path) -> None:
     if not shutil.which("pandoc"):
         pytest.skip("Pandoc not installed")
     compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
@@ -4307,8 +4380,8 @@ def test_real_evidence_quote_nine_paragraphs_pass_and_ten_fail_preflight(tmp_pat
 
     passing_source = manuscript / "evidence-pass.md"
     failing_source = manuscript / "evidence-fail.md"
-    quote_source(passing_source, 9)
-    quote_source(failing_source, 10)
+    quote_source(passing_source, 8)
+    quote_source(failing_source, 9)
     renderer = SlidesRenderer(
         RenderingConfig(
             output_dir=str(tmp_path / "output"),
@@ -4327,7 +4400,7 @@ def test_real_evidence_quote_nine_paragraphs_pass_and_ten_fail_preflight(tmp_pat
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-evidence\]") as exc_info:
         renderer.render_accessible_pair(failing_source, manuscript_dir=manuscript)
-    assert exc_info.value.context["estimated_lines"] == 9
+    assert exc_info.value.context["estimated_lines"] == 8
     assert not (slides / "evidence-fail_slides.pdf").exists()
     assert not (slides / "evidence-fail_slides.html").exists()
 
@@ -4343,7 +4416,7 @@ def test_real_evidence_quote_nine_paragraphs_pass_and_ten_fail_preflight(tmp_pat
         (" ", r"\ "),
     ],
 )
-def test_real_pandoc_code_serialization_matches_breaktt_predicate_across_threshold(
+def test_real_pandoc_accessible_code_stays_contiguous_across_archive_breaktt_threshold(
     tmp_path: Path,
     literal: str,
     latex_literal: str,
@@ -4385,14 +4458,10 @@ def test_real_pandoc_code_serialization_matches_breaktt_predicate_across_thresho
     assert html_result.is_file()
     tex = pdf_result.with_suffix(".tex").read_text(encoding="utf-8")
     log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
-    expected_breakable_count = 2 if literal == " " else 1
-    assert tex.count(r"\breaktt{") == expected_breakable_count
-    assert rf"\breaktt{{{safe_at}}}" in tex
+    assert r"\breaktt{" not in tex
+    assert rf"\texttt{{{safe_at}}}" in tex
     serialized_at = f"{'a' * 7}{latex_literal}{'a' * 8}"
-    if literal == " ":
-        assert rf"\breaktt{{{serialized_at}}}" in tex
-    else:
-        assert rf"\texttt{{{serialized_at}}}" in tex
+    assert rf"\texttt{{{serialized_at}}}" in tex
     assert "Overfull \\hbox" not in log
     assert "Overfull \\vbox" not in log
 

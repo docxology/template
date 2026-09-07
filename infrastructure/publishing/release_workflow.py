@@ -402,7 +402,7 @@ def _update_transmission_artifacts(
             append_release_entry,
             ledger_path_for_project,
         )
-        from infrastructure.publishing.transmission_bookends import (
+        from infrastructure.transmission.transmission_bookends import (
             write_transmission_bookends,
         )
 

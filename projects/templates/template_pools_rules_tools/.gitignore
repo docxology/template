@@ -28,3 +28,7 @@ htmlcov/
 # OS
 .DS_Store
 Thumbs.db
+# Local artifacts (aligned with template_textbook convention)
+coverage_project.json
+.mypy_cache/
+.ruff_cache/

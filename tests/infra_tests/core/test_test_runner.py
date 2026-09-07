@@ -26,6 +26,7 @@ from infrastructure.core.test_runner import (
     DEFAULT_FAIL_UNDER,
     run_per_project_pytest,
 )
+from infrastructure.core.test_runner_outputs import declared_output_relpaths
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 pytestmark = pytest.mark.timeout(120)
@@ -785,3 +786,95 @@ def test_receipt_rejects_parent_output_drift_after_project_process_exits(
         "OVERALL-EXIT: receipt overall_exit=1",
         "OUTPUT-ISOLATION: project 'alpha' changed output/",
     ]
+
+
+def test_output_digest_exclude_skips_declared_outputs(tmp_path: Path) -> None:
+    """The exclusion set removes a project's declared artifacts from the digest."""
+    project_root = tmp_path / "projects" / "alpha"
+    output_dir = project_root / "output"
+    output_dir.mkdir(parents=True)
+    declared = output_dir / "result.txt"
+    declared.write_text("regenerated per run\n", encoding="utf-8")
+    undeclared = output_dir / "side.txt"
+    undeclared.write_text("baseline\n", encoding="utf-8")
+    exclude = frozenset({"output/result.txt"})
+
+    before_excluding = _output_tree_digest(project_root, exclude=exclude)
+    declared.write_text("refreshed with a new commit pin\n", encoding="utf-8")
+    assert _output_tree_digest(project_root, exclude=exclude) == before_excluding
+
+    undeclared.write_text("mutated\n", encoding="utf-8")
+    assert _output_tree_digest(project_root, exclude=exclude) != before_excluding
+
+
+def test_declared_output_relpaths_tolerates_missing_or_malformed_manifest(tmp_path: Path) -> None:
+    """A missing or malformed manifest yields an empty set (strict isolation)."""
+    project_root = tmp_path / "projects" / "alpha"
+    (project_root / "output" / "reports").mkdir(parents=True)
+    assert declared_output_relpaths(project_root) == frozenset()
+
+    manifest = project_root / "output" / "reports" / "artifact_manifest.json"
+    manifest.write_text("{not json", encoding="utf-8")
+    assert declared_output_relpaths(project_root) == frozenset()
+
+    manifest.write_text(
+        '{"entries": [{"path": "output/reports/test_results.json"}, {"bogus": true}, "junk"]}',
+        encoding="utf-8",
+    )
+    assert declared_output_relpaths(project_root) == frozenset({"output/reports/test_results.json"})
+
+
+def test_receipt_allows_declared_output_artifact_regeneration(
+    synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A lane regenerating its *declared* output artifacts stays green.
+
+    Exemplars declare their regenerated outputs in
+    ``output/reports/artifact_manifest.json``; a fresh clone at a newer
+    commit would otherwise deterministically fail isolation when the
+    declared Stage-01 verifier refreshes e.g. the provenance commit pin —
+    the silent all-green-then-exit-1 rehearsal failure this exemption fixes.
+    """
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+    project_root = synthetic_repo / "projects" / "alpha"
+    output_file = project_root / "output" / "result.txt"
+    output_file.parent.mkdir()
+    output_file.write_text("stale commit pin\n", encoding="utf-8")
+    reports_dir = project_root / "output" / "reports"
+    reports_dir.mkdir()
+    (reports_dir / "artifact_manifest.json").write_text(
+        '{"entries": [{"path": "output/result.txt"}]}', encoding="utf-8"
+    )
+    (project_root / "tests" / "test_declared_regeneration.py").write_text(
+        dedent(
+            """
+            from pathlib import Path
+
+
+            def test_refreshes_declared_output_artifact() -> None:
+                output = Path(__file__).parent.parent / "output" / "result.txt"
+                output.write_text("current commit pin\\n", encoding="utf-8")
+            """
+        ).lstrip(),
+        encoding="utf-8",
+    )
+
+    receipt_path = synthetic_repo / "public-matrix-receipt.json"
+    rc = run_per_project_pytest(
+        synthetic_repo,
+        projects=["alpha"],
+        fail_under=1,
+        timeout=60,
+        receipt_path=receipt_path,
+    )
+
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    assert rc == 0
+    assert receipt.overall_exit == 0
+    assert receipt.lanes[0].exit_code == 0
+    assert receipt.lanes[0].output_isolation_ok is True
+    assert receipt.validate(["alpha"]) == []
+    assert output_file.read_text(encoding="utf-8") == "current commit pin\n"

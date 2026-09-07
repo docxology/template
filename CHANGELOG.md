@@ -9,6 +9,113 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Public-matrix output isolation honors declared artifacts (2026-09-07)
+
+- Root cause of the deterministic fresh-clone rehearsal exit 1
+  (``REHEARSAL-ANALYSIS-EXIT-1``): every public exemplar's declared Stage-01
+  verifier legitimately regenerates its *manifest-declared* output artifacts
+  during the matrix run (e.g. ``artifact_provenance.json`` re-pins
+  ``source_commit`` to the current HEAD; ``test_results.*`` embed the run
+  outcome), so ``output_digests_before != after`` flipped the receipt's
+  output-isolation check and forced exit 1 behind an all-green receipt on
+  every fresh clone at a newer commit.
+- ``output_tree_digest`` now accepts an exclusion set, and
+  ``run_per_project_pytest``/``write_public_matrix_receipt`` exclude each
+  project's ``output/reports/artifact_manifest.json``-declared paths from the
+  isolation *comparison* (the recorded per-lane digest stays the full-tree
+  identity). A missing or malformed manifest yields an empty set, keeping the
+  previous fail-closed strictness; the negative control
+  (``test_receipt_rejects_test_generated_output_drift`` — an *undeclared*
+  output mutation still fails the matrix) is preserved, and a companion test
+  proves a declared-artifact regeneration stays green.
+
+### Testing-cluster re-home and test-module splits (2026-09-07)
+
+- ``CORE-TESTING-REHOME-1`` closed: the 11 testing-cluster modules (~2.9k
+  lines) moved from the flat ``infrastructure/core/`` top level into
+  ``infrastructure/core/testing/`` (README+AGENTS shipped). Old module paths
+  remain as explicit re-export shims — import parity verified for every
+  externally-imported name, with the five externally-consumed privates pinned
+  via ``__all__``. ``determinism.py`` and ``script_discovery.py`` stay at the
+  top level (general utilities, not test machinery).
+- ``TEST-MODULE-SPLITS-1`` closed: the eight >800-line test modules split
+  along their section banners into 62 per-area files (+9204/-8570). Collection
+  parity verified exactly: 10758 collected / 11013 total / 255 deselected
+  before and after, every test id preserved verbatim; shared helpers moved to
+  per-directory ``_helpers`` modules.
+- ``RENDERING-LAYERING-1`` phase 1 in the same wave: the transmission family
+  re-home (below) plus the new ``tests/infra_tests/rendering/test_layering.py``
+  import-lint guard, which fails on any new rendering -> publishing/reporting
+  edge and allowlists the two tracked pre-existing metadata edges.
+
+### Rendering layering: transmission family re-home (2026-09-07)
+
+- ``RENDERING-LAYERING-1`` phase 1: the five ``transmission_*`` modules
+  (bookends, models, figure, barcode strip, page check — ~1.1k lines) moved
+  from ``infrastructure/publishing/`` to a shared-leaf
+  ``infrastructure/transmission/`` package with README+AGENTS. Rendering's
+  eight consumers, validation's three, and the publishing release workflow
+  now import from ``infrastructure.transmission``; publishing-side
+  ``transmission_*.py`` re-export shims keep historical imports resolving,
+  and the page-check CLI subprocess tests target the moved module.
+- New import-lint guard ``tests/infra_tests/rendering/test_layering.py``
+  fails on any new rendering -> publishing/reporting import. Two pre-existing
+  metadata edges (``ebook_bundle.py`` -> metadata_package,
+  ``_pdf_title_page_publishing.py`` -> repository_metadata) are explicitly
+  allowlisted and tracked as remaining work on the row; the publishing-side
+  metadata/release subpackage decoupling is the phase-2 remainder.
+
+### Storybook quick-profile floor resolved (2026-09-07)
+
+- ``STORYBOOK-QUICK-FLOOR-1`` closed by unmarking the seven ``@pytest.mark.slow``
+  rendering tests in ``template_storybook/tests/test_rendering.py`` (16.6s of
+  real PIL rendering — not slow-tier material). The declared 90% coverage floor
+  now holds in every profile: the quick-profile lane runs the full suite and
+  exits 0 (verified via ``stage_01_test.py --project
+  templates/template_storybook --project-only --profile quick``), and the
+  ``--include-slow`` lane is unchanged. The unused ``slow`` marker registration
+  was removed from the exemplar's pytest config.
+
+### Shared combined-edition pandoc argument builder (2026-09-07)
+
+- ``RENDERING-PANDOC-ARGS-1`` closed: the combined-pandoc-args assembly
+  (resource-path triple, formalism filter, pandoc-crossref probe,
+  citeproc+bibliography args) that was duplicated across the
+  ``_combined_exports.py`` DOCX/EPUB lanes and ``ebook_stage.py`` is now one
+  builder, ``infrastructure/rendering/_pandoc_args.combined_pandoc_args``, so
+  the resource-path contract cannot drift per edition. New wiring tests prove
+  each lane carries all three resource-path legs and the contract ordering
+  (formalism before crossref before citeproc).
+
+### Backlog reconciliation (2026-09-07)
+
+- Survey re-verified every active row against the tree:
+  ``TEST-ISOLATION-SYSPATH-1`` (393 ``from src.``/``import src`` sites across
+  exemplar trees, all 24 ``tests/__init__.py`` present, 42 regression files
+  carrying ``_PKG_ALIAS`` loaders), ``CORE-TESTING-REHOME-1`` (the flat
+  ``infrastructure/core/`` testing cluster is still at the top level),
+  ``TEST-MODULE-SPLITS-1`` (all eight modules still exceed 800 lines; the
+  row's counts were refreshed: test_counts_doc 1,509, test_slides_renderer_core
+  1,219, test_artifact_manifest_semantics 994), and ``RENDERING-LAYERING-1``
+  (seven ``rendering → publishing`` transmission imports remain).
+  ``CLEAN-CHECKOUT-MAJ-1`` and ``SECURITY-PRIVATE-PROMOTION-1`` remain
+  blocked-external. No new MINOR or MAJOR cross-cutting items surfaced.
+- Newly discovered and added as ``STORYBOOK-QUICK-FLOOR-1`` (Medium): the
+  exemplar's declared 90% coverage floor only holds with its 7 slow-marked
+  rendering tests (93.91% with ``--include-slow`` vs 88.73% under the quick
+  profile), so the all-projects receipt lane fails storybook's gate while CI's
+  ``--include-slow`` lanes stay green. A local probe with the exact rehearsal
+  flags confirmed the isolation fix eliminates the all-green-then-exit-1 flip
+  (24/24 lanes isolation-ok) and surfaced this second, independent blocker.
+
+### Branch protection and backlog closure (2026-09-06)
+
+- Branch protection is configured on ``main``: the static ``CI Gate`` check is
+  required, force-pushes and deletions are blocked, and admins are included;
+  no review requirement (solo maintainer). Evidence recorded in
+  ``docs/audit/BACKLOG-CLOSURE-2026-09-06.md``; ``SECURITY-OWNERSHIP-1``
+  closed with the live platform state as its receipt.
+
 ### Archival tracker refresh and credential-free status checks (2026-09-06)
 
 - ``SoftwareHeritageProvider.check_status`` (plus
@@ -44,6 +151,16 @@ not to the contents of any specific workspace.
   (both are required for rendering) and its error counters use
   ``set -e``-safe increments so a first failure no longer aborts the
   remaining diagnostics.
+### Rehearsal diagnosability and budget (2026-09-06)
+
+- Failed rehearsal commands now record a bounded, credential-redacted output
+  tail in the receipt (digest-only receipts made hosted failures
+  undiagnosable); passing commands keep an empty tail.
+- The rehearsal plan's project matrix runs the quick profile with two
+  project workers: the serial release profile cannot fit a hosted job
+  budget (a single exemplar's release pass exceeded 60 minutes in a local
+  probe). The rehearsal proves clean-checkout integrity; CI's project
+  lanes remain the authoritative content verification.
 
 ### Test collection groundwork, CI gate, and rehearsal machinery (2026-09-06)
 

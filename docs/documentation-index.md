@@ -177,7 +177,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[usage/style-guide.md](usage/style-guide.md)** - Equations, figures, tables
 - **[usage/image-management.md](usage/image-management.md)** - Image handling
 - **[usage/visualization-guide.md](usage/visualization-guide.md)** - Publication-quality figures
-- **[usage/output-formats.md](usage/output-formats.md)** - Per-format render toggles (PDF, HTML, slides, DOCX, EPUB)
+- **[usage/output-formats.md](usage/output-formats.md)** - Per-format render toggles plus the accessible presentation profile, paired-output contract, and failure semantics
 
 ### Scientific Computing
 

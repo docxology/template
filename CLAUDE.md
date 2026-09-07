@@ -614,7 +614,10 @@ This prohibition is enforced, not aspirational: regenerated-artifact guards reje
 - Maintain 90%+ test coverage for project code, 60%+ for infrastructure
 - Use `uv` for dependency management (recommended)
 - Pipeline can be resumed from checkpoints with `--resume`
-- Tests timeout after 10 seconds by default (configurable in pyproject.toml)
+- Test timeouts are layered: plain pytest defaults to 10 s per test
+  (pyproject.toml); pipeline and infra lanes pass `--timeout=120`; the
+  runner's subprocess cap is 1800 s and single-project release lanes cap
+  at 6900 s.
 
 
 <!-- BEGIN:STAGE_SUMMARY -->

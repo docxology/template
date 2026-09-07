@@ -53,7 +53,7 @@ from infrastructure.documentation._coverage_workspace import (
 COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 5
 COVERAGE_SOURCE_INVENTORY_MODE = "tracked-and-nonignored-coverage-inputs-v3"
-EXEMPLAR_SNAPSHOT_DATE = "2026-08-16"
+EXEMPLAR_SNAPSHOT_DATE = "2026-09-06"
 COVERAGE_MEASUREMENT_TIMEOUT_SECONDS = 1800
 _ACTIVE_COVERAGE_PROJECT = "template_active_inference"
 
@@ -155,7 +155,7 @@ class ExemplarSnapshot:
 
 
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    ExemplarSnapshot("template_active_inference", "91.87 %"),
+    ExemplarSnapshot("template_active_inference", "91.88 %"),
     ExemplarSnapshot("template_advanced_literature_review", "91.96 %"),
     ExemplarSnapshot("template_autopoiesis", "97.03 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.33 %"),
@@ -178,7 +178,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_sia", "94.39 %"),
     ExemplarSnapshot("template_storybook", "93.91 %"),
     ExemplarSnapshot("template_template", "97.53 %"),
-    ExemplarSnapshot("template_textbook", "96.36 %"),
+    ExemplarSnapshot("template_textbook", "96.08 %"),
 )
 
 

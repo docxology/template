@@ -8,7 +8,7 @@ import signal
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 from infrastructure.core.exceptions import RenderingError
 
@@ -20,7 +20,7 @@ _UNTRUSTED_SOURCE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
         "file or command inclusion",
         re.compile(
-            r"file://|(?:\.\./)+|!include\b|\\(?:input|include|openin|read|write18|shellescape)\b",
+            r"file://|(?:\.\./)+|!include\b|\^\^|\\(?:input|include|openin|read|write18|shellescape)\b",
             re.IGNORECASE,
         ),
     ),
@@ -35,9 +35,17 @@ _UNTRUSTED_SOURCE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
 class RenderSecurityProfile:
     """Describe the process boundary used for renderer child processes."""
 
-    name: str = "trusted-local"
+    name: Literal["trusted-local", "untrusted"] = "trusted-local"
     timeout_seconds: int = 600
     temp_root: Path | None = None
+
+    def __post_init__(self) -> None:
+        """Reject unknown or incomplete profiles before any child is launched."""
+
+        if self.name not in {"trusted-local", "untrusted"}:
+            raise ValueError("render security profile must be 'trusted-local' or 'untrusted'")
+        if self.name == "untrusted" and self.temp_root is None:
+            raise ValueError("untrusted rendering requires an isolated temporary output root")
 
     @property
     def untrusted(self) -> bool:

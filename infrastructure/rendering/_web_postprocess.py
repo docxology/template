@@ -24,6 +24,9 @@ from infrastructure.rendering._web_figure_details import apply_figure_long_descr
 from infrastructure.rendering._web_io import write_if_changed as write_if_changed
 from infrastructure.rendering._web_assets import (
     MATHJAX_URL as MATHJAX_URL,
+    MATHJAX_INTEGRITY as MATHJAX_INTEGRITY,
+    MATHJAX_FONT_URL as MATHJAX_FONT_URL,
+    MATHJAX_DYNAMIC_PREFIX as MATHJAX_DYNAMIC_PREFIX,
     _MATHJAX_INTEGRITY as _MATHJAX_INTEGRITY,
     _MATHJAX_FONT_URL as _MATHJAX_FONT_URL,
     _MATHJAX_DYNAMIC_PREFIX as _MATHJAX_DYNAMIC_PREFIX,

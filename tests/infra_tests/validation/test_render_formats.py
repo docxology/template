@@ -47,14 +47,18 @@ def _write_valid_pdf(path: Path) -> None:
 def _write_accessible_reveal(path: Path) -> None:
     path.write_text(
         "<!doctype html><html><head><title>Current — presentation</title>"
+        '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
         '<link rel="stylesheet" href="https://unpkg.com/reveal.js@5.2.1/dist/theme/white.css">'
         "<style data-template-accessible-slides>html, body { overflow-x: hidden; }</style></head>"
         '<body><a class="skip-link" href="#main-content">Skip to main content</a>'
         '<nav class="slide-reader-nav" aria-label="Presentation companion"></nav>'
         '<main id="main-content"><h1>Current presentation</h1>'
         '<div aria-label="Presentation slides"><section aria-roledescription="slide" '
-        'aria-labelledby="current-heading"><h2 id="current-heading">Current</h2></section></div>'
-        "<script>keyboard: true</script></main></body></html>",
+        'aria-labelledby="current-heading"><h2 id="current-heading">Current</h2>'
+        "<p>Visible slide body.</p></section></div>"
+        "<script data-template-interactive-keyboard-guard>/* keyboard guard */</script>"
+        "<script>Reveal.initialize({scrollActivationWidth: null, keyboard: true});</script>"
+        "</main></body></html>",
         encoding="utf-8",
     )
 

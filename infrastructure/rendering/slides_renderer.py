@@ -36,6 +36,7 @@ from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._slides_crossref import (
     COMBINED_AUX_BASENAME,
+    bind_displayed_equation_numbers,
     parse_aux_label_numbers,
     resolve_cross_deck_references,
     transform_tex_prose,
@@ -62,6 +63,11 @@ from infrastructure.rendering._slides_beamer import (
     _slide_bibliography_args as _slide_bibliography_args,
     beamer_command,
     transform_beamer_latex,
+)
+from infrastructure.rendering._slides_beamer_geometry import reject_unsafe_accessible_beamer_geometry
+from infrastructure.rendering._slides_presentation_variants import (
+    reject_small_embedded_labels,
+    relocate_presentation_panels,
 )
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
@@ -104,15 +110,14 @@ class SlidesRenderer:
         self._latex_compile = latex_compile
 
     def _require_accessible_seqsplit(self) -> None:
-        """Require the package that makes accessible long-code pricing truthful.
+        """Require the package used by admitted literal/reference break sequences.
 
-        Archive rendering keeps the historical graceful LaTeX fallback. Accessible
-        composition, however, discounts a long simple inline Code node only because
-        the downstream ``breaktt`` macro inserts character-level opportunities.
-        If ``seqsplit.sty`` is unavailable, that macro is intentionally an identity
-        fallback and the geometric premise is false. Detect the capability through
-        the same injected, security-profiled process boundary as every other slide
-        subprocess.
+        Accessible authored ``Code`` remains indivisible. Two narrow generated
+        cases may still use ``breakseq``: recurring display literals and unresolved
+        cross-deck reference tokens. If ``seqsplit.sty`` is unavailable, that macro
+        is an identity fallback and the generated geometric premise is false.
+        Detect the capability through the same injected, security-profiled process
+        boundary as every other slide subprocess.
         """
 
         located = ""
@@ -133,13 +138,13 @@ class SlidesRenderer:
         if located:
             return
         raise RenderingError(
-            "[slides.capability.seqsplit-required] Accessible long monospace wrapping requires seqsplit.sty",
+            "[slides.capability.seqsplit-required] Accessible generated label wrapping requires seqsplit.sty",
             context={
                 "diagnostic_code": "slides.capability.seqsplit-required",
                 "required_latex_package": "seqsplit",
             },
             suggestions=[
-                "Install the TeX seqsplit package before rendering the accessible slide profile.",
+                "Install the TeX seqsplit package before rendering generated long labels in the accessible profile.",
                 "Shorten or remove the long projected monospace token; archive rendering retains its historical fallback.",
             ],
         )
@@ -187,6 +192,7 @@ class SlidesRenderer:
 
         render_source = source_file
         temporary_sources: tuple[Path, ...] = ()
+        accessible_resource_roots: tuple[Path, ...] = ()
         if self.config.slides_profile == "accessible":
             # A failed strict composition must not leave a prior derivative
             # that can be mistaken for the current source.
@@ -195,6 +201,10 @@ class SlidesRenderer:
                 source_file,
                 output_dir,
                 manuscript_dir=manuscript_dir,
+                figures_dir=figures_dir,
+            )
+            accessible_resource_roots = tuple(
+                dict.fromkeys(path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None)
             )
 
         try:
@@ -206,6 +216,7 @@ class SlidesRenderer:
                     manuscript_dir,
                     figures_dir,
                     strict_cross_deck_refs=strict_cross_deck_refs,
+                    accessible_resource_roots=accessible_resource_roots,
                 )
             # For reveal.js, use direct pandoc rendering.
             return self._render_revealjs(
@@ -214,6 +225,7 @@ class SlidesRenderer:
                 manuscript_dir,
                 figures_dir,
                 strict_cross_deck_refs=strict_cross_deck_refs,
+                accessible_resource_roots=accessible_resource_roots,
             )
         finally:
             for temporary in temporary_sources:
@@ -258,11 +270,15 @@ class SlidesRenderer:
         render_source = source_file
         temporary_sources: tuple[Path, ...] = ()
         completed = False
+        accessible_resource_roots = tuple(
+            dict.fromkeys(path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None)
+        )
         try:
             render_source, temporary_sources = self._prepare_accessible_source(
                 source_file,
                 output_dir,
                 manuscript_dir=manuscript_dir,
+                figures_dir=figures_dir,
             )
             pdf_result = self._render_beamer_with_paths(
                 render_source,
@@ -270,6 +286,7 @@ class SlidesRenderer:
                 manuscript_dir,
                 figures_dir,
                 strict_cross_deck_refs=strict_cross_deck_refs,
+                accessible_resource_roots=accessible_resource_roots,
             )
             html_result = self._render_revealjs(
                 render_source,
@@ -277,6 +294,7 @@ class SlidesRenderer:
                 manuscript_dir,
                 figures_dir,
                 strict_cross_deck_refs=strict_cross_deck_refs,
+                accessible_resource_roots=accessible_resource_roots,
             )
             completed = True
             return pdf_result, html_result
@@ -293,6 +311,7 @@ class SlidesRenderer:
         output_dir: Path,
         *,
         manuscript_dir: Path | None,
+        figures_dir: Path | None,
     ) -> tuple[Path, tuple[Path, ...]]:
         """Resolve citations, then compose one bounded Pandoc JSON document."""
 
@@ -338,6 +357,17 @@ class SlidesRenderer:
                 raw_json,
                 policy=self.config.accessible_slide_policy(),
                 source=str(source_file),
+                authorized_image_roots=tuple(
+                    path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None
+                ),
+                figure_image_root=figures_dir,
+            )
+            relocate_presentation_panels(
+                composition.document,
+                output_dir=output_dir,
+                source=str(source_file),
+                roots=tuple(path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None),
+                figure_root=figures_dir,
             )
             try:
                 temporary.write_text(
@@ -386,6 +416,7 @@ class SlidesRenderer:
         figures_dir: Path | None = None,
         *,
         strict_cross_deck_refs: bool = False,
+        accessible_resource_roots: tuple[Path, ...] = (),
     ) -> Path:
         """Render reveal.js slides."""
         theme = _ACCESSIBLE_REVEAL_THEME if self.config.slides_profile == "accessible" else self.config.slide_theme
@@ -412,10 +443,11 @@ class SlidesRenderer:
                 ]
             )
         cmd.extend(_slide_bibliography_args(manuscript_dir))
-        if manuscript_dir is not None:
-            cmd.extend(["--resource-path", str(manuscript_dir)])
-        if figures_dir is not None:
-            cmd.extend(["--resource-path", str(figures_dir)])
+        resource_roots = accessible_resource_roots or tuple(
+            path for path in (manuscript_dir, figures_dir) if path is not None
+        )
+        for resource_root in dict.fromkeys(resource_roots):
+            cmd.extend(["--resource-path", str(resource_root)])
 
         logger.info(f"Generating reveal.js slides from {source_file}")
 
@@ -472,6 +504,7 @@ class SlidesRenderer:
         figures_dir: Path | None,
         *,
         strict_cross_deck_refs: bool = False,
+        accessible_resource_roots: tuple[Path, ...] = (),
     ) -> Path:
         """Render beamer slides with proper figure path handling.
 
@@ -489,6 +522,7 @@ class SlidesRenderer:
         # into ``output/slides``.
         temp_tex = output_file.with_suffix(".tex")
 
+        profile = self.config.security()
         cmd = beamer_command(
             self.config,
             source_file,
@@ -496,6 +530,7 @@ class SlidesRenderer:
             manuscript_dir,
             figures_dir,
             slide_level=2 if self.config.slides_profile == "accessible" else self._slide_level_for_source(source_file),
+            accessible_resource_roots=accessible_resource_roots,
         )
 
         logger.info(f"Generating beamer slides from {source_file}")
@@ -507,7 +542,7 @@ class SlidesRenderer:
                 check=True,
                 capture_output=True,
                 text=True,
-                **subprocess_options(self.config.security(), 600),
+                **subprocess_options(profile, 600),
             )
 
             # Read LaTeX content and fix figure paths
@@ -526,6 +561,13 @@ class SlidesRenderer:
                 tex_content, self.config, require_seqsplit=self._require_accessible_seqsplit
             )
 
+            if (self.config.slides_profile == "accessible" or profile.untrusted) and "^^" in tex_content:
+                temp_tex.unlink(missing_ok=True)
+                raise RenderingError(
+                    "[slides.security.tex-lexical-translation] Generated slide TeX contains forbidden lexical translation",
+                    context={"diagnostic_code": "slides.security.tex-lexical-translation", "source": str(source_file)},
+                )
+
             # Replace only our TeX target through an exclusive confined temp.
             atomic_write_text_confined(output_dir, temp_tex, tex_content)
 
@@ -533,6 +575,12 @@ class SlidesRenderer:
             compiled_pdf = self._latex_compile(temp_tex, output_dir, compiler=self.config.latex_compiler, timeout=900)
             if self.config.slides_profile == "accessible":
                 _reject_accessible_beamer_overflow(temp_tex.with_suffix(".log"), compiled_pdf)
+                reject_unsafe_accessible_beamer_geometry(compiled_pdf)
+                reject_small_embedded_labels(
+                    compiled_pdf,
+                    source_file,
+                    minimum_pt=self.config.slides_figure_label_font_pt,
+                )
             ensure_pdf_at(compiled_pdf, output_file)
 
             if output_file.exists():
@@ -619,7 +667,7 @@ class SlidesRenderer:
         (``{pdf_dir}/_combined_manuscript.aux``); this pre-pass replaces
         each cross-deck reference with the literal number that aux
         recorded — the same number the combined PDF prints. Within-deck
-        references are untouched (Beamer numbers them natively), labels
+        references are untouched by default (Beamer numbers them natively), labels
         missing from the aux are left as-is and noted in the render log,
         and a missing aux (e.g. first-ever render, before any combined
         build) skips only the numeric lookup. In the accessible profile,
@@ -630,10 +678,14 @@ class SlidesRenderer:
         The default standalone pass remains fail-open. The producer-ordered
         refresh sets ``strict_cross_deck_refs`` and, in accessible mode, fails
         when any reference (including a local section reference) is absent
-        from the current combined-manuscript AUX.
+        from the current combined-manuscript AUX. That strict accessible pass
+        also tags labeled single-number equations with their canonical numbers
+        so the visible equation and its prose references agree.
         """
         aux_path = Path(self.config.pdf_dir) / COMBINED_AUX_BASENAME
         label_numbers = parse_aux_label_numbers(aux_path)
+        if self.config.slides_profile == "accessible" and strict_cross_deck_refs:
+            tex_content = bind_displayed_equation_numbers(tex_content, label_numbers)
         missing_accessible_sections: set[str] = set()
         accessible_section_replacements = 0
         if self.config.slides_profile == "accessible":

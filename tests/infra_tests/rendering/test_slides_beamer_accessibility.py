@@ -46,11 +46,8 @@ def _inline_text(value: object) -> str:
     return _inline_text(content)
 
 
-def test_long_shell_commands_reflow_as_complete_breakable_inline_code() -> None:
-    source = (
-        "uv run --extra dev python scripts/validate_test_coverage.py\n"
-        "    uv run  python scripts/z_generate_manuscript_variables.py"
-    )
+def test_long_shell_commands_reflow_at_whitespace_with_complete_tokens() -> None:
+    source = "uv run --extra dev python scripts/check_coverage.py\n    uv run python scripts/make_variables.py"
 
     composition = compose_accessible_pandoc_document(
         _document(_header("Coverage evidence"), _code(source, "bash")),
@@ -100,7 +97,7 @@ def test_overwide_whitespace_sensitive_code_fails_with_stable_diagnostic() -> No
 
 
 def test_atomic_shell_block_that_is_too_tall_fails_before_pandoc() -> None:
-    source = "\n".join("uv run pytest tests/unit.py" for _ in range(9))
+    source = "\n".join("uv run pytest tests/unit.py" for _ in range(8))
 
     with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-code\]") as exc_info:
         compose_accessible_pandoc_document(
@@ -109,9 +106,9 @@ def test_atomic_shell_block_that_is_too_tall_fails_before_pandoc() -> None:
             source="manuscript/reproducibility.md",
         )
 
-    assert exc_info.value.context["source_line_count"] == 9
-    assert exc_info.value.context["estimated_lines"] == 9
-    assert exc_info.value.context["maximum_lines"] == 8
+    assert exc_info.value.context["source_line_count"] == 8
+    assert exc_info.value.context["estimated_lines"] == 8
+    assert exc_info.value.context["maximum_lines"] == 7
 
 
 def test_beamer_transform_remaps_projection_unsupported_glyphs_outside_code() -> None:

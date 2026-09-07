@@ -5,8 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from infrastructure.publishing.transmission_barcode_strip import MIN_STRIP_HEIGHT, MIN_STRIP_WIDTH, STRIP_FILENAME
-from infrastructure.publishing.transmission_bookends import (
+from infrastructure.transmission.transmission_barcode_strip import MIN_STRIP_HEIGHT, MIN_STRIP_WIDTH, STRIP_FILENAME
+from infrastructure.transmission.transmission_bookends import (
     BEGIN_FILENAME,
     END_FILENAME,
     FIGURE_WIDTH,
@@ -17,7 +17,7 @@ from infrastructure.publishing.transmission_bookends import (
     transmission_bookends_enabled,
     write_transmission_bookends,
 )
-from infrastructure.publishing.transmission_figure import write_transmission_diagram
+from infrastructure.transmission.transmission_figure import write_transmission_diagram
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 
 

@@ -12,7 +12,6 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Final
 
-from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
 from infrastructure.rendering._pdf_unicode_remap import _T, _map_prose_glyphs
@@ -20,8 +19,12 @@ from infrastructure.rendering._slides_codelisting import make_codelisting_slide_
 from infrastructure.rendering._slides_framebreaks import split_long_slide_frames
 from infrastructure.rendering._slides_math_header import write_slides_math_header
 from infrastructure.rendering._slides_tex_figures import normalize_accessible_projection_latex
+from infrastructure.rendering._slides_tex_tables import inset_accessible_longtables
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.latex_log_quality import parse_latex_log_findings
+from infrastructure.rendering.latex_log_quality import parse_latex_log_findings as parse_latex_log_findings
+from infrastructure.rendering._slides_beamer_geometry import (
+    reject_accessible_beamer_overflow,
+)
 from infrastructure.rendering.latex_texttt import (
     constrain_includegraphics_textheight,
     make_known_literals_breakable,
@@ -114,31 +117,8 @@ _SLIDES_GLYPH_REMAP: Final[dict[str, str]] = {
 
 
 def _reject_accessible_beamer_overflow(log_file: Path, compiled_pdf: Path) -> None:
-    """Discard a Beamer derivative whose fixed accessible layout overflowed."""
-
-    blocked = {r"Overfull \hbox", r"Overfull \vbox"}
-    findings = [
-        finding
-        for finding in parse_latex_log_findings(log_file, blocked_layout_kinds=blocked)
-        if finding.kind in blocked
-    ]
-    if not findings:
-        return
-    compiled_pdf.unlink(missing_ok=True)
-    examples = [f"{finding.kind} at line {finding.line_number}: {finding.message}" for finding in findings[:5]]
-    raise RenderingError(
-        "[slides.density.beamer-overflow] Accessible Beamer content exceeds its fixed frame geometry",
-        context={
-            "diagnostic_code": "slides.density.beamer-overflow",
-            "log_file": str(log_file),
-            "finding_count": len(findings),
-            "examples": examples,
-        },
-        suggestions=[
-            "Split the source at a semantic block boundary or shorten the projected excerpt.",
-            "Keep complete prose, captions, and tables in the linked canonical HTML manuscript.",
-        ],
-    )
+    """Compatibility adapter for the shared rendered-geometry validation."""
+    reject_accessible_beamer_overflow(log_file, compiled_pdf)
 
 
 def _slide_bibliography_args(manuscript_dir: Path | None) -> list[str]:
@@ -169,6 +149,7 @@ def beamer_command(
     figures_dir: Path | None,
     *,
     slide_level: int,
+    accessible_resource_roots: tuple[Path, ...] = (),
 ) -> list[str]:
     """Prepare Pandoc arguments and the profile-specific math header."""
     output_dir = temp_tex.parent
@@ -224,6 +205,9 @@ def beamer_command(
     # Inject the math-font subset of the manuscript preamble so
     # \mid, \ll, \gg etc. render cleanly in slide decks without
     # pulling in the full combined-PDF preamble.
+    preamble_file = manuscript_dir / "preamble.md" if manuscript_dir is not None else None
+    if preamble_file is not None and preamble_file.exists():
+        config.security().validate_source(preamble_file)
     math_header = write_slides_math_header(
         manuscript_dir,
         output_dir,
@@ -233,10 +217,11 @@ def beamer_command(
         cmd.extend(["-H", str(math_header)])
 
     # Add resource paths if provided
-    if manuscript_dir:
-        cmd.extend(["--resource-path", str(manuscript_dir)])
-    if figures_dir:
-        cmd.extend(["--resource-path", str(figures_dir)])
+    resource_roots = accessible_resource_roots or tuple(
+        path for path in (manuscript_dir, figures_dir) if path is not None
+    )
+    for resource_root in dict.fromkeys(resource_roots):
+        cmd.extend(["--resource-path", str(resource_root)])
 
     return cmd
 
@@ -266,7 +251,9 @@ def transform_beamer_latex(
     if remapped_glyphs:
         logger.info("Remapped %d projection-unsupported glyph(s) to LaTeX math", remapped_glyphs)
 
-    tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
+    texttt_replacements = 0
+    if config.slides_profile == "archive":
+        tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
     if texttt_replacements:
         logger.info("Made %d long monospace path span(s) breakable in slides", texttt_replacements)
 
@@ -287,6 +274,7 @@ def transform_beamer_latex(
         require_seqsplit()
 
     if config.slides_profile == "accessible":
+        tex_content, _ = inset_accessible_longtables(tex_content)
         tex_content, normalized_graphics, removed_empty_captions = normalize_accessible_projection_latex(tex_content)
         if normalized_graphics:
             logger.info("Preserved aspect ratio for %d accessible slide figure(s)", normalized_graphics)
@@ -296,15 +284,10 @@ def transform_beamer_latex(
     # A long scientific caption is part of an unbreakable figure
     # environment. Keep the image legible but leave vertical room for
     # its accessibility/source caption on the same frame.
-    figure_fraction = (
-        f"{config.slides_min_figure_area_percent / 100:.2f}" if config.slides_profile == "accessible" else "0.40"
-    )
-    tex_content, graphics_replacements = constrain_includegraphics_textheight(
-        tex_content,
-        figure_fraction,
-    )
-    if graphics_replacements:
-        logger.info("Constrained %d slide figure height bound(s)", graphics_replacements)
+    if config.slides_profile == "archive":
+        tex_content, graphics_replacements = constrain_includegraphics_textheight(tex_content, "0.40")
+        if graphics_replacements:
+            logger.info("Constrained %d slide figure height bound(s)", graphics_replacements)
 
     if config.slides_profile == "archive":
         tex_content, framebreak_replacements = split_long_slide_frames(tex_content)

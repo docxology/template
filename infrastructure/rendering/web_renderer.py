@@ -29,9 +29,9 @@ from infrastructure.rendering._web_markdown_preprocess import (
 logger = get_logger(__name__)
 
 _MATHJAX_URL = web_postprocess.MATHJAX_URL
-_MATHJAX_INTEGRITY = web_postprocess._MATHJAX_INTEGRITY
-_MATHJAX_FONT_URL = web_postprocess._MATHJAX_FONT_URL
-_MATHJAX_DYNAMIC_PREFIX = web_postprocess._MATHJAX_DYNAMIC_PREFIX
+_MATHJAX_INTEGRITY = web_postprocess.MATHJAX_INTEGRITY
+_MATHJAX_FONT_URL = web_postprocess.MATHJAX_FONT_URL
+_MATHJAX_DYNAMIC_PREFIX = web_postprocess.MATHJAX_DYNAMIC_PREFIX
 
 
 class WebRenderer:

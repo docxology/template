@@ -97,6 +97,18 @@ The Core module provides fundamental foundation utilities used across the entire
 - Public API: `MemoryAdvisory`, `memory_path(repo_root)`, `example_path(repo_root)`, `empty_memory_payload()`, `normalize_bullets(items, *, max_items=MAX_BULLETS)`, `audit_memory_payload(payload)`, `load_memory(repo_root)`, `save_memory(repo_root, payload)`
 - Tests: `tests/infra_tests/core/test_agent_memory.py`
 
+**Testing cluster — re-homed to [`testing/`](testing/AGENTS.md) (`CORE-TESTING-REHOME-1`)**
+
+The pytest/testing modules below moved to the
+[`infrastructure/core/testing/`](testing/README.md) subpackage; their old
+`infrastructure/core/<module>.py` paths remain as backwards-compat shims
+re-exporting the public surface, so every existing import keeps resolving.
+The per-module documentation below still applies verbatim:
+`pytest_marker_exprs.py`, `pytest_orchestration.py`, `pytest_profiles.py`,
+`public_matrix_receipt.py`, `project_test_matrix.py`,
+`test_impact.py`, `test_performance.py`, `test_runner.py`,
+`test_runner_cache.py`, `test_runner_outputs.py`, `coverage_policy.py`.
+
 **pytest_marker_exprs.py**
 - ``build_pytest_marker_expression(...)`` returns one ``pytest -m`` string for subprocess runners (`pipeline_test_runner`, ``run_per_project_pytest``) so benchmarks and slow/Ollama-gated tests stay opt-in outside defaults.
 

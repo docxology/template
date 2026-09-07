@@ -11,3 +11,5 @@ htmlcov/
 src/*.egg-info/
 *.egg-info/
 .DS_Store
+# Local artifacts (aligned with template_textbook convention)
+coverage_project.json

@@ -113,7 +113,7 @@ class RenderingConfig:
 
     # Trusted local rendering remains the default. Callers handling external
     # submissions must opt into ``untrusted`` and provide a temporary root.
-    security_profile: str = "trusted-local"
+    security_profile: Literal["trusted-local", "untrusted"] = "trusted-local"
     untrusted_temp_root: str | None = None
 
     # Format on/off toggles. PDF/HTML/Slides default True (existing behavior);
@@ -130,6 +130,16 @@ class RenderingConfig:
     def __post_init__(self) -> None:
         """Validate the opt-in slide contract without changing legacy output."""
 
+        if self.security_profile not in {"trusted-local", "untrusted"}:
+            raise ValueError("security_profile must be 'trusted-local' or 'untrusted'")
+        if self.untrusted_temp_root is not None and (
+            not isinstance(self.untrusted_temp_root, str)
+            or not self.untrusted_temp_root.strip()
+            or "\x00" in self.untrusted_temp_root
+        ):
+            raise ValueError("untrusted_temp_root must be a non-empty path string without null bytes")
+        if self.security_profile == "untrusted" and self.untrusted_temp_root is None:
+            raise ValueError("untrusted rendering requires untrusted_temp_root")
         if self.slides_profile not in {"archive", "accessible"}:
             raise ValueError("slides_profile must be 'archive' or 'accessible'")
         numeric_contract = (
@@ -186,6 +196,8 @@ class RenderingConfig:
         - ENABLE_PDF / ENABLE_HTML / ENABLE_SLIDES / ENABLE_DOCX / ENABLE_EPUB
           ("0"/"1", "false"/"true", "no"/"yes" — case-insensitive)
         - SLIDES_PROFILE and SLIDES_* density/typography policy values
+        - RENDER_SECURITY_PROFILE (trusted-local/untrusted) and
+          RENDER_UNTRUSTED_TEMP_ROOT (required for untrusted rendering)
 
         Args:
             env: Optional dictionary to override or replace os.environ

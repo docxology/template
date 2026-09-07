@@ -7,7 +7,8 @@ markdown manuscript using the infrastructure rendering module:
 3. Copies generated ebook files to output/ebook/ under the project's output
 4. Reports results with file sizes
 
-Stage 07 of the pipeline orchestration (opt-in ebook stage).
+Stage 11 of the pipeline orchestration (opt-in ebook stage; script
+``stage_11_ebook.py``).
 
 Exit codes:
     0: All requested ebook formats generated successfully
@@ -17,7 +18,6 @@ Exit codes:
 
 from __future__ import annotations
 
-import shutil
 import tempfile
 from pathlib import Path
 
@@ -26,14 +26,13 @@ from infrastructure.core.logging.utils import get_logger, log_header, log_succes
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.rendering._bibliography import (
     BibliographyConflictError,
-    pandoc_bibliography_args,
     resolve_bibliography,
 )
 from infrastructure.rendering._combined_exports import (
     resolve_combined_markdown,
     rewrite_pdf_figure_refs_to_raster,
 )
-from infrastructure.rendering._pandoc_filters import formalism_filter_args
+from infrastructure.rendering._pandoc_args import combined_pandoc_args
 from infrastructure.rendering.epub_renderer import render_epub
 from infrastructure.rendering.mobi_renderer import render_mobi
 from infrastructure.rendering.docx_renderer import render_docx
@@ -164,35 +163,23 @@ def run_ebook_generation(
     # rewritten copy, not the original.
     original_text = combined_md.read_text(encoding="utf-8")
     rewritten_text = rewrite_pdf_figure_refs_to_raster(original_text, combined_md)
-    figures_dir = project_root / "output" / "figures"
-    pandoc_extra_args_list = [
-        "--resource-path=" + str(combined_md.parent),
-        "--resource-path=" + str(figures_dir),
-        "--resource-path=" + str(figures_dir.parent),
-    ]
-
-    # Without pandoc-crossref, {#fig-x}-style targets (e.g. a manual
-    # "[see Figure](#fig-x)" link) don't reliably resolve to a real anchor —
-    # confirmed via epubcheck RSC-012 "Fragment identifier is not defined" on
-    # a real manuscript. Mirrors the same filter render_combined_docx already
-    # applies in _combined_exports.py.
-    # Numbering must match the PDF/DOCX/EPUB editions of the same manuscript.
-    pandoc_extra_args_list.extend(formalism_filter_args())
-
-    crossref = shutil.which("pandoc-crossref")
-    if crossref:
-        pandoc_extra_args_list.extend(["--filter", crossref])
-    else:
-        logger.warning("pandoc-crossref not on PATH; @fig:/@sec:/@tbl:/@eq: cross-references will not resolve.")
-
     try:
         bibliographies = resolve_bibliography(project_root / "manuscript")
     except (BibliographyConflictError, OSError, UnicodeError) as exc:
         logger.error("Bibliography resolution failed: %s", exc)
         return 1
-    if bibliographies:
-        pandoc_extra_args_list.append("--citeproc")
-        pandoc_extra_args_list.extend(pandoc_bibliography_args(bibliographies))
+
+    figures_dir = project_root / "output" / "figures"
+    # Same shared assembly as the combined DOCX/EPUB lanes in
+    # _combined_exports.py: the builder carries the resource-path triple
+    # (combined-markdown dir, figures dir, figures parent), the formalism
+    # filter, the crossref probe, and citeproc+bibliography so the ebook
+    # editions cannot drift from the rest of the manuscript's numbering.
+    pandoc_extra_args_list = combined_pandoc_args(
+        [combined_md.parent, figures_dir, figures_dir.parent],
+        bibliographies,
+        edition="ebook",
+    )
 
     results: dict[str, tuple[bool, str]] = {}  # format → (success, message)
 

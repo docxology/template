@@ -31,7 +31,7 @@ from infrastructure.rendering._slides_accessibility_figures import (
     _image_nodes as _image_nodes,
     _image_width_percent as _image_width_percent,
     _is_projection_image_only as _is_projection_image_only,
-    _shorten_figure_caption as _shorten_figure_caption,
+    shorten_figure_caption,
     _validate_projection_image_row as _validate_projection_image_row,
 )
 from infrastructure.rendering._slides_accessibility_raw_tex import _validate_raw_tex_geometry
@@ -40,11 +40,11 @@ from infrastructure.rendering._slides_accessibility_text_geometry import (
     _estimated_lines_with_hard_breaks,
     _estimated_proportional_text_lines,
     _plain_text,
+    _validate_indivisible_code_width,
     _validate_math_geometry,
     _widest_indivisible_inline_token,
     _word_count,
 )
-from infrastructure.rendering.latex_texttt import long_texttt_source_is_breakable
 
 _PRESENTATION_PAGE_BREAK_RE = re.compile(r"^\\(?:clearpage|newpage|pagebreak)\s*$")
 _EQUATION_LABEL_RE = re.compile(r"^\{#(?:eq|def|prop|lem|thm):[^{}]+\}$")
@@ -69,6 +69,7 @@ _CONTINUATION_TITLE_TARGET_CHARS = CONTINUATION_TITLE_TARGET_CHARS
 _SEMANTIC_BREAK_SUFFIXES = SEMANTIC_BREAK_SUFFIXES
 _CLAUSE_COORDINATORS = CLAUSE_COORDINATORS
 _density_error = density_error
+_shorten_figure_caption = shorten_figure_caption
 
 
 def _compact_continuation_title(title: str, continuation: int) -> str:
@@ -125,8 +126,10 @@ def _frame_body_line_capacity(
     header: dict[str, Any],
     continuation: int,
     policy: AccessibleSlidePolicy,
+    *,
+    base_body_lines: int = _BASE_BODY_LINES_16_9,
 ) -> int:
-    """Estimate safe body lines after the fixed title and footer regions."""
+    """Estimate safe geometry units after the fixed title and footer regions."""
 
     title_chars_per_line = max(
         1,
@@ -136,7 +139,7 @@ def _frame_body_line_capacity(
         _continuation_title_text(header, continuation),
         title_chars_per_line,
     )
-    body_lines = math.floor(_BASE_BODY_LINES_16_9 * 20 / policy.body_font_pt)
+    body_lines = math.floor(base_body_lines * 20 / policy.body_font_pt)
     return max(1, body_lines - (title_lines - 1) * _BODY_LINES_PER_EXTRA_TITLE_LINE)
 
 
@@ -163,6 +166,13 @@ def _validate_header_geometry(
     title_width_capacity = max(
         1,
         math.floor(_TITLE_CHARACTERS_PER_LINE_28PT * 28 / policy.title_font_pt),
+    )
+    _validate_indivisible_code_width(
+        inlines,
+        capacity=title_width_capacity,
+        policy=policy,
+        source=source,
+        heading=heading,
     )
     physical_token, physical_token_width = _widest_indivisible_inline_token(inlines)
     if physical_token_width > title_width_capacity:
@@ -203,6 +213,13 @@ def _validate_body_width_geometry(
     body_width_capacity = max(
         1,
         math.floor(_BODY_CHARACTERS_PER_LINE_20PT * 20 / policy.body_font_pt),
+    )
+    _validate_indivisible_code_width(
+        value,
+        capacity=body_width_capacity,
+        policy=policy,
+        source=source,
+        heading=heading,
     )
     if physical_token_width <= body_width_capacity:
         return
@@ -261,13 +278,13 @@ def _code_block_parts(block: dict[str, Any]) -> tuple[list[Any], str, str]:
 
 
 def _shell_code_inlines(source_text: str) -> list[dict[str, Any]]:
-    """Represent shell tokens as breakable inline code with visible spacing.
+    """Represent a shell command as indivisible code tokens with breakable spacing.
 
     Pandoc's fenced ``CodeBlock`` becomes a FancyVerb environment, whose
     physical lines cannot wrap.  Inline ``Code`` tokens keep monospace text
-    while permitting line breaks at source whitespace; the existing Beamer
-    ``breaktt`` pass adds character-level opportunities inside long paths.
-    Logical source lines remain explicit ``LineBreak`` nodes.
+    while permitting line breaks only at source whitespace. No character-level
+    split is introduced inside an identifier or path. Logical source lines
+    remain explicit ``LineBreak`` nodes.
     """
 
     inlines: list[dict[str, Any]] = []
@@ -303,11 +320,11 @@ def _prepare_code_block_for_frame(
 ) -> dict[str, Any]:
     """Preflight one atomic code block and safely reflow long shell commands.
 
-    The accessible profile keeps code blocks atomic.  A long shell command is
-    safe to wrap at whitespace and inside long path tokens, so it is converted
-    to inline monospace tokens.  Other languages can be whitespace-sensitive;
-    an over-wide physical line therefore fails closed with a stable diagnostic
-    instead of being clipped or silently typeset below the font floor.
+    The accessible profile keeps code blocks atomic. A long shell command may
+    reflow at whitespace, but every code token remains indivisible. Other
+    languages can be whitespace-sensitive; an over-wide physical line fails
+    closed instead of being clipped, split inside an identifier, or silently
+    typeset below the font floor.
     """
 
     _attributes, source_text, language = _code_block_parts(block)
@@ -340,11 +357,11 @@ def _prepare_code_block_for_frame(
     if overwide_lines and is_shell:
         for line_number, line in enumerate(logical_lines, start=1):
             for token in re.split(r"[ \t]+", line.expandtabs(4)):
-                if len(token) <= code_chars_per_line or long_texttt_source_is_breakable(token):
+                if len(token) <= code_chars_per_line:
                     continue
                 raise _density_error(
                     "slides.density.indivisible-code-line",
-                    "one shell token cannot use the exact breakable-monospace projection contract",
+                    "one shell token cannot fit without character-level splitting",
                     source=source,
                     heading=heading,
                     language=language,
@@ -352,6 +369,7 @@ def _prepare_code_block_for_frame(
                     observed_characters=len(token),
                     maximum_characters=code_chars_per_line,
                     first_offending_token=token,
+                    remediation="use a shorter projected label or a bounded excerpt",
                 )
     if overwide_lines and is_shell and has_caption:
         line_number, observed_characters = overwide_lines[0]
@@ -653,6 +671,34 @@ def _is_presentation_page_break(block: dict[str, Any]) -> bool:
         and isinstance(content[1], str)
         and _PRESENTATION_PAGE_BREAK_RE.fullmatch(content[1].strip()) is not None
     )
+
+
+def _is_identifier_only_block(block: dict[str, Any]) -> bool:
+    """Return whether a block carries anchors but no projected visible content."""
+
+    if block.get("t") not in {"Para", "Plain"} or not isinstance(block.get("c"), list):
+        return False
+
+    def inspect(value: object) -> tuple[bool, bool]:
+        if isinstance(value, list):
+            findings = [inspect(item) for item in value]
+            return all(valid for valid, _found in findings), any(found for _valid, found in findings)
+        if not isinstance(value, dict):
+            return False, False
+        tag = value.get("t")
+        if tag in {"Space", "SoftBreak", "LineBreak"}:
+            return True, False
+        if tag != "Span" or not isinstance(value.get("c"), list) or len(value["c"]) != 2:
+            return False, False
+        attributes, inlines = value["c"]
+        identifier = attributes[0] if isinstance(attributes, list) and attributes else ""
+        if not isinstance(identifier, str) or not identifier:
+            return False, False
+        valid_children, found_child = inspect(inlines)
+        return valid_children, bool(identifier) or found_child
+
+    valid, found = inspect(block["c"])
+    return valid and found
 
 
 def _is_display_equation_paragraph(block: dict[str, Any]) -> bool:

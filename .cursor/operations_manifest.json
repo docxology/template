@@ -1262,6 +1262,15 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.transmission.transmission_page_check",
+      "invocation": "python -m infrastructure.transmission.transmission_page_check",
+      "source_path": "infrastructure/transmission/transmission_page_check.py",
+      "purpose": "Validate transmission bookends occupy exactly one PDF page each.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.validation.cli",
       "invocation": "python -m infrastructure.validation.cli",
       "source_path": "infrastructure/validation/cli/__main__.py",

@@ -43,3 +43,28 @@ authorization** — only read-only `GET` evidence. Two pieces landed:
 Submitting the remaining ~44 origins (save-code-now `POST`s) is a public
 archival submission and still requires explicit owner authorization. The
 tracker records where things stand; it does not authorize the next deposit.
+
+## `SECURITY-OWNERSHIP-1` — closed 2026-09-06
+
+> | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+> | --- | --- | --- | --- | --- | --- | --- | --- |
+> | `SECURITY-OWNERSHIP-1` | blocked-external | Medium | Administrator branch-protection and CODEOWNERS receipt | Obtain administrator evidence for required checks, review, force-push protection, and sensitive-path review; local health must remain distinct from authority. | administrator authority receipt | `uv run python scripts/gates/security_scan.py` | repository files or a green local run must not imply remote protection |
+
+### How it was closed
+
+The owner (repository administrator) authorized configuration this session; the
+platform state is the evidence, captured live from the GitHub API
+(`GET /repos/docxology/template/branches/main/protection`, 2026-09-06):
+
+- `required_status_checks.contexts = ["CI Gate"]` — the static gate job added
+  in PR #55; `strict = false`.
+- `allow_force_pushes = false`, `allow_deletions = false`.
+- `enforce_admins = true`.
+- `required_pull_request_reviews = null` — **deliberate deviation** from the
+  row's "review" item: the maintainer works solo, and a self-review
+  requirement would be ceremony without a second reviewer. Owner-authorized.
+
+The negative control holds by construction: a green local run implies nothing
+about remote protection — the receipt cites the live API state, and the first
+protection-enforced merge (PR #58, `5db56301d`) merged only with a green
+`CI Gate` check run on the platform.

@@ -32,12 +32,14 @@ from infrastructure.rendering._epub_package_validation import (
     _resolve_reference,
     validate_epub_package,
 )
-from infrastructure.rendering._output_text import _process_output_text
+from infrastructure.rendering._output_text import (
+    _process_output_text,
+    _truncate_error_context,
+)
 
 logger = get_logger(__name__)
 
 _TIMEOUT_SECONDS = 120
-_ERROR_CONTEXT_LIMIT = 500
 _FIXED_EPUB_SOURCE_DATE_EPOCH = 315532800  # 1980-01-01T00:00:00Z; ZIP's earliest timestamp.
 _MAX_SUPPORTED_SOURCE_DATE_EPOCH = 253402300799  # 9999-12-31T23:59:59Z.
 _MAX_ZIP_SOURCE_DATE_EPOCH = 4354819198  # 2107-12-31T23:59:58Z.
@@ -56,14 +58,6 @@ class EpubRenderResult:
     output_path: Path
     size_bytes: int
     duration_seconds: float
-
-
-def _truncate_error_context(stderr_text: str) -> str:
-    """Return bounded stderr/stdout context for RenderingError messages."""
-    stripped = stderr_text.strip()
-    if not stripped:
-        return "no stderr captured"
-    return stripped[:_ERROR_CONTEXT_LIMIT]
 
 
 def _epub_source_date_epoch() -> int:
@@ -423,7 +417,7 @@ def render_epub(
         except subprocess.TimeoutExpired as exc:
             stderr_text = _process_output_text(exc.stderr) or _process_output_text(exc.stdout) or str(exc)
             raise RenderingError(
-                f"pandoc EPUB render timed out after 120s: {_truncate_error_context(stderr_text)}"
+                f"pandoc EPUB render timed out after {_TIMEOUT_SECONDS}s: {_truncate_error_context(stderr_text)}"
             ) from exc
 
         duration = time.monotonic() - start

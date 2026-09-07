@@ -143,6 +143,7 @@ A negative control backs this contract: deliberately breaking any represented st
 - **Matrix:** `ubuntu-latest` × `3.10`, `3.11`, `3.12`, `3.13`, `3.14`, plus an `include:` of `macos-latest` × `3.14` (6 cells). macOS legs are ~10x cost and rarely surface OS-specific breakage beyond the 3.14 cell, so only the 3.14 smoke runs there.
 - **Coverage threshold:** 60% (`--cov-fail-under=60`)
 - **Coverage file:** `.coverage.infra` (isolated from project coverage)
+- **Browser reflow:** the Ubuntu/Python 3.14 cell runs the real Chromium MathJax regression after infrastructure tests. It provisions `@playwright/test@1.62.1` and Chromium, waits for completed typesetting, and verifies visible equation numbers across live viewport changes. CDN access is required; a browser or MathJax failure fails the cell.
 - **Exclusions:** Tests marked `requires_ollama` are skipped (`-m "not requires_ollama"`)
 - **Codecov upload:** On Python 3.14 / `ubuntu-latest` only to avoid duplicate reports; upload failures do not fail CI
 
