@@ -15,6 +15,9 @@ HTML rewrites retain the page's permissions and skip unchanged content. Shared
 confined writes protect HTML and rewritten Beamer TeX from temporary-file
 symlink redirection. Unsafe empty-path URI schemes are rejected like other
 unsupported links.
+Desktop figure links may extend beyond the prose column while remaining inside
+the viewport. The body must not clip these widened figures; narrow readers retain
+local table scrolling and responsive image sizing.
 
 ## Features
 
