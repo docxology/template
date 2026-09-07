@@ -54,7 +54,7 @@ logger = get_logger(__name__)
 
 
 def _write_transmission_bookends(project_root: Path, project_name: str, *, repo_root: Path) -> None:
-    from infrastructure.publishing.transmission_bookends import write_transmission_bookends
+    from infrastructure.transmission.transmission_bookends import write_transmission_bookends
 
     write_transmission_bookends(project_root, project_name, repo_root=repo_root)
 

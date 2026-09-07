@@ -25,7 +25,7 @@ from infrastructure.rendering._pdf_combined_renderer import (
     run_pandoc_conversion,
     verify_figure_references,
 )
-from infrastructure.publishing.transmission_bookends import transmission_bookends_enabled
+from infrastructure.transmission.transmission_bookends import transmission_bookends_enabled
 from infrastructure.rendering._pdf_tex_transforms import fix_figure_paths
 from infrastructure.rendering._pdf_latex_pipeline import (
     compile_latex_manuscript,

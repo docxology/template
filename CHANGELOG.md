@@ -29,6 +29,23 @@ not to the contents of any specific workspace.
   output mutation still fails the matrix) is preserved, and a companion test
   proves a declared-artifact regeneration stays green.
 
+### Rendering layering: transmission family re-home (2026-09-07)
+
+- ``RENDERING-LAYERING-1`` phase 1: the five ``transmission_*`` modules
+  (bookends, models, figure, barcode strip, page check — ~1.1k lines) moved
+  from ``infrastructure/publishing/`` to a shared-leaf
+  ``infrastructure/transmission/`` package with README+AGENTS. Rendering's
+  eight consumers, validation's three, and the publishing release workflow
+  now import from ``infrastructure.transmission``; publishing-side
+  ``transmission_*.py`` re-export shims keep historical imports resolving,
+  and the page-check CLI subprocess tests target the moved module.
+- New import-lint guard ``tests/infra_tests/rendering/test_layering.py``
+  fails on any new rendering -> publishing/reporting import. Two pre-existing
+  metadata edges (``ebook_bundle.py`` -> metadata_package,
+  ``_pdf_title_page_publishing.py`` -> repository_metadata) are explicitly
+  allowlisted and tracked as remaining work on the row; the publishing-side
+  metadata/release subpackage decoupling is the phase-2 remainder.
+
 ### Storybook quick-profile floor resolved (2026-09-07)
 
 - ``STORYBOOK-QUICK-FLOOR-1`` closed by unmarking the seven ``@pytest.mark.slow``

@@ -14,7 +14,7 @@ from pathlib import Path
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-from infrastructure.publishing.transmission_page_check import (
+from infrastructure.transmission.transmission_page_check import (
     BEGIN_MARKER,
     END_MARKER,
     OVERFLOW_MARKER,
@@ -154,7 +154,7 @@ class TestTransmissionPageCheckCLI:
         pdf_path = tmp_path / "valid.pdf"
         _make_pdf(pdf_path, [BEGIN_MARKER, "body", END_MARKER])
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.publishing.transmission_page_check", str(pdf_path)],
+            [sys.executable, "-m", "infrastructure.transmission.transmission_page_check", str(pdf_path)],
             capture_output=True,
             text=True,
             check=False,
@@ -166,7 +166,7 @@ class TestTransmissionPageCheckCLI:
         pdf_path = tmp_path / "invalid.pdf"
         _make_pdf(pdf_path, ["no markers"])
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.publishing.transmission_page_check", str(pdf_path)],
+            [sys.executable, "-m", "infrastructure.transmission.transmission_page_check", str(pdf_path)],
             capture_output=True,
             text=True,
             check=False,
@@ -176,7 +176,12 @@ class TestTransmissionPageCheckCLI:
 
     def test_cli_missing_pdf_exits_nonzero(self, tmp_path: Path) -> None:
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.publishing.transmission_page_check", str(tmp_path / "missing.pdf")],
+            [
+                sys.executable,
+                "-m",
+                "infrastructure.transmission.transmission_page_check",
+                str(tmp_path / "missing.pdf"),
+            ],
             capture_output=True,
             text=True,
             check=False,
