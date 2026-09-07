@@ -142,6 +142,7 @@ repos:
           - >-
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             export PYTHONDONTWRITEBYTECODE=1 &&
+            unset $(git rev-parse --local-env-vars) &&
             uv run python scripts/audit/check_tracked_generated_artifacts.py &&
             uv run python scripts/audit/check_tracked_secrets.py &&
             uv run python scripts/audit/check_tracked_all.py &&
@@ -173,6 +174,7 @@ repos:
           - >-
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             export PYTHONDONTWRITEBYTECODE=1 &&
+            unset $(git rev-parse --local-env-vars) &&
             uv run python scripts/audit/check_template_drift.py --strict &&
             uv run python scripts/audit/check_backlog.py &&
             uv run python scripts/audit/check_claim_bindings.py &&
