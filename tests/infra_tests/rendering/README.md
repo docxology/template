@@ -67,7 +67,10 @@ The probe requires the pinned MathJax CDN assets; it is not an offline test.
 
 ### Slide Renderer Tests
 
-The slide contract is partitioned across `test_slides_renderer_core.py`,
+The slide contract is partitioned across `test_slides_bibliography.py`,
+`test_slides_frame_splitting.py`, `test_slides_math_header.py`,
+`test_slides_module_contract.py`, `test_slides_render_executions.py`,
+`test_slides_tex_figures.py`,
 `test_slides_accessibility.py`, `test_slides_accessibility_reveal_regressions.py`,
 `test_slides_beamer_accessibility.py`, `test_slides_beamer_safe_area.py`,
 `test_slides_crossref.py`, `test_slides_figure_area.py`,
@@ -77,7 +80,12 @@ Presentation slide generation:
 
 ```bash
 uv run pytest \
-  tests/infra_tests/rendering/test_slides_renderer_core.py \
+  tests/infra_tests/rendering/test_slides_bibliography.py \
+  tests/infra_tests/rendering/test_slides_frame_splitting.py \
+  tests/infra_tests/rendering/test_slides_math_header.py \
+  tests/infra_tests/rendering/test_slides_module_contract.py \
+  tests/infra_tests/rendering/test_slides_render_executions.py \
+  tests/infra_tests/rendering/test_slides_tex_figures.py \
   tests/infra_tests/rendering/test_slides_accessibility.py \
   tests/infra_tests/rendering/test_slides_accessibility_reveal_regressions.py \
   tests/infra_tests/rendering/test_slides_beamer_accessibility.py \
