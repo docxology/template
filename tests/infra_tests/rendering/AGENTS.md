@@ -12,7 +12,7 @@ flowchart TB
     T --> META[AGENTS.md · __init__.py · conftest.py]
     T --> CORE[Core<br/>test_core · test_config · test_renderers ·<br/>test_render_cache]
     T --> PDF[PDF renderer<br/>test_pdf_renderer_additional / _combined ·<br/>_coverage / _fixes / _full]
-    T --> SLIDES[Slides renderer<br/>test_slides_renderer_core ·<br/>test_slides_accessibility]
+    T --> SLIDES[Slides renderer<br/>core · accessibility · Reveal regressions ·<br/>Beamer safe area · figure area · formal content ·<br/>identifier integrity]
     T --> WEB[Web renderer<br/>test_web_renderer]
     T --> LATEX[LaTeX<br/>test_latex_package_validator · test_latex_utils]
     T --> MAN[Manuscript<br/>test_manuscript_discovery]

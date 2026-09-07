@@ -6,11 +6,19 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._slides_accessibility_contracts import (
+    ACCESSIBLE_BEAMER_FOOTER_BOTTOM_SKIP_PT,
+    ACCESSIBLE_BEAMER_FOOTER_FONT_PT,
+    ACCESSIBLE_BEAMER_FOOTER_LEADING_PT,
+    ACCESSIBLE_BEAMER_FOOTER_RESERVED_PT,
+    ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH,
+)
 from infrastructure.rendering._pdf_latex_helpers import (
     extract_command_fallbacks,
     extract_math_font_preamble,
     extract_preamble,
 )
+from infrastructure.core.exceptions import RenderingError
 
 logger = get_logger(__name__)
 
@@ -71,6 +79,19 @@ def write_slides_math_header(
     snippet_parts: list[str] = []
     if preamble_file.exists():
         preamble = extract_preamble(preamble_file)
+        if accessible_policy is not None and "^^" in preamble:
+            # TeX performs double-caret lexical translation before command
+            # tokenization.  The accessible source contract never needs that
+            # mechanism, and allowing it here would bypass the AST preflight
+            # because the manuscript preamble is loaded separately with ``-H``.
+            raise RenderingError(
+                "[slides.security.tex-lexical-translation] Accessible slide preamble "
+                "contains forbidden TeX lexical translation",
+                context={
+                    "diagnostic_code": "slides.security.tex-lexical-translation",
+                    "source": str(preamble_file),
+                },
+            )
         math_snippet = extract_math_font_preamble(preamble)
         if math_snippet is not None:
             snippet_parts.append(math_snippet)
@@ -187,6 +208,10 @@ def write_slides_math_header(
         title_leading = accessible_title_pt + 4
         body_leading = body + 4
         label_leading = label + 3
+        footer_font = ACCESSIBLE_BEAMER_FOOTER_FONT_PT
+        footer_leading = ACCESSIBLE_BEAMER_FOOTER_LEADING_PT
+        footer_depth = footer_leading - footer_font
+        footer_skip = ACCESSIBLE_BEAMER_FOOTER_BOTTOM_SKIP_PT
         reader_href = _latex_href(accessible_policy.reader_href)
         snippet_parts.append(
             "% Opt-in accessible presentation profile.\n"
@@ -216,15 +241,22 @@ def write_slides_math_header(
             f"\\AtBeginEnvironment{{enumerate}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
             f"\\AtBeginEnvironment{{description}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
             "\\AtBeginDocument{\\usebeamerfont{normal text}}\n"
+            f"\\newlength{{{ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH}}}\n"
+            "% The fixed footer reservation is calibrated with the semantic seven-line regular-body budget.\n"
             "\\setbeamertemplate{footline}{%\n"
-            "  \\leavevmode\\hbox{%\n"
-            "    \\begin{beamercolorbox}[wd=\\paperwidth,ht=2.6ex,dp=1.1ex,center]{author in head/foot}%\n"
-            f"      \\fontsize{{{label}pt}}{{{label_leading}pt}}\\selectfont "
+            "  \\leavevmode\\vbox{%\n"
+            "    \\hbox{%\n"
+            f"      \\begin{{beamercolorbox}}[wd=\\paperwidth,ht={footer_font}pt,dp={footer_depth}pt,center]"
+            "{author in head/foot}%\n"
+            f"        \\fontsize{{{footer_font}pt}}{{{footer_leading}pt}}\\selectfont "
             f"Untagged PDF derivative \\textbar\\ "
             f"\\href{{{reader_href}}}{{HTML reader}}%\n"
-            "    \\end{beamercolorbox}%\n"
+            "      \\end{beamercolorbox}%\n"
+            "    }%\n"
+            f"    \\vskip{footer_skip}pt%\n"
             "  }%\n"
             "}\n"
+            f"% Accessible footer reserved height: {ACCESSIBLE_BEAMER_FOOTER_RESERVED_PT}pt.\n"
         )
 
     # Manuscript preambles may declare additional theorem-like environments
@@ -324,8 +356,18 @@ def write_slides_math_header(
     # snippet_parts is never empty past this point (the natbib/cref
     # fallback and the formalism-environment declarations above are both
     # unconditional appends) -- a header is always written here.
+    header_source = "\n".join(snippet_parts)
+    if accessible_policy is not None and "^^" in header_source:
+        raise RenderingError(
+            "[slides.security.tex-lexical-translation] Generated accessible slide header "
+            "contains forbidden TeX lexical translation",
+            context={
+                "diagnostic_code": "slides.security.tex-lexical-translation",
+                "source": str(preamble_file),
+            },
+        )
     output_dir.mkdir(parents=True, exist_ok=True)
     header_path = output_dir / "_slides_math_header.tex"
-    header_path.write_text("\n".join(snippet_parts), encoding="utf-8")
+    header_path.write_text(header_source, encoding="utf-8")
     logger.debug(f"Wrote slides math header: {header_path}")
     return header_path

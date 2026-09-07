@@ -226,19 +226,29 @@ tag tree, reading order, or PDF/UA conformance.
 |----------|---------|-------------|
 | `ENABLE_PDF` | `1` | Per-format toggle — combined PDF + per-section LaTeX/PDF. Values: `0/1`, `true/false`, `yes/no` (case-insensitive). |
 | `ENABLE_HTML` | `1` | Per-format toggle — combined HTML index + per-section HTML. |
-| `ENABLE_SLIDES` | `1` | Per-format toggle — per-section Beamer PDFs. |
+| `ENABLE_SLIDES` | `1` | Per-format toggle — archive profile requires per-section Beamer PDFs; accessible profile requires a transactional Beamer-PDF/Reveal-HTML pair from one composed AST. |
 | `ENABLE_DOCX` | `0` | Opt-in — combined Word document at `output/<project>/docx/`. |
 | `ENABLE_EPUB` | `0` | Opt-in — combined EPUB at `output/<project>/epub/`. |
 | `SLIDES_PROFILE` | `archive` | Slide composition profile: backwards-compatible `archive` or opt-in `accessible`. |
-| `SLIDES_MAX_PROSE_WORDS` | `80` | Accessible-profile prose ceiling; values above 80 are rejected. |
-| `SLIDES_MAX_TABLE_ROWS` | `8` | Accessible-profile displayed table-row ceiling; values above 8 are rejected. |
-| `SLIDES_MIN_FIGURE_AREA_PERCENT` | `70` | Minimum figure-led frame allocation; values below 70 are rejected. |
-| `SLIDES_TITLE_FONT_PT` | `28` | Native title font floor in points. |
-| `SLIDES_BODY_FONT_PT` | `20` | Native body font floor in points. |
-| `SLIDES_FIGURE_LABEL_FONT_PT` | `16` | Native figure-label/caption font floor in points. |
+| `SLIDES_MAX_PROSE_WORDS` | `80` | Accessible-profile prose ceiling; accepted integer interval `[1, 80]`. |
+| `SLIDES_MAX_TABLE_ROWS` | `8` | Accessible-profile displayed table-row ceiling; accepted integer interval `[1, 8]`. |
+| `SLIDES_MIN_FIGURE_AREA_PERCENT` | `70` | Minimum figure-led frame allocation; accepted integer interval `[70, 100]`. |
+| `SLIDES_TITLE_FONT_PT` | `28` | Native title size in points; accepted integer interval `[28, 96]`. |
+| `SLIDES_BODY_FONT_PT` | `20` | Native body size in points; accepted integer interval `[20, 72]`. |
+| `SLIDES_FIGURE_LABEL_FONT_PT` | `16` | Native figure-label/caption size in points; accepted integer interval `[16, 48]`. |
 | `SLIDES_READER_HREF` | `../web/index.html` | Relative or HTTPS link to the canonical manuscript reader. |
+| `RENDER_SECURITY_PROFILE` | `trusted-local` | Exact renderer process profile: `trusted-local` or `untrusted`; unknown values fail during configuration. |
+| `RENDER_UNTRUSTED_TEMP_ROOT` | unset | Required non-empty output/temp root when `RENDER_SECURITY_PROFILE=untrusted`. |
 
 > **Precedence** (highest first): `ENABLE_<FORMAT>` env var → `render.formats.<format>` in `manuscript/config.yaml` → dataclass default. See [`../../usage/output-formats.md`](../../usage/output-formats.md) for the full reference.
+
+The corresponding Python fields are `RenderingConfig.security_profile` and
+`RenderingConfig.untrusted_temp_root`. These process controls are currently
+configured through the Python API or environment, not `render.slides` YAML.
+The untrusted profile strips inherited credentials, redirects child
+`HOME`/`TMPDIR`, confines outputs, and bounds subprocesses; the accessible
+composer separately preflights AST, TeX, and raster inputs. See the
+[renderer boundary reference](../../../infrastructure/rendering/README.md#opt-in-to-accessible-presentation-composition).
 
 #### Render-format YAML block
 
@@ -267,8 +277,11 @@ Reveal.js/Beamer accessibility boundaries. Explicit `SLIDES_*` environment
 values take precedence over the corresponding YAML field.
 
 The block is validated by `infrastructure/core/config/schema.py` (strict
-`additionalProperties: false` on the inner mapping). When a format is
-disabled the pipeline logs `[skip] <format> rendering disabled in config`.
+`additionalProperties: false` on the inner mapping). The known-wrong fixtures
+`test_validate_config_keys_strict_raises_for_unknown_key` and
+`test_from_project_config_rejects_string_boolean` cover unknown keys and
+quoted-Boolean coercion. When a format is disabled the pipeline logs
+`[skip] <format> rendering disabled in config`.
 
 ### Analysis script allowlist
 

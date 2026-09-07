@@ -18,6 +18,7 @@ ACCESSIBLE_REVEAL_VERSION = "5.2.1"
 ACCESSIBLE_REVEAL_URL = f"https://unpkg.com/reveal.js@{ACCESSIBLE_REVEAL_VERSION}"
 _REFERENCE_KINDS = {
     "alg": "Algorithm",
+    "ax": "Axiom",
     "cor": "Corollary",
     "def": "Definition",
     "eq": "Equation",
@@ -40,6 +41,11 @@ _CITATION_SPAN_RE = re.compile(
     flags=re.IGNORECASE | re.DOTALL,
 )
 _DATA_CITES_RE = re.compile(r"\bdata-cites\s*=\s*[\"'](?P<cites>[^\"']+)[\"']", flags=re.IGNORECASE)
+_FORMAL_REFERENCE_SPAN_RE = re.compile(
+    r"<span\b(?P<attrs>(?=[^>]*\bclass\s*=\s*[\"'][^\"']*\bformal-reference\b[^\"']*[\"'])[^>]*)>"
+    r".*?</span>",
+    flags=re.IGNORECASE | re.DOTALL,
+)
 _HTML_ID_RE = re.compile(r"\bid\s*=\s*[\"'](?P<id>[^\"']+)[\"']", flags=re.IGNORECASE)
 _DISPLAY_MATH_RE = re.compile(
     r"<span\b(?P<attrs>(?=[^>]*\bclass\s*=\s*[\"'][^\"']*\bmath\b[^\"']*\bdisplay\b[^\"']*[\"'])"
@@ -227,6 +233,21 @@ def resolve_reveal_cross_references(
     fallback; neither path exposes citeproc's ``label?`` placeholder.
     """
 
+    def _drop_redundant_formal_fallback(match: re.Match[str]) -> str:
+        cites = _DATA_CITES_RE.search(match.group("attrs"))
+        if cites is None:
+            return match.group(0)
+        labels = cites.group("cites").split()
+        if len(labels) != 1:
+            return match.group(0)
+        preceding: re.Match[str] | None = None
+        for candidate in _INLINE_MATH_REFERENCE_RE.finditer(content, 0, match.start()):
+            preceding = candidate
+        if preceding is not None and preceding.end() == match.start() and preceding.group("label") == labels[0]:
+            return ""
+        return match.group(0)
+
+    content = _FORMAL_REFERENCE_SPAN_RE.sub(_drop_redundant_formal_fallback, content)
     numbers = dict(label_numbers or {})
     local_ids = {match.group("id") for match in _HTML_ID_RE.finditer(content)}
     unresolved: set[str] = set()

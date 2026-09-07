@@ -40,10 +40,9 @@ def _inline_unbreakable_tokens(value: object) -> list[tuple[str, int]]:
 
     Ordinary prose may break at whitespace and after an explicit ASCII hyphen;
     slashes and other punctuation remain part of the same indivisible token.
-    Pandoc inline ``Code`` shorter than the downstream ``breaktt`` threshold is
-    sized at the wider monospace face. Longer code is character-breakable after
-    LaTeX post-processing, so it contributes one guarded monospace glyph rather
-    than monopolizing a source column.
+    Pandoc inline ``Code`` is indivisible in the accessible profile and is
+    therefore sized at the wider monospace face in full. This keeps preflight
+    aligned with both projected derivatives and prevents mid-identifier wraps.
     """
 
     if isinstance(value, str):
@@ -61,8 +60,7 @@ def _inline_unbreakable_tokens(value: object) -> list[tuple[str, int]]:
         # Pandoc writes table-cell CodeBlock nodes as FancyVerb. A physical
         # verbatim line has no TeX break opportunity—not even at an ASCII
         # hyphen or space—so price every expanded line in the monospace face.
-        # This deliberately differs from long inline Code, which the later
-        # breaktt pass can transform under its exact source/LaTeX predicate.
+        # Inline Code follows the same indivisible accessible-profile rule.
         return [
             (
                 line,
@@ -132,7 +130,7 @@ def _table_cell_minimum(blocks: list[Any]) -> tuple[int, str]:
 
 
 def _table_cell_demand(blocks: list[Any]) -> float:
-    """Return bounded explanatory demand without overpricing breakable code."""
+    """Return bounded explanatory demand while preserving code minima."""
 
     text = " ".join(_plain_text(blocks).split())
     minimum, _token = _table_cell_minimum(blocks)
@@ -140,8 +138,7 @@ def _table_cell_demand(blocks: list[Any]) -> float:
         return float(minimum)
     # The square-root term gives explanatory cells more room without allowing
     # one paragraph to consume the frame. The source-node-aware minimum above
-    # replaces the old raw longest-token term, which incorrectly treated long
-    # Code spans as indivisible despite the later ``breaktt`` transformation.
+    # ensures an indivisible Code span is never underpriced.
     return float(max(minimum, min(32, math.ceil(math.sqrt(len(text)) * 2.5))))
 
 
@@ -221,10 +218,8 @@ def _wrapped_text_lines(text: str, capacity: int) -> int:
             if used:
                 lines += 1
                 used = 0
-            # The minima pass prevents ordinary and short-Code segments from
-            # entering this branch. Character-level wrapping remains valid for
-            # long Code because the downstream ``breaktt`` pass adds precisely
-            # those opportunities before LaTeX compilation.
+            # The minima pass prevents ordinary prose and indivisible Code
+            # segments from entering this branch.
             whole_lines, remainder = divmod(segment_length, capacity)
             if whole_lines:
                 lines += whole_lines - int(remainder == 0)

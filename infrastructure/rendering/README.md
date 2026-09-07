@@ -317,11 +317,19 @@ figure. Tagged combined PDFs consume the same registry descriptions for body
 images only when `metadata.tagged_pdf: true`; ordinary untagged PDFs are
 unchanged, and successful tagged rendering is not PDF/UA certification.
 
-**Note**: Figure paths are automatically corrected during rendering. The system handles:
+**Note**: Figure paths are normalized only within their declared resource
+roots. The system handles:
 
-- Path normalization for various formats (`../output/figures/`, `output/figures/`, etc.)
+- The four recognized figure aliases (`../output/figures/`,
+  `output/figures/`, `../figures/`, and `./figures/`) when the alias payload
+  remains inside the configured figure root
 - Unicode characters in filenames
-- Missing figure warnings (compilation continues gracefully, but logs the issue)
+- Missing-figure discovery warnings in the legacy/archive path
+
+Escaping or unrecognized traversal is never normalized. In the accessible
+profile, a resource-preflight or writer failure invalidates the transactional
+Beamer/Reveal pair; a discovery warning is not a promise that either derivative
+will be retained.
 
 ## Common Tasks
 
@@ -348,7 +356,18 @@ uv run python -m infrastructure.rendering.cli slides presentation.md --format re
 
 The default `archive` profile preserves the historical Beamer and Reveal.js
 output. Projects that need a projection-scale, accessibility-enhanced slide
-surface can opt in through their source-owned `manuscript/config.yaml`:
+surface must install the rendering capability before opting in. From a source
+checkout, use `uv sync --group rendering`; for an installed distribution, use
+`python -m pip install 'research-project-template[rendering]'` (or install a
+local wheel with its `[rendering]` extra). Accessible Beamer validation fails
+loudly with `slides.capability.pdf-geometry-required` when `pdfplumber` is not
+available, because an uninspected PDF cannot satisfy the safe-area contract.
+The default `archive` profile does not require `pdfplumber` and retains its
+historical post-compile behavior. The full capability table is in
+[`../../docs/development/optional-dependencies.md`](../../docs/development/optional-dependencies.md).
+
+After installing that capability, opt in through the source-owned
+`manuscript/config.yaml`:
 
 ```yaml
 render:
@@ -365,9 +384,18 @@ render:
     reader_href: ../web/index.html
 ```
 
-These values are safety bounds. A project may choose fewer prose words or table
-rows, a larger figure allocation, or larger fonts; it cannot weaken the
-80-word/eight-row/70-percent/28-20-16 contract. `SLIDES_PROFILE` and the
+These values are policy ceilings and floors, not fit guarantees. A project may
+choose fewer prose words or table rows, a larger figure allocation, or larger
+fonts; it cannot weaken the 80-word/eight-row/70-percent/28-20-16 contract.
+Under the fixed 25-point Beamer footer and a one-line title, measured 16:9
+geometry admits seven regular 24-point-leading body lines at the 20-point
+floor. Unusually wide prose can reach that physical boundary well before 80
+words. Compact longtable rows and rules use a separately calibrated eight-unit
+table budget, while figure percentages use their own title-adjusted reference
+envelope; neither budget increases regular prose capacity. The 70-percent value is a
+minimum allocation within the title/footer-safe body, not an image-height cap;
+the measured one-line-title maximum-fit envelope is 80 percent and shrinks
+proportionally for wrapped titles. `SLIDES_PROFILE` and the
 corresponding `SLIDES_*` environment variables override YAML for an isolated
 render without changing project metadata.
 
@@ -386,12 +414,14 @@ that exceeds its declared budget fails with a `slides.density.*` diagnostic;
 an indivisible list is reported specifically as
 `slides.density.indivisible-list`. Table excerpts retain a contiguous prefix of
 at most eight complete body rows after title, header, cell wrapping, and rules
-are priced against the same geometry. Ordinary tokens must fit one physical
+are priced against the compact table geometry. Ordinary tokens must fit one physical
 column at the 20-point floor; their minima conservatively weight wide glyphs,
-and explicit hyphens are recognized as TeX break points. Long inline code is
-priced as character-breakable only when its source characters serialize to the
-same simple, brace-free `texttt` body that the downstream `breaktt` pass
-rewrites; braced TeX literal encodings remain indivisible. Contiguous colspan
+and explicit hyphens are recognized as TeX break points. Authored inline code,
+paths, and individual shell-command tokens remain indivisible. A shell command
+may reflow only at its source whitespace; an over-wide token fails with
+the established `slides.density.indivisible-code-line` diagnostic rather than
+acquiring a mid-identifier
+break. Contiguous colspan
 constraints are solved jointly, so overlapping spans can share width in their
 common columns. If the resulting
 per-column minima exceed the frame width, composition stops before LaTeX with
@@ -430,6 +460,96 @@ tables fail before rendering. Loose-list paragraphs and every block inside one
 definition entry are priced separately. When projection must excerpt a table,
 its complete-table footer is removed before the row budget is recomputed; the
 canonical reader retains the untouched table and footer.
+The accessible profile also treats the Pandoc document and local raster
+metadata as bounded rendering inputs. Pandoc JSON is limited to 16 MiB,
+100,000 AST nodes, and 128 levels of nesting. TeX's ``^^`` lexical-translation
+syntax is rejected in metadata, ordinary math, admitted raw blocks, generated
+headers, project preambles, and untrusted archive sources before a writer or
+TeX engine receives it. Local image targets must be relative to a
+caller-authorized resource root: absolute and ``file:`` targets, traversal,
+backslash paths, null bytes, symlink components, non-regular files, resources
+over 128 MiB, and rasters over 100 million pixels fail closed. Descriptor-based
+no-follow traversal is used where the platform supports it. Web image URLs
+remain remote references and are never opened merely to estimate intrinsic
+geometry. These checks protect the renderer boundary; they do not make an
+untrusted manuscript safe to execute through unrelated filters or external
+tools.
+
+| Bounded input | Limit or rejection | Stable diagnostic |
+| --- | --- | --- |
+| Pandoc JSON bytes / AST nodes / nesting | 16 MiB / 100,000 / 128 levels | `slides.schema.pandoc-limits` |
+| Raw TeX admitted for geometry analysis | 65,536 characters per value; unsupported geometry and every ``^^`` lexical translation are rejected | `slides.density.unsupported-raw-geometry` |
+| Local image target | 4,096 characters; absolute, ``file:``, escaping, backslash, null-byte, and symlinked targets are rejected | `slides.security.figure-path` |
+| Local raster metadata | 128 MiB and 100 million pixels; only the declared raster formats are inspected | `slides.security.figure-resource` |
+| Resolvable local raster | Must be a readable regular file with valid positive intrinsic geometry | `slides.density.figure-area` |
+
+The numeric ceilings are defensive resource bounds, not promises that inputs
+below them will compose or render successfully.
+
+### Source-bound presentation panels
+
+An accessible deck can use complete presentation panels while the canonical
+manuscript retains its original figure. Annotate a single-image, top-level
+Markdown figure with `data-slide-manifest="../figures/example.slides.json"`.
+Archive mode ignores this selector. Accessible mode expands the manifest's
+panels in reading order, assigns unique derivative figure labels, and keeps
+full captions in the canonical reader. Each panel has its own concise `alt`.
+
+```json
+{
+  "schema_version": "1.0",
+  "panels": [
+    {
+      "src": "../figures/example-panel-1.png",
+      "alt": "First complete panel; encodings and bounded result.",
+      "sha256": "<SHA-256 of the exact panel raster>",
+      "minimum_label_px": 64.0
+    }
+  ]
+}
+```
+
+The figure producer measures the smallest visible label in raster pixels
+(native point size times export DPI divided by 72). This is a producer
+assertion whose integrity the renderer checks; it is not OCR or a scientific
+validity assessment. Every `src` uses the declared image roots and aliases,
+not the manifest's parent directory. Manifests are required local regular
+files, limited to 1 MiB and 64 distinct panels. Duplicate or unknown JSON keys,
+ambiguous attributes, missing/remote/escaping/symlinked files, hash mismatches,
+nonfinite or nonpositive measurements, and uninspectable rasters fail before
+writer execution. Each raster also meets the existing byte and pixel bounds.
+Selected targets are relocated as encoded URIs relative to the derivative
+output directory for both writers, so spaces and query punctuation in filenames
+remain usable by the linked HTML reader. Literal hash, percent, brace, and
+backslash filename characters are rejected before either writer because the
+TeX graphics path cannot portably preserve them. Generated panel IDs reserve
+the entire authored identifier namespace, including headings and nested spans.
+Place evidence anchors on the outer Figure: selected figures with nested image,
+span, or caption identifiers are rejected before cloning to prevent duplicate
+anchors or broken local references across panels.
+Keep the generated HTML and its referenced figure directory together when
+serving or distributing the presentation.
+
+After Beamer compilation, the renderer measures every matching raster's actual
+embedded dimensions in PDF points and requires the declared smallest label to
+meet `figure_label_font_pt` (at least 16 pt). Equal-sized panel rasters are
+checked using the smallest declared label, conservatively, and missing panel
+occurrences fail. `slides.density.figure-label-scale` removes the invalid PDF;
+the paired rendering boundary removes both public derivatives. The Reveal
+panel retains the same source and alternative under its responsive max-fit
+allocation. Browser zoom and final-context visual review remain separate
+requirements. Neither a digest nor a label-size gate establishes accessibility
+conformance, source-panel semantic completeness, or scientific validity.
+Unannotated images have no producer label measurement and are outside this
+label-size check. Projects requiring a complete figure-label audit must select
+a measured manifest for every required figure and verify that inventory.
+
+Allowlisted definition, theorem, lemma, proposition, corollary, hypothesis,
+proof, and remark blocks keep their original TeX for Beamer and acquire an
+HTML-only semantic fallback for Reveal. Anchor-only blocks and safe declarations
+are retained as auxiliaries but cannot create a title-only frame. A second
+rendered-output check ignores speaker notes, hidden content, and empty figures
+when deciding whether a non-divider slide has a visible body.
 For captioned source listings, the projection copy retains an empty caption to
 preserve pandoc-crossref's counter and label while omitting the full prose
 caption from the frame. The unmodified source still supplies the complete
@@ -438,18 +558,22 @@ physical column over an unrelated active colspan; otherwise they retain the
 exact span start, end, token, and minimum that made the joint constraints
 infeasible.
 
-When source code can be rewritten into the accessible `breaktt` form, the
-renderer verifies that `seqsplit.sty` is available before relying on
-character-level wrapping. A missing package is
-`slides.capability.seqsplit-required`; the derivative pair is not emitted.
-Archive mode keeps its historical identity fallback. Accessible Beamer assigns
+Accessible authored code never uses `breaktt`. The renderer verifies that
+`seqsplit.sty` is available only when generated recurring display labels or
+unresolved cross-deck reference tokens require the narrower `breakseq` path. A
+missing package is `slides.capability.seqsplit-required`; the derivative pair
+is not emitted. Archive mode keeps its historical long-code fallback.
+Accessible Beamer assigns
 the declared body typography to nested itemize/enumerate levels, descriptions,
 quotes, captioned listings, and algorithm stand-ins so those paths cannot
 silently reset below the 20-point floor.
-The shared source/LaTeX predicate also recognizes Pandoc's brace-free `\ `
-control-space serialization. Archive and accessible output therefore retain
-the historical safe wrapping behavior for long space-bearing monospace spans,
-while apostrophes, brackets, and other braced encodings remain fail-closed.
+Archive output continues to recognize Pandoc's brace-free `\ ` control-space
+serialization for its historical wrapping behavior; the accessible profile
+instead preserves every authored monospace token as one contiguous unit.
+An over-wide shell `CodeBlock` retains the established
+`slides.density.indivisible-code-line` diagnostic. Newly covered inline,
+heading, and table `Code` nodes use `slides.density.indivisible-code-token` so
+callers can distinguish a semantic token from a complete code-block line.
 
 The canonical `RenderManager.render_all()` and Stage 03 path treat accessible
 slides as an exact pair: every eligible source produces both
@@ -458,6 +582,14 @@ renderer fails, both public derivatives are removed. Stage 03 verification and
 the Stage 04/05 enabled-output gates require the complete pair in accessible
 mode. The default archive profile retains its historical required-Beamer and
 optional-Reveal behavior.
+
+Reveal postprocessing replaces every input viewport declaration with one
+zoom-permitting viewport, contains document-level horizontal overflow, and
+reserves nonoverlapping fixed lanes for the skip link, companion navigation,
+and projected content at 400-percent-equivalent reflow widths. A capture-phase
+keyboard guard handles Space only for controls whose native activation uses
+Space; links, text input, Enter activation, and noninteractive Reveal navigation
+retain their browser or Reveal behavior.
 
 The two outputs have deliberately different accessibility status:
 
@@ -479,6 +611,21 @@ config = RenderingConfig(
 manager = RenderManager(config)
 pdf_path, reveal_path = manager.render_accessible_slide_pair(Path("manuscript/01_intro.md"))
 ```
+
+This call has the same optional-dependency boundary: install the `rendering`
+extra before requesting `slides_profile="accessible"`. Programmatic archive
+rendering remains available without `pdfplumber`.
+
+`RenderingConfig.security_profile` and `RENDER_SECURITY_PROFILE` accept only
+the exact values `trusted-local` and `untrusted`; unknown values fail during
+configuration instead of falling back to trusted execution. The `untrusted`
+profile also requires `untrusted_temp_root` (or
+`RENDER_UNTRUSTED_TEMP_ROOT`) before a renderer is constructed. It confines
+outputs to that root, removes inherited credentials from child environments,
+bounds child timeouts, and rejects the documented active-content and inclusion
+primitives. This process profile is separate from the accessible composer's
+AST, TeX, and raster preflights; callers handling external material should use
+both boundaries rather than treating either one as a complete content sandbox.
 
 When a figure registry record includes `long_description`, rendered HTML places
 one labelled disclosure after the caption and associates it with the image via
@@ -583,8 +730,18 @@ graph TD
 | **pdf_renderer.py** | PDF document generation | `PDFRenderer.render_combined_pdf()` - LaTeX compilation | latex_utils, manuscript_discovery |
 | **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and Reveal.js support; archive mode chooses an adaptive `--slide-level` in the 2–4 range and applies `_beamer_allowframebreaks.lua`, while accessible mode consumes the semantic Pandoc AST from `_slides_accessibility.py` | latex_utils, Pandoc, semantic slide composer |
 | **_slides_accessibility.py** | Accessible presentation composition facade | Public policy, frame, and diagnostic exports plus semantic frame composition | `_slides_accessibility_*`, shared HTML accessibility postprocessor |
+| **_slides_accessibility_composition.py** | Semantic composition boundary | Validates the complete document, applies writer-specific formal-content fallbacks, and constructs projection frames without mutating canonical source | Pandoc JSON AST, contracts, figures, tables, text geometry |
+| **_slides_accessibility_contracts.py** | Projection policy and diagnostics | Owns the opt-in 16:9 typography, density, table, and figure contracts plus stable fail-closed diagnostic construction | Rendering configuration, Pandoc node helpers |
+| **_slides_accessibility_figures.py** | Figure-led frame composition | Prices figure allocation, validates writer-visible targets, and reads bounded intrinsic raster geometry only through the confined image boundary | `_slides_accessibility_image_io.py`, Pandoc JSON AST |
+| **_slides_accessibility_image_io.py** | Confined local-raster inspection | Resolves local targets inside declared roots, rejects symlink and path escapes, opens with no-follow semantics, and bounds byte/pixel metadata reads | Pillow, filesystem descriptors, accessibility contracts |
+| **_slides_presentation_variants.py** | Source-bound presentation panels | Expands bounded local panel manifests and verifies actual embedded label scale | Confined image I/O, producer hashes, pdfplumber |
+| **_slides_accessibility_limits.py** | Pandoc resource limits | Enforces the 16 MiB JSON, 100,000-node, and 128-level AST ceilings before recursive composition | Pandoc JSON AST, rendering errors |
+| **_slides_accessibility_raw_tex.py** | Raw-TeX admission | Preserves the formal-statement subset while rejecting unsupported geometry and TeX lexical translations before writer fallback | Pandoc JSON AST, accessibility contracts |
 | **_slides_accessibility_text_geometry.py** | Shared projected-text geometry | Citeproc-resolved visible text, physical-token widths, hard-break/container lines, and conservative math geometry | Pandoc JSON AST, `_slides_accessibility_contracts.py` |
 | **_slides_accessibility_tables.py** | Accessible table composition | Joint column/span minima, supported rich-cell geometry, bounded whole-row excerpts, and stable fail-closed diagnostics | `_slides_accessibility_text_geometry.py`, Pandoc JSON AST |
+| **_slides_math_header.py** | Accessible math preamble | Builds the slide math header from validated project preamble material and rejects TeX lexical translations before writing | manuscript sources, accessibility policy |
+| **_slides_beamer_geometry.py** | Compiled Beamer geometry | Rejects safe-area violations and log-reported frame overflow after compilation, removing invalid derivatives | pdfplumber, LaTeX log parser |
+| **_slides_tex_tables.py** | Beamer table normalization | Insets generated longtables against the captured frame-body width and preserves continuation-table geometry | generated LaTeX, accessibility policy |
 | **_slides_codelisting.py** | Captioned slide listings | Replaces pandoc-crossref's generated listing float after Pandoc preamble assembly so numbered code captions compile inside Beamer frames | slides_renderer |
 | **_slides_framebreaks.py** | Dense slide splitting | Isolates unbreakable listing, figure, table, and list environments while splitting long top-level frame content safely; explicit `\begingroup`/`\endgroup` regions remain in one continuation frame | slides_renderer |
 | **web_renderer.py** | Web HTML output | `WebRenderer` - MathJax integration; markdown preprocess in `_web_markdown_preprocess.py`, HTML postprocess in `_web_postprocess.py` | pandoc |

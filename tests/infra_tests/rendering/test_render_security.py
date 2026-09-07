@@ -67,6 +67,46 @@ def test_rendering_config_exposes_explicit_security_profile(tmp_path: Path) -> N
     assert config.security().temp_root == tmp_path
 
 
+@pytest.mark.parametrize("profile", ("", "untrustd", "UNTRUSTED", "trusted"))
+def test_rendering_config_rejects_unknown_security_profile(profile: str) -> None:
+    with pytest.raises(ValueError, match="security_profile must be"):
+        RenderingConfig(security_profile=profile)  # type: ignore[arg-type]
+
+
+def test_untrusted_rendering_config_requires_nonempty_temp_root() -> None:
+    with pytest.raises(ValueError, match="requires untrusted_temp_root"):
+        RenderingConfig(security_profile="untrusted")
+
+    with pytest.raises(ValueError, match="non-empty path string"):
+        RenderingConfig(security_profile="untrusted", untrusted_temp_root="")
+
+
+@pytest.mark.parametrize("profile", ("", "untrustd", "UNTRUSTED", "trusted"))
+def test_direct_security_profile_rejects_unknown_name(profile: str) -> None:
+    with pytest.raises(ValueError, match="render security profile must be"):
+        RenderSecurityProfile(name=profile)  # type: ignore[arg-type]
+
+
+def test_direct_untrusted_security_profile_requires_temp_root() -> None:
+    with pytest.raises(ValueError, match="isolated temporary output root"):
+        RenderSecurityProfile(name="untrusted")
+
+
+def test_environment_security_profile_is_validated(tmp_path: Path) -> None:
+    config = RenderingConfig.from_env(
+        {
+            "RENDER_SECURITY_PROFILE": "untrusted",
+            "RENDER_UNTRUSTED_TEMP_ROOT": str(tmp_path),
+        }
+    )
+
+    assert config.security().untrusted is True
+    assert config.security().temp_root == tmp_path
+
+    with pytest.raises(ValueError, match="security_profile must be"):
+        RenderingConfig.from_env({"RENDER_SECURITY_PROFILE": "untrustd"})
+
+
 @pytest.mark.skipif(os.name != "posix", reason="process groups differ on Windows")
 def test_isolated_subprocess_reaps_descendant_processes_on_timeout() -> None:
     """Timeout cleanup must terminate the shell's child process group."""

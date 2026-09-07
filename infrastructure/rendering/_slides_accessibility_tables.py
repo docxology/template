@@ -13,6 +13,7 @@ from infrastructure.rendering._slides_accessibility_ast import _frame_body_line_
 from infrastructure.rendering._slides_accessibility_contracts import (
     BODY_CHARACTERS_PER_LINE_20PT,
     LIST_CHARACTERS_PER_LINE_20PT,
+    TABLE_BODY_LINE_UNITS_16_9,
     TABLE_INTERCOLUMN_GUTTER_CHARACTERS,
     TABLE_LIST_INDENT_WIDTH_UNITS,
     TABLE_MINIMUM_COLUMN_CHARACTERS,
@@ -53,6 +54,7 @@ from infrastructure.rendering._slides_accessibility_table_widths import (
 
 _BODY_CHARACTERS_PER_LINE_20PT = BODY_CHARACTERS_PER_LINE_20PT
 _LIST_CHARACTERS_PER_LINE_20PT = LIST_CHARACTERS_PER_LINE_20PT
+_TABLE_BODY_LINE_UNITS_16_9 = TABLE_BODY_LINE_UNITS_16_9
 _TABLE_INTERCOLUMN_GUTTER_CHARACTERS = TABLE_INTERCOLUMN_GUTTER_CHARACTERS
 _TABLE_LIST_INDENT_WIDTH_UNITS = TABLE_LIST_INDENT_WIDTH_UNITS
 _TABLE_MINIMUM_COLUMN_CHARACTERS = TABLE_MINIMUM_COLUMN_CHARACTERS
@@ -90,7 +92,12 @@ def _excerpt_table(
         heading=heading,
     )
     capacities = _table_column_character_capacities(widths, policy, minima)
-    maximum_lines = _frame_body_line_capacity(header, continuation, policy)
+    maximum_lines = _frame_body_line_capacity(
+        header,
+        continuation,
+        policy,
+        base_body_lines=_TABLE_BODY_LINE_UNITS_16_9,
+    )
     # Both projected surfaces already carry a persistent canonical-reader
     # link. Repeating that link as a table caption consumes scarce geometry
     # without adding a distinct accessible name.

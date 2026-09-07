@@ -23,7 +23,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from pypdf import PdfReader
+from pypdf import PdfReader, PdfWriter
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import slides_renderer
@@ -1074,7 +1074,10 @@ code
         """Only the opt-in projection profile requests Beamer's 16:9 canvas."""
 
         source = tmp_path / "00_intro.md"
-        source.write_text("# Slide 1\n\nHello.\n", encoding="utf-8")
+        source.write_text(
+            '{"blocks": [], "meta": {}}' if slides_profile == "accessible" else "# Slide 1\n\nHello.\n",
+            encoding="utf-8",
+        )
         (tmp_path / "slides").mkdir()
         captured: dict[str, list[str]] = {}
 
@@ -1086,7 +1089,10 @@ code
 
         def fake_compile(tex, out_dir, **kwargs):
             compiled = out_dir / f"{tex.stem}.pdf"
-            compiled.write_bytes(b"%PDF-1.4 fake\n")
+            writer = PdfWriter()
+            writer.add_blank_page(width=453.543, height=255.12)
+            with compiled.open("wb") as stream:
+                writer.write(stream)
             return compiled
 
         renderer = SlidesRenderer(
