@@ -404,6 +404,17 @@ jobs:
           -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance"
           --timeout=120
 
+      - name: Verify completed MathJax equations across live viewport changes
+        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest'
+        run: |
+          export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+          npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
+          .tmp/playwright-node/node_modules/.bin/playwright install --with-deps chromium
+          NODE_PATH="$PWD/.tmp/playwright-node/node_modules" \
+            .tmp/playwright-node/node_modules/.bin/playwright test \
+            tests/infra_tests/rendering/mathjax_reflow.spec.cjs \
+            --workers=1 --output=.tmp/mathjax-browser
+
       - name: Upload infrastructure coverage to Codecov
         if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest'
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0

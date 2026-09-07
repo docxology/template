@@ -47,6 +47,24 @@ uv run pytest tests/infra_tests/rendering/test_web_renderer.py -v
 - Cross-reference handling
 - Style application
 
+The real Chromium regression in `mathjax_reflow.spec.cjs` typesets an equation
+through the shared pinned MathJax configuration, then changes the viewport from
+desktop to 200% and 400% equivalent widths and back. It checks visible equation
+numbers, unchanged input mathematics, and document width after asynchronous
+typesetting completes. It runs in the Ubuntu/Python 3.14 infrastructure CI cell.
+Run it locally from the repository root with:
+
+```bash
+npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
+.tmp/playwright-node/node_modules/.bin/playwright install chromium
+NODE_PATH="$PWD/.tmp/playwright-node/node_modules" \
+  .tmp/playwright-node/node_modules/.bin/playwright test \
+  tests/infra_tests/rendering/mathjax_reflow.spec.cjs \
+  --workers=1 --output=.tmp/mathjax-browser
+```
+
+The probe requires the pinned MathJax CDN assets; it is not an offline test.
+
 ### Slide Renderer Tests
 
 The slide contract is partitioned across `test_slides_renderer_core.py`,
