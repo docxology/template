@@ -8,7 +8,7 @@ import pytest
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-from infrastructure.publishing.transmission_page_check import (
+from infrastructure.transmission.transmission_page_check import (
     BEGIN_MARKER,
     END_MARKER,
     check_transmission_bookend_pages,

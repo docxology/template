@@ -14,7 +14,7 @@ from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.publishing.transmission_bookends import is_transmission_bookend
+from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering._bibliography import resolve_bibliography
 from infrastructure.rendering._pandoc_args import combined_pandoc_args

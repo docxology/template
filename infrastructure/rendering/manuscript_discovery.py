@@ -11,7 +11,7 @@ from typing import Any
 import yaml
 
 from infrastructure.core.logging.utils import get_logger, log_success
-from infrastructure.publishing.transmission_bookends import BEGIN_FILENAME, END_FILENAME
+from infrastructure.transmission.transmission_bookends import BEGIN_FILENAME, END_FILENAME
 
 logger = get_logger(__name__)
 

@@ -20,8 +20,8 @@ def validate_transmission_bookends(
     page_validator: Callable[[Path], bool] | None = None,
 ) -> bool:
     """Validate transmission bookend single-page contract when enabled."""
-    from infrastructure.publishing.transmission_bookends import transmission_bookends_enabled
-    from infrastructure.publishing.transmission_page_check import validate_transmission_bookend_pages
+    from infrastructure.transmission.transmission_bookends import transmission_bookends_enabled
+    from infrastructure.transmission.transmission_page_check import validate_transmission_bookend_pages
 
     config_path = resolve_source_manuscript_dir(project_root) / "config.yaml"
     if not transmission_bookends_enabled(config_path):

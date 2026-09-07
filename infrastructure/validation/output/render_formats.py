@@ -27,7 +27,7 @@ from infrastructure.core.pipeline.artifacts import (
     collect_stable_output_inventory,
 )
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
-from infrastructure.publishing.transmission_bookends import is_transmission_bookend
+from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 from infrastructure.rendering._epub_package_validation import validate_epub_package
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.rendering._slides_accessibility import accessible_reveal_output_issues

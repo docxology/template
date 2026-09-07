@@ -148,7 +148,7 @@ def write_resolved_manuscript_tree(
     )
 
     try:
-        from infrastructure.publishing.transmission_bookends import write_transmission_bookends
+        from infrastructure.transmission.transmission_bookends import write_transmission_bookends
 
         repo_root = root.parent.parent if root.parent.name == "projects" else root.parent
         write_transmission_bookends(root, root.name, repo_root=repo_root)

@@ -34,6 +34,7 @@ screen-reader-friendly and text-searchable representation.
 | Infrastructure · config | `infrastructure/config/` | Shared configuration/resource directory |
 | Infrastructure · config | `infrastructure/docker/` | Shared configuration/resource directory |
 | Infrastructure · config | `infrastructure/logrotate.d/` | Shared configuration/resource directory |
+| Infrastructure · config | `infrastructure/transmission/` | Shared configuration/resource directory |
 | Projects · public CI scope | `projects/templates/template_active_inference/` | Canonical Layer 2 exemplar |
 | Projects · public CI scope | `projects/templates/template_advanced_literature_review/` | Canonical Layer 2 exemplar |
 | Projects · public CI scope | `projects/templates/template_autopoiesis/` | Canonical Layer 2 exemplar |

@@ -20,7 +20,7 @@ from typing import Literal
 import pytest
 
 from infrastructure.core.exceptions import CompilationError, RenderingError, TemplateError
-from infrastructure.publishing.transmission_bookends import BEGIN_FILENAME
+from infrastructure.transmission.transmission_bookends import BEGIN_FILENAME
 from infrastructure.rendering._combined_exports import (
     render_combined_outputs,
 )

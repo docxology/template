@@ -15,7 +15,7 @@ import json
 from pathlib import Path
 
 
-from infrastructure.publishing.transmission_bookends import BEGIN_FILENAME, END_FILENAME
+from infrastructure.transmission.transmission_bookends import BEGIN_FILENAME, END_FILENAME
 from infrastructure.rendering._combined_exports import (
     combined_source_files,
     prepare_shared_combined_markdown,

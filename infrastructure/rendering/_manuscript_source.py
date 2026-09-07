@@ -15,7 +15,7 @@ from infrastructure.core.logging.diagnostic import DiagnosticReporter, Diagnosti
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.core.progress import SubStageProgress
-from infrastructure.publishing.transmission_bookends import is_transmission_bookend
+from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering.latex_package_validator import validate_preamble_packages
 from infrastructure.rendering.latex_validation import ValidationReport
