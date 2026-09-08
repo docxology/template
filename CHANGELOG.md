@@ -9,6 +9,17 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Rehearsal diagnosability (2026-09-07)
+
+- ``release_rehearsal.py --execute --artifact-dir DIR`` now persists each
+  run's public-matrix receipt (previously destroyed inside the disposable
+  clone's TemporaryDirectory, taking every lane verdict with it) and the
+  full redacted stdout/stderr of every blocked command. The hosted
+  workflow uploads the artifact directory alongside the top-level receipt,
+  so a hosted exit-1 is triageable after the runner is gone.
+- ``REHEARSAL-ANALYSIS-EXIT-1`` row updated: the hosted re-dispatch now
+  carries self-diagnosing evidence.
+
 ### Public-matrix output isolation honors declared artifacts (2026-09-07)
 
 - Root cause of the deterministic fresh-clone rehearsal exit 1
@@ -135,6 +146,22 @@ not to the contents of any specific workspace.
   provider evidence, not external authority. Public archival submission
   (save-code-now) remains owner-authorized work.
 
+### One-shot system dependency setup (2026-09-06)
+
+- ``scripts/shell/setup-system-deps.sh`` installs and verifies the external
+  toolchain ``uv`` cannot provision: pandoc, a XeLaTeX TeX distribution
+  (BasicTeX on macOS, ``texlive-xetex`` + ``texlive-latex-extra`` on
+  Debian/Ubuntu), and the LaTeX packages minimal distributions lack —
+  detected via ``kpsewhich`` with the sty→tlmgr name mapping
+  (``subcaption``→``caption``, ``bm``→``tools``). Idempotent: present tools
+  are skipped. Fail-closed: when elevation is required and stdin is not a
+  TTY it prints the exact commands and exits 1 instead of hanging;
+  ``--check`` verifies without installing. Verification runs
+  ``infrastructure.rendering.latex_package_validator`` end-to-end.
+- ``scripts/shell/health-check.sh`` now fails on missing pandoc/xelatex
+  (both are required for rendering) and its error counters use
+  ``set -e``-safe increments so a first failure no longer aborts the
+  remaining diagnostics.
 ### Rehearsal diagnosability and budget (2026-09-06)
 
 - Failed rehearsal commands now record a bounded, credential-redacted output

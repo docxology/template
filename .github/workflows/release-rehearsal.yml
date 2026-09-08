@@ -60,7 +60,7 @@ jobs:
       - name: Run two deterministic fresh-checkout rehearsals
         run: >-
           uv run --frozen --no-sync python scripts/maintenance/release_rehearsal.py
-          --execute --receipt clean_checkout_rehearsal_receipt.json
+          --execute --receipt clean_checkout_rehearsal_receipt.json --artifact-dir clean_checkout_rehearsal_logs
 
       - name: Summarize receipt
         if: always()
@@ -77,5 +77,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: clean-checkout-rehearsal-receipt
-          path: clean_checkout_rehearsal_receipt.json
+          path: |
+            clean_checkout_rehearsal_receipt.json
+            clean_checkout_rehearsal_logs/
           if-no-files-found: error

@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.88 %",
-      "source_hash": "9bf0eca0adb326bd7c99701416c904f9f3c640e3d68ab37e4e5392fe81deba94"
+      "source_hash": "38a49c6e12f7d3369b19ab9c31a86bc0822b5c7a9782f55ecc979ad140b4cc59"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "91.96 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "ef4f57f31ebe93aac93512c40877448e82e5644d",
+  "source_commit": "3692a6ce3236b9cdefbbef018c2b771808455e92",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -107,12 +107,12 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "4ff07e8a670efbd78aa590d9deab4c4678fe1b942d64b214b27cdd914ee6ea9c",
+        "digest": "1fba613bf04c21b77aba17f6ceff9d10cc9bc0fda24f04585c3ec08d8df3f3ce",
         "entries": [
           {
             "identity": "sha256",
             "path": "AGENTS.md",
-            "sha256": "fc725f4c594080ee321ba574bc2e12217b87fffb0c5225711ab3d66744159916",
+            "sha256": "afbe2dbc6b9d3f855aa030a6e43d926d56d521e4c63cd63ec15fc2fbaf5a80c8",
             "type": "file"
           },
           {
@@ -184,7 +184,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "9bf0eca0adb326bd7c99701416c904f9f3c640e3d68ab37e4e5392fe81deba94",
+      "template_active_inference": "38a49c6e12f7d3369b19ab9c31a86bc0822b5c7a9782f55ecc979ad140b4cc59",
       "template_advanced_literature_review": "fe8a2bcffe44383609253860793699d36b854e9962d32e6e072511d6dc629807",
       "template_autopoiesis": "025efdc71c7d24a50c9840eae657708010423194e7cdd70e55b84daf46267f7b",
       "template_autoresearch_project": "fdcdf3e7508cefccbdccdabf1d00d853d0fae1cd49384bd46d5798403242e305",

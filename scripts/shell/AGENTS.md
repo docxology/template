@@ -11,8 +11,9 @@ used by the repository's root wrappers and maintenance workflows.
 |--------|---------|
 | `bash_utils.sh` | Shared shell helpers for backup/health scripts and integration tests |
 | `shell_bootstrap.sh` | Shared `uv` bootstrap and sandbox env vars; sourced by `run.sh` / `secure_run.sh` |
+| `setup-system-deps.sh` | One-shot installer for the external toolchain: pandoc, XeLaTeX + missing LaTeX packages, uv (macOS/Debian; idempotent, `--check` verifies without installing) |
 | `ci_local.sh` | Local CI reproduction (`act` when available, else a documented fail-closed direct-command subset) |
-| `health-check.sh` | Pre-flight system health check (Python, uv, disk, Docker, repo) |
+| `health-check.sh` | Pre-flight system health check (Python, uv, pandoc, xelatex, disk, Docker, repo) |
 | `backup-daily.sh` | Daily rsync backup tier |
 | `backup-weekly.sh` | Weekly rsync backup tier |
 | `backup-full.sh` | Write-once-by-helper, versioned rsync snapshot (`.hermes`, `.cache`, `output`) |
@@ -23,6 +24,10 @@ used by the repository's root wrappers and maintenance workflows.
 ```bash
 # System health check
 bash scripts/shell/health-check.sh
+
+# One-shot system dependency setup (pandoc, xelatex + LaTeX packages, uv)
+bash scripts/shell/setup-system-deps.sh --check
+bash scripts/shell/setup-system-deps.sh
 
 # Local CI
 bash scripts/shell/ci_local.sh
