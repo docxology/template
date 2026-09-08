@@ -57,7 +57,7 @@ Default exemplar for paths: `projects/templates/template_code_project/`.
 
 ## Infrastructure Modules
 
-Current importable Python subpackages under `infrastructure/` (25):
+Current importable Python subpackages under `infrastructure/` (26):
 
 - autoresearch
 - benchmark
@@ -66,6 +66,7 @@ Current importable Python subpackages under `infrastructure/` (25):
 - documentation
 - fonds
 - llm
+- metadata
 - methods
 - orchestration
 - project
@@ -226,7 +227,7 @@ uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 ```mermaid
 flowchart TD
-    Root[Root] --> Infra[infrastructure/ <br/>25 importable packages]
+    Root[Root] --> Infra[infrastructure/ <br/>26 importable packages]
     Root --> Projects[projects/ <br/>see active_projects.md]
     Root --> Tests[tests/infra_tests/]
     Infra --> Core[core/ <br/>pipeline, logging, files, config]

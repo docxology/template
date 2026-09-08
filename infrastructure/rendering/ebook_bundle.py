@@ -36,7 +36,7 @@ from typing import Any
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.publishing.metadata_package import (
+from infrastructure.metadata.metadata_package import (
     PublicationMetadata,
     generate_metadata_package,
 )
@@ -229,7 +229,7 @@ class EbookBundleManager:
                 When omitted, the selected ``book.cover.alt`` or
                 ``paper.cover.alt`` value is read from manuscript config.
             publication_metadata: Optional pre-built
-                :class:`~infrastructure.publishing.metadata_package.PublicationMetadata`
+                :class:`~infrastructure.metadata.metadata_package.PublicationMetadata`
                 instance. When ``None`` a metadata object is derived from
                 ``manuscript/config.yaml`` if present, else from the project
                 directory name.

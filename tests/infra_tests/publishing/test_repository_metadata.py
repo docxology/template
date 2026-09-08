@@ -1,6 +1,6 @@
 """Repository metadata normalization tests."""
 
-from infrastructure.publishing.repository_metadata import normalized_repository_url
+from infrastructure.metadata.repository_metadata import normalized_repository_url
 
 
 def test_explicit_repository_url_wins() -> None:
