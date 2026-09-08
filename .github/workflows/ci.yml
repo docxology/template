@@ -531,6 +531,49 @@ jobs:
           fi
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Job 3c — Integration tier (repository-level wiring)
+#
+# CI-WIRING-1: ``tests/integration/`` (run.sh, secure_run.sh, output copying,
+# execute_pipeline CLI, full-pipeline flow) is a registered suite that no CI
+# job ran — this job mirrors ``test-regression`` so the suite is exercised on
+# every push/PR instead of only on developer machines.
+# ─────────────────────────────────────────────────────────────────────────────
+  test-integration:
+    name: "Integration Tier (run.sh + pipeline CLI)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [verify-no-mocks]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14"
+
+      - name: Sync dependencies (dev + optional test groups)
+        run: uv sync --group public-exemplars
+
+      - name: Run integration suite
+        run: >-
+          uv run pytest tests/integration/ --no-cov --timeout=120
+          --collect-only -q | tee /tmp/integration-collect.txt
+          && uv run pytest tests/integration/ -q --no-cov --timeout=120
+
+      # Fail closed against a silently empty integration tier: this suite is
+      # the only CI exercise for the shell entry points, so zero collected
+      # tests must surface as a violation, not vacuous success.
+      - name: Assert integration tier is not empty
+        run: |-
+          count=$(grep -c "::" /tmp/integration-collect.txt || true)
+          echo "integration collection lines: $count"
+          if [ "$count" -lt 3 ]; then
+            echo "FAIL: integration tier collected fewer than 3 tests; the suite is not wired." >&2
+            exit 1
+          fi
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Job 4 — Project Tests (one parallel job per public exemplar)
 # ─────────────────────────────────────────────────────────────────────────────
   test-project:
@@ -1117,6 +1160,7 @@ jobs:
       - test-infra
       - test-infra-slow
       - test-regression
+      - test-integration
       - test-project
       - fep-lean
       - validate
