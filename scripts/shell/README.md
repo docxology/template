@@ -3,8 +3,9 @@
 Shell helpers used by root entry points and maintenance workflows:
 - `bash_utils.sh` — shared helpers for backup and integration tests
 - `shell_bootstrap.sh` — uv bootstrap sourced by `run.sh`
+- `setup-system-deps.sh` — one-shot installer for pandoc, XeLaTeX + LaTeX packages, and uv (`--check` = verify only)
 - `ci_local.sh` — `act` workflow reproduction, with a fail-closed direct-command fallback
-- `health-check.sh` — pre-flight system health check
+- `health-check.sh` — pre-flight system health check (Python, uv, pandoc, xelatex, Docker)
 - `backup-daily.sh` / `backup-weekly.sh` — site-specific rsync tiers
 - `backup-full.sh` — write-once-by-helper, metadata-bearing rsync snapshots
 - `restore-test.sh` — private-scratch restore and transfer-consistency comparison
@@ -13,6 +14,8 @@ Shell helpers used by root entry points and maintenance workflows:
 
 ```bash
 bash scripts/shell/health-check.sh
+bash scripts/shell/setup-system-deps.sh --check
+bash scripts/shell/setup-system-deps.sh
 bash scripts/shell/ci_local.sh
 bash scripts/shell/ci_local.sh --no-act --dry-run
 bash scripts/shell/backup-daily.sh

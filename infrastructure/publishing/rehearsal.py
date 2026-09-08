@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+
 import hashlib
 import os
+import shutil
 import tempfile
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from time import monotonic
@@ -127,7 +130,13 @@ def _failure_tail(stdout: str, stderr: str) -> str:
     return tail
 
 
-def _run_command(command: Sequence[str], cwd: Path, *, timeout_seconds: float = 1800) -> CommandReceipt:
+def _run_command(
+    command: Sequence[str],
+    cwd: Path,
+    *,
+    timeout_seconds: float = 1800,
+    outputs_sink: Callable[[tuple[str, str]], None] | None = None,
+) -> CommandReceipt:
     """Run one rehearsal command through the shared bounded policy."""
     started = monotonic()
     result = run_with_policy(
@@ -142,6 +151,8 @@ def _run_command(command: Sequence[str], cwd: Path, *, timeout_seconds: float = 
         ),
     )
     status: ReceiptStatus = "pass" if result.returncode == 0 and not result.timed_out else "blocked"
+    if outputs_sink is not None:
+        outputs_sink((result.stdout, result.stderr))
     return CommandReceipt(
         command=tuple(command),
         status=status,
@@ -233,12 +244,47 @@ def _clean_generated_render_output(checkout: Path, status_output: str) -> tuple[
     return True, f"restored {len(paths)} generated render path(s) in disposable checkout"
 
 
+def _persist_run_artifacts(
+    artifact_dir: Path | None,
+    run_index: int,
+    receipt_path: Path,
+    command_receipts: Sequence[CommandReceipt],
+    command_outputs: Sequence[tuple[str, str]],
+) -> None:
+    """Persist per-run diagnostic artifacts beside the top-level receipt.
+
+    The public-matrix receipt written inside the disposable clone dies with
+    its TemporaryDirectory; copying it out (plus full redacted output for
+    blocked commands) is what makes a hosted exit-1 diagnosable after the
+    runner is gone.
+    """
+    if artifact_dir is None:
+        return
+    run_dir = artifact_dir / f"run-{run_index + 1}"
+    run_dir.mkdir(parents=True, exist_ok=True)
+    if receipt_path.is_file():
+        shutil.copy2(receipt_path, run_dir / "public-matrix-receipt.json")
+    from infrastructure.publishing.release_receipts import _SECRET_PATTERN
+
+    for position, (receipt, (stdout, stderr)) in enumerate(zip(command_receipts, command_outputs, strict=True)):
+        if receipt.status == "pass":
+            continue
+        combined = f"{stdout}\n{stderr}".strip()
+        if not combined:
+            continue
+        if _SECRET_PATTERN.search(combined):
+            combined = "[redacted: credential-like pattern in output]"
+        stem = "-".join(part.replace("/", "-") for part in receipt.command[-2:]) or f"command-{position}"
+        (run_dir / f"command-{position:02d}-{stem[-80:]}.log").write_text(combined + "\n", encoding="utf-8")
+
+
 def run_clean_checkout_rehearsal(
     repo_root: Path | str,
     plan: CleanCheckoutPlan,
     *,
     platform_name: str,
     timeout_seconds: float = 1800,
+    artifact_dir: Path | None = None,
 ) -> CleanCheckoutReceipt:
     """Run two independent local clones for an explicit opt-in rehearsal."""
     root = Path(repo_root).resolve()
@@ -278,10 +324,17 @@ def run_clean_checkout_rehearsal(
                 output_clean = False
                 continue
             receipt_path = parent / f"public-matrix-rehearsal-{index}.json"
+            command_outputs: list[tuple[str, str]] = []
             command_receipts = [
-                _run_command(_materialize_command(command, receipt_path), checkout, timeout_seconds=timeout_seconds)
+                _run_command(
+                    _materialize_command(command, receipt_path),
+                    checkout,
+                    timeout_seconds=timeout_seconds,
+                    outputs_sink=command_outputs.append,
+                )
                 for command in plan.commands
             ]
+            _persist_run_artifacts(artifact_dir, index, receipt_path, command_receipts, command_outputs)
             pre_clean = run_with_policy(
                 ("git", "status", "--porcelain", "--untracked-files=all"),
                 cwd=checkout,
