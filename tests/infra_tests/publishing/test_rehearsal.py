@@ -131,6 +131,40 @@ def test_rehearsal_blocks_when_runs_produce_unequal_digests(tmp_path: Path) -> N
     assert _rehearsal_exit_code(receipt) == 1
 
 
+@pytest.mark.skipif(not _git_supports_clone_revision(), reason="git clone --revision requires Git 2.51+")
+def test_rehearsal_ignores_volatile_outputs_when_judging_determinism(tmp_path: Path) -> None:
+    """Wall-clock-embedded command output must not block an otherwise-equal pair.
+
+    Hosted run 34243791209 passed all 20 commands but the run digests
+    differed only because health/stage/sync stdout embeds durations; the
+    determinism digest now covers the byte-stable subset only.
+    """
+    repo = _fixture_repo(tmp_path)
+    script = repo / "scripts/pipeline/stage_01_test.py"
+    script.parent.mkdir(parents=True, exist_ok=True)
+    script.write_text("import random\nprint(random.random())\n", encoding="utf-8")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-qm", "volatile script")
+    plan = build_clean_checkout_plan(repo, commands=(("python", "scripts/pipeline/stage_01_test.py"),))
+
+    receipt = run_clean_checkout_rehearsal(repo, plan, platform_name="darwin", timeout_seconds=120)
+
+    assert receipt.status == "pass"
+    assert receipt.validate() == []
+
+
+def test_output_is_volatile_classification() -> None:
+    """Only the known wall-clock-embedded commands count as volatile."""
+    from infrastructure.publishing.rehearsal import _output_is_volatile
+
+    assert _output_is_volatile(("uv", "sync", "--locked", "--offline"))
+    assert _output_is_volatile(("uv", "run", "python", "-m", "infrastructure.core.health", "--json"))
+    assert _output_is_volatile(("uv", "run", "python", "scripts/pipeline/stage_01_test.py", "--receipt", "x.json"))
+    assert _output_is_volatile(("uv", "run", "python", "scripts/pipeline/stage_03_render.py", "--project", "p"))
+    assert not _output_is_volatile(("uv", "run", "python", "scripts/docgen/counts.py", "--check"))
+    assert not _output_is_volatile(("git", "status", "--porcelain", "--untracked-files=all"))
+
+
 def test_failed_command_receipt_carries_output_tail(tmp_path: Path) -> None:
     """A failing rehearsal command records a bounded diagnostic tail for triage."""
     from infrastructure.publishing.rehearsal import _run_command

@@ -109,6 +109,33 @@ def _digest_output(stdout: str, stderr: str) -> str:
     return hashlib.sha256(f"{stdout}\n{stderr}".encode("utf-8", errors="replace")).hexdigest()
 
 
+# Commands whose captured stdout legitimately embeds wall-clock data (sync
+# progress, per-gate health timings, per-lane/stage durations). Their outputs
+# can never be byte-equal across runs, so they are excluded from the
+# run-determinism digest; byte-stable commands still fail the rehearsal when
+# they diverge. Hosted run 34243791209 passed all 20 commands but differed
+# only in these four, which previously made the check unfailable-green.
+_VOLATILE_OUTPUT_COMMAND_MARKERS = (
+    "infrastructure.core.health",
+    "scripts/pipeline/stage_01_test.py",
+    "scripts/pipeline/stage_03_render.py",
+)
+
+
+def _output_is_volatile(command: Sequence[str]) -> bool:
+    """Return True iff *command*'s captured output is allowed to vary per run."""
+    joined = " ".join(command)
+    return tuple(command) == ("uv", "sync", "--locked", "--offline") or any(
+        marker in joined for marker in _VOLATILE_OUTPUT_COMMAND_MARKERS
+    )
+
+
+def _determinism_digest(command_receipts: Sequence[CommandReceipt]) -> str:
+    """Hash the byte-stable subset of a run's command-output digests."""
+    parts = [receipt.output_sha256 for receipt in command_receipts if not _output_is_volatile(receipt.command)]
+    return hashlib.sha256("\n".join(parts).encode("ascii")).hexdigest()
+
+
 _FAILURE_TAIL_LIMIT = 4000
 
 
@@ -374,9 +401,7 @@ def run_clean_checkout_rehearsal(
             command_receipts.append(clean_receipt)
             failed = next((receipt for receipt in command_receipts if receipt.status != "pass"), None)
             status: ReceiptStatus = "pass" if failed is None else "blocked"
-            digest = hashlib.sha256(
-                "\n".join(receipt.output_sha256 for receipt in command_receipts).encode("ascii")
-            ).hexdigest()
+            digest = _determinism_digest(command_receipts)
             run_command_receipts.append(tuple(command_receipts))
             run_receipts.append(
                 CommandReceipt(

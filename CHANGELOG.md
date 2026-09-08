@@ -9,6 +9,20 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Rehearsal determinism over byte-stable outputs (2026-09-08)
+
+- Hosted run 34243791209 passed **all 20 commands in both deterministic
+  runs** (the docs-lint toolchain fix landed in #77 held), but the
+  run-determinism digest still differed: it hashed every command's full
+  stdout, and four commands legitimately embed wall-clock data (uv sync
+  progress, per-gate health timings, Stage-01/Stage-03 durations).
+  The run digest now covers the byte-stable command subset only
+  (``_determinism_digest`` / ``_output_is_volatile``); volatile commands
+  are recorded in full but excluded from the equality check. Byte-stable
+  divergence still blocks the rehearsal, and the negative controls for
+  non-generated mutation, dirty final tree, and changed revision are
+  unchanged.
+
 ### Publishing prefix-family subpackaging (2026-09-08)
 
 - Phase 2b of ``RENDERING-LAYERING-1`` (row now closed): the ``release_*``
