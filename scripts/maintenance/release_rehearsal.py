@@ -27,12 +27,17 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--revision", default="HEAD")
     parser.add_argument("--execute", action="store_true", help="Create two local clones and run the plan.")
+    parser.add_argument("--receipt", type=Path, help="Optional path for the JSON receipt.")
+    parser.add_argument(
+        "--artifact-dir",
+        type=Path,
+        help="Optional directory for per-run diagnostic artifacts (matrix receipts, failed-command logs).",
+    )
     parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Explicitly select the default no-side-effect planning mode.",
     )
-    parser.add_argument("--receipt", type=Path, help="Optional path for the JSON receipt.")
     args = parser.parse_args(argv)
     if args.execute and args.dry_run:
         parser.error("--execute and --dry-run are mutually exclusive")
@@ -42,8 +47,9 @@ def main(argv: list[str] | None = None) -> int:
         payload = {"schema_version": "template-release-rehearsal-plan/v1", **plan.to_dict()}
         print(json.dumps(payload, indent=2, sort_keys=True))
         return 0
-
-    receipt = run_clean_checkout_rehearsal(REPO_ROOT, plan, platform_name=platform.system().lower())
+    receipt = run_clean_checkout_rehearsal(
+        REPO_ROOT, plan, platform_name=platform.system().lower(), artifact_dir=args.artifact_dir
+    )
     if args.receipt:
         write_receipt(args.receipt, receipt)
     print(json.dumps(receipt.to_dict(), indent=2, sort_keys=True))

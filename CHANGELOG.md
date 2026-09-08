@@ -9,6 +9,17 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Rehearsal diagnosability (2026-09-07)
+
+- ``release_rehearsal.py --execute --artifact-dir DIR`` now persists each
+  run's public-matrix receipt (previously destroyed inside the disposable
+  clone's TemporaryDirectory, taking every lane verdict with it) and the
+  full redacted stdout/stderr of every blocked command. The hosted
+  workflow uploads the artifact directory alongside the top-level receipt,
+  so a hosted exit-1 is triageable after the runner is gone.
+- ``REHEARSAL-ANALYSIS-EXIT-1`` row updated: the hosted re-dispatch now
+  carries self-diagnosing evidence.
+
 ### Public-matrix output isolation honors declared artifacts (2026-09-07)
 
 - Root cause of the deterministic fresh-clone rehearsal exit 1
