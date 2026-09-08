@@ -142,7 +142,7 @@ Result: **624** project-scope infrastructure tests collected and **864** publish
 | `template_registered_report` | 44 | 94.35 % |
 | `template_search_project` | 321 | 96.28 % |
 | `template_sia` | 77 | 94.39 % |
-| `template_storybook` | 25 | 93.91 % |
+| `template_storybook` | 45 | 93.91 % |
 | `template_template` | 147 | 97.53 % |
 | `template_textbook` | 247 | 96.08 % |
 
