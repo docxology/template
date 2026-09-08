@@ -10,19 +10,19 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 
 | Module | Role |
 | --- | --- |
-| `metadata.py` / `_metadata_*.py` | Publication metadata extraction and reporting |
+| `metadata/` (package; flat `_metadata_*.py` helpers remain) | Publication metadata extraction and reporting — the flat `metadata.py` aggregator became the `metadata/` package (`metadata_aggregate.py` + family submodules) |
 | `models.py` | `PublicationMetadata`, `AuthorRecord`, `CitationStyle` |
 | `citations.py` | Citation helpers: BibTeX CLI target plus APA/MLA library helpers |
 | `package.py` | Publication package, checklist, readiness re-exports |
-| `metadata_from_config.py` | `publication_metadata_from_config`, `load_publication_release_context` — single-parse metadata + deposit context + prior DOI from `config.yaml` |
+| `metadata/metadata_from_config.py` | `publication_metadata_from_config`, `load_publication_release_context` — single-parse metadata + deposit context + prior DOI from `config.yaml` |
 | `abstract_plaintext.py` | Plaintext abstract + cross-link footer for Zenodo/GitHub (`build_deposit_description`, `build_github_release_body`) |
 | `config_doi.py` | `update_publication_doi`, `read_publication_doi`, `update_publication_after_zenodo_deposit` — comment-preserving DOI write-back (concept DOI preserved when `version_doi` is declared) |
-| `release_workflow.py` | Unified GitHub + Zenodo + DOI + re-render orchestration |
-| `release_workflow_zenodo.py` | Reserve-first DOI phase + `publish_zenodo_for_release` (leaf of release workflow) |
+| `release/release_workflow.py` | Unified GitHub + Zenodo + DOI + re-render orchestration |
+| `release/release_workflow_zenodo.py` | Reserve-first DOI phase + `publish_zenodo_for_release` (leaf of release workflow) |
 | `root_release_contract.py` | Fail-closed root tag/package/changelog identity gate; exemplar releases stay on standalone repositories |
 | `deposit_filename.py` | `build_deposit_filename`, `DepositPublishContext`, `deposit_context_from_config` — metadata-driven Zenodo/GitHub upload basename |
 | `publication_ledger.py` | Append-only release ledger for transmission bookends |
-| `release_pairing.py` | Structural GitHub ↔ Zenodo pairing validation |
+| `release/release_pairing.py` | Structural GitHub ↔ Zenodo pairing validation |
 | `transmission_bookends.py` | Generated begin/end transmission manuscript pages |
 | `transmission_barcode_strip.py` | Dual-row 7-QR + Code128 strip PNG; writes `transmission_manifest.json` |
 | `transmission_models.py` | Dependency-light shared transmission context model; keeps bookend/barcode modules acyclic |
@@ -32,18 +32,18 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `announcement.py`, `checklist.py`, `readiness.py` | Pre-publication helpers. `readiness.py`'s `completeness_score` is manuscript PUBLICATION readiness (heading/PDF/citation/figure presence), distinct from `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s paper CONTENT reproducibility score — cross-reference only. |
 | `executable_bundle.py` | Stage 14 executable bundle with public-roster, path, lock, and deterministic-manifest gates |
 | `preflight.py` | Publication payload and credential/path preflight |
-| `release_receipts.py` | Versioned command, release-authority, coverage-gap, and clean-checkout receipts |
+| `release/release_receipts.py` | Versioned command, release-authority, coverage-gap, and clean-checkout receipts |
 | `rehearsal.py` | Offline-by-default two-run clean-checkout release rehearsal |
 | `registry.py` | `PLATFORM_REGISTRY`, `list_platforms()`, `get_platform()`, `PublishingTier` — central adapter registry |
 | `status_report.py` | `compile_publishing_status`, `render_status_markdown`, `render_status_block`, `update_readme_block`, `status_report_is_current` — registry + `config.yaml` → regenerable README publishing-status block |
 | `reachability.py` | Opt-in live repository/DOI reachability probes used by publishing-status diagnostics; ordinary CI remains offline |
 | `credential_check.py` | `PROBES`, `run_probe`, `check_all`, `format_results` — read-only, non-destructive verification that publishing credentials authenticate |
 | `upload_runner.py` | `UploadTargets`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs`, `run_uploads` — reusable multi-platform upload dispatch (dry-run by default; per-platform failure never aborts the batch) |
-| `metadata_export.py` | `build_citation_cff`, `build_codemeta` / `build_codemeta_json`, `build_zenodo` / `build_zenodo_json`, `write_metadata_files`, `write_metadata_for_config_path` — generate `CITATION.cff`, `codemeta.json`, and `.zenodo.json` from a parsed `manuscript/config.yaml`, with `paper` fields taking precedence and a complete `book`-schema fallback (optional `released_date` for byte-stable output) |
+| `metadata/metadata_export.py` | `build_citation_cff`, `build_codemeta` / `build_codemeta_json`, `build_zenodo` / `build_zenodo_json`, `write_metadata_files`, `write_metadata_for_config_path` — generate `CITATION.cff`, `codemeta.json`, and `.zenodo.json` from a parsed `manuscript/config.yaml`, with `paper` fields taking precedence and a complete `book`-schema fallback (optional `released_date` for byte-stable output) |
 | `standalone_mirror.py` | `sync_exemplar`, `populate_mirror_tree`, `tracked_relative_paths`, `declared_repository` — mirror a public exemplar into its standalone publication repository. Update-only (never deletes mirror-only published artifacts) and dereferences cross-project symlinks so a mirror is self-contained |
-| `metadata_export_cli.py` | `main` — `metadata-export` CLI writing the citation/archival metadata files for a project (`python -m infrastructure.publishing.metadata_export_cli metadata-export --project <name>`) |
+| `metadata/metadata_export_cli.py` | `main` — `metadata-export` CLI writing the citation/archival metadata files for a project (`python -m infrastructure.publishing.metadata.metadata_export_cli metadata-export --project <name>`; the flat path remains as a shim) |
 | `metadata_package.py` | compat shim -> `infrastructure/metadata/metadata_package.py` (moved 2026-09-07 for RENDERING-LAYERING-1); publishing consumers import `infrastructure.metadata.metadata_package` directly |
-| `metadata_stage.py` | `run_metadata_package` — thin stage orchestrator: resolve project, load config, build ebook metadata, write the package into `output/metadata/` |
+| `metadata/metadata_stage.py` | `run_metadata_package` — thin stage orchestrator: resolve project, load config, build ebook metadata, write the package into `output/metadata/` |
 | `export_bundle.py` | `export_for_publishing`, `main` — bundle a project's `output/` PDFs / ebooks / metadata into a timestamped import package with `manifest.json` and a `latest` symlink for the `docxology/publishing` repo |
 | `repro_bundle.py` | `build_repro_bundle`, `build_public_repro_bundles`, `verify_repro_bundle`, `collect_entries`, `build_manifest_dict`, `BundleEntry`, `VerifyReport` — hermetic reproduction-bundle builder/verifier emitting a deterministic `repro_manifest.json`; bundle construction first validates the source artifact manifest against its lifecycle-authorized stable inventory, and verification fails closed on any missing or changed file. `verify_repro_bundle` is implemented in `_repro_bundle_verify.py` (`collect_schema_findings`, `collect_expected_kinds`, `collect_entry_findings`, `collect_cardinality_findings`) and re-exported from `repro_bundle`. This is artifact-hash byte-reproducibility (a build/CI concept), distinct from `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s methodological/workflow completeness scoring (a paper-content concept) — cross-reference only. |
 | `http_constants.py` | `REQUEST_TIMEOUT` — shared default outbound HTTP timeout (30s) for publishing platform clients |
@@ -327,7 +327,7 @@ Prefer `infrastructure.publishing.zenodo` (and sibling subpackages) for new code
 | `upload_runner.py` | `UploadTargets`, `UploadRun`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs`, `run_uploads` | `PINATA_JWT`, `HUGGINGFACE_TOKEN`/`HF_TOKEN`, `OSF_TOKEN`, `TESTPYPI_TOKEN`, `GITHUB_TOKEN`, `NETLIFY_AUTH_TOKEN`, `CLOUDFLARE_API_TOKEN` |
 | `executable_bundle.py` | `bundle_project` | — |
 | `preflight.py` | `publishing_preflight` | — |
-| `release_receipts.py` | `ReleaseMetadataReceipt`, `CommandReceipt`, `CleanCheckoutReceipt`, `CoverageGapSnapshot`, `SubprocessPolicyReceipt` | — |
+| `release/release_receipts.py` | `ReleaseMetadataReceipt`, `CommandReceipt`, `CleanCheckoutReceipt`, `CoverageGapSnapshot`, `SubprocessPolicyReceipt` | — |
 | `rehearsal.py` | `build_clean_checkout_plan`, `run_clean_checkout_rehearsal` | — |
 | `cli.py` | `main`, `publish_zenodo_command`, `extract_metadata_command`, ... | `--token`, `ZENODO_PROD_TOKEN`, `ZENODO_TOKEN` |
 | `publish_cli.py` | `main` | `--token`, `--repo`, `--tag`, `--name` |
@@ -416,7 +416,7 @@ print(result.url)
 ```python
 from pathlib import Path
 
-from infrastructure.publishing.release_workflow import ReleaseRequest, run_release_workflow
+from infrastructure.publishing.release.release_workflow import ReleaseRequest, run_release_workflow
 
 result = run_release_workflow(
     ReleaseRequest(
@@ -468,7 +468,7 @@ Local renders keep `{project}_combined.pdf`. `prepare_release_bundle` copies the
 
 ```python
 from infrastructure.publishing.deposit_filename import build_deposit_filename
-from infrastructure.publishing.metadata_from_config import publication_metadata_from_config
+from infrastructure.publishing.metadata.metadata_from_config import publication_metadata_from_config
 
 metadata = publication_metadata_from_config(Path("projects/templates/template_code_project/manuscript/config.yaml"))
 name = build_deposit_filename(

@@ -9,9 +9,9 @@ from typing import Any, Literal
 from infrastructure.core.config.loader import load_config
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.publishing.zenodo_urls import zenodo_record_url_from_doi
-from infrastructure.publishing.metadata_from_config import publication_metadata_from_config
+from infrastructure.publishing.metadata.metadata_from_config import publication_metadata_from_config
 from infrastructure.publishing.publication_ledger import load_publication_ledger
-from infrastructure.publishing.release_pairing import (
+from infrastructure.publishing.release.release_pairing import (
     format_pairing_checklist,
     format_pairing_checklist_compact,
     validate_release_pairing,

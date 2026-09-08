@@ -19,7 +19,7 @@ from infrastructure.publishing.rehearsal import (  # noqa: E402
     build_clean_checkout_plan,
     run_clean_checkout_rehearsal,
 )
-from infrastructure.publishing.release_receipts import write_receipt  # noqa: E402
+from infrastructure.publishing.release.release_receipts import write_receipt  # noqa: E402
 
 
 def main(argv: list[str] | None = None) -> int:

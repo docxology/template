@@ -219,7 +219,7 @@ def _write_metadata_exports(root: Path, config_text: str) -> None:
     with the real generator — the same one the metadata-export CLI wraps."""
     import yaml
 
-    from infrastructure.publishing.metadata_export import write_metadata_files
+    from infrastructure.publishing.metadata.metadata_export import write_metadata_files
 
     write_metadata_files(yaml.safe_load(config_text), root, released_date="2026-07-10")
 

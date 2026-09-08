@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.88 %",
-      "source_hash": "38a49c6e12f7d3369b19ab9c31a86bc0822b5c7a9782f55ecc979ad140b4cc59"
+      "source_hash": "22ab9ec54112d03af8c3b43fe10478bea19813d8c198b2d1793614fdbf48ee99"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "91.96 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "a408a79f1e2750e0cdedbee1cf205ad7ed514411",
+  "source_commit": "26fa0ab46013f3b51f237612a9cfdfec045a0851",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -107,7 +107,7 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "1fba613bf04c21b77aba17f6ceff9d10cc9bc0fda24f04585c3ec08d8df3f3ce",
+        "digest": "8dcbc20965a1239ca5c9611678aef43f338e27dbac1665f60e9b2819dc67e8c6",
         "entries": [
           {
             "identity": "sha256",
@@ -147,7 +147,7 @@
           {
             "identity": "sha256",
             "path": "docs/guides/zenodo-doi-strategy.md",
-            "sha256": "cd9dc11557faf1525e40b37318ead96e75459fb2e3eb06692c1c157ab2aedcfd",
+            "sha256": "6d6b748a0e1c0f1f134bf2f73f5860a55d15cfd3237ccdde2a55030ea9bd32ec",
             "type": "file"
           },
           {
@@ -171,7 +171,7 @@
           {
             "identity": "sha256",
             "path": "infrastructure/publishing/README.md",
-            "sha256": "ad0e743c35f4012b3c3045535e9dad516a56e08478bb49694841469e1da060ab",
+            "sha256": "a22365b8bbf4367c558a150eecb7f63c834babbdc8953d8445f4cbdffa081635",
             "type": "file"
           },
           {
@@ -184,7 +184,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "38a49c6e12f7d3369b19ab9c31a86bc0822b5c7a9782f55ecc979ad140b4cc59",
+      "template_active_inference": "22ab9ec54112d03af8c3b43fe10478bea19813d8c198b2d1793614fdbf48ee99",
       "template_advanced_literature_review": "fe8a2bcffe44383609253860793699d36b854e9962d32e6e072511d6dc629807",
       "template_autopoiesis": "025efdc71c7d24a50c9840eae657708010423194e7cdd70e55b84daf46267f7b",
       "template_autoresearch_project": "fdcdf3e7508cefccbdccdabf1d00d853d0fae1cd49384bd46d5798403242e305",

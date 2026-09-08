@@ -1,4 +1,4 @@
-"""Tests for infrastructure/publishing/release_workflow_zenodo.py.
+"""Tests for infrastructure/publishing/release/release_workflow_zenodo.py.
 
 No mocks: exercises the deterministic dry-run and config-writing paths plus the
 fail-closed reserve-first guards with real on-disk config files. The networked
@@ -13,7 +13,7 @@ import pytest
 
 from infrastructure.core.exceptions import PublishingError
 from infrastructure.publishing.models import PublicationMetadata
-from infrastructure.publishing.release_workflow_zenodo import (
+from infrastructure.publishing.release.release_workflow_zenodo import (
     _reserve_doi_dry_run,
     reserve_zenodo_doi_pair,
     write_reserved_dois_to_config,

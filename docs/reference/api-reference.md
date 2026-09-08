@@ -1709,7 +1709,7 @@ Mirror a publication bundle to N independent archival targets.
 
 ### `build_coverage_gap_snapshot`
 
-*function — defined in `infrastructure.publishing.release_receipts`*
+*function — defined in `infrastructure.publishing.release.release_receipts`*
 
 ```python
 build_coverage_gap_snapshot(*, revision: str, infrastructure_percent: float | None, infrastructure_floor: float, projects: Mapping[str, float | None], project_floors: Mapping[str, float]) -> CoverageGapSnapshot
@@ -1729,7 +1729,7 @@ Build wheel + sdist using ``uv build``.
 
 ### `build_release_metadata_receipt`
 
-*function — defined in `infrastructure.publishing.release_receipts`*
+*function — defined in `infrastructure.publishing.release.release_receipts`*
 
 ```python
 build_release_metadata_receipt(*, repository: str, revision: str, version: str, command: tuple[str, ...], scope: tuple[str, ...], owner: str, checked_at: str, health: str, verification_mode: VerificationMode='offline', source_urls: tuple[str, ...]=(), artifact: str='', branch_protection: AuthorityStatus='unavailable', private_promotion: AuthorityStatus='unavailable', status: ReceiptStatus='review_required', skip_reason: str='') -> ReleaseMetadataReceipt
@@ -1739,7 +1739,7 @@ Build a metadata receipt with all reproducibility fields explicit.
 
 ### `build_subprocess_policy_receipt`
 
-*function — defined in `infrastructure.publishing.release_receipts`*
+*function — defined in `infrastructure.publishing.release.release_receipts`*
 
 ```python
 build_subprocess_policy_receipt(repo_root: Path | str | None=None) -> SubprocessPolicyReceipt
@@ -1779,7 +1779,7 @@ Container for citation style configuration.
 
 ### `CleanCheckoutReceipt`
 
-*class — defined in `infrastructure.publishing.release_receipts`*
+*class — defined in `infrastructure.publishing.release.release_receipts`*
 
 ```python
 class CleanCheckoutReceipt
@@ -1799,7 +1799,7 @@ Data container for CloudflarePagesAdapter.
 
 ### `CommandReceipt`
 
-*class — defined in `infrastructure.publishing.release_receipts`*
+*class — defined in `infrastructure.publishing.release.release_receipts`*
 
 ```python
 class CommandReceipt
@@ -1809,7 +1809,7 @@ Evidence for one command without recording secret environment values.
 
 ### `CoverageGapSnapshot`
 
-*class — defined in `infrastructure.publishing.release_receipts`*
+*class — defined in `infrastructure.publishing.release.release_receipts`*
 
 ```python
 class CoverageGapSnapshot
@@ -2117,7 +2117,7 @@ Build → check → upload orchestrator for PyPI / TestPyPI.
 
 ### `ReleaseMetadataReceipt`
 
-*class — defined in `infrastructure.publishing.release_receipts`*
+*class — defined in `infrastructure.publishing.release.release_receipts`*
 
 ```python
 class ReleaseMetadataReceipt
@@ -2157,7 +2157,7 @@ Data container for SiteHosting.
 
 ### `SubprocessPolicyReceipt`
 
-*class — defined in `infrastructure.publishing.release_receipts`*
+*class — defined in `infrastructure.publishing.release.release_receipts`*
 
 ```python
 class SubprocessPolicyReceipt

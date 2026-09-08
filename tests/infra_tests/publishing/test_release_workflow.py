@@ -15,12 +15,12 @@ from infrastructure.publishing.config_doi import (
     update_publication_doi,
     uses_split_zenodo_doi_fields,
 )
-from infrastructure.publishing.metadata_from_config import (
+from infrastructure.publishing.metadata.metadata_from_config import (
     load_publication_release_context,
     publication_metadata_from_config,
 )
-from infrastructure.publishing import release_workflow as release_workflow_module
-from infrastructure.publishing.release_workflow import (
+from infrastructure.publishing.release import release_workflow as release_workflow_module
+from infrastructure.publishing.release.release_workflow import (
     ReleaseRequest,
     prepare_release_bundle,
     resolve_combined_pdf,

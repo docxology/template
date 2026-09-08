@@ -2,7 +2,7 @@
 """Unified project release orchestrator (GitHub + Zenodo + DOI → render).
 
 Thin orchestrator: validates credentials, builds a release bundle, delegates
-to ``infrastructure.publishing.release_workflow``.
+to ``infrastructure.publishing.release.release_workflow``.
 
 Exit codes:
     0: Success
@@ -31,13 +31,13 @@ from infrastructure.core.logging.utils import (
     log_header,
     log_success,
 )  # noqa: E402
-from infrastructure.publishing.release_workflow import (  # noqa: E402
+from infrastructure.publishing.release.release_workflow import (  # noqa: E402
     ReleaseRequest,
     resolve_combined_pdf,
     run_release_workflow,
 )
 from infrastructure.publishing.preflight import publishing_preflight  # noqa: E402
-from infrastructure.publishing.release_cli import (  # noqa: E402
+from infrastructure.publishing.release.release_cli import (  # noqa: E402
     build_release_parser,
     resolve_github_token,
     resolve_zenodo_token,

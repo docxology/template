@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from infrastructure.publishing.release_pairing import (
+from infrastructure.publishing.release.release_pairing import (
     format_pairing_checklist,
     validate_release_pairing,
 )

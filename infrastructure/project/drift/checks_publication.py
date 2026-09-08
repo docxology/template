@@ -603,7 +603,7 @@ def check_metadata_export_current(project_root: Path, report: Report, project: s
     GitHub renders CITATION.cff live and Zenodo ingests .zenodo.json, and
     no gate bound the derived files back to their source (a cross-vendor
     audit caught it, not the gate suite). Expected values are re-derived
-    with the generator itself (infrastructure.publishing.metadata_export),
+    with the generator itself (infrastructure.publishing.metadata.metadata_export),
     projecting only authorship and concept-DOI fields so version/date
     churn — covered by check_publication_metadata_consistency — never
     false-fires here.
@@ -613,14 +613,14 @@ def check_metadata_export_current(project_root: Path, report: Report, project: s
     if not config_path.is_file() or not any((project_root / name).is_file() for name in targets):
         return
 
-    from infrastructure.publishing.metadata_export import (
+    from infrastructure.publishing.metadata.metadata_export import (
         build_citation_cff,
         build_codemeta,
         build_zenodo,
     )
 
     regen_hint = (
-        "regenerate with `uv run python -m infrastructure.publishing.metadata_export_cli "
+        "regenerate with `uv run python -m infrastructure.publishing.metadata.metadata_export_cli "
         f"metadata-export --project {project}`"
     )
 

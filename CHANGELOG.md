@@ -9,6 +9,30 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Publishing prefix-family subpackaging (2026-09-08)
+
+- Phase 2b of ``RENDERING-LAYERING-1`` (row now closed): the ``release_*``
+  family moved to ``infrastructure.publishing.release/`` (receipts, pairing,
+  workflow, Zenodo helpers, CLI) and the ``metadata_*`` family to
+  ``infrastructure.publishing.metadata/`` (stage, export, CLI, config-driven
+  metadata). The flat ``metadata.py`` aggregator became the package's
+  ``metadata_aggregate.py``, with the historical
+  ``from infrastructure.publishing.metadata import <symbol>`` path resolving
+  through the package ``__init__``.
+- Silent re-export shims keep all nine flat module paths (and the
+  ``python -m infrastructure.publishing.metadata_export_cli`` execution path)
+  working; every consumer is retargeted to the canonical nested paths
+  (publishing internals, drift gate, Stage-12 pipeline, transmission
+  bookends, thin scripts, five test files, and the Zenodo DOI strategy guide
+  link).
+- The new subpackages carry the required ``AGENTS.md``/``README.md`` doc
+  pairs; the layering guard still runs with an empty allowlist; api-reference
+  stays at 26 top-level packages; counts refreshed with coverage provenance.
+- ``infrastructure/metadata/SKILL.md`` usage example corrected:
+  ``generate_metadata_package(meta, output_dir)`` writes
+  ``onix.xml``/``metadata.json``/``package.opf`` itself and returns the path
+  dict (the old example showed a nonexistent ``metadata.xml`` manual write).
+
 ### Rehearsal docs-lint root cause and failure visibility (2026-09-08)
 
 - Root cause of the 2026-09-08 hosted rehearsal failures (run 34186872361):

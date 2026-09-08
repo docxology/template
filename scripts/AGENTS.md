@@ -162,7 +162,7 @@ orchestrator:
 | `pipeline/stage_06_llm_review.py` | `infrastructure.llm.review` | Skipped when Ollama is absent. |
 | `pipeline/stage_07_executive_report.py` | `infrastructure.reporting.multi_project_reporter.generate_multi_project_report`, `infrastructure.reporting.output_organizer.OutputOrganizer.copy_combined_pdfs` | Multi-project only; skips when one project discovered. |
 | `pipeline/stage_11_ebook.py` | `infrastructure.rendering.ebook_stage.run_ebook_generation` | Opt-in ebook stage; gracefully skips (exit 2) when combined markdown absent. |
-| `pipeline/stage_12_metadata.py` | `infrastructure.publishing.metadata_stage.run_metadata_package` | Opt-in metadata stage; gracefully skips (exit 2) when config.yaml absent. |
+| `pipeline/stage_12_metadata.py` | `infrastructure.publishing.metadata.metadata_stage.run_metadata_package` | Opt-in metadata stage; gracefully skips (exit 2) when config.yaml absent. |
 | `maintenance/render_working_projects.py` | `infrastructure.project.working_render` | Local WIP audit under `projects/working/`; not part of default pipeline. |
 | `maintenance/rerender_working_pdfs.py` | subprocess over the `pipeline/stage_03_render.py` / `pipeline/stage_05_copy.py` stages (+ `infrastructure.project.working_render`) | Local-only working-PDF re-render; not part of default pipeline. |
 | `maintenance/merge_test_supplements.py` | `infrastructure.validation.test_supplements.merge_supplements` | Local maintenance helper. |

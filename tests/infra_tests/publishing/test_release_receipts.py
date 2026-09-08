@@ -6,7 +6,7 @@ import hashlib
 from pathlib import Path
 
 from infrastructure.core.subprocess_policy import SubprocessPolicyRecord
-from infrastructure.publishing.release_receipts import (
+from infrastructure.publishing.release.release_receipts import (
     CleanCheckoutReceipt,
     CommandReceipt,
     CoverageGapSnapshot,

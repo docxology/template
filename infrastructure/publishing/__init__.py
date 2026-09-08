@@ -74,7 +74,7 @@ from .registry import (
     first_class_platforms,
     documented_platforms,
 )
-from .release_receipts import (
+from .release.release_receipts import (
     CleanCheckoutReceipt,
     CommandReceipt,
     CoverageGapSnapshot,

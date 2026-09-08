@@ -5,7 +5,7 @@ Tools for academic publishing, citations, and platform integration.
 Repository metadata is normalized by `infrastructure/metadata/repository_metadata.py` (shim `repository_metadata.py` kept); non-dry-run
 payloads are validated and summarized without credential values by
 `preflight.py` before any publishing transport is invoked.
-`release_cli.py` owns the stable argument and credential-source resolution
+`release/release_cli.py` owns the stable argument and credential-source resolution
 surface so the executable release script remains a thin orchestrator.
 `root_release_contract.py` rejects root-repository release tags that do not
 match both the root package version and a released changelog heading.
