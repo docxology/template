@@ -20,7 +20,7 @@ from infrastructure.rendering._pdf_title_page_latex import (
     _latex_paragraphs,
     _latex_text,
 )
-from infrastructure.publishing.repository_metadata import normalized_repository_url
+from infrastructure.metadata.repository_metadata import normalized_repository_url
 
 __all__ = [
     "_book_cover_body",

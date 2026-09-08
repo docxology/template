@@ -9,7 +9,7 @@ from typing import Any
 from infrastructure.core.files.serialization import load_yaml_mapping as _load_yaml_mapping
 from infrastructure.documentation._publication_records_types import PublicationRecord
 from infrastructure.project.public_scope import public_project_names
-from infrastructure.publishing.repository_metadata import normalized_repository_url
+from infrastructure.metadata.repository_metadata import normalized_repository_url
 
 
 def _load_json_mapping(path: Path) -> dict[str, Any]:

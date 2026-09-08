@@ -2,7 +2,7 @@
 
 Tools for academic publishing, citations, and platform integration.
 
-Repository metadata is normalized by `repository_metadata.py`; non-dry-run
+Repository metadata is normalized by `infrastructure/metadata/repository_metadata.py` (shim `repository_metadata.py` kept); non-dry-run
 payloads are validated and summarized without credential values by
 `preflight.py` before any publishing transport is invoked.
 `release_cli.py` owns the stable argument and credential-source resolution

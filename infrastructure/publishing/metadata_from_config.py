@@ -15,7 +15,7 @@ from infrastructure.publishing.deposit_filename import (
     deposit_context_from_config,
 )
 from infrastructure.publishing.models import AuthorRecord, PublicationMetadata
-from infrastructure.publishing.repository_metadata import normalized_repository_url
+from infrastructure.metadata.repository_metadata import normalized_repository_url
 
 logger = get_logger(__name__)
 

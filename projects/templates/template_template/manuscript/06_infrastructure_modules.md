@@ -44,6 +44,14 @@ Resource pool management for curated fonds (tracked reference datasets, bibliogr
 
 Ollama integrations, sanitization adapters, templated reviewer flows. **Literature ingestion now lives primarily in `search/literature` + citation helpers in `reference/`.**
 
+### `infrastructure.metadata` (${module_metadata_python_file_count} files)
+
+Shared publication-metadata leaves: repository-URL normalization
+(`normalized_repository_url`) and ebook metadata package generation (ONIX,
+`metadata.json`, EPUB OPF). Consumed by publishing, rendering, documentation,
+and project layers; extracted from `publishing` by RENDERING-LAYERING-1 so
+renderers import it without an inverted publishing dependency.
+
 ### `infrastructure.methods` (${module_methods_python_file_count} files)
 
 Deterministic methods-orchestration contracts (`MethodStage`, `MethodsOrchestrationPlan`, `MethodsIssue`): builds and validates an ordered methods plan for a research project so the manuscript's "Methods" track stays bound to executable stages.

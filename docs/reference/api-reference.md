@@ -695,6 +695,82 @@ validate_complete(content: str, mode: ResponseMode=ResponseMode.STANDARD, schema
 
 Validate LLM response content based on the response mode.
 
+## Package: `infrastructure.metadata`
+
+### `ebook_metadata_from_config`
+
+*function — defined in `infrastructure.metadata.metadata_package`*
+
+```python
+ebook_metadata_from_config(config: dict[str, Any], project_slug: str) -> EbookPublicationMetadata
+```
+
+Build ebook metadata from the manuscript config.
+
+### `EbookPublicationMetadata`
+
+*class — defined in `infrastructure.metadata.metadata_package`*
+
+```python
+class EbookPublicationMetadata
+```
+
+Structured metadata for an ebook / printed publication.
+
+### `generate_epub_opf`
+
+*function — defined in `infrastructure.metadata.metadata_package`*
+
+```python
+generate_epub_opf(meta: EbookPublicationMetadata) -> str
+```
+
+Generate an EPUB 3.0 OPF (Open Packaging Format) metadata skeleton.
+
+### `generate_metadata_json`
+
+*function — defined in `infrastructure.metadata.metadata_package`*
+
+```python
+generate_metadata_json(meta: EbookPublicationMetadata) -> dict[str, Any]
+```
+
+Generate a portable ebook metadata dict for retail platform ingestion.
+
+### `generate_metadata_package`
+
+*function — defined in `infrastructure.metadata.metadata_package`*
+
+```python
+generate_metadata_package(meta: EbookPublicationMetadata, output_dir: Path) -> dict[str, Path]
+```
+
+Generate all three metadata artefacts and write them to *output_dir*.
+
+### `generate_onix_xml`
+
+*function — defined in `infrastructure.metadata.metadata_package`*
+
+```python
+generate_onix_xml(meta: EbookPublicationMetadata) -> str
+```
+
+Generate an ONIX 3.0 XML string for *meta*.
+
+### `normalized_repository_url`
+
+*function — defined in `infrastructure.metadata.repository_metadata`*
+
+```python
+normalized_repository_url(publication: Mapping[str, object] | None) -> str | None
+```
+
+Return the explicit repository URL or derive one from ``owner/repo``.
+
+### `repository_metadata`
+
+*symbol — defined in `infrastructure.metadata`*
+
 ## Package: `infrastructure.methods`
 
 ### `audit_methods_projects`

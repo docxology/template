@@ -547,7 +547,7 @@ def check_repository_url_consistent(project_root: Path, report: Report, project:
     except (OSError, yaml.YAMLError):
         return
 
-    from infrastructure.publishing.repository_metadata import normalized_repository_url
+    from infrastructure.metadata.repository_metadata import normalized_repository_url
 
     publication = config.get("publication")
     expected = normalized_repository_url(publication if isinstance(publication, dict) else None)

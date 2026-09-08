@@ -1,7 +1,9 @@
-"""Backwards-compat shim: the module moved to ``infrastructure.metadata``.
+"""Shared publication-metadata leaves consumed by publishing, rendering,
+documentation, and project layers.
 
-Historical import paths keep resolving; new code imports
-``infrastructure.metadata.metadata_package`` directly.
+Renderers may import this package; the rendering->publishing inversion
+guard (``tests/infra_tests/rendering/test_layering.py``) treats it as
+rendering-safe.
 """
 
 from infrastructure.metadata.metadata_package import (
@@ -12,6 +14,7 @@ from infrastructure.metadata.metadata_package import (
     generate_metadata_package,
     generate_onix_xml,
 )
+from infrastructure.metadata.repository_metadata import normalized_repository_url
 
 __all__ = [
     "EbookPublicationMetadata",
@@ -20,4 +23,6 @@ __all__ = [
     "generate_metadata_json",
     "generate_metadata_package",
     "generate_onix_xml",
+    "normalized_repository_url",
+    "repository_metadata",
 ]

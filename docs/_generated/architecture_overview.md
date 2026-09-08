@@ -13,6 +13,7 @@ screen-reader-friendly and text-searchable representation.
 | Infrastructure · Python | `infrastructure/documentation/` | Reusable Layer 1 package |
 | Infrastructure · Python | `infrastructure/fonds/` | Reusable Layer 1 package |
 | Infrastructure · Python | `infrastructure/llm/` | Reusable Layer 1 package |
+| Infrastructure · Python | `infrastructure/metadata/` | Reusable Layer 1 package |
 | Infrastructure · Python | `infrastructure/methods/` | Reusable Layer 1 package |
 | Infrastructure · Python | `infrastructure/orchestration/` | Reusable Layer 1 package |
 | Infrastructure · Python | `infrastructure/project/` | Reusable Layer 1 package |

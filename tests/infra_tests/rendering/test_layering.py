@@ -23,16 +23,11 @@ RENDERING_ROOT = pathlib.Path(__file__).resolve().parents[3] / "infrastructure" 
 
 FORBIDDEN_MODULES = ("infrastructure.publishing", "infrastructure.reporting")
 
-# Pre-existing, explicitly-tracked exceptions (both are publishing-side
-# metadata surfaces the render path consumes). New edges must NOT be added
-# here: extend infrastructure/transmission (or decouple the publishing
-# module) instead. Tracked as remaining work on RENDERING-LAYERING-1.
-_ALLOWED_EDGES = frozenset(
-    {
-        "infrastructure/rendering/ebook_bundle.py: infrastructure.publishing.metadata_package",
-        "infrastructure/rendering/_pdf_title_page_publishing.py: infrastructure.publishing.repository_metadata",
-    }
-)
+
+# No current exceptions. Rendering reaches publishing-side metadata via
+# infrastructure.metadata (a shared leaf); new inversions must be re-homed,
+# not allowlisted here.
+_ALLOWED_EDGES = frozenset()
 
 
 def _import_targets(tree: ast.AST) -> list[str]:

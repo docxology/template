@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.project.discovery import resolve_project_root
-from infrastructure.publishing.metadata_package import ebook_metadata_from_config, generate_metadata_package
+from infrastructure.metadata.metadata_package import ebook_metadata_from_config, generate_metadata_package
 
 logger = get_logger(__name__)
 

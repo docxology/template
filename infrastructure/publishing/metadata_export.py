@@ -13,7 +13,7 @@ import yaml
 
 from infrastructure.core.config.loader import load_config
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.publishing.repository_metadata import normalized_repository_url
+from infrastructure.metadata.repository_metadata import normalized_repository_url
 
 logger = get_logger(__name__)
 
