@@ -9,6 +9,22 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Clean-checkout rehearsal closed green (2026-09-08)
+
+- Hosted run [34257533462](https://github.com/docxology/template/actions/runs/34257533462)
+  on assembled main ``16a1246da`` produced the closure receipt:
+  ``status=pass``, ``output_clean=true``, two deterministic runs with
+  **identical determinism digests** (``edd307372177…``), and **all 20
+  commands passed in both runs** — including the health docs-lint gate
+  under ``CI=true`` with the lockfile-pinned ``mmdc`` toolchain.
+- Closes ``CLEAN-CHECKOUT-MAJ-1`` (the two-run hosted-Linux clean-checkout
+  receipt now exists and is attached to the run artifacts) and
+  ``REHEARSAL-ANALYSIS-EXIT-1`` (the exit-1 chain is fully diagnosed and
+  fixed across three hosted runs: 34186872361 → silent docs-lint failure
+  fixed by toolchain provisioning + ``runtime_error`` emission; 34243791209
+  → digest-vs-wall-clock confusion fixed by hashing the byte-stable command
+  subset; 34257533462 → green). Both rows are removed from ``TO-DO.md``;
+  this entry is their dated evidence.
 ### Rehearsal determinism over byte-stable outputs (2026-09-08)
 
 - Hosted run 34243791209 passed **all 20 commands in both deterministic
