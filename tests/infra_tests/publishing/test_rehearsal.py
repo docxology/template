@@ -158,6 +158,59 @@ def test_passing_command_receipt_has_empty_output_tail(tmp_path: Path) -> None:
     assert receipt.output_tail == ""
 
 
+def test_run_command_outputs_sink_captures_full_output(tmp_path: Path) -> None:
+    """The optional sink receives the complete stdout/stderr pair for persistence."""
+    from infrastructure.publishing.rehearsal import _run_command
+
+    captured: list[tuple[str, str]] = []
+    receipt = _run_command(
+        ["python", "-c", "print('full-stdout'); import sys; sys.stderr.write('full-stderr')"],
+        tmp_path,
+        outputs_sink=captured.append,
+    )
+    assert receipt.status == "pass"
+    assert captured == [("full-stdout\n", "full-stderr")]
+
+
+def test_persist_run_artifacts_writes_matrix_receipt_and_failure_logs(tmp_path: Path) -> None:
+    """Blocked commands persist redacted logs and the matrix receipt beside the top-level receipt."""
+    import json
+
+    from infrastructure.publishing.rehearsal import CommandReceipt, _persist_run_artifacts
+
+    receipt_path = tmp_path / "matrix.json"
+    receipt_path.write_text('{"overall_exit": 1}', encoding="utf-8")
+    blocked = CommandReceipt(
+        command=("uv", "run", "python", "-m", "infrastructure.core.health"),
+        status="blocked",
+        exit_code=1,
+        duration_seconds=1.0,
+        skip_reason="command failed",
+    )
+    passing = CommandReceipt(
+        command=("git", "rev-parse", "HEAD"),
+        status="pass",
+        exit_code=0,
+        duration_seconds=0.1,
+    )
+    artifact_dir = tmp_path / "artifacts"
+    _persist_run_artifacts(artifact_dir, 0, receipt_path, [blocked, passing], [("boom-out", "boom-err"), ("", "")])
+
+    run_dir = artifact_dir / "run-1"
+    assert json.loads((run_dir / "public-matrix-receipt.json").read_text(encoding="utf-8")) == {"overall_exit": 1}
+    logs = sorted(path.name for path in run_dir.glob("*.log"))
+    assert len(logs) == 1
+    assert "boom-out" in (run_dir / logs[0]).read_text(encoding="utf-8")
+
+
+def test_persist_run_artifacts_noop_without_artifact_dir(tmp_path: Path) -> None:
+    from infrastructure.publishing.rehearsal import CommandReceipt, _persist_run_artifacts
+
+    receipt = CommandReceipt(command=("false",), status="blocked", exit_code=1, duration_seconds=0.1)
+    _persist_run_artifacts(None, 0, tmp_path / "missing.json", [receipt], [("out", "err")])
+    assert not (tmp_path / "run-1").exists()
+
+
 def test_failure_tail_redacts_credential_like_output(tmp_path: Path) -> None:
     from infrastructure.publishing.rehearsal import _run_command
 
