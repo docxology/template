@@ -530,14 +530,28 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not args.quiet and not args.json_output:
         color = _supports_color(sys.stdout) and not args.no_color
         print(format_report_table(report, color=color))
-        # Surface captured diagnostics for every failing gate, so a FAIL row is
-        # actionable instead of an opaque "FAIL 0.03s" (a gate that fails to
-        # spawn, times out, or reports real errors all print their tail here).
+    # A failing health run must be legible from any bounded output tail: the
+    # one-line verdict always reaches stderr (stdout stays pure JSON for
+    # machine consumers), and in non-quiet mode each failing gate's captured
+    # output tail follows. The 2026-09-08 hosted rehearsal failed on
+    # docs-lint with a stdout-only JSON tail that hid both the verdict and
+    # the failing gate name; this guarantees neither can hide again.
+    _emit_failure_diagnostics(report, quiet=args.quiet)
+
+    return 0 if report.passed else 1
+
+
+def _emit_failure_diagnostics(report: HealthReport, *, quiet: bool) -> None:
+    """Write the failure verdict (and, unless *quiet*, gate tails) to stderr."""
+    failed_gates = [result.name for result in report.results if not result.passed]
+    print(
+        f"health verdict: passed={str(report.passed).lower()} failed_gates={failed_gates}",
+        file=sys.stderr,
+    )
+    if not quiet:
         for result in report.results:
             if not result.passed and result.output:
                 print(f"\n── {result.name} ──\n{result.output}", file=sys.stderr)
-
-    return 0 if report.passed else 1
 
 
 if __name__ == "__main__":  # pragma: no cover — exercised via subprocess in tests.

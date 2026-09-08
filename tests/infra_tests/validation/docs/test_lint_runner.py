@@ -2,12 +2,19 @@
 
 from __future__ import annotations
 
+import json
+import logging
 from pathlib import Path
 
 import pytest
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-from infrastructure.validation.docs.lint_runner import doc_roots, run_docs_lint
+from infrastructure.validation.docs.lint_runner import (
+    DocsLintReport,
+    doc_roots,
+    format_docs_lint_report,
+    run_docs_lint,
+)
 
 
 def _write(path: Path, body: str = "") -> None:
@@ -91,3 +98,30 @@ def test_run_docs_lint_links_only_scoped_clean(tmp_path: Path) -> None:
     report = run_docs_lint(repo, links_only=True, paths=["docs"])
     assert report.broken_links == []
     assert report.failed is False
+
+
+def test_runtime_error_surfaces_in_json_report(tmp_path: Path) -> None:
+    """The JSON payload must carry ``runtime_error`` (it was dropped entirely)."""
+    report = DocsLintReport(
+        mermaid=[],
+        broken_links=[],
+        consistency=[],
+        doc_pairs=[],
+        runtime_error="mmdc (mermaid-cli) is unavailable",
+    )
+    payload = json.loads(format_docs_lint_report(report, tmp_path, as_json=True))
+    assert payload["runtime_error"] == "mmdc (mermaid-cli) is unavailable"
+
+
+def test_runtime_error_is_emitted_even_under_quiet(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
+    """A failing --quiet docs-lint must never exit non-zero with no output."""
+    report = DocsLintReport(
+        mermaid=[],
+        broken_links=[],
+        consistency=[],
+        doc_pairs=[],
+        runtime_error="mmdc (mermaid-cli) is unavailable",
+    )
+    with caplog.at_level(logging.ERROR):
+        assert format_docs_lint_report(report, tmp_path, quiet=True) is None
+    assert "mmdc (mermaid-cli) is unavailable" in caplog.text

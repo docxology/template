@@ -9,6 +9,32 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Rehearsal docs-lint root cause and failure visibility (2026-09-08)
+
+- Root cause of the 2026-09-08 hosted rehearsal failures (run 34186872361):
+  the health ``docs-lint`` gate exited non-zero inside every fresh clone
+  because ``CI=true`` on GitHub runners makes the mermaid gate strict while
+  the clones never provision ``mmdc`` (no node toolchain in the rehearsal
+  plan). The failure was invisible because
+  ``DocsLintReport.runtime_error`` was dropped from both the text and JSON
+  emission paths — the gate exited with zero bytes of output.
+- ``release-rehearsal.yml`` now provisions the docs-lint toolchain
+  (``./.github/actions/setup-docs-lint``) before the rehearsals, so each
+  fresh clone resolves the lockfile-pinned ``mmdc`` via ``PATH`` and Chrome
+  via ``CHROME_EXECUTABLE_PATH`` — the same install the CI docs-lint job
+  uses.
+- ``lint_runner`` renders ``runtime_error`` in the text report (even under
+  ``--quiet``) and includes it in the JSON payload.
+- ``health`` now always writes a one-line verdict
+  (``health verdict: passed=… failed_gates=[…]``) plus, unless ``--quiet``,
+  each failing gate's captured output tail to **stderr**; stdout stays pure
+  JSON for machine consumers (new ``_emit_failure_diagnostics`` helper).
+- The public-matrix receipt writer logs any ``error:``-prefixed skip reason
+  before forcing exit 1 (previously silent; the receipt JSON was the only
+  trace).
+- Negative control: a ``CI=true`` probe with ``mmdc`` unavailable now exits
+  2 with the full runtime error rendered (previously: silent, zero output).
+
 ### Rehearsal diagnosability (2026-09-07)
 
 - ``release_rehearsal.py --execute --artifact-dir DIR`` now persists each
