@@ -35,6 +35,7 @@ always-running blocking jobs declared by the current `ci.yml` are:
 | Setup hook (Windows smoke) | `setup-hook-windows-smoke` | Skipped (not failed) when no project ships `setup_hook.py` |
 | fep_lean (gauss + lake) | `fep-lean` | Skipped when the optional local project is absent |
 | Public Matrix Receipt | `public-matrix-receipt` | Runs only for scheduled or manually dispatched CI, not pull requests |
+| Infra Slow Lane (`pytest.mark.slow`) | `test-infra-slow` | Runs only for scheduled or manually dispatched CI, not pull requests |
 
 Do not require a context that is absent from normal pull-request events. Also
 review the list after workflow or matrix changes: a copied static checklist is

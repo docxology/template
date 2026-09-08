@@ -429,6 +429,65 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Job 3b — Infrastructure slow lane (scheduled/dispatch only)
+#
+# SLOW-PROFILE-1: the ~190 ``pytest.mark.slow`` infra tests (36 files; real
+# pandoc/LaTeX rendering, llm review generators over a local HTTP stub) never
+# ran on CI — the default marker expression deselects them on every lane. This
+# scheduled lane exercises the full slow suite so a broken slow-marked test
+# fails HERE, loudly, while PR lanes stay fast. ``slow`` has zero overlap with
+# the other opt-in markers (verified 2026-09-08), so a bare ``-m slow`` — which
+# overrides the pyproject default marker expression — selects exactly the
+# deferred suite.
+# ─────────────────────────────────────────────────────────────────────────────
+  test-infra-slow:
+    name: "Infra Slow Lane (pytest.mark.slow)"
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [verify-no-mocks]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: ./.github/actions/setup-python-env
+
+      - name: Sync dependencies (dev + optional test groups)
+        run: uv sync --group public-exemplars
+
+      - name: Install pandoc
+        uses: pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e # v1.1.1
+
+      - name: Cache TeX Live packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            /var/cache/apt
+            /usr/share/texlive
+            /usr/share/texmf
+          key: texlive-${{ runner.os }}-xetex-extra-bibtex-fonts-v1
+        id: texlive-cache
+
+      - name: Install TeX Live (xelatex + bibtex)
+        if: steps.texlive-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-xetex texlive-latex-extra texlive-bibtex-extra \
+            texlive-fonts-recommended lmodern
+
+      - name: Run slow-marked infrastructure tests
+        run: >-
+          uv run pytest tests/infra_tests/
+          -m slow
+          -n auto
+          --dist loadscope
+          --benchmark-disable
+          --durations=10
+          --timeout=1200
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Job — Regression tier (claim-binding pins across all public exemplars)
 # ─────────────────────────────────────────────────────────────────────────────
   test-regression:
@@ -1056,6 +1115,7 @@ jobs:
       - verify-no-mocks
       - setup-hook-windows-smoke
       - test-infra
+      - test-infra-slow
       - test-regression
       - test-project
       - fep-lean
