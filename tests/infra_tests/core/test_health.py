@@ -345,3 +345,88 @@ class TestRepositoryState:
 
         assert commit is None
         assert clean is None
+
+
+class TestFailureDiagnosticsReachStderr:
+    """A failing health run must be legible from any bounded output tail.
+
+    The 2026-09-08 hosted rehearsal ran ``health --json --quiet``; a
+    docs-lint failure surfaced only as a bare exit 1 because the verdict
+    and failing-gate detail lived mid-JSON on stdout. The verdict line and
+    failing-gate dumps now always reach stderr (stdout stays pure JSON).
+    """
+
+    @staticmethod
+    def _failing_report() -> HealthReport:
+        return HealthReport(
+            results=[
+                GateResult(name="docs-lint", passed=False, elapsed_ms=1.0, output="boom detail"),
+                GateResult(name="ruff", passed=True, elapsed_ms=1.0, output="All checks passed!"),
+            ],
+            passed=False,
+            total_elapsed_ms=2.0,
+            wall_elapsed_ms=2.0,
+        )
+
+    @staticmethod
+    def _passing_report() -> HealthReport:
+        return HealthReport(
+            results=[
+                GateResult(name="ruff", passed=True, elapsed_ms=1.0, output="All checks passed!"),
+            ],
+            passed=True,
+            total_elapsed_ms=1.0,
+            wall_elapsed_ms=1.0,
+        )
+
+    def test_failing_quiet_writes_verdict_only(self, capsys: pytest.CaptureFixture[str]) -> None:
+        from infrastructure.core.health import _emit_failure_diagnostics  # noqa: PLC0415
+
+        _emit_failure_diagnostics(self._failing_report(), quiet=True)
+
+        captured = capsys.readouterr()
+        assert captured.out == ""
+        assert "health verdict: passed=false failed_gates=['docs-lint']" in captured.err
+        # --quiet suppresses the per-gate dumps, never the verdict line.
+        assert "boom detail" not in captured.err
+
+    def test_failing_non_quiet_dumps_failing_gate_tail(self, capsys: pytest.CaptureFixture[str]) -> None:
+        from infrastructure.core.health import _emit_failure_diagnostics  # noqa: PLC0415
+
+        _emit_failure_diagnostics(self._failing_report(), quiet=False)
+
+        captured = capsys.readouterr()
+        assert "── docs-lint ──" in captured.err
+        assert "boom detail" in captured.err
+        # Passing gates are never dumped.
+        assert "── ruff ──" not in captured.err
+
+    def test_passing_run_reports_passed_with_no_failed_gates(self, capsys: pytest.CaptureFixture[str]) -> None:
+        from infrastructure.core.health import _emit_failure_diagnostics  # noqa: PLC0415
+
+        _emit_failure_diagnostics(self._passing_report(), quiet=True)
+
+        captured = capsys.readouterr()
+        assert captured.out == ""
+        assert "health verdict: passed=true failed_gates=[]" in captured.err
+
+    def test_module_cli_wiring_keeps_stdout_pure_json_with_stderr_verdict(
+        self,
+    ) -> None:
+        """End-to-end wiring: the real CLI emits the verdict line on stderr."""
+        completed = _run_module_cli("--json", "--quiet", "--gates", "ruff")
+
+        assert completed.returncode == 0
+        payload = json.loads(completed.stdout)
+        assert payload["passed"] is True
+        assert "health verdict: passed=true failed_gates=[]" in completed.stderr
+
+    def test_module_cli_timed_out_gate_reports_failure_verdict(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Real failing run: the timeout env knob forces a genuine gate failure."""
+        monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0.001")
+        completed = _run_module_cli("--json", "--quiet", "--gates", "ruff")
+
+        assert completed.returncode == 1
+        payload = json.loads(completed.stdout)
+        assert payload["passed"] is False
+        assert "health verdict: passed=false failed_gates=['ruff']" in completed.stderr

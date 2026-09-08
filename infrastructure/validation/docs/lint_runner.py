@@ -158,6 +158,13 @@ def run_doc_pairs_lint(repo_root: Path, *, quiet: bool) -> list[DocPairIssue]:
 
 def emit_text_report(report: DocsLintReport) -> None:
     """Emit text report."""
+    # ``runtime_error`` means the lint could not run at all (e.g. mmdc
+    # unavailable under strict mode). It must render in every mode — a
+    # silent exit-1 with empty output once hid a hosted CI failure entirely
+    # (2026-09-08 rehearsal triage).
+    if report.runtime_error:
+        log_header("DOCS-LINT RUNTIME ERROR", logger)
+        logger.error(report.runtime_error)
     if report.mermaid:
         log_header("MERMAID FAILURES", logger)
         for failure in report.mermaid:
@@ -218,6 +225,7 @@ def emit_json_report(report: DocsLintReport, repo_root: Path) -> str:
             }
             for issue in (report.doc_pairs or [])
         ],
+        "runtime_error": report.runtime_error,
     }
     return json.dumps(payload, indent=2) + "\n"
 

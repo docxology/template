@@ -400,6 +400,10 @@ def write_public_matrix_receipt(
     for project_name, reason in sorted((skip_reasons or {}).items()):
         is_error = reason.startswith("error:")
         if is_error:
+            # An error-prefixed skip forces exit 1; without this log line the
+            # only trace was the receipt's JSON skip_reason written after the
+            # runner had already reported a bare exit 1.
+            logger.error("Project '%s' skipped with error: %s", project_name, reason)
             overall_exit = overall_exit or 1
         lanes.append(
             PublicMatrixLaneResult(

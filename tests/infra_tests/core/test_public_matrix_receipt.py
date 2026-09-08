@@ -7,7 +7,12 @@ isolation. All checks run against constructed payloads (no subprocess needed).
 
 from __future__ import annotations
 
+import json
+import logging
+import subprocess
 from pathlib import Path
+
+import pytest
 
 from infrastructure.core.public_matrix_receipt import (
     PublicMatrixLaneResult,
@@ -15,6 +20,7 @@ from infrastructure.core.public_matrix_receipt import (
     build_public_matrix_cache_key,
     build_public_matrix_receipt,
     determine_worker_info,
+    write_public_matrix_receipt,
 )
 
 ROSTER = ("templates/template_a", "templates/template_b", "templates/template_c")
@@ -61,6 +67,11 @@ def _receipt(lanes: tuple[PublicMatrixLaneResult, ...], **overrides) -> PublicMa
         lanes=lanes,
         **fields,
     )
+
+
+def _no_coverage_percent(coverage_file: Path) -> None:
+    """Injectable no-op coverage probe for synthetic writer tests."""
+    return None
 
 
 def test_receipt_round_trip_is_deterministic(tmp_path: Path) -> None:
@@ -316,3 +327,40 @@ def test_matrix_cache_key_is_order_independent_but_plan_bound() -> None:
     )
     assert first == reordered
     assert first != changed
+
+
+def test_error_skip_reason_logs_and_forces_exit(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
+    """``error:``-prefixed skip reasons must log before forcing exit 1.
+
+    The hosted rehearsal once exited 1 with no runner-side trace because
+    this branch set the exit code silently; the receipt's skip_reasons
+    JSON was the only evidence, written after the fact.
+    """
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    subprocess.run(["git", "init", "-q", str(repo)], check=True)  # noqa: S603
+    receipt_path = tmp_path / "receipt.json"
+
+    with caplog.at_level(logging.ERROR):
+        exit_code = write_public_matrix_receipt(
+            repo,
+            receipt_path,
+            specs=[],
+            results=[],
+            output_digests_before={},
+            profile="quick",
+            marker_expr="not requires_ollama",
+            measure_coverage_percent=_no_coverage_percent,
+            project_workers=None,
+            parallel=None,
+            combined_coverage_percent=None,
+            combined_floor=75,
+            overall_exit=0,
+            skip_reasons={"templates/optional": "error: tool exploded"},
+        )
+
+    assert exit_code == 1
+    assert "templates/optional" in caplog.text
+    assert "error: tool exploded" in caplog.text
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["skip_reasons"] == {"templates/optional": "error: tool exploded"}
