@@ -7,8 +7,8 @@ from pathlib import Path
 
 import yaml
 
-from infrastructure.publishing import metadata_export_cli
-from infrastructure.publishing.metadata_export import (
+from infrastructure.publishing.metadata import metadata_export_cli
+from infrastructure.publishing.metadata.metadata_export import (
     build_citation_cff,
     build_codemeta,
     build_codemeta_json,
@@ -25,7 +25,7 @@ def test_book_title_fallback_for_booklength_projects(tmp_path: Path) -> None:
     Regression for PUB-1: template_textbook published as 'Untitled Research'
     because the metadata builder only read ``paper.title``.
     """
-    from infrastructure.publishing.metadata_from_config import publication_metadata_from_config_dict
+    from infrastructure.publishing.metadata.metadata_from_config import publication_metadata_from_config_dict
 
     config = {"book": {"title": "The Template Textbook", "version": "1.0"}}
     md = publication_metadata_from_config_dict(config, config_path=tmp_path / "config.yaml", allow_draft_abstract=True)
@@ -39,7 +39,7 @@ def test_book_version_and_year_fallback_for_booklength_projects(tmp_path: Path) 
     the ``vX.Y.Z`` git tag string instead of the clean deposit version, and the
     publication date is dropped.
     """
-    from infrastructure.publishing.metadata_from_config import publication_metadata_from_config_dict
+    from infrastructure.publishing.metadata.metadata_from_config import publication_metadata_from_config_dict
 
     config = {"book": {"title": "The Template Textbook", "version": "0.1.1", "year": 2026}}
     md = publication_metadata_from_config_dict(config, config_path=tmp_path / "config.yaml", allow_draft_abstract=True)
@@ -49,7 +49,7 @@ def test_book_version_and_year_fallback_for_booklength_projects(tmp_path: Path) 
 
 def test_paper_version_takes_precedence_over_book_version(tmp_path: Path) -> None:
     """When both schemas are present, ``paper:`` wins (book is the fallback)."""
-    from infrastructure.publishing.metadata_from_config import publication_metadata_from_config_dict
+    from infrastructure.publishing.metadata.metadata_from_config import publication_metadata_from_config_dict
 
     config = {
         "paper": {"title": "Paper Title", "version": "2.0.0", "date": "2026-01-01"},

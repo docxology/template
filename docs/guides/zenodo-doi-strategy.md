@@ -73,7 +73,7 @@ uv run python scripts/publish/publish_project_release.py \
   --reserve-doi-first
 ```
 
-Flow (via [`release_workflow_zenodo.py`](../../infrastructure/publishing/release_workflow_zenodo.py)):
+Flow (via [`release_workflow_zenodo.py`](../../infrastructure/publishing/release/release_workflow_zenodo.py)):
 
 1. Create a Zenodo draft with `prereserve_doi=True`.
 2. Write **concept DOI** to `publication.doi` and **version DOI** to `publication.version_doi`.

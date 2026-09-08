@@ -41,7 +41,7 @@ Load this skill when you need to:
 | `stage_09_provenance_record.py` | `infrastructure.provenance` (opt-in) |
 | `stage_10_research_workflow.py` | `infrastructure.research.ResearchWorkflow` (opt-in) |
 | `stage_11_ebook.py` | `infrastructure.rendering.ebook_stage` |
-| `stage_12_metadata.py` | `infrastructure.publishing.metadata_stage` |
+| `stage_12_metadata.py` | `infrastructure.publishing.metadata.metadata_stage` |
 
 ## Bootstrap pattern
 

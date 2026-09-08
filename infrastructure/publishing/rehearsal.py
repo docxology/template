@@ -14,7 +14,7 @@ from time import monotonic
 from typing import Sequence
 
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
-from infrastructure.publishing.release_receipts import CleanCheckoutReceipt, CommandReceipt, ReceiptStatus
+from infrastructure.publishing.release.release_receipts import CleanCheckoutReceipt, CommandReceipt, ReceiptStatus
 
 # Non-secret marker replaced with a receipt path before command execution.
 REHEARSAL_RECEIPT_TOKEN = "__REHEARSAL_RECEIPT__"  # nosec B105
@@ -123,7 +123,7 @@ def _failure_tail(stdout: str, stderr: str) -> str:
     if not combined:
         return ""
     tail = combined[-_FAILURE_TAIL_LIMIT:]
-    from infrastructure.publishing.release_receipts import _SECRET_PATTERN
+    from infrastructure.publishing.release.release_receipts import _SECRET_PATTERN
 
     if _SECRET_PATTERN.search(tail):
         return "[redacted: credential-like pattern in output]"
@@ -264,7 +264,7 @@ def _persist_run_artifacts(
     run_dir.mkdir(parents=True, exist_ok=True)
     if receipt_path.is_file():
         shutil.copy2(receipt_path, run_dir / "public-matrix-receipt.json")
-    from infrastructure.publishing.release_receipts import _SECRET_PATTERN
+    from infrastructure.publishing.release.release_receipts import _SECRET_PATTERN
 
     for position, (receipt, (stdout, stderr)) in enumerate(zip(command_receipts, command_outputs, strict=True)):
         if receipt.status == "pass":

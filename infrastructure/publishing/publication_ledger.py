@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.publishing.release_pairing import validate_release_pairing
+from infrastructure.publishing.release.release_pairing import validate_release_pairing
 
 logger = get_logger(__name__)
 

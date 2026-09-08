@@ -1,4 +1,4 @@
-"""Tests for infrastructure/publishing/metadata.py.
+"""Tests for the infrastructure/publishing/metadata/ package.
 
 Tests metadata extraction with real temp files. No mocks.
 """

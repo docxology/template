@@ -671,6 +671,20 @@
       "effect": "mutating"
     },
     {
+      "module": "infrastructure.publishing.metadata.metadata_export_cli",
+      "invocation": "python -m infrastructure.publishing.metadata.metadata_export_cli",
+      "source_path": "infrastructure/publishing/metadata/metadata_export_cli.py",
+      "purpose": "CLI entry point for metadata export files derived from project config.",
+      "subcommands": [
+        {
+          "name": "metadata-export",
+          "help": "Export citation and archival metadata files from manuscript/config.yaml."
+        }
+      ],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.reference.citation",
       "invocation": "python -m infrastructure.reference.citation",
       "source_path": "infrastructure/reference/citation/cli.py",

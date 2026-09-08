@@ -253,6 +253,16 @@ from infrastructure.publishing.executable_bundle import bundle_project
 bundle_path = bundle_project(project_root, "templates/<project-name>")
 ```
 
+## Prefix-family subpackages
+
+`release/` (receipts, pairing, workflow, Zenodo helpers, CLI) and `metadata/`
+(stage, export, CLI, config-driven metadata) are proper subpackages added by
+RENDERING-LAYERING-1 phase 2b. The flat `release_*.py` / `metadata_*.py`
+module paths remain as silent backwards-compat shims; new code imports the
+nested paths. `metadata/` also re-exports the historical
+`infrastructure.publishing.metadata` aggregate symbols from
+`metadata_aggregate.py`.
+
 ## Multi-target archival (Stage 15)
 
 `archival/` is a proper subpackage. The flat `archival.py` shim that used to sit at the package root has been removed; `import infrastructure.publishing.archival` resolves directly to the package.

@@ -31,7 +31,9 @@ from infrastructure.metadata.metadata_package import (
 )
 
 meta = ebook_metadata_from_config(config, project_slug)
-write_text(generate_metadata_package(meta), output_dir / "metadata.xml")
+paths = generate_metadata_package(meta, output_dir=Path("output/metadata"))
+# paths == {"onix_xml": ..., "metadata_json": ..., "opf": ...} — the writer
+# emits onix.xml, metadata.json, and package.opf itself; no manual write_text.
 ```
 
 ## Invariants
