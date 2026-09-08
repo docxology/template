@@ -166,7 +166,7 @@
       "qualified_name": "templates/template_storybook",
       "title": "The Shape Between - `template_storybook`",
       "use_when": "Use this template when you need **full-page illustrated PDF storytelling**: picture-book pages, symbolic scenes, character-generation methods, page-level orchestrators, and deterministic raster art assembled into a print-ready PDF.",
-      "test_file_count": 3,
+      "test_file_count": 7,
       "coverage_floor": 90
     },
     {
