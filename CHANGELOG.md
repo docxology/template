@@ -9,6 +9,25 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Backlog scoping round (2026-09-08)
+
+- Six-subsystem survey (test suite, publishing/rendering, core/orchestration,
+  CI/rehearsal, docs/audit/security) scoped the next round into ``TO-DO.md``:
+  **7 Medium + 14 Minor rows** added, zero Major items — module sizes, layering
+  edges, action pinning, and concurrency settings were all measured clean.
+- Both pre-existing rows verified against the tree rather than assumed:
+  ``TEST-ISOLATION-SYSPATH-1`` is 0% landed (≈165 flat ``src/*.py`` modules,
+  ~480 ``from src.`` sites, 11 ``_PKG_ALIAS`` loaders, 24 exemplar
+  ``tests/__init__.py`` still present — recipe stands) and
+  ``SECURITY-PRIVATE-PROMOTION-1`` remains genuinely owner-blocked (promotion
+  tooling complete on the public side; no owner-approved record exists).
+- Findings folded into rows rather than left as prose: 14 oversized test
+  modules (largest 4,627 lines), 116 slow-marked tests never run on CI,
+  ``tests/integration/`` unwired in CI, 15 unconsumed publishing shims with
+  4 live old-path consumers, 11 ``core/`` flat shims awaiting cutover,
+  missing uv cache, sequential rehearsal runs, and a doc→module reference
+  gap no audit currently covers.
+
 ### Clean-checkout rehearsal closed green (2026-09-08)
 
 - Hosted run [34257533462](https://github.com/docxology/template/actions/runs/34257533462)
