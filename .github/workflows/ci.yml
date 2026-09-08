@@ -635,7 +635,26 @@ jobs:
       # project dir (generic pytest: .coverage.project; declared verifier:
       # .coverage; both produce coverage_project.json).
       # The gate is therefore authoritative here; no repo-root coverage step.
-      - name: Run project tests
+      #
+      # CI-SLOWMARK-SHARD-1: the two lanes are split explicitly instead of a
+      # bare ``--include-slow`` on every event. Push/PR cells run with slow
+      # tests deselected (profile marker expression adds ``not slow``);
+      # scheduled/dispatched cells keep ``--include-slow`` so the full suite —
+      # including any slow-marked project test — exercises on the slow lane
+      # only, mirroring the public-matrix-receipt precedent. No project test
+      # is slow-marked today (verified 2026-09-08); this gate keeps any future
+      # slow-marked project regression off the PR path.
+      - name: Run project tests (push/PR — slow deselected)
+        if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
+        env:
+          PYTHONPATH: .
+        run: |
+          set -euo pipefail
+          uv run python scripts/pipeline/stage_01_test.py \
+            --project "${{ matrix.project }}" --project-only
+
+      - name: Run project tests (scheduled/dispatch — slow included)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         env:
           PYTHONPATH: .
         run: |
