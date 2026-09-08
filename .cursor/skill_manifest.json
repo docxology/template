@@ -699,6 +699,12 @@
       "cursor_at": "infrastructure/llm/SKILL.md"
     },
     {
+      "name": "infrastructure-metadata",
+      "description": "Skill for the shared metadata infrastructure module providing repository-URL normalization and ebook publication-metadata generation. Use when normalizing publication repository URLs, generating ONIX XML, metadata.json, or EPUB OPF metadata packages, or building ebook metadata from project config.",
+      "path": "infrastructure/metadata/SKILL.md",
+      "cursor_at": "infrastructure/metadata/SKILL.md"
+    },
+    {
       "name": "infrastructure-methods",
       "description": "Methods orchestration contract builder for template projects. Use when mapping pipeline stages, manuscript methods, artifact manifests, evidence registries, figures, claim ledgers, experiment plans, and validation commands into one reproducible methods plan.",
       "path": "infrastructure/methods/SKILL.md",

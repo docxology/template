@@ -108,6 +108,7 @@ def build_module_inventory_table(modules: list[ModuleInfo]) -> str:
         "doctor": "Checkout diagnose/fix/undo repairs",
         "documentation": "`FigureManager`, `generate_glossary`",
         "llm": "Ollama helpers, sanitization, review + translation pipelines",
+        "metadata": "`normalized_repository_url`, `generate_metadata_package`",
         "methods": "`build_methods_orchestration_plan`, methods-stage contracts + validation",
         "orchestration": "`PipelineRunner`, entry point for `./run.sh`",
         "prose": "Markdown readability + prose tooling",
