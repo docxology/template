@@ -15,7 +15,7 @@ if python -c "import sys; print(f'Python {sys.version}')" 2>/dev/null; then
     echo "✅ Python available"
 else
     echo "❌ Python missing or broken"
-    ((ERRORS++))
+    ERRORS=$((ERRORS + 1))
 fi
 
 # 2. uv package manager
@@ -23,17 +23,33 @@ if uv --version >/dev/null 2>&1; then
     echo "✅ uv ($(uv --version | head -1))"
 else
     echo "❌ uv not found"
-    ((ERRORS++))
+    ERRORS=$((ERRORS + 1))
 fi
 
-# 3. Ollama (optional but warn)
+# 3. pandoc (required for HTML/DOCX/EPUB rendering)
+if command -v pandoc &>/dev/null; then
+    echo "✅ pandoc ($(pandoc --version | head -1))"
+else
+    echo "❌ pandoc not found (required for rendering) — bash scripts/shell/setup-system-deps.sh"
+    ERRORS=$((ERRORS + 1))
+fi
+
+# 4. xelatex (required for PDF rendering)
+if command -v xelatex &>/dev/null; then
+    echo "✅ xelatex present"
+else
+    echo "❌ xelatex not found (required for PDF rendering) — bash scripts/shell/setup-system-deps.sh"
+    ERRORS=$((ERRORS + 1))
+fi
+
+# 5. Ollama (optional but warn)
 if command -v ollama &>/dev/null; then
     echo "✅ Ollama present"
 else
     echo "⚠️  Ollama not installed (needed for LLM stages)"
 fi
 
-# 4. Disk space (warn if < 5GB free on working dir)
+# 6. Disk space (warn if < 5GB free on working dir)
 FREE_KB=$(df . | tail -1 | awk '{print $4}')
 FREE_GB=$((FREE_KB / 1024 / 1024))
 if [ "$FREE_KB" -lt 5242880 ]; then
@@ -42,14 +58,14 @@ else
     echo "✅ Disk space OK (${FREE_GB} GB free)"
 fi
 
-# 5. Docker (if using containerized Humos)
+# 7. Docker (if using containerized Humos)
 if docker --version >/dev/null 2>&1; then
     echo "✅ Docker available ($(docker --version | cut -d',' -f1))"
 else
     echo "⚠️  Docker not available (Humos container won't run)"
 fi
 
-# 6. Verify repository structure
+# 8. Verify repository structure
 for dir in infrastructure projects docs; do
     if [[ -d "${dir}" ]]; then
         echo "✅ Found ${dir}/"
@@ -59,7 +75,7 @@ for dir in infrastructure projects docs; do
     fi
 done
 
-# 7. Check run.sh is executable
+# 9. Check run.sh is executable
 if [[ -x "./run.sh" ]]; then
     echo "✅ run.sh executable"
 else
@@ -67,12 +83,12 @@ else
     ((ERRORS++))
 fi
 
-# 8. Verify uv sync succeeded (dependencies installed)
+# 10. Verify uv sync succeeded (dependencies installed)
 if uv sync --quiet 2>/dev/null; then
     echo "✅ Dependencies synced"
 else
     echo "❌ uv sync failed — run 'uv sync' to install dependencies"
-    ((ERRORS++))
+    ERRORS=$((ERRORS + 1))
 fi
 
 echo ""

@@ -497,6 +497,11 @@ MacTeX on macOS). Python deps install with `uv sync` (project interpreter is
 `uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>`. To
 generate a manuscript, follow the [Quickstart](#quickstart) at the top.
 
+One-shot setup: `bash scripts/shell/setup-system-deps.sh` installs and verifies
+that toolchain on macOS and Debian/Ubuntu — pandoc, a XeLaTeX TeX distribution,
+the LaTeX packages minimal distributions lack, and `uv` (idempotent; `--check`
+verifies without installing).
+
 Layer 1 is also a standard Python distribution. Build it with `uv build`, or
 install the wheel attached to a GitHub release. Installation provides the
 `research-template` command (`research-template --help`). Optional pip extras
