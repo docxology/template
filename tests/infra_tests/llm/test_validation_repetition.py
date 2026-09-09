@@ -13,7 +13,6 @@ from infrastructure.llm.validation import (
     validate_no_repetition,
 )
 from infrastructure.llm.validation.repetition import calculate_unique_content_ratio
-from infrastructure.llm.validation.similarity import _calculate_similarity
 
 # =============================================================================
 # Repetition Detection Tests
@@ -307,40 +306,43 @@ These sections present different results from the machine learning experiments.
         assert "## Results" in result
 
 
-class TestSimilarityCalculations:
-    """Test improved similarity calculation methods."""
+class TestSimilarityMethodSelection:
+    """Similarity methods drive repetition detection through the public API.
 
-    def test_calculate_similarity_jaccard(self):
-        """Test Jaccard similarity calculation."""
-        text1 = "machine learning algorithms data"
-        text2 = "machine learning methods data"
-        similarity = _calculate_similarity(text1, text2, method="jaccard")
-        assert similarity > 0.5  # High overlap
+    The similarity helpers are internal to ``detection``; their behavior is
+    defended here via ``detect_repetition`` threshold boundaries: a duplicate
+    is reported iff the pairwise similarity of two distinct sections reaches
+    the configured threshold.
+    """
 
-    def test_calculate_similarity_tfidf(self):
-        """Test TF-IDF cosine similarity."""
-        text1 = "machine learning algorithms"
-        text2 = "machine learning methods"
-        similarity = _calculate_similarity(text1, text2, method="tfidf")
-        assert similarity > 0.0
+    @staticmethod
+    def _two_section_text() -> str:
+        """Two distinct-but-overlapping sections, each above the chunk-size floor."""
+        algorithms = ("machine learning algorithms data " * 4).strip()
+        methods = ("machine learning methods data " * 4).strip()
+        return f"## Section\n{algorithms}\n\n## Section\n{methods}"
 
-    def test_calculate_similarity_hybrid(self):
-        """Test hybrid similarity calculation."""
-        text1 = "machine learning algorithms data science"
-        text2 = "machine learning methods data analysis"
-        similarity = _calculate_similarity(text1, text2, method="hybrid")
-        assert similarity > 0.3  # Should combine multiple methods
+    def test_jaccard_flags_known_word_overlap(self):
+        """Jaccard overlap of the two sections exceeds the 0.5 threshold."""
+        result = detect_repetition(self._two_section_text(), similarity_threshold=0.5, similarity_method="jaccard")
+        assert result.examples, "expected the overlapping section to be flagged as a duplicate"
 
-    def test_calculate_similarity_identical(self):
-        """Test identical texts have perfect similarity."""
-        text = "machine learning algorithms data science"
-        similarity = _calculate_similarity(text, text, method="hybrid")
-        assert similarity == 1.0
+    def test_tfidf_detects_any_real_overlap(self):
+        """TF-IDF cosine similarity of overlapping sections is strictly positive."""
+        result = detect_repetition(self._two_section_text(), similarity_threshold=0.01, similarity_method="tfidf")
+        assert result.examples
 
-    def test_calculate_similarity_empty(self):
-        """Test empty texts have zero similarity."""
-        similarity = _calculate_similarity("", "text", method="hybrid")
-        assert similarity == 0.0
+    def test_hybrid_detects_moderate_overlap(self):
+        """The hybrid method combines its components to at least a moderate score."""
+        result = detect_repetition(self._two_section_text(), similarity_threshold=0.3, similarity_method="hybrid")
+        assert result.examples
+
+    def test_identical_sections_flagged_at_maximal_threshold(self):
+        """Identical sections are duplicates even at a threshold of exactly 1.0."""
+        body = ("machine learning algorithms data science " * 4).strip()
+        text = f"## Section\n{body}\n\n## Section\n{body}"
+        result = detect_repetition(text, similarity_threshold=1.0, similarity_method="hybrid")
+        assert result.examples
 
 
 class TestOutputValidatorRepetition:

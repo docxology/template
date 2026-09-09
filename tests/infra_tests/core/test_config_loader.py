@@ -292,15 +292,44 @@ class TestFindConfigFile:
     def test_lookup_rejects_traversal_project_name(self, tmp_path):
         assert find_config_file(tmp_path, "../outside") is None
 
-    def test_infer_project_name_covers_published_and_other_parents(self):
-        """projects/published/ and projects/other/ configs infer their project."""
-        from pathlib import Path
+    def test_infer_project_name_covers_published_and_other_parents(self, tmp_path):
+        """projects/published/ and projects/other/ configs infer their project:
+        with a strict loader, a per-project schema extension for the inferred
+        name is applied without an explicit project_name, and unknown keys
+        still fail when the layout does not match a known parent."""
+        import yaml
 
-        from infrastructure.core.config.loader import _infer_project_name_from_path
+        from infrastructure.core.config.loader import load_config
+        from infrastructure.core.config.schema import (
+            clear_project_schema_extensions,
+            register_project_schema_extension,
+        )
 
-        for parent in ("published", "other"):
-            config = Path("repo") / "projects" / parent / "demo" / "manuscript" / "config.yaml"
-            assert _infer_project_name_from_path(config) == "demo", parent
+        register_project_schema_extension("demo", {"custom_demo_key": dict})
+        try:
+            for parent in ("published", "other"):
+                config_file = tmp_path / "repo" / "projects" / parent / "demo" / "manuscript" / "config.yaml"
+                config_file.parent.mkdir(parents=True)
+                config_file.write_text(
+                    yaml.safe_dump({"custom_demo_key": {"k": "v"}}),
+                    encoding="utf-8",
+                )
+                loaded = load_config(config_file, strict=True)
+                assert loaded is not None, parent
+                assert "custom_demo_key" in loaded, parent
+
+            # Negative control: an unrecognized parent breaks the inference,
+            # so the extension is not applied and strict validation fails.
+            config_file = tmp_path / "repo" / "projects" / "elsewhere" / "demo" / "manuscript" / "config.yaml"
+            config_file.parent.mkdir(parents=True)
+            config_file.write_text(
+                yaml.safe_dump({"custom_demo_key": {"k": "v"}}),
+                encoding="utf-8",
+            )
+            with pytest.raises(ValueError, match="custom_demo_key"):
+                load_config(config_file, strict=True)
+        finally:
+            clear_project_schema_extensions()
 
     def test_find_config_file_under_published_lifecycle_parent(self, tmp_path):
         """A config under projects/published/<name>/ is found by bare name."""

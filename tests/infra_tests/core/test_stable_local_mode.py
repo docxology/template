@@ -177,7 +177,7 @@ def test_every_public_exemplar_manifest_references_only_tracked_files() -> None:
 
 def test_declared_output_paths_reject_parent_traversal(tmp_path: Path) -> None:
     """A projects/ prefix must not be enough to walk out of the repository."""
-    from infrastructure.core.pipeline.artifacts import _declared_output_paths
+    from infrastructure.core.pipeline.artifacts import declared_output_paths
 
     repo = tmp_path / "repo"
     project = repo / "projects" / "p"
@@ -186,17 +186,17 @@ def test_declared_output_paths_reject_parent_traversal(tmp_path: Path) -> None:
     victim.write_text("SECRET_OUTSIDE\n", encoding="utf-8")
 
     with pytest.raises(ValueError, match="escapes confinement"):
-        _declared_output_paths(repo, project, StageContract(output_artifacts=("projects/../victim.txt",)))
+        declared_output_paths(repo, project, StageContract(output_artifacts=("projects/../victim.txt",)))
     assert victim.read_text(encoding="utf-8") == "SECRET_OUTSIDE\n"
 
 
 def test_declared_output_paths_keep_in_repo_outputs(tmp_path: Path) -> None:
-    from infrastructure.core.pipeline.artifacts import _declared_output_paths
+    from infrastructure.core.pipeline.artifacts import declared_output_paths
 
     repo = tmp_path / "repo"
     project = repo / "projects" / "p"
     project.mkdir(parents=True)
-    paths = _declared_output_paths(
+    paths = declared_output_paths(
         repo,
         project,
         StageContract(output_artifacts=("projects/{project}/output/data/result.json",)),

@@ -1,10 +1,4 @@
-"""Additional branch coverage for _render_pipeline_impl.
-
-Missing manuscript dir, skip_manuscript_hydration, manuscript_variable_script
-failure, RenderManager init error, failed_files, reporter.events path, figure
-truncation log, no-figures warning, transmission bookend except, and the
-unresolved-config-token guard.
-"""
+"""Additional branch coverage for the rendering pipeline orchestration."""
 
 from __future__ import annotations
 
@@ -14,7 +8,7 @@ import pytest
 
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.pipeline import _render_pipeline_impl
+from infrastructure.rendering.pipeline import execute_render_pipeline
 from ._pipeline_helpers import (
     _dependencies_for,
     _make_project_with_manuscript,
@@ -24,13 +18,13 @@ from ._pipeline_helpers import (
 
 # ---------------------------------------------------------------------------
 # Additional branch coverage: missing manuscript dir, skip_manuscript_hydration,
-# manuscript_variable_script failure, RenderManager init error, failed_files,
+# manuscript-variable-script failure, RenderManager init error, failed_files,
 # reporter.events path, figure truncation log, no-figures warning,
 # transmission bookend except, verify_pdf_outputs False, outer except in execute.
 # ---------------------------------------------------------------------------
 
 
-def test_render_pipeline_impl_missing_manuscript_dir_returns_one(
+def test_render_pipeline_missing_manuscript_dir_returns_one(
     tmp_path: Path,
 ) -> None:
     """No current manuscript inputs must not validate stale prior outputs."""
@@ -38,12 +32,12 @@ def test_render_pipeline_impl_missing_manuscript_dir_returns_one(
     _make_project_with_manuscript(project, n_md=0)
 
     # manuscript dir exists but has no .md files
-    rc = _render_pipeline_impl("empty_ms_proj", repo_root=tmp_path, dependencies=_dependencies_for(project))
+    rc = execute_render_pipeline("empty_ms_proj", repo_root=tmp_path, dependencies=_dependencies_for(project))
 
     assert rc == 1
 
 
-def test_render_pipeline_impl_skip_manuscript_hydration_branch(
+def test_render_pipeline_skip_manuscript_hydration_branch(
     tmp_path: Path,
 ) -> None:
     """skip_manuscript_hydration=True logs the skip message and does not call the variable script."""
@@ -57,7 +51,7 @@ def test_render_pipeline_impl_skip_manuscript_hydration_branch(
         return 0
 
     dependencies = _dependencies_for(project, hydrate_manuscript=_fail_if_called)
-    rc = _render_pipeline_impl(
+    rc = execute_render_pipeline(
         "skip_hydration_proj",
         skip_manuscript_hydration=True,
         repo_root=tmp_path,
@@ -115,7 +109,7 @@ def test_render_pipeline_propagates_accessible_slide_policy(
 
     dependencies = _dependencies_for(project, manager_factory=_capture_manager)
 
-    rc = _render_pipeline_impl(
+    rc = execute_render_pipeline(
         "accessible_slides_proj",
         skip_manuscript_hydration=True,
         repo_root=tmp_path,
@@ -135,20 +129,20 @@ def test_render_pipeline_propagates_accessible_slide_policy(
     assert config.slides_reader_href == "reader/index.html"
 
 
-def test_render_pipeline_impl_manuscript_variable_script_nonzero_exits_one(
+def test_render_pipeline_manuscript_variable_script_nonzero_exits_one(
     tmp_path: Path,
 ) -> None:
-    """A non-zero return from _run_manuscript_variable_script causes _render_pipeline_impl to return 1."""
+    """A non-zero return from the manuscript-variable hydration script causes the pipeline to return 1."""
     project = tmp_path / "var_fail_proj"
     _make_project_with_manuscript(project, n_md=1)
 
     dependencies = _dependencies_for(project, hydrate_manuscript=lambda project_root, template_repo_root=None: 1)
-    rc = _render_pipeline_impl("var_fail_proj", repo_root=tmp_path, dependencies=dependencies)
+    rc = execute_render_pipeline("var_fail_proj", repo_root=tmp_path, dependencies=dependencies)
 
     assert rc == 1
 
 
-def test_render_pipeline_impl_render_manager_init_raises_exits_one(
+def test_render_pipeline_render_manager_init_raises_exits_one(
     tmp_path: Path,
 ) -> None:
     """An OSError/ValueError/TypeError during RenderManager construction returns 1."""
@@ -162,16 +156,16 @@ def test_render_pipeline_impl_render_manager_init_raises_exits_one(
             raise OSError("Simulated init failure from real OSError")
 
     dependencies = _dependencies_for(project, manager_factory=_FailingRenderManager)
-    rc = _render_pipeline_impl("rm_init_fail_proj", repo_root=tmp_path, dependencies=dependencies)
+    rc = execute_render_pipeline("rm_init_fail_proj", repo_root=tmp_path, dependencies=dependencies)
 
     assert rc == 1
 
 
 @pytest.mark.slow
-def test_render_pipeline_impl_failed_files_exits_one(
+def test_render_pipeline_failed_files_exits_one(
     tmp_path: Path,
 ) -> None:
-    """When _render_individual_files returns non-empty failed_files, pipeline returns 1."""
+    """When individual file rendering returns non-empty failed_files, the pipeline returns 1."""
     project = tmp_path / "fail_files_proj"
     _make_project_with_manuscript(project, n_md=1)
 
@@ -190,12 +184,12 @@ def test_render_pipeline_impl_failed_files_exits_one(
         return 0, [sf.name for sf in source_files if sf.suffix == ".md"]
 
     dependencies = _dependencies_for(project, render_individual=_always_fail)
-    rc = _render_pipeline_impl("fail_files_proj", repo_root=tmp_path, dependencies=dependencies)
+    rc = execute_render_pipeline("fail_files_proj", repo_root=tmp_path, dependencies=dependencies)
 
     assert rc == 1
 
 
-def test_render_pipeline_impl_reporter_events_triggers_print_save(
+def test_render_pipeline_reporter_events_triggers_print_save(
     tmp_path: Path,
     caplog: pytest.LogCaptureFixture,
 ) -> None:
@@ -233,13 +227,13 @@ def test_render_pipeline_impl_reporter_events_triggers_print_save(
         return 0, []
 
     dependencies = _dependencies_for(project, render_individual=_inject_event_and_succeed)
-    _render_pipeline_impl("reporter_events_proj", repo_root=tmp_path, dependencies=dependencies)
+    execute_render_pipeline("reporter_events_proj", repo_root=tmp_path, dependencies=dependencies)
 
     assert print_called, "reporter.print_report() was not called when events were present"
     assert save_called, "reporter.save_report() was not called when events were present"
 
 
-def test_render_pipeline_impl_figure_truncation_log(
+def test_render_pipeline_figure_truncation_log(
     tmp_path: Path,
     caplog: pytest.LogCaptureFixture,
 ) -> None:
@@ -252,14 +246,14 @@ def test_render_pipeline_impl_figure_truncation_log(
     dependencies = _dependencies_for(project)
 
     with caplog.at_level(logging.INFO, logger="infrastructure.rendering.pipeline"):
-        rc = _render_pipeline_impl("fig_truncate_proj", repo_root=tmp_path, dependencies=dependencies)
+        rc = execute_render_pipeline("fig_truncate_proj", repo_root=tmp_path, dependencies=dependencies)
 
     truncation_logged = any("... and" in record.message and "more" in record.message for record in caplog.records)
     assert truncation_logged, "Expected truncation log '... and N more' when figures > 3"
     assert rc == 0
 
 
-def test_render_pipeline_impl_no_figures_warning(
+def test_render_pipeline_no_figures_warning(
     tmp_path: Path,
     caplog: pytest.LogCaptureFixture,
 ) -> None:
@@ -276,13 +270,13 @@ def test_render_pipeline_impl_no_figures_warning(
     dependencies = _dependencies_for(project, discover_manuscript=lambda manuscript_dir: [])
 
     with caplog.at_level(logging.WARNING, logger="infrastructure.rendering.pipeline"):
-        _render_pipeline_impl("no_fig_proj", repo_root=tmp_path, dependencies=dependencies)
+        execute_render_pipeline("no_fig_proj", repo_root=tmp_path, dependencies=dependencies)
 
     no_fig_warned = any("No figures found" in record.message for record in caplog.records)
     assert no_fig_warned, "Expected warning about no figures found"
 
 
-def test_render_pipeline_impl_transmission_bookend_exception_logged(
+def test_render_pipeline_transmission_bookend_exception_logged(
     tmp_path: Path,
     caplog: pytest.LogCaptureFixture,
 ) -> None:
@@ -301,7 +295,7 @@ def test_render_pipeline_impl_transmission_bookend_exception_logged(
     )
 
     with caplog.at_level(logging.WARNING, logger="infrastructure.rendering.pipeline"):
-        rc = _render_pipeline_impl("bookend_exc_proj", repo_root=tmp_path, dependencies=dependencies)
+        rc = execute_render_pipeline("bookend_exc_proj", repo_root=tmp_path, dependencies=dependencies)
 
     bookend_warned = any(
         "Transmission bookend" in record.message or "bookend" in record.message.lower() for record in caplog.records
@@ -310,7 +304,7 @@ def test_render_pipeline_impl_transmission_bookend_exception_logged(
     assert rc == 0
 
 
-def test_render_pipeline_impl_fails_on_unresolved_config_token(tmp_path: Path) -> None:
+def test_render_pipeline_fails_on_unresolved_config_token(tmp_path: Path) -> None:
     """An unresolved config token exits non-zero instead of printing on the title page."""
     project = tmp_path / "token_proj"
     _write_minimal_project_tree(project)
@@ -319,6 +313,6 @@ def test_render_pipeline_impl_fails_on_unresolved_config_token(tmp_path: Path) -
         encoding="utf-8",
     )
 
-    rc = _render_pipeline_impl("token_proj", repo_root=tmp_path, dependencies=_dependencies_for(project))
+    rc = execute_render_pipeline("token_proj", repo_root=tmp_path, dependencies=_dependencies_for(project))
 
     assert rc == 1

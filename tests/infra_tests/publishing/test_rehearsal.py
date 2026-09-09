@@ -161,30 +161,39 @@ def test_rehearsal_ignores_volatile_outputs_when_judging_determinism(tmp_path: P
     assert receipt.validate() == []
 
 
-def test_output_is_volatile_classification() -> None:
-    """Only the known wall-clock-embedded commands count as volatile."""
-    from infrastructure.publishing.rehearsal import _output_is_volatile
+@pytest.mark.skipif(not _git_supports_clone_revision(), reason="git clone --revision requires Git 2.51+")
+def test_render_stage_volatile_output_does_not_block_determinism(tmp_path: Path) -> None:
+    """A render-stage command whose stdout embeds wall-clock values is ignored by the determinism digest."""
+    repo = _fixture_repo(tmp_path)
+    script = repo / "scripts/pipeline/stage_03_render.py"
+    script.parent.mkdir(parents=True, exist_ok=True)
+    script.write_text("import random\nprint(random.random())\n", encoding="utf-8")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-qm", "volatile render script")
+    plan = build_clean_checkout_plan(
+        repo, commands=(("python", "scripts/pipeline/stage_03_render.py", "--project", "p"),)
+    )
 
-    assert _output_is_volatile(("uv", "sync", "--locked", "--offline"))
-    assert _output_is_volatile(("uv", "run", "python", "-m", "infrastructure.core.health", "--json"))
-    assert _output_is_volatile(("uv", "run", "python", "scripts/pipeline/stage_01_test.py", "--receipt", "x.json"))
-    assert _output_is_volatile(("uv", "run", "python", "scripts/pipeline/stage_03_render.py", "--project", "p"))
-    assert not _output_is_volatile(("uv", "run", "python", "scripts/docgen/counts.py", "--check"))
-    assert not _output_is_volatile(("git", "status", "--porcelain", "--untracked-files=all"))
+    receipt = run_clean_checkout_rehearsal(repo, plan, platform_name="darwin", timeout_seconds=120)
+
+    assert receipt.status == "pass"
+    assert receipt.validate() == []
 
 
+@pytest.mark.skipif(not _git_supports_clone_revision(), reason="git clone --revision requires Git 2.51+")
 def test_failed_command_receipt_carries_output_tail(tmp_path: Path) -> None:
     """A failing rehearsal command records a bounded diagnostic tail for triage."""
-    from infrastructure.publishing.rehearsal import _run_command
-
-    receipt = _run_command(
-        [
-            "python",
-            "-c",
-            "import sys; print('stdout-marker'); sys.stderr.write('boom-detail-line'); sys.exit(3)",
-        ],
-        tmp_path,
+    repo = _fixture_repo(tmp_path)
+    plan = build_clean_checkout_plan(
+        repo,
+        commands=(
+            ("python", "-c", "import sys; print('stdout-marker'); sys.stderr.write('boom-detail-line'); sys.exit(3)"),
+        ),
     )
+
+    shard = run_clean_checkout_shard(repo, plan, run_index=1, platform_name="darwin", timeout_seconds=120)
+    receipt = shard.commands[0]
+
     assert receipt.status == "blocked"
     assert receipt.exit_code == 3
     assert "boom-detail-line" in receipt.output_tail
@@ -192,26 +201,37 @@ def test_failed_command_receipt_carries_output_tail(tmp_path: Path) -> None:
     assert len(receipt.output_tail) <= 4000
 
 
+@pytest.mark.skipif(not _git_supports_clone_revision(), reason="git clone --revision requires Git 2.51+")
 def test_passing_command_receipt_has_empty_output_tail(tmp_path: Path) -> None:
-    from infrastructure.publishing.rehearsal import _run_command
+    repo = _fixture_repo(tmp_path)
+    plan = build_clean_checkout_plan(repo, commands=(("python", "-c", "print('fine')"),))
 
-    receipt = _run_command(["python", "-c", "print('fine')"], tmp_path)
+    shard = run_clean_checkout_shard(repo, plan, run_index=1, platform_name="darwin", timeout_seconds=120)
+    receipt = shard.commands[0]
+
     assert receipt.status == "pass"
     assert receipt.output_tail == ""
 
 
-def test_run_command_outputs_sink_captures_full_output(tmp_path: Path) -> None:
-    """The optional sink receives the complete stdout/stderr pair for persistence."""
-    from infrastructure.publishing.rehearsal import _run_command
-
-    captured: list[tuple[str, str]] = []
-    receipt = _run_command(
-        ["python", "-c", "print('full-stdout'); import sys; sys.stderr.write('full-stderr')"],
-        tmp_path,
-        outputs_sink=captured.append,
+@pytest.mark.skipif(not _git_supports_clone_revision(), reason="git clone --revision requires Git 2.51+")
+def test_blocked_command_outputs_persist_in_full_to_artifact_logs(tmp_path: Path) -> None:
+    """Blocked commands persist the complete stdout/stderr pair as run artifacts."""
+    repo = _fixture_repo(tmp_path)
+    plan = build_clean_checkout_plan(
+        repo,
+        commands=(("python", "-c", "print('full-stdout'); import sys; sys.stderr.write('full-stderr'); sys.exit(4)"),),
     )
-    assert receipt.status == "pass"
-    assert captured == [("full-stdout\n", "full-stderr")]
+    artifact_dir = tmp_path / "artifacts"
+
+    run_clean_checkout_shard(
+        repo, plan, run_index=1, platform_name="darwin", timeout_seconds=120, artifact_dir=artifact_dir
+    )
+
+    logs = sorted((artifact_dir / "run-1").glob("*.log"))
+    assert len(logs) == 1
+    content = logs[0].read_text(encoding="utf-8")
+    assert "full-stdout" in content
+    assert "full-stderr" in content
 
 
 def test_persist_run_artifacts_writes_matrix_receipt_and_failure_logs(tmp_path: Path) -> None:
@@ -253,13 +273,17 @@ def test_persist_run_artifacts_noop_without_artifact_dir(tmp_path: Path) -> None
     assert not (tmp_path / "run-1").exists()
 
 
+@pytest.mark.skipif(not _git_supports_clone_revision(), reason="git clone --revision requires Git 2.51+")
 def test_failure_tail_redacts_credential_like_output(tmp_path: Path) -> None:
-    from infrastructure.publishing.rehearsal import _run_command
-
-    receipt = _run_command(
-        ["python", "-c", "import sys; sys.stderr.write('token=supersecret123'); sys.exit(2)"],
-        tmp_path,
+    repo = _fixture_repo(tmp_path)
+    plan = build_clean_checkout_plan(
+        repo,
+        commands=(("python", "-c", "import sys; sys.stderr.write('token=supersecret123'); sys.exit(2)"),),
     )
+
+    shard = run_clean_checkout_shard(repo, plan, run_index=1, platform_name="darwin", timeout_seconds=120)
+    receipt = shard.commands[0]
+
     assert receipt.status == "blocked"
     assert "supersecret123" not in receipt.output_tail
     assert "redacted" in receipt.output_tail

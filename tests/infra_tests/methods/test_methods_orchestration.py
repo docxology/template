@@ -211,7 +211,7 @@ def test_discovers_method_section_by_heading(tmp_path: Path) -> None:
     no mocks) and mirrors the live ``template_template`` exemplar, whose
     ``# Methods`` content lives inside ``03a_architecture.md``.
     """
-    from infrastructure.methods.orchestration import _discover_method_sections
+    from infrastructure.methods import build_methods_orchestration_plan
 
     project = make_project(tmp_path, "template_test", with_manuscript=True)
     manuscript = project / "manuscript"
@@ -219,7 +219,7 @@ def test_discovers_method_section_by_heading(tmp_path: Path) -> None:
     write_doc(manuscript / "02_introduction.md", "# Introduction\n\nContext only.\n")
     write_doc(manuscript / "05_discussion.md", "## Methodological caveats\n\nNotes.\n")
 
-    sections = _discover_method_sections(project, tmp_path)
+    sections = build_methods_orchestration_plan(tmp_path, "template_test").method_sections
 
     # Heading-named section is discovered even though the filename has no token.
     assert any(s.endswith("manuscript/03a_architecture.md") for s in sections), sections
@@ -232,12 +232,12 @@ def test_discovers_method_section_by_heading(tmp_path: Path) -> None:
 def test_discovers_method_section_by_filename_token(tmp_path: Path) -> None:
     """A manuscript file whose *name* carries a method token is discovered
     without needing a heading (filename path, real ``template_test`` fixture)."""
-    from infrastructure.methods.orchestration import _discover_method_sections
+    from infrastructure.methods import build_methods_orchestration_plan
 
     project = make_project(tmp_path, "template_test", with_manuscript=True)
     write_doc(project / "manuscript" / "02_methodology.md", "Body without a heading token.\n")
 
-    sections = _discover_method_sections(project, tmp_path)
+    sections = build_methods_orchestration_plan(tmp_path, "template_test").method_sections
 
     assert any(s.endswith("manuscript/02_methodology.md") for s in sections), sections
 

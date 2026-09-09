@@ -526,68 +526,68 @@ def test_cmd_menu_no_projects(tmp_path: Path, capsys) -> None:
 
 
 def test_interactive_quit_immediate(fake_repo: Path, patch_runner) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
-    rc = _interactive(fake_repo, reader=lambda: "q")
+    rc = interactive(fake_repo, reader=lambda: "q")
     assert rc == 0
 
 
 def test_interactive_eof_returns_zero(fake_repo: Path, patch_runner) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     def _reader() -> str:
         raise EOFError
 
-    assert _interactive(fake_repo, reader=_reader) == 0
+    assert interactive(fake_repo, reader=_reader) == 0
 
 
 def test_interactive_no_projects_returns_one(tmp_path: Path) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     (tmp_path / "projects").mkdir()
-    assert _interactive(tmp_path, reader=lambda: "q") == 1
+    assert interactive(tmp_path, reader=lambda: "q") == 1
 
 
 def test_interactive_show_info_then_quit(fake_repo: Path, capsys) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     answers = iter(["i", "q"])
-    rc = _interactive(fake_repo, reader=lambda: next(answers))
+    rc = interactive(fake_repo, reader=lambda: next(answers))
     assert rc == 0
     assert "Current project" in capsys.readouterr().out
 
 
 def test_interactive_change_project_then_quit(fake_repo: Path) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     # 'p' opens picker, '0' selects first, then 'q' quits
     answers = iter(["p", "0", "q"])
-    rc = _interactive(fake_repo, reader=lambda: next(answers))
+    rc = interactive(fake_repo, reader=lambda: next(answers))
     assert rc == 0
 
 
 @pytest.mark.slow
 def test_interactive_invalid_then_quit(fake_repo: Path, capsys) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     answers = iter(["zzz", "q"])
-    rc = _interactive(fake_repo, reader=lambda: next(answers))
+    rc = interactive(fake_repo, reader=lambda: next(answers))
     assert rc == 0
     assert "Invalid input" in capsys.readouterr().err
 
 
 def test_interactive_runs_full_pipeline_via_key_9(fake_repo: Path) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     spy = _SpyRunner(fake_repo)
     answers = iter(["9", "q"])
-    rc = _interactive(fake_repo, reader=lambda: next(answers), runner=spy)
+    rc = interactive(fake_repo, reader=lambda: next(answers), runner=spy)
     assert rc == 0
     assert len(spy.runs) == 1
 
 
 def test_interactive_failed_op_breaks_sequence(fake_repo: Path) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     class _Failing(_SpyRunner):
         def run(self, invocation):
@@ -596,14 +596,14 @@ def test_interactive_failed_op_breaks_sequence(fake_repo: Path) -> None:
 
     spy = _Failing(fake_repo)
     answers = iter(["89", "q"])  # chained: core then full; first should fail
-    rc = _interactive(fake_repo, reader=lambda: next(answers), runner=spy)
+    rc = interactive(fake_repo, reader=lambda: next(answers), runner=spy)
     assert rc == 0
     # Only the first invocation runs because of failure-break.
     assert len(spy.runs) == 1
 
 
 def test_interactive_dispatches_stage_keys(fake_repo: Path) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     received: list[str] = []
 
@@ -613,7 +613,7 @@ def test_interactive_dispatches_stage_keys(fake_repo: Path) -> None:
 
     spy = _SpyRunner(fake_repo)
     answers = iter(["234", "q"])  # chained: 2,3,4
-    _interactive(
+    interactive(
         fake_repo,
         reader=lambda: next(answers),
         runner=spy,
@@ -623,11 +623,11 @@ def test_interactive_dispatches_stage_keys(fake_repo: Path) -> None:
 
 
 def test_interactive_dispatch_multi_keys(fake_repo: Path) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     spy = _SpyRunner(fake_repo)
     answers = iter(["a", "b", "c", "d", "q"])
-    _interactive(fake_repo, reader=lambda: next(answers), runner=spy)
+    interactive(fake_repo, reader=lambda: next(answers), runner=spy)
     assert len(spy.multi_runs) == 4
     # a: full ; b: skip infra; c: skip llm; d: skip both
     assert spy.multi_runs[0].skip_infra is False
@@ -641,10 +641,10 @@ def test_interactive_dispatch_multi_keys(fake_repo: Path) -> None:
 @pytest.mark.slow
 def test_interactive_multi_d_alone_exits_without_second_prompt(fake_repo: Path, capsys) -> None:
     """Successful sole menu key ``d`` ends the interactive session (no menu redraw)."""
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     spy = _SpyRunner(fake_repo)
-    rc = _interactive(fake_repo, reader=lambda: "d", runner=spy)
+    rc = interactive(fake_repo, reader=lambda: "d", runner=spy)
     assert rc == 0
     assert len(spy.multi_runs) == 1
     assert spy.multi_runs[0].skip_infra is True
@@ -655,11 +655,11 @@ def test_interactive_multi_d_alone_exits_without_second_prompt(fake_repo: Path, 
 
 
 def test_interactive_p_quit_returns_zero(fake_repo: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     # 'p' opens picker, then 'q' inside picker => returns None => loop returns 0
     answers = iter(["p", "q"])
-    rc = _interactive(fake_repo, reader=lambda: next(answers))
+    rc = interactive(fake_repo, reader=lambda: next(answers))
     assert rc == 0
     out = capsys.readouterr().out
     assert "Available projects:" in out
@@ -667,41 +667,41 @@ def test_interactive_p_quit_returns_zero(fake_repo: Path, capsys: pytest.Capture
 
 
 def test_interactive_p_all_keeps_loop(fake_repo: Path) -> None:
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     answers = iter(["p", "a", "q"])
-    rc = _interactive(fake_repo, reader=lambda: next(answers))
+    rc = interactive(fake_repo, reader=lambda: next(answers))
     assert rc == 0
 
 
 def test_dispatch_menu_key_unknown_returns_one(fake_repo: Path) -> None:
-    from infrastructure.orchestration.cli import _dispatch_menu_key
+    from infrastructure.orchestration.interactive import dispatch_menu_key
 
     spy = _SpyRunner(fake_repo)
-    rc = _dispatch_menu_key("zzz", "template_code_project", fake_repo, spy)
+    rc = dispatch_menu_key("zzz", "template_code_project", fake_repo, spy)
     assert rc == 1
 
 
 def test_dispatch_menu_key_f_skips_infra(fake_repo: Path) -> None:
-    from infrastructure.orchestration.cli import _dispatch_menu_key
+    from infrastructure.orchestration.interactive import dispatch_menu_key
 
     spy = _SpyRunner(fake_repo)
-    rc = _dispatch_menu_key("f", "template_code_project", fake_repo, spy)
+    rc = dispatch_menu_key("f", "template_code_project", fake_repo, spy)
     assert rc == 0
     assert spy.runs[0].skip_infra is True
 
 
 def test_interactive_empty_input_loops(fake_repo: Path) -> None:
     """An empty enter cycles back to the menu without dispatch."""
-    from infrastructure.orchestration.cli import _interactive
+    from infrastructure.orchestration.interactive import interactive
 
     answers = iter(["", "q"])
-    rc = _interactive(fake_repo, reader=lambda: next(answers))
+    rc = interactive(fake_repo, reader=lambda: next(answers))
     assert rc == 0
 
 
 def test_main_no_subcommand_runs_interactive(fake_repo: Path) -> None:
-    """Bare invocation (no subcommand) routes to _interactive."""
+    """Bare invocation (no subcommand) routes to the interactive menu loop."""
     captured = {}
 
     def _fake_interactive(repo_root, **kwargs):
