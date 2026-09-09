@@ -175,6 +175,12 @@ jobs:
       - name: Mirror guard — projects/<lifecycle>/ holds managed symlinks only
         run: uv run python scripts/audit/check_mirror_symlinks.py
 
+      # AUDIT-DOC-MODULE-REF-1: every `infrastructure.*` dotted path in docs/,
+      # README.md, and AGENTS.md must resolve to a real module, so the next
+      # module split cannot silently stale documentation references.
+      - name: Documentation module-reference guard
+        run: uv run python scripts/audit/check_doc_module_refs.py
+
       # Publication audit is source-only in CI because project output trees are
       # disposable/ignored. Release jobs and local sign-off add --rendered to
       # require artifact manifests, evidence registries, and figure bindings.
