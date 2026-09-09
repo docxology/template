@@ -37,8 +37,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
-from infrastructure.core.pytest_orchestration import (
+from infrastructure.core.testing.project_test_matrix import ProjectTestTask, run_project_test_matrix
+from infrastructure.core.testing.pytest_orchestration import (
     build_project_pytest_command,
     parse_project_workers,
 )

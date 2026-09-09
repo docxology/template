@@ -7,7 +7,7 @@ from textwrap import dedent
 
 import pytest
 
-from infrastructure.core.pytest_orchestration import (
+from infrastructure.core.testing.pytest_orchestration import (
     PIPELINE_SMOKE_INFRA_TEST_PATHS,
     project_declared_coverage_floor,
 )

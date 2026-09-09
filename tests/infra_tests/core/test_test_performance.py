@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.test_performance import (
+from infrastructure.core.testing.test_performance import (
     TestBenchmarkError,
     TestRunSummary,
     _redact_output_tail,

@@ -303,7 +303,7 @@ def extract_coverage_percentage(stdout_text: str, coverage_json_paths: list[Path
     return False, None
 
 
-from infrastructure.core.coverage_policy import check_cov_datafile_support  # noqa: E402 — compat re-export
+from infrastructure.core.testing.coverage_policy import check_cov_datafile_support  # noqa: E402 — compat re-export
 
 __all__ = [
     "FailedTestInfo",

@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
+from infrastructure.core.testing.project_test_matrix import ProjectTestTask, run_project_test_matrix
 
 
 def _task(tmp_path: Path, index: int, name: str, body: str, timeout: int = 5) -> ProjectTestTask:
