@@ -7,14 +7,15 @@ Requires ``HERMES_HOME`` and a Hermes plugin tree. Invoked only via
 from __future__ import annotations
 
 import json
-import logging
 import os
 import shutil
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-logger = logging.getLogger(__name__)
+from infrastructure.core.logging.utils import get_logger
+
+logger = get_logger(__name__)
 
 
 class _NoOpMetrics:
@@ -116,10 +117,10 @@ def _populate_cache(hermes_home: Path, cache_path: Path, cache_marker: Path) -> 
             encoding="utf-8",
         )
         cache_marker.touch()
-        print(f"Cache populated at {cache_path}")
+        logger.info("Cache populated at %s", cache_path)
         return True
     except OSError as exc:
-        print(f"ERROR: Failed to populate cache: {exc}")
+        logger.error("Failed to populate cache: %s", exc)
         return False
 
 
@@ -134,13 +135,13 @@ def run_cache_gate() -> int:
     cache_marker = cache_path / ".cache_valid"
 
     if not hermes_home_env:
-        print("ERROR: HERMES_HOME environment variable not set")
+        logger.error("HERMES_HOME environment variable not set")
         gate_runs_total.labels(gate="cache", outcome="failure").inc()
         return 1
 
     hermes_home = Path(hermes_home_env)
     if not hermes_home.exists():
-        print(f"ERROR: Hermes home not found: {hermes_home_env}")
+        logger.error("Hermes home not found: %s", hermes_home_env)
         gate_runs_total.labels(gate="cache", outcome="failure").inc()
         return 1
 
@@ -148,21 +149,21 @@ def run_cache_gate() -> int:
     outcome = "failure"
     try:
         if _is_cache_fresh(cache_marker, cache_ttl):
-            print(f"Cache is fresh (TTL: {cache_ttl}s). Skipping rebuild.")
+            logger.info("Cache is fresh (TTL: %ss). Skipping rebuild.", cache_ttl)
             outcome = "success"
             return 0
-        print("Cache stale or missing. Rebuilding...")
+        logger.info("Cache stale or missing. Rebuilding...")
         cache_path.mkdir(parents=True, exist_ok=True)
         if not _populate_cache(hermes_home, cache_path, cache_marker):
             return 1
         outcome = "success"
         return 0
     except KeyboardInterrupt:
-        print("ERROR: Gate interrupted by user")
+        logger.error("Gate interrupted by user")
         outcome = "error"
         return 1
     except OSError as exc:
-        print(f"ERROR: Unexpected error in cache gate: {exc}")
+        logger.error("Unexpected error in cache gate: %s", exc)
         outcome = "error"
         return 1
     finally:

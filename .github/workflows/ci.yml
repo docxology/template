@@ -170,6 +170,13 @@ jobs:
       - name: Confidentiality guard — only public template resources tracked
         run: uv run python scripts/audit/check_tracked_all.py
 
+      # AUDIT-PRINT-GUARD-1: the T20 (print) ban is scoped to infrastructure/
+      # via CLI select (a global select would flag every CLI/report module in
+      # docs/ and tests/); per-file-ignores in pyproject.toml exempt the
+      # legitimate CLI entrypoint, gate, and human-report modules.
+      - name: Print ban — infrastructure library modules use structured logging
+        run: uv run ruff check --select T20 infrastructure/
+
       # No-op on a clean CI clone (projects/ has no mirror); it is the local
       # developer checkout this catches, and CI asserts the guard still runs.
       - name: Mirror guard — projects/<lifecycle>/ holds managed symlinks only
