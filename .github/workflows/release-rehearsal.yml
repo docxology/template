@@ -6,10 +6,14 @@ name: Release Rehearsal
 # exactly one fresh-checkout run (`--shard-index`) and uploads its own shard
 # receipt; the `consolidate` job rebuilds the same two-run determinism receipt
 # the sequential script produces (equal digests or the job fails — parallel
-# cells must not weaken the comparison). Dispatch-only — zero cost on normal
-# PRs; run from the Actions tab (or `gh workflow run release-rehearsal.yml`)
-# when a clean-checkout receipt is needed.
+# cells must not weaken the comparison). Monthly schedule + manual dispatch —
+# zero cost on normal PRs; the monthly trigger keeps clean-checkout receipts
+# flowing without an operator remembering to dispatch (REHEARSAL-SCHEDULE-1),
+# and the Actions tab still accepts manual runs.
 on:
+  schedule:
+    # Monthly: first day of the month, 05:00 UTC.
+    - cron: "0 5 1 * *"
   workflow_dispatch:
 
 permissions:
@@ -87,11 +91,12 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: clean-checkout-rehearsal-shard-${{ matrix.run-index }}
+          name: clean-checkout-rehearsal-shard-${{ matrix.run-index }}-${{ github.run_id }}
           path: |
             clean_checkout_rehearsal_shard_${{ matrix.run-index }}.json
             clean_checkout_rehearsal_logs_run${{ matrix.run-index }}/
           if-no-files-found: error
+          retention-days: 365
 
   consolidate:
     name: Consolidate rehearsal determinism receipt
@@ -115,31 +120,39 @@ jobs:
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           pattern: clean-checkout-rehearsal-shard-*
-          merge-multiple: false
+          merge-multiple: true
           path: shards
 
       - name: Consolidate shards into the release receipt
         run: >-
           uv run --frozen --no-sync python scripts/maintenance/release_rehearsal.py
           --consolidate
-          shards/clean-checkout-rehearsal-shard-1/clean_checkout_rehearsal_shard_1.json
-          shards/clean-checkout-rehearsal-shard-2/clean_checkout_rehearsal_shard_2.json
+          shards/clean_checkout_rehearsal_shard_1.json
+          shards/clean_checkout_rehearsal_shard_2.json
           --receipt clean_checkout_rehearsal_receipt.json
 
       - name: Upload consolidated rehearsal receipt
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: clean-checkout-rehearsal-receipt
+          name: clean-checkout-rehearsal-receipt-${{ github.run_id }}
           path: clean_checkout_rehearsal_receipt.json
           if-no-files-found: error
+          retention-days: 365
 
+      # REHEARSAL-SUMMARY-1: a rehearsal that dies before writing a receipt
+      # must print one clear message instead of turning `cat` into a confusing
+      # second failure. A real receipt still prints in full.
       - name: Summarize receipt
         if: always()
         run: |
           {
             echo "## Clean-checkout rehearsal receipt"
-            echo '```json'
-            cat clean_checkout_rehearsal_receipt.json
-            echo '```'
+            if [ -f clean_checkout_rehearsal_receipt.json ]; then
+              echo '```json'
+              cat clean_checkout_rehearsal_receipt.json
+              echo '```'
+            else
+              echo '**receipt not produced** — the rehearsal failed before writing a receipt; inspect the rehearsal cell logs above.'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"

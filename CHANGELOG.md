@@ -9,6 +9,26 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Rehearsal minor batch (2026-09-09)
+
+- ``release-rehearsal.yml`` gains a monthly cron trigger (first day of the
+  month 05:00 UTC; ``REHEARSAL-SCHEDULE-1``), ``run_id``-suffixed artifact
+  names with explicit ``retention-days: 365`` for both shard receipts and the
+  consolidated receipt (``REHEARSAL-ARTIFACT-1``), and a guarded receipt
+  summary step that prints one clear ``**receipt not produced**`` message when
+  a rehearsal dies before writing a receipt while still printing real receipts
+  in full (``REHEARSAL-SUMMARY-1``). ``merge-multiple: true`` shard download +
+  flattened ``shards/`` paths complete the ``REHEARSAL-PARALLEL-1`` shard
+  layout for ``--consolidate``.
+- Backlog rows for the three landed minors move to ``partial`` with hosted
+  closure conditions (first scheduled receipt, two addressable dispatch
+  artifacts, receipt-less dry run); rows landed in PRs #82–#85
+  (``SLOW-PROFILE-1``, ``CI-WIRING-1``, ``CI-SLOWMARK-SHARD-1``,
+  ``REHEARSAL-PARALLEL-1``) keep ``open`` with hosted-merge closure conditions.
+  Local acceptance verified: ``cron`` count 1, ``github.run_id`` in both
+  artifact names, ``retention-days: 365`` on both uploads, receipt guard at
+  line 156, actionlint clean.
+
 ### Backlog scoping round (2026-09-08)
 
 - Six-subsystem survey (test suite, publishing/rendering, core/orchestration,
