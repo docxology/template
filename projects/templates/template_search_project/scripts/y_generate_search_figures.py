@@ -30,7 +30,7 @@ sys.path.insert(0, str(_repo_root))
 
 from infrastructure.core.logging.utils import get_logger
 
-from template_search_project.figures import generate_all_figures, load_search_result
+from template_search_project.publish.figures import generate_all_figures, load_search_result
 
 logger = get_logger(__name__)
 

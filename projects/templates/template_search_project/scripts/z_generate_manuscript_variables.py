@@ -31,8 +31,8 @@ sys.path.insert(0, str(_repo_root))
 
 from infrastructure.core.logging.utils import get_logger
 
-from template_search_project.config import load_project_config
-from template_search_project.manuscript_variables import (
+from template_search_project.publish.config import load_project_config
+from template_search_project.publish.manuscript_variables import (
     compute_variables,
     load_aggregate_payload,
     load_search_result_payload,

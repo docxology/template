@@ -48,7 +48,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Test and validator gaps
 
-- Keep `src/review_report.py` above the project coverage floor with no-mock
+- Keep `src/analysis/review_report.py` above the project coverage floor with no-mock
   tests for subprocess environment policy, syntax-error handling, import
   boundaries, and explicit skipped/disabled/not-materialised statuses.
 - Retrieval-coverage claims remain bounded by the bundled offline corpus; any
@@ -57,7 +57,7 @@ keeps a capability blocked rather than silently promoting it.
   `output/run_summary.json`; extend assertion vocabulary only with a focused
   negative-control test.
 - Keep the byte-identical-across-reruns test
-  (`tests/test_pipeline.py::TestRunLiteraturePipeline::test_bibtex_byte_identical_across_reruns`)
+  (`tests/pipeline/test_pipeline.py::TestRunLiteraturePipeline::test_bibtex_byte_identical_across_reruns`)
   in sync as new pipeline stages are added.
 - Keep `manuscript/references_deep.bib` derived from the committed deep-search
   aggregate and fail when citation keys or source revisions drift.

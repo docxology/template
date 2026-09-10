@@ -9,18 +9,18 @@ The two exemplars sit at different points on the abstraction spectrum.
 - `template_code_project` owns its **own algorithm** (`src/optimizer.py`); the algorithm has no upstream dependency, so `src/` can be infrastructure-free.
 - `template_search_project` has **no algorithm of its own**. Its value is in being a thin orchestration layer over `infrastructure.search.literature`, `infrastructure.reference.citation`, and `infrastructure.llm`. Forbidding those imports in `src/` would force the orchestration into `scripts/` — which would push every contributor towards mocking the infrastructure, defeating the zero-mock policy.
 
-The boundary is preserved differently here: `src/pipeline.py` and `src/deep_search.py` are the **only** modules that touch `infrastructure.search.*`; the rest of `src/` (figures, report, manuscript_variables, analysis, search_invariants) is pure.
+The boundary is preserved differently here: `src/pipeline/pipeline.py` and `src/search/deep_search.py` are the **only** modules that touch `infrastructure.search.*`; the rest of `src/` (figures, report, manuscript_variables, analysis, search_invariants) is pure.
 
-### Why are `src/pipeline.py` and `src/deep_search.py` separate modules instead of one big file?
+### Why are `src/pipeline/pipeline.py` and `src/search/deep_search.py` separate modules instead of one big file?
 
 They have different fan-out semantics:
 
 - `pipeline.py::run_literature_pipeline` runs **one** `SearchQuery` against the configured sources, deduplicates on `paper.id`, enriches every result, and produces `manuscript/references.bib`.
 - `deep_search.py::run_deep_search` runs **N** queries (one per keyword), each capped at `max_results_per_keyword`, fully enriches every paper, and produces a per-keyword tree under `output/deep_search/` plus the unified `manuscript/references_deep.bib`.
 
-Splitting them keeps each function's input and output shape coherent and lets `tests/test_pipeline.py` and `tests/test_deep_search.py` exercise the two contracts independently. They both delegate citation-key generation to the same `infrastructure.reference.citation.paper_to_bibentry` utility, and `_disambiguate_citation_key` (in `src/pipeline.py`) is reused.
+Splitting them keeps each function's input and output shape coherent and lets `tests/pipeline/test_pipeline.py` and `tests/search/test_deep_search.py` exercise the two contracts independently. They both delegate citation-key generation to the same `infrastructure.reference.citation.paper_to_bibentry` utility, and `_disambiguate_citation_key` (in `src/pipeline/pipeline.py`) is reused.
 
-### Why does `src/synthesis.py` take a callable instead of an `LLMClient`?
+### Why does `src/pipeline/synthesis.py` take a callable instead of an `LLMClient`?
 
 The duck-typed `llm: Callable[[str], str]` parameter is what makes the LLM testable without Ollama. Tests pass a deterministic local function:
 
@@ -31,7 +31,7 @@ def deterministic_llm(prompt: str) -> str:
 result = synthesise_per_paper(paper, "key2024", llm=deterministic_llm)
 ```
 
-Runtime callers pass the adapter built by `src/llm_runtime.py::build_llm_callable`, which wraps `infrastructure.llm.LLMClient`. The same function shape works in both worlds — there is no test-only branch in `src/synthesis.py`.
+Runtime callers pass the adapter built by `src/pipeline/llm_runtime.py::build_llm_callable`, which wraps `infrastructure.llm.LLMClient`. The same function shape works in both worlds — there is no test-only branch in `src/pipeline/synthesis.py`.
 
 ## Testing
 
@@ -41,7 +41,7 @@ Live counts are tracked in [`docs/_generated/COUNTS.md`](../../../../docs/_gener
 
 ### How is the LLM tested without Ollama?
 
-`src/synthesis.py` accepts a callable, so `tests/test_synthesis.py` passes a Python function as the `llm=` kwarg. `tests/test_llm_runtime.py` exercises the adapter shape and asserts that `build_llm_callable` returns a deterministic stub when `infrastructure.llm` is unimportable. No Ollama dependency at any point.
+`src/pipeline/synthesis.py` accepts a callable, so `tests/pipeline/test_synthesis.py` passes a Python function as the `llm=` kwarg. `tests/pipeline/test_llm_runtime.py` exercises the adapter shape and asserts that `build_llm_callable` returns a deterministic stub when `infrastructure.llm` is unimportable. No Ollama dependency at any point.
 
 ### Why 90% coverage? Can I lower it?
 
@@ -49,7 +49,7 @@ The gate ensures `src/` orchestration is exercised. Lowering it weakens the exem
 
 ### Do I need to test `scripts/`?
 
-`scripts/` is exercised by integration tests (`tests/test_scripts.py`, `tests/test_pipeline_integration.py`, `tests/test_composition_script.py`) that invoke the real CLI surface via `subprocess.run` with `--project-root` pointing at temp directories. The scripts themselves are intentionally thin so the integration coverage is sufficient.
+`scripts/` is exercised by integration tests (`tests/pipeline/test_scripts.py`, `tests/pipeline/test_pipeline_integration.py`, `tests/pipeline/test_composition_script.py`) that invoke the real CLI surface via `subprocess.run` with `--project-root` pointing at temp directories. The scripts themselves are intentionally thin so the integration coverage is sufficient.
 
 ## Search
 
@@ -98,7 +98,7 @@ Ollama threads the seed through the sampler, so a pinned model + seed + zero-tem
 2. Re-run `scripts/run_deep_search.py`.
 3. The composer (`scripts/s_compose_literature_review.py`) will pick up the new keyword's `output/deep_search/<keyword_slug>/` tree and include it in `manuscript/S01_literature_review.md` on the next pipeline run.
 
-No code changes required. `tests/test_readme_config_consistency.py` ensures the README's documented keyword list stays aligned with `config.yaml`.
+No code changes required. `tests/publish/test_readme_config_consistency.py` ensures the README's documented keyword list stays aligned with `config.yaml`.
 
 ### What is the alphabetical script-order convention?
 

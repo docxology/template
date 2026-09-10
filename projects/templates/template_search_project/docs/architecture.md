@@ -13,14 +13,14 @@ flowchart TB
 
     subgraph L2 [Layer 2 - Project-specific orchestration]
         direction LR
-        CFG[src/config.py<br/>typed YAML loader]
-        PIPE[src/pipeline.py<br/>search → enrich → BibTeX]
-        DEEP[src/deep_search.py<br/>multi-keyword fan-out]
-        SYN[src/synthesis.py<br/>prompts · LLM callable]
-        FIG[src/figures.py<br/>matplotlib]
-        MV[src/manuscript_variables.py<br/>substitution]
-        REP[src/report.py<br/>markdown assembly]
-        AN[src/analysis.py<br/>review-stage helpers]
+        CFG[src/publish/config.py<br/>typed YAML loader]
+        PIPE[src/pipeline/pipeline.py<br/>search → enrich → BibTeX]
+        DEEP[src/search/deep_search.py<br/>multi-keyword fan-out]
+        SYN[src/pipeline/synthesis.py<br/>prompts · LLM callable]
+        FIG[src/publish/figures.py<br/>matplotlib]
+        MV[src/publish/manuscript_variables.py<br/>substitution]
+        REP[src/analysis/report.py<br/>markdown assembly]
+        AN[src/analysis/analysis.py<br/>review-stage helpers]
     end
 
     subgraph SCR [Thin orchestrators - no logic]

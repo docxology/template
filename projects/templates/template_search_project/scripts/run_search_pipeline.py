@@ -2,8 +2,8 @@
 """Thin orchestrator: search → enrich → BibTeX → LLM → reading report.
 
 All logic lives in :mod:`template_search_project.pipeline`,
-:mod:`template_search_project.synthesis`, :mod:`template_search_project.report`,
-and :mod:`template_search_project.search_pipeline_cli` (under ``src/``). This
+:mod:`template_search_project.pipeline.synthesis`, :mod:`template_search_project.analysis.report`,
+and :mod:`template_search_project.search.search_pipeline_cli` (under ``src/``). This
 script's job is purely to wire those functions to the filesystem, the optional
 local Ollama server, and the command-line argument set.
 
@@ -33,9 +33,9 @@ sys.path.insert(0, str(_project_root / "src"))
 sys.path.insert(0, str(_project_root / "src" / "template_search_project"))
 sys.path.insert(0, str(_repo_root))
 
-from template_search_project.config import load_project_config
-from template_search_project.dotenv import load_dotenv
-from template_search_project.search_pipeline_cli import run_search_pipeline_cli
+from template_search_project.publish.config import load_project_config
+from template_search_project.pipeline.dotenv import load_dotenv
+from template_search_project.search.search_pipeline_cli import run_search_pipeline_cli
 
 # Load project-local .env early so PAPERCLIP_API_KEY (and any other
 # secrets) are available before the pipeline module builds backends.

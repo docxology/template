@@ -24,26 +24,26 @@ uv run python projects/templates/template_search_project/scripts/run_search_pipe
 
 | File | Location | Producer |
 |---|---|---|
-| `aggregate.json` | `output/deep_search/` | `src/deep_search.py::run_deep_search` |
+| `aggregate.json` | `output/deep_search/` | `src/search/deep_search.py::run_deep_search` |
 | `aggregate_report.md` | `output/deep_search/` | same |
 | `run_summary.json` | `output/deep_search/` | same |
 | `<keyword_slug>/papers.json` | `output/deep_search/` | same |
 | `<keyword_slug>/reading_report.md` | `output/deep_search/` | same |
 | `<keyword_slug>/per_paper/<safe_id>.md` | `output/deep_search/` | LLM stage when enabled |
-| `references_deep.bib` | `manuscript/` | `src/deep_search.py` |
+| `references_deep.bib` | `manuscript/` | `src/search/deep_search.py` |
 
 **`run_search_pipeline.py` outputs**:
 
 | File | Location | Producer |
 |---|---|---|
-| `results.json` | `output/search/` | `src/pipeline.py::run_literature_pipeline` |
+| `results.json` | `output/search/` | `src/pipeline/pipeline.py::run_literature_pipeline` |
 | `cache/search_<hash>.json` | `output/search/` | `infrastructure.search.literature.SearchCache` |
 | `corpus.json` | `output/` | `infrastructure.search.literature.write_corpus` |
-| `enrichment_log.json` | `output/` | `src/pipeline.py` |
-| `reading_report.md` | `output/` | `src/report.py::write_reading_report` |
-| `run_summary.json` | `output/` | `src/pipeline.py` |
-| `references.bib` | `manuscript/` | `src/pipeline.py` (via `infrastructure.reference.citation.paper_to_bibentry`) |
-| `llm/synthesis.md`, `llm/per_paper/<safe_id>.md` | `output/` | `src/synthesis.py` (when `config.llm.enabled`) |
+| `enrichment_log.json` | `output/` | `src/pipeline/pipeline.py` |
+| `reading_report.md` | `output/` | `src/analysis/report.py::write_reading_report` |
+| `run_summary.json` | `output/` | `src/pipeline/pipeline.py` |
+| `references.bib` | `manuscript/` | `src/pipeline/pipeline.py` (via `infrastructure.reference.citation.paper_to_bibentry`) |
+| `llm/synthesis.md`, `llm/per_paper/<safe_id>.md` | `output/` | `src/pipeline/synthesis.py` (when `config.llm.enabled`) |
 
 ### Phase 2 — Compose the Literature Review
 
@@ -58,7 +58,7 @@ uv run python projects/templates/template_search_project/scripts/s_compose_liter
 
 **Output**: `manuscript/S01_literature_review.md` — a multi-section narrative grouped by deep-search keyword, with citations into `references_deep.bib`. The composer also writes `output/deep_search/composition_summary.json` for downstream tooling.
 
-The composer runs **between** the search runners (`run_*`) and the variable resolver (`z_*`) so the freshly composed S01 reaches the manuscript-mirroring stage. This ordering is enforced by `tests/test_script_order.py`.
+The composer runs **between** the search runners (`run_*`) and the variable resolver (`z_*`) so the freshly composed S01 reaches the manuscript-mirroring stage. This ordering is enforced by `tests/pipeline/test_script_order.py`.
 
 ### Phase 3 — Figures and Manuscript Variables
 
@@ -76,7 +76,7 @@ uv run python projects/templates/template_search_project/scripts/z_generate_manu
 
 **`y_generate_search_figures.py` outputs**:
 
-| File | Generator (in `src/figures.py`) |
+| File | Generator (in `src/publish/figures.py`) |
 |---|---|
 | `output/figures/papers_per_source.png` | `plot_papers_per_source` |
 | `output/figures/year_histogram.png` | `plot_year_histogram` |
@@ -91,7 +91,7 @@ uv run python projects/templates/template_search_project/scripts/z_generate_manu
 | `output/manuscript/config.yaml` | Copy of `manuscript/config.yaml` |
 | `output/manuscript/*.bib` | Copies of every `manuscript/*.bib` (sorted) |
 
-**Critical**: every `{{TOKEN}}` defined in the field set of `src/manuscript_variables.py::ManuscriptVariables` must resolve before Phase 4. If a token is unresolved, the literal `{{TOKEN_NAME}}` will appear in the rendered PDF. The `variables_resolved` review stage detects this; the `<deep-search not run>` sentinel is the exception (it is intentionally written when no aggregate exists).
+**Critical**: every `{{TOKEN}}` defined in the field set of `src/publish/manuscript_variables.py::ManuscriptVariables` must resolve before Phase 4. If a token is unresolved, the literal `{{TOKEN_NAME}}` will appear in the rendered PDF. The `variables_resolved` review stage detects this; the `<deep-search not run>` sentinel is the exception (it is intentionally written when no aggregate exists).
 
 ### Phase 4 — Render the Combined PDF
 
@@ -145,12 +145,12 @@ The review CLI (`scripts/review`) reads `review_config.yaml` to enable / disable
 | `prerender_validation` | `infrastructure.validation.cli prerender` |
 | `markdown_links` | `infrastructure.validation.cli links` |
 | `bibtex_validation` | `infrastructure.reference.citation.cli validate` |
-| `bibliography_completeness` | `src/analysis.py::validate_bibliography_completeness` |
-| `variables_resolved` | `src/analysis.py::validate_variables_resolved` |
+| `bibliography_completeness` | `src/analysis/analysis.py::validate_bibliography_completeness` |
+| `variables_resolved` | `src/analysis/analysis.py::validate_variables_resolved` |
 | `output_integrity` | `infrastructure.validation.cli integrity` |
 | `test_suite_health` | pytest + coverage subprocess |
-| `infrastructure_usage` | `src/analysis.py::audit_infrastructure_imports` (subprocess) |
-| `determinism_check` | `src/analysis.py::check_determinism_artifacts` — inspects cache/run_summary/seed/temperature (no re-run) |
+| `infrastructure_usage` | `src/analysis/analysis.py::audit_infrastructure_imports` (subprocess) |
+| `determinism_check` | `src/analysis/analysis.py::check_determinism_artifacts` — inspects cache/run_summary/seed/temperature (no re-run) |
 
 ## `config.yaml` Controls
 
@@ -159,22 +159,22 @@ The review CLI (`scripts/review`) reads `review_config.yaml` to enable / disable
 | `paper.title` | PDF title page and headers | `infrastructure/core/config/loader.py` → `pdf_renderer.py` |
 | `paper.version` | Title page metadata | same |
 | `authors[*]` | Author list | same |
-| `project_config.search.query` | Single-query search string; bound to `{{CONFIG_QUERY}}` | `src/pipeline.py`, `src/manuscript_variables.py` |
+| `project_config.search.query` | Single-query search string; bound to `{{CONFIG_QUERY}}` | `src/pipeline/pipeline.py`, `src/publish/manuscript_variables.py` |
 | `project_config.search.sources` | Backends invoked (`arxiv`, `crossref`, `paperclip`, `local`); bound to `{{CONFIG_SOURCES}}` | same |
-| `project_config.search.year_min` / `year_max` | Defensive year filtering at search and aggregation | `src/pipeline.py` |
-| `project_config.search.max_results` | Cap on returned papers | `src/pipeline.py` |
-| `project_config.search.local_corpus` | Path to JSON corpus when `sources` includes `local` | `src/pipeline.py` |
+| `project_config.search.year_min` / `year_max` | Defensive year filtering at search and aggregation | `src/pipeline/pipeline.py` |
+| `project_config.search.max_results` | Cap on returned papers | `src/pipeline/pipeline.py` |
+| `project_config.search.local_corpus` | Path to JSON corpus when `sources` includes `local` | `src/pipeline/pipeline.py` |
 | `project_config.search.cache_dir`, `cache_ttl_seconds` | `SearchCache` location and TTL | `infrastructure.search.literature.SearchCache` |
-| `project_config.enrichment.fetch_abstracts`, `fetch_fulltext` | Per-paper enrichment toggles | `src/pipeline.py` |
+| `project_config.enrichment.fetch_abstracts`, `fetch_fulltext` | Per-paper enrichment toggles | `src/pipeline/pipeline.py` |
 | `project_config.enrichment.abstract_cache_dir`, `fulltext_cache_dir`, `max_fulltext_chars` | Cache locations and truncation | `AbstractFetcher`, `FulltextFetcher` |
 | `llm.enabled` | Whether `synthesise_per_paper` and `synthesise_corpus` run | `scripts/run_search_pipeline.py` |
-| `llm.model`, `seed`, `temperature` | LLM determinism knobs | `src/llm_runtime.py::build_llm_callable` |
+| `llm.model`, `seed`, `temperature` | LLM determinism knobs | `src/pipeline/llm_runtime.py::build_llm_callable` |
 | `llm.context_window`, `long_max_tokens`, `max_input_length`, `review_timeout` | Ollama runtime budgets | same |
-| `report.output_path`, `include_per_paper`, `include_corpus_synthesis` | Reading-report assembly | `src/report.py::write_reading_report` |
+| `report.output_path`, `include_per_paper`, `include_corpus_synthesis` | Reading-report assembly | `src/analysis/report.py::write_reading_report` |
 | `project_config.deep_search.enabled` | Whether `run_deep_search.py` performs work (exits 2 when disabled) | `scripts/run_deep_search.py` |
-| `project_config.deep_search.keywords`, `max_results_per_keyword`, `sources` | Fan-out parameters | `src/deep_search.py` |
+| `project_config.deep_search.keywords`, `max_results_per_keyword`, `sources` | Fan-out parameters | `src/search/deep_search.py` |
 | `project_config.deep_search.write_unified_bibtex`, `unified_bibtex_path` | `references_deep.bib` controls | same |
-| `project_config.references_path` | Override the standard BibTeX output path | `src/pipeline.py` |
+| `project_config.references_path` | Override the standard BibTeX output path | `src/pipeline/pipeline.py` |
 
 ## Troubleshooting
 
@@ -182,7 +182,7 @@ The review CLI (`scripts/review`) reads `review_config.yaml` to enable / disable
 
 **Symptom**: literal `{{TOKEN_NAME}}` in the PDF.
 
-**Cause**: Phase 3 did not run, the token is not declared in `src/manuscript_variables.py::ManuscriptVariables`, or `output/manuscript/` is stale.
+**Cause**: Phase 3 did not run, the token is not declared in `src/publish/manuscript_variables.py::ManuscriptVariables`, or `output/manuscript/` is stale.
 
 **Fix**:
 ```bash

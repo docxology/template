@@ -18,7 +18,7 @@ _repo_root = _project_root.parents[2]
 sys.path.insert(0, str(_project_root / "src"))
 sys.path.insert(0, str(_repo_root))
 
-from template_search_project.review_report import generate_review_report, project_paths  # noqa: E402
+from template_search_project.analysis.review_report import generate_review_report, project_paths  # noqa: E402
 
 
 def main() -> int:

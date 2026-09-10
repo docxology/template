@@ -246,10 +246,10 @@ live provider source and retain its provenance before making substantive claims.
 
 ## Architecture
 
-* `src/config.py` — typed YAML loader.
-* `src/pipeline.py` — search → enrich → corpus → BibTeX. Pure orchestration over `infrastructure/`.
-* `src/synthesis.py` — prompt construction + LLM-callable invocation.
-* `src/report.py` — final markdown assembly.
+* `src/publish/config.py` — typed YAML loader.
+* `src/pipeline/pipeline.py` — search → enrich → corpus → BibTeX. Pure orchestration over `infrastructure/`.
+* `src/pipeline/synthesis.py` — prompt construction + LLM-callable invocation.
+* `src/analysis/report.py` — final markdown assembly.
 * `scripts/run_deep_search.py`, `scripts/run_search_pipeline.py` — thin orchestrators. **No business logic.**
 * `scripts/s_compose_literature_review.py` — composes `S01_literature_review.md` from the deep-search outputs (runs after `run_*` and before `y_*`/`z_*`).
 * `scripts/y_generate_search_figures.py`, `scripts/z_generate_manuscript_variables.py`, `scripts/zz_generate_review_report.py`, `scripts/zzz_build_dashboard.py` — project-analysis stage chain (lexicographic order); the dashboard stage runs last and writes `output/web/dashboard.html`, `output/data/dashboard_payload.json`, and `output/reports/dashboard_*.txt`.
