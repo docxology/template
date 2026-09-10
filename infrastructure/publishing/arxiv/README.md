@@ -48,7 +48,7 @@ uv run python - <<'PY'
 from pathlib import Path
 
 from infrastructure.publishing import prepare_arxiv_submission
-from infrastructure.publishing.metadata_from_config import publication_metadata_from_config
+from infrastructure.publishing.metadata.metadata_from_config import publication_metadata_from_config
 
 project = Path("projects/templates/template_active_inference")
 metadata = publication_metadata_from_config(project / "manuscript/config.yaml")

@@ -338,6 +338,19 @@ Prefer `infrastructure.publishing.zenodo` (and sibling subpackages) for new code
 
 Archival Zenodo deposits use empty deposition metadata (bundle mirror). Rich metadata paths: `publish_to_zenodo` and `cli.publish_zenodo_command`.
 
+## Deprecation and shim policy (DEPRECATION-SHIM-POLICY-1)
+
+**Retire-when-zero-consumers.** A back-compat re-export surface is retained in
+this package only while at least one live importer still resolves through it:
+
+- `platforms.py` — retained re-export surface (arxiv/github/zenodo/pypi/static_site/huggingface/osf adapters). New code imports the platform subpackages directly.
+- `api.py` — retained re-export surface for Zenodo API types. New code imports `infrastructure.publishing.zenodo`.
+- `pypi_release.py` — the implementation home for TestPyPI helpers (`run_test_pypi_release`, `_display_command`, `_twine_token_env`), not a shim; import it directly.
+
+When `grep -rn "from infrastructure.publishing.platforms import\|from infrastructure.publishing.api import" ` across `infrastructure/ tests/ scripts/` returns zero hits, delete the surface in the same change that proves the zero (no deprecation stubs, no re-exports kept "just in case").
+
+**Flat shims are gone.** The 16 flat `infrastructure/publishing/*.py` back-compat shims (11 metadata/release + 5 transmission) were deleted; every historical import path now fails fast with `ModuleNotFoundError` instead of silently resolving. Import the real homes (`infrastructure.publishing.metadata.*`, `infrastructure.publishing.release.*`, `infrastructure.transmission.*`) directly. A `Backwards-compat shim` docstring in this package is a gate failure (`grep -rn "Backwards-compat shim" infrastructure/publishing/ --include='*.py'` must stay at 0).
+
 ## Future (deferred)
 
 - Metadata subpackage consolidation
