@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from src.config import EnrichmentConfig, LLMConfig, ProjectConfig, ReportConfig, SearchConfig
-from src.search_pipeline_cli import run_search_pipeline_cli
+from template_search_project.config import EnrichmentConfig, LLMConfig, ProjectConfig, ReportConfig, SearchConfig
+from template_search_project.search_pipeline_cli import run_search_pipeline_cli
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 BUNDLED_CORPUS = PROJECT_ROOT / "data" / "corpus.json"

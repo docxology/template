@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from src.methods_dsl.compiler import (
+from template_methods_paper.methods_dsl.compiler import (
     CycleError,
     MethodValidationError,
     compile_method,

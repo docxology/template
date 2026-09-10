@@ -70,14 +70,16 @@ def test_claim_values_bind_to_live_code():
     claims = {c["claim_id"]: c for c in _load_claims()}
 
     dpi = claims["figure-export-dpi"]
-    figures_src = (REPO_ROOT / "projects/templates/template_prose_project/src/figures.py").read_text(encoding="utf-8")
+    figures_src = (
+        REPO_ROOT / "projects/templates/template_prose_project/src/template_prose_project/figures.py"
+    ).read_text(encoding="utf-8")
     assert dpi["value"] == 300
     assert "dpi=300" in figures_src, "figure-export-dpi claim no longer matches src/figures.py"
 
     denominator = claims["citation-density-denominator"]
-    checks_src = (REPO_ROOT / "projects/templates/template_prose_project/src/pipeline/checks.py").read_text(
-        encoding="utf-8"
-    )
+    checks_src = (
+        REPO_ROOT / "projects/templates/template_prose_project/src/template_prose_project/pipeline/checks.py"
+    ).read_text(encoding="utf-8")
     assert denominator["value"] == 1000
     assert "1000.0" in checks_src, "citation-density-denominator claim no longer matches the check"
 

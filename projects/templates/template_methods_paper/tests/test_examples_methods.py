@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from src.methods_dsl.compiler import compile_method
-from src.methods_dsl.examples_methods import (
+from template_methods_paper.methods_dsl.compiler import compile_method
+from template_methods_paper.methods_dsl.examples_methods import (
     all_example_methods,
     pbs_preparation_method,
     sensor_calibration_method,
 )
-from src.methods_dsl.validation import run_all_gates
-from src.methods_dsl.vocabulary import Target
+from template_methods_paper.methods_dsl.validation import run_all_gates
+from template_methods_paper.methods_dsl.vocabulary import Target
 
 
 def test_pbs_preparation_method_is_valid_and_human_target():

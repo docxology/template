@@ -15,8 +15,8 @@ import pytest
 from infrastructure.reference.citation import parse_bibfile
 from infrastructure.search.literature import Paper, SearchBackend, SearchQuery
 
-from src.config import DeepSearchConfig
-from src.deep_search import (
+from template_search_project.config import DeepSearchConfig
+from template_search_project.deep_search import (
     DEEP_PROMPT,
     DeepSearchArtifacts,
     KeywordResult,
@@ -262,7 +262,7 @@ class TestRunDeepSearch:
     def test_paperclip_requires_env(self, tmp_path: Path, monkeypatch):
         """Same contract as the standard pipeline: missing
         ``PAPERCLIP_API_KEY`` is a fail-fast environmental error."""
-        from src.deep_search import _build_backends
+        from template_search_project.deep_search import _build_backends
 
         monkeypatch.delenv("PAPERCLIP_API_KEY", raising=False)
         config = _config(tmp_path, sources=["paperclip"])
@@ -274,14 +274,14 @@ class TestRunDeepSearch:
         the deep-search ``_build_backends`` returns the expected names
         in source-list order. (We do not actually call ``.search()`` so
         no network round-trip happens here.)"""
-        from src.deep_search import _build_backends
+        from template_search_project.deep_search import _build_backends
 
         config = _config(tmp_path, sources=["arxiv", "crossref"])
         backends = _build_backends(config)
         assert [b.name for b in backends] == ["arxiv", "crossref"]
 
     def test_paperclip_backend_constructed_when_env_set(self, tmp_path: Path, monkeypatch):
-        from src.deep_search import _build_backends
+        from template_search_project.deep_search import _build_backends
 
         monkeypatch.setenv("PAPERCLIP_API_KEY", "gxl_test_dummy")
         config = _config(tmp_path, sources=["paperclip"])
@@ -478,7 +478,7 @@ class TestPromptTemplate:
 class TestWritePerPaperNote:
     def test_url_only_paper_with_fulltext(self, tmp_path: Path):
         """Cover the URL-only locator and the fulltext-excerpt branches."""
-        from src.deep_search import write_per_paper_note
+        from template_search_project.deep_search import write_per_paper_note
 
         paper = Paper(
             id="x:1",
@@ -494,7 +494,7 @@ class TestWritePerPaperNote:
         assert "..." in text  # truncation marker
 
     def test_with_summary_writes_summary_block(self, tmp_path: Path):
-        from src.deep_search import write_per_paper_note
+        from template_search_project.deep_search import write_per_paper_note
 
         paper = Paper(id="x:1", title="A Paper", abstract="Some abstract.")
         path = write_per_paper_note(tmp_path, paper, "x", summary="MY SUMMARY TEXT", keyword="kw")
@@ -509,7 +509,7 @@ class TestWriteKeywordReport:
         """When SearchResult.errors is non-empty, the report includes a callout."""
         from infrastructure.search.literature import SearchResult, SearchQuery
 
-        from src.deep_search import KeywordResult, write_keyword_report
+        from template_search_project.deep_search import KeywordResult, write_keyword_report
 
         result = SearchResult(
             query=SearchQuery(text="kw", max_results=5),
@@ -642,7 +642,7 @@ class TestStandardDeepParity:
         """26+ collisions force the alphabetic→double-letter cascade.
         The deep-search aggregator must produce the same keys the
         standard pipeline would for the same author/year/title-word."""
-        from src.pipeline import _disambiguate_citation_key
+        from template_search_project.pipeline import _disambiguate_citation_key
 
         # 30 papers all collide on the same proto-key, forcing the
         # disambiguator past the single-letter alphabet.

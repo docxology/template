@@ -2,31 +2,31 @@ claims:
   - claim_id: validation-gate-count
     kind: number
     value: 4
-    source: projects/templates/template_methods_paper/src/methods_dsl/validation.py run_all_gates fixed-order gate sequence
+    source: projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/validation.py run_all_gates fixed-order gate sequence
     source_tier: project_source
     freshness: active
-    artifact_path: src/methods_dsl/validation.py
+    artifact_path: src/template_methods_paper/methods_dsl/validation.py
   - claim_id: plan-hash-truncation-length
     kind: number
     value: 12
-    source: projects/templates/template_methods_paper/src/manuscript_variables.py plan_hash display truncation
+    source: projects/templates/template_methods_paper/src/template_methods_paper/manuscript_variables.py plan_hash display truncation
     source_tier: project_source
     freshness: active
     artifact_path: output/data/compiled_plans.json
   - claim_id: genesis-hash-length
     kind: number
     value: 64
-    source: projects/templates/template_methods_paper/src/methods_dsl/trust.py _GENESIS_HASH ("0" * 64)
+    source: projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/trust.py _GENESIS_HASH ("0" * 64)
     source_tier: project_source
     freshness: active
-    artifact_path: src/methods_dsl/trust.py
+    artifact_path: src/template_methods_paper/methods_dsl/trust.py
   - claim_id: automated-only-step-kind-count
     kind: number
     value: 1
-    source: projects/templates/template_methods_paper/src/methods_dsl/vocabulary.py _AUTOMATED_ONLY frozenset
+    source: projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/vocabulary.py _AUTOMATED_ONLY frozenset
     source_tier: project_source
     freshness: active
-    artifact_path: src/methods_dsl/vocabulary.py
+    artifact_path: src/template_methods_paper/methods_dsl/vocabulary.py
   - claim_id: demo-trust-chain-length
     kind: number
     value: 3
@@ -37,14 +37,14 @@ claims:
   - claim_id: controlled-dimension-count
     kind: number
     value: 8
-    source: projects/templates/template_methods_paper/src/methods_dsl/units.py Dimension members
+    source: projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/units.py Dimension members
     source_tier: project_source
     freshness: active
-    artifact_path: src/methods_dsl/units.py
+    artifact_path: src/template_methods_paper/methods_dsl/units.py
   - claim_id: config-hash-prefix-length
     kind: number
     value: 16
-    source: projects/templates/template_methods_paper/src/manuscript_variables.py CONFIG_HASH_LENGTH
+    source: projects/templates/template_methods_paper/src/template_methods_paper/manuscript_variables.py CONFIG_HASH_LENGTH
     source_tier: project_source
     freshness: active
-    artifact_path: src/manuscript_variables.py
+    artifact_path: src/template_methods_paper/manuscript_variables.py

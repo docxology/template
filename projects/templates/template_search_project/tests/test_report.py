@@ -6,9 +6,9 @@ from pathlib import Path
 
 from infrastructure.search.literature import Paper, SearchQuery, SearchResult
 
-from src.report import write_reading_report
-from src.report import validate_fixture_claim_boundary
-from src.synthesis import SynthesisResult
+from template_search_project.report import write_reading_report
+from template_search_project.report import validate_fixture_claim_boundary
+from template_search_project.synthesis import SynthesisResult
 
 
 def _result_with_papers() -> SearchResult:

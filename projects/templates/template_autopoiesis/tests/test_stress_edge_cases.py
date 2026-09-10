@@ -6,14 +6,14 @@ import sys
 
 import pytest
 
-from src.grammar import (
+from template_autopoiesis.grammar import (
     KNOWN_DOMAINS,
     GrammarSlot,
     parse_grammar,
     GrammarError,
 )
-from src.expand import expand, derive_seed, sample
-from src.integrity import sha256_text, merkle_root
+from template_autopoiesis.expand import expand, derive_seed, sample
+from template_autopoiesis.integrity import sha256_text, merkle_root
 
 
 # ---------------------------------------------------------------------------
@@ -51,7 +51,7 @@ def test_zero_slots_raises():
 
 
 def test_all_reserved_slots_effective_product_one():
-    from src.grammar import RESERVED_SLOTS
+    from template_autopoiesis.grammar import RESERVED_SLOTS
 
     block = {
         "seed": 1,

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pandas as pd
 import pytest
-from src.eda.cleaning import clean_dataset
-from src.eda.dataset import load_dataset
-from src.eda.figures import (
+from template_eda_notebook.eda.cleaning import clean_dataset
+from template_eda_notebook.eda.dataset import load_dataset
+from template_eda_notebook.eda.figures import (
     CORRELATION_COLOR_LIMITS,
     CorrelationFigureData,
     GroupCountFigureData,

@@ -10,18 +10,18 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 
 | Module | Responsibility |
 | --- | --- |
-| [`state.py`](src/state.py) | `Proposal`, `ExperimentOutcome`, `Champion`, and the mutable `SharedState` (append-only log + champion promotion). The deterministic data core; no agent logic. |
-| [`objective.py`](src/objective.py) | `SyntheticObjective` — a multi-axis landscape with a single global optimum, deceptive cosine ripples, and seeded evaluation noise. `clean(params)` is the noise-free ground truth; `evaluate(params, seed)` adds reproducible `(params, seed)`-hashed noise. |
-| [`confirmation.py`](src/confirmation.py) | `confirm_improvement` — accepts a candidate only when its multi-seed mean beats the incumbent by more than the noise band (σ × standard error). Synchronized standalone copy of `infrastructure/scientific/confirmation.py`. |
-| [`dead_ends.py`](src/dead_ends.py) | `DeadEndRegistry` — retires an `(axis, direction)` after `threshold` consecutive non-improving experiments. `retired_keys()` exposes the set agents consult to steer away. |
-| [`ranking.py`](src/ranking.py) | `axis_effect_sizes` / `rank_axes` — deterministic axis ordering (untried-first, then descending effect). |
-| [`stagnation.py`](src/stagnation.py) | `StagnationDetector` + `reorganize_axes` — fires when the champion stalls for a window and re-deals live axes across teams. |
-| [`agents.py`](src/agents.py) | `Proposer` protocol and `DeterministicProposer` (rule-based, registry-consulting). By design, the live implementation — `HermesProposer` (Ollama, `# pragma: no cover`) — lives in [`scripts/hermes_proposer.py`](scripts/hermes_proposer.py) instead, so `src/` stays infrastructure-free. |
-| [`search.py`](src/search.py) | `SearchConfig` (toggles + budgets), `SearchResult`, and the `_Runner` propose→filter→evaluate→confirm→promote→reorganize loop. `run_search(objective, proposer, config)` is the entry point. |
-| [`ablation.py`](src/ablation.py) | Canonical single-mechanism ablation matrix, measured rows, and derived noise-inflation ratio used by output generation and tests. |
-| [`comparison.py`](src/comparison.py) | Canonical matched-budget coordinated/baseline experiment and honest result summaries. |
-| [`figures.py`](src/figures.py) | Figure-generation helpers (build/write pairs for the comparison, ablation, and efficiency charts) plus `FIGURE_SPECS`/`write_figure_registry`, so `scripts/` stay thin. |
-| [`transcript.py`](src/transcript.py) | Offline transcript envelope validation (`validate_transcript`, `replay_transcript`) and digesting (`transcript_digest`) — the stale-replay/no-network contract for the opt-in live-agent path. |
+| [`state.py`](src/template_autoscientists/state.py) | `Proposal`, `ExperimentOutcome`, `Champion`, and the mutable `SharedState` (append-only log + champion promotion). The deterministic data core; no agent logic. |
+| [`objective.py`](src/template_autoscientists/objective.py) | `SyntheticObjective` — a multi-axis landscape with a single global optimum, deceptive cosine ripples, and seeded evaluation noise. `clean(params)` is the noise-free ground truth; `evaluate(params, seed)` adds reproducible `(params, seed)`-hashed noise. |
+| [`confirmation.py`](src/template_autoscientists/confirmation.py) | `confirm_improvement` — accepts a candidate only when its multi-seed mean beats the incumbent by more than the noise band (σ × standard error). Synchronized standalone copy of `infrastructure/scientific/confirmation.py`. |
+| [`dead_ends.py`](src/template_autoscientists/dead_ends.py) | `DeadEndRegistry` — retires an `(axis, direction)` after `threshold` consecutive non-improving experiments. `retired_keys()` exposes the set agents consult to steer away. |
+| [`ranking.py`](src/template_autoscientists/ranking.py) | `axis_effect_sizes` / `rank_axes` — deterministic axis ordering (untried-first, then descending effect). |
+| [`stagnation.py`](src/template_autoscientists/stagnation.py) | `StagnationDetector` + `reorganize_axes` — fires when the champion stalls for a window and re-deals live axes across teams. |
+| [`agents.py`](src/template_autoscientists/agents.py) | `Proposer` protocol and `DeterministicProposer` (rule-based, registry-consulting). By design, the live implementation — `HermesProposer` (Ollama, `# pragma: no cover`) — lives in [`scripts/hermes_proposer.py`](scripts/hermes_proposer.py) instead, so `src/` stays infrastructure-free. |
+| [`search.py`](src/template_autoscientists/search.py) | `SearchConfig` (toggles + budgets), `SearchResult`, and the `_Runner` propose→filter→evaluate→confirm→promote→reorganize loop. `run_search(objective, proposer, config)` is the entry point. |
+| [`ablation.py`](src/template_autoscientists/ablation.py) | Canonical single-mechanism ablation matrix, measured rows, and derived noise-inflation ratio used by output generation and tests. |
+| [`comparison.py`](src/template_autoscientists/comparison.py) | Canonical matched-budget coordinated/baseline experiment and honest result summaries. |
+| [`figures.py`](src/template_autoscientists/figures.py) | Figure-generation helpers (build/write pairs for the comparison, ablation, and efficiency charts) plus `FIGURE_SPECS`/`write_figure_registry`, so `scripts/` stay thin. |
+| [`transcript.py`](src/template_autoscientists/transcript.py) | Offline transcript envelope validation (`validate_transcript`, `replay_transcript`) and digesting (`transcript_digest`) — the stale-replay/no-network contract for the opt-in live-agent path. |
 
 ## The coordination loop
 

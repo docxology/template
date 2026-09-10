@@ -320,7 +320,11 @@ def check_all_export_drift(project_root: Path, report: Report, project: str) -> 
     `CheckResult` and `write_resolved_manuscript_tree` exported (false),
     missed `ManuscriptVariables`, `plot_*`, `substitute_in_text` (true).
     """
-    init_py = project_root / "src" / "__init__.py"
+    # TEST-ISOLATION-SYSPATH-1: prefer the nested package init (the real
+    # __all__ surface post-migration); fall back to the flat shim.
+    exemplar = project_root.name
+    nested_init = project_root / "src" / exemplar / "__init__.py"
+    init_py = nested_init if nested_init.is_file() else project_root / "src" / "__init__.py"
     if not init_py.is_file():
         return
     actual = _parse_all_block(_read(init_py))
@@ -374,9 +378,11 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
         "pyproject.toml",
         ".gitignore",
         "scripts",
+        # TEST-ISOLATION-SYSPATH-1: tests/ is a rootdir directory (no
+        # tests/__init__.py — its presence collided exemplar conftests under
+        # one pytest run); src/__init__.py stays as the namespace shim.
         "src/__init__.py",
         "tests",
-        "tests/__init__.py",
         "manuscript/config.yaml",
         "manuscript/config.yaml.example",
         "manuscript/references.bib",

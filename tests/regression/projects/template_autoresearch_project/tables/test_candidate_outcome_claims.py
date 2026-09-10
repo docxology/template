@@ -20,7 +20,6 @@ from __future__ import annotations
 
 import importlib
 from pathlib import Path
-import sys
 from typing import Any
 
 import pytest
@@ -31,32 +30,13 @@ PROJECT_ROOT = REPO_ROOT / "projects" / "templates" / "template_autoresearch_pro
 
 
 def _load_project_src() -> Any:
-    """Import the project's ``src`` package for a clean re-derivation.
+    """Import the project's nested package for a clean re-derivation.
 
-    Both this exemplar and ``template_code_project`` ship a top-level ``src``
-    package, so a bare ``sys.path.insert`` + ``import src`` would let whichever
-    regression module imports first win the cached ``src`` name in
-    ``sys.modules`` and break the other's collection. To keep every project's
-    re-derivation independent (and let the whole ``tests/regression/`` tier
-    collect together), we insert this project root, import ``src`` fresh, and
-    then invalidate the cache so the next project imports its own ``src``.
+    Post-nesting, every exemplar ships a project-unique package under
+    ``src/<exemplar>/``, so a plain import cannot collide in ``sys.modules``.
     """
-
-    inserted = str(PROJECT_ROOT) not in sys.path
-    if inserted:
-        sys.path.insert(0, str(PROJECT_ROOT))
-    for name in [key for key in sys.modules if key == "src" or key.startswith("src.")]:
-        del sys.modules[name]
-    try:
-        config = importlib.import_module("src.config")
-        task = importlib.import_module("src.ml.task")
-    finally:
-        # Drop this project's ``src`` from the module cache and the path so a
-        # sibling project regression module can import its own ``src`` cleanly.
-        for name in [key for key in sys.modules if key == "src" or key.startswith("src.")]:
-            del sys.modules[name]
-        if inserted and str(PROJECT_ROOT) in sys.path:
-            sys.path.remove(str(PROJECT_ROOT))
+    config = importlib.import_module("template_autoresearch_project.config")
+    task = importlib.import_module("template_autoresearch_project.ml.task")
     return config.load_loop_config, task.run_bounded_ml_task
 
 

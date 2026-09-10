@@ -6,8 +6,10 @@ invariant should have a negative control that proves it fails on bad input.
 Gate negative controls live under `tests/gates/` (`test_output_gates.py`,
 `test_manuscript_gates.py`, `test_claim_ledger.py`) plus `test_lean_gate.py`.
 Use `gate_support.temporary_json_mutation()` for generated-artifact negative
-controls so failures restore the mutated JSON byte-for-byte. Small support
-helpers remain in `test_support_modules.py`.
+controls so failures restore the mutated JSON byte-for-byte. Coverage-partition
+helpers live in `_coverage_partition_helpers.py`; the former monolith is split
+into `test_support_modules.py`, `test_full_verification_runs.py`, and
+`test_full_verification_coverage.py`.
 
 Sheaf tests are split by concern: `test_sheaf_manifest.py`, `test_sheaf_registry.py`,
 `test_sheaf_compose.py`, `test_sheaf_coverage.py`, `test_sheaf_cli.py`,
@@ -45,13 +47,13 @@ back with a `no-sysmon` warning). Do not trade `branch = true` away for speed.
 The fixed-point coverage singleton has a 2,400-second group ceiling aligned
 with its forced-settlement item. The twelve-group coverage plan gives canonical
 sheaf negative controls and consolidation surface checks separate 1,800-second
-groups, then divides the former 57-module remainder into explicit 29-module,
+groups, then divides the former 59-module remainder into explicit 29-module,
 seven-module manuscript/pipeline, seven-module rendering/semantic-validation,
 eight-node semantic certificate-integrity, and seven-node semantic
-dependency/evidence/manuscript cohorts plus a computed 13-module terminal
+dependency/evidence/manuscript cohorts plus a computed 15-module terminal
 cohort. The semantic cohorts are explicit pytest node IDs whose union and order
 must equal the AST-derived set of supported top-level nonparametrized tests;
-unsupported dynamic or class-based collection fails closed. Only the 13-module
+unsupported dynamic or class-based collection fails closed. Only the 15-module
 terminal cohort reports and enforces the aggregate coverage floor. Every group
 other than fixed-point remains at 1,800 seconds, and the fixed-point exception
 must not spread to unrelated coverage or producer commands.

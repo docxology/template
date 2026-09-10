@@ -17,8 +17,8 @@ from infrastructure.validation.content.figure_validator import validate_figure_r
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-from src.agents import DeterministicProposer  # noqa: E402
-from src.figures import (  # noqa: E402
+from template_autoscientists.agents import DeterministicProposer  # noqa: E402
+from template_autoscientists.figures import (  # noqa: E402
     AblationRow,
     ablation_alt_text,
     build_ablation_figure,
@@ -32,8 +32,8 @@ from src.figures import (  # noqa: E402
     write_efficiency_figure,
     write_figure_registry,
 )
-from src.objective import SyntheticObjective  # noqa: E402
-from src.search import SearchConfig, run_search  # noqa: E402
+from template_autoscientists.objective import SyntheticObjective  # noqa: E402
+from template_autoscientists.search import SearchConfig, run_search  # noqa: E402
 
 _PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 
-from src.honesty import (
+from template_autopoiesis.honesty import (
     build_manifest,
     verify_honesty,
     STRUCTURAL_EVIDENCE,

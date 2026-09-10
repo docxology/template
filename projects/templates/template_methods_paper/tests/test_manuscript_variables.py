@@ -12,8 +12,13 @@ from pathlib import Path
 import pytest
 import yaml
 
-from src.manuscript_variables import CONFIG_HASH_LENGTH, PLAN_HASH_TRUNCATION, generate_variables, save_variables
-from src.methods_dsl import (
+from template_methods_paper.manuscript_variables import (
+    CONFIG_HASH_LENGTH,
+    PLAN_HASH_TRUNCATION,
+    generate_variables,
+    save_variables,
+)
+from template_methods_paper.methods_dsl import (
     GATE_COUNT,
     Dimension,
     ProvenanceTier,

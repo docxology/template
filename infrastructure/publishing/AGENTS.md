@@ -450,7 +450,7 @@ print(result.doi, result.receipt_path, result.pdf_sha256)
 ```python
 from pathlib import Path
 
-from infrastructure.publishing.transmission_bookends import write_transmission_bookends
+from infrastructure.transmission.transmission_bookends import write_transmission_bookends
 
 paths = write_transmission_bookends(
     Path("projects/templates/template_prose_project"),
@@ -465,7 +465,7 @@ When enabled, [`PDFRenderer.render_combined`](../rendering/pdf_renderer.py) pass
 ```python
 from pathlib import Path
 
-from infrastructure.publishing.transmission_page_check import check_transmission_bookend_pages
+from infrastructure.transmission.transmission_page_check import check_transmission_bookend_pages
 
 result = check_transmission_bookend_pages(
     Path("projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf")

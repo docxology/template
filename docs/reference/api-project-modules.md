@@ -35,7 +35,7 @@ layout.
 
 ## `optimizer.py`
 
-Source: [`optimizer.py`](../../projects/templates/template_code_project/src/optimizer.py)
+Source: [`optimizer.py`](../../projects/templates/template_code_project/src/template_code_project/optimizer.py)
 
 Behavior tests: [`test_optimizer.py`](../../projects/templates/template_code_project/tests/test_optimizer.py)
 
@@ -101,7 +101,7 @@ its source docstring for the current return mapping and defaults.
 
 ## `invariants.py`
 
-Source: [`invariants.py`](../../projects/templates/template_code_project/src/invariants.py)
+Source: [`invariants.py`](../../projects/templates/template_code_project/src/template_code_project/invariants.py)
 
 Behavior tests: [`test_invariants.py`](../../projects/templates/template_code_project/tests/test_invariants.py)
 

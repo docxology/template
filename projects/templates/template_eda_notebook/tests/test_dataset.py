@@ -11,7 +11,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from src.eda.dataset import (
+from template_eda_notebook.eda.dataset import (
     DatasetSchema,
     default_dataset_path,
     load_dataset,

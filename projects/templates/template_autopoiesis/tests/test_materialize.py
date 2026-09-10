@@ -7,9 +7,9 @@ from pathlib import Path
 
 import pytest
 
-from src.grammar import KNOWN_DOMAINS, force_domain, parse_grammar
-from src.expand import expand
-from src.materialize import (
+from template_autopoiesis.grammar import KNOWN_DOMAINS, force_domain, parse_grammar
+from template_autopoiesis.expand import expand
+from template_autopoiesis.materialize import (
     PROVENANCE_SCHEMA_VERSION,
     MaterializeResult,
     child_name,
@@ -79,7 +79,7 @@ def test_child_name_includes_hash(spec_for_domain):
 
 
 def test_rewrite_kernel_imports_from_src():
-    code = "from src.primitives import foo"
+    code = "from template_autopoiesis.primitives import foo"
     result = _rewrite_kernel_imports(code)
     assert "from primitives import foo" in result
 

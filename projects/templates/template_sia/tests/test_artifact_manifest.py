@@ -5,14 +5,14 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from src.artifact_manifest import (
+from template_sia.artifact_manifest import (
     ArtifactManifestEntry,
     collect_run_artifact_paths,
     compute_sha256,
     write_artifact_manifest,
     validate_artifact_manifest,
 )
-from src.loop import run_sia_loop_project
+from template_sia.loop import run_sia_loop_project
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 

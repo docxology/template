@@ -7,15 +7,15 @@ from pathlib import Path
 
 import pytest
 
-from src.dashboard import (
+from template_code_project.dashboard import (
     _compute_payload,
     _load_yaml_defaults,
     CFG_DEFAULT,
     cli_main as dashboard_main,
     parse_dashboard_args as _parse_args,
 )
-from src.dashboard_payload import validate_dashboard_payload
-from src.experiment_config import ExperimentConfig, load_experiment_config
+from template_code_project.dashboard_payload import validate_dashboard_payload
+from template_code_project.experiment_config import ExperimentConfig, load_experiment_config
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -91,8 +91,8 @@ class TestDashboardPayload:
         assert any("alpha_sweep" in issue for issue in issues)
 
     def test_compute_payload_records_sweep_exception(self):
-        from src.invariants import OptimizerSweepConfig
-        from src.sweeps import run_alpha_sweep
+        from template_code_project.invariants import OptimizerSweepConfig
+        from template_code_project.sweeps import run_alpha_sweep
 
         calls = {"n": 0}
         original = OptimizerSweepConfig.run_for

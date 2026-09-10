@@ -49,7 +49,7 @@ def main() -> int:
     args = parser.parse_args()
 
     from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
-    from src.manuscript_variables import generate_variables, save_variables
+    from template_code_project.manuscript_variables import generate_variables, save_variables
 
     variables = generate_variables(
         _PROJECT_ROOT,

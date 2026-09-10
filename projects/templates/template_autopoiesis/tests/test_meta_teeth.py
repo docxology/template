@@ -9,8 +9,8 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from src.grammar import KNOWN_DOMAINS
-from src.primitives import collect_primitives
+from template_autopoiesis.grammar import KNOWN_DOMAINS
+from template_autopoiesis.primitives import collect_primitives
 
 
 # ---------------------------------------------------------------------------

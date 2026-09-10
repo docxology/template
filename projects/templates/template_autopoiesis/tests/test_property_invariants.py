@@ -9,11 +9,11 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from src.grammar import KNOWN_DOMAINS, parse_grammar, force_domain
-from src.expand import expand
-from src.materialize import materialize
-from src.verify import verify_child
-from src.sealing import qr_matrix
+from template_autopoiesis.grammar import KNOWN_DOMAINS, parse_grammar, force_domain
+from template_autopoiesis.expand import expand
+from template_autopoiesis.materialize import materialize
+from template_autopoiesis.verify import verify_child
+from template_autopoiesis.sealing import qr_matrix
 
 
 # ---------------------------------------------------------------------------
@@ -157,7 +157,7 @@ def test_verify_fails_delete_per_domain(domain, tmp_path, template_root):
 
 
 def test_honesty_all_evidence_pass(template_root):
-    from src.honesty import build_manifest
+    from template_autopoiesis.honesty import build_manifest
 
     m = build_manifest(template_root)
     assert all(m.evidence.values()), f"Failed: {[k for k, v in m.evidence.items() if not v]}"

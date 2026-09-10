@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.primitives.signal import dft, convolve_known, _identity_kernel_convolve, PRIMITIVES
+from template_autopoiesis.primitives.signal import dft, convolve_known, _identity_kernel_convolve, PRIMITIVES
 
 
 _SIGNAL = (np.sin(2 * np.pi * 5 * np.linspace(0, 1, 64))).tolist()

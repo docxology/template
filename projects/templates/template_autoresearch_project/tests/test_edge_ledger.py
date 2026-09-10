@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from src.source_ledger import (
+from template_autoresearch_project.source_ledger import (
     load_source_ledger,
     source_age_summary,
     validate_source_ledger_contract,
@@ -108,7 +108,7 @@ def test_source_age_summary_returns_correct_buckets(tmp_path: Path) -> None:
 
     from datetime import date
 
-    from src.source_ledger import SourceLedgerEntry
+    from template_autoresearch_project.source_ledger import SourceLedgerEntry
 
     today = date(2026, 6, 1)
 

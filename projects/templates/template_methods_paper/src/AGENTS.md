@@ -120,8 +120,8 @@ uv run pytest projects/templates/template_methods_paper/tests -k "test_run_all_g
 
 ## See Also
 
-- [README.md](README.md) — Quick reference.
+- [README.md](template_methods_paper/README.md) — Quick reference.
 - [STYLE.md](STYLE.md) — Code style and the `__all__` export contract.
-- [methods_dsl/AGENTS.md](methods_dsl/AGENTS.md) — Subpackage-level rules.
+- [methods_dsl/AGENTS.md](template_methods_paper/methods_dsl/AGENTS.md) — Subpackage-level rules.
 - [../scripts/methods_analysis.py](../scripts/methods_analysis.py) — Example usage (thin orchestrator).
 - [../docs/architecture.md](../docs/architecture.md) — Correspondence with BPL's compiler pipeline.

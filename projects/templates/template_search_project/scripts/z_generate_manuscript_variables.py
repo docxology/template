@@ -26,12 +26,13 @@ _project_root = Path(__file__).resolve().parent.parent
 _repo_root = _project_root.parents[2]
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
+sys.path.insert(0, str(_project_root / "src" / "template_search_project"))
 sys.path.insert(0, str(_repo_root))
 
 from infrastructure.core.logging.utils import get_logger
 
-from src.config import load_project_config
-from src.manuscript_variables import (
+from template_search_project.config import load_project_config
+from template_search_project.manuscript_variables import (
     compute_variables,
     load_aggregate_payload,
     load_search_result_payload,

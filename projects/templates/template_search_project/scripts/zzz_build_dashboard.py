@@ -26,10 +26,10 @@ THIS_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = THIS_DIR.parent
 # PROJECT_ROOT is projects/templates/<name>/; repo root is three levels above it.
 REPO_ROOT = PROJECT_ROOT.parents[2]
-sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(REPO_ROOT))
 
-from src.dashboard import (  # noqa: E402
+from template_search_project.dashboard import (  # noqa: E402
     build_dashboard,
     compute_payload,
     filter_papers,

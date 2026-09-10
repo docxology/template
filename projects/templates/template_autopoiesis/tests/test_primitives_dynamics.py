@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.primitives.dynamics import damped_oscillator, _zero_damping_control, PRIMITIVES
+from template_autopoiesis.primitives.dynamics import damped_oscillator, _zero_damping_control, PRIMITIVES
 
 
 # ---------------------------------------------------------------------------

@@ -56,8 +56,8 @@ Live test and coverage totals: [`docs/_generated/COUNTS.md`](_generated/COUNTS.m
 | --- | --- | --- | --- |
 | 0 Clean outputs | built-in (`PipelineExecutor`) | `infrastructure.core.files` | — |
 | 1 Environment setup | `scripts/pipeline/stage_00_setup.py` | `infrastructure.project.discovery` | — |
-| 2 Infrastructure tests | `scripts/pipeline/stage_01_test.py --infra-only` | `infrastructure.core.test_runner` | — |
-| 3 Project tests | `scripts/pipeline/stage_01_test.py --project-only` | `infrastructure.core.test_runner` | — |
+| 2 Infrastructure tests | `scripts/pipeline/stage_01_test.py --infra-only` | `infrastructure.core.testing.test_runner` | — |
+| 3 Project tests | `scripts/pipeline/stage_01_test.py --project-only` | `infrastructure.core.testing.test_runner` | — |
 | 4 Project analysis | `scripts/pipeline/stage_02_analysis.py` | `infrastructure.core.pipeline` | `projects/templates/<name>/scripts/*.py` |
 | 5 PDF rendering | `scripts/pipeline/stage_03_render.py` | `infrastructure.rendering` | optional `render_*.py` in project |
 | 6 Output validation | `scripts/pipeline/stage_04_validate.py` | `infrastructure.validation` | — |

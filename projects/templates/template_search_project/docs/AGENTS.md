@@ -83,5 +83,5 @@ cd projects/templates/template_search_project && uv run python scripts/review --
 - [`../tests/conftest.py`](../tests/conftest.py) — `sys.path` setup and `MPLBACKEND=Agg`.
 - [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — manuscript-directory protocol.
 - [`../manuscript/SYNTAX.md`](../manuscript/SYNTAX.md) — project-local Pandoc syntax overlay.
-- [`../src/AGENTS.md`](../src/AGENTS.md) — `src/` module-level guide.
+- [`../src/AGENTS.md`](../src/template_search_project/AGENTS.md) — `src/` module-level guide.
 - [`../../../AGENTS.md`](../../../AGENTS.md) — root template documentation.

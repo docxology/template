@@ -9,7 +9,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 
 ## Architecture
 
-- Business logic: [`src/`](src/) — see [`src/AGENTS.md`](src/AGENTS.md) for package layout and conventions.
+- Business logic: [`src/`](src/) — see [`src/AGENTS.md`](src/template_autoresearch_project/AGENTS.md) for package layout and conventions.
 
 Implementation lives in typed packages under `src/`; each package's `__init__.py`
 is the public facade (import `src.<package>` or a specific submodule). There are no

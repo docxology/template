@@ -19,14 +19,15 @@ _project_root = Path(__file__).resolve().parent.parent
 _repo_root = _project_root.parents[2]
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
+sys.path.insert(0, str(_project_root / "src" / "template_prose_project"))
 sys.path.insert(0, str(_repo_root))
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.prose import analyze_manuscript
 
-from src.config import load_project_config
-from src.pipeline import run_prose_pipeline
-from src.report import write_review_report
+from template_prose_project.config import load_project_config
+from template_prose_project.pipeline import run_prose_pipeline
+from template_prose_project.report import write_review_report
 
 logger = get_logger(__name__)
 

@@ -7,14 +7,16 @@ from pathlib import Path
 from infrastructure.autoresearch import AutoResearchReport, SecurityProfile
 from infrastructure.autoresearch.models import AutoResearchIssue
 
-from src.config import AutoResearchLoopConfig
-from src.loop import (
+from template_autoresearch_project.config import AutoResearchLoopConfig
+from template_autoresearch_project.loop import (
     _final_output_path_payload,
     build_stage_results,
 )
-from src.loop_phases import LoopRunContext, append_paths
-from src.loop_phases import combine_readiness_reports as _combine_readiness_reports
-from src.loop_phases import only_changed_artifact_manifest_issues as _only_changed_artifact_manifest_issues
+from template_autoresearch_project.loop_phases import LoopRunContext, append_paths
+from template_autoresearch_project.loop_phases import combine_readiness_reports as _combine_readiness_reports
+from template_autoresearch_project.loop_phases import (
+    only_changed_artifact_manifest_issues as _only_changed_artifact_manifest_issues,
+)
 
 
 def test_build_stage_results_fallback_action_for_unknown_stage() -> None:

@@ -7,7 +7,7 @@ from pathlib import Path
 
 from infrastructure.search.literature import Paper, SearchQuery, SearchResult
 
-from src.figures import (
+from template_search_project.figures import (
     generate_all_figures,
     load_search_result,
     plot_papers_per_source,

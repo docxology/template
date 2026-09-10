@@ -7,7 +7,7 @@ from pathlib import Path
 from infrastructure.prose import analyze_files
 from infrastructure.prose.report import load_report_json
 
-from src.figures import (
+from template_prose_project.figures import (
     generate_all_figures,
     plot_citation_density,
     plot_readability_metrics,

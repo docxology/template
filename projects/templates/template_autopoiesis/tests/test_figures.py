@@ -7,14 +7,14 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from src.figures import (
+from template_autopoiesis.figures import (
     _first_plottable_array,
     _scalar_summary_lines,
     render_primitive_figure,
     build_figure_registry,
 )
-from src.grammar import KNOWN_DOMAINS
-from src.primitives import collect_primitives
+from template_autopoiesis.grammar import KNOWN_DOMAINS
+from template_autopoiesis.primitives import collect_primitives
 
 
 @pytest.fixture

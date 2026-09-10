@@ -17,17 +17,6 @@ import pytest
 
 from tests._support.projects import make_project
 
-# Force headless backend for matplotlib in tests
-os.environ.setdefault("MPLBACKEND", "Agg")
-
-# Repository root path
-ROOT = Path(__file__).parent.parent.parent.resolve()
-SRC = ROOT / "src"
-
-# Add src/ to path so we can import infrastructure and scientific modules
-if SRC.exists() and str(SRC) not in sys.path:
-    sys.path.insert(0, str(SRC))
-
 
 # =============================================================================
 # Path Fixtures

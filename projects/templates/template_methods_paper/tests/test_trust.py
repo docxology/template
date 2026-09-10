@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from src.methods_dsl.trust import ProvenanceTier, append_record, demo_chain_report, verify_chain
+from template_methods_paper.methods_dsl.trust import ProvenanceTier, append_record, demo_chain_report, verify_chain
 
 
 def test_append_record_to_empty_chain_links_to_genesis():

@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from src.grammar import RESERVED_SLOTS, load_grammar
+from template_autopoiesis.grammar import RESERVED_SLOTS, load_grammar
 
 PROJECT_ROOT = Path(__file__).parent.parent
 

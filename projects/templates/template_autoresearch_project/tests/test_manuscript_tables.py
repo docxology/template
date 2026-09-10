@@ -6,9 +6,9 @@ import json
 from pathlib import Path
 
 from infrastructure.rendering.manuscript_injection import substitute_manuscript_text
-from src.artifact_loader import LoopArtifacts
-from src.manuscript.manuscript_tables_builders import artifact_manifest_table
-from src.manuscript.manuscript_tables import build_table_specs, variable_provenance_table
+from template_autoresearch_project.artifact_loader import LoopArtifacts
+from template_autoresearch_project.manuscript.manuscript_tables_builders import artifact_manifest_table
+from template_autoresearch_project.manuscript.manuscript_tables import build_table_specs, variable_provenance_table
 
 
 def test_build_table_specs_generates_compact_registry_and_diagnostic_tables() -> None:

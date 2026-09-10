@@ -54,7 +54,7 @@ figure is produced by the thin analysis script from compiled-plan data in
 **To add a new token**:
 
 1. Add the key to `generate_variables()` in
-   [`../src/manuscript_variables.py`](../src/manuscript_variables.py),
+   [`../src/manuscript_variables.py`](../src/template_methods_paper/manuscript_variables.py),
    sourced from `config.yaml` or an `output/` artifact.
 2. Add a test in `tests/test_manuscript_variables.py` asserting the key is
    present.
@@ -98,5 +98,5 @@ figure is produced by the thin analysis script from compiled-plan data in
 - [`README.md`](README.md) — Quick orientation.
 - [`SYNTAX.md`](SYNTAX.md) — Pandoc + `{{TOKEN}}` syntax reference for this manuscript.
 - [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md) — Manuscript → PDF flow.
-- [`../src/manuscript_variables.py`](../src/manuscript_variables.py) — Token generation.
+- [`../src/manuscript_variables.py`](../src/template_methods_paper/manuscript_variables.py) — Token generation.
 - [`../scripts/methods_analysis.py`](../scripts/methods_analysis.py) — Thin orchestrator that writes the figure and analysis outputs.

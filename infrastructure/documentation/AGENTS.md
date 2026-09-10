@@ -17,6 +17,7 @@ tree instead of copying volatile literals into prose.
 | Generated facts | `counts_doc.py`, `counts_coverage.py`, `active_projects_doc.py`, `architecture_overview.py` | `docs/_generated/COUNTS.md`, source-bound coverage provenance, active projects, architecture diagram and accessible topology summary. |
 | Backlog contracts | `backlog.py`, `backlog_normalizer.py` | Future-only root/public TODO validation, stable-ID checks, lifecycle-path hygiene, and idempotent exemplar backlog normalization. |
 | Publication docs | `publication_records.py`, `_publication_records_{types,load,render,external,check}.py`, `publication_standalone.py` | DOI/archive/config/GitHub publication matrix plus generated publication-identity blocks in every canonical exemplar's `STANDALONE.md`. Public imports stay on `publication_records`. |
+| Doc reference audits | `doc_module_refs.py` | Resolves every `infrastructure.*` dotted path in `docs/`, `README.md`, and `AGENTS.md` to a real module, so module splits cannot silently stale documentation (thin CLI: `scripts/audit/check_doc_module_refs.py`; tests: [`tests/infra_tests/audit/`](../../tests/infra_tests/audit/)). |
 
 ## Boundaries
 

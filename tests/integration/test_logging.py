@@ -9,18 +9,12 @@ correctly.
 
 import os
 import subprocess
-from pathlib import Path
 
 import pytest
 
 
 class TestBashLogging:
     """Test suite for bash script logging functionality."""
-
-    @pytest.fixture
-    def repo_root(self):
-        """Get the repository root directory."""
-        return Path(__file__).parent.parent.parent
 
     @pytest.fixture
     def bash_utils_path(self, repo_root):

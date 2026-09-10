@@ -97,7 +97,7 @@ def validate_policy_inventory(policies: Sequence[SubprocessPolicy], repo_root: P
 INTENTIONAL_SUBPROCESS_POLICIES: tuple[SubprocessPolicy, ...] = (
     SubprocessPolicy(
         policy_id="project-test-matrix",
-        source_path="infrastructure/core/project_test_matrix.py",
+        source_path="infrastructure/core/testing/project_test_matrix.py",
         timeout_seconds=1800,
         check=False,
         capture_output=False,
@@ -119,21 +119,21 @@ INTENTIONAL_SUBPROCESS_POLICIES: tuple[SubprocessPolicy, ...] = (
     ),
     SubprocessPolicy(
         policy_id="git-metadata-test-runner",
-        source_path="infrastructure/core/test_runner_cache.py",
+        source_path="infrastructure/core/testing/test_runner_cache.py",
         timeout_seconds=30,
         check=False,
         capture_output=True,
     ),
     SubprocessPolicy(
         policy_id="git-cache-identity",
-        source_path="infrastructure/core/test_runner_cache.py",
+        source_path="infrastructure/core/testing/test_runner_cache.py",
         timeout_seconds=30,
         check=False,
         capture_output=True,
     ),
     SubprocessPolicy(
         policy_id="output-visibility",
-        source_path="infrastructure/core/test_runner_outputs.py",
+        source_path="infrastructure/core/testing/test_runner_outputs.py",
         timeout_seconds=30,
         check=False,
         capture_output=True,
@@ -147,14 +147,14 @@ INTENTIONAL_SUBPROCESS_POLICIES: tuple[SubprocessPolicy, ...] = (
     ),
     SubprocessPolicy(
         policy_id="coverage-combine",
-        source_path="infrastructure/core/test_runner.py",
+        source_path="infrastructure/core/testing/test_runner.py",
         timeout_seconds=300,
         check=False,
         capture_output=False,
     ),
     SubprocessPolicy(
         policy_id="coverage-gate",
-        source_path="infrastructure/core/test_runner.py",
+        source_path="infrastructure/core/testing/test_runner.py",
         timeout_seconds=300,
         check=False,
         capture_output=False,

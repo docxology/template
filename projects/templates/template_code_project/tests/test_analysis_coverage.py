@@ -16,8 +16,8 @@ REPO_ROOT = PROJECT_ROOT.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-import src.analysis as analysis_mod  # noqa: E402
-from src.analysis import (  # noqa: E402
+import template_code_project.analysis as analysis_mod  # noqa: E402
+from template_code_project.analysis import (  # noqa: E402
     _get_logger,
     _setup_fallback_logging,
     _stability_score_from_runs,
@@ -28,9 +28,9 @@ from src.analysis import (  # noqa: E402
     validate_generated_outputs,
     infrastructure_context,
 )
-from src.experiment_config import ExperimentConfig  # noqa: E402
-from src.optimizer import OptimizationResult  # noqa: E402
-from src.project_paths import project_root_context  # noqa: E402
+from template_code_project.experiment_config import ExperimentConfig  # noqa: E402
+from template_code_project.optimizer import OptimizationResult  # noqa: E402
+from template_code_project.project_paths import project_root_context  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
@@ -161,7 +161,7 @@ class TestScientificInfraPaths:
     def test_stability_uses_infrastructure_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
-        from src.analysis import run_stability_analysis
+        from template_code_project.analysis import run_stability_analysis
 
         path = run_stability_analysis(ExperimentConfig(stability_starting_points=(0.0, 1.0)))
         data = json.loads(path.read_text())
@@ -171,7 +171,7 @@ class TestScientificInfraPaths:
     def test_benchmark_uses_infrastructure_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         if not analysis_mod.INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
-        from src.analysis import run_performance_benchmarking
+        from template_code_project.analysis import run_performance_benchmarking
 
         path = run_performance_benchmarking()
         data = json.loads(path.read_text())
@@ -372,7 +372,7 @@ class TestRegisterFigure:
     def test_register_figure_writes_registry(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         figures = tmp_path / "output" / "figures"
         figures.mkdir(parents=True)
-        from src.analysis import register_figure
+        from template_code_project.analysis import register_figure
 
         register_figure()
         registry = figures / "figure_registry.json"
@@ -382,7 +382,7 @@ class TestRegisterFigure:
         assert data["fig:convergence"]["metadata"]["alt_text"]
 
     def test_register_figure_handles_import_error(self, tmp_path: Path):
-        from src.analysis import register_figure
+        from template_code_project.analysis import register_figure
 
         def unavailable_manager(**kwargs: object):
             raise ImportError("figure manager unavailable")
@@ -399,7 +399,7 @@ class TestRegisterFigure:
             def register_figure(self, **kwargs: object) -> None:
                 raise OSError("registry write failed")
 
-        from src.analysis import register_figure
+        from template_code_project.analysis import register_figure
 
         register_figure(figure_manager_factory=_BrokenFigureManager)
 
@@ -428,10 +428,11 @@ def _block_infra(name, globals=None, locals=None, fromlist=(), level=0):
 builtins.__import__ = _block_infra
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
+sys.path.insert(0, str(project_root / "src" / "template_code_project"))
 
 spec = importlib.util.spec_from_file_location(
     "analysis_infra_isolated",
-    project_root / "src" / "analysis" / "_infra.py",
+    project_root / "src" / "template_code_project" / "analysis" / "_infra.py",
 )
 mod = importlib.util.module_from_spec(spec)
 assert spec.loader is not None

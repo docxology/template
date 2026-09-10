@@ -12,7 +12,7 @@ for candidate in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
         sys.path.insert(0, text)
 
 from infrastructure.core.logging.utils import get_logger, log_success
-from src.analysis import generate_artifacts
+from template_madlib.analysis import generate_artifacts
 
 logger = get_logger(__name__)
 

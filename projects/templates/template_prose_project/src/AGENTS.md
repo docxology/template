@@ -89,6 +89,6 @@ flowchart LR
 
 ## See also
 
-* [`README.md`](README.md) — quick reference.
+* [`README.md`](template_prose_project/README.md) — quick reference.
 * [`../AGENTS.md`](../AGENTS.md) — project-level agent guide.
 * [`../docs/architecture.md`](../docs/architecture.md) — architectural diagram.

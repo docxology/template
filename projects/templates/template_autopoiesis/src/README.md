@@ -1,3 +1,3 @@
 # Source
 
-Combinatoric generator implementation. See [`AGENTS.md`](AGENTS.md).
+Combinatoric generator implementation. See [`AGENTS.md`](template_autopoiesis/AGENTS.md).

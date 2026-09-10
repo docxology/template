@@ -70,7 +70,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[5]
 PROJECT_ROOT = REPO_ROOT / "projects" / "templates" / "template_search_project"
-_SRC = PROJECT_ROOT / "src"
+_SRC = PROJECT_ROOT / "src" / "template_search_project"
 _FIXTURE_CORPUS = PROJECT_ROOT / "data" / "corpus.json"
 
 _PKG_ALIAS = "_search_project_src"

@@ -13,7 +13,7 @@ import urllib.request
 
 import pytest
 
-from src.state import Champion, SharedState
+from template_autoscientists.state import Champion, SharedState
 
 
 def _ollama_model_available(model: str = "hermes3") -> bool:

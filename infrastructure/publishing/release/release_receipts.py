@@ -14,7 +14,7 @@ import re
 from dataclasses import asdict, dataclass, field
 from datetime import date
 from pathlib import Path
-from typing import Literal, Mapping
+from typing import Literal, Mapping, cast
 
 from infrastructure.core.subprocess_policy import (
     INTENTIONAL_SUBPROCESS_POLICIES,
@@ -23,9 +23,11 @@ from infrastructure.core.subprocess_policy import (
 )
 
 RELEASE_RECEIPT_SCHEMA = "template-release-receipt/v1"
+RELEASE_REHEARSAL_SHARD_SCHEMA = "template-release-rehearsal-shard/v1"
 ReceiptStatus = Literal["pass", "review_required", "blocked", "skipped"]
 AuthorityStatus = Literal["confirmed", "unavailable", "blocked"]
 VerificationMode = Literal["offline", "hosted", "external", "manual", "automated", "optional-tool"]
+_RECEIPT_STATUS_VALUES = frozenset({"pass", "review_required", "blocked", "skipped"})
 _SECRET_PATTERN = re.compile(r"(?:token|secret|password|api[_-]?key|private[_-]?key)", re.IGNORECASE)
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
@@ -258,6 +260,126 @@ class CleanCheckoutReceipt:
 
 
 @dataclass(frozen=True)
+class RehearsalShardReceipt:
+    """One matrix cell of a sharded fresh-checkout rehearsal.
+
+    A shard runs exactly one fresh-checkout run of a ``CleanCheckoutPlan``.
+    Shards carry per-run evidence only; the cross-run determinism judgment
+    happens when shards are consolidated back into a ``CleanCheckoutReceipt``
+    (which keeps the two-run requirement and digest-equality contract).
+    """
+
+    revision: str
+    platform: str
+    run_index: int
+    run_count: int
+    status: ReceiptStatus
+    run: CommandReceipt
+    commands: tuple[CommandReceipt, ...] = ()
+    output_clean: bool = False
+    skip_reason: str = ""
+    schema_version: str = RELEASE_REHEARSAL_SHARD_SCHEMA
+
+    def validate(self) -> list[str]:
+        """Return contract errors for this shard's evidence."""
+        errors: list[str] = []
+        if self.schema_version != RELEASE_REHEARSAL_SHARD_SCHEMA:
+            errors.append(f"receipt schema must be {RELEASE_REHEARSAL_SHARD_SCHEMA}")
+        errors.extend(_status_errors(self.status, skip_reason=self.skip_reason))
+        if not self.revision or not self.platform:
+            errors.append("revision and platform are required")
+        if self.run_count < 2 or not 1 <= self.run_index <= self.run_count:
+            errors.append("shard run_index must be within 1..run_count with run_count >= 2")
+        errors.extend(f"run: {error}" for error in self.run.validate())
+        if not self.commands:
+            errors.append("shard receipts require per-command evidence")
+        for command in self.commands:
+            errors.extend(f"commands: {error}" for error in command.validate())
+        if self.status == "pass":
+            if self.run.status != "pass":
+                errors.append("passing shards require a passing run")
+            if not self.output_clean:
+                errors.append("passing shards require clean outputs")
+        return errors
+
+    def to_dict(self) -> dict[str, object]:
+        """Return deterministic receipt data."""
+        return asdict(self) | {
+            "run": self.run.to_dict(),
+            "commands": [command.to_dict() for command in self.commands],
+        }
+
+
+def _shard_str(payload: Mapping[str, object], key: str) -> str:
+    value = payload.get(key)
+    if not isinstance(value, str):
+        raise ReleaseReceiptError(f"rehearsal shard payload field {key!r} must be a string")
+    return value
+
+
+def _shard_int(payload: Mapping[str, object], key: str) -> int:
+    value = payload.get(key)
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ReleaseReceiptError(f"rehearsal shard payload field {key!r} must be an integer")
+    return value
+
+
+def _shard_optional_str(payload: Mapping[str, object], key: str) -> str:
+    value = payload.get(key)
+    return value if isinstance(value, str) else ""
+
+
+def _shard_status(payload: Mapping[str, object], key: str) -> ReceiptStatus:
+    value = payload.get(key)
+    if isinstance(value, str) and value in _RECEIPT_STATUS_VALUES:
+        return cast(ReceiptStatus, value)
+    raise ReleaseReceiptError(f"rehearsal shard payload field {key!r} must be a receipt status")
+
+
+def _shard_command(payload_item: object) -> CommandReceipt:
+    if not isinstance(payload_item, dict):
+        raise ReleaseReceiptError("rehearsal shard command entries must be JSON objects")
+    parts = payload_item.get("command")
+    if not isinstance(parts, list) or any(not isinstance(part, str) for part in parts):
+        raise ReleaseReceiptError("rehearsal shard command must be a list of strings")
+    exit_value = payload_item.get("exit_code")
+    exit_code = None if exit_value is None else _shard_int(payload_item, "exit_code")
+    duration = payload_item.get("duration_seconds")
+    if isinstance(duration, bool) or not isinstance(duration, (int, float)):
+        raise ReleaseReceiptError("rehearsal shard command duration_seconds must be a number")
+    return CommandReceipt(
+        command=tuple(parts),
+        status=_shard_status(payload_item, "status"),
+        exit_code=exit_code,
+        duration_seconds=float(duration),
+        skip_reason=_shard_optional_str(payload_item, "skip_reason"),
+        output_sha256=_shard_optional_str(payload_item, "output_sha256"),
+        output_tail=_shard_optional_str(payload_item, "output_tail"),
+    )
+
+
+def rehearsal_shard_from_payload(payload: Mapping[str, object]) -> RehearsalShardReceipt:
+    """Rebuild a shard receipt from its JSON payload, failing on malformed input."""
+    run_entry = payload.get("run")
+    command_entries = payload.get("commands")
+    if not isinstance(command_entries, list):
+        raise ReleaseReceiptError("rehearsal shard payload field 'commands' must be a list")
+    output_clean = payload.get("output_clean")
+    return RehearsalShardReceipt(
+        revision=_shard_str(payload, "revision"),
+        platform=_shard_str(payload, "platform"),
+        run_index=_shard_int(payload, "run_index"),
+        run_count=_shard_int(payload, "run_count"),
+        status=_shard_status(payload, "status"),
+        run=_shard_command(run_entry),
+        commands=tuple(_shard_command(entry) for entry in command_entries),
+        output_clean=bool(output_clean) if isinstance(output_clean, bool) else False,
+        skip_reason=_shard_optional_str(payload, "skip_reason"),
+        schema_version=_shard_optional_str(payload, "schema_version") or RELEASE_REHEARSAL_SHARD_SCHEMA,
+    )
+
+
+@dataclass(frozen=True)
 class CoverageGapSnapshot:
     """Source-bound coverage-floor snapshot for release review."""
 
@@ -402,14 +524,17 @@ __all__ = [
     "CommandReceipt",
     "CoverageGapSnapshot",
     "RELEASE_RECEIPT_SCHEMA",
+    "RELEASE_REHEARSAL_SHARD_SCHEMA",
     "ReleaseMetadataReceipt",
     "ReleaseReceiptError",
     "ReceiptStatus",
+    "RehearsalShardReceipt",
     "SubprocessPolicyReceipt",
     "VerificationMode",
     "build_coverage_gap_snapshot",
     "build_release_metadata_receipt",
     "build_subprocess_policy_receipt",
     "receipt_digest",
+    "rehearsal_shard_from_payload",
     "write_receipt",
 ]

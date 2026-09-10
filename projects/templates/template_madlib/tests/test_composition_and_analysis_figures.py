@@ -5,9 +5,9 @@ import re
 from pathlib import Path
 
 
-from src.analysis import generate_artifacts
-from src.analysis_fields import configured_field_counts, configured_field_inventory
-from src.composition import (
+from template_madlib.analysis import generate_artifacts
+from template_madlib.analysis_fields import configured_field_counts, configured_field_inventory
+from template_madlib.composition import (
     build_configured_field_summary_table,
     build_configured_field_table,
     build_configuration_figure_markdown,
@@ -21,9 +21,9 @@ from src.composition import (
     build_section_title_table,
     section_title_variables,
 )
-from src.config import load_madlib_config
-from src.tokens import generate_token_plan
-from .helpers import base_payload, write_config
+from template_madlib.config import load_madlib_config
+from template_madlib.tokens import generate_token_plan
+from helpers import base_payload, write_config
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -271,7 +271,7 @@ def test_section_plan_table_shows_disabled_sections(tmp_path: Path) -> None:
 
 def test_section_title_table_contains_all_sections(tmp_path: Path) -> None:
     """Section title table must have an entry for every section key."""
-    from src.config import SECTION_KEYS
+    from template_madlib.config import SECTION_KEYS
 
     write_config(tmp_path, base_payload())
     config = load_madlib_config(tmp_path)
@@ -353,7 +353,7 @@ def test_all_enabled_imrad_sections_are_non_empty(tmp_path: Path) -> None:
 
     sections = build_imrad_sections(config, plan)
 
-    from src.config import SECTION_KEYS
+    from template_madlib.config import SECTION_KEYS
 
     for key in SECTION_KEYS:
         body_key = f"{key.upper()}_BODY"
@@ -411,7 +411,7 @@ def test_configured_field_summary_table_all_labels_present(tmp_path: Path) -> No
 
 def test_section_title_variables_covers_all_sections(tmp_path: Path) -> None:
     """section_title_variables must produce TITLE_ variables for every section."""
-    from src.config import SECTION_KEYS
+    from template_madlib.config import SECTION_KEYS
 
     write_config(tmp_path, base_payload())
     config = load_madlib_config(tmp_path)
@@ -500,7 +500,7 @@ def test_imrad_scope_with_single_move(tmp_path: Path) -> None:
 
 def test_init_exports_all_public_symbols() -> None:
     """Importing from the package __init__ must expose all documented public symbols."""
-    import src as module
+    import template_madlib as module
 
     expected = [
         "EvaluationCriterion",

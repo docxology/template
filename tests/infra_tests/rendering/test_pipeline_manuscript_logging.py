@@ -1,14 +1,14 @@
-"""Tests for infrastructure.rendering.pipeline._log_manuscript_composition."""
+"""Tests for the manuscript composition summary logged by the render pipeline."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from infrastructure.rendering.pipeline import _log_manuscript_composition
+from infrastructure.rendering._manuscript_source import log_manuscript_composition
 
 
 # ---------------------------------------------------------------------------
-# _log_manuscript_composition
+# log_manuscript_composition
 # ---------------------------------------------------------------------------
 
 
@@ -22,7 +22,7 @@ def test_log_manuscript_composition_mixed_files(tmp_path: Path) -> None:
     tex.write_text(r"\documentclass{article}")
 
     # Should not raise
-    _log_manuscript_composition([md1, md2, tex])
+    log_manuscript_composition([md1, md2, tex])
 
 
 def test_log_manuscript_composition_only_md(tmp_path: Path) -> None:
@@ -30,9 +30,9 @@ def test_log_manuscript_composition_only_md(tmp_path: Path) -> None:
     md = tmp_path / "01_abstract.md"
     md.write_text("Abstract content")
 
-    _log_manuscript_composition([md])
+    log_manuscript_composition([md])
 
 
 def test_log_manuscript_composition_empty(tmp_path: Path) -> None:
     """Handles empty source file list without error."""
-    _log_manuscript_composition([])
+    log_manuscript_composition([])

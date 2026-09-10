@@ -5,11 +5,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from src.artifact_content import _json_is_substantive, _value_is_substantive
-from src.research_object import research_object_manifest_payload
-from src.security.render import render_security_review_markdown
-from src.writers.benchmark import _benchmark_score, _has_supported_claim
-from src.writers.io import relative_path
+from template_autoresearch_project.artifact_content import _json_is_substantive, _value_is_substantive
+from template_autoresearch_project.research_object import research_object_manifest_payload
+from template_autoresearch_project.security.render import render_security_review_markdown
+from template_autoresearch_project.writers.benchmark import _benchmark_score, _has_supported_claim
+from template_autoresearch_project.writers.io import relative_path
 
 
 def test_research_object_manifest_excludes_out_of_tree_paths(tmp_path: Path) -> None:

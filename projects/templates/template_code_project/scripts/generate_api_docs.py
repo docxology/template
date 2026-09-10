@@ -28,7 +28,7 @@ from infrastructure.documentation.glossary_gen import (  # noqa: E402
     generate_markdown_table,
 )
 
-from src.documentation import build_api_reference_markdown  # noqa: E402
+from template_code_project.documentation import build_api_reference_markdown  # noqa: E402
 
 logger = get_logger(__name__)
 

@@ -21,7 +21,7 @@ import sys
 _PROJECT_DIR = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PROJECT_DIR))
 
-from src.manuscript_variables import generate_variables
+from template_pools_rules_tools.manuscript_variables import generate_variables
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 logger = logging.getLogger(__name__)

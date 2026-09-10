@@ -165,7 +165,7 @@ AESTHETIC list as the audit surface that lives outside automated CI.
 * [`README.md`](README.md) — quick links.
 * [`../AGENTS.md`](../AGENTS.md) — project-level agent guide.
 * [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — substitution-marker registry.
-* [`../src/AGENTS.md`](../src/AGENTS.md) — domain-orchestration guide.
+* [`../src/AGENTS.md`](../src/template_prose_project/AGENTS.md) — domain-orchestration guide.
 * [`../tests/AGENTS.md`](../tests/AGENTS.md) — test-suite agent guide.
 * [`../../../docs/rules/folder_structure.md`](../../../../docs/rules/folder_structure.md) — repository-wide tri-doc convention.
 * [`../../../infrastructure/prose/SKILL.md`](../../../../infrastructure/prose/SKILL.md) — underlying analysis API.

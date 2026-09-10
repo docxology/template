@@ -14,10 +14,10 @@ from collections.abc import Sequence
 
 import pytest
 
-from src.agents import DeterministicProposer
-from src.objective import SyntheticObjective
-from src.search import SearchConfig, _Runner, run_search
-from src.state import Proposal, SharedState
+from template_autoscientists.agents import DeterministicProposer
+from template_autoscientists.objective import SyntheticObjective
+from template_autoscientists.search import SearchConfig, _Runner, run_search
+from template_autoscientists.state import Proposal, SharedState
 
 
 class _AlternatingProposer:

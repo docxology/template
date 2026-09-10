@@ -16,11 +16,6 @@ import pytest
 
 
 @pytest.fixture
-def repo_root() -> Path:
-    return Path(__file__).parent.parent.parent
-
-
-@pytest.fixture
 def secure_script(repo_root: Path) -> Path:
     return repo_root / "secure_run.sh"
 

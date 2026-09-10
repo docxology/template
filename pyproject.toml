@@ -349,14 +349,14 @@ line-length = 120
 exclude = ["docs/reference/api-reference.md"]
 
 [tool.ruff.lint]
-select = ["E", "F"]
+select = ["E", "F"]  # T20 print ban is enforced infrastructure-scoped (CI lint job): ruff check --select T20 infrastructure/
 ignore = [
     "E741",  # Allow short math variable names in scientific code (l, I, O)
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "infrastructure/core/logging/*.py" = ["E402"]  # Conditional imports after setup
-"infrastructure/publishing/publish_cli.py" = ["E402"]  # sys.path manipulation before imports
+"infrastructure/publishing/publish_cli.py" = ["E402", "T201"]  # sys.path manipulation before imports; CLI entrypoint
 "scripts/*" = ["E402", "E501"]  # sys.path before imports; docstring line length
 "projects/*/scripts/**/*.py" = ["E402", "E501"]  # Path bootstrap before imports; long CLI strings
 "projects/*/*/scripts/**/*.py" = ["E402", "E501", "N999"]  # Nested public exemplar stage scripts
@@ -367,6 +367,57 @@ ignore = [
 "__init__.py" = ["F401"]  # Allow re-exports in __init__ files
 # E501 in docstrings/comments (ruff format handles code structure line length)
 "infrastructure/__init__.py" = ["E501"]  # Module inventory docstring
+# T20 (print ban) over infrastructure/: only legitimate CLI entrypoint, gate,
+# and human-report modules may print; library modules route through get_logger.
+"infrastructure/autoresearch/cli.py" = ["T201"]
+"infrastructure/benchmark/template_harness.py" = ["T201"]
+"infrastructure/core/cli_handlers.py" = ["T201"]
+"infrastructure/core/config/cli.py" = ["T201"]
+"infrastructure/core/health.py" = ["T201"]
+"infrastructure/core/health_benchmark.py" = ["T201"]
+"infrastructure/core/pipeline/hitl_cli.py" = ["T201"]
+"infrastructure/core/pipeline/snapshot.py" = ["T201"]
+"infrastructure/core/testing/test_performance.py" = ["T201"]
+"infrastructure/documentation/generate_glossary_cli.py" = ["T201"]
+"infrastructure/fonds/linking.py" = ["T201"]
+"infrastructure/llm/cli/main.py" = ["T201"]
+"infrastructure/methods/cli.py" = ["T201"]
+"infrastructure/orchestration/cli.py" = ["T201"]
+"infrastructure/orchestration/commands.py" = ["T201"]
+"infrastructure/orchestration/interactive.py" = ["T201"]
+"infrastructure/project/copy_exemplar.py" = ["T201"]
+"infrastructure/project/drift/runner.py" = ["T201"]
+"infrastructure/project/linking.py" = ["T201"]
+"infrastructure/project/promotion/cli.py" = ["T201"]
+"infrastructure/project/public_scope.py" = ["T201"]
+"infrastructure/provenance/cli.py" = ["T201"]
+"infrastructure/publishing/archival_cli.py" = ["T201"]
+"infrastructure/publishing/cli.py" = ["T201"]
+"infrastructure/publishing/credential_check.py" = ["T201"]
+"infrastructure/publishing/export_bundle.py" = ["T201"]
+"infrastructure/publishing/metadata/metadata_export_cli.py" = ["T201"]
+"infrastructure/publishing/pypi_release.py" = ["T201"]
+"infrastructure/publishing/repro_bundle.py" = ["T201"]
+"infrastructure/publishing/root_release_contract.py" = ["T201"]
+"infrastructure/publishing/status_report.py" = ["T201"]
+"infrastructure/rendering/_pdf_canonicalization_worker.py" = ["T201"]
+"infrastructure/rendering/cli.py" = ["T201"]
+"infrastructure/rendering/latex_package_validator.py" = ["T201"]
+"infrastructure/reporting/evidence_graph.py" = ["T201"]
+"infrastructure/rules/linking.py" = ["T201"]
+"infrastructure/search/connectors/cli.py" = ["T201"]
+"infrastructure/search/deep_research/cli.py" = ["T201"]
+"infrastructure/search/exa/cli.py" = ["T201"]
+"infrastructure/search/monid/cli.py" = ["T201"]
+"infrastructure/sia/cli.py" = ["T201"]
+"infrastructure/skills/runtime_sync.py" = ["T201"]
+"infrastructure/steganography/start_tpm_backend.py" = ["T201"]
+"infrastructure/tools/linking.py" = ["T201"]
+"infrastructure/transmission/transmission_page_check.py" = ["T201"]
+"infrastructure/validation/cli/main.py" = ["T201"]
+"infrastructure/validation/output/no_mock_audit.py" = ["T201"]
+"infrastructure/validation/plugin_export.py" = ["T201"]
+"infrastructure/validation/security_gate.py" = ["T201"]
 "infrastructure/documentation/counts_doc.py" = ["E501"]  # Long markdown prose lines in the COUNTS.md template literal
 "projects/templates/template_search_project/src/__init__.py" = ["E402"]  # Deferred exports after public __all__
 "infrastructure/core/runtime/checkpoint.py" = ["E501"]

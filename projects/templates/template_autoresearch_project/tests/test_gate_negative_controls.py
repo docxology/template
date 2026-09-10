@@ -15,18 +15,18 @@ from pathlib import Path
 
 import pytest
 
-from src.artifact_content import is_substantive_artifact
-from src.config import (
+from template_autoresearch_project.artifact_content import is_substantive_artifact
+from template_autoresearch_project.config import (
     AutoResearchLoopConfig,
     ResearchQuestion,
     build_loop_config,
     load_manuscript_loop_settings,
 )
-from src.figures.figure_quality import figure_quality_report_payload
-from src.loop import _final_output_path_payload, build_claims
-from src.ml.selection import run_bounded_ml_task
-from src.models import AutoResearchLoopResult
-from src.writers import _BENCHMARK_CORE_ARTIFACTS, _grade_absent_benchmark
+from template_autoresearch_project.figures.figure_quality import figure_quality_report_payload
+from template_autoresearch_project.loop import _final_output_path_payload, build_claims
+from template_autoresearch_project.ml.selection import run_bounded_ml_task
+from template_autoresearch_project.models import AutoResearchLoopResult
+from template_autoresearch_project.writers import _BENCHMARK_CORE_ARTIFACTS, _grade_absent_benchmark
 from infrastructure.autoresearch import BenchmarkTask, build_autoresearch_plan
 
 

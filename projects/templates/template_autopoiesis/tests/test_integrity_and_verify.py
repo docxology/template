@@ -6,11 +6,17 @@ import json
 import pytest
 from pathlib import Path
 
-from src.integrity import sha256_text, sha256_bytes, tree_hash_from_content_hashes, merkle_root, tree_hash
-from src.grammar import KNOWN_DOMAINS, force_domain, parse_grammar
-from src.expand import expand
-from src.materialize import materialize
-from src.verify import verify_child, verify_child_full, verify_seal
+from template_autopoiesis.integrity import (
+    sha256_text,
+    sha256_bytes,
+    tree_hash_from_content_hashes,
+    merkle_root,
+    tree_hash,
+)
+from template_autopoiesis.grammar import KNOWN_DOMAINS, force_domain, parse_grammar
+from template_autopoiesis.expand import expand
+from template_autopoiesis.materialize import materialize
+from template_autopoiesis.verify import verify_child, verify_child_full, verify_seal
 
 
 # ---------------------------------------------------------------------------

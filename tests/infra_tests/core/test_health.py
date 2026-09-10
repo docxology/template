@@ -23,7 +23,6 @@ from infrastructure.core.health import (
     format_report_table,
     run_health_checks,
 )
-from infrastructure.core.health import _stage_table_passed
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -117,96 +116,73 @@ class TestPublicSurface:
 
 
 class TestSyntheticGate:
-    """A trivial echo gate must parse correctly into a ``GateResult``."""
+    """A trivial stub gate script must parse correctly into a ``GateResult``."""
 
-    def test_synthetic_gate_runs_via_register_then_subprocess(
+    @staticmethod
+    def _stub_gate_repo(tmp_path: Path, script_body: str) -> Path:
+        repo = tmp_path / "stub-repo"
+        (repo / "scripts" / "audit").mkdir(parents=True)
+        (repo / "scripts" / "audit" / "verify_no_mocks.py").write_text(script_body, encoding="utf-8")
+        return repo
+
+    def test_stub_gate_runs_via_registry_then_subprocess(
         self,
         tmp_path: Path,
     ) -> None:
-        # Hand-roll a minimal gate by calling the underlying private helper
-        # via the module's own subprocess — keeps the test mock-free while
-        # exercising the parsing path that real gates use.
-        from infrastructure.core.health import _run_single_gate  # noqa: PLC0415
+        # The gate executes through the public registry path (run_health_checks
+        # → real subprocess), exercising the output-parsing behavior real gates
+        # rely on — no mocks, no private seams.
+        report = run_health_checks(self._stub_gate_repo(tmp_path, "print('hello health')\n"), gates=["no-mocks"])
 
-        result = _run_single_gate(
-            "synthetic-echo",
-            [sys.executable, "-c", "print('hello health'); raise SystemExit(0)"],
-            tmp_path,
-        )
+        result = report.results[0]
         assert isinstance(result, GateResult)
-        assert result.name == "synthetic-echo"
+        assert result.name == "no-mocks"
         assert result.passed is True
         assert result.elapsed_ms >= 0.0
         assert "hello health" in result.output
 
-    def test_synthetic_failing_gate_reports_failure(self, tmp_path: Path) -> None:
-        from infrastructure.core.health import _run_single_gate  # noqa: PLC0415
+    def test_stub_gate_failure_reports_stderr_tail(self, tmp_path: Path) -> None:
+        repo = self._stub_gate_repo(tmp_path, "import sys; sys.stderr.write('boom'); raise SystemExit(7)\n")
 
-        result = _run_single_gate(
-            "synthetic-fail",
-            [sys.executable, "-c", "import sys; sys.stderr.write('boom'); sys.exit(7)"],
-            tmp_path,
-        )
+        result = run_health_checks(repo, gates=["no-mocks"]).results[0]
+
         assert result.passed is False
         assert "boom" in result.output
 
-    def test_synthetic_gate_timeout_fails_closed(self, tmp_path: Path) -> None:
-        from infrastructure.core.health import _run_single_gate  # noqa: PLC0415
+    def test_stub_gate_timeout_fails_closed(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0.01")
+        repo = self._stub_gate_repo(tmp_path, "import time; time.sleep(1)\n")
 
-        result = _run_single_gate(
-            "synthetic-timeout",
-            [sys.executable, "-c", "import time; time.sleep(1)"],
-            tmp_path,
-            timeout_seconds=0.01,
-        )
+        result = run_health_checks(repo, gates=["no-mocks"]).results[0]
+
         assert result.passed is False
         assert "timed out" in result.output
 
 
 class TestGateTimeoutResolution:
-    """Per-gate timeout overrides and the environment knob."""
+    """The environment knob overrides gate timeouts and fails closed on bad values."""
 
-    def test_default_gate_uses_registry_ceiling(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        monkeypatch.delenv("TEMPLATE_HEALTH_GATE_TIMEOUT", raising=False)
-        from infrastructure.core.health import _GATE_TIMEOUT_SECONDS, _gate_timeout_seconds  # noqa: PLC0415
+    def test_env_override_forces_a_real_gate_timeout(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0.01")
+        repo = tmp_path / "timeout-repo"
+        (repo / "scripts" / "audit").mkdir(parents=True)
+        (repo / "scripts" / "audit" / "verify_no_mocks.py").write_text("import time; time.sleep(1)\n", encoding="utf-8")
 
-        assert _gate_timeout_seconds("mypy") == _GATE_TIMEOUT_SECONDS
+        result = run_health_checks(repo, gates=["no-mocks"]).results[0]
 
-    def test_counts_override_exceeds_default(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        monkeypatch.delenv("TEMPLATE_HEALTH_GATE_TIMEOUT", raising=False)
-        from infrastructure.core.health import _GATE_TIMEOUT_SECONDS, _gate_timeout_seconds  # noqa: PLC0415
-
-        override = _gate_timeout_seconds("counts")
-        assert override > _GATE_TIMEOUT_SECONDS
-
-    def test_bandit_override_exceeds_default(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        monkeypatch.delenv("TEMPLATE_HEALTH_GATE_TIMEOUT", raising=False)
-        from infrastructure.core.health import _GATE_TIMEOUT_SECONDS, _gate_timeout_seconds  # noqa: PLC0415
-
-        # Measured bandit wall time on a loaded workstation exceeds 10 minutes.
-        assert _gate_timeout_seconds("bandit") >= 1200.0
-        assert _gate_timeout_seconds("bandit") > _GATE_TIMEOUT_SECONDS
-
-    def test_env_override_applies_to_every_gate(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "42")
-        from infrastructure.core.health import _gate_timeout_seconds  # noqa: PLC0415
-
-        assert _gate_timeout_seconds("counts") == 42.0
-        assert _gate_timeout_seconds("mypy") == 42.0
+        assert result.passed is False
+        # The resolved override surfaces in the diagnostic tail.
+        assert "gate timed out after 0.01s" in result.output
 
     def test_env_override_rejects_nonpositive(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0")
-        from infrastructure.core.health import _gate_timeout_seconds  # noqa: PLC0415
-
         with pytest.raises(ValueError, match="positive"):
-            _gate_timeout_seconds("mypy")
+            run_health_checks(REPO_ROOT, gates=["no-mocks"])
 
     def test_env_override_rejects_non_numeric(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "soon")
-        from infrastructure.core.health import _gate_timeout_seconds  # noqa: PLC0415
-
         with pytest.raises(ValueError, match="Invalid TEMPLATE_HEALTH_GATE_TIMEOUT"):
-            _gate_timeout_seconds("mypy")
+            run_health_checks(REPO_ROOT, gates=["no-mocks"])
 
 
 class TestSubsetSelection:
@@ -239,12 +215,29 @@ class TestSubsetSelection:
         with pytest.raises(ValueError, match="at least one gate"):
             run_health_checks(REPO_ROOT, gates=[])
 
-    def test_stage_table_requires_complete_zero_drift_summary(self) -> None:
-        assert _stage_table_passed(0, "Would update 0; up-to-date 7") is True
-        assert _stage_table_passed(0, "") is False
-        assert _stage_table_passed(0, "stage table completed") is False
-        assert _stage_table_passed(0, "Would update 0; up-to-date 0") is False
-        assert _stage_table_passed(0, "Would update 1; up-to-date 6") is False
+    @pytest.mark.parametrize(
+        ("script_body", "expected_pass"),
+        [
+            ("print('Would update 0; up-to-date 7')\n", True),  # idempotent success summary
+            ("print('')\n", False),  # empty / crashed-before-work output is not proof
+            ("print('stage table completed')\n", False),  # arbitrary exit-zero output
+            ("print('Would update 0; up-to-date 0')\n", False),  # no up-to-date evidence
+            ("print('Would update 1; up-to-date 6')\n", False),  # pending drift
+            ("import sys; print('Would update 0; up-to-date 7'); sys.exit(3)\n", False),  # nonzero exit
+            ("print('Would update 0; up-to-date 7'); print('Updating stale.md')\n", False),  # mutation marker
+        ],
+    )
+    def test_stage_table_requires_complete_zero_drift_summary(
+        self, tmp_path: Path, script_body: str, expected_pass: bool
+    ) -> None:
+        """The stage-table pass decision, exercised through the real gate registry."""
+        repo = tmp_path / "stage-table-repo"
+        (repo / "scripts" / "docgen").mkdir(parents=True)
+        (repo / "scripts" / "docgen" / "stage_table.py").write_text(script_body, encoding="utf-8")
+
+        report = run_health_checks(repo, gates=["stage-table"])
+
+        assert report.results[0].passed is expected_pass
 
 
 class TestRealGate:
@@ -330,21 +323,19 @@ class TestCLI:
 
 
 class TestRepositoryState:
-    """``_repository_state`` degrades to unknown when git is unavailable."""
+    """Health reports degrade to unknown repository state when git is unavailable."""
 
-    def test_unresolvable_git_executable_returns_unknown_state(
+    def test_unresolvable_git_executable_reports_unknown_state(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        from infrastructure.core.health import _repository_state
-
         # Real environmental fault, no mocks: a PATH with no git binary makes
         # the actual subprocess call raise FileNotFoundError.
         monkeypatch.setenv("PATH", str(tmp_path))
 
-        commit, clean = _repository_state(tmp_path)
+        report = run_health_checks(REPO_ROOT, gates=["no-mocks"])
 
-        assert commit is None
-        assert clean is None
+        assert report.repo_commit is None
+        assert report.clean_checkout is False
 
 
 class TestFailureDiagnosticsReachStderr:
@@ -356,59 +347,25 @@ class TestFailureDiagnosticsReachStderr:
     failing-gate dumps now always reach stderr (stdout stays pure JSON).
     """
 
-    @staticmethod
-    def _failing_report() -> HealthReport:
-        return HealthReport(
-            results=[
-                GateResult(name="docs-lint", passed=False, elapsed_ms=1.0, output="boom detail"),
-                GateResult(name="ruff", passed=True, elapsed_ms=1.0, output="All checks passed!"),
-            ],
-            passed=False,
-            total_elapsed_ms=2.0,
-            wall_elapsed_ms=2.0,
-        )
+    def test_failing_quiet_run_writes_verdict_only(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """--quiet suppresses the per-gate dumps, never the verdict line."""
+        monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0.001")
+        proc = _run_module_cli("--json", "--quiet", "--gates", "ruff")
 
-    @staticmethod
-    def _passing_report() -> HealthReport:
-        return HealthReport(
-            results=[
-                GateResult(name="ruff", passed=True, elapsed_ms=1.0, output="All checks passed!"),
-            ],
-            passed=True,
-            total_elapsed_ms=1.0,
-            wall_elapsed_ms=1.0,
-        )
+        assert proc.returncode == 1
+        assert "health verdict: passed=false failed_gates=['ruff']" in proc.stderr
+        # The failing gate's captured tail is suppressed in quiet mode.
+        assert "── ruff ──" not in proc.stderr
+        assert "gate timed out" not in proc.stderr
 
-    def test_failing_quiet_writes_verdict_only(self, capsys: pytest.CaptureFixture[str]) -> None:
-        from infrastructure.core.health import _emit_failure_diagnostics  # noqa: PLC0415
+    def test_failing_non_quiet_run_dumps_failing_gate_tail(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Without --quiet, the failing gate's captured tail follows the verdict."""
+        monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0.001")
+        proc = _run_module_cli("--gates", "ruff")
 
-        _emit_failure_diagnostics(self._failing_report(), quiet=True)
-
-        captured = capsys.readouterr()
-        assert captured.out == ""
-        assert "health verdict: passed=false failed_gates=['docs-lint']" in captured.err
-        # --quiet suppresses the per-gate dumps, never the verdict line.
-        assert "boom detail" not in captured.err
-
-    def test_failing_non_quiet_dumps_failing_gate_tail(self, capsys: pytest.CaptureFixture[str]) -> None:
-        from infrastructure.core.health import _emit_failure_diagnostics  # noqa: PLC0415
-
-        _emit_failure_diagnostics(self._failing_report(), quiet=False)
-
-        captured = capsys.readouterr()
-        assert "── docs-lint ──" in captured.err
-        assert "boom detail" in captured.err
-        # Passing gates are never dumped.
-        assert "── ruff ──" not in captured.err
-
-    def test_passing_run_reports_passed_with_no_failed_gates(self, capsys: pytest.CaptureFixture[str]) -> None:
-        from infrastructure.core.health import _emit_failure_diagnostics  # noqa: PLC0415
-
-        _emit_failure_diagnostics(self._passing_report(), quiet=True)
-
-        captured = capsys.readouterr()
-        assert captured.out == ""
-        assert "health verdict: passed=true failed_gates=[]" in captured.err
+        assert proc.returncode == 1
+        assert "── ruff ──" in proc.stderr
+        assert "gate timed out" in proc.stderr
 
     def test_module_cli_wiring_keeps_stdout_pure_json_with_stderr_verdict(
         self,

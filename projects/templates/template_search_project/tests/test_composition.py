@@ -5,8 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from src.composition import compose_literature_review
-from src.config import DeepSearchConfig, ProjectConfig, SearchConfig
+from template_search_project.composition import compose_literature_review
+from template_search_project.config import DeepSearchConfig, ProjectConfig, SearchConfig
 
 
 def _make_config(*, output_dir: str = "output/deep_search") -> ProjectConfig:

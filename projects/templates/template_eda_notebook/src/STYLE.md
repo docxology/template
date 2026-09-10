@@ -133,6 +133,6 @@ intentionally NOT in `__init__.py.__all__`.
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) — API reference and infrastructure integration.
+- [AGENTS.md](template_eda_notebook/AGENTS.md) — API reference and infrastructure integration.
 - [../tests/PATTERNS.md](../tests/PATTERNS.md) — How to test code written here.
 - [../scripts/CONVENTIONS.md](../scripts/CONVENTIONS.md) — How scripts use this code.

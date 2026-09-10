@@ -98,11 +98,11 @@ def _load_absolute_submodules(*dotted_names: str) -> tuple[ModuleType, ...]:
     finder = _SrcScopedFinder()
     sys.meta_path.insert(0, finder)
     try:
-        src_init = PROJECT_ROOT / "src" / "__init__.py"
+        src_init = PROJECT_ROOT / "src" / "template_sia" / "__init__.py"
         spec = importlib.util.spec_from_file_location(
             _PKG_ALIAS,
             src_init,
-            submodule_search_locations=[str(PROJECT_ROOT / "src")],
+            submodule_search_locations=[str(PROJECT_ROOT / "src" / "template_sia")],
         )
         assert spec is not None and spec.loader is not None, f"cannot load {src_init}"
         package = importlib.util.module_from_spec(spec)

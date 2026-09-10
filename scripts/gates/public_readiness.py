@@ -7,7 +7,7 @@ import argparse
 import json
 from pathlib import Path
 
-from infrastructure.core.pytest_orchestration import TEST_PROFILE_NAMES, parse_project_workers
+from infrastructure.core.testing.pytest_orchestration import TEST_PROFILE_NAMES, parse_project_workers
 from infrastructure.project.public_readiness import (
     DEFAULT_TIMEOUT_SECONDS,
     format_public_readiness,

@@ -15,7 +15,7 @@ from infrastructure.reporting.project_verifier import (
     run_declared_project_verifier,
     validate_project_test_command,
 )
-from infrastructure.core.pytest_profiles import test_runner_dependency_specs
+from infrastructure.core.testing.pytest_profiles import test_runner_dependency_specs
 from infrastructure.reporting.pipeline_test_runner import execute_test_pipeline
 
 

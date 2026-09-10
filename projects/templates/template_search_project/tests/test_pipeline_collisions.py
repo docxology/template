@@ -6,14 +6,14 @@ from pathlib import Path
 
 from infrastructure.search.literature import Paper, SearchBackend
 
-from src.config import (
+from template_search_project.config import (
     EnrichmentConfig,
     LLMConfig,
     ProjectConfig,
     ReportConfig,
     SearchConfig,
 )
-from src.pipeline import (
+from template_search_project.pipeline import (
     _build_citation_keys,
     _disambiguate_citation_key,
     run_literature_pipeline,

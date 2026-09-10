@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import pytest
 
-from src.llm_runtime import build_llm_callable
+from template_search_project.llm_runtime import build_llm_callable
 
 
 def _kwargs() -> dict:

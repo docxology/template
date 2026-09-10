@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from src.adapters import ADAPTER_RESULT_SCHEMA, available_adapters, run_quadratic_adapter
+from template_autoresearch_project.adapters import ADAPTER_RESULT_SCHEMA, available_adapters, run_quadratic_adapter
 
 
 def test_quadratic_adapter_is_deterministic_and_budgeted() -> None:

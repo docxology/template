@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.coverage_policy import PYTEST_HELP_PROBE_TIMEOUT_SECONDS
+from infrastructure.core.testing.coverage_policy import PYTEST_HELP_PROBE_TIMEOUT_SECONDS
 from infrastructure.reporting.coverage_parser import (
     MIN_VALID_COVERAGE_FILE_BYTES,
     _parse_coverage_json,

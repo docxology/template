@@ -31,8 +31,8 @@ import matplotlib.pyplot as plt  # noqa: E402
 from infrastructure.documentation.generated_figure_registry import (  # noqa: E402
     write_generated_figure_registry,
 )
-from src.figure_specs import FIGURE_REGISTRY_SCHEMA, METHODS_FIGURE_SPECS  # noqa: E402
-from src.methods_dsl import (  # noqa: E402
+from template_methods_paper.figure_specs import FIGURE_REGISTRY_SCHEMA, METHODS_FIGURE_SPECS  # noqa: E402
+from template_methods_paper.methods_dsl import (  # noqa: E402
     all_example_methods,
     compile_method,
     demo_chain_report,
@@ -40,7 +40,7 @@ from src.methods_dsl import (  # noqa: E402
     write_all_exports,
     write_json_report,
 )
-from src.project_paths import project_output_dirs  # noqa: E402
+from template_methods_paper.project_paths import project_output_dirs  # noqa: E402
 
 
 def run_methods_analysis(project_root: Path | None = None) -> list[Path]:

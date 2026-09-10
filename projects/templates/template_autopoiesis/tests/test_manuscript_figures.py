@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from src.grammar import KNOWN_DOMAINS
-from src.manuscript_figures import (
+from template_autopoiesis.grammar import KNOWN_DOMAINS
+from template_autopoiesis.manuscript_figures import (
     _teal_slate_palette,
     fig_coverage_by_module,
     fig_domain_coverage,

@@ -13,7 +13,7 @@ from textwrap import dedent
 
 import pytest
 
-from infrastructure.core.pytest_orchestration import (
+from infrastructure.core.testing.pytest_orchestration import (
     DEFAULT_TEST_PROFILE,
     ENV_DISCOVERY_PREFLIGHT,
     ENV_XDIST_WORKERS,

@@ -7,10 +7,10 @@ import re
 from collections.abc import Callable
 from pathlib import Path
 
-from src.generation_records import load_run_summary
-from src.loop import run_sia_loop_project
-from src.manuscript_tokens_metrics import compute_metrics_variables
-from src.manuscript_variables import compute_variables
+from template_sia.generation_records import load_run_summary
+from template_sia.loop import run_sia_loop_project
+from template_sia.manuscript_tokens_metrics import compute_metrics_variables
+from template_sia.manuscript_variables import compute_variables
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 

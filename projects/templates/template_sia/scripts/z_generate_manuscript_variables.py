@@ -15,7 +15,7 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
 
 from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
 
-from src.reports import compute_variables, write_manuscript_variables
+from template_sia.reports import compute_variables, write_manuscript_variables
 
 
 def main() -> int:

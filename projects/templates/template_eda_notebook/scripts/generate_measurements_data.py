@@ -12,8 +12,8 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "src"):
     if text not in sys.path:
         sys.path.insert(0, text)
 
-from src.eda.generate import DEFAULT_N_ROWS, DEFAULT_SEED, generate_measurements  # noqa: E402
-from src.project_paths import project_output_dirs  # noqa: E402
+from template_eda_notebook.eda.generate import DEFAULT_N_ROWS, DEFAULT_SEED, generate_measurements  # noqa: E402
+from template_eda_notebook.project_paths import project_output_dirs  # noqa: E402
 
 
 def generate_measurements_file(project_root: Path | None = None) -> Path:

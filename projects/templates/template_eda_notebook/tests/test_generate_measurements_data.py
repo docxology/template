@@ -16,7 +16,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from src.eda.generate import DEFAULT_N_ROWS, DEFAULT_SEED, generate_measurements
+from template_eda_notebook.eda.generate import DEFAULT_N_ROWS, DEFAULT_SEED, generate_measurements
 
 _PROJECT_ROOT = Path(__file__).resolve().parents[1]
 _SCRIPT = _PROJECT_ROOT / "scripts" / "generate_measurements_data.py"

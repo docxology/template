@@ -25,11 +25,12 @@ _project_root = Path(__file__).resolve().parent.parent
 _repo_root = _project_root.parents[2]
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
+sys.path.insert(0, str(_project_root / "src" / "template_search_project"))
 sys.path.insert(0, str(_repo_root))
 
 from infrastructure.core.logging.utils import get_logger
 
-from src.figures import generate_all_figures, load_search_result
+from template_search_project.figures import generate_all_figures, load_search_result
 
 logger = get_logger(__name__)
 

@@ -297,15 +297,15 @@ def simulate_trajectory(
 
 ### optimization_analysis.py
 
-Thin orchestrator (~65 lines) — runs the full pipeline via `main()`. **Function signatures:** [`src/AGENTS.md`](src/AGENTS.md) (`analysis/`, `figures/`, `optimizer.py`, `dashboard.py`). Do not duplicate API blocks here.
+Thin orchestrator (~65 lines) — runs the full pipeline via `main()`. **Function signatures:** [`src/AGENTS.md`](src/template_code_project/AGENTS.md) (`analysis/`, `figures/`, `optimizer.py`, `dashboard.py`). Do not duplicate API blocks here.
 
 ### build_dashboard.py
 
-Thin wrapper → [`src/dashboard.py`](src/dashboard.py).
+Thin wrapper → [`src/dashboard.py`](src/template_code_project/dashboard.py).
 
 ### generate_api_docs.py
 
-Thin wrapper → [`src/documentation.py`](src/documentation.py).
+Thin wrapper → [`src/documentation.py`](src/template_code_project/documentation.py).
 
 ## Troubleshooting
 

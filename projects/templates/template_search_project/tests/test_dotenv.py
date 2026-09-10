@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from src.dotenv import load_dotenv, parse_dotenv
+from template_search_project.dotenv import load_dotenv, parse_dotenv
 
 
 def test_parse_dotenv_basic_and_comments():

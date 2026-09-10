@@ -38,6 +38,6 @@ Release workflow: [`../../../docs/guides/publishing-guide.md`](../../../../docs/
 
 ## See Also
 
-- [`README.md`](README.md)
+- [`README.md`](template_template/README.md)
 - [`template_template/AGENTS.md`](template_template/AGENTS.md)
 - [`../AGENTS.md`](../AGENTS.md)

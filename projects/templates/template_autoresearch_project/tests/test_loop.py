@@ -17,9 +17,9 @@ from infrastructure.core.pipeline.artifacts import (
     validate_artifact_manifest,
 )
 
-from src.config import build_loop_config, load_manuscript_loop_settings
-from src.loop import build_claims, run_autoresearch_loop
-from src.models import AutoResearchLoopResult
+from template_autoresearch_project.config import build_loop_config, load_manuscript_loop_settings
+from template_autoresearch_project.loop import build_claims, run_autoresearch_loop
+from template_autoresearch_project.models import AutoResearchLoopResult
 
 
 def _run_loop_without_coverage(project: Path, repo: Path) -> AutoResearchLoopResult:
@@ -470,7 +470,7 @@ def test_pre_extrinsic_phase_table_covers_manifest_settlement(
     autoresearch_loop_result: AutoResearchLoopResult,
 ) -> None:
     """Pre-extrinsic phases run payload refresh, visuals, and settlement pass 2."""
-    from src.loop_phases import PRE_EXTRINSIC_PHASES
+    from template_autoresearch_project.loop_phases import PRE_EXTRINSIC_PHASES
 
     assert [handler.__name__ for handler in PRE_EXTRINSIC_PHASES] == [
         "run_provisional_payload_phase",

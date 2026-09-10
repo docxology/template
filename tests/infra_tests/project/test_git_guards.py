@@ -33,6 +33,66 @@ def _github_credential(marker: str) -> str:
     return "ghp_" + (marker * 40)[:40]
 
 
+def _slack_credential() -> str:
+    """Build a Slack-shaped fixture without tracking a token-shaped literal."""
+    return "xox" + "b-" + "1" * 12 + "-" + "2" * 13 + "-" + "Z9" * 13
+
+
+def _huggingface_credential() -> str:
+    """Build a HuggingFace-shaped fixture without tracking a token-shaped literal."""
+    return "hf_" + "Z9" * 17
+
+
+def _slack_documented_fixture() -> str:
+    """Assemble the documented Slack fixture at runtime (no tracked token literal)."""
+    return "xoxb-" + "123456789012" + "-" + "1234567890123" + "-" + "abcdefghijklmnopqrstuvwxyz"
+
+
+def _huggingface_documented_fixture() -> str:
+    """Assemble the documented HuggingFace fixture at runtime (no tracked token literal)."""
+    return "hf_" + "abcdefghij" + "klmnopqrstuvwxyz0123456789ABCD"
+
+
+def _aws_access_key_id_documented_fixture() -> str:
+    """Assemble the documented AWS access key id at runtime (no tracked key literal)."""
+    return "AKIA" + "ABCDEFGHIJKLMNOP"
+
+
+def _github_pat_documented_fixture() -> str:
+    """Assemble the documented GitHub PAT fixture at runtime (no tracked token literal)."""
+    return "ghp_" + "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJ"
+
+
+def _openai_documented_fixture() -> str:
+    """Assemble the documented OpenAI fixture at runtime (no tracked token literal)."""
+    return "sk-proj-" + "abcdefghijklmnopqrstuvwxyz" + "123456"
+
+
+def _high_entropy_documented_fixture() -> str:
+    """Assemble the documented high-entropy fixture at runtime (no tracked 40+ char run)."""
+    return "abcdefghij" + "klmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789ab"
+
+
+def _gcp_private_key_id() -> str:
+    """Build a 32-hex service-account id without tracking a flaggable literal."""
+    return "a1b2c3d4" + "e5f6a7b8" + "c9d0e1f2" + "a3b4c5d6"
+
+
+def _gcp_type_marker() -> str:
+    """Build the service-account JSON type marker without tracking a flaggable literal."""
+    return '"type"' + ': "service_account"'
+
+
+def _gcp_service_account_email() -> str:
+    """Build a service-account email without tracking a flaggable literal."""
+    return "ci-runner@" + "example-project" + ".iam.gserviceaccount.com"
+
+
+def _high_entropy_credential() -> str:
+    """Build a 48-char mixed-class value without tracking a flaggable literal."""
+    return "Z9" * 24
+
+
 def _commit_all(root: Path, message: str) -> None:
     subprocess.run(["git", "add", "-A"], cwd=root, check=True)
     subprocess.run(["git", "commit", "-m", message], cwd=root, check=True, capture_output=True)
@@ -339,9 +399,9 @@ def test_tracked_public_output_local_paths_detects_windows_home(tmp_path: Path) 
     "secret",
     [
         "-----BEGIN PRIVATE KEY-----",
-        "ghp_abcdefghijklmnopqrstuvwxyzABCDEFGHIJ",
-        "AKIAABCDEFGHIJKLMNOP",
-        "sk-proj-abcdefghijklmnopqrstuvwxyz123456",
+        _github_pat_documented_fixture(),
+        _aws_access_key_id_documented_fixture(),
+        _openai_documented_fixture(),
     ],
 )
 def test_tracked_public_output_secrets_detects_structured_credentials(tmp_path: Path, secret: str) -> None:
@@ -492,3 +552,91 @@ def test_tracked_secret_findings_fail_closed_with_diagnostic(tmp_path: Path) -> 
     """
     with pytest.raises(RuntimeError, match="git guard subprocess failed"):
         tracked_secret_findings(tmp_path)
+
+
+def _tracked_finding(tmp_path: Path, content: str, expected: str) -> None:
+    """Commit content into a scratch checkout and assert one exact finding."""
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    (repo_root / "note.txt").write_text(content, encoding="utf-8")
+    subprocess.run(["git", "init", "--quiet"], cwd=repo_root, check=True, timeout=30)
+    subprocess.run(["git", "add", "-A"], cwd=repo_root, check=True, timeout=30)
+
+    assert tracked_secret_findings(repo_root) == [expected]
+
+
+def test_tracked_secret_scan_flags_slack_token_but_not_documented_fixture(tmp_path: Path) -> None:
+    """Negative control: a real xoxb token is flagged; documented fixtures are not."""
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    secret = _slack_credential()
+    (repo_root / "note.txt").write_text(f"token\n{secret}\n", encoding="utf-8")
+    (repo_root / "fixture.md").write_text(
+        "example\n" + _slack_documented_fixture() + "\n",
+        encoding="utf-8",
+    )
+    subprocess.run(["git", "init", "--quiet"], cwd=repo_root, check=True, timeout=30)
+    subprocess.run(["git", "add", "-A"], cwd=repo_root, check=True, timeout=30)
+
+    assert tracked_secret_findings(repo_root) == ["note.txt:2:slack-token"]
+
+
+def test_tracked_secret_scan_flags_huggingface_token(tmp_path: Path) -> None:
+    _tracked_finding(tmp_path, f"{_huggingface_credential()}\n", "note.txt:1:huggingface-token")
+
+
+def test_tracked_secret_scan_flags_gcp_service_account_type_marker(tmp_path: Path) -> None:
+    _tracked_finding(
+        tmp_path,
+        "{" + _gcp_type_marker() + ', "project_id": "example-prod"}\n',
+        "note.txt:1:gcp-service-account",
+    )
+
+
+def test_tracked_secret_scan_flags_gcp_service_account_email(tmp_path: Path) -> None:
+    content = f"rotation owner {_gcp_service_account_email()}\n"
+    _tracked_finding(tmp_path, content, "note.txt:1:gcp-service-account")
+
+
+def test_tracked_secret_scan_flags_gcp_service_account_private_key_id(tmp_path: Path) -> None:
+    content = '{"private_key_id": "' + _gcp_private_key_id() + '"}\n'
+    _tracked_finding(tmp_path, content, "note.txt:1:gcp-service-account")
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        'API_TOKEN = "{value}"\n',
+        "secret_access_key: {value}\n",
+        '"client_secret": "{value}"\n',
+    ],
+)
+def test_tracked_secret_scan_flags_high_entropy_assignment(tmp_path: Path, template: str) -> None:
+    _tracked_finding(
+        tmp_path,
+        template.format(value=_high_entropy_credential()),
+        "note.txt:1:high-entropy-assignment",
+    )
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        _slack_documented_fixture() + "\n",
+        _huggingface_documented_fixture() + "\n",
+        '{"private_key_id": "abcdefghijklmnopqrstuvwxyz0123456"}\n',
+        'API_KEY = "' + _high_entropy_documented_fixture() + '"\n',
+        # The four original families keep their documented fixtures, too.
+        _github_pat_documented_fixture() + "\n",
+        _aws_access_key_id_documented_fixture() + "\n",
+        _openai_documented_fixture() + "\n",
+    ],
+)
+def test_tracked_secret_scan_ignores_documented_fixtures(tmp_path: Path, content: str) -> None:
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    (repo_root / "fixture.md").write_text(content, encoding="utf-8")
+    subprocess.run(["git", "init", "--quiet"], cwd=repo_root, check=True, timeout=30)
+    subprocess.run(["git", "add", "-A"], cwd=repo_root, check=True, timeout=30)
+
+    assert tracked_secret_findings(repo_root) == []

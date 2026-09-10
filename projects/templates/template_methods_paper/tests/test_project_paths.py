@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.project_paths import project_output_dirs, resolve_project_root
+from template_methods_paper.project_paths import project_output_dirs, resolve_project_root
 
 
 def test_project_output_dirs_default_root_has_expected_keys():
