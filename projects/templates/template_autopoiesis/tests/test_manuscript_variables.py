@@ -118,6 +118,7 @@ def test_honesty_manifest_tokens():
 def test_measure_test_summary_on_synthetic_passing_project(tmp_path):
     (tmp_path / "src" / "template_autopoiesis").mkdir(parents=True)
     (tmp_path / "src" / "__init__.py").write_text("")
+    (tmp_path / "src" / "template_autopoiesis" / "__init__.py").write_text("")
     (tmp_path / "src" / "template_autopoiesis" / "adder.py").write_text("def add(a, b):\n    return a + b\n")
     (tmp_path / "tests").mkdir()
     (tmp_path / "tests" / "test_adder.py").write_text(

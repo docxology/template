@@ -58,7 +58,7 @@ def measure_test_summary(
     python = str(repo_root_python) if repo_root_python.is_file() else sys.executable
     if repo_root_python.is_file():
         probe = subprocess.run(
-            [str(repo_root_python), "-c", "import pytest, coverage"],
+            [str(repo_root_python), "-c", "import pytest, pytest_cov"],
             capture_output=True,
             text=True,
             timeout=30,
