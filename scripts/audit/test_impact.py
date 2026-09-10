@@ -11,7 +11,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from infrastructure.core.test_impact import classify_changed_paths  # noqa: E402
+from infrastructure.core.testing.test_impact import classify_changed_paths  # noqa: E402
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy  # noqa: E402
 
 

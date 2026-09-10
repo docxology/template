@@ -12,7 +12,7 @@ import logging
 import re
 
 
-from infrastructure.core.pytest_orchestration import (
+from infrastructure.core.testing.pytest_orchestration import (
     DISCOVERY_PATTERNS,
     PIPELINE_SMOKE_INFRA_TEST_PATHS,
     XDIST_DISTRIBUTION,

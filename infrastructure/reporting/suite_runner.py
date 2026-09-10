@@ -26,7 +26,7 @@ from infrastructure.core.execution_boundary import (
     terminate_process_tree,
 )
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
-from infrastructure.core.pytest_profiles import (
+from infrastructure.core.testing.pytest_profiles import (
     DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS as DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
 )
 from infrastructure.core.logging.utils import get_logger

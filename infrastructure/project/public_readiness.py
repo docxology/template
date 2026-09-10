@@ -10,11 +10,11 @@ from contextlib import ExitStack
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
-from infrastructure.core.pytest_profiles import (
+from infrastructure.core.testing.project_test_matrix import ProjectTestTask, run_project_test_matrix
+from infrastructure.core.testing.pytest_profiles import (
     DEFAULT_PUBLIC_PROJECT_TEST_TIMEOUT_SECONDS as DEFAULT_TIMEOUT_SECONDS,
 )
-from infrastructure.core.pytest_orchestration import (
+from infrastructure.core.testing.pytest_orchestration import (
     TestProfileName,
     parse_project_workers,
     resolve_test_profile,

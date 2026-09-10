@@ -16,7 +16,7 @@ from infrastructure.core.config.queries import get_testing_config
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.logging.utils import get_logger, log_header, log_substep, log_success
-from infrastructure.core.pytest_orchestration import (
+from infrastructure.core.testing.pytest_orchestration import (
     DEFAULT_TEST_PROFILE,
     INFRASTRUCTURE_TEST_SCOPES,
     InfrastructureTestScope,

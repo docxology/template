@@ -21,7 +21,7 @@ from pathlib import Path
 from types import MappingProxyType
 
 from infrastructure.core.execution_boundary import BoundedSubprocessResult
-from infrastructure.core.pytest_orchestration import (
+from infrastructure.core.testing.pytest_orchestration import (
     build_profile_marker_expression,
     resolve_test_profile,
 )

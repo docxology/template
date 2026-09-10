@@ -1,4 +1,4 @@
-"""Tests for ``infrastructure.core.test_runner.run_per_project_pytest``.
+"""Tests for ``infrastructure.core.testing.test_runner.run_per_project_pytest``.
 
 These tests build a synthetic two-project tree under ``tmp_path`` and exercise
 ``run_per_project_pytest`` end-to-end with real ``pytest`` subprocesses — no
@@ -19,14 +19,14 @@ from textwrap import dedent
 
 import pytest
 
-from infrastructure.core.test_runner import (
+from infrastructure.core.testing.test_runner import (
     DEFAULT_COVERAGE_FILE,
     _output_tree_digest,
     _contains_tests,
     DEFAULT_FAIL_UNDER,
     run_per_project_pytest,
 )
-from infrastructure.core.test_runner_outputs import declared_output_relpaths
+from infrastructure.core.testing.test_runner_outputs import declared_output_relpaths
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 pytestmark = pytest.mark.timeout(120)
@@ -392,7 +392,7 @@ def test_allow_empty_requires_explicit_opt_in(synthetic_repo: Path) -> None:
 def test_empty_matrix_still_writes_an_explicit_failure_receipt(synthetic_repo: Path) -> None:
     receipt_path = synthetic_repo / "empty-matrix-receipt.json"
     assert run_per_project_pytest(synthetic_repo, projects=[], receipt_path=receipt_path) == 1
-    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+    from infrastructure.core.testing.public_matrix_receipt import PublicMatrixReceipt
 
     receipt = PublicMatrixReceipt.read(receipt_path)
     assert receipt.overall_exit == 1
@@ -558,7 +558,7 @@ def test_receipt_is_written_and_validates_for_green_run(synthetic_repo: Path, mo
     assert rc == 0
     assert receipt_path.is_file()
 
-    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+    from infrastructure.core.testing.public_matrix_receipt import PublicMatrixReceipt
 
     receipt = PublicMatrixReceipt.read(receipt_path)
     lane_names = {lane.project_name for lane in receipt.lanes}
@@ -590,7 +590,7 @@ def test_receipt_captures_failure_and_is_written_on_error(
     assert rc != 0
     assert receipt_path.is_file(), "receipt must be written even when the matrix fails"
 
-    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+    from infrastructure.core.testing.public_matrix_receipt import PublicMatrixReceipt
 
     receipt = PublicMatrixReceipt.read(receipt_path)
     by_name = {lane.project_name: lane for lane in receipt.lanes}
@@ -631,7 +631,7 @@ def test_receipt_rejects_test_generated_output_drift(synthetic_repo: Path, monke
         receipt_path=receipt_path,
     )
 
-    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+    from infrastructure.core.testing.public_matrix_receipt import PublicMatrixReceipt
 
     receipt = PublicMatrixReceipt.read(receipt_path)
     assert rc == 1
@@ -722,7 +722,7 @@ def test_detached_project_writer_is_killed_before_receipt_finalization(
         receipt_path=receipt_path,
     )
 
-    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+    from infrastructure.core.testing.public_matrix_receipt import PublicMatrixReceipt
 
     receipt = PublicMatrixReceipt.read(receipt_path)
     assert output_file.read_text(encoding="utf-8") == "baseline\n"
@@ -775,7 +775,7 @@ def test_receipt_rejects_parent_output_drift_after_project_process_exits(
 
     assert not writer.is_alive()
     assert mutation_errors == []
-    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+    from infrastructure.core.testing.public_matrix_receipt import PublicMatrixReceipt
 
     receipt = PublicMatrixReceipt.read(receipt_path)
     assert output_file.read_text(encoding="utf-8") == "late drift\n"
@@ -869,7 +869,7 @@ def test_receipt_allows_declared_output_artifact_regeneration(
         receipt_path=receipt_path,
     )
 
-    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+    from infrastructure.core.testing.public_matrix_receipt import PublicMatrixReceipt
 
     receipt = PublicMatrixReceipt.read(receipt_path)
     assert rc == 0
