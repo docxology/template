@@ -40,11 +40,11 @@ def _load_eda_package() -> ModuleType:
 
     if _PKG_ALIAS in sys.modules:
         return sys.modules[_PKG_ALIAS]
-    src_init = PROJECT_ROOT / "src" / "__init__.py"
+    src_init = PROJECT_ROOT / "src" / "template_eda_notebook" / "__init__.py"
     spec = importlib.util.spec_from_file_location(
         _PKG_ALIAS,
         src_init,
-        submodule_search_locations=[str(PROJECT_ROOT / "src")],
+        submodule_search_locations=[str(PROJECT_ROOT / "src" / "template_eda_notebook")],
     )
     assert spec is not None and spec.loader is not None, f"cannot load {src_init}"
     package = importlib.util.module_from_spec(spec)
