@@ -28,7 +28,7 @@ from infrastructure.publishing.zenodo import (
 ```
 
 Reserve-first orchestration (write concept/version DOI to config, re-render, upload) lives in
-[`release_workflow_zenodo.py`](../release_workflow_zenodo.py); see
+[`release_workflow_zenodo.py`](../release/release_workflow_zenodo.py); see
 [`docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md).
 
 ### `DepositionResult.from_zenodo_body`
@@ -110,7 +110,7 @@ publish_reserved_deposition_to_zenodo(
 ) -> PublishResult
 ```
 
-Uploads to an existing reserved draft and publishes. Used by [`release_workflow_zenodo.py`](../release_workflow_zenodo.py) after config write-back and re-render.
+Uploads to an existing reserved draft and publishes. Used by [`release_workflow_zenodo.py`](../release/release_workflow_zenodo.py) after config write-back and re-render.
 
 ## Environment variables
 
