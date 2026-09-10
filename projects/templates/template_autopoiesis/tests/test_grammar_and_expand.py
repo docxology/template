@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from src.grammar import (
+from template_autopoiesis.grammar import (
     KNOWN_DOMAINS,
     RESERVED_SLOTS,
     VENDORABLE_DEPS,
@@ -14,7 +14,7 @@ from src.grammar import (
     load_grammar,
     parse_grammar,
 )
-from src.expand import (
+from template_autopoiesis.expand import (
     SCHEMA_VERSION,
     Spec,
     derive_seed,

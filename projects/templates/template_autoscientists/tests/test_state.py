@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from src.state import Champion, ExperimentOutcome, Proposal, SharedState
+from template_autoscientists.state import Champion, ExperimentOutcome, Proposal, SharedState
 
 
 def _outcome(metric: float, delta: float, confirmed: bool, axis: int = 0, step: float = 0.5) -> ExperimentOutcome:

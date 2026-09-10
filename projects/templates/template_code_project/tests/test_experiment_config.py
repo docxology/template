@@ -7,8 +7,8 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from src.experiment_config import ExperimentConfig, load_experiment_config
-from src.invariants import OptimizerSweepConfig
+from template_code_project.experiment_config import ExperimentConfig, load_experiment_config
+from template_code_project.invariants import OptimizerSweepConfig
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 

@@ -15,11 +15,11 @@ import pytest
 
 from infrastructure.autoresearch import BenchmarkTask
 from infrastructure.core.pipeline.artifacts import compute_sha256
-from src.artifact_schemas import _check_conformance, schema_manifest_payload
-from src.models import AutoResearchLoopResult
-from src.figures.figures_core import save_figure
-from src.security import _provenance_integrity_check, integrity_attestation_payload
-from src.writers import (
+from template_autoresearch_project.artifact_schemas import _check_conformance, schema_manifest_payload
+from template_autoresearch_project.models import AutoResearchLoopResult
+from template_autoresearch_project.figures.figures_core import save_figure
+from template_autoresearch_project.security import _provenance_integrity_check, integrity_attestation_payload
+from template_autoresearch_project.writers import (
     _BENCHMARK_CORE_ARTIFACTS,
     _GradingSettings,
     _grade_absent_benchmark,
@@ -240,7 +240,7 @@ def test_grade_payload_records_effective_threshold(tmp_path: Path) -> None:
 def test_research_object_manifest_surfaces_empty_artifacts(tmp_path: Path) -> None:
     # The research-object inventory must surface present-but-empty artifacts, not
     # just record their presence.
-    from src.research_object import research_object_manifest_payload
+    from template_autoresearch_project.research_object import research_object_manifest_payload
 
     (tmp_path / "output" / "data").mkdir(parents=True)
     empty = tmp_path / "output" / "data" / "empty.json"

@@ -25,16 +25,17 @@ _REPO_ROOT = _DEFAULT_PROJECT_ROOT.parents[2]
 
 sys.path.insert(0, str(_DEFAULT_PROJECT_ROOT))
 sys.path.insert(0, str(_DEFAULT_PROJECT_ROOT / "src"))
+sys.path.insert(0, str(_DEFAULT_PROJECT_ROOT / "src" / "template_prose_project"))
 sys.path.insert(0, str(_REPO_ROOT))
 
 from infrastructure.core.logging.utils import get_logger  # noqa: E402
 
-from src.config import load_project_config  # noqa: E402
+from template_prose_project.config import load_project_config  # noqa: E402
 from infrastructure.rendering.manuscript_injection import (  # noqa: E402
     write_resolved_manuscript_tree,
 )
 
-from src.manuscript_variables import (  # noqa: E402
+from template_prose_project.manuscript_variables import (  # noqa: E402
     compute_variables,
     load_report_payload,
     write_variables,

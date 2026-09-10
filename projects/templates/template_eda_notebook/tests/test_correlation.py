@@ -5,9 +5,9 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from src.eda.cleaning import clean_dataset
-from src.eda.correlation import correlation_matrix, strongest_pairs
-from src.eda.dataset import load_dataset
+from template_eda_notebook.eda.cleaning import clean_dataset
+from template_eda_notebook.eda.correlation import correlation_matrix, strongest_pairs
+from template_eda_notebook.eda.dataset import load_dataset
 
 
 class TestCorrelationMatrix:

@@ -9,10 +9,10 @@ from pathlib import Path
 
 import pytest
 
-from src.eda.cleaning import clean_dataset
-from src.eda.dataset import load_dataset
-from src.eda.notebook_binding import validate_binding
-from src.eda.statistics import summary_statistics
+from template_eda_notebook.eda.cleaning import clean_dataset
+from template_eda_notebook.eda.dataset import load_dataset
+from template_eda_notebook.eda.notebook_binding import validate_binding
+from template_eda_notebook.eda.statistics import summary_statistics
 
 
 PROJECT = Path(__file__).resolve().parents[1]

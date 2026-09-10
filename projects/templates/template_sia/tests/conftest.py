@@ -50,3 +50,12 @@ def copy_project_sandbox() -> Callable[[Path], Path]:
         return dst
 
     return _copy
+
+
+# TEST-ISOLATION-SYSPATH-1: expose the unique nested source package.
+import os as _os
+import sys as _sys
+
+_SRC = _os.path.join(_os.path.dirname(__file__), "..", "src")
+if _SRC not in _sys.path:
+    _sys.path.insert(0, _SRC)

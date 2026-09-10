@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from src.search_invariants import (
+from template_search_project.search_invariants import (
     InvariantResult,
     all_invariants,
     cache_invariants,

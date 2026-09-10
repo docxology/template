@@ -16,7 +16,7 @@ claims:
   - claim_id: fixture-replay-gens
     kind: number
     value: 3
-    source: projects/templates/template_sia/src/fixtures/recorded_generations/ fixture generation count
+    source: projects/templates/template_sia/src/template_sia/fixtures/recorded_generations/ fixture generation count
     source_tier: fixture
     freshness: active
     artifact_path: output/runs/run_1/run_summary.json
@@ -37,21 +37,21 @@ claims:
   - claim_id: fixture-generation-1-threshold
     kind: number
     value: 0.5
-    source: src/fixtures/recorded_generations/gen_1/target_agent.py THRESHOLD
+    source: src/template_sia/fixtures/recorded_generations/gen_1/target_agent.py THRESHOLD
     source_tier: claim_ledger
     freshness: active
-    artifact_path: src/fixtures/recorded_generations/gen_1/target_agent.py
+    artifact_path: src/template_sia/fixtures/recorded_generations/gen_1/target_agent.py
   - claim_id: fixture-generation-2-threshold
     kind: number
     value: 0.3
-    source: src/fixtures/recorded_generations/gen_2/target_agent.py THRESHOLD
+    source: src/template_sia/fixtures/recorded_generations/gen_2/target_agent.py THRESHOLD
     source_tier: claim_ledger
     freshness: active
-    artifact_path: src/fixtures/recorded_generations/gen_2/target_agent.py
+    artifact_path: src/template_sia/fixtures/recorded_generations/gen_2/target_agent.py
   - claim_id: fixture-generation-3-threshold
     kind: number
     value: 0.25
-    source: src/fixtures/recorded_generations/gen_3/target_agent.py THRESHOLD
+    source: src/template_sia/fixtures/recorded_generations/gen_3/target_agent.py THRESHOLD
     source_tier: claim_ledger
     freshness: active
-    artifact_path: src/fixtures/recorded_generations/gen_3/target_agent.py
+    artifact_path: src/template_sia/fixtures/recorded_generations/gen_3/target_agent.py

@@ -19,11 +19,6 @@ import pytest
 
 
 @pytest.fixture
-def repo_root() -> Path:
-    return Path(__file__).parent.parent.parent
-
-
-@pytest.fixture
 def script_path(repo_root: Path) -> Path:
     return repo_root / "run.sh"
 

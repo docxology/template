@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from src.common import CheckReport, CheckResult, trunc
+from template_autopoiesis.common import CheckReport, CheckResult, trunc
 
 
 # ---------------------------------------------------------------------------

@@ -34,7 +34,7 @@ independently enforced project coverage floor.
 
 ### Core Reporting Tests
 
-**Pipeline Reporter Tests (`test_pipeline_reporter.py`)**
+**Pipeline Reporter Tests (`test_pipeline_reporter_reports.py`, `test_pipeline_reporter_renderers.py`, `test_pipeline_reporter_writers.py`, `test_pipeline_reporter_multi_project.py`, `test_pipeline_reporter_log_enrichment.py`)**
 - Pipeline execution reporting and summarization
 - Stage duration tracking and bottleneck identification
 - Resource usage monitoring and reporting
@@ -193,7 +193,7 @@ def test_html_template_error_handling():
 - Coverage XML/JSON parsing and analysis
 - pytest output parsing into structured results
 
-**Pipeline Reporting (`test_pipeline_reporter.py`, `test_pipeline_io.py`, `test_pipeline_markdown.py`, `test_pipeline_html.py`)**
+**Pipeline Reporting (`test_pipeline_reporter_*.py`, `test_pipeline_io.py`, `test_pipeline_markdown.py`, `test_pipeline_html.py`)**
 - End-to-end pipeline report assembly
 - Markdown and HTML pipeline report rendering
 - Real-world usage scenario simulation
@@ -389,7 +389,7 @@ def validate_html_report_structure(html_content: str):
 uv run pytest tests/infra_tests/reporting/
 
 # Run specific component tests
-uv run pytest tests/infra_tests/reporting/test_pipeline_reporter.py
+uv run pytest tests/infra_tests/reporting/test_pipeline_reporter_reports.py tests/infra_tests/reporting/test_pipeline_reporter_renderers.py tests/infra_tests/reporting/test_pipeline_reporter_writers.py tests/infra_tests/reporting/test_pipeline_reporter_multi_project.py tests/infra_tests/reporting/test_pipeline_reporter_log_enrichment.py
 
 # Run executive and coverage tests
 uv run pytest tests/infra_tests/reporting/test_executive_reporter.py tests/infra_tests/reporting/test_coverage_parser.py
@@ -562,7 +562,7 @@ def debug_error_categorization():
 **Verbose Execution:**
 ```bash
 # Run with detailed output
-uv run pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v -s
+uv run pytest tests/infra_tests/reporting/test_pipeline_reporter_reports.py tests/infra_tests/reporting/test_pipeline_reporter_renderers.py tests/infra_tests/reporting/test_pipeline_reporter_writers.py tests/infra_tests/reporting/test_pipeline_reporter_multi_project.py tests/infra_tests/reporting/test_pipeline_reporter_log_enrichment.py -v -s
 
 # Debug specific assertion
 uv run pytest tests/infra_tests/reporting/ --pdb -k "test_pipeline_reporter_basic"

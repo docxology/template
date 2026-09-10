@@ -100,8 +100,10 @@ Add `.secrets` to `.gitignore` if you need to test secret-dependent jobs locally
 | `health` (blocking static-health report) | ✅ Yes | Runs `infrastructure.core.health`; needs `lint` and the shared Mermaid/Chrome setup action |
 | `verify-no-mocks` | ✅ Yes | Fully Linux-portable; needs `lint` |
 | `test-regression` (claim-binding pins) | ✅ Yes | Fully Linux-portable; needs `verify-no-mocks` |
+| `test-integration` (run.sh + secure_run.sh + pipeline CLI) | ✅ Yes | Fully Linux-portable; needs `verify-no-mocks`; mirrors `test-regression` (CI-WIRING-1) |
 | `fep-lean` (gauss + lake, conditional) | ✅ Yes | Linux-only, `if: needs.detect.outputs.fep_lean == 'true'`; heavy (60 min timeout) |
 | `setup-hook-windows-smoke` | ❌ No | Runs on `windows-latest` — `act` only reproduces Linux containers; treat the real CI run as source of truth (same caveat as the macOS jobs above) |
+| `test-infra-slow` (`pytest.mark.slow` lane, schedule/manual only) | ✅ Yes | `uv run pytest tests/infra_tests/ -m slow` locally; heavy real-render suite (pandoc + TeX Live), no coverage upload |
 
 ## Fallback: fail-closed direct commands
 

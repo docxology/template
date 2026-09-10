@@ -74,7 +74,16 @@ def check_project_src_infrastructure_boundary(
         imports = _infra_imports_in_file(py_path)
         if not imports:
             continue
-        if rel_py in allowlist:
+        # TEST-ISOLATION-SYSPATH-1: layer contracts were written against the
+        # flat layout (src/loop.py); the same file now lives at
+        # src/<exemplar>/loop.py. Match either form so exemptions survive the
+        # nesting while genuinely unallowlisted imports still warn.
+        rel_variants = {rel_py}
+        exemplar = project.split("/")[-1]
+        prefix = f"src/{exemplar}/"
+        if rel_py.startswith(prefix):
+            rel_variants.add("src/" + rel_py.removeprefix(prefix))
+        if any(variant in allowlist for variant in rel_variants):
             continue
         severity = "ERROR" if strict else "WARNING"
         joined = ", ".join(sorted(set(imports)))

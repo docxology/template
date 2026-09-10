@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from src.sealing import (
+from template_autopoiesis.sealing import (
     qr_matrix,
     read_qr_matrix,
     qr_image,
@@ -250,7 +250,7 @@ def test_qr_matrix_fallback_checkerboard_when_qrcode_absent():
     """qr_matrix falls back to 5x5 checkerboard when qrcode is not importable."""
     import sys
     import importlib
-    import src.sealing as _sealing_mod
+    import template_autopoiesis.sealing as _sealing_mod
 
     saved = sys.modules.get("qrcode")
     # Block qrcode import to exercise the ImportError branch
@@ -277,7 +277,7 @@ def test_read_qr_matrix_body_with_pyzbar_available():
     import sys
     import types
     import importlib
-    import src.sealing as _sealing_mod
+    import template_autopoiesis.sealing as _sealing_mod
 
     # Build a minimal fake pyzbar.pyzbar module with a decode that returns []
     fake_pyzbar_inner = types.ModuleType("pyzbar.pyzbar")

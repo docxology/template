@@ -14,6 +14,7 @@ Audit and quality-gate scripts for documentation, filepath, drift, and git-guard
 | `verify_no_mocks.py` | Lexical mock-framework gate; `--inventory` reports monkeypatch stand-ins |
 | `audit_filepaths.py` | Filepath audit |
 | `check_template_drift.py` | Template drift check |
+| `check_doc_module_refs.py` | Resolves every `infrastructure.*` dotted path in docs/, README.md, and AGENTS.md to a real module |
 | `check_tracked_projects.py` | Confidentiality guard |
 | `check_tracked_fonds.py` | Fonds git guard |
 | `check_tracked_rules.py` | Rules git guard |
@@ -33,6 +34,7 @@ uv run python scripts/audit/check_template_drift.py --strict
 uv run python scripts/audit/check_backlog.py
 uv run python scripts/audit/check_claim_bindings.py
 uv run python scripts/audit/check_public_template_contract.py --strict
+uv run python scripts/audit/check_doc_module_refs.py
 uv run python scripts/audit/check_tracked_all.py
 uv run python scripts/audit/check_tracked_secrets.py
 uv run python scripts/audit/check_staged_secrets.py

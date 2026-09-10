@@ -10,7 +10,7 @@ and executes both projects with the same code.
 
 Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
-Subfolder documentation: [`docs/AGENTS.md`](docs/AGENTS.md), [`manuscript/AGENTS.md`](manuscript/AGENTS.md), [`src/AGENTS.md`](src/AGENTS.md), [`tests/AGENTS.md`](tests/AGENTS.md), [`scripts/AGENTS.md`](scripts/AGENTS.md) (each with a [`README.md`](README.md) in the same directory).
+Subfolder documentation: [`docs/AGENTS.md`](docs/AGENTS.md), [`manuscript/AGENTS.md`](manuscript/AGENTS.md), [`src/AGENTS.md`](src/template_search_project/AGENTS.md), [`tests/AGENTS.md`](tests/AGENTS.md), [`scripts/AGENTS.md`](scripts/AGENTS.md) (each with a [`README.md`](README.md) in the same directory).
 
 ## Layout
 
@@ -105,7 +105,7 @@ Reads the `deep_search:` block of `config.yaml`. Each keyword runs its
 own `SearchQuery` (capped at `max_results_per_keyword`, default 100),
 every paper is fully enriched (abstract + fulltext), and each paper
 gets a multi-section markdown reading note (LLM-generated when enabled).
-See [`src/deep_search.py`](src/deep_search.py) and
+See [`src/deep_search.py`](src/template_search_project/deep_search.py) and
 [`manuscript/07_deep_search.md`](manuscript/07_deep_search.md).
 
 | Command | Behaviour |

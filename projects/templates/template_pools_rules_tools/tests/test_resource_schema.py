@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from src.resource_schema import (
+from template_pools_rules_tools.resource_schema import (
     REQUIRED_MANIFEST_KEYS,
     build_resource_schema_receipt,
     validate_resource_directory,

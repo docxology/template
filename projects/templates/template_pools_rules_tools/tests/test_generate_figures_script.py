@@ -17,7 +17,7 @@ from infrastructure.validation.content.figure_validator import (  # noqa: E402
     validate_figure_registry,
 )
 
-from src.figures import INTEGRATION_FIGURE_SPECS, all_figures  # noqa: E402
+from template_pools_rules_tools.figures import INTEGRATION_FIGURE_SPECS, all_figures  # noqa: E402
 
 SCRIPT = PROJECT_ROOT / "scripts" / "05_generate_figures.py"
 

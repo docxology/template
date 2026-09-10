@@ -17,11 +17,11 @@ from pathlib import Path
 
 import yaml
 
-from src.agents import DeterministicProposer
-from src.ablation import AblationRow, build_ablation_payload, run_ablations
-from src.comparison import build_comparison_payload, build_objective, run_comparison, summarize_run
-from src.objective import SyntheticObjective
-from src.search import SearchConfig, run_search
+from template_autoscientists.agents import DeterministicProposer
+from template_autoscientists.ablation import AblationRow, build_ablation_payload, run_ablations
+from template_autoscientists.comparison import build_comparison_payload, build_objective, run_comparison, summarize_run
+from template_autoscientists.objective import SyntheticObjective
+from template_autoscientists.search import SearchConfig, run_search
 
 _CONFIG_YAML = Path(__file__).resolve().parent.parent / "manuscript" / "config.yaml"
 

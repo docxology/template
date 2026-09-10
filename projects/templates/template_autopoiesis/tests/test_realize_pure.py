@@ -5,7 +5,7 @@ from __future__ import annotations
 import sys
 
 
-from src.realize import _gate_python, _project_slug, run_child_stage
+from template_autopoiesis.realize import _gate_python, _project_slug, run_child_stage
 
 
 # ---------------------------------------------------------------------------

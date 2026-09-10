@@ -1,0 +1,40 @@
+"""Small code project - numerical optimization utilities.
+
+This project demonstrates a small, fully-tested codebase implementing
+basic numerical optimization algorithms with comprehensive testing
+and analysis capabilities.
+"""
+
+from .invariants import (
+    InvariantResult,
+    OptimizerSweepConfig,
+    all_invariants,
+    convergence_invariants,
+    gradient_consistency_invariants,
+    trajectory_invariants,
+)
+from .optimizer import (
+    OptimizationResult,
+    compute_gradient,
+    gradient_descent,
+    make_quadratic_problem,
+    quadratic_function,
+    simulate_trajectory,
+)
+
+__all__ = [
+    # Optimizer primitives
+    "quadratic_function",
+    "gradient_descent",
+    "compute_gradient",
+    "make_quadratic_problem",
+    "simulate_trajectory",
+    "OptimizationResult",
+    # Numerical invariants (driven by scripts/build_dashboard.py)
+    "InvariantResult",
+    "OptimizerSweepConfig",
+    "all_invariants",
+    "convergence_invariants",
+    "gradient_consistency_invariants",
+    "trajectory_invariants",
+]

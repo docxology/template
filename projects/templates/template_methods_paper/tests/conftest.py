@@ -21,9 +21,9 @@ for _path in (REPO_ROOT, SRC):
 
 import pytest  # noqa: E402
 
-from src.methods_dsl.model import Method, Parameter, Resource, Step  # noqa: E402
-from src.methods_dsl.units import Quantity  # noqa: E402
-from src.methods_dsl.vocabulary import StepKind, Target  # noqa: E402
+from template_methods_paper.methods_dsl.model import Method, Parameter, Resource, Step  # noqa: E402
+from template_methods_paper.methods_dsl.units import Quantity  # noqa: E402
+from template_methods_paper.methods_dsl.vocabulary import StepKind, Target  # noqa: E402
 
 # Shared fixtures: minimal valid and deliberately-invalid Method objects.
 # No mocks — every fixture is a real, fully-constructed Method.
@@ -137,3 +137,12 @@ def target_mismatch_method() -> Method:
         target=Target.HUMAN,
         steps=(Step(step_id=1, name="Compute offset", kind=StepKind.COMPUTE, target=Target.HUMAN),),
     )
+
+
+# TEST-ISOLATION-SYSPATH-1: expose the unique nested source package.
+import os as _os
+import sys as _sys
+
+_SRC = _os.path.join(_os.path.dirname(__file__), "..", "src")
+if _SRC not in _sys.path:
+    _sys.path.insert(0, _SRC)

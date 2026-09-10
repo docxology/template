@@ -7,7 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from src.analysis import (
+from template_search_project.analysis import (
     StageResult,
     audit_infrastructure_imports,
     check_determinism_artifacts,
@@ -224,7 +224,7 @@ def test_analysis_cli_infrastructure_usage(tmp_path: Path) -> None:
     proc = subprocess.run(
         [
             sys.executable,
-            str(PROJECT_ROOT / "src" / "analysis.py"),
+            str(PROJECT_ROOT / "src" / "template_search_project" / "analysis.py"),
             "--stage",
             "infrastructure_usage",
             "--project-root",
@@ -246,7 +246,7 @@ def test_analysis_cli_determinism_check_failed(tmp_path: Path) -> None:
     proc = subprocess.run(
         [
             sys.executable,
-            str(PROJECT_ROOT / "src" / "analysis.py"),
+            str(PROJECT_ROOT / "src" / "template_search_project" / "analysis.py"),
             "--stage",
             "determinism_check",
             "--project-root",
@@ -268,7 +268,7 @@ def test_analysis_cli_test_suite_health_missing_tests(tmp_path: Path) -> None:
     proc = subprocess.run(
         [
             sys.executable,
-            str(PROJECT_ROOT / "src" / "analysis.py"),
+            str(PROJECT_ROOT / "src" / "template_search_project" / "analysis.py"),
             "--stage",
             "test_suite_health",
             "--project-root",
@@ -327,7 +327,7 @@ def test_audit_infrastructure_imports_reports_syntax_error(tmp_path: Path) -> No
 def test_extract_citation_keys_handles_empty_brackets() -> None:
     """Pathological input: ``[@]`` and ``[@; @]`` must produce no keys
     rather than emitting empty strings into the cited-key set."""
-    from src.analysis import _extract_citation_keys
+    from template_search_project.analysis import _extract_citation_keys
 
     assert _extract_citation_keys("[@]") == set()
     assert _extract_citation_keys("[@; @]") == set()
@@ -346,7 +346,7 @@ def test_extract_citation_keys_handles_multicite_and_crossref() -> None:
       markers (``[-@k]``, ``[+@k]``),
     * leave plain single citations untouched.
     """
-    from src.analysis import _extract_citation_keys
+    from template_search_project.analysis import _extract_citation_keys
 
     text = (
         "See [@boyd2004convex; @nocedal2006numerical] and a single [@kingma2014adam]. "
@@ -470,7 +470,7 @@ def test_analysis_cli_bibliography_completeness(tmp_path: Path) -> None:
     proc = subprocess.run(
         [
             sys.executable,
-            str(PROJECT_ROOT / "src" / "analysis.py"),
+            str(PROJECT_ROOT / "src" / "template_search_project" / "analysis.py"),
             "--stage",
             "bibliography_completeness",
             "--project-root",
@@ -494,7 +494,7 @@ def test_analysis_cli_variables_resolved(tmp_path: Path) -> None:
     proc = subprocess.run(
         [
             sys.executable,
-            str(PROJECT_ROOT / "src" / "analysis.py"),
+            str(PROJECT_ROOT / "src" / "template_search_project" / "analysis.py"),
             "--stage",
             "variables_resolved",
             "--project-root",

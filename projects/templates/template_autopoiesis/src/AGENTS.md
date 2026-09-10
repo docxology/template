@@ -6,5 +6,5 @@ materialize, verify, and seal child projects.
 ## See also
 
 - [`../AGENTS.md`](../AGENTS.md)
-- [`README.md`](README.md)
-- [`primitives/AGENTS.md`](primitives/AGENTS.md)
+- [`README.md`](template_autopoiesis/README.md)
+- [`primitives/AGENTS.md`](template_autopoiesis/primitives/AGENTS.md)

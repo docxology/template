@@ -24,7 +24,7 @@ import pytest
 
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.sia import RunConfig, run_sia_loop
-from src.loop import build_run_config, fixtures_dir, run_sia_loop_project
+from template_sia.loop import build_run_config, fixtures_dir, run_sia_loop_project
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 

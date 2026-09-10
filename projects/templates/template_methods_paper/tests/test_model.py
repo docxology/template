@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from src.methods_dsl.model import Method, MethodModelError, Parameter, Resource, Step
-from src.methods_dsl.units import Quantity
-from src.methods_dsl.vocabulary import StepKind, Target
+from template_methods_paper.methods_dsl.model import Method, MethodModelError, Parameter, Resource, Step
+from template_methods_paper.methods_dsl.units import Quantity
+from template_methods_paper.methods_dsl.vocabulary import StepKind, Target
 
 
 def test_parameter_requires_name():

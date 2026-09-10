@@ -2,7 +2,7 @@
 
 import subprocess
 
-from infrastructure.core.test_impact import classify_changed_paths
+from infrastructure.core.testing.test_impact import classify_changed_paths
 from scripts.audit.test_impact import _git_changed_paths
 
 

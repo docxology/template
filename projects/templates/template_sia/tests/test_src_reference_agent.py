@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from src.reference_agent import main, majority_label, run_agent, write_predictions
+from template_sia.reference_agent import main, majority_label, run_agent, write_predictions
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATASET = PROJECT_ROOT / "tasks" / "mini_classify" / "data" / "public"

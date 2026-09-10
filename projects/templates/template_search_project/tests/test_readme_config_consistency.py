@@ -27,7 +27,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def _load_config():
-    from src.config import load_project_config
+    from template_search_project.config import load_project_config
 
     return load_project_config(PROJECT_ROOT / "manuscript" / "config.yaml")
 

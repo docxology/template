@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.public_matrix_receipt import (
+from infrastructure.core.testing.public_matrix_receipt import (
     PublicMatrixLaneResult,
     PublicMatrixReceipt,
     build_public_matrix_cache_key,

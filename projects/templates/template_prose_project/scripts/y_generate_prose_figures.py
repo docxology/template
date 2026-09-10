@@ -22,13 +22,14 @@ _REPO_ROOT = _DEFAULT_PROJECT_ROOT.parents[2]
 
 sys.path.insert(0, str(_DEFAULT_PROJECT_ROOT))
 sys.path.insert(0, str(_DEFAULT_PROJECT_ROOT / "src"))
+sys.path.insert(0, str(_DEFAULT_PROJECT_ROOT / "src" / "template_prose_project"))
 sys.path.insert(0, str(_REPO_ROOT))
 
 from infrastructure.core.logging.utils import get_logger  # noqa: E402
 
 from infrastructure.prose.report import load_report_json  # noqa: E402
 
-from src.figures import generate_all_figures  # noqa: E402
+from template_prose_project.figures import generate_all_figures  # noqa: E402
 
 logger = get_logger(__name__)
 

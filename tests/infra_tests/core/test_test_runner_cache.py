@@ -5,7 +5,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from infrastructure.core.test_runner_cache import _cache_identity_inputs
+from infrastructure.core.testing.test_runner_cache import _cache_identity_inputs
 
 
 def _git_repo(tmp_path: Path) -> Path:

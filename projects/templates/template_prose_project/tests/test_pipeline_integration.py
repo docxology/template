@@ -6,9 +6,9 @@ import json
 import shutil
 from pathlib import Path
 
-from src.config import load_project_config
+from template_prose_project.config import load_project_config
 from pipeline_helpers import run_prose_pipeline_with_analysis
-from src.report import write_review_report
+from template_prose_project.report import write_review_report
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent

@@ -7,7 +7,7 @@ from pathlib import Path
 
 from infrastructure.prose import analyze_files
 
-from src.config import (
+from template_prose_project.config import (
     BibliographyConfig,
     ProjectConfig,
     ProseAnalysisConfig,
@@ -15,8 +15,8 @@ from src.config import (
 )
 from pipeline_helpers import run_prose_pipeline_with_analysis
 
-from src.pipeline import CheckResult
-from src.pipeline.checks import (
+from template_prose_project.pipeline import CheckResult
+from template_prose_project.pipeline.checks import (
     _check_bibliography,
     _check_citation_density,
     _check_grade_level,
@@ -651,7 +651,7 @@ class TestNegativeControls:
         (grade level and citation density and bibliography always run; only
         structural checks are optional). Verify the contract for what happens
         when every optional flag is False."""
-        from src.pipeline.checks import run_configured_checks
+        from template_prose_project.pipeline.checks import run_configured_checks
         from infrastructure.prose import analyze_files as af
 
         report = af({"f.md": "# A\\n\\nbody."})
@@ -682,7 +682,7 @@ class TestNegativeControls:
         Negative control: the check message must say 'not found' so an
         agent or CI log can distinguish 'file missing' from 'key missing'.
         """
-        from src.pipeline.checks import _check_bibliography
+        from template_prose_project.pipeline.checks import _check_bibliography
         from infrastructure.prose import analyze_files as af
 
         report = af({"f.md": "# A\\n\\nCite [@x]."})
@@ -694,7 +694,7 @@ class TestNegativeControls:
 
     def test_citation_density_message_contains_density_value(self):
         """Check message must surface the computed density so CI logs are informative."""
-        from src.pipeline.checks import _check_citation_density
+        from template_prose_project.pipeline.checks import _check_citation_density
         from infrastructure.prose import analyze_files as af
 
         report = af({"f.md": "# A\\n\\n" + "word " * 100})

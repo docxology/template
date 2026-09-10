@@ -6,7 +6,7 @@ import argparse
 import json
 from pathlib import Path
 
-from src.dashboard import build_dashboard, compute_payload, filter_papers, load_papers
+from template_search_project.dashboard import build_dashboard, compute_payload, filter_papers, load_papers
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 

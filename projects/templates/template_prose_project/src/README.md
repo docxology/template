@@ -57,4 +57,4 @@ write_review_report(
 | `report.py` | `write_review_report`. |
 | `prose_facade.py` | `ManuscriptReportLike`, `FileReportLike`, `ProseMetricsLike`, `QualityReportLike`, `StructureReportLike`, `render_outline`, `parse_bib_keys`. |
 
-See [AGENTS.md](AGENTS.md) for invariants and the editing checklist.
+See [AGENTS.md](template_prose_project/AGENTS.md) for invariants and the editing checklist.

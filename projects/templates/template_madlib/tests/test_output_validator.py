@@ -3,14 +3,14 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from src.config import SECTION_KEYS, load_madlib_config
-from src.output_validator import (
+from template_madlib.config import SECTION_KEYS, load_madlib_config
+from template_madlib.output_validator import (
     DECLARED_FIGURE_FILES,
     OutputValidationResult,
     validate_generated_outputs,
     write_validation_report,
 )
-from .helpers import base_payload, write_config
+from helpers import base_payload, write_config
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 

@@ -11,7 +11,7 @@ import pytest
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-from scripts.pipeline.stage_05_copy import execute_copy_stage
+from infrastructure.orchestration.stage_policy import execute_copy_stage
 
 
 def _write_pdf(path: Path) -> None:

@@ -7,20 +7,20 @@ import sys
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[1]
-if str(PROJECT) not in sys.path:
-    sys.path.insert(0, str(PROJECT))
+if str(PROJECT / "src") not in sys.path:
+    sys.path.insert(0, str(PROJECT / "src"))
 
-from src.eda.notebook_binding import build_binding_receipt  # noqa: E402
+from template_eda_notebook.eda.notebook_binding import build_binding_receipt  # noqa: E402
 
 
 SOURCE_PATHS = [
-    "src/eda/__init__.py",
-    "src/eda/cleaning.py",
-    "src/eda/correlation.py",
-    "src/eda/dataset.py",
-    "src/eda/figures.py",
-    "src/eda/notebook_binding.py",
-    "src/eda/statistics.py",
+    "src/template_eda_notebook/eda/__init__.py",
+    "src/template_eda_notebook/eda/cleaning.py",
+    "src/template_eda_notebook/eda/correlation.py",
+    "src/template_eda_notebook/eda/dataset.py",
+    "src/template_eda_notebook/eda/figures.py",
+    "src/template_eda_notebook/eda/notebook_binding.py",
+    "src/template_eda_notebook/eda/statistics.py",
 ]
 
 

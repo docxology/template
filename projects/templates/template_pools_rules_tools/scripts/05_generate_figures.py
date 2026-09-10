@@ -19,8 +19,15 @@ from infrastructure.documentation.generated_figure_registry import (  # noqa: E4
     publish_generated_figures,
 )
 
-from src.figures import FIGURE_REGISTRY_SCHEMA, INTEGRATION_FIGURE_SPECS, all_figures  # noqa: E402
-from src.integration import derive_dashboard_data, run_integration_demo  # noqa: E402
+from template_pools_rules_tools.figures import (  # noqa: E402
+    FIGURE_REGISTRY_SCHEMA,
+    INTEGRATION_FIGURE_SPECS,
+    all_figures,
+)
+from template_pools_rules_tools.integration import (  # noqa: E402
+    derive_dashboard_data,
+    run_integration_demo,
+)
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 logger = logging.getLogger(__name__)

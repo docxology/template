@@ -13,7 +13,6 @@ from infrastructure.search.literature import (
     enrich_papers,
     write_corpus,
 )
-from infrastructure.search.literature.fulltext import _safe_id
 
 ARXIV_SUMMARY_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
@@ -50,17 +49,28 @@ class TestAbstractFetcher:
         assert result.path is not None and result.path.exists()
 
     def test_cached_read_skips_network(self, httpserver: HTTPServer, tmp_path: Path):
-        # Pre-populate cache; HTTP server should never be called.
-        cache_path = tmp_path / f"abs_{_safe_id('arxiv:1234')}.txt"
-        cache_path.write_text("cached abstract", encoding="utf-8")
-        fetcher = AbstractFetcher(
-            arxiv_base_url=httpserver.url_for("/never-called"),
-            cache_dir=tmp_path,
+        # One probe fetch establishes the cache; the sanitizer must have turned
+        # "arxiv:1234" into the filesystem-safe stem "arxiv_1234". A second
+        # fetch must read the cache and never touch the network.
+        httpserver.expect_request("/api/query").respond_with_data(
+            ARXIV_SUMMARY_XML, content_type="application/atom+xml"
         )
-        p = Paper(id="arxiv:1234", title="x")
+        cache_dir = tmp_path / "cache"
+        fetcher = AbstractFetcher(
+            arxiv_base_url=httpserver.url_for("/api/query"),
+            cache_dir=cache_dir,
+        )
+        probe = fetcher.fetch(Paper(id="arxiv:1234", title="T"))
+        assert probe.status == "hit"
+        assert probe.path is not None and probe.path.name == "abs_arxiv_1234.txt"
+
+        probe.path.write_text("cached abstract", encoding="utf-8")
+        httpserver.clear()
+        p = Paper(id="arxiv:1234", title="T2")
         result = fetcher.fetch(p)
         assert result.status == "cached"
         assert p.abstract == "cached abstract"
+        assert result.path == probe.path
 
     def test_force_refetches(self, httpserver: HTTPServer, tmp_path: Path):
         httpserver.expect_request("/api/query").respond_with_data(
@@ -116,11 +126,11 @@ class TestFulltextFetcher:
         fetcher = FulltextFetcher(cache_dir=tmp_path)
         # Override the URL to point at our local server.
         p = Paper(id="arxiv:1", title="x", pdf_url=httpserver.url_for("/pdf/1.pdf"))
-        fetcher.fetch(p)
+        result = fetcher.fetch(p)
         # Without pypdf installed, status will be "error" with the cached
         # PDF path; with pypdf, it may be "error" (parse failure on the
         # synthetic PDF) — in either case the PDF must have been written.
-        assert (tmp_path / f"{_safe_id('arxiv:1')}.pdf").exists()
+        assert result.path is not None and result.path.name == "arxiv_1.pdf"
 
     def test_non_200_returns_error(self, httpserver: HTTPServer, tmp_path: Path):
         httpserver.expect_request("/pdf").respond_with_data("nope", status=404)
@@ -134,8 +144,9 @@ class TestFulltextFetcher:
         httpserver.expect_request("/p.pdf").respond_with_data(b"%PDF-1.4\n", content_type="application/pdf")
         fetcher = FulltextFetcher(cache_dir=tmp_path)
         p = Paper(id="x:1", title="t", pdf_url=httpserver.url_for("/p.pdf"))
-        fetcher.fetch(p)
-        assert (tmp_path / f"{_safe_id('x:1')}.pdf").exists()
+        result = fetcher.fetch(p)
+        assert result.path is not None and result.path.exists()
+        assert result.path.name == "x_1.pdf"
 
     def test_pdf_bytes_cached_without_corruption(self, httpserver: HTTPServer, tmp_path: Path):
         # PDF payload with non-ASCII bytes (>0x7F). The previous text->latin-1
@@ -145,18 +156,27 @@ class TestFulltextFetcher:
         httpserver.expect_request("/raw.pdf").respond_with_data(payload, content_type="application/pdf")
         fetcher = FulltextFetcher(cache_dir=tmp_path)
         p = Paper(id="x:2", title="t", pdf_url=httpserver.url_for("/raw.pdf"))
-        fetcher.fetch(p)
-        cached = tmp_path / f"{_safe_id('x:2')}.pdf"
-        assert cached.exists()
+        result = fetcher.fetch(p)
+        cached = result.path
+        assert cached is not None and cached.exists()
         assert cached.read_bytes() == payload  # byte-identical: no decode corruption
 
-    def test_cached_text_short_circuits(self, tmp_path: Path):
-        text_path = tmp_path / f"{_safe_id('arxiv:1')}.txt"
-        text_path.write_text("cached body", encoding="utf-8")
+    def test_cached_text_short_circuits(self, httpserver: HTTPServer, tmp_path: Path):
+        # One probe fetch establishes the sanitized cache names; the extracted
+        # text is then replaced with a sentinel and a second fetch must read
+        # the cache instead of the network.
+        httpserver.expect_request("/p.pdf").respond_with_data(b"%PDF-1.4\n", content_type="application/pdf")
         fetcher = FulltextFetcher(cache_dir=tmp_path)
+        probe = fetcher.fetch(Paper(id="arxiv:1", title="x", pdf_url=httpserver.url_for("/p.pdf")))
+        assert probe.path is not None and probe.path.name == "arxiv_1.pdf"
+        text_path = probe.path.with_suffix(".txt")
+        text_path.write_text("cached body", encoding="utf-8")
+        httpserver.clear()
+
         p = Paper(id="arxiv:1", title="x")
         result = fetcher.fetch(p)
         assert result.status == "cached"
+        assert result.path == text_path
         assert p.fulltext == "cached body"
 
 

@@ -35,11 +35,24 @@ def test_read_markdown_returns_none_on_missing_file(tmp_path: Path) -> None:
     assert read_markdown(tmp_path / "nope.md") is None
 
 
-def test_consistency_shared_reexports_read_markdown() -> None:
-    """Back-compat: consistency/_shared must still expose the same callable."""
-    from infrastructure.validation.docs.consistency import _shared
+def test_consistency_check_skips_corrupt_fixture(tmp_path: Path) -> None:
+    """A consistency-package linter routes through the shared defensive reader:
+    a bad-UTF-8 file is skipped without crashing while valid docs are linted."""
+    from infrastructure.validation.docs.consistency import check_doc_imports_resolve
 
-    assert _shared.read_markdown is read_markdown
+    (tmp_path / "bad.md").write_bytes(_INVALID_UTF8)
+    valid = tmp_path / "doc.md"
+    valid.write_text(
+        "```python\nimport infrastructure.module_that_does_not_exist_xyz\n```\n",
+        encoding="utf-8",
+    )
+
+    issues = check_doc_imports_resolve(tmp_path)
+
+    # No crash; the corrupt file contributes nothing; the valid doc is linted.
+    assert all(issue.file != tmp_path / "bad.md" for issue in issues)
+    assert any(issue.file == valid for issue in issues), issues
+    assert any("module_that_does_not_exist_xyz" in issue.detail for issue in issues), issues
 
 
 def test_corrupt_fixture_skipped_by_cross_link_lint(tmp_path: Path) -> None:

@@ -9,7 +9,7 @@ import pytest
 
 from infrastructure.sia.evaluation_runner import read_results_json
 from infrastructure.sia.task_layout import validate_task_dir
-from src.artifact_manifest import write_artifact_manifest
+from template_sia.artifact_manifest import write_artifact_manifest
 
 
 def test_read_results_json_rejects_hollow_object(tmp_path: Path) -> None:

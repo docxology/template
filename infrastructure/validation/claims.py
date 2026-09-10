@@ -305,9 +305,11 @@ def _producer_source_exists(root: Path, project: str, producer: str) -> bool:
     if module.startswith("infrastructure.") or module.startswith("scripts."):
         return _module_file_exists(root, module)
     project_root = root / "projects" / project
-    if module.startswith("src."):
-        return _module_file_exists(project_root, "src." + module.removeprefix("src."))
-    return _module_file_exists(project_root, "src." + module)
+    exemplar = project.split("/")[-1]
+    body = module.removeprefix("src.")
+    # Dual layout: flat src/<module>.py (pre-isolation) and nested
+    # src/<exemplar>/<module>.py (TEST-ISOLATION-SYSPATH-1) both resolve.
+    return any(_module_file_exists(project_root, candidate) for candidate in (f"src.{body}", f"src.{exemplar}.{body}"))
 
 
 def _longest_existing_module(module: str, root: Path, project: str) -> str:
@@ -321,7 +323,10 @@ def _longest_existing_module(module: str, root: Path, project: str) -> str:
             continue
         project_root = root / "projects" / project
         source_module = candidate.removeprefix("src.") if candidate.startswith("src.") else candidate
-        if _module_file_exists(project_root, "src." + source_module):
+        if any(
+            _module_file_exists(project_root, nested_candidate)
+            for nested_candidate in (f"src.{source_module}", f"src.{project.split('/')[-1]}.{source_module}")
+        ):
             return candidate
     return ""
 

@@ -29,16 +29,12 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 
 ensure_repo_root_on_path()
 
-from infrastructure.core.logging.utils import get_logger, log_header, log_live_resource_usage, log_substep
-from infrastructure.core.pytest_orchestration import (
-    DEFAULT_TEST_PROFILE,
-    TEST_PROFILE_NAMES,
-    resolve_test_profile,
-    resolve_xdist_worker_config,
-    validate_project_matrix_concurrency,
+from infrastructure.core.logging.utils import get_logger, log_header, log_live_resource_usage
+from infrastructure.orchestration.stage_policy import (
+    build_stage_01_parser,
+    execute_test_stage,
+    resolve_test_stage_options,
 )
-from infrastructure.core.test_runner import run_per_project_pytest
-from infrastructure.reporting.pipeline_test_runner import INFRASTRUCTURE_TEST_SCOPES, execute_test_pipeline
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -54,173 +50,29 @@ def main() -> int:
         Exit code (0=all requested phases passed, 1=an infrastructure or project
         phase failed)
     """
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Run test suite")
-    parser.add_argument(
-        "--quiet",
-        "-q",
-        action="store_true",
-        help="Suppress individual test names (default: verbose mode)",
-    )
-    parser.add_argument(
-        "--verbose",
-        "-v",
-        action="store_true",
-        help="Show individual test names (default; use --quiet to suppress)",
-    )
-    parser.add_argument(
-        "--project",
-        default="project",
-        help="Project name in projects/ directory (default: project)",
-    )
-    parser.add_argument(
-        "--non-strict",
-        action="store_true",
-        help="Allow configured test-failure tolerances (not recommended for CI)",
-    )
-    parser.add_argument(
-        "--profile",
-        choices=TEST_PROFILE_NAMES,
-        default=DEFAULT_TEST_PROFILE,
-        help=(
-            "Central test profile. 'quick' is the bounded default lane; "
-            "'release' includes slow tests for public/release validation; "
-            "'exhaustive' adds long-running tests; live services and "
-            "benchmarks remain explicit opt-ins."
-        ),
-    )
-    parser.add_argument(
-        "--include-slow",
-        action="store_true",
-        help="Include slow tests (normally skipped for faster execution)",
-    )
-    parser.add_argument(
-        "--include-long-running",
-        action="store_true",
-        help=(
-            "Include long-running end-to-end/deep gate tests. These are heavier "
-            "than ordinary slow tests and are skipped by default."
-        ),
-    )
-    parser.add_argument(
-        "--infra-only",
-        action="store_true",
-        help="Run only infrastructure tests (skip project tests)",
-    )
-    parser.add_argument(
-        "--infra-scope",
-        choices=INFRASTRUCTURE_TEST_SCOPES,
-        default="full",
-        help=(
-            "Infrastructure test scope. 'full' runs the coverage-bearing repo "
-            "suite; 'pipeline-smoke' runs the focused real contract used by "
-            "project pipelines."
-        ),
-    )
-    parser.add_argument(
-        "--project-only",
-        action="store_true",
-        help="Run only project tests (skip infrastructure tests)",
-    )
-    parser.add_argument(
-        "--include-ollama-tests",
-        action="store_true",
-        help="Include Ollama-dependent tests (requires Ollama server running)",
-    )
-    parser.add_argument(
-        "--include-bench",
-        action="store_true",
-        help="Include benchmark/performance-marked tests",
-    )
-    parser.add_argument(
-        "--all-projects",
-        action="store_true",
-        help=(
-            "When combined with --project-only, run every discovered "
-            "projects/<name>/tests/ via infrastructure.core.test_runner "
-            "(one pytest process per project; combined coverage gate at end). "
-            "This mirrors the open-coded loop in .github/workflows/ci.yml."
-        ),
-    )
-    parser.add_argument(
-        "--public-projects",
-        action="store_true",
-        help=(
-            "When combined with --project-only --all-projects, restrict the "
-            "per-project loop to infrastructure.project.public_scope. Use this "
-            "for public-repo release validation in checkouts that also symlink "
-            "private or rotating local projects."
-        ),
-    )
-    parser.add_argument(
-        "--project-workers",
-        metavar="WORKERS",
-        default=None,
-        help=(
-            "Outer project-matrix worker count for --project-only --all-projects. "
-            "Use 'auto', 'serial', or a positive integer. Quick all-projects runs "
-            "default to bounded auto parallelism; release lanes remain serial unless set."
-        ),
-    )
-    parser.add_argument(
-        "--parallel",
-        "-n",
-        metavar="WORKERS",
-        default=None,
-        help=(
-            "Opt into pytest-xdist parallelism: 'auto' (one worker per core) or "
-            "a positive integer. Default is serial. Also honours the "
-            "PYTEST_XDIST_WORKERS env var. On loaded dev machines prefer a fixed "
-            "count (e.g. -n 6) over 'auto' to avoid wall-clock timeout flakiness."
-        ),
-    )
-    parser.add_argument(
-        "--receipt",
-        metavar="PATH",
-        default=None,
-        help=(
-            "When combined with --project-only --all-projects, write a "
-            "deterministic public-matrix receipt (roster revision, profile, "
-            "per-project floor/exit/timeout/coverage/output-isolation) to this "
-            "path after the run."
-        ),
-    )
+    parser = build_stage_01_parser()
     args = parser.parse_args()
 
-    # Validate mutually exclusive flags
-    if args.infra_only and args.project_only:
-        parser.error("--infra-only and --project-only cannot be used together")
-    if args.public_projects and not (args.project_only and args.all_projects):
-        parser.error("--public-projects requires --project-only --all-projects")
-    if args.project_workers is not None and not (args.project_only and args.all_projects):
-        parser.error("--project-workers requires --project-only --all-projects")
-    effective_project_workers = args.project_workers
-    if args.project_only and args.all_projects and effective_project_workers is None and args.profile == "quick":
-        effective_project_workers = "auto"
-
     try:
-        resolve_test_profile(
-            args.profile,
+        options = resolve_test_stage_options(
+            profile=args.profile,
             include_slow=args.include_slow,
             include_long_running=args.include_long_running,
             include_ollama_tests=args.include_ollama_tests,
             include_bench=args.include_bench,
-        )
-        resolve_xdist_worker_config(args.parallel, strict=args.parallel is not None)
-        validate_project_matrix_concurrency(
-            effective_project_workers,
-            args.parallel,
-            strict_parallel=args.parallel is not None,
+            infra_only=args.infra_only,
+            project_only=args.project_only,
+            all_projects=args.all_projects,
+            public_projects=args.public_projects,
+            infra_scope=args.infra_scope,
+            quiet=args.quiet,
+            strict=not args.non_strict,
+            project_workers=args.project_workers,
+            parallel=args.parallel,
+            receipt_path=args.receipt,
         )
     except ValueError as exc:
         parser.error(str(exc))
-
-    quiet = args.quiet
-
-    # Determine execution mode based on flags
-    run_infra = not args.project_only  # Run infra unless --project-only specified
-    run_project = not args.infra_only  # Run project unless --infra-only specified
 
     log_header(f"STAGE 01: Run Tests (Project: {args.project})", logger)
 
@@ -229,75 +81,10 @@ def main() -> int:
 
     # NOTE: ``scripts/`` is *not* the repo root — this script lives at
     # ``scripts/pipeline/stage_01_test.py`` (two levels deep).  Use the same
-    # ``parents[2]`` resolution as the sys.path bootstrap on line 27 so
-    # ``resolve_project_root`` gets the real repo root, not ``scripts/``.
-    # The old ``Path(__file__).parent.parent`` resolved to ``scripts/``,
-    # which made ``resolve_project_root`` prepend ``scripts/`` to every
-    # project path (e.g. ``scripts/projects/templates/<name>/tests``),
-    # causing 0 tests discovered for all templates.
+    # ``parents[2]`` resolution as the sys.path bootstrap above so the policy
+    # layer gets the real repo root, not ``scripts/``.
     repo_root = Path(__file__).resolve().parents[2]
-    strict = not args.non_strict
-
-    # If the default placeholder project is selected but isn't a runnable project,
-    # pick the first discovered runnable project (has src/ and tests/).
-    from infrastructure.project.discovery import resolve_project_root
-
-    project_root = resolve_project_root(repo_root, args.project)
-    if args.project == "project" and (not (project_root / "src").exists() or not (project_root / "tests").exists()):
-        try:
-            from infrastructure.project.discovery import discover_projects
-
-            discovered = discover_projects(repo_root)
-            runnable = [p for p in discovered if (p.path / "src").exists() and (p.path / "tests").exists()]
-            if runnable:
-                args.project = runnable[0].name
-                log_substep(f"Default project placeholder is not runnable; using '{args.project}' instead.", logger)
-        except Exception as e:
-            logger.warning("Project discovery failed; continuing with project=%s (%s)", args.project, e)
-
-    # --project-only --all-projects dispatches to the per-project runner
-    # (one pytest process per project, combined coverage gate at end).
-    # This is the local mirror of the bash loop in .github/workflows/ci.yml.
-    if args.project_only and args.all_projects:
-        projects = None
-        if args.public_projects:
-            from infrastructure.project.public_scope import public_project_names
-
-            projects = public_project_names(repo_root)
-            log_substep(
-                "Restricting all-projects test run to public scope: " + ", ".join(projects),
-                logger,
-            )
-        exit_code = run_per_project_pytest(
-            repo_root,
-            projects=projects,
-            profile=args.profile,
-            include_slow=args.include_slow,
-            include_long_running=args.include_long_running,
-            include_ollama_tests=args.include_ollama_tests,
-            include_bench=args.include_bench,
-            project_workers=effective_project_workers,
-            parallel=args.parallel,
-            receipt_path=args.receipt,
-        )
-        log_live_resource_usage("Test stage end", logger)
-        return exit_code
-
-    exit_code = execute_test_pipeline(
-        project_name=args.project,
-        repo_root=repo_root,
-        run_infra=run_infra,
-        run_project=run_project,
-        quiet=quiet,
-        profile=args.profile,
-        include_slow=args.include_slow,
-        include_long_running=args.include_long_running,
-        include_bench=args.include_bench,
-        include_ollama_tests=args.include_ollama_tests,
-        strict=strict,
-        infra_scope=args.infra_scope,
-        parallel=args.parallel,
-    )
+    exit_code = execute_test_stage(options, args.project, repo_root)
 
     # Log resource usage at end
     log_live_resource_usage("Test stage end", logger)

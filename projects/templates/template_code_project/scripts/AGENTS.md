@@ -114,7 +114,7 @@ uv run pytest ../tests/test_scripts_smoke.py -v
 
 ### generate_api_docs.py
 
-Thin wrapper (~35 lines) delegating to [`src/documentation.py`](../src/documentation.py):
+Thin wrapper (~35 lines) delegating to [`src/documentation.py`](../src/template_code_project/documentation.py):
 
 - `build_api_reference_markdown()` — static API reference template
 - `run_api_doc_generation(project_root)` — writes `output/docs/api_reference.md` and optional glossary index
@@ -127,16 +127,16 @@ Thin wrapper (~65 lines) — re-exports and `main()` only. **All API signatures 
 
 | Concern | Module |
 | --- | --- |
-| Convergence experiments, stability, benchmarking | [`src/analysis/`](../src/analysis/) |
-| Matplotlib figures | [`src/figures/`](../src/figures/) |
-| Core optimizer | [`src/optimizer.py`](../src/optimizer.py) |
-| Dashboard HTML | [`src/dashboard.py`](../src/dashboard.py) via `build_dashboard.py` |
+| Convergence experiments, stability, benchmarking | [`src/analysis/`](../src/template_code_project/analysis/) |
+| Matplotlib figures | [`src/figures/`](../src/template_code_project/figures/) |
+| Core optimizer | [`src/optimizer.py`](../src/template_code_project/optimizer.py) |
+| Dashboard HTML | [`src/dashboard.py`](../src/template_code_project/dashboard.py) via `build_dashboard.py` |
 
 Run: `uv run python scripts/optimization_analysis.py` from the project root.
 
 ### build_dashboard.py
 
-Thin wrapper → [`src/dashboard.py`](../src/dashboard.py). See [`../src/AGENTS.md`](../src/AGENTS.md).
+Thin wrapper → [`src/dashboard.py`](../src/template_code_project/dashboard.py). See [`../src/AGENTS.md`](../src/AGENTS.md).
 
 ### 00_preflight.py
 
@@ -148,7 +148,7 @@ Thin orchestrator for the `infrastructure.benchmark` rubric demo backed by
 `src/benchmark_support.py`. Writes `output/reports/benchmark_report.json` and a
 deterministic timing figure (`output/figures/benchmark_timings.png`) with
 wall-clock timing logged as a runtime diagnostic only. See
-[`src/benchmark_support.py`](../src/benchmark_support.py).
+[`src/benchmark_support.py`](../src/template_code_project/benchmark_support.py).
 
 ### 08_connector_search.py
 
@@ -171,7 +171,7 @@ default core DAG.
 
 ### z_generate_manuscript_variables.py
 
-Thin wrapper → [`src/manuscript_variables.py`](../src/manuscript_variables.py).
+Thin wrapper → [`src/manuscript_variables.py`](../src/template_code_project/manuscript_variables.py).
 
 ## Infrastructure Integration
 
@@ -281,4 +281,4 @@ logging.basicConfig(level=logging.DEBUG)
 ## See Also
 
 - [README.md](README.md) - Quick reference
-- [../src/optimizer.py](../src/optimizer.py) - Core algorithms used by scripts
+- [../src/optimizer.py](../src/template_code_project/optimizer.py) - Core algorithms used by scripts

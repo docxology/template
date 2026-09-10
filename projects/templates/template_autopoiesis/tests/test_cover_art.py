@@ -6,7 +6,7 @@ import math
 from pathlib import Path
 
 
-from src.cover_art import (
+from template_autopoiesis.cover_art import (
     ring_root_angles,
     domain_root_indices,
     branch_segments,
@@ -15,7 +15,7 @@ from src.cover_art import (
     DOMAIN_COLORS,
     render_cover,
 )
-from src.grammar import KNOWN_DOMAINS
+from template_autopoiesis.grammar import KNOWN_DOMAINS
 
 
 # ---------------------------------------------------------------------------

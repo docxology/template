@@ -178,7 +178,7 @@ These files are validation inputs only; they do not run autonomous agents.
 ## More information
 
 See [AGENTS.md](AGENTS.md) for technical documentation and
-[`src/AGENTS.md`](src/AGENTS.md) for the library API.
+[`src/AGENTS.md`](src/template_eda_notebook/AGENTS.md) for the library API.
 
 ## Template integrity (fork / standalone)
 

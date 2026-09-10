@@ -6,9 +6,9 @@ import shutil
 from collections.abc import Callable
 from pathlib import Path
 
-from src.loop import build_run_config, run_sia_loop_project
-from src.loop_config import load_sia_settings
-from src.reports import compute_variables, format_metric
+from template_sia.loop import build_run_config, run_sia_loop_project
+from template_sia.loop_config import load_sia_settings
+from template_sia.reports import compute_variables, format_metric
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 

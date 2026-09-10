@@ -57,7 +57,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[5]
 PROJECT_ROOT = REPO_ROOT / "projects" / "templates" / "template_madlib"
-SRC_DIR = PROJECT_ROOT / "src"
+SRC_DIR = PROJECT_ROOT / "src" / "template_madlib"
 
 _PKG_ALIAS = "_madlib_src"
 

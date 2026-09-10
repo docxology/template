@@ -65,6 +65,25 @@ def _is_recorded_generation_fixture(path: Path) -> bool:
     return "recorded_generations" in path.parts
 
 
+def _is_exemplar_python_package_dir(path: Path) -> bool:
+    """Return True for an exemplar's own nested Python package directory.
+
+    TEST-ISOLATION-SYSPATH-1 moved each exemplar's modules from flat
+    ``src/*.py`` into ``src/<exemplar>/``; the package directory is code
+    (its documentation lives in ``src/AGENTS.md``/``src/README.md`` at the
+    ``src/`` level), so it is not a doc-pair-bearing content directory.
+    """
+    parts = path.parts
+    # Match src/<package>/ where <package> == the exemplar directory name.
+    for index, part in enumerate(parts):
+        if part != "src" or index == 0 or index + 1 >= len(parts):
+            continue
+        exemplar_root = parts[index - 1]
+        if parts[index + 1] == exemplar_root:
+            return True
+    return False
+
+
 def _contains_path_parts(path: Path, needle: tuple[str, ...]) -> bool:
     parts = path.parts
     if len(needle) > len(parts):
@@ -105,6 +124,8 @@ def is_doc_pair_excluded_path(
     if _is_generated_tests_fixture_payload(path):
         return True
     if _is_recorded_generation_fixture(path):
+        return True
+    if _is_exemplar_python_package_dir(path):
         return True
     return any(part in excluded or part.endswith(".egg-info") for part in path.parts)
 

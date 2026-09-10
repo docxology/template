@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 from infrastructure.autoresearch import build_autoresearch_plan, parse_string_sequence
 
-from src.config import (
+from template_autoresearch_project.config import (
     build_loop_config,
     load_human_review,
     load_loop_config,

@@ -19,5 +19,5 @@ point; all analytical logic lives in `src/eda/`.
 ## See Also
 
 - [`README.md`](README.md) - quick reference
-- [`../src/eda/README.md`](../src/eda/README.md) - the library the notebook calls
+- [`../src/eda/README.md`](../src/template_eda_notebook/eda/README.md) - the library the notebook calls
 - [`../AGENTS.md`](../AGENTS.md) - project agent guide

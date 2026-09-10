@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 
-from src.project_paths import project_output_dirs
+from template_autopoiesis.project_paths import project_output_dirs
 
 
 # ---------------------------------------------------------------------------

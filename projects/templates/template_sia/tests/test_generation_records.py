@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from src.generation_records import generation_metrics, load_run_summary
+from template_sia.generation_records import generation_metrics, load_run_summary
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -60,7 +60,7 @@ def test_load_run_summary_from_fixture_run(tmp_path: Path, copy_project_sandbox:
     copy_project_sandbox(project)
     if (project / "output").exists():
         shutil.rmtree(project / "output")
-    from src.loop import run_sia_loop_project
+    from template_sia.loop import run_sia_loop_project
 
     run_sia_loop_project(project, live=False)
     summary = load_run_summary(project)

@@ -14,7 +14,12 @@ from time import monotonic
 from typing import Sequence
 
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
-from infrastructure.publishing.release.release_receipts import CleanCheckoutReceipt, CommandReceipt, ReceiptStatus
+from infrastructure.publishing.release.release_receipts import (  # noqa: E402
+    CleanCheckoutReceipt,
+    CommandReceipt,
+    ReceiptStatus,
+    RehearsalShardReceipt,
+)
 
 # Non-secret marker replaced with a receipt path before command execution.
 REHEARSAL_RECEIPT_TOKEN = "__REHEARSAL_RECEIPT__"  # nosec B105
@@ -305,6 +310,107 @@ def _persist_run_artifacts(
         (run_dir / f"command-{position:02d}-{stem[-80:]}.log").write_text(combined + "\n", encoding="utf-8")
 
 
+def _execute_clean_checkout_run(
+    root: Path,
+    plan: CleanCheckoutPlan,
+    index: int,
+    parent: Path,
+    *,
+    timeout_seconds: float,
+    artifact_dir: Path | None,
+) -> tuple[CommandReceipt, tuple[CommandReceipt, ...], bool]:
+    """Clone a fresh checkout at *index* and run the plan's commands in it.
+
+    Returns the run-level receipt, the per-command receipts (including the
+    trailing clean-status receipt), and whether the checkout ended clean.
+    """
+    checkout = parent / f"checkout-{index}"
+    clone_started = monotonic()
+    clone = run_with_policy(
+        ("git", "clone", "--no-local", "--revision", plan.revision, str(root), str(checkout)),
+        cwd=root.parent,
+        env=dict(os.environ),
+        policy=SubprocessPolicy(
+            policy_id="release-rehearsal-clone",
+            source_path="infrastructure/publishing/rehearsal.py",
+            timeout_seconds=timeout_seconds,
+            capture_output=True,
+        ),
+    )
+    if clone.returncode != 0 or clone.timed_out:
+        clone_receipt = CommandReceipt(
+            command=("git", "clone", "--revision", plan.revision),
+            status="blocked",
+            exit_code=clone.returncode,
+            duration_seconds=round(monotonic() - clone_started, 3),
+            output_sha256=_digest_output(clone.stdout, clone.stderr),
+            output_tail="" if clone.returncode == 0 else _failure_tail(clone.stdout, clone.stderr),
+            skip_reason=clone.command_error or "fresh clone failed",
+        )
+        return clone_receipt, (clone_receipt,), False
+    receipt_path = parent / f"public-matrix-rehearsal-{index}.json"
+    command_outputs: list[tuple[str, str]] = []
+    command_receipts = [
+        _run_command(
+            _materialize_command(command, receipt_path),
+            checkout,
+            timeout_seconds=timeout_seconds,
+            outputs_sink=command_outputs.append,
+        )
+        for command in plan.commands
+    ]
+    _persist_run_artifacts(artifact_dir, index, receipt_path, command_receipts, command_outputs)
+    pre_clean = run_with_policy(
+        ("git", "status", "--porcelain", "--untracked-files=all"),
+        cwd=checkout,
+        env=dict(os.environ),
+        policy=SubprocessPolicy(
+            policy_id="release-rehearsal-clean-status",
+            source_path="infrastructure/publishing/rehearsal.py",
+            timeout_seconds=60,
+            capture_output=True,
+        ),
+    )
+    clean_ok = pre_clean.returncode == 0
+    clean_reason = ""
+    if clean_ok and pre_clean.stdout.strip():
+        clean_ok, clean_reason = _clean_generated_render_output(checkout, pre_clean.stdout)
+    clean = run_with_policy(
+        ("git", "status", "--porcelain", "--untracked-files=all"),
+        cwd=checkout,
+        env=dict(os.environ),
+        policy=SubprocessPolicy(
+            policy_id="release-rehearsal-clean-status-final",
+            source_path="infrastructure/publishing/rehearsal.py",
+            timeout_seconds=60,
+            capture_output=True,
+        ),
+    )
+    clean_ok = clean_ok and clean.returncode == 0 and not clean.stdout.strip()
+    clean_receipt = CommandReceipt(
+        command=("git", "status", "--porcelain", "--untracked-files=all"),
+        status="pass" if clean_ok else "blocked",
+        exit_code=clean.returncode,
+        duration_seconds=0.0,
+        output_sha256=_digest_output(clean.stdout, clean.stderr),
+        output_tail="" if clean.returncode == 0 else _failure_tail(clean.stdout, clean.stderr),
+        skip_reason="" if clean_ok else (clean_reason or "fresh checkout produced tracked or untracked output"),
+    )
+    command_receipts.append(clean_receipt)
+    failed = next((receipt for receipt in command_receipts if receipt.status != "pass"), None)
+    status: ReceiptStatus = "pass" if failed is None else "blocked"
+    digest = _determinism_digest(command_receipts)
+    run_receipt = CommandReceipt(
+        command=("release-rehearsal", f"run-{index + 1}", plan.revision),
+        status=status,
+        exit_code=0 if status == "pass" else (failed.exit_code if failed else 1),
+        duration_seconds=round(monotonic() - clone_started, 3),
+        output_sha256=digest,
+        skip_reason="" if status == "pass" else (failed.skip_reason if failed else "command failed"),
+    )
+    return run_receipt, tuple(command_receipts), clean_ok
+
+
 def run_clean_checkout_rehearsal(
     repo_root: Path | str,
     plan: CleanCheckoutPlan,
@@ -323,96 +429,16 @@ def run_clean_checkout_rehearsal(
     with tempfile.TemporaryDirectory(prefix="template-release-rehearsal-") as temp_dir:
         parent = Path(temp_dir)
         for index in range(plan.runs):
-            checkout = parent / f"checkout-{index}"
-            clone_started = monotonic()
-            clone = run_with_policy(
-                ("git", "clone", "--no-local", "--revision", plan.revision, str(root), str(checkout)),
-                cwd=root.parent,
-                env=dict(os.environ),
-                policy=SubprocessPolicy(
-                    policy_id="release-rehearsal-clone",
-                    source_path="infrastructure/publishing/rehearsal.py",
-                    timeout_seconds=timeout_seconds,
-                    capture_output=True,
-                ),
+            run_receipt, commands, clean_ok = _execute_clean_checkout_run(
+                root,
+                plan,
+                index,
+                parent,
+                timeout_seconds=timeout_seconds,
+                artifact_dir=artifact_dir,
             )
-            if clone.returncode != 0 or clone.timed_out:
-                clone_receipt = CommandReceipt(
-                    command=("git", "clone", "--revision", plan.revision),
-                    status="blocked",
-                    exit_code=clone.returncode,
-                    duration_seconds=round(monotonic() - clone_started, 3),
-                    output_sha256=_digest_output(clone.stdout, clone.stderr),
-                    output_tail="" if clone.returncode == 0 else _failure_tail(clone.stdout, clone.stderr),
-                    skip_reason=clone.command_error or "fresh clone failed",
-                )
-                run_command_receipts.append((clone_receipt,))
-                run_receipts.append(clone_receipt)
-                output_clean = False
-                continue
-            receipt_path = parent / f"public-matrix-rehearsal-{index}.json"
-            command_outputs: list[tuple[str, str]] = []
-            command_receipts = [
-                _run_command(
-                    _materialize_command(command, receipt_path),
-                    checkout,
-                    timeout_seconds=timeout_seconds,
-                    outputs_sink=command_outputs.append,
-                )
-                for command in plan.commands
-            ]
-            _persist_run_artifacts(artifact_dir, index, receipt_path, command_receipts, command_outputs)
-            pre_clean = run_with_policy(
-                ("git", "status", "--porcelain", "--untracked-files=all"),
-                cwd=checkout,
-                env=dict(os.environ),
-                policy=SubprocessPolicy(
-                    policy_id="release-rehearsal-clean-status",
-                    source_path="infrastructure/publishing/rehearsal.py",
-                    timeout_seconds=60,
-                    capture_output=True,
-                ),
-            )
-            clean_ok = pre_clean.returncode == 0
-            clean_reason = ""
-            if clean_ok and pre_clean.stdout.strip():
-                clean_ok, clean_reason = _clean_generated_render_output(checkout, pre_clean.stdout)
-            clean = run_with_policy(
-                ("git", "status", "--porcelain", "--untracked-files=all"),
-                cwd=checkout,
-                env=dict(os.environ),
-                policy=SubprocessPolicy(
-                    policy_id="release-rehearsal-clean-status-final",
-                    source_path="infrastructure/publishing/rehearsal.py",
-                    timeout_seconds=60,
-                    capture_output=True,
-                ),
-            )
-            clean_ok = clean_ok and clean.returncode == 0 and not clean.stdout.strip()
-            clean_receipt = CommandReceipt(
-                command=("git", "status", "--porcelain", "--untracked-files=all"),
-                status="pass" if clean_ok else "blocked",
-                exit_code=clean.returncode,
-                duration_seconds=0.0,
-                output_sha256=_digest_output(clean.stdout, clean.stderr),
-                output_tail="" if clean.returncode == 0 else _failure_tail(clean.stdout, clean.stderr),
-                skip_reason="" if clean_ok else (clean_reason or "fresh checkout produced tracked or untracked output"),
-            )
-            command_receipts.append(clean_receipt)
-            failed = next((receipt for receipt in command_receipts if receipt.status != "pass"), None)
-            status: ReceiptStatus = "pass" if failed is None else "blocked"
-            digest = _determinism_digest(command_receipts)
-            run_command_receipts.append(tuple(command_receipts))
-            run_receipts.append(
-                CommandReceipt(
-                    command=("release-rehearsal", f"run-{index + 1}", plan.revision),
-                    status=status,
-                    exit_code=0 if status == "pass" else (failed.exit_code if failed else 1),
-                    duration_seconds=round(monotonic() - clone_started, 3),
-                    output_sha256=digest,
-                    skip_reason="" if status == "pass" else (failed.skip_reason if failed else "command failed"),
-                )
-            )
+            run_command_receipts.append(commands)
+            run_receipts.append(run_receipt)
             output_clean = output_clean and clean_ok
     passing_run_digests = {run.output_sha256 for run in run_receipts if run.status == "pass"}
     deterministic = len(passing_run_digests) <= 1
@@ -441,7 +467,117 @@ def run_clean_checkout_rehearsal(
     )
 
 
-def _rehearsal_exit_code(receipt: CleanCheckoutReceipt) -> int:
+def _shard_skip_reason(run_receipt: CommandReceipt) -> str:
+    """Best actionable reason for a blocked shard, with a deterministic fallback."""
+    return run_receipt.skip_reason or "fresh-checkout command or clean-output check failed"
+
+
+def run_clean_checkout_shard(
+    repo_root: Path | str,
+    plan: CleanCheckoutPlan,
+    *,
+    run_index: int,
+    platform_name: str,
+    timeout_seconds: float = 1800,
+    artifact_dir: Path | None = None,
+) -> RehearsalShardReceipt:
+    """Run exactly one fresh-checkout run of *plan* as a sharded matrix cell.
+
+    The shard carries per-run evidence only; the cross-run determinism
+    judgment happens in :func:`consolidate_rehearsal_shards`, which preserves
+    the two-run requirement and digest-equality contract of the sequential
+    rehearsal.
+    """
+    if plan.runs < 2:
+        raise ValueError("deterministic rehearsal requires at least two runs")
+    if not 1 <= run_index <= plan.runs:
+        raise ValueError(f"run_index must be within 1..{plan.runs}, got {run_index}")
+    root = Path(repo_root).resolve()
+    with tempfile.TemporaryDirectory(prefix="template-release-rehearsal-shard-") as temp_dir:
+        run_receipt, commands, clean_ok = _execute_clean_checkout_run(
+            root,
+            plan,
+            run_index - 1,
+            Path(temp_dir),
+            timeout_seconds=timeout_seconds,
+            artifact_dir=artifact_dir,
+        )
+    status: ReceiptStatus = "pass" if run_receipt.status == "pass" and clean_ok else "blocked"
+    return RehearsalShardReceipt(
+        revision=plan.revision,
+        platform=platform_name,
+        run_index=run_index,
+        run_count=plan.runs,
+        status=status,
+        run=run_receipt,
+        commands=commands,
+        output_clean=clean_ok,
+        skip_reason="" if status == "pass" else _shard_skip_reason(run_receipt),
+    )
+
+
+def consolidate_rehearsal_shards(
+    shards: Sequence[RehearsalShardReceipt],
+    *,
+    platform_name: str,
+) -> CleanCheckoutReceipt:
+    """Rebuild the two-run ``CleanCheckoutReceipt`` from sharded matrix cells.
+
+    The determinism contract is unchanged from the sequential rehearsal: every
+    run must pass, outputs must be clean, and the passing runs' deterministic
+    output digests must be equal. Any violation yields a ``blocked`` receipt
+    with the specific reason, exactly as the sequential path would.
+    """
+    if len(shards) < 2:
+        return CleanCheckoutReceipt(
+            revision=shards[0].revision if shards else "",
+            platform=platform_name,
+            status="blocked",
+            skip_reason="deterministic rehearsal requires at least two shard receipts",
+        )
+    revisions = {shard.revision for shard in shards}
+    run_counts = {shard.run_count for shard in shards}
+    indices = [shard.run_index for shard in shards]
+    if len(revisions) != 1 or len(run_counts) != 1:
+        return CleanCheckoutReceipt(
+            revision=shards[0].revision,
+            platform=platform_name,
+            status="blocked",
+            skip_reason="shard receipts disagree on revision or run_count",
+        )
+    run_count = run_counts.pop()
+    revision = revisions.pop()
+    if sorted(indices) != list(range(1, run_count + 1)):
+        return CleanCheckoutReceipt(
+            revision=revision,
+            platform=platform_name,
+            status="blocked",
+            skip_reason=f"shard indices {sorted(indices)} do not cover 1..{run_count}",
+        )
+    ordered = sorted(shards, key=lambda shard: shard.run_index)
+    passing_digests = {shard.run.output_sha256 for shard in ordered if shard.status == "pass"}
+    deterministic = len(passing_digests) <= 1
+    all_pass = all(shard.status == "pass" for shard in ordered)
+    output_clean = all(shard.output_clean for shard in ordered)
+    overall_status: ReceiptStatus = "pass" if all_pass and output_clean and deterministic else "blocked"
+    if overall_status == "pass":
+        skip_reason = ""
+    elif not deterministic:
+        skip_reason = "runs produced different deterministic output digests"
+    else:
+        skip_reason = "fresh-checkout command or clean-output check failed"
+    return CleanCheckoutReceipt(
+        revision=revision,
+        platform=platform_name,
+        status=overall_status,
+        runs=tuple(shard.run for shard in ordered),
+        run_commands=tuple(shard.commands for shard in ordered),
+        output_clean=output_clean,
+        skip_reason=skip_reason,
+    )
+
+
+def _rehearsal_exit_code(receipt: CleanCheckoutReceipt | RehearsalShardReceipt) -> int:
     """Exit 0 only for a passing receipt that also validates cleanly.
 
     ``validate()`` accepts well-formed blocked receipts (they are legitimate
@@ -455,5 +591,7 @@ __all__ = [
     "DEFAULT_REHEARSAL_COMMANDS",
     "REHEARSAL_RECEIPT_TOKEN",
     "build_clean_checkout_plan",
+    "consolidate_rehearsal_shards",
     "run_clean_checkout_rehearsal",
+    "run_clean_checkout_shard",
 ]

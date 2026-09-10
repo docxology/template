@@ -13,7 +13,7 @@ from infrastructure.core.exceptions import LLMConnectionError, LLMError, Securit
 from infrastructure.llm.core.client import LLMClient, ResponseMode
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 from infrastructure.llm.core.context import ConversationContext
-from .._test_helpers import safe_network_test
+from tests.helpers.network import safe_network_test
 from .real_ollama_client import build_real_small_llm_client
 
 

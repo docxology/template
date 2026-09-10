@@ -9,9 +9,9 @@ from pathlib import Path
 
 import pytest
 
-from src.loop import build_run_config, fixtures_dir, run_sia_loop_project
-from src.loop_config import SiaLoopSettings, load_paper_title, load_sia_settings
-from src.reports import compute_variables, write_loop_report, write_manuscript_variables
+from template_sia.loop import build_run_config, fixtures_dir, run_sia_loop_project
+from template_sia.loop_config import SiaLoopSettings, load_paper_title, load_sia_settings
+from template_sia.reports import compute_variables, write_loop_report, write_manuscript_variables
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 

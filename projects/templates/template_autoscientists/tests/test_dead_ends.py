@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from src.dead_ends import DeadEndRegistry
+from template_autoscientists.dead_ends import DeadEndRegistry
 
 
 def test_direction_retires_at_threshold() -> None:

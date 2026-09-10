@@ -2,7 +2,7 @@ claims:
   - claim_id: figure-export-dpi
     kind: number
     value: 300
-    source: projects/templates/template_prose_project/src/figures.py export settings
+    source: projects/templates/template_prose_project/src/template_prose_project/figures.py export settings
     source_tier: project_source
     freshness: active
     artifact_path: output/figures/
@@ -16,7 +16,7 @@ claims:
   - claim_id: citation-density-denominator
     kind: number
     value: 1000
-    source: projects/templates/template_prose_project/src/pipeline/checks.py::_check_citation_density
+    source: projects/templates/template_prose_project/src/template_prose_project/pipeline/checks.py::_check_citation_density
     source_tier: project_source
     freshness: active
     artifact_path: output/manuscript_report.json

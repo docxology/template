@@ -12,13 +12,13 @@ from pathlib import Path
 
 import pytest
 
-from src.manuscript_variables import (
+from template_autoresearch_project.manuscript_variables import (
     compute_variables,
     compute_variables_and_provenance,
     compute_variables_from_payload,
 )
-from src.models import AutoResearchLoopResult
-from src.source_ledger import load_source_ledger
+from template_autoresearch_project.models import AutoResearchLoopResult
+from template_autoresearch_project.source_ledger import load_source_ledger
 
 
 def _candidate_display_label(value: object) -> str:

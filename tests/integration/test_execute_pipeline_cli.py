@@ -7,13 +7,6 @@ import os
 import subprocess
 from pathlib import Path
 
-import pytest
-
-
-@pytest.fixture
-def repo_root() -> Path:
-    return Path(__file__).parent.parent.parent
-
 
 def test_execute_pipeline_help_includes_stage(repo_root: Path) -> None:
     script = repo_root / "scripts" / "runner" / "execute_pipeline.py"

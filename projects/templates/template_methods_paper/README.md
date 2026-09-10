@@ -177,7 +177,7 @@ These files are validation inputs only; they do not run autonomous agents.
 ## More information
 
 See [AGENTS.md](AGENTS.md) for technical documentation and
-[`src/AGENTS.md`](src/AGENTS.md) / [`src/methods_dsl/AGENTS.md`](src/methods_dsl/AGENTS.md)
+[`src/AGENTS.md`](src/template_methods_paper/AGENTS.md) / [`src/methods_dsl/AGENTS.md`](src/template_methods_paper/methods_dsl/AGENTS.md)
 for the library API.
 
 ## Template integrity (fork / standalone)

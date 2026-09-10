@@ -88,5 +88,5 @@ figure-data preparer in `src/eda/figures.py`:
 - [`README.md`](README.md) — Quick orientation.
 - [`SYNTAX.md`](SYNTAX.md) — Pandoc syntax reference for this manuscript.
 - [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md) — Manuscript → PDF flow.
-- [`../src/eda/figures.py`](../src/eda/figures.py) — Figure-data preparers.
+- [`../src/eda/figures.py`](../src/template_eda_notebook/eda/figures.py) — Figure-data preparers.
 - [`../scripts/eda_analysis.py`](../scripts/eda_analysis.py) — Thin orchestrator that writes the figures.

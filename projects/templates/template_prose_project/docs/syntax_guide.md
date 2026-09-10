@@ -21,7 +21,7 @@ For internal cross-references, prefer relative paths to files inside the
 repository:
 
 - **BAD**: See `https://github.com/docxology/template/blob/main/projects/templates/template_prose_project/src/pipeline/`
-- **GOOD**: See [`projects/templates/template_prose_project/src/pipeline/`](../src/pipeline/).
+- **GOOD**: See [`projects/templates/template_prose_project/src/pipeline/`](../src/template_prose_project/pipeline/).
 
 ---
 

@@ -32,7 +32,7 @@ pytestmark = pytest.mark.skipif(
 # Only import the module when matplotlib is present so collection succeeds
 # in minimal CI environments.
 if _MATPLOTLIB_AVAILABLE:
-    from src.figures import (
+    from template_pools_rules_tools.figures import (
         all_figures,
         generate_architecture_overview,
         generate_cover_art,
@@ -191,7 +191,10 @@ class TestAllFigures:
 
     def test_expected_keys(self, tmp_path: pathlib.Path):
         result = all_figures(output_dir=tmp_path)
-        from src.figure_support import COVER_FIGURE_FILENAMES, INTEGRATION_FIGURE_SPECS
+        from template_pools_rules_tools.figure_support import (
+            COVER_FIGURE_FILENAMES,
+            INTEGRATION_FIGURE_SPECS,
+        )
 
         expected = {
             *(pathlib.Path(spec.filename).stem for spec in INTEGRATION_FIGURE_SPECS),

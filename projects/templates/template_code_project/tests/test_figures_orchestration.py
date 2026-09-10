@@ -7,8 +7,8 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from src.experiment_config import ExperimentConfig, load_experiment_config
-from src.figures import (
+from template_code_project.experiment_config import ExperimentConfig, load_experiment_config
+from template_code_project.figures import (
     generate_benchmark_visualization,
     generate_complexity_visualization,
     generate_convergence_plot,
@@ -16,8 +16,8 @@ from src.figures import (
     generate_stability_visualization,
     generate_step_size_sensitivity_plot,
 )
-from src.optimizer import OptimizationResult, quadratic_optimum
-from src.project_paths import project_root_context
+from template_code_project.optimizer import OptimizationResult, quadratic_optimum
+from template_code_project.project_paths import project_root_context
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -127,7 +127,7 @@ class TestBackendProfile:
 
     def test_effective_max_stable_alpha_uses_explicit_value(self):
         """Line 53: explicit max_stable_alpha overrides the 2/L formula."""
-        from src.figures.scientific_complexity import BackendProfile
+        from template_code_project.figures.scientific_complexity import BackendProfile
 
         p = BackendProfile(
             name="Custom",
@@ -139,14 +139,14 @@ class TestBackendProfile:
 
     def test_effective_max_stable_alpha_derived(self):
         """When max_stable_alpha is None, returns 2/hessian_scale."""
-        from src.figures.scientific_complexity import BackendProfile
+        from template_code_project.figures.scientific_complexity import BackendProfile
 
         p = BackendProfile(name="Derived", hessian_scale=2.0, description="derived")
         assert p.effective_max_stable_alpha() == pytest.approx(1.0)
 
     def test_effective_label_alpha_uses_explicit_value(self):
         """Line 58-59: explicit label_alpha is returned directly."""
-        from src.figures.scientific_complexity import BackendProfile
+        from template_code_project.figures.scientific_complexity import BackendProfile
 
         p = BackendProfile(
             name="WithLabel",
@@ -158,7 +158,7 @@ class TestBackendProfile:
 
     def test_effective_label_alpha_derived(self):
         """Line 60: label_alpha defaults to 0.5 * max_stable_alpha."""
-        from src.figures.scientific_complexity import BackendProfile
+        from template_code_project.figures.scientific_complexity import BackendProfile
 
         p = BackendProfile(name="NoLabel", hessian_scale=1.0, description="no label")
         # effective_max_stable_alpha = 2/1 = 2.0 → label = 0.5 * 2.0 = 1.0
@@ -166,7 +166,7 @@ class TestBackendProfile:
 
     def test_profile_stable_region_returns_zero_to_bound(self):
         """Line 196: profile_stable_region always starts at 0.0."""
-        from src.figures.scientific_complexity import BackendProfile, profile_stable_region
+        from template_code_project.figures.scientific_complexity import BackendProfile, profile_stable_region
 
         p = BackendProfile(name="TestP", hessian_scale=5.0, description="test")
         lo, hi = profile_stable_region(p)
@@ -175,7 +175,7 @@ class TestBackendProfile:
 
     def test_compare_profiles_at_alpha_returns_one_row_per_profile(self):
         """Lines 232-247: compare_profiles_at_alpha covers the loop + dict build."""
-        from src.figures.scientific_complexity import (
+        from template_code_project.figures.scientific_complexity import (
             BackendProfile,
             compare_profiles_at_alpha,
         )
@@ -195,7 +195,7 @@ class TestBackendProfile:
 
     def test_compare_profiles_at_alpha_uses_default_backend_profiles(self):
         """compare_profiles_at_alpha works with the default BACKEND_PROFILES tuple."""
-        from src.figures.scientific_complexity import BACKEND_PROFILES, compare_profiles_at_alpha
+        from template_code_project.figures.scientific_complexity import BACKEND_PROFILES, compare_profiles_at_alpha
 
         rows = compare_profiles_at_alpha(0.1)
         assert len(rows) == len(BACKEND_PROFILES)

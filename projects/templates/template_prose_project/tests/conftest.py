@@ -20,6 +20,15 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 if str(PROJECT_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "src"))
+    sys.path.insert(0, str(PROJECT_ROOT / "src" / "template_prose_project"))
 _TESTS_DIR = Path(__file__).resolve().parent
 if str(_TESTS_DIR) not in sys.path:
     sys.path.insert(0, str(_TESTS_DIR))
+
+# TEST-ISOLATION-SYSPATH-1: expose the unique nested source package.
+import os as _os
+import sys as _sys
+
+_SRC = _os.path.join(_os.path.dirname(__file__), "..", "src")
+if _SRC not in _sys.path:
+    _sys.path.insert(0, _SRC)

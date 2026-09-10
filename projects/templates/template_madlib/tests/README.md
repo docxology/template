@@ -4,7 +4,8 @@ Tests import project code as `src.<module>` (see `tests/conftest.py` and `pyproj
 
 | File | Focus |
 | --- | --- |
-| `test_config.py` | Config schema, visualization controls, explicit/default origins, defaults, validation failures, and extended loader edge cases. |
+| `test_config.py` | Config schema, visualization controls, explicit/default origins, defaults, and validation failures. |
+| `test_config_loader_edges.py` | Extended loader edge cases: fail-closed rejection of malformed or incomplete configuration blocks. |
 | `test_tokens.py` | Deterministic token selection, digest invariants, provenance, and TokenPlan property coverage. |
 | `test_composition_and_analysis.py` | Section composition, tables, configured-field inventory, artifact JSON, figure registry, disabled-visualization branches, `analysis_fields`, and `src` public API surface. |
 | `test_manuscript_variables.py` | Token map, title/table/figure variables, manuscript cross-reference, and hydration script. |

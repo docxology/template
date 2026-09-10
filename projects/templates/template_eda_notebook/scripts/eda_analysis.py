@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 from infrastructure.documentation.generated_figure_registry import (  # noqa: E402
     write_generated_figure_registry,
 )
-from src.eda import (  # noqa: E402
+from template_eda_notebook.eda import (  # noqa: E402
     CORRELATION_COLOR_LIMITS,
     FIGURE_REGISTRY_SCHEMA,
     clean_dataset,
@@ -32,7 +32,7 @@ from src.eda import (  # noqa: E402
     load_dataset,
     summary_statistics,
 )
-from src.project_paths import project_output_dirs  # noqa: E402
+from template_eda_notebook.project_paths import project_output_dirs  # noqa: E402
 
 
 def run_eda(project_root: Path | None = None) -> list[Path]:

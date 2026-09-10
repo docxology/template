@@ -15,7 +15,7 @@ import pytest
 
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
-from src.tools_invoker import (
+from template_pools_rules_tools.tools_invoker import (
     discover_tools,
     get_tool_entrypoints,
     get_tools_root,

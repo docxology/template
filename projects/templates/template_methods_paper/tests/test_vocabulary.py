@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from src.methods_dsl.vocabulary import StepKind, Target, target_accepts
+from template_methods_paper.methods_dsl.vocabulary import StepKind, Target, target_accepts
 
 
 def test_step_kind_values_are_lowercase_strings():

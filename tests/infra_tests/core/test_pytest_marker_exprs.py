@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
+from infrastructure.core.testing.pytest_marker_exprs import build_pytest_marker_expression
 
 
 def test_default_triple_skip_matches_repo_gate() -> None:

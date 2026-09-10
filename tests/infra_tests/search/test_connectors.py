@@ -427,11 +427,22 @@ class TestOpenAlexConnector:
         assert hit.abstract == "Hello world"
         assert hit.score == 0.85
 
-    def test_reconstruct_abstract(self):
-        from infrastructure.search.connectors.impl.openalex import _reconstruct_abstract
+    def test_reconstruct_abstract(self, httpserver):
+        """An inverted abstract index is rebuilt into sentence order via the public fetch path."""
+        item = {
+            "id": "https://openalex.org/W777",
+            "title": "Sentence order",
+            "authorships": [],
+            "publication_year": 2020,
+            "abstract_inverted_index": {"The": [0], "cat": [1], "sat": [2]},
+        }
+        httpserver.expect_request("/works/W777").respond_with_json(item)
+        connector = OpenAlexConnector(base_url=httpserver.url_for(""))
 
-        abstract = _reconstruct_abstract({"The": [0], "cat": [1], "sat": [2]})
-        assert abstract == "The cat sat"
+        hit = connector.fetch("openalex:W777")
+
+        assert hit is not None
+        assert hit.abstract == "The cat sat"
 
     def test_empty_abstract_index(self):
         item = {"id": "https://openalex.org/W9", "title": "X", "authorships": [], "publication_year": None}

@@ -6,7 +6,7 @@ import json
 import pytest
 from pathlib import Path
 
-from src.cli import build_parser, main
+from template_autopoiesis.cli import build_parser, main
 
 
 PROJECT_ROOT = Path(__file__).parent.parent

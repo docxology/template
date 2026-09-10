@@ -7,14 +7,14 @@ import tempfile
 
 import pytest
 
-from src.emit_templates import (
+from template_autopoiesis.emit_templates import (
     TEMPLATE_PATHS,
     apply_template,
     emit_all,
     emit_file,
 )
-from src.grammar import KNOWN_DOMAINS, force_domain, parse_grammar
-from src.expand import expand
+from template_autopoiesis.grammar import KNOWN_DOMAINS, force_domain, parse_grammar
+from template_autopoiesis.expand import expand
 
 
 # ---------------------------------------------------------------------------

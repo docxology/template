@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from src.source_ledger import (
+from template_autoresearch_project.source_ledger import (
     load_source_ledger,
     source_age_summary,
     source_ledger_citekeys,

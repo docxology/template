@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from src.config import LLMReviewConfig, ProjectConfig, load_project_config
-from src.llm_review import (
+from template_prose_project.config import LLMReviewConfig, ProjectConfig, load_project_config
+from template_prose_project.llm_review import (
     LLM_TRANSCRIPT_SCHEMA_VERSION,
     build_llm_review_receipt,
     validate_transcript,

@@ -16,9 +16,13 @@ import sys
 _PROJECT_DIR = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PROJECT_DIR))
 
-from src.fonds_reader import read_bibliography_fond, read_contacts_fond, read_datasets_fond
-from src.rules_applier import validate_against_rules
-from src.tools_invoker import discover_tools, validate_tool_scripts_exist
+from template_pools_rules_tools.fonds_reader import (
+    read_bibliography_fond,
+    read_contacts_fond,
+    read_datasets_fond,
+)
+from template_pools_rules_tools.rules_applier import validate_against_rules
+from template_pools_rules_tools.tools_invoker import discover_tools, validate_tool_scripts_exist
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 logger = logging.getLogger(__name__)

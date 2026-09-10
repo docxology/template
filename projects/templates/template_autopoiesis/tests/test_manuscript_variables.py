@@ -6,7 +6,12 @@ import json
 from pathlib import Path
 
 
-from src.manuscript_variables import generate_variables, measure_test_summary, save_variables, _md_table
+from template_autopoiesis.manuscript_variables import (
+    generate_variables,
+    measure_test_summary,
+    save_variables,
+    _md_table,
+)
 
 
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -45,7 +50,7 @@ def test_md_table_shape():
     table = v["SLOT_TABLE"]
     lines = [l for l in table.strip().split("\n") if l.strip()]
     # header + separator + one row per slot
-    from src.grammar import load_grammar
+    from template_autopoiesis.grammar import load_grammar
 
     g = load_grammar(PROJECT_ROOT)
     expected_rows = 2 + len(g.slots)
@@ -74,13 +79,13 @@ def test_generate_variables_uses_supplied_real_numbers():
 
 
 def test_example_parameters_are_bound_to_executable_primitive_specs():
-    from src.common import DERIVED_SEED_BITS, HASH_PREFIX_HEX_LENGTH
-    from src.primitives.graph import PAGERANK_ITERATIONS
-    from src.primitives.optimization import (
+    from template_autopoiesis.common import DERIVED_SEED_BITS, HASH_PREFIX_HEX_LENGTH
+    from template_autopoiesis.primitives.graph import PAGERANK_ITERATIONS
+    from template_autopoiesis.primitives.optimization import (
         OPTIMIZATION_EXAMPLE_LEARNING_RATE,
         OPTIMIZATION_EXAMPLE_STEPS,
     )
-    from src.primitives.signal import SIGNAL_SAMPLE_POINTS
+    from template_autopoiesis.primitives.signal import SIGNAL_SAMPLE_POINTS
 
     v = generate_variables(PROJECT_ROOT)
 
@@ -111,12 +116,13 @@ def test_honesty_manifest_tokens():
 
 
 def test_measure_test_summary_on_synthetic_passing_project(tmp_path):
-    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "template_autopoiesis").mkdir(parents=True)
     (tmp_path / "src" / "__init__.py").write_text("")
-    (tmp_path / "src" / "adder.py").write_text("def add(a, b):\n    return a + b\n")
+    (tmp_path / "src" / "template_autopoiesis" / "__init__.py").write_text("")
+    (tmp_path / "src" / "template_autopoiesis" / "adder.py").write_text("def add(a, b):\n    return a + b\n")
     (tmp_path / "tests").mkdir()
     (tmp_path / "tests" / "test_adder.py").write_text(
-        "from src.adder import add\n\n\ndef test_add():\n    assert add(1, 2) == 3\n"
+        "from template_autopoiesis.adder import add\n\n\ndef test_add():\n    assert add(1, 2) == 3\n"
     )
     test_count, coverage_pct = measure_test_summary(tmp_path)
     assert test_count == 1

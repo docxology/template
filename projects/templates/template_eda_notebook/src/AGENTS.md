@@ -102,7 +102,7 @@ uv run pytest projects/templates/template_eda_notebook/tests -k "TestCorrelation
 
 ## See Also
 
-- [README.md](README.md) — Quick reference.
+- [README.md](template_eda_notebook/README.md) — Quick reference.
 - [STYLE.md](STYLE.md) — Code style and the `__all__` export contract.
 - [../scripts/eda_analysis.py](../scripts/eda_analysis.py) — Example usage (thin orchestrator).
 - [../tests/test_dataset.py](../tests/test_dataset.py) — Tests.

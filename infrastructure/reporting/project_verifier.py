@@ -25,8 +25,8 @@ from coverage.exceptions import CoverageException
 
 from infrastructure.core.execution_boundary import validate_hook_root
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.pytest_orchestration import TestSuiteResults, build_pythonpath, prepend_uv_to_path
-from infrastructure.core.pytest_profiles import test_runner_dependency_specs
+from infrastructure.core.testing.pytest_orchestration import TestSuiteResults, build_pythonpath, prepend_uv_to_path
+from infrastructure.core.testing.pytest_profiles import test_runner_dependency_specs
 from infrastructure.reporting.suite_runner import (
     DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
     run_pytest_stream,

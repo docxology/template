@@ -6,8 +6,8 @@ import json
 from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
-from src.agents import _extract_json
-from src.state import Proposal, SharedState
+from template_autoscientists.agents import _extract_json
+from template_autoscientists.state import Proposal, SharedState
 
 if TYPE_CHECKING:
     from infrastructure.llm.core.client import LLMClient

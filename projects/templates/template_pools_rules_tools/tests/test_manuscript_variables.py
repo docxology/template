@@ -11,12 +11,12 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
-from src.figure_support import (
+from template_pools_rules_tools.figure_support import (
     COVER_FIGURE_FILENAMES,
     INTEGRATION_FIGURE_SPECS,
     IntegrationFigureSpec,
 )
-from src.manuscript_variables import generate_variables
+from template_pools_rules_tools.manuscript_variables import generate_variables
 
 
 class TestGenerateVariables:
@@ -141,7 +141,7 @@ class TestGenerateVariables:
         token actually moves. A generator that ignored its input and emitted
         a constant would pass every other test in this file but fail this one.
         """
-        import src.manuscript_variables as mv
+        import template_pools_rules_tools.manuscript_variables as mv
 
         real_result = mv.run_integration_demo()
         fake_result = {
