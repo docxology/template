@@ -2,14 +2,14 @@ claims:
   - claim_id: ml-candidate-budget
     kind: number
     value: 20
-    source: projects/templates/template_autoresearch_project/src/ml/config.py ML task max candidate budget
+    source: projects/templates/template_autoresearch_project/src/template_autoresearch_project/ml/config.py ML task max candidate budget
     source_tier: project_source
     freshness: active
-    artifact_path: src/config.py
+    artifact_path: src/template_autoresearch_project/config.py
   - claim_id: baseline-accuracy
     kind: number
     value: 0.50
-    source: projects/templates/template_autoresearch_project/src/ml/baseline.py nearest-centroid expected accuracy
+    source: projects/templates/template_autoresearch_project/src/template_autoresearch_project/ml/baseline.py nearest-centroid expected accuracy
     source_tier: generated_metric
     freshness: active
     artifact_path: output/data/benchmark_scores.json
@@ -37,7 +37,7 @@ claims:
   - claim_id: ml-iteration-cutoff
     kind: number
     value: 100
-    source: projects/templates/template_autoresearch_project/src/ml/training.py training step cutoff
+    source: projects/templates/template_autoresearch_project/src/template_autoresearch_project/ml/training.py training step cutoff
     source_tier: project_source
     freshness: active
     artifact_path: output/data/ml_task_results.json

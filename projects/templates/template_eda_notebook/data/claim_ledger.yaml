@@ -9,10 +9,10 @@ claims:
   - claim_id: numeric-feature-count
     kind: number
     value: 3
-    source: projects/templates/template_eda_notebook/src/eda/dataset.py DatasetSchema.numeric_columns
+    source: projects/templates/template_eda_notebook/src/template_eda_notebook/eda/dataset.py DatasetSchema.numeric_columns
     source_tier: project_source
     freshness: active
-    artifact_path: src/eda/dataset.py
+    artifact_path: src/template_eda_notebook/eda/dataset.py
   - claim_id: group-count
     kind: number
     value: 3
@@ -23,7 +23,7 @@ claims:
   - claim_id: cleaned-rows-dropped
     kind: number
     value: 4
-    source: projects/templates/template_eda_notebook/src/eda/cleaning.py clean_dataset on the shipped CSV
+    source: projects/templates/template_eda_notebook/src/template_eda_notebook/eda/cleaning.py clean_dataset on the shipped CSV
     source_tier: generated_metric
     freshness: active
     artifact_path: output/data/summary_statistics.csv
@@ -44,14 +44,14 @@ claims:
   - claim_id: correlation-color-scale-minimum
     kind: number
     value: -1
-    source: projects/templates/template_eda_notebook/src/eda/figures.py CORRELATION_COLOR_LIMITS[0]
+    source: projects/templates/template_eda_notebook/src/template_eda_notebook/eda/figures.py CORRELATION_COLOR_LIMITS[0]
     source_tier: project_source
     freshness: active
-    artifact_path: src/eda/figures.py
+    artifact_path: src/template_eda_notebook/eda/figures.py
   - claim_id: correlation-color-scale-maximum
     kind: number
     value: 1
-    source: projects/templates/template_eda_notebook/src/eda/figures.py CORRELATION_COLOR_LIMITS[1]
+    source: projects/templates/template_eda_notebook/src/template_eda_notebook/eda/figures.py CORRELATION_COLOR_LIMITS[1]
     source_tier: project_source
     freshness: active
-    artifact_path: src/eda/figures.py
+    artifact_path: src/template_eda_notebook/eda/figures.py

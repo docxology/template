@@ -9,10 +9,10 @@ claims:
   - claim_id: required-lexicon-categories
     kind: number
     value: 3
-    source: projects/templates/template_madlib/src/config.py REQUIRED_LEXICON_CATEGORIES
+    source: projects/templates/template_madlib/src/template_madlib/config.py REQUIRED_LEXICON_CATEGORIES
     source_tier: project_source
     freshness: active
-    artifact_path: src/config.py
+    artifact_path: src/template_madlib/config.py
   - claim_id: method-protocol-owned-by-config
     kind: artifact
     value: manuscript/config.yaml madlib.method_protocol
@@ -30,10 +30,10 @@ claims:
   - claim_id: digest-invariant-contract
     kind: boundary
     value: "Token choices depend only on seed, slot name, category, ordinal, and ordered category inventory"
-    source: projects/templates/template_madlib/src/tokens.py _choose_value
+    source: projects/templates/template_madlib/src/template_madlib/tokens.py _choose_value
     source_tier: project_source
     freshness: active
-    artifact_path: src/tokens.py
+    artifact_path: src/template_madlib/tokens.py
   - claim_id: section-titles-owned-by-config
     kind: artifact
     value: manuscript/config.yaml madlib.section_titles
@@ -93,35 +93,35 @@ claims:
   - claim_id: configured-field-inventory
     kind: artifact
     value: output/data/configured_field_inventory.json
-    source: projects/templates/template_madlib/src/analysis.py configured_field_inventory
+    source: projects/templates/template_madlib/src/template_madlib/analysis.py configured_field_inventory
     source_tier: generated_metric
     freshness: active
     artifact_path: output/data/configured_field_inventory.json
   - claim_id: token-density-figure
     kind: artifact
     value: output/figures/token_density.png
-    source: projects/templates/template_madlib/src/analysis.py write_token_density_figure
+    source: projects/templates/template_madlib/src/template_madlib/analysis.py write_token_density_figure
     source_tier: generated_metric
     freshness: active
     artifact_path: output/figures/token_density.png
   - claim_id: cover-overview-figure
     kind: artifact
     value: output/figures/madlib_cover_overview.png
-    source: projects/templates/template_madlib/src/analysis.py write_cover_overview_figure
+    source: projects/templates/template_madlib/src/template_madlib/analysis.py write_cover_overview_figure
     source_tier: generated_metric
     freshness: active
     artifact_path: output/figures/madlib_cover_overview.png
   - claim_id: pipeline-audit-figures
     kind: artifact
     value: output/figures/token_injection_flow.png; output/figures/section_token_allocation.png; output/figures/provenance_trace_map.png; output/figures/quality_gate_matrix.png
-    source: projects/templates/template_madlib/src/analysis.py pipeline audit figure writers
+    source: projects/templates/template_madlib/src/template_madlib/analysis.py pipeline audit figure writers
     source_tier: generated_metric
     freshness: active
     artifact_path: output/figures/
   - claim_id: configured-field-figures
     kind: artifact
     value: output/figures/configured_field_matrix.png; output/figures/section_configuration_heatmap.png; output/figures/field_origin_summary.png
-    source: projects/templates/template_madlib/src/analysis.py configured-field figure writers
+    source: projects/templates/template_madlib/src/template_madlib/analysis.py configured-field figure writers
     source_tier: generated_metric
     freshness: active
     artifact_path: output/figures/
