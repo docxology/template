@@ -302,7 +302,7 @@ for cases where a pre-DOI deposited PDF is acceptable.
 
 **Outputs:** `output/{project}/release_bundle/` (`Author_Year_Topic_hash8.pdf` by default — see [Deposit upload filename](#deposit-upload-filename); fallback `{project}_combined.pdf` when disabled), `publication_metadata.json`, `manifest.json`, `RELEASE_RECEIPT.json`.
 
-Programmatic API: `infrastructure.publishing.release_workflow.run_release_workflow`.
+Programmatic API: `infrastructure.publishing.release.release_workflow.run_release_workflow`.
 
 ## Updating Existing GitHub and Zenodo Publications
 

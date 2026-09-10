@@ -3651,6 +3651,28 @@ validate_tool_structure(tool_dir: Path) -> tuple[bool, str]
 
 Validate that a tool has the required structure.
 
+## Package: `infrastructure.transmission`
+
+### `transmission_barcode_strip`
+
+*symbol — defined in `infrastructure.transmission`*
+
+### `transmission_bookends`
+
+*symbol — defined in `infrastructure.transmission`*
+
+### `transmission_figure`
+
+*symbol — defined in `infrastructure.transmission`*
+
+### `transmission_models`
+
+*symbol — defined in `infrastructure.transmission`*
+
+### `transmission_page_check`
+
+*symbol — defined in `infrastructure.transmission`*
+
 ## Package: `infrastructure.validation`
 
 ### `assign_severity`
