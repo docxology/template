@@ -44,7 +44,7 @@ flowchart TB
 
 ### Configuration and Environment
 
-**Configuration Loading (`test_config_loader.py`)**
+**Configuration Loading (`test_config_loader_*.py`)**
 - YAML configuration file parsing
 - Environment variable integration
 - Default value handling
@@ -185,7 +185,7 @@ def test_translation_languages(tmp_path, sample_project_config):
 
 ### Configuration Testing
 
-**`test_config_loader.py`:**
+**`test_config_loader_*.py`:**
 ```python
 def test_load_config_from_file():
     """Test loading configuration from YAML file."""
@@ -285,10 +285,10 @@ def test_config():
 uv run pytest tests/infra_tests/core/
 
 # Run specific test file
-uv run pytest tests/infra_tests/core/test_config_loader.py
+uv run pytest tests/infra_tests/core/test_config_loader_*.py
 
 # Run specific test function
-uv run pytest tests/infra_tests/core/test_config_loader.py::test_load_config_from_file
+uv run pytest tests/infra_tests/core/test_config_loader_loading.py::test_load_config_from_file
 ```
 
 ### Coverage Analysis
@@ -404,7 +404,7 @@ class TestModuleName:
 uv run pytest tests/infra_tests/core/ -v -s
 
 # Debug specific test
-uv run pytest tests/infra_tests/core/test_config_loader.py::TestConfigLoader::test_load_config -x --pdb
+uv run pytest tests/infra_tests/core/test_config_loader_loading.py::TestConfigLoader::test_load_config -x --pdb
 
 # Profile test performance
 uv run pytest tests/infra_tests/core/ --durations=10

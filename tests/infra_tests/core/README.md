@@ -13,7 +13,7 @@ Tests for core infrastructure modules including configuration, logging, exceptio
 uv run pytest tests/infra_tests/core/ -v
 
 # Run specific test module
-uv run pytest tests/infra_tests/core/test_config_loader.py -v
+uv run pytest tests/infra_tests/core/test_config_loader_loading.py -v
 
 # Run with coverage
 uv run pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-report=term
@@ -29,12 +29,12 @@ uv run pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-report=ter
 | `pipeline/` | Multi-project parallel helpers and worker isolation |
 | `telemetry/` | Telemetry retention and archive rotation |
 
-### Configuration Tests (`test_config_loader.py`)
+### Configuration Tests (`test_config_loader_*.py`)
 
 Configuration loading and environment variable integration:
 
 ```bash
-uv run pytest tests/infra_tests/core/test_config_loader.py -v
+uv run pytest tests/infra_tests/core/test_config_loader_loading.py -v
 ```
 
 **Test Coverage:**
@@ -121,7 +121,7 @@ Individual function and class testing:
 
 ```bash
 # Test specific function
-uv run pytest tests/infra_tests/core/test_config_loader.py::test_load_config -v
+uv run pytest tests/infra_tests/core/test_config_loader_loading.py::test_load_config -v
 
 # Test specific class
 uv run pytest tests/infra_tests/core/test_exceptions.py::TestTemplateError -v
@@ -133,7 +133,7 @@ Cross-module functionality:
 
 ```bash
 # Test configuration + logging integration
-uv run pytest tests/infra_tests/core/test_config_loader.py::test_config_with_logging -v
+uv run pytest tests/infra_tests/core/test_config_loader_loading.py::test_config_with_logging -v
 ```
 
 ### Edge Case Tests
@@ -150,7 +150,7 @@ uv run pytest tests/infra_tests/core/ -k "error" -v
 ### Configuration Testing
 
 ```python
-# test_config_loader.py pattern
+# test_config_loader_loading.py pattern
 def test_load_config():
     config = load_config(Path("config.yaml"))
     assert config["key"] == "value"
