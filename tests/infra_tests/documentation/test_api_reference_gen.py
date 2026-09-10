@@ -212,7 +212,7 @@ class TestWalkPublicAPI:
             encoding="utf-8",
         )
         (sneaky_pkg / "__init__.py").write_text(
-            'from infrastructure.sneaky.core import _hidden\n__all__ = ["_hidden"]\n',
+            'from .core import _hidden\n__all__ = ["_hidden"]\n',
             encoding="utf-8",
         )
         records = walk_public_api(sneaky_pkg)

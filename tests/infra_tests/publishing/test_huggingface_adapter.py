@@ -99,25 +99,24 @@ def test_commit_http_error_returns_error_receipt(httpserver: HTTPServer, bundle_
     assert "HTTP error" in (result.error or "")
 
 
-def test_should_use_hub_is_false_for_custom_base_url() -> None:
-    # Tests point base_url at a local server; the huggingface_hub LFS path must
-    # never engage there (it would make a real network call), regardless of install.
+def test_oversized_file_never_escalates_on_test_server_base_url(httpserver: HTTPServer, bundle_dir: Path) -> None:
+    """An oversized inline upload against a test-server base URL must fail closed
+    with the inline-ceiling error instead of engaging the real-Hub client path
+    (which would make a real network call), regardless of what is installed."""
+    big = bundle_dir / "big.bin"
+    big.write_bytes(b"\0" * (10 * 1024 * 1024 + 1))
     adapter = HuggingFaceHubAdapter(
-        HuggingFaceConfig(repo_id="ns/x", token="t", base_url="http://localhost:9"),
+        HuggingFaceConfig(repo_id="ns/x", token="t", base_url=httpserver.url_for("")),
     )
-    assert adapter._should_use_hub() is False
+    result = adapter.publish(bundle_dir, dry_run=False)
+    assert result.status == "error"
+    assert "inline (non-LFS) commit ceiling" in (result.error or "")
 
 
-def test_should_use_hub_tracks_availability_on_public_hub() -> None:
-    from infrastructure.publishing.huggingface.adapter import _hub_available
-
-    adapter = HuggingFaceHubAdapter(HuggingFaceConfig(repo_id="ns/x", token="t"))  # default public Hub
-    assert adapter._should_use_hub() is _hub_available()
-
-
-def test_model_repo_url_has_no_prefix() -> None:
+def test_model_repo_url_has_no_prefix(bundle_dir: Path) -> None:
     adapter = HuggingFaceHubAdapter(
         HuggingFaceConfig(repo_id="ns/m", token="t", repo_type=HFRepoType.MODEL),
     )
-    assert adapter._repo_url.endswith("/ns/m")
-    assert "models/" not in adapter._repo_url
+    result = adapter.publish(bundle_dir, dry_run=True)
+    assert result.url.endswith("/ns/m")
+    assert "models/" not in result.url

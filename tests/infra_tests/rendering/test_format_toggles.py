@@ -177,20 +177,20 @@ def test_pipeline_skip_branches_present() -> None:
 def test_combined_html_skips_missing_transmission_bookends(tmp_path) -> None:
     """Combined HTML should survive PDF-side cleanup of generated bookends."""
     from infrastructure.transmission.transmission_bookends import BEGIN_FILENAME, END_FILENAME
-    from infrastructure.rendering.pipeline import _html_combined_source_files
+    from infrastructure.rendering._combined_exports import combined_source_files
 
     body = tmp_path / "01_body.md"
     body.write_text("# Body\n", encoding="utf-8")
     missing_regular = tmp_path / "02_missing.md"
 
-    filtered = _html_combined_source_files(
+    filtered = combined_source_files(
         [
             tmp_path / BEGIN_FILENAME,
             body,
             tmp_path / END_FILENAME,
         ]
     )
-    with_regular_missing = _html_combined_source_files([body, missing_regular])
+    with_regular_missing = combined_source_files([body, missing_regular])
 
     assert filtered == [body]
     assert with_regular_missing == [body, missing_regular]

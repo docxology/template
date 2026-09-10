@@ -27,7 +27,6 @@ from infrastructure.publishing.archival import (
     ZenodoProvider,
     archive_publication,
 )
-from infrastructure.publishing.archival.models import _bundle_sha256
 
 
 # ---------------------------------------------------------------------------
@@ -272,59 +271,64 @@ def test_archival_run_to_dict_structure() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 5. _bundle_sha256 helper
+# 5. Bundle digest via the public dry-run deposit path
 # ---------------------------------------------------------------------------
 
 
+def _deposit_bundle_sha256(bundle: Path) -> str:
+    """Return the digest a real provider records for *bundle* (no network, no credentials)."""
+    return ZenodoProvider(token=None).deposit(bundle, dry_run=True).bundle_sha256
+
+
 def test_bundle_sha256_file_returns_hex_string(tmp_path: Path) -> None:
-    """_bundle_sha256 on a single file returns a 64-char lowercase hex string."""
+    """The recorded digest for a single-file bundle is a 64-char lowercase hex string."""
     f = tmp_path / "data.bin"
     f.write_bytes(b"hello archival world")
-    result = _bundle_sha256(f)
+    result = _deposit_bundle_sha256(f)
     assert isinstance(result, str)
     assert len(result) == 64
     assert all(c in "0123456789abcdef" for c in result)
 
 
 def test_bundle_sha256_matches_hashlib_for_single_file(tmp_path: Path) -> None:
-    """Hash of a single file must equal hashlib.sha256 applied to the same bytes."""
+    """The recorded digest of a single file must equal hashlib.sha256 applied to the same bytes."""
     content = b"deterministic content for hash check"
     f = tmp_path / "file.txt"
     f.write_bytes(content)
     expected = hashlib.sha256(content).hexdigest()
-    assert _bundle_sha256(f) == expected
+    assert _deposit_bundle_sha256(f) == expected
 
 
 def test_bundle_sha256_deterministic(tmp_path: Path) -> None:
-    """Calling _bundle_sha256 twice on the same file produces the same hash."""
+    """Recording the same single-file bundle twice produces the same digest."""
     f = tmp_path / "repeat.txt"
     f.write_bytes(b"some bytes that should hash consistently")
-    assert _bundle_sha256(f) == _bundle_sha256(f)
+    assert _deposit_bundle_sha256(f) == _deposit_bundle_sha256(f)
 
 
 def test_bundle_sha256_directory_deterministic(tmp_path: Path) -> None:
-    """_bundle_sha256 on a directory is deterministic across two calls."""
+    """The digest of a directory bundle is deterministic across two dry-run deposits."""
     d = tmp_path / "dir"
     d.mkdir()
     (d / "a.txt").write_bytes(b"file a")
     (d / "b.txt").write_bytes(b"file b")
-    assert _bundle_sha256(d) == _bundle_sha256(d)
+    assert _deposit_bundle_sha256(d) == _deposit_bundle_sha256(d)
 
 
 def test_bundle_sha256_different_content_differs(tmp_path: Path) -> None:
-    """Two files with different content must produce different hashes."""
+    """Two bundles with different content must produce different digests."""
     f1 = tmp_path / "f1.txt"
     f2 = tmp_path / "f2.txt"
     f1.write_bytes(b"content one")
     f2.write_bytes(b"content two")
-    assert _bundle_sha256(f1) != _bundle_sha256(f2)
+    assert _deposit_bundle_sha256(f1) != _deposit_bundle_sha256(f2)
 
 
 def test_bundle_sha256_empty_directory(tmp_path: Path) -> None:
-    """An empty directory returns a 64-char hex string (hash of nothing)."""
+    """An empty directory bundle still yields a 64-char hex digest (hash of nothing)."""
     d = tmp_path / "empty_dir"
     d.mkdir()
-    result = _bundle_sha256(d)
+    result = _deposit_bundle_sha256(d)
     assert len(result) == 64
     assert all(c in "0123456789abcdef" for c in result)
 

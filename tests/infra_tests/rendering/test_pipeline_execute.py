@@ -14,10 +14,9 @@ from pathlib import Path
 import pytest
 
 from infrastructure.rendering._combined_exports import render_combined_outputs
+from infrastructure.rendering._manuscript_source import render_individual_files
 from infrastructure.rendering.pipeline import (
     RenderPipelineDependencies,
-    _render_individual_files,
-    _render_pipeline_impl,
     execute_render_pipeline,
     verify_render_outputs,
 )
@@ -41,7 +40,7 @@ def test_execute_render_pipeline_missing_project_returns_one(tmp_path: Path, mon
 # ---------------------------------------------------------------------------
 
 
-def test_render_pipeline_impl_short_circuits_on_override_script(
+def test_render_pipeline_short_circuits_on_override_script(
     tmp_path: Path,
 ) -> None:
     """When _render_pdf_override.py exists, the pipeline delegates and skips LaTeX."""
@@ -50,7 +49,7 @@ def test_render_pipeline_impl_short_circuits_on_override_script(
     override = project / "scripts" / "_render_pdf_override.py"
     override.write_text("import sys\nsys.exit(42)\n", encoding="utf-8")
 
-    rc = _render_pipeline_impl("override_proj", repo_root=tmp_path, dependencies=_dependencies_for(project))
+    rc = execute_render_pipeline("override_proj", repo_root=tmp_path, dependencies=_dependencies_for(project))
 
     assert rc == 42
 
@@ -94,7 +93,7 @@ def test_execute_render_pipeline_override_success_with_pdf(
 def test_execute_render_pipeline_verify_pdf_false_returns_one(
     tmp_path: Path,
 ) -> None:
-    """When _render_pipeline_impl returns 0 but verify_pdf_outputs returns False, exit code is 1."""
+    """When the render orchestration returns 0 but output verification returns False, exit code is 1."""
     project = tmp_path / "verify_fail_proj"
     _make_project_with_manuscript(project, n_md=1)
 
@@ -207,7 +206,7 @@ def test_execute_render_pipeline_combined_packages_do_not_require_pdf(
 
     dependencies = _dependencies_for(
         project,
-        render_individual=_render_individual_files,
+        render_individual=render_individual_files,
         render_combined=render_combined_outputs,
         verify_outputs=verify_render_outputs,
     )

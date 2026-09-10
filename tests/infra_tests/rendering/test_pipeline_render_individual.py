@@ -1,4 +1,4 @@
-"""Tests for infrastructure.rendering.pipeline._render_individual_files.
+"""Tests for per-manuscript-file rendering orchestration.
 
 RenderManager subclasses record successes and failures — no mocks.
 """
@@ -13,11 +13,11 @@ from infrastructure.core.exceptions import RenderingError, TemplateError
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.pipeline import _render_individual_files
+from infrastructure.rendering._manuscript_source import render_individual_files
 
 
 # ---------------------------------------------------------------------------
-# _render_individual_files (RenderManager subclasses — no mocks)
+# render_individual_files (RenderManager subclasses — no mocks)
 # ---------------------------------------------------------------------------
 
 
@@ -68,7 +68,7 @@ def test_render_individual_files_empty_outputs(tmp_path: Path) -> None:
     md.write_text("# Intro", encoding="utf-8")
     manager = _EmptyRenderManager(RenderingConfig(output_dir=str(tmp_path)))
 
-    rendered_count, failed_files = _render_individual_files(manager, [md], reporter)
+    rendered_count, failed_files = render_individual_files(manager, [md], reporter)
 
     assert rendered_count == 0
     assert failed_files == []
@@ -81,7 +81,7 @@ def test_render_individual_files_rendering_error(tmp_path: Path) -> None:
     md.write_text("# Methods", encoding="utf-8")
     manager = _ErrorRenderManager(RenderingConfig(output_dir=str(tmp_path)))
 
-    rendered_count, failed_files = _render_individual_files(manager, [md], reporter)
+    rendered_count, failed_files = render_individual_files(manager, [md], reporter)
 
     assert rendered_count == 0
     assert failed_files == ["02_methods.md"]
@@ -95,7 +95,7 @@ def test_render_individual_files_template_error_is_a_recorded_failure(tmp_path: 
     md.write_text("# Template", encoding="utf-8")
     manager = _TemplateErrorRenderManager(RenderingConfig(output_dir=str(tmp_path)))
 
-    rendered_count, failed_files = _render_individual_files(manager, [md], reporter)
+    rendered_count, failed_files = render_individual_files(manager, [md], reporter)
 
     assert rendered_count == 0
     assert failed_files == ["02b_template.md"]
@@ -110,7 +110,7 @@ def test_render_individual_files_success(tmp_path: Path) -> None:
     out_dir = tmp_path / "outputs"
     manager = _SuccessRenderManager(RenderingConfig(output_dir=str(tmp_path)), out_dir)
 
-    rendered_count, failed_files = _render_individual_files(manager, [md], reporter)
+    rendered_count, failed_files = render_individual_files(manager, [md], reporter)
 
     assert rendered_count == 1
     assert failed_files == []
@@ -157,7 +157,7 @@ def test_render_individual_files_defers_only_pre_aux_accessible_beamer_overflow(
     )
     reporter = DiagnosticReporter(project_name="t", output_dir=tmp_path / "reports", load_existing=False)
 
-    _rendered_count, failed_files = _render_individual_files(manager, [source], reporter)
+    _rendered_count, failed_files = render_individual_files(manager, [source], reporter)
 
     assert failed_files == expected_failures
     assert len(reporter.events) == len(expected_failures)
@@ -198,7 +198,7 @@ def test_render_individual_files_cleans_stale_web_artifacts(tmp_path: Path) -> N
         tmp_path / "outputs",
     )
 
-    rendered_count, failed_files = _render_individual_files(manager, [md], reporter)
+    rendered_count, failed_files = render_individual_files(manager, [md], reporter)
 
     assert rendered_count == 1
     assert failed_files == []

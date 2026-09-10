@@ -1,19 +1,20 @@
-"""Tests for infrastructure/llm/validation/similarity.py.
+"""Tests for the LLM validation similarity machinery.
 
 Covers: _normalize_for_comparison, _jaccard_similarity, _tf_cosine_similarity,
-_sequence_similarity, _calculate_similarity.
+_sequence_similarity, plus the composite similarity behavior via the public
+repetition-detection API.
 
 No mocks used -- all tests use real data and computations.
 """
 
 from __future__ import annotations
 
+from infrastructure.llm.validation.repetition import detect_repetition
 from infrastructure.llm.validation.similarity import (
     _normalize_for_comparison,
     _jaccard_similarity,
     _tf_cosine_similarity,
     _sequence_similarity,
-    _calculate_similarity,
 )
 
 
@@ -112,46 +113,50 @@ class TestSequenceSimilarity:
         assert _sequence_similarity("", "hello world test") == 0.0
 
 
-class TestCalculateSimilarity:
-    """Test _calculate_similarity."""
+class TestCompositeSimilarityViaDetection:
+    """The composite similarity drives duplicate detection through the public API.
 
-    def test_empty_texts(self):
-        assert _calculate_similarity("", "hello") == 0.0
-        assert _calculate_similarity("hello", "") == 0.0
+    The similarity module is internal (its docstring forbids direct imports),
+    so the composite behavior is exercised via ``detect_repetition`` threshold
+    boundaries: a distinct second section is reported as a duplicate iff the
+    pairwise similarity reaches the configured threshold.
+    """
 
-    def test_jaccard_method(self):
-        sim = _calculate_similarity(
-            "the cat sat on the mat",
-            "the dog sat on the mat",
-            method="jaccard",
-        )
-        assert 0.0 < sim < 1.0
+    @staticmethod
+    def _overlap_text() -> str:
+        first = ("the cat sat on the mat " * 5).strip()
+        second = ("the dog sat on the mat " * 5).strip()
+        return f"## Section\n{first}\n\n## Section\n{second}"
 
-    def test_tfidf_method(self):
-        sim = _calculate_similarity(
-            "machine learning algorithms process data",
-            "machine learning models analyze data",
-            method="tfidf",
-        )
-        assert 0.0 < sim < 1.0
+    def test_degenerate_input_reports_no_repetition(self):
+        found, examples, ratio = detect_repetition("Short.")
+        assert found is False
+        assert examples == []
+        assert ratio == 1.0
 
-    def test_hybrid_method(self):
-        sim = _calculate_similarity(
-            "the quick brown fox jumps over the lazy dog",
-            "the quick brown fox jumps over the lazy dog",
-            method="hybrid",
-        )
-        assert sim > 0.9
+    def test_jaccard_method_scores_partial_overlap(self):
+        result = detect_repetition(self._overlap_text(), similarity_threshold=0.5, similarity_method="jaccard")
+        assert result.examples
+        result = detect_repetition(self._overlap_text(), similarity_threshold=0.99, similarity_method="jaccard")
+        assert result.examples == []
 
-    def test_different_texts_hybrid(self):
-        sim = _calculate_similarity(
-            "quantum physics experiments in laboratory settings",
-            "culinary arts and pastry making techniques",
-            method="hybrid",
-        )
-        assert sim < 0.5
+    def test_tfidf_method_scores_partial_overlap(self):
+        result = detect_repetition(self._overlap_text(), similarity_threshold=0.01, similarity_method="tfidf")
+        assert result.examples
+        result = detect_repetition(self._overlap_text(), similarity_threshold=0.99, similarity_method="tfidf")
+        assert result.examples == []
+
+    def test_hybrid_method_separates_similar_from_disjoint(self):
+        result = detect_repetition(self._overlap_text(), similarity_threshold=0.3, similarity_method="hybrid")
+        assert result.examples
+
+        disjoint_first = ("quantum physics experiments in laboratory settings " * 4).strip()
+        disjoint_second = ("culinary arts and pastry making techniques " * 4).strip()
+        disjoint = f"## Section\n{disjoint_first}\n\n## Section\n{disjoint_second}"
+        result = detect_repetition(disjoint, similarity_threshold=0.5, similarity_method="hybrid")
+        assert result.examples == []
 
     def test_default_method_is_hybrid(self):
-        sim1 = _calculate_similarity("hello world test", "hello world test")
-        sim2 = _calculate_similarity("hello world test", "hello world test", method="hybrid")
-        assert abs(sim1 - sim2) < 0.01
+        default = detect_repetition(self._overlap_text(), similarity_threshold=0.3)
+        explicit = detect_repetition(self._overlap_text(), similarity_threshold=0.3, similarity_method="hybrid")
+        assert default.examples == explicit.examples
