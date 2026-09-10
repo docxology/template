@@ -396,25 +396,28 @@ jobs:
           # Coverage instrumentation is memory-intensive on macOS; keep that
           # runner deterministic while retaining wider auto-parallelism on Linux.
           TEMPLATE_CI_XDIST_WORKERS: ${{ matrix.os == 'macos-latest' && '2' || 'auto' }}
+          # CI-COV-SCOPE-1: only the py3.14-ubuntu cell uploads to Codecov, so
+          # only that cell pays for instrumentation and enforces the 60% floor.
+          INFRA_COV_FLAGS: ${{ (matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest') && '--cov=infrastructure --cov-report=term-missing --cov-report=xml:coverage-infra.xml --cov-fail-under=60' || '' }}
         # -n auto parallelizes across runner cores (pytest-xdist). Scope-based
         # distribution keeps subprocess-heavy test modules together, avoiding
         # intermittent worker replacement under work-stealing contention.
-        # pytest-cov combines per-worker data before the gate.
-        run: >-
-          uv run pytest tests/infra_tests/
-          -n "$TEMPLATE_CI_XDIST_WORKERS"
-          --dist loadscope
-          --benchmark-disable
-          --cov=infrastructure
-          --cov-report=term-missing
-          --cov-report=xml:coverage-infra.xml
-          --cov-fail-under=60
-          --durations=10
-          -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance"
-          --timeout=120
+        run: |
+          # shellcheck disable=SC2086  # INFRA_COV_FLAGS is intentionally word-split
+          uv run pytest tests/infra_tests/ \
+            -n "$TEMPLATE_CI_XDIST_WORKERS" \
+            --dist loadscope \
+            --benchmark-disable \
+            $INFRA_COV_FLAGS \
+            --durations=10 \
+            -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
+            --timeout=120
 
+      # CI-PLAYWRIGHT-SCHEDULE-1: browser provisioning costs several minutes,
+      # so PR and push runs skip it; the MathJax live-viewport spec still runs
+      # on the weekly scheduled (and manually dispatched) lanes.
       - name: Verify completed MathJax equations across live viewport changes
-        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest'
+        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         run: |
           export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
           npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
@@ -707,6 +710,26 @@ jobs:
       - name: Sync fep_lean project (explicit venv + dev extras)
         run: uv sync --directory projects/fep_lean --extra dev
 
+      # CI-LEAN-CACHE-1: elan skips the multi-GB toolchain download when the
+      # cached `~/.elan/toolchains` already holds the pinned toolchain; the
+      # `.lake` build dir skips the multi-minute Lake rebuild when sources are
+      # unchanged. Keys hash the fep_lean pin/manifest files (absent in the
+      # public template → empty hash → cache miss, which actions/cache
+      # tolerates; the job is skipped there anyway by `detect`).
+      - name: Cache elan toolchains (lean-toolchain-keyed)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.elan/toolchains
+          key: elan-toolchains-${{ runner.os }}-${{ hashFiles('projects/fep_lean/lean/lean-toolchain') }}
+
+      - name: Cache Lake build (lake-manifest-keyed)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: projects/fep_lean/lean/.lake
+          key: lake-build-${{ runner.os }}-${{ hashFiles('projects/fep_lean/lean/lake-manifest.json', 'projects/fep_lean/lean/lean-toolchain') }}
+          restore-keys: |
+            lake-build-${{ runner.os }}-
+
       - name: Install elan (lean + lake)
         run: |
           set -euxo pipefail
@@ -722,7 +745,7 @@ jobs:
         working-directory: projects/fep_lean/lean
         run: |
           set -euxo pipefail
-          TOOLCHAIN=$(tr -d '[:space:]' < lean-toolchain)
+
           elan override set "$TOOLCHAIN"
           lean --version
           lake --version
