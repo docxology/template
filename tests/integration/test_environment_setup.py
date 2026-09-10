@@ -57,12 +57,17 @@ package = false
         )
 
         # Test uv sync with real subprocess
+        # Test uv sync with real subprocess. get_subprocess_env strips
+        # VIRTUAL_ENV when uv is active -- inheriting the raw parent
+        # environment makes uv warn (and this assert fail) on runners that
+        # export an absolute VIRTUAL_ENV path.
         result = subprocess.run(
             ["uv", "sync"],
             cwd=str(tmp_path),
             capture_output=True,
             text=True,
             check=False,
+            env=get_subprocess_env(),
         )
 
         # Should succeed
