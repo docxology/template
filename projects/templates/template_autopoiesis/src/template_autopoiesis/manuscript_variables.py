@@ -8,9 +8,9 @@ import re
 import subprocess
 import sys
 import tempfile
+import traceback
 from pathlib import Path
 from typing import Any
-
 from .common import DERIVED_SEED_BITS, HASH_PREFIX_HEX_LENGTH
 from .grammar import load_grammar, KNOWN_DOMAINS, RESERVED_SLOTS
 from .primitives.graph import PAGERANK_ITERATIONS
@@ -56,6 +56,22 @@ def measure_test_summary(
     src_dir = project_root / "src"
     repo_root_python = Path(__file__).resolve().parents[5] / ".venv" / "bin" / "python3"
     python = str(repo_root_python) if repo_root_python.is_file() else sys.executable
+    if repo_root_python.is_file():
+        probe = subprocess.run(
+            [str(repo_root_python), "-c", "import pytest, coverage"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        if probe.returncode != 0:
+            print(
+                f"measure_test_summary: interpreter {repo_root_python} cannot "
+                f"import pytest/coverage ({probe.stderr.strip()[-300:]}); "
+                "falling back to sys.executable",
+                file=sys.stderr,
+            )
+            python = sys.executable
     with tempfile.TemporaryDirectory() as tmp:
         cov_json = Path(tmp) / "coverage.json"
         # Isolate coverage so this inner pytest never inherits or pollutes the
@@ -93,6 +109,13 @@ def measure_test_summary(
             )
             match = _PASSED_RE.search(result.stdout)
             if not match or not cov_json.is_file():
+                print(
+                    "measure_test_summary: inner pytest run did not produce "
+                    f"a parseable summary or coverage JSON (rc={result.returncode})\n"
+                    f"stdout tail: {result.stdout[-500:]}\n"
+                    f"stderr tail: {result.stderr[-500:]}",
+                    file=sys.stderr,
+                )
                 return "pending", "pending"
             test_count = int(match.group(1))
             coverage_data = json.loads(cov_json.read_text())
@@ -103,8 +126,12 @@ def measure_test_summary(
                 full_report_out.write_text(cov_json.read_text())
             return test_count, coverage_pct
         except (OSError, subprocess.SubprocessError, json.JSONDecodeError, KeyError):
+            print(
+                "measure_test_summary: subprocess/parse failure; reporting "
+                f"'pending' ({traceback.format_exc(limit=2)})",
+                file=sys.stderr,
+            )
             return "pending", "pending"
-
 
 def _md_table(headers: list[str], rows: list[list[str]]) -> str:
     """Render a simple Markdown table."""
