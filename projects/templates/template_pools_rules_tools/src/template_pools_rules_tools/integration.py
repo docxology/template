@@ -40,7 +40,7 @@ __all__ = [
 ]
 
 # projects/templates/template_pools_rules_tools/src/integration.py -> project root
-_PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[1]
+_PROJECT_ROOT = pathlib.Path(__file__).resolve().parents[2]
 
 # Human-readable labels for the status dashboard, keyed by generate_figure_data()'s
 # machine labels.

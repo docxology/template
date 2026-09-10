@@ -16,14 +16,15 @@ from .type_defs import IntegrationResult
 
 __all__ = ["generate_variables"]
 
-_PROJECT_ROOT = Path(__file__).resolve().parents[1]
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _filesystem_counts(project_root: Path) -> tuple[int, int, int]:
     """Count the project-owned Python source, test, and orchestration files."""
     source_modules = sum(
         path.is_file() and path.name != "__init__.py"
-        for path in (project_root / "src").glob("*.py")
+        for path in (project_root / "src").rglob("*.py")
+        if path.name != "__init__.py"
     )
     test_files = sum(path.is_file() for path in (project_root / "tests").glob("test_*.py"))
     orchestration_scripts = sum(

@@ -280,8 +280,16 @@ def _evaluate_module_structure(
     if isinstance(required_layout, dict):
         src_required = required_layout.get("src_root")
         if isinstance(src_required, list):
+            # TEST-ISOLATION-SYSPATH-1: modules nest under src/<package>/;
+            # required src files resolve flat (src/<rel>) or nested
+            # (src/<package>/<rel>) so forks of either layout satisfy the rule.
+            package_dir = project_root.name
             for rel in src_required:
-                if isinstance(rel, str) and not (src_root / rel).exists():
+                if (
+                    isinstance(rel, str)
+                    and not (src_root / rel).exists()
+                    and not (src_root / package_dir / rel).exists()
+                ):
                     violations.append(
                         StrongRuleViolation(
                             rule_name=rule_name,
