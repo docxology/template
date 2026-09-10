@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.88 %",
-      "source_hash": "22ab9ec54112d03af8c3b43fe10478bea19813d8c198b2d1793614fdbf48ee99"
+      "source_hash": "fcd2128b41a46d6f3e91d34c7133fff01975f783eefa2e7c912df3612926c505"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "91.96 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "d4f2961bdc110603cc9c1899eba8b138105c14fb",
+  "source_commit": "dd5495465998be3381ee279fe7037b6ccd6ff39d",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -107,7 +107,7 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "8dcbc20965a1239ca5c9611678aef43f338e27dbac1665f60e9b2819dc67e8c6",
+        "digest": "2c03ac96975d5a18fd795e7aec36d56262c950fb30facd5be312ffef29b2645d",
         "entries": [
           {
             "identity": "sha256",
@@ -129,7 +129,7 @@
           {
             "identity": "sha256",
             "path": "docs/RUN_GUIDE.md",
-            "sha256": "d16c52b11b5a6381a3a6ab8f5b50eac105ec9764307b4537e4ad91ea2a8bd506",
+            "sha256": "f3b91a8300a3469541e9e0b47c4a41f8bfb0e73527c05daac2cecfafd8abf5be",
             "type": "file"
           },
           {
@@ -184,7 +184,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "22ab9ec54112d03af8c3b43fe10478bea19813d8c198b2d1793614fdbf48ee99",
+      "template_active_inference": "fcd2128b41a46d6f3e91d34c7133fff01975f783eefa2e7c912df3612926c505",
       "template_advanced_literature_review": "fe8a2bcffe44383609253860793699d36b854e9962d32e6e072511d6dc629807",
       "template_autopoiesis": "025efdc71c7d24a50c9840eae657708010423194e7cdd70e55b84daf46267f7b",
       "template_autoresearch_project": "fdcdf3e7508cefccbdccdabf1d00d853d0fae1cd49384bd46d5798403242e305",
