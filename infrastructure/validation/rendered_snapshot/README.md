@@ -24,4 +24,4 @@ including legacy test aliases such as `_cached_records`).
 ## See Also
 
 - [`../AGENTS.md`](../AGENTS.md) - rendered-snapshot role in validation
-- [`../../../tests/infra_tests/validation/test_rendered_provenance.py`](../../../tests/infra_tests/validation/test_rendered_provenance.py)
+- [`../../../tests/infra_tests/validation/`](../../../tests/infra_tests/validation/) - rendered-provenance tests (`test_rendered_provenance_*` cluster)

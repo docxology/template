@@ -158,7 +158,7 @@ The `pyproject.toml` enforces `fail_under = 90` as the CI gate. Live achieved co
 
 - [AGENTS.md](AGENTS.md) — Test class listing and run commands
 - [../src/STYLE.md](../src/STYLE.md) — How source code should be structured
-- [../src/invariants.py](../src/invariants.py) — Numerical invariant builders covered by `test_invariants.py`
+- [../src/invariants.py](../src/template_code_project/invariants.py) — Numerical invariant builders covered by `test_invariants.py`
 - [../scripts/build_dashboard.py](../scripts/build_dashboard.py) — Dashboard CLI covered by `test_invariants_and_dashboard.py`
 - [../scripts/generate_api_docs.py](../scripts/generate_api_docs.py) — Auxiliary smoke in `test_scripts_smoke.py`
 - [../scripts/00_preflight.py](../scripts/00_preflight.py) — Auxiliary smoke in `test_scripts_smoke.py` (exit 0 or 1)

@@ -79,9 +79,9 @@ job.
 basename collides (`ValueError: plugin already registered`). The workaround is
 the per-project subprocess model above, not a single mega pytest command.
 
-**References:** [`infrastructure/core/test_runner.py`](../infrastructure/core/test_runner.py),
-[`tests/infra_tests/core/test_test_runner.py`](infra_tests/core/test_test_runner.py),
-[`infrastructure/core/project_test_matrix.py`](../infrastructure/core/project_test_matrix.py)
+**References:** [`infrastructure/core/test_runner.py`](../infrastructure/core/testing/test_runner.py),
+[`tests/infra_tests/core/test_test_runner.py`](infra_tests/core/test_test_runner_per_project.py),
+[`infrastructure/core/project_test_matrix.py`](../infrastructure/core/testing/project_test_matrix.py)
 (bounded per-project subprocess matrix with duplicate-index rejection).
 
 ## See Also

@@ -337,7 +337,7 @@ There is no shared fallback shim — projects that want `src/` to stay
 infrastructure-independent write a small local wrapper that tries the
 infrastructure import and falls back to a bare stdlib logger on
 `ImportError`. Real example:
-[`template_code_project/src/_runtime.py`](../../../projects/templates/template_code_project/src/_runtime.py):
+[`template_code_project/src/template_code_project/_runtime.py`](../../../projects/templates/template_code_project/src/template_code_project/_runtime.py):
 
 ```python
 def get_logger(module_name: str | None = None) -> logging.Logger:

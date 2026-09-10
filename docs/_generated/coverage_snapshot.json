@@ -23,7 +23,7 @@
     },
     "template_code_project": {
       "coverage_pct": "95.20 %",
-      "source_hash": "a3aca4aad99dac5da11fb7952a8069d373413eef5a385153966b3464cfd87a26"
+      "source_hash": "92197d64727436273c1b5d52d5c5792b43bb4ce5d9d5eff2cf2f7d726d33e0a7"
     },
     "template_data_descriptor": {
       "coverage_pct": "96.13 %",
@@ -31,7 +31,7 @@
     },
     "template_eda_notebook": {
       "coverage_pct": "90.03 %",
-      "source_hash": "4d0efce801bec9f3f7034dba71ef59cc755062368717865b66595ab675972dbb"
+      "source_hash": "eff983de1defd6451e177af0923e2921db8c91c3f9686627522445ea956410a4"
     },
     "template_formal": {
       "coverage_pct": "94.50 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "f72e525adfebbc0a7620ae1ec22b3dfd1d027c37",
+  "source_commit": "5f895ad85542d82503845d96c2ee888668430a32",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -189,9 +189,9 @@
       "template_autopoiesis": "ef37786864b7486b4d80168f71b8cdf8a6565f9f9cd74ee35899c5eedc9200f9",
       "template_autoresearch_project": "2c717150de8dc0285efa51f025b887279bf14b0d98a757031af0c5457ccb0468",
       "template_autoscientists": "a94f69ea23372a177a3f0368ce865ea451e42dbc5f1ca5ac1c8643da4c847b4c",
-      "template_code_project": "a3aca4aad99dac5da11fb7952a8069d373413eef5a385153966b3464cfd87a26",
+      "template_code_project": "92197d64727436273c1b5d52d5c5792b43bb4ce5d9d5eff2cf2f7d726d33e0a7",
       "template_data_descriptor": "ec58ba3e75bcd7e89fd89f87e6695b4574d81ff13b2763b0b710059860f4b2ff",
-      "template_eda_notebook": "4d0efce801bec9f3f7034dba71ef59cc755062368717865b66595ab675972dbb",
+      "template_eda_notebook": "eff983de1defd6451e177af0923e2921db8c91c3f9686627522445ea956410a4",
       "template_formal": "0e3394c9fd914b4fadd5a6b0953e54432c4450c938df4e1f8517132684a51d82",
       "template_gold_refinement": "c2da5d079d6212ec03364801604d2ef1c86945e65b0388a50559f31218e97d63",
       "template_literature_meta_analysis": "8cdc2cae7ebf97a2b2573d3752c4fb8445431df068035f49f9af60d4ca0fc70a",

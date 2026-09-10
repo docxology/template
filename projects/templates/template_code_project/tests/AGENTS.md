@@ -274,5 +274,5 @@ Tests validate performance characteristics:
 ## See Also
 
 - [README.md](README.md) - Quick reference
-- [../src/optimizer.py](../src/optimizer.py) - Code under test
+- [../src/optimizer.py](../src/template_code_project/optimizer.py) - Code under test
 - [../scripts/optimization_analysis.py](../scripts/optimization_analysis.py) - Integration examples
