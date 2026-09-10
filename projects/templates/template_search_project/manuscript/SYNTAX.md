@@ -61,7 +61,7 @@ Reference with `[@fig:papers_per_source]`, `[@fig:year_histogram]`, `[@fig:score
 
 ## `{{TOKEN}}` substitution
 
-`scripts/z_generate_manuscript_variables.py` (and the deep-search variant) replaces these tokens at render time. Defined in [`src/manuscript_variables.py`](../src/manuscript_variables.py):
+`scripts/z_generate_manuscript_variables.py` (and the deep-search variant) replaces these tokens at render time. Defined in [`src/manuscript_variables.py`](../src/template_search_project/manuscript_variables.py):
 
 | Token | Source |
 |---|---|

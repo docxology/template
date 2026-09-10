@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from src.review_report import (
+from template_search_project.review_report import (
     _subprocess_env,
     collect_infra_imports,
     ensure_review_summary,

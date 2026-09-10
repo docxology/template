@@ -2,7 +2,7 @@
 
 Agent-facing notes for this documentation tree. The nearest authoritative
 contracts are [`../AGENTS.md`](../AGENTS.md), [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md),
-[`../src/AGENTS.md`](../src/AGENTS.md), and [`../scripts/AGENTS.md`](../scripts/AGENTS.md) —
+[`../src/AGENTS.md`](../src/template_pools_rules_tools/AGENTS.md), and [`../scripts/AGENTS.md`](../scripts/AGENTS.md) —
 each wins over this file.
 
 ## Layout

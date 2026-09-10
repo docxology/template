@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from src.transcript import replay_transcript, transcript_digest, validate_transcript
+from template_autoscientists.transcript import replay_transcript, transcript_digest, validate_transcript
 
 
 FIXTURE = Path(__file__).resolve().parents[1] / "data" / "transcript_fixture.json"

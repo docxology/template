@@ -214,7 +214,7 @@ stays infrastructure-free per this file's own boundary table above.
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) — full module reference
+- [AGENTS.md](template_prose_project/AGENTS.md) — full module reference
 - [../tests/PATTERNS.md](../tests/PATTERNS.md) — how to test code written under these conventions
 - [../scripts/CONVENTIONS.md](../scripts/CONVENTIONS.md) — how scripts use this code
 - [../../template_code_project/src/STYLE.md](../../template_code_project/src/STYLE.md) — sibling style guide

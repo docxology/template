@@ -3,7 +3,7 @@
 The tested controlled-method specification library for the exemplar. All
 logic lives in the `src.methods_dsl` subpackage and is re-exported from
 `src/__init__.py`. The library is standalone except one declared logging
-adapter (see [AGENTS.md](AGENTS.md)): no plotting, no file I/O in the DSL
+adapter (see [AGENTS.md](template_methods_paper/AGENTS.md)): no plotting, no file I/O in the DSL
 itself, no other `infrastructure.*` imports.
 
 ## Quick Start
@@ -58,6 +58,6 @@ graph TD
 
 ## More Information
 
-See [AGENTS.md](AGENTS.md) for the API reference and infrastructure-boundary
+See [AGENTS.md](template_methods_paper/AGENTS.md) for the API reference and infrastructure-boundary
 contract, and [STYLE.md](STYLE.md) for the code-style and `__all__` export
 contract.

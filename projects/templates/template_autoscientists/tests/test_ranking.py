@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from src.ranking import axis_effect_sizes, rank_axes
-from src.state import ExperimentOutcome, Proposal
+from template_autoscientists.ranking import axis_effect_sizes, rank_axes
+from template_autoscientists.state import ExperimentOutcome, Proposal
 
 
 def _outcome(axis: int, delta: float) -> ExperimentOutcome:

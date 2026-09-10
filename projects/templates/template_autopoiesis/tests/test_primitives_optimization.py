@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.primitives.optimization import (
+from template_autopoiesis.primitives.optimization import (
     gradient_descent,
     analytic_minimizer,
     _negative_control_wrong_sign,

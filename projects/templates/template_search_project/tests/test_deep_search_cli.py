@@ -6,8 +6,8 @@ import argparse
 import json
 from pathlib import Path
 
-from src.config import DeepSearchConfig, ProjectConfig, SearchConfig
-from src.deep_search_cli import run_deep_search_cli
+from template_search_project.config import DeepSearchConfig, ProjectConfig, SearchConfig
+from template_search_project.deep_search_cli import run_deep_search_cli
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 BUNDLED_CORPUS = PROJECT_ROOT / "data" / "corpus.json"

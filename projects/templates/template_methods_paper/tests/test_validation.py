@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from src.methods_dsl.validation import (
+from template_methods_paper.methods_dsl.validation import (
     plan_gate,
     run_all_gates,
     semantic_gate,

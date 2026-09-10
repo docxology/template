@@ -7,9 +7,9 @@ from pathlib import Path
 import pytest
 import yaml
 
-from src.analysis import generate_artifacts
-from src.analysis_fields import configured_field_counts, configured_field_inventory
-from src.analysis_figures import (
+from template_madlib.analysis import generate_artifacts
+from template_madlib.analysis_fields import configured_field_counts, configured_field_inventory
+from template_madlib.analysis_figures import (
     write_configured_field_matrix,
     write_cover_overview_figure,
     write_field_origin_summary,
@@ -20,8 +20,8 @@ from src.analysis_figures import (
     write_token_density_figure,
     write_token_injection_flow_figure,
 )
-from src.markdown_tables import artifact_markdown_tables
-from src.composition import (
+from template_madlib.markdown_tables import artifact_markdown_tables
+from template_madlib.composition import (
     build_authoring_obligation_table,
     build_audit_rule_table,
     build_design_principle_table,
@@ -36,9 +36,9 @@ from src.composition import (
     build_quality_probe_table,
     section_title_variables,
 )
-from src.config import load_madlib_config
-from src.tokens import generate_token_plan
-from .helpers import base_payload, write_config
+from template_madlib.config import load_madlib_config
+from template_madlib.tokens import generate_token_plan
+from helpers import base_payload, write_config
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 

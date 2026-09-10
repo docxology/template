@@ -3,9 +3,9 @@ from __future__ import annotations
 from dataclasses import replace
 from pathlib import Path
 
-from src.config import load_madlib_config
-from src.tokens import generate_token_plan
-from .helpers import base_payload, write_config
+from template_madlib.config import load_madlib_config
+from template_madlib.tokens import generate_token_plan
+from helpers import base_payload, write_config
 
 
 def test_token_plan_is_stable_for_fixed_config(tmp_path: Path) -> None:

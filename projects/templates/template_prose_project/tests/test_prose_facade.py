@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from src.prose_facade import HeadingView, parse_bib_keys, render_outline
+from template_prose_project.prose_facade import HeadingView, parse_bib_keys, render_outline
 
 
 # ---------------------------------------------------------------------------

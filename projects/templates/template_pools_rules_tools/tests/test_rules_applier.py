@@ -15,7 +15,7 @@ import yaml
 
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
-from src.rules_applier import (
+from template_pools_rules_tools.rules_applier import (
     get_rules_root,
     load_all_manuscript_rules,
     load_all_project_rules,
@@ -225,7 +225,7 @@ class TestEmptyStrongDirectory:
     def test_empty_strong_dir_returns_empty_list(self, tmp_path: pathlib.Path):
         # Simulate a rule-set that has a strong/ dir with no YAML files
         # We do this by monkey-patching the rules root temporarily.
-        import src.rules_applier as ra
+        import template_pools_rules_tools.rules_applier as ra
 
         rule_set = "test_empty_strong"
         strong_dir = tmp_path / rule_set / "strong"
@@ -243,7 +243,7 @@ class TestEmptyStrongDirectory:
             ra._rules_root = original_root  # type: ignore[assignment]
 
     def test_empty_soft_dir_returns_empty_list(self, tmp_path: pathlib.Path):
-        import src.rules_applier as ra
+        import template_pools_rules_tools.rules_applier as ra
 
         rule_set = "test_empty_soft"
         soft_dir = tmp_path / rule_set / "soft"
@@ -270,7 +270,7 @@ class TestMalformedYAML:
     """Malformed YAML strong rules should be skipped with a warning, not raise."""
 
     def test_malformed_yaml_is_skipped(self, tmp_path: pathlib.Path):
-        import src.rules_applier as ra
+        import template_pools_rules_tools.rules_applier as ra
 
         rule_set = "test_malformed"
         strong_dir = tmp_path / rule_set / "strong"
@@ -292,7 +292,7 @@ class TestMalformedYAML:
             ra._rules_root = original_root  # type: ignore[assignment]
 
     def test_all_malformed_yaml_returns_empty_list(self, tmp_path: pathlib.Path):
-        import src.rules_applier as ra
+        import template_pools_rules_tools.rules_applier as ra
 
         rule_set = "test_all_malformed"
         strong_dir = tmp_path / rule_set / "strong"
@@ -319,7 +319,7 @@ class TestDeeplyNestedRuleStructures:
     """load_strong_rules must handle YAML with arbitrary nesting depth."""
 
     def test_deeply_nested_schema_is_loaded(self, tmp_path: pathlib.Path):
-        import src.rules_applier as ra
+        import template_pools_rules_tools.rules_applier as ra
 
         rule_set = "test_nested"
         strong_dir = tmp_path / rule_set / "strong"
@@ -356,7 +356,7 @@ class TestDeeplyNestedRuleStructures:
             ra._rules_root = original_root  # type: ignore[assignment]
 
     def test_soft_rule_with_large_content_is_loaded(self, tmp_path: pathlib.Path):
-        import src.rules_applier as ra
+        import template_pools_rules_tools.rules_applier as ra
 
         rule_set = "test_large_soft"
         soft_dir = tmp_path / rule_set / "soft"
@@ -429,7 +429,7 @@ class TestLoadAllManuscriptRules:
 
     def test_never_raises_when_manuscript_rules_absent(self, tmp_path: pathlib.Path):
         """Even when the manuscript rules dir is completely absent, no exception."""
-        import src.rules_applier as ra
+        import template_pools_rules_tools.rules_applier as ra
 
         original_root = ra._rules_root  # noqa: SLF001
         ra._rules_root = lambda: tmp_path  # type: ignore[assignment]

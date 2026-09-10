@@ -31,12 +31,12 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "src", *[_p for _p in [_template_repo
     if path_text not in sys.path:
         sys.path.insert(0, path_text)
 
-from src.benchmark_support import (  # noqa: E402
+from template_code_project.benchmark_support import (  # noqa: E402
     benchmark_payload,
     run_quadratic_benchmark,
     write_benchmark_report,
 )
-from src.project_paths import project_output_dirs  # noqa: E402
+from template_code_project.project_paths import project_output_dirs  # noqa: E402
 
 
 def main() -> int:

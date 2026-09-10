@@ -10,8 +10,8 @@ The canonical, repo-wide manuscript-semantics reference is [`docs/guides/manuscr
 
 Hyperlinks must be informative. Never use placeholder text.
 
-- **BAD**: [this link](../src/pipeline.py) describes the pipeline.
-- **GOOD**: See [`src/pipeline.py`](../src/pipeline.py) for the orchestrator.
+- **BAD**: [this link](../src/template_search_project/pipeline.py) describes the pipeline.
+- **GOOD**: See [`src/pipeline.py`](../src/template_search_project/pipeline.py) for the orchestrator.
 
 For internal cross-references inside `manuscript/`, prefer relative paths to source files; the pre-render link checker (`infrastructure.validation.cli links`) walks them.
 

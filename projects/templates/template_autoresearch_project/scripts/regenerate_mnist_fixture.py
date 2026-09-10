@@ -14,7 +14,7 @@ from _bootstrap import ensure_project_paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ensure_project_paths(PROJECT_ROOT)
 
-from src.ml.mnist_fixture import regenerate_mnist_fixture  # noqa: E402
+from template_autoresearch_project.ml.mnist_fixture import regenerate_mnist_fixture  # noqa: E402
 
 
 def main() -> None:

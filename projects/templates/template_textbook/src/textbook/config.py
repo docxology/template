@@ -9,7 +9,7 @@ from typing import Any
 
 import yaml
 
-DEFAULT_MANUSCRIPT = Path(__file__).resolve().parent.parent.parent / "manuscript"
+DEFAULT_MANUSCRIPT = Path(__file__).resolve().parent.parent.parent.parent / "manuscript"
 
 
 @dataclass(frozen=True)

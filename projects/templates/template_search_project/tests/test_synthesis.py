@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from infrastructure.search.literature import Paper
 
-from src.synthesis import (
+from template_search_project.synthesis import (
     PROMPT_CORPUS,
     PROMPT_PER_PAPER,
     SynthesisResult,

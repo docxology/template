@@ -10,7 +10,7 @@ from _bootstrap import ensure_project_paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPO_ROOT = ensure_project_paths(PROJECT_ROOT)
 
-from src.loop import run_autoresearch_loop  # noqa: E402
+from template_autoresearch_project.loop import run_autoresearch_loop  # noqa: E402
 
 
 def main() -> int:

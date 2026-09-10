@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from src.approval import APPROVAL_SCHEMA, ApprovalContract, validate_approval_contract
+from template_sia.approval import APPROVAL_SCHEMA, ApprovalContract, validate_approval_contract
 
 
 def test_fixture_replay_does_not_require_or_claim_approval() -> None:

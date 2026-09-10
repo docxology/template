@@ -9,8 +9,11 @@ import yaml
 
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
-from src.fonds_reader import read_all_fonds
-from src.rules_applier import load_all_manuscript_rules, load_all_project_rules
+from template_pools_rules_tools.fonds_reader import read_all_fonds
+from template_pools_rules_tools.rules_applier import (
+    load_all_manuscript_rules,
+    load_all_project_rules,
+)
 
 
 class TestReadAllFonds:
@@ -53,7 +56,7 @@ class TestLoadAllManuscriptRules:
 
 
 def test_read_bibliography_fond_missing_bib_returns_none(tmp_path: pathlib.Path) -> None:
-    from src.fonds_reader import read_bibliography_fond
+    from template_pools_rules_tools.fonds_reader import read_bibliography_fond
 
     fond_dir = tmp_path / "test_bib_fond"
     fond_dir.mkdir()
@@ -63,7 +66,7 @@ def test_read_bibliography_fond_missing_bib_returns_none(tmp_path: pathlib.Path)
 
 
 def test_read_contacts_fond_missing_contacts_yaml_returns_none(tmp_path: pathlib.Path) -> None:
-    from src.fonds_reader import read_contacts_fond
+    from template_pools_rules_tools.fonds_reader import read_contacts_fond
 
     fond_dir = tmp_path / "test_contacts_fond"
     fond_dir.mkdir()
@@ -73,7 +76,7 @@ def test_read_contacts_fond_missing_contacts_yaml_returns_none(tmp_path: pathlib
 
 
 def test_read_datasets_fond_missing_datasets_yaml_returns_none(tmp_path: pathlib.Path) -> None:
-    from src.fonds_reader import read_datasets_fond
+    from template_pools_rules_tools.fonds_reader import read_datasets_fond
 
     fond_dir = tmp_path / "test_datasets_fond"
     fond_dir.mkdir()
@@ -83,7 +86,7 @@ def test_read_datasets_fond_missing_datasets_yaml_returns_none(tmp_path: pathlib
 
 
 def test_read_bibliography_fond_invalid_yaml_returns_none(tmp_path: pathlib.Path) -> None:
-    from src.fonds_reader import read_bibliography_fond
+    from template_pools_rules_tools.fonds_reader import read_bibliography_fond
 
     fond_dir = tmp_path / "bad_bib"
     fond_dir.mkdir()
@@ -99,7 +102,7 @@ def test_read_bibliography_fond_invalid_yaml_returns_none(tmp_path: pathlib.Path
 
 
 def test_load_soft_rules_unreadable_file_skips(tmp_path: pathlib.Path) -> None:
-    from src.rules_applier import load_soft_rules
+    from template_pools_rules_tools.rules_applier import load_soft_rules
 
     rule_dir = tmp_path / "my_rules" / "soft"
     rule_dir.mkdir(parents=True)
@@ -114,7 +117,7 @@ def test_load_soft_rules_unreadable_file_skips(tmp_path: pathlib.Path) -> None:
 
 
 def test_load_strong_rules_invalid_yaml_skips(tmp_path: pathlib.Path) -> None:
-    from src.rules_applier import load_strong_rules
+    from template_pools_rules_tools.rules_applier import load_strong_rules
 
     rule_dir = tmp_path / "my_rules" / "strong"
     rule_dir.mkdir(parents=True)
@@ -123,7 +126,7 @@ def test_load_strong_rules_invalid_yaml_skips(tmp_path: pathlib.Path) -> None:
 
 
 def test_validate_against_rules_missing_rules_yaml_warns(tmp_path: pathlib.Path) -> None:
-    from src.rules_applier import validate_against_rules
+    from template_pools_rules_tools.rules_applier import validate_against_rules
 
     rule_dir = tmp_path / "incomplete_rules" / "soft"
     rule_dir.mkdir(parents=True)
@@ -135,7 +138,7 @@ def test_validate_against_rules_missing_rules_yaml_warns(tmp_path: pathlib.Path)
 
 
 def test_validate_against_rules_partial_status(tmp_path: pathlib.Path) -> None:
-    from src.rules_applier import validate_against_rules
+    from template_pools_rules_tools.rules_applier import validate_against_rules
 
     rule_dir = tmp_path / "bad_manifest_rules"
     soft_dir = rule_dir / "soft"
@@ -147,13 +150,13 @@ def test_validate_against_rules_partial_status(tmp_path: pathlib.Path) -> None:
 
 
 def test_discover_tools_missing_root_returns_empty(tmp_path: pathlib.Path) -> None:
-    from src.tools_invoker import discover_tools
+    from template_pools_rules_tools.tools_invoker import discover_tools
 
     assert discover_tools(templates_root=tmp_path / "no_such_dir") == []
 
 
 def test_discover_tools_tool_without_manifest(tmp_path: pathlib.Path) -> None:
-    from src.tools_invoker import discover_tools
+    from template_pools_rules_tools.tools_invoker import discover_tools
 
     tools_dir = tmp_path / "tools"
     tool_dir = tools_dir / "my_tool"
@@ -165,7 +168,7 @@ def test_discover_tools_tool_without_manifest(tmp_path: pathlib.Path) -> None:
 
 
 def test_discover_tools_invalid_manifest_skips_gracefully(tmp_path: pathlib.Path) -> None:
-    from src.tools_invoker import discover_tools
+    from template_pools_rules_tools.tools_invoker import discover_tools
 
     tools_dir = tmp_path / "tools"
     tool_dir = tools_dir / "bad_tool"
@@ -178,7 +181,7 @@ def test_discover_tools_invalid_manifest_skips_gracefully(tmp_path: pathlib.Path
 
 
 def test_validate_tool_scripts_exist_missing_entrypoint(tmp_path: pathlib.Path) -> None:
-    from src.tools_invoker import validate_tool_scripts_exist
+    from template_pools_rules_tools.tools_invoker import validate_tool_scripts_exist
 
     tools_dir = tmp_path / "tools"
     tool_dir = tools_dir / "partial_tool"
@@ -197,7 +200,7 @@ def test_validate_tool_scripts_exist_missing_entrypoint(tmp_path: pathlib.Path) 
 
 def test_validate_tool_scripts_exist_rejects_traversal_entrypoint(tmp_path: pathlib.Path) -> None:
     """An entrypoint must be a regular file confined to its tool directory."""
-    from src.tools_invoker import validate_tool_scripts_exist
+    from template_pools_rules_tools.tools_invoker import validate_tool_scripts_exist
 
     tools_dir = tmp_path / "tools"
     tool_dir = tools_dir / "partial_tool"
@@ -214,8 +217,12 @@ def test_validate_tool_scripts_exist_rejects_traversal_entrypoint(tmp_path: path
 
 
 def test_count_summary_with_explicit_fonds() -> None:
-    from src.fonds_reader import count_summary
-    from src.type_defs import AllFondsResult, BibliographyFondResult, ContactsFondResult
+    from template_pools_rules_tools.fonds_reader import count_summary
+    from template_pools_rules_tools.type_defs import (
+        AllFondsResult,
+        BibliographyFondResult,
+        ContactsFondResult,
+    )
 
     all_fonds = AllFondsResult(
         bibliography=BibliographyFondResult(manifest={}, bib_text="", csv_rows=[{}, {}]),
@@ -230,14 +237,14 @@ def test_count_summary_with_explicit_fonds() -> None:
 
 
 def test_count_summary_defaults_to_read_all() -> None:
-    from src.fonds_reader import count_summary
+    from template_pools_rules_tools.fonds_reader import count_summary
 
     summary = count_summary()
     assert summary["fonds_loaded"] >= 0
 
 
 def test_read_contacts_fond_invalid_yaml_returns_none(tmp_path: pathlib.Path) -> None:
-    from src.fonds_reader import read_contacts_fond
+    from template_pools_rules_tools.fonds_reader import read_contacts_fond
 
     fond_dir = tmp_path / "bad_contacts"
     data_dir = fond_dir / "data"
@@ -248,7 +255,7 @@ def test_read_contacts_fond_invalid_yaml_returns_none(tmp_path: pathlib.Path) ->
 
 
 def test_read_datasets_fond_invalid_yaml_returns_none(tmp_path: pathlib.Path) -> None:
-    from src.fonds_reader import read_datasets_fond
+    from template_pools_rules_tools.fonds_reader import read_datasets_fond
 
     fond_dir = tmp_path / "bad_datasets"
     data_dir = fond_dir / "data"
@@ -259,8 +266,8 @@ def test_read_datasets_fond_invalid_yaml_returns_none(tmp_path: pathlib.Path) ->
 
 
 def test_generate_figure_data_builds_rows() -> None:
-    from src.integration import generate_figure_data
-    from src.type_defs import (
+    from template_pools_rules_tools.integration import generate_figure_data
+    from template_pools_rules_tools.type_defs import (
         AllFondsResult,
         IntegrationResult,
         IntegrationSummary,
@@ -318,8 +325,8 @@ def test_generate_figure_data_builds_rows() -> None:
 
 def test_derive_dashboard_data_binds_to_ground_truth() -> None:
     """derive_dashboard_data() must reflect a degraded run, not a hard-coded default."""
-    from src.integration import derive_dashboard_data
-    from src.type_defs import (
+    from template_pools_rules_tools.integration import derive_dashboard_data
+    from template_pools_rules_tools.type_defs import (
         AllFondsResult,
         IntegrationResult,
         IntegrationSummary,
@@ -385,7 +392,7 @@ def test_derive_dashboard_data_binds_to_ground_truth() -> None:
 
 
 def test_discover_tools_with_validation(tmp_path: pathlib.Path) -> None:
-    from src.tools_invoker import discover_tools_with_validation
+    from template_pools_rules_tools.tools_invoker import discover_tools_with_validation
 
     tools_dir = tmp_path / "tools"
     tool_dir = tools_dir / "demo_tool"
@@ -402,7 +409,7 @@ def test_discover_tools_with_validation(tmp_path: pathlib.Path) -> None:
 
 
 def test_get_tool_entrypoints_invalid_yaml(tmp_path: pathlib.Path) -> None:
-    from src.tools_invoker import get_tool_entrypoints
+    from template_pools_rules_tools.tools_invoker import get_tool_entrypoints
 
     tools_dir = tmp_path / "tools"
     tool_dir = tools_dir / "bad_tool"
@@ -412,7 +419,7 @@ def test_get_tool_entrypoints_invalid_yaml(tmp_path: pathlib.Path) -> None:
 
 
 def test_get_tool_entrypoints_non_dict_manifest(tmp_path: pathlib.Path) -> None:
-    from src.tools_invoker import get_tool_entrypoints
+    from template_pools_rules_tools.tools_invoker import get_tool_entrypoints
 
     tools_dir = tmp_path / "tools"
     tool_dir = tools_dir / "list_tool"
@@ -422,7 +429,7 @@ def test_get_tool_entrypoints_non_dict_manifest(tmp_path: pathlib.Path) -> None:
 
 
 def test_discover_tools_skips_non_directory_entries(tmp_path: pathlib.Path) -> None:
-    from src.tools_invoker import discover_tools
+    from template_pools_rules_tools.tools_invoker import discover_tools
 
     tools_dir = tmp_path / "tools"
     tools_dir.mkdir()

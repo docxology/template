@@ -6,8 +6,8 @@ from pathlib import Path
 
 from infrastructure.prose import analyze_files
 
-from src.pipeline import CheckResult
-from src.report import write_review_report
+from template_prose_project.pipeline import CheckResult
+from template_prose_project.report import write_review_report
 
 
 def _sample_report():

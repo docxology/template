@@ -4,7 +4,9 @@ Tests for `infrastructure.autoresearch`: deterministic AutoResearchClaw-inspired
 
 ## Files
 
-- `test_autoresearch.py` — config defaults, pipeline overlays, validation diagnostics, report writers, and CLI validate behavior.
+- `test_autoresearch_plan_validation.py` — pipeline overlays and phased validation diagnostics.
+- `test_autoresearch_config_models.py` — config defaults, method-contract fields, domain models, and report writers.
+- `test_autoresearch_cli_overlay.py` — CLI validate/plan subprocess behavior and overlay entrypoints.
 - `test_autoresearch_cli.py` — CLI commands, argument parsing, and exit codes.
 - `test_orchestrator.py` — multi-phase AutoResearch loop orchestrator and event logging.
 - `test_metrics.py` — metric parsing and noise statistics.

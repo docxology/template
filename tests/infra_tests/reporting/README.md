@@ -36,12 +36,12 @@ uv run pytest tests/infra_tests/reporting/test_error_aggregator.py -v
 - Error categorization
 - Report generation
 
-### Pipeline Reporter Tests (`test_pipeline_reporter.py`)
+### Pipeline Reporter Tests (`test_pipeline_reporter_*.py`)
 
 Pipeline report generation:
 
 ```bash
-uv run pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v
+uv run pytest tests/infra_tests/reporting/test_pipeline_reporter_*.py -v
 ```
 
 **Test Coverage:**
@@ -68,7 +68,7 @@ End-to-end reporting workflows:
 
 ```bash
 # Full reporting pipeline
-uv run pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v
+uv run pytest tests/infra_tests/reporting/test_pipeline_reporter_*.py -v
 ```
 
 ### Additional Test Modules

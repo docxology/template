@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.config import load_loop_config
-from src.models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
+from template_autoresearch_project.config import load_loop_config
+from template_autoresearch_project.models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
 
 
 def test_stage_and_claim_models_serialize_to_json_safe_dicts() -> None:

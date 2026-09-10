@@ -9,8 +9,8 @@ import pytest
 
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
-from src.rules_applier import load_strong_rules
-from src.strong_rule_evaluator import (
+from template_pools_rules_tools.rules_applier import load_strong_rules
+from template_pools_rules_tools.strong_rule_evaluator import (
     evaluate_strong_rule,
     evaluate_strong_rules,
     load_rule_context_from_project,

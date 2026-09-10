@@ -52,5 +52,5 @@ graph TD
 
 ## More Information
 
-See [AGENTS.md](AGENTS.md) for the API reference and [STYLE.md](STYLE.md) for the
+See [AGENTS.md](template_eda_notebook/AGENTS.md) for the API reference and [STYLE.md](STYLE.md) for the
 code-style and `__all__` export contract.

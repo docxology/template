@@ -8,9 +8,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.grammar import KNOWN_DOMAINS, load_grammar
-from src.cover_art import render_cover
-from src.project_paths import project_output_dirs
+from template_autopoiesis.grammar import KNOWN_DOMAINS, load_grammar
+from template_autopoiesis.cover_art import render_cover
+from template_autopoiesis.project_paths import project_output_dirs
 
 PROJECT_ROOT = Path(__file__).parent.parent
 

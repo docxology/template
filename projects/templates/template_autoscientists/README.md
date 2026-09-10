@@ -144,7 +144,7 @@ uv run python scripts/runner/execute_pipeline.py --project templates/template_au
 ## The language-model plug-in seam
 
 The coordination loop depends only on the `Proposer` protocol
-([`src/agents.py`](src/agents.py)). Two real implementations are provided:
+([`src/agents.py`](src/template_autoscientists/agents.py)). Two real implementations are provided:
 
 - `DeterministicProposer` — rule-based, fully deterministic, drives the tested
   exemplar runs and rendered figures. It consults the dead-end registry (the

@@ -24,7 +24,7 @@ from dataclasses import is_dataclass
 
 import numpy as np
 import pytest
-from src.invariants import (
+from template_code_project.invariants import (
     InvariantResult,
     OptimizerSweepConfig,
     all_invariants,

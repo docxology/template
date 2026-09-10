@@ -12,14 +12,14 @@ from infrastructure.search.literature import (
     SearchBackend,
 )
 
-from src.config import (
+from template_search_project.config import (
     EnrichmentConfig,
     LLMConfig,
     ProjectConfig,
     ReportConfig,
     SearchConfig,
 )
-from src.pipeline import _build_backends, run_literature_pipeline
+from template_search_project.pipeline import _build_backends, run_literature_pipeline
 
 
 def _write_corpus(tmp_path: Path) -> Path:

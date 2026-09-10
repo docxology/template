@@ -20,7 +20,7 @@ from pathlib import Path
 
 import pytest
 
-from src.manuscript.manuscript_tokens_format import (
+from template_autoresearch_project.manuscript.manuscript_tokens_format import (
     accuracy_interval,
     artifact_markdown_link,
     artifact_role,
@@ -495,83 +495,83 @@ def test_escape_table_cell_pipes_and_newlines() -> None:
 
 
 def test_positive_int_rejects_bool() -> None:
-    from src.ml.data import _positive_int  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _positive_int  # type: ignore[attr-defined]
 
     with pytest.raises(ValueError, match="must be a positive integer"):
         _positive_int(True, "field")
 
 
 def test_positive_int_rejects_zero() -> None:
-    from src.ml.data import _positive_int  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _positive_int  # type: ignore[attr-defined]
 
     with pytest.raises(ValueError, match="must be a positive integer"):
         _positive_int(0, "field")
 
 
 def test_positive_int_rejects_negative() -> None:
-    from src.ml.data import _positive_int  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _positive_int  # type: ignore[attr-defined]
 
     with pytest.raises(ValueError, match="must be a positive integer"):
         _positive_int(-1, "field")
 
 
 def test_nonnegative_int_rejects_bool() -> None:
-    from src.ml.data import _nonnegative_int  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _nonnegative_int  # type: ignore[attr-defined]
 
     with pytest.raises(ValueError, match="must be a non-negative integer"):
         _nonnegative_int(True, "field")
 
 
 def test_nonnegative_int_rejects_negative() -> None:
-    from src.ml.data import _nonnegative_int  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _nonnegative_int  # type: ignore[attr-defined]
 
     with pytest.raises(ValueError, match="must be a non-negative integer"):
         _nonnegative_int(-1, "field")
 
 
 def test_nonnegative_int_accepts_zero() -> None:
-    from src.ml.data import _nonnegative_int  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _nonnegative_int  # type: ignore[attr-defined]
 
     assert _nonnegative_int(0, "field") == 0
 
 
 def test_probability_float_rejects_out_of_range() -> None:
-    from src.ml.data import _probability_float  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _probability_float  # type: ignore[attr-defined]
 
     with pytest.raises(ValueError, match="between 0 and 1"):
         _probability_float(1.5, "field")
 
 
 def test_probability_float_accepts_boundary() -> None:
-    from src.ml.data import _probability_float  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _probability_float  # type: ignore[attr-defined]
 
     assert _probability_float(0.0, "field") == pytest.approx(0.0)
     assert _probability_float(1.0, "field") == pytest.approx(1.0)
 
 
 def test_decay_float_rejects_zero() -> None:
-    from src.ml.data import _decay_float  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _decay_float  # type: ignore[attr-defined]
 
     with pytest.raises(ValueError, match="greater than 0"):
         _decay_float(0.0, "field")
 
 
 def test_decay_float_rejects_above_one() -> None:
-    from src.ml.data import _decay_float  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _decay_float  # type: ignore[attr-defined]
 
     with pytest.raises(ValueError, match="at most 1"):
         _decay_float(1.5, "field")
 
 
 def test_mapping_list_rejects_non_list() -> None:
-    from src.ml.data import _mapping_list  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _mapping_list  # type: ignore[attr-defined]
 
     with pytest.raises(ValueError, match="must be a list"):
         _mapping_list("not_a_list", "label")
 
 
 def test_mapping_list_rejects_non_mapping_entries() -> None:
-    from src.ml.data import _mapping_list  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _mapping_list  # type: ignore[attr-defined]
 
     with pytest.raises(ValueError, match="entries must be mappings"):
         _mapping_list(["not_a_dict"], "label")
@@ -580,7 +580,7 @@ def test_mapping_list_rejects_non_mapping_entries() -> None:
 def test_robustness_transforms_rejects_empty_list(tmp_path: Path, project_root: Path) -> None:
     """Empty robustness_transforms list should raise ValueError."""
     import yaml
-    from src.ml.data import load_mnist_task_config
+    from template_autoresearch_project.ml.data import load_mnist_task_config
 
     real_config_text = (project_root / "mnist_task.yaml").read_text(encoding="utf-8")
     config_dict = yaml.safe_load(real_config_text)
@@ -596,7 +596,7 @@ def test_robustness_transforms_rejects_empty_list(tmp_path: Path, project_root: 
 def test_validate_mnist_shapes_rejects_wrong_image_dims(project_root: Path) -> None:
     """Arrays that aren't (n,28,28) shape should raise ValueError."""
     import numpy as np
-    from src.ml.data import _validate_mnist_shapes  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _validate_mnist_shapes  # type: ignore[attr-defined]
 
     x_bad = np.zeros((10, 14, 14))  # wrong spatial dims
     y = np.zeros(10, dtype=np.int64)
@@ -609,7 +609,7 @@ def test_validate_mnist_shapes_rejects_wrong_image_dims(project_root: Path) -> N
 def test_validate_mnist_shapes_rejects_1d_labels(project_root: Path) -> None:
     """2D label array should raise ValueError."""
     import numpy as np
-    from src.ml.data import _validate_mnist_shapes  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _validate_mnist_shapes  # type: ignore[attr-defined]
 
     x = np.zeros((10, 28, 28))
     y_2d = np.zeros((10, 1), dtype=np.int64)  # 2D → must be 1D
@@ -620,7 +620,7 @@ def test_validate_mnist_shapes_rejects_1d_labels(project_root: Path) -> None:
 def test_validate_mnist_shapes_rejects_mismatched_lengths(project_root: Path) -> None:
     """Mismatched image/label sizes should raise ValueError."""
     import numpy as np
-    from src.ml.data import _validate_mnist_shapes  # type: ignore[attr-defined]
+    from template_autoresearch_project.ml.data import _validate_mnist_shapes  # type: ignore[attr-defined]
 
     x = np.zeros((10, 28, 28))
     y_short = np.zeros(8, dtype=np.int64)  # wrong length

@@ -20,7 +20,7 @@ for candidate in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
         sys.path.insert(0, text)
 
 from infrastructure.core.logging.utils import get_logger, log_success  # noqa: E402
-from src.output_validator import validate_generated_outputs, write_validation_report  # noqa: E402
+from template_madlib.output_validator import validate_generated_outputs, write_validation_report  # noqa: E402
 
 logger = get_logger(__name__)
 

@@ -17,10 +17,10 @@ from infrastructure.core.pipeline.artifacts import (
     validate_artifact_manifest,
 )
 
-from src.config import AutoResearchLoopConfig, HumanReviewState
-from src.ml.task import run_bounded_ml_task
-from src.models import AutoResearchLoopResult, LoopStageResult
-from src.writers import (
+from template_autoresearch_project.config import AutoResearchLoopConfig, HumanReviewState
+from template_autoresearch_project.ml.task import run_bounded_ml_task
+from template_autoresearch_project.models import AutoResearchLoopResult, LoopStageResult
+from template_autoresearch_project.writers import (
     write_artifact_manifest,
     write_loop_payloads,
     write_method_contract_artifacts,
@@ -153,7 +153,11 @@ def test_write_method_contract_artifacts_uses_human_review_state(tmp_path: Path)
 
 
 def test_refresh_loop_payloads_matches_legacy_aliases(tmp_path: Path) -> None:
-    from src.writers import finalize_loop_payloads, refresh_loop_payloads, update_result_payloads
+    from template_autoresearch_project.writers import (
+        finalize_loop_payloads,
+        refresh_loop_payloads,
+        update_result_payloads,
+    )
 
     config = AutoResearchLoopConfig(
         topic="Demo",
@@ -178,9 +182,9 @@ def test_refresh_loop_payloads_matches_legacy_aliases(tmp_path: Path) -> None:
 
 
 def test_build_figure_render_context_reuses_diagnostics(project_root: Path) -> None:
-    from src.diagnostics import diagnostic_bundle
-    from src.ml.task import run_bounded_ml_task
-    from src.writers import build_figure_render_context
+    from template_autoresearch_project.diagnostics import diagnostic_bundle
+    from template_autoresearch_project.ml.task import run_bounded_ml_task
+    from template_autoresearch_project.writers import build_figure_render_context
 
     ml_result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=4))
     bundle = diagnostic_bundle(project_root, ml_result)

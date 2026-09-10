@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from src.dead_ends import DeadEndRegistry
-from src.stagnation import StagnationDetector, reorganize_axes
-from src.state import Champion, ExperimentOutcome, Proposal, SharedState
+from template_autoscientists.dead_ends import DeadEndRegistry
+from template_autoscientists.stagnation import StagnationDetector, reorganize_axes
+from template_autoscientists.state import Champion, ExperimentOutcome, Proposal, SharedState
 
 
 def _state_with(deltas_confirmed: list[tuple[float, bool]]) -> SharedState:

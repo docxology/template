@@ -166,7 +166,7 @@ for row in rows:
 
 The fonds and tools counts are discovered at runtime from whatever you actually
 copied. The rules-set counts are the exception: `rules_sets_total` is
-`len(_DEFAULT_RULE_SETS)` in [`src/integration.py`](src/integration.py), a
+`len(_DEFAULT_RULE_SETS)` in [`src/integration.py`](src/template_pools_rules_tools/integration.py), a
 fixed two-entry demo list (`template_project_rules`, `template_manuscript_rules`),
 so adding a rule set under `rules/` does not raise that total until you extend
 that list. The values shown match the minimal fork layout in

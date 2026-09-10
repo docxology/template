@@ -7,10 +7,10 @@ from pathlib import Path
 
 from infrastructure.autoresearch import BudgetPolicy
 
-from src.config import AutoResearchLoopConfig, HumanReviewState
-from src.ml.task import run_bounded_ml_task
-from src.models import AutoResearchLoopResult, LoopStageResult
-from src.reports import (
+from template_autoresearch_project.config import AutoResearchLoopConfig, HumanReviewState
+from template_autoresearch_project.ml.task import run_bounded_ml_task
+from template_autoresearch_project.models import AutoResearchLoopResult, LoopStageResult
+from template_autoresearch_project.reports import (
     build_evidence_overview,
     build_review_packet,
     build_review_packet_v2,
@@ -21,8 +21,8 @@ from src.reports import (
     render_stage_matrix_csv,
     validate_review_packet,
 )
-from src.writers.benchmark import build_benchmark_boundary
-from src.writers import write_json, write_text
+from template_autoresearch_project.writers.benchmark import build_benchmark_boundary
+from template_autoresearch_project.writers import write_json, write_text
 
 
 def test_render_loop_markdown_includes_declared_stage_status() -> None:

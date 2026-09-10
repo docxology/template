@@ -254,7 +254,7 @@ live provider source and retain its provenance before making substantive claims.
 * `scripts/s_compose_literature_review.py` — composes `S01_literature_review.md` from the deep-search outputs (runs after `run_*` and before `y_*`/`z_*`).
 * `scripts/y_generate_search_figures.py`, `scripts/z_generate_manuscript_variables.py`, `scripts/zz_generate_review_report.py`, `scripts/zzz_build_dashboard.py` — project-analysis stage chain (lexicographic order); the dashboard stage runs last and writes `output/web/dashboard.html`, `output/data/dashboard_payload.json`, and `output/reports/dashboard_*.txt`.
 * `tests/` — real-data tests; LLM tested with a deterministic local callable.
-* Per-folder pointers: [`docs/README.md`](docs/README.md), [`manuscript/README.md`](manuscript/README.md), [`src/README.md`](src/README.md), [`tests/README.md`](tests/README.md), [`scripts/README.md`](scripts/README.md).
+* Per-folder pointers: [`docs/README.md`](docs/README.md), [`manuscript/README.md`](manuscript/README.md), [`src/README.md`](src/template_search_project/README.md), [`tests/README.md`](tests/README.md), [`scripts/README.md`](scripts/README.md).
 
 The project enforces the template's two-layer architecture: every reusable
 component is in `infrastructure/`; only project-specific glue is in `src/`;

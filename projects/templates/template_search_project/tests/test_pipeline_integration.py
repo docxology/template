@@ -11,16 +11,16 @@ from pathlib import Path
 
 from infrastructure.reference.citation import parse_bibfile
 
-from src.config import (
+from template_search_project.config import (
     EnrichmentConfig,
     LLMConfig,
     ProjectConfig,
     ReportConfig,
     SearchConfig,
 )
-from src.pipeline import run_literature_pipeline
-from src.report import write_reading_report
-from src.synthesis import synthesise_corpus, synthesise_per_paper
+from template_search_project.pipeline import run_literature_pipeline
+from template_search_project.report import write_reading_report
+from template_search_project.synthesis import synthesise_corpus, synthesise_per_paper
 
 
 def _corpus(tmp_path: Path) -> Path:

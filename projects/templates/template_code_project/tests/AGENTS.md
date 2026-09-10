@@ -93,7 +93,7 @@ uv run pytest tests/ -k "TestGradientDescent"
 
 ```bash
 # Run single test with debug output
-uv run pytest tests/test_optimizer.py::TestGradientDescent::test_convergence_to_optimum -v -s
+uv run pytest tests/test_optimizer_gradient_descent.py::TestGradientDescent::test_convergence_to_optimum -v -s
 ```
 
 ## Configuration

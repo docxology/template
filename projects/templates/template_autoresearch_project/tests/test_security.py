@@ -8,9 +8,9 @@ from pathlib import Path
 
 from infrastructure.autoresearch import SecurityProfile
 
-from src.config import AutoResearchLoopConfig
-from src.models import AutoResearchLoopResult
-from src.security import (
+from template_autoresearch_project.config import AutoResearchLoopConfig
+from template_autoresearch_project.models import AutoResearchLoopResult
+from template_autoresearch_project.security import (
     SECURITY_ARTIFACTS,
     integrity_attestation_payload,
     render_security_review_markdown,
@@ -140,7 +140,7 @@ def test_write_security_artifacts_generates_local_review_and_figures(
 
     from infrastructure.autoresearch import BudgetPolicy
 
-    from src.ml.task import run_bounded_ml_task
+    from template_autoresearch_project.ml.task import run_bounded_ml_task
 
     ml_result = run_bounded_ml_task(sandbox_project, BudgetPolicy(max_iterations=4))
     paths = write_security_artifacts(

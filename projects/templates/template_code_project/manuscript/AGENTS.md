@@ -124,5 +124,5 @@ Final deliverables appear under `output/templates/template_code_project/` after 
 - [`../../../docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by the permanent exemplars
 - [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md) — Manuscript → PDF flow (4 phases)
 - [`../docs/syntax_guide.md`](../docs/syntax_guide.md) — Complete `{{VARIABLE}}` token reference
-- [`../src/manuscript_variables.py`](../src/manuscript_variables.py) — Variable computation logic (`generate_variables()`)
+- [`../src/manuscript_variables.py`](../src/template_code_project/manuscript_variables.py) — Variable computation logic (`generate_variables()`)
 - [`../scripts/z_generate_manuscript_variables.py`](../scripts/z_generate_manuscript_variables.py) — Thin orchestrator that runs the above and writes output files

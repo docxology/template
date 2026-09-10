@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from src.models import AutoResearchLoopResult
+from template_autoresearch_project.models import AutoResearchLoopResult
 
 
 @pytest.mark.slow

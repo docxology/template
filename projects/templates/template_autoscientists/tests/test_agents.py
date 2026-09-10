@@ -11,8 +11,8 @@ import pytest
 
 from hermes_proposer import HermesProposer
 
-from src.agents import DeterministicProposer, _extract_json
-from src.state import Champion, ExperimentOutcome, Proposal, SharedState
+from template_autoscientists.agents import DeterministicProposer, _extract_json
+from template_autoscientists.state import Champion, ExperimentOutcome, Proposal, SharedState
 
 
 def _state(champion_params: tuple[float, ...]) -> SharedState:

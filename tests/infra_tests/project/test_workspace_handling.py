@@ -6,7 +6,7 @@ Exercises ``infrastructure.project.discovery.discover_projects``,
 trees. No mocks: real files, real symlinks, real subprocess calls.
 
 This module complements ``test_workspace.py``, ``test_workspace_additional.py``,
-``test_discovery.py``, and ``test_linking.py`` by focusing on *interactions*
+``test_discovery.py``, and the ``test_linking_*.py`` split modules by focusing on *interactions*
 between workspace discovery and sidecar linking — the integration boundary
 where a linked lifecycle entry must be discoverable as a project, and where
 ``resolve_project_root`` resolves a linked entry back to its source.

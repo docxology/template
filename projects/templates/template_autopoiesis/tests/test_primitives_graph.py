@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 
-from src.primitives.graph import bfs_distances, pagerank, _disconnected_control, PRIMITIVES
+from template_autopoiesis.primitives.graph import bfs_distances, pagerank, _disconnected_control, PRIMITIVES
 
 _GRAPH = {
     "A": ["B", "C"],

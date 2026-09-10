@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from src.config import (
+from template_autoresearch_project.config import (
     load_experiment_candidates,
     load_human_review,
     load_loop_config,
@@ -217,7 +217,7 @@ def test_load_mnist_task_config_rejects_bad_model_type(tmp_path: Path, project_r
 
     import yaml
 
-    from src.ml.data import load_mnist_task_config
+    from template_autoresearch_project.ml.data import load_mnist_task_config
 
     # Load real config and inject a bad candidate
 
@@ -242,7 +242,7 @@ def test_load_mnist_task_config_rejects_bad_training_key(tmp_path: Path, project
 
     import yaml
 
-    from src.ml.data import load_mnist_task_config
+    from template_autoresearch_project.ml.data import load_mnist_task_config
 
     real_config_text = (project_root / "mnist_task.yaml").read_text(encoding="utf-8")
 
@@ -263,7 +263,7 @@ def test_load_mnist_task_config_rejects_bad_training_key(tmp_path: Path, project
 def test_load_mnist_task_config_rejects_non_mapping_yaml(tmp_path: Path) -> None:
     """A non-mapping YAML root should raise ValueError."""
 
-    from src.ml.data import load_mnist_task_config
+    from template_autoresearch_project.ml.data import load_mnist_task_config
 
     (tmp_path / "mnist_task.yaml").write_text("- not\n- a\n- mapping\n", encoding="utf-8")
 
@@ -276,7 +276,7 @@ def test_load_mnist_task_config_rejects_unsupported_normalization(tmp_path: Path
 
     import yaml
 
-    from src.ml.data import load_mnist_task_config, load_mnist_arrays
+    from template_autoresearch_project.ml.data import load_mnist_task_config, load_mnist_arrays
 
     real_config_text = (project_root / "mnist_task.yaml").read_text(encoding="utf-8")
 
@@ -305,7 +305,7 @@ def test_load_mnist_task_config_rejects_robustness_bad_type(tmp_path: Path, proj
 
     import yaml
 
-    from src.ml.data import load_mnist_task_config
+    from template_autoresearch_project.ml.data import load_mnist_task_config
 
     real_config_text = (project_root / "mnist_task.yaml").read_text(encoding="utf-8")
 
@@ -326,7 +326,7 @@ def test_load_mnist_task_config_rejects_robustness_empty_id(tmp_path: Path, proj
 
     import yaml
 
-    from src.ml.data import load_mnist_task_config
+    from template_autoresearch_project.ml.data import load_mnist_task_config
 
     real_config_text = (project_root / "mnist_task.yaml").read_text(encoding="utf-8")
 

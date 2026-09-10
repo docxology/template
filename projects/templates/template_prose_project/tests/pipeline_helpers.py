@@ -16,7 +16,7 @@ def analyze_manuscript_for_config(project_root: Path, config) -> object:
 
 
 def run_prose_pipeline_with_analysis(config, project_root: Path, **kwargs):
-    from src.pipeline import run_prose_pipeline
+    from template_prose_project.pipeline import run_prose_pipeline
 
     report = analyze_manuscript_for_config(project_root, config)
     return run_prose_pipeline(

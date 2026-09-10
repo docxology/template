@@ -14,7 +14,7 @@ import sys
 _PROJECT_DIR = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PROJECT_DIR))
 
-from src.strong_rule_evaluator import (  # noqa: E402
+from template_pools_rules_tools.strong_rule_evaluator import (  # noqa: E402
     evaluate_strong_rules,
     load_rule_context_from_project,
 )

@@ -16,7 +16,7 @@ import pytest
 # Ensure src/ is importable when running pytest from the project root
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
-from src.fonds_reader import (
+from template_pools_rules_tools.fonds_reader import (
     get_fonds_root,
     read_all_fonds,
     read_bibliography_fond,
@@ -220,7 +220,7 @@ class TestCorruptedCSVHandling:
         return fond_dir
 
     def test_binary_garbage_in_csv_returns_none(self, tmp_path: pathlib.Path):
-        import src.fonds_reader as fr
+        import template_pools_rules_tools.fonds_reader as fr
 
         # Write raw binary that is not valid UTF-8
         fond_dir = tmp_path / "template_bibliography"
@@ -240,7 +240,7 @@ class TestCorruptedCSVHandling:
 
     def test_valid_csv_is_parsed_correctly(self, tmp_path: pathlib.Path):
         """Sanity-check: a well-formed CSV round-trips through DictReader."""
-        import src.fonds_reader as fr
+        import template_pools_rules_tools.fonds_reader as fr
 
         csv_content = "key,type,title,author,year\nsmith2024,article,A Title,Smith,2024\n"
         self._make_bib_fond(tmp_path, csv_content=csv_content)
@@ -266,7 +266,7 @@ class TestEmptyCSVHandling:
 
     def test_header_only_csv_returns_empty_list(self, tmp_path: pathlib.Path):
         """CSV with only a header row → csv_rows should be []."""
-        import src.fonds_reader as fr
+        import template_pools_rules_tools.fonds_reader as fr
 
         fond_dir = tmp_path / "template_bibliography"
         (fond_dir / "data").mkdir(parents=True)
@@ -286,7 +286,7 @@ class TestEmptyCSVHandling:
 
     def test_completely_empty_csv_returns_empty_list(self, tmp_path: pathlib.Path):
         """Truly empty CSV → csv_rows == []."""
-        import src.fonds_reader as fr
+        import template_pools_rules_tools.fonds_reader as fr
 
         fond_dir = tmp_path / "template_bibliography"
         (fond_dir / "data").mkdir(parents=True)
@@ -313,7 +313,7 @@ class TestMissingDataDirectoryHandling:
     """When the fond's data/ subdirectory is absent, return None gracefully."""
 
     def test_missing_data_dir_bibliography_returns_none(self, tmp_path: pathlib.Path):
-        import src.fonds_reader as fr
+        import template_pools_rules_tools.fonds_reader as fr
 
         fond_dir = tmp_path / "template_bibliography"
         fond_dir.mkdir(parents=True)
@@ -330,7 +330,7 @@ class TestMissingDataDirectoryHandling:
             fr._fonds_root = original_root  # type: ignore[assignment]
 
     def test_missing_data_dir_contacts_returns_none(self, tmp_path: pathlib.Path):
-        import src.fonds_reader as fr
+        import template_pools_rules_tools.fonds_reader as fr
 
         fond_dir = tmp_path / "template_contacts"
         fond_dir.mkdir(parents=True)
@@ -345,7 +345,7 @@ class TestMissingDataDirectoryHandling:
             fr._fonds_root = original_root  # type: ignore[assignment]
 
     def test_missing_data_dir_datasets_returns_none(self, tmp_path: pathlib.Path):
-        import src.fonds_reader as fr
+        import template_pools_rules_tools.fonds_reader as fr
 
         fond_dir = tmp_path / "template_datasets"
         fond_dir.mkdir(parents=True)
@@ -361,7 +361,7 @@ class TestMissingDataDirectoryHandling:
 
     def test_completely_absent_fonds_root_returns_none(self, tmp_path: pathlib.Path):
         """When the entire fonds root is missing, every reader returns None."""
-        import src.fonds_reader as fr
+        import template_pools_rules_tools.fonds_reader as fr
 
         ghost_root = tmp_path / "does_not_exist"
         original_root = fr._fonds_root  # noqa: SLF001

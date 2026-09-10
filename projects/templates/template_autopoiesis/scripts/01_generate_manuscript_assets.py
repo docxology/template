@@ -11,13 +11,13 @@ sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT.parents[2]))
 
 from infrastructure.documentation.generated_figure_registry import write_generated_figure_registry
-from src.manuscript_figures import (
+from template_autopoiesis.manuscript_figures import (
     FIGURE_REGISTRY_SCHEMA,
     MANUSCRIPT_FIGURE_SPECS,
     fig_coverage_by_module,
     generate_manuscript_figures,
 )
-from src.project_paths import project_output_dirs
+from template_autopoiesis.project_paths import project_output_dirs
 
 
 def generate_assets(

@@ -12,7 +12,7 @@ import json
 import re
 from pathlib import Path
 
-from src.review_report import (
+from template_search_project.review_report import (
     H,
     check_anchors,
     collect_infra_imports,

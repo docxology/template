@@ -6,7 +6,7 @@ import math
 
 import pytest
 
-from src.objective import SyntheticObjective, _seed_noise
+from template_autoscientists.objective import SyntheticObjective, _seed_noise
 
 
 def test_clean_peaks_at_optimum() -> None:

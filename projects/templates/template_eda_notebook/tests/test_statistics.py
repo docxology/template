@@ -5,9 +5,9 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from src.eda.cleaning import clean_dataset
-from src.eda.dataset import DatasetSchema, load_dataset
-from src.eda.statistics import ColumnSummary, group_means, summary_statistics
+from template_eda_notebook.eda.cleaning import clean_dataset
+from template_eda_notebook.eda.dataset import DatasetSchema, load_dataset
+from template_eda_notebook.eda.statistics import ColumnSummary, group_means, summary_statistics
 
 
 def _toy_frame() -> pd.DataFrame:

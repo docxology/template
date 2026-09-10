@@ -17,7 +17,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from src.manuscript_variables import (
+from template_code_project.manuscript_variables import (
     _ANALYSIS_DATA_FILENAMES,
     _ANALYSIS_FIGURE_FILENAMES,
     _ANALYSIS_REPORT_FILENAMES,
@@ -207,13 +207,13 @@ def test_all_keys_present_without_results(tmp_path):
 def test_load_config_missing_file(tmp_path):
     root = tmp_path / "empty"
     root.mkdir()
-    from src.manuscript_variables import _load_config
+    from template_code_project.manuscript_variables import _load_config
 
     assert _load_config(root) == {}
 
 
 def test_load_optimization_results_missing_csv(tmp_path):
-    from src.manuscript_variables import _load_optimization_results
+    from template_code_project.manuscript_variables import _load_optimization_results
 
     assert _load_optimization_results(tmp_path) == []
 
@@ -600,10 +600,11 @@ def _block_infra(name, globals=None, locals=None, fromlist=(), level=0):
 
 builtins.__import__ = _block_infra
 sys.path.insert(0, str(project_root / "src"))
+sys.path.insert(0, str(project_root / "src" / "template_code_project"))
 
 spec = importlib.util.spec_from_file_location(
     "manuscript_variables_isolated",
-    project_root / "src" / "manuscript_variables.py",
+    project_root / "src" / "template_code_project" / "manuscript_variables.py",
 )
 mod = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
@@ -623,8 +624,8 @@ assert mod.logger.name == "manuscript_variables_isolated"
 def test_step_sensitivity_caption_numbers_match_sweep():
     """Pin the #fig:step_sensitivity caption's hardcoded numbers to the sweep the
     figure is generated from, so prose cannot drift from the computation."""
-    from src.experiment_config import load_experiment_config
-    from src.sweeps import sensitivity_sweep
+    from template_code_project.experiment_config import load_experiment_config
+    from template_code_project.sweeps import sensitivity_sweep
 
     sweep = sensitivity_sweep(load_experiment_config())
     n_points = len(sweep.alphas)

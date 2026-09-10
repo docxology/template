@@ -14,7 +14,7 @@ REPO_ROOT = PROJECT_ROOT.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from src.analysis import (
+from template_code_project.analysis import (
     extract_optimization_metadata,
     run_convergence_experiment,
     run_performance_benchmarking,
@@ -22,9 +22,9 @@ from src.analysis import (
     save_optimization_results,
     infrastructure_context,
 )
-from src.experiment_config import ExperimentConfig, load_experiment_config
-from src.optimizer import OptimizationResult
-from src.project_paths import project_root_context
+from template_code_project.experiment_config import ExperimentConfig, load_experiment_config
+from template_code_project.optimizer import OptimizationResult
+from template_code_project.project_paths import project_root_context
 
 
 @pytest.fixture(autouse=True)
@@ -34,7 +34,7 @@ def _isolated_project_root(tmp_path: Path):
 
 
 try:
-    from src.figures import (
+    from template_code_project.figures import (
         generate_benchmark_visualization,
         generate_stability_visualization,
     )
@@ -142,7 +142,7 @@ class TestAnalysisStandalonePaths:
 
     def test_stability_score_standalone(self):
         cfg = ExperimentConfig(stability_starting_points=(0.0, 10.0))
-        from src.analysis import _stability_score_from_runs
+        from template_code_project.analysis import _stability_score_from_runs
 
         score, max_error, recs = _stability_score_from_runs(
             [np.array([0.0]), np.array([10.0])],
@@ -154,7 +154,7 @@ class TestAnalysisStandalonePaths:
         assert isinstance(recs, list)
 
     def test_benchmark_timings_standalone(self):
-        from src.analysis import _benchmark_timings
+        from template_code_project.analysis import _benchmark_timings
 
         cfg = ExperimentConfig()
         avg = _benchmark_timings([np.array([0.0])], cfg.A_array(), cfg.b_array(), iterations=2)
@@ -163,7 +163,7 @@ class TestAnalysisStandalonePaths:
 
 class TestPublishingHelpers:
     def test_citations_and_save_materials(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        from src.analysis import generate_citations_from_metadata, save_publishing_materials
+        from template_code_project.analysis import generate_citations_from_metadata, save_publishing_materials
 
         meta = {
             "title": "Test",
@@ -178,7 +178,7 @@ class TestPublishingHelpers:
         assert (tmp_path / "output" / "citations" / "optimization_metadata.json").exists()
 
     def test_save_publishing_materials_handles_missing_keys(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        from src.analysis import save_publishing_materials
+        from template_code_project.analysis import save_publishing_materials
 
         save_publishing_materials({"title": "only title"}, None)
         assert (tmp_path / "output" / "citations" / "optimization_metadata.json").exists()
@@ -186,12 +186,14 @@ class TestPublishingHelpers:
 
 class TestValidationAndRegistration:
     def test_validate_and_save_report(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-        if not __import__("src.analysis", fromlist=["INFRASTRUCTURE_AVAILABLE"]).INFRASTRUCTURE_AVAILABLE:
+        if not __import__(
+            "template_code_project.analysis", fromlist=["INFRASTRUCTURE_AVAILABLE"]
+        ).INFRASTRUCTURE_AVAILABLE:
             pytest.skip("Infrastructure not available")
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "convergence_plot.png").write_bytes(b"png")
 
-        from src.analysis import save_validation_report, validate_generated_outputs
+        from template_code_project.analysis import save_validation_report, validate_generated_outputs
 
         report = validate_generated_outputs()
         if report:
@@ -200,7 +202,7 @@ class TestValidationAndRegistration:
 
     def test_register_figure(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         (tmp_path / "output" / "figures").mkdir(parents=True)
-        from src.analysis import register_figure
+        from template_code_project.analysis import register_figure
 
         register_figure()
         registry = tmp_path / "output" / "figures" / "figure_registry.json"
@@ -216,7 +218,7 @@ class TestMainPipelineSmoke:
 
         shutil.copytree(PROJECT_ROOT / "manuscript", tmp_path / "manuscript")
 
-        from src.analysis import main
+        from template_code_project.analysis import main
 
         main()
 
@@ -310,8 +312,8 @@ class TestCompareAlgorithms:
 
     def test_compare_returns_algorithm_comparison(self):
         """compare_algorithms returns a populated AlgorithmComparison."""
-        from src.analysis import AlgorithmComparison, compare_algorithms
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import AlgorithmComparison, compare_algorithms
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=200)
         result = compare_algorithms(config=cfg, stability_check=False, time_runs=False)
@@ -320,8 +322,8 @@ class TestCompareAlgorithms:
 
     def test_compare_best_variant_converged(self):
         """The best variant among converged candidates has the lowest final objective."""
-        from src.analysis import compare_algorithms
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import compare_algorithms
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1, 0.5, 1.0), max_iterations=500)
         result = compare_algorithms(config=cfg, stability_check=False, time_runs=False)
@@ -332,9 +334,9 @@ class TestCompareAlgorithms:
 
     def test_compare_pre_computed_results(self):
         """compare_algorithms accepts pre-computed results dict."""
-        from src.analysis import compare_algorithms
-        from src.experiment_config import ExperimentConfig
-        from src.optimizer import OptimizationResult
+        from template_code_project.analysis import compare_algorithms
+        from template_code_project.experiment_config import ExperimentConfig
+        from template_code_project.optimizer import OptimizationResult
 
         pre = {
             0.1: OptimizationResult(
@@ -360,8 +362,8 @@ class TestCompareAlgorithms:
 
     def test_compare_convergence_summary_all_converged(self):
         """convergence_summary is 100 when all variants converge."""
-        from src.analysis import compare_algorithms
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import compare_algorithms
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=1000)
         result = compare_algorithms(config=cfg, stability_check=False, time_runs=False)
@@ -370,8 +372,8 @@ class TestCompareAlgorithms:
 
     def test_compare_ranking_table_structure(self):
         """ranking_table has the required keys per row."""
-        from src.analysis import compare_algorithms
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import compare_algorithms
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
         result = compare_algorithms(config=cfg, stability_check=False, time_runs=False)
@@ -385,8 +387,8 @@ class TestCompareAlgorithms:
 
     def test_compare_with_timing_enabled(self):
         """time_runs=True records a non-negative timing for each variant."""
-        from src.analysis import compare_algorithms
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import compare_algorithms
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=50)
         result = compare_algorithms(config=cfg, stability_check=False, time_runs=True)
@@ -395,8 +397,8 @@ class TestCompareAlgorithms:
 
     def test_compare_with_stability_check(self):
         """stability_check=True sets stability_score on each variant."""
-        from src.analysis import compare_algorithms
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import compare_algorithms
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=100)
         result = compare_algorithms(config=cfg, stability_check=True, time_runs=False)
@@ -406,9 +408,9 @@ class TestCompareAlgorithms:
 
     def test_compare_history_convergence_rate(self):
         """Variants with ≥2 history points have convergence_rate > 0."""
-        from src.analysis import compare_algorithms
-        from src.experiment_config import ExperimentConfig
-        from src.optimizer import OptimizationResult
+        from template_code_project.analysis import compare_algorithms
+        from template_code_project.experiment_config import ExperimentConfig
+        from template_code_project.optimizer import OptimizationResult
 
         pre = {
             0.1: OptimizationResult(
@@ -426,9 +428,9 @@ class TestCompareAlgorithms:
 
     def test_compare_convergence_rate_zero_when_single_history(self):
         """Variant with <2 history points gets convergence_rate=0.0 (line 275)."""
-        from src.analysis import compare_algorithms
-        from src.experiment_config import ExperimentConfig
-        from src.optimizer import OptimizationResult
+        from template_code_project.analysis import compare_algorithms
+        from template_code_project.experiment_config import ExperimentConfig
+        from template_code_project.optimizer import OptimizationResult
 
         pre = {
             0.1: OptimizationResult(
@@ -446,8 +448,8 @@ class TestCompareAlgorithms:
 
     def test_compare_fastest_slowest_convergence(self):
         """fastest_convergence and slowest_convergence names are populated."""
-        from src.analysis import compare_algorithms
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import compare_algorithms
+        from template_code_project.experiment_config import ExperimentConfig
 
         # Two step sizes with notably different iteration counts
         cfg = ExperimentConfig(step_sizes=(0.01, 0.9), max_iterations=5000)
@@ -467,8 +469,8 @@ class TestMultiFactorAnalysis:
 
     def test_multi_factor_returns_report(self):
         """multi_factor_analysis returns a MultiFactorReport."""
-        from src.analysis import MultiFactorReport, multi_factor_analysis
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import MultiFactorReport, multi_factor_analysis
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=200)
         report = multi_factor_analysis(config=cfg)
@@ -476,8 +478,8 @@ class TestMultiFactorAnalysis:
 
     def test_composite_score_in_range(self):
         """Composite score is ∈ [0, 1]."""
-        from src.analysis import multi_factor_analysis
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import multi_factor_analysis
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=200)
         report = multi_factor_analysis(config=cfg)
@@ -485,8 +487,8 @@ class TestMultiFactorAnalysis:
 
     def test_factor_weights_sum_to_one(self):
         """Normalised factor weights sum to 1.0."""
-        from src.analysis import multi_factor_analysis
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import multi_factor_analysis
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
         report = multi_factor_analysis(config=cfg)
@@ -494,8 +496,8 @@ class TestMultiFactorAnalysis:
 
     def test_recommendations_non_empty(self):
         """recommendations list always has at least one entry."""
-        from src.analysis import multi_factor_analysis
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import multi_factor_analysis
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=200)
         report = multi_factor_analysis(config=cfg)
@@ -503,8 +505,8 @@ class TestMultiFactorAnalysis:
 
     def test_custom_factor_weights(self):
         """Custom factor weights override defaults and are normalised."""
-        from src.analysis import multi_factor_analysis
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import multi_factor_analysis
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
         report = multi_factor_analysis(config=cfg, factor_weights={"convergence": 0.8, "stability": 0.2})
@@ -512,8 +514,8 @@ class TestMultiFactorAnalysis:
 
     def test_custom_factor_weights_with_unknown_key(self):
         """Unknown keys in factor_weights are silently ignored (line 467 False branch)."""
-        from src.analysis import multi_factor_analysis
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import multi_factor_analysis
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
         # "nonexistent_key" is not in the defaults → silently skipped
@@ -525,8 +527,8 @@ class TestMultiFactorAnalysis:
 
     def test_factor_weights_zero_total_skips_normalisation(self):
         """factor_weights summing to 0 skips normalisation (line 471 False branch)."""
-        from src.analysis import multi_factor_analysis
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import multi_factor_analysis
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
         # All-zero weights → total_w = 0 → normalisation step is skipped
@@ -539,8 +541,8 @@ class TestMultiFactorAnalysis:
 
     def test_with_pre_computed_comparison(self):
         """multi_factor_analysis accepts a pre-computed AlgorithmComparison."""
-        from src.analysis import compare_algorithms, multi_factor_analysis
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import compare_algorithms, multi_factor_analysis
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1, 0.5), max_iterations=200)
         cmp = compare_algorithms(config=cfg, stability_check=True, time_runs=False)
@@ -549,13 +551,13 @@ class TestMultiFactorAnalysis:
 
     def test_degenerate_empty_variants(self):
         """Degenerate case (no variants) returns a zeroed MultiFactorReport."""
-        from src.analysis import (
+        from template_code_project.analysis import (
             AlgorithmComparison,
             AlgorithmVariant,
             MultiFactorReport,
             multi_factor_analysis,
         )
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.experiment_config import ExperimentConfig
 
         # Build an empty comparison — need at least one variant for the dataclass
         # but we trigger the degenerate path by making variants=[] via a patched comparison
@@ -584,8 +586,8 @@ class TestMultiFactorAnalysis:
 
     def test_factor_breakdown_keys(self):
         """factor_breakdown contains all expected keys."""
-        from src.analysis import multi_factor_analysis
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.analysis import multi_factor_analysis
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
         report = multi_factor_analysis(config=cfg)
@@ -596,11 +598,11 @@ class TestMultiFactorAnalysis:
 
     def test_stability_fallback_recomputes_when_scores_none(self):
         """When no variant has stability_score, multi_factor_analysis recomputes it."""
-        from src.analysis import (
+        from template_code_project.analysis import (
             compare_algorithms,
             multi_factor_analysis,
         )
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.experiment_config import ExperimentConfig
 
         cfg = ExperimentConfig(step_sizes=(0.1,), max_iterations=200)
         # compare_algorithms with stability_check=False → stability_score=None
@@ -614,9 +616,9 @@ class TestMultiFactorAnalysis:
 
     def test_recommendation_low_convergence(self):
         """convergence_factor < 0.5 triggers the convergence recommendation."""
-        from src.analysis import compare_algorithms, multi_factor_analysis
-        from src.experiment_config import ExperimentConfig
-        from src.optimizer import OptimizationResult
+        from template_code_project.analysis import compare_algorithms, multi_factor_analysis
+        from template_code_project.experiment_config import ExperimentConfig
+        from template_code_project.optimizer import OptimizationResult
 
         # One converged, three diverged → convergence_factor = 0.25 < 0.5
         pre = {
@@ -663,12 +665,12 @@ class TestMultiFactorAnalysis:
 
         Force by building variants with explicitly low stability scores.
         """
-        from src.analysis import (
+        from template_code_project.analysis import (
             AlgorithmComparison,
             AlgorithmVariant,
             multi_factor_analysis,
         )
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.experiment_config import ExperimentConfig
 
         # Create a variant with a low stability score
         variant = AlgorithmVariant(
@@ -697,12 +699,12 @@ class TestMultiFactorAnalysis:
 
     def test_variant_score_unconverged_returns_negative(self):
         """_variant_score returns -1.0 for unconverged variants (line 547)."""
-        from src.analysis import (
+        from template_code_project.analysis import (
             AlgorithmComparison,
             AlgorithmVariant,
             multi_factor_analysis,
         )
-        from src.experiment_config import ExperimentConfig
+        from template_code_project.experiment_config import ExperimentConfig
 
         converged_v = AlgorithmVariant(
             name="GD α=0.1",
@@ -752,7 +754,7 @@ class TestAlphaSweepConfigResolvedAlphas:
         """AlphaSweepConfig.resolved_alphas raises ValueError when alphas=None
         and alpha_min/alpha_max/alpha_num are all unset."""
         import numpy as np
-        from src.sweeps import AlphaSweepConfig
+        from template_code_project.sweeps import AlphaSweepConfig
 
         cfg = AlphaSweepConfig(
             A=np.eye(1),
@@ -771,7 +773,7 @@ class TestAlphaSweepConfigResolvedAlphas:
     def test_resolved_alphas_linspace_path(self):
         """alpha_min/max/num fully specified → linspace grid."""
         import numpy as np
-        from src.sweeps import AlphaSweepConfig
+        from template_code_project.sweeps import AlphaSweepConfig
 
         cfg = AlphaSweepConfig(
             A=np.eye(1),

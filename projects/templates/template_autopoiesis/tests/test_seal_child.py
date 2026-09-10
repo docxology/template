@@ -7,11 +7,11 @@ from pathlib import Path
 
 import pytest
 
-from src.grammar import KNOWN_DOMAINS, force_domain, parse_grammar
-from src.expand import expand
-from src.materialize import materialize
-from src.sealing import build_payload, qr_matrix
-from src.verify import verify_seal
+from template_autopoiesis.grammar import KNOWN_DOMAINS, force_domain, parse_grammar
+from template_autopoiesis.expand import expand
+from template_autopoiesis.materialize import materialize
+from template_autopoiesis.sealing import build_payload, qr_matrix
+from template_autopoiesis.verify import verify_seal
 
 
 def _make_grammar(domain=None):

@@ -12,8 +12,8 @@ for candidate in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
         sys.path.insert(0, text)
 
 from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
-from src.analysis import generate_artifacts
-from src.manuscript_variables import generate_variables, save_variables
+from template_madlib.analysis import generate_artifacts
+from template_madlib.manuscript_variables import generate_variables, save_variables
 
 
 def main() -> int:

@@ -5,7 +5,7 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-from src.manuscript_contract import REQUIRED_MANUSCRIPT_FILES, validate_phase10_contract
+from template_autopoiesis.manuscript_contract import REQUIRED_MANUSCRIPT_FILES, validate_phase10_contract
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]

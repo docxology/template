@@ -14,10 +14,10 @@ import pytest
 
 sys.path.insert(0, str(pathlib.Path(__file__).parents[1]))
 
-from src.fonds_reader import get_fonds_root
-from src.integration import run_integration_demo
-from src.rules_applier import get_rules_root
-from src.tools_invoker import get_tools_root
+from template_pools_rules_tools.fonds_reader import get_fonds_root
+from template_pools_rules_tools.integration import run_integration_demo
+from template_pools_rules_tools.rules_applier import get_rules_root
+from template_pools_rules_tools.tools_invoker import get_tools_root
 
 # ---------------------------------------------------------------------------
 # Path guards
@@ -130,7 +130,7 @@ class TestBibliographyOverlap:
         a frozen fixture), not a defect. If it fails after an intentional
         bibliography edit, update the pinned counts in this test.
         """
-        from src.integration import check_bibliography_overlap
+        from template_pools_rules_tools.integration import check_bibliography_overlap
 
         result = check_bibliography_overlap()
         assert len(result["project_keys"]) == 12
@@ -150,7 +150,7 @@ class TestBibliographyOverlap:
         Proves this check reports overlap honestly rather than only ever
         succeeding when one side happens to be a full subset of the other.
         """
-        from src.integration import check_bibliography_overlap
+        from template_pools_rules_tools.integration import check_bibliography_overlap
 
         result = check_bibliography_overlap()
         assert result["project_only"], "expected some project-only cite keys"
@@ -158,7 +158,7 @@ class TestBibliographyOverlap:
 
     def test_missing_manuscript_returns_empty_project_keys(self, tmp_path: pathlib.Path):
         """A project root with no manuscript/references.bib degrades to empty, not an exception."""
-        from src.integration import check_bibliography_overlap
+        from template_pools_rules_tools.integration import check_bibliography_overlap
 
         result = check_bibliography_overlap(project_root=tmp_path)
         assert result["project_keys"] == []

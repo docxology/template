@@ -4,7 +4,14 @@ from __future__ import annotations
 
 import pytest
 
-from src.methods_dsl.units import Dimension, DimensionError, Quantity, check_compatible, dimension_of, known_units
+from template_methods_paper.methods_dsl.units import (
+    Dimension,
+    DimensionError,
+    Quantity,
+    check_compatible,
+    dimension_of,
+    known_units,
+)
 
 
 def test_dimension_of_known_units():

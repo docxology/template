@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 
-from src.primitives import collect_primitives, PrimitiveSpec
-from src.grammar import KNOWN_DOMAINS
+from template_autopoiesis.primitives import collect_primitives, PrimitiveSpec
+from template_autopoiesis.grammar import KNOWN_DOMAINS
 
 
 def test_collect_primitives_returns_dict():

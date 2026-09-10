@@ -1,6 +1,6 @@
 # Source Modules
 
-Reusable AutoResearch project logic lives here. See [`AGENTS.md`](AGENTS.md) for the full module map.
+Reusable AutoResearch project logic lives here. See [`AGENTS.md`](template_autoresearch_project/AGENTS.md) for the full module map.
 
 ## Core loop
 

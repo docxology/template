@@ -39,3 +39,11 @@ REPO_ROOT = _find_repo_root(ROOT)
 for _path in ([REPO_ROOT] if REPO_ROOT else []) + [SRC]:
     if _path not in sys.path:
         sys.path.insert(0, _path)
+
+# TEST-ISOLATION-SYSPATH-1: expose the unique nested source package.
+import os as _os
+import sys as _sys
+
+_SRC = _os.path.join(_os.path.dirname(__file__), "..", "src")
+if _SRC not in _sys.path:
+    _sys.path.insert(0, _SRC)

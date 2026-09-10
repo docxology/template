@@ -11,7 +11,7 @@ import pytest
 
 from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
 
-from src.manuscript_variables import (
+from template_prose_project.manuscript_variables import (
     compute_variables,
     load_report_payload,
     substitute_in_text,

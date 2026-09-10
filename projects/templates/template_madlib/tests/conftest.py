@@ -13,6 +13,9 @@ REPO_ROOT = os.path.abspath(os.path.join(ROOT, "..", "..", ".."))
 for _path in (REPO_ROOT, ROOT):
     if _path not in sys.path:
         sys.path.insert(0, _path)
+SRC = os.path.join(ROOT, "src")
+if SRC not in sys.path:
+    sys.path.insert(0, SRC)
 
 
 @pytest.fixture(scope="session", autouse=True)

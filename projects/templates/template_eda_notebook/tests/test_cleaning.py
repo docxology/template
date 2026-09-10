@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-from src.eda.cleaning import CleaningReport, clean_dataset, normalize_numeric
-from src.eda.dataset import DatasetSchema, load_dataset
+from template_eda_notebook.eda.cleaning import CleaningReport, clean_dataset, normalize_numeric
+from template_eda_notebook.eda.dataset import DatasetSchema, load_dataset
 
 
 class TestCleanDataset:

@@ -48,7 +48,7 @@ class TestBuildDashboardCLI:
         assert "cdn.plot.ly" in html.read_text()
 
     def test_payload_step_sizes_match_config_yaml(self, tmp_path):
-        from src.experiment_config import load_experiment_config
+        from template_code_project.experiment_config import load_experiment_config
 
         cfg = load_experiment_config(PROJECT_ROOT)
         js = tmp_path / "d.json"
@@ -195,7 +195,7 @@ class TestBuildDashboardCLI:
         js = tmp_path / "dash.json"
         inv = tmp_path / "inv.txt"
         sm = tmp_path / "sum.txt"
-        from src.dashboard import cli_main as dashboard_main
+        from template_code_project.dashboard import cli_main as dashboard_main
 
         dashboard_main(
             [
@@ -219,7 +219,7 @@ class TestBuildDashboardCLI:
         js = tmp_path / "dash.json"
         inv = tmp_path / "inv.txt"
         sm = tmp_path / "sum.txt"
-        from src.dashboard import cli_main as dashboard_main
+        from template_code_project.dashboard import cli_main as dashboard_main
 
         dashboard_main(
             [

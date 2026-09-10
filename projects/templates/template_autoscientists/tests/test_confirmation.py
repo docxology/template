@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from src.confirmation import confirm_improvement
+from template_autoscientists.confirmation import confirm_improvement
 
 
 def test_confirms_when_gain_exceeds_band() -> None:

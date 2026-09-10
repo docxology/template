@@ -30,21 +30,21 @@ pytestmark = pytest.mark.skipif(
 )
 
 if _HYPOTHESIS_AVAILABLE:
-    from src.fonds_reader import (
+    from template_pools_rules_tools.fonds_reader import (
         read_all_fonds,
         read_bibliography_fond,
         read_contacts_fond,
         read_datasets_fond,
     )
-    from src.integration import run_integration_demo
-    from src.rules_applier import (
+    from template_pools_rules_tools.integration import run_integration_demo
+    from template_pools_rules_tools.rules_applier import (
         load_all_manuscript_rules,
         load_all_project_rules,
         load_soft_rules,
         load_strong_rules,
         validate_against_rules,
     )
-    from src.tools_invoker import (
+    from template_pools_rules_tools.tools_invoker import (
         get_tool_entrypoints,
         validate_tool_scripts_exist,
     )

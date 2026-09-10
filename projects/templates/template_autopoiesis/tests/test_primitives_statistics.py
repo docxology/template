@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.primitives.statistics import ols_fit, _shuffled_control, PRIMITIVES
+from template_autopoiesis.primitives.statistics import ols_fit, _shuffled_control, PRIMITIVES
 
 # Inject known coefficients
 _n = 50

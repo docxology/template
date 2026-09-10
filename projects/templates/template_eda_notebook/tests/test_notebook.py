@@ -13,7 +13,7 @@ import json
 import re
 from pathlib import Path
 
-import src as eda_pkg
+import template_eda_notebook as eda_pkg
 
 _PROJECT_ROOT = Path(__file__).resolve().parents[1]
 _NOTEBOOK = _PROJECT_ROOT / "notebooks" / "eda_walkthrough.ipynb"
@@ -46,8 +46,8 @@ class TestNotebookSrcBinding:
     def test_imported_names_exist_in_src(self):
         nb = _load_notebook()
         joined = "\n".join(_code_sources(nb))
-        # Capture the parenthesised `from src import (...)` block.
-        match = re.search(r"from src import \(([^)]*)\)", joined)
+        # Capture the parenthesised `from template_eda_notebook import (...)` block.
+        match = re.search(r"from template_eda_notebook import \(([^)]*)\)", joined)
         assert match is not None, "notebook must import from src"
         names = [n.strip().rstrip(",") for n in match.group(1).split() if n.strip().rstrip(",")]
         names = [n for n in names if n and n != ","]

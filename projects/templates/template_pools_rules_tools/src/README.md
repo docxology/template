@@ -1,3 +1,3 @@
 # Source
 
-Fonds/rules/tools integration logic. See [`AGENTS.md`](AGENTS.md).
+Fonds/rules/tools integration logic. See [`AGENTS.md`](template_pools_rules_tools/AGENTS.md).

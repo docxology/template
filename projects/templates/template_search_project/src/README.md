@@ -2,4 +2,4 @@
 
 Project-specific Python. Business logic for the literature pipeline lives here; generic pieces stay in `infrastructure/`.
 
-See [AGENTS.md](AGENTS.md) for module map and extension rules.
+See [AGENTS.md](template_search_project/AGENTS.md) for module map and extension rules.

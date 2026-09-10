@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from src.config import (
+from template_prose_project.config import (
     BibliographyConfig,
     ProjectConfig,
     ProseAnalysisConfig,

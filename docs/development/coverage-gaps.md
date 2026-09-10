@@ -188,7 +188,7 @@ no `*_coverage.py`, `*_full.py`, or duplicate supplement files were introduced.
 | `rendering/pdf_renderer.py` | 68.70% | `tests/infra_tests/rendering/test_pdf_renderer.py` |
 | `validation/security_gate.py` | 53.85% | `tests/infra_tests/validation/test_security_gate.py` |
 | `validation/plugin_export.py` | 68.64% | `tests/infra_tests/validation/test_plugin_export.py` |
-| `autoresearch/reports.py` | 86.67% | `tests/infra_tests/autoresearch/test_autoresearch.py` |
+| `autoresearch/reports.py` | 86.67% | `tests/infra_tests/autoresearch/test_autoresearch_plan_validation.py` |
 | `benchmark/template_harness.py` | 61.25% | `tests/infra_tests/benchmark/test_template_benchmark_harness.py` |
 | `reporting/executive_outputs.py` | 80.36% | `tests/infra_tests/reporting/test_executive_outputs.py` |
 

@@ -5,8 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from src.config import DeepSearchConfig
-from src.manuscript_variables import (
+from template_search_project.config import DeepSearchConfig
+from template_search_project.manuscript_variables import (
     compute_variables,
     load_aggregate_payload,
     load_search_result_payload,

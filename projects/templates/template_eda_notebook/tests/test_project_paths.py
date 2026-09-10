@@ -6,7 +6,7 @@ import sys
 import types
 from pathlib import Path
 
-from src.project_paths import project_output_dirs, resolve_project_root
+from template_eda_notebook.project_paths import project_output_dirs, resolve_project_root
 
 
 class TestProjectOutputDirs:

@@ -5,8 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 
-from src.methods_dsl.compiler import compile_method
-from src.methods_dsl.export import (
+from template_methods_paper.methods_dsl.compiler import compile_method
+from template_methods_paper.methods_dsl.export import (
     EXPORT_RECEIPT_SCHEMA,
     export_receipt,
     to_csv_rows,
@@ -36,8 +36,8 @@ def test_to_csv_rows_header_and_row_count(linear_method):
 
 
 def test_to_csv_rows_escapes_embedded_quotes():
-    from src.methods_dsl.model import Method, Step
-    from src.methods_dsl.vocabulary import StepKind, Target
+    from template_methods_paper.methods_dsl.model import Method, Step
+    from template_methods_paper.methods_dsl.vocabulary import StepKind, Target
 
     method = Method(
         name="QuoteTest",

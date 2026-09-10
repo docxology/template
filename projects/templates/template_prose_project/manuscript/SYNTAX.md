@@ -19,7 +19,7 @@ Pipeline behaviour:
 * `bibliography.fail_on_missing: true` — a `[@key]` whose key is not in `references.bib` makes the `bibliography_consistency` check fail.
 * `bibliography.fail_on_unused: false` — bib entries with no citations only produce warnings.
 
-The [`citation_density_above_floor`](../src/pipeline/checks.py) check (`_check_citation_density` in `src/pipeline/checks.py`) enforces ≥ `prose.citation_density_min_per_1000` citations per 1000 words.
+The [`citation_density_above_floor`](../src/template_prose_project/pipeline/checks.py) check (`_check_citation_density` in `src/pipeline/checks.py`) enforces ≥ `prose.citation_density_min_per_1000` citations per 1000 words.
 
 ## Section labels
 
@@ -63,7 +63,7 @@ The Pandoc renderer uses `--number-sections`, so **never write manual numbers** 
 | `{{LONGEST_SECTION_WORDS}}` | max per-file word count |
 | `{{SHORTEST_SECTION_WORDS}}` | min per-file word count |
 
-Define new tokens in [`src/manuscript_variables.py`](../src/manuscript_variables.py) and they become available everywhere.
+Define new tokens in [`src/manuscript_variables.py`](../src/template_prose_project/manuscript_variables.py) and they become available everywhere.
 
 ## Preamble
 

@@ -6,8 +6,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from src.pipeline import CheckResult, build_evidence_summary
-from src.pipeline.report_schema import validate_evidence_summary
+from template_prose_project.pipeline import CheckResult, build_evidence_summary
+from template_prose_project.pipeline.report_schema import validate_evidence_summary
 
 
 def _report() -> SimpleNamespace:

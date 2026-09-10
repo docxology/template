@@ -30,11 +30,12 @@ _project_root = Path(__file__).resolve().parent.parent
 _repo_root = _project_root.parents[2]
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
+sys.path.insert(0, str(_project_root / "src" / "template_search_project"))
 sys.path.insert(0, str(_repo_root))
 
-from src.config import load_project_config
-from src.deep_search_cli import run_deep_search_cli
-from src.dotenv import load_dotenv
+from template_search_project.config import load_project_config
+from template_search_project.deep_search_cli import run_deep_search_cli
+from template_search_project.dotenv import load_dotenv
 
 # Load project-local .env early so PAPERCLIP_API_KEY (and any other
 # secrets) are available when the deep_search module instantiates

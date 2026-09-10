@@ -22,7 +22,7 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "src", *[_p for _p in [_template_repo
     if path_text not in sys.path:
         sys.path.insert(0, path_text)
 
-from src.analysis.workflow import main, run_analysis_pipeline  # noqa: E402
+from template_code_project.analysis.workflow import main, run_analysis_pipeline  # noqa: E402
 
 __all__ = [
     "main",

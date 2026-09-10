@@ -199,6 +199,6 @@ manuscript_variables.
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) — Full API reference and infrastructure integration
+- [AGENTS.md](template_code_project/AGENTS.md) — Full API reference and infrastructure integration
 - [../tests/PATTERNS.md](../tests/PATTERNS.md) — How to test code written here
 - [../scripts/CONVENTIONS.md](../scripts/CONVENTIONS.md) — How scripts use this code

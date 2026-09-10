@@ -22,6 +22,7 @@ uv run pytest tests/ --cov=src --cov-fail-under=90
 | File | Focus |
 | --- | --- |
 | `test_optimizer.py` | Pure math (`optimizer.py`) |
+| `test_optimizer_gradient_descent.py` | Gradient-descent runs and performance characteristics (`optimizer.py`) |
 | `test_analysis_integration.py` | Analysis orchestration, stability/benchmark |
 | `test_analysis_coverage.py` | Analysis branch and error-path coverage |
 | `test_experiment_config.py` | Shared config loader |

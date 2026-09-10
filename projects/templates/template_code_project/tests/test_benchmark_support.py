@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from src.benchmark_support import (
+from template_code_project.benchmark_support import (
     DEFAULT_INPUT_SIZES,
     benchmark_payload,
     run_quadratic_benchmark,

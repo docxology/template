@@ -15,10 +15,10 @@ from pathlib import Path
 _project_root = Path(__file__).resolve().parent.parent
 # Project lives at projects/templates/<name>/; repo root is three levels up.
 _repo_root = _project_root.parents[2]
-sys.path.insert(0, str(_project_root))
+sys.path.insert(0, str(_project_root / "src"))
 sys.path.insert(0, str(_repo_root))
 
-from src.review_report import generate_review_report, project_paths  # noqa: E402
+from template_search_project.review_report import generate_review_report, project_paths  # noqa: E402
 
 
 def main() -> int:

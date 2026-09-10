@@ -10,8 +10,8 @@ from pathlib import Path
 
 import pytest
 
-from src.config import load_madlib_config
-from src.manuscript_variables import _build_timestamp, generate_variables, save_variables
+from template_madlib.config import load_madlib_config
+from template_madlib.manuscript_variables import _build_timestamp, generate_variables, save_variables
 
 DOC_ONLY = frozenset({"AGENTS.md", "README.md", "SYNTAX.md"})
 TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")

@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from src.config import (
+from template_search_project.config import (
     EnrichmentConfig,
     LLMConfig,
     ProjectConfig,
