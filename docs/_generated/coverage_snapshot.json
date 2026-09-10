@@ -11,7 +11,7 @@
     },
     "template_autopoiesis": {
       "coverage_pct": "97.04 %",
-      "source_hash": "20bb4f8e59526c21ac434314bc97a427470f5330a32d74b662a33bb0c46b6d79"
+      "source_hash": "169e2cda7fc5774c6dab29fecf8b65af2b0f0a3860feeb4263916925d65c1523"
     },
     "template_autoresearch_project": {
       "coverage_pct": "96.33 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "6ad55481e19d84294924a211a7d086abb0b869b0",
+  "source_commit": "d8672d98e114b418b14f6b6a4aa388127a80c4d8",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -186,7 +186,7 @@
     "projects": {
       "template_active_inference": "d9431361f8eae365f3219d0608d6ea729bd24be8c6c6586d68096ce715f319e5",
       "template_advanced_literature_review": "fe8a2bcffe44383609253860793699d36b854e9962d32e6e072511d6dc629807",
-      "template_autopoiesis": "20bb4f8e59526c21ac434314bc97a427470f5330a32d74b662a33bb0c46b6d79",
+      "template_autopoiesis": "169e2cda7fc5774c6dab29fecf8b65af2b0f0a3860feeb4263916925d65c1523",
       "template_autoresearch_project": "2c717150de8dc0285efa51f025b887279bf14b0d98a757031af0c5457ccb0468",
       "template_autoscientists": "a94f69ea23372a177a3f0368ce865ea451e42dbc5f1ca5ac1c8643da4c847b4c",
       "template_code_project": "a3aca4aad99dac5da11fb7952a8069d373413eef5a385153966b3464cfd87a26",
