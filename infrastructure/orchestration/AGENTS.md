@@ -20,6 +20,7 @@ This package coordinates existing Layer-1 modules (`infrastructure.core.pipeline
 | `stage_logger.py` | `setup_stage_log`, `stage_log_path` — append-only banners under project log paths. |
 | `secure_run.py` | `run_secure_pipeline` — pipeline + steganography post-processing. |
 | `link_sync.py` | Sidecar link-sync hook registry: `register_link_sync` / `registered_link_sync_hooks`, `maybe_sync_all_links`, and `print_link_sync_result(s)`. Registers the projects/fonds/rules/tools sync hooks (each skipped via its own `*_SKIP` env var). |
+| `stage_policy.py` | Extracted stage-script orchestration policy: profile/worker defaulting (`resolve_effective_project_workers`, `resolve_test_stage_options`), default-project fallback (`resolve_default_project`), and the `execute_test_stage` / `execute_copy_stage` entry points consumed by the thin `scripts/pipeline/stage_01_test.py` and `stage_05_copy.py`. Tested in [`tests/infra_tests/orchestration/test_stage_policy.py`](../../tests/infra_tests/orchestration/test_stage_policy.py). |
 
 ## Contracts
 
