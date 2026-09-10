@@ -133,6 +133,7 @@ def measure_test_summary(
             )
             return "pending", "pending"
 
+
 def _md_table(headers: list[str], rows: list[list[str]]) -> str:
     """Render a simple Markdown table."""
     sep = "|".join(["---"] * len(headers))
