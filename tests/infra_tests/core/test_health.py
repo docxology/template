@@ -359,8 +359,9 @@ class TestFailureDiagnosticsReachStderr:
         assert "gate timed out" not in proc.stderr
 
     def test_failing_non_quiet_run_dumps_failing_gate_tail(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Without --quiet, the failing gate's captured tail follows the verdict."""
         monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0.001")
-        proc = _run_module_cli("--quiet", "--gates", "ruff")
+        proc = _run_module_cli("--gates", "ruff")
 
         assert proc.returncode == 1
         assert "── ruff ──" in proc.stderr
