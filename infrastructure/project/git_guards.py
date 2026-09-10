@@ -149,6 +149,43 @@ _TRACKED_SECRET_RES: tuple[tuple[str, re.Pattern[bytes]], ...] = (
             rb"-----END (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"
         ),
     ),
+    # Slack, HuggingFace, and GCP families mirror the four above structurally:
+    # bytes patterns, \b anchors, no compiled flags. The GCP email alternative
+    # deliberately requires a raw "@" so URL-encoded "%40" occurrences (e.g.
+    # signed-storage citations inside public corpora) stay clean. The
+    # high-entropy heuristic requires a secret-named key in assignment position
+    # plus a >=32-char base64ish value containing both letters and digits, so
+    # snake_case provenance identifiers and placeholder prose do not match.
+    # Every family added here (unlike "private-key") honors the
+    # _DOCUMENTED_SECRET_FIXTURE_FRAGMENTS allowlist: documented example values
+    # embed a fixture fragment, match these patterns, and are skipped.
+    ("slack-token", re.compile(rb"\bxox[abpos]-[A-Za-z0-9-]{20,255}\b")),
+    ("huggingface-token", re.compile(rb"\bhf_[A-Za-z0-9]{30,255}\b")),
+    (
+        "gcp-service-account",
+        re.compile(
+            rb"(?:"
+            rb'"private_key_id":\s*"[0-9a-fA-F]{32}"'
+            rb"|"
+            rb'"type":\s*"service_account"'
+            rb"|"
+            rb"[A-Za-z0-9_.-]+@[A-Za-z0-9_.-]+\.iam\.gserviceaccount\.com"
+            rb")"
+        ),
+    ),
+    (
+        "high-entropy-assignment",
+        re.compile(
+            rb"\b(?i:(?:[\w.-]+[_-])?(?:api[_-]?key|access[_-]?key|secret[_-]?key"
+            rb"|auth[_-]?token|api[_-]?token|credentials?|passwords?"
+            rb"|secret|private[_-]?key))"
+            rb"[\"']?\s*[:=]\s*[\"']?"
+            rb"(?=[A-Za-z0-9_./+=-]{32,})"
+            rb"(?=[A-Za-z0-9_./+=-]*[0-9])"
+            rb"(?=[A-Za-z0-9_./+=-]*[A-Za-z])"
+            rb"[A-Za-z0-9_./+=-]{32,}"
+        ),
+    ),
 )
 _DOCUMENTED_SECRET_FIXTURE_FRAGMENTS = (
     b"abcdefghijklmnopqrstuvwxyz",
