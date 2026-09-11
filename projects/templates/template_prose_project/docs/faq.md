@@ -12,7 +12,7 @@ testable with real `numpy` arrays and zero infrastructure imports. Its
 `template_prose_project` owns no algorithm. The science lives in
 `infrastructure/prose/analysis/` (Flesch, Flesch-Kincaid, Gunning Fog,
 heading parsers, citation extractors); the project's own bibliography
-cross-check uses the minimal `src/prose_facade.parse_bib_keys` regex
+cross-check uses the minimal `src/pipeline/prose_facade.parse_bib_keys` regex
 (dialect-complete BibTeX parsing is available in
 `infrastructure/reference/citation/` for forks that need it). This
 project's `src/` is **project-orchestration glue** — it wires those
@@ -24,10 +24,10 @@ The thin-orchestrator pattern still applies, just at a different level:
 - `scripts/*.py` are CLI shims around `src/*.py`.
 - `src/pipeline/` is the single point of contact with infrastructure
   operations.
-- `src/figures.py`, `src/report.py`, `src/manuscript_variables.py`,
-  `src/config.py`, `src/prose_facade.py` are pure: matplotlib + stdlib
+- `src/figures/figures.py`, `src/manuscript/report.py`, `src/manuscript/manuscript_variables.py`,
+  `src/pipeline/config.py`, `src/pipeline/prose_facade.py` are pure: matplotlib + stdlib
   only, plus type-only imports of `ManuscriptReport`. `render_outline` is
-  project-owned in `src/prose_facade.py` itself (zero infrastructure
+  project-owned in `src/pipeline/prose_facade.py` itself (zero infrastructure
   imports), not an infrastructure import.
 
 See [`agent_instructions.md`](agent_instructions.md) Rule 3 and
@@ -39,7 +39,7 @@ Files in `scripts/` are CLI shims:
 
 - Parse argparse flags.
 - Configure logging.
-- Load `ProjectConfig` (via `src/config.py`).
+- Load `ProjectConfig` (via `src/pipeline/config.py`).
 - Call exactly one `src/` function (`run_prose_pipeline`,
   `generate_all_figures`, `compute_variables`).
 - Surface results / exit code.
@@ -75,23 +75,23 @@ the gate.
 ### My new function lowered coverage. What now?
 
 Write a unit test for the new function before or immediately after adding
-it. Mirror the existing test class style in `tests/test_pipeline.py`
+it. Mirror the existing test class style in `tests/pipeline/test_pipeline.py`
 (class per `_check_<name>`, one test per branch). Use real Markdown via
 `tmp_path`, not constructed `ManuscriptReport` objects.
 
 ### Do I need to test `scripts/`?
 
-Yes, via `tests/test_scripts.py`, which invokes
+Yes, via `tests/pipeline/test_scripts.py`, which invokes
 `scripts/run_prose_pipeline.py` and
 `scripts/y_generate_prose_figures.py` through `subprocess.run`. The tests
 assert exit codes and on-disk artefacts, not call counts. The integration
-test `tests/test_pipeline_integration.py` additionally drives
+test `tests/pipeline/test_pipeline_integration.py` additionally drives
 `run_prose_pipeline` directly against the bundled `manuscript/`.
 
 ### How do I run a single test?
 
 ```bash
-uv run pytest projects/templates/template_prose_project/tests/test_pipeline.py::TestRunProsePipeline -v
+uv run pytest projects/templates/template_prose_project/tests/pipeline/test_pipeline.py::TestRunProsePipeline -v
 ```
 
 Use the standard pytest selector syntax (`module::Class::method`).
@@ -113,7 +113,7 @@ See [`syntax_guide.md`](syntax_guide.md) Section 2.
 ### What `{{TOKEN}}`s are available?
 
 Eleven tokens are defined in
-`projects/templates/template_prose_project/src/manuscript_variables.py::ManuscriptVariables`.
+`projects/templates/template_prose_project/src/manuscript/manuscript_variables.py::ManuscriptVariables`.
 The full list with sources is documented in [`syntax_guide.md`](syntax_guide.md)
 Section 3.
 
@@ -159,9 +159,9 @@ The promotion step is `scripts/pipeline/stage_05_copy.py --project template_pros
 
 ## Common pitfalls
 
-### I imported `infrastructure.prose.analyze_manuscript` in `src/figures.py` and tests broke
+### I imported `infrastructure.prose.analyze_manuscript` in `src/figures/figures.py` and tests broke
 
-Remove the call. `src/figures.py` may import the *type* `ManuscriptReport`
+Remove the call. `src/figures/figures.py` may import the *type* `ManuscriptReport`
 for type hints, but it must not call any analysis function. Pre-compute
 the report in `src/pipeline/` and pass the resulting `ManuscriptReport`
 into the figure renderer. The boundary is documented in
@@ -190,7 +190,7 @@ them in separate subprocess calls; this only affects ad-hoc combined runs.
 
 ### YAML loader rejects my new key
 
-`src/config.py::ProjectConfig.from_dict` is strict: it validates the set
+`src/pipeline/config.py::ProjectConfig.from_dict` is strict: it validates the set
 of keys it sees against the closed registries `_KNOWN_TOP_LEVEL_KEYS`,
 `_KNOWN_PROSE_KEYS`, `_KNOWN_BIBLIOGRAPHY_KEYS`, `_KNOWN_REPORT_KEYS`
 and raises `ValueError` listing the unknown key(s) and the allowed set.
@@ -205,11 +205,11 @@ To add a new knob:
    are **mutable** (the YAML loader populates them post-construction);
    only `ManuscriptVariables` in `manuscript_variables.py` is `frozen=True`.
 2. Add the YAML key name to the matching `_KNOWN_*_KEYS` frozenset at
-   the top of `src/config.py`.
+   the top of `src/pipeline/config.py`.
 3. Parse it in `from_dict` with an explicit default.
 4. If it has an invariant, encode it in `__post_init__` and raise a
    message containing both the value and the constraint.
-5. Add a unit test in `tests/test_config.py` (both the happy path and
+5. Add a unit test in `tests/pipeline/test_config.py` (both the happy path and
    the rejection of an unknown key or violated invariant).
 6. Document it in the table in [`README.md`](../README.md) and in
    [`rendering_pipeline.md`](rendering_pipeline.md).
@@ -219,10 +219,10 @@ To add a new knob:
 Adding a check is a four-step process documented in
 `projects/templates/template_prose_project/AGENTS.md` ("Extending"):
 
-1. Add the field to `src/config.py::ProseAnalysisConfig`.
+1. Add the field to `src/pipeline/config.py::ProseAnalysisConfig`.
 2. Add a `_check_<name>` function in `src/pipeline/checks.py`.
 3. Append it to the `checks` list inside `run_prose_pipeline`.
-4. Add a test in `tests/test_pipeline.py` covering both `passed=True` and
+4. Add a test in `tests/pipeline/test_pipeline.py` covering both `passed=True` and
    `passed=False` outcomes.
 
 If you skipped step 3, the check function exists but is never invoked.

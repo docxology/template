@@ -20,7 +20,7 @@ The command executes the standard project stages:
 5. Copy outputs moves final deliverables into the repository-level `output/`
    tree.
 
-## Loop sequence (`src.loop.run_autoresearch_loop`)
+## Loop sequence (`src.loop.loop.run_autoresearch_loop`)
 
 1. Compose plan via `build_autoresearch_plan()` and merge manuscript settings
    via `build_loop_config()`.

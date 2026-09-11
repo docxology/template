@@ -8,8 +8,8 @@ from pathlib import Path
 import numpy as np
 
 from .records import _candidate_predictions, _evaluated_candidates
-from template_autoresearch_project.json_coerce import mapping_list
-from template_autoresearch_project.ml.task import (
+from ..loop.json_coerce import mapping_list
+from ..ml.task import (
     CandidateResult,
     MLTaskResult,
     load_mnist_arrays,

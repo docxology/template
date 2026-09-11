@@ -15,7 +15,7 @@ import sys
 _PROJECT_DIR = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PROJECT_DIR))
 
-from template_pools_rules_tools.integration import run_integration_demo
+from template_pools_rules_tools.tools.integration import run_integration_demo
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 

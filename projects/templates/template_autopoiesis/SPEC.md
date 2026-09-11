@@ -60,7 +60,7 @@
 - Stress: boundary seeds, 1000-seed, Merkle invariants
 
 ### P10 — Phase 10 manuscript render readiness ✅
-- The source-bound checklist in `src/manuscript_contract.py` requires the
+- The source-bound checklist in `src/template_autopoiesis/manuscript/manuscript_contract.py` requires the
   complete manuscript file set, a non-empty configuration, and explicit
   preamble fences.
 - `manuscript/preamble.md` is fenced as one complete LaTeX preamble and keeps

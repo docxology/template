@@ -2,14 +2,14 @@ claims:
   - claim_id: figure-export-dpi
     kind: number
     value: 300
-    source: projects/templates/template_code_project/src/viz_config.py plotting defaults (dpi)
+    source: projects/templates/template_code_project/src/template_code_project/figures/viz_config.py plotting defaults (dpi)
     source_tier: project_source
     freshness: active
     artifact_path: output/figures/convergence_plot.png
   - claim_id: step-size-sensitivity-cap
     kind: number
     value: 500
-    source: projects/templates/template_code_project/src/sweeps.py sensitivity_sweep max_iter cap
+    source: projects/templates/template_code_project/src/template_code_project/core/sweeps.py sensitivity_sweep max_iter cap
     source_tier: generated_metric
     freshness: active
     artifact_path: output/figures/step_size_sensitivity.png

@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from template_autoresearch_project.manuscript import compute_variables_from_payload, save_variables
-from template_autoresearch_project.config import AutoResearchLoopConfig
-from template_autoresearch_project.models import AutoResearchLoopResult, LoopStageResult
-from template_autoresearch_project.reports import (
+from ..manuscript import compute_variables_from_payload, save_variables
+from ..loop.config import AutoResearchLoopConfig
+from ..loop.models import AutoResearchLoopResult, LoopStageResult
+from .reports import (
     build_evidence_overview,
     build_review_packet,
     render_evidence_overview_markdown,

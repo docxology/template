@@ -58,7 +58,7 @@ def test_check_against_real_manuscript(tmp_path: Path):
 Tests covering `_check_bibliography` (which emits
 `CheckResult(name="bibliography_consistency")`) write small but valid
 `.bib` files and `_check_bibliography` parses them via
-`src/prose_facade.parse_bib_keys`:
+`src/pipeline/prose_facade.parse_bib_keys`:
 
 ```python
 def _write_bib(path: Path, entries: dict[str, dict[str, str]]) -> Path:
@@ -104,7 +104,7 @@ own `output/`.
 
 ## Test Class Organisation
 
-Actual class inventory of `tests/test_pipeline.py` (the largest test
+Actual class inventory of `tests/pipeline/test_pipeline.py` (the largest test
 file in this project):
 
 | Class | Covers |
@@ -119,11 +119,11 @@ file in this project):
 | `TestNegativeControls` | negative controls: failure-path `all_passed`/`to_dict`, exact boundary values, checks-JSON-on-failure, all-disabled registry, missing-bib-with-both-flags-false |
 
 Other test files use the same `Test<Concept>` convention:
-`tests/test_config.py` (free functions, no class), `tests/test_figures.py`
-(free functions), `tests/test_manuscript_variables.py` (free functions),
-`tests/test_pipeline_integration.py` (one end-to-end test on the bundled
-manuscript), `tests/test_report.py` (free functions),
-`tests/test_scripts.py` (subprocess invocations).
+`tests/pipeline/test_config.py` (free functions, no class), `tests/figures/test_figures.py`
+(free functions), `tests/manuscript/test_manuscript_variables.py` (free functions),
+`tests/pipeline/test_pipeline_integration.py` (one end-to-end test on the bundled
+manuscript), `tests/manuscript/test_report.py` (free functions),
+`tests/pipeline/test_scripts.py` (subprocess invocations).
 
 Method naming: `test_<what_is_being_tested>` and every test method has
 a docstring.

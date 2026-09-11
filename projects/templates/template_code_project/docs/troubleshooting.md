@@ -6,7 +6,7 @@ Symptom-driven recipes for the most common breakage modes when running this proj
 
 **Cause.** A placeholder in `manuscript/*.md` was not substituted because
 `scripts/z_generate_manuscript_variables.py` was not (re)run after the
-analysis stage, or the token is not defined in `src/manuscript_variables.py::generate_variables()`.
+analysis stage, or the token is not defined in `src/template_code_project/core/manuscript_variables.py::generate_variables()`.
 
 **Fix.**
 
@@ -23,7 +23,7 @@ analysis stage, or the token is not defined in `src/manuscript_variables.py::gen
    uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
    ```
 4. If the token is still literal, add it to `generate_variables()` in
-   `src/manuscript_variables.py`.
+   `src/template_code_project/core/manuscript_variables.py`.
 
 ## `FileNotFoundError`: missing `optimization_results.csv` during variable hydration
 
@@ -241,9 +241,9 @@ zero collected tests is not a pass.**
 `source`/`omit` are *project-relative* and do not resolve when pytest runs
 from the repo root; the canonical command and the runner both measure
 against the **repo-root** `pyproject.toml` config — that is the number the
-90% gate enforces (missing-cells coverage below the floor fails pytest itself via `--cov-fail-under`, it never warns) (≈99% for this exemplar; `src/analysis/` and
+90% gate enforces (missing-cells coverage below the floor fails pytest itself via `--cov-fail-under`, it never warns) (≈99% for this exemplar; `src/template_code_project/analysis/` and
 Dropping below it fails the gate outright; deliberate omissions are recorded in the repo-root coverage configuration.
-`src/dashboard.py` are intentionally omitted there).
+`src/template_code_project/dashboard/dashboard.py` are intentionally omitted there).
 
 ## See also
 

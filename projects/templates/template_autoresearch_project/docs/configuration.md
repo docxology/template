@@ -78,7 +78,7 @@ serialized to `ml_training_diagnostics.json`.
 
 ## `manuscript/config.yaml` (loop settings)
 
-Loaded by `src.config.load_manuscript_loop_settings`:
+Loaded by `src.loop.config.load_manuscript_loop_settings`:
 
 - `analysis.scripts`: runs the thin orchestrators in `scripts/`.
 - `project_config.review_policy`: records the required human review mode.
@@ -86,7 +86,7 @@ Loaded by `src.config.load_manuscript_loop_settings`:
 - `project_config.research_questions`: declares questions and expected
   evidence paths.
 
-Runtime loop configuration is merged in `src.config.build_loop_config(plan,
+Runtime loop configuration is merged in `src.loop.config.build_loop_config(plan,
 settings)` so `required_artifacts` and `quality_checks` come from the composed
 plan, not a second parse of `autoresearch.yaml` in project code.
 
@@ -138,7 +138,7 @@ thresholds, and the no-retrain robustness transforms.
 
 ## Manuscript hydration and figures
 
-`src.manuscript_variables` treats run-derived names, paths, metrics, figure
+`src.manuscript.manuscript_variables` treats run-derived names, paths, metrics, figure
 captions, and generated tables as validated variables. It reads the final
 `autoresearch_loop.json`, ML result payload, candidate ledger, review decisions,
 benchmark scores, artifact manifest, and figure registry. It then writes:
@@ -234,11 +234,11 @@ SLSA signed provenance.
 
 ## Scripts
 
-- `scripts/run_autoresearch_loop.py` calls `src.loop.run_autoresearch_loop`.
+- `scripts/run_autoresearch_loop.py` calls `src.loop.loop.run_autoresearch_loop`.
 - `scripts/check_source_ledger.py` validates `manuscript/source_ledger.yaml`
   offline and prints source-tier counts.
 - `scripts/z_generate_manuscript_variables.py` calls
-  `src.manuscript_variables` helpers, writes resolved manuscript files, and
+  `src.manuscript.manuscript_variables` helpers, writes resolved manuscript files, and
   enforces strict tokenization for numbered manuscript sources.
 
 ## Validation phases

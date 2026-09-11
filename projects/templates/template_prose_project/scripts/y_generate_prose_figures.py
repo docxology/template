@@ -29,7 +29,7 @@ from infrastructure.core.logging.utils import get_logger  # noqa: E402
 
 from infrastructure.prose.report import load_report_json  # noqa: E402
 
-from template_prose_project.figures import generate_all_figures  # noqa: E402
+from template_prose_project.figures.figures import generate_all_figures  # noqa: E402
 
 logger = get_logger(__name__)
 

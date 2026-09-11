@@ -55,7 +55,7 @@ coverage gate regresses.
 ## Principles
 
 - **Thin orchestrator pattern**: all new figure/cover logic lives in
-  `src/figures.py` (or a sibling `src/` module); scripts only call it and
+  `src/figures/figures.py` (or a sibling `src/` module); scripts only call it and
   handle I/O.
 - **No mocks**: figure tests render real matplotlib figures to `tmp_path`
   and assert real file existence/size, never mocked.
@@ -72,7 +72,7 @@ coverage gate regresses.
 - Repo-root-relative discovery only (`pathlib.Path(__file__).resolve().parents[N]`)
   — any new module must follow the same idiom documented in this project's
   `CLAUDE.md`.
-- `src/type_defs.py` remains the single source of truth for TypedDicts; no
+- `src/tools/type_defs.py` remains the single source of truth for TypedDicts; no
   inline dicts introduced elsewhere.
 - Project coverage floor stays ≥90% for `src/` (per repo `CLAUDE.md`); new
   code must ship with tests, not just prose about it.
@@ -117,12 +117,12 @@ fonds/rules/tools contract intact.
 
 ## Criteria
 
-- [x] ISC-1: `src/figures.py` gains `generate_fond_taxonomy()` returning a `pathlib.Path`
-- [x] ISC-2: `src/figures.py` gains `generate_rule_hierarchy()` returning a `pathlib.Path`
-- [x] ISC-3: `src/figures.py` gains `generate_tool_contract()` returning a `pathlib.Path`
-- [x] ISC-4: `src/figures.py` gains `generate_resilience_layers()` returning a `pathlib.Path`
-- [x] ISC-5: `src/figures.py` gains `generate_pipeline_flow()` returning a `pathlib.Path`
-- [x] ISC-6: `src/figures.py` gains `generate_cover_art()` returning a `pathlib.Path`
+- [x] ISC-1: `src/figures/figures.py` gains `generate_fond_taxonomy()` returning a `pathlib.Path`
+- [x] ISC-2: `src/figures/figures.py` gains `generate_rule_hierarchy()` returning a `pathlib.Path`
+- [x] ISC-3: `src/figures/figures.py` gains `generate_tool_contract()` returning a `pathlib.Path`
+- [x] ISC-4: `src/figures/figures.py` gains `generate_resilience_layers()` returning a `pathlib.Path`
+- [x] ISC-5: `src/figures/figures.py` gains `generate_pipeline_flow()` returning a `pathlib.Path`
+- [x] ISC-6: `src/figures/figures.py` gains `generate_cover_art()` returning a `pathlib.Path`
 - [x] ISC-7: `all_figures()` wrapper calls all 6 new functions plus the original 3
 - [x] ISC-8: `src/__init__.py` `__all__` re-exports all 6 new function names
 - [x] ISC-9: new `scripts/05_generate_figures.py` thin-orchestrator script exists, ≤50 lines of orchestration logic
@@ -165,11 +165,11 @@ fonds/rules/tools contract intact.
 - [x] ISC-44: line count of `manuscript/05_tools.md` increases vs. baseline (75 lines)
 - [x] ISC-45: line count of `manuscript/06_integration.md` increases vs. baseline (61 lines)
 - [x] ISC-46: line count of `manuscript/07_conclusion.md` increases vs. baseline (33 lines)
-- [x] ISC-47: `tests/test_figures.py` (or a new test file) gains a test for `generate_fond_taxonomy()`
-- [x] ISC-48: `tests/test_figures.py` (or a new test file) gains a test for `generate_rule_hierarchy()`
-- [x] ISC-49: `tests/test_figures.py` (or a new test file) gains a test for `generate_tool_contract()`
-- [x] ISC-50: `tests/test_figures.py` (or a new test file) gains a test for `generate_resilience_layers()`
-- [x] ISC-51: `tests/test_figures.py` (or a new test file) gains a test for `generate_pipeline_flow()`
+- [x] ISC-47: `tests/figures/test_figures.py` (or a new test file) gains a test for `generate_fond_taxonomy()`
+- [x] ISC-48: `tests/figures/test_figures.py` (or a new test file) gains a test for `generate_rule_hierarchy()`
+- [x] ISC-49: `tests/figures/test_figures.py` (or a new test file) gains a test for `generate_tool_contract()`
+- [x] ISC-50: `tests/figures/test_figures.py` (or a new test file) gains a test for `generate_resilience_layers()`
+- [x] ISC-51: `tests/figures/test_figures.py` (or a new test file) gains a test for `generate_pipeline_flow()`
 - [x] ISC-52: `tests/test_cover_art.py` (new) tests `generate_cover_art()`
 - [x] ISC-53: `uv run pytest projects/templates/template_pools_rules_tools/tests/ --cov=projects/templates/template_pools_rules_tools/src --cov-fail-under=90` exits 0
 - [x] ISC-54: `uv run mypy projects/templates/template_pools_rules_tools/src --config-file projects/templates/template_pools_rules_tools/pyproject.toml` reports no new errors
@@ -213,7 +213,7 @@ fonds/rules/tools contract intact.
 
 | name | description | satisfies | depends_on | parallelizable |
 |---|---|---|---|---|
-| new-figure-functions | 6 new `generate_*` functions exposed by the `src/figures.py` façade, with shared specs in `src/figure_support.py` | ISC-1..8 | none | no (split support + façade) |
+| new-figure-functions | 6 new `generate_*` functions exposed by the `src/figures/figures.py` façade, with shared specs in `src/figures/figure_support.py` | ISC-1..8 | none | no (split support + façade) |
 | figure-generation-script | `scripts/05_generate_figures.py` orchestrator | ISC-9..15 | new-figure-functions | no |
 | config-wiring | `config.yaml` figure registry + cover + typography metadata | ISC-16..23 | figure-generation-script | yes (independent of prose) |
 | preamble-typography | `preamble.md` margin reduction | ISC-24 | none | yes |
@@ -308,7 +308,7 @@ fonds/rules/tools contract intact.
 - **conjectured**: passing `integration_result=results` (a plain `IntegrationResult` TypedDict) into `generate_status_dashboard()` would bind the status-dashboard figure to real per-component pass/partial/missing state, since the manuscript prose says so.
   **refuted by**: Forge cross-vendor audit — `generate_status_dashboard()` only rebinds when `hasattr(integration_result, "statuses")`; a plain dict never has that attribute, so the branch was dead and the figure always rendered its hardcoded all-"ok" default. Same defect in `generate_resource_counts()`, which never received a `counts=` override at all.
   **learned**: a figure function accepting an "integration_result" parameter is not evidence it uses it — the binding path itself must be traced to the call site, not assumed from the parameter's presence or the prose's claim about it. `generate_figure_data()` already existed as exactly the right data source and had simply never been wired to these two figures.
-  **criterion now**: `all_figures()` accepts explicit `counts`/`statuses` dicts; `scripts/05_generate_figures.py` derives them via new `src/integration.py::derive_dashboard_data()` (built on the pre-existing `generate_figure_data()`) and passes them through. Verified via `resource_counts.png` showing 3/2/3 (matching real `run_integration_demo()` output) and a new ground-truth-binding test (`test_derive_dashboard_data_binds_to_ground_truth`) using a synthetic degraded `IntegrationResult`.
+  **criterion now**: `all_figures()` accepts explicit `counts`/`statuses` dicts; `scripts/05_generate_figures.py` derives them via new `src/tools/integration.py::derive_dashboard_data()` (built on the pre-existing `generate_figure_data()`) and passes them through. Verified via `resource_counts.png` showing 3/2/3 (matching real `run_integration_demo()` output) and a new ground-truth-binding test (`test_derive_dashboard_data_binds_to_ground_truth`) using a synthetic degraded `IntegrationResult`.
 - **conjectured**: stating "seven modules / 219 tests / eight test files" in the prose would stay accurate through the rest of the session.
   **refuted by**: Forge cross-vendor audit — this session added an 8th module (`manuscript_variables.py`) and a 9th test file (`test_manuscript_variables.py`) *after* that prose was written, and the numbers were never re-synced; a second Forge-adjacent self-check then caught a further drift (225→226) after fixing the two figures above added one more test.
   **learned**: any exact count cited in prose about the codebase's own shape (module count, test count, coverage decimal) is a live claim that must be re-verified against the actual repo state immediately before the session's final render, not computed once mid-session and trusted. The coverage decimal specifically was replaced with qualitative phrasing plus an explicit "these drift, re-run the command" caveat, since re-verifying a moving float on every edit is not sustainable; the module/test *counts* were kept exact because they are cheap to verify (`ls | wc -l`) at zero marginal cost right before finalizing.
@@ -356,7 +356,7 @@ ISC-62 (Anti — no unresolved tokens): `pdftotext combined.pdf - | grep -oE '\{
 
 ISC-63 (Anti — no regressions): full suite 225/225 passing at final tree state; 0 failures introduced.
 
-Negative-control / flip-test (Advisor-requested, closes "tokens might be decorative" risk): added `tests/test_manuscript_variables.py::test_reflects_changed_integration_result`, which monkeypatches `run_integration_demo()`'s return value and asserts `generate_variables()["FONDS_LOADED"] == "999"` and `!= str(real_value)` — proves token computation is live-wired to its source, not hard-coded. Test passes.
+Negative-control / flip-test (Advisor-requested, closes "tokens might be decorative" risk): added `tests/figures/test_manuscript_variables.py::test_reflects_changed_integration_result`, which monkeypatches `run_integration_demo()`'s return value and asserts `generate_variables()["FONDS_LOADED"] == "999"` and `!= str(real_value)` — proves token computation is live-wired to its source, not hard-coded. Test passes.
 
 Independent corroboration: the final rendered PDF's resolved prose reads "the integration demo loaded 3 fonds, validated 2 rule sets, discovered 3 tools, and processed 8 bibliography entries" — matching the real `run_integration_demo()` output independently observed earlier in the session via direct script invocation (fonds=3, rules_ok=2, tools=3, bib=8), not a placeholder.
 

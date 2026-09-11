@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from template_autoresearch_project.json_coerce import mapping, mapping_list
+from ..loop.json_coerce import mapping, mapping_list
 
 
 def render_security_review_markdown(

@@ -15,7 +15,7 @@ def test_build_infrastructure_report(repo_root):
 
 # ❌ PROHIBITED: Mock objects substitute assumptions for reality
 def test_build_report_mocked():
-    with patch('template_template.introspection.Path.rglob') as mock_rglob:
+    with patch('template_template.core.introspection.Path.rglob') as mock_rglob:
         mock_rglob.return_value = [Path('a.py'), Path('b.py')]
         report = build_infrastructure_report(Path('.'))
         assert report.total_python_files == 2  # tests the mock, not the code
@@ -37,7 +37,7 @@ Tests that the `build_infrastructure_report()` function correctly:
 - Enumerates pipeline stages
 - Excludes `.venv`, `__pycache__`, `.git` from counts
 
-### `test_architecture_viz.py` — Figure Generation
+### `figures/test_architecture_viz.py` — Figure Generation
 
 Tests that architecture visualization functions:
 
@@ -89,13 +89,13 @@ PYTHONPATH=. uv run pytest projects/templates/template_template/tests/ -v --tb=s
   --cov=projects/templates/template_template/src --cov-report=term-missing
 
 # Single test file
-PYTHONPATH=. uv run pytest projects/templates/template_template/tests/test_meta.py -v
+PYTHONPATH=. uv run pytest projects/templates/template_template/tests/core/test_meta.py -v
 ```
 
 ## Adding New Tests
 
-1. Create `test_<module>.py` in `projects/templates/template_template/tests/`
-2. Import from `template_template.<module>` (the `src/` is on `PYTHONPATH` via conftest)
+1. Create `test_<module>.py` in the cluster directory under `projects/templates/template_template/tests/` that mirrors the module's subpackage (`core/`, `metrics/`, or `figures/`)
+2. Import from `template_template.<cluster>.<module>` (the `src/` is on `PYTHONPATH` via conftest)
 3. Use real data — no mocks, no fakes, no stubs
 4. Assert against real repository state
 5. Update `docs/VERIFICATION.md` test count if changed

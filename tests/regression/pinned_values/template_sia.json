@@ -11,7 +11,7 @@
       "commit": "691d6ebf",
       "date": "2026-07-01",
       "reason": "Number of completed SIA generations in the bundled fixture-replay run (Meta -> Target -> Feedback loop, max_generations=3 in manuscript/config.yaml). Backs SIA_GENERATION_COUNT and the row count of the fixture-replay metrics table. Re-derived as len(run_sia_loop(config)) from the real infrastructure loop, not copied from the manuscript.",
-      "script": "PYTHONPATH=<repo>:<template_sia> .venv/bin/python -c 'from infrastructure.sia import RunConfig, run_sia_loop; len(run_sia_loop(RunConfig(task_dir=.../tasks/mini_classify, output_dir=<tmp>, run_id=1, max_generations=3, live=False, fixtures_dir=.../src/fixtures/recorded_generations)))'"
+      "script": "PYTHONPATH=<repo>:<template_sia> .venv/bin/python -c 'from infrastructure.sia import RunConfig, run_sia_loop; len(run_sia_loop(RunConfig(task_dir=.../tasks/mini_classify, output_dir=<tmp>, run_id=1, max_generations=3, live=False, fixtures_dir=.../src/template_sia/fixtures/recorded_generations)))'"
     },
     "first_generation_accuracy": {
       "commit": "5f4b6b84",
@@ -44,7 +44,7 @@
     "value": 3,
     "abs_tolerance": 0,
     "verifier_function": "infrastructure.sia.run_sia_loop",
-    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/fixtures/recorded_generations)", "read": "len(artifacts)"},
+    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/template_sia/fixtures/recorded_generations)", "read": "len(artifacts)"},
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
     "pinned_at_commit": "691d6ebf"
@@ -55,7 +55,7 @@
     "value": 1.0,
     "abs_tolerance": 1e-9,
     "verifier_function": "infrastructure.sia.run_sia_loop",
-    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/fixtures/recorded_generations)", "read": "artifacts[0].evaluation.metric_value"},
+    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/template_sia/fixtures/recorded_generations)", "read": "artifacts[0].evaluation.metric_value"},
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
     "pinned_at_commit": "691d6ebf"
@@ -66,7 +66,7 @@
     "value": 1.0,
     "abs_tolerance": 1e-9,
     "verifier_function": "infrastructure.sia.run_sia_loop",
-    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/fixtures/recorded_generations)", "read": "artifacts[-1].evaluation.metric_value"},
+    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/template_sia/fixtures/recorded_generations)", "read": "artifacts[-1].evaluation.metric_value"},
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
     "pinned_at_commit": "691d6ebf"
@@ -77,7 +77,7 @@
     "value": 0.0,
     "abs_tolerance": 5e-05,
     "verifier_function": "infrastructure.sia.run_sia_loop",
-    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/fixtures/recorded_generations)", "expr": "artifacts[-1].evaluation.metric_value - artifacts[0].evaluation.metric_value"},
+    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/template_sia/fixtures/recorded_generations)", "expr": "artifacts[-1].evaluation.metric_value - artifacts[0].evaluation.metric_value"},
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
     "pinned_at_commit": "691d6ebf"
@@ -88,7 +88,7 @@
     "value": 6,
     "abs_tolerance": 0,
     "verifier_function": "infrastructure.sia.run_sia_loop",
-    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/fixtures/recorded_generations)", "read": "artifacts[-1].evaluation.n_samples"},
+    "verifier_args": {"task": "tasks/mini_classify", "config": "RunConfig(run_id=1, max_generations=3, live=False, fixtures_dir=src/template_sia/fixtures/recorded_generations)", "read": "artifacts[-1].evaluation.n_samples"},
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
     "pinned_at_commit": "691d6ebf"

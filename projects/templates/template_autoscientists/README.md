@@ -144,7 +144,7 @@ uv run python scripts/runner/execute_pipeline.py --project templates/template_au
 ## The language-model plug-in seam
 
 The coordination loop depends only on the `Proposer` protocol
-([`src/agents.py`](src/template_autoscientists/agents.py)). Two real implementations are provided:
+([`src/template_autoscientists/agents/agents.py`](src/template_autoscientists/agents/agents.py)). Two real implementations are provided:
 
 - `DeterministicProposer` — rule-based, fully deterministic, drives the tested
   exemplar runs and rendered figures. It consults the dead-end registry (the
@@ -158,7 +158,7 @@ The coordination loop depends only on the `Proposer` protocol
 Run the live path (requires `ollama serve` + `ollama pull hermes3`):
 
 ```bash
-uv run pytest projects/templates/template_autoscientists/tests/test_hermes_live.py -m requires_ollama
+uv run pytest projects/templates/template_autoscientists/tests/agents/test_hermes_live.py -m requires_ollama
 ```
 
 The live network boundary is `# pragma: no cover` and excluded from the gate —

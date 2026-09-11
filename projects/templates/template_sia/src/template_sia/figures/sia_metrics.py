@@ -19,8 +19,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-from ..generation_records import generation_metrics, load_run_summary
-from ..loop_config import load_sia_settings
+from ..ledger.generation_records import generation_metrics, load_run_summary
+from ..loop.loop_config import load_sia_settings
 from .figure_registry import FIGURE_SPECS, PALETTE, figure_path
 
 # ── style constants ────────────────────────────────────────────────────────────

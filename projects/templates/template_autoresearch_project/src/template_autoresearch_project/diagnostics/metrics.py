@@ -12,7 +12,7 @@ from .intervals import (
     bootstrap_intervals,
     paired_comparison_report,
 )
-from template_autoresearch_project.json_coerce import mapping_list
+from ..loop.json_coerce import mapping_list
 from .records import (
     _candidate_predictions,
     _candidate_records,
@@ -21,7 +21,7 @@ from .records import (
     _record_probabilities,
     prediction_records,
 )
-from template_autoresearch_project.ml.task import (
+from ..ml.task import (
     CandidateResult,
     MLTaskResult,
     load_mnist_arrays,

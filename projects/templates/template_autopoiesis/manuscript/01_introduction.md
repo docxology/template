@@ -16,7 +16,7 @@ that is copied once, it defines a **grammar** — a finite set of orthogonal
 a single integer seed plus that grammar to one specific, fully-formed child
 project. The grammar lives in `manuscript/config.yaml` under the
 `autopoiesis:` key and is parsed and validated by `parse_grammar()` in
-`src/grammar.py`. Two grammars that differ in even one option, one slot name,
+`src/template_autopoiesis/core/grammar.py`. Two grammars that differ in even one option, one slot name,
 or one dependency string hash to different `grammar_hash` values, because
 `Grammar.grammar_hash` is the truncated SHA-256 of a `sort_keys=True` JSON
 canonicalization of the whole grammar (`Grammar.canonical()`). Nothing about
@@ -109,7 +109,7 @@ Traceability is handled the same way, structurally rather than rhetorically.
 `materialize()` writes a `provenance.json` alongside every generated child
 recording a tree hash computed from the sorted `(path, content_hash)` pairs
 of every file it wrote (`tree_hash_from_content_hashes` in
-`src/integrity.py`), and `verify_child()` does not read that recorded hash
+`src/template_autopoiesis/gates/integrity.py`), and `verify_child()` does not read that recorded hash
 and trust it — it re-reads every file listed in `provenance.json` from disk,
 recomputes the tree hash from what is actually present, and compares the two.
 A file edited after generation, a file deleted after generation, or a
@@ -126,7 +126,7 @@ identically regardless of the order files were written or listed
 This project contributes, as a runnable, tested artifact rather than a
 proposal:
 
-- **A validated combinatoric grammar** (`src/grammar.py`) with explicit
+- **A validated combinatoric grammar** (`src/template_autopoiesis/core/grammar.py`) with explicit
   reserved-slot semantics. Grammars distinguish *effective* slots, which
   multiply into the space of meaningfully distinct children, from *reserved*
   slots (`figure_profile`, `qr_profile`, `integrity_profile`), which vary
@@ -137,7 +137,7 @@ proposal:
   new content — the honesty manifest checks this distinction explicitly
   rather than leaving it to prose.
 - **A seeded, entropy-free expansion function** (`expand()` in
-  `src/expand.py`) whose every selection is reconstructible from `(seed,
+  `src/template_autopoiesis/core/expand.py`) whose every selection is reconstructible from `(seed,
   slot_name, ordinal, options)` alone, with no hidden state.
 - **A materialize/verify pair** (`materialize()` / `verify_child()`) where
   verification is defined as *recomputation from disk*, not as reading

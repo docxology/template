@@ -5,11 +5,11 @@ truth**. A research-artifact pipeline is only trustworthy if a hollow, degraded,
 or fabricated run is *caught*, not silently certified. This document describes the
 veridicality gates, what each one binds, and — critically — what each one does
 *not* claim. Every gate has a fault-injecting negative-control test that proves it
-fails closed (`tests/test_gate_negative_controls.py`, `tests/test_gate_improvements.py`).
+fails closed (`tests/loop/test_gate_negative_controls.py`, `tests/writers/test_gate_improvements.py`).
 
 ## The substance predicate (shared foundation)
 
-`src/artifact_content.is_substantive_artifact(path)` is the single shared check
+`src/writers/artifact_content.is_substantive_artifact(path)` is the single shared check
 that distinguishes a real artifact from a hollow one. A file is substantive only
 if it exists **and** carries non-trivial, parseable content:
 
@@ -80,4 +80,4 @@ rendered PNGs are byte-identical across runs. Figures pin `savefig` metadata
 (`Software`/`Creation Time`/`Date` → `None`) so PNGs are reproducible across
 machines, dates, and matplotlib versions, not just back-to-back on one host.
 Inter-figure order independence is covered by
-`tests/test_figures.py::test_isolated_equals_batch_no_order_leakage`.
+`tests/figures/test_figures.py::test_isolated_equals_batch_no_order_leakage`.

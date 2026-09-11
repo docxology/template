@@ -4,17 +4,20 @@ Technical specification for the template project test infrastructure.
 
 ## Test Inventory
 
-| File | Contract |
-|------|----------|
-| `test_meta.py` | Introspection, injection, and real-manuscript integration |
-| `test_metrics.py` | Metric helpers and live-repository integration |
-| `test_architecture_viz.py` | Matrix invariants and real PNG generation |
-| `test_confidentiality.py` | Public/private project discovery boundary |
-| `test_edge_cases.py` | Error branches, sibling fallback, and malformed-input handling |
-| `test_evidence_contract.py` | Executable policy binding, evidence completeness, and an invented-result negative control |
-| `test_script_entrypoints.py` | Sandboxed subprocess execution of the manuscript-metrics orchestrator |
-| `test_stale_metrics_control.py` | Negative controls for stale generated metrics (key presence, positive counts, generated-vs-live consistency, private-path absence) |
-| `test_contracts.py` | Metrics/steganography receipt schema + determinism, comparative-matrix lockstep validation, stale-payload rejection |
+Test files mirror the src subpackage layout one-to-one (`tests/<cluster>/` for
+each of `core/`, `metrics/`, `figures/`).
+
+| File | Cluster | Contract |
+|------|---------|----------|
+| `core/test_meta.py` | `core` | Introspection, injection, and real-manuscript integration |
+| `metrics/test_metrics.py` | `metrics` | Metric helpers and live-repository integration |
+| `figures/test_architecture_viz.py` | `figures` | Matrix invariants and real PNG generation |
+| `core/test_confidentiality.py` | `core` | Public/private project discovery boundary |
+| `core/test_edge_cases.py` | `core` | Error branches, sibling fallback, and malformed-input handling |
+| `metrics/test_evidence_contract.py` | `metrics` | Executable policy binding, evidence completeness, and an invented-result negative control |
+| `core/test_script_entrypoints.py` | `core` | Sandboxed subprocess execution of the manuscript-metrics orchestrator |
+| `metrics/test_stale_metrics_control.py` | `metrics` | Negative controls for stale generated metrics (key presence, positive counts, generated-vs-live consistency, private-path absence) |
+| `core/test_contracts.py` | `core` | Metrics/steganography receipt schema + determinism, comparative-matrix lockstep validation, stale-payload rejection |
 
 Do not hand-maintain counts here. Re-derive live test and coverage values through
 the commands above and the repository's generated counts report.
@@ -58,11 +61,11 @@ the commands above and the repository's generated counts report.
 
 ## Additional Test Modules
 
-- `test_metrics.py`: verifies count helpers (`count_test_functions`, `count_docs_markdown_files`), `format_count`, `build_module_inventory_table`, and real-repo metric dictionary shape.
-- `test_architecture_viz.py`: verifies comparative matrix invariants (shape, value range, label count) and PNG file generation for all 4 figures.
-- `test_confidentiality.py`: negative controls proving private project names never reach public metrics or manuscript.
-- `test_evidence_contract.py`: binds coverage and figure-policy tokens to executable sources, validates the full manuscript registry, and proves an unregistered result is rejected.
-- `test_script_entrypoints.py`: executes the metrics script from the repository root against a temporary project tree, preventing output-side effects.
+- `metrics/test_metrics.py`: verifies count helpers (`count_test_functions`, `count_docs_markdown_files`), `format_count`, `build_module_inventory_table`, and real-repo metric dictionary shape.
+- `figures/test_architecture_viz.py`: verifies comparative matrix invariants (shape, value range, label count) and PNG file generation for all 4 figures.
+- `core/test_confidentiality.py`: negative controls proving private project names never reach public metrics or manuscript.
+- `metrics/test_evidence_contract.py`: binds coverage and figure-policy tokens to executable sources, validates the full manuscript registry, and proves an unregistered result is rejected.
+- `core/test_script_entrypoints.py`: executes the metrics script from the repository root against a temporary project tree, preventing output-side effects.
 
 ## Known Unreachable Branches
 

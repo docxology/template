@@ -6,9 +6,9 @@ This section describes the implementation methodology, explicitly detailing how 
 
 ### Gradient Descent Algorithm
 
-The core algorithm implements the iterative procedure for unconstrained optimization. The [`optimizer` module](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py) uses the standard-library `logging` logger for optional verbose diagnostics; the [analysis orchestrator](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/scripts/optimization_analysis.py) uses `infrastructure.core.logging.utils.get_logger`. Tests run under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/conftest.py).
+The core algorithm implements the iterative procedure for unconstrained optimization. The [`optimizer` module](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/template_code_project/core/optimizer.py) uses the standard-library `logging` logger for optional verbose diagnostics; the [analysis orchestrator](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/scripts/optimization_analysis.py) uses `infrastructure.core.logging.utils.get_logger`. Tests run under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/conftest.py).
 
-**Algorithm — Gradient Descent (implemented in the [optimizer module](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py#L87-L173))**
+**Algorithm — Gradient Descent (implemented in the [optimizer module](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/template_code_project/core/optimizer.py#L87-L173))**
 
 > **Input:** Initial point $x_0$, step size $\alpha$, tolerance $\epsilon$, max iterations $N_{\max}$
 >
@@ -47,7 +47,7 @@ Optimal convergence occurs when $\alpha = \frac{2}{\lambda_{\min} + \lambda_{\ma
 
 ### Step Size Analysis
 
-Step sizes are not chosen ad hoc in the manuscript: they are read from `experiment.step_sizes` in `manuscript/config.yaml` and passed through `run_convergence_experiment()` in `src/analysis/` (entry: `scripts/optimization_analysis.py`). The active grid for this build is:
+Step sizes are not chosen ad hoc in the manuscript: they are read from `experiment.step_sizes` in `manuscript/config.yaml` and passed through `run_convergence_experiment()` in `src/template_code_project/analysis/` (entry: `scripts/optimization_analysis.py`). The active grid for this build is:
 
 {{CONFIG_STEP_SIZES_BULLETS}}
 
@@ -57,7 +57,7 @@ Labels follow the same agency taxonomy used for plot colours (`_agency_category`
 
 The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict Zero-Mock testing policy, evaluated actively by executing `uv run pytest projects/templates/template_code_project/tests/` during the infrastructure build phase (negative control: the repository lexical no-mock gate `scripts/audit/verify_no_mocks.py --inventory` flags any prohibited mock import or call and fails on dependency-replacement debt).
 
-1. **Project tests**: [the project optimizer test suite](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/test_optimizer.py) exercises `src/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks. Suite size: [the measured repository counts](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md).
+1. **Project tests**: [the project optimizer test suite](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/core/test_optimizer.py) exercises `src/template_code_project/core/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks. Suite size: [the measured repository counts](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md).
 2. **Infrastructure validation**: The repository-level `tests/infra_tests/` suite validates shared template modules (e.g. pipeline and discovery helpers) independently of this project’s manuscript.
 3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate on `projects/templates/template_code_project/src/` prior to treating the project as build-green. Coverage below the floor fails the test process through `--cov-fail-under`, so build-green status cannot be reached while silently skipping weakened coverage.
 Falling below that floor fails the gate outright (`--cov-fail-under` enforces it).
@@ -68,7 +68,7 @@ Falling below that floor fails the gate outright (`--cov-fail-under` enforces it
 
 ### Figure generation contract
 
-Each figure in `03_results.md` maps to a generator in `src/figures/` (`generate_convergence_plot`, `generate_step_size_sensitivity_plot`, `generate_convergence_rate_plot`, `generate_complexity_visualization`, `generate_stability_visualization`, `generate_benchmark_visualization`), orchestrated by `src/analysis/` / `scripts/optimization_analysis.py`. Captions in the markdown intentionally name the function and the key parameters (tolerance lines, grids, dimensions) so reviewers can navigate from PDF to code without inferring hidden defaults.
+Each figure in `03_results.md` maps to a generator in `src/template_code_project/figures/` (`generate_convergence_plot`, `generate_step_size_sensitivity_plot`, `generate_convergence_rate_plot`, `generate_complexity_visualization`, `generate_stability_visualization`, `generate_benchmark_visualization`), orchestrated by `src/template_code_project/analysis/` / `scripts/optimization_analysis.py`. Captions in the markdown intentionally name the function and the key parameters (tolerance lines, grids, dimensions) so reviewers can navigate from PDF to code without inferring hidden defaults.
 
 The same generator writes explicit `metadata.alt_text` for every registered
 figure. The alt text states what the visual encodes and preserves the boundary

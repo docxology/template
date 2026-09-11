@@ -8,9 +8,9 @@ from typing import Any
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ..optimizer import gradient_descent, make_quadratic_problem
-from ..sweeps import stability_error_matrix
-from ..viz_config import VIZ_CONFIG
+from ..core.optimizer import gradient_descent, make_quadratic_problem
+from ..core.sweeps import stability_error_matrix
+from .viz_config import VIZ_CONFIG
 from ._common import experiment_config, get_logger, project_root
 
 

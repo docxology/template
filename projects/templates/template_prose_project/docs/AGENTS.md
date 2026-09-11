@@ -40,7 +40,7 @@ documentation, determinism, the style/syntax-guide split, and the
 disposability of `output/`.
 
 **Architecture isolation.** `src/` never imports `infrastructure`:
-`src/prose_facade.py` defines project-owned report Protocols and the
+`src/pipeline/prose_facade.py` defines project-owned report Protocols and the
 `parse_bib_keys` / `render_outline` helpers that decouple the layer from
 `infrastructure.prose`/`infrastructure.reference` internals. The thin
 `scripts/` orchestrators make the `infrastructure` calls
@@ -50,7 +50,7 @@ disposability of `output/`.
 `infrastructure.rendering.manuscript_injection` in
 `z_generate_manuscript_variables.py`). The bibliography cross-check
 (`_check_bibliography`) compares the cited keys against
-`src/prose_facade.parse_bib_keys`. See [`style_guide.md`](style_guide.md)
+`src/pipeline/prose_facade.parse_bib_keys`. See [`style_guide.md`](style_guide.md)
 Rule 2 for the full delegation table.
 
 **Zero-mock enforcement.** No `unittest.mock`, `MagicMock`, `@patch`, or
@@ -110,11 +110,11 @@ grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
 
 # 3. No infrastructure analysis calls outside the scripts seam
 grep -nE "analyze_manuscript|write_report|parse_bibfile" \
-    projects/templates/template_prose_project/src/figures.py \
-    projects/templates/template_prose_project/src/report.py \
-    projects/templates/template_prose_project/src/manuscript_variables.py \
-    projects/templates/template_prose_project/src/config.py \
-    projects/templates/template_prose_project/src/prose_facade.py \
+    projects/templates/template_prose_project/src/figures/figures.py \
+    projects/templates/template_prose_project/src/manuscript/report.py \
+    projects/templates/template_prose_project/src/manuscript/manuscript_variables.py \
+    projects/templates/template_prose_project/src/pipeline/config.py \
+    projects/templates/template_prose_project/src/pipeline/prose_facade.py \
     || echo "Clean"
 ```
 
@@ -128,19 +128,19 @@ viable project.
 
 | Path | Status | Enforcing gate / source of truth |
 |------|--------|---------------------------------|
-| `src/pipeline/` | REQUIRED | Coverage gate; every `_check_<name>` is exercised by `tests/test_pipeline.py` |
-| `src/config.py` | REQUIRED | `tests/test_config.py` |
-| `src/figures.py` | REQUIRED | `tests/test_figures.py` |
-| `src/manuscript_variables.py` | REQUIRED | `tests/test_manuscript_variables.py` + the live `{{TOKEN}}` cross-reference test |
-| `src/report.py` | REQUIRED | `tests/test_report.py` |
-| `src/prose_facade.py` | REQUIRED | `tests/test_prose_facade.py`; drives `bibliography_consistency` (`parse_bib_keys`) and the report outline section (`render_outline`) |
+| `src/pipeline/` | REQUIRED | Coverage gate; every `_check_<name>` is exercised by `tests/pipeline/test_pipeline.py` |
+| `src/pipeline/config.py` | REQUIRED | `tests/pipeline/test_config.py` |
+| `src/figures/figures.py` | REQUIRED | `tests/figures/test_figures.py` |
+| `src/manuscript/manuscript_variables.py` | REQUIRED | `tests/manuscript/test_manuscript_variables.py` + the live `{{TOKEN}}` cross-reference test |
+| `src/manuscript/report.py` | REQUIRED | `tests/manuscript/test_report.py` |
+| `src/pipeline/prose_facade.py` | REQUIRED | `tests/pipeline/test_prose_facade.py`; drives `bibliography_consistency` (`parse_bib_keys`) and the report outline section (`render_outline`) |
 | `tests/` (all `test_*.py`) | REQUIRED | 90% coverage gate (per-project and root pipeline) |
 | `tests/conftest.py` | REQUIRED | Pinning `MPLBACKEND=Agg` is load-bearing for CI |
-| `scripts/run_prose_pipeline.py` | REQUIRED | `tests/test_scripts.py` exercises via subprocess |
-| `scripts/y_generate_prose_figures.py` | REQUIRED | `tests/test_scripts.py` (after Tier M: subprocess test with `--project-root`) |
-| `scripts/z_generate_manuscript_variables.py` | REQUIRED | `tests/test_scripts.py` (after Tier M: dedicated subprocess test) |
+| `scripts/run_prose_pipeline.py` | REQUIRED | `tests/pipeline/test_scripts.py` exercises via subprocess |
+| `scripts/y_generate_prose_figures.py` | REQUIRED | `tests/pipeline/test_scripts.py` (after Tier M: subprocess test with `--project-root`) |
+| `scripts/z_generate_manuscript_variables.py` | REQUIRED | `tests/pipeline/test_scripts.py` (after Tier M: dedicated subprocess test) |
 | `scripts/00_preflight.py` | AESTHETIC | Emits a warning before PDF render; pipeline still runs without it |
-| `manuscript/config.yaml` | REQUIRED | `src/config.py` loader; pipeline aborts without it |
+| `manuscript/config.yaml` | REQUIRED | `src/pipeline/config.py` loader; pipeline aborts without it |
 | `manuscript/*.md` | REQUIRED | Read by `infrastructure.prose.analyze_manuscript`; no manuscript = no run |
 | `manuscript/references.bib` | REQUIRED | `_check_bibliography` reads it; `fail_on_missing=true` blocks empty bib |
 | `manuscript/preamble.md` | REQUIRED | Injected at PDF compile; missing → LaTeX errors |

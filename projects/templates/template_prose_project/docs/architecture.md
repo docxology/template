@@ -10,12 +10,12 @@ flowchart TB
     end
 
     subgraph L2 [Layer 2 - Project orchestration]
-        CFG["src/config.py<br/>typed YAML loader"]
+        CFG["src/pipeline/config.py<br/>typed YAML loader"]
         PIPE["src/pipeline/<br/>read → analyse → check"]
-        FIG["src/figures.py<br/>matplotlib renderers"]
-        MV["src/manuscript_variables.py<br/>abstract substitution"]
-        REP["src/report.py<br/>markdown review report"]
-        PF["src/prose_facade.py<br/>report Protocols · render_outline · parse_bib_keys"]
+        FIG["src/figures/figures.py<br/>matplotlib renderers"]
+        MV["src/manuscript/manuscript_variables.py<br/>abstract substitution"]
+        REP["src/manuscript/report.py<br/>markdown review report"]
+        PF["src/pipeline/prose_facade.py<br/>report Protocols · render_outline · parse_bib_keys"]
     end
 
     subgraph SCR [Thin orchestrators]
@@ -46,7 +46,7 @@ sequenceDiagram
     participant CFG as load_project_config
     participant PROSE as infrastructure.prose
     participant PIPE as run_prose_pipeline (src/pipeline)
-    participant PF as src/prose_facade.parse_bib_keys
+    participant PF as src/pipeline/prose_facade.parse_bib_keys
     participant FS as Filesystem
     participant REP as write_review_report (src/report)
 

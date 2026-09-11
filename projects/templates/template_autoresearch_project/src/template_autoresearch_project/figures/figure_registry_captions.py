@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from template_autoresearch_project.ml.task import MLTaskResult
-from template_autoresearch_project.models import AutoResearchLoopResult
+from ..ml.task import MLTaskResult
+from ..loop.models import AutoResearchLoopResult
 
 
 def _format_percent(value: float) -> str:

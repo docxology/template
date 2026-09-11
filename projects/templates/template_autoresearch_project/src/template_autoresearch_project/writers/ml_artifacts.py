@@ -4,17 +4,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from template_autoresearch_project.diagnostics import diagnostic_bundle
-from template_autoresearch_project.figures.figure_quality import write_figure_quality_report
-from template_autoresearch_project.figures.figure_registry import figure_registry_payload
-from template_autoresearch_project.figures.figure_style import apply_style, load_figure_style
-from template_autoresearch_project.ml.task import (
+from ..diagnostics import diagnostic_bundle
+from ..figures.figure_quality import write_figure_quality_report
+from ..figures.figure_registry import figure_registry_payload
+from ..figures.figure_style import apply_style, load_figure_style
+from ..ml.task import (
     MLTaskResult,
     write_confusion_matrix_csv,
     write_error_examples_json,
     write_training_history_csv,
 )
-from template_autoresearch_project.reports import render_ml_experiment_report
+from .reports import render_ml_experiment_report
 
 from .figure_artifacts import build_figure_render_context
 from .figure_dispatch import render_figure_batch

@@ -2,7 +2,7 @@
 
 No-mocks test suite for the coordination core.
 
-**Contents.** The suite consists of `test_agents.py`, `test_confirmation.py`, `test_dead_ends.py`, `test_figures.py`, `test_hermes_live.py`, `test_manuscript_numbers.py`, `test_objective.py`, `test_ranking.py`, `test_search.py`, `test_stagnation.py`, `test_state.py`, and `test_transcript.py`, plus `conftest.py` and `__init__.py`. `test_hermes_live.py` is opt-in via `requires_ollama`.
+**Contents.** The suite is mirrored to the `src/` subpackage layout: `agents/test_agents.py` + `agents/test_hermes_live.py` (opt-in via `requires_ollama`), `analysis/test_confirmation.py`/`test_objective.py`/`test_state.py`/`test_transcript.py`, `figures/test_figures.py`, and `search/test_search.py`/`test_ranking.py`/`test_dead_ends.py`/`test_stagnation.py`/`test_manuscript_numbers.py` (which also covers the `search/ablation.py` and `search/comparison.py` experiment modules), plus `conftest.py` and `__init__.py`.
 
 **Contract.** Run: `uv run python scripts/pipeline/stage_01_test.py --project templates/template_autoscientists --project-only`.
 

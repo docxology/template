@@ -6,10 +6,10 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 
-from ..experiment_config import ExperimentConfig
-from ..optimizer import quadratic_optimum
-from ..sweeps import sensitivity_sweep
-from ..viz_config import VIZ_CONFIG
+from ..core.experiment_config import ExperimentConfig
+from ..core.optimizer import quadratic_optimum
+from ..core.sweeps import sensitivity_sweep
+from .viz_config import VIZ_CONFIG
 from ._common import experiment_config, get_logger, project_root
 
 

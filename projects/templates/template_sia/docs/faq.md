@@ -12,14 +12,14 @@ No. It reimplements the **contract** (task layout, artifact tree, evaluation sch
 
 ## Why fixture replay instead of live LLM in CI?
 
-Reproducibility and cost. Default runs copy recorded generations from `src/fixtures/recorded_generations/` so CI never depends on Ollama or non-deterministic model output.
+Reproducibility and cost. Default runs copy recorded generations from `src/template_sia/fixtures/recorded_generations/` so CI never depends on Ollama or non-deterministic model output.
 
 ## How do I add a new task?
 
 1. Copy `tasks/mini_classify/` to `tasks/<your_task>/`
 2. Keep `data/public/`, `data/private/`, `reference/`, and `evaluate.py`
 3. Point `project_config.sia.task_name` in `manuscript/config.yaml`
-4. Add fixtures under `src/fixtures/recorded_generations/` for default replay
+4. Add fixtures under `src/template_sia/fixtures/recorded_generations/` for default replay
 5. Validate: `uv run python -m infrastructure.sia.cli validate tasks/<your_task>`
 
 ## Where are live metrics documented?

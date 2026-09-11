@@ -23,13 +23,7 @@ run uses real deterministic objects and the real loop state machine only.
 
 from __future__ import annotations
 
-import importlib
-import importlib.util
-from importlib.abc import MetaPathFinder
-from importlib.machinery import ModuleSpec, PathFinder
 from pathlib import Path
-import sys
-from types import ModuleType
 from typing import Any
 
 import pytest
@@ -38,91 +32,14 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[5]
 PROJECT_ROOT = REPO_ROOT / "projects" / "templates" / "template_sia"
 
-_PKG_ALIAS = "_sia_src"
 
-# This exemplar's own src/loop.py does an absolute ``from src.artifact_manifest
-# import ...`` (assuming its own package is importable as the bare name
-# ``src``). The scoped finder below resolves exactly that -- and only that --
-# from this project's own directory, for the duration of the load only.
-_TOP_LEVEL = frozenset({"src"})
-
-
-class _SrcScopedFinder(MetaPathFinder):
-    """Resolve this exemplar's bare ``src`` name from its own directory only.
-
-    Installed on ``sys.meta_path`` only while loading this project's package
-    (never left permanently -- see ``_load_absolute_submodules``), so the
-    exemplar's absolute ``from src.artifact_manifest import ...`` resolves to
-    *this* project's ``src/`` tree without a global ``sys.path`` entry that
-    would collide with another exemplar's top-level packages of the same name.
-    """
-
-    def find_spec(
-        self,
-        fullname: str,
-        path: Any = None,
-        target: ModuleType | None = None,
-    ) -> ModuleSpec | None:
-        if fullname.split(".")[0] not in _TOP_LEVEL:
-            return None
-        return PathFinder.find_spec(fullname, [str(PROJECT_ROOT)], target)
-
-
-def _load_absolute_submodules(*dotted_names: str) -> tuple[ModuleType, ...]:
-    """Load this exemplar's ``src`` package (plus the named submodules) under a project-unique alias.
-
-    Every public exemplar ships a top-level ``src`` package, so a bare
-    ``sys.path.insert`` + ``from src...`` collides on ``sys.modules['src']``
-    once a second project's regression test joins the same pytest session.
-    An earlier version of this loader permanently inserted ``PROJECT_ROOT``
-    onto ``sys.path`` (with no cleanup) so the exemplar's own absolute
-    ``from src.artifact_manifest import ...`` would resolve -- but that left a
-    real, uncleaned ``sys.modules['src']`` entry (this project's) for the rest
-    of the pytest session, which then silently hijacked
-    ``template_search_project``'s own absolute ``from src.config import ...``
-    once both exemplars' regression tests collected together (whichever
-    project's ``src`` got cached into ``sys.modules`` first wins for everyone
-    else, since the cache is checked before ``sys.meta_path``). Using a
-    temporarily-installed scoped finder (removed, with ``sys.modules``
-    cleanup, in every case) avoids leaking either the path entry or the cache
-    entry.
-    """
-
-    if _PKG_ALIAS in sys.modules:
-        return tuple(importlib.import_module(f"{_PKG_ALIAS}.{dotted}") for dotted in dotted_names)
-
-    if str(REPO_ROOT) not in sys.path:
-        sys.path.insert(0, str(REPO_ROOT))  # needed for `infrastructure.*`; shared-safe, no top-level collision
-
-    pre_existing_src = {key: mod for key, mod in sys.modules.items() if key == "src" or key.startswith("src.")}
-    finder = _SrcScopedFinder()
-    sys.meta_path.insert(0, finder)
-    try:
-        src_init = PROJECT_ROOT / "src" / "template_sia" / "__init__.py"
-        spec = importlib.util.spec_from_file_location(
-            _PKG_ALIAS,
-            src_init,
-            submodule_search_locations=[str(PROJECT_ROOT / "src" / "template_sia")],
-        )
-        assert spec is not None and spec.loader is not None, f"cannot load {src_init}"
-        package = importlib.util.module_from_spec(spec)
-        sys.modules[_PKG_ALIAS] = package
-        spec.loader.exec_module(package)
-        return tuple(importlib.import_module(f"{_PKG_ALIAS}.{dotted}") for dotted in dotted_names)
-    finally:
-        sys.meta_path.remove(finder)
-        for key in [k for k in sys.modules if (k == "src" or k.startswith("src.")) and k not in pre_existing_src]:
-            del sys.modules[key]
-        sys.modules.update(pre_existing_src)
-
-
-# The project's own thin orchestrator (src/loop.py) re-exports the harness
-# entry points from scripts/sia_loop_impl.py, which in turn drive the real
-# infrastructure.sia loop. Re-deriving through this surface binds the pins to
-# the exemplar's actual public API, not a private shortcut.
-(_loop_mod,) = _load_absolute_submodules("loop")
-build_run_config = _loop_mod.build_run_config
-run_sia_loop_project = _loop_mod.run_sia_loop_project
+# SUBMODULAR-SIA-1: the exemplar package is a regular nested package
+# (``src/template_sia/``) whose modules import via absolute
+# ``template_sia.*`` paths, so the exemplar imports directly -- no
+# project-unique alias or scoped meta-path finder is needed. The alias
+# machinery existed only to resolve the pre-split flat layout's relative
+# ``from ..generation_records import ...`` imports, which no longer exist.
+from template_sia.loop.loop import build_run_config  # noqa: E402
 
 # The infrastructure loop + config live one import below; use them directly to
 # run into an isolated output tree without touching the committed run.

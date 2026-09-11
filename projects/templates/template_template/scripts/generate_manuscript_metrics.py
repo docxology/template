@@ -29,7 +29,7 @@ if BOOTSTRAP_REPO_ROOT is None:
 if str(BOOTSTRAP_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(BOOTSTRAP_REPO_ROOT))
 
-from template_template.paths import locate_repo_root  # noqa: E402
+from template_template.core.paths import locate_repo_root  # noqa: E402
 
 REPO_ROOT = locate_repo_root(BOOTSTRAP_REPO_ROOT)
 if str(REPO_ROOT) not in sys.path:

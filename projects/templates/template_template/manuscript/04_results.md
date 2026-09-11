@@ -27,7 +27,7 @@ Exercises Pandoc/XeLaTeX paths, steganography hashing, telemetry, YAML-driven pi
 
 ## Infrastructure Module Inventory
 
-The introspection module (`template_template.introspection`) emits the authoritative table below—every row reflects `discover_infrastructure_modules(REPO_ROOT)`.
+The introspection module (`template_template.core.introspection`) emits the authoritative table below—every row reflects `discover_infrastructure_modules(REPO_ROOT)`.
 
 ${module_inventory_table}
 
@@ -69,7 +69,7 @@ The steganography path exposes metadata injection, SHA-256 hashing, overlay gene
 
 ## Self-Referential Analysis
 
-Rendered via `projects/templates/template_template` (`generate_manuscript_metrics.py` → injected tokens such as `${module_count}`). Architecture figures stem from [`template_template.architecture_viz`](../src/template_template/architecture_viz.py)—font sizes constrained by §QA.
+Rendered via `projects/templates/template_template` (`generate_manuscript_metrics.py` → injected tokens such as `${module_count}`). Architecture figures stem from [`template_template.figures.architecture_viz`](../src/template_template/figures/architecture_viz.py)—font sizes constrained by §QA.
 
 ![Two-Layer Architecture Overview](../output/figures/architecture_overview.png)
 **Figure 1.** Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `${module_count}` reusable subpackages, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.

@@ -23,7 +23,7 @@ entrypoints:
 ```
 
 The `type` field determines the invocation contract the consumer should expect. The `entrypoints` list names the files that must exist on disk; the `tools_invoker` module validates their presence at discovery time rather than at invocation time, making failures visible early in the pipeline rather than at runtime — a manifest naming a missing entrypoint file is rejected during discovery instead of failing later mid-invocation. @fig:toolcontract visualises the stdin/stdout/exit-code contract for all {{TOOLS_DISCOVERED}} discovered template tools side by side. Note that the *shape* of stdin and stdout differs per tool while the *presence* of a well-defined contract does not — this is what makes `tools_invoker` able to discover and validate any tool generically without knowing its payload schema.
-A declared entrypoint that is missing blocks invocation — absent files make the tool unavailable rather than silently deferred. The strong-rule evaluator carries matching negative controls: `tests/test_strong_rule_evaluator.py` flags missing manuscript sections, missing `src/`, and missing context keys on known-wrong fixtures.
+A declared entrypoint that is missing blocks invocation — absent files make the tool unavailable rather than silently deferred. The strong-rule evaluator carries matching negative controls: `tests/rules/test_strong_rule_evaluator.py` flags missing manuscript sections, missing `src/`, and missing context keys on known-wrong fixtures.
 
 ![Invocation contract for the {{TOOLS_DISCOVERED}} discovered template tools: stdin payload, tool behaviour, and stdout/exit-code shape.](figures/tool_contract.png){#fig:toolcontract width=90%}
 
@@ -56,10 +56,10 @@ A pre-trained linear-regression model exemplar. It predicts a numeric target fro
 
 ## Tool Discovery Module
 
-The `src/tools_invoker.py` module provides three public functions:
+The `src/tools/tools_invoker.py` module provides three public functions:
 
 ```python
-from src.tools_invoker import (
+from src.tools.tools_invoker import (
     discover_tools,
     get_tool_entrypoints,
     validate_tool_scripts_exist,
@@ -91,13 +91,13 @@ Because every tool exposes the same discovery contract (manifest + entrypoint li
 2. **Manifest missing entirely.** A directory under `tools/templates/` exists but has no `tools.yaml`. `discover_tools()` still returns a `ToolEntry` for it (with `manifest=None`, so the caller can see it exists), but `get_tool_entrypoints()` and `validate_tool_scripts_exist()` both treat a `None` manifest as "not yet a tool," returning an empty collection or `"missing"` status without ever raising — this matters for partially-scaffolded work-in-progress tool directories created by a parallel agent.
 3. **Manifest malformed YAML.** The same graceful-degradation pattern from @sec:pools applies here: a parse error is caught and logged, and the offending tool is quietly excluded from the discovery result, leaving the pipeline free to continue with everything else it found.
 
-Each of these is a distinct, testable branch in `tests/test_tools_invoker.py`, and each maps to one row of the resilience taxonomy in @fig:resilience.
+Each of these is a distinct, testable branch in `tests/tools/test_tools_invoker.py`, and each maps to one row of the resilience taxonomy in @fig:resilience.
 
 ## Execution-Proof Testing: Beyond Manifest Checking
 
-Everything described so far — discovery, entrypoint-existence validation, the three failure modes above — is *structural*: it confirms a tool's files are present and well-formed without ever running them. `src/tools_invoker.py`'s public API deliberately stays that way, because subprocess execution is exactly the kind of operation that can raise (a missing `bash`/`jq`/`python3` binary, a permission error, a timeout), and this project's readers are contracted to degrade gracefully rather than propagate exceptions (see @sec:pools).
+Everything described so far — discovery, entrypoint-existence validation, the three failure modes above — is *structural*: it confirms a tool's files are present and well-formed without ever running them. `src/tools/tools_invoker.py`'s public API deliberately stays that way, because subprocess execution is exactly the kind of operation that can raise (a missing `bash`/`jq`/`python3` binary, a permission error, a timeout), and this project's readers are contracted to degrade gracefully rather than propagate exceptions (see @sec:pools).
 
-The test suite closes this gap without weakening that contract: `tests/test_tools_invoker.py` genuinely subprocess-invokes the two fully local, deterministic tools and asserts on their real output, rather than only checking that their scripts exist.
+The test suite closes this gap without weakening that contract: `tests/tools/test_tools_invoker.py` genuinely subprocess-invokes the two fully local, deterministic tools and asserts on their real output, rather than only checking that their scripts exist.
 
 - **`template_code_executor`**: `TestInvokeCodeExecutor` pipes `{"code": "print(2 + 2)", "language": "python"}` into the real `scripts/run.sh` and asserts the parsed JSON result has `exit_code == 0` and `"4"` in `stdout` — and, as a negative control, pipes code that calls `raise SystemExit(3)` and asserts the real `exit_code == 3` comes back.
 - **`template_validator`**: `TestInvokeValidator` pipes a schema-conformant document into the real `scripts/validate.sh` and asserts `returncode == 0` and `"VALID"` in stdout; a document missing the `version` field required by the tool's own `schema.json` is asserted to return `returncode == 1` and `"INVALID"` — a genuine, schema-verified violation, not an assumed one.

@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from template_autoresearch_project.json_coerce import mapping
+from ..loop.json_coerce import mapping
 from .manuscript_tokens_format import string_value
 
 FIGURE_BLOCK_KEYS = frozenset(

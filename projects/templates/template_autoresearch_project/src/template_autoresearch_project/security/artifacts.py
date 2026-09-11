@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from template_autoresearch_project.config import AutoResearchLoopConfig
-from template_autoresearch_project.ml.task import MLTaskResult
-from template_autoresearch_project.writers.figure_dispatch import FigureRenderContext, render_security_figures
-from template_autoresearch_project.writers.io import write_json, write_text
+from ..loop.config import AutoResearchLoopConfig
+from ..ml.task import MLTaskResult
+from ..writers.figure_dispatch import FigureRenderContext, render_security_figures
+from ..writers.io import write_json, write_text
 
 from .payloads import (
     integrity_attestation_payload,

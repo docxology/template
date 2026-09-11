@@ -6,7 +6,7 @@ Reads experiment config and analysis outputs, writes
 ``{{TOKEN}}`` markers in manuscript sections into
 ``output/manuscript/`` for PDF rendering.
 
-All computation lives in ``src/manuscript_variables``;
+All computation lives in ``src/template_code_project/core/manuscript_variables``;
 all injection lives in
 ``infrastructure.rendering.manuscript_injection``.
 
@@ -49,7 +49,7 @@ def main() -> int:
     args = parser.parse_args()
 
     from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
-    from template_code_project.manuscript_variables import generate_variables, save_variables
+    from template_code_project.core.manuscript_variables import generate_variables, save_variables
 
     variables = generate_variables(
         _PROJECT_ROOT,

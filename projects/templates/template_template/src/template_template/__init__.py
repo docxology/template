@@ -18,8 +18,8 @@ Data classes:
 
 from __future__ import annotations
 
-from .inject_metrics import load_metrics, render_all_chapters, render_chapter
-from .contracts import (
+from .metrics.inject_metrics import load_metrics, render_all_chapters, render_chapter
+from .core.contracts import (
     build_metrics_receipt,
     build_steganography_defaults_receipt,
     validate_comparative_matrix_lockstep,
@@ -27,7 +27,7 @@ from .contracts import (
     validate_metrics_receipt,
     validate_steganography_defaults_receipt,
 )
-from .introspection import (
+from .core.introspection import (
     CoverageConfig,
     InfrastructureReport,
     ModuleInfo,
@@ -42,7 +42,7 @@ from .introspection import (
     load_pipeline_stages_from_yaml,
     resolve_template_repo_root,
 )
-from .architecture_viz import (
+from .figures.architecture_viz import (
     comparative_feature_matrix_data,
     generate_all_architecture_figures,
     generate_architecture_overview,

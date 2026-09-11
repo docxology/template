@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
-from template_autoresearch_project.diagnostics import diagnostic_bundle
-from template_autoresearch_project.figures.figure_quality import write_figure_quality_report
-from template_autoresearch_project.figures.figure_registry import figure_registry_payload
-from template_autoresearch_project.figures.figure_style import apply_style, load_figure_style
-from template_autoresearch_project.ml.task import MLTaskResult
-from template_autoresearch_project.models import AutoResearchLoopResult
+from ..diagnostics import diagnostic_bundle
+from ..figures.figure_quality import write_figure_quality_report
+from ..figures.figure_registry import figure_registry_payload
+from ..figures.figure_style import apply_style, load_figure_style
+from ..ml.task import MLTaskResult
+from ..loop.models import AutoResearchLoopResult
 
 from .figure_dispatch import FigureRenderContext, render_all_figures, render_figure_batch
 from .io import write_json
@@ -47,7 +47,7 @@ def write_loop_bound_figures(
     figure_ctx = build_figure_render_context(project_root, ml_result, loop_result=result, diagnostics=diagnostics)
     style = load_figure_style(project_root)
     with apply_style(style):
-        return cast(list[Path], render_figure_batch(figure_ctx, include_loop_only=True))
+        return render_figure_batch(figure_ctx, include_loop_only=True)
 
 
 def write_final_visual_artifacts(

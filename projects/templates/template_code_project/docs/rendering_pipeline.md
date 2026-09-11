@@ -41,7 +41,7 @@ The pipeline has four steps. Each step must complete before the next begins.
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 ```
 
-**Inputs**: `src/optimizer.py` functions + `manuscript/config.yaml` experiment parameters
+**Inputs**: `src/template_code_project/core/optimizer.py` functions + `manuscript/config.yaml` experiment parameters
 
 **Outputs**:
 
@@ -61,7 +61,7 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 
 ### Manuscript variables
 
-**Script**: `scripts/z_generate_manuscript_variables.py` (thin orchestrator; logic lives in `src/manuscript_variables.py`)
+**Script**: `scripts/z_generate_manuscript_variables.py` (thin orchestrator; logic lives in `src/template_code_project/core/manuscript_variables.py`)
 
 **Command**:
 ```bash
@@ -70,7 +70,7 @@ uv run python projects/templates/template_code_project/scripts/z_generate_manusc
 
 **Inputs**: `manuscript/config.yaml` + `output/data/optimization_results.csv` + `output/reports/*.json`
 
-**What it does**: Calls `src/manuscript_variables.py::generate_variables(..., require_analysis_outputs=True)` (default) to compute all token values, then calls `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` to write substituted copies of `manuscript/*.md` to `output/manuscript/`. It also writes the full mapping to `output/data/manuscript_variables.json`.
+**What it does**: Calls `src/template_code_project/core/manuscript_variables.py::generate_variables(..., require_analysis_outputs=True)` (default) to compute all token values, then calls `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` to write substituted copies of `manuscript/*.md` to `output/manuscript/`. It also writes the full mapping to `output/data/manuscript_variables.json`.
 
 **Strict default**: Fails with `FileNotFoundError` when `output/data/optimization_results.csv` is missing. Use `--allow-draft` only for intentional early drafts that may emit `"N/A"` for result-derived tokens.
 
@@ -127,11 +127,11 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_cod
 | YAML Key | Controls | Consumed by |
 |---|---|---|
 | `paper.title` | PDF title page and page headers | `infrastructure/core/config/loader.py` → `pdf_renderer.py` |
-| `paper.version` | `{{CONFIG_VERSION}}` token | `src/manuscript_variables.py` |
+| `paper.version` | `{{CONFIG_VERSION}}` token | `src/template_code_project/core/manuscript_variables.py` |
 | `authors[*]` | Author list on title page | `pdf_renderer.py` + `{{CONFIG_FIRST_AUTHOR}}` |
 | `publication.doi` | DOI on title page and citations | `pdf_renderer.py` |
-| `keywords` | `{{CONFIG_KEYWORDS}}` count | `src/manuscript_variables.py` |
-| `experiment.*` | Step sizes, tolerances, A/b, stability/benchmark grids | `src/experiment_config.py::load_experiment_config()` → `analysis/`, `figures/`, `dashboard.py`, `manuscript_variables.py` |
+| `keywords` | `{{CONFIG_KEYWORDS}}` count | `src/template_code_project/core/manuscript_variables.py` |
+| `experiment.*` | Step sizes, tolerances, A/b, stability/benchmark grids | `src/template_code_project/core/experiment_config.py::load_experiment_config()` → `analysis/`, `figures/`, `dashboard/dashboard.py`, `core/manuscript_variables.py` |
 | `llm.translations.enabled` | Whether to run LLM translation step | `execute_pipeline.py` |
 
 ## Troubleshooting
@@ -140,7 +140,7 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_cod
 
 **Symptom**: The rendered PDF contains literal `{{TOKEN_NAME}}` text.
 
-**Cause**: Manuscript variables (`scripts/z_generate_manuscript_variables.py`) did not run, failed silently, or the token is not defined in `src/manuscript_variables.py::generate_variables()`.
+**Cause**: Manuscript variables (`scripts/z_generate_manuscript_variables.py`) did not run, failed silently, or the token is not defined in `src/template_code_project/core/manuscript_variables.py::generate_variables()`.
 
 **Fix**:
 ```bash

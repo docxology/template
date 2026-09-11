@@ -18,7 +18,7 @@ tokens to their source computation:
 
 from __future__ import annotations
 
-import importlib
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -27,20 +27,19 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[5]
 PROJECT_ROOT = REPO_ROOT / "projects" / "templates" / "template_autoresearch_project"
+_SRC = PROJECT_ROOT / "src" / "template_autoresearch_project"
 
+# SUBMODULAR-2: the exemplar package is a regular nested package
+# (``src/template_autoresearch_project/``) whose modules import via absolute
+# ``template_autoresearch_project.*`` paths, so the exemplar imports directly --
+# no importlib indirection or project-unique alias is needed.
+from template_autoresearch_project.loop.config import load_loop_config  # noqa: E402
+from template_autoresearch_project.ml.task import run_bounded_ml_task  # noqa: E402
 
-def _load_project_src() -> Any:
-    """Import the project's nested package for a clean re-derivation.
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))  # needed for ``infrastructure.*``; shared-safe, no top-level collision
 
-    Post-nesting, every exemplar ships a project-unique package under
-    ``src/<exemplar>/``, so a plain import cannot collide in ``sys.modules``.
-    """
-    config = importlib.import_module("template_autoresearch_project.config")
-    task = importlib.import_module("template_autoresearch_project.ml.task")
-    return config.load_loop_config, task.run_bounded_ml_task
-
-
-load_loop_config, run_bounded_ml_task = _load_project_src()
+assert _SRC.is_dir(), f"exemplar package missing: {_SRC}"
 
 
 def _pin(pinned: dict[str, Any], key: str) -> dict[str, Any]:

@@ -2,7 +2,7 @@
 
 *Slide 10 of 57 — template_template pitch, long deck — kind: `content`*
 
-- src/template_template/introspection.py discovers infrastructure/ subpackages, the pipeline.yaml stage DAG, and the public exemplar roster.
+- src/template_template/core/introspection.py discovers infrastructure/ subpackages, the pipeline.yaml stage DAG, and the public exemplar roster.
 - The scan reads the filesystem and YAML directly — it does not depend on any external service or cached snapshot.
 - Function-level entry points (discover_infrastructure_modules, discover_projects, load_pipeline_stages_from_yaml) each return typed, testable dataclasses.
 

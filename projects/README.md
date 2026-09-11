@@ -68,13 +68,13 @@ local private symlinks and is intentionally broader.
 
 | Exemplar | Purpose | Algorithm? | Mutates `references.bib`? | Embeds figures? | Tests | Coverage |
 |---|---|---|---|---|---|---|
-| [`template_code_project`](templates/template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | see canonical facts | see canonical facts |
+| [`template_code_project`](templates/template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/core/optimizer.py`, `src/core/invariants.py`) | no (curated) | yes (6 figures) | see canonical facts | see canonical facts |
 | [`template_data_descriptor`](templates/template_data_descriptor/) | Dataset descriptor/data-paper contract | yes (`src/data_descriptor/*`) | no (curated) | no | see canonical facts | see canonical facts |
 | [`template_gold_refinement`](templates/template_gold_refinement/) | Metallurgical gold-refining analogy for manuscript composition | yes (`src/refinery.py`, `src/composition.py`) | no (curated) | no (planned) | see canonical facts | see canonical facts |
 | [`template_literature_meta_analysis`](templates/template_literature_meta_analysis/) | Generic literature meta-analysis (multi-engine retrieval + de-dup + full-text + embeddings + bibliometrics) | yes (`src/literature/*`, `src/analysis/*`) | no (curated) | yes (bibliometric figures) | see canonical facts | see canonical facts |
 | [`template_prose_project`](templates/template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
-| [`template_autoresearch_project`](templates/template_autoresearch_project/) | Deterministic AutoResearch loop | yes (`src/loop.py`) | no (read-only validation) | no | see canonical facts | see canonical facts |
-| [`template_autoscientists`](templates/template_autoscientists/) | Coordination-mechanism testbed | yes (`src/agents.py`, `src/comparison.py`) | no (curated) | no | see canonical facts | see canonical facts |
+| [`template_autoresearch_project`](templates/template_autoresearch_project/) | Deterministic AutoResearch loop | yes (`src/loop/loop.py`) | no (read-only validation) | no | see canonical facts | see canonical facts |
+| [`template_autoscientists`](templates/template_autoscientists/) | Coordination-mechanism testbed | yes (`src/agents/agents.py`, `src/search/comparison.py`) | no (curated) | no | see canonical facts | see canonical facts |
 | [`template_active_inference`](templates/template_active_inference/) | Active Inference multi-track research | yes (multiple tracks) | no (curated) | yes | see canonical facts | see canonical facts |
 | [`template_advanced_literature_review`](templates/template_advanced_literature_review/) | Advanced multi-phase literature review | yes (`src/multi_phase/*`) | fixture-backed | yes | see canonical facts | see canonical facts |
 | [`template_eda_notebook`](templates/template_eda_notebook/) | Exploratory data analysis notebook | yes (`src/eda/*`) | n/a | yes (analysis figures) | see canonical facts | see canonical facts |
@@ -86,12 +86,12 @@ local private symlinks and is intentionally broader.
 | [`template_newspaper`](templates/template_newspaper/) | Newspaper layout engine | no (layout orchestration) | n/a | yes (page-layout output) | see canonical facts | see canonical facts |
 | [`template_pitch_deck`](templates/template_pitch_deck/) | Pitch deck / slide deck scaffold | see canonical facts | see canonical facts | see canonical facts | see canonical facts |
 | [`template_search_project`](templates/template_search_project/) | Literature-search pipeline with auto-populated BibTeX | no (orchestration over search/reference/LLM infrastructure) | yes (`references.bib` + `references_deep.bib`) | 3 figures | see canonical facts | see canonical facts |
-| [`template_sia`](templates/template_sia/) | Self-Improvement Agent harness | yes (`src/loop.py`) | no (curated) | registry-backed | see canonical facts | see canonical facts |
+| [`template_sia`](templates/template_sia/) | Self-Improvement Agent harness | yes (`src/loop/loop.py`) | no (curated) | registry-backed | see canonical facts | see canonical facts |
 | [`template_storybook`](templates/template_storybook/) | Full-page illustrated storybook PDF | yes (`src/storybook/*`) | n/a | yes (full-page story art) | see canonical facts | see canonical facts |
-| [`template_template`](templates/template_template/) | Meta-template (infrastructure introspection) | yes (`src/template_template/introspection.py`) | no (curated) | yes (architecture figures) | see canonical facts | see canonical facts |
+| [`template_template`](templates/template_template/) | Meta-template (infrastructure introspection) | yes (`src/template_template/core/introspection.py`) | no (curated) | yes (architecture figures) | see canonical facts | see canonical facts |
 | [`template_textbook`](templates/template_textbook/) | Book-length scaffold with labs/question banks | yes (`src/textbook/*`) | no (curated) | deterministic figures/diagrams | see canonical facts | see canonical facts |
-| [`template_autopoiesis`](templates/template_autopoiesis/) | Combinatoric grammar generating whole runnable child projects from a seed | yes (`src/grammar.py`, `src/expand.py`, `src/materialize.py`) | no (curated, 5 live-verified) | yes (4 figures) | see canonical facts | see canonical facts |
-| [`template_pools_rules_tools`](templates/template_pools_rules_tools/) | Fonds/rules/tools resource-pool integration | yes (`src/fonds_reader.py`, `src/rules_applier.py`, `src/tools_invoker.py`) | no (curated) | no | see canonical facts | see canonical facts |
+| [`template_autopoiesis`](templates/template_autopoiesis/) | Combinatoric grammar generating whole runnable child projects from a seed | yes (`src/core/grammar.py`, `src/core/expand.py`, `src/gates/materialize.py`) | no (curated, 5 live-verified) | yes (4 figures) | see canonical facts | see canonical facts |
+| [`template_pools_rules_tools`](templates/template_pools_rules_tools/) | Fonds/rules/tools resource-pool integration | yes (`src/tools/fonds_reader.py`, `src/rules/rules_applier.py`, `src/tools/tools_invoker.py`) | no (curated) | no | see canonical facts | see canonical facts |
 
 The measured test and coverage totals drift as the exemplars evolve; confirm
 current numbers in

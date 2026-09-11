@@ -5,7 +5,7 @@ basic numerical optimization algorithms with comprehensive testing
 and analysis capabilities.
 """
 
-from .invariants import (
+from .core.invariants import (
     InvariantResult,
     OptimizerSweepConfig,
     all_invariants,
@@ -13,7 +13,7 @@ from .invariants import (
     gradient_consistency_invariants,
     trajectory_invariants,
 )
-from .optimizer import (
+from .core.optimizer import (
     OptimizationResult,
     compute_gradient,
     gradient_descent,

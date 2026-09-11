@@ -92,9 +92,9 @@ uv run python projects/templates/template_sia/scripts/z_generate_manuscript_vari
 uv run python scripts/pipeline/stage_01_test.py --project templates/template_sia --project-only
 ```
 
-Default runs replay fixtures under `src/fixtures/recorded_generations/`. Pass
+Default runs replay fixtures under `src/template_sia/fixtures/recorded_generations/`. Pass
 `--live-sia` for bounded subprocess execution.
-The reusable Layer-2 adapter is `src/loop.py`; `scripts/run_sia_loop.py` is a
+The reusable Layer-2 adapter is `src/template_sia/loop/loop.py`; `scripts/run_sia_loop.py` is a
 thin CLI that parses flags, calls that adapter, and prints artifact paths.
 
 > **Live mode is a deterministic stub.** `--live-sia` runs the *reference* agent

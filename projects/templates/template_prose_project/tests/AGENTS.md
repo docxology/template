@@ -48,7 +48,7 @@ uv run pytest projects/templates/template_prose_project/tests/ \
     --cov-fail-under=90
 
 # A single test
-uv run pytest projects/templates/template_prose_project/tests/test_pipeline.py::TestRunProsePipeline::test_passing_run -v
+uv run pytest projects/templates/template_prose_project/tests/pipeline/test_pipeline.py::TestRunProsePipeline::test_passing_run -v
 ```
 
 ## Editing rules

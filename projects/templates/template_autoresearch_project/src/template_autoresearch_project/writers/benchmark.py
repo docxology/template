@@ -12,8 +12,8 @@ import yaml
 
 from infrastructure.autoresearch import BenchmarkTask
 
-from template_autoresearch_project.artifact_content import is_substantive_artifact
-from template_autoresearch_project.config import AutoResearchLoopConfig
+from .artifact_content import is_substantive_artifact
+from ..loop.config import AutoResearchLoopConfig
 
 # Core artifacts the loop must have emitted (and filled with real content) by the
 # time method-contract benchmark grading runs (after write_core_loop_artifacts,

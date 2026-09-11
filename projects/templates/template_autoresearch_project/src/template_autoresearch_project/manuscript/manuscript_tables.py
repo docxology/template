@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from . import manuscript_tables_builders as builders
-from template_autoresearch_project.artifact_loader import LoopArtifacts
+from .artifact_loader import LoopArtifacts
 
 
 def build_table_specs(artifacts: LoopArtifacts) -> dict[str, tuple[str, str, str]]:

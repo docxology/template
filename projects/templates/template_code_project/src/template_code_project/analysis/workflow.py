@@ -30,7 +30,7 @@ def run_analysis_pipeline(
         infrastructure_available,
     )
     from .experiments import _project_root
-    from ..experiment_config import load_experiment_config
+    from ..core.experiment_config import load_experiment_config
     from ..figures import (
         apply_visualization_style,
         generate_benchmark_visualization,

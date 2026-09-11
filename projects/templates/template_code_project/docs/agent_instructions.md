@@ -27,7 +27,7 @@ Reading order is mandatory, not advisory. Each document gates a category of acti
 
 The test suite spans `test_optimizer.py` (pure math), `test_analysis_integration.py` (orchestration), `test_analysis_coverage.py` (orchestration branches and error paths), `test_experiment_config.py`, `test_figures_orchestration.py`, `test_dashboard_config.py`, `test_invariants.py`, `test_invariants_and_dashboard.py`, `test_manuscript_variables.py`, `test_documentation.py` (API doc helpers), and `test_scripts_smoke.py` (auxiliary script smoke). Both the project `pyproject.toml` and the root pipeline gate coverage at **90%**. Live test count + current coverage percentage live in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md) — do not hardcode either number in prose, because both drift faster than the docs touching them.
 
-Before modifying `src/optimizer.py`, count the existing tests for the function you are changing. After modifying, run:
+Before modifying `src/template_code_project/core/optimizer.py`, count the existing tests for the function you are changing. After modifying, run:
 
 ```bash
 uv run pytest projects/templates/template_code_project/tests/ \
@@ -43,7 +43,7 @@ If coverage drops, do not delete tests to make the number work — fix the gap.
 
 ## Rule 3: The Thin Orchestrator Boundary — `scripts/` vs `src/`
 
-**`src/optimizer.py`** contains pure mathematical functions: no file I/O, no infrastructure imports, no side-effects, stdlib `logging` only.
+**`src/template_code_project/core/optimizer.py`** contains pure mathematical functions: no file I/O, no infrastructure imports, no side-effects, stdlib `logging` only.
 
 **`scripts/*.py`** contains experiment coordination: loops over step sizes, calls to `src/` functions, delegation to `infrastructure.*`, writing CSVs and PNGs.
 
@@ -74,7 +74,7 @@ Our testing framework validates numerical accuracy using standard approaches.
 
 **GOOD** (concrete, linkable):
 ```markdown
-`projects/templates/template_code_project/tests/test_optimizer.py::TestComputeGradient` validates gradient
+`projects/templates/template_code_project/tests/core/test_optimizer.py::TestComputeGradient` validates gradient
 accuracy against analytical solutions without mocks, using `numpy` arrays with known values.
 ```
 
@@ -110,7 +110,7 @@ Prefer analytical inputs over random inputs whenever a mathematical property can
 
 ## Rule 6: Style and Syntax Guides Govern Their Domains
 
-- **[`style_guide.md`](style_guide.md)** governs: `src/optimizer.py`, `tests/test_optimizer.py`, `scripts/*.py` — mock prohibition, infrastructure delegation, thin orchestrator, error message format, type hints.
+- **[`style_guide.md`](style_guide.md)** governs: `src/template_code_project/core/optimizer.py`, `tests/core/test_optimizer.py`, `scripts/*.py` — mock prohibition, infrastructure delegation, thin orchestrator, error message format, type hints.
 - **[`syntax_guide.md`](syntax_guide.md)** governs: `manuscript/*.md` — `{{VARIABLE}}` injection, `[@label]` Pandoc-crossref cross-references, figure labels, table captions.
 
 Do not apply code-style rules to manuscript prose, and do not apply manuscript syntax rules to Python source.
@@ -122,7 +122,7 @@ Do not apply code-style rules to manuscript prose, and do not apply manuscript s
 The entire `projects/templates/template_code_project/output/` tree is written by the pipeline and overwritten on every run. Editing a file in `output/` has zero lasting effect and will confuse future agents.
 
 If you need to change what a generated file contains, change the **generator**:
-- To change `output/data/optimization_results.csv` → modify `src/analysis/` (re-run via `scripts/optimization_analysis.py`)
+- To change `output/data/optimization_results.csv` → modify `src/template_code_project/analysis/` (re-run via `scripts/optimization_analysis.py`)
 - To change `output/manuscript/03_results.md` → modify `manuscript/03_results.md` (the template) and/or `scripts/z_generate_manuscript_variables.py` (the variable definitions)
 - To change `output/pdf/template_code_project_combined.pdf` → modify the manuscript source files, then re-render
 
@@ -144,15 +144,15 @@ uv run pytest projects/templates/template_code_project/tests/ \
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
     projects/templates/template_code_project/tests/ || echo "Clean — no mocks found"
 
-# 3. The mathematical primitives (optimizer.py, invariants.py) have no infrastructure imports.
+# 3. The mathematical primitives (core/optimizer.py, core/invariants.py) have no infrastructure imports.
 #    These two files MUST remain infrastructure-free so they are copy-pasteable into any
 #    Python environment without the pipeline installed. Other `src/` modules (`analysis/`,
-#    `dashboard.py`, `manuscript_variables.py`) are orchestration layers and may import
+#    `dashboard/dashboard.py`, `core/manuscript_variables.py`) are orchestration layers and may import
 #    `infrastructure.*` behind try/except fallbacks; that is intentional and documented in
 #    `src/AGENTS.md` and `architecture.md`.
 grep -nE "^(from|import) infrastructure" \
-    projects/templates/template_code_project/src/optimizer.py \
-    projects/templates/template_code_project/src/invariants.py \
+    projects/templates/template_code_project/src/template_code_project/core/optimizer.py \
+    projects/templates/template_code_project/src/template_code_project/core/invariants.py \
     && echo "VIOLATION — math primitive imports infrastructure" \
     || echo "Clean — math primitives are infrastructure-free"
 ```

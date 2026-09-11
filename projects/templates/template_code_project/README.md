@@ -146,8 +146,8 @@ trees, mutate prompts, or run autonomous experiment agents.
 The genuinely transferable lesson is not gradient descent. It is
 **reproducibility-by-construction**: every numeric in the manuscript prose
 is a `{{TOKEN}}` registered in one Python function
-(`src/manuscript_variables.py::generate_variables`) and cross-checked by
-one test (`tests/test_manuscript_variables.py::test_all_manuscript_tokens_are_generated`),
+(`src/template_code_project/core/manuscript_variables.py::generate_variables`) and cross-checked by
+one test (`tests/core/test_manuscript_variables.py::test_all_manuscript_tokens_are_generated`),
 which fails CI on any token used in prose that the generator does not emit.
 The deliverable PDF is therefore *proof* that the repo's invariants held
 during build: configuration drift, deleted result, or out-of-sync narrative
@@ -205,8 +205,8 @@ cat projects/templates/template_code_project/output/data/optimization_results.cs
 
 ```mermaid
 graph TD
-    A[scripts/optimization_analysis.py] --> B[src/analysis/]
-    B --> C[src/optimizer.py]
+    A[scripts/optimization_analysis.py] --> B[src/template_code_project/analysis/]
+    B --> C[src/template_code_project/core/optimizer.py]
     B --> D[Scientific Analysis]
     B --> E[Generate Figures]
     B --> F[Export Data]

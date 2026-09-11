@@ -17,19 +17,13 @@ root-level `src/*.py` compatibility stubs — the flat→package migration is co
 
 | Package | Role | Key submodules |
 | --- | --- | --- |
+| `loop/` | Typed loop configuration, adapters, result models, phase helpers, orchestration | `loop/{adapters,config,json_coerce,models,phase_ledger,loop_phases,loop}.py` (`__init__.py` facade) |
 | `ml/` | MNIST task config, models, training, selection | `ml/task.py`, `ml/data.py`, `ml/models.py`, `ml/training.py`, `ml/selection.py` |
-| `diagnostics/` | Records, metrics, intervals, reports | `diagnostics/{records,metrics,intervals,reports}.py` (`__init__.py` facade) |
+| `diagnostics/` | Records, metrics, intervals, reports, source ledger | `diagnostics/{records,metrics,intervals,reports,source_ledger}.py` (`__init__.py` facade) |
 | `figures/` | Figure specs and ML/process/security charts | `figures/figure_specs.py`, `figures/figures_core.py`, `figures/figures_ml_*.py` (`__init__.py` barrel) |
-| `manuscript/` | Token builders, tables, hydration | `manuscript/manuscript_tables.py`, `manuscript/manuscript_tokens_*.py` (root `manuscript_variables.py` is the hydration facade) |
-| `writers/` | JSON/CSV/manifest I/O, payloads, benchmark dispatch | `writers/{benchmark,figure_dispatch,io,manifests,payloads}.py` |
+| `manuscript/` | Token builders, tables, hydration | `manuscript/manuscript_tables.py`, `manuscript/manuscript_tokens_*.py`, `manuscript/artifact_loader.py`, `manuscript/manuscript_variables.py` (facade) |
+| `writers/` | JSON/CSV/manifest I/O, payloads, benchmark dispatch, report renderers, artifact gates | `writers/{artifact_content,artifact_schemas,benchmark,figure_dispatch,io,loop_artifacts,manifests,ml_artifacts,payloads,reports,research_object}.py` |
 | `security/` | Local security profile, threat model, attestation | `security/{artifacts,payloads,render}.py` |
-
-Top-level orchestration (not in packages above):
-
-- `loop.py`, `loop_phases.py` — AutoResearch loop orchestration
-- `models.py`, `config.py` — loop dataclasses and plan merge
-- `reports.py`, `phase_ledger.py`, `research_object.py` — markdown renderers and ledgers
-- `artifact_loader.py`, `artifact_schemas.py`, `artifact_content.py`, `json_coerce.py`, `source_ledger.py` — artifact gates and loaders
 
 - Thin scripts: `scripts/`
 - Project docs: `docs/`
@@ -72,8 +66,8 @@ Claims are `supported` only when the configured evidence path points at
 substantive content on disk — a non-empty, parseable artifact (an empty file,
 `{}`/`[]`, an all-null JSON tree, or a header-only CSV does not support a claim).
 This substance binding is shared with the figure-quality and benchmark gates via
-`src/artifact_content.is_substantive_artifact` and is locked by negative-control
-tests in `tests/test_gate_negative_controls.py`.
+`src/writers/artifact_content.is_substantive_artifact` and is locked by negative-control
+tests in `tests/loop/test_gate_negative_controls.py`.
 Accepted seed ideas require evidence links; candidate `touched_paths` must stay
 inside `autoresearch.yaml` `edit_allowlist`. The ML-loop candidate budget is
 finite; candidates beyond it are recorded as deferred.
@@ -92,7 +86,7 @@ uv run python -m infrastructure.autoresearch.cli validate --project template_aut
 ## Editing Rules
 
 - Keep `scripts/` as orchestrators only.
-- Add orchestration in `src/loop.py`; add I/O under `src/writers/`; add renderers in `src/reports.py`.
+- Add orchestration in `src/loop/loop.py`; add I/O under `src/writers/`; add renderers in `src/writers/reports.py`.
 - Keep ML task logic in `src/ml/`; do not move model evaluation into scripts.
 - Keep true publication approval in the human-authored `human_review.yaml`.
   Generated readiness may never self-approve publication.

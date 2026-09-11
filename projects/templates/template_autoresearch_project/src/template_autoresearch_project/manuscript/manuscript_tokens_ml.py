@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from template_autoresearch_project.json_coerce import mapping
+from ..loop.json_coerce import mapping
 from .manuscript_tokens_format import (
     accuracy_interval,
     benchmark_task_ids,

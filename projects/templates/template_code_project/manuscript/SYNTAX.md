@@ -70,7 +70,7 @@ Reference equations with `[@eq:label]` (parenthetical) or `@eq:label` (narrative
 
 ### Figure label registry
 
-| Label | PNG filename | Generator in `src/figures/` (orchestrated via `src/analysis/` / `scripts/optimization_analysis.py`) |
+| Label | PNG filename | Generator in `src/template_code_project/figures/` (orchestrated via `src/template_code_project/analysis/` / `scripts/optimization_analysis.py`) |
 |---|---|---|
 | `{#fig:convergence}` | `output/figures/convergence_plot.png` | `generate_convergence_plot()` |
 | `{#fig:step_sensitivity}` | `output/figures/step_size_sensitivity.png` | `generate_step_size_sensitivity_plot()` |
@@ -167,7 +167,7 @@ Files are assembled in lexicographic order by `infrastructure/rendering/pdf_rend
 
 - No "In summary" or "In conclusion" at section ends (RASP standard)
 - Use active voice for methodology descriptions
-- Use explicit file paths when referencing code: `src/optimizer.py`, not "the optimizer module"
+- Use explicit file paths when referencing code: `src/template_code_project/core/optimizer.py`, not "the optimizer module"
 - Keep paragraphs focused — one idea per paragraph
 
 ## See Also

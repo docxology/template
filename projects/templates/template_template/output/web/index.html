@@ -2160,7 +2160,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a hr
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    names <span class="op">=</span> [m.name <span class="cf">for</span> m <span class="kw">in</span> modules]</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="st">&quot;core&quot;</span> <span class="kw">in</span> names, <span class="ss">f&quot;&#39;core&#39; not found in </span><span class="sc">{</span>names<span class="sc">}</span><span class="ss">&quot;</span></span></code></pre></div>
 <p>This test
-(<code>tests/test_meta.py::TestDiscoverInfrastructureModules::test_core_module_present</code>)
+(<code>tests/core/test_meta.py::TestDiscoverInfrastructureModules::test_core_module_present</code>)
 exercises the real <code>discover_infrastructure_modules</code> function
 against the real repository root. There are no mock objects substituting
 for the directory walk, no patched YAML parsers, and no synthetic return
@@ -2347,7 +2347,7 @@ YAML-driven pipeline DAG resolution, HTTPS-bound optional suites
 class="header-section-number">4.3</span> Infrastructure Module
 Inventory</h2>
 <p>The introspection module
-(<code>template_template.introspection</code>) emits the authoritative
+(<code>template_template.core.introspection</code>) emits the authoritative
 table below—every row reflects
 <code>discover_infrastructure_modules(REPO_ROOT)</code>.</p>
 <table>
@@ -2716,7 +2716,7 @@ class="header-section-number">4.7</span> Self-Referential Analysis</h2>
 <p>Rendered via <code>projects/templates/template_template</code>
 (<code>generate_manuscript_metrics.py</code> → injected tokens such as
 <code>28</code>). Architecture figures stem from <a
-href="../src/template_template/architecture_viz.py"><code>template_template.architecture_viz</code></a>—font
+href="../src/template_template/figures/architecture_viz.py"><code>template_template.figures.architecture_viz</code></a>—font
 sizes constrained by §QA.</p>
 <p><img src="../figures/architecture_overview.png"
 alt="Two-Layer Architecture Overview" /> <strong>Figure 1.</strong> Live

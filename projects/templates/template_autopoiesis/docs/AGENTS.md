@@ -6,21 +6,26 @@ monorepo-wide rules live in [`../../../../AGENTS.md`](../../../../AGENTS.md).
 
 ## Layout
 
-- `src/` — all business logic. Key modules: `grammar.py`, `expand.py`,
-  `materialize.py`, `realize.py`, `sealing.py`, `integrity.py`, `verify.py`,
-  `honesty.py`, `manuscript_contract.py`, `manuscript_variables.py`,
-  `figures.py`, `cover_art.py`, plus `primitives/` registries.
+- `src/template_autopoiesis/` — all business logic, in four domain subpackages:
+  `core/` (`grammar.py`, `expand.py`, `common.py`, `honesty.py`,
+  `project_paths.py`, `cli.py`), `gates/` (`materialize.py`, `realize.py`,
+  `sealing.py`, `integrity.py`, `verify.py`), `manuscript/`
+  (`manuscript_contract.py`, `manuscript_variables.py`, `manuscript_figures.py`,
+  `emit_templates.py`), and `figures/` (`figures.py`, `cover_art.py`), plus
+  `primitives/` registries.
 - `scripts/` — thin orchestrators only; they import from `src/` and never
   contain business logic. Numeric-prefixed scripts are order-sensitive.
-- `tests/` — zero-mock suite; per-directory `README.md`/`AGENTS.md` contracts.
+- `tests/` — zero-mock suite, mirrored one-to-one into `core/`, `gates/`,
+  `figures/`, `manuscript/`, and `primitives/` directories with per-directory
+  `README.md`/`AGENTS.md` contracts.
 - `manuscript/` — source sections and config; `manuscript/AGENTS.md` is
   authoritative for token, figure, and bibliography rules.
 
 ## Conventions observed in this repo
 
-- Deterministic outputs; seeds and provenance verification (`verify.py`,
-  `sealing.py`) gate child-project materialization.
-- Volatile counts come from generators (`manuscript_variables.py`,
+- Deterministic outputs; seeds and provenance verification (`gates/verify.py`,
+  `gates/sealing.py`) gate child-project materialization.
+- Volatile counts come from generators (`manuscript/manuscript_variables.py`,
   `scripts/z_generate_manuscript_variables.py`), never hand-typed prose.
 - No mocks in tests; real files and real subprocesses.
 - Never hand-edit `output/` or `dist/`; regenerate through the pipeline.

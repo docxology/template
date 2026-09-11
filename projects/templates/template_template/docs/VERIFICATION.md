@@ -42,7 +42,7 @@ Expected:
 ```bash
 uv run python -c "
 from pathlib import Path
-from template_template.introspection import build_infrastructure_report
+from template_template.core.introspection import build_infrastructure_report
 r = build_infrastructure_report(Path('.'))
 assert r.pipeline_stages_declared >= 14
 assert r.pipeline_stages_core_only == 8

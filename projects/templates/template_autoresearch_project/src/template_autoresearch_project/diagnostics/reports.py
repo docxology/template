@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from template_autoresearch_project.json_coerce import mapping, mapping_list
+from ..loop.json_coerce import mapping, mapping_list
 from .intervals import (
     bootstrap_intervals,
     candidate_accuracy_intervals,
@@ -23,7 +23,7 @@ from .metrics import (
     training_diagnostics,
 )
 from .records import _evaluated_candidates, prediction_records
-from template_autoresearch_project.ml.task import MLTaskResult
+from ..ml.task import MLTaskResult
 
 
 def candidate_selection_audit(

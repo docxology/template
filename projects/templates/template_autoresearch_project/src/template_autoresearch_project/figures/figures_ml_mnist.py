@@ -16,7 +16,7 @@ from .figures_core import (
     save_figure,
     styled_grid,
 )
-from template_autoresearch_project.ml.task import (
+from ..ml.task import (
     MLTaskResult,
     accepted_error_examples,
     load_mnist_arrays,

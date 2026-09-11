@@ -53,7 +53,7 @@ from infrastructure.documentation._coverage_workspace import (
 COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 5
 COVERAGE_SOURCE_INVENTORY_MODE = "tracked-and-nonignored-coverage-inputs-v3"
-EXEMPLAR_SNAPSHOT_DATE = "2026-09-10"
+EXEMPLAR_SNAPSHOT_DATE = "2026-09-11"
 COVERAGE_MEASUREMENT_TIMEOUT_SECONDS = 1800
 _ACTIVE_COVERAGE_PROJECT = "template_active_inference"
 
@@ -157,10 +157,10 @@ class ExemplarSnapshot:
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_active_inference", "91.88 %"),
     ExemplarSnapshot("template_advanced_literature_review", "91.96 %"),
-    ExemplarSnapshot("template_autopoiesis", "96.83 %"),
+    ExemplarSnapshot("template_autopoiesis", "96.92 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.33 %"),
     ExemplarSnapshot("template_autoscientists", "97.16 %"),
-    ExemplarSnapshot("template_code_project", "95.20 %"),
+    ExemplarSnapshot("template_code_project", "95.27 %"),
     ExemplarSnapshot("template_data_descriptor", "96.13 %"),
     ExemplarSnapshot("template_eda_notebook", "90.03 %"),
     ExemplarSnapshot("template_formal", "94.50 %"),
@@ -170,14 +170,14 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_methods_paper", "99.00 %"),
     ExemplarSnapshot("template_newspaper", "99.25 %"),
     ExemplarSnapshot("template_pitch_deck", "97.27 %"),
-    ExemplarSnapshot("template_pools_rules_tools", "94.72 %"),
+    ExemplarSnapshot("template_pools_rules_tools", "94.73 %"),
     ExemplarSnapshot("template_prose_project", "95.87 %"),
     ExemplarSnapshot("template_redacted_report", "97.03 %"),
     ExemplarSnapshot("template_registered_report", "94.35 %"),
     ExemplarSnapshot("template_search_project", "96.28 %"),
     ExemplarSnapshot("template_sia", "94.39 %"),
     ExemplarSnapshot("template_storybook", "93.91 %"),
-    ExemplarSnapshot("template_template", "97.53 %"),
+    ExemplarSnapshot("template_template", "97.56 %"),
     ExemplarSnapshot("template_textbook", "96.08 %"),
 )
 

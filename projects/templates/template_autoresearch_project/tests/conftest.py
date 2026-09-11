@@ -7,7 +7,7 @@ import shutil
 
 import pytest
 
-from template_autoresearch_project.models import AutoResearchLoopResult
+from template_autoresearch_project.loop.models import AutoResearchLoopResult
 
 SOURCE_PROJECT_ROOT = Path(__file__).resolve().parents[1]
 _COPY_IGNORE = shutil.ignore_patterns(
@@ -57,7 +57,7 @@ def repo_root() -> Path:
 @pytest.fixture(scope="session")
 def autoresearch_loop_result(project_root: Path, repo_root: Path) -> AutoResearchLoopResult:
     """Run the full deterministic loop once for read-only output assertions."""
-    from template_autoresearch_project.loop import run_autoresearch_loop
+    from template_autoresearch_project.loop.loop import run_autoresearch_loop
 
     return run_autoresearch_loop(project_root, repo_root)
 

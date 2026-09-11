@@ -4,7 +4,7 @@
 |---------|-------------|-----|
 | `readiness_valid = False` | Some required artifact is empty or missing | Run the full analysis stage, check `output/data/` for expected files |
 | ML candidate budget exhausted | `max_candidates` (under `task:`) too low for the search space | Increase `max_candidates` in `mnist_task.yaml` or narrow the candidate space |
-| Token `{{METRIC}}` appears raw | Variable not injected in `src/manuscript/manuscript_tokens_core.py` or `manuscript_tokens_ml.py` (`manuscript_variables.py` is only the re-export facade) | Add the variable binding there and re-run `z_generate_manuscript_variables.py` |
+| Token `{{METRIC}}` appears raw | Variable not injected in `src/manuscript/manuscript_tokens_core.py` or `manuscript_tokens_ml.py` (`manuscript/manuscript_variables.py` is only the re-export facade) | Add the variable binding there and re-run `z_generate_manuscript_variables.py` |
 | Evidence registry validation fails | `claim_ledger.yaml` references a non-existent artifact | Update the `artifact_path` to the real output location |
 | Human review required but absent | `human_review.yaml` missing or incomplete | Create the review file with `publication_approved: false` as a baseline |
 | Security artifacts missing | Security stage not run | Run `scripts/pipeline/stage_02_analysis.py` which writes local security profile |

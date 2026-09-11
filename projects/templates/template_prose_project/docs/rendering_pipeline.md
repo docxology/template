@@ -55,8 +55,8 @@ uv run python projects/templates/template_prose_project/scripts/run_prose_pipeli
 `infrastructure.prose.analyze_manuscript` to produce the `ManuscriptReport`,
 passes it to `src.pipeline.run_prose_pipeline`, which evaluates the
 configured checks (the bibliography check compares cited keys against
-`src/prose_facade.parse_bib_keys`) and writes the JSON artefacts, then
-`src.report.write_review_report` writes the markdown review.
+`src/pipeline/prose_facade.parse_bib_keys`) and writes the JSON artefacts, then
+`src.manuscript.report.write_review_report` writes the markdown review.
 
 **Outputs**:
 
@@ -87,10 +87,10 @@ uv run python projects/templates/template_prose_project/scripts/z_generate_manus
 **What `y_generate_prose_figures.py` does**: Loads the typed
 `ManuscriptReport` JSON via
 `infrastructure.prose.report.load_report_json`, then calls
-`src/figures.py::generate_all_figures` to write three diagnostic PNGs.
+`src/figures/figures.py::generate_all_figures` to write three diagnostic PNGs.
 
 **What `z_generate_manuscript_variables.py` does**: Loads the raw report
-JSON via `src/manuscript_variables.py::load_report_payload`, calls
+JSON via `src/manuscript/manuscript_variables.py::load_report_payload`, calls
 `compute_variables` to derive the eleven substitution values, writes them
 to `output/data/manuscript_variables.json`, and produces token-substituted
 copies of every `manuscript/*.md` under `output/manuscript/`.
@@ -166,14 +166,14 @@ Every knob lives in `projects/templates/template_prose_project/manuscript/config
 | `prose.citation_density_min_per_1000` | Floor for `citation_density_above_floor` check | `_check_citation_density` in `src/pipeline/checks.py` |
 | `prose.require_h1_per_section` | Toggle `every_file_has_h1` check | `_check_h1_per_file` in `src/pipeline/checks.py` |
 | `prose.forbid_skipped_levels` | Toggle `no_skipped_heading_levels` check | `_check_no_skipped_levels` in `src/pipeline/checks.py` |
-| `prose.preset` | Named editorial profile (`lenient`/`strict`) applied to unset prose knobs | `ProseAnalysisConfig.from_dict` in `src/config.py` |
-| `bibliography.references_path` | Path to BibTeX file | `_check_bibliography` in `src/pipeline/checks.py` (via `src/prose_facade.parse_bib_keys`) |
+| `prose.preset` | Named editorial profile (`lenient`/`strict`) applied to unset prose knobs | `ProseAnalysisConfig.from_dict` in `src/pipeline/config.py` |
+| `bibliography.references_path` | Path to BibTeX file | `_check_bibliography` in `src/pipeline/checks.py` (via `src/pipeline/prose_facade.parse_bib_keys`) |
 | `bibliography.fail_on_missing` | Fail if a `[@key]` is not in the bib | `_check_bibliography` in `src/pipeline/checks.py` |
 | `bibliography.fail_on_unused` | Fail if a bib entry is never cited | `_check_bibliography` in `src/pipeline/checks.py` |
-| `report.output_path` | Where the markdown review report is written | `write_review_report` in `src/report.py` |
-| `report.include_per_file_table` | Toggle the per-file words/sentences/FRE/FKGL/Fog table | `write_review_report` in `src/report.py` |
-| `report.include_outline` | Toggle the per-file heading outline section | `write_review_report` in `src/report.py` (via `render_outline` in `src/prose_facade.py`) |
-| `report.include_quality_flags` | Toggle the long-sentence/passive/hedge quality-flags section | `write_review_report` in `src/report.py` |
+| `report.output_path` | Where the markdown review report is written | `write_review_report` in `src/manuscript/report.py` |
+| `report.include_per_file_table` | Toggle the per-file words/sentences/FRE/FKGL/Fog table | `write_review_report` in `src/manuscript/report.py` |
+| `report.include_outline` | Toggle the per-file heading outline section | `write_review_report` in `src/manuscript/report.py` (via `render_outline` in `src/pipeline/prose_facade.py`) |
+| `report.include_quality_flags` | Toggle the long-sentence/passive/hedge quality-flags section | `write_review_report` in `src/manuscript/report.py` |
 
 ## Troubleshooting
 
@@ -182,7 +182,7 @@ Every knob lives in `projects/templates/template_prose_project/manuscript/config
 **Symptom**: The rendered PDF contains a literal `{{TOKEN_NAME}}` string.
 
 **Cause**: Phase 2 did not run, failed silently, or the token is not defined
-in `src/manuscript_variables.py::ManuscriptVariables`.
+in `src/manuscript/manuscript_variables.py::ManuscriptVariables`.
 
 **Fix**:
 ```bash
@@ -236,7 +236,7 @@ See [`troubleshooting.md`](troubleshooting.md) for the diagnostic flowchart.
 **Symptom**: `y_generate_prose_figures.py` fails with a Tk/Qt backend error.
 
 **Cause**: The shell environment is overriding the `MPLBACKEND` variable
-that `src/figures.py` sets at import time.
+that `src/figures/figures.py` sets at import time.
 
 **Fix**:
 ```bash
@@ -245,7 +245,7 @@ uv run python projects/templates/template_prose_project/scripts/y_generate_prose
 ```
 
 `tests/conftest.py` pins `MPLBACKEND=Agg` for the test suite; the figure
-script does the same at import time of `src/figures.py`.
+script does the same at import time of `src/figures/figures.py`.
 
 ### Phase 2 runs before Phase 1
 

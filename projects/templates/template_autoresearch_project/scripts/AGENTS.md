@@ -7,7 +7,7 @@ Shared `sys.path` setup lives in [`_bootstrap.py`](_bootstrap.py) (`ensure_proje
 
 | Script | Delegates to |
 | --- | --- |
-| `run_autoresearch_loop.py` | `src.loop.run_autoresearch_loop` |
-| `z_generate_manuscript_variables.py` | `src.manuscript_variables`, `infrastructure.rendering.manuscript_injection` |
-| `check_source_ledger.py` | `src.source_ledger` validators |
+| `run_autoresearch_loop.py` | `src.loop.loop.run_autoresearch_loop` |
+| `z_generate_manuscript_variables.py` | `src.manuscript.manuscript_variables`, `infrastructure.rendering.manuscript_injection` |
+| `check_source_ledger.py` | `src.diagnostics.source_ledger` validators |
 | `regenerate_mnist_fixture.py` | `src.ml.mnist_fixture.regenerate_mnist_fixture` (maintenance only) |

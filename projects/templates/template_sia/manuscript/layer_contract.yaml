@@ -1,3 +1,4 @@
 # Layer-2 adapter: shared state-machine logic remains in infrastructure/sia.
+# Paths updated to the post-split subpackage layout (SUBMODULAR-SIA-1).
 allow_infrastructure_imports:
-  - src/loop.py
+  - src/template_sia/loop/loop.py

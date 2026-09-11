@@ -6,7 +6,7 @@
 
 2. **Infrastructure imports in Layer 2.** `src/` may import `infrastructure.sia` and `infrastructure.core.config`. Avoid importing `infrastructure.rendering` package init from project venv paths (use lazy load in `reports.write_resolved_manuscript_tree`).
 
-3. **Typed settings.** Use `SiaLoopSettings` dataclass from `loop_config.py`; do not scatter raw YAML access.
+3. **Typed settings.** Use `SiaLoopSettings` dataclass from `loop/loop_config.py`; do not scatter raw YAML access.
 
 4. **Explicit paths.** Resolve `project_root` from `Path(__file__).resolve().parent.parent` in scripts; pass `Path` objects into `src/` APIs.
 
@@ -18,4 +18,4 @@
 
 ## Module size
 
-Keep `src/*.py` under the exemplar drift line-count guidance. Split new logic into focused modules rather than expanding `loop.py`.
+Keep `src/*.py` under the exemplar drift line-count guidance. Split new logic into focused modules rather than expanding `loop/loop.py`.

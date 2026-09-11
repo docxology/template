@@ -17,13 +17,13 @@ keeps a capability blocked rather than silently promoting it.
 ## Integrity and template-status gaps
 
 - Keep the three resource directories read-only: never write back to `fonds/`, `rules/`, or `tools/` from this project.
-- Keep `src/type_defs.py` the single source of truth for all TypedDict shapes; no inline dicts and no `Any` in public signatures.
+- Keep `src/tools/type_defs.py` the single source of truth for all TypedDict shapes; no inline dicts and no `Any` in public signatures.
 - Keep graceful-fallback behavior everywhere — `src/` functions return `None` or empty collections when files are absent and never raise.
 - Confirm every `pytest.mark.skipif` guard keeps an accurate resource file-path check as pool contents evolve.
 
 ## Configurable-surface gaps
 
-- Extend the discovery adapters in `src/integration.py` when new public fonds/rules/tools ship; do not duplicate the discovered roster in manuscript configuration.
+- Extend the discovery adapters in `src/tools/integration.py` when new public fonds/rules/tools ship; do not duplicate the discovered roster in manuscript configuration.
 - Any new resource-pool category must enter through a typed loader before it is wired into `integration.py`.
 
 ## Documentation and signposting gaps

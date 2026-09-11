@@ -10,8 +10,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 sys.path.insert(0, str(Path(__file__).parents[4]))  # repo root (for `infrastructure`)
 
-from template_autopoiesis.manuscript_variables import generate_variables, save_variables
-from template_autopoiesis.project_paths import project_output_dirs
+from template_autopoiesis.manuscript.manuscript_variables import generate_variables, save_variables
+from template_autopoiesis.core.project_paths import project_output_dirs
 from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
 
 PROJECT_ROOT = Path(__file__).parent.parent

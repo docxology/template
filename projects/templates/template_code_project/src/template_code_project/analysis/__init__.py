@@ -52,7 +52,7 @@ from ._infra import (
     infrastructure_context,
 )
 from ._logging import _setup_fallback_logging, get_logger as _get_logger
-from ..project_paths import _DEFAULT_ROOT as project_root
+from ..core.project_paths import _DEFAULT_ROOT as project_root
 from .pipeline import (
     extract_optimization_metadata,
     generate_citations_from_metadata,
@@ -253,8 +253,8 @@ def compare_algorithms(
     >>> report = compare_algorithms()
     >>> print(report.best_variant.name)
     """
-    from ..experiment_config import load_experiment_config
-    from ..optimizer import compute_gradient, gradient_descent, quadratic_function, quadratic_optimum
+    from ..core.experiment_config import load_experiment_config
+    from ..core.optimizer import compute_gradient, gradient_descent, quadratic_function, quadratic_optimum
     from .experiments import _project_root
 
     cfg = config or load_experiment_config(_project_root())
@@ -434,7 +434,7 @@ def multi_factor_analysis(
     >>> report = multi_factor_analysis(cmp)
     >>> print(f"Composite score: {report.composite_score:.3f}")
     """
-    from ..experiment_config import load_experiment_config
+    from ..core.experiment_config import load_experiment_config
     from .experiments import _project_root
 
     cfg = config or load_experiment_config(_project_root())

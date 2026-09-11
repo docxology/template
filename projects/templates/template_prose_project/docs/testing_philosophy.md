@@ -24,9 +24,9 @@ test the boundary directly.
 
 Files (`projects/templates/template_prose_project/tests/`):
 
-- `test_config.py` — covers `src/config.py` typed YAML loader (23 tests).
-- `test_figures.py` — covers `src/figures.py` matplotlib renderers (6 tests).
-- `test_manuscript_variables.py` — covers `src/manuscript_variables.py`
+- `test_config.py` — covers `src/pipeline/config.py` typed YAML loader (23 tests).
+- `test_figures.py` — covers `src/figures/figures.py` matplotlib renderers (6 tests).
+- `test_manuscript_variables.py` — covers `src/manuscript/manuscript_variables.py`
   substitution (11 tests).
 - `test_pipeline.py` — covers `src/pipeline/` checks and
   `run_prose_pipeline` (44 tests across `TestRunProsePipeline`,
@@ -38,9 +38,9 @@ Files (`projects/templates/template_prose_project/tests/`):
   `TestNegativeControls`).
 - `test_pipeline_integration.py` — runs the bundled `manuscript/` end-to-end
   against `run_prose_pipeline` (1 test).
-- `test_prose_facade.py` — covers `src/prose_facade.py` report Protocols,
+- `test_prose_facade.py` — covers `src/pipeline/prose_facade.py` report Protocols,
   `render_outline`, and `parse_bib_keys` (16 tests).
-- `test_report.py` — covers `src/report.py::write_review_report`
+- `test_report.py` — covers `src/manuscript/report.py::write_review_report`
   (15 tests).
 - `test_scripts.py` — invokes the three orchestrator scripts via
   `subprocess.run` (4 tests).
@@ -84,19 +84,19 @@ Every test uses real artefacts:
 - **Real BibTeX.** Tests covering `_check_bibliography` (emits
   `CheckResult(name="bibliography_consistency")`) write small but valid
   `.bib` files and `_check_bibliography` parses them through
-  `src/prose_facade.parse_bib_keys`. This catches
+  `src/pipeline/prose_facade.parse_bib_keys`. This catches
   parser-level breakage that a mocked parse would hide.
 - **Real `tmp_path`.** No test writes into the project's own `output/`
   tree; every filesystem operation is contained in pytest's
   `tmp_path` fixture.
-- **Real subprocess.** `tests/test_scripts.py` invokes
+- **Real subprocess.** `tests/pipeline/test_scripts.py` invokes
   `scripts/run_prose_pipeline.py` and `scripts/y_generate_prose_figures.py`
   via `subprocess.run`, with real argparse, real exit codes, and real
   output-file existence checks.
 
 ## Integration Test
 
-`tests/test_pipeline_integration.py::test_bundled_manuscript_runs` is the
+`tests/pipeline/test_pipeline_integration.py::test_bundled_manuscript_runs` is the
 end-to-end fixture: it copies the project's own `manuscript/` directory
 into a temporary location, runs `run_prose_pipeline` against it, and
 verifies that `manuscript_report.json`, `checks.json`, `review_report.md`,
@@ -111,7 +111,7 @@ Before submitting any test, verify all boxes are checked:
 - [ ] Test uses real Markdown strings or `.md` files written to `tmp_path`.
 - [ ] Test calls `src/` functions with real `ManuscriptReport`,
   `ProjectConfig`, or `CheckResult` objects produced by infrastructure
-  or by `src/config.py::load_project_config`.
+  or by `src/pipeline/config.py::load_project_config`.
 - [ ] Test asserts on properties (passed/failed checks, file existence,
   field values), not on call counts.
 - [ ] No `unittest.mock`, `MagicMock`, `create_autospec`, `@patch`, or
@@ -123,16 +123,16 @@ Before submitting any test, verify all boxes are checked:
 
 The zero-mock constraint is self-enforcing when the architecture is correct:
 
-- **`src/config.py`, `src/manuscript_variables.py`, `src/figures.py`,
-  `src/report.py`, `src/prose_facade.py`** — pure modules → testable with
+- **`src/pipeline/config.py`, `src/manuscript/manuscript_variables.py`, `src/figures/figures.py`,
+  `src/manuscript/report.py`, `src/pipeline/prose_facade.py`** — pure modules → testable with
   real data.
 - **`src/pipeline/`** — evaluates the configured checks over the
   pre-analysed report (pure; no `infrastructure` imports; bibliography
-  cross-check via `src/prose_facade.parse_bib_keys`) → testable with real
+  cross-check via `src/pipeline/prose_facade.parse_bib_keys`) → testable with real
   Markdown and real BibTeX in `tmp_path`.
 - **`scripts/*.py`** — CLI shims that call `infrastructure.prose` /
   `infrastructure.rendering` → tested via `subprocess.run` in
-  `tests/test_scripts.py`.
+  `tests/pipeline/test_scripts.py`.
 
 If you find yourself wanting to mock `analyze_manuscript`, `parse_bib_keys`,
 or any I/O inside a test, stop. Either pass it real data, or move the

@@ -8,7 +8,7 @@ capability exists.  The abstract of this manuscript survived exactly this
 failure once — a hand-written test-count and coverage line that no
 generator step had computed — and was corrected by replacing the literal
 numbers with `{{TEST_COUNT}}` / `{{COVERAGE_PCT}}` tokens filled in at render
-time by `scripts/02_measure_test_coverage.py`.  `src/honesty.py` exists to
+time by `scripts/02_measure_test_coverage.py`.  `src/template_autopoiesis/core/honesty.py` exists to
 make that class of failure structurally harder: every load-bearing claim in
 this manuscript must resolve to a named function in a named file, and a
 dedicated module inspects the source tree to confirm that resolution rather
@@ -21,7 +21,7 @@ processes that produced them [@maturana_varela_1980] — organizational
 closure, not open-loop assertion. The honesty manifest is the narrow,
 literal, code-level analogue of that closure: the manuscript's claims about
 the code are checked *by the code*, not by a separate act of faith from the
-author. The analogy should not be over-read — `src/honesty.py` is a static
+author. The analogy should not be over-read — `src/template_autopoiesis/core/honesty.py` is a static
 AST scan, not a self-maintaining living system — but it is the reason this
 mechanism exists at all rather than a simple "trust me" comment block.
 
@@ -29,15 +29,15 @@ mechanism exists at all rather than a simple "trust me" comment block.
 
 | Claim | Evidence location | Test |
 |---|---|---|
-| Grammar parses | `src/grammar.py::parse_grammar` | `test_grammar_and_expand.py` |
-| Expansion is deterministic | `src/expand.py::expand`, `_digest_index` | `test_grammar_and_expand.py` |
-| Materialize writes files | `src/materialize.py::materialize` | `test_materialize.py` |
-| Integrity hashes | `src/integrity.py::tree_hash_from_content_hashes` | `test_integrity_and_verify.py` |
-| Verify recomputes | `src/verify.py::verify_child` | `test_integrity_and_verify.py` |
+| Grammar parses | `src/template_autopoiesis/core/grammar.py::parse_grammar` | `test_grammar_and_expand.py` |
+| Expansion is deterministic | `src/template_autopoiesis/core/expand.py::expand`, `_digest_index` | `test_grammar_and_expand.py` |
+| Materialize writes files | `src/template_autopoiesis/gates/materialize.py::materialize` | `test_materialize.py` |
+| Integrity hashes | `src/template_autopoiesis/gates/integrity.py::tree_hash_from_content_hashes` | `test_integrity_and_verify.py` |
+| Verify recomputes | `src/template_autopoiesis/gates/verify.py::verify_child` | `test_integrity_and_verify.py` |
 | Primitives collected | `src/primitives/__init__.py::collect_primitives` | `test_primitives_registry.py` |
 
 Each row is not prose describing an intention — it is a key into
-`STRUCTURAL_EVIDENCE`, the dict in `src/honesty.py` that the code below
+`STRUCTURAL_EVIDENCE`, the dict in `src/template_autopoiesis/core/honesty.py` that the code below
 walks mechanically. If a row's evidence path stops existing, the manifest
 fails and `test_honesty.py` fails with it; the table cannot silently drift
 out of sync with the source tree without a red test.
@@ -119,7 +119,7 @@ all must fail every claim, or the checker has no teeth.
 `build_manifest`, then — if a `manuscript/` directory exists — reads every
 `*.md` file in it and scans for a fixed, case-insensitive regex over six
 absolute-certainty words and one hard percentage figure, defined verbatim in
-`_UNSUPPORTED_CLAIM_PATTERN` in `src/honesty.py` (deliberately not quoted
+`_UNSUPPORTED_CLAIM_PATTERN` in `src/template_autopoiesis/core/honesty.py` (deliberately not quoted
 here: a plain-text regex has no exemption for markdown code spans, and an
 earlier draft of this very paragraph reproduced the list inside backticks —
 which tripped the gate it was describing, during this session's own
@@ -134,12 +134,12 @@ that failure mode is closed instead by the `{{TEST_COUNT}}` token
 substitution, a separate mechanism). Second, `unsupported_claims` *is*
 enforced, but only on one of the two paths through this module:
 `HonestyManifest.all_passed` is a conjunction over `evidence`,
-`missing_calls`, *and* `unsupported_claims`, and `src/cli.py::cmd_honesty`
+`missing_calls`, *and* `unsupported_claims`, and `src/template_autopoiesis/core/cli.py::cmd_honesty`
 calls `verify_honesty()` (the function that populates all three) and exits
 the process with code 1 whenever `all_passed` is false —
-`tests/test_cli.py::test_main_honesty_exits_zero` pins exactly this
+`tests/core/test_cli.py::test_main_honesty_exits_zero` pins exactly this
 behavior. The one place prose hits are *not* enforced is
-`test_verify_honesty_all_passed` in `tests/test_honesty.py`, which asserts
+`test_verify_honesty_all_passed` in `tests/core/test_honesty.py`, which asserts
 only `all(m.evidence.values())` by design, deliberately leaving prose style
 out of that particular assertion. Reading only that one test in isolation
 would suggest the prose scanner is a lint rather than a gate; reading the
@@ -151,7 +151,7 @@ CLI path shows it is a real gate on the `honesty` subcommand specifically.
 "does the claimed function exist" but "would a fake implementation of it get
 away with passing." It is parametrized via the
 `pytest.mark.parametrize("domain", list(KNOWN_DOMAINS))` decorator over all
-{{DOMAIN_COUNT}} primitive domains from `src/grammar.py`, and runs three
+{{DOMAIN_COUNT}} primitive domains from `src/template_autopoiesis/core/grammar.py`, and runs three
 checks per domain:
 
 1. **`test_stub_fails_gate_per_domain`** — `_stub_run_analysis` is a
@@ -192,7 +192,7 @@ with a stub and nothing downstream notices.
 ### What this buys, and what it does not
 
 The honesty manifest and the mutation gate are complementary, not
-redundant, but both are narrower than they might sound. `src/honesty.py`'s
+redundant, but both are narrower than they might sound. `src/template_autopoiesis/core/honesty.py`'s
 AST check covers exactly the six `STRUCTURAL_EVIDENCE` entries (`grammar
 parses`, `expand deterministic`, `materialize writes files`, `integrity
 hashes`, `verify recomputes`, `primitives collected`) — it does not scan
@@ -201,7 +201,7 @@ claim about a piece of code outside that list of six would not be caught by
 this mechanism. (This is not a hypothetical gap: an earlier draft of the
 Limitations section below claimed `generate_variables` exposed a
 `NOMINAL_OVER_EFFECTIVE` token that does not exist anywhere in
-`src/manuscript_variables.py`; the honesty AST check did not catch it
+`src/template_autopoiesis/manuscript/manuscript_variables.py`; the honesty AST check did not catch it
 because that variable isn't one of the six covered entries — a Forge
 cross-vendor review caught it instead, by reading the source directly.)
 `test_meta_teeth.py` similarly guarantees only that the acceptance tests

@@ -7,10 +7,10 @@ import re
 from pathlib import Path
 from typing import Any
 
-from template_autoresearch_project.artifact_loader import LoopArtifacts
+from .artifact_loader import LoopArtifacts
 from .manuscript_token_registry import STRICT_VALUE_TOKENS
 from .manuscript_tables import build_table_specs, variable_provenance_table
-from template_autoresearch_project.json_coerce import mapping, mapping_list
+from ..loop.json_coerce import mapping, mapping_list
 from .manuscript_tokens_figures import put_figure_blocks, save_figure_blocks
 from .manuscript_tokens_format import (
     string_value,
@@ -118,7 +118,7 @@ def save_variable_provenance(provenance: dict[str, object], path: Path) -> Path:
 
 
 def _load_project_artifacts(project_root: Path, *, require_valid: bool) -> LoopArtifacts:
-    from template_autoresearch_project.artifact_loader import load_loop_artifacts
+    from .artifact_loader import load_loop_artifacts
 
     return load_loop_artifacts(project_root, require_valid=require_valid)
 

@@ -6,14 +6,14 @@ from collections.abc import Callable
 from pathlib import Path
 
 try:
-    from ..experiment_config import ExperimentConfig, load_experiment_config
-    from ..optimizer import OptimizationResult, make_quadratic_problem, gradient_descent
+    from ..core.experiment_config import ExperimentConfig, load_experiment_config
+    from ..core.optimizer import OptimizationResult, make_quadratic_problem, gradient_descent
 except ImportError:  # pragma: no cover
     from experiment_config import ExperimentConfig, load_experiment_config  # type: ignore[no-redef]
     from optimizer import OptimizationResult, make_quadratic_problem, gradient_descent  # type: ignore[no-redef]
 
 from ._logging import get_logger
-from ..project_paths import resolve_project_root
+from ..core.project_paths import resolve_project_root
 
 
 def _project_root() -> Path:

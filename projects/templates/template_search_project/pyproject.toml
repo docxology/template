@@ -65,10 +65,15 @@ llm = [
     "urllib3>=2.7.0",
 ]
 
-[tool.setuptools]
-# Explicit package list so a future setuptools upgrade does not silently
-# auto-discover unintended top-level packages from this directory.
-packages = ["src"]
+[tool.setuptools.packages.find]
+# Explicit src-anchored discovery: the exemplar's importable package lives at
+# `src/template_search_project` (nested unique-package layout), so an
+# editable/wheel install must expose `template_search_project.*` — not a
+# phantom top-level `src` module (packages = ["src"] predates the
+# SUBMODULAR-SEARCH-1 split). The include filter keeps discovery explicit —
+# no unintended top-level packages auto-discovered from this directory.
+where = ["src"]
+include = ["template_search_project*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

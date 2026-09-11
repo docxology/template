@@ -8,9 +8,9 @@ from typing import Any
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ..experiment_config import ExperimentConfig
-from ..optimizer import quadratic_optimum
-from ..viz_config import VIZ_CONFIG, agency_category
+from ..core.experiment_config import ExperimentConfig
+from ..core.optimizer import quadratic_optimum
+from .viz_config import VIZ_CONFIG, agency_category
 from ._common import experiment_config, get_logger, project_root
 
 

@@ -18,11 +18,11 @@ uv run pytest projects/templates/template_pools_rules_tools/tests/ \
 
 The suite's project-owned test modules are:
 
-`test_coverage_extras.py`, `test_figures.py`, `test_fonds_reader.py`,
-`test_generate_figures_script.py`, `test_integration.py`,
-`test_manuscript_variables.py`, `test_property_based.py`,
-`test_resource_schema.py`, `test_rules_applier.py`,
-`test_strong_rule_evaluator.py`, and `test_tools_invoker.py`.
+Tests mirror the `src/` subpackage layout (SUBMODULAR): `tools/test_coverage_extras.py`,
+`tools/test_fonds_reader.py`, `tools/test_integration.py`, `tools/test_property_based.py`,
+`tools/test_resource_schema.py`, `tools/test_tools_invoker.py`; `rules/test_rules_applier.py`,
+`rules/test_strong_rule_evaluator.py`; `figures/test_figures.py`,
+`figures/test_generate_figures_script.py`, `figures/test_manuscript_variables.py`.
 
 ## See also
 

@@ -8,11 +8,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from template_autopoiesis.grammar import load_grammar
-from template_autopoiesis.expand import expand
-from template_autopoiesis.materialize import materialize
-from template_autopoiesis.realize import validate_child, run_analysis_stage
-from template_autopoiesis.project_paths import project_output_dirs
+from template_autopoiesis.core.grammar import load_grammar
+from template_autopoiesis.core.expand import expand
+from template_autopoiesis.gates.materialize import materialize
+from template_autopoiesis.gates.realize import validate_child, run_analysis_stage
+from template_autopoiesis.core.project_paths import project_output_dirs
 
 PROJECT_ROOT = Path(__file__).parent.parent
 

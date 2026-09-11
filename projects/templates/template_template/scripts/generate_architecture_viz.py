@@ -17,7 +17,7 @@ SRC_DIR = PROJECT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from template_template.paths import locate_repo_root  # noqa: E402
+from template_template.core.paths import locate_repo_root  # noqa: E402
 
 REPO_ROOT = locate_repo_root(PROJECT_DIR)
 if str(REPO_ROOT) not in sys.path:

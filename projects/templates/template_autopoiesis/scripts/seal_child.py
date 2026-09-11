@@ -9,8 +9,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from template_autopoiesis.sealing import build_payload
-from template_autopoiesis.verify import verify_child
+from template_autopoiesis.gates.sealing import build_payload
+from template_autopoiesis.gates.verify import verify_child
 
 
 def seal_child(child_root: Path) -> None:

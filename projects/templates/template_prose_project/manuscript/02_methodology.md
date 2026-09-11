@@ -29,7 +29,7 @@ Every cited key is matched against the BibTeX file at `bibliography.references_p
 | `fail_on_unused: true` | Bib entries that are never cited fail the check. |
 | `fail_on_unused: false` | Unused entries are warned but do not fail. |
 
-The check compares the cited keys from the `ManuscriptReport` against the BibTeX keys returned by `src.prose_facade.parse_bib_keys` — a deliberately minimal regex that skips `@comment` blocks. (Forks that need dialect-complete BibTeX parsing can swap in [`infrastructure.reference.citation.parse_bibfile`](../../../../infrastructure/reference/citation/SKILL.md) at the script layer; the exemplar's own gate does not require it.)
+The check compares the cited keys from the `ManuscriptReport` against the BibTeX keys returned by `src.pipeline.prose_facade.parse_bib_keys` — a deliberately minimal regex that skips `@comment` blocks. (Forks that need dialect-complete BibTeX parsing can swap in [`infrastructure.reference.citation.parse_bibfile`](../../../../infrastructure/reference/citation/SKILL.md) at the script layer; the exemplar's own gate does not require it.)
 
 ## Evaluate
 
@@ -47,7 +47,7 @@ The thresholds each check applies come from `manuscript/config.yaml`. A `prose.p
 
 ## Render
 
-`src/report.py::write_review_report` writes a markdown file with:
+`src/manuscript/report.py::write_review_report` writes a markdown file with:
 
 * Top-line counts (files, words, sentences, paragraphs, averages).
 * A pass/fail table for every check.

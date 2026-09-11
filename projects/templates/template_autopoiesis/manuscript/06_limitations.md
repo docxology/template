@@ -4,7 +4,7 @@ This section states what the exemplar does *not* do, alongside what it does.
 Coverage and test-count figures are not restated as literal numbers here —
 those live only in the `{{TEST_COUNT}}` / `{{COVERAGE_PCT}}` tokens, resolved
 at render time from a live measurement
-(`src/manuscript_variables.py::measure_test_summary`), not hand-typed.
+(`src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary`), not hand-typed.
 
 ### Reserved slots are excluded from the effective product space
 
@@ -19,7 +19,7 @@ consequence: distinct seeds can produce a nominally distinct `spec_hash`
 while materializing byte-identical children, since only three slots vary
 output. That inflation, {{PRODUCT_SIZE}} nominal vs. {{EFFECTIVE_PRODUCT_SIZE}}
 effective, is disclosed rather than hidden: `generate_variables`
-(`src/manuscript_variables.py`) exposes both `PRODUCT_SIZE` and
+(`src/template_autopoiesis/manuscript/manuscript_variables.py`) exposes both `PRODUCT_SIZE` and
 `EFFECTIVE_PRODUCT_SIZE` as separate tokens, so nowhere in this manuscript
 can the larger, nominal number be quoted without the smaller, effective one
 appearing beside it. Wiring the reserved slots into `materialize()` is an
@@ -58,7 +58,7 @@ constitutive components through its own operation [@maturana_varela_1980].
 Here the grammar (`manuscript/config.yaml`) is fixed input; `parse_grammar`
 and `expand` are pure functions of that input plus a seed; no code path
 feeds a materialized child back into the grammar or rewrites
-`src/grammar.py`. Children are causally downstream of the grammar — the
+`src/template_autopoiesis/core/grammar.py`. Children are causally downstream of the grammar — the
 reverse direction does not occur in the current codebase. The name is a
 provocation about what genuine self-production would require, not a claim
 this exemplar achieves it.
@@ -67,7 +67,7 @@ this exemplar achieves it.
 
 `verify_child` recomputes a tree hash from the files *listed inside*
 `provenance.json` and compares it against the `tree_hash` field stored in
-that same file (`src/verify.py`, `src/materialize.py`). Both the manifest
+that same file (`src/template_autopoiesis/gates/verify.py`, `src/template_autopoiesis/gates/materialize.py`). Both the manifest
 and the expected hash are self-reported at materialization time; nothing
 external anchors them. An actor who can rewrite `provenance.json` can edit
 its `files` list and recompute a matching hash from whatever content they
@@ -91,12 +91,12 @@ trio — first `sealing.py`/`verify.py`/`cli.py`, then, after those were
 hardened, `common.py`/`figures.py`/`cover_art.py`. As of this measurement no
 module sits below the 90% branch-coverage line
 ([@fig:coverage_by_module]): dedicated tests were added for `common.py`'s
-`trunc()` clipping branch and `CheckReport.failed` (`tests/test_common.py`,
+`trunc()` clipping branch and `CheckReport.failed` (`tests/core/test_common.py`,
 new this session), `figures.py`'s `list`/`tuple` input branch of
 `_first_plottable_array`, the generic `repr()` fallback in
 `_scalar_summary_lines`, and the array-plotting branch of
-`render_primitive_figure` (`tests/test_figures.py`), and `cover_art.py`'s
-QR-seal drawing branch (`tests/test_cover_art.py`,
+`render_primitive_figure` (`tests/figures/test_figures.py`), and `cover_art.py`'s
+QR-seal drawing branch (`tests/figures/test_cover_art.py`,
 `test_render_cover_with_grammar_hash_*`) — the same branch identified above
 as running in production but previously untested.
 
@@ -112,8 +112,8 @@ floor (`--cov-fail-under=90`), and the aggregate {{COVERAGE_PCT}} alone would
 obscure exactly where the remaining, smaller gaps live — which is the reason
 this section, and [@fig:coverage_by_module], exist as a per-module view
 rather than trusting one headline number. Property-based tests
-(`tests/test_property_invariants.py`, Hypothesis) and a stress/edge suite
-(`tests/test_stress_edge_cases.py`) cover invariants like boundary seeds and
+(`tests/gates/test_property_invariants.py`, Hypothesis) and a stress/edge suite
+(`tests/core/test_stress_edge_cases.py`) cover invariants like boundary seeds and
 all-reserved-slot configurations [@claessen2000quickcheck;
 @maciver2019hypothesis], but generated inputs are not a substitute for
 direct tests of the specific branches named above.
@@ -132,7 +132,7 @@ An earlier draft of this section reported that the title-page cover image
 omitted the originally envisioned QR seal, gradient glow, and seed-derived
 dot placement. That is no longer accurate and is corrected here rather than
 left to silently drift: `scripts/generate_cover_art.py` now calls
-`render_cover(..., grammar_hash=grammar.grammar_hash)`, and `src/cover_art.py`
+`render_cover(..., grammar_hash=grammar.grammar_hash)`, and `src/template_autopoiesis/figures/cover_art.py`
 draws all three elements unconditionally except the QR seal, which is drawn
 whenever `grammar_hash` is not `None` — the shipped `paper.cover.image`
 (`output/figures/cover_art.png`) is generated by exactly this call, so the
@@ -140,9 +140,9 @@ rendered title page carries a real gradient glow, real seed-derived dot
 scatter, and a real QR-style pixel grid encoding `{{GRAMMAR_HASH}}` with the
 hash printed as a text label beneath it. An earlier draft of this section
 also noted that no test called `render_cover` with an explicit
-`grammar_hash=`, leaving the QR-drawing branch (`src/cover_art.py`, the `if
+`grammar_hash=`, leaving the QR-drawing branch (`src/template_autopoiesis/figures/cover_art.py`, the `if
 grammar_hash is not None:` block) exercised in production but untested; that
-gap is now closed by `tests/test_cover_art.py::test_render_cover_with_grammar_hash_*`,
+gap is now closed by `tests/figures/test_cover_art.py::test_render_cover_with_grammar_hash_*`,
 added this session (see "Coverage is uneven across modules" below).
 
 Separately, for most of this project's life `manuscript/references.bib` held

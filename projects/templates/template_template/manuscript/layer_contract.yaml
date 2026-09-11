@@ -1,5 +1,8 @@
-# Meta-template exception: runtime introspection of Layer 1 is documented and allowlisted.
+# Meta-template exception: runtime introspection of Layer 1 is documented and
+# allowlisted. Paths updated to the post-split subpackage layout
+# (SUBMODULAR-TEMPLATE-1); the boundary gate matches either the flat or the
+# nested form, but the contract names the files at their live locations.
 allow_infrastructure_imports:
-  - src/template_template/introspection.py
-  - src/template_template/metrics.py
-  - src/template_template/inject_metrics.py
+  - src/template_template/core/introspection.py
+  - src/template_template/metrics/metrics.py
+  - src/template_template/metrics/inject_metrics.py

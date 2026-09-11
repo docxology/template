@@ -39,10 +39,10 @@ The `type` field governs which reader function is appropriate and what schema th
 
 ## Fond Reader Module
 
-The `src/fonds_reader.py` module provides three reader functions — one per fond type — plus a convenience aggregator:
+The `src/tools/fonds_reader.py` module provides three reader functions — one per fond type — plus a convenience aggregator:
 
 ```python
-from src.fonds_reader import (
+from src.tools.fonds_reader import (
     read_bibliography_fond,
     read_contacts_fond,
     read_datasets_fond,
@@ -71,4 +71,4 @@ Consider a concrete failure scenario: a parallel automation agent is in the proc
 4. `run_integration_demo()` records the reduced count in the summary dict rather than propagating any exception.
 5. The manuscript token `{{FONDS_LOADED}}` reflects the reduced count honestly — the pipeline never claims a fond loaded that did not.
 
-This sequence is exercised directly by `tests/test_fonds_reader.py::test_missing_data_dir_contacts_returns_none`, which constructs a fond directory with a manifest but no `data/` subdirectory and asserts the reader returns `None` rather than raising. The same existence-check-then-parse pattern repeats identically across `fonds_reader.py`'s three readers, `rules_applier.py`, and `tools_invoker.py`, which is why @fig:resilience presents it as one repeated design, not three independent ad-hoc fixes.
+This sequence is exercised directly by `tests/tools/test_fonds_reader.py::test_missing_data_dir_contacts_returns_none`, which constructs a fond directory with a manifest but no `data/` subdirectory and asserts the reader returns `None` rather than raising. The same existence-check-then-parse pattern repeats identically across `fonds_reader.py`'s three readers, `rules_applier.py`, and `tools_invoker.py`, which is why @fig:resilience presents it as one repeated design, not three independent ad-hoc fixes.

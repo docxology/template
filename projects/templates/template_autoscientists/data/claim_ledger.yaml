@@ -2,28 +2,28 @@ claims:
   - claim_id: dead-end-registry-threshold
     kind: number
     value: 3
-    source: projects/templates/template_autoscientists/src/dead_ends.py DeadEndRegistry default threshold
+    source: projects/templates/template_autoscientists/src/template_autoscientists/search/dead_ends.py DeadEndRegistry default threshold
     source_tier: project_source
     freshness: active
     artifact_path: output/data/ablation.json
   - claim_id: confirmation-noise-seeds
     kind: number
     value: 3
-    source: projects/templates/template_autoscientists/src/search.py SearchConfig default confirmation seeds
+    source: projects/templates/template_autoscientists/src/template_autoscientists/search/search.py SearchConfig default confirmation seeds
     source_tier: project_source
     freshness: active
     artifact_path: output/data/ablation.json
   - claim_id: stagnation-window
     kind: number
     value: 10
-    source: projects/templates/template_autoscientists/src/stagnation.py StagnationDetector default window
+    source: projects/templates/template_autoscientists/src/template_autoscientists/search/stagnation.py StagnationDetector default window
     source_tier: project_source
     freshness: active
     artifact_path: output/data/ablation.json
   - claim_id: team-count
     kind: number
     value: 3
-    source: projects/templates/template_autoscientists/src/search.py SearchConfig default team count
+    source: projects/templates/template_autoscientists/src/template_autoscientists/search/search.py SearchConfig default team count
     source_tier: project_source
     freshness: active
     artifact_path: output/data/ablation.json

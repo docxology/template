@@ -68,7 +68,7 @@ Final PDF: `projects/templates/template_code_project/output/pdf/template_code_pr
 ## Common Next Steps
 
 - **Change step sizes**: edit `projects/templates/template_code_project/manuscript/config.yaml` → `experiment.step_sizes`, then re-run steps 2–4.
-- **Add a new algorithm**: extend `src/optimizer.py`, add tests in `tests/test_optimizer.py`, and call it from the analysis script (see `docs/architecture.md`).
+- **Add a new algorithm**: extend `src/template_code_project/core/optimizer.py`, add tests in `tests/core/test_optimizer.py`, and call it from the analysis script (see `docs/architecture.md`).
 - **Modify the manuscript**: edit markdown files under `projects/templates/template_code_project/manuscript/`, then hydrate variables and re-render (steps 3–4).
 
 ## Getting Help

@@ -35,9 +35,9 @@ layout.
 
 ## `optimizer.py`
 
-Source: [`optimizer.py`](../../projects/templates/template_code_project/src/template_code_project/optimizer.py)
+Source: [`optimizer.py`](../../projects/templates/template_code_project/src/template_code_project/core/optimizer.py)
 
-Behavior tests: [`test_optimizer.py`](../../projects/templates/template_code_project/tests/test_optimizer.py)
+Behavior tests: [`test_optimizer.py`](../../projects/templates/template_code_project/tests/core/test_optimizer.py)
 
 ### `OptimizationResult`
 
@@ -101,9 +101,9 @@ its source docstring for the current return mapping and defaults.
 
 ## `invariants.py`
 
-Source: [`invariants.py`](../../projects/templates/template_code_project/src/template_code_project/invariants.py)
+Source: [`invariants.py`](../../projects/templates/template_code_project/src/template_code_project/core/invariants.py)
 
-Behavior tests: [`test_invariants.py`](../../projects/templates/template_code_project/tests/test_invariants.py)
+Behavior tests: [`test_invariants.py`](../../projects/templates/template_code_project/tests/core/test_invariants.py)
 
 The invariant surface evaluates real numerical behavior without infrastructure
 imports or I/O:

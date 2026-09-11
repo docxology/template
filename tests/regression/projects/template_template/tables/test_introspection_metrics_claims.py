@@ -25,7 +25,7 @@ to the real source functions:
   infra module, tight enough to fail on a broken discovery or a large jump.
 
 Every value is re-derived by calling the real
-``template_template.introspection`` functions (and
+``template_template.core.introspection`` functions (and
 ``infrastructure.project.public_scope.public_project_names``) on the repo root
 -- never by hand-copying a rendered ``${token}`` from the manuscript.
 
@@ -35,10 +35,8 @@ with the repo no-mock policy.
 
 from __future__ import annotations
 
-import importlib.util
-from pathlib import Path
 import sys
-from types import ModuleType
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -46,50 +44,25 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[5]
 PROJECT_ROOT = REPO_ROOT / "projects" / "templates" / "template_template"
+_SRC = PROJECT_ROOT / "src" / "template_template"
 
-_PKG_ALIAS = "_template_template_src"
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))  # needed for ``infrastructure.*``
 
-
-def _load_src_package() -> ModuleType:
-    """Load this exemplar's ``src`` package under a project-unique alias.
-
-    Every public exemplar ships a top-level ``src`` package, so a bare
-    ``sys.path.insert`` + ``from src...`` collides on ``sys.modules['src']``
-    once a second project's regression test joins the same pytest session.
-    Registering under a namespaced key keeps the real tested functions in
-    scope (no mocks) and stays collision-free regardless of collection order.
-
-    Unlike the flat-``src`` exemplars, ``template_template`` ships its package
-    at ``src/template_template/`` and its introspection functions import
-    ``infrastructure.*``, so the repo root must be importable too.
-    """
-
-    if str(REPO_ROOT) not in sys.path:
-        sys.path.insert(0, str(REPO_ROOT))
-
-    if _PKG_ALIAS in sys.modules:
-        return sys.modules[_PKG_ALIAS]
-    pkg_init = PROJECT_ROOT / "src" / "template_template" / "__init__.py"
-    spec = importlib.util.spec_from_file_location(
-        _PKG_ALIAS,
-        pkg_init,
-        submodule_search_locations=[str(PROJECT_ROOT / "src" / "template_template")],
-    )
-    assert spec is not None and spec.loader is not None, f"cannot load {pkg_init}"
-    package = importlib.util.module_from_spec(spec)
-    sys.modules[_PKG_ALIAS] = package
-    spec.loader.exec_module(package)
-    return package
-
-
-def _import_submodule(dotted: str) -> ModuleType:
-    _load_src_package()
-    return importlib.import_module(f"{_PKG_ALIAS}.{dotted}")
-
-
-_introspection = _import_submodule("introspection")
-build_infrastructure_report = _introspection.build_infrastructure_report
-discover_infrastructure_modules = _introspection.discover_infrastructure_modules
+# SUBMODULAR-TEMPLATE-1: the exemplar package is a regular nested package
+# (``src/template_template/``) whose subpackage modules import via absolute
+# ``template_template.*`` paths, so the exemplar imports directly -- no
+# project-unique alias or scoped meta-path finder is needed. The alias
+# machinery existed only to resolve the pre-split flat layout's
+# ``sys.modules['src']`` collision, which no longer applies: the repo conftest
+# places every ``projects/*/src`` on ``sys.path`` and each exemplar owns a
+# unique nested package name. Import the tested functions via the real
+# absolute module paths.
+assert _SRC.is_dir(), f"exemplar package missing: {_SRC}"
+from template_template.core.introspection import (  # noqa: E402
+    build_infrastructure_report,
+    discover_infrastructure_modules,
+)
 
 # public_scope is plain infrastructure (no src-package collision), imported directly.
 from infrastructure.project.public_scope import public_project_names  # noqa: E402

@@ -33,10 +33,10 @@ Reading order is mandatory, not advisory. Each document gates a category of acti
 
 ## Rule 2: Coverage Gate — ≥90% on `src/`
 
-The test suite covers `tests/test_config.py`, `tests/test_figures.py`,
-`tests/test_manuscript_variables.py`, `tests/test_pipeline.py`,
-`tests/test_pipeline_integration.py`, `tests/test_prose_facade.py`,
-`tests/test_report.py`, and `tests/test_scripts.py`. Live test count +
+The test suite covers `tests/pipeline/test_config.py`, `tests/figures/test_figures.py`,
+`tests/manuscript/test_manuscript_variables.py`, `tests/pipeline/test_pipeline.py`,
+`tests/pipeline/test_pipeline_integration.py`, `tests/pipeline/test_prose_facade.py`,
+`tests/manuscript/test_report.py`, and `tests/pipeline/test_scripts.py`. Live test count +
 achieved coverage are tracked in
 [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md) —
 do not hardcode either number in prose. The gate is **90%**
@@ -67,19 +67,19 @@ sub-module level inside `src/`:
 
 | File | May call infrastructure operations | Notes |
 |---|---|---|
-| `src/pipeline/` | **No** — pure check evaluation over the pre-analysed report | Zero `infrastructure` imports; the bibliography cross-check uses `src.prose_facade.parse_bib_keys` |
-| `src/figures.py` | **No** — plots over the project-owned `ManuscriptReportLike` Protocol | Must not re-implement analysis — plot only over a typed report |
-| `src/report.py` | **Yes** — via `src.prose_facade.{ManuscriptReportLike, render_outline}` (project-owned Protocol + pure helper) | No `analyze_*`, no `parse_*`, no I/O into infrastructure |
-| `src/prose_facade.py` | **No** — zero `infrastructure` imports by design | Project-owned report Protocols plus `render_outline`/`parse_bib_keys`; decouples `src/` from `infrastructure.prose`/`infrastructure.reference` internals |
-| `src/manuscript_variables.py` | **No** — `load_report_payload` reads raw JSON only | `infrastructure.rendering.manuscript_injection` is called by `scripts/z_generate_manuscript_variables.py`, not from `src/` |
+| `src/pipeline/` | **No** — pure check evaluation over the pre-analysed report | Zero `infrastructure` imports; the bibliography cross-check uses `src.pipeline.prose_facade.parse_bib_keys` |
+| `src/figures/figures.py` | **No** — plots over the project-owned `ManuscriptReportLike` Protocol | Must not re-implement analysis — plot only over a typed report |
+| `src/manuscript/report.py` | **Yes** — via `src.pipeline.prose_facade.{ManuscriptReportLike, render_outline}` (project-owned Protocol + pure helper) | No `analyze_*`, no `parse_*`, no I/O into infrastructure |
+| `src/pipeline/prose_facade.py` | **No** — zero `infrastructure` imports by design | Project-owned report Protocols plus `render_outline`/`parse_bib_keys`; decouples `src/` from `infrastructure.prose`/`infrastructure.reference` internals |
+| `src/manuscript/manuscript_variables.py` | **No** — `load_report_payload` reads raw JSON only | `infrastructure.rendering.manuscript_injection` is called by `scripts/z_generate_manuscript_variables.py`, not from `src/` |
 | `scripts/run_prose_pipeline.py` | **Yes** — `infrastructure.prose.analyze_manuscript` produces the `ManuscriptReport` before calling `src.pipeline.run_prose_pipeline` | No inline analysis logic |
-| `scripts/y_generate_prose_figures.py` | **Yes** — `infrastructure.prose.report.load_report_json` rehydrates a typed `ManuscriptReport` before calling `src/figures.py` | No inline analysis logic |
-| `src/config.py` | No | Pure YAML loading + dataclasses |
+| `scripts/y_generate_prose_figures.py` | **Yes** — `infrastructure.prose.report.load_report_json` rehydrates a typed `ManuscriptReport` before calling `src/figures/figures.py` | No inline analysis logic |
+| `src/pipeline/config.py` | No | Pure YAML loading + dataclasses |
 | `scripts/z_generate_manuscript_variables.py` | **Yes** — `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree` for the token-substituted tree | No inline analysis logic |
 
 **The boundary test**: if you find yourself writing a regex over
 manuscript prose, computing readability, or parsing BibTeX inside `scripts/`
-or inside `src/figures.py`, stop. That work belongs in `infrastructure/prose/`
+or inside `src/figures/figures.py`, stop. That work belongs in `infrastructure/prose/`
 or (for dialect-complete parsing) `infrastructure/reference/`, called from
 the scripts layer.
 
@@ -101,7 +101,7 @@ The pipeline analyses the manuscript using standard readability metrics.
 `infrastructure.prose.analyze_manuscript` to compute Flesch-Kincaid Grade
 Level, Flesch Reading Ease, and Gunning Fog from the files under
 `manuscript/`, then validates citations against `manuscript/references.bib`
-via `src/prose_facade.parse_bib_keys` (`src/pipeline/__init__.py::run_prose_pipeline`
+via `src/pipeline/prose_facade.parse_bib_keys` (`src/pipeline/__init__.py::run_prose_pipeline`
 evaluates the configured checks).
 ```
 
@@ -114,7 +114,7 @@ The bibliography is automatically validated.
 ```markdown
 `_check_bibliography` in `src/pipeline/checks.py` cross-references the
 `[@key]` citations extracted by `infrastructure.prose` against the keys
-returned by `src/prose_facade.parse_bib_keys` (a minimal regex over
+returned by `src/pipeline/prose_facade.parse_bib_keys` (a minimal regex over
 `manuscript/references.bib` that skips `@comment` blocks), emitting a
 `CheckResult` with `name="bibliography_consistency"` whose
 `details.missing` lists unmatched keys.
@@ -129,7 +129,7 @@ random draws anywhere in `src/` or `scripts/`. Two requirements apply:
 
 1. **Configuration is the single source of truth.** Do not hard-code a
    threshold (e.g. `if grade > 18`) anywhere; read it from
-   `ProseAnalysisConfig` (`src/config.py`).
+   `ProseAnalysisConfig` (`src/pipeline/config.py`).
 2. **Outputs are reproducible byte-for-byte for a given configuration and
    manuscript.** `output/manuscript_report.json`, `output/checks.json`,
    `output/run_summary.json`, and the figure PNGs are stable across runs
@@ -165,10 +165,10 @@ If you need to change what a generated file contains, change the **generator**:
   or the wiring in `src/pipeline/`.
 - To change `output/checks.json` → add or adjust a `_check_<name>` function
   in `src/pipeline/`.
-- To change `output/review_report.md` → modify `src/report.py`.
-- To change `output/figures/*.png` → modify `src/figures.py`.
+- To change `output/review_report.md` → modify `src/manuscript/report.py`.
+- To change `output/figures/*.png` → modify `src/figures/figures.py`.
 - To change `output/manuscript/*.md` (token-substituted copies) → modify the
-  template under `manuscript/` and/or `src/manuscript_variables.py`.
+  template under `manuscript/` and/or `src/manuscript/manuscript_variables.py`.
 - To change `output/pdf/template_prose_project_combined.pdf` → modify the
   manuscript source files, then re-render.
 
@@ -193,10 +193,10 @@ grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
 
 # 3. No infrastructure analysis calls outside the scripts seam
 grep -nE "analyze_manuscript|parse_bibfile|write_report" \
-    projects/templates/template_prose_project/src/figures.py \
-    projects/templates/template_prose_project/src/report.py \
-    projects/templates/template_prose_project/src/manuscript_variables.py \
-    projects/templates/template_prose_project/src/config.py \
+    projects/templates/template_prose_project/src/figures/figures.py \
+    projects/templates/template_prose_project/src/manuscript/report.py \
+    projects/templates/template_prose_project/src/manuscript/manuscript_variables.py \
+    projects/templates/template_prose_project/src/pipeline/config.py \
     || echo "Clean — only the scripts layer performs infrastructure operations"
 ```
 

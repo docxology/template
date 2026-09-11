@@ -14,18 +14,10 @@ Programmatic introspection and documentation of the template repository's own ar
 
 ```text
 template_template/
-├── src/template_template/        # Core modules
-│   ├── introspection.py          # YAML + filesystem repository analysis
-│   ├── metrics.py                # Manuscript metrics + token dict
-│   ├── contracts.py              # Receipts, lockstep, deterministic-default validation
-│   ├── inject_metrics.py         # ${variable} substitution
-│   ├── architecture_viz.py       # Figure orchestrator (calls figure_* modules)
-│   ├── figure_architecture_overview.py  # Architecture overview figure
-│   ├── figure_pipeline_stages.py        # Pipeline stages figure
-│   ├── figure_module_inventory.py       # Module inventory figure
-│   ├── figure_comparative_matrix.py     # Comparative feature matrix figure
-│   ├── viz_palette.py            # Shared palette + drawing helpers
-│   └── paths.py                  # Repository root discovery
+├── src/template_template/        # Domain modules (core / metrics / figures)
+│   ├── core/                     # Introspection, contracts, repo-root discovery
+│   ├── metrics/                  # Manuscript metrics + ${variable} injection
+│   └── figures/                  # Figure orchestrator + per-figure builders + palette
 ├── scripts/                      # Thin orchestrators (metrics, figures)
 ├── tests/                     # 90%+ coverage on src/
 ├── manuscript/                # Chapters + config + references
@@ -49,7 +41,7 @@ quick reference commands, and pitfalls.
 
 ## Key Subsystems
 
-### Introspection (`src/template_template/introspection.py`)
+### Introspection (`src/template_template/core/introspection.py`)
 
 | Function | Returns | Description |
 |----------|---------|-------------|
@@ -58,22 +50,22 @@ quick reference commands, and pitfalls.
 | `load_pipeline_stages_from_yaml` | `list[PipelineStage]` | Parse `pipeline.yaml` |
 | `build_infrastructure_report` | `InfrastructureReport` | Full aggregated report |
 
-### Metrics (`src/template_template/metrics.py`)
+### Metrics (`src/template_template/metrics/metrics.py`)
 
 | Function | Description |
 |----------|-------------|
 | `build_manuscript_metrics_dict` | `${variable}` values from live repo |
 | `save_metrics_json` | Write `output/data/metrics.json` |
 
-### Injection (`src/template_template/inject_metrics.py`)
+### Injection (`src/template_template/metrics/inject_metrics.py`)
 
 | Function | Description |
 |----------|-------------|
 | `render_all_chapters` | Write `output/manuscript/` with substituted tokens |
 
-### Visualization (`src/template_template/architecture_viz.py`)
+### Visualization (`src/template_template/figures/architecture_viz.py`)
 
-`generate_all_architecture_figures` orchestrates the four dedicated figure modules — `figure_architecture_overview.py`, `figure_pipeline_stages.py`, `figure_module_inventory.py`, and `figure_comparative_matrix.py` (sharing `viz_palette.py` helpers) — to write architecture overview, pipeline stages, module inventory, and comparative feature matrix figures under `output/figures/`.
+`generate_all_architecture_figures` orchestrates the four dedicated figure builders under `figures/` — `figure_architecture_overview.py`, `figure_pipeline_stages.py`, `figure_module_inventory.py`, and `figure_comparative_matrix.py` (sharing `figures/viz_palette.py` helpers) — to write architecture overview, pipeline stages, module inventory, and comparative feature matrix figures under `output/figures/`.
 
 ## Verification
 

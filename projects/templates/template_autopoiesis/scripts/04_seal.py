@@ -14,8 +14,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 sys.path.insert(0, str(Path(__file__).parent))
 
 from seal_child import seal_child
-from template_autopoiesis.project_paths import project_output_dirs
-from template_autopoiesis.realize import select_full_child
+from template_autopoiesis.core.project_paths import project_output_dirs
+from template_autopoiesis.gates.realize import select_full_child
 
 PROJECT_ROOT = Path(__file__).parent.parent
 

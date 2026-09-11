@@ -12,27 +12,7 @@ from .figures import (
     generate_status_dashboard,
     generate_tool_contract,
 )
-from .fonds_reader import (
-    count_summary,
-    get_fonds_root,
-    read_all_fonds,
-    read_bibliography_fond,
-    read_contacts_fond,
-    read_datasets_fond,
-)
-from .integration import (
-    check_bibliography_overlap,
-    derive_dashboard_data,
-    generate_figure_data,
-    run_integration_demo,
-)
-from .resource_schema import (
-    REQUIRED_MANIFEST_KEYS,
-    build_resource_schema_receipt,
-    validate_resource_directory,
-    validate_resource_manifest,
-)
-from .rules_applier import (
+from .rules.rules_applier import (
     get_rules_root,
     load_all_manuscript_rules,
     load_all_project_rules,
@@ -40,18 +20,38 @@ from .rules_applier import (
     load_strong_rules,
     validate_against_rules,
 )
-from .strong_rule_evaluator import (
+from .rules.strong_rule_evaluator import (
     evaluate_strong_rules,
     load_rule_context_from_project,
 )
-from .tools_invoker import (
+from .tools.fonds_reader import (
+    count_summary,
+    get_fonds_root,
+    read_all_fonds,
+    read_bibliography_fond,
+    read_contacts_fond,
+    read_datasets_fond,
+)
+from .tools.integration import (
+    check_bibliography_overlap,
+    derive_dashboard_data,
+    generate_figure_data,
+    run_integration_demo,
+)
+from .tools.resource_schema import (
+    REQUIRED_MANIFEST_KEYS,
+    build_resource_schema_receipt,
+    validate_resource_directory,
+    validate_resource_manifest,
+)
+from .tools.tools_invoker import (
     discover_tools,
     discover_tools_with_validation,
     get_tool_entrypoints,
     get_tools_root,
     validate_tool_scripts_exist,
 )
-from .type_defs import (
+from .tools.type_defs import (
     AllFondsResult,
     AllRulesResult,
     BibliographyFondResult,

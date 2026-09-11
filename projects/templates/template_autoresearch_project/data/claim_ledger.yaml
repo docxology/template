@@ -2,10 +2,10 @@ claims:
   - claim_id: ml-candidate-budget
     kind: number
     value: 20
-    source: projects/templates/template_autoresearch_project/src/template_autoresearch_project/ml/config.py ML task max candidate budget
+    source: projects/templates/template_autoresearch_project/src/template_autoresearch_project/ml/data.py ML task max candidate budget
     source_tier: project_source
     freshness: active
-    artifact_path: src/template_autoresearch_project/config.py
+    artifact_path: src/template_autoresearch_project/loop/config.py
   - claim_id: baseline-accuracy
     kind: number
     value: 0.50

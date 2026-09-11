@@ -1,6 +1,6 @@
 """Deterministic AutoResearch exemplar project."""
 
-from .config import (
+from .loop.config import (
     AutoResearchLoopConfig,
     ManuscriptLoopSettings,
     ResearchQuestion,
@@ -9,9 +9,9 @@ from .config import (
     load_manuscript_loop_settings,
 )
 from .loop import run_autoresearch_loop
-from .manuscript_variables import compute_variables, save_variables
+from .manuscript.manuscript_variables import compute_variables, save_variables
 from .ml.task import MLTaskResult, load_mnist_task_config, run_bounded_ml_task
-from .models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
+from .loop.models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
 
 __all__ = [
     "AutoResearchClaim",

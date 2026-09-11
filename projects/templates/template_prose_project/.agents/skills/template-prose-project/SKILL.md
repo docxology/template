@@ -45,7 +45,7 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_pro
   require `chrome-headless-shell`; install it once via
   `npx --yes puppeteer browsers install chrome-headless-shell` (see
   [`README.md`](../../../README.md)).
-- **Config validation is strict, not permissive.** `src/config.py::ProjectConfig.from_dict`
+- **Config validation is strict, not permissive.** `src/pipeline/config.py::ProjectConfig.from_dict`
   rejects unknown keys and out-of-range values by raising `ValueError` with the
   offending value and the allowed set quoted — see
   [`docs/faq.md`](../../../docs/faq.md).
