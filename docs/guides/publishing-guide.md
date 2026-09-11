@@ -63,7 +63,7 @@ from infrastructure.publishing import (
 )
 
 # Extract metadata from config.yaml
-from infrastructure.publishing.metadata_from_config import publication_metadata_from_config
+from infrastructure.publishing.metadata.metadata_from_config import publication_metadata_from_config
 from pathlib import Path
 
 metadata = publication_metadata_from_config(Path("projects/templates/template_code_project/manuscript/config.yaml"))
@@ -302,7 +302,7 @@ for cases where a pre-DOI deposited PDF is acceptable.
 
 **Outputs:** `output/{project}/release_bundle/` (`Author_Year_Topic_hash8.pdf` by default — see [Deposit upload filename](#deposit-upload-filename); fallback `{project}_combined.pdf` when disabled), `publication_metadata.json`, `manifest.json`, `RELEASE_RECEIPT.json`.
 
-Programmatic API: `infrastructure.publishing.release_workflow.run_release_workflow`.
+Programmatic API: `infrastructure.publishing.release.release_workflow.run_release_workflow`.
 
 ## Updating Existing GitHub and Zenodo Publications
 
@@ -539,7 +539,7 @@ When `publication.transmission_bookends.enabled: true`, the render pipeline writ
 
 When bookends are enabled, the combined-PDF renderer skips the auto `\maketitle` block so transmission begin is page 1; the table of contents moves to page 2. Bibliography is injected **before** the end bookend so references render on the pages immediately preceding END OF TRANSMISSION. Bookend section titles use `\section*` so they do not appear in the TOC.
 
-Each bookend uses a LaTeX single-page envelope (`samepage`, `\scriptsize`, zero paragraph/list spacing). Stage 04 runs `infrastructure.publishing.transmission_page_check` when bookends are enabled — BEGIN must appear only on page 1 and END only on the last page.
+Each bookend uses a LaTeX single-page envelope (`samepage`, `\scriptsize`, zero paragraph/list spacing). Stage 04 runs `infrastructure.transmission.transmission_page_check` when bookends are enabled — BEGIN must appear only on page 1 and END only on the last page.
 
 Structured manifest: `output/data/transmission_manifest.json` (`title`, `version`, `doi`, GitHub/Zenodo URLs, PDF SHA-256/512, `published`). The strip’s **Manifest** QR encodes compact JSON (≤100 chars).
 
@@ -652,7 +652,7 @@ Tests: `tests/infra_tests/publishing/test_abstract_plaintext.py`, `test_release_
 Manual page-span check after render:
 
 ```bash
-uv run python -m infrastructure.publishing.transmission_page_check \
+uv run python -m infrastructure.transmission.transmission_page_check \
   projects/{name}/output/pdf/{name}_combined.pdf
 ```
 

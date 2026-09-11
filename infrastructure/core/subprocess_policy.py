@@ -140,7 +140,7 @@ INTENTIONAL_SUBPROCESS_POLICIES: tuple[SubprocessPolicy, ...] = (
     ),
     SubprocessPolicy(
         policy_id="release-rerender",
-        source_path="infrastructure/publishing/release_workflow.py",
+        source_path="infrastructure/publishing/release/release_workflow.py",
         timeout_seconds=1800,
         check=False,
         capture_output=True,

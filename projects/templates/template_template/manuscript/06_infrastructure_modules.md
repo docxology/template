@@ -120,6 +120,14 @@ Watermark overlays, hashing companions triggered by secure pipeline path.
 
 Invocable tool definitions registered by resource-pool governance; tools mirror `projects/templates/` with git-tracked `templates/*` exemplars.
 
+### `infrastructure.transmission` (${module_transmission_python_file_count} files)
+
+Rendered-release transmission leaves: LaTeX single-page bookends
+(`transmission_bookends`), page-check validation for Stage 04
+(`transmission_page_check`), barcode strips, figure embedding, and shared
+models. Consumed by the publishing release workflow; regular package so the
+documentation module-reference guard resolves nested refs on disk.
+
 ### `infrastructure.validation` (${module_validation_python_file_count} files)
 
 Markdown + PDF + integrity CLIs underpinning Stage 04 diagnostics.

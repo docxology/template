@@ -837,6 +837,12 @@
       "cursor_at": "infrastructure/tools/SKILL.md"
     },
     {
+      "name": "infrastructure-transmission",
+      "description": "Skill for the transmission infrastructure module providing rendered-release transmission leaves. Use when generating LaTeX single-page bookends for release bundles, running Stage 04 page-check validation, embedding barcode strips or figures into rendered PDFs, or working with transmission models shared by the publishing release workflow.",
+      "path": "infrastructure/transmission/SKILL.md",
+      "cursor_at": "infrastructure/transmission/SKILL.md"
+    },
+    {
       "name": "infrastructure-validation",
       "description": "Skill for the validation infrastructure module providing PDF validation, markdown validation, output integrity checks, link verification, documentation audits, issue categorization, and repository scanning. Use when validating research outputs, checking document quality, running audits, or verifying cross-references.",
       "path": "infrastructure/validation/SKILL.md",

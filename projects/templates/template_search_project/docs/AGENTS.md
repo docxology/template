@@ -15,7 +15,7 @@ Project-local agent-facing documentation. This is the operational rulebook for A
 | [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock + LLM-as-callable; live counts in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md) |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | Five-phase flow (search → compose → figures+vars → PDF → review); `config.yaml` controls; troubleshooting |
 | [`style_guide.md`](style_guide.md) | 7 rules: zero-mock, infrastructure delegation, thin orchestrator, show-not-tell, explicit paths, dataclass standards, error messages |
-| [`syntax_guide.md`](syntax_guide.md) | Pandoc-crossref labels, `{{TOKEN}}` registry from `src/manuscript_variables.py`, two-bibliography citation rule |
+| [`syntax_guide.md`](syntax_guide.md) | Pandoc-crossref labels, `{{TOKEN}}` registry from `src/publish/manuscript_variables.py`, two-bibliography citation rule |
 | [`faq.md`](faq.md) | Architecture, testing, search, LLM, manuscript, common-pitfall answers |
 | [`quickstart.md`](quickstart.md) | Six-step first-run walkthrough |
 | [`output_conventions.md`](output_conventions.md) | Producer / consumer mapping for every artifact |
@@ -37,15 +37,15 @@ This sequence is intentional. Each document provides context the next assumes:
 
 **Read-first protocol.** Skipping `agent_instructions.md` is the most common source of errors: agents who skip it tend to introduce mocks (violating Rule 1 of `style_guide.md`), import `infrastructure.rendering` or `infrastructure.scientific` from `src/` (violating Rule 3 of `agent_instructions.md`), or hardcode numbers in manuscript prose (violating Rule 4 of `style_guide.md`).
 
-**Architecture isolation.** `src/pipeline.py` and `src/deep_search.py` are the only modules that touch `infrastructure.search.*`. `src/synthesis.py` takes a duck-typed `llm: Callable[[str], str]` argument so tests pass deterministic local functions and runtime callers pass the adapter from `src/llm_runtime.py`. Every other `src/` module is pure.
+**Architecture isolation.** `src/pipeline/pipeline.py` and `src/search/deep_search.py` are the only modules that touch `infrastructure.search.*`. `src/pipeline/synthesis.py` takes a duck-typed `llm: Callable[[str], str]` argument so tests pass deterministic local functions and runtime callers pass the adapter from `src/pipeline/llm_runtime.py`. Every other `src/` module is pure.
 
 **Zero-mock enforcement.** No `unittest.mock`, `MagicMock`, `@patch`, or `create_autospec` anywhere in `tests/`. The LLM is tested by passing a Python function — never a mock — to `synthesise_per_paper` / `synthesise_corpus`.
 
-**Show-not-tell.** Manuscript prose must reference concrete file paths and APIs. A reader of `02_methodology.md` should be able to open `src/pipeline.py` and find the named function within seconds.
+**Show-not-tell.** Manuscript prose must reference concrete file paths and APIs. A reader of `02_methodology.md` should be able to open `src/pipeline/pipeline.py` and find the named function within seconds.
 
 **Two bibliographies.** `manuscript/references.bib` (single-query) and `manuscript/references_deep.bib` (deep-search) coexist; Pandoc `--natbib` merges every `manuscript/*.bib` at render time.
 
-**Alphabetical script order.** `run_*` < `s_*` < `y_*` < `z_*` < `zz_*` is enforced by `tests/test_script_order.py`. The composer must run before the resolver.
+**Alphabetical script order.** `run_*` < `s_*` < `y_*` < `z_*` < `zz_*` is enforced by `tests/pipeline/test_script_order.py`. The composer must run before the resolver.
 
 ## Verification Commands
 

@@ -63,9 +63,9 @@ sys.path.insert(0, str(_project_root / "src"))
 sys.path.insert(0, str(_project_root / "src" / "template_search_project"))
 sys.path.insert(0, str(_repo_root))
 
-from template_search_project.composition import compose_literature_review
-from template_search_project.config import load_project_config
-from template_search_project.dotenv import load_dotenv
+from template_search_project.pipeline.composition import compose_literature_review
+from template_search_project.publish.config import load_project_config
+from template_search_project.pipeline.dotenv import load_dotenv
 
 load_dotenv(_project_root / ".env")
 

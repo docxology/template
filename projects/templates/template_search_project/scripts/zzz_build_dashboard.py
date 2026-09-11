@@ -29,7 +29,7 @@ REPO_ROOT = PROJECT_ROOT.parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(REPO_ROOT))
 
-from template_search_project.dashboard import (  # noqa: E402
+from template_search_project.publish.dashboard import (  # noqa: E402
     build_dashboard,
     compute_payload,
     filter_papers,

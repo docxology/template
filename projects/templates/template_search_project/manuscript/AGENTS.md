@@ -25,6 +25,6 @@ Markdown source, LaTeX preamble, and bibliography for the literature-search manu
 
 - [`SYNTAX.md`](SYNTAX.md) — Pandoc citation/cross-reference syntax for this manuscript.
 - [`../../../../docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics.
-- [`../src/manuscript_variables.py`](../src/template_search_project/manuscript_variables.py)
+- [`../src/publish/manuscript_variables.py`](../src/template_search_project/publish/manuscript_variables.py)
 - [`../scripts/z_generate_manuscript_variables.py`](../scripts/z_generate_manuscript_variables.py)
 - [`README.md`](README.md)

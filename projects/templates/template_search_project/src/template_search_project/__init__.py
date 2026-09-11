@@ -2,13 +2,13 @@
 
 This package keeps *all* business logic for the project:
 
-* :mod:`template_search_project.config` — typed access to ``manuscript/config.yaml``.
+* :mod:`template_search_project.publish.config` — typed access to ``manuscript/config.yaml``.
 * :mod:`template_search_project.pipeline` — pure orchestration: search →
   enrich → export → synthesise. Imports from ``infrastructure.*``; never
   performs I/O directly.
 * :mod:`template_search_project.synthesis` — turns enriched papers into
   LLM prompts and parses the LLM response back into structured records.
-* :mod:`template_search_project.report` — assembles the final markdown
+* :mod:`template_search_project.analysis.report` — assembles the final markdown
   reading report and BibTeX file.
 
 Per the template's thin-orchestrator pattern, ``scripts/`` import from
@@ -18,24 +18,24 @@ orchestration.
 
 from __future__ import annotations
 
-from .config import ProjectConfig, load_project_config
-from .llm_runtime import build_llm_callable
-from .figures import (
+from .publish.config import ProjectConfig, load_project_config
+from .pipeline.llm_runtime import build_llm_callable
+from .publish.figures import (
     generate_all_figures,
     load_search_result,
     plot_papers_per_source,
     plot_score_distribution,
     plot_year_histogram,
 )
-from .manuscript_variables import (
+from .publish.manuscript_variables import (
     ManuscriptVariables,
     compute_variables,
     substitute_in_text,
     write_variables,
 )
-from .pipeline import LiteratureRunArtifacts, run_literature_pipeline
-from .report import write_reading_report
-from .synthesis import (
+from .pipeline.pipeline import LiteratureRunArtifacts, run_literature_pipeline
+from .analysis.report import write_reading_report
+from .pipeline.synthesis import (
     SynthesisResult,
     build_corpus_block,
     build_paper_block,
@@ -66,7 +66,7 @@ __all__ = [
     "write_variables",
 ]
 
-from .analysis import (
+from .analysis.analysis import (
     StageResult,
     validate_bibliography_completeness,
     validate_variables_resolved,
@@ -86,7 +86,7 @@ __all__.extend(
     ]
 )
 
-from .deep_search import (  # noqa: E402 — re-export surface order preserved from flat layout
+from .search.deep_search import (  # noqa: E402 — re-export surface order preserved from flat layout
     DeepSearchArtifacts,
     KeywordResult,
     build_rich_paper_block,

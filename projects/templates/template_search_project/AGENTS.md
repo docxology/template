@@ -68,23 +68,23 @@ flowchart TB
 
 ## Key contracts
 
-* `src/config.py::ProjectConfig` — every knob is here. Adding a new flag
+* `src/publish/config.py::ProjectConfig` — every knob is here. Adding a new flag
   means: add a field to the dataclass, add YAML parsing in
   `from_dict`, add a default in `manuscript/config.yaml`. Tests live in
-  `tests/test_config.py`.
+  `tests/publish/test_config.py`.
 
-* `src/pipeline.py::run_literature_pipeline` — the single-query search →
+* `src/pipeline/pipeline.py::run_literature_pipeline` — the single-query search →
   enrich → BibTeX entry point into `infrastructure.search.*` (the
-  multi-keyword fan-out in `src/deep_search.py::run_deep_search` performs
+  multi-keyword fan-out in `src/search/deep_search.py::run_deep_search` performs
   the equivalent calls for the deep-search run mode). Returns a
   :class:`LiteratureRunArtifacts` so the script knows where every
   artefact landed without re-deriving paths.
 
-* `src/synthesis.py` — duck-typed `llm: (str) -> str` callable lets
+* `src/pipeline/synthesis.py` — duck-typed `llm: (str) -> str` callable lets
   tests pass deterministic local functions and runtime callers pass an
   Ollama-backed adapter. Prompts are module-level constants.
 
-* `src/report.py::write_reading_report` — single function; takes a
+* `src/analysis/report.py::write_reading_report` — single function; takes a
   `SearchResult` + citation-key map + optional synthesis records.
 
 ## Run modes
@@ -105,7 +105,7 @@ Reads the `deep_search:` block of `config.yaml`. Each keyword runs its
 own `SearchQuery` (capped at `max_results_per_keyword`, default 100),
 every paper is fully enriched (abstract + fulltext), and each paper
 gets a multi-section markdown reading note (LLM-generated when enabled).
-See [`src/deep_search.py`](src/template_search_project/deep_search.py) and
+See [`src/search/deep_search.py`](src/template_search_project/search/deep_search.py) and
 [`manuscript/07_deep_search.md`](manuscript/07_deep_search.md).
 
 | Command | Behaviour |

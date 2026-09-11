@@ -53,15 +53,15 @@ Three diagnostic figures are produced by `scripts/y_generate_search_figures.py` 
 
 | Label | PNG filename | Generator |
 |---|---|---|
-| `{#fig:papers_per_source}` | `output/figures/papers_per_source.png` | `src/figures.py::plot_papers_per_source` |
-| `{#fig:year_histogram}` | `output/figures/year_histogram.png` | `src/figures.py::plot_year_histogram` |
-| `{#fig:score_distribution}` | `output/figures/score_distribution.png` | `src/figures.py::plot_score_distribution` |
+| `{#fig:papers_per_source}` | `output/figures/papers_per_source.png` | `src/publish/figures.py::plot_papers_per_source` |
+| `{#fig:year_histogram}` | `output/figures/year_histogram.png` | `src/publish/figures.py::plot_year_histogram` |
+| `{#fig:score_distribution}` | `output/figures/score_distribution.png` | `src/publish/figures.py::plot_score_distribution` |
 
 Reference with `[@fig:papers_per_source]`, `[@fig:year_histogram]`, `[@fig:score_distribution]`. Always use **underscored** labels — pandoc-crossref accepts dashes but mixed conventions confuse downstream tooling.
 
 ## `{{TOKEN}}` substitution
 
-`scripts/z_generate_manuscript_variables.py` (and the deep-search variant) replaces these tokens at render time. Defined in [`src/manuscript_variables.py`](../src/template_search_project/manuscript_variables.py):
+`scripts/z_generate_manuscript_variables.py` (and the deep-search variant) replaces these tokens at render time. Defined in [`src/publish/manuscript_variables.py`](../src/template_search_project/publish/manuscript_variables.py):
 
 | Token | Source |
 |---|---|

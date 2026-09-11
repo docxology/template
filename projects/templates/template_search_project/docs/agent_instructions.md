@@ -50,15 +50,15 @@ Unlike `template_code_project` (whose `src/` is `infrastructure`-free), this pro
 
 | Module | May touch `infrastructure.search.*` | May touch `infrastructure.reference.citation.*` | May touch `infrastructure.llm.*` |
 |---|---|---|---|
-| `src/pipeline.py` | yes | yes | no |
-| `src/deep_search.py` | yes | yes | no |
-| `src/synthesis.py` | no | no | no — receives a duck-typed `llm: Callable[[str], str]` |
-| `src/llm_runtime.py` | no | no | yes (builds the runtime adapter) |
-| `src/figures.py`, `src/report.py`, `src/manuscript_variables.py`, `src/analysis.py`, `src/search_invariants.py` | no | no | no |
+| `src/pipeline/pipeline.py` | yes | yes | no |
+| `src/search/deep_search.py` | yes | yes | no |
+| `src/pipeline/synthesis.py` | no | no | no — receives a duck-typed `llm: Callable[[str], str]` |
+| `src/pipeline/llm_runtime.py` | no | no | yes (builds the runtime adapter) |
+| `src/publish/figures.py`, `src/analysis/report.py`, `src/publish/manuscript_variables.py`, `src/analysis/analysis.py`, `src/search/search_invariants.py` | no | no | no |
 
-**`src/pipeline.py` and `src/deep_search.py` are the only modules that touch `infrastructure.search.*`.** Every downstream module receives data through dataclass parameters or reads it from disk. This keeps the rest of the project testable without `pytest-httpserver` or a network connection.
+**`src/pipeline/pipeline.py` and `src/search/deep_search.py` are the only modules that touch `infrastructure.search.*`.** Every downstream module receives data through dataclass parameters or reads it from disk. This keeps the rest of the project testable without `pytest-httpserver` or a network connection.
 
-**`src/synthesis.py` does not depend on Ollama.** Its public functions (`synthesise_per_paper`, `synthesise_corpus`) accept a callable of shape `(str) -> str`. Tests pass a deterministic local function. Runtime callers build a real adapter via `src/llm_runtime.py::build_llm_callable`.
+**`src/pipeline/synthesis.py` does not depend on Ollama.** Its public functions (`synthesise_per_paper`, `synthesise_corpus`) accept a callable of shape `(str) -> str`. Tests pass a deterministic local function. Runtime callers build a real adapter via `src/pipeline/llm_runtime.py::build_llm_callable`.
 
 ---
 
@@ -73,7 +73,7 @@ Our pipeline uses standard literature-search APIs and produces a citation list.
 
 **GOOD** (concrete, linkable):
 ```markdown
-`src/pipeline.py::run_literature_pipeline` calls
+`src/pipeline/pipeline.py::run_literature_pipeline` calls
 `infrastructure.search.literature.LiteratureClient.search` against the backends
 listed in `project_config.search.sources`, then writes BibTeX entries via
 `infrastructure.reference.citation.paper_to_bibentry` to
@@ -87,8 +87,8 @@ The deep-search stage runs the LLM on every paper.
 
 **GOOD**:
 ```markdown
-`src/deep_search.py::run_deep_search` invokes the callable returned by
-`src/llm_runtime.py::build_llm_callable` for each paper that survives
+`src/search/deep_search.py::run_deep_search` invokes the callable returned by
+`src/pipeline/llm_runtime.py::build_llm_callable` for each paper that survives
 enrichment, writing per-paper notes to
 `output/deep_search/<keyword_slug>/per_paper/<safe_id>.md`.
 ```
@@ -116,14 +116,14 @@ deep_search:
   enabled: true          # runs by default; sources: [arxiv, crossref] (live network, no key required)
 ```
 
-Tests assume these defaults. When changing them, also update `tests/test_readme_config_consistency.py`.
+Tests assume these defaults. When changing them, also update `tests/publish/test_readme_config_consistency.py`.
 
 ---
 
 ## Rule 6: Style and Syntax Guides Govern Their Domains
 
 - [`style_guide.md`](style_guide.md) governs `src/*.py`, `tests/test_*.py`, `scripts/*.py` — mock prohibition, infrastructure-delegation table, dataclass standards, error-message format.
-- [`syntax_guide.md`](syntax_guide.md) governs `manuscript/*.md` — Pandoc-crossref labels, the live `{{TOKEN}}` registry from `src/manuscript_variables.py`, the two-bib citation rule, and the figure label registry.
+- [`syntax_guide.md`](syntax_guide.md) governs `manuscript/*.md` — Pandoc-crossref labels, the live `{{TOKEN}}` registry from `src/publish/manuscript_variables.py`, the two-bib citation rule, and the figure label registry.
 
 Do not apply code-style rules to manuscript prose, and do not apply manuscript syntax rules to Python source.
 
@@ -135,11 +135,11 @@ The entire `projects/templates/template_search_project/output/` tree (and the au
 
 If you need to change what a generated file contains, change the **generator**:
 
-- To change `manuscript/references.bib` → modify `src/pipeline.py` or the inputs in `data/corpus.json` / `manuscript/config.yaml`.
-- To change `manuscript/references_deep.bib` → modify `src/deep_search.py` or `project_config.deep_search.keywords`.
+- To change `manuscript/references.bib` → modify `src/pipeline/pipeline.py` or the inputs in `data/corpus.json` / `manuscript/config.yaml`.
+- To change `manuscript/references_deep.bib` → modify `src/search/deep_search.py` or `project_config.deep_search.keywords`.
 - To change `manuscript/S01_literature_review.md` → modify `scripts/s_compose_literature_review.py`.
-- To change `output/figures/*.png` → modify `src/figures.py` and the matching call in `scripts/y_generate_search_figures.py`.
-- To change resolved tokens in `output/manuscript/*.md` → modify `src/manuscript_variables.py` (token definitions) or `manuscript/*.md` (templates).
+- To change `output/figures/*.png` → modify `src/publish/figures.py` and the matching call in `scripts/y_generate_search_figures.py`.
+- To change resolved tokens in `output/manuscript/*.md` → modify `src/publish/manuscript_variables.py` (token definitions) or `manuscript/*.md` (templates).
 
 See [`output_conventions.md`](output_conventions.md) for the complete producer / consumer mapping.
 
