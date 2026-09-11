@@ -15,8 +15,8 @@
 
 Do not hard-code generated loop counts or ML metrics in numbered prose. Add
 variables in `src/manuscript/manuscript_tokens_core.py` or
-`src/manuscript/manuscript_tokens_ml.py` (facade: `src/manuscript_variables.py`)
-and verify coverage in `tests/test_manuscript_variables.py`.
+`src/manuscript/manuscript_tokens_ml.py` (facade: `src/manuscript/manuscript_variables.py`)
+and verify coverage in `tests/manuscript/test_manuscript_variables.py`.
 
 Strict tokenization means hydration fails on raw accepted-candidate IDs, metric
 values, dataset/model labels, artifact paths, or registry captions left in
@@ -34,7 +34,7 @@ loop.
 
 ## Validation
 
-- Source ledger: `scripts/check_source_ledger.py` and `tests/test_source_ledger.py`
-- Token coverage: `tests/test_manuscript_variables.py`
-- Tables vs ledgers: `tests/test_manuscript_tables.py`
+- Source ledger: `scripts/check_source_ledger.py` and `tests/diagnostics/test_source_ledger.py`
+- Token coverage: `tests/manuscript/test_manuscript_variables.py`
+- Tables vs ledgers: `tests/manuscript/test_manuscript_tables.py`
 - Prerender: `uv run python -m infrastructure.validation.cli prerender manuscript --repo-root ../../..`

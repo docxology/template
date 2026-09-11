@@ -15,8 +15,9 @@ and [`../AGENTS.md`](../AGENTS.md).
 
 | Path | Role |
 | --- | --- |
-| `src/` | Readers/appliers/evaluators: `fonds_reader.py`, `rules_applier.py`, `strong_rule_evaluator.py`, `tools_invoker.py`, `integration.py`, typed return shapes in `type_defs.py` |
-| `src/` (figures) | `figure_support.py`, `figures.py`, `cover_figure.py`, `rule_hierarchy_figure.py` |
+| `src/` (tools) | `tools/fonds_reader.py`, `tools/tools_invoker.py`, `tools/integration.py`, typed return shapes in `tools/type_defs.py` |
+| `src/` (rules) | `rules/rules_applier.py`, `rules/strong_rule_evaluator.py` |
+| `src/` (figures) | `figures/figure_support.py`, `figures/figures.py`, `figures/cover_figure.py`, `figures/rule_hierarchy_figure.py`, `figures/manuscript_variables.py` |
 | `scripts/` | Thin orchestrators: validate sources → integration → manuscript vars → strong rules → figures |
 | `tests/` | Zero-mock tests incl. property-based and fail-closed validator negatives |
 | `manuscript/` | Section sources, config, references; `figures/` PNG assets + registry |

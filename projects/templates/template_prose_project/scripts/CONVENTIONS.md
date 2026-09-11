@@ -12,7 +12,7 @@ Scripts **coordinate**; they never **analyze**:
 
 ```python
 # CORRECT — script loads config and calls into src/
-from src.config import load_project_config
+from src.pipeline.config import load_project_config
 from src.pipeline import run_prose_pipeline
 
 def main() -> int:
@@ -75,7 +75,7 @@ for p in (REPO_ROOT, PROJECT_ROOT, PROJECT_ROOT / "src"):
         sys.path.insert(0, str(p))
 
 # 4. Project source imports
-from src.config import load_project_config
+from src.pipeline.config import load_project_config
 from src.pipeline import run_prose_pipeline
 
 # 5. Infrastructure import
@@ -189,7 +189,7 @@ Before submitting a new or modified script:
 - [ ] Writes output under the documented layout above.
 - [ ] Supports `--project-root` for test isolation.
 - [ ] Returns/sets the documented exit code.
-- [ ] Has a subprocess test in `tests/test_scripts.py`.
+- [ ] Has a subprocess test in `tests/pipeline/test_scripts.py`.
 
 ## See Also
 

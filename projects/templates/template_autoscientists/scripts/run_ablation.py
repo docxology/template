@@ -21,9 +21,9 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
     if text not in sys.path:
         sys.path.insert(0, text)
 
-from template_autoscientists.ablation import DEFAULT_BUDGET, build_ablation_payload, run_ablations  # noqa: E402
-from template_autoscientists.comparison import build_objective, run_comparison  # noqa: E402
-from template_autoscientists.figures import (  # noqa: E402
+from template_autoscientists.search.ablation import DEFAULT_BUDGET, build_ablation_payload, run_ablations  # noqa: E402
+from template_autoscientists.search.comparison import build_objective, run_comparison  # noqa: E402
+from template_autoscientists.figures.figures import (  # noqa: E402
     figure_specs_for_results,
     write_ablation_figure,
     write_efficiency_figure,

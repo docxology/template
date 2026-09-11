@@ -6,13 +6,13 @@ import json
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from . import figures_ml, figures_process
 from .figures_security import write_security_control_matrix_figure, write_security_integrity_chain_figure
-from template_autoresearch_project.json_coerce import mapping
-from template_autoresearch_project.ml.task import MLTaskResult
-from template_autoresearch_project.models import AutoResearchLoopResult
+from ..loop.json_coerce import mapping
+from ..ml.task import MLTaskResult
+from ..loop.models import AutoResearchLoopResult
 
 
 @dataclass(frozen=True)
@@ -77,7 +77,7 @@ def _load_output_json(ctx: FigureRenderContext, relative: str) -> dict[str, Any]
     path = ctx.project_root / relative
     if not path.is_file():
         return {}
-    return cast(dict[str, Any], mapping(json.loads(path.read_text(encoding="utf-8"))))
+    return mapping(json.loads(path.read_text(encoding="utf-8")))
 
 
 def _render_security_control(ctx: FigureRenderContext) -> Path:

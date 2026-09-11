@@ -18,19 +18,23 @@ The project imports from infrastructure but never modifies it.
 ```
 src/template_template/
 ├── __init__.py                       # Public API surface
-├── introspection.py                  # Repository analysis engine
-├── architecture_viz.py               # Figure orchestrator (calls figure_* modules below)
-├── figure_architecture_overview.py   # Two-layer overview figure
-├── figure_pipeline_stages.py         # Pipeline stages figure
-├── figure_module_inventory.py        # Module inventory figure
-├── figure_comparative_matrix.py      # Comparative feature matrix figure + data
-├── viz_palette.py                    # Shared palette + drawing helpers
-├── paths.py                          # Repository root discovery (`locate_repo_root`)
-├── metrics.py                        # Metric formatting + token dict
-└── inject_metrics.py                 # ${variable} substitution
+├── core/
+│   ├── introspection.py              # Repository analysis engine
+│   ├── contracts.py                  # Receipts, lockstep, deterministic-default validation
+│   └── paths.py                      # Repository root discovery (`locate_repo_root`)
+├── metrics/
+│   ├── metrics.py                    # Metric formatting + token dict
+│   └── inject_metrics.py             # ${variable} substitution
+└── figures/
+    ├── architecture_viz.py           # Figure orchestrator (calls figure_* modules below)
+    ├── figure_architecture_overview.py   # Two-layer overview figure
+    ├── figure_pipeline_stages.py         # Pipeline stages figure
+    ├── figure_module_inventory.py        # Module inventory figure
+    ├── figure_comparative_matrix.py      # Comparative feature matrix figure + data
+    └── viz_palette.py                    # Shared palette + drawing helpers
 ```
 
-### `introspection.py`
+### `core/introspection.py`
 
 Exports:
 
@@ -46,7 +50,7 @@ Exports:
 - `pipeline_stages_default_full` — default full run (10)
 - `pipeline_stages_core_only` — `--core-only` (8)
 
-### `architecture_viz.py`
+### `figures/architecture_viz.py`
 
 | Figure | Function | Description |
 |--------|----------|-------------|
@@ -55,13 +59,13 @@ Exports:
 | `module_inventory.png` | `generate_module_inventory()` | Horizontal bar chart |
 | `comparative_feature_matrix.png` | `generate_comparative_feature_matrix()` | Heatmap vs peer tools |
 
-### `metrics.py`
+### `metrics/metrics.py`
 
 - `build_manuscript_metrics_dict(repo_root)` — all `${variable}` mappings
 - `build_module_inventory_table(modules)` — Markdown table for chapter 06
 - Pipeline tokens: `pipeline_stages_declared`, `pipeline_stages_default_full`, `pipeline_stages_core_only`, `public_exemplar_list`
 
-### `inject_metrics.py`
+### `metrics/inject_metrics.py`
 
 Reads `manuscript/*.md`, substitutes tokens from `metrics.json`, writes `output/manuscript/`.
 
@@ -75,7 +79,7 @@ introspection.py → InfrastructureReport
 
 ## Script Architecture (Thin Orchestrators)
 
-Both `generate_architecture_viz.py` and `generate_manuscript_metrics.py` resolve the Layer-1 repo via `locate_repo_root()` (from `src/template_template/paths.py`; works from `projects/templates/template_template/`), then delegate to `src/template_template/`.
+Both `generate_architecture_viz.py` and `generate_manuscript_metrics.py` resolve the Layer-1 repo via `locate_repo_root()` (from `src/template_template/core/paths.py`; works from `projects/templates/template_template/`), then delegate to `src/template_template/`.
 
 ## Verification
 

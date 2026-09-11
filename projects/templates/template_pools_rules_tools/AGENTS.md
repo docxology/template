@@ -13,7 +13,7 @@ for directory-specific rules.
 Ground truth for integration and figure counts lives in
 `output/data/manuscript_variables.json`; configuration is owned by
 `manuscript/config.yaml`. Content-figure counts derive from
-`src/figure_support.py::INTEGRATION_FIGURE_SPECS`, while the separately declared
+`src/figures/figure_support.py::INTEGRATION_FIGURE_SPECS`, while the separately declared
 `COVER_FIGURE_FILENAMES` contract covers layout-only cover art.
 
 This exemplar shows how a project reads from the three top-level resource
@@ -43,16 +43,16 @@ write back to `fonds/`, `rules/`, or `tools/` from project code.
 
 | Module | Role |
 |---|---|
-| `src/type_defs.py` | All TypedDict definitions — edit here first |
-| `src/fonds_reader.py` | Reads `fonds/templates/template_bibliography`, `template_contacts`, `template_datasets` |
-| `src/rules_applier.py` | Loads `rules/templates/template_project_rules` and `template_manuscript_rules` |
-| `src/strong_rule_evaluator.py` | Semantic evaluation of strong rule YAML against a runtime context dict |
-| `src/resource_schema.py` | Fail-closed shared-resource schema receipts |
-| `src/tools_invoker.py` | Discovers `tools/templates/template_code_executor` and other tool manifests |
-| `src/integration.py` | Orchestrates all three into a combined demo result dict |
-| `src/manuscript_variables.py` | Generates `{{UPPERCASE_KEY}}` manuscript variables from a live integration run |
-| `src/figure_support.py` | Figure themes, `INTEGRATION_FIGURE_SPECS`, and `COVER_FIGURE_FILENAMES` |
-| `src/figures.py` / `src/cover_figure.py` / `src/rule_hierarchy_figure.py` | Figure façade and renderers |
+| `src/tools/type_defs.py` | All TypedDict definitions — edit here first |
+| `src/tools/fonds_reader.py` | Reads `fonds/templates/template_bibliography`, `template_contacts`, `template_datasets` |
+| `src/rules/rules_applier.py` | Loads `rules/templates/template_project_rules` and `template_manuscript_rules` |
+| `src/rules/strong_rule_evaluator.py` | Semantic evaluation of strong rule YAML against a runtime context dict |
+| `src/tools/resource_schema.py` | Fail-closed shared-resource schema receipts |
+| `src/tools/tools_invoker.py` | Discovers `tools/templates/template_code_executor` and other tool manifests |
+| `src/tools/integration.py` | Orchestrates all three into a combined demo result dict |
+| `src/figures/manuscript_variables.py` | Generates `{{UPPERCASE_KEY}}` manuscript variables from a live integration run |
+| `src/figures/figure_support.py` | Figure themes, `INTEGRATION_FIGURE_SPECS`, and `COVER_FIGURE_FILENAMES` |
+| `src/figures/figures.py` / `src/figures/cover_figure.py` / `src/figures/rule_hierarchy_figure.py` | Figure façade and renderers |
 
 ---
 

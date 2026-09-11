@@ -17,7 +17,7 @@ keeps a capability blocked rather than silently promoting it.
 ## Integrity and template-status gaps
 
 - Keep the grammar the single source of truth in `manuscript/config.yaml` (`autopoiesis:` block) and all generation logic in `src/` (`grammar.py`, `expand.py`, `materialize.py`, `realize.py`, `sealing.py`, `verify.py`, `honesty.py`) — scripts stay thin orchestrators.
-- Keep materialization routed through `src/emit_templates.py::emit_all` for
+- Keep materialization routed through `src/template_autopoiesis/manuscript/emit_templates.py::emit_all` for
   every child-facing analysis, test, project, and manuscript file so standalone
   emitters and generated children cannot drift silently.
 - Keep provenance recompute-based: verification must re-derive the tree hash from disk at check time and never trust a recorded manifest hash.

@@ -6,8 +6,8 @@ from collections import Counter
 from pathlib import Path
 
 from .figures_core import palette_color, save_figure, styled_grid
-from template_autoresearch_project.ml.task import MLTaskResult
-from template_autoresearch_project.models import AutoResearchLoopResult
+from ..ml.task import MLTaskResult
+from ..loop.models import AutoResearchLoopResult
 
 
 def write_stage_matrix_figure(figures_dir: Path, result: AutoResearchLoopResult) -> Path:

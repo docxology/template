@@ -16,7 +16,7 @@ from typing import Any
 import numpy as np
 
 from .figure_style import FigureStyleConfig, get_active_style
-from template_autoresearch_project.json_coerce import mapping_list as _mapping_list
+from ..loop.json_coerce import mapping_list as _mapping_list
 
 # Candidate-status roles resolved from the palette; any other status falls back to
 # the muted colour (matching the historical default for unknown statuses).

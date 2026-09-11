@@ -8,8 +8,8 @@ beat the single-thread baseline on solution quality (clean-metric advantage is
 exactly 0.0000), and the measurable benefits are search hygiene (dead-end
 registry: 36 wasted re-probes -> 0) and noise robustness (noise-band
 confirmation: ~13x less accepted noise). These pins bind those exact claims to
-the source: each value is re-derived by calling ``src.search.run_search`` /
-``src.objective.SyntheticObjective.clean`` with the same objective, proposer,
+the source: each value is re-derived by calling ``src.search.search.run_search`` /
+``src.analysis.objective.SyntheticObjective.clean`` with the same objective, proposer,
 config, and budget the analysis scripts (``run_search_comparison.py`` /
 ``run_ablation.py``) use -- never by hand-copying a number from the manuscript.
 
@@ -64,9 +64,9 @@ def _import_submodule(dotted: str) -> ModuleType:
     return importlib.import_module(f"{_PKG_ALIAS}.{dotted}")
 
 
-DeterministicProposer = _import_submodule("agents").DeterministicProposer
-SyntheticObjective = _import_submodule("objective").SyntheticObjective
-_search_mod = _import_submodule("search")
+DeterministicProposer = _import_submodule("agents.agents").DeterministicProposer
+SyntheticObjective = _import_submodule("analysis.objective").SyntheticObjective
+_search_mod = _import_submodule("search.search")
 SearchConfig = _search_mod.SearchConfig
 SearchResult = _search_mod.SearchResult
 run_search = _search_mod.run_search

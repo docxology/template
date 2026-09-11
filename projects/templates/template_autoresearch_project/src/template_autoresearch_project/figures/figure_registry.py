@@ -5,8 +5,8 @@ from __future__ import annotations
 from .figure_registry_captions import build_figure_registry_captions
 from .figure_registry_contract import finalize_figure_registry
 from .figure_registry_records import build_figure_registry_records
-from template_autoresearch_project.ml.task import MLTaskResult
-from template_autoresearch_project.models import AutoResearchLoopResult
+from ..ml.task import MLTaskResult
+from ..loop.models import AutoResearchLoopResult
 
 
 def figure_registry_payload(

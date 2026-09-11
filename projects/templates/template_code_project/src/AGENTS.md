@@ -408,4 +408,4 @@ Markdown API reference builder for public `src/` symbols. Invoked by `scripts/ge
 
 - [README.md](template_code_project/README.md) - Quick reference
 - [../scripts/optimization_analysis.py](../scripts/optimization_analysis.py) - Example usage
-- [../tests/test_optimizer.py](../tests/test_optimizer.py) - tests
+- [../tests/core/test_optimizer.py](../tests/core/test_optimizer.py) - tests

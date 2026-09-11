@@ -21,9 +21,9 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from ..config import ProjectConfig
-from ..llm_review import build_llm_review_receipt
-from ..prose_facade import ManuscriptReportLike
+from .config import ProjectConfig
+from .llm_review import build_llm_review_receipt
+from .prose_facade import ManuscriptReportLike
 from .checks import (
     CHECK_REGISTRY,
     CheckResult,

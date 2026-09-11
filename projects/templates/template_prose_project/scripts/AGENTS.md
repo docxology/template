@@ -10,7 +10,7 @@ Thin orchestrators. **No business logic.** Each script imports from
 | `00_preflight.py` | `infrastructure.rendering.preflight` | Optional AESTHETIC; not pipeline-required |
 | `run_prose_pipeline.py` | `src/` prose pipeline | Produces `output/manuscript_report.json` |
 | `y_generate_prose_figures.py` | `src/` figure helpers | Consumes manuscript report JSON |
-| `z_generate_manuscript_variables.py` | `src/manuscript_variables.py` | Runs last (`z_` prefix) |
+| `z_generate_manuscript_variables.py` | `src/manuscript/manuscript_variables.py` | Runs last (`z_` prefix) |
 
 ```mermaid
 flowchart LR
@@ -61,7 +61,7 @@ sorts at the right point. No edits to `pipeline.yaml` are required.
 - [ ] Print every output path on stdout for the manifest collector.
 - [ ] Use `infrastructure.core.logging.utils.get_logger`, not `print`,
   for status messages.
-- [ ] Add a test in `tests/test_scripts.py` (real subprocess).
+- [ ] Add a test in `tests/pipeline/test_scripts.py` (real subprocess).
 
 ## See also
 

@@ -35,7 +35,7 @@ result = _check_grade_level(mock_report, config)
 assert result.passed
 ```
 
-**Correct pattern** (from `tests/test_pipeline.py`):
+**Correct pattern** (from `tests/pipeline/test_pipeline.py`):
 ```python
 # GOOD — uses a real ManuscriptReport produced by infrastructure.prose
 manuscript_dir = tmp_path / "manuscript"
@@ -67,15 +67,15 @@ types, pure helpers, and operations as needed; logic must stay in
 
 | File | May import from infrastructure | Must NOT do |
 |---|---|---|
-| `src/config.py` | (does not currently import infrastructure) | re-implement YAML parsing or schema validation |
-| `src/pipeline/` | none (pure checks over `ManuscriptReportLike`; the bibliography cross-check uses `src.prose_facade.parse_bib_keys`) | I/O outside the documented `write_outputs=True` branch; importing `infrastructure.*` |
-| `src/figures.py` | none (plots over the project-owned `ManuscriptReportLike` Protocol) | re-implement readability/structure analysis; plot over a typed report, never recompute metrics |
-| `src/report.py` | `src.prose_facade.{ManuscriptReportLike, render_outline}` (project-owned Protocol + pure helper, no infrastructure import) | `analyze_*`, `parse_*`, `write_*` |
-| `src/prose_facade.py` | (does not import infrastructure — project-owned report Protocols plus `render_outline`/`parse_bib_keys`, deliberately decoupled from `infrastructure.prose`/`infrastructure.reference`) | call into `infrastructure.*`; re-implement dialect-complete BibTeX parsing (its `parse_bib_keys` is a deliberately minimal cross-check regex, and forks needing the full parser can call `infrastructure.reference.citation.parse_bibfile` from their scripts layer) |
-| `src/manuscript_variables.py` | `load_report_payload` (raw JSON dict) | re-implement substitution; reads JSON written by `pipeline/`. (`infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` are called by `scripts/z_generate_manuscript_variables.py`, not from `src/`.) |
-| `scripts/y_generate_prose_figures.py` | `infrastructure.prose.report.load_report_json` → typed `ManuscriptReport` for `src/figures.py` | inline analysis logic |
-| `scripts/run_prose_pipeline.py` | `src.pipeline`, `src.config`, `src.report` | inline analysis logic, regex over prose, BibTeX parsing |
-| `scripts/z_generate_manuscript_variables.py` | `src.manuscript_variables` (`load_report_payload`) | inline analysis logic |
+| `src/pipeline/config.py` | (does not currently import infrastructure) | re-implement YAML parsing or schema validation |
+| `src/pipeline/` | none (pure checks over `ManuscriptReportLike`; the bibliography cross-check uses `src.pipeline.prose_facade.parse_bib_keys`) | I/O outside the documented `write_outputs=True` branch; importing `infrastructure.*` |
+| `src/figures/figures.py` | none (plots over the project-owned `ManuscriptReportLike` Protocol) | re-implement readability/structure analysis; plot over a typed report, never recompute metrics |
+| `src/manuscript/report.py` | `src.pipeline.prose_facade.{ManuscriptReportLike, render_outline}` (project-owned Protocol + pure helper, no infrastructure import) | `analyze_*`, `parse_*`, `write_*` |
+| `src/pipeline/prose_facade.py` | (does not import infrastructure — project-owned report Protocols plus `render_outline`/`parse_bib_keys`, deliberately decoupled from `infrastructure.prose`/`infrastructure.reference`) | call into `infrastructure.*`; re-implement dialect-complete BibTeX parsing (its `parse_bib_keys` is a deliberately minimal cross-check regex, and forks needing the full parser can call `infrastructure.reference.citation.parse_bibfile` from their scripts layer) |
+| `src/manuscript/manuscript_variables.py` | `load_report_payload` (raw JSON dict) | re-implement substitution; reads JSON written by `pipeline/`. (`infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` are called by `scripts/z_generate_manuscript_variables.py`, not from `src/`.) |
+| `scripts/y_generate_prose_figures.py` | `infrastructure.prose.report.load_report_json` → typed `ManuscriptReport` for `src/figures/figures.py` | inline analysis logic |
+| `scripts/run_prose_pipeline.py` | `src.pipeline`, `src.pipeline.config`, `src.manuscript.report` | inline analysis logic, regex over prose, BibTeX parsing |
+| `scripts/z_generate_manuscript_variables.py` | `src.manuscript.manuscript_variables` (`load_report_payload`) | inline analysis logic |
 | `tests/test_*.py` | `src.*`, `infrastructure.*` (real) | `unittest.mock.*` |
 
 **Verify the boundary** (no analysis re-implemented under `src/`):
@@ -83,9 +83,9 @@ types, pure helpers, and operations as needed; logic must stay in
 # Operations originate from the scripts/ layer; figures/report/config/prose_facade
 # must not call analyze_*/write_* infrastructure entry points.
 grep -nE "analyze_manuscript|parse_bibfile|write_report" \
-    projects/templates/template_prose_project/src/figures.py \
-    projects/templates/template_prose_project/src/report.py \
-    projects/templates/template_prose_project/src/config.py \
+    projects/templates/template_prose_project/src/figures/figures.py \
+    projects/templates/template_prose_project/src/manuscript/report.py \
+    projects/templates/template_prose_project/src/pipeline/config.py \
     || echo "Clean — figures/report/config call no analysis operations"
 ```
 
@@ -111,7 +111,7 @@ def main():
 **Correct** — `scripts/` calls `src/` for the orchestration:
 ```python
 # GOOD — load config, run pipeline, surface artefacts
-from projects.template_prose_project.src.config import load_project_config
+from projects.template_prose_project.src.pipeline.config import load_project_config
 from projects.template_prose_project.src.pipeline import run_prose_pipeline
 
 def main():
@@ -143,7 +143,7 @@ Our pipeline computes readability and validates citations automatically.
 `projects/templates/template_prose_project/scripts/run_prose_pipeline.py` computes
 readability via `infrastructure.prose.analyze_manuscript` and validates
 citation keys against `manuscript/references.bib` parsed by
-`src/prose_facade.parse_bib_keys`; `src/pipeline/__init__.py::run_prose_pipeline`
+`src/pipeline/prose_facade.parse_bib_keys`; `src/pipeline/__init__.py::run_prose_pipeline`
 evaluates the configured checks. The thresholds applied
 to the resulting metrics are read from `manuscript/config.yaml`
 (`prose.target_grade_level_min`, `prose.target_grade_level_max`,
@@ -171,13 +171,13 @@ multiple sibling exemplars.
 | Short Name | Absolute Path (from repo root) |
 |---|---|
 | pipeline orchestrator | `projects/templates/template_prose_project/src/pipeline/` |
-| config loader | `projects/templates/template_prose_project/src/config.py` |
-| figures module | `projects/templates/template_prose_project/src/figures.py` |
-| variables module | `projects/templates/template_prose_project/src/manuscript_variables.py` |
-| report module | `projects/templates/template_prose_project/src/report.py` |
-| pipeline test | `projects/templates/template_prose_project/tests/test_pipeline.py` |
-| integration test | `projects/templates/template_prose_project/tests/test_pipeline_integration.py` |
-| script test | `projects/templates/template_prose_project/tests/test_scripts.py` |
+| config loader | `projects/templates/template_prose_project/src/pipeline/config.py` |
+| figures module | `projects/templates/template_prose_project/src/figures/figures.py` |
+| variables module | `projects/templates/template_prose_project/src/manuscript/manuscript_variables.py` |
+| report module | `projects/templates/template_prose_project/src/manuscript/report.py` |
+| pipeline test | `projects/templates/template_prose_project/tests/pipeline/test_pipeline.py` |
+| integration test | `projects/templates/template_prose_project/tests/pipeline/test_pipeline_integration.py` |
+| script test | `projects/templates/template_prose_project/tests/pipeline/test_scripts.py` |
 | conftest | `projects/templates/template_prose_project/tests/conftest.py` |
 | run-pipeline script | `projects/templates/template_prose_project/scripts/run_prose_pipeline.py` |
 | figure script | `projects/templates/template_prose_project/scripts/y_generate_prose_figures.py` |
@@ -205,7 +205,7 @@ projects/templates/template_prose_project/output/figures/section_word_counts.png
 
 ## 6. Dataclass and Type Hint Standards
 
-Follow the patterns established in `src/config.py` and `src/pipeline/`:
+Follow the patterns established in `src/pipeline/config.py` and `src/pipeline/`:
 
 - Use Python 3.10+ union syntax: `Path | None`, not `Optional[Path]`.
 - Configuration dataclasses (`ProseAnalysisConfig`, `BibliographyConfig`, `ReportConfig`, `ProjectConfig`) are **mutable** because YAML parsing populates them after construction. `ManuscriptVariables` is `frozen=True` because it represents a fully-resolved substitution payload. The rule of thumb: freeze immutable result-types; leave config containers mutable.
@@ -213,7 +213,7 @@ Follow the patterns established in `src/config.py` and `src/pipeline/`:
   parameter and the return value.
 - Container fields use the same union syntax: `details: dict[str, object] | None = None`.
 
-**Example** (mirroring `ManuscriptVariables` in `src/manuscript_variables.py`):
+**Example** (mirroring `ManuscriptVariables` in `src/manuscript/manuscript_variables.py`):
 
 ```python
 from dataclasses import dataclass, field
@@ -226,7 +226,7 @@ class ManuscriptVariables:
     # ... immutable result type, so frozen=True is correct here.
 ```
 
-For a mutable config container (matching `ProjectConfig` in `src/config.py`):
+For a mutable config container (matching `ProjectConfig` in `src/pipeline/config.py`):
 
 ```python
 @dataclass
@@ -251,7 +251,7 @@ raise ValueError("Config invalid")
 raise FileNotFoundError("File not found")
 ```
 
-**Correct** (following the pattern in `src/config.py` and `src/pipeline/`):
+**Correct** (following the pattern in `src/pipeline/config.py` and `src/pipeline/`):
 ```python
 raise FileNotFoundError(f"manuscript_dir does not exist: {manuscript_dir}")
 raise ValueError(
@@ -264,5 +264,5 @@ raise ValueError(
 
 The format `f"<what was expected>: <what was actually received>"` is the
 default. Tests assert on substrings of these messages
-(`tests/test_config.py`, `tests/test_pipeline.py`), so message stability is
+(`tests/pipeline/test_config.py`, `tests/pipeline/test_pipeline.py`), so message stability is
 part of the public contract.

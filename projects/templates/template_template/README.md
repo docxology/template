@@ -87,8 +87,8 @@ infrastructure, pipeline stages, or cross-template validation.
 
 ## Overview
 
-- **Repository introspection:** `src/template_template/introspection.py` loads the YAML pipeline DAG, discovers modules/projects, and aggregates file counts.
-- **Metrics injection:** `src/template_template/metrics.py` computes manuscript variables; `inject_metrics.py` renders `${var}` tokens into `output/manuscript/`.
+- **Repository introspection:** `src/template_template/core/introspection.py` loads the YAML pipeline DAG, discovers modules/projects, and aggregates file counts.
+- **Metrics injection:** `src/template_template/metrics/metrics.py` computes manuscript variables; `inject_metrics.py` renders `${var}` tokens into `output/manuscript/`.
 - **Figures:** `scripts/generate_architecture_viz.py` produces four PNGs from live introspection data.
 
 ## Quick Start

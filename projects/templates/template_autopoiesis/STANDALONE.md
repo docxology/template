@@ -28,9 +28,9 @@ When `materialize()` generates a child project, the following are vendored from 
 
 | Vendored artifact | Source | Child path |
 |---|---|---|
-| `primitives/__init__.py` | `src/primitives/__init__.py` | `primitives/__init__.py` |
-| `primitives/base.py` | `src/primitives/base.py` | `primitives/base.py` |
-| `primitives/{domain}.py` | `src/primitives/{domain}.py` | `primitives/{domain}.py` |
+| `primitives/__init__.py` | `src/template_autopoiesis/primitives/__init__.py` | `primitives/__init__.py` |
+| `primitives/base.py` | `src/template_autopoiesis/primitives/base.py` | `primitives/base.py` |
+| `primitives/{domain}.py` | `src/template_autopoiesis/primitives/{domain}.py` | `primitives/{domain}.py` |
 | `figures.py` | `src/figures.py` | `figures.py` |
 
 The child project does **not** require the parent `src/` at runtime — it runs entirely from its vendored sources.

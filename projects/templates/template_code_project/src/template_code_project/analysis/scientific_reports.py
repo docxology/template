@@ -11,8 +11,8 @@ from typing import Any
 import numpy as np
 
 try:
-    from ..experiment_config import ExperimentConfig, load_experiment_config
-    from ..optimizer import compute_gradient, gradient_descent, quadratic_function, quadratic_optimum
+    from ..core.experiment_config import ExperimentConfig, load_experiment_config
+    from ..core.optimizer import compute_gradient, gradient_descent, quadratic_function, quadratic_optimum
 except ImportError:  # pragma: no cover
     from experiment_config import ExperimentConfig, load_experiment_config  # type: ignore[no-redef]
     from optimizer import compute_gradient, gradient_descent, quadratic_function, quadratic_optimum  # type: ignore[no-redef]

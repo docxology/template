@@ -2,8 +2,8 @@
 """Thin orchestrator: read manuscript → analyse prose → check → review report.
 
 All logic lives in :mod:`template_prose_project.pipeline`,
-:mod:`template_prose_project.figures`, and
-:mod:`template_prose_project.report`. This script's job is to wire those
+:mod:`template_prose_project.figures.figures`, and
+:mod:`template_prose_project.manuscript.report`. This script's job is to wire those
 functions to the filesystem.
 """
 
@@ -25,9 +25,9 @@ sys.path.insert(0, str(_repo_root))
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.prose import analyze_manuscript
 
-from template_prose_project.config import load_project_config
+from template_prose_project.pipeline.config import load_project_config
 from template_prose_project.pipeline import run_prose_pipeline
-from template_prose_project.report import write_review_report
+from template_prose_project.manuscript.report import write_review_report
 
 logger = get_logger(__name__)
 

@@ -33,15 +33,15 @@ Repository-wide agent rules for this exemplar live in [`../docs/agent_instructio
 Numeric values that come from analysis outputs **must** use `{{VARIABLE_NAME}}` syntax. Hardcoding a number that will change when `config.yaml` is edited or the analysis is re-run is the primary cause of inaccurate manuscripts.
 
 **The token pipeline**:
-1. `scripts/z_generate_manuscript_variables.py` calls `src/manuscript_variables.py::generate_variables()` to compute all token values
-2. `generate_variables()` reads experiment parameters via `src/experiment_config.py::load_experiment_config()` (same loader as analysis, figures, and dashboard)
+1. `scripts/z_generate_manuscript_variables.py` calls `src/template_code_project/core/manuscript_variables.py::generate_variables()` to compute all token values
+2. `generate_variables()` reads experiment parameters via `src/template_code_project/core/experiment_config.py::load_experiment_config()` (same loader as analysis, figures, and dashboard)
 3. The script writes the full `{TOKEN: value}` mapping to `output/data/manuscript_variables.json`
 4. It calls `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` which copies each `manuscript/*.md` template to `output/manuscript/*.md`, substituting every `{{TOKEN}}` with its resolved value
 5. `scripts/pipeline/stage_03_render.py` renders the **substituted** copies (from `output/manuscript/`), not the originals
 
 **Adding a new token**:
-1. Add a key/value pair to the `variables` dict in `src/manuscript_variables.py::generate_variables()`
-2. Add a corresponding assertion in `tests/test_manuscript_variables.py` (the live cross-reference test `test_all_manuscript_tokens_are_generated` will fail automatically if a manuscript token is missing)
+1. Add a key/value pair to the `variables` dict in `src/template_code_project/core/manuscript_variables.py::generate_variables()`
+2. Add a corresponding assertion in `tests/core/test_manuscript_variables.py` (the live cross-reference test `test_all_manuscript_tokens_are_generated` will fail automatically if a manuscript token is missing)
 3. Verify: `python -c "import json; d=json.load(open('projects/templates/template_code_project/output/data/manuscript_variables.json')); print(d['MY_TOKEN'])"`
 4. Reference in a manuscript file as `{{MY_TOKEN}}`
 
@@ -52,13 +52,13 @@ grep -r "{{" projects/templates/template_code_project/output/manuscript/ 2>/dev/
   || echo "All tokens resolved"
 ```
 
-See [`../docs/syntax_guide.md`](../docs/syntax_guide.md) for an illustrative token reference table — it is a subset that may lag behind the code, per that file's own disclaimer. The authoritative source of truth is the return value of `src/manuscript_variables.py::generate_variables()`; the live cross-reference test `tests/test_manuscript_variables.py::test_all_manuscript_tokens_are_generated` is what actually gates completeness.
+See [`../docs/syntax_guide.md`](../docs/syntax_guide.md) for an illustrative token reference table — it is a subset that may lag behind the code, per that file's own disclaimer. The authoritative source of truth is the return value of `src/template_code_project/core/manuscript_variables.py::generate_variables()`; the live cross-reference test `tests/core/test_manuscript_variables.py::test_all_manuscript_tokens_are_generated` is what actually gates completeness.
 
 ## Figure Protocol
 
 All six figures must be referenced via Pandoc-crossref `[@fig:label]`, never with hardcoded numbers or raw `\ref{}`:
 
-| Label | PNG Filename | Generator in `src/figures/` (orchestrated via `src/analysis/` / `scripts/optimization_analysis.py`) |
+| Label | PNG Filename | Generator in `src/template_code_project/figures/` (orchestrated via `src/template_code_project/analysis/` / `scripts/optimization_analysis.py`) |
 |---|---|---|
 | `{#fig:convergence}` | `output/figures/convergence_plot.png` | `generate_convergence_plot()` |
 | `{#fig:step_sensitivity}` | `output/figures/step_size_sensitivity.png` | `generate_step_size_sensitivity_plot()` |
@@ -68,21 +68,21 @@ All six figures must be referenced via Pandoc-crossref `[@fig:label]`, never wit
 | `{#fig:stability}` | `output/figures/stability_analysis.png` | `generate_stability_visualization()` |
 
 **To add a new figure**:
-1. Add a generator function to `src/figures/` and wire it through `src/analysis/` (script entry: `scripts/optimization_analysis.py`).
+1. Add a generator function to `src/template_code_project/figures/` and wire it through `src/template_code_project/analysis/` (script entry: `scripts/optimization_analysis.py`).
 2. In the appropriate manuscript section, add a Pandoc image line (alt, relative path under `../output/figures/`, and `{#fig:…}`) by copying the structure of any figure in `03_results.md` and updating the path to match the file your generator writes.
 3. Reference in prose: `[@fig:new_label]` (parenthetical) or `@fig:new_label` (narrative)
 4. Document in [`../docs/output_inventory.md`](../docs/output_inventory.md) regeneration table
 
 ## Infrastructure Coupling (`scripts/`, not `src/`)
 
-Orchestrators under `projects/templates/template_code_project/scripts/` should use `infrastructure.core.logging.utils.get_logger(__name__)` (same pattern as `optimization_analysis.py`). Scientific checks should go through `infrastructure.scientific` helpers where applicable. `src/optimizer.py` must remain infrastructure-free.
+Orchestrators under `projects/templates/template_code_project/scripts/` should use `infrastructure.core.logging.utils.get_logger(__name__)` (same pattern as `optimization_analysis.py`). Scientific checks should go through `infrastructure.scientific` helpers where applicable. `src/template_code_project/core/optimizer.py` must remain infrastructure-free.
 
 ## Section Modification Protocol
 
 Follow these steps in order whenever you change behavior and need to update the manuscript:
 
 1. **Update mathematical or experimental description** in `02_methodology.md` / `05_experimental_setup.md` as needed.
-2. **Add or extend tests** — pure math in `tests/test_optimizer.py`; orchestration and error paths in `tests/test_analysis_integration.py` and `tests/test_analysis_coverage.py`.
+2. **Add or extend tests** — pure math in `tests/core/test_optimizer.py`; orchestration and error paths in `tests/analysis/test_analysis_integration.py` and `tests/analysis/test_analysis_coverage.py`.
 3. **Regenerate analysis outputs**:
    ```bash
    uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
@@ -124,5 +124,5 @@ Final deliverables appear under `output/templates/template_code_project/` after 
 - [`../../../docs/guides/manuscript-semantics.md`](../../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by the permanent exemplars
 - [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md) — Manuscript → PDF flow (4 phases)
 - [`../docs/syntax_guide.md`](../docs/syntax_guide.md) — Complete `{{VARIABLE}}` token reference
-- [`../src/manuscript_variables.py`](../src/template_code_project/manuscript_variables.py) — Variable computation logic (`generate_variables()`)
+- [`../src/template_code_project/core/manuscript_variables.py`](../src/template_code_project/core/manuscript_variables.py) — Variable computation logic (`generate_variables()`)
 - [`../scripts/z_generate_manuscript_variables.py`](../scripts/z_generate_manuscript_variables.py) — Thin orchestrator that runs the above and writes output files

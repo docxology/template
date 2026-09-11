@@ -27,11 +27,11 @@ Technical guide for `projects/templates/template_code_project/docs/` — the ope
 
 **Read-first protocol**: AI agents must read `agent_instructions.md` before modifying any project file. Skipping this document is the most common source of errors in this project — agents who skip it tend to: introduce mocks (violating Rule 1), write math in `scripts/` (violating Rule 3), or hardcode numbers in manuscript prose (violating Rule 4 of `style_guide.md`). The consequence of any one violation is a CI failure or a misleading exemplar for future users.
 
-**Architecture isolation**: the **mathematical primitives** in `src/` (`optimizer.py`, `invariants.py`) are pure logic with no `infrastructure.*` imports; the **orchestration modules** (`analysis/`, `figures/`, `dashboard.py`, `manuscript_variables.py`) live in `src/` for testability but may import `infrastructure.*` behind try/except fallbacks; `scripts/` is glue (no math); `infrastructure/` is operations (cross-cutting). The dependency arrow remains one-directional: `scripts/` → `src/`; `scripts/` → `infrastructure/`; `tests/` → `src/`. Nothing imports upward. The math-primitive purity is the load-bearing claim: `optimizer.py` and `invariants.py` can be lifted into any Python environment without the pipeline installed.
+**Architecture isolation**: the **mathematical primitives** in `src/` (`core/optimizer.py`, `core/invariants.py`) are pure logic with no `infrastructure.*` imports; the **orchestration modules** (`analysis/`, `figures/`, `dashboard/dashboard.py`, `core/manuscript_variables.py`) live in `src/` for testability but may import `infrastructure.*` behind try/except fallbacks; `scripts/` is glue (no math); `infrastructure/` is operations (cross-cutting). The dependency arrow remains one-directional: `scripts/` → `src/`; `scripts/` → `infrastructure/`; `tests/` → `src/`. Nothing imports upward. The math-primitive purity is the load-bearing claim: `core/optimizer.py` and `core/invariants.py` can be lifted into any Python environment without the pipeline installed.
 
 **Zero-mock enforcement**: No `unittest.mock`, `MagicMock`, `@patch`, or `create_autospec` anywhere in `tests/`. CI enforces this via `scripts/audit/verify_no_mocks.py` before the test stage runs. The enforcement exists because mock tests can pass even when the actual mathematical logic is wrong — they test call signatures, not convergence.
 
-**Show-not-tell**: Manuscript references must use explicit file paths and function names, not vague descriptions. A reader of `02_methodology.md` should be able to open `src/optimizer.py` and find the exact function being discussed within 10 seconds. Vague descriptions like "the test suite validates accuracy" cannot be verified or linked.
+**Show-not-tell**: Manuscript references must use explicit file paths and function names, not vague descriptions. A reader of `02_methodology.md` should be able to open `src/template_code_project/core/optimizer.py` and find the exact function being discussed within 10 seconds. Vague descriptions like "the test suite validates accuracy" cannot be verified or linked.
 
 ## Reading Order
 
@@ -58,12 +58,12 @@ uv run pytest projects/templates/template_code_project/tests/ \
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
     projects/templates/template_code_project/tests/ || echo "Clean"
 
-# Mathematical primitives (optimizer.py, invariants.py) have no infrastructure imports
-# (orchestration modules analysis/ / dashboard.py / manuscript_variables.py are allowed
+# Mathematical primitives (core/optimizer.py, core/invariants.py) have no infrastructure imports
+# (orchestration modules analysis/ / dashboard/ / core/manuscript_variables.py are allowed
 # to import infrastructure behind try/except fallbacks — see src/AGENTS.md).
 grep -nE "^(from|import) infrastructure" \
-    projects/templates/template_code_project/src/optimizer.py \
-    projects/templates/template_code_project/src/invariants.py \
+    projects/templates/template_code_project/src/template_code_project/core/optimizer.py \
+    projects/templates/template_code_project/src/template_code_project/core/invariants.py \
     || echo "Clean — math primitives are infrastructure-free"
 ```
 
@@ -77,22 +77,22 @@ viable project.
 
 | Path | Status | Enforcing gate / source of truth |
 |------|--------|---------------------------------|
-| `src/optimizer.py` | REQUIRED | Coverage gate; `tests/test_optimizer.py` |
-| `src/invariants.py` | REQUIRED | `tests/test_invariants.py` + dashboard invariants check |
-| `src/experiment_config.py` | REQUIRED | `load_experiment_config()`; shared by analysis, figures, dashboard, manuscript_variables; `tests/test_experiment_config.py` |
-| `src/analysis/` | REQUIRED (orchestration) | Exercised by `scripts/optimization_analysis.py`; `tests/test_analysis_integration.py`, `tests/test_analysis_coverage.py` |
-| `src/figures/` | REQUIRED (orchestration) | Six `generate_*` plot functions; `tests/test_figures_orchestration.py` + stability/benchmark viz in `tests/test_analysis_integration.py` |
-| `src/dashboard.py` | REQUIRED (orchestration) | Exercised by `scripts/build_dashboard.py`; `tests/test_invariants_and_dashboard.py`, `tests/test_dashboard_config.py` |
-| `src/manuscript_variables.py` | REQUIRED | `tests/test_manuscript_variables.py` + live `{{TOKEN}}` cross-reference; reads config via `load_experiment_config()` |
+| `src/template_code_project/core/optimizer.py` | REQUIRED | Coverage gate; `tests/core/test_optimizer.py` |
+| `src/template_code_project/core/invariants.py` | REQUIRED | `tests/core/test_invariants.py` + dashboard invariants check |
+| `src/template_code_project/core/experiment_config.py` | REQUIRED | `load_experiment_config()`; shared by analysis, figures, dashboard, manuscript_variables; `tests/core/test_experiment_config.py` |
+| `src/template_code_project/analysis/` | REQUIRED (orchestration) | Exercised by `scripts/optimization_analysis.py`; `tests/analysis/test_analysis_integration.py`, `tests/analysis/test_analysis_coverage.py` |
+| `src/template_code_project/figures/` | REQUIRED (orchestration) | Six `generate_*` plot functions; `tests/figures/test_figures_orchestration.py` + stability/benchmark viz in `tests/analysis/test_analysis_integration.py` |
+| `src/template_code_project/dashboard/dashboard.py` | REQUIRED (orchestration) | Exercised by `scripts/build_dashboard.py`; `tests/dashboard/test_invariants_and_dashboard.py`, `tests/dashboard/test_dashboard_config.py` |
+| `src/template_code_project/core/manuscript_variables.py` | REQUIRED | `tests/core/test_manuscript_variables.py` + live `{{TOKEN}}` cross-reference; reads config via `load_experiment_config()` |
 | `tests/` (all `test_*.py`) | REQUIRED | 90% coverage gate (per-project and root pipeline) |
 | `tests/conftest.py` | REQUIRED | Pins `MPLBACKEND=Agg` + `src/` `sys.path`; without it pytest cannot collect |
 | `scripts/optimization_analysis.py` | REQUIRED | Pipeline stage 4 entry point; PDF stage depends on its outputs |
 | `scripts/z_generate_manuscript_variables.py` | REQUIRED | Hydrates `{{TOKEN}}`s; default strict mode requires `output/data/optimization_results.csv` (`--allow-draft` for early drafts); PDF stage reads `output/manuscript/*.md` it writes |
 | `scripts/build_dashboard.py` | REQUIRED | Pipeline reads `output/web/dashboard.html` |
-| `scripts/generate_api_docs.py` | AESTHETIC | Auxiliary docs generator; smoke-tested by `tests/test_scripts_smoke.py`; pipeline does not consume its output |
-| `scripts/00_preflight.py` | AESTHETIC | Emits a warning before PDF render; smoke-tested by `tests/test_scripts_smoke.py`; pipeline still runs without it |
-| `tests/test_scripts_smoke.py` | AESTHETIC | Subprocess smoke for auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`) |
-| `tests/test_documentation.py` | AESTHETIC | Unit tests for `documentation.py` API reference helpers |
+| `scripts/generate_api_docs.py` | AESTHETIC | Auxiliary docs generator; smoke-tested by `tests/analysis/test_scripts_smoke.py`; pipeline does not consume its output |
+| `scripts/00_preflight.py` | AESTHETIC | Emits a warning before PDF render; smoke-tested by `tests/analysis/test_scripts_smoke.py`; pipeline still runs without it |
+| `tests/analysis/test_scripts_smoke.py` | AESTHETIC | Subprocess smoke for auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`) |
+| `tests/core/test_documentation.py` | AESTHETIC | Unit tests for `core/documentation.py` API reference helpers |
 | `manuscript/config.yaml` | REQUIRED | Loaded by `infrastructure.rendering.pdf_renderer`; pipeline aborts without it |
 | `manuscript/*.md` | REQUIRED | Pandoc reads token-substituted copies during PDF stage |
 | `manuscript/references.bib` | REQUIRED | Pandoc citeproc reads it during PDF stage |

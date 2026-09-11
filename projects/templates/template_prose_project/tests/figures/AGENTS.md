@@ -1,0 +1,16 @@
+# tests/figures/ — agent contract
+
+Behavior tests for `src/template_prose_project/figures/` (one-to-one mirror
+per SUBMODULAR-PROSE-1). Pure-domain tests only: no mocks, no network;
+real matplotlib renders against real `infrastructure.prose` reports. Keep
+test files co-located with their subject module's subpackage; move a test
+only when its subject module moves.
+
+## Files
+
+- `README.md` — scope of this cluster.
+
+## See Also
+
+- [`../AGENTS.md`](../AGENTS.md) — shared testing contract.
+- [`../../src/template_prose_project/AGENTS.md`](../../src/template_prose_project/AGENTS.md) — package-level module map covering `figures/`.

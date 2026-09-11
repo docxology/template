@@ -15,7 +15,7 @@ The most critical style rule is the absolute prohibition of mocking. The followi
 
 **Allowed for orchestration modules only:** `pytest.MonkeyPatch` on module attributes (`project_root`, `INFRASTRUCTURE_AVAILABLE`, I/O boundaries) and subprocess import isolation — real code paths run; see [`../tests/PATTERNS.md`](../tests/PATTERNS.md).
 
-**Why**: `src/optimizer.py` contains pure functions. You can always test them with real numpy arrays and real mathematical results. A test that requires a mock is a test for the wrong thing — it tests that one function calls another (call-count assertion), not that the algorithm is correct.
+**Why**: `src/template_code_project/core/optimizer.py` contains pure functions. You can always test them with real numpy arrays and real mathematical results. A test that requires a mock is a test for the wrong thing — it tests that one function calls another (call-count assertion), not that the algorithm is correct.
 
 **Forbidden pattern**:
 ```python
@@ -26,7 +26,7 @@ result = gradient_descent(x0, obj_func, mock_grad, step_size=0.1)
 assert mock_grad.call_count > 0
 ```
 
-**Correct pattern** (from `tests/test_optimizer.py`):
+**Correct pattern** (from `tests/core/test_optimizer.py`):
 ```python
 # GOOD — tests real mathematical output
 obj, grad = make_quadratic_problem(A=np.array([[2.0]]), b=np.array([4.0]))
@@ -48,11 +48,11 @@ Project code must delegate cross-cutting concerns to `infrastructure/`. The dele
 
 | File | May Import | Must NOT Import |
 |---|---|---|
-| `src/optimizer.py` | `numpy`, `dataclasses`, `logging` (stdlib), `typing` | **Anything from `infrastructure.*`** |
-| `scripts/optimization_analysis.py` | `src/optimizer`, `infrastructure.core.logging.utils`, `infrastructure.scientific.*`, `infrastructure.reporting.*`, `infrastructure.validation.*`, `infrastructure.core.progress` | Business logic (math, gradient update rules) |
-| `scripts/generate_api_docs.py` | `src/optimizer`, `infrastructure.core.logging.utils` | Math |
+| `src/template_code_project/core/optimizer.py` | `numpy`, `dataclasses`, `logging` (stdlib), `typing` | **Anything from `infrastructure.*`** |
+| `scripts/optimization_analysis.py` | `template_code_project.core.optimizer`, `infrastructure.core.logging.utils`, `infrastructure.scientific.*`, `infrastructure.reporting.*`, `infrastructure.validation.*`, `infrastructure.core.progress` | Business logic (math, gradient update rules) |
+| `scripts/generate_api_docs.py` | `template_code_project.core.optimizer`, `infrastructure.core.logging.utils` | Math |
 | `scripts/z_generate_manuscript_variables.py` | `src/manuscript_variables`, `infrastructure.rendering.manuscript_injection` | Business logic; direct infrastructure I/O (delegated via src) |
-| `tests/test_optimizer.py` | `src/optimizer`, `scripts/optimization_analysis` (via `INFRASTRUCTURE_AVAILABLE` guard) | `unittest.mock.*`, `infrastructure.*` directly |
+| `tests/core/test_optimizer.py` | `template_code_project.core.optimizer`, `scripts/optimization_analysis` (via `INFRASTRUCTURE_AVAILABLE` guard) | `unittest.mock.*`, `infrastructure.*` directly |
 
 **Verify `src/` is clean**:
 ```bash
@@ -67,7 +67,7 @@ Files in `scripts/` must be "thin orchestrators": they may run experiment loops 
 
 **Forbidden** — gradient update rule re-implemented in `scripts/`:
 ```python
-# BAD — math belongs in src/optimizer.py, not in optimization_analysis.py
+# BAD — math belongs in src/template_code_project/core/optimizer.py, not in optimization_analysis.py
 def run_experiment(alpha, x0):
     x = x0
     for i in range(1000):
@@ -79,9 +79,9 @@ def run_experiment(alpha, x0):
 **Correct** — `scripts/` calls `src/` for the math:
 ```python
 # GOOD — import and call the tested function
-# (matches real usage: tests/test_optimizer.py, scripts/optimization_analysis.py;
+# (matches real usage: tests/core/test_optimizer.py, scripts/optimization_analysis.py;
 # enabled by conftest.py adding the project root to sys.path)
-from src.optimizer import gradient_descent, make_quadratic_problem
+from template_code_project.core.optimizer import gradient_descent, make_quadratic_problem
 
 def run_experiment(alpha, A, b, x0):
     obj, grad = make_quadratic_problem(A=A, b=b)
@@ -104,7 +104,7 @@ The infrastructure handles PDF rendering automatically.
 
 **Correct (concrete, from `01_introduction.md`)**:
 ```markdown
-The test suite in `projects/templates/template_code_project/tests/test_optimizer.py` verifies gradient
+The test suite in `projects/templates/template_code_project/tests/core/test_optimizer.py` verifies gradient
 calculations without mocks, using `numpy` arrays with known analytical solutions.
 PDF rendering is handled by `infrastructure/rendering/pdf_renderer.py` via Pandoc and LaTeX.
 ```
@@ -113,7 +113,7 @@ Two additional BAD/GOOD pairs:
 
 | BAD (vague) | GOOD (concrete) |
 |---|---|
-| "The optimizer converges for most step sizes." | "For $\alpha \in \{0.01, 0.1, 0.5, 1.0\}$, `gradient_descent()` in `src/optimizer.py` meets the gradient tolerance $\|\nabla f\| < 10^{-8}$ within `max_iterations=1000`." |
+| "The optimizer converges for most step sizes." | "For $\alpha \in \{0.01, 0.1, 0.5, 1.0\}$, `gradient_descent()` in `src/template_code_project/core/optimizer.py` meets the gradient tolerance $\|\nabla f\| < 10^{-8}$ within `max_iterations=1000`." |
 | "We validated numerical stability." | "`check_numerical_stability()` from `infrastructure.scientific.stability` was called with {{CONFIG_NUM_STABILITY_STARTS}} starting points and {{CONFIG_NUM_STABILITY_STEPS}} step sizes, producing {{CONFIG_STABILITY_CELLS}} total evaluations." |
 
 ---
@@ -126,11 +126,11 @@ When AI agents or humans refer to files in logs, documentation, comments, or imp
 
 | Short Name | Absolute Path (from repo root) |
 |---|---|
-| optimizer | `projects/templates/template_code_project/src/optimizer.py` |
-| test suite | `projects/templates/template_code_project/tests/test_optimizer.py` |
+| optimizer | `projects/templates/template_code_project/src/template_code_project/core/optimizer.py` |
+| test suite | `projects/templates/template_code_project/tests/core/test_optimizer.py` |
 | conftest | `projects/templates/template_code_project/tests/conftest.py` |
 | analysis script | `projects/templates/template_code_project/scripts/optimization_analysis.py` |
-| variable hydration (logic) | `projects/templates/template_code_project/src/manuscript_variables.py` |
+| variable hydration (logic) | `projects/templates/template_code_project/src/template_code_project/core/manuscript_variables.py` |
 | variable hydration (runner) | `projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py` |
 | config | `projects/templates/template_code_project/manuscript/config.yaml` |
 | results CSV | `projects/templates/template_code_project/output/data/optimization_results.csv` |
@@ -145,7 +145,7 @@ output/figures/    # Relative to what?
 
 **Correct (absolute from repo root)**:
 ```
-projects/templates/template_code_project/src/optimizer.py
+projects/templates/template_code_project/src/template_code_project/core/optimizer.py
 projects/templates/template_code_project/output/figures/convergence_plot.png
 ```
 
@@ -153,14 +153,14 @@ projects/templates/template_code_project/output/figures/convergence_plot.png
 
 ## 6. Dataclass and Type Hint Standards
 
-Follow the patterns established in `src/optimizer.py`:
+Follow the patterns established in `src/template_code_project/core/optimizer.py`:
 
 - Use Python 3.10+ union syntax: `list[float] | None`, not `Optional[List[float]]`
 - Use `np.ndarray` for array type hints, not `npt.NDArray[np.float64]` (consistency with existing code)
 - All public functions must have complete type annotations on all parameters and return values
 - `@dataclass` fields use the same union syntax: `trajectory: list[np.ndarray] | None = None`
 
-**Example** (following `OptimizationResult` in `src/optimizer.py`):
+**Example** (following `OptimizationResult` in `src/template_code_project/core/optimizer.py`):
 ```python
 @dataclass
 class NewResult:
@@ -182,7 +182,7 @@ raise ValueError("Dimension mismatch")
 raise ValueError("Invalid step size")
 ```
 
-**Correct** (following the pattern in `src/optimizer.py`):
+**Correct** (following the pattern in `src/template_code_project/core/optimizer.py`):
 ```python
 raise ValueError(f"A must be {n}x{n}, got {A.shape}")
 raise ValueError(f"step_size must be positive, got {step_size}")

@@ -15,14 +15,14 @@ for the opt-in agentic demo.
 from __future__ import annotations
 
 from .agents import DeterministicProposer, Proposer
-from .confirmation import Confirmation, confirm_improvement
-from .dead_ends import DeadEnd, DeadEndRegistry
-from .objective import SyntheticObjective
-from .ranking import axis_effect_sizes, rank_axes
+from .analysis.confirmation import Confirmation, confirm_improvement
+from .search.dead_ends import DeadEnd, DeadEndRegistry
+from .analysis.objective import SyntheticObjective
+from .search.ranking import axis_effect_sizes, rank_axes
 from .search import SearchConfig, SearchResult, run_search
-from .stagnation import StagnationDetector, reorganize_axes
-from .state import Champion, ExperimentOutcome, Proposal, SharedState
-from .transcript import TRANSCRIPT_SCHEMA, replay_transcript, transcript_digest, validate_transcript
+from .search.stagnation import StagnationDetector, reorganize_axes
+from .analysis.state import Champion, ExperimentOutcome, Proposal, SharedState
+from .analysis.transcript import TRANSCRIPT_SCHEMA, replay_transcript, transcript_digest, validate_transcript
 
 
 def __getattr__(name: str):  # pragma: no cover - lazy script-layer export

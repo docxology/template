@@ -8,7 +8,7 @@
 | `output/runs/run_{id}/gen_{n}/improvement.md` | Feedback step | Context ledger |
 | `output/runs/run_{id}/context.md` | Context ledger | Agent context (deterministic) |
 | `output/runs/run_{id}/run_summary.json` | Loop runner | `z_generate_manuscript_variables.py` |
-| `output/reports/sia_loop_report.md` | `src/reports.py` | Human review |
+| `output/reports/sia_loop_report.md` | `src/template_sia/manuscript/reports.py` | Human review |
 | `output/data/manuscript_variables.json` | Variables script | Debugging, tokens audit |
 | `output/manuscript/*.md` | Injection pass | PDF renderer |
 | `output/pdf/template_sia_combined.pdf` | Stage 03 (`stage_03_render.py`) | Validation, publication |

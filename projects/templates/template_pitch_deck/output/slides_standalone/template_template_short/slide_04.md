@@ -2,7 +2,7 @@
 
 *Slide 4 of 11 — template_template pitch, short deck — kind: `content`*
 
-- src/template_template/introspection.py scans infrastructure/ modules, the pipeline DAG, and the public project roster.
+- src/template_template/core/introspection.py scans infrastructure/ modules, the pipeline DAG, and the public project roster.
 - metrics.py turns that scan into a dictionary of ${variable} values; inject_metrics.py substitutes them into the manuscript text.
 - Re-running the pipeline regenerates the paper from current repository state — the citation and the artifact cannot drift apart.
 

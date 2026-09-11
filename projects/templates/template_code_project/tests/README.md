@@ -17,12 +17,14 @@ uv run pytest tests/ --cov=src --cov-fail-under=90
 - **Integration tests** for analysis, figures, dashboard, and manuscript variables
 - **Deterministic results**
 
-## Test Files
+All test files live in cluster subdirectories mirroring
+`src/template_code_project/` (`core/`, `dashboard/`, `analysis/`,
+`figures/`) per SUBMODULAR-CODE-2.
 
 | File | Focus |
 | --- | --- |
-| `test_optimizer.py` | Pure math (`optimizer.py`) |
-| `test_optimizer_gradient_descent.py` | Gradient-descent runs and performance characteristics (`optimizer.py`) |
+| `test_optimizer.py` | Pure math (`core/optimizer.py`) |
+| `test_optimizer_gradient_descent.py` | Gradient-descent runs and performance characteristics (`core/optimizer.py`) |
 | `test_analysis_integration.py` | Analysis orchestration, stability/benchmark |
 | `test_analysis_coverage.py` | Analysis branch and error-path coverage |
 | `test_experiment_config.py` | Shared config loader |
@@ -31,9 +33,9 @@ uv run pytest tests/ --cov=src --cov-fail-under=90
 | `test_invariants.py` | Invariant builders |
 | `test_invariants_and_dashboard.py` | Dashboard CLI |
 | `test_manuscript_variables.py` | `{{TOKEN}}` map + live cross-reference |
-| `test_benchmark_support.py` | `infrastructure.benchmark` rubric demo (`src/benchmark_support.py`) |
+| `test_benchmark_support.py` | `infrastructure.benchmark` rubric demo (`src/template_code_project/core/benchmark_support.py`) |
 | `test_scripts_smoke.py` | Auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`) |
-| `test_documentation.py` | `documentation.py` API reference helpers |
+| `test_documentation.py` | `core/documentation.py` API reference helpers |
 
 Live test count and coverage: [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 
@@ -41,15 +43,15 @@ Live test count and coverage: [`docs/_generated/COUNTS.md`](../../../../docs/_ge
 
 ```mermaid
 graph TD
-    OPT[test_optimizer.py] --> MATH[src/optimizer.py]
-    CFG[test_experiment_config.py] --> EC[src/experiment_config.py]
-    INT[test_analysis_integration.py] --> ANA[src/analysis/]
-    FIG[test_figures_orchestration.py] --> FIGS[src/figures/]
+    OPT[test_optimizer.py] --> MATH[src/template_code_project/core/optimizer.py]
+    CFG[test_experiment_config.py] --> EC[src/template_code_project/core/experiment_config.py]
+    INT[test_analysis_integration.py] --> ANA[src/template_code_project/analysis/]
+    FIG[test_figures_orchestration.py] --> FIGS[src/template_code_project/figures/]
     COV[test_analysis_coverage.py] --> ANA
-    TINV[test_invariants.py] --> INVM[src/invariants.py]
-    DASH[test_invariants_and_dashboard.py] --> DB[src/dashboard.py]
+    TINV[test_invariants.py] --> INVM[src/template_code_project/core/invariants.py]
+    DASH[test_invariants_and_dashboard.py] --> DB[src/template_code_project/dashboard/dashboard.py]
     SMK[test_scripts_smoke.py] --> SCRIPTS[scripts/ auxiliary]
-    MV[test_manuscript_variables.py] --> VARS[src/manuscript_variables.py]
+    MV[test_manuscript_variables.py] --> VARS[src/template_code_project/core/manuscript_variables.py]
 ```
 
 > **Zero-Mock Policy**: Tests use real numpy arrays, temp files, and generated artifacts. No `unittest.mock`, `MagicMock`, or `@patch`. Orchestration modules may use `pytest.MonkeyPatch` on module attributes and subprocess import isolation — see [`PATTERNS.md`](PATTERNS.md).

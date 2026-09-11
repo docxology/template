@@ -7,13 +7,13 @@ from typing import Any
 
 from infrastructure.autoresearch import ResearchProgram, RunLedger
 
-from template_autoresearch_project.figures import figures_process
-from template_autoresearch_project.config import AutoResearchLoopConfig, load_experiment_candidates, load_seed_ideas
-from template_autoresearch_project.figures.figure_registry import figure_registry_payload
-from template_autoresearch_project.figures.figure_style import apply_style, load_figure_style
-from template_autoresearch_project.ml.task import MLTaskResult
-from template_autoresearch_project.models import AutoResearchLoopResult, LoopStageResult
-from template_autoresearch_project.reports import render_loop_markdown, render_stage_matrix_csv
+from ..figures import figures_process
+from ..loop.config import AutoResearchLoopConfig, load_experiment_candidates, load_seed_ideas
+from ..figures.figure_registry import figure_registry_payload
+from ..figures.figure_style import apply_style, load_figure_style
+from ..ml.task import MLTaskResult
+from ..loop.models import AutoResearchLoopResult, LoopStageResult
+from .reports import render_loop_markdown, render_stage_matrix_csv
 
 from .benchmark import _benchmark_score, _write_benchmark_grading_reports, write_benchmark_boundary
 from .io import write_json, write_text

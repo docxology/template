@@ -64,7 +64,7 @@ render:
 # ---------------------------------------------------------------------------
 # Prose-analysis thresholds.
 #
-# Every knob below has a documented default in src/config.py
+# Every knob below has a documented default in src/pipeline/config.py
 # (ProseAnalysisConfig). Sensible bounds are noted inline; the pipeline
 # does not enforce hard min/max but values outside the suggested range
 # will produce noisy or meaningless reports.

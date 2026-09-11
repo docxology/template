@@ -56,29 +56,29 @@ the short version:
 
 | Class | Examples | Action |
 |---|---|---|
-| REQUIRED — pipeline gate | `src/optimizer.py` and `invariants.py` (math primitives), all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
-| REQUIRED — orchestration | `src/analysis/`, `src/figures/`, `src/dashboard.py`, `src/manuscript_variables.py`, all `scripts/*.py` | May import `infrastructure.*`; exercised by the end-to-end pipeline run |
+| REQUIRED — pipeline gate | `src/template_code_project/core/optimizer.py` and `core/invariants.py` (math primitives), all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
+| REQUIRED — orchestration | `src/template_code_project/analysis/`, `src/template_code_project/figures/`, `src/template_code_project/dashboard/dashboard.py`, `src/template_code_project/core/manuscript_variables.py`, all `scripts/*.py` | May import `infrastructure.*`; exercised by the end-to-end pipeline run |
 | AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/audit/check_template_drift.py` and audits; aspire to update them when code changes |
 
 ## Concrete first steps after fork
 
 ### 1. Replace the algorithm
-Edit `src/optimizer.py` with your real algorithm. Keep it
+Edit `src/template_code_project/core/optimizer.py` with your real algorithm. Keep it
 **infrastructure-free** (no `from infrastructure import ...`) — the
-math-primitive purity is what lets you copy `src/optimizer.py` into any
+math-primitive purity is what lets you copy `src/template_code_project/core/optimizer.py` into any
 Python environment without the pipeline installed. The orchestration
 modules (`analysis/`, `figures/`, etc.) are the right place for
 infrastructure-coupled code.
 
 ### 2. Update the manuscript variables
-`src/manuscript_variables.py::generate_variables()` is the **single
+`src/template_code_project/core/manuscript_variables.py::generate_variables()` is the **single
 function** that produces every numeric token referenced in
 `manuscript/*.md`. When you change the algorithm:
 
 1. Add new tokens to `generate_variables()`.
 2. Reference them in your manuscript as `{{NEW_TOKEN}}`.
 3. The regression test
-   `tests/test_manuscript_variables.py::test_all_manuscript_tokens_are_generated`
+   `tests/core/test_manuscript_variables.py::test_all_manuscript_tokens_are_generated`
    automatically fails if a token is referenced but not generated.
 
 ### 3. Update the test suite

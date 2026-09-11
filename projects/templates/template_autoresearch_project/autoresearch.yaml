@@ -13,7 +13,7 @@ edit_allowlist:
   - projects/templates/template_autoresearch_project/manuscript/
 metric_direction: maximize
 grading:
-  # Knobs for the readiness-benchmark auto-grade (consumed by src/writers._load_grading_settings).
+  # Knobs for the readiness-benchmark auto-grade (consumed by writers.benchmark._load_grading_settings).
   # min_accuracy_delta: the smallest ML improvement over baseline that counts as a real result.
   min_accuracy_delta: 0.005
   # core_artifacts: the artifacts that must be substantive for the readiness benchmark to pass.

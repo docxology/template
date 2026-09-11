@@ -24,32 +24,18 @@ Technical documentation for the `template` meta-project — the self-referential
 projects/templates/template_template/
 ├── src/template_template/         # Domain logic (Layer 2)
 │   ├── __init__.py                # Public API (generate_all_architecture_figures)
-│   ├── introspection.py           # Repository analysis engine
-│   ├── architecture_viz.py        # Figure orchestrator (calls figure_* modules)
-│   ├── figure_architecture_overview.py  # Two-layer overview figure
-│   ├── figure_pipeline_stages.py        # Pipeline stages figure
-│   ├── figure_module_inventory.py       # Module inventory figure
-│   ├── figure_comparative_matrix.py     # Comparative feature matrix figure + data
-│   ├── viz_palette.py             # Shared palette + drawing helpers
-│   ├── paths.py                   # Repository root discovery (`locate_repo_root`)
-│   ├── metrics.py                 # Metric formatting utilities
-│   ├── contracts.py               # Receipts, lockstep, deterministic-default validation
-│   └── inject_metrics.py          # ${variable} → value substitution
+│   ├── core/                      # Introspection, contracts, repo-root discovery
+│   ├── metrics/                   # Manuscript metrics + ${variable} injection
+│   └── figures/                   # Figure orchestrator + figure builders + palette
 ├── scripts/                       # Thin Orchestrators (Stage 02)
 │   ├── generate_architecture_viz.py   # Figure generation orchestrator
 │   └── generate_manuscript_metrics.py # Metrics + variable injection orchestrator
-├── tests/                         # Project suite; counts are generated, coverage floor is declared in pyproject.toml
+├── tests/                         # Project suite mirrored per cluster; counts are generated, coverage floor is declared in pyproject.toml
 │   ├── conftest.py                # Shared fixtures (repo root path)
 │   ├── helpers.py                 # REPO_ROOT / PROJECT_DIR resolution helpers
-│   ├── test_meta.py               # Introspection + injection + real-manuscript integration
-│   ├── test_architecture_viz.py   # Visualization output tests
-│   ├── test_metrics.py            # Metric formatting + table builder tests
-│   ├── test_confidentiality.py    # Public/private discovery boundary (negative controls)
-│   ├── test_contracts.py          # Receipt schema, matrix lockstep, deterministic defaults
-│   ├── test_evidence_contract.py  # Executable policy binding + evidence fail-closed controls
-│   ├── test_script_entrypoints.py # Sandboxed subprocess execution of the metrics orchestrator
-│   ├── test_stale_metrics_control.py  # Stale-metric negative controls
-│   └── test_edge_cases.py         # Error branches, fallbacks, and previously-uncovered paths
+│   ├── core/                      # test_meta, test_contracts, test_confidentiality, test_edge_cases, test_script_entrypoints
+│   ├── metrics/                   # test_metrics, test_evidence_contract, test_stale_metrics_control
+│   └── figures/                   # test_architecture_viz
 ├── manuscript/                    # 21 Markdown chapters + references.bib
 ├── docs/                          # This directory
 ├── output/                        # Generated artifacts (figures, PDFs, data)

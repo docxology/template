@@ -243,7 +243,7 @@ ollama serve
 ollama pull hermes3
 
 # Run the live round-trip test
-uv run pytest projects/templates/template_autoscientists/tests/test_hermes_live.py \
+uv run pytest projects/templates/template_autoscientists/tests/agents/test_hermes_live.py \
     -m requires_ollama -v
 ```
 

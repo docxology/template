@@ -8,8 +8,8 @@ from typing import Any
 
 from infrastructure.core.pipeline.artifacts import compute_sha256
 
-from template_autoresearch_project.config import AutoResearchLoopConfig
-from template_autoresearch_project.json_coerce import mapping_list
+from ..loop.config import AutoResearchLoopConfig
+from ..loop.json_coerce import mapping_list
 
 from .constants import SECURITY_ARTIFACTS
 

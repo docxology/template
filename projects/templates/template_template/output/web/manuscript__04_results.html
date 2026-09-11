@@ -532,7 +532,7 @@ YAML-driven pipeline DAG resolution, HTTPS-bound optional suites
 <h2 id="infrastructure-module-inventory">Infrastructure Module
 Inventory</h2>
 <p>The introspection module
-(<code>template_template.introspection</code>) emits the authoritative
+(<code>template_template.core.introspection</code>) emits the authoritative
 table below—every row reflects
 <code>discover_infrastructure_modules(REPO_ROOT)</code>.</p>
 <table>
@@ -897,7 +897,7 @@ artifact rather than copied from an ad-hoc workstation run.</p>
 <p>Rendered via <code>projects/templates/template_template</code>
 (<code>generate_manuscript_metrics.py</code> → injected tokens such as
 <code>28</code>). Architecture figures stem from <a
-href="../src/template_template/architecture_viz.py"><code>template_template.architecture_viz</code></a>—font
+href="../src/template_template/figures/architecture_viz.py"><code>template_template.figures.architecture_viz</code></a>—font
 sizes constrained by §QA.</p>
 <p><img src="../figures/architecture_overview.png"
 alt="Two-Layer Architecture Overview" /> <strong>Figure 1.</strong> Live

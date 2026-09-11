@@ -125,15 +125,16 @@ The analysis stage runs two thin scripts:
   stage matrix, review packet, method ledgers, benchmark scores, final figures,
   evidence registry snapshot, schema manifest, local research-object manifest,
   phase ledger, figure-quality report, artifact manifest, readiness report, and
-  manuscript-hydration sidecars through `src.loop.run_autoresearch_loop`.
+  manuscript-hydration sidecars through `src.loop.loop.run_autoresearch_loop`.
 - `scripts/z_generate_manuscript_variables.py` hydrates manuscript variables
   into `output/manuscript/` for rendering and fails when strict run-derived
   manuscript values are not tokenized.
 
-Reusable behavior lives under `src/` in typed packages (`loop`, `ml.data`,
-`ml.models`, `ml.training`, `ml.selection`, `ml.task`, `diagnostics.records`,
-`diagnostics.metrics`, `diagnostics.intervals`, `diagnostics.reports`,
-`models`, `config`, `writers`, `reports`, `figures`, `manuscript_variables`).
+Reusable behavior lives under `src/` in typed packages (`loop.config`, `loop.loop`,
+`loop.loop_phases`, `loop.models`, `loop.phase_ledger`, `ml.data`, `ml.models`,
+`ml.training`, `ml.selection`, `ml.task`, `diagnostics.records`, `diagnostics.metrics`,
+`diagnostics.intervals`, `diagnostics.reports`, `diagnostics.source_ledger`,
+`writers`, `figures`, `manuscript`, `security`).
 No network calls, LLM calls, runtime dataset downloads, generated-code
 execution, or autonomous approval loops are used.
 
@@ -165,7 +166,7 @@ incomplete rather than silently certified.
 
 **Validation boundary.** The claim, figure-quality, and benchmark gates bind to
 substantive content and are exercised by fault-injecting negative-control tests
-(`tests/test_gate_negative_controls.py`, `tests/test_gate_improvements.py`) that
+(`tests/loop/test_gate_negative_controls.py`, `tests/writers/test_gate_improvements.py`) that
 prove each one fails closed. The former self-referential gates are now hardened
 into production gates:
 

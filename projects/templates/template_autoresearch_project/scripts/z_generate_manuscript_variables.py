@@ -15,7 +15,10 @@ REPO_ROOT = next(
 )
 
 from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree  # noqa: E402
-from template_autoresearch_project.manuscript_variables import compute_variables, write_manuscript_hydration_artifacts  # noqa: E402
+from template_autoresearch_project.manuscript.manuscript_variables import (
+    compute_variables,
+    write_manuscript_hydration_artifacts,
+)  # noqa: E402
 from template_autoresearch_project.writers import write_artifact_manifest  # noqa: E402
 
 _LOOP_JSON = PROJECT_ROOT / "output" / "data" / "autoresearch_loop.json"

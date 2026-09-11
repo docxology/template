@@ -6,7 +6,7 @@ Read this file before modifying any file in this project.
 
 1. **Layer boundaries.** Harness logic belongs in `infrastructure/sia/` (Layer 1) or `src/` (Layer 2). Scripts under `scripts/` coordinate only — no generation state machines in scripts.
 
-2. **Deterministic default.** CI and default pipeline runs use `live=False` fixture replay from `src/fixtures/recorded_generations/`. Do not require network, Ollama, or subprocess execution of generated agents in default tests.
+2. **Deterministic default.** CI and default pipeline runs use `live=False` fixture replay from `src/template_sia/fixtures/recorded_generations/`. Do not require network, Ollama, or subprocess execution of generated agents in default tests.
 
 3. **Task layout contract.** Every task under `tasks/<name>/` must expose `data/public/`, `data/private/`, `reference/`, and a public `evaluate.py` that writes `results.json` with keys `metric_name`, `metric_value`, `n_samples`.
 

@@ -11,15 +11,13 @@ pin time).
 
 No mocks: the values are recomputed by calling the same deterministic source
 functions the pipeline uses — ``infrastructure.prose.analyze_manuscript`` and
-``src.prose_facade.parse_bib_keys`` — over the real manuscript directory.
+``src.pipeline.prose_facade.parse_bib_keys`` — over the real manuscript directory.
 """
 
 from __future__ import annotations
 
-import importlib.util
 from pathlib import Path
 import sys
-from types import ModuleType
 from typing import Any
 
 import pytest
@@ -31,46 +29,19 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from infrastructure.prose import analyze_manuscript  # noqa: E402
 
-_PKG_ALIAS = "_prose_project_src"
 
-
-def _load_src_package() -> ModuleType:
-    """Load this exemplar's ``src`` package under a project-unique alias.
-
-    Every public exemplar ships a top-level ``src`` package, so a bare
-    ``sys.path.insert`` + ``from src...`` collides on ``sys.modules['src']``
-    once a second project's regression test joins the same pytest session
-    (``infrastructure.prose`` above is repo-wide and shared safely — only
-    the project-local ``src`` package needs this isolation). Registering
-    under a namespaced key keeps the real tested functions in scope (no
-    mocks) and stays collision-free regardless of collection order.
-    """
-
-    if _PKG_ALIAS in sys.modules:
-        return sys.modules[_PKG_ALIAS]
-    src_init = PROJECT_ROOT / "src" / "template_prose_project" / "__init__.py"
-    spec = importlib.util.spec_from_file_location(
-        _PKG_ALIAS,
-        src_init,
-        submodule_search_locations=[str(PROJECT_ROOT / "src" / "template_prose_project")],
-    )
-    assert spec is not None and spec.loader is not None, f"cannot load {src_init}"
-    package = importlib.util.module_from_spec(spec)
-    sys.modules[_PKG_ALIAS] = package
-    spec.loader.exec_module(package)
-    return package
-
-
-def _import_submodule(dotted: str) -> ModuleType:
-    _load_src_package()
-    return importlib.import_module(f"{_PKG_ALIAS}.{dotted}")
-
-
-load_project_config = _import_submodule("config").load_project_config
-_manuscript_variables_mod = _import_submodule("manuscript_variables")
-ManuscriptVariables = _manuscript_variables_mod.ManuscriptVariables
-compute_variables = _manuscript_variables_mod.compute_variables
-parse_bib_keys = _import_submodule("prose_facade").parse_bib_keys
+# SUBMODULAR-PROSE-1: the exemplar package is a regular nested package
+# (``src/template_prose_project/``) whose modules import via absolute
+# ``template_prose_project.*`` paths, so the exemplar imports directly --
+# the project-unique alias machinery existed only to resolve the pre-split
+# flat layout's ``from src.config import ...`` imports, which no longer
+# exist (and a dotted alias import cannot address subpackages by path).
+from template_prose_project.pipeline.config import load_project_config  # noqa: E402
+from template_prose_project.manuscript.manuscript_variables import (  # noqa: E402
+    ManuscriptVariables,
+    compute_variables,
+)
+from template_prose_project.pipeline.prose_facade import parse_bib_keys  # noqa: E402
 
 
 def _pin(pinned: dict[str, Any], key: str) -> dict[str, Any]:

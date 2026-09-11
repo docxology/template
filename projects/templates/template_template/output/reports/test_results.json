@@ -49,77 +49,77 @@
           "excluded_lines": 0,
           "total_lines": 7
         },
-        "src/template_template/architecture_viz.py": {
+        "src/template_template/figures/architecture_viz.py": {
           "coverage_percent": 100.0,
           "executed_lines": 13,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 13
         },
-        "src/template_template/contracts.py": {
+        "src/template_template/core/contracts.py": {
           "coverage_percent": 82.27848101265823,
           "executed_lines": 48,
           "missing_lines": 7,
           "excluded_lines": 0,
           "total_lines": 55
         },
-        "src/template_template/figure_architecture_overview.py": {
+        "src/template_template/figures/figure_architecture_overview.py": {
           "coverage_percent": 100.0,
           "executed_lines": 68,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 68
         },
-        "src/template_template/figure_comparative_matrix.py": {
+        "src/template_template/figures/figure_comparative_matrix.py": {
           "coverage_percent": 100.0,
           "executed_lines": 59,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 59
         },
-        "src/template_template/figure_module_inventory.py": {
+        "src/template_template/figures/figure_module_inventory.py": {
           "coverage_percent": 100.0,
           "executed_lines": 38,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 38
         },
-        "src/template_template/figure_pipeline_stages.py": {
+        "src/template_template/figures/figure_pipeline_stages.py": {
           "coverage_percent": 100.0,
           "executed_lines": 43,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 43
         },
-        "src/template_template/inject_metrics.py": {
+        "src/template_template/metrics/inject_metrics.py": {
           "coverage_percent": 100.0,
           "executed_lines": 89,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 89
         },
-        "src/template_template/introspection.py": {
+        "src/template_template/core/introspection.py": {
           "coverage_percent": 98.22695035460993,
           "executed_lines": 223,
           "missing_lines": 3,
           "excluded_lines": 0,
           "total_lines": 226
         },
-        "src/template_template/metrics.py": {
+        "src/template_template/metrics/metrics.py": {
           "coverage_percent": 98.36065573770492,
           "executed_lines": 97,
           "missing_lines": 1,
           "excluded_lines": 0,
           "total_lines": 98
         },
-        "src/template_template/paths.py": {
+        "src/template_template/core/paths.py": {
           "coverage_percent": 100.0,
           "executed_lines": 12,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 12
         },
-        "src/template_template/viz_palette.py": {
+        "src/template_template/figures/viz_palette.py": {
           "coverage_percent": 100.0,
           "executed_lines": 18,
           "missing_lines": 0,

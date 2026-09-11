@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections import Counter
 from typing import Any
 
-from template_autoresearch_project.json_coerce import mapping, mapping_list
+from ..loop.json_coerce import mapping, mapping_list
 from .manuscript_tables_format import artifact_markdown_link, markdown_table, pdf_small_table
 from .manuscript_tokens_format import (
     artifact_role,

@@ -4,7 +4,7 @@
     "project_name": "template_template",
     "populated_on": "2026-07-01",
     "populated_by": "Marcus Webb (Engineer)",
-    "note": "First real regression pins for the autopoietic meta-template. This exemplar introspects the LIVE repository (infrastructure/ subdirectory roster, pipeline.yaml DAG, PUBLIC_PROJECT_NAMES) and injects the numbers into its own manuscript via build_manuscript_metrics_dict. Every value below is re-derived by calling the real src.template_template.introspection functions on the repo root -- never hand-copied from a rendered ${token}. Two stability tiers are pinned: (1) the declared pipeline.yaml DAG structure and the current confidentiality-controlled public exemplar roster count (24) at tolerance 0; (2) the live infrastructure module_count at abs_tolerance 2, following this exemplar's own convention (manuscript/AGENTS.md: rotating layout facts link to docs/_generated/COUNTS.md) -- the band catches a broken discovery (0, halved) or a large jump while tolerating single-module organic repo growth."
+    "note": "First real regression pins for the autopoietic meta-template. This exemplar introspects the LIVE repository (infrastructure/ subdirectory roster, pipeline.yaml DAG, PUBLIC_PROJECT_NAMES) and injects the numbers into its own manuscript via build_manuscript_metrics_dict. Every value below is re-derived by calling the real src.template_template.core.introspection functions on the repo root -- never hand-copied from a rendered ${token}. Two stability tiers are pinned: (1) the declared pipeline.yaml DAG structure and the current confidentiality-controlled public exemplar roster count (24) at tolerance 0; (2) the live infrastructure module_count at abs_tolerance 2, following this exemplar's own convention (manuscript/AGENTS.md: rotating layout facts link to docs/_generated/COUNTS.md) -- the band catches a broken discovery (0, halved) or a large jump while tolerating single-module organic repo growth."
   },
   "_provenance": {
     "pipeline_stages_declared": {
@@ -43,7 +43,7 @@
     "claim_text": "a YAML-declared pipeline (${pipeline_stages_declared} stages; default full ${pipeline_stages_default_full}) ... `${pipeline_stages_declared}` | YAML stage count (17)",
     "value": 17,
     "abs_tolerance": 0,
-    "verifier_function": "template_template.introspection.build_infrastructure_report",
+    "verifier_function": "template_template.core.introspection.build_infrastructure_report",
     "verifier_args": {
       "repo_root": ".",
       "read": "pipeline_stages_declared"
@@ -61,7 +61,7 @@
     "claim_text": "default full runs use ${pipeline_stages_default_full} stages ... `${pipeline_stages_default_full}` | Default full run (10)",
     "value": 10,
     "abs_tolerance": 0,
-    "verifier_function": "template_template.introspection.build_infrastructure_report",
+    "verifier_function": "template_template.core.introspection.build_infrastructure_report",
     "verifier_args": {
       "repo_root": ".",
       "read": "pipeline_stages_default_full"
@@ -75,7 +75,7 @@
     "claim_text": "Effective core stages: ${pipeline_stages_core_only} ... `${pipeline_stages_core_only}` | `--core-only` run (8)",
     "value": 8,
     "abs_tolerance": 0,
-    "verifier_function": "template_template.introspection.build_infrastructure_report",
+    "verifier_function": "template_template.core.introspection.build_infrastructure_report",
     "verifier_args": {
       "repo_root": ".",
       "read": "pipeline_stages_core_only"
@@ -107,7 +107,7 @@
     "claim_text": "a Two-Layer Architecture that separates ${module_count} infrastructure subdirectories ... All ${module_count} enumerated subdirectories carry Tier-1/README.md and Tier-2/AGENTS.md coverage",
     "value": 28,
     "abs_tolerance": 2,
-    "verifier_function": "template_template.introspection.discover_infrastructure_modules",
+    "verifier_function": "template_template.core.introspection.discover_infrastructure_modules",
     "verifier_args": {
       "repo_root": ".",
       "read": "len"

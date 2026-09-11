@@ -71,7 +71,7 @@ which writes resolved copies to `output/manuscript/` and excludes
 documentation-only files (`AGENTS.md`, `README.md`, `SYNTAX.md`) from
 the output tree so their literal `{{TOKEN}}` examples are never substituted.
 Current markers (defined in
-[`src/manuscript_variables.py`](../src/template_prose_project/manuscript_variables.py)):
+[`src/manuscript/manuscript_variables.py`](../src/template_prose_project/manuscript/manuscript_variables.py)):
 
 | Marker | Source |
 |---|---|

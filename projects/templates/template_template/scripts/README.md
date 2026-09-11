@@ -15,8 +15,8 @@ uv run python projects/templates/template_template/scripts/generate_manuscript_m
 
 Module logic:
 
-- `src/template_template/metrics.py` — metrics computation, module inventory table, and JSON save
-- `src/template_template/inject_metrics.py` — `${variable}` substitution and chapter rendering
+- `src/template_template/metrics/metrics.py` — metrics computation, module inventory table, and JSON save
+- `src/template_template/metrics/inject_metrics.py` — `${variable}` substitution and chapter rendering
 
 Outputs:
 
@@ -33,8 +33,8 @@ uv run python projects/templates/template_template/scripts/generate_architecture
 
 Module logic:
 
-- `src/template_template/architecture_viz.py` — all figure construction, colour palette, and comparative matrix data
-- `src/template_template/introspection.py` — repository data used by figure generators
+- `src/template_template/figures/architecture_viz.py` — all figure construction, colour palette, and comparative matrix data
+- `src/template_template/core/introspection.py` — repository data used by figure generators
 
 Outputs (`output/figures/`):
 

@@ -19,7 +19,7 @@ from .figures_core import (
     save_figure,
     styled_grid,
 )
-from template_autoresearch_project.ml.task import MLTaskResult
+from ..ml.task import MLTaskResult
 
 
 def write_ml_confusion_matrix_figure(figures_dir: Path, result: MLTaskResult) -> Path:

@@ -102,24 +102,24 @@ Scripts are tested through the project test suite:
 uv run pytest ../tests/ -v
 
 # Run specific analysis tests
-uv run pytest ../tests/test_analysis_integration.py -k "TestStabilityAnalysis or TestPerformanceBenchmarking" -v
+uv run pytest ../tests/analysis/test_analysis_integration.py -k "TestStabilityAnalysis or TestPerformanceBenchmarking" -v
 
 # Auxiliary script smoke (non-gated AESTHETIC scripts)
-uv run pytest ../tests/test_scripts_smoke.py -v
+uv run pytest ../tests/analysis/test_scripts_smoke.py -v
 ```
 
-**Auxiliary smoke coverage:** [`tests/test_scripts_smoke.py`](../tests/test_scripts_smoke.py) subprocess-invokes `generate_api_docs.py` (expects exit 0 and `output/docs/api_reference.md`) and `00_preflight.py` (accepts exit 0 or 1 when the local Puppeteer cache is absent; asserts actionable preflight diagnostics). Neither script is pipeline-required.
+**Auxiliary smoke coverage:** [`tests/analysis/test_scripts_smoke.py`](../tests/analysis/test_scripts_smoke.py) subprocess-invokes `generate_api_docs.py` (expects exit 0 and `output/docs/api_reference.md`) and `00_preflight.py` (accepts exit 0 or 1 when the local Puppeteer cache is absent; asserts actionable preflight diagnostics). Neither script is pipeline-required.
 
 ## API Reference
 
 ### generate_api_docs.py
 
-Thin wrapper (~35 lines) delegating to [`src/documentation.py`](../src/template_code_project/documentation.py):
+Thin wrapper (~35 lines) delegating to [`src/template_code_project/core/documentation.py`](../src/template_code_project/core/documentation.py):
 
 - `build_api_reference_markdown()` — static API reference template
 - `run_api_doc_generation(project_root)` — writes `output/docs/api_reference.md` and optional glossary index
 
-Unit tests: [`tests/test_documentation.py`](../tests/test_documentation.py). Subprocess smoke: [`tests/test_scripts_smoke.py`](../tests/test_scripts_smoke.py).
+Unit tests: [`tests/core/test_documentation.py`](../tests/core/test_documentation.py). Subprocess smoke: [`tests/analysis/test_scripts_smoke.py`](../tests/analysis/test_scripts_smoke.py).
 
 ### optimization_analysis.py
 
@@ -127,16 +127,16 @@ Thin wrapper (~65 lines) — re-exports and `main()` only. **All API signatures 
 
 | Concern | Module |
 | --- | --- |
-| Convergence experiments, stability, benchmarking | [`src/analysis/`](../src/template_code_project/analysis/) |
-| Matplotlib figures | [`src/figures/`](../src/template_code_project/figures/) |
-| Core optimizer | [`src/optimizer.py`](../src/template_code_project/optimizer.py) |
-| Dashboard HTML | [`src/dashboard.py`](../src/template_code_project/dashboard.py) via `build_dashboard.py` |
+| Convergence experiments, stability, benchmarking | [`src/template_code_project/analysis/`](../src/template_code_project/analysis/) |
+| Matplotlib figures | [`src/template_code_project/figures/`](../src/template_code_project/figures/) |
+| Core optimizer | [`src/template_code_project/core/optimizer.py`](../src/template_code_project/core/optimizer.py) |
+| Dashboard HTML | [`src/template_code_project/dashboard/dashboard.py`](../src/template_code_project/dashboard/dashboard.py) via `build_dashboard.py` |
 
 Run: `uv run python scripts/optimization_analysis.py` from the project root.
 
 ### build_dashboard.py
 
-Thin wrapper → [`src/dashboard.py`](../src/template_code_project/dashboard.py). See [`../src/AGENTS.md`](../src/AGENTS.md).
+Thin wrapper → [`src/template_code_project/dashboard/dashboard.py`](../src/template_code_project/dashboard/dashboard.py). See [`../src/AGENTS.md`](../src/AGENTS.md).
 
 ### 00_preflight.py
 
@@ -145,10 +145,10 @@ Thin wrapper → [`infrastructure.rendering.preflight`](../../../../infrastructu
 ### 04_benchmark_stage.py
 
 Thin orchestrator for the `infrastructure.benchmark` rubric demo backed by
-`src/benchmark_support.py`. Writes `output/reports/benchmark_report.json` and a
+`src/template_code_project/core/benchmark_support.py`. Writes `output/reports/benchmark_report.json` and a
 deterministic timing figure (`output/figures/benchmark_timings.png`) with
 wall-clock timing logged as a runtime diagnostic only. See
-[`src/benchmark_support.py`](../src/template_code_project/benchmark_support.py).
+[`src/template_code_project/core/benchmark_support.py`](../src/template_code_project/core/benchmark_support.py).
 
 ### 08_connector_search.py
 
@@ -171,7 +171,7 @@ default core DAG.
 
 ### z_generate_manuscript_variables.py
 
-Thin wrapper → [`src/manuscript_variables.py`](../src/template_code_project/manuscript_variables.py).
+Thin wrapper → [`src/template_code_project/core/manuscript_variables.py`](../src/template_code_project/core/manuscript_variables.py).
 
 ## Infrastructure Integration
 
@@ -281,4 +281,4 @@ logging.basicConfig(level=logging.DEBUG)
 ## See Also
 
 - [README.md](README.md) - Quick reference
-- [../src/optimizer.py](../src/template_code_project/optimizer.py) - Core algorithms used by scripts
+- [../src/template_code_project/core/optimizer.py](../src/template_code_project/core/optimizer.py) - Core algorithms used by scripts

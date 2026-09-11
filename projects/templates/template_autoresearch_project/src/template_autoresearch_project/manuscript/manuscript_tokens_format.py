@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from template_autoresearch_project.json_coerce import mapping_list
+from ..loop.json_coerce import mapping_list
 
 
 def load_json_mapping(path: Path) -> dict[str, Any]:

@@ -41,7 +41,7 @@ keeps a capability blocked rather than silently promoting it.
 ## Test and validator gaps
 
 - Negative controls for stale generated metrics and accidental inclusion of
-  local-only project paths are bound by `tests/test_stale_metrics_control.py` to
+  local-only project paths are bound by `tests/metrics/test_stale_metrics_control.py` to
   the generated metric schema and live public-scope paths.
 - Schema tests are required before changing the metrics JSON consumed by the
   manuscript.

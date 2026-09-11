@@ -1,5 +1,7 @@
-# Code-centric exemplar: optional monorepo adapters only.
+# Code-centric exemplar: optional monorepo adapters only. Paths updated to
+# the post-split subpackage layout (SUBMODULAR-CODE-2): flat modules moved
+# into src/template_code_project/{core,dashboard,figures}/.
 allow_infrastructure_imports:
-  - src/analysis/_infra.py
-  - src/_runtime.py
-  - src/benchmark_support.py
+  - src/template_code_project/analysis/_infra.py
+  - src/template_code_project/core/_runtime.py
+  - src/template_code_project/core/benchmark_support.py

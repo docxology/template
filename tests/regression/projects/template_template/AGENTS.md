@@ -4,16 +4,14 @@ Read [`../../AGENTS.md`](../../AGENTS.md) first.
 
 New regression tests for `template_template` go under `tables/`.
 Use the `pinned_values` fixture; do not hardcode expected numbers in
-test bodies. Load the project's own `src` package via the
-`_load_src_package` helper in `tables/test_introspection_metrics_claims.py`
-(registers it under the `_template_template_src` alias) rather than a bare
-`sys.path.insert` + `from src...` import at module level — every
-exemplar ships a top-level `src` package, and the bare pattern collides
-across projects once more than one is collected in the same pytest
-session.
+test bodies. Import the project's package directly via its unique nested
+name (`from template_template.core.introspection import ...`) — the repo
+conftest places every `projects/*/src` on `sys.path`, so the old
+`_load_src_package` alias loader (which existed to avoid a bare
+`sys.modules['src']` collision under the pre-split flat layout) is retired.
 
 This exemplar introspects the LIVE repository, so re-derive every value
-by calling the real `template_template.introspection` functions (and
+by calling the real `template_template.core.introspection` functions (and
 `infrastructure.project.public_scope.public_project_names`) on the repo
 root — never copy a rendered `${token}` value. Frozen structural counts
 (pipeline DAG, public exemplar roster) are pinned at tolerance 0; the

@@ -3,17 +3,16 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import cast
 
 from infrastructure.core.pipeline.artifacts import (
     output_inventory_mode_for_project,
     snapshot_current_artifact_manifest,
 )
 
-from template_autoresearch_project.artifact_schemas import schema_manifest_payload
-from template_autoresearch_project.models import AutoResearchLoopResult
-from template_autoresearch_project.phase_ledger import write_phase_ledger
-from template_autoresearch_project.research_object import research_object_manifest_payload
+from .artifact_schemas import schema_manifest_payload
+from ..loop.models import AutoResearchLoopResult
+from ..loop.phase_ledger import write_phase_ledger
+from .research_object import research_object_manifest_payload
 
 from .io import write_json
 
@@ -63,14 +62,11 @@ def write_autoresearch_phase_ledger(
     settlement_pass_count: int,
 ) -> Path:
     """Write the deterministic phase ledger for the loop settlement order."""
-    return cast(
-        Path,
-        write_phase_ledger(
-            project_root / "output" / "data" / "autoresearch_phase_ledger.json",
-            project_root,
-            result,
-            paths,
-            generated_at=generated_at,
-            settlement_pass_count=settlement_pass_count,
-        ),
+    return write_phase_ledger(
+        project_root / "output" / "data" / "autoresearch_phase_ledger.json",
+        project_root,
+        result,
+        paths,
+        generated_at=generated_at,
+        settlement_pass_count=settlement_pass_count,
     )

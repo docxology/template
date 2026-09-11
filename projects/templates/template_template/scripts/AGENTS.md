@@ -6,8 +6,8 @@ Technical specification for the template project's analysis scripts.
 
 | Script | Pattern | Input | Output |
 |--------|---------|-------|--------|
-| `generate_manuscript_metrics.py` | Stage 02 Thin Orchestrator | `src/template_template/metrics.py`, `src/template_template/inject_metrics.py` | `output/data/metrics.json`, rendered `output/manuscript/*` |
-| `generate_architecture_viz.py` | Stage 02 Thin Orchestrator | `src/template_template/architecture_viz.py` | 4 PNG figures in `output/figures/` |
+| `generate_manuscript_metrics.py` | Stage 02 Thin Orchestrator | `src/template_template/metrics/metrics.py`, `src/template_template/metrics/inject_metrics.py` | `output/data/metrics.json`, rendered `output/manuscript/*` |
+| `generate_architecture_viz.py` | Stage 02 Thin Orchestrator | `src/template_template/figures/architecture_viz.py` | 4 PNG figures in `output/figures/` |
 
 ## Design Contract
 

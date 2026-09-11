@@ -22,13 +22,13 @@ resource directories without writing back to them:
 
 | Module | Role |
 |---|---|
-| `src/type_defs.py` | All TypedDict definitions — **edit here first** when adding return fields (named `type_defs.py`, not `types.py`, to avoid shadowing the stdlib `types` module once `src/` is added to `PYTHONPATH`) |
-| `src/fonds_reader.py` | Reads 3 fond types; returns typed dicts |
-| `src/rules_applier.py` | Loads soft/strong rules; returns typed dicts |
-| `src/tools_invoker.py` | Discovers tool manifests; returns typed dicts |
-| `src/integration.py` | Orchestrates all three; adds `generate_figure_data()` |
-| `src/strong_rule_evaluator.py`, `src/resource_schema.py`, `src/manuscript_variables.py` | Strong-rule evaluation, schema receipts, manuscript variables |
-| `src/figure_support.py`, `src/figures.py`, `src/cover_figure.py`, `src/rule_hierarchy_figure.py` | Figure specs, façade, and renderers |
+| `src/tools/type_defs.py` | All TypedDict definitions — **edit here first** when adding return fields (named `type_defs.py`, not `types.py`, to avoid shadowing the stdlib `types` module once `src/` is added to `PYTHONPATH`) |
+| `src/tools/fonds_reader.py` | Reads 3 fond types; returns typed dicts |
+| `src/rules/rules_applier.py` | Loads soft/strong rules; returns typed dicts |
+| `src/tools/tools_invoker.py` | Discovers tool manifests; returns typed dicts |
+| `src/tools/integration.py` | Orchestrates all three; adds `generate_figure_data()` |
+| `src/rules/strong_rule_evaluator.py`, `src/tools/resource_schema.py`, `src/figures/manuscript_variables.py` | Strong-rule evaluation, schema receipts, manuscript variables |
+| `src/figures/figure_support.py`, `src/figures/figures.py`, `src/figures/cover_figure.py`, `src/figures/rule_hierarchy_figure.py` | Figure specs, façade, and renderers |
 | `src/__init__.py` | Re-exports all public symbols |
 
 ---
@@ -41,7 +41,7 @@ resource directories without writing back to them:
    this project's perspective.
 3. **Graceful fallback everywhere.** Functions return `None` or empty
    collections when files are absent — they never raise.
-4. **`src/type_defs.py` is the single source of truth** for all TypedDict shapes.
+4. **`src/tools/type_defs.py` is the single source of truth** for all TypedDict shapes.
    Do not declare inline dicts in other modules.
 5. **`__all__` in every module.** Keep `src/__init__.py` in sync.
 
@@ -49,7 +49,7 @@ resource directories without writing back to them:
 
 ## Adding a new return field
 
-1. Add the field to the appropriate TypedDict in `src/type_defs.py`.
+1. Add the field to the appropriate TypedDict in `src/tools/type_defs.py`.
 2. Update the producing function to populate it.
 3. Update any downstream callers in `integration.py`.
 4. Add or update the corresponding test.

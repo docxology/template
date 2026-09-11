@@ -41,19 +41,22 @@ total/content/cover figure counts are generated into
 ```
 template_pools_rules_tools/
 ├── src/
-│   ├── type_defs.py           # All TypedDict definitions — edit here first
-│   ├── fonds_reader.py        # Read fonds from fonds/templates/
-│   ├── rules_applier.py       # Load and apply soft rules from rules/templates/
-│   ├── strong_rule_evaluator.py  # Evaluate strong (hard-constraint) rules
-│   ├── resource_schema.py     # Fail-closed shared-resource schema receipts
-│   ├── tools_invoker.py       # Discover tools from tools/templates/
-│   ├── integration.py         # Integration orchestrator; generate_figure_data()
-│   ├── manuscript_variables.py # {{UPPERCASE_KEY}} token generation
-│   ├── figure_support.py     # Figure themes, status maps, and provenance specs
-│   ├── figures.py             # Figure façade and shared manuscript figures
-│   ├── cover_figure.py        # Cover-art renderer
-│   ├── rule_hierarchy_figure.py # Rule-hierarchy renderer
-│   └── __init__.py            # Re-exports all public symbols
+│   ├── tools/
+│   │   ├── type_defs.py            # All TypedDict definitions — edit here first
+│   │   ├── fonds_reader.py         # Read fonds from fonds/templates/
+│   │   ├── resource_schema.py      # Fail-closed shared-resource schema receipts
+│   │   ├── tools_invoker.py        # Discover tools from tools/templates/
+│   │   └── integration.py          # Integration orchestrator; generate_figure_data()
+│   ├── rules/
+│   │   ├── rules_applier.py        # Load and apply soft rules from rules/templates/
+│   │   └── strong_rule_evaluator.py  # Evaluate strong (hard-constraint) rules
+│   ├── figures/
+│   │   ├── figure_support.py       # Figure themes, status maps, and provenance specs
+│   │   ├── cover_figure.py         # Cover-art renderer
+│   │   ├── rule_hierarchy_figure.py  # Rule-hierarchy renderer
+│   │   ├── figures.py              # Figure façade and shared manuscript figures
+│   │   └── manuscript_variables.py # {{UPPERCASE_KEY}} token generation
+│   └── __init__.py                 # Re-exports all public symbols
 ├── scripts/
 │   ├── 01_validate_sources.py       # Validate all sources exist and are well-formed
 │   ├── 02_run_integration.py        # Run the full integration demo
@@ -62,17 +65,20 @@ template_pools_rules_tools/
 │   ├── 05_generate_figures.py       # Render the manuscript figure set
 │   └── z_generate_manuscript_variables.py  # Resolve manuscript tokens
 ├── tests/
-│   ├── test_fonds_reader.py
-│   ├── test_rules_applier.py
-│   ├── test_strong_rule_evaluator.py
-│   ├── test_tools_invoker.py
-│   ├── test_integration.py
-│   ├── test_figures.py
-│   ├── test_property_based.py
-│   ├── test_manuscript_variables.py
-│   ├── test_resource_schema.py
-│   ├── test_coverage_extras.py
-│   └── test_generate_figures_script.py
+│   ├── tools/
+│   │   ├── test_fonds_reader.py
+│   │   ├── test_tools_invoker.py
+│   │   ├── test_integration.py
+│   │   ├── test_property_based.py
+│   │   ├── test_resource_schema.py
+│   │   └── test_coverage_extras.py
+│   ├── rules/
+│   │   ├── test_rules_applier.py
+│   │   └── test_strong_rule_evaluator.py
+│   └── figures/
+│       ├── test_figures.py
+│       ├── test_manuscript_variables.py
+│       └── test_generate_figures_script.py
 └── manuscript/
     ├── config.yaml, config.yaml.example
     ├── 00_frontmatter.md … 07_conclusion.md

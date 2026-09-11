@@ -74,7 +74,7 @@ filename links.
 When the manuscript needs a numeric or string value derived from a run, use
 the `{{TOKEN_NAME}}` syntax. Values are hydrated by
 `scripts/z_generate_manuscript_variables.py`, which delegates to
-`src/manuscript_variables.py::compute_variables`. Never hardcode a number
+`src/manuscript/manuscript_variables.py::compute_variables`. Never hardcode a number
 that will change when the manuscript or the configuration changes.
 
 - **BAD**: The manuscript contains 12,345 words.
@@ -82,7 +82,7 @@ that will change when the manuscript or the configuration changes.
 
 ### Complete `{{TOKEN}}` Reference
 
-All tokens defined in `src/manuscript_variables.py::ManuscriptVariables`:
+All tokens defined in `src/manuscript/manuscript_variables.py::ManuscriptVariables`:
 
 | Token | Source |
 |---|---|
@@ -101,11 +101,11 @@ All tokens defined in `src/manuscript_variables.py::ManuscriptVariables`:
 ### Adding a New Token
 
 1. Add a field to the `ManuscriptVariables` dataclass in
-   `projects/templates/template_prose_project/src/manuscript_variables.py`.
+   `projects/templates/template_prose_project/src/manuscript/manuscript_variables.py`.
 2. Populate the new field inside
    `compute_variables(*, config_title=..., manuscript_report=...)` from the
    `manuscript_report` mapping it receives (the function is keyword-only).
-3. Add a test in `projects/templates/template_prose_project/tests/test_manuscript_variables.py`
+3. Add a test in `projects/templates/template_prose_project/tests/manuscript/test_manuscript_variables.py`
    asserting the new field's value on a known fixture.
 4. Reference the token in the appropriate `manuscript/*.md` file as
    `{{NEW_TOKEN}}`.
@@ -189,7 +189,7 @@ publishes no figures into the manuscript body. See
 [`architecture.md`](architecture.md) for the full justification.
 
 If a future revision needs to embed a figure, follow the code-project
-convention: write the PNG via `src/figures.py`, reference it as a Pandoc
+convention: write the PNG via `src/figures/figures.py`, reference it as a Pandoc
 image with the relative path `../output/figures/new_figure.png` and the
 anchor `{#fig:new_label}`, and document the new label here.
 

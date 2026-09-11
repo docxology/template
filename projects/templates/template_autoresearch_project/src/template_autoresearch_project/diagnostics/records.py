@@ -7,8 +7,8 @@ from typing import Any
 
 import numpy as np
 
-from template_autoresearch_project.json_coerce import mapping_list
-from template_autoresearch_project.ml.task import (
+from ..loop.json_coerce import mapping_list
+from ..ml.task import (
     CandidateResult,
     MLTaskResult,
     load_mnist_arrays,

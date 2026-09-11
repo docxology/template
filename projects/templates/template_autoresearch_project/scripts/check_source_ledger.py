@@ -10,7 +10,7 @@ from _bootstrap import ensure_project_paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ensure_project_paths(PROJECT_ROOT)
 
-from template_autoresearch_project.source_ledger import (  # noqa: E402
+from template_autoresearch_project.diagnostics.source_ledger import (  # noqa: E402
     load_source_ledger,
     source_age_summary,
     source_tier_counts,

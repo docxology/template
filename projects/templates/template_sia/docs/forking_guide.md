@@ -23,7 +23,7 @@ Private work stays under `projects/working/` (local-only). Promote to `projects/
 
 | Path | Status |
 | --- | --- |
-| `src/loop.py`, `src/reports.py`, `src/loop_config.py` | REQUIRED |
+| `src/template_sia/loop/loop.py`, `src/template_sia/manuscript/reports.py`, `src/template_sia/loop/loop_config.py` | REQUIRED |
 | `tasks/<name>/` with public/private split | REQUIRED |
 | `src/fixtures/recorded_generations/` | REQUIRED for default CI replay |
 | `scripts/run_sia_loop.py`, `scripts/z_generate_manuscript_variables.py` | REQUIRED |
@@ -43,7 +43,7 @@ Private work stays under `projects/working/` (local-only). Promote to `projects/
 
 The public exemplar never applies generated feedback to target code. A fork
 that wants to apply mutations must produce a versioned
-`src/approval.py::ApprovalContract` payload first:
+`src/template_sia/loop/approval.py::ApprovalContract` payload first:
 
 1. run the target in a disposable sandbox;
 2. record a SHA-256 digest of the proposed diff and a rollback snapshot;

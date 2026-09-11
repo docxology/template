@@ -30,12 +30,12 @@ sys.path.insert(0, str(_REPO_ROOT))
 
 from infrastructure.core.logging.utils import get_logger  # noqa: E402
 
-from template_prose_project.config import load_project_config  # noqa: E402
+from template_prose_project.pipeline.config import load_project_config  # noqa: E402
 from infrastructure.rendering.manuscript_injection import (  # noqa: E402
     write_resolved_manuscript_tree,
 )
 
-from template_prose_project.manuscript_variables import (  # noqa: E402
+from template_prose_project.manuscript.manuscript_variables import (  # noqa: E402
     compute_variables,
     load_report_payload,
     write_variables,

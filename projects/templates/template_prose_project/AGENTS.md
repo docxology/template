@@ -23,7 +23,7 @@ flowchart TB
     P --> META[pyproject.toml · README.md ·<br/>AGENTS.md · .gitignore]
     P --> OVERLAY[domain_profile.yaml · experiment_plan.yaml ·<br/>data/claim_ledger.yaml<br/>advisory controls · evidence validation]
 
-    SRC --> SRC_F[config.py · pipeline/ · figures.py ·<br/>manuscript_variables.py · report.py ·<br/>prose_facade.py]
+    SRC --> SRC_F["pipeline/ · config.py · llm_review.py ·<br/>prose_facade.py · figures/ ·<br/>manuscript/ (manuscript_variables.py · report.py)"]
     SC --> SC_F[run_prose_pipeline.py ·<br/>y_generate_prose_figures.py ·<br/>z_generate_manuscript_variables.py]
     M --> M_F[config.yaml · preamble.md ·<br/>00_abstract → 06_reproducibility.md ·<br/>99_references.md · references.bib]
 
@@ -46,18 +46,18 @@ flowchart TB
 
 ## Key contracts
 
-* `src/config.py::ProjectConfig` — every knob is here. Add a new check
+* `src/pipeline/config.py::ProjectConfig` — every knob is here. Add a new check
   by adding a field to `ProseAnalysisConfig`, parsing it in
   `from_dict`, and wiring it into `pipeline.run_prose_pipeline`.
 * `scripts/run_prose_pipeline.py` — calls `infrastructure.prose.analyze_manuscript`,
   then `src/pipeline.run_prose_pipeline` with the typed report. Returns a
   :class:`ProseRunArtifacts` so the script knows where every artefact
   landed.
-* `src/figures.py` — pure matplotlib; takes a `ManuscriptReport` and a
+* `src/figures/figures.py` — pure matplotlib; takes a `ManuscriptReport` and a
   `Path`, returns the saved file paths.
-* `src/manuscript_variables.py` — derives substitution variables from
+* `src/manuscript/manuscript_variables.py` — derives substitution variables from
   the JSON report; no project-specific knowledge embedded.
-* `src/report.py::write_review_report` — single function that takes a
+* `src/manuscript/report.py::write_review_report` — single function that takes a
   `ManuscriptReport` + `CheckResult`s and writes markdown.
 * `src/pipeline::build_evidence_summary` — writes the machine-readable,
   diagnostic-only evidence summary; it must not be interpreted as publication
@@ -94,20 +94,20 @@ mocks.
 
 To add a new check:
 
-1. Edit `src/config.py::ProseAnalysisConfig` to add the new field, and add
-   its YAML key to `_KNOWN_PROSE_KEYS` at the top of `src/config.py` —
+1. Edit `src/pipeline/config.py::ProseAnalysisConfig` to add the new field, and add
+   its YAML key to `_KNOWN_PROSE_KEYS` at the top of `src/pipeline/config.py` —
    the strict validator rejects any key not listed there. (See the full
    "To add a new knob" recipe in [`docs/faq.md`](docs/faq.md).)
 2. Add a `_check_<name>` function in `src/pipeline/checks.py`.
 3. Wire it into `run_prose_pipeline` so it appears in `artifacts.checks`.
-4. Add a test in `tests/test_pipeline.py` covering both `passed=True`
+4. Add a test in `tests/pipeline/test_pipeline.py` covering both `passed=True`
    and `passed=False` outcomes (the existing `TestCheckUnits` class
    shows the pattern).
-5. Optionally surface its result in `src/report.py::write_review_report`.
+5. Optionally surface its result in `src/manuscript/report.py::write_review_report`.
 
 To add a new figure:
 
-1. Add a `plot_<name>` function in `src/figures.py`.
+1. Add a `plot_<name>` function in `src/figures/figures.py`.
 2. Append it to `generate_all_figures`.
 3. Reference the output PNG in `manuscript/03_results.md` if desired.
 

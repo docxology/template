@@ -4,7 +4,7 @@ The Generalized Research Template strictly forbids mocking in scientific/mathema
 
 ## Why Zero Mocks?
 
-The core insight is architectural: if a function requires a mock to be tested, it is doing I/O, calling external systems, or producing side-effects — which means it belongs in `scripts/` (as a thin orchestrator), not in `src/` (as pure logic). The purity of `src/optimizer.py` is what makes zero-mock testing achievable. Every function in `src/optimizer.py` is deterministic and side-effect-free, so tests simply call functions with real numpy arrays and verify real mathematical outputs.
+The core insight is architectural: if a function requires a mock to be tested, it is doing I/O, calling external systems, or producing side-effects — which means it belongs in `scripts/` (as a thin orchestrator), not in `src/` (as pure logic). The purity of `src/template_code_project/core/optimizer.py` is what makes zero-mock testing achievable. Every function in `src/template_code_project/core/optimizer.py` is deterministic and side-effect-free, so tests simply call functions with real numpy arrays and verify real mathematical outputs.
 
 If you ever feel the urge to mock something in a test for `src/`, treat it as a signal: move that code to `scripts/` and test the `src/` boundary directly.
 
@@ -18,9 +18,9 @@ If you ever feel the urge to mock something in a test for `src/`, treat it as a 
 | `test_analysis_coverage.py` | Analysis orchestration branches: validation errors/issues, `main()` paths, citations, publishing, register_figure |
 | `test_figures_orchestration.py` | Matplotlib figure generators |
 | `test_scripts_smoke.py` | Auxiliary script smoke (`generate_api_docs.py`, `00_preflight.py`) |
-| `test_documentation.py` | `documentation.py` API reference helpers |
+| `test_documentation.py` | `core/documentation.py` API reference helpers |
 | `test_dashboard_config.py` | Dashboard `_parse_args` validation, payload divergent α-sweep, config parity with YAML |
-| `test_invariants.py` | `src/invariants.py` builders and schema |
+| `test_invariants.py` | `src/template_code_project/core/invariants.py` builders and schema |
 | `test_invariants_and_dashboard.py` | `scripts/build_dashboard.py` end-to-end |
 | `test_manuscript_variables.py` | `{{TOKEN}}` map + live manuscript cross-reference |
 
@@ -89,20 +89,20 @@ Before submitting any test, verify all boxes are checked:
 
 ## Infrastructure-Dependent Test Pattern
 
-`TestStabilityAnalysis` and `TestPerformanceBenchmarking` in `test_analysis_integration.py` call `src/analysis/` and `src/figures/` directly. When figure modules import cleanly, tests run real stability/benchmark paths and validate PNG output. When imports fail, tests skip cleanly — this is not a mock.
+`TestStabilityAnalysis` and `TestPerformanceBenchmarking` in `test_analysis_integration.py` call `src/template_code_project/analysis/` and `src/template_code_project/figures/` directly. When figure modules import cleanly, tests run real stability/benchmark paths and validate PNG output. When imports fail, tests skip cleanly — this is not a mock.
 
 ## Coverage inventory (`test_analysis_coverage.py`)
 
-Branch and error-path tests for `src/analysis/`: `TestFallbackLogging`, `TestValidateOutputs`, `TestSaveValidationReport`, `TestStabilityScoreBranches`, `TestScientificInfraPaths`, `TestExtractMetadataExtended`, `TestCitationsExtended`, `TestPublishingExtended`, `TestMainBranches`, `TestMainErrors`, `TestRegisterFigure`, `TestImportFallback`.
+Branch and error-path tests for `src/template_code_project/analysis/`: `TestFallbackLogging`, `TestValidateOutputs`, `TestSaveValidationReport`, `TestStabilityScoreBranches`, `TestScientificInfraPaths`, `TestExtractMetadataExtended`, `TestCitationsExtended`, `TestPublishingExtended`, `TestMainBranches`, `TestMainErrors`, `TestRegisterFigure`, `TestImportFallback`.
 
 ## Orchestration Branch Testing
 
-Orchestration modules (`analysis/`, `dashboard.py`, `figures/`, `manuscript_variables.py`) may use **`pytest.MonkeyPatch`** on module attributes and **subprocess import isolation** to hit error paths and infrastructure fallbacks. That is not the same as mocking algorithm output: real code runs with redirected boundaries. See [`../tests/PATTERNS.md`](../tests/PATTERNS.md) and [`test_analysis_coverage.py`](../tests/test_analysis_coverage.py).
+Orchestration modules (`analysis/`, `dashboard/dashboard.py`, `figures/`, `core/manuscript_variables.py`) may use **`pytest.MonkeyPatch`** on module attributes and **subprocess import isolation** to hit error paths and infrastructure fallbacks. That is not the same as mocking algorithm output: real code runs with redirected boundaries. See [`../tests/PATTERNS.md`](../tests/PATTERNS.md) and [`test_analysis_coverage.py`](../tests/analysis/test_analysis_coverage.py).
 
 ## Structural Rule: If You Need a Mock, Move the Code
 
-- **`src/optimizer.py`, `src/invariants.py`, `src/experiment_config.py`** — Pure or config-only; no infrastructure imports
-- **`src/analysis/`, `src/figures/`, `src/dashboard.py`, `src/manuscript_variables.py`** — Orchestration; may import `infrastructure.*` behind try/except
+- **`src/template_code_project/core/optimizer.py`, `src/template_code_project/core/invariants.py`, `src/template_code_project/core/experiment_config.py`** — Pure or config-only; no infrastructure imports
+- **`src/template_code_project/analysis/`, `src/template_code_project/figures/`, `src/template_code_project/dashboard/dashboard.py`, `src/template_code_project/core/manuscript_variables.py`** — Orchestration; may import `infrastructure.*` behind try/except
 - **`scripts/*.py`** — CLI wrappers only
 
 ## Running the Gate

@@ -607,6 +607,13 @@ jobs:
     # have the full pipeline's separate 120-minute stage wrapper; 20 minutes of
     # job margin remain for setup, descendant cleanup, and uploads. This is
     # capacity, not evidence of success.
+    # Lane-wedging runbook (observed 2026-09-11): a lane can sit in_progress
+    # long past this timeout-minutes without GitHub enforcing the timeout.
+    # If a lane stalls: (1) cancel at the RUN level (`gh run cancel <run-id>`)
+    # — job-ID cancels no-op on dead IDs because job IDs rotate per attempt —
+    # (2) let the cancel settle, (3) `gh run rerun <run-id> --failed`. Retry
+    # attempts normally complete well inside this envelope (observed: 42/53
+    # min on attempt 3 after a wedged attempt 1).
     timeout-minutes: 135
     needs: [verify-no-mocks, detect-projects]
     permissions:

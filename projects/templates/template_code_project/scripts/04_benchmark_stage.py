@@ -2,7 +2,8 @@
 """Thin orchestrator: run the infra-backed benchmark and write artifacts.
 
 Demonstrates ``infrastructure.benchmark`` from inside the code exemplar. All
-computation lives in ``src/benchmark_support.py``; this script only handles
+computation lives in ``src/template_code_project/core/benchmark_support.py``;
+this script only handles
 I/O — writing a canonical JSON report and a deterministic objective-value
 figure, then printing artifact paths for manifest collection.
 """
@@ -31,12 +32,12 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "src", *[_p for _p in [_template_repo
     if path_text not in sys.path:
         sys.path.insert(0, path_text)
 
-from template_code_project.benchmark_support import (  # noqa: E402
+from template_code_project.core.benchmark_support import (  # noqa: E402
     benchmark_payload,
     run_quadratic_benchmark,
     write_benchmark_report,
 )
-from template_code_project.project_paths import project_output_dirs  # noqa: E402
+from template_code_project.core.project_paths import project_output_dirs  # noqa: E402
 
 
 def main() -> int:

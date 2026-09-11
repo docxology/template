@@ -2,7 +2,7 @@ claims:
   - claim_id: figure-export-dpi
     kind: number
     value: 300
-    source: projects/templates/template_prose_project/src/template_prose_project/figures.py export settings
+    source: projects/templates/template_prose_project/src/template_prose_project/figures/figures.py export settings
     source_tier: project_source
     freshness: active
     artifact_path: output/figures/

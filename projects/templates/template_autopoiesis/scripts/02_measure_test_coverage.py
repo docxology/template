@@ -18,8 +18,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from template_autopoiesis.manuscript_variables import measure_test_summary
-from template_autopoiesis.project_paths import project_output_dirs
+from template_autopoiesis.manuscript.manuscript_variables import measure_test_summary
+from template_autopoiesis.core.project_paths import project_output_dirs
 
 PROJECT_ROOT = Path(__file__).parent.parent
 

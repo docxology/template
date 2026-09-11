@@ -8,8 +8,8 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 
 | Surface | Rule |
 | --- | --- |
-| `src/optimizer.py`, `src/invariants.py` (mathematical core) | Pure optimization and invariant logic — **no** direct `infrastructure` imports |
-| `src/analysis/_infra.py`, `src/_runtime.py`, `src/benchmark_support.py` | Declared monorepo adapters only (analysis services, rendering/runtime helpers, benchmark rubric) |
+| `src/template_code_project/core/optimizer.py`, `src/template_code_project/core/invariants.py` (mathematical core) | Pure optimization and invariant logic — **no** direct `infrastructure` imports |
+| `src/template_code_project/analysis/_infra.py`, `src/template_code_project/core/_runtime.py`, `src/template_code_project/core/benchmark_support.py` | Declared monorepo adapters only (analysis services, rendering/runtime helpers, benchmark rubric) |
 | `scripts/` | Thin orchestrators; may import `infrastructure/` and `src/` |
 | Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); do not hardcode measured test totals or coverage % |
 
@@ -80,9 +80,9 @@ flowchart TB
     P --> PY[pyproject.toml<br/>Pytest/coverage config · project metadata]
     P --> DP[domain_profile.yaml · experiment_plan.yaml ·<br/>data/claim_ledger.yaml<br/>advisory controls · evidence validation]
 
-    SRC --> SRC_F[__init__.py · optimizer.py · invariants.py ·<br/>experiment_config.py · sweeps.py · project_paths.py ·<br/>_runtime.py · viz_config.py · benchmark_support.py ·<br/>dashboard.py · dashboard_payload.py · dashboard_panels.py ·<br/>manuscript_variables.py · documentation.py ·<br/>analysis/ · figures/ ·<br/>STYLE.md · AGENTS.md · README.md]
+    SRC --> SRC_F["__init__.py · core/ (optimizer · invariants · sweeps ·<br/>experiment_config · project_paths · _runtime ·<br/>benchmark_support · manuscript_variables · documentation) ·<br/>dashboard/ (dashboard · dashboard_payload · dashboard_panels) ·<br/>analysis/ · figures/ (incl. viz_config) ·<br/>STYLE.md · AGENTS.md · README.md"]
     SC --> SC_F[optimization_analysis.py · build_dashboard.py ·<br/>00_preflight.py · generate_api_docs.py ·<br/>z_generate_manuscript_variables.py ·<br/>CONVENTIONS.md · AGENTS.md · README.md]
-    T --> T_F[conftest.py · test_optimizer.py · test_analysis_integration.py ·<br/>test_analysis_coverage.py · test_experiment_config.py ·<br/>test_figures_orchestration.py · test_dashboard_config.py ·<br/>test_invariants.py · test_invariants_and_dashboard.py ·<br/>test_manuscript_variables.py · test_documentation.py ·<br/>test_scripts_smoke.py ·<br/>PATTERNS.md · AGENTS.md · README.md]
+    T --> T_F["conftest.py · core/ (test_optimizer ·<br/>test_optimizer_gradient_descent · test_invariants ·<br/>test_experiment_config · test_benchmark_support ·<br/>test_manuscript_variables · test_documentation) ·<br/>dashboard/ (test_dashboard_config ·<br/>test_invariants_and_dashboard) ·<br/>analysis/ (test_analysis_integration ·<br/>test_analysis_coverage · test_scripts_smoke) ·<br/>figures/ (test_figures_orchestration) ·<br/>PATTERNS.md · AGENTS.md · README.md"]
     DOCS --> DOCS_F[AGENTS.md · README.md · agent_instructions.md ·<br/>architecture.md · testing_philosophy.md ·<br/>rendering_pipeline.md · style_guide.md · syntax_guide.md]
     M --> M_F[00_abstract → 07_scope_and_related_work.md · 99_references.md ·<br/>SYNTAX.md · config.yaml · config.yaml.example · layer_contract.yaml ·<br/>preamble.md · references.bib · AGENTS.md · README.md]
 
@@ -103,7 +103,7 @@ Install dependencies from the **repository root** with `uv sync` (see root [`pyp
 ### Basic Optimization
 
 ```python
-from src.optimizer import gradient_descent, quadratic_function, compute_gradient
+from template_code_project.core.optimizer import gradient_descent, quadratic_function, compute_gradient
 from infrastructure.core.logging.utils import get_logger
 import numpy as np
 
@@ -142,7 +142,7 @@ uv run python projects/templates/template_code_project/scripts/z_generate_manusc
 ### Scientific Analysis Features
 
 ```python
-from src.analysis import run_performance_benchmarking, run_stability_analysis
+from template_code_project.analysis import run_performance_benchmarking, run_stability_analysis
 
 # Assess numerical stability
 stability_path = run_stability_analysis()
@@ -187,7 +187,7 @@ uv run pytest projects/templates/template_code_project/tests/ --cov=projects/tem
 
 ## API Reference
 
-### optimizer.py
+### core/optimizer.py
 
 #### OptimizationResult (dataclass)
 
@@ -297,15 +297,15 @@ def simulate_trajectory(
 
 ### optimization_analysis.py
 
-Thin orchestrator (~65 lines) — runs the full pipeline via `main()`. **Function signatures:** [`src/AGENTS.md`](src/template_code_project/AGENTS.md) (`analysis/`, `figures/`, `optimizer.py`, `dashboard.py`). Do not duplicate API blocks here.
+Thin orchestrator (~65 lines) — runs the full pipeline via `main()`. **Function signatures:** [`src/AGENTS.md`](src/template_code_project/AGENTS.md) (`analysis/`, `figures/`, `core/optimizer.py`, `dashboard/dashboard.py`). Do not duplicate API blocks here.
 
 ### build_dashboard.py
 
-Thin wrapper → [`src/dashboard.py`](src/template_code_project/dashboard.py).
+Thin wrapper → [`src/template_code_project/dashboard/dashboard.py`](src/template_code_project/dashboard/dashboard.py).
 
 ### generate_api_docs.py
 
-Thin wrapper → [`src/documentation.py`](src/template_code_project/documentation.py).
+Thin wrapper → [`src/template_code_project/core/documentation.py`](src/template_code_project/core/documentation.py).
 
 ## Troubleshooting
 
@@ -458,7 +458,7 @@ quick reference commands, and pitfalls.
 Automated citation generation and metadata extraction:
 
 ```python
-from src.analysis import extract_optimization_metadata, generate_citations_from_metadata
+from template_code_project.analysis import extract_optimization_metadata, generate_citations_from_metadata
 
 # Extract metadata from optimization results
 metadata = extract_optimization_metadata(results)

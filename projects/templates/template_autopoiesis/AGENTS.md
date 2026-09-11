@@ -12,30 +12,32 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 
 | Module | Role |
 |---|---|
-| `src/cli.py` | CLI entry point: `enumerate`, `expand`, `sample`, `materialize`, `verify`, `honesty` |
-| `src/common.py` | Shared dataclasses: `CheckResult`, `CheckReport`, `trunc()` |
-| `src/cover_art.py` | Ouroboros ring cover art: `render_cover()`, `branch_segments()`, `build_ring_geometry()` |
-| `src/emit_templates.py` | `@@KEY@@`-templated child file bodies: template strings + substitution from a `Spec` |
-| `src/expand.py` | Deterministic grammar expansion: `expand()`, `enumerate_all()`, `sample()`, `derive_seed()` |
-| `src/figures.py` | Figure rendering: `render_primitive_figure()`, `build_figure_registry()` |
-| `src/grammar.py` | Grammar parsing: `parse_grammar()`, `load_grammar()`, `force_domain()` |
-| `src/honesty.py` | Honesty manifest: `build_manifest()`, `verify_honesty()`, `STRUCTURAL_EVIDENCE` |
-| `src/integrity.py` | Integrity hashing: `sha256_text()`, `sha256_bytes()`, `tree_hash_from_content_hashes()`, `merkle_root()` |
-| `src/manuscript_contract.py` | Phase 10 source contract: `validate_phase10_contract()` |
-| `src/manuscript_figures.py` | Manuscript figure writers plus the label/filename provenance specs consumed by `output/figures/figure_registry.json` |
-| `src/manuscript_variables.py` | Manuscript token generation: `generate_variables()`, `save_variables()` |
-| `src/materialize.py` | Child project writer: `materialize()`, `child_name()`, `_build_tree()` |
-| `src/primitives/__init__.py` | Registry: `collect_primitives()` |
-| `src/primitives/base.py` | `PrimitiveSpec` dataclass |
-| `src/primitives/dynamics.py` | Damped oscillator kernel |
-| `src/primitives/graph.py` | BFS distances + PageRank kernels |
-| `src/primitives/optimization.py` | Gradient descent + analytic minimizer kernels |
-| `src/primitives/signal.py` | DFT + convolve_known kernels |
-| `src/primitives/statistics.py` | OLS regression kernel |
-| `src/project_paths.py` | Output directory helpers: `project_output_dirs()` |
-| `src/realize.py` | Child pipeline orchestration: `run_child_stage()`, `run_analysis_stage()`, `validate_child()` |
-| `src/sealing.py` | QR seal: `qr_matrix()`, `build_payload()`, `embed_semi_transparent()` |
-| `src/verify.py` | Integrity verification: `verify_child()`, `verify_child_full()`, `verify_seal()` |
+| `src/template_autopoiesis/core/cli.py` | CLI entry point: `enumerate`, `expand`, `sample`, `materialize`, `verify`, `honesty` |
+| `src/template_autopoiesis/core/common.py` | Shared dataclasses: `CheckResult`, `CheckReport`, `trunc()` |
+| `src/template_autopoiesis/core/expand.py` | Deterministic grammar expansion: `expand()`, `enumerate_all()`, `sample()`, `derive_seed()` |
+| `src/template_autopoiesis/core/grammar.py` | Grammar parsing: `parse_grammar()`, `load_grammar()`, `force_domain()` |
+| `src/template_autopoiesis/core/honesty.py` | Honesty manifest: `build_manifest()`, `verify_honesty()`, `STRUCTURAL_EVIDENCE` |
+| `src/template_autopoiesis/core/project_paths.py` | Output directory helpers: `project_output_dirs()` |
+| `src/template_autopoiesis/gates/integrity.py` | Integrity hashing: `sha256_text()`, `sha256_bytes()`, `tree_hash_from_content_hashes()`, `merkle_root()` |
+| `src/template_autopoiesis/gates/materialize.py` | Child project writer: `materialize()`, `child_name()`, `_build_tree()` |
+| `src/template_autopoiesis/gates/realize.py` | Child pipeline orchestration: `run_child_stage()`, `run_analysis_stage()`, `validate_child()` |
+| `src/template_autopoiesis/gates/sealing.py` | QR seal: `qr_matrix()`, `build_payload()`, `embed_semi_transparent()` |
+| `src/template_autopoiesis/gates/verify.py` | Integrity verification: `verify_child()`, `verify_child_full()`, `verify_seal()` |
+| `src/template_autopoiesis/manuscript/emit_templates.py` | `@@KEY@@`-templated child file bodies: template strings + substitution from a `Spec` |
+| `src/template_autopoiesis/manuscript/manuscript_contract.py` | Phase 10 source contract: `validate_phase10_contract()` |
+| `src/template_autopoiesis/manuscript/manuscript_figures.py` | Manuscript figure writers plus the label/filename provenance specs consumed by `output/figures/figure_registry.json` |
+| `src/template_autopoiesis/manuscript/manuscript_variables.py` | Manuscript token generation: `generate_variables()`, `save_variables()` |
+| `src/template_autopoiesis/figures/cover_art.py` | Ouroboros ring cover art: `render_cover()`, `branch_segments()`, `build_ring_geometry()` |
+| `src/template_autopoiesis/figures/figures.py` | Figure rendering: `render_primitive_figure()`, `build_figure_registry()` |
+| `src/template_autopoiesis/primitives/__init__.py` | Registry: `collect_primitives()` |
+| `src/template_autopoiesis/primitives/base.py` | `PrimitiveSpec` dataclass |
+| `src/template_autopoiesis/primitives/dynamics.py` | Damped oscillator kernel |
+| `src/template_autopoiesis/primitives/graph.py` | BFS distances + PageRank kernels |
+| `src/template_autopoiesis/primitives/optimization.py` | Gradient descent + analytic minimizer kernels |
+| `src/template_autopoiesis/primitives/signal.py` | DFT + convolve_known kernels |
+| `src/template_autopoiesis/primitives/statistics.py` | OLS regression kernel |
+
+Source layout: four domain subpackages (`core/`, `gates/`, `manuscript/`, `figures/`) plus the `primitives/` registry package; the package root `__init__.py` re-exports every public symbol for backwards compatibility.
 
 ---
 
@@ -43,12 +45,12 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 
 | Invariant | Where enforced |
 |---|---|
-| Slot selections are deterministic | `expand.py::_digest_index` uses SHA-256, no entropy |
-| Tree hash is order-independent | `integrity.py::tree_hash_from_content_hashes` sorts paths |
-| Reserved slots do not vary effective product | `grammar.py::effective_product_size` excludes RESERVED_SLOTS |
-| Stub `run_analysis` must fail | `test_meta_teeth.py` parametrized over KNOWN_DOMAINS |
-| Verify never trusts cached hash | `verify.py::verify_child` re-reads files from disk |
-| Honesty manifest checks live AST | `honesty.py::build_manifest` inspects source at test time |
+| Slot selections are deterministic | `core/expand.py::_digest_index` uses SHA-256, no entropy |
+| Tree hash is order-independent | `gates/integrity.py::tree_hash_from_content_hashes` sorts paths |
+| Reserved slots do not vary effective product | `core/grammar.py::effective_product_size` excludes RESERVED_SLOTS |
+| Stub `run_analysis` must fail | `tests/core/test_meta_teeth.py` parametrized over KNOWN_DOMAINS |
+| Verify never trusts cached hash | `gates/verify.py::verify_child` re-reads files from disk |
+| Honesty manifest checks live AST | `core/honesty.py::build_manifest` inspects source at test time |
 
 ---
 

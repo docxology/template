@@ -49,7 +49,7 @@ analysis:
     - z_generate_manuscript_variables.py
 
 # ── Autopoiesis grammar ───────────────────────────────────────────────────────
-# This block is parsed by src/grammar.py::load_grammar().
+# This block is parsed by src/template_autopoiesis/core/grammar.py::load_grammar().
 # seed: master integer seed for all deterministic selections.
 # slots: each entry has name (str) and options (list[str]).
 #   Reserved slots (figure_profile, qr_profile, integrity_profile) are excluded

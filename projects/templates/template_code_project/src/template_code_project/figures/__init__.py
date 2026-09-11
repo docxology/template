@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from ..project_paths import _DEFAULT_ROOT as project_root
-from ..viz_config import VIZ_CONFIG, agency_category, apply_visualization_style
+from ..core.project_paths import _DEFAULT_ROOT as project_root
+from .viz_config import VIZ_CONFIG, agency_category, apply_visualization_style
 from .convergence import generate_convergence_plot, generate_convergence_rate_plot
 from .scientific import (
     generate_benchmark_visualization,

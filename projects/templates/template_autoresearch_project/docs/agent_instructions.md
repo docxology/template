@@ -16,7 +16,7 @@
 
 ## Workflow
 
-1. Edit loop logic in `src/loop.py`. Add I/O handlers in `src/writers/`.
+1. Edit loop logic in `src/loop/loop.py`. Add I/O handlers in `src/writers/`.
 2. Add manuscript tokens in `src/manuscript/manuscript_tokens_*.py`.
 3. Register any new figure in the figure registry.
 4. Run: `uv run --extra dev pytest tests/ --cov=src --cov-fail-under=90`.

@@ -43,8 +43,8 @@ Supporting assets: `preamble.md`, `config.yaml`, `references.bib`.
 | `${pipeline_stages_core_only}` | `--core-only` stage count after tag filtering |
 | `${coverage_floor_infrastructure}` | Infrastructure coverage default from `ResolvedTestingConfig` |
 | `${coverage_floor_project}` | This exemplar's declared `pyproject.toml` floor |
-| `${figure_font_floor_pt}` | Shared primary-text constant from `viz_palette.py` |
-| `${figure_dpi}` | Shared figure-writer resolution from `viz_palette.py` |
+| `${figure_font_floor_pt}` | Shared primary-text constant from `figures/viz_palette.py` |
+| `${figure_dpi}` | Shared figure-writer resolution from `figures/viz_palette.py` |
 | `${stage_count}` | Numbered `scripts/NN_*.py` files only |
 | `${public_exemplar_list}` | Git-tracked exemplars from `public_scope` |
 | `${project_template_*}` | Meta-project metrics from `projects/templates/template_template` |

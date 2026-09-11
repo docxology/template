@@ -47,7 +47,7 @@ The Pandoc renderer uses `--number-sections`, so **never write manual numbers** 
 
 ## `{{TOKEN}}` substitution
 
-`scripts/z_generate_manuscript_variables.py` computes token values via `src/manuscript_variables.py::compute_variables()` and writes substituted copies of `manuscript/*.md` to `output/manuscript/` via `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()`. This file (`SYNTAX.md`), `AGENTS.md`, and `README.md` are excluded from `output/manuscript/` so their literal `{{TOKEN}}` examples are never substituted.
+`scripts/z_generate_manuscript_variables.py` computes token values via `src/manuscript/manuscript_variables.py::compute_variables()` and writes substituted copies of `manuscript/*.md` to `output/manuscript/` via `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()`. This file (`SYNTAX.md`), `AGENTS.md`, and `README.md` are excluded from `output/manuscript/` so their literal `{{TOKEN}}` examples are never substituted.
 
 | Token | Source |
 |---|---|
@@ -63,7 +63,7 @@ The Pandoc renderer uses `--number-sections`, so **never write manual numbers** 
 | `{{LONGEST_SECTION_WORDS}}` | max per-file word count |
 | `{{SHORTEST_SECTION_WORDS}}` | min per-file word count |
 
-Define new tokens in [`src/manuscript_variables.py`](../src/template_prose_project/manuscript_variables.py) and they become available everywhere.
+Define new tokens in [`src/manuscript/manuscript_variables.py`](../src/template_prose_project/manuscript/manuscript_variables.py) and they become available everywhere.
 
 ## Preamble
 

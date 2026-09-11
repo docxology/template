@@ -69,23 +69,25 @@ my_project/
 │       └── template_code_executor/
 │           └── tools.yaml
 └── src/
-    ├── __init__.py               # re-exports the public API (imports figures.py)
+    ├── __init__.py               # re-exports the public API (imports figures/figures.py)
     ├── py.typed
-    ├── type_defs.py
-    ├── fonds_reader.py
-    ├── rules_applier.py
-    ├── strong_rule_evaluator.py  # imported by integration.py
-    ├── tools_invoker.py
-    ├── integration.py
-    ├── manuscript_variables.py
-    ├── figures.py                # imports cover_figure.py + rule_hierarchy_figure.py
-    ├── cover_figure.py
-    └── rule_hierarchy_figure.py
+    ├── tools/
+    │   ├── type_defs.py
+    │   ├── fonds_reader.py
+    │   ├── tools_invoker.py
+    │   └── integration.py        # imports rules/strong_rule_evaluator.py
+    ├── rules/
+    │   ├── rules_applier.py
+    │   └── strong_rule_evaluator.py
+    └── figures/
+        ├── figures.py             # imports cover_figure.py + rule_hierarchy_figure.py
+        ├── cover_figure.py
+        ├── rule_hierarchy_figure.py
+        └── manuscript_variables.py
 ```
 
-Copy the whole `src/` package — the modules import each other at import time
-(`src/__init__.py` imports `figures.py`; `integration.py` imports
-`strong_rule_evaluator.py`), so omitting any of them makes the Quick start
+(`src/__init__.py` imports `figures/figures.py`; `tools/integration.py` imports
+`rules/strong_rule_evaluator.py`), so omitting any of them makes the Quick start
 below fail with `ModuleNotFoundError` before any of this project's own code
 runs.
 
@@ -142,7 +144,7 @@ uv sync
 ## Quick start
 
 ```python
-from src.integration import run_integration_demo
+from src.tools.integration import run_integration_demo
 
 result = run_integration_demo()
 
@@ -158,7 +160,7 @@ print(result["summary"])
 #   "datasets": 5,
 # }
 
-from src.integration import generate_figure_data
+from src.tools.integration import generate_figure_data
 rows = generate_figure_data(result)
 for row in rows:
     print(row["label"], row["count"], row["status"])
@@ -166,7 +168,7 @@ for row in rows:
 
 The fonds and tools counts are discovered at runtime from whatever you actually
 copied. The rules-set counts are the exception: `rules_sets_total` is
-`len(_DEFAULT_RULE_SETS)` in [`src/integration.py`](src/template_pools_rules_tools/integration.py), a
+`len(_DEFAULT_RULE_SETS)` in [`src/tools/integration.py`](src/template_pools_rules_tools/tools/integration.py), a
 fixed two-entry demo list (`template_project_rules`, `template_manuscript_rules`),
 so adding a rule set under `rules/` does not raise that total until you extend
 that list. The values shown match the minimal fork layout in

@@ -14,14 +14,14 @@ Every test must exercise real algorithms with real data.
 
 ### Orchestration boundary testing (allowed)
 
-For **`src/analysis/`**, **`src/dashboard.py`**, **`src/figures/`**, and **`src/manuscript_variables.py`** only:
+For **`src/template_code_project/analysis/`**, **`src/template_code_project/dashboard/dashboard.py`**, **`src/template_code_project/figures/`**, and **`src/template_code_project/core/manuscript_variables.py`** only:
 
 - **`pytest.MonkeyPatch`** on module attributes (`project_root`, `verify_output_integrity`, `_get_logger`, etc.) — real functions run; I/O boundaries are redirected, not faked
 - **Subprocess import isolation** — block `infrastructure.*` at import time to exercise fallback paths (see `TestImportFallback` in `test_analysis_coverage.py` and `test_manuscript_variables.py`)
 
-Canonical orchestration-branch examples: [`test_analysis_coverage.py`](test_analysis_coverage.py), [`test_dashboard_config.py`](test_dashboard_config.py).
+Canonical orchestration-branch examples: [`test_analysis_coverage.py`](analysis/test_analysis_coverage.py), [`test_dashboard_config.py`](dashboard/test_dashboard_config.py).
 
-Pure-math modules (`optimizer.py`, `invariants.py`, `experiment_config.py`) should not need monkeypatch.
+Pure-math modules (`core/optimizer.py`, `core/invariants.py`, `core/experiment_config.py`) should not need monkeypatch.
 
 ## Fixture Patterns
 
@@ -128,7 +128,7 @@ def test_dimension_mismatch_A(self):
 ```
 
 - Always use `match=` to verify the error message content
-- The actual message format is `f"A must be {n}x{n}, got {A.shape}"` (see `src/optimizer.py::_validate_quadratic_inputs`)
+- The actual message format is `f"A must be {n}x{n}, got {A.shape}"` (see `src/template_code_project/core/optimizer.py::_validate_quadratic_inputs`)
 - Test every documented `Raises` clause in the docstring
 
 ## Coverage Verification
@@ -158,7 +158,7 @@ The `pyproject.toml` enforces `fail_under = 90` as the CI gate. Live achieved co
 
 - [AGENTS.md](AGENTS.md) — Test class listing and run commands
 - [../src/STYLE.md](../src/STYLE.md) — How source code should be structured
-- [../src/invariants.py](../src/template_code_project/invariants.py) — Numerical invariant builders covered by `test_invariants.py`
+- [../src/template_code_project/core/invariants.py](../src/template_code_project/core/invariants.py) — Numerical invariant builders covered by `test_invariants.py`
 - [../scripts/build_dashboard.py](../scripts/build_dashboard.py) — Dashboard CLI covered by `test_invariants_and_dashboard.py`
 - [../scripts/generate_api_docs.py](../scripts/generate_api_docs.py) — Auxiliary smoke in `test_scripts_smoke.py`
 - [../scripts/00_preflight.py](../scripts/00_preflight.py) — Auxiliary smoke in `test_scripts_smoke.py` (exit 0 or 1)

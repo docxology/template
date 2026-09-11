@@ -8,7 +8,7 @@ Scripts **coordinate** — they never **compute**:
 
 ```python
 # ✅ CORRECT: Script imports and orchestrates
-from src.optimizer import gradient_descent, quadratic_function, compute_gradient
+from template_code_project.core.optimizer import gradient_descent, quadratic_function, compute_gradient
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -48,7 +48,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 3. Project source imports (via pythonpath)
-from src.optimizer import gradient_descent, OptimizationResult
+from template_code_project.core.optimizer import gradient_descent, OptimizationResult
 
 # 4. Infrastructure imports (graceful fallback)
 try:

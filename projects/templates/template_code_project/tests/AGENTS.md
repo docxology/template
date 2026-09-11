@@ -16,33 +16,19 @@ The `tests/` directory contains tests for the optimization algorithms in `src/`.
 ```mermaid
 flowchart LR
     T[tests/]
-    T --> INIT[__init__.py]
     T --> CFG[conftest.py<br/>PYTHONPATH · MPLBACKEND]
-    T --> TEST[test_optimizer.py]
-    T --> TAI[test_analysis_integration.py]
-    T --> TAC[test_analysis_coverage.py]
-    T --> TEC[test_experiment_config.py]
-    T --> TFO[test_figures_orchestration.py]
-    T --> TDC[test_dashboard_config.py]
-    T --> TINV[test_invariants.py]
-    T --> TBS[test_benchmark_support.py]
-    T --> TIDA[test_invariants_and_dashboard.py]
-    T --> TMV[test_manuscript_variables.py]
-    T --> TSS[test_scripts_smoke.py]
-    T --> TDOC[test_documentation.py]
+    T --> CORE["core/<br/>optimizer · optimizer_gradient_descent · invariants ·<br/>experiment_config · benchmark_support ·<br/>manuscript_variables · documentation"]
+    T --> DASH["dashboard/<br/>dashboard_config · invariants_and_dashboard"]
+    T --> ANA["analysis/<br/>analysis_integration · analysis_coverage ·<br/>scripts_smoke"]
+    T --> FIG["figures/<br/>figures_orchestration"]
     T --> DOCS[PATTERNS.md · AGENTS.md · README.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class INIT,CFG,TEST,TAI,TAC,TEC,TFO,TDC,TINV,TIDA,TBS,TMV,TSS,TDOC code
-    class DOCS doc
+    class CFG,CORE,DASH,ANA,FIG code
 ```
-
-Live test count: [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
-
-## Installation/Setup
 
 Tests require the same dependencies as the main code:
 
@@ -93,7 +79,7 @@ uv run pytest tests/ -k "TestGradientDescent"
 
 ```bash
 # Run single test with debug output
-uv run pytest tests/test_optimizer_gradient_descent.py::TestGradientDescent::test_convergence_to_optimum -v -s
+uv run pytest tests/core/test_optimizer_gradient_descent.py::TestGradientDescent::test_convergence_to_optimum -v -s
 ```
 
 ## Configuration
@@ -159,7 +145,7 @@ Core mathematical primitives only — no infrastructure-dependent integration te
 - `test_invariants.py` — numerical invariant builders
 - `test_invariants_and_dashboard.py` — `build_dashboard.py` CLI
 - `test_manuscript_variables.py` — `{{TOKEN}}` map + live manuscript cross-reference
-- `test_benchmark_support.py` — `infrastructure.benchmark` rubric demo (`src/benchmark_support.py`)
+- `test_benchmark_support.py` — `infrastructure.benchmark` rubric demo (`src/template_code_project/core/benchmark_support.py`)
 - `test_scripts_smoke.py` — auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`)
 
 ## API Reference
@@ -274,5 +260,5 @@ Tests validate performance characteristics:
 ## See Also
 
 - [README.md](README.md) - Quick reference
-- [../src/optimizer.py](../src/template_code_project/optimizer.py) - Code under test
+- [../src/template_code_project/core/optimizer.py](../src/template_code_project/core/optimizer.py) - Code under test
 - [../scripts/optimization_analysis.py](../scripts/optimization_analysis.py) - Integration examples

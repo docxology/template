@@ -15,7 +15,7 @@ from template_sia.figures.figure_registry import FIGURE_SPECS, write_figure_regi
 from template_sia.figures.sia_generation_heatmap import write_sia_generation_heatmap
 from template_sia.figures.sia_improvement_delta import write_sia_improvement_delta
 from template_sia.figures.sia_metrics import _fmt, write_sia_metric_progression
-from template_sia.loop import run_sia_loop_project
+from template_sia.loop.loop import run_sia_loop_project
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 

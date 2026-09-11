@@ -4,8 +4,8 @@ Reproducibility is not a claim this manuscript makes about itself; it is a
 property the code enforces on every run. Every number that appears below the
 Determinism heading — {{GRAMMAR_HASH}}, {{GRAMMAR_SEED}}, {{TEST_COUNT}},
 {{COVERAGE_PCT}} — is a token substituted at render time by
-`src/manuscript_variables.py::generate_variables()` from a live grammar load
-and a live pytest run (`src/manuscript_variables.py::measure_test_summary()`).
+`src/template_autopoiesis/manuscript/manuscript_variables.py::generate_variables()` from a live grammar load
+and a live pytest run (`src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary()`).
 Neither function accepts a hardcoded literal as a fallback: if the subprocess
 pytest run cannot be parsed, `measure_test_summary` returns the string
 `"pending"` for both the test count and the coverage percentage rather than a
@@ -25,7 +25,7 @@ byte-identical selections on every invocation, and `materialize` produces a
 byte-identical child project tree. The determinism chain has three concrete
 steps, each implemented as a pure function with no random or wall-clock input:
 
-1. **Selection.** For every grammar slot, `src/expand.py::_digest_index()`
+1. **Selection.** For every grammar slot, `src/template_autopoiesis/core/expand.py::_digest_index()`
    builds the key
    `f"{seed}\x1f{slot_name}\x1f{ordinal}\x1f{','.join(options)}"` (a unit
    separator, `\x1f`, joins the fields so that no combination of seed/name/
@@ -38,15 +38,15 @@ steps, each implemented as a pure function with no random or wall-clock input:
    anywhere in the selection path.
 2. **Spec identity.** The resolved selections, together with the grammar hash
    and seed, are assembled into a `Spec` dataclass
-   (`src/expand.py::Spec`). Its `spec_hash` property serializes the full spec
+   (`src/template_autopoiesis/core/expand.py::Spec`). Its `spec_hash` property serializes the full spec
    to canonical JSON (`sort_keys=True`, compact separators) and takes the
    first sixteen hex characters of the SHA-256 of that string. Sorting keys
    before hashing means insertion order in the underlying dict cannot
    perturb the hash — only the actual selections can.
-3. **Tree identity.** `materialize()` (`src/materialize.py`) writes every
+3. **Tree identity.** `materialize()` (`src/template_autopoiesis/gates/materialize.py`) writes every
    vendored and generated file into the child project directory, then folds
    the complete `{relative_path: content}` mapping through
-   `src/integrity.py::tree_hash_from_content_hashes()`. That function sorts
+   `src/template_autopoiesis/gates/integrity.py::tree_hash_from_content_hashes()`. That function sorts
    the mapping lexicographically by path before hashing
    (`"\n".join(f"{k}:{v}" for k, v in sorted(...))`) specifically so that
    filesystem iteration order — which is not stable across
@@ -57,7 +57,7 @@ steps, each implemented as a pure function with no random or wall-clock input:
    the source and the seed are unchanged.
 
 Multiple children can be derived from one root seed without collisions: given
-a `base_seed` and an integer `index`, `src/expand.py::derive_seed()` hashes
+a `base_seed` and an integer `index`, `src/template_autopoiesis/core/expand.py::derive_seed()` hashes
 `f"{base_seed}\x1f{index}"` through SHA-256 and folds the first eight bytes to
 a new integer seed. `sample(grammar, count)` calls `expand()` once per derived
 seed, so a batch of `count` children is itself deterministic — the same
@@ -71,7 +71,7 @@ second one is optional. `materialize()` writes a `provenance.json`
 into the child root containing the schema version
 (`PROVENANCE_SCHEMA_VERSION = "autopoiesis/provenance/1"`), the full resolved
 spec (`spec.to_dict()`), the tree hash, and the sorted list of every file path
-that was written. This is the record `verify_child()` (`src/verify.py`)
+that was written. This is the record `verify_child()` (`src/template_autopoiesis/gates/verify.py`)
 recomputes against later.
 
 A child project can additionally be **sealed**: `scripts/seal_child.py` (and
@@ -79,11 +79,11 @@ the pipeline-facing wrapper `scripts/04_seal.py`, which seals the
 most-recently materialized child under `output/children/`) reads
 `provenance.json`, re-runs `verify_child()` against the live files as a
 pre-seal sanity check, and writes `seal.json` alongside it. The seal payload —
-built by `src/sealing.py::build_payload()` — is a compact JSON object
+built by `src/template_autopoiesis/gates/sealing.py::build_payload()` — is a compact JSON object
 `{"spec_hash": ..., "tree_hash": ..., "seed": ...}`. A shorter,
 colon-delimited variant (`build_barcode_payload()`, truncating each hash to
 its first eight hex characters) exists for embedding into a QR code or
-barcode image via `src/sealing.py::qr_matrix()` / `qr_image()`, so that a
+barcode image via `src/template_autopoiesis/gates/sealing.py::qr_matrix()` / `qr_image()`, so that a
 printed or exported artifact can carry a scannable, self-describing pointer
 back to the exact spec and tree hash that produced it. Both the QR encoder and
 its optional decode path (`read_qr_matrix()`, which depends on `pyzbar` and
@@ -94,12 +94,12 @@ an empty string. The seal itself does not gate materialization — a child
 project is fully valid and independently verifiable from `provenance.json`
 alone; `seal.json` is an additive, portable pointer, not a second source of
 truth. Sealing does not currently run inside `verify_child_full()`; it is a
-separate check (`src/verify.py::verify_seal()`) invoked only when a caller
+separate check (`src/template_autopoiesis/gates/verify.py::verify_seal()`) invoked only when a caller
 explicitly asks whether a seal exists, parses, and carries a `spec_hash`.
 
 ### SHA-256 vs. Merkle integrity profiles
 
-`src/integrity.py` provides two distinct ways of turning a collection of
+`src/template_autopoiesis/gates/integrity.py` provides two distinct ways of turning a collection of
 hashes into one summary digest, and the project does not conflate them:
 
 - **`tree_hash_from_content_hashes()`** — the profile used by
@@ -120,13 +120,13 @@ hashes into one summary digest, and the project does not conflate them:
   tree-hash profile does not have.
 
 Both are exercised in this codebase, but at present the materialize/verify
-path in `src/materialize.py` and `src/verify.py` uses the flat,
+path in `src/template_autopoiesis/gates/materialize.py` and `src/template_autopoiesis/gates/verify.py` uses the flat,
 order-independent tree hash exclusively; `merkle_root()` is available in
-`src/integrity.py` and covered by its own tests as an independent integrity
+`src/template_autopoiesis/gates/integrity.py` and covered by its own tests as an independent integrity
 primitive, not yet as the provenance root written into `provenance.json`. A
 manuscript describing this project should not claim Merkle-tree provenance for
 `provenance.json` today — that would be exactly the kind of prose-outruns-code
-gap this project's honesty checks exist to catch (`src/honesty.py`).
+gap this project's honesty checks exist to catch (`src/template_autopoiesis/core/honesty.py`).
 
 ### Recompute / verify workflow
 
@@ -144,7 +144,7 @@ uv run python scripts/autopoiesis.py verify output/children/<child_name>
 uv run python scripts/seal_child.py output/children/<child_name>
 ```
 
-`verify` (`src/cli.py::cmd_verify` → `src/verify.py::verify_child_full()`)
+`verify` (`src/template_autopoiesis/core/cli.py::cmd_verify` → `src/template_autopoiesis/gates/verify.py::verify_child_full()`)
 performs four checks in sequence and exits non-zero if any fails:
 `provenance_exists`, `provenance_parseable`, `all_files_present` (every path
 listed in `provenance.json["files"]` still exists on disk), and
@@ -173,7 +173,7 @@ without trusting any claim made in this document.
   but imported unconditionally at the top of `test_property_invariants.py` —
   a real dependency of that test module, not a soft, try/except-guarded one;
   see Methods)
-- `qrcode`, `pillow` (optional — `src/sealing.py`'s QR/barcode payload
+- `qrcode`, `pillow` (optional — `src/template_autopoiesis/gates/sealing.py`'s QR/barcode payload
   encoding degrades to a deterministic stub when unavailable; `pyzbar` is
   needed only for the optional decode path)
 

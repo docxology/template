@@ -34,7 +34,7 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_sia
 ## Pitfalls
 
 - **Keep scripts thin.** Business logic belongs in `src/` or shared
-  `infrastructure/`, not in `scripts/`. `src/loop.py` owns the project adapter;
+  `infrastructure/`, not in `scripts/`. `src/template_sia/loop/loop.py` owns the project adapter;
   `scripts/run_sia_loop.py` only parses flags and presents result paths.
 - **No mocks.** All tests must use real data, real files, and real
   computation.

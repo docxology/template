@@ -25,7 +25,7 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "src", *[_p for _p in [_template_repo
     if path_text not in sys.path:
         sys.path.insert(0, path_text)
 
-from template_code_project.dashboard import cli_main  # noqa: E402
+from template_code_project.dashboard.dashboard import cli_main  # noqa: E402
 
 if __name__ == "__main__":
     cli_main()

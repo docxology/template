@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .._runtime import experiment_config, get_logger, save_figure_data
-from .._runtime import project_root as _project_root
+from ..core._runtime import experiment_config, get_logger, save_figure_data
+from ..core._runtime import project_root as _project_root
 
 
 def project_root() -> Path:

@@ -4,7 +4,7 @@ Automation guidance for `figures` in the `template_template` exemplar.
 
 - This directory holds **no PNGs**. Architecture figures are regenerated
   on every run by Stage 02 analysis (`scripts/generate_architecture_viz.py` →
-  `src/template_template/architecture_viz.py:generate_all_architecture_figures`)
+  `src/template_template/figures/architecture_viz.py:generate_all_architecture_figures`)
   and written to `../output/figures/*.png`, which is tracked as public output
   when files stay below the size ceiling.
 - The manuscript references those rendered figures via `../output/figures/*.png`,

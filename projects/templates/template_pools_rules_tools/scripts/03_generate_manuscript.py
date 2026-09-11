@@ -3,7 +3,7 @@
 
 Reads the integration demo results and emits a manuscript_variables.json
 file to output/data/ (created if absent). Token computation lives in
-``src/manuscript_variables.py``, shared with
+``src/figures/manuscript_variables.py``, shared with
 ``scripts/z_generate_manuscript_variables.py`` (which additionally injects
 the tokens into ``output/manuscript/`` before rendering).
 
@@ -21,7 +21,7 @@ import sys
 _PROJECT_DIR = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_PROJECT_DIR))
 
-from template_pools_rules_tools.manuscript_variables import generate_variables
+from template_pools_rules_tools.figures.manuscript_variables import generate_variables
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 logger = logging.getLogger(__name__)

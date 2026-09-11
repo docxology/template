@@ -6,7 +6,7 @@ import json
 from typing import Any
 
 try:
-    from ..optimizer import OptimizationResult
+    from ..core.optimizer import OptimizationResult
 except ImportError:  # pragma: no cover
     from optimizer import OptimizationResult  # type: ignore[no-redef]
 

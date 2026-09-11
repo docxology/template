@@ -7,8 +7,8 @@ from pathlib import Path
 
 import numpy as np
 
-from template_autoresearch_project.artifact_content import is_substantive_artifact
-from template_autoresearch_project.json_coerce import mapping
+from ..writers.artifact_content import is_substantive_artifact
+from ..loop.json_coerce import mapping
 
 
 FIGURE_QUALITY_SCHEMA = "template-autoresearch-figure-quality-report-v1"

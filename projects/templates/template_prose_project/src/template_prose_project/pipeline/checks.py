@@ -25,8 +25,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Protocol
 
-from ..config import ProjectConfig
-from ..prose_facade import ManuscriptReportLike, parse_bib_keys
+from .config import ProjectConfig
+from .prose_facade import ManuscriptReportLike, parse_bib_keys
 
 
 @dataclass

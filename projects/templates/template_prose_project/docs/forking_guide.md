@@ -47,7 +47,7 @@ its own** — instead, `scripts/run_prose_pipeline.py` calls
 `infrastructure.prose.analyze_manuscript`, then `src/pipeline/` applies five
 threshold checks (grade-level band, citation density, H1-per-file,
 no-skipped-heading-levels, bibliography consistency via
-`src/prose_facade.parse_bib_keys`), and emits JSON +
+`src/pipeline/prose_facade.parse_bib_keys`), and emits JSON +
 Markdown + three PNGs.
 
 The transferable pattern is **self-grading**: the bundled
@@ -69,7 +69,7 @@ AESTHETIC path is convention only. The full inventory lives in
 | Class | Examples | Action |
 |---|---|---|
 | REQUIRED — pipeline gate | All `src/*.py`, all `tests/test_*.py`, `tests/conftest.py` (pins `MPLBACKEND=Agg`), `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
-| REQUIRED — orchestration | `scripts/run_prose_pipeline.py`, `scripts/y_generate_prose_figures.py`, `scripts/z_generate_manuscript_variables.py` | Subprocess-tested in `tests/test_scripts.py`; the alphabetical prefix (none / `y_` / `z_`) is an ordering hint |
+| REQUIRED — orchestration | `scripts/run_prose_pipeline.py`, `scripts/y_generate_prose_figures.py`, `scripts/z_generate_manuscript_variables.py` | Subprocess-tested in `tests/pipeline/test_scripts.py`; the alphabetical prefix (none / `y_` / `z_`) is an ordering hint |
 | AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md`, `scripts/00_preflight.py`, `manuscript/config.yaml.example` | Drift detected only by `scripts/audit/check_template_drift.py` and audits |
 
 ## Concrete first steps after fork
@@ -99,12 +99,12 @@ The loader rejects unknown YAML keys and enforces invariants
 ### 3. Add new checks
 [`AGENTS.md`](../AGENTS.md) "Extending" documents the four-step process:
 
-1. Add a field to `ProseAnalysisConfig` in `src/config.py` (and to the
+1. Add a field to `ProseAnalysisConfig` in `src/pipeline/config.py` (and to the
    `_KNOWN_PROSE_KEYS` registry).
 2. Add a `_check_<name>` function in `src/pipeline/checks.py`.
 3. Wire it into `run_prose_pipeline` so it appears in
    `artifacts.checks`.
-4. Add a test in `tests/test_pipeline.py` covering both
+4. Add a test in `tests/pipeline/test_pipeline.py` covering both
    `passed=True` and `passed=False`.
 
 ### 4. Run the drift checker before pushing
@@ -122,7 +122,7 @@ prove each detector catches the bug class it was built for.
 | Tests collect 0 / coverage 0% | Per-project `.venv` lacks `pytest` (`uv venv` without `uv sync`) | The runner now hard-fails; the canonical gate is the `uv run pytest …` command above |
 | `PDF Rendering` stage fails with `mmdc could not find Chrome` | `manuscript/05_pipeline_internals.md` embeds `mermaid` blocks | One-time: `npx --yes puppeteer browsers install chrome-headless-shell`; `scripts/00_preflight.py` emits an actionable warning before the PDF stage |
 | Matplotlib backend error in CI | `MPLBACKEND` not set | `tests/conftest.py` pins `MPLBACKEND=Agg` at import time — keep it |
-| `Unknown prose key` ValueError | Typo in `manuscript/config.yaml` (e.g., `target_grade_level_minimum`) | The strict loader rejects unknown keys; check spelling against `_KNOWN_PROSE_KEYS` in `src/config.py` |
+| `Unknown prose key` ValueError | Typo in `manuscript/config.yaml` (e.g., `target_grade_level_minimum`) | The strict loader rejects unknown keys; check spelling against `_KNOWN_PROSE_KEYS` in `src/pipeline/config.py` |
 | `{{TOKEN}}` appears literally in the rendered PDF | `scripts/z_generate_manuscript_variables.py` did not run or the token is not in `compute_variables()` | Re-run `z_generate_manuscript_variables.py`; if still literal, add to `ManuscriptVariables` |
 
 ## Sibling exemplar

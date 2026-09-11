@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from template_autoresearch_project.figures.figure_specs import (
+from ..figures.figure_specs import (
     FIGURE_DISPATCH,
     FigureDispatchEntry,
     FigureRenderContext,

@@ -19,12 +19,12 @@ from infrastructure.documentation.generated_figure_registry import (  # noqa: E4
     publish_generated_figures,
 )
 
-from template_pools_rules_tools.figures import (  # noqa: E402
+from template_pools_rules_tools.figures.figures import (  # noqa: E402
     FIGURE_REGISTRY_SCHEMA,
     INTEGRATION_FIGURE_SPECS,
     all_figures,
 )
-from template_pools_rules_tools.integration import (  # noqa: E402
+from template_pools_rules_tools.tools.integration import (  # noqa: E402
     derive_dashboard_data,
     run_integration_demo,
 )

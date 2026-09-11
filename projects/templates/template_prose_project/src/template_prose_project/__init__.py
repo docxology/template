@@ -17,22 +17,22 @@ orchestrators.
 
 from __future__ import annotations
 
-from .config import LLMReviewConfig, ProjectConfig, load_project_config
+from .pipeline.config import LLMReviewConfig, ProjectConfig, load_project_config
 from .figures import (
     generate_all_figures,
     plot_citation_density,
     plot_readability_metrics,
     plot_section_word_counts,
 )
-from .manuscript_variables import (
+from .manuscript.manuscript_variables import (
     ManuscriptVariables,
     compute_variables,
     substitute_in_text,
     write_variables,
 )
-from .llm_review import build_llm_review_receipt, validate_transcript
+from .pipeline.llm_review import build_llm_review_receipt, validate_transcript
 from .pipeline import ProseRunArtifacts, run_prose_pipeline
-from .report import write_review_report
+from .manuscript.report import write_review_report
 
 __all__ = [
     # Config

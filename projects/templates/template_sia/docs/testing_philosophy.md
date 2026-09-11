@@ -10,14 +10,14 @@
 ## Fixture / live-mode separation (the public-exemplar boundary)
 
 The single switch between modes is the `live` flag resolved by
-`src.loop.build_run_config(project_root, *, live)`:
+`template_sia.loop.loop.build_run_config(project_root, *, live)`:
 
 - `live=False` (and the committed default `sia.live: false`) sets
-  `fixtures_dir` to `src/fixtures/recorded_generations/` and replays recorded
+  `fixtures_dir` to `src/template_sia/fixtures/recorded_generations/` and replays recorded
   artifacts — **no agent is executed, no subprocess is spawned**.
 - `live=True` sets `fixtures_dir=None` and executes the reference agent.
 
-`test_fixture_live_separation.py` pins this boundary so a refactor cannot blur
+`tests/test_fixture_live_separation.py` pins this boundary so a refactor cannot blur
 it: replay points at the recorded fixtures, ignores the *content* of the
 reference agent (it is never executed), and **fails closed** — raising
 `ValidationError` rather than fabricating a pass — when the fixtures (or any one
@@ -29,14 +29,14 @@ execution in CI.
 
 | File | Focus |
 | --- | --- |
-| `test_loop.py` | Settings, fixture replay, script smoke |
+| `loop/test_loop.py` | Settings, fixture replay, script smoke |
 | `test_fixture_live_separation.py` | Fixture-vs-live boundary + fail-closed guardrails |
-| `test_loop_live.py` | Single live generation (optional) |
-| `test_reports.py` | Manuscript variables and resolved tree |
-| `test_generation_records.py` | Run summary parsing |
-| `test_reference_agent.py` | Task reference agent |
-| `test_src_reference_agent.py` | `src/reference_agent.py` unit paths |
-| `test_artifact_manifest.py` | Artifact manifest writer |
+| `loop/test_loop_live.py` | Single live generation (optional) |
+| `manuscript/test_reports.py` | Manuscript variables and resolved tree |
+| `ledger/test_generation_records.py` | Run summary parsing |
+| `loop/test_reference_agent.py` | Task reference agent |
+| `loop/test_src_reference_agent.py` | `src/template_sia/loop/reference_agent.py` unit paths |
+| `ledger/test_artifact_manifest.py` | Artifact manifest writer |
 | `test_figures.py` | Registry-backed figures |
 | `test_gate_negative_controls.py` | Negative controls for SIA artifact validation (verifier-like gates must actually fail on bad input) |
 | `test_manuscript_variables.py` | Manuscript variable hydration |

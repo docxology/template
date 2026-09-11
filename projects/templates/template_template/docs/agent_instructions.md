@@ -20,7 +20,7 @@ run them **from this project directory**
 (`projects/templates/template_template/`). Steps 4–5 are repo-root commands —
 run them **from the repository root** instead.
 
-1. Edit introspection logic in `src/template_template/introspection.py`.
+1. Edit introspection logic in `src/template_template/core/introspection.py`.
 2. Regenerate metrics (cwd: `projects/templates/template_template/`):
    `uv run python scripts/generate_manuscript_metrics.py`.
 3. Regenerate figures (cwd: `projects/templates/template_template/`):

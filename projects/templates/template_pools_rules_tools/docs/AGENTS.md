@@ -8,16 +8,16 @@ each wins over this file.
 ## Layout
 
 - `src/` — pure readers and validators; no `infrastructure` imports.
-  Single source of truth for return shapes: `type_defs.py` (TypedDicts).
+  Single source of truth for return shapes: `tools/type_defs.py` (TypedDicts).
 - `scripts/` — thin orchestrators importing from `src/` only. Source
   validation fails closed: non-compliant sources stop the run before any
   figures generate (negative control:
-  `tests/test_strong_rule_evaluator.py::test_section_schema_flags_missing_section`).
+  `tests/rules/test_strong_rule_evaluator.py::test_section_schema_flags_missing_section`).
 - `tests/` — real file paths; skip via `pytest.mark.skipif` when files absent.
 - `manuscript/` — counts inject from `output/data/manuscript_variables.json`
   at render time. Never hand-author total/content/cover figure counts: the
   generator derives them from the content figure registry
-  (`src/figure_support.py::INTEGRATION_FIGURE_SPECS`) and the separately
+  (`src/figures/figure_support.py::INTEGRATION_FIGURE_SPECS`) and the separately
   declared cover-asset contract (`COVER_FIGURE_FILENAMES`).
 
 ## Conventions observed in this repo

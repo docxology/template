@@ -7,7 +7,7 @@ The project-relative `output/` directory (`projects/templates/template_code_proj
 `output/` is **disposable but regeneratable**. Every file in this directory is produced by a deterministic pipeline script; none should be edited manually. If any file is missing or corrupted, re-run the appropriate pipeline stage to recreate it.
 
 **Key principle:** The source of truth for all outputs is the combination of:
-- `src/optimizer.py` (pure mathematical logic)
+- `src/template_code_project/core/optimizer.py` (pure mathematical logic)
 - `manuscript/config.yaml` (experiment parameters)
 - `scripts/optimization_analysis.py` (orchestration)
 - `scripts/z_generate_manuscript_variables.py` (token substitution)
@@ -89,7 +89,7 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
 
 To add a new figure or data product:
 
-1. **Add the generator** in `src/figures/` and wire it through `src/analysis/` (script entry: `scripts/optimization_analysis.py`) — write to `output/figures/` or `output/data/` with a fixed, predictable filename.
+1. **Add the generator** in `src/template_code_project/figures/` and wire it through `src/template_code_project/analysis/` (script entry: `scripts/optimization_analysis.py`) — write to `output/figures/` or `output/data/` with a fixed, predictable filename.
 2. **Update `docs/output_inventory.md`** — add an entry to the file inventory table (see below).
 3. **Update manuscript references** — reference the new file via `\\ref{fig:label}` or data table as appropriate.
 4. **Re-run the pipeline** (steps 2–5 above).

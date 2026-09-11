@@ -29,7 +29,7 @@ sys.path.insert(0, str(_PROJECT_DIR.parents[2]))
 
 from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
 
-from template_pools_rules_tools.manuscript_variables import generate_variables
+from template_pools_rules_tools.figures.manuscript_variables import generate_variables
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 logger = logging.getLogger(__name__)
