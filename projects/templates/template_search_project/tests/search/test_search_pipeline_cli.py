@@ -8,7 +8,13 @@ from pathlib import Path
 
 import pytest
 
-from template_search_project.publish.config import EnrichmentConfig, LLMConfig, ProjectConfig, ReportConfig, SearchConfig
+from template_search_project.publish.config import (
+    EnrichmentConfig,
+    LLMConfig,
+    ProjectConfig,
+    ReportConfig,
+    SearchConfig,
+)
 from template_search_project.search.search_pipeline_cli import run_search_pipeline_cli
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]

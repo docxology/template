@@ -79,7 +79,6 @@ class TestAnalysisCLIInProcess:
     def test_cli_bibliography_completeness_pass(self, tmp_path: Path) -> None:
         from template_search_project.analysis import analysis
 
-
         md = tmp_path / "manuscript"
         md.mkdir()
         (md / "references.bib").write_text("@article{k1,\n title={x}\n}\n", encoding="utf-8")
@@ -96,7 +95,6 @@ class TestAnalysisCLIInProcess:
 
     def test_cli_determinism_check_routes_correctly(self, tmp_path: Path) -> None:
         from template_search_project.analysis import analysis
-
 
         # Set up an empty repo skeleton — determinism_check will fail
         # (no run_summary.json, etc.) which is fine; we only need to
