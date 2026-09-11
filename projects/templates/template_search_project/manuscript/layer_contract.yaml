@@ -4,15 +4,16 @@
 # imports one of those directly by design (this project's whole purpose is
 # orchestrating those infrastructure capabilities for the literature-search
 # workflow), so each is declared here per the layer-boundary contract
-# infrastructure/project/drift/checks_boundary.py enforces.
+# infrastructure/project/drift/checks_boundary.py enforces. Paths updated to
+# the post-split subpackage layout (SUBMODULAR-SEARCH-1).
 allow_infrastructure_imports:
-  - src/composition.py
-  - src/dashboard.py
-  - src/deep_search.py
-  - src/deep_search_cli.py
-  - src/figures.py
-  - src/llm_runtime.py
-  - src/pipeline.py
-  - src/report.py
-  - src/search_pipeline_cli.py
-  - src/synthesis.py
+  - src/template_search_project/pipeline/composition.py
+  - src/template_search_project/publish/dashboard.py
+  - src/template_search_project/search/deep_search.py
+  - src/template_search_project/search/deep_search_cli.py
+  - src/template_search_project/publish/figures.py
+  - src/template_search_project/pipeline/llm_runtime.py
+  - src/template_search_project/pipeline/pipeline.py
+  - src/template_search_project/analysis/report.py
+  - src/template_search_project/search/search_pipeline_cli.py
+  - src/template_search_project/pipeline/synthesis.py

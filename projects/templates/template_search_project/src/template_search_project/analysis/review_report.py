@@ -121,7 +121,7 @@ def collect_infra_imports(project_root: Path, template_root: Path) -> defaultdic
     """
     infra_root_p = template_root / "infrastructure"
     infra_imports_used: defaultdict[str, set[str]] = defaultdict(set)
-    for py in sorted((project_root / "src").glob("*.py")):
+    for py in sorted((project_root / "src").rglob("*.py")):
         if py.name.startswith("_"):
             continue
         try:
