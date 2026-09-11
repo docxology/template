@@ -36,7 +36,7 @@ def test_default_pipeline_yaml_is_present() -> None:
 
 
 def test_template_project_optimizer_import_path() -> None:
-    import template_code_project.optimizer as optimizer_mod
+    import template_code_project.core.optimizer as optimizer_mod
 
     assert hasattr(optimizer_mod, "gradient_descent")
 
