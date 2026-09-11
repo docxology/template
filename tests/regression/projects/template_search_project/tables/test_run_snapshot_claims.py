@@ -35,7 +35,7 @@ pins bind to the pure functions directly rather than to the
 regeneratable on-disk ``output/`` artefacts, in line with the repo
 no-mock / no-network-in-CI policy.
 
-Import isolation: every public exemplar ships a top-level ``src``
+Import isolation (historical): before SUBMODULAR-SEARCH-1 every public exemplar shipped a top-level ``src``
 package, so a bare ``sys.path.insert`` + ``from src...`` collides on
 ``sys.modules['src']`` once a second project's regression test joins
 the same pytest session. Unlike ``template_prose_project`` (whose
@@ -56,13 +56,8 @@ another exemplar that also ships top-level packages of the same name.
 
 from __future__ import annotations
 
-import importlib
-import importlib.util
-from importlib.abc import MetaPathFinder
-from importlib.machinery import ModuleSpec, PathFinder
-from pathlib import Path
 import sys
-from types import ModuleType
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -73,88 +68,21 @@ PROJECT_ROOT = REPO_ROOT / "projects" / "templates" / "template_search_project"
 _SRC = PROJECT_ROOT / "src" / "template_search_project"
 _FIXTURE_CORPUS = PROJECT_ROOT / "data" / "corpus.json"
 
-_PKG_ALIAS = "_search_project_src"
+# SUBMODULAR-SEARCH-1: the exemplar package is a regular nested package
+# (``src/template_search_project/``) whose modules import via absolute
+# ``template_search_project.*`` paths, so the exemplar imports directly --
+# no project-unique alias or scoped meta-path finder is needed. The alias
+# machinery existed only to resolve the pre-split flat layout's absolute
+# ``from src.config import ...`` imports, which no longer exist.
+from template_search_project.pipeline.pipeline import _build_citation_keys  # noqa: E402
+from template_search_project.publish.manuscript_variables import (  # noqa: E402
+    compute_variables,
+)
 
-# The only top-level module name this exemplar's own code imports
-# *absolutely* is ``src`` itself (``from src.config import
-# DeepSearchConfig`` in ``manuscript_variables.py``). The scoped finder
-# below resolves exactly that -- and only that -- from this project's
-# own directory.
-_TOP_LEVEL = frozenset({"src"})
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))  # needed for ``infrastructure.*``; shared-safe, no top-level collision
 
-
-class _SrcScopedFinder(MetaPathFinder):
-    """Resolve this exemplar's bare ``src`` name from its own directory only.
-
-    Installed on ``sys.meta_path`` so the exemplar's absolute
-    ``from src.config import ...`` resolves to *this* project's ``src/``
-    tree without a global ``sys.path`` entry that would collide with
-    another exemplar's top-level packages once both regression tests run
-    in the same pytest session. Scoping to ``_TOP_LEVEL`` (just ``src``)
-    means an already-cached ``sys.modules['src']`` wins before
-    ``sys.meta_path`` is consulted; conversely this finder only ever
-    points at *this* project's directory.
-    """
-
-    def find_spec(
-        self,
-        fullname: str,
-        path: Any = None,
-        target: ModuleType | None = None,
-    ) -> ModuleSpec | None:
-        if fullname.split(".")[0] not in _TOP_LEVEL:
-            return None
-        # ``src`` lives directly under PROJECT_ROOT, so search there.
-        return PathFinder.find_spec(fullname, [str(PROJECT_ROOT)], target)
-
-
-def _load_absolute_submodules(*dotted_names: str) -> tuple[ModuleType, ...]:
-    """Load this exemplar's ``src`` package (plus the named submodules) under a project-unique alias.
-
-    Installs the project-scoped meta-path finder for the duration of this
-    call only, so every absolute ``from src.config import ...`` the package
-    init *or* its submodules (``manuscript_variables.py`` does this) perform
-    resolves to this project's own ``src/`` tree, then removes the finder and
-    pops every ``sys.modules`` entry it caused to be added under the bare
-    ``src`` name. An earlier version installed the finder permanently and
-    never removed it -- since it matches the single most generic name every
-    exemplar uses (``src``), that leak silently redirected any *other*
-    exemplar's later absolute ``from src.X import Y`` to *this* project's
-    directory instead of its own once both regression tests collected in the
-    same pytest session (it broke ``template_sia``'s unrelated
-    ``from src.artifact_manifest import ...``, which needs its own ``src``).
-    """
-
-    if _PKG_ALIAS in sys.modules:
-        package = sys.modules[_PKG_ALIAS]
-        return tuple(importlib.import_module(f"{_PKG_ALIAS}.{dotted}") for dotted in dotted_names)
-
-    pre_existing_src = {key: mod for key, mod in sys.modules.items() if key == "src" or key.startswith("src.")}
-    finder = _SrcScopedFinder()
-    sys.meta_path.insert(0, finder)
-    try:
-        src_init = _SRC / "__init__.py"
-        spec = importlib.util.spec_from_file_location(
-            _PKG_ALIAS,
-            src_init,
-            submodule_search_locations=[str(_SRC)],
-        )
-        assert spec is not None and spec.loader is not None, f"cannot load {src_init}"
-        package = importlib.util.module_from_spec(spec)
-        sys.modules[_PKG_ALIAS] = package
-        spec.loader.exec_module(package)
-        return tuple(importlib.import_module(f"{_PKG_ALIAS}.{dotted}") for dotted in dotted_names)
-    finally:
-        sys.meta_path.remove(finder)
-        for key in [k for k in sys.modules if (k == "src" or k.startswith("src.")) and k not in pre_existing_src]:
-            del sys.modules[key]
-        sys.modules.update(pre_existing_src)
-
-
-_pipeline_mod, _manuscript_variables_mod = _load_absolute_submodules("pipeline", "manuscript_variables")
-_build_citation_keys = _pipeline_mod._build_citation_keys
-compute_variables = _manuscript_variables_mod.compute_variables
-
+assert _SRC.is_dir(), f"exemplar package missing: {_SRC}"
 # Repo-wide infrastructure (shared safely -- only the project-local
 # ``src`` package needs the alias / finder isolation above).
 from infrastructure.search.literature import (  # noqa: E402
