@@ -26,8 +26,8 @@
   `extra.state` uses the tracker taxonomy — `verified`, `accepted`, `pending`,
   `excluded`, `unavailable`, `rate-limited` — with an as-of timestamp. It never
   posts, so it needs no authorization and cannot trigger a save.
-  For the whole roster, see the 2026-09-06 census below and
-  `docs/audit/BACKLOG-CLOSURE-2026-09-06.md`.
+  For the whole roster, see the 2026-09-06 census below (dated closure
+  snapshots were removed from `docs/audit/` 2026-09-11; recover via git history).
 
 ## Verified census — 2026-09-06 (17 of 61 archived)
 

@@ -184,11 +184,11 @@
       "mode": "automated",
       "receipt": "docs/_generated/status_evidence.json",
       "subsystem": "Rendering internals, checkpoint recovery, and local exports",
-      "verification_scope": "Real accessible-slide and Beamer suites passed 65 tests; normalized render output remained identical. Checkpoint and export negative controls passed, including a fresh reviewer's source-swap probes. Pixel capture completed 2026-09-05 via managed-Chromium compositor screenshots at 390\u00d7844 and 1200\u00d7800: narrow scroll-mode content measured 374.4px with no horizontal overflow and MathJax loaded with zero error nodes. See [review receipt](docs/audit/REVIEW_2026-09-04.md) and [2026-09-05 record](docs/audit/REVIEW_2026-09-05.md).",
+      "verification_scope": "Real accessible-slide and Beamer suites passed 65 tests; normalized render output remained identical. Checkpoint and export negative controls passed, including a fresh reviewer's source-swap probes. Pixel capture completed 2026-09-05 via managed-Chromium compositor screenshots at 390\u00d7844 and 1200\u00d7800: narrow scroll-mode content measured 374.4px with no horizontal overflow and MathJax loaded with zero error nodes. Point-in-time receipts removed 2026-09-11; recover via git history.",
       "verified_by": "Codex"
     }
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "a74b970b4475c5f0359472225ecd7614a72743bfda315def80bc6667f562ce5f"
+  "source_sha256": "11d730892eaa850b82bea7edf95b7d7690060f334527ac1949ba4a90f2777d86"
 }

@@ -160,7 +160,7 @@ These run Ruff, mypy, Bandit, and smoke tests automatically on every commit and 
 ./run.sh --pipeline --project templates/template_code_project --core-only
 ```
 
-This runs 8 stages (clean → setup → infra tests → project tests → analysis → render PDF → validate → copy). No LLM or network required. Wall-clock: 2–5 minutes on a quiet machine; measured 28–44+ minutes on an external-drive checkout under concurrent load (see `docs/audit/AUDIT_2026-08-30.md` for the measurement context).
+This runs 8 stages (clean → setup → infra tests → project tests → analysis → render PDF → validate → copy). No LLM or network required. Wall-clock: 2–5 minutes on a quiet machine; measured 28–44+ minutes on an external-drive checkout under concurrent load.
 
 **Expected success signals:**
 - All pipeline stages show ✅ (exit 0)

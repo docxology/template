@@ -354,7 +354,7 @@ not to the contents of any specific workspace.
   checkouts produce different output digests: determinism is enforced, not
   assumed. `git clone --revision` (Git 2.51+) is documented as the tool floor.
 - The backlog gate rejects `completed` rows: closed root rows moved verbatim
-  to [docs/audit/BACKLOG-CLOSURE-2026-09-05.md](docs/audit/BACKLOG-CLOSURE-2026-09-05.md),
+  to ``docs/audit/BACKLOG-CLOSURE-2026-09-05.md`` (receipt removed 2026-09-11; git history),
   leaving the root backlog future-work-only with its blocked-external rows
   and receipts intact.
 - Test isolation: the `uv sync` success-path test runs in a synthetic
@@ -469,7 +469,7 @@ not to the contents of any specific workspace.
   `test_compose_full_pipeline_services_fail_closed`.
 - Closed backlog row `EXECUTABLE-BUNDLE-MAJ-1` with the full
   **offline-container verification receipt**
-  ([`docs/audit/executable-bundle-offline-receipt-2026-08-26.md`](docs/audit/executable-bundle-offline-receipt-2026-08-26.md)):
+  (``docs/audit/executable-bundle-offline-receipt-2026-08-26.md``, removed 2026-09-11; git history):
   image `template-bundle-vendored:2026-08-26` (id `58c35a2d1675`) built from the
   regenerated bundle; with `--network none` the vendored payload runs its real
   project suite (242 passed, pytest exit 0) and a full-pipeline compose service
