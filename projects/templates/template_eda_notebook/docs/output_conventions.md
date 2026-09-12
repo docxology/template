@@ -13,7 +13,7 @@ or corrupted, re-run the appropriate step to recreate it.
 
 **Key principle:** the source of truth for all outputs is the combination of:
 - `data/measurements.csv` (the shipped dataset)
-- `src/eda/*.py` (pure data logic)
+- `src/template_eda_notebook/eda/*.py` (pure data logic)
 - `scripts/eda_analysis.py` (orchestration: plotting + writing)
 - `manuscript/config.yaml` (paper/publication metadata)
 
@@ -69,7 +69,7 @@ flowchart TB
 - **When adding a new output file** (e.g. a new figure):
   1. Document it in [`output_inventory.md`](output_inventory.md) with its
      producer and stage.
-  2. Plot it in `scripts/eda_analysis.py` from a tested `src/eda/figures.py`
+  2. Plot it in `scripts/eda_analysis.py` from a tested `src/template_eda_notebook/eda/figures.py`
      preparer.
   3. Reference it from the manuscript with a `{#fig:label}`.
 

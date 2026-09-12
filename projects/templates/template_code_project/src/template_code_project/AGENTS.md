@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `src/` directory contains the importable project logic for the research project. The mathematical layer (`optimizer.py`, `invariants.py`) remains pure and deterministic; generated-output workflows (`analysis/`, `figures/`, `dashboard.py`, `manuscript_variables.py`, `documentation.py`) live here so scripts stay thin CLI wrappers. Experiment parameters are loaded once from `manuscript/config.yaml` → `experiment:` via `experiment_config.py` and shared by analysis, figures, dashboard, and manuscript variable generation.
+The `src/` directory contains the importable project logic for the research project. The package lives at `src/template_code_project/`, with the mathematical layer (`core/optimizer.py`, `core/invariants.py`) pure and deterministic; generated-output workflows (`analysis/`, `figures/`, `dashboard/`, `core/manuscript_variables.py`, `core/documentation.py`) live in the package so scripts stay thin CLI wrappers. Experiment parameters are loaded once from `manuscript/config.yaml` → `experiment:` via `core/experiment_config.py` and shared by analysis, figures, dashboard, and manuscript variable generation.
 
 ## Key Concepts
 
@@ -18,21 +18,23 @@ The `src/` directory contains the importable project logic for the research proj
 
 ```mermaid
 flowchart LR
-    CFG[experiment_config.py<br/>load_experiment_config · ExperimentConfig]
     SRC["src/"]
-    SRC --> INIT[__init__.py<br/>Module exports]
-    SRC --> OPT[optimizer.py<br/>Core optimization · quadratic_optimum]
-    SRC --> INV[invariants.py<br/>Numerical invariant builders]
-    SRC --> ANA[analysis/<br/>Experiment orchestration]
-    SRC --> FIG[figures/<br/>Matplotlib visualizations]
-    SRC --> RUN[_runtime.py<br/>Shared figure/path helpers]
-    SRC --> DASH[dashboard.py<br/>Facade · build_dashboard_html]
-    SRC --> DP[dashboard_payload.py · dashboard_panels.py]
-    SRC --> VARS["manuscript_variables.py<br/>template variable substitution map"]
-    SRC --> DOC[documentation.py<br/>API reference builder]
-    SRC --> PP[project_paths.py<br/>resolve_project_root]
-    SRC --> BS[benchmark_support.py<br/>infrastructure.benchmark demo]
+    SRC --> SHIM[__init__.py<br/>Namespace shim · no re-exports]
+    SRC --> PKG["template_code_project/"]
     SRC --> AG[AGENTS.md · README.md · STYLE.md]
+    PKG --> CFG[core/experiment_config.py<br/>load_experiment_config · ExperimentConfig]
+    PKG --> OPT[core/optimizer.py<br/>Core optimization · quadratic_optimum]
+    PKG --> INV[core/invariants.py<br/>Numerical invariant builders]
+    PKG --> RUN[core/_runtime.py<br/>Shared figure/path helpers]
+    PKG --> PP[core/project_paths.py<br/>resolve_project_root]
+    PKG --> SW[core/sweeps.py<br/>alpha sweep · stability matrix]
+    PKG --> BS[core/benchmark_support.py<br/>infrastructure.benchmark demo]
+    PKG --> VARS[core/manuscript_variables.py<br/>template variable substitution map]
+    PKG --> DOC[core/documentation.py<br/>API reference builder]
+    PKG --> ANA[analysis/<br/>Experiment orchestration]
+    PKG --> FIG[figures/<br/>Matplotlib visualizations]
+    PKG --> DASH[dashboard/<br/>Facade · build_dashboard_html]
+    DASH --> DP[dashboard_payload.py · dashboard_panels.py]
 
     CFG --> ANA
     CFG --> FIG
@@ -46,8 +48,8 @@ flowchart LR
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef cfg fill:#7c2d12,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
-    class SRC d
-    class INIT,OPT,INV,ANA,FIG,DASH,VARS code
+    class SRC,PKG,SHIM d
+    class OPT,INV,ANA,FIG,DASH,VARS code
     class CFG cfg
     class AG doc
 ```
@@ -62,7 +64,7 @@ This module uses standard scientific Python libraries:
 
 ## Infrastructure Integration
 
-The optimizer core is **infrastructure-independent**: `optimizer.py` and `invariants.py` must not import `infrastructure.*`. Coupling to infrastructure (logging configuration, benchmarking, stability analysis, validation, rendering) belongs in importable workflow modules such as `analysis/` and `dashboard.py`, with `scripts/` acting as wrappers.
+The optimizer core is **infrastructure-independent**: `core/optimizer.py` and `core/invariants.py` must not import `infrastructure.*`. Coupling to infrastructure (logging configuration, benchmarking, stability analysis, validation, rendering) belongs in importable workflow modules such as `analysis/` and `dashboard/`, with `scripts/` acting as wrappers.
 
 ### Available Infrastructure Capabilities
 
@@ -77,7 +79,7 @@ The optimizer core is **infrastructure-independent**: `optimizer.py` and `invari
 #### Scientific Analysis Integration
 
 ```python
-from optimizer import gradient_descent
+from template_code_project.core.optimizer import gradient_descent
 from infrastructure.scientific import check_numerical_stability, benchmark_function
 from infrastructure.core.logging.utils import get_logger
 
@@ -125,7 +127,7 @@ else:
 ### Basic Optimization
 
 ```python
-from optimizer import gradient_descent, quadratic_function, compute_gradient
+from template_code_project.core.optimizer import gradient_descent, quadratic_function, compute_gradient
 
 # Define objective function
 def objective(x):
@@ -187,40 +189,40 @@ uv run pytest ../tests/ --cov=. --cov-report=html
 
 ## API Reference
 
-### experiment_config.py
+### core/experiment_config.py
 
 #### ExperimentConfig (frozen dataclass)
 
 Loaded from `manuscript/config.yaml` → `experiment:` by `load_experiment_config(project_root)`.
-Shared by `analysis/`, `figures/`, `sweeps.py`, `dashboard.py`, and `manuscript_variables.py`.
+Shared by `analysis/`, `figures/`, `core/sweeps.py`, `dashboard/`, and `core/manuscript_variables.py`.
 
-### sweeps.py
+### core/sweeps.py
 
-Unified α-sweep and stability matrix used by `figures/sensitivity.py`, `dashboard.py`,
-and `invariants.py` — do not duplicate sweep logic elsewhere.
+Unified α-sweep and stability matrix used by `figures/sensitivity.py`, `dashboard/`,
+and `core/invariants.py` — do not duplicate sweep logic elsewhere.
 
 ### figures/ package
 
 - `viz_config.py` — `VIZ_CONFIG`, `apply_visualization_style`, `agency_category`
 - `figures/convergence.py`, `figures/sensitivity.py`, `figures/scientific.py` (barrel → `scientific_complexity.py`, `scientific_stability.py`)
-- `figures/_common.py` — shim to `_runtime.py` for `project_root`, `get_logger`, `experiment_config`, `save_figure_data`
-- `figures/__init__.py` — re-export barrel (`from src.figures import …`)
+- `figures/_common.py` — shim to `core/_runtime.py` for `project_root`, `get_logger`, `experiment_config`, `save_figure_data`
+- `figures/__init__.py` — re-export barrel (`from template_code_project.figures import …`)
 
 ### analysis/ package
 
-- `workflow.py` — full `run_analysis_pipeline` / `main` orchestration (tests import via `src.analysis.main`)
+- `workflow.py` — full `run_analysis_pipeline` / `main` orchestration (tests import via `template_code_project.analysis.main`)
 - `pipeline.py` — composable step exports only (no full-run orchestration)
 - `experiments.py`, `scientific_reports.py`, `publishing.py`
 - CLI lives in `../scripts/optimization_analysis.py` (thin wrapper)
 
 ### dashboard modules
 
-- `dashboard_payload.py` — `compute_payload`, `load_yaml_defaults`, `to_diagonal_A`
-- `dashboard_panels.py` — `build_dashboard`, Plotly panel assembly
-- `dashboard.py` — facade re-exports + `build_dashboard_html(project_root) -> Path`
+- `dashboard/dashboard_payload.py` — `compute_payload`, `load_yaml_defaults`, `to_diagonal_A`
+- `dashboard/dashboard_panels.py` — `build_dashboard`, Plotly panel assembly
+- `dashboard/dashboard.py` — facade re-exports + `build_dashboard_html(project_root) -> Path`
 - CLI in `../scripts/build_dashboard.py`
 
-### _runtime.py
+### core/_runtime.py
 
 Shared helpers for figure generators: `project_root(caller)`, `get_logger`, `experiment_config`, `save_figure_data`. Analysis infra/logging remain in `analysis/_infra.py` and `analysis/_logging.py`.
 
@@ -228,14 +230,14 @@ Key fields: `step_sizes`, `quadratic_A`, `quadratic_b`, `initial_point`, `max_it
 `tolerance`, `convergence_tolerance`, `stability_starting_points`, `stability_step_sizes`,
 `benchmark_dimensions`. Helpers: `A_array()`, `b_array()`, `to_optimizer_sweep_config()`.
 
-### project_paths.py
+### core/project_paths.py
 
 `resolve_project_root(package_name)` — resolves the exemplar's project root from
 the caller's module (falls back to `Path(__file__).resolve().parent.parent`).
 `project_output_dirs(project_root=None)` — returns the standard `output/{figures,data,reports,web}`
-directory map used across `analysis/`, `figures/`, and `dashboard.py`.
+directory map used across `analysis/`, `figures/`, and `dashboard/`.
 
-### benchmark_support.py
+### core/benchmark_support.py
 
 Thin domain helper demonstrating `infrastructure.benchmark` from inside the
 exemplar: evaluates the pure `quadratic_function` across fixed seeded inputs,
@@ -252,7 +254,7 @@ def load_experiment_config(project_root: Path | None = None) -> ExperimentConfig
     """Parse ``experiment:`` from ``manuscript/config.yaml`` with typed defaults."""
 ```
 
-### manuscript_variables.py
+### core/manuscript_variables.py
 
 #### generate_variables (function)
 
@@ -279,7 +281,7 @@ def save_variables(variables: dict[str, str], output_path: Path) -> Path:
     """Write ``manuscript_variables.json`` for rendering and debugging."""
 ```
 
-### optimizer.py
+### core/optimizer.py
 
 #### quadratic_optimum (function)
 
@@ -393,7 +395,7 @@ Enable verbose output to monitor optimization progress:
 result = gradient_descent(..., verbose=True)
 ```
 
-### documentation.py
+### core/documentation.py
 
 Markdown API reference builder for public `src/` symbols. Invoked by `scripts/generate_api_docs.py` (AESTHETIC); tested in `tests/test_documentation.py` and subprocess-smoke in `tests/test_scripts_smoke.py`.
 

@@ -23,7 +23,7 @@ def compile_method(method: Method) -> Plan:
 ```
 
 Plotting, file I/O, and orchestration belong in `scripts/`, never in
-`src/methods_dsl/`. This is why every exporter in `export.py` returns text or
+`src/template_methods_paper/methods_dsl/`. This is why every exporter in `export.py` returns text or
 takes an explicit `path: Path` argument rather than reaching for a global
 output directory.
 
@@ -77,7 +77,7 @@ plan_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 - Never iterate a `dict`/`set` directly when the order affects an output the
   manuscript reports (a `plan_hash`, a scheduled order); sort explicitly.
 - Honor `SOURCE_DATE_EPOCH` for any wall-clock timestamp that reaches a
-  manuscript token (`src/manuscript_variables.py::_build_timestamp`).
+  manuscript token (`src/template_methods_paper/manuscript_variables.py::_build_timestamp`).
 
 ## Error Handling
 
@@ -92,9 +92,9 @@ plan_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 ## Module Exports
 
-`src/__init__.py` re-exports the full public API from `src.methods_dsl`, so
-callers can write `from src import compile_method`. The export set is kept in
-sync with `src/methods_dsl/__init__.py` — drift is caught by
+`src/template_methods_paper/__init__.py` re-exports the full public API from `template_methods_paper.methods_dsl`, so
+callers can write `from template_methods_paper import compile_method`. The export set is kept in
+sync with `src/template_methods_paper/methods_dsl/__init__.py` — drift is caught by
 `scripts/audit/check_template_drift.py`'s `__all___doc_drift` rule:
 
 ```python
@@ -114,7 +114,7 @@ __all__ = [
 ]
 ```
 
-`src/project_paths.py` and `src/manuscript_variables.py` expose orchestration
+`src/template_methods_paper/project_paths.py` and `src/template_methods_paper/manuscript_variables.py` expose orchestration
 and rendering plumbing (`project_output_dirs`, `resolve_project_root`,
 `generate_variables`, `save_variables`) used by `scripts/`; they are
 intentionally NOT in `__init__.py.__all__`, mirroring `template_code_project`'s

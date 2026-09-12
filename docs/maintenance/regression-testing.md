@@ -128,11 +128,16 @@ from typing import Any
 
 import pytest
 
-PROJECT_ROOT = Path(__file__).resolve().parents[5] / "projects" / "templates" / "template_code_project"
-sys.path.insert(0, str(PROJECT_ROOT))
+REPO_ROOT = Path(__file__).resolve().parents[5]
+PROJECT_ROOT = REPO_ROOT / "projects" / "templates" / "template_code_project"
 
-from src.experiment_config import load_experiment_config  # noqa: E402
-from src.optimizer import quadratic_optimum  # noqa: E402
+# The exemplar package is a regular nested package (``src/template_code_project/``)
+# whose modules import via absolute ``template_code_project.*`` paths, so the
+# exemplar imports directly -- the pre-split ``from src.<module>`` bare-import
+# pattern is retired (see ``tests/regression/projects/template_code_project/tables/
+# test_optimization_results_claims.py`` for the live canonical form).
+from template_code_project.core.experiment_config import load_experiment_config  # noqa: E402
+from template_code_project.core.optimizer import quadratic_optimum  # noqa: E402
 
 
 def test_solution_accuracy_claims_rederive_from_quadratic(load_pinned_values: Any) -> None:
@@ -156,7 +161,7 @@ def test_solution_accuracy_claims_rederive_from_quadratic(load_pinned_values: An
     "claim_text": "Target solution: x = {{RESULT_OPTIMUM_X}} ...",
     "value": 1.0,
     "abs_tolerance": 1e-12,
-    "verifier_function": "src.optimizer.quadratic_optimum",
+    "verifier_function": "template_code_project.core.optimizer.quadratic_optimum",
     "verifier_args": {"source": "projects/templates/template_code_project/manuscript/config.yaml"},
     "pinned_on": "2026-06-13",
     "pinned_by": "Codex",

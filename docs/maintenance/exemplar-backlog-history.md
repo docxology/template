@@ -45,12 +45,18 @@ active backlog table.
 
 The following pre-normalization sections were archived on 2026-08-09:
 
-## Current validation evidence
+## Validation evidence at the 2026-08-09 revision
 
-Current evidence (re-run the commands below to refresh; live counts, coverage,
-and timings are read from
+Historical evidence record. The commands below are the ones as they existed at
+the 2026-08-09 revision (several have since been retired or relocated —
+e.g. the root-level `validate_outputs.py`/`compose_manuscript.py`/
+`check_documentation_contract.py`/`generate_method_inventory.py` thin scripts
+and the root-level `tests/test_figures.py`-style layout predate the pipeline
+restructure); re-run their current equivalents (the canonical pipeline stages
+under `scripts/pipeline/` and the per-exemplar pytest suites) rather than these
+verbatim. Live counts, coverage, and timings are read from
 [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md), not pinned
-here as a hardcoded date):
+here as a hardcoded date.
 
 ```bash
 uv run python scripts/validate_outputs.py

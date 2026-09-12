@@ -1,5 +1,11 @@
 # Review & Improvement Record — 2026-08-12
 
+> **Point-in-time record (2026-08, released as v3.7.0).** Current normative
+> guidance lives in the live gates ([`TO-DO.md`](../../TO-DO.md),
+> [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md),
+> [`docs/documentation-index.md`](../documentation-index.md)); the commands and
+> module paths below describe the v3.7.0 tree.
+
 > Parallel-agent comprehensive review of `docxology/template` (infrastructure/,
 > scripts/, docs/, and all 24 public exemplar projects), executed as Hermes herdr
 > agents with strict disjoint file ownership, and released as **v3.7.0**.

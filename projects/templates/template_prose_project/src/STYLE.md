@@ -9,23 +9,31 @@ calls `infrastructure.prose` and
 `infrastructure.rendering.manuscript_injection` on its behalf), not its
 own algorithm.
 
+> **Path convention (after the 2026-09 `src/` split).** Throughout this guide
+> and the project docs, `src/<module>` abbreviates the on-disk path
+> `src/template_prose_project/<module>`: `src/__init__.py` is a namespace
+> shim, and the real package lives in
+> `src/template_prose_project/{pipeline,manuscript,figures}/`. Dotted import
+> paths always use the real form, e.g.
+> `from template_prose_project.pipeline.prose_facade import parse_bib_keys`.
+
 ## What belongs in `src/` vs `infrastructure/`
 
 | Code shape | Belongs in |
 |---|---|
 | Readability metric (FKGL / FRE / Gunning Fog) implementation | `infrastructure/prose/` |
-| BibTeX key extraction for the cross-check gate | `src/prose_facade.py::parse_bib_keys` (deliberately minimal regex; dialect-complete parsing lives in `infrastructure/reference/citation/` for forks that need it) |
+| BibTeX key extraction for the cross-check gate | `src/template_prose_project/pipeline/prose_facade.py::parse_bib_keys` (deliberately minimal regex; dialect-complete parsing lives in `infrastructure/reference/citation/` for forks that need it) |
 | Token-substitution + manuscript-tree write | `infrastructure/rendering/manuscript_injection` |
 | **Project-specific threshold checks** (`grade_level_in_band`, etc.) | `src/pipeline/checks.py` (`_check_<name>` functions) |
-| **Project-specific report assembly** | `src/report.py` |
-| **Project-specific figure renderers** | `src/figures.py` |
-| **Project-specific {{TOKEN}} derivation** | `src/manuscript_variables.py` |
-| **Project-specific config schema** | `src/config.py` (dataclasses + YAML loader) |
+| **Project-specific report assembly** | `src/template_prose_project/manuscript/report.py` |
+| **Project-specific figure renderers** | `src/template_prose_project/figures/figures.py` |
+| **Project-specific {{TOKEN}} derivation** | `src/template_prose_project/manuscript/manuscript_variables.py` |
+| **Project-specific config schema** | `src/template_prose_project/pipeline/config.py` (dataclasses + YAML loader) |
 
 The rule of thumb: if a module under `src/` is doing string-regex over
 manuscript prose, computing readability, or parsing BibTeX, that work has
 leaked from `infrastructure/` — move it, unless it is the documented
-`parse_bib_keys` cross-check helper in `src/prose_facade.py`, which is
+`parse_bib_keys` cross-check helper in `src/template_prose_project/pipeline/prose_facade.py`, which is
 deliberately minimal and project-owned.
 
 ## Pure-by-default
@@ -44,7 +52,7 @@ The intentional exception is `src/pipeline/__init__.py::run_prose_pipeline`
 itself: it writes the JSON artefacts (`manuscript_report.json`,
 `checks.json`, `evidence_summary.json`) to disk when
 `write_outputs=True`. Markdown and figures are written by the explicit
-helpers in `src/report.py` and `src/figures.py`; every other function in
+helpers in `src/template_prose_project/manuscript/report.py` and `src/template_prose_project/figures/figures.py`; every other function in
 `src/` stays pure.
 
 ## Type Hints
@@ -203,13 +211,13 @@ __all__ = [
 ```
 
 Note: `CheckResult` (in `pipeline/checks.py`) is intentionally NOT in
-`__all__` — tests import it directly via `from src.pipeline import
+`__all__` — tests import it directly via `from template_prose_project.pipeline import
 CheckResult` because it is stable but not part of the user-facing API
 surface a forker should rely on. `write_resolved_manuscript_tree` is not
 part of `src/` at all — it lives in
 `infrastructure.rendering.manuscript_injection` and is imported directly
-from there (see `tests/test_manuscript_variables.py` and
-`scripts/z_generate_manuscript_variables.py`); `src/manuscript_variables.py`
+from there (see `tests/manuscript/test_manuscript_variables.py` and
+`scripts/z_generate_manuscript_variables.py`); `src/template_prose_project/manuscript/manuscript_variables.py`
 stays infrastructure-free per this file's own boundary table above.
 
 ## See Also

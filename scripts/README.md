@@ -8,7 +8,7 @@ each table and in the generated stage documentation.
 
 | Subpackage | Role |
 | --- | --- |
-| [`pipeline/`](pipeline/) | Numbered stage scripts (`stage_00_setup.py` … `stage_12_metadata.py`) |
+| [`pipeline/`](pipeline/) | Numbered stage scripts (`stage_00_setup.py` … `stage_13_docxplus.py`) |
 | [`runner/`](runner/) | Single- and multi-project pipeline execution |
 | [`audit/`](audit/) | Documentation lint, drift, mock checks, tracked-resource guards |
 | [`docgen/`](docgen/) | Regenerators for `docs/_generated/` |
@@ -48,6 +48,12 @@ uv run python scripts/pipeline/stage_07_executive_report.py
 | 05 | `pipeline/stage_05_copy.py` | Copy to `output/`, filter disabled renderer-owned formats, and validate enabled deliverables |
 | 06 | `pipeline/stage_06_llm_review.py` | Generate LLM reviews or translations when Ollama is available |
 | 07 | `pipeline/stage_07_executive_report.py` | Build multi-project executive summaries and dashboards |
+| 08 | `pipeline/stage_08_connector_search.py` | Opt-in connector search over scientific databases (`science` tag) |
+| 09 | `pipeline/stage_09_provenance_record.py` | Opt-in provenance recording for pipeline stages (`provenance` tag) |
+| 10 | `pipeline/stage_10_research_workflow.py` | Opt-in seven-stage research workflow |
+| 11 | `pipeline/stage_11_ebook.py` | Ebook generation from the combined markdown (`ebook` tag) |
+| 12 | `pipeline/stage_12_metadata.py` | Metadata package (ONIX, metadata.json, EPUB OPF; `metadata` tag) |
+| 13 | `pipeline/stage_13_docxplus.py` | docxplus export (`docxplus` tag) |
 
 `runner/execute_pipeline.py` also supports single-stage execution with keys such as `setup`, `infra_tests`, `project_tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, and `executive_report`. Script stages use the same 7,200-second, descendant-tree-killing boundary as the full pipeline, so a long declared verifier cannot be cut off by the former 30-minute wrapper or leave detached output writers behind.
 
@@ -89,8 +95,8 @@ uv run python scripts/pipeline/stage_07_executive_report.py
 | CodeGraph local scope | `codegraph files "$(pwd)" --json \| uv run python scripts/maintenance/codegraph_local.py verify-scope` |
 | Unified health | `uv run python -m infrastructure.core.health` |
 | Changed-surface guidance | `uv run python scripts/audit/test_impact.py` |
-| Opt-in Stage 14 executable bundle | `uv run python scripts/runner/bundle_executable.py --project {name}` |
-| Opt-in Stage 15 archival publication | `uv run python scripts/runner/archive_publication.py --project {name}` |
+| Opt-in Stage 15 executable bundle | `uv run python scripts/runner/bundle_executable.py --project {name}` |
+| Opt-in Stage 16 archival publication | `uv run python scripts/runner/archive_publication.py --project {name}` |
 
 See [`docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) and [`gates/AGENTS.md`](gates/AGENTS.md).
 

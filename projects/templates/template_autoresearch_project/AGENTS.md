@@ -66,7 +66,7 @@ Claims are `supported` only when the configured evidence path points at
 substantive content on disk — a non-empty, parseable artifact (an empty file,
 `{}`/`[]`, an all-null JSON tree, or a header-only CSV does not support a claim).
 This substance binding is shared with the figure-quality and benchmark gates via
-`src/writers/artifact_content.is_substantive_artifact` and is locked by negative-control
+`src/template_autoresearch_project/writers/artifact_content.is_substantive_artifact` and is locked by negative-control
 tests in `tests/loop/test_gate_negative_controls.py`.
 Accepted seed ideas require evidence links; candidate `touched_paths` must stay
 inside `autoresearch.yaml` `edit_allowlist`. The ML-loop candidate budget is
@@ -86,12 +86,12 @@ uv run python -m infrastructure.autoresearch.cli validate --project template_aut
 ## Editing Rules
 
 - Keep `scripts/` as orchestrators only.
-- Add orchestration in `src/loop/loop.py`; add I/O under `src/writers/`; add renderers in `src/writers/reports.py`.
-- Keep ML task logic in `src/ml/`; do not move model evaluation into scripts.
+- Add orchestration in `src/template_autoresearch_project/loop/loop.py`; add I/O under `src/template_autoresearch_project/writers/`; add renderers in `src/template_autoresearch_project/writers/reports.py`.
+- Keep ML task logic in `src/template_autoresearch_project/ml/`; do not move model evaluation into scripts.
 - Keep true publication approval in the human-authored `human_review.yaml`.
   Generated readiness may never self-approve publication.
-- Add manuscript tokens in `src/manuscript/manuscript_tokens_*.py`, tables in
-  `src/manuscript/manuscript_tables_builders.py`, figure blocks, and provenance — then extend tests.
+- Add manuscript tokens in `src/template_autoresearch_project/manuscript/manuscript_tokens_*.py`, tables in
+  `src/template_autoresearch_project/manuscript/manuscript_tables_builders.py`, figure blocks, and provenance — then extend tests.
 - Register every generated figure with source artifact, alt text, and claim
   boundary metadata before inserting it into numbered manuscript files.
 - Keep figure generation methods in `output/figures/figure_registry.json`; the

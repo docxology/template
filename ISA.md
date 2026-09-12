@@ -100,7 +100,8 @@ Baseline: clean tree at `4521726a185c6d1217b595939d854b485ae90abc` =
 expected optional skips (re-verified live at session start). GitNexus has no
 index for this checkout, so nine read-only scout lenses audited the adjacent
 surfaces through direct source review. Findings, fixes, negative controls,
-and receipts: [2026-09-05 review record](docs/audit/REVIEW_2026-09-05.md).
+and receipts: point-in-time receipts removed 2026-09-11 — recover
+`REVIEW_2026-09-05.md` from git history.
 
 > Project ISA (system of record). The template is a two-layer research-paper
 > pipeline (generic `infrastructure/` Layer 1 + per-project Layer 2) delivered

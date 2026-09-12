@@ -5,7 +5,7 @@
 ### Why does this project's `src/` import from `infrastructure/` when `template_code_project`'s `src/` does not?
 
 `template_code_project` owns a scientific algorithm: gradient descent and
-its supporting functions live in `src/optimizer.py` as pure mathematics,
+its supporting functions live in `src/template_code_project/core/optimizer.py` as pure mathematics,
 testable with real `numpy` arrays and zero infrastructure imports. Its
 `src/` is *the science*.
 

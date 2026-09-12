@@ -74,8 +74,8 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_m
 ## Common Next Steps
 
 - **Specify your own method**: add a new `Method` (via
-  `src/methods_dsl/model.py`'s dataclasses) to
-  `src/methods_dsl/examples_methods.py`, add a test, wire it into
+  `src/template_methods_paper/methods_dsl/model.py`'s dataclasses) to
+  `src/template_methods_paper/methods_dsl/examples_methods.py`, add a test, wire it into
   `scripts/methods_analysis.py`, then re-run the analysis.
 - **Extend the controlled vocabulary**: only if your domain genuinely needs a
   new `StepKind` or `Dimension` — add it to `vocabulary.py`/`units.py` with a

@@ -1,8 +1,8 @@
 # src/ — Methods Specification DSL
 
 The tested controlled-method specification library for the exemplar. All
-logic lives in the `src.methods_dsl` subpackage and is re-exported from
-`src/__init__.py`. The library is standalone except one declared logging
+logic lives in the `template_methods_paper.methods_dsl` subpackage and is re-exported from
+`src/template_methods_paper/__init__.py`. The library is standalone except one declared logging
 adapter (see [AGENTS.md](AGENTS.md)): no plotting, no file I/O in the DSL
 itself, no other `infrastructure.*` imports.
 

@@ -100,10 +100,12 @@ The Core module provides fundamental foundation utilities used across the entire
 **Testing cluster — re-homed to [`testing/`](testing/AGENTS.md) (`CORE-TESTING-REHOME-1`)**
 
 The pytest/testing modules below moved to the
-[`infrastructure/core/testing/`](testing/README.md) subpackage; their old
-`infrastructure/core/<module>.py` paths remain as backwards-compat shims
-re-exporting the public surface, so every existing import keeps resolving.
-The per-module documentation below still applies verbatim:
+[`infrastructure/core/testing/`](testing/README.md) subpackage. **Flat shims
+are gone:** their old flat `infrastructure/core/<module>.py` back-compat shims
+were deleted, and every historical import path now fails fast with
+`ModuleNotFoundError` instead of silently resolving. Import the real homes
+(`infrastructure.core.testing.*`) directly. The per-module documentation below
+still applies verbatim:
 `pytest_marker_exprs.py`, `pytest_orchestration.py`, `pytest_profiles.py`,
 `public_matrix_receipt.py`, `project_test_matrix.py`,
 `test_impact.py`, `test_performance.py`, `test_runner.py`,

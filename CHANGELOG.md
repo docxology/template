@@ -9,6 +9,35 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Receipt cleanup and docs accuracy pass (2026-09-11)
+
+- Deleted every dated point-in-time receipt from the repository per
+  maintainer instruction: the tracked root ``REVIEW_LOG_2026-08-31.md`` and
+  the ``AUDIT_2026-08-30*``, ``_FLEET_REPORT_2026-08-30``,
+  ``PROJECT_STATE_REPORT_2026-08-28``, ``REVIEW_LOG_*``, ``REVIEW_2026-09-*``,
+  ``BACKLOG-CLOSURE-*``, and executable-bundle offline-receipt snapshots under
+  ``docs/audit/``. They remain recoverable from git history; the directory now
+  tracks only the regenerable ``filepath-audit-report.md``, and
+  ``docs/audit/{README,AGENTS}.md`` document the receipt-free contract (new
+  receipts belong in commit messages and the ``STATUS.md`` ledger, not the
+  tree).
+- Landed-work evidence recorded and rows removed from ``TO-DO.md``:
+  ``DEPRECATION-SHIM-POLICY-1`` (the 16 flat ``infrastructure/publishing/``
+  shims and the 11 ``infrastructure/core/`` flat shims are deleted;
+  ``infrastructure/publishing/AGENTS.md`` carries the
+  retire-when-zero-consumers policy), ``CORE-TESTING-SHIM-CUTOVER-1``
+  (``infrastructure/core/testing/`` is the live surface; ``stage_01_test.py``
+  consumes ``infrastructure.orchestration.stage_policy``),
+  ``CACHE-GATE-LOGGING-1`` (zero ``print(`` in ``cache_gate.py``),
+  ``STAGE-01-CLI-POLICY-1`` (96-line stage script; policy in
+  ``infrastructure/orchestration/stage_policy.py``),
+  ``AUDIT-DOC-MODULE-REF-1`` (``scripts/audit/check_doc_module_refs.py``
+  exists), and ``AUDIT-PRINT-GUARD-1`` (T20 print ban enforced
+  infrastructure-scoped per ``pyproject.toml``). ``TEST-ISOLATION-SYSPATH-1``
+  updated: the 8-exemplar src subpackaging (04f016915) landed; the recipe
+  continues for the four flat exemplars, the residual ``from src.`` sweep, and
+  the remaining ``_PKG_ALIAS`` loaders.
+
 ### Rehearsal minor batch (2026-09-09)
 
 - ``release-rehearsal.yml`` gains a monthly cron trigger (first day of the

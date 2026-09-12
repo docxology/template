@@ -34,7 +34,7 @@ This document provides detailed performance analysis extracted from the build sy
 #### Script 1: `projects/templates/template_code_project/scripts/optimization_analysis.py`
 
 - ✅ Demonstrates thin orchestrator pattern
-- ✅ Imports from `src/analysis/workflow.py` (`run_analysis_pipeline`), with figure builders under `src/figures/` and the optimizer core in `src/optimizer.py`
+- ✅ Imports from `src/template_code_project/analysis/workflow.py` (`run_analysis_pipeline`), with figure builders under `src/template_code_project/figures/` and the optimizer core in `src/template_code_project/core/optimizer.py`
 - ✅ Generates: `output/figures/convergence_plot.png`, `output/data/optimization_results.csv`, reports under `output/reports/`
 
 #### Script 2: `projects/{name}/scripts/<analysis>.py`

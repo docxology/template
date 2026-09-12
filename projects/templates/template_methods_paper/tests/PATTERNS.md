@@ -13,7 +13,7 @@ The following are **strictly forbidden** anywhere in this exemplar:
 - Replacing `compile_method`/`run_all_gates` with a stub that never touches
   the real DAG scheduling or hash computation.
 
-Every test exercises the real `src.methods_dsl` functions against a real
+Every test exercises the real `template_methods_paper.methods_dsl` functions against a real
 `Method` object — either one of the two worked examples
 (`all_example_methods()`) or a fixture built in `conftest.py`. No
 infrastructure is faked.
@@ -61,7 +61,7 @@ def test_run_methods_analysis_writes_expected_artifacts(tmp_path):
   suite does not use class-based tests (no `class Test...` declarations) —
   see [AGENTS.md](AGENTS.md) before introducing one.
 - Group tests by source module: `test_<module>.py` mirrors
-  `src/methods_dsl/<module>.py` one-to-one.
+  `src/template_methods_paper/methods_dsl/<module>.py` one-to-one.
 
 ## Determinism Assertions
 

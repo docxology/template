@@ -83,7 +83,7 @@ pandoc --version   # should print 2.x or 3.x
 brew install --cask basictex
 # Restart your terminal, then install the LaTeX packages the pipeline needs:
 sudo tlmgr update --self
-sudo tlmgr install multirow cleveref doi newunicodechar subcaption bm
+sudo tlmgr install multirow cleveref doi newunicodechar caption tools
 ```
 
 **macOS — MacTeX (full distribution, 5 GB, no extra packages needed):**
@@ -241,7 +241,7 @@ docs/               Documentation corpus (hierarchy and index in docs/AGENTS.md
 |---------|-----|
 | `uv: command not found` | Follow the [checksum-verified uv installation instructions](docs/operational/build/dependency-management.md#installing-uv), then restart the terminal |
 | `uv` is outdated / install fails | Run the installer again — it upgrades in place |
-| `xelatex: command not found` | `brew install --cask basictex` then `sudo tlmgr install multirow cleveref doi newunicodechar` |
+| `xelatex: command not found` | `brew install --cask basictex` then `sudo tlmgr install multirow cleveref doi newunicodechar caption tools` (caption provides `subcaption.sty`, tools provides `bm.sty`) |
 | `pandoc: command not found` | `brew install pandoc` or `sudo apt-get install pandoc` |
 | Missing LaTeX package `*.sty` | `sudo tlmgr install <package>` |
 | `ModuleNotFoundError` | `uv sync` then retry |

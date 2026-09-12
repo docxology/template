@@ -20,7 +20,7 @@ contains 120 subject records with the following columns:
 | `weight_kg` | numeric feature | float |
 | `resting_hr_bpm` | numeric feature | float |
 
-These roles are declared once in `src/eda/dataset.py::DatasetSchema`, which the
+These roles are declared once in `src/template_eda_notebook/eda/dataset.py::DatasetSchema`, which the
 statistics, correlation, and figure functions consult. The generating process
 makes weight depend positively on height (a strong correlation) while resting
 heart rate is only weakly related, and a few numeric cells are left blank to
@@ -59,7 +59,7 @@ The typical analysis order is:
 
 ## Relation to figures
 
-| Figure ([@sec:results]) | Figure-data preparer (`src/eda/figures.py`) | Primary inputs |
+| Figure ([@sec:results]) | Figure-data preparer (`src/template_eda_notebook/eda/figures.py`) | Primary inputs |
 |---|---|---|
 | Height histogram | `histogram_data()` | `height_cm` column, 10 bins |
 | Rows per group | `group_count_data()` | `group` column |

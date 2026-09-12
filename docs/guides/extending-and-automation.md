@@ -110,7 +110,7 @@ import subprocess
 import json
 import os
 
-from projects.working.machine_learning.src.analysis import process_simulation_results  # From the project's src/
+from machine_learning.analysis import process_simulation_results  # From the project's nested src package (PROJECT_ROOT/src on sys.path)
 
 def run_external_tool(config_file):
     """Run external simulation tool."""
@@ -256,7 +256,7 @@ jobs:
 **Generate API docs from source**:
 
 ```python
-# scripts/auto_documentation.py
+# scripts/auto_documentation.py (illustrative example — not part of the live pipeline)
 #!/usr/bin/env python3
 """Automatically generate API documentation."""
 import inspect
@@ -389,8 +389,9 @@ See the [Publishing Guide](publishing-guide.md) for the full workflow.
 import requests
 from collections import Counter
 
-# Import from projects/{name}/src/ (implement these as needed)
-from projects.templates.template_code_project.src.text_analysis import extract_keywords, analyze_trends
+# Import from the project's analysis package (implement these as needed;
+# PROJECT_ROOT/src must be on sys.path, as in the exemplar's scripts)
+from template_code_project.analysis.text_analysis import extract_keywords, analyze_trends
 
 def fetch_papers(query, max_results=100):
     """Fetch papers from API (e.g., arXiv, PubMed)."""
@@ -434,14 +435,14 @@ def generate_trend_report(trends):
 git checkout -b feature/new-algorithm
 
 # Make changes
-vim projects/templates/template_code_project/src/new_algorithm.py
-vim projects/templates/template_code_project/tests/test_new_algorithm.py
+vim projects/templates/template_code_project/src/template_code_project/core/new_algorithm.py
+vim projects/templates/template_code_project/tests/core/test_new_algorithm.py
 
 # Ensure coverage requirements met
-uv run pytest projects/templates/template_code_project/tests/ --cov=projects.templates.template_code_project.src --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/core/ --cov=projects/templates/template_code_project/src --cov-report=term-missing
 
 # Commit with conventional commit messages
-git add projects/templates/template_code_project/src/new_algorithm.py projects/templates/template_code_project/tests/test_new_algorithm.py
+git add projects/templates/template_code_project/src/template_code_project/core/new_algorithm.py projects/templates/template_code_project/tests/core/test_new_algorithm.py
 git commit -m "feat: add new optimization algorithm
 
 - Implements gradient-free optimization

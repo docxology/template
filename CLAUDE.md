@@ -567,13 +567,16 @@ uv run pytest --cov=infrastructure --cov-report=term-missing
 
 ```bash
 uv run python -m infrastructure.rendering.latex_package_validator
-sudo tlmgr install multirow cleveref doi newunicodechar
+sudo tlmgr install multirow cleveref doi newunicodechar caption tools
 ```
 
-**Import Errors**: Ensure project structure correct
+**Import Errors**: Ensure project structure correct. For the subpackaged
+exemplars, import through the unique package with `src/` on `sys.path`
+(the bare `import {module}` form only works for exemplars that still keep
+flat top-level modules):
 
 ```bash
-uv run python -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import {module}"
+uv run python -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import {name}.{module}"
 ```
 
 **Markdown Validation Errors**: Check image paths and references

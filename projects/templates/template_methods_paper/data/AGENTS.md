@@ -3,8 +3,8 @@
 Versioned project **inputs** only. Pipeline outputs must not be committed here.
 
 This exemplar has no external dataset: its "input" is the controlled
-vocabulary declared in code (`src/methods_dsl/vocabulary.py`,
-`src/methods_dsl/units.py`), not a CSV fixture. `data/` therefore holds only
+vocabulary declared in code (`src/template_methods_paper/methods_dsl/vocabulary.py`,
+`src/template_methods_paper/methods_dsl/units.py`), not a CSV fixture. `data/` therefore holds only
 the claim ledger, matching `template_code_project`'s convention for exemplars
 without a dataset.
 
