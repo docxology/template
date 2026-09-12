@@ -26,7 +26,7 @@ uv run python scripts/runner/execute_pipeline.py --project templates/template_ed
 **Cause.** `data/measurements.csv` is missing or was renamed.
 
 **Fix.** Restore the shipped CSV, or pass an explicit path to `load_dataset(path=...)`
-and update `src/eda/dataset.py::DatasetSchema` to match its columns.
+and update `src/template_eda_notebook/eda/dataset.py::DatasetSchema` to match its columns.
 
 ## `Figure ???` in the rendered PDF
 
@@ -88,11 +88,11 @@ or install it with Homebrew on macOS.
 
 ## `test_notebook.py` fails
 
-**Cause.** A notebook cell imports a name not exported by `src.__all__`, or a
+**Cause.** A notebook cell imports a name not exported by `template_eda_notebook.__all__`, or a
 cell defines its own `def`/`class`.
 
-**Fix.** Export the name from `src/__init__.py`, or move the cell's logic into a
-tested `src/eda/` function and call it from the cell.
+**Fix.** Export the name from `src/template_eda_notebook/__init__.py`, or move the cell's logic into a
+tested `src/template_eda_notebook/eda/` function and call it from the cell.
 
 ## PDF Rendering fails: `mmdc` could not find Chrome
 

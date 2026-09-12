@@ -1,13 +1,13 @@
 # Methodology {#sec:methodology}
 
 This section maps each step of the exploratory analysis to the tested function
-that implements it. Every function lives in `src/eda/`, takes a
+that implements it. Every function lives in `src/template_eda_notebook/eda/`, takes a
 `pandas.DataFrame` in, and returns data out — no plotting, no file I/O — so the
 notebook, the analysis script, and this manuscript all reach the same code.
 
 ## Dataset loading and schema
 
-`src/eda/dataset.py::load_dataset()` reads the shipped CSV and coerces the
+`src/template_eda_notebook/eda/dataset.py::load_dataset()` reads the shipped CSV and coerces the
 numeric columns with `pandas.to_numeric(errors="coerce")`. Coercion is
 deliberate: a blank or non-numeric cell becomes `NaN` rather than raising or
 being silently dropped, so missingness is *surfaced* and handled in an explicit
@@ -17,7 +17,7 @@ which downstream functions consult instead of re-sniffing dtypes.
 
 ## Cleaning: explicit, reported row removal
 
-`src/eda/cleaning.py::clean_dataset()` drops any row missing a numeric feature
+`src/template_eda_notebook/eda/cleaning.py::clean_dataset()` drops any row missing a numeric feature
 and returns a `CleaningReport` recording how many rows entered, how many
 remained, and how many were dropped. This exemplar makes a deliberate choice —
 listwise deletion with a visible count — rather than imputation, because a first
@@ -28,7 +28,7 @@ zeros instead of producing `inf`/`NaN`.
 
 ## Descriptive statistics
 
-`src/eda/statistics.py::summary_statistics()` returns one `ColumnSummary` per
+`src/template_eda_notebook/eda/statistics.py::summary_statistics()` returns one `ColumnSummary` per
 numeric column — count of non-missing observations, mean, sample standard
 deviation, minimum, median, and maximum — computed with real pandas
 aggregation. `group_means()` returns the mean of each numeric feature grouped by
@@ -36,7 +36,7 @@ the categorical column, sorted by group name for deterministic output.
 
 ## Correlation structure
 
-`src/eda/correlation.py::correlation_matrix()` returns the Pearson correlation
+`src/template_eda_notebook/eda/correlation.py::correlation_matrix()` returns the Pearson correlation
 matrix of the numeric columns [@tukey1977eda]. The companion
 `strongest_pairs(matrix, top_n)` ranks the distinct off-diagonal feature pairs
 by absolute correlation while preserving sign — usually the single most useful
@@ -45,7 +45,7 @@ investigating. Each unordered pair appears exactly once.
 
 ## Figure-data preparers
 
-Plotting is kept out of the library entirely. `src/eda/figures.py` returns
+Plotting is kept out of the library entirely. `src/template_eda_notebook/eda/figures.py` returns
 *plot-ready data structures* — bin counts and edges for a histogram, a square
 value grid plus labels for a correlation heatmap, and sorted category counts for
 a bar chart — as frozen dataclasses of plain numbers. The thin analysis script
@@ -80,7 +80,7 @@ Falling below that floor fails the gate outright (`--cov-fail-under` enforces it
 ## Figure generation contract
 
 Each figure in `03_results.md` maps to a figure-data preparer in
-`src/eda/figures.py`: `histogram_data` → height histogram,
+`src/template_eda_notebook/eda/figures.py`: `histogram_data` → height histogram,
 `correlation_heatmap_data` → feature-correlation heatmap, and `group_count_data`
 → per-group row counts. Captions name the preparer and the key parameters (bin
 count, value range) so reviewers can navigate from the PDF to the code without

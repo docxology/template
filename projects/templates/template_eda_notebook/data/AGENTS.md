@@ -5,7 +5,7 @@ Versioned project **inputs** only. Pipeline outputs must not be committed here.
 ## `measurements.csv`
 
 The shipped dataset the EDA library loads via
-`src/eda/dataset.py::load_dataset()`. It is a static, deterministic fixture
+`src/template_eda_notebook/eda/dataset.py::load_dataset()`. It is a static, deterministic fixture
 (120 rows; columns `subject_id`, `group`, `height_cm`, `weight_kg`,
 `resting_hr_bpm`) with a designed correlation structure and a few blank numeric
 cells that exercise the missing-data path. Treat it as a fixture: if it is ever
@@ -14,7 +14,7 @@ update `DatasetSchema` if the columns change.
 
 A deterministic **sibling** of this fixture can be regenerated with
 `scripts/generate_measurements_data.py` (writes
-`output/data/measurements_generated.csv` via `src/eda/generate.py`); the
+`output/data/measurements_generated.csv` via `src/template_eda_notebook/eda/generate.py`); the
 generator reproduces the fixture's schema, size, missingness pattern, and
 correlation sign structure from a fixed seed rather than cloning its exact
 random draw order.

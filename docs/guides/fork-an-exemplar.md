@@ -9,16 +9,21 @@ environments, rendered outputs, or stale package metadata.
 | Your work shape | Fork this exemplar | Standalone notes |
 |---|---|---|
 | Multi-track active-inference research with sheaf composition | [`template_active_inference`](../../projects/templates/template_active_inference/) | [`STANDALONE.md`](../../projects/templates/template_active_inference/STANDALONE.md) |
+| Multi-phase, provenance-aware literature-review pipeline | [`template_advanced_literature_review`](../../projects/templates/template_advanced_literature_review/) | [`STANDALONE.md`](../../projects/templates/template_advanced_literature_review/STANDALONE.md) |
+| Combinatoric grammar that deterministically generates whole runnable child projects | [`template_autopoiesis`](../../projects/templates/template_autopoiesis/) | [`STANDALONE.md`](../../projects/templates/template_autopoiesis/STANDALONE.md) |
 | Bounded AutoResearch loop with evidence/artifact gates | [`template_autoresearch_project`](../../projects/templates/template_autoresearch_project/) | [`STANDALONE.md`](../../projects/templates/template_autoresearch_project/STANDALONE.md) |
 | Coordination-mechanism ablations for agent teams | [`template_autoscientists`](../../projects/templates/template_autoscientists/) | [`STANDALONE.md`](../../projects/templates/template_autoscientists/STANDALONE.md) |
 | Code-driven computational research | [`template_code_project`](../../projects/templates/template_code_project/) | [`STANDALONE.md`](../../projects/templates/template_code_project/STANDALONE.md) |
 | Dataset descriptor or data-paper release package | [`template_data_descriptor`](../../projects/templates/template_data_descriptor/) | [`STANDALONE.md`](../../projects/templates/template_data_descriptor/STANDALONE.md) |
 | Exploratory data analysis notebook over a tested library | [`template_eda_notebook`](../../projects/templates/template_eda_notebook/) | [`STANDALONE.md`](../../projects/templates/template_eda_notebook/STANDALONE.md) |
+| Strongly-typed multiagent ant-robot colony (illegal-states-unrepresentable design) | [`template_formal`](../../projects/templates/template_formal/) | [`STANDALONE.md`](../../projects/templates/template_formal/STANDALONE.md) |
 | Analogical manuscript composition with mega-madlib token injection | [`template_gold_refinement`](../../projects/templates/template_gold_refinement/) | [`AGENTS.md`](../../projects/templates/template_gold_refinement/AGENTS.md) |
 | Reproducible literature meta-analysis (multi-engine retrieval, de-dup, bibliometrics) | [`template_literature_meta_analysis`](../../projects/templates/template_literature_meta_analysis/) | [`STANDALONE.md`](../../projects/templates/template_literature_meta_analysis/STANDALONE.md) |
 | Conditional token-injection manuscripts | [`template_madlib`](../../projects/templates/template_madlib/) | [`STANDALONE.md`](../../projects/templates/template_madlib/STANDALONE.md) |
 | Controlled-method specification DSL with staged validation gates | [`template_methods_paper`](../../projects/templates/template_methods_paper/) | [`STANDALONE.md`](../../projects/templates/template_methods_paper/STANDALONE.md) |
 | Data-driven newspaper or print-layout engine | [`template_newspaper`](../../projects/templates/template_newspaper/) | [`STANDALONE.md`](../../projects/templates/template_newspaper/STANDALONE.md) |
+| Validated pitch-deck generation from one token-resolved content source | [`template_pitch_deck`](../../projects/templates/template_pitch_deck/) | [`STANDALONE.md`](../../projects/templates/template_pitch_deck/STANDALONE.md) |
+| Template-integrated pools/rules/tools resource-architecture meta-exemplar | [`template_pools_rules_tools`](../../projects/templates/template_pools_rules_tools/) | [`STANDALONE.md`](../../projects/templates/template_pools_rules_tools/STANDALONE.md) |
 | Manuscript-focused prose review | [`template_prose_project`](../../projects/templates/template_prose_project/) | [`STANDALONE.md`](../../projects/templates/template_prose_project/STANDALONE.md) |
 | Redacted release-review report with audit ledger | [`template_redacted_report`](../../projects/templates/template_redacted_report/) | [`STANDALONE.md`](../../projects/templates/template_redacted_report/STANDALONE.md) |
 | Registered report or preregistered replication | [`template_registered_report`](../../projects/templates/template_registered_report/) | [`STANDALONE.md`](../../projects/templates/template_registered_report/STANDALONE.md) |
@@ -27,6 +32,10 @@ environments, rendered outputs, or stale package metadata.
 | Full-page illustrated storybook PDF | [`template_storybook`](../../projects/templates/template_storybook/) | [`STANDALONE.md`](../../projects/templates/template_storybook/STANDALONE.md) |
 | Meta-research over a template-like checkout | [`template_template`](../../projects/templates/template_template/) | [`STANDALONE.md`](../../projects/templates/template_template/STANDALONE.md) |
 | Book-length fillable scaffold | [`template_textbook`](../../projects/templates/template_textbook/) | [`STANDALONE.md`](../../projects/templates/template_textbook/STANDALONE.md) |
+
+The live tracked roster is
+[`docs/_generated/active_projects.md`](../_generated/active_projects.md); this
+table is representative, not exhaustive.
 
 For one-glance differentiation, see the generated
 [`docs/_generated/exemplar_roster.md`](../_generated/exemplar_roster.md).

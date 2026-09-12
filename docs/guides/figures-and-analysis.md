@@ -101,20 +101,23 @@ import matplotlib
 matplotlib.use('Agg')  # Headless backend
 import matplotlib.pyplot as plt
 
-# IMPORT from src/ - never implement algorithms here.
-# `example.py` (calculate_average/find_maximum/find_minimum) is an illustrative
-# stand-in for an analysis module you add to src/; the statistics.py and
-# correlation.py modules used later in this guide ARE built step by step below.
-from projects.templates.template_code_project.src.example import calculate_average, find_maximum, find_minimum
+# Project scripts add PROJECT_ROOT/src to sys.path before importing
+# (see scripts/optimization_analysis.py for the canonical preamble).
+# IMPORT from the project package - never implement algorithms here.
+# `analysis/example.py` (calculate_average/find_maximum/find_minimum) is an
+# illustrative stand-in for an analysis module you add to
+# src/template_code_project/analysis/; the statistics.py and correlation.py
+# modules used later in this guide ARE built step by step below.
+from template_code_project.analysis.example import calculate_average, find_maximum, find_minimum
 
 def main():
     # Sample data
     data = [1.2, 2.3, 1.8, 3.4, 2.1]
 
     # USE src/ methods for computation - NEVER implement here
-    avg = calculate_average(data)  # illustrative: src/example.py
-    max_val = find_maximum(data)   # illustrative: src/example.py
-    min_val = find_minimum(data)   # illustrative: src/example.py
+    avg = calculate_average(data)  # illustrative: src/template_code_project/analysis/example.py
+    max_val = find_maximum(data)   # illustrative: src/template_code_project/analysis/example.py
+    min_val = find_minimum(data)   # illustrative: src/template_code_project/analysis/example.py
 
     # Script ONLY handles visualization
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -143,11 +146,11 @@ if __name__ == '__main__':
 
 **Key Points**:
 
-1. ✅ **Import** from `projects/{name}/src/` - line 8
-2. ✅ **Use** tested methods - lines 14-16
-3. ✅ **Handle** visualization only - lines 18-28
-4. ✅ **Save** to output directory - lines 30-34
-5. ✅ **Print** path for manifest - line 37
+1. ✅ **Import** from the project package (`projects/{name}/src/<pkg>/`) - line 16
+2. ✅ **Use** tested methods - lines 23-25
+3. ✅ **Handle** visualization only - lines 27-31
+4. ✅ **Save** to output directory - lines 33-38
+5. ✅ **Print** path for manifest - line 41
 
 ### Creating Your Own Figure Script
 
@@ -162,7 +165,7 @@ if __name__ == '__main__':
 If computation logic doesn't exist, add it to `projects/{name}/src/` first:
 
 ```python
-# projects/templates/template_code_project/src/statistics.py
+# projects/templates/template_code_project/src/template_code_project/analysis/statistics.py
 import math
 from collections.abc import Sequence
 
@@ -197,10 +200,10 @@ def calculate_sample_std_dev(values: Sequence[float]) -> float:
 **Step 3: Create tests (coverage required)**
 
 ```python
-# projects/templates/template_code_project/tests/test_statistics.py
+# projects/templates/template_code_project/tests/analysis/test_statistics.py
 import pytest
 
-from projects.templates.template_code_project.src.statistics import (
+from template_code_project.analysis.statistics import (
     calculate_mean,
     calculate_sample_std_dev,
     calculate_sample_variance,
@@ -236,7 +239,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from projects.templates.template_code_project.src.statistics import (
+from template_code_project.analysis.statistics import (
     calculate_mean,
     calculate_sample_std_dev,
 )
@@ -363,9 +366,9 @@ When adding new analysis capabilities:
 **Step 2: Write tests first**
 
 ```python
-# projects/templates/template_code_project/tests/test_correlation.py
+# projects/templates/template_code_project/tests/analysis/test_correlation.py
 import pytest
-from projects.templates.template_code_project.src.correlation import calculate_correlation, calculate_r_squared, linear_regression
+from template_code_project.analysis.correlation import calculate_correlation, calculate_r_squared, linear_regression
 
 def test_calculate_correlation_perfect():
     """Test positive correlation."""
@@ -409,7 +412,7 @@ def test_regression_rejects_undefined_inputs(x, y):
 **Step 3: Implement in `projects/{name}/src/`**
 
 ```python
-# projects/templates/template_code_project/src/correlation.py
+# projects/templates/template_code_project/src/template_code_project/analysis/correlation.py
 """Correlation and simple-regression analysis functions."""
 
 import math
@@ -510,7 +513,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from projects.templates.template_code_project.src.correlation import calculate_correlation, linear_regression  # illustrative: from your project's src/
+from template_code_project.analysis.correlation import calculate_correlation, linear_regression  # illustrative: from your project's analysis package
 
 def main():
     # Generate sample data
@@ -643,10 +646,10 @@ because it lives under `output/`.
 
 ```bash
 # 1. Edit source code
-vim projects/<subfolder>/<name>/src/my_module.py
+vim projects/<subfolder>/<name>/src/<pkg>/my_module.py
 
 # 2. Write tests
-vim projects/templates/template_code_project/tests/test_my_module.py
+vim projects/templates/template_code_project/tests/analysis/test_my_module.py
 
 # 3. Run tests
 uv run pytest projects/templates/template_code_project/tests/test_my_module.py --cov=projects/templates/template_code_project/src
@@ -900,7 +903,7 @@ manager.register_figure(
     filename="convergence.png",
     caption="Objective value across recorded optimization iterations.",
     label="fig:convergence",
-    generated_by="projects.templates.template_code_project.src.analysis.generate",
+    generated_by="projects.templates.template_code_project.src.template_code_project.analysis.workflow",
     metadata={
         "alt_text": "Line chart of objective value by iteration for each configured method.",
         "source": "analysis summary identifier or hash",

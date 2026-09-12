@@ -52,8 +52,8 @@ rsync -a \
 - Update `manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
   `CITATION.cff`, `.zenodo.json`, `codemeta.json`, and `pyproject.toml`.
 - Replace `data/measurements.csv` with your dataset and update
-  `src/eda/dataset.py::DatasetSchema` to match its columns.
-- Extend or replace the EDA functions in `src/eda/` and their tests; update the
+  `src/template_eda_notebook/eda/dataset.py::DatasetSchema` to match its columns.
+- Extend or replace the EDA functions in `src/template_eda_notebook/eda/` and their tests; update the
   notebook cells to call them.
 - Regenerate figures and the summary table before updating manuscript claims.
 
@@ -76,7 +76,7 @@ uv run pytest projects/templates/template_eda_notebook/tests \
 
 ## Standalone By Design
 
-Unlike some exemplars, the EDA library is fully standalone: `src/eda/` imports
+Unlike some exemplars, the EDA library is fully standalone: `src/template_eda_notebook/eda/` imports
 only `numpy` and `pandas` and never imports `infrastructure.*`. The only place
 that touches shared infrastructure is the thin analysis script and the
 manuscript-rendering pipeline, so the library itself is forkable as an

@@ -3,7 +3,7 @@
 Tested controlled-method specification library for the methods-paper exemplar.
 
 The analysis script (`scripts/methods_analysis.py`) and the manuscript
-variable generator (`src/manuscript_variables.py`) call these functions
+variable generator (`src/template_methods_paper/manuscript_variables.py`) call these functions
 instead of burying logic in either place, so the methodology the paper
 describes is reproducible and unit-tested.
 

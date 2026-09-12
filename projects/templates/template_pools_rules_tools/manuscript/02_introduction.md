@@ -18,10 +18,10 @@ This paper introduces `template_pools_rules_tools`, a **meta-project exemplar** 
 
 | Module | Resource category | Key function |
 |---|---|---|
-| `src/tools/fonds_reader.py` | Data pools | `read_all_fonds()` |
-| `src/rules/rules_applier.py` | Governance rules | `validate_against_rules()` |
-| `src/tools/tools_invoker.py` | Executable tools | `discover_tools()` |
-| `src/tools/integration.py` | All three | `run_integration_demo()` |
+| `src/template_pools_rules_tools/tools/fonds_reader.py` | Data pools | `read_all_fonds()` |
+| `src/template_pools_rules_tools/rules/rules_applier.py` | Governance rules | `validate_against_rules()` |
+| `src/template_pools_rules_tools/tools/tools_invoker.py` | Executable tools | `discover_tools()` |
+| `src/template_pools_rules_tools/tools/integration.py` | All three | `run_integration_demo()` |
 
 ![Three-layer resource architecture of template_pools_rules_tools. Fonds (left) provide read-only data pools; Rules (centre) provide governance constraints; Tools (right) provide executable entry points. The Integration layer (bottom) orchestrates all three.](figures/architecture_overview.png){#fig:architecture width=90%}
 

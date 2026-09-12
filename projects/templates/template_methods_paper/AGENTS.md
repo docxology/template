@@ -15,7 +15,7 @@ counts generated, and add negative controls for verifier-like gates.
 
 This exemplar demonstrates the **methods paper** archetype: the manuscript's
 subject is a controlled-method specification domain language
-(`src/methods_dsl/`) itself, not results produced by running one. The
+(`src/template_methods_paper/methods_dsl/`) itself, not results produced by running one. The
 vocabulary generalizes BPL (Biology Programming Language,
 https://gitlab.com/bota-biosciences-public/bpl-code) — an upstream reference
 for encoding controlled-system protocols as programs with staged validation
@@ -26,7 +26,7 @@ procedure.
 
 | Surface | Rule |
 | --- | --- |
-| `src/methods_dsl/` (domain) | Pure dataclasses and functions — **no** plotting, no file I/O, **no** `infrastructure` imports except the one sanctioned exception (`_logging.py`) |
+| `src/template_methods_paper/methods_dsl/` (domain) | Pure dataclasses and functions — **no** plotting, no file I/O, **no** `infrastructure` imports except the one sanctioned exception (`_logging.py`) |
 | `scripts/` | Thin orchestrators; may import `infrastructure/` and `src/`; the only place matplotlib + file writes live |
 | Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); **do not** hardcode measured test totals or coverage % |
 
@@ -42,13 +42,13 @@ mirrored by a sanitized
 [`manuscript/config.yaml.example`](manuscript/config.yaml.example) with the
 same top-level sections. The controlled vocabulary (units, step kinds,
 targets, gate order) is declared in code
-(`src/methods_dsl/units.py`, `vocabulary.py`, `validation.py`), not
+(`src/template_methods_paper/methods_dsl/units.py`, `vocabulary.py`, `validation.py`), not
 configuration — `config.yaml`'s `project_config.dsl` block documents that surface for
 readers without driving it.
 
 ## Key capabilities
 
-- **Controlled-method model** (`src/methods_dsl/model.py`): `Method`,
+- **Controlled-method model** (`src/template_methods_paper/methods_dsl/model.py`): `Method`,
   `Step`, `Resource`, `Parameter`, constructed directly as frozen
   dataclasses rather than parsed from text.
 - **Dimensional safety** (`units.py`): `Quantity` arithmetic across

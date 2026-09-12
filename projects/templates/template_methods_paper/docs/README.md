@@ -53,7 +53,7 @@ what the repo's gates enforce:
 
 | Invariant | Where it's taught | How it's enforced |
 |---|---|---|
-| Thin orchestrator: `scripts/` only calls `src/`; gate/compile logic stays in `src/methods_dsl/` | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/methods_dsl/` infra-import scan |
+| Thin orchestrator: `scripts/` only calls `src/`; gate/compile logic stays in `src/template_methods_paper/methods_dsl/` | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/template_methods_paper/methods_dsl/` infra-import scan |
 | Zero mocks: real `Method` fixtures / `tmp_path` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/audit/verify_no_mocks.py` |
 | ≥90% project coverage on `src/` | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` |
 | `manuscript/config.yaml` is the configuration source of truth | [`rendering_pipeline.md`](rendering_pipeline.md) | rendering infra |
@@ -67,8 +67,8 @@ uv run python scripts/audit/copy_exemplar.py \
   --source templates/template_methods_paper \
   --dest "projects/working/$NEW" --new-name "$NEW"
 cd "projects/working/$NEW"
-# 1. Replace src/methods_dsl/examples_methods.py with your own Method(s)
-# 2. Extend src/methods_dsl/vocabulary.py / units.py only if your domain needs
+# 1. Replace src/template_methods_paper/methods_dsl/examples_methods.py with your own Method(s)
+# 2. Extend src/template_methods_paper/methods_dsl/vocabulary.py / units.py only if your domain needs
 #    a new StepKind / Dimension (keep additions in the controlled vocabulary)
 # 3. Replace tests/ — real Method fixtures, no mocks, drive src/ coverage >= 90%
 # 4. Edit manuscript/config.yaml (title, authors)
@@ -86,8 +86,8 @@ uv run pytest projects/templates/template_methods_paper/tests \
 # No mocks in tests/
 grep -r "unittest.mock\|MagicMock\|@patch" projects/templates/template_methods_paper/tests/ || echo "Clean"
 
-# src/methods_dsl/ has no unsanctioned infrastructure imports
-grep -rnE "^(from|import) infrastructure" projects/templates/template_methods_paper/src/methods_dsl/ \
+# src/template_methods_paper/methods_dsl/ has no unsanctioned infrastructure imports
+grep -rnE "^(from|import) infrastructure" projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/ \
     | grep -v "_logging.py" || echo "Clean"
 ```
 

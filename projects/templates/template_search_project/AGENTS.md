@@ -131,7 +131,7 @@ empirical assertion language in fixture-backed synthesis.
 
 ## How this project differs from `template_code_project`
 
-* `template_code_project` has its **own algorithm** (`src/optimizer.py`) and
+* `template_code_project` has its **own algorithm** (`src/template_code_project/core/optimizer.py`) and
   generates figures from numerical experiments.
 * `template_search_project` has **no algorithm** — its `src/` is pure
   orchestration over `infrastructure/`. The "experiment" is the

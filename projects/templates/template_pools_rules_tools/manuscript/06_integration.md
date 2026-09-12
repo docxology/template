@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-The three resource layers described in @sec:pools, @sec:rules, and @sec:tools are orchestrated by a single function in `src/tools/integration.py`. The `run_integration_demo()` function calls all three subsystems in a defined order, collects their results into a structured dictionary, and writes summary counts to `output/data/manuscript_variables.json` for injection into this manuscript at render time. @fig:architecture illustrates the complete architecture.
+The three resource layers described in @sec:pools, @sec:rules, and @sec:tools are orchestrated by a single function in `src/template_pools_rules_tools/tools/integration.py`. The `run_integration_demo()` function calls all three subsystems in a defined order, collects their results into a structured dictionary, and writes summary counts to `output/data/manuscript_variables.json` for injection into this manuscript at render time. @fig:architecture illustrates the complete architecture.
 
 ```
 run_integration_demo()
@@ -53,7 +53,7 @@ This table is itself token-injected: the values shown are those produced by the 
 
 @fig:pipelineflow traces this sequence left to right: source validation feeds the integration demo, whose summary feeds both the manuscript-variable token file and the strong-rule semantic evaluator; the figure-generation stage runs independently; and `z_generate_manuscript_variables.py` — invoked automatically by the rendering pipeline immediately before the PDF render step — is what actually substitutes every declared placeholder and writes the resolved manuscript that pandoc consumes. @fig:pipeline shows the corresponding per-component pass/partial/missing status from the same run.
 
-Each script imports all business logic from `src/` and stays free of computation of its own — even `01_validate_sources.py`, the largest entry point in this project, is entirely CLI plumbing (argument parsing, console formatting) around calls into `src/tools/fonds_reader.py`, `src/rules/rules_applier.py`, and `src/tools/tools_invoker.py`. This thin-orchestrator pattern [@Wilson2014best] ensures that all testable logic is in `src/` under the configured project coverage gate, while the scripts themselves remain readable without a dedicated test suite of their own.
+Each script imports all business logic from `src/` and stays free of computation of its own — even `01_validate_sources.py`, the largest entry point in this project, is entirely CLI plumbing (argument parsing, console formatting) around calls into `src/template_pools_rules_tools/tools/fonds_reader.py`, `src/template_pools_rules_tools/rules/rules_applier.py`, and `src/template_pools_rules_tools/tools/tools_invoker.py`. This thin-orchestrator pattern [@Wilson2014best] ensures that all testable logic is in `src/` under the configured project coverage gate, while the scripts themselves remain readable without a dedicated test suite of their own.
 
 ## Resilience Design
 

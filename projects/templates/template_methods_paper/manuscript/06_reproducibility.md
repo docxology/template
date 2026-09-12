@@ -40,7 +40,7 @@ The analysis script writes the following artifacts under
 |---|---|
 | `data/pbspreparation_worklist.md`, `data/pbspreparation_plan.csv`, `data/pbspreparation_graph.mmd`, `data/pbspreparation_plan.json` | `compile_method()` + exporters, for `PBSPreparation` |
 | `data/sensorcalibrationsweep_worklist.md`, `data/sensorcalibrationsweep_plan.csv`, `data/sensorcalibrationsweep_graph.mmd`, `data/sensorcalibrationsweep_plan.json` | `compile_method()` + exporters, for `SensorCalibrationSweep` |
-| `data/compiled_plans.json` | Per-method plan summary, consumed by `src/manuscript_variables.py` |
+| `data/compiled_plans.json` | Per-method plan summary, consumed by `src/template_methods_paper/manuscript_variables.py` |
 | `reports/gate_report.json` | `run_all_gates()` tally across both methods |
 | `reports/trust_chain_report.json` | `append_record()`/`verify_chain()` demonstration chain |
 | `figures/step_counts.png` | Step-count bar chart |
@@ -58,7 +58,7 @@ source of truth.
 - `topological_order()` breaks scheduling ties by ascending `step_id`, so
   the same `Method` object always yields the same step order across
   processes and platforms.
-- {{DETERMINISM_CHECK}} — `src/manuscript_variables.py::generate_variables`
+- {{DETERMINISM_CHECK}} — `src/template_methods_paper/manuscript_variables.py::generate_variables`
   recompiles every example method twice at manuscript-build time and
   compares hashes live, so this guarantee is checked on every build, not
   merely asserted once in a test.

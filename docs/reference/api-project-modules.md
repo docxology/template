@@ -15,11 +15,11 @@ against source when its API changes.
 
 ## Import context
 
-From the repository root, the public exemplar can be imported by its full
-namespace:
+Exemplar scripts and tests put the project `src/` directory on `sys.path` and
+use deep imports into the package:
 
 ```python
-from projects.templates.template_code_project.src.optimizer import (
+from template_code_project.core.optimizer import (
     compute_gradient,
     gradient_descent,
     make_quadratic_problem,
@@ -27,11 +27,10 @@ from projects.templates.template_code_project.src.optimizer import (
 )
 ```
 
-Project scripts commonly add their own project root to `sys.path` and then use
-`from src.optimizer import ...`; follow the convention exercised by that
-project's tests and scripts. The obsolete namespace
-`projects.template_code_project` is not valid for the typed `projects/`
-layout.
+`tests/conftest.py` adds `projects/templates/template_code_project/src/` to
+`sys.path`, and the project's scripts do the same before importing. Tooling
+that avoids `sys.path` mutation can use the full dotted path
+`projects.templates.template_code_project.src.template_code_project.core.optimizer`.
 
 ## `optimizer.py`
 

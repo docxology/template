@@ -3,7 +3,7 @@
 Symptom-driven recipes for the most common breakage modes when running this
 project.
 
-## Edited `src/methods_dsl/examples_methods.py` or `manuscript/config.yaml` but the figure/PDF didn't change
+## Edited `src/template_methods_paper/methods_dsl/examples_methods.py` or `manuscript/config.yaml` but the figure/PDF didn't change
 
 **Cause.** The analysis stage was skipped, or only the render stage ran (it
 does not re-execute `methods_analysis.py`).
@@ -30,7 +30,7 @@ rejected the method — the error message names which gate(s) and why.
 **Fix.**
 
 1. Read the gate names and issues in the exception message.
-2. Cross-reference against `src/methods_dsl/validation.py`'s gate
+2. Cross-reference against `src/template_methods_paper/methods_dsl/validation.py`'s gate
    definitions and `manuscript/02_methodology.md`'s description of each gate.
 3. Fix the `Method` construction (e.g. a duplicate `step_id`, an unknown unit
    string, a cyclic `depends_on`, or a target/kind mismatch) — never catch
@@ -45,7 +45,7 @@ Unresolved {{TOKEN}} in 03_results.md: SOME_NAME
 ```
 
 **Cause.** A manuscript file references a `{{TOKEN}}` that
-`src/manuscript_variables.py::generate_variables` does not emit — either a
+`src/template_methods_paper/manuscript_variables.py::generate_variables` does not emit — either a
 typo in the token name, or a literal generic placeholder mention (e.g.
 writing the word `TOKEN` inside double braces as illustrative prose).
 

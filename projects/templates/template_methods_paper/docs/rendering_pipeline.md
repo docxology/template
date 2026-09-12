@@ -39,8 +39,8 @@ The pipeline has four steps. Each must complete before the next begins.
 uv run python projects/templates/template_methods_paper/scripts/methods_analysis.py
 ```
 
-**Inputs**: `src/methods_dsl/examples_methods.py`'s worked example methods +
-the tested gate/compiler/exporter functions in `src/methods_dsl/`.
+**Inputs**: `src/template_methods_paper/methods_dsl/examples_methods.py`'s worked example methods +
+the tested gate/compiler/exporter functions in `src/template_methods_paper/methods_dsl/`.
 
 **Outputs**:
 
@@ -109,10 +109,10 @@ upload).
 | YAML Key | Controls | Consumed by |
 |---|---|---|
 | `paper.title` | PDF title page and page headers | `infrastructure/core/config/loader.py` → `pdf_renderer.py` |
-| `paper.version` | Title page version; `{{CONFIG_VERSION}}` | `pdf_renderer.py`, `src/manuscript_variables.py` |
-| `authors[*]` | Author list on the title page; `{{CONFIG_FIRST_AUTHOR}}` | `pdf_renderer.py`, `src/manuscript_variables.py` |
+| `paper.version` | Title page version; `{{CONFIG_VERSION}}` | `pdf_renderer.py`, `src/template_methods_paper/manuscript_variables.py` |
+| `authors[*]` | Author list on the title page; `{{CONFIG_FIRST_AUTHOR}}` | `pdf_renderer.py`, `src/template_methods_paper/manuscript_variables.py` |
 | `publication.doi` | DOI on the title page and citations | `pdf_renderer.py` |
-| `keywords` | Keyword metadata; `{{CONFIG_KEYWORDS}}` | `pdf_renderer.py`, `src/manuscript_variables.py` |
+| `keywords` | Keyword metadata; `{{CONFIG_KEYWORDS}}` | `pdf_renderer.py`, `src/template_methods_paper/manuscript_variables.py` |
 | `render.formats.*` | Which output formats are produced | `infrastructure/rendering/config.py` |
 
 ## Troubleshooting

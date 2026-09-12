@@ -37,7 +37,7 @@ Live test count and coverage live in
 [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md) — do
 not hardcode either number in prose.
 
-After modifying any `src/methods_dsl/` module, run:
+After modifying any `src/template_methods_paper/methods_dsl/` module, run:
 
 ```bash
 uv run pytest projects/templates/template_methods_paper/tests \
@@ -51,7 +51,7 @@ If coverage drops, fix the gap — do not delete tests to make the number work.
 
 ## Rule 3: The Thin Orchestrator Boundary
 
-**`src/methods_dsl/*.py`** contains the controlled vocabulary, the unit
+**`src/template_methods_paper/methods_dsl/*.py`** contains the controlled vocabulary, the unit
 system, the model, the staged gates, the compiler, the exporters, and the
 trust module: no plotting, no file I/O, no `infrastructure.*` imports except
 the one declared exception in `_logging.py`.
@@ -62,7 +62,7 @@ files, and resolve manuscript tokens.
 
 **The boundary test**: if a script implements a validation gate, computes a
 plan hash, or constructs DAG scheduling logic inline, it violates the
-boundary. Move that computation into `src/methods_dsl/` and write a test.
+boundary. Move that computation into `src/template_methods_paper/methods_dsl/` and write a test.
 
 ```python
 # In a script — BAD
@@ -78,7 +78,7 @@ plan = compile_method(method)  # tested src function
 
 Use explicit, verifiable references in `manuscript/` files.
 
-**GOOD**: `src/methods_dsl/compiler.py::topological_order()` schedules steps
+**GOOD**: `src/template_methods_paper/methods_dsl/compiler.py::topological_order()` schedules steps
 with Kahn's algorithm, breaking ties by ascending `step_id`.
 
 **BAD**: "The compiler figures out a sensible order."
@@ -97,7 +97,7 @@ hardcoded hash string literal.
 
 ## Rule 6: Style and Syntax Guides Govern Their Domains
 
-- **[`style_guide.md`](style_guide.md)** governs `src/methods_dsl/*.py`,
+- **[`style_guide.md`](style_guide.md)** governs `src/template_methods_paper/methods_dsl/*.py`,
   `tests/`, and `scripts/`.
 - **[`syntax_guide.md`](syntax_guide.md)** governs `manuscript/*.md`.
 
@@ -112,7 +112,7 @@ run. To change what a generated file contains, change the **generator**:
 
 - To change `output/data/compiled_plans.json`,
   `output/reports/gate_report.json`, `output/reports/trust_chain_report.json`,
-  or `output/figures/step_counts.png` → modify `src/methods_dsl/` and/or
+  or `output/figures/step_counts.png` → modify `src/template_methods_paper/methods_dsl/` and/or
   `scripts/methods_analysis.py`, then re-run the script.
 - To change the rendered PDF → modify the `manuscript/*.md` source, then
   re-render via `scripts/z_generate_manuscript_variables.py` and
@@ -135,8 +135,8 @@ grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
 
 # 3. The DSL library has no unsanctioned infrastructure imports
 grep -rnE "^(from|import) infrastructure" \
-    projects/templates/template_methods_paper/src/methods_dsl/ \
+    projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/ \
     | grep -v "_logging.py" \
-    && echo "VIOLATION — src/methods_dsl/ imports infrastructure outside _logging.py" \
+    && echo "VIOLATION — src/template_methods_paper/methods_dsl/ imports infrastructure outside _logging.py" \
     || echo "Clean — only the declared _logging.py exception imports infrastructure"
 ```

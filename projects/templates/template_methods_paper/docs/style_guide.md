@@ -17,7 +17,7 @@ are **forbidden** anywhere inside
 - `@patch(...)` decorators
 - monkeypatching a real function with a fake callable
 
-**Why**: `src/methods_dsl/` contains pure model/validation/compilation logic.
+**Why**: `src/template_methods_paper/methods_dsl/` contains pure model/validation/compilation logic.
 You can always test it with a real `Method`/`Step`/`Quantity` and real
 results. A test that requires a mock tests the wrong thing.
 
@@ -48,14 +48,14 @@ grep -r "unittest.mock\|MagicMock\|@patch" projects/templates/template_methods_p
 
 | File | May Import | Must NOT Import / Do |
 |---|---|---|
-| `src/methods_dsl/*.py` (except `_logging.py`) | stdlib (`dataclasses`, `enum`, `hashlib`, `json`, `typing`) | **Anything from `infrastructure.*`; matplotlib; file writes** |
-| `src/methods_dsl/_logging.py` | `infrastructure.core.logging.utils` (the one sanctioned exception) | Anything else from `infrastructure.*` |
-| `scripts/methods_analysis.py` | `src.methods_dsl`, `src.project_paths`, `matplotlib` | Gate, compilation, or scheduling logic |
-| `tests/test_*.py` | `src.*`, `pytest` | `unittest.mock.*`, `infrastructure.*` |
+| `src/template_methods_paper/methods_dsl/*.py` (except `_logging.py`) | stdlib (`dataclasses`, `enum`, `hashlib`, `json`, `typing`) | **Anything from `infrastructure.*`; matplotlib; file writes** |
+| `src/template_methods_paper/methods_dsl/_logging.py` | `infrastructure.core.logging.utils` (the one sanctioned exception) | Anything else from `infrastructure.*` |
+| `scripts/methods_analysis.py` | `template_methods_paper.methods_dsl`, `template_methods_paper.project_paths`, `matplotlib` | Gate, compilation, or scheduling logic |
+| `tests/test_*.py` | `template_methods_paper.*`, `pytest` | `unittest.mock.*`, `infrastructure.*` |
 
-**Verify `src/methods_dsl/` is clean outside the declared exception**:
+**Verify `src/template_methods_paper/methods_dsl/` is clean outside the declared exception**:
 ```bash
-grep -rnE "^(from|import) infrastructure" projects/templates/template_methods_paper/src/methods_dsl/ \
+grep -rnE "^(from|import) infrastructure" projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/ \
     | grep -v "_logging.py" || echo "Clean"
 ```
 
@@ -65,11 +65,11 @@ grep -rnE "^(from|import) infrastructure" projects/templates/template_methods_pa
 
 `scripts/methods_analysis.py` may call gates/compiler/exporters, plot the
 returned data, and write files, but must not implement validation or
-scheduling logic that belongs in `src/methods_dsl/`.
+scheduling logic that belongs in `src/template_methods_paper/methods_dsl/`.
 
 **Forbidden** — gate logic re-implemented in a script:
 ```python
-# BAD — scheduling logic belongs in src/methods_dsl/compiler.py
+# BAD — scheduling logic belongs in src/template_methods_paper/methods_dsl/compiler.py
 ready = [s for s in method.steps if not s.depends_on]
 ```
 
@@ -82,7 +82,7 @@ plan = compile_method(method)
 **Decision rule**: if a line of code in a script validates, schedules, or
 The decision rule guides placement but does not certify enforcement — misclassification is caught by review, not automatically.
 hashes a `Method` (not just exports/plots an already-compiled `Plan`), move
-it to `src/methods_dsl/` and write a test. Known-wrong input: business logic
+it to `src/template_methods_paper/methods_dsl/` and write a test. Known-wrong input: business logic
 left inside a thin orchestrator script is flagged by the repository
 thin-orchestrator drift audits, which is the negative control for this rule. Gate-level negative controls are
 established in `tests/test_validation.py` (e.g.
@@ -98,7 +98,7 @@ Use explicit, verifiable references instead of vague descriptions.
 
 | BAD (vague) | GOOD (concrete) |
 |---|---|
-| "The compiler figures out a sensible order." | "`src/methods_dsl/compiler.py::topological_order()` schedules steps with Kahn's algorithm, breaking ties by ascending `step_id`." |
+| "The compiler figures out a sensible order." | "`src/template_methods_paper/methods_dsl/compiler.py::topological_order()` schedules steps with Kahn's algorithm, breaking ties by ascending `step_id`." |
 | "We validated the methods." | "`tests/test_validation.py` asserts each of the four staged gates against `conftest.py`'s fixtures, including one fixture per gate-failure mode." |
 
 ---
@@ -109,14 +109,14 @@ Refer to files by their path relative to the repository root:
 
 | Short Name | Path (from repo root) |
 |---|---|
-| method model | `projects/templates/template_methods_paper/src/methods_dsl/model.py` |
-| compiler | `projects/templates/template_methods_paper/src/methods_dsl/compiler.py` |
+| method model | `projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/model.py` |
+| compiler | `projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/compiler.py` |
 | analysis script | `projects/templates/template_methods_paper/scripts/methods_analysis.py` |
 | config | `projects/templates/template_methods_paper/manuscript/config.yaml` |
-| worked examples | `projects/templates/template_methods_paper/src/methods_dsl/examples_methods.py` |
+| worked examples | `projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/examples_methods.py` |
 
 Never hardcode an absolute filesystem path in code — resolve relative to the
-project root (see `src/project_paths.py`).
+project root (see `src/template_methods_paper/project_paths.py`).
 
 ---
 
@@ -149,7 +149,7 @@ All `ValueError` subclasses must include the actual problematic value.
 raise ValueError("bad argument")
 ```
 
-**Correct** (following the pattern in `src/methods_dsl/`):
+**Correct** (following the pattern in `src/template_methods_paper/methods_dsl/`):
 ```python
 raise MethodModelError(f"Step.step_id must be positive, got {self.step_id}")
 raise DimensionError(f"unknown unit {unit!r} — not in the controlled unit vocabulary")

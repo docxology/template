@@ -14,8 +14,8 @@
 ## Tokenization contract
 
 Do not hard-code generated loop counts or ML metrics in numbered prose. Add
-variables in `src/manuscript/manuscript_tokens_core.py` or
-`src/manuscript/manuscript_tokens_ml.py` (facade: `src/manuscript/manuscript_variables.py`)
+variables in `src/template_autoresearch_project/manuscript/manuscript_tokens_core.py` or
+`src/template_autoresearch_project/manuscript/manuscript_tokens_ml.py` (facade: `src/template_autoresearch_project/manuscript/manuscript_variables.py`)
 and verify coverage in `tests/manuscript/test_manuscript_variables.py`.
 
 Strict tokenization means hydration fails on raw accepted-candidate IDs, metric

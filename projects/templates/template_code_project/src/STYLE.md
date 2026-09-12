@@ -115,86 +115,31 @@ def quadratic_function(x: np.ndarray, A: np.ndarray, b: np.ndarray) -> float:
 - Include actual values in error messages for debuggability
 - Never catch and silently swallow exceptions
 
-## Dual-Import Shim (`src.X` vs bare `X`)
-
-`src/optimizer.py` and `src/invariants.py` both contain a small pattern that
-new contributors should not delete:
-
-```python
-try:
-    from .optimizer import OptimizationResult     # invoked as `python -m src.optimizer`
-except ImportError:                                # noqa: E402
-    from optimizer import OptimizationResult      # invoked as a bare script from inside src/
-```
-
-The shim exists because the test suite, the analysis script, and humans
-running `python src/optimizer.py` all reach the module through three
-different import paths:
-
-| Caller | Resolution path |
-|---|---|
-| `tests/conftest.py` adds `src/` to `sys.path`, tests do `from optimizer import …` | Bare-module form (no `src.` prefix) |
-| Pipeline scripts do `from src.optimizer import …` | Package form |
-| `python -m src.invariants` invocation | Package form |
-
-The `try/except ImportError` covers both code paths. Deleting it breaks
-the bare-module form silently — the test suite still passes (it uses the
-bare path) but anything running `from src.optimizer import …` fails on
-the very first import. Do not "clean up" this pattern without re-thinking
-the conftest path setup first.
-
 ## Module Exports
 
-`src/__init__.py` re-exports the public API. The actual export set (kept
-in sync with `__init__.py` — drift is caught by
-`scripts/audit/check_template_drift.py`'s `__all___doc_drift` rule):
+`src/__init__.py` is a namespace shim only — it performs no re-exports:
 
 ```python
-"""template_code_project — gradient descent optimization research exemplar."""
-
-from .optimizer import (
-    OptimizationResult,
-    compute_gradient,
-    gradient_descent,
-    make_quadratic_problem,
-    quadratic_function,
-    simulate_trajectory,
-)
-from .invariants import (
-    InvariantResult,
-    OptimizerSweepConfig,
-    all_invariants,
-    convergence_invariants,
-    gradient_consistency_invariants,
-    trajectory_invariants,
-)
-
-__all__ = [
-    # Optimizer (pure mathematics)
-    "OptimizationResult",
-    "compute_gradient",
-    "gradient_descent",
-    "make_quadratic_problem",
-    "quadratic_function",
-    "simulate_trajectory",
-    # Invariants (dashboard panels)
-    "InvariantResult",
-    "OptimizerSweepConfig",
-    "all_invariants",
-    "convergence_invariants",
-    "gradient_consistency_invariants",
-    "trajectory_invariants",
-]
+"""Namespace shim — the real template_code_project package lives at src/template_code_project/ (TEST-ISOLATION-SYSPATH-1)."""
 ```
 
-`src/analysis/`, `src/dashboard.py`, `src/figures/`,
-`src/experiment_config.py`, and `src/manuscript_variables.py`
-expose their public callables directly via deep imports
-(`from src.analysis import generate_convergence_plot`,
-`from src.experiment_config import load_experiment_config`, etc.); they are part of
-the orchestration layer, not the pure-math API, so they are
-intentionally NOT in `__init__.py.__all__`. `experiment_config.py` is the
-config single source of truth shared by analysis, figures, dashboard, and
+The public API lives in the `src/template_code_project/` subpackages and is
+accessed through deep imports such as:
+
+```python
+from template_code_project.core.optimizer import gradient_descent
+from template_code_project.core.invariants import all_invariants
+from template_code_project.figures import generate_convergence_plot
+from template_code_project.core.experiment_config import load_experiment_config
+```
+
+`src/template_code_project/analysis/`, `src/template_code_project/dashboard/`,
+`src/template_code_project/figures/`, `src/template_code_project/core/experiment_config.py`,
+and `src/template_code_project/core/manuscript_variables.py`
+expose their public callables directly via these deep imports; they are part
+of the orchestration layer, not the pure-math API, so nothing from them is
+re-exported at package level. `core/experiment_config.py` is the config
+single source of truth shared by analysis, figures, dashboard, and
 manuscript_variables.
 
 ## See Also

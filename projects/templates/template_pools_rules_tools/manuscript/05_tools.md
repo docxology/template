@@ -56,10 +56,10 @@ A pre-trained linear-regression model exemplar. It predicts a numeric target fro
 
 ## Tool Discovery Module
 
-The `src/tools/tools_invoker.py` module provides three public functions:
+The `src/template_pools_rules_tools/tools/tools_invoker.py` module provides three public functions:
 
 ```python
-from src.tools.tools_invoker import (
+from template_pools_rules_tools.tools.tools_invoker import (
     discover_tools,
     get_tool_entrypoints,
     validate_tool_scripts_exist,
@@ -95,7 +95,7 @@ Each of these is a distinct, testable branch in `tests/tools/test_tools_invoker.
 
 ## Execution-Proof Testing: Beyond Manifest Checking
 
-Everything described so far — discovery, entrypoint-existence validation, the three failure modes above — is *structural*: it confirms a tool's files are present and well-formed without ever running them. `src/tools/tools_invoker.py`'s public API deliberately stays that way, because subprocess execution is exactly the kind of operation that can raise (a missing `bash`/`jq`/`python3` binary, a permission error, a timeout), and this project's readers are contracted to degrade gracefully rather than propagate exceptions (see @sec:pools).
+Everything described so far — discovery, entrypoint-existence validation, the three failure modes above — is *structural*: it confirms a tool's files are present and well-formed without ever running them. `src/template_pools_rules_tools/tools/tools_invoker.py`'s public API deliberately stays that way, because subprocess execution is exactly the kind of operation that can raise (a missing `bash`/`jq`/`python3` binary, a permission error, a timeout), and this project's readers are contracted to degrade gracefully rather than propagate exceptions (see @sec:pools).
 
 The test suite closes this gap without weakening that contract: `tests/tools/test_tools_invoker.py` genuinely subprocess-invokes the two fully local, deterministic tools and asserts on their real output, rather than only checking that their scripts exist.
 

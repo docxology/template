@@ -26,7 +26,7 @@ embeds the enabled origin/coverage figures.
 
 The rendered section order is Abstract, Introduction, Methods, Results, Discussion, Configuration, Evaluation, Reproducibility, Limitations, Scope, Authoring Contract, and References.
 
-When extending the Methods section, edit config-owned method rows and `src/composition.py` together. The source Markdown shells should keep large-grain placeholders such as `{{METHODS_BODY}}` and `{{METHODS_FIGURES}}`; generated Methods prose, tables, figures, and hydrated output remain disposable and must be regenerated through the pipeline.
+When extending the Methods section, edit config-owned method rows and `src/template_madlib/composition.py` together. The source Markdown shells should keep large-grain placeholders such as `{{METHODS_BODY}}` and `{{METHODS_FIGURES}}`; generated Methods prose, tables, figures, and hydrated output remain disposable and must be regenerated through the pipeline.
 
 Method review has three additional obligations:
 

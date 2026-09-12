@@ -1,5 +1,14 @@
 # Review Remediation Plan — 2026-07-02
 
+> **Point-in-time snapshot (2026-07).** This plan is historical: every scoped
+> item is ✅ SHIPPED (only a deferred comment rewrite remains). Current
+> normative guidance lives in the live gates (`scripts/audit/`,
+> `infrastructure/validation/`) and [`TO-DO.md`](../../TO-DO.md); the
+> successor campaign record is
+> [`review-remediation-2026-08.md`](review-remediation-2026-08.md). The
+> "open a PR" invitation below describes how the campaign operated, not a
+> live work queue.
+
 > Source: a multi-lens adversarial review of `docxology/template` at HEAD
 > `890abb6a` (9 dimensions × read-only finders, each finding verified against
 > HEAD). 43 findings confirmed, 3 refuted. This plan captures the items that

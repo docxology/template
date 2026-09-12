@@ -22,14 +22,14 @@ resource directories without writing back to them:
 
 | Module | Role |
 |---|---|
-| `src/tools/type_defs.py` | All TypedDict definitions — **edit here first** when adding return fields (named `type_defs.py`, not `types.py`, to avoid shadowing the stdlib `types` module once `src/` is added to `PYTHONPATH`) |
-| `src/tools/fonds_reader.py` | Reads 3 fond types; returns typed dicts |
-| `src/rules/rules_applier.py` | Loads soft/strong rules; returns typed dicts |
-| `src/tools/tools_invoker.py` | Discovers tool manifests; returns typed dicts |
-| `src/tools/integration.py` | Orchestrates all three; adds `generate_figure_data()` |
-| `src/rules/strong_rule_evaluator.py`, `src/tools/resource_schema.py`, `src/figures/manuscript_variables.py` | Strong-rule evaluation, schema receipts, manuscript variables |
-| `src/figures/figure_support.py`, `src/figures/figures.py`, `src/figures/cover_figure.py`, `src/figures/rule_hierarchy_figure.py` | Figure specs, façade, and renderers |
-| `src/__init__.py` | Re-exports all public symbols |
+| `src/template_pools_rules_tools/tools/type_defs.py` | All TypedDict definitions — **edit here first** when adding return fields (named `type_defs.py`, not `types.py`, to avoid shadowing the stdlib `types` module once `src/` is added to `PYTHONPATH`) |
+| `src/template_pools_rules_tools/tools/fonds_reader.py` | Reads 3 fond types; returns typed dicts |
+| `src/template_pools_rules_tools/rules/rules_applier.py` | Loads soft/strong rules; returns typed dicts |
+| `src/template_pools_rules_tools/tools/tools_invoker.py` | Discovers tool manifests; returns typed dicts |
+| `src/template_pools_rules_tools/tools/integration.py` | Orchestrates all three; adds `generate_figure_data()` |
+| `src/template_pools_rules_tools/rules/strong_rule_evaluator.py`, `src/template_pools_rules_tools/tools/resource_schema.py`, `src/template_pools_rules_tools/figures/manuscript_variables.py` | Strong-rule evaluation, schema receipts, manuscript variables |
+| `src/template_pools_rules_tools/figures/figure_support.py`, `src/template_pools_rules_tools/figures/figures.py`, `src/template_pools_rules_tools/figures/cover_figure.py`, `src/template_pools_rules_tools/figures/rule_hierarchy_figure.py` | Figure specs, façade, and renderers |
+| `src/template_pools_rules_tools/__init__.py` | Re-exports all public symbols |
 
 ---
 
@@ -41,15 +41,15 @@ resource directories without writing back to them:
    this project's perspective.
 3. **Graceful fallback everywhere.** Functions return `None` or empty
    collections when files are absent — they never raise.
-4. **`src/tools/type_defs.py` is the single source of truth** for all TypedDict shapes.
+4. **`src/template_pools_rules_tools/tools/type_defs.py` is the single source of truth** for all TypedDict shapes.
    Do not declare inline dicts in other modules.
-5. **`__all__` in every module.** Keep `src/__init__.py` in sync.
+5. **`__all__` in every module.** Keep `src/template_pools_rules_tools/__init__.py` in sync.
 
 ---
 
 ## Adding a new return field
 
-1. Add the field to the appropriate TypedDict in `src/tools/type_defs.py`.
+1. Add the field to the appropriate TypedDict in `src/template_pools_rules_tools/tools/type_defs.py`.
 2. Update the producing function to populate it.
 3. Update any downstream callers in `integration.py`.
 4. Add or update the corresponding test.
@@ -96,9 +96,9 @@ reports rather than relying on exceptions.
 
 ## Common pitfalls
 
-- **Repo-root resolution** uses `pathlib.Path(__file__).resolve().parents[4]`.
+- **Repo-root resolution** uses `pathlib.Path(__file__).resolve().parents[6]`.
   This is correct for the nested path
-  `projects/templates/template_pools_rules_tools/src/<module>.py`.
+  `projects/templates/template_pools_rules_tools/src/template_pools_rules_tools/<subpackage>/<module>.py`.
   Do not change this without updating all modules that use it (`fonds_reader.py`, `rules_applier.py`, `tools_invoker.py`).
 - **`pathlib.Path` objects in TypedDicts** (`ToolEntry.path`) are not JSON-
   serialisable. Convert to `str` before serialising to JSON.

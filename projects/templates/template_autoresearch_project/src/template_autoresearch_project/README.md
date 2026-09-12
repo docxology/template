@@ -24,7 +24,7 @@ Reusable AutoResearch project logic lives here. See [`AGENTS.md`](AGENTS.md) for
 ## Manuscript hydration
 
 - `manuscript/manuscript_tokens_{core,ml,figures,format}.py` — render-time `{{TOKEN}}` values (`manuscript_variables.py` facade)
-- `manuscript/manuscript_tables_{builders,format}.py` — registry-backed tables (imported as `manuscript.manuscript_tables`, e.g. `from src.manuscript.manuscript_tables import ...`; there is no top-level `src/manuscript_tables.py` facade — unlike `manuscript_variables.py` above, callers import this one directly from `manuscript/`)
+- `manuscript/manuscript_tables_{builders,format}.py` — registry-backed tables (imported as `template_autoresearch_project.manuscript.manuscript_tables`, e.g. `from template_autoresearch_project.manuscript.manuscript_tables import ...` with the project's `src/` directory on `sys.path`; there is no top-level `manuscript_tables.py` facade — unlike `manuscript_variables.py` above, callers import this one directly from `manuscript/`)
 - `reports.py` — loop and review markdown renderers
 
 ## Governance

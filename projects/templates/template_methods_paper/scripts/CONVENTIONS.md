@@ -9,7 +9,7 @@ Scripts **coordinate** — they never **compute**:
 
 ```python
 # ✅ CORRECT: import tested functions, then export/plot/write
-from src.methods_dsl import all_example_methods, compile_method, run_all_gates, to_csv_rows
+from template_methods_paper.methods_dsl import all_example_methods, compile_method, run_all_gates, to_csv_rows
 
 for method in all_example_methods():
     gate_results = run_all_gates(method)
@@ -20,11 +20,11 @@ for method in all_example_methods():
 ```python
 # ❌ WRONG: script implements a validation gate directly
 def my_target_check(method):
-    return all(step.target == method.target for step in method.steps)  # Belongs in src/methods_dsl/validation.py
+    return all(step.target == method.target for step in method.steps)  # Belongs in src/template_methods_paper/methods_dsl/validation.py
 ```
 
 If you find yourself writing model, validation, compilation, or export logic
-in `scripts/`, move it to `src/methods_dsl/` first (with a test).
+in `scripts/`, move it to `src/template_methods_paper/methods_dsl/` first (with a test).
 
 ## Headless plotting
 
@@ -51,7 +51,7 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "src", PROJECT_ROOT.parents[2]):
         sys.path.insert(0, str(_path))
 
 import matplotlib.pyplot as plt  # noqa: E402
-from src.methods_dsl import all_example_methods, compile_method  # noqa: E402
+from template_methods_paper.methods_dsl import all_example_methods, compile_method  # noqa: E402
 ```
 
 - Use explicit imports (not `from module import *`).
@@ -59,7 +59,7 @@ from src.methods_dsl import all_example_methods, compile_method  # noqa: E402
 
 ## Output Directory Structure
 
-Scripts write to the standard output layout via `src/project_paths.py`:
+Scripts write to the standard output layout via `src/template_methods_paper/project_paths.py`:
 
 ```mermaid
 flowchart LR
@@ -73,7 +73,7 @@ flowchart LR
 ```
 
 ```python
-from src.project_paths import project_output_dirs
+from template_methods_paper.project_paths import project_output_dirs
 
 dirs = project_output_dirs()
 dirs["figures"].mkdir(parents=True, exist_ok=True)
@@ -95,7 +95,7 @@ for path in run_methods_analysis():
 Before submitting a new or modified script, verify:
 
 - [ ] All model/validation/compilation/export logic lives in
-      `src/methods_dsl/`, not in the script.
+      `src/template_methods_paper/methods_dsl/`, not in the script.
 - [ ] `MPLBACKEND=Agg` is set before importing pyplot.
 - [ ] Output goes to standard `output/` subdirectories via `project_output_dirs`.
 - [ ] `Path` objects are used (no string concatenation) for file paths.

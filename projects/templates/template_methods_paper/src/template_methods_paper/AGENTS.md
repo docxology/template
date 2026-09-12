@@ -1,14 +1,15 @@
-# src/ — Methods Specification DSL
+# src/template_methods_paper/ — Methods Specification DSL
 
 ## Overview
 
 The `src/` directory contains the importable, tested controlled-method
 specification library for this exemplar. All DSL logic lives in the
-`src.methods_dsl` subpackage and is re-exported from `src/__init__.py`, so
-callers (scripts, tests, manuscript variable generation) can write
-`from src import compile_method, run_all_gates`. The library is
+`template_methods_paper.methods_dsl` subpackage and is re-exported from
+`src/template_methods_paper/__init__.py`, so callers (scripts, tests,
+manuscript variable generation) can write
+`from template_methods_paper import compile_method, run_all_gates`. The library is
 **standalone** except one sanctioned adapter
-(`src/methods_dsl/_logging.py`, declared in `manuscript/layer_contract.yaml`):
+(`src/template_methods_paper/methods_dsl/_logging.py`, declared in `manuscript/layer_contract.yaml`):
 nothing else imports `infrastructure.*` or any sibling project.
 
 ## Key Concepts
@@ -35,7 +36,7 @@ nothing else imports `infrastructure.*` or any sibling project.
 
 ```mermaid
 flowchart LR
-    SRC["src/"]
+    SRC["src/template_methods_paper/"]
     SRC --> INIT[__init__.py<br/>public re-exports]
     SRC --> PP[project_paths.py<br/>output dir helpers]
     SRC --> FS[figure_specs.py<br/>figure provenance contract]
@@ -67,7 +68,7 @@ it is not re-configurable per run.
 ## Infrastructure Integration (boundary / contract)
 
 The DSL library is infrastructure-independent by contract, with one declared
-exception: `src/methods_dsl/_logging.py` reaches into
+exception: `src/template_methods_paper/methods_dsl/_logging.py` reaches into
 `infrastructure.core.logging.utils.get_logger` so gate and compiler log
 output matches every other project's structured format, and falls back to
 stdlib `logging` if `infrastructure` is not importable (a standalone fork).
@@ -79,7 +80,7 @@ stays import-clean.
 ## Usage Examples
 
 ```python
-from src import (
+from template_methods_paper import (
     all_example_methods, run_all_gates, compile_method,
     to_worklist_markdown, to_csv_rows, to_mermaid,
 )

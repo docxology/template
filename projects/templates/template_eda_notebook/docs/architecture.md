@@ -10,7 +10,7 @@ logic trapped in a script, and mocks appearing in tests.
 
 | Layer | Primary Files | Public API | Invariants | Testability |
 |---|---|---|---|---|
-| **`src/` — EDA Library** | `src/eda/dataset.py`, `src/eda/cleaning.py`, `src/eda/statistics.py`, `src/eda/correlation.py`, `src/eda/figures.py` | Re-exported from `src/__init__.py` (`load_dataset`, `summary_statistics`, …) | Pure data transforms; no plotting, no file I/O, no `infrastructure.*` imports | Direct unit tests against the shipped CSV / real frames |
+| **`src/` — EDA Library** | `src/template_eda_notebook/eda/dataset.py`, `src/template_eda_notebook/eda/cleaning.py`, `src/template_eda_notebook/eda/statistics.py`, `src/template_eda_notebook/eda/correlation.py`, `src/template_eda_notebook/eda/figures.py` | Re-exported from `src/template_eda_notebook/__init__.py` (`load_dataset`, `summary_statistics`, …) | Pure data transforms; no plotting, no file I/O, no `infrastructure.*` imports | Direct unit tests against the shipped CSV / real frames |
 | **`notebooks/` — Walkthrough** | `notebooks/eda_walkthrough.ipynb` | none (entry point) | Cells only call `src` functions; no `def`/`class` in cells | Structurally checked by `test_notebook.py` |
 | **`scripts/` — Orchestrators** | `scripts/eda_analysis.py` | `run_eda()` + `main()` | All matplotlib + file writes live here; no analysis math | `test_eda_analysis_script.py` runs it against a temp root |
 | **`infrastructure/` — Cross-Cutting** | `infrastructure/rendering/`, `infrastructure/core/`, `infrastructure/validation/` | PDF rendering, logging, output validation | Generic reusable behavior only | Covered by the separate `tests/infra_tests/` suite |
@@ -20,7 +20,7 @@ logic trapped in a script, and mocks appearing in tests.
 ```
 notebooks/ ──→ src/      (cells call tested library functions)
 scripts/   ──→ src/      (run_eda calls the library, then plots)
-src/eda/   ──→ [numpy + pandas only]
+src/template_eda_notebook/eda/   ──→ [numpy + pandas only]
 tests/     ──→ src/, scripts/, notebooks/  (direct testing of real behavior)
 ```
 
@@ -29,14 +29,14 @@ sibling project, so it stays forkable.
 
 ```mermaid
 graph TD
-    CSV[data/measurements.csv] --> DS[src/eda/dataset.py]
-    DS --> CL[src/eda/cleaning.py]
-    CL --> ST[src/eda/statistics.py]
-    CL --> CO[src/eda/correlation.py]
-    CL --> FG[src/eda/figures.py]
+    CSV[data/measurements.csv] --> DS[src/template_eda_notebook/eda/dataset.py]
+    DS --> CL[src/template_eda_notebook/eda/cleaning.py]
+    CL --> ST[src/template_eda_notebook/eda/statistics.py]
+    CL --> CO[src/template_eda_notebook/eda/correlation.py]
+    CL --> FG[src/template_eda_notebook/eda/figures.py]
     CO --> FG
 
-    NB[notebooks/eda_walkthrough.ipynb] -->|imports| INIT[src/__init__.py]
+    NB[notebooks/eda_walkthrough.ipynb] -->|imports| INIT[src/template_eda_notebook/__init__.py]
     SC[scripts/eda_analysis.py] -->|imports| INIT
     INIT --> DS
     INIT --> CL
@@ -60,9 +60,9 @@ graph TD
 
 | Pattern | Why It Is Forbidden | Correct Alternative |
 |---|---|---|
-| Analysis math inside a notebook cell | Cannot be unit-tested; drifts from the library | Move to `src/eda/`, add a test class, call it from the cell |
-| `import matplotlib` inside `src/eda/` | Breaks library purity; needs a display backend | Return plot-ready data; plot in `scripts/` or the notebook |
-| `from infrastructure import ...` in `src/eda/` | Breaks the standalone/forkable contract | Keep the library standalone; use `scripts/` for infra calls |
+| Analysis math inside a notebook cell | Cannot be unit-tested; drifts from the library | Move to `src/template_eda_notebook/eda/`, add a test class, call it from the cell |
+| `import matplotlib` inside `src/template_eda_notebook/eda/` | Breaks library purity; needs a display backend | Return plot-ready data; plot in `scripts/` or the notebook |
+| `from infrastructure import ...` in `src/template_eda_notebook/eda/` | Breaks the standalone/forkable contract | Keep the library standalone; use `scripts/` for infra calls |
 | Silently imputing missing values in the loader | Hides data quality problems | `to_numeric(errors="coerce")` + an explicit `clean_dataset` report |
 | Hardcoded absolute paths | Makes copied projects brittle | Resolve paths relative to the project root |
 | `unittest.mock`, `MagicMock`, `@patch` in `tests/` | Zero-mock policy | Compute real results from the shipped CSV / real frames |
@@ -71,9 +71,9 @@ graph TD
 
 Follow these steps in order:
 
-1. **Add the function to the right `src/eda/` module** — pure data transform,
-   type hints, Google-style docstring; export it from `src/eda/__init__.py` and
-   `src/__init__.py`.
+1. **Add the function to the right `src/template_eda_notebook/eda/` module** — pure data transform,
+   type hints, Google-style docstring; export it from `src/template_eda_notebook/eda/__init__.py` and
+   `src/template_eda_notebook/__init__.py`.
 2. **Write a test class in the matching `tests/test_*.py`** — zero-mock; use the
    shipped CSV or a tiny real frame; assert exact numeric properties; run
    `uv run pytest projects/templates/template_eda_notebook/tests --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90`.
@@ -82,4 +82,4 @@ Follow these steps in order:
 4. **Wire it into `scripts/eda_analysis.py`** if it produces a figure/table —
    the script plots the returned data and writes to `output/`.
 5. **Update the manuscript** — describe the step in `manuscript/02_methodology.md`
-   using concrete paths (e.g. `src/eda/correlation.py::strongest_pairs()`).
+   using concrete paths (e.g. `src/template_eda_notebook/eda/correlation.py::strongest_pairs()`).

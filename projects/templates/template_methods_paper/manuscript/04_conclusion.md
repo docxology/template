@@ -13,7 +13,7 @@ exemplar.
 Operating as the methods-paper exemplar for the Research Project Template
 methodology, the project deployed the three foundational pillars:
 
-1. **`src/methods_dsl/` library**: a controlled vocabulary, a dimensional
+1. **`src/template_methods_paper/methods_dsl/` library**: a controlled vocabulary, a dimensional
    unit system, four staged validation gates, a deterministic compiler, and
    four export formats — with no plotting, no file I/O, and (with one
    declared logging exception) no `infrastructure` imports.

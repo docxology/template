@@ -40,7 +40,7 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_met
 - **Outputs are disposable.** Never hand-edit `output/` — regenerate from
   source and config.
 - **Figure provenance is part of analysis.** `methods_analysis.py` validates
-  `step_counts.png` against `src/figure_specs.py` before writing
+  `step_counts.png` against `src/template_methods_paper/figure_specs.py` before writing
   `output/figures/figure_registry.json`.
 - **Run from the repo root.** Commands assume the template monorepo root
   as working directory unless the child `AGENTS.md` states otherwise.

@@ -214,6 +214,8 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[maintenance/doc-mega-decomposition.md](maintenance/doc-mega-decomposition.md)** - Policy for splitting oversized documentation mega-files
 - **[maintenance/review-remediation-2026-07.md](maintenance/review-remediation-2026-07.md)** - Multi-lens review remediation plan (R1–R18 items with acceptance lines)
 - **[maintenance/review-remediation-2026-08.md](maintenance/review-remediation-2026-08.md)** - Parallel-agent comprehensive review + improvement record (infra/scripts/docs + 24 exemplars, v3.7.0) — changes, evidence, incidents/lessons
+- **[maintenance/publishing-export-pipeline.md](maintenance/publishing-export-pipeline.md)** - Two-repo publication export pipeline design (`template/` → `docxology/publishing`)
+- **[maintenance/exemplar-backlog-history.md](maintenance/exemplar-backlog-history.md)** - Archived per-exemplar backlog-closure evidence records (point-in-time; current work tracked per exemplar `TODO.md`)
 
 ---
 
@@ -282,10 +284,9 @@ subpackage.
 - **[operational/build/ci-cd-integration.md](operational/build/ci-cd-integration.md)** - CI/CD integration
 - **[operational/build/dependency-management.md](operational/build/dependency-management.md)** - Dependency management
 - **[plans/README.md](plans/README.md)** - Strategic plans and architecture decisions
-- **Live doc linter** — `scripts/audit/lint_docs.py`: `uv run python scripts/audit/lint_docs.py` ([script entrypoint](../scripts/audit/lint_docs.py)) — mermaid block validation + cross-link integrity + sibling-doc consistency across `docs/`, `infrastructure/`, `.github/`, `scripts/`, `tests/`, root-level markdown, and the public exemplars (the scan set is `doc_roots()` in `infrastructure/validation/docs/lint_runner.py`, not the whole repo); replaces the older point-in-time `scripts/audit/audit_filepaths.py` snapshots
+- **Live doc linter** — `scripts/audit/lint_docs.py`: `uv run python scripts/audit/lint_docs.py` ([script entrypoint](../scripts/audit/lint_docs.py)) — mermaid block validation + cross-link integrity + sibling-doc consistency across `docs/`, `infrastructure/`, `.github/`, `scripts/`, `tests/`, root-level markdown, and the public exemplars (the scan set is `doc_roots()` in `infrastructure/validation/docs/lint_runner.py`, not the whole repo); supersedes point-in-time scan snapshots, with one sanctioned exception: the undated regenerated [audit/filepath-audit-report.md](audit/filepath-audit-report.md) remains the checked-in filepath-audit artifact (refresh with `uv run python scripts/audit/audit_filepaths.py`, see [audit/README.md](audit/README.md))
 - **Template drift checker** — `scripts/audit/check_template_drift.py`: `uv run python scripts/audit/check_template_drift.py` ([script entrypoint](../scripts/audit/check_template_drift.py)) — 19 per-exemplar detectors + 4 repo-level checks (registered in `infrastructure/project/drift/registry.py`)
-- **Audit replacement note** — dated audit snapshots were retired from public docs; use the live linters above as the canonical reference, or git history for point-in-time reports
-- **[audit/filepath-audit-report.md](audit/filepath-audit-report.md)** — Historical filepath audit report (point-in-time snapshot)
+- **Audit retention note** — dated audit snapshots were retired from public docs (removed 2026-09-11); use the live linters above as the canonical reference, or git history for point-in-time receipts. The audit directory's own contract is [audit/README.md](audit/README.md) / [audit/AGENTS.md](audit/AGENTS.md).
 - **[guides/fork-an-exemplar.md](guides/fork-an-exemplar.md)** - Top-level entry: pick the right exemplar and start a 5-minute fork
 
 ### Configuration & Performance (`operational/config/`)

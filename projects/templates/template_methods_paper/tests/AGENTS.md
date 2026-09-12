@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Exercises every public function in `src.methods_dsl` (and the thin
+Exercises every public function in `template_methods_paper.methods_dsl` (and the thin
 `scripts/methods_analysis.py` orchestrator) against real `Method` objects —
 never mocks. Coverage gate: ≥90% on `src/` (`pyproject.toml`
 `[tool.coverage.report] fail_under = 90`).
@@ -20,7 +20,7 @@ never mocks. Coverage gate: ≥90% on `src/` (`pyproject.toml`
 - Reuse the shared fixtures in `conftest.py` (`linear_method`,
   `diamond_method`, and one fixture per gate-failure mode) instead of
   hand-rolling a near-duplicate `Method` inline.
-- Every `Raises:` clause documented in `src/methods_dsl/*.py` has a
+- Every `Raises:` clause documented in `src/template_methods_paper/methods_dsl/*.py` has a
   corresponding `pytest.raises(..., match=...)` test.
 - Determinism claims (`compile_method` plan-hash stability) are tested by
   compiling the *same* method object twice and asserting the hashes are

@@ -12,9 +12,9 @@ The root analysis stage uses the allowlist in `manuscript/config.yaml` and runs 
 
 | Script | Responsibility |
 | --- | --- |
-| `01_generate_madlib_artifacts.py` | Calls `src.analysis.generate_artifacts`, writing token inventory, configured-field inventory, section plan, injection trace, summary report, configured-field report, cover overview, manuscript figures, and figure registry. These artifacts are the evidence surface for method protocol rows, pipeline phases, QA probes, failure modes, claim-ledger alignment, and reviewer-packet assembly. |
+| `01_generate_madlib_artifacts.py` | Calls `template_madlib.analysis.generate_artifacts`, writing token inventory, configured-field inventory, section plan, injection trace, summary report, configured-field report, cover overview, manuscript figures, and figure registry. These artifacts are the evidence surface for method protocol rows, pipeline phases, QA probes, failure modes, claim-ledger alignment, and reviewer-packet assembly. |
 | `z_generate_manuscript_variables.py` | Regenerates artifacts, writes `output/data/manuscript_variables.json`, and delegates token substitution to shared manuscript injection. It is the only path that should hydrate `output/manuscript/`. |
-| `02_validate_outputs.py` | Validates regenerated outputs (`src.output_validator`): hydrated placeholders, token provenance, figure registry, field origins, declared artifact inventory, and authoring-contract binding; writes `output/reports/output_validation.json`. |
+| `02_validate_outputs.py` | Validates regenerated outputs (`template_madlib.output_validator`): hydrated placeholders, token provenance, figure registry, field origins, declared artifact inventory, and authoring-contract binding; writes `output/reports/output_validation.json`. |
 | `00_preflight.py` | Inherited render preflight plumbing; not part of Stage 02 analysis. |
 
 Do not put token selection, section composition, schema validation, provenance logic, method-protocol logic, invariant logic, claim-ledger logic, review-packet logic, or figure-evidence logic in scripts.

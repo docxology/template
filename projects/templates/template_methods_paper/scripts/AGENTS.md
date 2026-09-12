@@ -5,7 +5,7 @@
 The `scripts/` directory contains **thin orchestrators**. A thin orchestrator
 strictly coordinates without implementing DSL logic: all method construction,
 validation, compilation, and export computation lives in the tested
-`src/methods_dsl/` library. Scripts import from `src/`, call the tested
+`src/template_methods_paper/methods_dsl/` library. Scripts import from `src/`, call the tested
 functions, plot one figure with matplotlib, write artifacts to `output/`, and
 resolve manuscript `{{TOKEN}}` values.
 
@@ -54,12 +54,12 @@ uv run python projects/templates/template_methods_paper/scripts/z_generate_manus
    (`compile_method`) and exports it as worklist markdown, CSV, Mermaid, and
    canonical JSON.
 4. Writes a per-method `compiled_plans.json` summary consumed by
-   `src/manuscript_variables.py`.
+   `src/template_methods_paper/manuscript_variables.py`.
 5. Demonstrates a provenance hash-chain (`append_record`/`verify_chain`)
    across DECLARED → CALIBRATED → VERIFIED tiers and writes a trust-chain
    report.
 6. Plots a step-count-per-method bar figure.
-7. Verifies that figure against `src/figure_specs.py` and writes
+7. Verifies that figure against `src/template_methods_paper/figure_specs.py` and writes
    `output/figures/figure_registry.json`.
 8. Prints every output path for manifest collection.
 
@@ -76,24 +76,24 @@ uv run python projects/templates/template_methods_paper/scripts/z_generate_manus
 
 | Function | Role |
 | --- | --- |
-| `main()` | Reads `manuscript/config.yaml` and `output/data`/`output/reports` artifacts via `src.manuscript_variables.generate_variables`, writes `output/data/manuscript_variables.json`, and injects every `{{TOKEN}}` via `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree`. `--allow-draft` permits `N/A` fallbacks before `methods_analysis.py` has run. |
+| `main()` | Reads `manuscript/config.yaml` and `output/data`/`output/reports` artifacts via `template_methods_paper.manuscript_variables.generate_variables`, writes `output/data/manuscript_variables.json`, and injects every `{{TOKEN}}` via `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree`. `--allow-draft` permits `N/A` fallbacks before `methods_analysis.py` has run. |
 
-All DSL logic is in `src/methods_dsl/`; these scripts only orchestrate. Tested
+All DSL logic is in `src/template_methods_paper/methods_dsl/`; these scripts only orchestrate. Tested
 by [`../tests/test_methods_analysis_script.py`](../tests/test_methods_analysis_script.py),
 which runs `run_methods_analysis()` against a temporary output root.
 
 ## Configuration
 
-- **Output directories**: resolved via `src/project_paths.py::project_output_dirs`.
+- **Output directories**: resolved via `src/template_methods_paper/project_paths.py::project_output_dirs`.
 - **Plotting backend**: `Agg` (set before importing pyplot).
 - **Example methods**: fixed at two (`PBSPreparation`, `SensorCalibrationSweep`)
-  via `src/methods_dsl/examples_methods.py::all_example_methods`.
+  via `src/template_methods_paper/methods_dsl/examples_methods.py::all_example_methods`.
 
 ## Best Practices
 
 - Use `pathlib.Path` for all file paths; never hardcode an absolute path.
 - Verify generated files exist and have content (the script test asserts this).
-- Keep all computation in `src/methods_dsl/` so the script stays trivially thin.
+- Keep all computation in `src/template_methods_paper/methods_dsl/` so the script stays trivially thin.
 
 ## See Also
 

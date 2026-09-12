@@ -4,7 +4,7 @@ The manuscript for the methods-specification-DSL exemplar. It describes a
 controlled-method specification language in prose and references the
 compiled-plan table and figure produced by the thin analysis script — every
 numeric claim is a `{{TOKEN}}` traceable to a tested function in
-`src/methods_dsl/`.
+`src/template_methods_paper/methods_dsl/`.
 
 ## Manuscript Structure
 
@@ -28,7 +28,7 @@ graph TD
     classDef infra fill:#f5f5f5,stroke:#333,stroke-width:2px;
 
     Script["scripts/methods_analysis.py"]:::project
-    Lib["src/methods_dsl/*"]:::project
+    Lib["src/template_methods_paper/methods_dsl/*"]:::project
     GMV["scripts/z_generate_manuscript_variables.py"]:::project
     Manuscript["manuscript/*.md"]:::project
     Rendering["infrastructure.rendering"]:::infra

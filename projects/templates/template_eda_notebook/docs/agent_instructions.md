@@ -35,7 +35,7 @@ The suite spans `test_dataset.py`, `test_cleaning.py`, `test_statistics.py`,
 and coverage live in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md) —
 do not hardcode either number in prose.
 
-After modifying any `src/eda/` module, run:
+After modifying any `src/template_eda_notebook/eda/` module, run:
 
 ```bash
 uv run pytest projects/templates/template_eda_notebook/tests \
@@ -49,7 +49,7 @@ If coverage drops, fix the gap — do not delete tests to make the number work.
 
 ## Rule 3: The Thin Orchestrator Boundary
 
-**`src/eda/*.py`** contains pure data transforms: no plotting, no file I/O, no
+**`src/template_eda_notebook/eda/*.py`** contains pure data transforms: no plotting, no file I/O, no
 `infrastructure.*` imports.
 
 **`scripts/eda_analysis.py`** and **notebook cells** coordinate: they call `src`
@@ -57,7 +57,7 @@ functions, plot the returned data, and write files.
 
 **The boundary test**: if a notebook cell or script computes a statistic,
 correlation, or any analysis result inline, it violates the boundary. Move that
-computation into `src/eda/` and write a test.
+computation into `src/template_eda_notebook/eda/` and write a test.
 
 ```python
 # In a cell or script — BAD
@@ -73,7 +73,7 @@ matrix = correlation_matrix(frame)  # tested src function
 
 Use explicit, verifiable references in `manuscript/` files.
 
-**GOOD**: `src/eda/correlation.py::strongest_pairs()` ranks feature pairs by
+**GOOD**: `src/template_eda_notebook/eda/correlation.py::strongest_pairs()` ranks feature pairs by
 absolute correlation while preserving sign.
 
 **BAD**: "The library finds the most related features."
@@ -91,7 +91,7 @@ randomness, seed it and assert bounds, not exact values.
 
 ## Rule 6: Style and Syntax Guides Govern Their Domains
 
-- **[`style_guide.md`](style_guide.md)** governs `src/eda/*.py`, `tests/`, and
+- **[`style_guide.md`](style_guide.md)** governs `src/template_eda_notebook/eda/*.py`, `tests/`, and
   `scripts/`.
 - **[`syntax_guide.md`](syntax_guide.md)** governs `manuscript/*.md`.
 
@@ -105,7 +105,7 @@ The entire `output/` tree is written by the pipeline and overwritten on every
 run. To change what a generated file contains, change the **generator**:
 
 - To change `output/figures/*.png` or `output/data/summary_statistics.csv` →
-  modify `src/eda/` and/or `scripts/eda_analysis.py`, then re-run the script.
+  modify `src/template_eda_notebook/eda/` and/or `scripts/eda_analysis.py`, then re-run the script.
 - To change the rendered PDF → modify the `manuscript/*.md` source, then
   re-render.
 

@@ -188,7 +188,7 @@ uv run python -m infrastructure.rendering.latex_package_validator
 
 ```bash
 # Install missing LaTeX packages
-sudo tlmgr install multirow cleveref doi newunicodechar
+sudo tlmgr install multirow cleveref doi newunicodechar caption tools
 ```
 
 ## DOCX / EPUB Rendering (`docx_renderer.py`, `epub_renderer.py`)

@@ -92,7 +92,7 @@ only). Follow the same convention for new project-level benchmarks.
 ```python
 # tests/infra_tests/benchmark/test_optimizer_performance.py
 import pytest
-from src.optimizer import gradient_descent
+from template_code_project.core.optimizer import gradient_descent
 
 @pytest.mark.bench
 def test_gradient_descent_performance(benchmark):
