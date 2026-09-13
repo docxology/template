@@ -10,7 +10,7 @@ Scientific engineering requires mathematical accuracy combined with software rel
 2. **`tests/` Framework (`projects/templates/template_code_project/tests/`)**: An uncompromising validation layer maintaining a zero-mock testing policy. This is enforced automatically via the [CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) mapping to `pyproject.toml` directives.
 3. **`docs/` Knowledge Base (`projects/templates/template_code_project/docs/`)**: A structured repository of architectural guidelines, operational patterns, and the Rigorous Agentic Scientific Protocol (RASP) that governs the AI-assisted agents writing these very texts.
 
-This implementation of gradient descent algorithms for solving optimization problems is used as the vehicle to demonstrate these pillars. The theoretical problem stated in [@eq:optimization_problem] is mapped programmatically inside the [optimizer module](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py):
+This implementation of gradient descent algorithms for solving optimization problems is used as the vehicle to demonstrate these pillars. The theoretical problem stated in [@eq:optimization_problem] is mapped programmatically inside the [optimizer module](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/template_code_project/core/optimizer.py):
 
 \begin{equation}
 \label{eq:optimization_problem}
@@ -50,7 +50,7 @@ As the representative project for the repository, this implementation explicitly
 ## Reader's guide to the manuscript
 
 - **[@sec:methodology]** ties pseudocode to `gradient_descent()` and explains how stability checks and benchmarks call into `infrastructure.scientific`.
-- **[@sec:results]** is figure-centric: every panel references a generator in `src/figures/` (orchestrated via `scripts/optimization_analysis.py`) and uses `CONFIG_*` / `RESULT_*` template tokens for numeric values.
+- **[@sec:results]** is figure-centric: every panel references a generator in `src/template_code_project/figures/` (orchestrated via `scripts/optimization_analysis.py`) and uses `CONFIG_*` / `RESULT_*` template tokens for numeric values.
 - **[@sec:experimental_setup]** lists the exact YAML fields (`experiment:` block) that controlled the run whose artifacts you are viewing.
 - **[@sec:reproducibility]** records the configuration hash and artifact inventory produced alongside the PDF.
 - **[@sec:scope]** states scope and related literature so the exemplar is not mistaken for a general-purpose optimizer benchmark suite.

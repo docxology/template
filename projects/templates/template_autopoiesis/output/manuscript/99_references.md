@@ -21,7 +21,7 @@ that a bare bibliography entry doesn't carry:
 - **Claessen & Hughes (2000), QuickCheck** [@claessen2000quickcheck] and
   **MacIver et al. (2019), Hypothesis** [@maciver2019hypothesis] — the
   property-based-testing lineage this project's own test suite descends
-  from. `tests/test_property_invariants.py` uses Hypothesis directly (not
+  from. `tests/gates/test_property_invariants.py` uses Hypothesis directly (not
   merely an homage) to check invariants like "expansion is deterministic for
   any seed" across generated inputs rather than hand-picked examples.
 - **Lamb & Zacchiroli (2022), Reproducible Builds** [@reproducible_builds] —
@@ -31,7 +31,7 @@ that a bare bibliography entry doesn't carry:
   bit-for-bit-identical (or hash-identical) output, and that this is a
   supply-chain-integrity property, not merely a convenience.
 - **Merkle (1987), digital signatures / hash trees** [@merkle_tree_provenance] —
-  the theoretical basis for `src/integrity.py`'s content-addressed
+  the theoretical basis for `src/template_autopoiesis/gates/integrity.py`'s content-addressed
   provenance: a tree of hashes lets a verifier recompute and confirm the
   integrity of a large structure from its leaves up, without trusting the
   producer's say-so. This project's `integrity_profile: merkle` grammar slot

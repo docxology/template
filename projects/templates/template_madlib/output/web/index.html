@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="A public exemplar for source-owned lexical composition" />
@@ -181,6 +181,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -191,14 +200,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -229,12 +270,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -246,7 +331,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -304,6 +400,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -311,13 +409,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -398,8 +551,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -448,6 +600,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -462,6 +620,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -632,7 +796,7 @@ extended with domain-specific validators while leaving the shared
 rendering infrastructure untouched.</p>
 <h2 data-number="2.1" id="contribution-ledger"><span
 class="header-section-number">2.1</span> Contribution Ledger</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -703,7 +867,7 @@ domain use.</td>
 does not imply empirical validation.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h1 data-number="3"
 id="methods-source-owned-token-injection-and-conditional-imrad-assembly"><span
@@ -896,14 +1060,14 @@ and documentation before replacing exemplar vocabulary with domain
 claims. Without that migration work, the fork has only changed words,
 not the evidential status of the generated manuscript.</p>
 <figure id="fig:token-injection-flow">
-<a class="figure-full-size-link" href="../figures/token_injection_flow.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/token_injection_flow.png"
+<a class="figure-full-size-link" href="../figures/token_injection_flow.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Deterministic token-injection flow"><img src="../figures/token_injection_flow.png"
 alt="Five-stage left-to-right token-injection flow: schema parse; slot expansion (22 rules and 40 choices); section composition (11 enabled sections); artifact writing; and render gates. Guard labels name parser tests, seed-stability tests, placeholder scanning, figure registry, and evidence registry. The diagram describes the configured method and does not assert that a particular render passed those gates." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Deterministic token-injection
 flow</figcaption>
 </figure>
 <h2 data-number="3.1" id="design-principles"><span
 class="header-section-number">3.1</span> Design Principles</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -1008,10 +1172,10 @@ domain use.</td>
 name fork responsibilities.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="3.2" id="operational-phases"><span
 class="header-section-number">3.2</span> Operational Phases</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 20%" />
@@ -1163,10 +1327,10 @@ fork must change before domain claims.</td>
 <td>documentation and claim-ledger tests</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="3.3" id="protocol-steps"><span
 class="header-section-number">3.3</span> Protocol Steps</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -1324,10 +1488,10 @@ claim ledger boundary rows.</td>
 <td><code>fork migration notes</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="3.4" id="section-plan"><span
 class="header-section-number">3.4</span> Section Plan</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 17%" />
 <col style="width: 17%" />
@@ -1448,10 +1612,10 @@ to generated evidence, require domain validators before domain claims,
 document fork migration notes</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="3.5" id="audit-rules"><span
 class="header-section-number">3.5</span> Audit Rules</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -1523,7 +1687,7 @@ validation results, and copy statistics alongside PDF or HTML.</td>
 pipeline, and claim-ledger obligations.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h1 data-number="4"
 id="results-provenance-density-and-resolved-manuscript-surface"><span
@@ -1556,26 +1720,26 @@ same explicit/default path inventory written to JSON; the pipeline,
 allocation, provenance, and gate figures are generated from the same
 token plan and QA schema.</p>
 <figure id="fig:token-density">
-<a class="figure-full-size-link" href="../figures/token_density.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/token_density.png"
+<a class="figure-full-size-link" href="../figures/token_density.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Token category density"><img src="../figures/token_density.png"
 alt="10 horizontal bars encode selected token choices by lexicon category: methods: 1; adjectives: 2; constraints: 3; failures: 3; qualities: 3; audiences: 4; nouns: 5; verbs: 5; measures: 6; artifacts: 8. Counts come from the seeded token plan; they are not vocabulary-size or prose-quality scores." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Token category
 density</figcaption>
 </figure>
 <figure id="fig:section-token-allocation">
-<a class="figure-full-size-link" href="../figures/section_token_allocation.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/section_token_allocation.png"
+<a class="figure-full-size-link" href="../figures/section_token_allocation.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Section token allocation"><img src="../figures/section_token_allocation.png"
 alt="11 horizontal bars encode selected token choices and section enablement: abstract: 3 (enabled); introduction: 8 (enabled); methods: 6 (enabled); results: 5 (enabled); discussion: 3 (enabled); configuration: 1 (enabled); evaluation: 5 (enabled); reproducibility: 2 (enabled); limitations: 3 (enabled); scope: 2 (enabled); authoring_contract: 2 (enabled). Muted rows are disabled; allocation counts do not measure prose quality." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Section token
 allocation</figcaption>
 </figure>
 <figure id="fig:provenance-trace-map">
-<a class="figure-full-size-link" href="../figures/provenance_trace_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/provenance_trace_map.png"
+<a class="figure-full-size-link" href="../figures/provenance_trace_map.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Provenance trace map"><img src="../figures/provenance_trace_map.png"
 alt="Heatmap crossing 11 manuscript sections with 10 lexicon categories. 40 token choices occupy 22 nonzero cells; the largest cell count is 4 at introduction/nouns, introduction/verbs. Cell counts trace generated choices and do not validate the truth of substituted prose." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Provenance trace
 map</figcaption>
 </figure>
 <h2 data-number="4.1" id="token-inventory"><span
 class="header-section-number">4.1</span> Token Inventory</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 20%" />
@@ -1874,10 +2038,10 @@ class="header-section-number">4.1</span> Token Inventory</h2>
 <td><code>manuscript/config.yaml#madlib.lexicon.qualities[3]</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="4.2" id="provenance-matrix"><span
 class="header-section-number">4.2</span> Provenance Matrix</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 30%" />
 <col style="width: 40%" />
@@ -1969,7 +2133,7 @@ Moves</td>
 <td>audiences, qualities</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h1 data-number="5"
 id="discussion-accountability-boundaries-for-generated-prose"><span
@@ -2019,26 +2183,26 @@ field that appears in the rendered manuscript may be intentionally
 authored in <code>config.yaml</code>, or it may be a documented default
 inherited from the template.</p>
 <figure id="fig:configured-field-matrix">
-<a class="figure-full-size-link" href="../figures/configured_field_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/configured_field_matrix.png"
+<a class="figure-full-size-link" href="../figures/configured_field_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Configured field origin matrix"><img src="../figures/configured_field_matrix.png"
 alt="Five-by-two heatmap of tracked config-field paths by scope and origin: schema: 19 explicit, 0 defaulted; section: 33 explicit, 0 defaulted; lexicon: 10 explicit, 0 defaulted; slot: 55 explicit, 11 defaulted; visualization: 9 explicit, 0 defaulted. Counts describe configuration provenance and do not establish schema completeness." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Configured field origin
 matrix</figcaption>
 </figure>
 <figure id="fig:section-configuration-heatmap">
-<a class="figure-full-size-link" href="../figures/section_configuration_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/section_configuration_heatmap.png"
+<a class="figure-full-size-link" href="../figures/section_configuration_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 6, Section configuration heatmap"><img src="../figures/section_configuration_heatmap.png"
 alt="11-row heatmap with columns for section switch, title, narrative moves, and slot count: abstract: switch explicit, title explicit, moves explicit, 3 slots; introduction: switch explicit, title explicit, moves explicit, 8 slots; methods: switch explicit, title explicit, moves explicit, 6 slots; results: switch explicit, title explicit, moves explicit, 5 slots; discussion: switch explicit, title explicit, moves explicit, 3 slots; configuration: switch explicit, title explicit, moves explicit, 1 slots; evaluation: switch explicit, title explicit, moves explicit, 5 slots; reproducibility: switch explicit, title explicit, moves explicit, 2 slots; limitations: switch explicit, title explicit, moves explicit, 3 slots; scope: switch explicit, title explicit, moves explicit, 2 slots; authoring_contract: switch explicit, title explicit, moves explicit, 2 slots. The matrix records configuration coverage, not manuscript quality." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 6: Section configuration
 heatmap</figcaption>
 </figure>
 <figure id="fig:field-origin-summary">
-<a class="figure-full-size-link" href="../figures/field_origin_summary.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/field_origin_summary.png"
+<a class="figure-full-size-link" href="../figures/field_origin_summary.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 7, Field origin summary"><img src="../figures/field_origin_summary.png"
 alt="Two horizontal bars summarize configured-field provenance: 126 explicit paths and 11 defaulted paths, out of 137 tracked paths. The counts identify origin and do not indicate validation status or research quality." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 7: Field origin
 summary</figcaption>
 </figure>
 <h2 data-number="6.1" id="declared-section-titles"><span
 class="header-section-number">6.1</span> Declared Section Titles</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 30%" />
 <col style="width: 30%" />
@@ -2110,7 +2274,7 @@ Moves</td>
 <td style="text-align: right;">True</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="6.2" id="configuration-counts"><span
 class="header-section-number">6.2</span> Configuration Counts</h2>
 <ul>
@@ -2137,7 +2301,7 @@ class="header-section-number">6.2</span> Configuration Counts</h2>
 </ul>
 <h2 data-number="6.3" id="configured-field-summary"><span
 class="header-section-number">6.3</span> Configured Field Summary</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Measure</th>
@@ -2182,10 +2346,10 @@ class="header-section-number">6.3</span> Configured Field Summary</h2>
 <td style="text-align: right;">19</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="6.4" id="configured-field-inventory"><span
 class="header-section-number">6.4</span> Configured Field Inventory</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -3028,7 +3192,7 @@ Assembly</td>
 <td>true</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h1 data-number="7"
 id="evaluation-gate-criteria-qa-probes-and-failure-discovery"><span
@@ -3062,14 +3226,14 @@ disappear, did the provenance survive, did the figure registry cover
 every reference, and did copied outputs preserve the same evidence
 surface that validation inspected?</p>
 <figure id="fig:quality-gate-matrix">
-<a class="figure-full-size-link" href="../figures/quality_gate_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/quality_gate_matrix.png"
+<a class="figure-full-size-link" href="../figures/quality_gate_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 8, Quality gate matrix"><img src="../figures/quality_gate_matrix.png"
 alt="Three declaration panels list configured review surfaces. Evaluation criteria (7): Placeholder resolution, Token provenance coverage, Figure registry integrity, Evidence registry cleanliness, Copied-output readiness, Reviewer packet completeness, Method-invariant traceability. QA probes (14): Method row completeness, Field-origin visibility, Placeholder survival, Provenance completeness, Section-switch observability, Figure registry coverage, Method-figure alignment, Evidence cleanliness, Fork readiness, Copied-output parity, Digest invariant review, Claim-ledger alignment, Review packet completeness, Fork migration sufficiency. Failure modes (13): Unresolved placeholder, Overclaimed generated prose, Config-source drift, Figure provenance gap, Domain misuse, Method row drift, Field-origin opacity, Visual-method mismatch, Fork without validators, Digest invariant drift, Claim ledger omission, Review packet incompleteness, Fork migration ambiguity. These are configured gates and failure boundaries, not results showing that the gates passed." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 8: Quality gate
 matrix</figcaption>
 </figure>
 <h2 data-number="7.1" id="evaluation-criteria"><span
 class="header-section-number">7.1</span> Evaluation Criteria</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -3138,10 +3302,10 @@ ordinal, and ordered category inventory.</td>
 <td><code>pytest</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="7.2" id="quality-probes"><span
 class="header-section-number">7.2</span> Quality Probes</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -3238,7 +3402,7 @@ reports.</td>
 tests?</td>
 <td>Methods prose names the digest inputs and token tests prove
 seed/category sensitivity.</td>
-<td><code>src/tokens.py and output/manuscript/02_methodology.md</code></td>
+<td><code>src/template_madlib/tokens.py and output/manuscript/02_methodology.md</code></td>
 </tr>
 <tr>
 <td>Claim-ledger alignment</td>
@@ -3265,7 +3429,7 @@ config, source, test, validator, and claim-ledger obligations.</td>
 <td><code>README.md, STANDALONE.md, manuscript/README.md, and output/manuscript/10_authoring_contract.md</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h1 data-number="8"
 id="reproducibility-seeded-regeneration-and-artifact-trace"><span
@@ -3296,11 +3460,12 @@ config. Generated files remain disposable; the durable contract is the
 ability to regenerate them from the tracked project tree and to observe
 the same validation gates passing.</p>
 <ul>
-<li>Config hash: <code>1af3356c12013333</code></li>
-<li>Generated: <code>2026-08-14T14:20:53Z</code> (derived from
-<code>SOURCE_DATE_EPOCH</code>; an explicit <code>not-recorded</code>
-marker is emitted when the reproducible timestamp is not supplied)</li>
-<li>Python: <code>3.12.12</code></li>
+<li>Config hash: <code>f64d6e672cc03a9f</code></li>
+<li>Generated: <code>not-recorded (set SOURCE_DATE_EPOCH)</code>
+(derived from <code>SOURCE_DATE_EPOCH</code>; an explicit
+<code>not-recorded</code> marker is emitted when the reproducible
+timestamp is not supplied)</li>
+<li>Python: <code>3.12.13</code></li>
 <li>Platform: <code>Darwin arm64</code></li>
 </ul>
 <hr />
@@ -3327,7 +3492,7 @@ and provenance; it cannot supply judgment. That division is the main
 safety property of the exemplar.</p>
 <h2 data-number="9.1" id="failure-modes"><span
 class="header-section-number">9.1</span> Failure Modes</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -3425,8 +3590,8 @@ entries before asserting domain findings.</td>
 influence token selection.</td>
 <td>Seed-stability, category-sensitivity, and method-invariant
 tests.</td>
-<td>Keep token selection isolated in src/tokens.py and document allowed
-digest inputs in Methods.</td>
+<td>Keep token selection isolated in src/template_madlib/tokens.py and
+document allowed digest inputs in Methods.</td>
 </tr>
 <tr>
 <td>Claim ledger omission</td>
@@ -3455,7 +3620,7 @@ review.</td>
 pipeline changes before making domain claims.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h1 data-number="10"
 id="scope-related-generators-and-responsible-forking"><span
@@ -3505,7 +3670,7 @@ artifacts, and reruns the same tests and validation gates before
 treating the output as reader-ready.</p>
 <h2 data-number="11.1" id="authoring-obligations"><span
 class="header-section-number">11.1</span> Authoring Obligations</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -3553,7 +3718,7 @@ copy deliverables.</td>
 <td>Review method invariants</td>
 <td>Confirm changed tokens are explained only by seed, slot, category,
 ordinal, or category inventory changes.</td>
-<td><code>src/tokens.py, token_inventory.json, and output/manuscript/02_methodology.md</code></td>
+<td><code>src/template_madlib/tokens.py, token_inventory.json, and output/manuscript/02_methodology.md</code></td>
 </tr>
 <tr>
 <td>Assemble reviewer packet</td>
@@ -3568,7 +3733,7 @@ required by a domain fork.</td>
 <td><code>README.md, STANDALONE.md, and data/claim_ledger.yaml</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h1 data-number="12" id="references"><span
 class="header-section-number">12</span> References</h1>

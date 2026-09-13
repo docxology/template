@@ -5,7 +5,7 @@
 This exemplar follows a single house style:
 
 * `manuscript/config.yaml` is the only place run policy lives.
-* `src/` is deliberately `infrastructure`-free: the report Protocols and the `parse_bib_keys`/`render_outline` helpers in `src/prose_facade.py` are the decoupling seam.
+* `src/` is deliberately `infrastructure`-free: the report Protocols and the `parse_bib_keys`/`render_outline` helpers in `src/pipeline/prose_facade.py` are the decoupling seam.
 * Scripts in `scripts/` do only filesystem I/O, CLI argument handling, and the `infrastructure/` calls (e.g. `infrastructure.prose.analyze_manuscript`) on `src/`'s behalf.
 * Every artefact in `output/` is regeneratable; `manuscript/references.bib` is curated and validated read-only by this project.
 

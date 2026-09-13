@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_methods.md.web</title>
   <style>
@@ -267,12 +267,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -284,7 +328,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -342,6 +397,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -349,13 +406,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -436,8 +548,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -486,6 +597,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -502,6 +619,12 @@ mjx-container[display="true"] {
   text-align: center;
 }
 
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 </style>
 </head>
 <body>
@@ -510,9 +633,12 @@ mjx-container[display="true"] {
 <h2 id="methods">Methods</h2>
 <h3 id="the-ae-generation-spine">The A→E generation spine</h3>
 <p>Generation proceeds through five stages, each implemented as a pure
-function in its own module (<code>src/grammar.py</code>,
-<code>src/expand.py</code>, <code>src/materialize.py</code>,
-<code>src/verify.py</code>, <code>src/sealing.py</code>). No stage
+function in its own module
+(<code>src/template_autopoiesis/core/grammar.py</code>,
+<code>src/template_autopoiesis/core/expand.py</code>,
+<code>src/template_autopoiesis/gates/materialize.py</code>,
+<code>src/template_autopoiesis/gates/verify.py</code>,
+<code>src/template_autopoiesis/gates/sealing.py</code>). No stage
 depends on interactive state or network access; every stage takes an
 immutable input and returns an immutable (or file-system-materialized)
 output.</p>
@@ -689,9 +815,9 @@ file map that will be written:</p>
 <ul>
 <li><strong>Kernel primitives.</strong>
 <code>_vendor_kernel_sources</code> copies
-<code>src/primitives/ base.py</code> and
-<code>src/primitives/{domain}.py</code> for the spec’s
-<code>primitive_domain</code>, rewriting
+<code>src/template_autopoiesis/primitives/ base.py</code> and
+<code>src/template_autopoiesis/primitives/{domain}.py</code> for the
+spec’s <code>primitive_domain</code>, rewriting
 <code>from src.primitives</code> / <code>from .primitives</code> imports
 to a bare <code>from primitives</code> so the copied module resolves
 correctly once it is no longer nested under the parent template’s
@@ -701,7 +827,8 @@ package. It also synthesizes a minimal
 submodule — the child ships exactly one domain’s kernel, not all
 five.</li>
 <li><strong>Figures source</strong>, vendored verbatim from
-<code>src/figures.py</code> when present.</li>
+<code>src/template_autopoiesis/figures/figures.py</code> when
+present.</li>
 <li><strong>Dependency vendoring.</strong> <code>_resolve_deps</code>
 reads <code>dep_mode</code> out of the spec’s selections (defaulting to
 <code>"vendor"</code>) and, for each name in <code>spec.deps</code>,
@@ -748,23 +875,24 @@ of every written relative path — the single artifact Stage D re-derives
 from.</p>
 <h3 id="stage-d-verification">Stage D — Verification</h3>
 <p><code>verify_child(child_root)</code> (implemented in
-<code>src/verify.py</code>, not <code>materialize.py</code>) loads
-<code>provenance.json</code>, reads back every file named in its
-<code>files</code> list, recomputes the tree hash from those live
-contents via the same <code>tree_hash_from_content_hashes</code>
-function used at materialization time, and compares it against the
-recorded hash. Each individual predicate —
-<code>provenance_exists</code>, <code>provenance_parseable</code>,
-<code>all_files_present</code>, <code>tree_hash_matches</code> — is
-captured as a <code>CheckResult(name, passed, detail)</code> inside an
-aggregate <code>CheckReport</code>, so a caller can distinguish
-<em>which</em> invariant broke rather than receiving a single boolean.
-Any edit, deletion, or addition to a file listed in provenance —
-anything from a hand-edited line to a regenerated timestamp — changes at
-least one entry in <code>live</code>, which changes the recomputed hash,
-which fails <code>tree_hash_matches</code> without requiring the
-verifier to inspect a diff. <code>verify_child_full</code> extends this
-with a <code>schema_version_correct</code> check against
+<code>src/template_autopoiesis/gates/verify.py</code>, not
+<code>materialize.py</code>) loads <code>provenance.json</code>, reads
+back every file named in its <code>files</code> list, recomputes the
+tree hash from those live contents via the same
+<code>tree_hash_from_content_hashes</code> function used at
+materialization time, and compares it against the recorded hash. Each
+individual predicate — <code>provenance_exists</code>,
+<code>provenance_parseable</code>, <code>all_files_present</code>,
+<code>tree_hash_matches</code> — is captured as a
+<code>CheckResult(name, passed, detail)</code> inside an aggregate
+<code>CheckReport</code>, so a caller can distinguish <em>which</em>
+invariant broke rather than receiving a single boolean. Any edit,
+deletion, or addition to a file listed in provenance — anything from a
+hand-edited line to a regenerated timestamp — changes at least one entry
+in <code>live</code>, which changes the recomputed hash, which fails
+<code>tree_hash_matches</code> without requiring the verifier to inspect
+a diff. <code>verify_child_full</code> extends this with a
+<code>schema_version_correct</code> check against
 <code>materialize.PROVENANCE_SCHEMA_VERSION</code>, catching provenance
 written by a different schema generation of the tool.</p>
 <h3 id="stage-e-sealing">Stage E — Sealing</h3>
@@ -788,13 +916,13 @@ D rather than introducing a parallel reporting shape.</p>
 <h3 id="property-based-invariants">Property-based invariants</h3>
 <p>Beyond the fixed example-based tests enumerated in the Honesty
 Contract’s ground-truth table (§4),
-<code>tests/test_property_invariants.py</code> exercises the expansion
-and materialization functions against Hypothesis-generated inputs using
-the property-based testing paradigm [claessen2000quickcheck;
-maciver2019hypothesis]: rather than asserting fixed input/output pairs,
-these tests assert invariants that must hold across a swept range of
-seeds — <code>product_size</code> equals the literal product of every
-slot’s option count regardless of seed;
+<code>tests/gates/test_property_invariants.py</code> exercises the
+expansion and materialization functions against Hypothesis-generated
+inputs using the property-based testing paradigm
+[claessen2000quickcheck; maciver2019hypothesis]: rather than asserting
+fixed input/output pairs, these tests assert invariants that must hold
+across a swept range of seeds — <code>product_size</code> equals the
+literal product of every slot’s option count regardless of seed;
 <code>effective_product_size</code> does not exceed
 <code>product_size</code>; two grammars parsed from the same block
 produce the same <code>grammar_hash</code>; <code>expand()</code> called
@@ -825,23 +953,23 @@ process that produced it. The tree hash’s construction — sort every
 <code>(path, content)</code> pair lexicographically, join as
 <code>"path:content"</code>, and take one SHA-256 of the concatenation —
 is a flat, single-level structure, not a binary hash tree.
-<code>src/integrity.py</code> separately exposes a genuine binary
-<code>merkle_root()</code> (pairwise concatenate-and-hash up the tree,
-duplicating the final odd node when a level has odd cardinality), in the
-spirit of the hash-tree provenance idea introduced for digital
-signatures [merkle_tree_provenance]. As of this writing
-<code>merkle_root()</code> is a standalone, independently-tested
-utility: <code>integrity_profile</code> is declared as a reserved
-grammar slot (options <code>sha256</code>, <code>merkle</code> in this
-project’s own <code>config.yaml</code>; <code>SYNTAX.md</code> documents
-a longer illustrative option list including <code>merkle_kmyth</code>),
-but neither <code>materialize()</code> nor <code>verify_child()</code>
-currently branches on its selected value — the slot is present in the
-grammar and excluded from the effective product size, but is not yet
-wired to switch which hashing function actually runs. Reporting that
-precisely, rather than implying the profile already gates behavior, is
-the same honesty discipline the project asks of its own manuscript
-elsewhere.</p>
+<code>src/template_autopoiesis/gates/integrity.py</code> separately
+exposes a genuine binary <code>merkle_root()</code> (pairwise
+concatenate-and-hash up the tree, duplicating the final odd node when a
+level has odd cardinality), in the spirit of the hash-tree provenance
+idea introduced for digital signatures [merkle_tree_provenance]. As of
+this writing <code>merkle_root()</code> is a standalone,
+independently-tested utility: <code>integrity_profile</code> is declared
+as a reserved grammar slot (options <code>sha256</code>,
+<code>merkle</code> in this project’s own <code>config.yaml</code>;
+<code>SYNTAX.md</code> documents a longer illustrative option list
+including <code>merkle_kmyth</code>), but neither
+<code>materialize()</code> nor <code>verify_child()</code> currently
+branches on its selected value — the slot is present in the grammar and
+excluded from the effective product size, but is not yet wired to switch
+which hashing function actually runs. Reporting that precisely, rather
+than implying the profile already gates behavior, is the same honesty
+discipline the project asks of its own manuscript elsewhere.</p>
 </main>
 </body>
 </html>

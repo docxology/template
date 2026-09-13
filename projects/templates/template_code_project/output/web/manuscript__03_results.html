@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03_results.md.web</title>
   <style>
@@ -178,6 +178,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -188,14 +197,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -226,12 +267,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -243,7 +328,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -301,6 +397,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -308,13 +406,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -395,8 +548,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -445,6 +597,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -459,6 +617,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -484,7 +648,7 @@ starting from the initial point <span class="math inline">\(x_0 =
 rule <span class="math inline">\(x_{k+1} = x_k - \alpha \nabla
 f(x_k)\)</span>.</p>
 <figure id="fig:convergence">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/convergence_plot.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/convergence_plot.png"
+<a class="figure-full-size-link" href="../figures/convergence_plot.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Objective value f(x_k)=\tfrac{1}{2}x_k^2 - x_k versus iteration k"><img src="../figures/convergence_plot.png"
 alt="Objective value over iterations for each declared step size; lower curves indicate faster convergence." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Objective value <span
 class="math inline">\(f(x_k)=\tfrac{1}{2}x_k^2 - x_k\)</span> versus
@@ -493,10 +657,11 @@ six step sizes (legend colours follow the agency taxonomy in <span
 class="citation" data-cites="sec:methodology">[@sec:methodology]</span>:
 blue = conservative, green = near-optimal, orange = aggressive, red =
 divergent). Trajectories are produced by
-<code>simulate_trajectory()</code> in <code>src/optimizer.py</code>,
-which calls the same <code>gradient_descent()</code> used in <span
-class="citation" data-cites="tbl:opt_results">[@tbl:opt_results]</span>;
-the upper bound on the y-axis clips the divergent <span
+<code>simulate_trajectory()</code> in
+<code>src/template_code_project/core/optimizer.py</code>, which calls
+the same <code>gradient_descent()</code> used in <span class="citation"
+data-cites="tbl:opt_results">[@tbl:opt_results]</span>; the upper bound
+on the y-axis clips the divergent <span
 class="math inline">\(\alpha=2.5\)</span> curve so that stable
 trajectories remain visible. Dashed grey reference line marks the
 analytic optimum <span class="math inline">\(f(x^\ast)=-0.5\)</span>.
@@ -529,7 +694,7 @@ examines how the choice of step size affects the convergence path and
 solution quality. The analysis reveals the trade-off between convergence
 speed and numerical stability.</p>
 <figure id="fig:step_sensitivity">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/step_size_sensitivity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/step_size_sensitivity.png"
+<a class="figure-full-size-link" href="../figures/step_size_sensitivity.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Sensitivity sweep produced by generate_step_size_sensitivity_plot() over an independent…"><img src="../figures/step_size_sensitivity.png"
 alt="Comparison of convergence iterations and final solution quality across the configured step-size grid." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Sensitivity sweep produced by
 <code>generate_step_size_sensitivity_plot()</code> over an independent
@@ -562,7 +727,7 @@ data-cites="tbl:opt_results">[@tbl:opt_results]</span>. Rows follow
 rows below are injected at render time from that CSV
 (<code>RESULT_TABLE_ROWS</code> in
 <code>scripts/z_generate_manuscript_variables.py</code>).</p>
-<table id="tbl:opt_results" style="width:100%;">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Gradient descent outcomes per configured step size: state at termination, iteration count capped by \(N_{\max} = 1000…"><table id="tbl:opt_results" style="width:100%;" data-responsive-table="true">
 <caption>Gradient descent outcomes per configured step size: state at
 termination, iteration count capped by <span
 class="math inline">\(N_{\max} = 1000\)</span>, the
@@ -639,7 +804,7 @@ iterate.</caption>
 <td>non_finite</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="convergence-rate-analysis">Convergence Rate Analysis</h2>
 <h3 id="theoretical-vs-empirical-convergence">Theoretical vs Empirical
 Convergence</h3>
@@ -651,7 +816,7 @@ provides a comparative analysis of convergence rates across different
 step sizes, validating theoretical predictions against empirical
 results.</p>
 <figure id="fig:convergence_rate">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/convergence_rate_comparison.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/convergence_rate_comparison.png"
+<a class="figure-full-size-link" href="../figures/convergence_rate_comparison.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Absolute objective error |f(x_k)-f(x^\ast)| versus iteration on a logarithmic y-axis…"><img src="../figures/convergence_rate_comparison.png"
 alt="Log-scale comparison of convergence error across step sizes, showing the stable and aggressive regimes." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Absolute objective error <span
 class="math inline">\(|f(x_k)-f(x^\ast)|\)</span> versus iteration on a
@@ -822,7 +987,7 @@ visualization of the algorithm’s computational characteristics,
 including time and space complexity analysis across different problem
 scales.</p>
 <figure id="fig:complexity">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/algorithm_complexity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/algorithm_complexity.png"
+<a class="figure-full-size-link" href="../figures/algorithm_complexity.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Six-panel diagnostic from generate_complexity_visualization() (3×2 grid)."><img src="../figures/algorithm_complexity.png"
 alt="Deterministic proxy for optimization work by problem dimension and recorded iteration count." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Six-panel diagnostic from
 <code>generate_complexity_visualization()</code> (3×2 grid). <strong>Top
@@ -885,7 +1050,7 @@ computational work and convergence iterations for
 dimension <span class="math inline">\(d \in \{1, 2, 5, 10, 20,
 50\}\)</span>.</p>
 <figure id="fig:benchmark">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/performance_benchmark.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/performance_benchmark.png"
+<a class="figure-full-size-link" href="../figures/performance_benchmark.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Deterministic dimensional benchmark from generate_benchmark_visualization() ."><img src="../figures/performance_benchmark.png"
 alt="Deterministic objective-evaluation observations; host-dependent wall-clock timing is excluded from the claim." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Deterministic dimensional benchmark from
 <code>generate_benchmark_visualization()</code>. Dimensions <span
@@ -913,7 +1078,7 @@ exercising <code>gradient_descent()</code>,
 <code>quadratic_function()</code>, and <code>compute_gradient()</code>
 across the parameter space.</p>
 <figure id="fig:stability">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/stability_analysis.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/stability_analysis.png"
+<a class="figure-full-size-link" href="../figures/stability_analysis.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Numerical stability heatmap from generate_stability_visualization() ."><img src="../figures/stability_analysis.png"
 alt="Numerical stability score and recommendations produced by the configured stability checks." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Numerical stability heatmap from
 <code>generate_stability_visualization()</code>. Each cell shows <span

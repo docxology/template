@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_reproducibility.md.web</title>
   <style>
@@ -267,12 +267,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -284,7 +328,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -342,6 +397,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -349,13 +406,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -436,8 +548,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -486,6 +597,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -502,6 +619,12 @@ mjx-container[display="true"] {
   text-align: center;
 }
 
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 </style>
 </head>
 <body>
@@ -512,9 +635,9 @@ mjx-container[display="true"] {
 is a property the code enforces on every run. Every number that appears
 below the Determinism heading — a1f3e428cf1fb3e3, 42, 528, 95.33 — is a
 token substituted at render time by
-<code>src/manuscript_variables.py::generate_variables()</code> from a
-live grammar load and a live pytest run
-(<code>src/manuscript_variables.py::measure_test_summary()</code>).
+<code>src/template_autopoiesis/manuscript/manuscript_variables.py::generate_variables()</code>
+from a live grammar load and a live pytest run
+(<code>src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary()</code>).
 Neither function accepts a hardcoded literal as a fallback: if the
 subprocess pytest run cannot be parsed,
 <code>measure_test_summary</code> returns the string
@@ -537,7 +660,8 @@ concrete steps, each implemented as a pure function with no random or
 wall-clock input:</p>
 <ol type="1">
 <li><strong>Selection.</strong> For every grammar slot,
-<code>src/expand.py::_digest_index()</code> builds the key
+<code>src/template_autopoiesis/core/expand.py::_digest_index()</code>
+builds the key
 <code>f"{seed}\x1f{slot_name}\x1f{ordinal}\x1f{','.join(options)}"</code>
 (a unit separator, <code>\x1f</code>, joins the fields so that no
 combination of seed/name/ ordinal/option values can collide across a
@@ -550,18 +674,18 @@ seed walk every slot to the same choice on every run — there is no
 seed-independent entropy source anywhere in the selection path.</li>
 <li><strong>Spec identity.</strong> The resolved selections, together
 with the grammar hash and seed, are assembled into a <code>Spec</code>
-dataclass (<code>src/expand.py::Spec</code>). Its <code>spec_hash</code>
-property serializes the full spec to canonical JSON
-(<code>sort_keys=True</code>, compact separators) and takes the first
-sixteen hex characters of the SHA-256 of that string. Sorting keys
-before hashing means insertion order in the underlying dict cannot
-perturb the hash — only the actual selections can.</li>
+dataclass (<code>src/template_autopoiesis/core/expand.py::Spec</code>).
+Its <code>spec_hash</code> property serializes the full spec to
+canonical JSON (<code>sort_keys=True</code>, compact separators) and
+takes the first sixteen hex characters of the SHA-256 of that string.
+Sorting keys before hashing means insertion order in the underlying dict
+cannot perturb the hash — only the actual selections can.</li>
 <li><strong>Tree identity.</strong> <code>materialize()</code>
-(<code>src/materialize.py</code>) writes every vendored and generated
-file into the child project directory, then folds the complete
-<code>{relative_path: content}</code> mapping through
-<code>src/integrity.py::tree_hash_from_content_hashes()</code>. That
-function sorts the mapping lexicographically by path before hashing
+(<code>src/template_autopoiesis/gates/materialize.py</code>) writes
+every vendored and generated file into the child project directory, then
+folds the complete <code>{relative_path: content}</code> mapping through
+<code>src/template_autopoiesis/gates/integrity.py::tree_hash_from_content_hashes()</code>.
+That function sorts the mapping lexicographically by path before hashing
 (<code>"\n".join(f"{k}:{v}" for k, v in sorted(...))</code>)
 specifically so that filesystem iteration order — which is not stable
 across platforms or <code>dict</code> construction paths — cannot change
@@ -572,9 +696,10 @@ tree hash as long as the source and the seed are unchanged.</li>
 </ol>
 <p>Multiple children can be derived from one root seed without
 collisions: given a <code>base_seed</code> and an integer
-<code>index</code>, <code>src/expand.py::derive_seed()</code> hashes
-<code>f"{base_seed}\x1f{index}"</code> through SHA-256 and folds the
-first eight bytes to a new integer seed.
+<code>index</code>,
+<code>src/template_autopoiesis/core/expand.py::derive_seed()</code>
+hashes <code>f"{base_seed}\x1f{index}"</code> through SHA-256 and folds
+the first eight bytes to a new integer seed.
 <code>sample(grammar, count)</code> calls <code>expand()</code> once per
 derived seed, so a batch of <code>count</code> children is itself
 deterministic — the same <code>base_seed</code> and <code>count</code>
@@ -589,7 +714,8 @@ version
 (<code>PROVENANCE_SCHEMA_VERSION = "autopoiesis/provenance/1"</code>),
 the full resolved spec (<code>spec.to_dict()</code>), the tree hash, and
 the sorted list of every file path that was written. This is the record
-<code>verify_child()</code> (<code>src/verify.py</code>) recomputes
+<code>verify_child()</code>
+(<code>src/template_autopoiesis/gates/verify.py</code>) recomputes
 against later.</p>
 <p>A child project can additionally be <strong>sealed</strong>:
 <code>scripts/seal_child.py</code> (and the pipeline-facing wrapper
@@ -598,33 +724,35 @@ materialized child under <code>output/children/</code>) reads
 <code>provenance.json</code>, re-runs <code>verify_child()</code>
 against the live files as a pre-seal sanity check, and writes
 <code>seal.json</code> alongside it. The seal payload — built by
-<code>src/sealing.py::build_payload()</code> — is a compact JSON object
+<code>src/template_autopoiesis/gates/sealing.py::build_payload()</code>
+— is a compact JSON object
 <code>{"spec_hash": ..., "tree_hash": ..., "seed": ...}</code>. A
 shorter, colon-delimited variant (<code>build_barcode_payload()</code>,
 truncating each hash to its first eight hex characters) exists for
 embedding into a QR code or barcode image via
-<code>src/sealing.py::qr_matrix()</code> / <code>qr_image()</code>, so
-that a printed or exported artifact can carry a scannable,
-self-describing pointer back to the exact spec and tree hash that
-produced it. Both the QR encoder and its optional decode path
-(<code>read_qr_matrix()</code>, which depends on <code>pyzbar</code> and
-<code>PIL</code>) degrade gracefully when those optional dependencies
-are absent: <code>qr_matrix()</code> falls back to a deterministic
-checkerboard stub so callers and tests do not hard-fail on a missing
-image dependency, and <code>read_qr_matrix()</code> simply returns an
-empty string. The seal itself does not gate materialization — a child
-project is fully valid and independently verifiable from
+<code>src/template_autopoiesis/gates/sealing.py::qr_matrix()</code> /
+<code>qr_image()</code>, so that a printed or exported artifact can
+carry a scannable, self-describing pointer back to the exact spec and
+tree hash that produced it. Both the QR encoder and its optional decode
+path (<code>read_qr_matrix()</code>, which depends on
+<code>pyzbar</code> and <code>PIL</code>) degrade gracefully when those
+optional dependencies are absent: <code>qr_matrix()</code> falls back to
+a deterministic checkerboard stub so callers and tests do not hard-fail
+on a missing image dependency, and <code>read_qr_matrix()</code> simply
+returns an empty string. The seal itself does not gate materialization —
+a child project is fully valid and independently verifiable from
 <code>provenance.json</code> alone; <code>seal.json</code> is an
 additive, portable pointer, not a second source of truth. Sealing does
 not currently run inside <code>verify_child_full()</code>; it is a
-separate check (<code>src/verify.py::verify_seal()</code>) invoked only
-when a caller explicitly asks whether a seal exists, parses, and carries
-a <code>spec_hash</code>.</p>
+separate check
+(<code>src/template_autopoiesis/gates/verify.py::verify_seal()</code>)
+invoked only when a caller explicitly asks whether a seal exists,
+parses, and carries a <code>spec_hash</code>.</p>
 <h3 id="sha-256-vs.-merkle-integrity-profiles">SHA-256 vs. Merkle
 integrity profiles</h3>
-<p><code>src/integrity.py</code> provides two distinct ways of turning a
-collection of hashes into one summary digest, and the project does not
-conflate them:</p>
+<p><code>src/template_autopoiesis/gates/integrity.py</code> provides two
+distinct ways of turning a collection of hashes into one summary digest,
+and the project does not conflate them:</p>
 <ul>
 <li><strong><code>tree_hash_from_content_hashes()</code></strong> — the
 profile used by <code>materialize()</code>/<code>verify_child()</code>
@@ -646,16 +774,18 @@ every other file — a property the flat tree-hash profile does not
 have.</li>
 </ul>
 <p>Both are exercised in this codebase, but at present the
-materialize/verify path in <code>src/materialize.py</code> and
-<code>src/verify.py</code> uses the flat, order-independent tree hash
-exclusively; <code>merkle_root()</code> is available in
-<code>src/integrity.py</code> and covered by its own tests as an
-independent integrity primitive, not yet as the provenance root written
-into <code>provenance.json</code>. A manuscript describing this project
-should not claim Merkle-tree provenance for <code>provenance.json</code>
-today — that would be exactly the kind of prose-outruns-code gap this
-project’s honesty checks exist to catch
-(<code>src/honesty.py</code>).</p>
+materialize/verify path in
+<code>src/template_autopoiesis/gates/materialize.py</code> and
+<code>src/template_autopoiesis/gates/verify.py</code> uses the flat,
+order-independent tree hash exclusively; <code>merkle_root()</code> is
+available in <code>src/template_autopoiesis/gates/integrity.py</code>
+and covered by its own tests as an independent integrity primitive, not
+yet as the provenance root written into <code>provenance.json</code>. A
+manuscript describing this project should not claim Merkle-tree
+provenance for <code>provenance.json</code> today — that would be
+exactly the kind of prose-outruns-code gap this project’s honesty checks
+exist to catch
+(<code>src/template_autopoiesis/core/honesty.py</code>).</p>
 <h3 id="recompute-verify-workflow">Recompute / verify workflow</h3>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Expand the grammar into a resolved spec (pure function of seed + config)</span></span>
@@ -669,9 +799,10 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. (optional) Seal the child — writes seal.json next to provenance.json</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/seal_child.py output/children/<span class="op">&lt;</span>child_name<span class="op">&gt;</span></span></code></pre></div>
-<p><code>verify</code> (<code>src/cli.py::cmd_verify</code> →
-<code>src/verify.py::verify_child_full()</code>) performs four checks in
-sequence and exits non-zero if any fails:
+<p><code>verify</code>
+(<code>src/template_autopoiesis/core/cli.py::cmd_verify</code> →
+<code>src/template_autopoiesis/gates/verify.py::verify_child_full()</code>)
+performs four checks in sequence and exits non-zero if any fails:
 <code>provenance_exists</code>, <code>provenance_parseable</code>,
 <code>all_files_present</code> (every path listed in
 <code>provenance.json["files"]</code> still exists on disk), and
@@ -703,9 +834,9 @@ unconditionally at the top of <code>test_property_invariants.py</code> —
 a real dependency of that test module, not a soft, try/except-guarded
 one; see Methods)</li>
 <li><code>qrcode</code>, <code>pillow</code> (optional —
-<code>src/sealing.py</code>’s QR/barcode payload encoding degrades to a
-deterministic stub when unavailable; <code>pyzbar</code> is needed only
-for the optional decode path)</li>
+<code>src/template_autopoiesis/gates/sealing.py</code>’s QR/barcode
+payload encoding degrades to a deterministic stub when unavailable;
+<code>pyzbar</code> is needed only for the optional decode path)</li>
 </ul>
 <p>Outside the parent <code>template</code> repository checkout,
 <code>STANDALONE.md</code> documents what is and is not vendored into a

@@ -6,7 +6,7 @@ controlled methods** — the **methods-paper exemplar** of the
 results paper, this manuscript's subject is the methodology itself: a
 controlled vocabulary, a unit system with dimensional safety, four staged
 validation gates, and a deterministic compiler, implemented in
-`projects/templates/template_methods_paper/src/methods_dsl/` and described
+`projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/` and described
 section by section in [@sec:methodology]. The domain language's vocabulary is
 informed by BPL (Biology Programming Language,
 [@bpl2026]), an upstream reference that encodes laboratory protocols as
@@ -16,14 +16,14 @@ shape from wet-lab protocols to any controlled procedure.
 
 A `Method` is a name, a set of typed parameters and resources, and an
 ordered, dependent set of steps — constructed directly as frozen Python
-dataclasses (`src/methods_dsl/model.py`) rather than parsed from new text
+dataclasses (`src/template_methods_paper/methods_dsl/model.py`) rather than parsed from new text
 syntax. Every `Quantity` carries a unit that resolves to one of
 18 controlled units across eight dimensions, and every step
 names one of 9 controlled-vocabulary intents
-(`src/methods_dsl/vocabulary.py`), executable on one of 3
+(`src/template_methods_paper/methods_dsl/vocabulary.py`), executable on one of 3
 backends. 4 staged gates — structural, semantic, plan, and
 target — validate a method before `compile_method`
-(`src/methods_dsl/compiler.py`) deterministically schedules it with Kahn's
+(`src/template_methods_paper/methods_dsl/compiler.py`) deterministically schedules it with Kahn's
 algorithm [@kahn1962topological] and hashes the canonical plan with SHA-256.
 
 We demonstrate the language on 2 worked example
@@ -36,7 +36,7 @@ target `automated`, plan hash `d89cced19be6`).
 Live re-compilation determinism check: **Yes**. Across both
 methods, 8 of 8 staged-gate
 evaluations pass. A demonstration provenance hash-chain
-(`src/methods_dsl/trust.py`) of length 3 verifies as
+(`src/template_methods_paper/methods_dsl/trust.py`) of length 3 verifies as
 **Yes**.
 
 Contributions are **methodological** and **architectural**. On the methods
@@ -49,7 +49,7 @@ repository's configured project coverage gate, generates 19 artifacts
 (1 figures, 7 data files,
 11 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash `a0f000565bef6a79`, build timestamp
-`2026-08-14T14:20:53Z`) into [@sec:reproducibility].
+`2026-09-13T22:27:42Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis
 
@@ -89,25 +89,25 @@ BPL's architecture is a compiler pipeline — parse, semantic check, lower,
 schedule, execute, export — over a biology-native type system (units,
 dimensional analysis, MW-aware concentration), staged validation gates, and
 deterministic compilation with a stable plan hash. Three design choices carry
-over directly into `src/methods_dsl/`:
+over directly into `src/template_methods_paper/methods_dsl/`:
 
 1. **Intent over instruction.** BPL users write high-level intents
    (`transfer`, `add_reagent`, `incubate`); a compiler lowers them to
-   backend-specific primitives. `src/methods_dsl/vocabulary.py`'s `StepKind`
+   backend-specific primitives. `src/template_methods_paper/methods_dsl/vocabulary.py`'s `StepKind`
    enum is the same idea, generalized: `TRANSFER`/`ADD`/`MIX` name *what*
    happens, never *how* a particular backend performs it.
 2. **Dimensional safety.** BPL's type system catches `mL + g` at compile
-   time, not at the bench. `src/methods_dsl/units.py` implements the same
+   time, not at the bench. `src/template_methods_paper/methods_dsl/units.py` implements the same
    guarantee with a small `Dimension`/`Quantity` system rather than a full
    unit library.
 3. **Deterministic compilation.** Same source, same options, same plan hash.
-   `src/methods_dsl/compiler.py::compile_method` reproduces this with a
+   `src/template_methods_paper/methods_dsl/compiler.py::compile_method` reproduces this with a
    canonical-JSON SHA-256 hash over a Kahn's-algorithm
    [@kahn1962topological] schedule.
 
 What this exemplar does **not** carry over is BPL's text grammar and parser:
 a `Method` here is constructed directly as frozen Python dataclasses
-(`src/methods_dsl/model.py`), not parsed from `.bpl` source. This keeps the
+(`src/template_methods_paper/methods_dsl/model.py`), not parsed from `.bpl` source. This keeps the
 DSL's discipline in its typed, validated shape rather than in new concrete
 syntax — appropriate for a template exemplar's scope — while the controlled
 vocabulary, dimensional safety, and deterministic compilation generalize
@@ -119,7 +119,7 @@ method.
 
 The project sits on the repository's three pillars:
 
-1. **`src/methods_dsl/` library**: pure, side-effect-free dataclasses and
+1. **`src/template_methods_paper/methods_dsl/` library**: pure, side-effect-free dataclasses and
    functions — no plotting, no file I/O, and (with one declared logging
    exception) no `infrastructure` imports. This purity is what makes the
    library forkable and trivially testable.
@@ -133,7 +133,7 @@ The project sits on the repository's three pillars:
 ## The worked examples
 
 We specify two methods with `all_example_methods()`
-(`src/methods_dsl/examples_methods.py`): `PBSPreparation`, an
+(`src/template_methods_paper/methods_dsl/examples_methods.py`): `PBSPreparation`, an
 original — not copied from BPL's shipped examples — manual bench
 preparation in BPL's own domain, and `SensorCalibrationSweep`, a
 non-biology controlled procedure mixing automated measurement with a
@@ -144,7 +144,7 @@ that the DSL's vocabulary generalizes beyond wet-lab protocols, as
 ## Reader's guide to the manuscript
 
 - **[@sec:methodology]** ties each pipeline stage to its module in
-  `src/methods_dsl/`.
+  `src/template_methods_paper/methods_dsl/`.
 - **[@sec:results]** is artifact-centric: every reported number names the
   function or report file that produced it.
 - **[@sec:experimental_setup]** lists the controlled vocabulary and software
@@ -163,10 +163,10 @@ that the DSL's vocabulary generalizes beyond wet-lab protocols, as
 # Methodology {#sec:methodology}
 
 The DSL is implemented as eight cooperating modules under
-`src/methods_dsl/`, each corresponding to one stage of a BPL-inspired
+`src/template_methods_paper/methods_dsl/`, each corresponding to one stage of a BPL-inspired
 pipeline [@bpl2026]. This section walks the pipeline stage by stage,
 naming the function or class that implements each design decision so every
-claim below is directly checkable against `src/methods_dsl/`.
+claim below is directly checkable against `src/template_methods_paper/methods_dsl/`.
 
 ## Controlled vocabulary (`vocabulary.py`)
 
@@ -296,6 +296,7 @@ build.
    literal — a literal would silently stop testing the moment the
    compiler's hash input changed.
 4. **Coverage gate**: CI enforces a ≥90% statement-coverage gate on
+Falling below that floor fails the gate outright (`--cov-fail-under` enforces it).
    `projects/templates/template_methods_paper/src/`; the live figure is
    tracked in
    [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
@@ -312,7 +313,7 @@ This section reports the compiled plans for both worked example methods.
 Every number below is produced by the
 [methods analysis orchestrator](https://github.com/docxology/template/blob/main/projects/templates/template_methods_paper/scripts/methods_analysis.py)
 (`scripts/methods_analysis.py`),
-which calls `run_all_gates` and `compile_method` from `src/methods_dsl/` and
+which calls `run_all_gates` and `compile_method` from `src/template_methods_paper/methods_dsl/` and
 writes `output/data/compiled_plans.json`, `output/reports/gate_report.json`,
 and `output/reports/trust_chain_report.json`. Running the script regenerates
 every artifact this section references.
@@ -355,7 +356,7 @@ target gates by design, since `compile_method` raises
 
 Recompiling each example method twice and comparing `plan_hash` values
 yields: **determinism check = Yes**. This is a live
-re-compilation comparison performed by `src/manuscript_variables.py` at
+re-compilation comparison performed by `src/template_methods_paper/manuscript_variables.py` at
 manuscript-build time, not a value asserted once and then transcribed — the
 same property [@sec:methodology] claims for `compile_method` is checked
 again here, independently, against the live build.
@@ -387,7 +388,7 @@ All tests pass under the configured project coverage gate, with no mocks.
 
 The results confirm the pipeline end to end: both worked examples pass
 every staged gate, compile deterministically, and produce a stable plan hash
-across repeated builds. The same `src/methods_dsl/` functions back the
+across repeated builds. The same `src/template_methods_paper/methods_dsl/` functions back the
 analysis script, the test suite, and this manuscript — which is the
 architectural point of the exemplar. Because every number here is produced
 by a tested function and regenerated on demand, the prose describes
@@ -415,7 +416,7 @@ exemplar.
 Operating as the methods-paper exemplar for the Research Project Template
 methodology, the project deployed the three foundational pillars:
 
-1. **`src/methods_dsl/` library**: a controlled vocabulary, a dimensional
+1. **`src/template_methods_paper/methods_dsl/` library**: a controlled vocabulary, a dimensional
    unit system, four staged validation gates, a deterministic compiler, and
    four export formats — with no plotting, no file I/O, and (with one
    declared logging exception) no `infrastructure` imports.
@@ -500,13 +501,13 @@ and the compiler — never re-declared per method:
 
 | Module | Declares | Cardinality |
 |---|---|---|
-| `src/methods_dsl/vocabulary.py` | `StepKind`, `Target`, `target_accepts` | 9 step kinds, 3 targets |
-| `src/methods_dsl/units.py` | `Dimension`, `Quantity`, the unit table | 18 controlled units across 8 dimensions |
-| `src/methods_dsl/validation.py` | The four staged gates | 4 gates, fixed order |
+| `src/template_methods_paper/methods_dsl/vocabulary.py` | `StepKind`, `Target`, `target_accepts` | 9 step kinds, 3 targets |
+| `src/template_methods_paper/methods_dsl/units.py` | `Dimension`, `Quantity`, the unit table | 18 controlled units across 8 dimensions |
+| `src/template_methods_paper/methods_dsl/validation.py` | The four staged gates | 4 gates, fixed order |
 
 ## Worked examples
 
-`all_example_methods()` (`src/methods_dsl/examples_methods.py`) returns
+`all_example_methods()` (`src/template_methods_paper/methods_dsl/examples_methods.py`) returns
 2 methods:
 
 | Method | Domain | Target | Notable structure |
@@ -537,11 +538,11 @@ evaluations a method's steps satisfy.
 
 ## Computational environment
 
-- **Language**: Python 3.12.12 on Darwin arm64 (see root
+- **Language**: Python 3.12.13 on Darwin arm64 (see root
   `pyproject.toml` for the supported version range).
 - **Core dependencies**: `pyyaml`, `matplotlib` (declared in
   `domain_profile.yaml::required_packages`); the DSL library itself
-  (`src/methods_dsl/`) has zero third-party dependencies beyond the
+  (`src/template_methods_paper/methods_dsl/`) has zero third-party dependencies beyond the
   standard library, with one declared `infrastructure` logging exception
   (`_logging.py`).
 - **Headless plotting**: the analysis script sets `MPLBACKEND=Agg` before
@@ -563,7 +564,7 @@ The typical analysis order is:
 
 ## Relation to results
 
-| Result ([@sec:results]) | Producing function (`src/methods_dsl/`) | Primary inputs |
+| Result ([@sec:results]) | Producing function (`src/template_methods_paper/methods_dsl/`) | Primary inputs |
 |---|---|---|
 | Compiled-plan summary | `compile_method()` | `all_example_methods()` |
 | Step-count figure | `len(plan.steps)` per method | `output/data/compiled_plans.json` |
@@ -622,7 +623,7 @@ The analysis script writes the following artifacts under
 |---|---|
 | `data/pbspreparation_worklist.md`, `data/pbspreparation_plan.csv`, `data/pbspreparation_graph.mmd`, `data/pbspreparation_plan.json` | `compile_method()` + exporters, for `PBSPreparation` |
 | `data/sensorcalibrationsweep_worklist.md`, `data/sensorcalibrationsweep_plan.csv`, `data/sensorcalibrationsweep_graph.mmd`, `data/sensorcalibrationsweep_plan.json` | `compile_method()` + exporters, for `SensorCalibrationSweep` |
-| `data/compiled_plans.json` | Per-method plan summary, consumed by `src/manuscript_variables.py` |
+| `data/compiled_plans.json` | Per-method plan summary, consumed by `src/template_methods_paper/manuscript_variables.py` |
 | `reports/gate_report.json` | `run_all_gates()` tally across both methods |
 | `reports/trust_chain_report.json` | `append_record()`/`verify_chain()` demonstration chain |
 | `figures/step_counts.png` | Step-count bar chart |
@@ -640,7 +641,7 @@ source of truth.
 - `topological_order()` breaks scheduling ties by ascending `step_id`, so
   the same `Method` object always yields the same step order across
   processes and platforms.
-- Yes — `src/manuscript_variables.py::generate_variables`
+- Yes — `src/template_methods_paper/manuscript_variables.py::generate_variables`
   recompiles every example method twice at manuscript-build time and
   compares hashes live, so this guarantee is checked on every build, not
   merely asserted once in a test.
@@ -653,7 +654,7 @@ evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
 Configuration provenance is itself injected: `a0f000565bef6a79` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-08-14T14:20:53Z` records when the variables were generated
+`2026-09-13T22:27:42Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
 
 
@@ -715,7 +716,7 @@ compilation to a hashed plan.
 
 The validation and compilation steps here are a deliberately small subset
 of BPL's. The **non-standard** contribution is procedural: the same tested
-functions in `src/methods_dsl/` back the analysis script, the test suite,
+functions in `src/template_methods_paper/methods_dsl/` back the analysis script, the test suite,
 and this manuscript, so the compiled-plan table and the figure always refer
 to the same code. That pattern — and the specific generalization from a
 biology-only domain language to a domain-neutral one — is what downstream

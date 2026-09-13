@@ -47,7 +47,7 @@ flowchart LR
 
 ```mermaid
 %% noqa: docs-lint — {{...}} tokens are manuscript-variable placeholders
-%% (src/manuscript_variables.py) injected at render time, not literal mermaid
+%% (src/template_autopoiesis/manuscript/manuscript_variables.py) injected at render time, not literal mermaid
 flowchart TB
     A[primitive_domain: 5] --> EP[Effective product: 45 cells]
     T[track: 3] --> EP

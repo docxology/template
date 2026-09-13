@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03_pools.md.web</title>
   <style>
@@ -267,12 +267,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -284,7 +328,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -342,6 +397,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -349,13 +406,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -436,8 +548,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -486,6 +597,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -500,6 +617,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -535,7 +658,7 @@ consequence of each category’s data having a naturally different
 canonical representation (BibTeX for citations, YAML for structured
 contact records, YAML for dataset metadata).</p>
 <figure id="fig:taxonomy">
-<a class="figure-full-size-link" href="../figures/fond_taxonomy.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/fond_taxonomy.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/fond_taxonomy.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Schema taxonomy comparison across the three fond types."><img src="../figures/fond_taxonomy.png" style="width:85.0%"
 alt="Taxonomy diagram comparing shared manifest fields and category-specific schemas for three fond types." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Schema taxonomy comparison across the
 three fond types. Each fond declares a manifest and a <code>type</code>
@@ -596,10 +719,11 @@ to follow. The <code>version</code> field is incremented whenever the
 schema changes, enabling consumers to detect and handle schema drift
 without silent failures.</p>
 <h2 id="fond-reader-module">Fond Reader Module</h2>
-<p>The <code>src/fonds_reader.py</code> module provides three reader
-functions — one per fond type — plus a convenience aggregator:</p>
+<p>The <code>src/template_pools_rules_tools/tools/fonds_reader.py</code>
+module provides three reader functions — one per fond type — plus a
+convenience aggregator:</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.fonds_reader <span class="im">import</span> (</span>
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> template_pools_rules_tools.tools.fonds_reader <span class="im">import</span> (</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    read_bibliography_fond,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    read_contacts_fond,</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    read_datasets_fond,</span>
@@ -611,7 +735,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a hr
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>datasets <span class="op">=</span> read_datasets_fond()       <span class="co"># dict | None</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>all_fonds <span class="op">=</span> read_all_fonds()          <span class="co"># {&quot;bibliography&quot;: ..., &quot;contacts&quot;: ..., &quot;datasets&quot;: ...}</span></span></code></pre></div>
 <p>Each reader resolves the repository root from
-<code>pathlib.Path(__file__).resolve().parents[4]</code>, checks that
+<code>pathlib.Path(__file__).resolve().parents[6]</code>, checks that
 the manifest and data files exist before touching them, and wraps the
 actual YAML parse in a
 <code>try/except (OSError, UnicodeDecodeError, yaml.YAMLError)</code>
@@ -643,7 +767,7 @@ integration pipeline over one incomplete resource.
 <code>read_contacts_fond()</code> instead:</p>
 <ol type="1">
 <li>Resolves the repository root via
-<code>pathlib.Path(__file__).resolve().parents[4]</code>.</li>
+<code>pathlib.Path(__file__).resolve().parents[6]</code>.</li>
 <li>Checks <code>manifest_path.exists()</code> and
 <code>contacts_path.exists()</code> explicitly before any read; on a
 missing path, logs
@@ -661,7 +785,7 @@ summary dict rather than propagating any exception.</li>
 honestly — the pipeline never claims a fond loaded that did not.</li>
 </ol>
 <p>This sequence is exercised directly by
-<code>tests/test_fonds_reader.py::test_missing_data_dir_contacts_returns_none</code>,
+<code>tests/tools/test_fonds_reader.py::test_missing_data_dir_contacts_returns_none</code>,
 which constructs a fond directory with a manifest but no
 <code>data/</code> subdirectory and asserts the reader returns
 <code>None</code> rather than raising. The same

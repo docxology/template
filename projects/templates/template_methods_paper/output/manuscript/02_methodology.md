@@ -1,10 +1,10 @@
 # Methodology {#sec:methodology}
 
 The DSL is implemented as eight cooperating modules under
-`src/methods_dsl/`, each corresponding to one stage of a BPL-inspired
+`src/template_methods_paper/methods_dsl/`, each corresponding to one stage of a BPL-inspired
 pipeline [@bpl2026]. This section walks the pipeline stage by stage,
 naming the function or class that implements each design decision so every
-claim below is directly checkable against `src/methods_dsl/`.
+claim below is directly checkable against `src/template_methods_paper/methods_dsl/`.
 
 ## Controlled vocabulary (`vocabulary.py`)
 
@@ -134,6 +134,7 @@ build.
    literal — a literal would silently stop testing the moment the
    compiler's hash input changed.
 4. **Coverage gate**: CI enforces a ≥90% statement-coverage gate on
+Falling below that floor fails the gate outright (`--cov-fail-under` enforces it).
    `projects/templates/template_methods_paper/src/`; the live figure is
    tracked in
    [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).

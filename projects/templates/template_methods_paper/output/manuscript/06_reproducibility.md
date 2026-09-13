@@ -40,7 +40,7 @@ The analysis script writes the following artifacts under
 |---|---|
 | `data/pbspreparation_worklist.md`, `data/pbspreparation_plan.csv`, `data/pbspreparation_graph.mmd`, `data/pbspreparation_plan.json` | `compile_method()` + exporters, for `PBSPreparation` |
 | `data/sensorcalibrationsweep_worklist.md`, `data/sensorcalibrationsweep_plan.csv`, `data/sensorcalibrationsweep_graph.mmd`, `data/sensorcalibrationsweep_plan.json` | `compile_method()` + exporters, for `SensorCalibrationSweep` |
-| `data/compiled_plans.json` | Per-method plan summary, consumed by `src/manuscript_variables.py` |
+| `data/compiled_plans.json` | Per-method plan summary, consumed by `src/template_methods_paper/manuscript_variables.py` |
 | `reports/gate_report.json` | `run_all_gates()` tally across both methods |
 | `reports/trust_chain_report.json` | `append_record()`/`verify_chain()` demonstration chain |
 | `figures/step_counts.png` | Step-count bar chart |
@@ -58,7 +58,7 @@ source of truth.
 - `topological_order()` breaks scheduling ties by ascending `step_id`, so
   the same `Method` object always yields the same step order across
   processes and platforms.
-- Yes — `src/manuscript_variables.py::generate_variables`
+- Yes — `src/template_methods_paper/manuscript_variables.py::generate_variables`
   recompiles every example method twice at manuscript-build time and
   compares hashes live, so this guarantee is checked on every build, not
   merely asserted once in a test.
@@ -71,5 +71,5 @@ evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
 Configuration provenance is itself injected: `a0f000565bef6a79` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-08-14T14:20:53Z` records when the variables were generated
+`2026-09-13T22:27:42Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).

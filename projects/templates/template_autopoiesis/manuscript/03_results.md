@@ -58,10 +58,10 @@ template can emit.
 
 ![The five primitive domains, type-colored: `optimization`, `dynamics`, `statistics`, `signal`, `graph`.](../output/figures/fig_domain_coverage.png){#fig:domain_coverage width=85% fig-alt="Five colored bars, one per primitive domain."}
 
-Each domain in `{{DOMAIN_BULLETS}}` is a Python module under `src/primitives/`
+Each domain in `{{DOMAIN_BULLETS}}` is a Python module under `src/template_autopoiesis/primitives/`
 exporting a `PRIMITIVES: tuple[PrimitiveSpec, ...]` collected by
-`collect_primitives()` (`src/primitives/__init__.py`). A `PrimitiveSpec`
-(`src/primitives/base.py`) bundles a callable kernel, an example input, an
+`collect_primitives()` (`src/template_autopoiesis/primitives/__init__.py`). A `PrimitiveSpec`
+(`src/template_autopoiesis/primitives/base.py`) bundles a callable kernel, an example input, an
 expected output (or `None` when the check is structural rather than a fixed
 value), a numerical tolerance, and — for five of the eight kernels — a
 `negative_control` callable whose entire purpose is to fail the primary
@@ -71,7 +71,7 @@ eight primitive kernels across them (`test_total_primitive_count`): two in
 `optimization`, one in `dynamics`, one in `statistics`, two in `signal`, and two
 in `graph`.
 
-**Optimization.** `gradient_descent` (`src/primitives/optimization.py`) runs
+**Optimization.** `gradient_descent` (`src/template_autopoiesis/primitives/optimization.py`) runs
 explicit gradient descent on the convex quadratic
 `f(x) = 0.5 (x-c)^T A (x-c)`, whose gradient is `A(x-c)`. Because the problem is
 convex quadratic, its analytic minimiser is known in closed form — `x* = c`,
@@ -87,7 +87,7 @@ away from `c` instead of converging to it, giving the mutation gate (see
 Honesty Contract) something to detect if the sign were ever silently restored
 to "wrong."
 
-**Dynamics.** `damped_oscillator` (`src/primitives/dynamics.py`) integrates the
+**Dynamics.** `damped_oscillator` (`src/template_autopoiesis/primitives/dynamics.py`) integrates the
 damped harmonic oscillator ODE `x'' + 2*zeta*omega*x' + omega^2*x = 0` with
 explicit Euler stepping, and separately computes the closed-form under-damped
 envelope `x0 * exp(-zeta*omega*t)`. The test suite does not merely check that
@@ -106,7 +106,7 @@ flatness directly — so a broken damping term that decayed regardless of the
 damping value would be caught, not just a broken damping term that fails to
 decay at all.
 
-**Statistics.** `ols_fit` (`src/primitives/statistics.py`) solves ordinary
+**Statistics.** `ols_fit` (`src/template_autopoiesis/primitives/statistics.py`) solves ordinary
 least squares via the normal equations, `beta_hat = (X^T X)^{-1} X^T y`, solved
 with `numpy.linalg.solve` rather than an explicit matrix inverse. The example
 input is synthetic, not observational: fifty rows with an intercept column and
@@ -139,7 +139,7 @@ smoothing cannot increase variance
 signal exactly (`atol=1e-12`) — a stronger, algebraically-derived check than
 an arbitrary "looks different" comparison.
 
-**Graph.** `bfs_distances` (`src/primitives/graph.py`) computes shortest-path
+**Graph.** `bfs_distances` (`src/template_autopoiesis/primitives/graph.py`) computes shortest-path
 distances on a fixed five-node undirected graph (`A`–`E`, encoded as an
 adjacency dict) via a plain breadth-first queue. Because the graph is fixed and
 small, the expected distances from source `A` are enumerable by hand and are

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="A Meta-Project Demonstrating Fonds, Rules, and Tools Integration in Research Software" />
@@ -265,6 +265,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -275,14 +284,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -313,12 +354,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -330,7 +415,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -388,6 +484,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -395,13 +493,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -482,8 +635,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -532,6 +684,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -546,6 +704,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -758,7 +922,7 @@ Template-Integrated Resource Architecture</h1>
 <p><strong>A Meta-Project Demonstrating Fonds, Rules, and Tools
 Integration in Research Software</strong></p>
 <hr />
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -815,7 +979,7 @@ reproducibility, fonds, governance rules, tool discovery, graceful
 degradation</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 data-number="1.1" id="author-contributions"><span
 class="header-section-number">1.1</span> Author Contributions</h2>
@@ -860,7 +1024,7 @@ class="header-section-number">1.4</span> Competing Interests</h2>
 class="header-section-number">1.5</span> Reproducibility Checklist</h2>
 <p>This exemplar targets full computational reproducibility for every
 quantitative claim and figure it makes:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -877,7 +1041,8 @@ quantitative claim and figure it makes:</p>
 <tr>
 <td>Integration counts (fonds/rules/tools)</td>
 <td><code>scripts/02_run_integration.py</code></td>
-<td><code>tests/test_integration.py</code> end-to-end assertion</td>
+<td><code>tests/tools/test_integration.py</code> end-to-end
+assertion</td>
 </tr>
 <tr>
 <td>Manuscript variable tokens</td>
@@ -887,8 +1052,8 @@ quantitative claim and figure it makes:</p>
 <tr>
 <td>All 9 figures (8 content + 1 cover)</td>
 <td><code>scripts/05_generate_figures.py</code></td>
-<td><code>tests/test_figures.py</code> (per-function file-existence
-checks)</td>
+<td><code>tests/figures/test_figures.py</code> (per-function
+file-existence checks)</td>
 </tr>
 <tr>
 <td>≥90% <code>src/</code> line coverage</td>
@@ -903,7 +1068,7 @@ bibtex)</td>
 page-scale raster read</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>A reader who clones the repository and runs the listed commands in
 order reproduces every number and image in this document without manual
 intervention. Quantitative claims in this document — fond/rule/tool
@@ -912,9 +1077,9 @@ counts, project inventory counts, and the runtime bar-chart figures
 are derived from the integration result, declared figure contracts, or
 the project filesystem at render time. None of these values are
 hand-typed; negative controls in
-<code>tests/test_manuscript_variables.py</code> change both integration
-inputs and a real temporary project tree to prove that token generation
-tracks its sources rather than emitting fixed constants.</p>
+<code>tests/figures/test_manuscript_variables.py</code> change both
+integration inputs and a real temporary project tree to prove that token
+generation tracks its sources rather than emitting fixed constants.</p>
 <hr />
 <h1 data-number="2" id="abstract"><span
 class="header-section-number">2</span> Abstract</h1>
@@ -1020,7 +1185,7 @@ class="header-section-number">3.2</span> Contribution</h2>
 four-module architecture (fig. <a href="#fig:architecture">1</a>). Each
 module handles one resource category plus a fourth orchestration
 module:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -1035,29 +1200,29 @@ module:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>src/fonds_reader.py</code></td>
+<td><code>src/template_pools_rules_tools/tools/fonds_reader.py</code></td>
 <td>Data pools</td>
 <td><code>read_all_fonds()</code></td>
 </tr>
 <tr>
-<td><code>src/rules_applier.py</code></td>
+<td><code>src/template_pools_rules_tools/rules/rules_applier.py</code></td>
 <td>Governance rules</td>
 <td><code>validate_against_rules()</code></td>
 </tr>
 <tr>
-<td><code>src/tools_invoker.py</code></td>
+<td><code>src/template_pools_rules_tools/tools/tools_invoker.py</code></td>
 <td>Executable tools</td>
 <td><code>discover_tools()</code></td>
 </tr>
 <tr>
-<td><code>src/integration.py</code></td>
+<td><code>src/template_pools_rules_tools/tools/integration.py</code></td>
 <td>All three</td>
 <td><code>run_integration_demo()</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <figure id="fig:architecture">
-<a class="figure-full-size-link" href="../figures/architecture_overview.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/architecture_overview.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/architecture_overview.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Three-layer resource architecture of template_pools_rules_tools."><img src="../figures/architecture_overview.png" style="width:90.0%"
 alt="Diagram showing fonds, rules, and tools feeding a shared integration layer." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Three-layer resource
 architecture of template_pools_rules_tools. Fonds (left) provide
@@ -1173,7 +1338,7 @@ differ by category — a consequence of each category’s data having a
 naturally different canonical representation (BibTeX for citations, YAML
 for structured contact records, YAML for dataset metadata).</p>
 <figure id="fig:taxonomy">
-<a class="figure-full-size-link" href="../figures/fond_taxonomy.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/fond_taxonomy.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/fond_taxonomy.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Schema taxonomy comparison across the three fond types."><img src="../figures/fond_taxonomy.png" style="width:85.0%"
 alt="Taxonomy diagram comparing shared manifest fields and category-specific schemas for three fond types." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Schema taxonomy comparison
 across the three fond types. Each fond declares a manifest and a
@@ -1260,10 +1425,11 @@ schema changes, enabling consumers to detect and handle schema drift
 without silent failures.</p>
 <h2 data-number="4.4" id="fond-reader-module"><span
 class="header-section-number">4.4</span> Fond Reader Module</h2>
-<p>The <code>src/fonds_reader.py</code> module provides three reader
-functions — one per fond type — plus a convenience aggregator:</p>
+<p>The <code>src/template_pools_rules_tools/tools/fonds_reader.py</code>
+module provides three reader functions — one per fond type — plus a
+convenience aggregator:</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.fonds_reader <span class="im">import</span> (</span>
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> template_pools_rules_tools.tools.fonds_reader <span class="im">import</span> (</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    read_bibliography_fond,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    read_contacts_fond,</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    read_datasets_fond,</span>
@@ -1275,7 +1441,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a hr
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>datasets <span class="op">=</span> read_datasets_fond()       <span class="co"># dict | None</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>all_fonds <span class="op">=</span> read_all_fonds()          <span class="co"># {&quot;bibliography&quot;: ..., &quot;contacts&quot;: ..., &quot;datasets&quot;: ...}</span></span></code></pre></div>
 <p>Each reader resolves the repository root from
-<code>pathlib.Path(__file__).resolve().parents[4]</code>, checks that
+<code>pathlib.Path(__file__).resolve().parents[6]</code>, checks that
 the manifest and data files exist before touching them, and wraps the
 actual YAML parse in a
 <code>try/except (OSError, UnicodeDecodeError, yaml.YAMLError)</code>
@@ -1311,7 +1477,7 @@ integration pipeline over one incomplete resource.
 <code>read_contacts_fond()</code> instead:</p>
 <ol type="1">
 <li>Resolves the repository root via
-<code>pathlib.Path(__file__).resolve().parents[4]</code>.</li>
+<code>pathlib.Path(__file__).resolve().parents[6]</code>.</li>
 <li>Checks <code>manifest_path.exists()</code> and
 <code>contacts_path.exists()</code> explicitly before any read; on a
 missing path, logs
@@ -1329,7 +1495,7 @@ summary dict rather than propagating any exception.</li>
 honestly — the pipeline never claims a fond loaded that did not.</li>
 </ol>
 <p>This sequence is exercised directly by
-<code>tests/test_fonds_reader.py::test_missing_data_dir_contacts_returns_none</code>,
+<code>tests/tools/test_fonds_reader.py::test_missing_data_dir_contacts_returns_none</code>,
 which constructs a fond directory with a manifest but no
 <code>data/</code> subdirectory and asserts the reader returns
 <code>None</code> rather than raising. The same
@@ -1415,7 +1581,7 @@ rather than a style preference: coverage below the source-declared
 threshold means tests are missing; a manuscript section without an
 abstract means the document is incomplete.</p>
 <figure id="fig:rulehier">
-<a class="figure-full-size-link" href="../figures/rule_hierarchy.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/rule_hierarchy.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/rule_hierarchy.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Rule hierarchy: the two template rule sets, each split into a machine-enforceable strong/ branch"><img src="../figures/rule_hierarchy.png" style="width:85.0%"
 alt="Hierarchy diagram separating guidance-oriented soft rules from machine-enforced strong rules." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Rule hierarchy: the two
 template rule sets, each split into a machine-enforceable
@@ -1429,7 +1595,7 @@ class="header-section-number">5.4.1</span>
 <code>template_project_rules</code></h3>
 <p>This rule set governs software projects throughout the template
 repository. Its strong rules currently comprise:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -1452,7 +1618,7 @@ public API 95%</td>
 <code>scripts/</code>, <code>manuscript/</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Its soft rules provide guidance on code style, commit message
 conventions, and pull-request labelling.</p>
 <h3 data-number="5.4.2" id="template_manuscript_rules"><span
@@ -1460,7 +1626,7 @@ class="header-section-number">5.4.2</span>
 <code>template_manuscript_rules</code></h3>
 <p>This rule set governs research manuscripts. Its strong rules
 comprise:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -1481,15 +1647,16 @@ comprise:</p>
 <td>Required manuscript sections, ordering, and minimum word counts</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>In the current pipeline run, <strong>2 of 2 rule sets</strong>
 validated successfully (fig. <a href="#fig:counts">5</a>).</p>
 <h2 data-number="5.5" id="rule-application-module"><span
 class="header-section-number">5.5</span> Rule Application Module</h2>
-<p>The <code>src/rules_applier.py</code> module exposes three
-functions:</p>
+<p>The
+<code>src/template_pools_rules_tools/rules/rules_applier.py</code>
+module exposes three functions:</p>
 <div class="sourceCode" id="cb5"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.rules_applier <span class="im">import</span> (</span>
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> template_pools_rules_tools.rules.rules_applier <span class="im">import</span> (</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    load_soft_rules,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    load_strong_rules,</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    validate_against_rules,</span>
@@ -1529,10 +1696,11 @@ Semantic Rule Evaluation</h2>
 <code>soft/</code>/<code>strong/</code> parse as YAML. It does not check
 whether the constraints those strong-rule files declare are actually
 satisfied by the current project. That semantic layer lives in a
-separate module, <code>src/strong_rule_evaluator.py</code>, exposed via
-<code>scripts/04_validate_strong_rules.py</code>:</p>
+separate module,
+<code>src/template_pools_rules_tools/rules/strong_rule_evaluator.py</code>,
+exposed via <code>scripts/04_validate_strong_rules.py</code>:</p>
 <div class="sourceCode" id="cb6"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.strong_rule_evaluator <span class="im">import</span> evaluate_strong_rules, load_rule_context_from_project</span>
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> template_pools_rules_tools.rules.strong_rule_evaluator <span class="im">import</span> evaluate_strong_rules, load_rule_context_from_project</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>context <span class="op">=</span> load_rule_context_from_project(project_root)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> evaluate_strong_rules(<span class="st">&quot;template_project_rules&quot;</span>, context)</span>
@@ -1541,7 +1709,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a hr
 file to a rule-kind-specific evaluator function keyed by its declared
 kind, via a small dispatch table covering all four strong-rule kinds
 that exist across both rule sets:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -1582,7 +1750,7 @@ headings (<code>TODO</code>, <code>Draft</code>, etc.)</td>
 parsed reference entry</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Each evaluator distinguishes structured violation <em>reasons</em>
 rather than collapsing everything to a boolean — for example,
 <code>coverage_threshold</code> reports separately whether a key was
@@ -1651,14 +1819,22 @@ consumer should expect. The <code>entrypoints</code> list names the
 files that must exist on disk; the <code>tools_invoker</code> module
 validates their presence at discovery time rather than at invocation
 time, making failures visible early in the pipeline rather than at
-runtime. fig. <a href="#fig:toolcontract">4</a> visualises the
-stdin/stdout/exit-code contract for all 4 discovered template tools side
-by side. Note that the <em>shape</em> of stdin and stdout differs per
-tool while the <em>presence</em> of a well-defined contract does not —
-this is what makes <code>tools_invoker</code> able to discover and
-validate any tool generically without knowing its payload schema.</p>
+runtime — a manifest naming a missing entrypoint file is rejected during
+discovery instead of failing later mid-invocation. fig. <a
+href="#fig:toolcontract">4</a> visualises the stdin/stdout/exit-code
+contract for all 4 discovered template tools side by side. Note that the
+<em>shape</em> of stdin and stdout differs per tool while the
+<em>presence</em> of a well-defined contract does not — this is what
+makes <code>tools_invoker</code> able to discover and validate any tool
+generically without knowing its payload schema. A declared entrypoint
+that is missing blocks invocation — absent files make the tool
+unavailable rather than silently deferred. The strong-rule evaluator
+carries matching negative controls:
+<code>tests/rules/test_strong_rule_evaluator.py</code> flags missing
+manuscript sections, missing <code>src/</code>, and missing context keys
+on known-wrong fixtures.</p>
 <figure id="fig:toolcontract">
-<a class="figure-full-size-link" href="../figures/tool_contract.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/tool_contract.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/tool_contract.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Invocation contract for the 4 discovered template tools: stdin payload, tool behaviour"><img src="../figures/tool_contract.png" style="width:90.0%"
 alt="Contract diagram comparing tool inputs, behavior, outputs, and exit codes." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Invocation contract for the 4
 discovered template tools: stdin payload, tool behaviour, and
@@ -1672,7 +1848,7 @@ class="header-section-number">6.3.1</span>
 <p>A generic code execution tool that accepts a JSON payload on standard
 input and returns execution results as JSON. The invocation contract
 is:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -1701,7 +1877,7 @@ is:</p>
 <td>0 = valid</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The code executor exemplifies tools that wrap a computational
 capability. The JSON-in/JSON-out contract makes it easily composable
 with pipeline orchestrators and agent frameworks.</p>
@@ -1745,10 +1921,11 @@ discovery and existence-validation contract covers both executable
 scripts and model data.</p>
 <h2 data-number="6.4" id="tool-discovery-module"><span
 class="header-section-number">6.4</span> Tool Discovery Module</h2>
-<p>The <code>src/tools_invoker.py</code> module provides three public
-functions:</p>
+<p>The
+<code>src/template_pools_rules_tools/tools/tools_invoker.py</code>
+module provides three public functions:</p>
 <div class="sourceCode" id="cb8"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.tools_invoker <span class="im">import</span> (</span>
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> template_pools_rules_tools.tools.tools_invoker <span class="im">import</span> (</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    discover_tools,</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    get_tool_entrypoints,</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    validate_tool_scripts_exist,</span>
@@ -1836,8 +2013,8 @@ is quietly excluded from the discovery result, leaving the pipeline free
 to continue with everything else it found.</li>
 </ol>
 <p>Each of these is a distinct, testable branch in
-<code>tests/test_tools_invoker.py</code>, and each maps to one row of
-the resilience taxonomy in fig. <a href="#fig:resilience">8</a>.</p>
+<code>tests/tools/test_tools_invoker.py</code>, and each maps to one row
+of the resilience taxonomy in fig. <a href="#fig:resilience">8</a>.</p>
 <h2 data-number="6.7"
 id="execution-proof-testing-beyond-manifest-checking"><span
 class="header-section-number">6.7</span> Execution-Proof Testing: Beyond
@@ -1845,17 +2022,19 @@ Manifest Checking</h2>
 <p>Everything described so far — discovery, entrypoint-existence
 validation, the three failure modes above — is <em>structural</em>: it
 confirms a tool’s files are present and well-formed without ever running
-them. <code>src/tools_invoker.py</code>’s public API deliberately stays
-that way, because subprocess execution is exactly the kind of operation
-that can raise (a missing
+them.
+<code>src/template_pools_rules_tools/tools/tools_invoker.py</code>’s
+public API deliberately stays that way, because subprocess execution is
+exactly the kind of operation that can raise (a missing
 <code>bash</code>/<code>jq</code>/<code>python3</code> binary, a
 permission error, a timeout), and this project’s readers are contracted
 to degrade gracefully rather than propagate exceptions (see sec. <a
 href="#sec:pools">4</a>).</p>
 <p>The test suite closes this gap without weakening that contract:
-<code>tests/test_tools_invoker.py</code> genuinely subprocess-invokes
-the two fully local, deterministic tools and asserts on their real
-output, rather than only checking that their scripts exist.</p>
+<code>tests/tools/test_tools_invoker.py</code> genuinely
+subprocess-invokes the two fully local, deterministic tools and asserts
+on their real output, rather than only checking that their scripts
+exist.</p>
 <ul>
 <li><strong><code>template_code_executor</code></strong>:
 <code>TestInvokeCodeExecutor</code> pipes
@@ -1892,9 +2071,10 @@ class="header-section-number">7.1</span> Architecture Overview</h2>
 <p>The three resource layers described in sec. <a
 href="#sec:pools">4</a>, sec. <a href="#sec:rules">5</a>, and sec. <a
 href="#sec:tools">6</a> are orchestrated by a single function in
-<code>src/integration.py</code>. The <code>run_integration_demo()</code>
-function calls all three subsystems in a defined order, collects their
-results into a structured dictionary, and writes summary counts to
+<code>src/template_pools_rules_tools/tools/integration.py</code>. The
+<code>run_integration_demo()</code> function calls all three subsystems
+in a defined order, collects their results into a structured dictionary,
+and writes summary counts to
 <code>output/data/manuscript_variables.json</code> for injection into
 this manuscript at render time. fig. <a href="#fig:architecture">1</a>
 illustrates the complete architecture.</p>
@@ -1920,7 +2100,7 @@ integration run. Tokens are resolved by
 <code>output/data/manuscript_variables.json</code> and substitutes each
 token before the manuscript is passed to the rendering engine.</p>
 <figure id="fig:counts">
-<a class="figure-full-size-link" href="../figures/resource_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/resource_counts.png" style="width:75.0%"
+<a class="figure-full-size-link" href="../figures/resource_counts.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Runtime integration counts from manuscript_variables.json."><img src="../figures/resource_counts.png" style="width:75.0%"
 alt="Bar chart comparing the runtime counts discovered for fonds, rules, and tools." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Runtime integration counts from
 manuscript_variables.json. Bars show fonds loaded, rule sets validated,
@@ -1929,7 +2109,7 @@ and tools discovered during a single pipeline run.</figcaption>
 <p>The current <code>manuscript_variables.json</code> contains the
 following summary values (see fig. <a href="#fig:counts">5</a> for a
 visual representation):</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Token</th>
@@ -1954,7 +2134,7 @@ visual representation):</p>
 <td>8</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>This table is itself token-injected: the values shown are those
 produced by the pipeline, not hard-coded by the manuscript author. If
 the pipeline results change — for example, because a new fond is added —
@@ -1970,7 +2150,7 @@ class="header-section-number">7.3</span> Methods: The Script
 Pipeline</h2>
 <p>6 thin orchestration scripts govern the integration workflow (fig. <a
 href="#fig:pipeline">7</a>, fig. <a href="#fig:pipelineflow">6</a>):</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -2017,16 +2197,16 @@ into <code>output/manuscript/</code> immediately before rendering</td>
 <td>JSON file + resolved manuscript tree</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <figure id="fig:pipelineflow">
-<a class="figure-full-size-link" href="../figures/pipeline_flow.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/pipeline_flow.png" style="width:95.0%"
+<a class="figure-full-size-link" href="../figures/pipeline_flow.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 6, The 6-script pipeline from source validation through token hydration, ending at the…"><img src="../figures/pipeline_flow.png" style="width:95.0%"
 alt="Left-to-right pipeline from source validation through integration, figure generation, variable hydration, and publication rendering." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 6: The 6-script pipeline from
 source validation through token hydration, ending at the combined-PDF
 render step.</figcaption>
 </figure>
 <figure id="fig:pipeline">
-<a class="figure-full-size-link" href="../figures/status_dashboard.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/status_dashboard.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/status_dashboard.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 7, Integration status dashboard showing per-resource validation results."><img src="../figures/status_dashboard.png" style="width:85.0%"
 alt="Status dashboard showing pass, partial, or missing state for each resource category." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 7: Integration status dashboard
 showing per-resource validation results. Green indicates ok, amber
@@ -2046,14 +2226,16 @@ pass/partial/missing status from the same run.</p>
 stays free of computation of its own — even
 <code>01_validate_sources.py</code>, the largest entry point in this
 project, is entirely CLI plumbing (argument parsing, console formatting)
-around calls into <code>src/fonds_reader.py</code>,
-<code>src/rules_applier.py</code>, and
-<code>src/tools_invoker.py</code>. This thin-orchestrator pattern <span
-class="citation" data-cites="Wilson2014best">(<a
-href="#ref-Wilson2014best" role="doc-biblioref">Wilson et al.
-2014</a>)</span> ensures that all testable logic is in <code>src/</code>
-under the configured project coverage gate, while the scripts themselves
-remain readable without a dedicated test suite of their own.</p>
+around calls into
+<code>src/template_pools_rules_tools/tools/fonds_reader.py</code>,
+<code>src/template_pools_rules_tools/rules/rules_applier.py</code>, and
+<code>src/template_pools_rules_tools/tools/tools_invoker.py</code>. This
+thin-orchestrator pattern <span class="citation"
+data-cites="Wilson2014best">(<a href="#ref-Wilson2014best"
+role="doc-biblioref">Wilson et al. 2014</a>)</span> ensures that all
+testable logic is in <code>src/</code> under the configured project
+coverage gate, while the scripts themselves remain readable without a
+dedicated test suite of their own.</p>
 <h2 data-number="7.4" id="resilience-design"><span
 class="header-section-number">7.4</span> Resilience Design</h2>
 <p>The integration layer enforces resilience at three levels,
@@ -2079,7 +2261,7 @@ script paths, so the pipeline can report the defect without attempting
 to invoke a non-existent script.</p></li>
 </ol>
 <figure id="fig:resilience">
-<a class="figure-full-size-link" href="../figures/resilience_layers.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/resilience_layers.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/resilience_layers.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 8, The integration layer’s three-level resilience design: resource absence, schema malformation"><img src="../figures/resilience_layers.png" style="width:85.0%"
 alt="Layered flow showing resource absence, malformed data, and missing scripts with bounded fallback responses." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 8: The integration layer’s
 three-level resilience design: resource absence, schema malformation,
@@ -2129,15 +2311,16 @@ resource-discovery logic. The current coverage report shows combined
 line coverage comfortably above the project’s 90% floor; exact test and
 coverage totals drift as the suite grows, so re-run
 <code>uv run pytest … --cov-report=term</code> for the current
-measurements. The <code>tests/test_integration.py</code> suite includes
-an end-to-end test that calls <code>run_integration_demo()</code> and
-asserts that the <code>summary</code> dict contains the expected keys
-with non-negative integer values — a contract test that verifies the
-token injection pipeline’s data source.
-<code>tests/test_manuscript_variables.py</code> adds negative controls
-that change both integration results and a real temporary project tree,
-proving the token generator tracks runtime and filesystem sources rather
-than emitting fixed constants.</p>
+measurements. The <code>tests/tools/test_integration.py</code> suite
+includes an end-to-end test that calls
+<code>run_integration_demo()</code> and asserts that the
+<code>summary</code> dict contains the expected keys with non-negative
+integer values — a contract test that verifies the token injection
+pipeline’s data source.
+<code>tests/figures/test_manuscript_variables.py</code> adds negative
+controls that change both integration results and a real temporary
+project tree, proving the token generator tracks runtime and filesystem
+sources rather than emitting fixed constants.</p>
 <hr />
 <h1 data-number="8" id="sec:conclusion"><span
 class="header-section-number">8</span> Conclusion</h1>
@@ -2281,8 +2464,8 @@ architecture places no constraints on the number of resource
 categories.</p>
 <p>A second direction, <strong>cross-fond validation</strong>, is now
 implemented:
-<code>src/integration.py::check_bibliography_overlap()</code> compares
-this manuscript’s own cite keys against the
+<code>src/template_pools_rules_tools/tools/integration.py::check_bibliography_overlap()</code>
+compares this manuscript’s own cite keys against the
 <code>template_bibliography</code> fond’s curated set and reports
 <code>overlap</code>, <code>project_only</code>, and
 <code>fond_only</code> counts. It deliberately does <em>not</em> assert
@@ -2290,7 +2473,7 @@ full containment in either direction — this manuscript legitimately
 cites software-engineering sources the fond does not curate, and the
 fond legitimately curates machine-learning sources this manuscript does
 not cite. Run
-<code>uv run python -c "from src.integration import check_bibliography_overlap; import json; print(json.dumps(check_bibliography_overlap(), indent=2))"</code>
+<code>uv run python -c "from template_pools_rules_tools.tools.integration import check_bibliography_overlap; import json; print(json.dumps(check_bibliography_overlap(), indent=2))"</code>
 from the project root to see the current overlap.</p>
 <p>A third direction, suggested directly by the Limitations above, was
 extending <code>strong_rule_evaluator</code> with additional rule kinds
@@ -2298,11 +2481,11 @@ beyond the original four. The <code>manifest_freshness</code> kind —
 flagging a fond whose <code>version</code> field has not been bumped
 despite its <code>data/</code> files changing more recently than its
 manifest — is now implemented:
-<code>src/strong_rule_evaluator.py::_evaluate_manifest_freshness()</code>
+<code>src/template_pools_rules_tools/rules/strong_rule_evaluator.py::_evaluate_manifest_freshness()</code>
 is a fifth dispatch entry, unit-tested against synthetic rule dicts
-(<code>tests/test_strong_rule_evaluator.py</code>). It is deliberately
-<strong>not</strong> yet wired to a real strong-rule YAML file: doing so
-would mean adding a file under the shared
+(<code>tests/rules/test_strong_rule_evaluator.py</code>). It is
+deliberately <strong>not</strong> yet wired to a real strong-rule YAML
+file: doing so would mean adding a file under the shared
 <code>rules/templates/template_project_rules/strong/</code> or
 <code>rules/templates/template_manuscript_rules/strong/</code>
 directory, which this project’s own read-only contract against
@@ -2312,8 +2495,9 @@ The evaluator’s logic is proven correct against synthetic input; proving
 it against a real fond’s real manifest and data-file timestamps is the
 natural next step, pending that decision.</p>
 <p>The exemplar is ready to fork. A project team wishing to adopt this
-architecture need only copy the relevant <code>src/</code> modules (the
-three readers plus <code>integration.py</code> are the minimum;
+architecture need only copy the relevant
+<code>src/template_pools_rules_tools/</code> modules (the three readers
+plus <code>integration.py</code> are the minimum;
 <code>strong_rule_evaluator.py</code> and <code>figures.py</code> are
 optional extensions), update the resource directory paths in each
 reader, and replace the exemplar fond/rules/tool names with their

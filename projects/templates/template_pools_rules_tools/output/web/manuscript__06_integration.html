@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>06_integration.md.web</title>
   <style>
@@ -202,12 +202,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -219,7 +263,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -277,6 +332,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -284,13 +341,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -371,8 +483,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -421,6 +532,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -437,6 +554,12 @@ mjx-container[display="true"] {
   text-align: center;
 }
 
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 </style>
 </head>
 <body>
@@ -449,7 +572,8 @@ Injection</h1>
 data-cites="sec:pools">@sec:pools</span>, <span class="citation"
 data-cites="sec:rules">@sec:rules</span>, and <span class="citation"
 data-cites="sec:tools">@sec:tools</span> are orchestrated by a single
-function in <code>src/integration.py</code>. The
+function in
+<code>src/template_pools_rules_tools/tools/integration.py</code>. The
 <code>run_integration_demo()</code> function calls all three subsystems
 in a defined order, collects their results into a structured dictionary,
 and writes summary counts to
@@ -478,7 +602,7 @@ integration run. Tokens are resolved by
 <code>output/data/manuscript_variables.json</code> and substitutes each
 token before the manuscript is passed to the rendering engine.</p>
 <figure id="fig:counts">
-<a class="figure-full-size-link" href="../figures/resource_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/resource_counts.png" style="width:75.0%"
+<a class="figure-full-size-link" href="../figures/resource_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Runtime integration counts from manuscript_variables.json."><img src="../figures/resource_counts.png" style="width:75.0%"
 alt="Bar chart comparing the runtime counts discovered for fonds, rules, and tools." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Runtime integration counts from
 manuscript_variables.json. Bars show fonds loaded, rule sets validated,
@@ -488,7 +612,7 @@ and tools discovered during a single pipeline run.</figcaption>
 following summary values (see <span class="citation"
 data-cites="fig:counts">@fig:counts</span> for a visual
 representation):</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Token</th>
@@ -513,7 +637,7 @@ representation):</p>
 <td>8</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>This table is itself token-injected: the values shown are those
 produced by the pipeline, not hard-coded by the manuscript author. If
 the pipeline results change — for example, because a new fond is added —
@@ -527,7 +651,7 @@ always consistent with the code that generated them
 class="citation" data-cites="fig:pipeline">@fig:pipeline</span>, <span
 class="citation"
 data-cites="fig:pipelineflow">@fig:pipelineflow</span>):</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -575,16 +699,16 @@ into <code>output/manuscript/</code> immediately before rendering</td>
 <td>JSON file + resolved manuscript tree</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <figure id="fig:pipelineflow">
-<a class="figure-full-size-link" href="../figures/pipeline_flow.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/pipeline_flow.png" style="width:95.0%"
+<a class="figure-full-size-link" href="../figures/pipeline_flow.png" target="_blank" rel="noopener" aria-label="Open full-size figure, The 6-script pipeline from source validation through token hydration, ending at the…"><img src="../figures/pipeline_flow.png" style="width:95.0%"
 alt="Left-to-right pipeline from source validation through integration, figure generation, variable hydration, and publication rendering." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>The 6-script pipeline from source
 validation through token hydration, ending at the combined-PDF render
 step.</figcaption>
 </figure>
 <figure id="fig:pipeline">
-<a class="figure-full-size-link" href="../figures/status_dashboard.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/status_dashboard.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/status_dashboard.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Integration status dashboard showing per-resource validation results."><img src="../figures/status_dashboard.png" style="width:85.0%"
 alt="Status dashboard showing pass, partial, or missing state for each resource category." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Integration status dashboard showing
 per-resource validation results. Green indicates ok, amber indicates
@@ -606,12 +730,14 @@ the same run.</p>
 stays free of computation of its own — even
 <code>01_validate_sources.py</code>, the largest entry point in this
 project, is entirely CLI plumbing (argument parsing, console formatting)
-around calls into <code>src/fonds_reader.py</code>,
-<code>src/rules_applier.py</code>, and
-<code>src/tools_invoker.py</code>. This thin-orchestrator pattern
-[Wilson2014best] ensures that all testable logic is in <code>src/</code>
-under the configured project coverage gate, while the scripts themselves
-remain readable without a dedicated test suite of their own.</p>
+around calls into
+<code>src/template_pools_rules_tools/tools/fonds_reader.py</code>,
+<code>src/template_pools_rules_tools/rules/rules_applier.py</code>, and
+<code>src/template_pools_rules_tools/tools/tools_invoker.py</code>. This
+thin-orchestrator pattern [Wilson2014best] ensures that all testable
+logic is in <code>src/</code> under the configured project coverage
+gate, while the scripts themselves remain readable without a dedicated
+test suite of their own.</p>
 <h2 id="resilience-design">Resilience Design</h2>
 <p>The integration layer enforces resilience at three levels,
 corresponding to the three failure modes a monorepo integration pipeline
@@ -636,7 +762,7 @@ script paths, so the pipeline can report the defect without attempting
 to invoke a non-existent script.</p></li>
 </ol>
 <figure id="fig:resilience">
-<a class="figure-full-size-link" href="../figures/resilience_layers.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/resilience_layers.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/resilience_layers.png" target="_blank" rel="noopener" aria-label="Open full-size figure, The integration layer’s three-level resilience design: resource absence, schema malformation"><img src="../figures/resilience_layers.png" style="width:85.0%"
 alt="Layered flow showing resource absence, malformed data, and missing scripts with bounded fallback responses." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>The integration layer’s three-level
 resilience design: resource absence, schema malformation, and script
@@ -683,15 +809,16 @@ resource-discovery logic. The current coverage report shows combined
 line coverage comfortably above the project’s 90% floor; exact test and
 coverage totals drift as the suite grows, so re-run
 <code>uv run pytest … --cov-report=term</code> for the current
-measurements. The <code>tests/test_integration.py</code> suite includes
-an end-to-end test that calls <code>run_integration_demo()</code> and
-asserts that the <code>summary</code> dict contains the expected keys
-with non-negative integer values — a contract test that verifies the
-token injection pipeline’s data source.
-<code>tests/test_manuscript_variables.py</code> adds negative controls
-that change both integration results and a real temporary project tree,
-proving the token generator tracks runtime and filesystem sources rather
-than emitting fixed constants.</p>
+measurements. The <code>tests/tools/test_integration.py</code> suite
+includes an end-to-end test that calls
+<code>run_integration_demo()</code> and asserts that the
+<code>summary</code> dict contains the expected keys with non-negative
+integer values — a contract test that verifies the token injection
+pipeline’s data source.
+<code>tests/figures/test_manuscript_variables.py</code> adds negative
+controls that change both integration results and a real temporary
+project tree, proving the token generator tracks runtime and filesystem
+sources rather than emitting fixed constants.</p>
 </main>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>01_introduction.md.web</title>
   <style>
@@ -202,12 +202,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -219,7 +263,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -277,6 +332,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -284,13 +341,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -371,8 +483,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -421,6 +532,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -435,6 +552,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -460,9 +583,9 @@ maps a single integer seed plus that grammar to one specific,
 fully-formed child project. The grammar lives in
 <code>manuscript/config.yaml</code> under the <code>autopoiesis:</code>
 key and is parsed and validated by <code>parse_grammar()</code> in
-<code>src/grammar.py</code>. Two grammars that differ in even one
-option, one slot name, or one dependency string hash to different
-<code>grammar_hash</code> values, because
+<code>src/template_autopoiesis/core/grammar.py</code>. Two grammars that
+differ in even one option, one slot name, or one dependency string hash
+to different <code>grammar_hash</code> values, because
 <code>Grammar.grammar_hash</code> is the truncated SHA-256 of a
 <code>sort_keys=True</code> JSON canonicalization of the whole grammar
 (<code>Grammar.canonical()</code>). Nothing about child generation is
@@ -560,38 +683,39 @@ rhetorically. <code>materialize()</code> writes a
 <code>provenance.json</code> alongside every generated child recording a
 tree hash computed from the sorted <code>(path, content_hash)</code>
 pairs of every file it wrote (<code>tree_hash_from_content_hashes</code>
-in <code>src/integrity.py</code>), and <code>verify_child()</code> does
-not read that recorded hash and trust it — it re-reads every file listed
-in <code>provenance.json</code> from disk, recomputes the tree hash from
-what is actually present, and compares the two. A file edited after
-generation, a file deleted after generation, or a corrupted provenance
-record are each distinguishable failure modes the verifier reports
-rather than an undifferentiated “verification failed.” The tree-hash and
-Merkle-root constructions used here follow the general content-addressed
-provenance pattern of hashing over a canonical, sorted representation of
-content so that structurally identical inputs verify identically
-regardless of the order files were written or listed
-[merkle_tree_provenance].</p>
+in <code>src/template_autopoiesis/gates/integrity.py</code>), and
+<code>verify_child()</code> does not read that recorded hash and trust
+it — it re-reads every file listed in <code>provenance.json</code> from
+disk, recomputes the tree hash from what is actually present, and
+compares the two. A file edited after generation, a file deleted after
+generation, or a corrupted provenance record are each distinguishable
+failure modes the verifier reports rather than an undifferentiated
+“verification failed.” The tree-hash and Merkle-root constructions used
+here follow the general content-addressed provenance pattern of hashing
+over a canonical, sorted representation of content so that structurally
+identical inputs verify identically regardless of the order files were
+written or listed [merkle_tree_provenance].</p>
 <h3 id="contributions-of-this-exemplar">Contributions of this
 exemplar</h3>
 <p>This project contributes, as a runnable, tested artifact rather than
 a proposal:</p>
 <ul>
 <li><strong>A validated combinatoric grammar</strong>
-(<code>src/grammar.py</code>) with explicit reserved-slot semantics.
-Grammars distinguish <em>effective</em> slots, which multiply into the
-space of meaningfully distinct children, from <em>reserved</em> slots
-(<code>figure_profile</code>, <code>qr_profile</code>,
-<code>integrity_profile</code>), which vary presentation or sealing
-behavior without producing a semantically new child.
-<code>Grammar.product_size</code> and
+(<code>src/template_autopoiesis/core/grammar.py</code>) with explicit
+reserved-slot semantics. Grammars distinguish <em>effective</em> slots,
+which multiply into the space of meaningfully distinct children, from
+<em>reserved</em> slots (<code>figure_profile</code>,
+<code>qr_profile</code>, <code>integrity_profile</code>), which vary
+presentation or sealing behavior without producing a semantically new
+child. <code>Grammar.product_size</code> and
 <code>Grammar.effective_product_size</code> are both computed and both
 reported, so the manuscript cannot silently inflate its own
 combinatorics by counting reserved-slot variation as if it were new
 content — the honesty manifest checks this distinction explicitly rather
 than leaving it to prose.</li>
 <li><strong>A seeded, entropy-free expansion function</strong>
-(<code>expand()</code> in <code>src/expand.py</code>) whose every
+(<code>expand()</code> in
+<code>src/template_autopoiesis/core/expand.py</code>) whose every
 selection is reconstructible from
 <code>(seed, slot_name, ordinal, options)</code> alone, with no hidden
 state.</li>

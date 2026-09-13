@@ -61,8 +61,29 @@ class PublicTemplateContractReport:
 
 
 def _test_files(path: Path) -> tuple[Path, ...]:
-    """Return ordinary project test files without traversing symlinked dirs."""
-    return tuple(sorted(item for item in path.glob("test_*.py") if item.is_file() and not item.is_symlink()))
+    """Return project test files at any subpackage depth, skipping symlinked entries.
+
+    Exemplars keep tests in ``tests/<subpackage>/test_*.py`` since the
+    subpackage split; top-level ``tests/test_*.py`` is only one accepted shape.
+    """
+    if not path.is_dir():
+        return ()
+    found: list[Path] = []
+    stack = [path]
+    while stack:
+        current = stack.pop()
+        try:
+            entries = sorted(current.iterdir())
+        except OSError:
+            continue
+        for item in entries:
+            if item.is_symlink():
+                continue
+            if item.is_file() and item.name.startswith("test_") and item.suffix == ".py":
+                found.append(item)
+            elif item.is_dir():
+                stack.append(item)
+    return tuple(sorted(found))
 
 
 def validate_public_template_contract(
@@ -99,9 +120,7 @@ def validate_public_template_contract(
             findings.append(PublicTemplateFinding(project, "EMPTY-SOURCE", "src contains no Python source files"))
         test_files = _test_files(project_root / "tests")
         if not test_files:
-            findings.append(
-                PublicTemplateFinding(project, "EMPTY-TEST-SCOPE", "tests contains no top-level test_*.py files")
-            )
+            findings.append(PublicTemplateFinding(project, "EMPTY-TEST-SCOPE", "tests contains no test_*.py files"))
     return PublicTemplateContractReport(projects, tuple(findings))
 
 

@@ -3,8 +3,8 @@
 ### The A→E generation spine
 
 Generation proceeds through five stages, each implemented as a pure function
-in its own module (`src/grammar.py`, `src/expand.py`, `src/materialize.py`,
-`src/verify.py`, `src/sealing.py`). No stage depends on interactive state or
+in its own module (`src/template_autopoiesis/core/grammar.py`, `src/template_autopoiesis/core/expand.py`, `src/template_autopoiesis/gates/materialize.py`,
+`src/template_autopoiesis/gates/verify.py`, `src/template_autopoiesis/gates/sealing.py`). No stage depends on interactive state or
 network access; every stage takes an immutable input and returns an immutable
 (or file-system-materialized) output.
 
@@ -162,15 +162,15 @@ is derived deterministically by `child_name(spec)` as
 selected domain and a content-derived identity, without any counter or
 timestamp. `_build_tree` then assembles the file map that will be written:
 
-- **Kernel primitives.** `_vendor_kernel_sources` copies `src/primitives/
-  base.py` and `src/primitives/{domain}.py` for the spec's
+- **Kernel primitives.** `_vendor_kernel_sources` copies `src/template_autopoiesis/primitives/
+  base.py` and `src/template_autopoiesis/primitives/{domain}.py` for the spec's
   `primitive_domain`, rewriting `from src.primitives` / `from .primitives`
   imports to a bare `from primitives` so the copied module resolves
   correctly once it is no longer nested under the parent template's
   package. It also synthesizes a minimal `primitives/__init__.py` whose
   `collect_primitives()` imports only the one selected domain submodule —
   the child ships exactly one domain's kernel, not all five.
-- **Figures source**, vendored verbatim from `src/figures.py` when present.
+- **Figures source**, vendored verbatim from `src/template_autopoiesis/figures/figures.py` when present.
 - **Dependency vendoring.** `_resolve_deps` reads `dep_mode` out of the
   spec's selections (defaulting to `"vendor"`) and, for each name in
   `spec.deps`, resolves the corresponding path from
@@ -208,7 +208,7 @@ artifact Stage D re-derives from.
 
 ### Stage D — Verification
 
-`verify_child(child_root)` (implemented in `src/verify.py`, not
+`verify_child(child_root)` (implemented in `src/template_autopoiesis/gates/verify.py`, not
 `materialize.py`) loads `provenance.json`, reads back every file named in its
 `files` list, recomputes the tree hash from those live contents via the same
 `tree_hash_from_content_hashes` function used at materialization time, and
@@ -243,7 +243,7 @@ rather than introducing a parallel reporting shape.
 ### Property-based invariants
 
 Beyond the fixed example-based tests enumerated in the Honesty Contract's
-ground-truth table (§4), `tests/test_property_invariants.py` exercises the
+ground-truth table (§4), `tests/gates/test_property_invariants.py` exercises the
 expansion and materialization functions against Hypothesis-generated inputs
 using the property-based testing paradigm [@claessen2000quickcheck; @maciver2019hypothesis]:
 rather than asserting fixed input/output pairs, these tests assert
@@ -277,7 +277,7 @@ checked by content hash rather than by trusting the process that produced
 it. The tree hash's construction — sort every `(path, content)` pair
 lexicographically, join as `"path:content"`, and take one SHA-256 of the
 concatenation — is a flat, single-level structure, not a binary hash tree.
-`src/integrity.py` separately exposes a genuine binary `merkle_root()`
+`src/template_autopoiesis/gates/integrity.py` separately exposes a genuine binary `merkle_root()`
 (pairwise concatenate-and-hash up the tree, duplicating the final odd node
 when a level has odd cardinality), in the spirit of the hash-tree
 provenance idea introduced for digital signatures

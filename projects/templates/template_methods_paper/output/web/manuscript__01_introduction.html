@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>01_introduction.md.web</title>
   <style>
@@ -202,12 +202,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -219,7 +263,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -277,6 +332,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -284,13 +341,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -371,8 +483,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -421,6 +532,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -435,6 +552,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -474,35 +597,38 @@ lower, schedule, execute, export — over a biology-native type system
 (units, dimensional analysis, MW-aware concentration), staged validation
 gates, and deterministic compilation with a stable plan hash. Three
 design choices carry over directly into
-<code>src/methods_dsl/</code>:</p>
+<code>src/template_methods_paper/methods_dsl/</code>:</p>
 <ol type="1">
 <li><strong>Intent over instruction.</strong> BPL users write high-level
 intents (<code>transfer</code>, <code>add_reagent</code>,
 <code>incubate</code>); a compiler lowers them to backend-specific
-primitives. <code>src/methods_dsl/vocabulary.py</code>’s
+primitives.
+<code>src/template_methods_paper/methods_dsl/vocabulary.py</code>’s
 <code>StepKind</code> enum is the same idea, generalized:
 <code>TRANSFER</code>/<code>ADD</code>/<code>MIX</code> name
 <em>what</em> happens, never <em>how</em> a particular backend performs
 it.</li>
 <li><strong>Dimensional safety.</strong> BPL’s type system catches
 <code>mL + g</code> at compile time, not at the bench.
-<code>src/methods_dsl/units.py</code> implements the same guarantee with
-a small <code>Dimension</code>/<code>Quantity</code> system rather than
-a full unit library.</li>
+<code>src/template_methods_paper/methods_dsl/units.py</code> implements
+the same guarantee with a small
+<code>Dimension</code>/<code>Quantity</code> system rather than a full
+unit library.</li>
 <li><strong>Deterministic compilation.</strong> Same source, same
 options, same plan hash.
-<code>src/methods_dsl/compiler.py::compile_method</code> reproduces this
-with a canonical-JSON SHA-256 hash over a Kahn’s-algorithm
-[kahn1962topological] schedule.</li>
+<code>src/template_methods_paper/methods_dsl/compiler.py::compile_method</code>
+reproduces this with a canonical-JSON SHA-256 hash over a
+Kahn’s-algorithm [kahn1962topological] schedule.</li>
 </ol>
 <p>What this exemplar does <strong>not</strong> carry over is BPL’s text
 grammar and parser: a <code>Method</code> here is constructed directly
-as frozen Python dataclasses (<code>src/methods_dsl/model.py</code>),
-not parsed from <code>.bpl</code> source. This keeps the DSL’s
-discipline in its typed, validated shape rather than in new concrete
-syntax — appropriate for a template exemplar’s scope — while the
-controlled vocabulary, dimensional safety, and deterministic compilation
-generalize unchanged from wet-lab protocols to any controlled procedure,
+as frozen Python dataclasses
+(<code>src/template_methods_paper/methods_dsl/model.py</code>), not
+parsed from <code>.bpl</code> source. This keeps the DSL’s discipline in
+its typed, validated shape rather than in new concrete syntax —
+appropriate for a template exemplar’s scope — while the controlled
+vocabulary, dimensional safety, and deterministic compilation generalize
+unchanged from wet-lab protocols to any controlled procedure,
 demonstrated in <span class="citation"
 data-cites="sec:results">[@sec:results]</span> by one wet-lab-flavored
 method and one instrument-calibration method.</p>
@@ -510,11 +636,11 @@ method and one instrument-calibration method.</p>
 context</h2>
 <p>The project sits on the repository’s three pillars:</p>
 <ol type="1">
-<li><strong><code>src/methods_dsl/</code> library</strong>: pure,
-side-effect-free dataclasses and functions — no plotting, no file I/O,
-and (with one declared logging exception) no <code>infrastructure</code>
-imports. This purity is what makes the library forkable and trivially
-testable.</li>
+<li><strong><code>src/template_methods_paper/methods_dsl/</code>
+library</strong>: pure, side-effect-free dataclasses and functions — no
+plotting, no file I/O, and (with one declared logging exception) no
+<code>infrastructure</code> imports. This purity is what makes the
+library forkable and trivially testable.</li>
 <li><strong><code>tests/</code> framework</strong>: a zero-mock suite
 that exercises every gate, the compiler, and the exporters against real
 <code>Method</code> fixtures covering both the success path and every
@@ -525,7 +651,7 @@ operational rules that govern agents editing this tree.</li>
 </ol>
 <h2 id="the-worked-examples">The worked examples</h2>
 <p>We specify two methods with <code>all_example_methods()</code>
-(<code>src/methods_dsl/examples_methods.py</code>):
+(<code>src/template_methods_paper/methods_dsl/examples_methods.py</code>):
 <code>PBSPreparation</code>, an original — not copied from BPL’s shipped
 examples — manual bench preparation in BPL’s own domain, and
 <code>SensorCalibrationSweep</code>, a non-biology controlled procedure
@@ -538,7 +664,8 @@ manuscript</h2>
 <ul>
 <li><strong><span class="citation"
 data-cites="sec:methodology">[@sec:methodology]</span></strong> ties
-each pipeline stage to its module in <code>src/methods_dsl/</code>.</li>
+each pipeline stage to its module in
+<code>src/template_methods_paper/methods_dsl/</code>.</li>
 <li><strong><span class="citation"
 data-cites="sec:results">[@sec:results]</span></strong> is
 artifact-centric: every reported number names the function or report

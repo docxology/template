@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_experimental_setup.md.web</title>
   <style>
@@ -202,12 +202,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -219,7 +263,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -277,6 +332,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -284,13 +341,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -371,8 +483,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -421,6 +532,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -435,6 +552,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -465,24 +588,24 @@ field that appears in the rendered manuscript may be intentionally
 authored in <code>config.yaml</code>, or it may be a documented default
 inherited from the template.</p>
 <figure id="fig:configured-field-matrix">
-<a class="figure-full-size-link" href="../figures/configured_field_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/configured_field_matrix.png"
+<a class="figure-full-size-link" href="../figures/configured_field_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Configured field origin matrix"><img src="../figures/configured_field_matrix.png"
 alt="Five-by-two heatmap of tracked config-field paths by scope and origin: schema: 19 explicit, 0 defaulted; section: 33 explicit, 0 defaulted; lexicon: 10 explicit, 0 defaulted; slot: 55 explicit, 11 defaulted; visualization: 9 explicit, 0 defaulted. Counts describe configuration provenance and do not establish schema completeness." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Configured field origin
 matrix</figcaption>
 </figure>
 <figure id="fig:section-configuration-heatmap">
-<a class="figure-full-size-link" href="../figures/section_configuration_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/section_configuration_heatmap.png"
+<a class="figure-full-size-link" href="../figures/section_configuration_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Section configuration heatmap"><img src="../figures/section_configuration_heatmap.png"
 alt="11-row heatmap with columns for section switch, title, narrative moves, and slot count: abstract: switch explicit, title explicit, moves explicit, 3 slots; introduction: switch explicit, title explicit, moves explicit, 8 slots; methods: switch explicit, title explicit, moves explicit, 6 slots; results: switch explicit, title explicit, moves explicit, 5 slots; discussion: switch explicit, title explicit, moves explicit, 3 slots; configuration: switch explicit, title explicit, moves explicit, 1 slots; evaluation: switch explicit, title explicit, moves explicit, 5 slots; reproducibility: switch explicit, title explicit, moves explicit, 2 slots; limitations: switch explicit, title explicit, moves explicit, 3 slots; scope: switch explicit, title explicit, moves explicit, 2 slots; authoring_contract: switch explicit, title explicit, moves explicit, 2 slots. The matrix records configuration coverage, not manuscript quality." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Section configuration
 heatmap</figcaption>
 </figure>
 <figure id="fig:field-origin-summary">
-<a class="figure-full-size-link" href="../figures/field_origin_summary.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/field_origin_summary.png"
+<a class="figure-full-size-link" href="../figures/field_origin_summary.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Field origin summary"><img src="../figures/field_origin_summary.png"
 alt="Two horizontal bars summarize configured-field provenance: 126 explicit paths and 11 defaulted paths, out of 137 tracked paths. The counts identify origin and do not indicate validation status or research quality." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Field origin summary</figcaption>
 </figure>
 <h2 id="declared-section-titles">Declared Section Titles</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 30%" />
 <col style="width: 30%" />
@@ -554,7 +677,7 @@ Moves</td>
 <td style="text-align: right;">True</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="configuration-counts">Configuration Counts</h2>
 <ul>
 <li>Seed: <code>431</code></li>
@@ -579,7 +702,7 @@ Moves</td>
 <li>Contribution claims: <code>9</code></li>
 </ul>
 <h2 id="configured-field-summary">Configured Field Summary</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Measure</th>
@@ -624,9 +747,9 @@ Moves</td>
 <td style="text-align: right;">19</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="configured-field-inventory">Configured Field Inventory</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -1469,7 +1592,7 @@ Assembly</td>
 <td>true</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 </main>
 </body>
 </html>
