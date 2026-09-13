@@ -9,8 +9,8 @@ Project-maintained **inputs** for the methods-paper exemplar (not pipeline outpu
 | `claim_ledger.yaml` | Source-backed numeric and artifact claims for evidence validation |
 
 This exemplar has no dataset fixture: the controlled vocabulary the manuscript
-describes is declared directly in `src/methods_dsl/vocabulary.py` and
-`src/methods_dsl/units.py`, which is itself the project's versioned "input."
+describes is declared directly in `src/template_methods_paper/methods_dsl/vocabulary.py` and
+`src/template_methods_paper/methods_dsl/units.py`, which is itself the project's versioned "input."
 Generated analysis outputs (compiled plans, gate reports, figures) belong
 under `output/` during pipeline runs, not here.
 

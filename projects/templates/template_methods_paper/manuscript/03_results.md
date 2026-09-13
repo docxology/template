@@ -4,7 +4,7 @@ This section reports the compiled plans for both worked example methods.
 Every number below is produced by the
 [methods analysis orchestrator](https://github.com/docxology/template/blob/main/projects/templates/template_methods_paper/scripts/methods_analysis.py)
 (`scripts/methods_analysis.py`),
-which calls `run_all_gates` and `compile_method` from `src/methods_dsl/` and
+which calls `run_all_gates` and `compile_method` from `src/template_methods_paper/methods_dsl/` and
 writes `output/data/compiled_plans.json`, `output/reports/gate_report.json`,
 and `output/reports/trust_chain_report.json`. Running the script regenerates
 every artifact this section references.
@@ -47,7 +47,7 @@ target gates by design, since `compile_method` raises
 
 Recompiling each example method twice and comparing `plan_hash` values
 yields: **determinism check = {{DETERMINISM_CHECK}}**. This is a live
-re-compilation comparison performed by `src/manuscript_variables.py` at
+re-compilation comparison performed by `src/template_methods_paper/manuscript_variables.py` at
 manuscript-build time, not a value asserted once and then transcribed — the
 same property [@sec:methodology] claims for `compile_method` is checked
 again here, independently, against the live build.
@@ -79,7 +79,7 @@ All tests pass under the configured project coverage gate, with no mocks.
 
 The results confirm the pipeline end to end: both worked examples pass
 every staged gate, compile deterministically, and produce a stable plan hash
-across repeated builds. The same `src/methods_dsl/` functions back the
+across repeated builds. The same `src/template_methods_paper/methods_dsl/` functions back the
 analysis script, the test suite, and this manuscript — which is the
 architectural point of the exemplar. Because every number here is produced
 by a tested function and regenerated on demand, the prose describes

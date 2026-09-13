@@ -11,7 +11,7 @@ repository-wide entrypoint; root-level duplicate launchers are intentionally abs
 
 | Subpackage | AGENTS | Role |
 | --- | --- | --- |
-| [`pipeline/`](pipeline/AGENTS.md) | stage orchestrators (`stage_00_setup.py` … `stage_12_metadata.py`) |
+| [`pipeline/`](pipeline/AGENTS.md) | stage orchestrators (`stage_00_setup.py` … `stage_13_docxplus.py`) |
 | [`runner/`](runner/AGENTS.md) | `execute_pipeline.py`, `execute_multi_project.py`, `run_matrix.py`, bundle/archive/repro runners |
 | [`audit/`](audit/AGENTS.md) | docs lint, drift, mock checks, tracked-resource guards |
 | [`docgen/`](docgen/AGENTS.md) | `docs/_generated/` regenerators |
@@ -37,6 +37,7 @@ repository-wide entrypoint; root-level duplicate launchers are intentionally abs
 - `pipeline/stage_10_research_workflow.py` - opt-in research workflow
 - `pipeline/stage_11_ebook.py` - ebook generation (opt-in `ebook` tag)
 - `pipeline/stage_12_metadata.py` - metadata package (opt-in `metadata` tag)
+- `pipeline/stage_13_docxplus.py` - docxplus export (opt-in `docxplus` tag)
 
 **Runners:**
 

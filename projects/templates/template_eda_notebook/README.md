@@ -13,7 +13,7 @@ dataset, surface missingness, compute descriptive statistics and per-group
 means, rank features by correlation, and produce a few diagnostic figures. It is
 a demonstration of the **notebook -> tested src extraction**
 workflow: explore fast in a notebook cell, then move any computation that
-matters into `src/eda/` behind a failing test (thin-orchestrator pattern;
+matters into `src/template_eda_notebook/eda/` behind a failing test (thin-orchestrator pattern;
 `src/` implements, scripts and cells coordinate, tests enforce ≥90% coverage
 with no mocks). If your project is primarily prose, layout, or numerical
 optimization, see [`template_prose_project`](../template_prose_project/),
@@ -133,7 +133,7 @@ uv run python scripts/pipeline/stage_04_validate.py --project templates/template
 publication block, and the dataset schema); copy
 [`manuscript/config.yaml.example`](manuscript/config.yaml.example) to start a new
 project. The dataset column roles are also declared in code at
-`src/eda/dataset.py::DatasetSchema`. No absolute paths are hardcoded — the
+`src/template_eda_notebook/eda/dataset.py::DatasetSchema`. No absolute paths are hardcoded — the
 shipped CSV resolves relative to the project root.
 
 ## Key features
@@ -141,7 +141,7 @@ shipped CSV resolves relative to the project root.
 - **Deterministic dataset**: `data/measurements.csv` is a static, committed
   fixture (fixed content, no generator step at run time), so every statistic
   is reproducible.
-- **Tested EDA library** (`src/eda/`): `load_dataset`, `clean_dataset`,
+- **Tested EDA library** (`src/template_eda_notebook/eda/`): `load_dataset`, `clean_dataset`,
   `normalize_numeric`, `summary_statistics`, `group_means`, `correlation_matrix`,
   `strongest_pairs`, and figure-data preparers.
 - **Walkthrough notebook**: imports the library and walks the EDA; cells carry no
@@ -153,12 +153,12 @@ shipped CSV resolves relative to the project root.
 
 ```mermaid
 graph TD
-    CSV[data/measurements.csv] --> DS[src/eda/dataset.py]
-    DS --> CL[src/eda/cleaning.py]
-    CL --> ST[src/eda/statistics.py]
-    CL --> CO[src/eda/correlation.py]
-    CL --> FG[src/eda/figures.py]
-    NB[notebooks/eda_walkthrough.ipynb] --> INIT[src/__init__.py]
+    CSV[data/measurements.csv] --> DS[src/template_eda_notebook/eda/dataset.py]
+    DS --> CL[src/template_eda_notebook/eda/cleaning.py]
+    CL --> ST[src/template_eda_notebook/eda/statistics.py]
+    CL --> CO[src/template_eda_notebook/eda/correlation.py]
+    CL --> FG[src/template_eda_notebook/eda/figures.py]
+    NB[notebooks/eda_walkthrough.ipynb] --> INIT[src/template_eda_notebook/__init__.py]
     SC[scripts/eda_analysis.py] --> INIT
     INIT --> DS
     SC --> OUT[output/figures + output/data]

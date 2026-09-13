@@ -34,7 +34,7 @@ the full fence.
 ## What you're forking
 
 A **controlled-method specification DSL skeleton**: pure model/validation/
-compilation/export logic in `src/methods_dsl/`, a thin analysis script,
+compilation/export logic in `src/template_methods_paper/methods_dsl/`, a thin analysis script,
 real-fixture `tests/`, and a manuscript whose subject is the methodology
 itself. The two included worked examples (`PBSPreparation`,
 `SensorCalibrationSweep`) are throwaway scaffolding for the **transferable
@@ -48,7 +48,7 @@ The full inventory lives in [`AGENTS.md`](AGENTS.md); the short version:
 
 | Class | Examples | Action |
 |---|---|---|
-| REQUIRED — pipeline gate | `src/methods_dsl/*.py`, `src/__init__.py`, all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
+| REQUIRED — pipeline gate | `src/template_methods_paper/methods_dsl/*.py`, `src/template_methods_paper/__init__.py`, all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
 | REQUIRED — orchestration | `scripts/methods_analysis.py`, `scripts/z_generate_manuscript_variables.py` | The analysis entry point and the token-injection step this template demonstrates |
 | AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/audit/check_template_drift.py`; update them when code changes |
 
@@ -56,9 +56,9 @@ The full inventory lives in [`AGENTS.md`](AGENTS.md); the short version:
 
 ### 1. Replace the worked examples
 
-Replace or extend `src/methods_dsl/examples_methods.py` with your own
+Replace or extend `src/template_methods_paper/methods_dsl/examples_methods.py` with your own
 `Method` declarations, built from `model.py`'s dataclasses. Keep
-`src/methods_dsl/` **infrastructure-free** outside the one declared
+`src/template_methods_paper/methods_dsl/` **infrastructure-free** outside the one declared
 `_logging.py` exception.
 
 ### 2. Extend the controlled vocabulary only if you must
@@ -94,7 +94,7 @@ uv run python scripts/audit/check_template_drift.py --strict
 | `ModuleNotFoundError: src` | Running a script from inside `src/` | `cd` to the repo root and use the full `projects/.../scripts/methods_analysis.py` path |
 | `MethodValidationError: ... failed validation` | A constructed `Method` fails one of the four staged gates | Read the gate name + issues in the message; fix the `Method`, never suppress the exception |
 | `DimensionError: unknown unit ...` | A `Quantity` uses a unit string not in `units.py`'s controlled table | Add the unit to the table with a test, or use an existing controlled unit |
-| Unresolved `{{TOKEN}}` after rendering | Manuscript references a token name `generate_variables()` does not emit | Add it to `src/manuscript_variables.py` + a test, or fix the typo |
+| Unresolved `{{TOKEN}}` after rendering | Manuscript references a token name `generate_variables()` does not emit | Add it to `src/template_methods_paper/manuscript_variables.py` + a test, or fix the typo |
 | Stale `*.egg-info/` after rename | editable install under the old name | `rm -rf src/*.egg-info/`; `.gitignore` already covers future occurrences |
 
 ## See also

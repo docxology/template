@@ -10,12 +10,12 @@ Use this prompt when you want a model to scaffold a full project in one pass. An
 
 | Control | Path | Role |
 | -------- | ----- | ----- |
-| A | [projects/templates/template_code_project](../../projects/templates/template_code_project/) | Flat `src/` modules, `scripts/` orchestrators, standard manuscript sections, reproducible figures/data, `tests/` layout |
+| A | [projects/templates/template_code_project](../../projects/templates/template_code_project/) | `src/<pkg>/` subpackages behind a namespace shim, `scripts/` orchestrators, standard manuscript sections, reproducible figures/data, `tests/<pkg>/` layout |
 
 ## Prompt (copy from below into your assistant)
 
 ````text
-You are working inside the docxology/template monorepo. Scaffold a project at <PROJECT_ROOT> with qualified name <QUALIFIED_PROJECT>. For a deliberately public, reusable exemplar, use PROJECT_ROOT=projects/templates/<PROJECT_SLUG> and QUALIFIED_PROJECT=templates/<PROJECT_SLUG>. Private research belongs in the configured external sidecar (normally working/<PROJECT_SLUG>) and is linked into projects/working/<PROJECT_SLUG>; never add that local mirror to git. Match the shape and discipline of projects/templates/template_code_project/: flat src modules, thin analysis orchestrators, source-bound manuscript hydration, reproducible figures/data, tests with conftest path and MPLBACKEND=Agg if using matplotlib, at least 90% coverage on <PROJECT_ROOT>/src, and no prohibited mock framework.
+You are working inside the docxology/template monorepo. Scaffold a project at <PROJECT_ROOT> with qualified name <QUALIFIED_PROJECT>. For a deliberately public, reusable exemplar, use PROJECT_ROOT=projects/templates/<PROJECT_SLUG> and QUALIFIED_PROJECT=templates/<PROJECT_SLUG>. Private research belongs in the configured external sidecar (normally working/<PROJECT_SLUG>) and is linked into projects/working/<PROJECT_SLUG>; never add that local mirror to git. Match the shape and discipline of projects/templates/template_code_project/: packaged src modules (`src/<pkg>/` subpackages behind a namespace shim), thin analysis orchestrators, source-bound manuscript hydration, reproducible figures/data, tests with conftest path and MPLBACKEND=Agg if using matplotlib, at least 90% coverage on <PROJECT_ROOT>/src, and no prohibited mock framework.
 
 Required layout (must exist):
 
@@ -23,7 +23,7 @@ Required layout (must exist):
 flowchart LR
     P[&lt;PROJECT_ROOT&gt;/]
     P --> PY[pyproject.toml<br/>name · python version · deps ·<br/>pytest + coverage for src]
-    P --> SRC[src<br/>__init__.py + real modules<br/>implementing domain logic]
+    P --> SRC[src<br/>__init__.py shim + <pkg>/<br/>subpackages implementing domain logic]
     P --> T[tests<br/>__init__.py · test_*.py<br/>≥ 90% coverage · no mocks]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
@@ -45,11 +45,11 @@ Rules:
 
 1. No unittest.mock, MagicMock, or pytest monkeypatch of domain code — use real data, temp files, subprocess, or pytest-httpserver for HTTP.
 2. Coverage: configure tool.coverage.run and fail_under in pyproject.toml like the exemplar; exercise all new src lines.
-3. Imports: use from src... in scripts/tests as in template_code_project; infrastructure imports allowed; never import another projects/* package.
+3. Imports: add <PROJECT_ROOT>/src to sys.path (tests/conftest.py does this; scripts do it inline, as in template_code_project) and use deep imports `from <pkg>.<subpackage>.<module> import ...`; infrastructure imports allowed; never import another projects/* package.
 4. Reproducibility: pass explicit local RNG state; record seed, stream/generator, inputs, config, environment, and comparison tolerance. A seed alone is not a reproducibility claim. Use headless plotting (MPLBACKEND=Agg) where relevant.
 5. Naming: <PROJECT_SLUG> is lowercase snake_case; package name in pyproject.toml aligns with repo conventions.
 6. Decision memory: follow docs/rules/memory_and_decision_records.md. Use `WHY:` comments only for counterintuitive local choices, project TODO/ISA notes for active plans, generated docs for volatile counts/rosters, and negative-control tests for verifier-like gates.
-7. Dynamic manuscript values: every computed count, estimate, uncertainty, percentage, benchmark, date/version, table cell, and result-bearing caption fragment must be generated from typed source outputs. Implement src/manuscript_variables.py plus scripts/z_generate_manuscript_variables.py; write output/data/manuscript_variables.json and hydrate output/manuscript. Use uppercase {{TOKEN_NAME}} placeholders in authored Markdown. Add a completeness test and fail when source outputs or tokens are missing; do not silently substitute plausible values.
+7. Dynamic manuscript values: every computed count, estimate, uncertainty, percentage, benchmark, date/version, table cell, and result-bearing caption fragment must be generated from typed source outputs. Implement src/<pkg>/core/manuscript_variables.py plus scripts/z_generate_manuscript_variables.py; write output/data/manuscript_variables.json and hydrate output/manuscript. Use uppercase {{TOKEN_NAME}} placeholders in authored Markdown. Add a completeness test and fail when source outputs or tokens are missing; do not silently substitute plausible values.
 8. Figures: generate each figure and its visible caption from the same analysis summary. Write output/figures/figure_registry.json with stable label, filename, caption, generated_by, source metadata, and separately authored metadata.alt_text. Use color-independent encodings, units, uncertainty/error-bar definitions, and long descriptions for complex figures. Inspect rendered HTML and PDF; registry presence is not an adequacy review.
 9. Statistics: define population/sample, estimand, estimator, denominator, exclusions, missing-data policy, transformations, multiplicity handling, interval/error-bar meaning, software/model version, and uncertainty. Preserve missing, unavailable, excluded, not-run, and zero as distinct states. Keep exploratory, confirmatory, simulation, and benchmark claims separate.
 10. Scholarship: cite primary sources adjacent to externally supported claims, keep citation keys resolvable, and verify that each source actually supports the bounded wording. Identifier resolution does not prove claim support or correction/retraction status. Never invent citations, DOIs, findings, novelty, or consensus.

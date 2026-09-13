@@ -28,25 +28,25 @@ BPL's architecture is a compiler pipeline — parse, semantic check, lower,
 schedule, execute, export — over a biology-native type system (units,
 dimensional analysis, MW-aware concentration), staged validation gates, and
 deterministic compilation with a stable plan hash. Three design choices carry
-over directly into `src/methods_dsl/`:
+over directly into `src/template_methods_paper/methods_dsl/`:
 
 1. **Intent over instruction.** BPL users write high-level intents
    (`transfer`, `add_reagent`, `incubate`); a compiler lowers them to
-   backend-specific primitives. `src/methods_dsl/vocabulary.py`'s `StepKind`
+   backend-specific primitives. `src/template_methods_paper/methods_dsl/vocabulary.py`'s `StepKind`
    enum is the same idea, generalized: `TRANSFER`/`ADD`/`MIX` name *what*
    happens, never *how* a particular backend performs it.
 2. **Dimensional safety.** BPL's type system catches `mL + g` at compile
-   time, not at the bench. `src/methods_dsl/units.py` implements the same
+   time, not at the bench. `src/template_methods_paper/methods_dsl/units.py` implements the same
    guarantee with a small `Dimension`/`Quantity` system rather than a full
    unit library.
 3. **Deterministic compilation.** Same source, same options, same plan hash.
-   `src/methods_dsl/compiler.py::compile_method` reproduces this with a
+   `src/template_methods_paper/methods_dsl/compiler.py::compile_method` reproduces this with a
    canonical-JSON SHA-256 hash over a Kahn's-algorithm
    [@kahn1962topological] schedule.
 
 What this exemplar does **not** carry over is BPL's text grammar and parser:
 a `Method` here is constructed directly as frozen Python dataclasses
-(`src/methods_dsl/model.py`), not parsed from `.bpl` source. This keeps the
+(`src/template_methods_paper/methods_dsl/model.py`), not parsed from `.bpl` source. This keeps the
 DSL's discipline in its typed, validated shape rather than in new concrete
 syntax — appropriate for a template exemplar's scope — while the controlled
 vocabulary, dimensional safety, and deterministic compilation generalize
@@ -58,7 +58,7 @@ method.
 
 The project sits on the repository's three pillars:
 
-1. **`src/methods_dsl/` library**: pure, side-effect-free dataclasses and
+1. **`src/template_methods_paper/methods_dsl/` library**: pure, side-effect-free dataclasses and
    functions — no plotting, no file I/O, and (with one declared logging
    exception) no `infrastructure` imports. This purity is what makes the
    library forkable and trivially testable.
@@ -72,7 +72,7 @@ The project sits on the repository's three pillars:
 ## The worked examples
 
 We specify two methods with `all_example_methods()`
-(`src/methods_dsl/examples_methods.py`): `PBSPreparation`, an
+(`src/template_methods_paper/methods_dsl/examples_methods.py`): `PBSPreparation`, an
 original — not copied from BPL's shipped examples — manual bench
 preparation in BPL's own domain, and `SensorCalibrationSweep`, a
 non-biology controlled procedure mixing automated measurement with a
@@ -83,7 +83,7 @@ that the DSL's vocabulary generalizes beyond wet-lab protocols, as
 ## Reader's guide to the manuscript
 
 - **[@sec:methodology]** ties each pipeline stage to its module in
-  `src/methods_dsl/`.
+  `src/template_methods_paper/methods_dsl/`.
 - **[@sec:results]** is artifact-centric: every reported number names the
   function or report file that produced it.
 - **[@sec:experimental_setup]** lists the controlled vocabulary and software

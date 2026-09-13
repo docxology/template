@@ -17,9 +17,16 @@ Split a mega guide when **any** of the following hold:
 Do **not** split generated inventories (`docs/_generated/*`, `api-reference.md`);
 those are refreshed by scripts and are exempt.
 
-## Current P1 watch list (2026-06-11)
+## Current P1 watch list (snapshot 2026-06-11 — line counts are historical; re-derive before acting)
 
-| Path | Lines | Suggested leaf topics |
+The numeric column below was measured on 2026-06-11 and is now stale; it is
+kept only to preserve the original scoping context. Re-derive current sizes
+from the file footers or
+[`docs/_generated/COUNTS.md`](../_generated/COUNTS.md) — never copy these
+numbers into prose — and treat [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md)
+as the live watch surface.
+
+| Path | Lines (2026-06-11) | Suggested leaf topics |
 | --- | ---: | --- |
 | [`docs/reference/api-reference.md`](../reference/api-reference.md) | 3245 | Generated — no split; refresh via `scripts/docgen/api_reference.py` |
 | [`docs/rules/manuscript_style.md`](../rules/manuscript_style.md) | 1145 | LaTeX math · citations · figures · accessibility |

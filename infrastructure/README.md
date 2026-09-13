@@ -10,35 +10,45 @@ The infrastructure layer provides generic, reusable functionality that can be ap
 
 Each subpackage (and the package root) includes a **`SKILL.md`** with YAML frontmatter (`name`, `description`) so assistants can route work to the right module. **Discovery:** open [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (or `@.cursor/skill_manifest.json` in Cursor), search `infrastructure/**/SKILL.md`, open the hub [SKILL.md](SKILL.md), or use `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md`. Regenerate the manifest after skill changes: `uv run python -m infrastructure.skills write`.
 
-| Path | Frontmatter `name` |
-| ------ | ------------------- |
-| [SKILL.md](SKILL.md) | `infrastructure-overview` |
-| [autoresearch/SKILL.md](autoresearch/SKILL.md) | `infrastructure-autoresearch` |
-| [benchmark/SKILL.md](benchmark/SKILL.md) | `infrastructure-benchmark` |
-| [config/SKILL.md](config/SKILL.md) | `infrastructure-config` |
-| [core/SKILL.md](core/SKILL.md) | `infrastructure-core` |
-| [docker/SKILL.md](docker/SKILL.md) | `infrastructure-docker` |
-| [doctor/SKILL.md](doctor/SKILL.md) | `infrastructure-doctor` |
-| [documentation/SKILL.md](documentation/SKILL.md) | `infrastructure-documentation` |
-| [llm/SKILL.md](llm/SKILL.md) | `infrastructure-llm` |
-| [methods/SKILL.md](methods/SKILL.md) | `infrastructure-methods` |
-| [orchestration/SKILL.md](orchestration/SKILL.md) | `infrastructure-orchestration` |
-| [project/SKILL.md](project/SKILL.md) | `infrastructure-project` |
-| [prose/SKILL.md](prose/SKILL.md) | `infrastructure-prose` |
-| [publishing/SKILL.md](publishing/SKILL.md) | `infrastructure-publishing` |
-| [reference/SKILL.md](reference/SKILL.md) | `infrastructure-reference` |
-| [reference/citation/SKILL.md](reference/citation/SKILL.md) | `infrastructure-reference-citation` |
-| [reference/verification/SKILL.md](reference/verification/SKILL.md) | `reference-verification` |
-| [rendering/SKILL.md](rendering/SKILL.md) | `infrastructure-rendering` |
-| [reporting/SKILL.md](reporting/SKILL.md) | `infrastructure-reporting` |
-| [scientific/SKILL.md](scientific/SKILL.md) | `infrastructure-scientific` |
-| [search/SKILL.md](search/SKILL.md) | `infrastructure-search` |
-| [search/literature/SKILL.md](search/literature/SKILL.md) | `infrastructure-search-literature` |
-| [sia/SKILL.md](sia/SKILL.md) | `infrastructure-sia` |
-| [skills/SKILL.md](skills/SKILL.md) | `infrastructure-skills` |
-| [steganography/SKILL.md](steganography/SKILL.md) | `infrastructure-steganography` |
-| [core/telemetry/SKILL.md](core/telemetry/SKILL.md) | `telemetry` |
-| [validation/SKILL.md](validation/SKILL.md) | `infrastructure-validation` |
+| Path | Frontmatter `name` | Description |
+| --- | --- | --- |
+| [SKILL.md](SKILL.md) | `infrastructure-overview` | Top-level routing for the infrastructure layer — module discovery, import patterns, two-layer architecture, and the skill manifest. |
+| [autoresearch/SKILL.md](autoresearch/SKILL.md) | `infrastructure-autoresearch` | Deterministic AutoResearch readiness planning — opt-in `autoresearch.yaml` controls, stage-gate readiness, and evidence-grounded claims. |
+| [benchmark/SKILL.md](benchmark/SKILL.md) | `infrastructure-benchmark` | Deterministic benchmark harnesses scoring generated project outputs against manifests; bounded no-network readiness checks. |
+| [config/SKILL.md](config/SKILL.md) | `infrastructure-config` | Repository-scoped configuration — `.env` patterns, default secure/steganography YAML, and project config overrides. |
+| [core/SKILL.md](core/SKILL.md) | `infrastructure-core` | Logging, configuration, exceptions, checkpoints/retry, pipeline execution, security, and multi-project orchestration. |
+| [core/telemetry/SKILL.md](core/telemetry/SKILL.md) | `telemetry` | Unified pipeline telemetry — per-stage performance metrics and diagnostic events into structured JSON/text reports. |
+| [docker/SKILL.md](docker/SKILL.md) | `infrastructure-docker` | Container build and compose assets for reproducing CI/cloud environments and wiring Ollama sidecars. |
+| [doctor/SKILL.md](doctor/SKILL.md) | `infrastructure-doctor` | Repository-level diagnostics with safe, reversible automated repair (backups + action journal). |
+| [documentation/SKILL.md](documentation/SKILL.md) | `infrastructure-documentation` | Figure management, image handling, markdown integration, and API glossary generation. |
+| [fonds/SKILL.md](fonds/SKILL.md) | `infrastructure-fonds` | Discovery, validation, scope, and private-sidecar symlink sync for the top-level `fonds/` directory. |
+| [llm/SKILL.md](llm/SKILL.md) | `infrastructure-llm` | Local LLM integration via Ollama — clients, prompt templates, output validation, reviews, and model management. |
+| [metadata/SKILL.md](metadata/SKILL.md) | `infrastructure-metadata` | Shared publication-metadata leaves — repository-URL normalization and ONIX/metadata.json/EPUB OPF generation. |
+| [methods/SKILL.md](methods/SKILL.md) | `infrastructure-methods` | Methods orchestration contract builder mapping pipeline stages, evidence registries, and validation commands into one reproducible plan. |
+| [orchestration/SKILL.md](orchestration/SKILL.md) | `infrastructure-orchestration` | Python CLI and interactive menu orchestration for pipeline runs — project picker, PipelineRunner, per-stage logs. |
+| [project/SKILL.md](project/SKILL.md) | `infrastructure-project` | Multi-project discovery, structure validation, and project metadata extraction. |
+| [prose/SKILL.md](prose/SKILL.md) | `infrastructure-prose` | Prose analysis utilities — readability metrics, heading outlines, editorial quality flags, and manuscript reports. |
+| [provenance/SKILL.md](provenance/SKILL.md) | `provenance-dag` | Content-addressed provenance DAG recording which pipeline stage produced which artifact, with review/validation passes. |
+| [publishing/SKILL.md](publishing/SKILL.md) | `infrastructure-publishing` | Academic publishing workflows — citations, DOIs, Zenodo/arXiv/GitHub/PyPI, site deployment, and multi-target archival. |
+| [reference/SKILL.md](reference/SKILL.md) | `infrastructure-reference` | BibTeX read/write/convert plus deterministic reference-existence verification against Crossref/OpenAlex/arXiv. |
+| [reference/citation/SKILL.md](reference/citation/SKILL.md) | `infrastructure-reference-citation` | BibTeX parse/render/convert with house-style citation-key generation and LaTeX escaping. |
+| [reference/verification/SKILL.md](reference/verification/SKILL.md) | `reference-verification` | Deterministic anti-hallucination gate resolving cited references against Crossref, OpenAlex, and arXiv (offline-first). |
+| [rendering/SKILL.md](rendering/SKILL.md) | `infrastructure-rendering` | Multi-format output generation — PDF manuscripts, HTML pages, and Beamer/Reveal.js slides. |
+| [reporting/SKILL.md](reporting/SKILL.md) | `infrastructure-reporting` | Pipeline reporting, error aggregation, executive summaries, dashboards, and multi-project reports. |
+| [research/SKILL.md](research/SKILL.md) | `research-workflow` | Seven-stage research workflow (SCOPE→LITERATURE→REASON→DESIGN→COMPUTE→SYNTHESIZE→WRITE) with config-driven stage overrides. |
+| [rules/SKILL.md](rules/SKILL.md) | `infrastructure-rules` | Discovery, validation, scope, and private-sidecar symlink sync for the top-level `rules/` directory. |
+| [scientific/SKILL.md](scientific/SKILL.md) | `infrastructure-scientific` | Numerical stability checks, performance benchmarking, and improvement confirmation beyond the noise band. |
+| [search/SKILL.md](search/SKILL.md) | `infrastructure-search` | Discovery utilities hosting `literature`, `exa`, `monid`, `connectors`, and `deep_research` subpackages. |
+| [search/connectors/SKILL.md](search/connectors/SKILL.md) | `scientific-connectors` | Uniform Connector interface over 8+ scientific databases for literature, biology, and protein/PDB queries. |
+| [search/literature/SKILL.md](search/literature/SKILL.md) | `infrastructure-search-literature` | Paperclip-style multi-source literature search across arXiv, Crossref, and local corpora with dedup and caching. |
+| [search/monid/SKILL.md](search/monid/SKILL.md) | `infrastructure-search-monid` | Monid HTTP API client (discover/inspect/run/poll/balance) with an offline search-API pricing comparison table. |
+| [sia/SKILL.md](sia/SKILL.md) | `infrastructure-sia` | Self-Improvement Agent (SIA) harness contract — layouts, artifact trees, evaluation runners, and replay loops. |
+| [skills/SKILL.md](skills/SKILL.md) | `infrastructure-skills` | Programmatic discovery of agent SKILL.md files and `.cursor/skill_manifest.json` validation/writing. |
+| [steganography/SKILL.md](steganography/SKILL.md) | `infrastructure-steganography` | QR codes, hash manifests, metadata payloads, and document-wide overlay processing for PDFs. |
+| [tools/SKILL.md](tools/SKILL.md) | `infrastructure-tools` | Discovery, validation, scope, and private-sidecar symlink sync for the top-level `tools/` directory. |
+| [transmission/SKILL.md](transmission/SKILL.md) | `infrastructure-transmission` | Rendered-release transmission leaves — LaTeX single-page bookends, Stage 04 page checks, barcode strips, and figure embedding. |
+| [validation/SKILL.md](validation/SKILL.md) | `infrastructure-validation` | PDF/markdown validation, output integrity, link verification, documentation audits, and repository scanning. |
+| [validation/publication/SKILL.md](validation/publication/SKILL.md) | `publication-readiness-audit` | Deterministic publication-readiness audit across tests, methods, evidence, artifacts, figures, and outputs of public exemplars. |
 
 Pair each `SKILL.md` with the matching **`AGENTS.md`** for full API tables.
 

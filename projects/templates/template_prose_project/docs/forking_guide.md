@@ -129,7 +129,7 @@ prove each detector catches the bug class it was built for.
 
 [`template_code_project`](../../template_code_project) is the
 numerical-research sibling — same shape, has its own gradient-descent
-algorithm in `src/optimizer.py`. If your work is computational rather
+algorithm in `src/template_code_project/core/optimizer.py`. If your work is computational rather
 than editorial, fork that one instead.
 
 ## See also

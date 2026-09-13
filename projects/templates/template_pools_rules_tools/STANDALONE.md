@@ -69,24 +69,26 @@ my_project/
 │       └── template_code_executor/
 │           └── tools.yaml
 └── src/
-    ├── __init__.py               # re-exports the public API (imports figures/figures.py)
-    ├── py.typed
-    ├── tools/
-    │   ├── type_defs.py
-    │   ├── fonds_reader.py
-    │   ├── tools_invoker.py
-    │   └── integration.py        # imports rules/strong_rule_evaluator.py
-    ├── rules/
-    │   ├── rules_applier.py
-    │   └── strong_rule_evaluator.py
-    └── figures/
-        ├── figures.py             # imports cover_figure.py + rule_hierarchy_figure.py
-        ├── cover_figure.py
-        ├── rule_hierarchy_figure.py
-        └── manuscript_variables.py
+    ├── __init__.py               # namespace shim — the real package lives at src/template_pools_rules_tools/
+    └── template_pools_rules_tools/
+            ├── __init__.py           # re-exports the public API (imports figures/figures.py)
+            ├── py.typed
+            ├── tools/
+            │   ├── type_defs.py
+            │   ├── fonds_reader.py
+            │   ├── tools_invoker.py
+            │   └── integration.py    # imports rules/strong_rule_evaluator.py
+            ├── rules/
+            │   ├── rules_applier.py
+            │   └── strong_rule_evaluator.py
+            └── figures/
+                ├── figures.py        # imports cover_figure.py + rule_hierarchy_figure.py
+                ├── cover_figure.py
+                ├── rule_hierarchy_figure.py
+                └── manuscript_variables.py
 ```
 
-(`src/__init__.py` imports `figures/figures.py`; `tools/integration.py` imports
+(`src/template_pools_rules_tools/__init__.py` imports `figures/figures.py`; `tools/integration.py` imports
 `rules/strong_rule_evaluator.py`), so omitting any of them makes the Quick start
 below fail with `ModuleNotFoundError` before any of this project's own code
 runs.
@@ -98,11 +100,11 @@ runs.
 The `src/` modules resolve the repo root using:
 
 ```python
-pathlib.Path(__file__).resolve().parents[4]
+pathlib.Path(__file__).resolve().parents[6]
 ```
 
-This assumes the source file sits at depth 5 from the repo root:
-`projects/templates/template_pools_rules_tools/src/<module>.py`.
+This assumes the source file sits at depth 7 from the repo root:
+`projects/templates/template_pools_rules_tools/src/template_pools_rules_tools/<subpackage>/<module>.py`.
 
 **When you fork**, if your layout is different (e.g. `src/<module>.py` sits
 only 1 level deep), update the `_repo_root()` helper in each module to use
@@ -144,7 +146,7 @@ uv sync
 ## Quick start
 
 ```python
-from src.tools.integration import run_integration_demo
+from template_pools_rules_tools.tools.integration import run_integration_demo
 
 result = run_integration_demo()
 
@@ -160,7 +162,7 @@ print(result["summary"])
 #   "datasets": 5,
 # }
 
-from src.tools.integration import generate_figure_data
+from template_pools_rules_tools.tools.integration import generate_figure_data
 rows = generate_figure_data(result)
 for row in rows:
     print(row["label"], row["count"], row["status"])
@@ -168,7 +170,7 @@ for row in rows:
 
 The fonds and tools counts are discovered at runtime from whatever you actually
 copied. The rules-set counts are the exception: `rules_sets_total` is
-`len(_DEFAULT_RULE_SETS)` in [`src/tools/integration.py`](src/template_pools_rules_tools/tools/integration.py), a
+`len(_DEFAULT_RULE_SETS)` in [`src/template_pools_rules_tools/tools/integration.py`](src/template_pools_rules_tools/tools/integration.py), a
 fixed two-entry demo list (`template_project_rules`, `template_manuscript_rules`),
 so adding a rule set under `rules/` does not raise that total until you extend
 that list. The values shown match the minimal fork layout in

@@ -7,8 +7,8 @@ exporter validation.
 
 The core insight is architectural: if a function requires a mock to be
 tested, it is doing I/O, plotting, or producing side-effects — which means it
-belongs in `scripts/` (a thin orchestrator), not in `src/methods_dsl/` (pure
-model/validation/compilation logic). The purity of `src/methods_dsl/` is what
+belongs in `scripts/` (a thin orchestrator), not in `src/template_methods_paper/methods_dsl/` (pure
+model/validation/compilation logic). The purity of `src/template_methods_paper/methods_dsl/` is what
 makes zero-mock testing achievable. Every function takes real dataclasses
 (`Method`, `Step`, `Quantity`, ...) in and returns real data out, so tests
 simply construct a real `Method` and verify real gate outcomes, plan hashes,
@@ -49,7 +49,7 @@ Live test count and coverage percentage:
 
 This suite uses **flat function-style tests** (`def test_<what_is_being_tested>`),
 not class-based tests — there is no `class Test...` declared anywhere under
-`tests/`. Each `test_<module>.py` file mirrors `src/methods_dsl/<module>.py`
+`tests/`. Each `test_<module>.py` file mirrors `src/template_methods_paper/methods_dsl/<module>.py`
 one-to-one. See [`../tests/AGENTS.md`](../tests/AGENTS.md) before introducing
 a class-based test, since the `test_class_drift` drift gate fails if any doc
 names a test class absent from `tests/`.
@@ -77,7 +77,7 @@ uv run pytest tests/ --cov=src --cov-report=term-missing --cov-fail-under=90
 
 - [ ] Test constructs a real `Method`/`Step`/`Resource`/`Quantity` (or reuses
       a `conftest.py` fixture) as input.
-- [ ] Test calls `src/methods_dsl/` functions directly with that real input.
+- [ ] Test calls `src/template_methods_paper/methods_dsl/` functions directly with that real input.
 - [ ] Test asserts real outcomes (gate `passed`/`issues`, a recomputed
       `plan_hash`, exported text content), not call counts.
 - [ ] No `unittest.mock`, `MagicMock`, `create_autospec`, `@patch`, or mock
@@ -87,7 +87,7 @@ uv run pytest tests/ --cov=src --cov-report=term-missing --cov-fail-under=90
 
 ## Structural Rule: If You Need a Mock, Move the Code
 
-- **`src/methods_dsl/*`** — pure model/validation/compilation/export/trust
+- **`src/template_methods_paper/methods_dsl/*`** — pure model/validation/compilation/export/trust
   logic; no plotting, no file I/O, no `infrastructure.*` imports except the
   one declared exception in `_logging.py`.
 - **`scripts/methods_analysis.py`** — the only place matplotlib and file

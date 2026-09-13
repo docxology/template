@@ -80,15 +80,15 @@ infrastructure, pipeline stages, or cross-template validation.
 | Surface | Responsibility |
 | --- | --- |
 | `manuscript/config.yaml` | Declares the Madlib schema, manuscript titles, narrative moves, method protocol, design principles, pipeline phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, lexicon categories, and slots. |
-| `src/config.py` | Validates `madlib:` and rejects malformed sections, empty required lexicons, bad protocol/design/phase/evaluation/probe/failure/obligation rows, malformed visualization controls, and invalid composition depth; records explicit and defaulted config paths. |
-| `src/tokens.py` | Uses seeded digest selection so a fixed config produces a stable token plan and config edits produce reviewable changes. |
-| `src/composition.py` | Builds multi-paragraph IMRAD, evaluation, reproducibility, limitation, scope, and authoring-contract bodies plus Markdown evidence tables and figure groups from config plus token plan. |
-| `src/analysis.py` | Thin orchestrator: `generate_artifacts` loads config, builds the token plan, and delegates to the sibling `analysis_*` modules, returning the artifact-path map. |
-| `src/analysis_fields.py` | Builds the configured-field inventory and explicit/default origin counts. |
-| `src/analysis_figures.py` | Writes the nine figure PNGs (cover overview, token density, injection flow, section allocation, provenance map, quality-gate matrix, configured-field matrix, section heatmap, origin summary) and the figure registry. |
-| `src/analysis_reports.py` | Writes the JSON data artifacts (token inventory, section plan, configured-field inventory, injection trace) and the Markdown summary/configured-field reports. |
-| `src/manuscript_variables.py` | Emits the flat `{{TOKEN}}` replacement map consumed by manuscript injection. |
-| `src/output_validator.py` | Deterministic project-local output validation: hydrated placeholders, token provenance, figure registry, configured-field origins, declared artifact inventory, and authoring-contract binding; writes `output/reports/output_validation.json`. |
+| `src/template_madlib/config.py` | Validates `madlib:` and rejects malformed sections, empty required lexicons, bad protocol/design/phase/evaluation/probe/failure/obligation rows, malformed visualization controls, and invalid composition depth; records explicit and defaulted config paths. |
+| `src/template_madlib/tokens.py` | Uses seeded digest selection so a fixed config produces a stable token plan and config edits produce reviewable changes. |
+| `src/template_madlib/composition.py` | Builds multi-paragraph IMRAD, evaluation, reproducibility, limitation, scope, and authoring-contract bodies plus Markdown evidence tables and figure groups from config plus token plan. |
+| `src/template_madlib/analysis.py` | Thin orchestrator: `generate_artifacts` loads config, builds the token plan, and delegates to the sibling `analysis_*` modules, returning the artifact-path map. |
+| `src/template_madlib/analysis_fields.py` | Builds the configured-field inventory and explicit/default origin counts. |
+| `src/template_madlib/analysis_figures.py` | Writes the nine figure PNGs (cover overview, token density, injection flow, section allocation, provenance map, quality-gate matrix, configured-field matrix, section heatmap, origin summary) and the figure registry. |
+| `src/template_madlib/analysis_reports.py` | Writes the JSON data artifacts (token inventory, section plan, configured-field inventory, injection trace) and the Markdown summary/configured-field reports. |
+| `src/template_madlib/manuscript_variables.py` | Emits the flat `{{TOKEN}}` replacement map consumed by manuscript injection. |
+| `src/template_madlib/output_validator.py` | Deterministic project-local output validation: hydrated placeholders, token provenance, figure registry, configured-field origins, declared artifact inventory, and authoring-contract binding; writes `output/reports/output_validation.json`. |
 | `manuscript/*.md` | Keeps author-readable section shells; generated prose belongs only under `output/manuscript/`. |
 
 ## Method Protocol Contract
@@ -106,9 +106,9 @@ Forks that add domain claims need additional domain validators and claim-ledger 
 Before a fork turns the exemplar into a domain report, update these surfaces together:
 
 - `madlib.method_protocol`, `pipeline_phases`, `quality_probes`, `failure_modes`, `audit_rules`, and `contribution_claims`.
-- `src/config.py` when the fork adds, removes, or changes schema fields, defaults, or malformed-value behavior.
-- `src/composition.py` when the generated Methods prose or evidence tables change.
-- `src/analysis.py` when new method artifacts, reports, figures, or registry rows are needed.
+- `src/template_madlib/config.py` when the fork adds, removes, or changes schema fields, defaults, or malformed-value behavior.
+- `src/template_madlib/composition.py` when the generated Methods prose or evidence tables change.
+- `src/template_madlib/analysis.py` when new method artifacts, reports, figures, or registry rows are needed.
 - Stage 04 validators or project-local validators when the fork introduces evidence that generic render checks cannot inspect.
 - `tests/` so method rows, generated prose, artifacts, validators, registry coverage, review-packet surfaces, and unresolved-token scans can fail.
 - `data/claim_ledger.yaml` so each local claim, non-claim, or domain claim has evidence.

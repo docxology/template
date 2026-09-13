@@ -1,7 +1,7 @@
 # scripts/ — Analysis Scripts
 
 **Thin orchestrators.** These scripts contain no DSL logic: they import from
-`src.methods_dsl`, compile and export the worked example methods, plot one
+`template_methods_paper.methods_dsl`, compile and export the worked example methods, plot one
 figure with matplotlib, and write artifacts to `output/`. All compilation,
 validation, and export logic lives in the library, never here.
 
@@ -35,12 +35,12 @@ real project root and prints each output path for manifest collection.
 
 ```mermaid
 graph TD
-    MA[methods_analysis.py] --> INIT[src/__init__.py]
-    INIT --> MDL[src/methods_dsl/model.py]
-    INIT --> VAL[src/methods_dsl/validation.py]
-    INIT --> CMP[src/methods_dsl/compiler.py]
-    INIT --> EXP[src/methods_dsl/export.py]
-    INIT --> TRU[src/methods_dsl/trust.py]
+    MA[methods_analysis.py] --> INIT[src/template_methods_paper/__init__.py]
+    INIT --> MDL[src/template_methods_paper/methods_dsl/model.py]
+    INIT --> VAL[src/template_methods_paper/methods_dsl/validation.py]
+    INIT --> CMP[src/template_methods_paper/methods_dsl/compiler.py]
+    INIT --> EXP[src/template_methods_paper/methods_dsl/export.py]
+    INIT --> TRU[src/template_methods_paper/methods_dsl/trust.py]
     MA --> OUT[output/data + output/reports + output/figures]
     GMV[z_generate_manuscript_variables.py] --> OUT
     GMV --> MAN[manuscript/*.md TOKEN substitution]

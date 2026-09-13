@@ -9,7 +9,7 @@ fails closed (`tests/loop/test_gate_negative_controls.py`, `tests/writers/test_g
 
 ## The substance predicate (shared foundation)
 
-`src/writers/artifact_content.is_substantive_artifact(path)` is the single shared check
+`src/template_autoresearch_project/writers/artifact_content.is_substantive_artifact(path)` is the single shared check
 that distinguishes a real artifact from a hollow one. A file is substantive only
 if it exists **and** carries non-trivial, parseable content:
 
@@ -28,13 +28,13 @@ The claim, figure-quality, and benchmark gates all delegate to this predicate, s
 
 | Gate | Binds | Enforcement | Source |
 | --- | --- | --- | --- |
-| **Claim support** | a research question is `supported` only if its evidence file is *substantive* | per-claim flag, surfaced in readiness | `src/loop.build_claims` |
-| **Figure quality** | a figure is `valid` only if its **source data artifact** is substantive (not just pixels non-uniform) | `valid` flag, all-figures gate | `src/figures/figure_quality.py` |
-| **Benchmark readiness** | measured: core artifacts substantive **+ ≥1 supported claim whose evidence is substantive + ML accuracy improved over baseline** by a configurable threshold | score `< 1.0` ⇒ `incomplete` | `src/writers._grade_absent_benchmark` |
-| **Schema conformance** | a tagged governance payload must satisfy its registered field/type contract | **HARD gate** — `write_schema_manifest` raises and aborts the loop on a nonconforming payload | `src/artifact_schemas` |
-| **Local integrity** | a present-but-empty required file → fail; the input MNIST fixture is cross-checked against its **committed declared** `npz_sha256` (external truth) | `status: "failed"` on any empty/mismatch/missing-declared-hash | `src/security.integrity_attestation_payload` |
+| **Claim support** | a research question is `supported` only if its evidence file is *substantive* | per-claim flag, surfaced in readiness | `template_autoresearch_project.loop.build_claims` |
+| **Figure quality** | a figure is `valid` only if its **source data artifact** is substantive (not just pixels non-uniform) | `valid` flag, all-figures gate | `src/template_autoresearch_project/figures/figure_quality.py` |
+| **Benchmark readiness** | measured: core artifacts substantive **+ ≥1 supported claim whose evidence is substantive + ML accuracy improved over baseline** by a configurable threshold | score `< 1.0` ⇒ `incomplete` | `template_autoresearch_project.writers._grade_absent_benchmark` |
+| **Schema conformance** | a tagged governance payload must satisfy its registered field/type contract | **HARD gate** — `write_schema_manifest` raises and aborts the loop on a nonconforming payload | `src/template_autoresearch_project/writers/artifact_schemas` |
+| **Local integrity** | a present-but-empty required file → fail; the input MNIST fixture is cross-checked against its **committed declared** `npz_sha256` (external truth) | `status: "failed"` on any empty/mismatch/missing-declared-hash | `template_autoresearch_project.security.integrity_attestation_payload` |
 | **Evidence (default)** | a manuscript number that matches **no** generated artifact (fabrication) → error | pipeline "Evidence registry" check | `infrastructure/validation/evidence_registry` |
-| **Output-path self-report** | `output_paths` lists only artifacts that actually exist (no overclaim) and covers the `required_artifacts` contract | derived, existence-filtered | `src/loop_phases.final_output_path_payload` |
+| **Output-path self-report** | `output_paths` lists only artifacts that actually exist (no overclaim) and covers the `required_artifacts` contract | derived, existence-filtered | `template_autoresearch_project.loop.loop_phases.final_output_path_payload` |
 
 ## Configurability
 

@@ -39,10 +39,10 @@ The `type` field governs which reader function is appropriate and what schema th
 
 ## Fond Reader Module
 
-The `src/tools/fonds_reader.py` module provides three reader functions — one per fond type — plus a convenience aggregator:
+The `src/template_pools_rules_tools/tools/fonds_reader.py` module provides three reader functions — one per fond type — plus a convenience aggregator:
 
 ```python
-from src.tools.fonds_reader import (
+from template_pools_rules_tools.tools.fonds_reader import (
     read_bibliography_fond,
     read_contacts_fond,
     read_datasets_fond,
@@ -55,7 +55,7 @@ datasets = read_datasets_fond()       # dict | None
 all_fonds = read_all_fonds()          # {"bibliography": ..., "contacts": ..., "datasets": ...}
 ```
 
-Each reader resolves the repository root from `pathlib.Path(__file__).resolve().parents[4]`, checks that the manifest and data files exist before touching them, and wraps the actual YAML parse in a `try/except (OSError, UnicodeDecodeError, yaml.YAMLError)` block. A missing path or a malformed file both degrade the same way — a logged warning and a `None` return — so the integration pipeline keeps going when a fond has not yet been populated by a parallel agent [@Taschuk2017ten]. In the current run, {{FONDS_LOADED}} of {{FONDS_EXPECTED}} expected fonds were successfully loaded (see @fig:counts).
+Each reader resolves the repository root from `pathlib.Path(__file__).resolve().parents[6]`, checks that the manifest and data files exist before touching them, and wraps the actual YAML parse in a `try/except (OSError, UnicodeDecodeError, yaml.YAMLError)` block. A missing path or a malformed file both degrade the same way — a logged warning and a `None` return — so the integration pipeline keeps going when a fond has not yet been populated by a parallel agent [@Taschuk2017ten]. In the current run, {{FONDS_LOADED}} of {{FONDS_EXPECTED}} expected fonds were successfully loaded (see @fig:counts).
 
 ## Resilience by Design
 
@@ -65,7 +65,7 @@ The fond layer enforces resilience at two levels. At the **structural** level, r
 
 Consider a concrete failure scenario: a parallel automation agent is in the process of authoring `fonds/templates/template_contacts/` and has written `fonds.yaml` but not yet populated `data/contacts.yaml`. A naive reader would raise `FileNotFoundError` the instant `read_contacts_fond()` is called, aborting the entire integration pipeline over one incomplete resource. `read_contacts_fond()` instead:
 
-1. Resolves the repository root via `pathlib.Path(__file__).resolve().parents[4]`.
+1. Resolves the repository root via `pathlib.Path(__file__).resolve().parents[6]`.
 2. Checks `manifest_path.exists()` and `contacts_path.exists()` explicitly before any read; on a missing path, logs `logger.warning("contacts fond: missing %s", p)` and returns `None` immediately — no exception is ever raised for the common case of an in-progress resource.
 3. If both paths exist, parses each with `yaml.safe_load()` inside a `try/except (OSError, UnicodeDecodeError, yaml.YAMLError)` block, so a present-but-malformed file degrades the same way as a missing one.
 4. `run_integration_demo()` records the reduced count in the summary dict rather than propagating any exception.

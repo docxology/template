@@ -33,11 +33,11 @@ the full fence.
 
 ## What you're forking
 
-A **computational-notebook skeleton**: pure-data `src/eda/`, a thin analysis
+A **computational-notebook skeleton**: pure-data `src/template_eda_notebook/eda/`, a thin analysis
 script, real-data `tests/`, a walkthrough notebook, and a manuscript. The
 included measurements dataset and three figures are throwaway scaffolding for
 the **transferable pattern**: explore in a cell, then extract any computation
-that matters into a tested `src/eda/` function. Your fork should preserve that
+that matters into a tested `src/template_eda_notebook/eda/` function. Your fork should preserve that
 discipline regardless of the dataset you swap in.
 
 ## REQUIRED vs AESTHETIC
@@ -46,7 +46,7 @@ The full inventory lives in [`AGENTS.md`](AGENTS.md); the short version:
 
 | Class | Examples | Action |
 |---|---|---|
-| REQUIRED — pipeline gate | `src/eda/*.py`, `src/__init__.py`, `data/measurements.csv`, all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
+| REQUIRED — pipeline gate | `src/template_eda_notebook/eda/*.py`, `src/template_eda_notebook/__init__.py`, `data/measurements.csv`, all `tests/test_*.py`, `pyproject.toml`, `manuscript/config.yaml`, `manuscript/*.md`, `manuscript/references.bib`, `manuscript/preamble.md` | Keep them; the 90% coverage gate + LaTeX render depend on them |
 | REQUIRED — orchestration | `scripts/eda_analysis.py`, `notebooks/eda_walkthrough.ipynb` | The analysis entry point and the archetype this template demonstrates |
 | AESTHETIC | `docs/*.md`, `*/STYLE.md`, `*/PATTERNS.md`, `*/CONVENTIONS.md`, `*/AGENTS.md`, `*/README.md` | Drift detected only by `scripts/audit/check_template_drift.py`; update them when code changes |
 
@@ -55,16 +55,16 @@ The full inventory lives in [`AGENTS.md`](AGENTS.md); the short version:
 ### 1. Replace the dataset
 
 Drop your CSV in at `data/measurements.csv` (or another path) and update
-`src/eda/dataset.py::DatasetSchema` so `numeric_columns`, `group_column`, and
-`id_column` match your columns. Keep `src/eda/` **infrastructure-free** — numpy
+`src/template_eda_notebook/eda/dataset.py::DatasetSchema` so `numeric_columns`, `group_column`, and
+`id_column` match your columns. Keep `src/template_eda_notebook/eda/` **infrastructure-free** — numpy
 and pandas only.
 
 ### 2. Extend the EDA library
 
-Add transforms to `src/eda/` (loading, cleaning, statistics, correlation, figure
+Add transforms to `src/template_eda_notebook/eda/` (loading, cleaning, statistics, correlation, figure
 data). Each is a pure function returning data — never plot or write files inside
-`src/eda/`. Re-export new public functions from `src/eda/__init__.py` and
-`src/__init__.py`.
+`src/template_eda_notebook/eda/`. Re-export new public functions from `src/template_eda_notebook/eda/__init__.py` and
+`src/template_eda_notebook/__init__.py`.
 
 ### 3. Update the test suite
 
@@ -91,7 +91,7 @@ uv run python scripts/audit/check_template_drift.py --strict
 |---|---|---|
 | `ModuleNotFoundError: src` | Running a script from inside `src/` | `cd` to the repo root and use the full `projects/.../scripts/eda_analysis.py` path |
 | `FileNotFoundError: dataset CSV not found` | `data/measurements.csv` missing or renamed | Restore the CSV or pass `load_dataset(path=...)` / update `DatasetSchema` |
-| `test_notebook.py` fails on imports | A cell imports a name not in `src.__all__` | Export the name from `src/__init__.py` or remove the import |
+| `test_notebook.py` fails on imports | A cell imports a name not in `template_eda_notebook.__all__` | Export the name from `src/template_eda_notebook/__init__.py` or remove the import |
 | `MPLBACKEND` / display errors | Script imports pyplot before setting Agg | Set `os.environ.setdefault("MPLBACKEND", "Agg")` before importing pyplot |
 | Stale `*.egg-info/` after rename | editable install under the old name | `rm -rf src/*.egg-info/`; `.gitignore` already covers future occurrences |
 

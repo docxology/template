@@ -48,7 +48,7 @@ uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py
 
 ## Explore Interactively
 
-Open the walkthrough notebook, which calls the same tested `src.eda` functions:
+Open the walkthrough notebook, which calls the same tested `template_eda_notebook.eda` functions:
 
 ```
 notebooks/eda_walkthrough.ipynb
@@ -73,8 +73,8 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_e
 ## Common Next Steps
 
 - **Use your own data**: replace `data/measurements.csv` and update
-  `src/eda/dataset.py::DatasetSchema`, then re-run the analysis.
-- **Add a new EDA step**: extend a module in `src/eda/`, add a test, then call it
+  `src/template_eda_notebook/eda/dataset.py::DatasetSchema`, then re-run the analysis.
+- **Add a new EDA step**: extend a module in `src/template_eda_notebook/eda/`, add a test, then call it
   from the notebook and `scripts/eda_analysis.py` (see `docs/architecture.md`).
 - **Modify the manuscript**: edit markdown files under `manuscript/`, then
   re-render.

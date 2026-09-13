@@ -20,7 +20,7 @@ Additional locations are config-declared publication evidence; the central index
 
 `template_methods_paper` is the canonical methods-paper exemplar: a small,
 tested domain language for specifying controlled methods
-(`src/methods_dsl/`), a thin analysis script, and a manuscript whose subject
+(`src/template_methods_paper/methods_dsl/`), a thin analysis script, and a manuscript whose subject
 is the methodology itself rather than results from running it.
 
 ## Copy This When
@@ -54,9 +54,9 @@ rsync -a \
 
 - Update `manuscript/config.yaml`, `domain_profile.yaml`, `experiment_plan.yaml`,
   `CITATION.cff`, `.zenodo.json`, `codemeta.json`, and `pyproject.toml`.
-- Replace or extend the controlled vocabulary in `src/methods_dsl/units.py`
+- Replace or extend the controlled vocabulary in `src/template_methods_paper/methods_dsl/units.py`
   and `vocabulary.py` to match your domain's units and step kinds.
-- Replace `src/methods_dsl/examples_methods.py`'s worked examples with your
+- Replace `src/template_methods_paper/methods_dsl/examples_methods.py`'s worked examples with your
   own methods, and update their tests.
 - Re-run `scripts/methods_analysis.py` and regenerate manuscript claims
   before publishing — every `{{TOKEN}}` in the manuscript is sourced from
@@ -82,7 +82,7 @@ uv run pytest projects/templates/template_methods_paper/tests \
 
 ## Standalone By Design
 
-`src/methods_dsl/` is standalone except one sanctioned exception: the
+`src/template_methods_paper/methods_dsl/` is standalone except one sanctioned exception: the
 logging adapter (`_logging.py`) reaches into the repository's unified
 logging system, declared in `manuscript/layer_contract.yaml`. Every other
 module imports only the Python standard library, so the DSL itself is

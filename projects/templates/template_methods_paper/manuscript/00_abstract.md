@@ -6,7 +6,7 @@ controlled methods** — the **methods-paper exemplar** of the
 results paper, this manuscript's subject is the methodology itself: a
 controlled vocabulary, a unit system with dimensional safety, four staged
 validation gates, and a deterministic compiler, implemented in
-`projects/templates/template_methods_paper/src/methods_dsl/` and described
+`projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/` and described
 section by section in [@sec:methodology]. The domain language's vocabulary is
 informed by BPL (Biology Programming Language,
 [@bpl2026]), an upstream reference that encodes laboratory protocols as
@@ -16,14 +16,14 @@ shape from wet-lab protocols to any controlled procedure.
 
 A `Method` is a name, a set of typed parameters and resources, and an
 ordered, dependent set of steps — constructed directly as frozen Python
-dataclasses (`src/methods_dsl/model.py`) rather than parsed from new text
+dataclasses (`src/template_methods_paper/methods_dsl/model.py`) rather than parsed from new text
 syntax. Every `Quantity` carries a unit that resolves to one of
 {{DSL_UNIT_COUNT}} controlled units across eight dimensions, and every step
 names one of {{DSL_STEP_KIND_COUNT}} controlled-vocabulary intents
-(`src/methods_dsl/vocabulary.py`), executable on one of {{DSL_TARGET_COUNT}}
+(`src/template_methods_paper/methods_dsl/vocabulary.py`), executable on one of {{DSL_TARGET_COUNT}}
 backends. {{DSL_GATE_COUNT}} staged gates — structural, semantic, plan, and
 target — validate a method before `compile_method`
-(`src/methods_dsl/compiler.py`) deterministically schedules it with Kahn's
+(`src/template_methods_paper/methods_dsl/compiler.py`) deterministically schedules it with Kahn's
 algorithm [@kahn1962topological] and hashes the canonical plan with SHA-256.
 
 We demonstrate the language on {{EXAMPLE_METHOD_COUNT}} worked example
@@ -36,7 +36,7 @@ target `{{CALIBRATION_TARGET}}`, plan hash `{{CALIBRATION_PLAN_HASH}}`).
 Live re-compilation determinism check: **{{DETERMINISM_CHECK}}**. Across both
 methods, {{TOTAL_GATES_PASSED}} of {{TOTAL_GATES_RUN}} staged-gate
 evaluations pass. A demonstration provenance hash-chain
-(`src/methods_dsl/trust.py`) of length {{TRUST_CHAIN_LENGTH}} verifies as
+(`src/template_methods_paper/methods_dsl/trust.py`) of length {{TRUST_CHAIN_LENGTH}} verifies as
 **{{TRUST_CHAIN_VERIFIED}}**.
 
 Contributions are **methodological** and **architectural**. On the methods

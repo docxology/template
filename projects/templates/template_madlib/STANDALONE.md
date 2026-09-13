@@ -19,11 +19,11 @@ Additional locations are config-declared publication evidence; the central index
 This project can be copied as a starting point for conditional manuscript generation. In the template monorepo it is built and rendered through the shared pipeline; after copying it elsewhere, keep these surfaces aligned:
 
 - `manuscript/config.yaml` owns lexicon categories, slots, section switches, section titles, narrative moves, method protocol, design principles, pipeline phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, and contribution claims.
-- `src/config.py` owns schema validation plus explicit/default path tracking.
-- `src/tokens.py` owns deterministic token selection.
-- `src/composition.py` owns generated manuscript bodies, Markdown evidence tables, and grouped figure references.
-- `src/analysis.py` owns artifact generation, configured-field inventories, the cover overview, and generated manuscript figures.
-- `src/manuscript_variables.py` owns the hydrated manuscript variable map.
+- `src/template_madlib/config.py` owns schema validation plus explicit/default path tracking.
+- `src/template_madlib/tokens.py` owns deterministic token selection.
+- `src/template_madlib/composition.py` owns generated manuscript bodies, Markdown evidence tables, and grouped figure references.
+- `src/template_madlib/analysis.py` owns artifact generation, configured-field inventories, the cover overview, and generated manuscript figures.
+- `src/template_madlib/manuscript_variables.py` owns the hydrated manuscript variable map.
 - `scripts/z_generate_manuscript_variables.py` owns writing `output/manuscript/`.
 
 Before a fork claims a new method, update the config-owned method surface first:

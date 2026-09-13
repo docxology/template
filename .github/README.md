@@ -154,7 +154,7 @@ The **Research Project Template** addresses the structural root of research irre
 
 | You get | How |
 | --- | --- |
-| **Reproducible builds** | 16-stage DAG pipeline from env setup → tests → PDF → hashed artifact |
+| **Reproducible builds** | 17-stage DAG pipeline from env setup → tests → PDF → hashed artifact |
 | **Real test enforcement** | Zero-Mock policy · ≥90% project coverage · ≥60% infra coverage |
 | **Cryptographic provenance** | SHA-256/512 hashing + steganographic watermarking on every PDF |
 | **Horizontal scaling** | N independent projects share one infrastructure layer — no coupling |
@@ -204,7 +204,7 @@ graph TD
     Root --> Docs["docs/ (see documentation-index.md)"]
     Root --> Output["output/ (Final Deliverables)"]
 
-    subgraph "Layer 1 · 25 importable Python packages under infrastructure/ (+ config/docker templates) · docs/modules/"
+    subgraph "Layer 1 · Python packages under infrastructure/ — live count in docs/_generated/COUNTS.md (+ config/docker templates) · docs/modules/"
         Infra --> Core["core/ — logging, config, exceptions"]
         Infra --> Rendering["rendering/ — Pandoc + XeLaTeX"]
         Infra --> Stego["steganography/ — SHA-256 + watermarking"]
@@ -231,7 +231,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
 | `projects/working/` | Transient | Staging area: scaffold here before promoting to `projects/` |
 | `projects/archive/` | Permanent | Completed/retired work — preserved, not executed |
-| `scripts/` | Permanent | 13 pipeline stage scripts (Stages 00–12) |
+| `scripts/` | Permanent | 14 pipeline stage scripts (stage_00_setup.py … stage_13_docxplus.py) |
 | `output/` | Disposable | Final PDFs, dashboards, reports — cleaned on each run |
 | `docs/` | Permanent | Large documentation hub — inventory in [`docs/documentation-index.md`](../docs/documentation-index.md) (counts vary; do not rely on a single “N files” figure across READMEs) |
 | `tests/` | Permanent | Infrastructure-level test suite (≥ 60% coverage gate) |
@@ -375,8 +375,8 @@ graph TB
     end
 
     subgraph Core["🧠 Core Systems (DAG Engine)"]
-        INFRASTRUCTURE[Infrastructure Modules<br/>25 Python packages<br/>Validation, rendering, LLM, methods]
-        BUSINESS_LOGIC[Business Logic<br/>Project algorithms<br/>100% test coverage]
+        INFRASTRUCTURE[Infrastructure Modules<br/>Python packages — live count in docs/_generated/COUNTS.md<br/>Validation, rendering, LLM, methods]
+        BUSINESS_LOGIC[Business Logic<br/>Project algorithms<br/>≥ 90% coverage]
         CONFIGURATION[Configuration System<br/>YAML + environment<br/>Runtime flexibility]
     end
 
@@ -437,7 +437,7 @@ stateDiagram-v2
 
 ## 🔄 Pipeline
 
-`run.sh` executes a **16-stage declarative DAG pipeline** configured via `pipeline.yaml`. `secure_run.sh` appends steganographic post-processing.
+`run.sh` executes a **17-stage declarative DAG pipeline** configured via `pipeline.yaml`. `secure_run.sh` appends steganographic post-processing.
 
 ```mermaid
 flowchart TD
@@ -448,7 +448,7 @@ flowchart TD
         CONFIG_FILES[Configuration<br/>config.yaml<br/>Runtime parameters]
     end
 
-    subgraph Processing["⚙️ 16-Stage DAG Pipeline"]
+    subgraph Processing["⚙️ 17-Stage DAG Pipeline"]
         STAGE0["Stage 0 — Clean<br/>(built-in / executor)"]
         STAGE1["Stage 1 — Setup<br/>scripts/pipeline/stage_00_setup.py"]
         STAGE2["Stage 2 — Infra smoke<br/>scripts/pipeline/stage_01_test.py --infra-scope pipeline-smoke"]
@@ -863,9 +863,9 @@ Long-horizon viability — toolchain migration, local CI, archival targets, regr
 | [docs/maintenance/README.md](../docs/maintenance/README.md) | Maintenance hub index |
 | [docs/maintenance/ci-local.md](../docs/maintenance/ci-local.md) | Reproduce GitHub Actions with `act` / [`scripts/shell/ci_local.sh`](../scripts/shell/ci_local.sh) |
 | [docs/maintenance/regression-testing.md](../docs/maintenance/regression-testing.md) | Pinned numerical outputs for claim binding |
-| [docs/maintenance/archival-targets.md](../docs/maintenance/archival-targets.md) | Stage 11 Zenodo / Software Heritage / IPFS |
+| [docs/maintenance/archival-targets.md](../docs/maintenance/archival-targets.md) | Stage 16 Zenodo / Software Heritage / IPFS |
 | [docs/maintenance/private-projects-repo.md](../docs/maintenance/private-projects-repo.md) | Private `active/` / `working/` / `published/` / `archive/` / `other/` lifecycle |
-| [docs/maintenance/stage-10-executable-bundle.md](../docs/maintenance/stage-10-executable-bundle.md) | Opt-in executable bundle stage |
+| [docs/maintenance/stage-10-executable-bundle.md](../docs/maintenance/stage-10-executable-bundle.md) | Opt-in Stage 15 executable bundle stage |
 
 ### 📋 Repo meta (root)
 
@@ -886,7 +886,7 @@ Long-horizon viability — toolchain migration, local CI, archival targets, regr
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| [`ci.yml`](workflows/ci.yml) | push/PR to `main` · weekly (Sun 00:00 UTC) · manual | **16 jobs** (2 conditional + 1 schedule-only) — see the full table below |
+| [`ci.yml`](workflows/ci.yml) | push/PR to `main` · weekly (Sun 00:00 UTC) · manual | **19 jobs** (2 conditional · 2 schedule/dispatch-only · 1 aggregation gate) — see the full table below |
 | [`stale.yml`](workflows/stale.yml) | Daily schedule | Close inactive issues/PRs (`actions/stale`) |
 | [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | Smoke test gate, capability, clean-export/import, rendered-evidence, build, and GitHub Release gates |
 | [`dependabot-automerge.yml`](workflows/dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
@@ -913,6 +913,9 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | 14 | `docs-lint` | `lint` | always | Mermaid render + relative-link resolution + doc-pair + consistency |
 | 15 | `performance` | `test-infra`, `test-project` | always | Benchmarks + coverage-history dashboard (informational) |
 | 16 | `public-matrix-receipt` | — | schedule · manual dispatch | Uploads the public-matrix coverage receipt artifact (fail-closed output-drift) |
+| 17 | `test-infra-slow` | `verify-no-mocks` | schedule · manual dispatch | Slow-marked infra suite lane (`pytest.mark.slow`) that the push/PR lanes deselect |
+| 18 | `test-integration` | `verify-no-mocks` | always | Registered `tests/integration/` suite (`run.sh` + pipeline CLI) on every push/PR (CI-WIRING-1) |
+| 19 | `ci-gate` | all upstream jobs (`if: always()`) | always | Aggregation gate — fails if any upstream job failed or was cancelled (skipped counts as intentional) |
 
 **Required status checks** for branch protection on `main` are documented in [`AGENTS.md`](AGENTS.md) (the conditional jobs `setup-hook-windows-smoke` / `fep-lean` must NOT be required — they are skipped, not failed, when their project is absent). Reproduce every gate locally with the commands in [`AGENTS.md`](AGENTS.md) → "Local CI parity" and the root [`CLAUDE.md`](../CLAUDE.md) Quick Reference.
 

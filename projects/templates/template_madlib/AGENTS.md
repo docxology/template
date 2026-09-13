@@ -17,11 +17,11 @@
 - Add vocabulary in `manuscript/config.yaml` under `madlib.lexicon`.
 - Add new manuscript shape controls under `section_titles`, `narrative_moves`, `method_protocol`, `design_principles`, `pipeline_phases`, `evaluation_criteria`, `quality_probes`, `failure_modes`, `authoring_obligations`, `visualizations`, `audit_rules`, or `contribution_claims`.
 - Keep method changes config-owned. A generated Methods claim needs a `method_protocol` row, a `pipeline_phases` row when it is operational, a QA probe or failure mode when it can fail, and claim-ledger evidence when it supports a claim.
-- Review-packet, token-invariant, claim-ledger, and fork-migration language belongs in config plus `src/composition_*.py` / `src/figure_specs.py`; do not hide those obligations in generated output or freeform docs only.
-- Change `src/config.py` only when the schema changes, and cover new validation behavior in `tests/test_config.py`.
-- Change `src/composition_sections.py`, `src/composition_tables.py`, or `src/composition_figures.py` when generated manuscript body or Markdown evidence tables change.
+- Review-packet, token-invariant, claim-ledger, and fork-migration language belongs in config plus `src/template_madlib/composition_*.py` / `src/template_madlib/figure_specs.py`; do not hide those obligations in generated output or freeform docs only.
+- Change `src/template_madlib/config.py` only when the schema changes, and cover new validation behavior in `tests/test_config.py`.
+- Change `src/template_madlib/composition_sections.py`, `src/template_madlib/composition_tables.py`, or `src/template_madlib/composition_figures.py` when generated manuscript body or Markdown evidence tables change.
 - Keep manuscript figures behind generated figure-group variables; do not hard-code image markdown in section shells.
-- Add new manuscript placeholders only after adding variables in `src/manuscript_variables.py` and coverage in `tests/test_manuscript_variables.py`.
+- Add new manuscript placeholders only after adding variables in `src/template_madlib/manuscript_variables.py` and coverage in `tests/test_manuscript_variables.py`.
 - Keep publication claims local unless a real DOI, release, or external validation exists.
 - Regenerate output through Stages 02-05 after source or config edits; do not hand-edit generated Markdown, PDFs, HTML, slides, figures, reports, or copied deliverables.
 

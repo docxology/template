@@ -95,8 +95,8 @@ echo "# New Section {#sec:new_section}" > projects/templates/template_code_proje
 # 1. Create script in project's scripts/ directory
 vim projects/templates/template_code_project/scripts/my_figure.py
 
-# 2. Import from src/ (thin orchestrator pattern)
-# from src.optimizer import gradient_descent
+# 2. Import from the project package (thin orchestrator pattern)
+# from template_code_project.core.optimizer import gradient_descent
 
 # 3. Generate and save to the project's output/figures/
 # 4. Declare it in figure_registry.json, including concise alt text
@@ -107,16 +107,16 @@ vim projects/templates/template_code_project/scripts/my_figure.py
 ### Add New Source Code
 ```bash
 # 1. Create module
-vim projects/templates/template_code_project/src/my_module.py
+vim projects/templates/template_code_project/src/template_code_project/analysis/my_module.py
 
 # 2. Create tests (90% minimum coverage required)
-vim projects/templates/template_code_project/tests/test_my_module.py
+vim projects/templates/template_code_project/tests/analysis/test_my_module.py
 
 # 3. Run tests
-uv run pytest projects/templates/template_code_project/tests/test_my_module.py --cov=projects/templates/template_code_project/src/my_module
+uv run pytest projects/templates/template_code_project/tests/analysis/test_my_module.py --cov=projects/templates/template_code_project/src/template_code_project/analysis
 
 # 4. Use in scripts (thin orchestrator pattern)
-# from projects.templates.template_code_project.src.my_module import my_function
+# from template_code_project.analysis.my_module import my_function
 ```
 
 ### Fix Test Coverage

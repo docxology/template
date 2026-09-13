@@ -83,7 +83,7 @@ pandoc --version   # should print 2.x or 3.x
 brew install --cask basictex
 # Restart your terminal, then install the LaTeX packages the pipeline needs:
 sudo tlmgr update --self
-sudo tlmgr install multirow cleveref doi newunicodechar subcaption bm
+sudo tlmgr install multirow cleveref doi newunicodechar caption tools
 ```
 
 **macOS — MacTeX (full distribution, 5 GB, no extra packages needed):**
@@ -160,7 +160,7 @@ These run Ruff, mypy, Bandit, and smoke tests automatically on every commit and 
 ./run.sh --pipeline --project templates/template_code_project --core-only
 ```
 
-This runs 8 stages (clean → setup → infra tests → project tests → analysis → render PDF → validate → copy). No LLM or network required. Wall-clock: 2–5 minutes on a quiet machine; measured 28–44+ minutes on an external-drive checkout under concurrent load (see `docs/audit/AUDIT_2026-08-30.md` for the measurement context).
+This runs 8 stages (clean → setup → infra tests → project tests → analysis → render PDF → validate → copy). No LLM or network required. Wall-clock: 2–5 minutes on a quiet machine; measured 28–44+ minutes on an external-drive checkout under concurrent load.
 
 **Expected success signals:**
 - All pipeline stages show ✅ (exit 0)
@@ -241,7 +241,7 @@ docs/               Documentation corpus (hierarchy and index in docs/AGENTS.md
 |---------|-----|
 | `uv: command not found` | Follow the [checksum-verified uv installation instructions](docs/operational/build/dependency-management.md#installing-uv), then restart the terminal |
 | `uv` is outdated / install fails | Run the installer again — it upgrades in place |
-| `xelatex: command not found` | `brew install --cask basictex` then `sudo tlmgr install multirow cleveref doi newunicodechar` |
+| `xelatex: command not found` | `brew install --cask basictex` then `sudo tlmgr install multirow cleveref doi newunicodechar caption tools` (caption provides `subcaption.sty`, tools provides `bm.sty`) |
 | `pandoc: command not found` | `brew install pandoc` or `sudo apt-get install pandoc` |
 | Missing LaTeX package `*.sty` | `sudo tlmgr install <package>` |
 | `ModuleNotFoundError` | `uv sync` then retry |

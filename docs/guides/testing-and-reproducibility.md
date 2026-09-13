@@ -70,121 +70,126 @@ flowchart TD
 
 ### Example TDD Workflow
 
-**Scenario**: Implement optimization algorithm
+**Scenario**: Add a momentum variant of the optimizer to the exemplar's core
+package. The live optimizer lives in `src/template_code_project/core/optimizer.py`
+and is tested by `tests/core/test_optimizer.py`; the cycle below develops a new
+`gradient_descent_with_momentum` function next to it.
 
 **Step 1: Write Test First** (RED)
 
 ```python
-# projects/templates/template_code_project/tests/test_optimization.py
+# projects/templates/template_code_project/tests/core/test_optimizer_momentum.py
+import numpy as np
 import pytest
-from projects.templates.template_code_project.src.optimization import gradient_descent
+from template_code_project.core.optimizer import (
+    OptimizationResult,
+    gradient_descent_with_momentum,
+)
 
-def test_gradient_descent_converges():
-    """Test that gradient descent converges for quadratic function."""
-
-    def objective(x):
-        return x[0]**2 + x[1]**2
-
-    def gradient(x):
-        return [2*x[0], 2*x[1]]
-
-    result = gradient_descent(objective, gradient, [1.0, 1.0])
-
-    # Test convergence
-    assert result.converged == True
-    assert result.iterations < 100
-    assert abs(result.f_x) < 1e-6
-    assert all(abs(xi) < 1e-3 for xi in result.x)
+def test_gradient_descent_with_momentum_converges():
+    """Momentum descent converges on a quadratic bowl."""
+    result = gradient_descent_with_momentum(
+        initial_point=np.array([1.0, 1.0]),
+        objective_func=lambda x: float(np.sum(x**2)),
+        gradient_func=lambda x: 2.0 * x,
+        step_size=0.1,
+    )
+    assert isinstance(result, OptimizationResult)
+    assert result.converged
+    assert result.objective_value < 1e-10
 ```
 
 **Step 2: Run Test** (FAILS)
 
 ```bash
-uv run pytest projects/templates/template_code_project/tests/test_optimization.py
-# ImportError: No module named 'optimization'
+uv run pytest projects/templates/template_code_project/tests/core/test_optimizer_momentum.py
+# ImportError: cannot import name 'gradient_descent_with_momentum'
 ```
 
 **Step 3: Write Minimum Code** (GREEN)
 
 ```python
-# projects/templates/template_code_project/src/optimization.py
-class OptimizationResult:
-    """Container for optimization results."""
-    def __init__(self, x, f_x, converged, iterations):
-        self.x = x
-        self.f_x = f_x
-        self.converged = converged
-        self.iterations = iterations
+# projects/templates/template_code_project/src/template_code_project/core/optimizer.py
+# (new function added next to gradient_descent)
+def gradient_descent_with_momentum(
+    initial_point: np.ndarray,
+    objective_func: Callable[[np.ndarray], float],
+    gradient_func: Callable[[np.ndarray], np.ndarray],
+    max_iterations: int = 1000,
+    tolerance: float = 1e-6,
+    step_size: float = 0.01,
+    momentum: float = 0.9,
+) -> OptimizationResult:
+    """Run gradient descent with a velocity term."""
+    x = np.asarray(initial_point, dtype=float)
+    velocity = np.zeros_like(x)
 
-def gradient_descent(objective_fn, gradient_fn, initial_x,
-                    learning_rate=0.01, max_iter=1000, tolerance=1e-6):
-    """Gradient descent optimization."""
-    x = list(initial_x)
+    for iteration in range(1, max_iterations + 1):
+        grad = gradient_func(x)
+        grad_norm = float(np.linalg.norm(grad))
 
-    for iteration in range(max_iter):
-        grad = gradient_fn(x)
-        x_new = [x[i] - learning_rate * grad[i] for i in range(len(x))]
+        if grad_norm < tolerance:
+            return OptimizationResult(
+                solution=x,
+                objective_value=objective_func(x),
+                iterations=iteration - 1,
+                converged=True,
+                gradient_norm=grad_norm,
+                termination_reason="converged",
+            )
 
-        # Check convergence
-        if all(abs(x_new[i] - x[i]) < tolerance for i in range(len(x))):
-            f_x = objective_fn(x_new)
-            return OptimizationResult(x_new, f_x, True, iteration + 1)
+        velocity = momentum * velocity - step_size * grad
+        x = x + velocity
 
-        x = x_new
-
-    # Max iterations reached
-    f_x = objective_fn(x)
-    return OptimizationResult(x, f_x, False, max_iter)
+    return OptimizationResult(
+        solution=x,
+        objective_value=objective_func(x),
+        iterations=max_iterations,
+        converged=False,
+        gradient_norm=float(np.linalg.norm(gradient_func(x))),
+        termination_reason="max_iterations",
+    )
 ```
 
 **Step 4: Run Test** (PASSES)
 
 ```bash
-uv run pytest projects/templates/template_code_project/tests/test_optimization.py
-# ✓ test_gradient_descent_converges PASSED
+uv run pytest projects/templates/template_code_project/tests/core/test_optimizer_momentum.py
+# ✓ test_gradient_descent_with_momentum_converges PASSED
 ```
 
 **Step 5: Add More Tests**
 
 ```python
-def test_gradient_descent_different_learning_rates():
-    """Test with different learning rates."""
-    def objective(x):
-        return x[0]**2 + x[1]**2
-    def gradient(x):
-        return [2*x[0], 2*x[1]]
-
-    for lr in [0.001, 0.01, 0.1]:
-        result = gradient_descent(objective, gradient, [1.0, 1.0], learning_rate=lr)
-        assert result.converged
-
-def test_gradient_descent_max_iterations():
-    """Test max iterations limit."""
-    def objective(x):
-        return x[0]**2
-    def gradient(x):
-        return [2*x[0]]
-
-    result = gradient_descent(objective, gradient, [1.0], max_iter=5, learning_rate=0.001)
-    assert result.iterations == 5
-    assert result.converged == False
-
-def test_gradient_descent_tolerance():
-    """Test convergence with different tolerances."""
-    def objective(x):
-        return x[0]**2
-    def gradient(x):
-        return [2*x[0]]
-
-    result = gradient_descent(objective, gradient, [1.0], tolerance=1e-8)
+@pytest.mark.parametrize("step_size", [0.001, 0.01, 0.1])
+def test_momentum_step_sizes_converge(step_size):
+    """Momentum descent converges across reasonable step sizes."""
+    result = gradient_descent_with_momentum(
+        initial_point=np.array([1.0, 1.0]),
+        objective_func=lambda x: float(np.sum(x**2)),
+        gradient_func=lambda x: 2.0 * x,
+        step_size=step_size,
+    )
     assert result.converged
-    assert abs(result.x[0]) < 1e-8
+
+def test_momentum_respects_iteration_cap():
+    """The iteration cap terminates with a recorded reason."""
+    result = gradient_descent_with_momentum(
+        initial_point=np.array([5.0]),
+        objective_func=lambda x: float(np.sum(x**2)),
+        gradient_func=lambda x: 2.0 * x,
+        step_size=0.001,
+        max_iterations=3,
+    )
+    assert not result.converged
+    assert result.iterations == 3
+    assert result.termination_reason == "max_iterations"
 ```
 
 **Step 6: Check Coverage**
 
 ```bash
-uv run pytest projects/templates/template_code_project/tests/test_optimization.py --cov=projects/templates/template_code_project/src --cov-report=term-missing
+uv run pytest projects/templates/template_code_project/tests/core/test_optimizer_momentum.py --cov=projects/templates/template_code_project/src --cov-report=term-missing
 ```
 
 Expected: Coverage requirements met (90% project, 60% infra)
@@ -199,7 +204,7 @@ uv run pytest projects/templates/template_code_project/tests/ --cov=projects/tem
 # Output shows:
 # Name                                              Stmts   Miss  Cover   Missing
 # ---------------------------------------------------------------------------------
-# projects/templates/template_code_project/src/optimization.py           25      2    92%   45-46
+# projects/templates/template_code_project/src/template_code_project/core/optimizer.py           25      2    92%   45-46
 ```
 
 **Lines 45-46 are not covered** - add test:
@@ -237,12 +242,23 @@ This template enforces:
 
 ### Advanced Source Modules
 
-**Example: Optimization with multiple algorithms**
+**Example (illustrative extension — not part of the shipped exemplar): adding
+an Adam optimizer as a sibling module in the core package.** The live exemplar
+keeps its numerical core in `src/template_code_project/core/optimizer.py`
+(quadratic problems, gradient descent, trajectory history), with
+sweep/invariant support in `core/invariants.py` and benchmark support in
+`core/benchmark_support.py`; the sketch below shows how a new optimizer module
+would reuse the shipped `OptimizationResult` dataclass:
 
 ```python
-# projects/templates/template_code_project/src/optimizers.py
-from typing import Callable, List, Tuple
+# projects/templates/template_code_project/src/template_code_project/core/advanced_optimizers.py  # illustrative
 from dataclasses import dataclass
+from typing import Callable
+
+import numpy as np
+
+from template_code_project.core.optimizer import OptimizationResult
+
 
 @dataclass
 class OptimizerConfig:
@@ -252,57 +268,15 @@ class OptimizerConfig:
     tolerance: float = 1e-6
     momentum: float = 0.9  # For momentum-based methods
 
-@dataclass
-class OptimizationResult:
-    """Results from optimization."""
-    x: List[float]
-    f_x: float
-    converged: bool
-    iterations: int
-    history: List[Tuple[List[float], float]]  # Track progress
-
-def gradient_descent_with_momentum(
-    objective_fn: Callable,
-    gradient_fn: Callable,
-    initial_x: List[float],
-    config: OptimizerConfig
-) -> OptimizationResult:
-    """Gradient descent with momentum."""
-    x = list(initial_x)
-    velocity = [0.0] * len(x)
-    history = []
-
-    for iteration in range(config.max_iterations):
-        grad = gradient_fn(x)
-        f_x = objective_fn(x)
-        history.append((list(x), f_x))
-
-        # Update velocity and position
-        velocity = [
-            config.momentum * v - config.learning_rate * g
-            for v, g in zip(velocity, grad)
-        ]
-        x_new = [xi + vi for xi, vi in zip(x, velocity)]
-
-        # Check convergence
-        if all(abs(x_new[i] - x[i]) < config.tolerance for i in range(len(x))):
-            f_x_new = objective_fn(x_new)
-            history.append((x_new, f_x_new))
-            return OptimizationResult(x_new, f_x_new, True, iteration + 1, history)
-
-        x = x_new
-
-    f_x = objective_fn(x)
-    return OptimizationResult(x, f_x, False, config.max_iterations, history)
 
 def adam_optimizer(
     objective_fn: Callable,
     gradient_fn: Callable,
-    initial_x: List[float],
+    initial_x: list[float],
     config: OptimizerConfig,
     beta1: float = 0.9,
     beta2: float = 0.999,
-    epsilon: float = 1e-8
+    epsilon: float = 1e-8,
 ) -> OptimizationResult:
     """Adam optimization algorithm."""
     x = list(initial_x)
@@ -313,7 +287,7 @@ def adam_optimizer(
     for t in range(1, config.max_iterations + 1):
         grad = gradient_fn(x)
         f_x = objective_fn(x)
-        history.append((list(x), f_x))
+        history.append(f_x)
 
         # Update biased moments
         m = [beta1 * mi + (1 - beta1) * gi for mi, gi in zip(m, grad)]
@@ -332,26 +306,37 @@ def adam_optimizer(
         # Check convergence
         if all(abs(x_new[i] - x[i]) < config.tolerance for i in range(len(x))):
             f_x_new = objective_fn(x_new)
-            history.append((x_new, f_x_new))
-            return OptimizationResult(x_new, f_x_new, True, t, history)
+            history.append(f_x_new)
+            return OptimizationResult(
+                solution=x_new,
+                objective_value=f_x_new,
+                iterations=t,
+                converged=True,
+                gradient_norm=float(np.linalg.norm(gradient_fn(x_new))),
+                objective_history=history,
+                termination_reason="converged",
+            )
 
         x = x_new
 
     f_x = objective_fn(x)
-    return OptimizationResult(x, f_x, False, config.max_iterations, history)
+    return OptimizationResult(
+        solution=x,
+        objective_value=f_x,
+        iterations=config.max_iterations,
+        converged=False,
+        gradient_norm=float(np.linalg.norm(gradient_fn(x))),
+        objective_history=history,
+        termination_reason="max_iterations",
+    )
 ```
 
 ### Testing
 
 ```python
-# projects/templates/template_code_project/tests/test_optimizers.py
-import pytest
+# projects/templates/template_code_project/tests/core/test_advanced_optimizers.py  # illustrative
 import numpy as np
-from projects.templates.template_code_project.src.optimizers import (
-    gradient_descent_with_momentum,
-    adam_optimizer,
-    OptimizerConfig
-)
+from template_code_project.core.advanced_optimizers import OptimizerConfig, adam_optimizer
 
 class TestObjectiveFunctions:
     """Test functions for optimization."""
@@ -377,18 +362,6 @@ class TestObjectiveFunctions:
             grad[i+1] += 200*(x[i+1] - x[i]**2)
         return grad
 
-def test_momentum_quadratic():
-    """Test momentum on simple quadratic."""
-    config = OptimizerConfig(learning_rate=0.01, max_iterations=1000)
-    result = gradient_descent_with_momentum(
-        TestObjectiveFunctions.quadratic,
-        TestObjectiveFunctions.quadratic_gradient,
-        [1.0, 1.0],
-        config
-    )
-    assert result.converged
-    assert result.f_x < 1e-10
-
 def test_adam_rosenbrock():
     """Test Adam on Rosenbrock function."""
     config = OptimizerConfig(learning_rate=0.01, max_iterations=5000)
@@ -399,27 +372,25 @@ def test_adam_rosenbrock():
         config
     )
     # Rosenbrock minimum at [1, 1]
-    assert all(abs(xi - 1.0) < 0.1 for xi in result.x)
+    assert all(abs(xi - 1.0) < 0.1 for xi in result.solution)
 
-def test_optimizer_history():
-    """Test that history is tracked."""
-    config = OptimizerConfig(learning_rate=0.1, max_iterations=100)
-    result = gradient_descent_with_momentum(
+def test_adam_history_is_recorded():
+    """Adam records the objective at every step."""
+    config = OptimizerConfig(learning_rate=0.01, max_iterations=100)
+    result = adam_optimizer(
         TestObjectiveFunctions.quadratic,
         TestObjectiveFunctions.quadratic_gradient,
         [1.0, 1.0],
-        config
+        config,
     )
-    assert len(result.history) > 0
-    # Check convergence in history
-    final_f_x = result.history[-1][1]
-    assert final_f_x < 1e-6
+    assert len(result.objective_history) > 0
+    assert result.objective_history[-1] < result.objective_history[0]
 ```
 
 ### Advanced Scripts
 
 ```python
-# projects/templates/template_code_project/scripts/optimizer_comparison.py
+# projects/templates/template_code_project/scripts/optimizer_comparison.py  # illustrative
 #!/usr/bin/env python3
 """Compare multiple optimization algorithms."""
 import os
@@ -428,65 +399,48 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from projects.templates.template_code_project.src.optimizers import (
-    gradient_descent_with_momentum,
-    adam_optimizer,
-    OptimizerConfig
-)
+# Project scripts add PROJECT_ROOT/src to sys.path before importing
+# (see scripts/optimization_analysis.py for the canonical preamble).
+from template_code_project.core.advanced_optimizers import OptimizerConfig, adam_optimizer  # illustrative
+from template_code_project.core.optimizer import gradient_descent
 
 def rosenbrock(x):
     return sum(100*(x[i+1] - x[i]**2)**2 + (1 - x[i])**2
               for i in range(len(x)-1))
 
 def rosenbrock_gradient(x):
-    grad = [0.0] * len(x)
+    grad = np.zeros_like(x)
     for i in range(len(x)-1):
         grad[i] += -400*x[i]*(x[i+1] - x[i]**2) - 2*(1 - x[i])
         grad[i+1] += 200*(x[i+1] - x[i]**2)
     return grad
 
 def main():
-    initial_x = [0.0, 0.0]
     config = OptimizerConfig(learning_rate=0.001, max_iterations=2000)
 
     # Use src/ methods for computation
-    result_momentum = gradient_descent_with_momentum(
-        rosenbrock, rosenbrock_gradient, initial_x, config
+    result_baseline = gradient_descent(
+        initial_point=np.array([0.0, 0.0]),
+        objective_func=rosenbrock,
+        gradient_func=rosenbrock_gradient,
+        step_size=config.learning_rate,
+        max_iterations=config.max_iterations,
     )
-
-    result_adam = adam_optimizer(
-        rosenbrock, rosenbrock_gradient, initial_x, config
-    )
+    result_adam = adam_optimizer(rosenbrock, rosenbrock_gradient, [0.0, 0.0], config)
 
     # Script handles visualization only
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+    fig, ax = plt.subplots(figsize=(8, 6))
 
     # Plot convergence
-    momentum_history = [f_x for _, f_x in result_momentum.history]
-    adam_history = [f_x for _, f_x in result_adam.history]
-
-    ax1.semilogy(momentum_history, label='Momentum')
-    ax1.semilogy(adam_history, label='Adam')
-    ax1.set_xlabel('Iteration')
-    ax1.set_ylabel('Objective Value')
-    ax1.set_title('Convergence Comparison')
-    ax1.legend()
-    ax1.grid(True, alpha=0.3)
-
-    # Plot trajectory
-    momentum_x = [x[0] for x, _ in result_momentum.history]
-    momentum_y = [x[1] for x, _ in result_momentum.history]
-    adam_x = [x[0] for x, _ in result_adam.history]
-    adam_y = [x[1] for x, _ in result_adam.history]
-
-    ax2.plot(momentum_x, momentum_y, 'o-', label='Momentum', alpha=0.5)
-    ax2.plot(adam_x, adam_y, 's-', label='Adam', alpha=0.5)
-    ax2.plot(1, 1, 'r*', markersize=20, label='Optimum')
-    ax2.set_xlabel('x[0]')
-    ax2.set_ylabel('x[1]')
-    ax2.set_title('Optimization Trajectory')
-    ax2.legend()
-    ax2.grid(True, alpha=0.3)
+    baseline_history = list(result_baseline.objective_history or [])
+    adam_history = list(result_adam.objective_history or [])
+    ax.semilogy(baseline_history, label='Gradient descent')
+    ax.semilogy(adam_history, label='Adam')
+    ax.set_xlabel('Iteration')
+    ax.set_ylabel('Objective Value')
+    ax.set_title('Convergence Comparison')
+    ax.legend()
+    ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
 

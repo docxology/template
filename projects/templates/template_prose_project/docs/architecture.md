@@ -48,7 +48,7 @@ sequenceDiagram
     participant PIPE as run_prose_pipeline (src/pipeline)
     participant PF as src/pipeline/prose_facade.parse_bib_keys
     participant FS as Filesystem
-    participant REP as write_review_report (src/report)
+    participant REP as write_review_report (src/template_prose_project/manuscript/report)
 
     CLI->>CFG: load_project_config(yaml)
     CFG-->>CLI: ProjectConfig
@@ -71,7 +71,7 @@ prose-review, and literature-discovery paths:
 
 | Project | Workflow | Algorithm? | Mutates `references.bib`? |
 |---|---|---|---|
-| `template_code_project` | Numerical experiment + analysis | yes (`src/optimizer.py`) | no |
+| `template_code_project` | Numerical experiment + analysis | yes (`src/template_code_project/core/optimizer.py`) | no |
 | `template_prose_project` | Editorial review (readability + structure + bibliography) | no | no (read-only validation) |
 | `template_search_project` | Literature discovery → BibTeX → LLM synthesis | no | yes (auto-populates) |
 

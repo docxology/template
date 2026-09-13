@@ -27,7 +27,7 @@ bypass auto-numbering. Never hardcode figure or table numbers.
 
 ### Figure Label Registry
 
-The three figures the analysis script produces from `src/eda/figures.py`:
+The three figures the analysis script produces from `src/template_eda_notebook/eda/figures.py`:
 
 | Anchor (in `03_results.md`) | PNG Filename | Figure-data preparer |
 |---|---|---|
@@ -71,7 +71,7 @@ uv run pytest projects/templates/template_eda_notebook/tests -v
 ```
 
 For inline code referencing file paths, use single backticks:
-`projects/templates/template_eda_notebook/src/eda/dataset.py`.
+`projects/templates/template_eda_notebook/src/template_eda_notebook/eda/dataset.py`.
 
 ---
 
@@ -94,7 +94,7 @@ Do not use a `Table:` prefix and do not hardcode the table number — use
 
 ## 6. Adding a New Figure
 
-1. Add a figure-data preparer to `src/eda/figures.py` with a test in
+1. Add a figure-data preparer to `src/template_eda_notebook/eda/figures.py` with a test in
    `tests/test_figures.py`.
 2. Plot it in `scripts/eda_analysis.py` and write the PNG to `output/figures/`.
 3. Add the Pandoc image reference in `03_results.md`:

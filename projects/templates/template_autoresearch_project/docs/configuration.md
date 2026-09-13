@@ -78,7 +78,7 @@ serialized to `ml_training_diagnostics.json`.
 
 ## `manuscript/config.yaml` (loop settings)
 
-Loaded by `src.loop.config.load_manuscript_loop_settings`:
+Loaded by `template_autoresearch_project.loop.config.load_manuscript_loop_settings`:
 
 - `analysis.scripts`: runs the thin orchestrators in `scripts/`.
 - `project_config.review_policy`: records the required human review mode.
@@ -86,15 +86,15 @@ Loaded by `src.loop.config.load_manuscript_loop_settings`:
 - `project_config.research_questions`: declares questions and expected
   evidence paths.
 
-Runtime loop configuration is merged in `src.loop.config.build_loop_config(plan,
+Runtime loop configuration is merged in `template_autoresearch_project.loop.config.build_loop_config(plan,
 settings)` so `required_artifacts` and `quality_checks` come from the composed
 plan, not a second parse of `autoresearch.yaml` in project code.
 
 ## ML task implementation
 
-The executable task is split across `src/ml/data.py`, `src/ml/models.py`,
-`src/ml/training.py`, and `src/ml/selection.py`, with public exports
-through `src/ml/task.py`. The implementation uses `numpy` only. It loads the
+The executable task is split across `src/template_autoresearch_project/ml/data.py`, `src/template_autoresearch_project/ml/models.py`,
+`src/template_autoresearch_project/ml/training.py`, and `src/template_autoresearch_project/ml/selection.py`, with public exports
+through `src/template_autoresearch_project/ml/task.py`. The implementation uses `numpy` only. It loads the
 local MNIST subset, evaluates a nearest-centroid baseline, trains bounded
 neural candidates by deterministic SGD or a fixed patch-attention
 representation plus softmax head, and selects the best result with
@@ -123,7 +123,7 @@ deterministic parameter-count tie-breaking. The task writes
 `ml_candidate_rank_stability.png`,
 `autoresearch_candidate_lifecycle.png`,
 `mnist_class_balance.png`, `mnist_subset_contact_sheet.png`, and final registry metadata through
-`src.writers`.
+`template_autoresearch_project.writers`.
 
 If a downstream project records benchmark stdout, use exact `METRIC name=value`
 lines and parse them with `infrastructure.autoresearch.parse_metric_lines`.
@@ -138,7 +138,7 @@ thresholds, and the no-retrain robustness transforms.
 
 ## Manuscript hydration and figures
 
-`src.manuscript.manuscript_variables` treats run-derived names, paths, metrics, figure
+`template_autoresearch_project.manuscript.manuscript_variables` treats run-derived names, paths, metrics, figure
 captions, and generated tables as validated variables. It reads the final
 `autoresearch_loop.json`, ML result payload, candidate ledger, review decisions,
 benchmark scores, artifact manifest, and figure registry. It then writes:
@@ -174,7 +174,7 @@ manuscript references without making live web calls.
 ## `figures.yaml` (visualization style)
 
 Every generated figure resolves its visual style from a single
-`FigureStyleConfig` (`src/figures/figure_style.py`). The optional project-local
+`FigureStyleConfig` (`src/template_autoresearch_project/figures/figure_style.py`). The optional project-local
 `figures.yaml` overrides any of its fields; missing keys — and a missing file —
 fall back to the built-in defaults, which reproduce the historical figure
 appearance **byte-for-byte**. A dedicated file is used rather than
@@ -222,7 +222,7 @@ be parallelised without a per-thread guard.
 
 ## Security artifacts
 
-`src.security` emits `autoresearch_security_profile.json`,
+`template_autoresearch_project.security` emits `autoresearch_security_profile.json`,
 `autoresearch_threat_model.json`, `autoresearch_supply_chain_inventory.json`,
 `autoresearch_inventory_export.json`, `autoresearch_integrity_attestation.json`,
 `autoresearch_security_review.md`,
@@ -234,11 +234,11 @@ SLSA signed provenance.
 
 ## Scripts
 
-- `scripts/run_autoresearch_loop.py` calls `src.loop.loop.run_autoresearch_loop`.
+- `scripts/run_autoresearch_loop.py` calls `template_autoresearch_project.loop.loop.run_autoresearch_loop`.
 - `scripts/check_source_ledger.py` validates `manuscript/source_ledger.yaml`
   offline and prints source-tier counts.
 - `scripts/z_generate_manuscript_variables.py` calls
-  `src.manuscript.manuscript_variables` helpers, writes resolved manuscript files, and
+  `template_autoresearch_project.manuscript.manuscript_variables` helpers, writes resolved manuscript files, and
   enforces strict tokenization for numbered manuscript sources.
 
 ## Validation phases

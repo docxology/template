@@ -20,7 +20,7 @@ keeps a capability blocked rather than silently promoting it.
   methods-specification / controlled-procedure research projects.
 - Keep every export and report artifact generated from
   `scripts/methods_analysis.py`, not hand-maintained `output/` snapshots.
-- Keep `src/methods_dsl/` free of plotting and `infrastructure.*` imports
+- Keep `src/template_methods_paper/methods_dsl/` free of plotting and `infrastructure.*` imports
   except the one declared exception (`_logging.py`).
 
 ## Configurable-surface gaps
@@ -29,7 +29,7 @@ keeps a capability blocked rather than silently promoting it.
   with the same top-level sections as `config.yaml`, including the `project_config.dsl`
   block.
 - Any future controlled vocabulary (units, step kinds, targets) must enter under
-  `src/methods_dsl/units.py` / `vocabulary.py`, never as ad hoc YAML read from
+  `src/template_methods_paper/methods_dsl/units.py` / `vocabulary.py`, never as ad hoc YAML read from
   scripts — the vocabulary is the DSL's contract, not configuration.
 
 ## Documentation and signposting gaps

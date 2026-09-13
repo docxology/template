@@ -44,7 +44,9 @@ coverage gate regresses.
 - No changes to `fonds/`, `rules/`, or `tools/` top-level directories —
   this project only reads them.
 - No AI-generated (external image API) cover art — the repository's own
-  convention (see `template_autopoiesis/src/cover_art.py`) is a
+  convention (see `template_autopoiesis/src/cover_art.py` — now
+  `template_autopoiesis/src/template_autopoiesis/figures/cover_art.py` after
+  the 2026-09 src split) is a
   deterministic, matplotlib-rendered, reproducible cover, and this project
   follows that convention for consistency and CI reproducibility.
 - No new resource categories added to `config.yaml`'s `integration:` block
@@ -55,8 +57,8 @@ coverage gate regresses.
 ## Principles
 
 - **Thin orchestrator pattern**: all new figure/cover logic lives in
-  `src/figures/figures.py` (or a sibling `src/` module); scripts only call it and
-  handle I/O.
+  `src/template_pools_rules_tools/figures/figures.py` (or a sibling module in
+  `src/template_pools_rules_tools/`); scripts only call it and handle I/O.
 - **No mocks**: figure tests render real matplotlib figures to `tmp_path`
   and assert real file existence/size, never mocked.
 - **Reproducibility**: figures and cover art are deterministic functions of
@@ -72,7 +74,7 @@ coverage gate regresses.
 - Repo-root-relative discovery only (`pathlib.Path(__file__).resolve().parents[N]`)
   — any new module must follow the same idiom documented in this project's
   `CLAUDE.md`.
-- `src/tools/type_defs.py` remains the single source of truth for TypedDicts; no
+- `src/template_pools_rules_tools/tools/type_defs.py` remains the single source of truth for TypedDicts; no
   inline dicts introduced elsewhere.
 - Project coverage floor stays ≥90% for `src/` (per repo `CLAUDE.md`); new
   code must ship with tests, not just prose about it.
@@ -117,14 +119,14 @@ fonds/rules/tools contract intact.
 
 ## Criteria
 
-- [x] ISC-1: `src/figures/figures.py` gains `generate_fond_taxonomy()` returning a `pathlib.Path`
-- [x] ISC-2: `src/figures/figures.py` gains `generate_rule_hierarchy()` returning a `pathlib.Path`
-- [x] ISC-3: `src/figures/figures.py` gains `generate_tool_contract()` returning a `pathlib.Path`
-- [x] ISC-4: `src/figures/figures.py` gains `generate_resilience_layers()` returning a `pathlib.Path`
-- [x] ISC-5: `src/figures/figures.py` gains `generate_pipeline_flow()` returning a `pathlib.Path`
-- [x] ISC-6: `src/figures/figures.py` gains `generate_cover_art()` returning a `pathlib.Path`
+- [x] ISC-1: `src/template_pools_rules_tools/figures/figures.py` gains `generate_fond_taxonomy()` returning a `pathlib.Path`
+- [x] ISC-2: `src/template_pools_rules_tools/figures/figures.py` gains `generate_rule_hierarchy()` returning a `pathlib.Path`
+- [x] ISC-3: `src/template_pools_rules_tools/figures/figures.py` gains `generate_tool_contract()` returning a `pathlib.Path`
+- [x] ISC-4: `src/template_pools_rules_tools/figures/figures.py` gains `generate_resilience_layers()` returning a `pathlib.Path`
+- [x] ISC-5: `src/template_pools_rules_tools/figures/figures.py` gains `generate_pipeline_flow()` returning a `pathlib.Path`
+- [x] ISC-6: `src/template_pools_rules_tools/figures/figures.py` gains `generate_cover_art()` returning a `pathlib.Path`
 - [x] ISC-7: `all_figures()` wrapper calls all 6 new functions plus the original 3
-- [x] ISC-8: `src/__init__.py` `__all__` re-exports all 6 new function names
+- [x] ISC-8: `src/template_pools_rules_tools/__init__.py` `__all__` re-exports all 6 new function names
 - [x] ISC-9: new `scripts/05_generate_figures.py` thin-orchestrator script exists, ≤50 lines of orchestration logic
 - [x] ISC-10: `scripts/05_generate_figures.py` run produces `manuscript/figures/fond_taxonomy.png` on disk
 - [x] ISC-11: `scripts/05_generate_figures.py` run produces `manuscript/figures/rule_hierarchy.png` on disk
@@ -213,7 +215,7 @@ fonds/rules/tools contract intact.
 
 | name | description | satisfies | depends_on | parallelizable |
 |---|---|---|---|---|
-| new-figure-functions | 6 new `generate_*` functions exposed by the `src/figures/figures.py` façade, with shared specs in `src/figures/figure_support.py` | ISC-1..8 | none | no (split support + façade) |
+| new-figure-functions | 6 new `generate_*` functions exposed by the `src/template_pools_rules_tools/figures/figures.py` façade, with shared specs in `src/template_pools_rules_tools/figures/figure_support.py` | ISC-1..8 | none | no (split support + façade) |
 | figure-generation-script | `scripts/05_generate_figures.py` orchestrator | ISC-9..15 | new-figure-functions | no |
 | config-wiring | `config.yaml` figure registry + cover + typography metadata | ISC-16..23 | figure-generation-script | yes (independent of prose) |
 | preamble-typography | `preamble.md` margin reduction | ISC-24 | none | yes |
@@ -278,7 +280,9 @@ fonds/rules/tools contract intact.
   a scope change — same Goal, corrected mechanism.
 - 2026-07-09: Chose matplotlib-generated deterministic cover art over an
   AI-image-generation route (Art skill / Flux / Nano Banana), matching the
-  established `template_autopoiesis/src/cover_art.py` convention in this
+  established `template_autopoiesis/src/cover_art.py` (now
+  `template_autopoiesis/src/template_autopoiesis/figures/cover_art.py` after
+  the 2026-09 src split) convention in this
   same repo — reproducible from code, no external network/API dependency,
   consistent with the "No Mocks" / determinism principles in the root
   `CLAUDE.md`.
@@ -308,7 +312,7 @@ fonds/rules/tools contract intact.
 - **conjectured**: passing `integration_result=results` (a plain `IntegrationResult` TypedDict) into `generate_status_dashboard()` would bind the status-dashboard figure to real per-component pass/partial/missing state, since the manuscript prose says so.
   **refuted by**: Forge cross-vendor audit — `generate_status_dashboard()` only rebinds when `hasattr(integration_result, "statuses")`; a plain dict never has that attribute, so the branch was dead and the figure always rendered its hardcoded all-"ok" default. Same defect in `generate_resource_counts()`, which never received a `counts=` override at all.
   **learned**: a figure function accepting an "integration_result" parameter is not evidence it uses it — the binding path itself must be traced to the call site, not assumed from the parameter's presence or the prose's claim about it. `generate_figure_data()` already existed as exactly the right data source and had simply never been wired to these two figures.
-  **criterion now**: `all_figures()` accepts explicit `counts`/`statuses` dicts; `scripts/05_generate_figures.py` derives them via new `src/tools/integration.py::derive_dashboard_data()` (built on the pre-existing `generate_figure_data()`) and passes them through. Verified via `resource_counts.png` showing 3/2/3 (matching real `run_integration_demo()` output) and a new ground-truth-binding test (`test_derive_dashboard_data_binds_to_ground_truth`) using a synthetic degraded `IntegrationResult`.
+  **criterion now**: `all_figures()` accepts explicit `counts`/`statuses` dicts; `scripts/05_generate_figures.py` derives them via new `src/template_pools_rules_tools/tools/integration.py::derive_dashboard_data()` (built on the pre-existing `generate_figure_data()`) and passes them through. Verified via `resource_counts.png` showing 3/2/3 (matching real `run_integration_demo()` output) and a new ground-truth-binding test (`test_derive_dashboard_data_binds_to_ground_truth`) using a synthetic degraded `IntegrationResult`.
 - **conjectured**: stating "seven modules / 219 tests / eight test files" in the prose would stay accurate through the rest of the session.
   **refuted by**: Forge cross-vendor audit — this session added an 8th module (`manuscript_variables.py`) and a 9th test file (`test_manuscript_variables.py`) *after* that prose was written, and the numbers were never re-synced; a second Forge-adjacent self-check then caught a further drift (225→226) after fixing the two figures above added one more test.
   **learned**: any exact count cited in prose about the codebase's own shape (module count, test count, coverage decimal) is a live claim that must be re-verified against the actual repo state immediately before the session's final render, not computed once mid-session and trusted. The coverage decimal specifically was replaced with qualitative phrasing plus an explicit "these drift, re-run the command" caveat, since re-verifying a moving float on every edit is not sustainable; the module/test *counts* were kept exact because they are cheap to verify (`ls | wc -l`) at zero marginal cost right before finalizing.

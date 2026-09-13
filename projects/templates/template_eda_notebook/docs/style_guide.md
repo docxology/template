@@ -17,7 +17,7 @@ The most critical rule is the absolute prohibition of mocking. The following are
 - `@patch(...)` decorators
 - monkeypatching a real function with a fake callable
 
-**Why**: `src/eda/` contains pure data transforms. You can always test them with
+**Why**: `src/template_eda_notebook/eda/` contains pure data transforms. You can always test them with
 the real shipped CSV or a small real DataFrame and real results. A test that
 requires a mock tests the wrong thing.
 
@@ -49,9 +49,9 @@ grep -r "unittest.mock\|MagicMock\|@patch" projects/templates/template_eda_noteb
 
 | File | May Import | Must NOT Import / Do |
 |---|---|---|
-| `src/eda/*.py` | `numpy`, `pandas`, `dataclasses`, `typing` | **Anything from `infrastructure.*`; matplotlib; file writes** |
-| `scripts/eda_analysis.py` | `src.eda`, `src.project_paths`, `matplotlib` | Analysis math (statistics, correlations) |
-| `tests/test_*.py` | `src.*`, `pandas`, `numpy`, `pytest` | `unittest.mock.*`, `infrastructure.*` |
+| `src/template_eda_notebook/eda/*.py` | `numpy`, `pandas`, `dataclasses`, `typing` | **Anything from `infrastructure.*`; matplotlib; file writes** |
+| `scripts/eda_analysis.py` | `template_eda_notebook.eda`, `template_eda_notebook.project_paths`, `matplotlib` | Analysis math (statistics, correlations) |
+| `tests/test_*.py` | `template_eda_notebook.*`, `pandas`, `numpy`, `pytest` | `unittest.mock.*`, `infrastructure.*` |
 
 **Verify `src/` is clean**:
 ```bash
@@ -63,11 +63,11 @@ grep -r "from infrastructure\|import infrastructure" projects/templates/template
 ## 3. The Thin Orchestrator Pattern
 
 The notebook and `scripts/eda_analysis.py` may load data, plot, and write files,
-but must not compute statistics or correlations that belong in `src/eda/`.
+but must not compute statistics or correlations that belong in `src/template_eda_notebook/eda/`.
 
 **Forbidden** — analysis re-implemented in a script/cell:
 ```python
-# BAD — correlation logic belongs in src/eda/correlation.py
+# BAD — correlation logic belongs in src/template_eda_notebook/eda/correlation.py
 corr = frame[["height_cm", "weight_kg"]].corr()
 ```
 
@@ -78,7 +78,7 @@ matrix = correlation_matrix(frame)
 ```
 
 **Decision rule**: if a line of code in a cell or script computes an analysis
-result (not just its visualization), move it to `src/eda/` and write a test.
+result (not just its visualization), move it to `src/template_eda_notebook/eda/` and write a test.
 
 ---
 
@@ -88,7 +88,7 @@ Use explicit, verifiable references instead of vague descriptions.
 
 | BAD (vague) | GOOD (concrete) |
 |---|---|
-| "The library finds related features." | "`src/eda/correlation.py::strongest_pairs()` ranks feature pairs by absolute correlation while preserving sign." |
+| "The library finds related features." | "`src/template_eda_notebook/eda/correlation.py::strongest_pairs()` ranks feature pairs by absolute correlation while preserving sign." |
 | "We validated the statistics." | "`tests/test_statistics.py::TestSummaryStatistics` asserts the exact mean/std/min/median/max for a designed frame." |
 
 ---
@@ -99,14 +99,14 @@ Refer to files by their path relative to the repository root:
 
 | Short Name | Path (from repo root) |
 |---|---|
-| dataset loader | `projects/templates/template_eda_notebook/src/eda/dataset.py` |
+| dataset loader | `projects/templates/template_eda_notebook/src/template_eda_notebook/eda/dataset.py` |
 | analysis script | `projects/templates/template_eda_notebook/scripts/eda_analysis.py` |
 | notebook | `projects/templates/template_eda_notebook/notebooks/eda_walkthrough.ipynb` |
 | config | `projects/templates/template_eda_notebook/manuscript/config.yaml` |
 | dataset CSV | `projects/templates/template_eda_notebook/data/measurements.csv` |
 
 Never hardcode an absolute filesystem path in code — resolve relative to the
-project root (see `src/eda/dataset.py`).
+project root (see `src/template_eda_notebook/eda/dataset.py`).
 
 ---
 
@@ -141,7 +141,7 @@ All `ValueError` / `KeyError` raises must include the actual problematic value.
 raise ValueError("bad argument")
 ```
 
-**Correct** (following the pattern in `src/eda/`):
+**Correct** (following the pattern in `src/template_eda_notebook/eda/`):
 ```python
 raise ValueError("bins must be positive")
 raise ValueError("top_n must be non-negative")

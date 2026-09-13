@@ -1,6 +1,6 @@
 # template_methods_paper/tests
 
-Zero-mock test suite for the `src.methods_dsl` controlled-method
+Zero-mock test suite for the `template_methods_paper.methods_dsl` controlled-method
 specification library.
 
 ## Quick reference

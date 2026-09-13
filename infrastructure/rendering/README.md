@@ -96,7 +96,7 @@ This rendering system supports **BasicTeX**, a minimal TeX distribution (~100 MB
 
 ```bash
 sudo tlmgr update --self
-sudo tlmgr install multirow cleveref doi newunicodechar
+sudo tlmgr install multirow cleveref doi newunicodechar caption tools
 ```
 
 **Already included in BasicTeX**:
@@ -1107,7 +1107,7 @@ uv run pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-
 uv run python -m infrastructure.rendering.latex_package_validator
 
 # Install missing packages
-sudo tlmgr install multirow cleveref doi newunicodechar
+sudo tlmgr install multirow cleveref doi newunicodechar caption tools
 
 # Verify installation
 kpsewhich multirow.sty

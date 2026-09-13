@@ -399,7 +399,7 @@ class Node:
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Check specific file
-uv run mypy infrastructure/core/test_runner.py
+uv run mypy infrastructure/core/testing/test_runner.py
 ```
 
 The blocking gate is `scripts/gates/mypy_ratchet.py` (compatibility-named),

@@ -2,7 +2,7 @@
 
 A methods-paper exemplar: the manuscript's subject is the methodology itself
 — a small, tested domain language for specifying, validating, and
-deterministically compiling controlled procedures (`src/methods_dsl/`), not
+deterministically compiling controlled procedures (`src/template_methods_paper/methods_dsl/`), not
 results produced by running one. Exemplar roster:
 [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
 
@@ -72,12 +72,12 @@ metadata, publication block, and the `dsl` block documenting the example
 methods and staged gates); copy
 [`manuscript/config.yaml.example`](manuscript/config.yaml.example) to start a
 new project. The controlled vocabulary itself is declared in code
-(`src/methods_dsl/vocabulary.py`, `units.py`), not configuration. No absolute
+(`src/template_methods_paper/methods_dsl/vocabulary.py`, `units.py`), not configuration. No absolute
 paths are hardcoded anywhere.
 
 ## Key features
 
-- **Controlled-method model** (`src/methods_dsl/model.py`): `Method`,
+- **Controlled-method model** (`src/template_methods_paper/methods_dsl/model.py`): `Method`,
   `Step`, `Resource`, `Parameter` as frozen dataclasses — constructed
   directly in Python rather than parsed from new text syntax.
 - **Dimensional safety** (`units.py`): every `Quantity` resolves to one of
@@ -103,7 +103,7 @@ paths are hardcoded anywhere.
 
 ```mermaid
 graph TD
-    M[src/methods_dsl/examples_methods.py] --> V[validation.py: 4 staged gates]
+    M[src/template_methods_paper/methods_dsl/examples_methods.py] --> V[validation.py: 4 staged gates]
     V --> C[compiler.py: compile_method]
     C --> E[export.py: worklist/CSV/Mermaid/JSON]
     C --> T[trust.py: provenance hash-chain]
@@ -158,7 +158,7 @@ would then be added to `publication.published_artifacts`); **Cloudflare
 Pages** needs a `CLOUDFLARE_ACCOUNT_ID` the configured API token cannot
 auto-discover; **IPFS (Web3.Storage)** has no `WEB3_STORAGE_TOKEN` configured.
 
-- `src/methods_dsl/` is standalone except one sanctioned exception
+- `src/template_methods_paper/methods_dsl/` is standalone except one sanctioned exception
   (`_logging.py`), declared in
   [`manuscript/layer_contract.yaml`](manuscript/layer_contract.yaml) and
   enforced by the `src_infrastructure_import` drift check.
@@ -177,7 +177,7 @@ These files are validation inputs only; they do not run autonomous agents.
 ## More information
 
 See [AGENTS.md](AGENTS.md) for technical documentation and
-[`src/AGENTS.md`](src/template_methods_paper/AGENTS.md) / [`src/methods_dsl/AGENTS.md`](src/template_methods_paper/methods_dsl/AGENTS.md)
+[`src/template_methods_paper/AGENTS.md`](src/template_methods_paper/AGENTS.md) / [`src/template_methods_paper/methods_dsl/AGENTS.md`](src/template_methods_paper/methods_dsl/AGENTS.md)
 for the library API.
 
 ## Template integrity (fork / standalone)

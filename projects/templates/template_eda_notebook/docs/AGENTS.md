@@ -30,13 +30,13 @@ operational rulebook for AI agents and developers working inside the
 **Read-first protocol**: read `agent_instructions.md` before modifying any
 project file. The most common errors are introducing mocks, putting analysis
 logic in notebook cells or scripts, and importing `infrastructure.*` into
-`src/eda/`.
+`src/template_eda_notebook/eda/`.
 
-**Architecture isolation**: the EDA library in `src/eda/` is pure data logic —
+**Architecture isolation**: the EDA library in `src/template_eda_notebook/eda/` is pure data logic —
 no plotting, no file I/O, and no `infrastructure.*` imports. `scripts/` is glue
 (plots + writes files); notebook cells only call the library. The dependency
 arrow is one-directional: `scripts/`/`notebooks/` → `src/`; `tests/` → `src/`.
-Nothing imports upward. The library purity is the load-bearing claim: `src/eda/`
+Nothing imports upward. The library purity is the load-bearing claim: `src/template_eda_notebook/eda/`
 can be lifted into any Python environment with only numpy and pandas installed.
 
 **Zero-mock enforcement**: no `unittest.mock`, `MagicMock`, `@patch`, or
@@ -64,9 +64,9 @@ grep -rnE "^(from|import) infrastructure" \
 
 | Path | Status | Enforcing gate / source of truth |
 |------|--------|---------------------------------|
-| `src/eda/*.py` | REQUIRED | Coverage gate; the matching `tests/test_*.py` |
-| `src/__init__.py` | REQUIRED | Public re-export surface; `tests/test_notebook.py` checks the notebook binds to it |
-| `src/project_paths.py` | REQUIRED | Output dir helpers; `tests/test_project_paths.py` |
+| `src/template_eda_notebook/eda/*.py` | REQUIRED | Coverage gate; the matching `tests/test_*.py` |
+| `src/template_eda_notebook/__init__.py` | REQUIRED | Public re-export surface; `tests/test_notebook.py` checks the notebook binds to it |
+| `src/template_eda_notebook/project_paths.py` | REQUIRED | Output dir helpers; `tests/test_project_paths.py` |
 | `data/measurements.csv` | REQUIRED | The dataset the library loads; every statistic derives from it |
 | `tests/` (all `test_*.py`) | REQUIRED | 90% coverage gate (per-project and root pipeline) |
 | `tests/conftest.py` | REQUIRED | Pins `MPLBACKEND=Agg` + `src/` `sys.path` |

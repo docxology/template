@@ -30,14 +30,14 @@ operational rulebook for AI agents and developers working inside the
 **Read-first protocol**: read `agent_instructions.md` before modifying any
 project file. The most common errors are introducing mocks, putting gate or
 compilation logic in scripts, and importing `infrastructure.*` into
-`src/methods_dsl/` outside the one declared exception.
+`src/template_methods_paper/methods_dsl/` outside the one declared exception.
 
-**Architecture isolation**: the DSL library in `src/methods_dsl/` is pure
+**Architecture isolation**: the DSL library in `src/template_methods_paper/methods_dsl/` is pure
 model/validation/compilation logic — no plotting, no file I/O, and (with one
 declared exception) no `infrastructure.*` imports. `scripts/` is glue (plots
 + writes files + resolves tokens). The dependency arrow is one-directional:
 `scripts/` → `src/`; `tests/` → `src/`. Nothing imports upward. The library
-purity is the load-bearing claim: `src/methods_dsl/` can be lifted into any
+purity is the load-bearing claim: `src/template_methods_paper/methods_dsl/` can be lifted into any
 Python environment with only the standard library installed.
 
 **Zero-mock enforcement**: no `unittest.mock`, `MagicMock`, `@patch`, or
@@ -56,9 +56,9 @@ uv run pytest projects/templates/template_methods_paper/tests \
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
     projects/templates/template_methods_paper/tests/ || echo "Clean"
 
-# src/methods_dsl/ has no unsanctioned infrastructure imports
+# src/template_methods_paper/methods_dsl/ has no unsanctioned infrastructure imports
 grep -rnE "^(from|import) infrastructure" \
-    projects/templates/template_methods_paper/src/methods_dsl/ \
+    projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/ \
     | grep -v "_logging.py" \
     || echo "Clean — only _logging.py's declared exception imports infrastructure"
 ```
@@ -67,10 +67,10 @@ grep -rnE "^(from|import) infrastructure" \
 
 | Path | Status | Enforcing gate / source of truth |
 |------|--------|---------------------------------|
-| `src/methods_dsl/*.py` | REQUIRED | Coverage gate; the matching `tests/test_*.py` |
-| `src/__init__.py` | REQUIRED | Public re-export surface |
-| `src/project_paths.py` | REQUIRED | Output dir helpers; `tests/test_project_paths.py` |
-| `src/manuscript_variables.py` | REQUIRED | `{{TOKEN}}` generation; `tests/test_manuscript_variables.py` |
+| `src/template_methods_paper/methods_dsl/*.py` | REQUIRED | Coverage gate; the matching `tests/test_*.py` |
+| `src/template_methods_paper/__init__.py` | REQUIRED | Public re-export surface (re-exports the `methods_dsl` API: `compile_method`, `run_all_gates`, …) |
+| `src/template_methods_paper/project_paths.py` | REQUIRED | Output dir helpers; `tests/test_project_paths.py` |
+| `src/template_methods_paper/manuscript_variables.py` | REQUIRED | `{{TOKEN}}` generation; `tests/test_manuscript_variables.py` |
 | `tests/` (all `test_*.py`) | REQUIRED | 90% coverage gate (per-project and root pipeline) |
 | `tests/conftest.py` | REQUIRED | Shared `Method` fixtures + `sys.path` setup |
 | `scripts/methods_analysis.py` | REQUIRED | Pipeline analysis entry point; writes exports + reports + figure |

@@ -24,7 +24,7 @@ what keeps that exploration reproducible, covered, and reusable.
 
 | Surface | Rule |
 | --- | --- |
-| `src/eda/` (domain) | Pure pandas/numpy data transforms — **no** plotting, no file I/O, **no** `infrastructure` imports |
+| `src/template_eda_notebook/eda/` (domain) | Pure pandas/numpy data transforms — **no** plotting, no file I/O, **no** `infrastructure` imports |
 | `notebooks/` | Thin walkthrough; cells only call `src` functions (no `def`/`class` in cells) |
 | `scripts/` | Thin orchestrators; may import `infrastructure/` and `src/`; the only place matplotlib + file writes live |
 | Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); **do not** hardcode measured test totals or coverage % |
@@ -39,7 +39,7 @@ The boundary is enforced by `check_project_src_infrastructure_boundary` via
 title, authors, keywords, version, and publication metadata; it is mirrored by a
 sanitized [`manuscript/config.yaml.example`](manuscript/config.yaml.example) with
 the same top-level sections. The dataset schema (which columns are numeric) is
-declared in `src/eda/dataset.py::DatasetSchema`. No absolute paths are hardcoded
+declared in `src/template_eda_notebook/eda/dataset.py::DatasetSchema`. No absolute paths are hardcoded
 in code — the shipped CSV (`data/measurements.csv`) resolves relative to the
 project root.
 
@@ -47,11 +47,11 @@ project root.
 
 - **Deterministic dataset**: a shipped CSV fixture with a designed correlation
   structure and a handful of missing cells, so every statistic is reproducible.
-- **Tested EDA library** (`src/eda/`): `load_dataset`, `clean_dataset`,
+- **Tested EDA library** (`src/template_eda_notebook/eda/`): `load_dataset`, `clean_dataset`,
   `normalize_numeric`, `summary_statistics`, `group_means`,
   `correlation_matrix`, `strongest_pairs`, and figure-data preparers.
 - **Notebook -> tested src extraction**: the workflow this template teaches —
-  when a cell grows beyond a one-line call, extract it into `src/eda/` with a
+  when a cell grows beyond a one-line call, extract it into `src/template_eda_notebook/eda/` with a
   test first (TDD).
 - **Thin analysis script**: [`scripts/eda_analysis.py`](scripts/eda_analysis.py)
   runs the EDA headless (`MPLBACKEND=Agg`), writes figures + a summary CSV to

@@ -400,7 +400,7 @@ maintained in [`AGENTS.md`](AGENTS.md#core-architecture) and
 
 - **Entry points:** `./run.sh` (interactive or `--pipeline`) and
   `uv run python scripts/runner/execute_pipeline.py --project <name> [--core-only]`;
-  numbered orchestrators under `scripts/` include `00_*.py` through `07_*.py` (setup → copy, LLM, executive report — see [`scripts/AGENTS.md`](scripts/AGENTS.md)).
+  numbered orchestrators under `scripts/pipeline/` run `stage_00_setup.py` through `stage_13_docxplus.py` (setup → copy, LLM, executive report, metadata, ebook, docxplus — see [`scripts/AGENTS.md`](scripts/AGENTS.md)).
 - **Orchestration:** the pipeline runs Setup → Tests → Analysis → Render →
   Validate → Copy, with optional LLM Review and LLM Translations stages.
 - **Core systems:** importable `infrastructure/` packages (Layer 1; live list

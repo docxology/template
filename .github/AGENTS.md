@@ -34,7 +34,7 @@ flowchart TB
     ITPL --> ITPL_F[config.yml · bug_report.md ·<br/>feature_request.md · documentation.md]
 
     WF --> WF_DOCS[AGENTS.md · README.md]
-    WF --> WF_CI[ci.yml<br/>16 jobs — 2 conditional via detect-job outputs — fep-lean, setup-hook-windows-smoke — plus 1 scheduled-only — public-matrix-receipt]
+    WF --> WF_CI[ci.yml<br/>19 jobs — 2 conditional via detect outputs — fep-lean, setup-hook-windows-smoke — 2 schedule/dispatch-only — public-matrix-receipt, test-infra-slow — 1 aggregation gate — ci-gate]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
     WF --> WF_DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
@@ -56,7 +56,7 @@ flowchart TB
 
 **Pipeline jobs** (job ids in `ci.yml`; display names differ — use `name:` for branch protection):
 
-**18 jobs total; 2 are conditional on push/PR (fep-lean, setup-hook-windows-smoke), gated by the `detect` job's outputs
+**19 jobs total; 2 are conditional on push/PR (fep-lean, setup-hook-windows-smoke), gated by the `detect` job's outputs
 (`needs.detect.outputs.*`) — NOT a job-level `hashFiles()` (that is invalid
 in a job `if:` and rejects the whole workflow at parse). 2 further jobs
 (`public-matrix-receipt`, `test-infra-slow`) run only on the weekly schedule
@@ -82,6 +82,7 @@ or manual dispatch.**
 | 16 | `public-matrix-receipt` | Public Matrix Receipt (receipt-bearing full matrix) | — | 3.14 | ubuntu · schedule/manual only |
 | 17 | `test-infra-slow` | Infra Slow Lane (`pytest.mark.slow`) | verify-no-mocks | 3.14 | ubuntu · schedule/manual only — exercises the slow-marked suite PR lanes deselect |
 | 18 | `test-integration` | Integration Tier (run.sh + pipeline CLI) | verify-no-mocks | 3.14 | ubuntu — runs the registered `tests/integration/` suite on every push/PR (CI-WIRING-1) |
+| 19 | `ci-gate` | CI Gate | all 18 upstream jobs (`if: always()`) | — | ubuntu · aggregation — fails if any upstream job failed or was cancelled; skipped counts as intentional |
 
 **Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/audit/check_tracked_generated_artifacts.py` (rejects generated outputs and local `.codegraph/` indexes), **`scripts/audit/check_template_drift.py --strict`** (exemplar doc/script drift against Layer-1 contracts), and **`scripts/audit/check_tracked_all.py`** — the **confidentiality guard** that fails CI if any path outside the public allowlists for `projects/`, `fonds/`, `rules/`, or `tools/` is git-tracked (this is a public repo; confidential/rotating resources are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/docgen/api_reference.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (`projects/working/`, `projects/ongoing/`, `projects/published/`, `projects/archive/`, `projects/other/`, plus `.venv`, `site-packages`, `.lake`, the vendored `infrastructure/steganography/kmyth` submodule, and named rotating research projects such as `projects/BeeStack` — **not** the rendered `projects/active/` mirror) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
 

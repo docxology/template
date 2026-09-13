@@ -12,8 +12,8 @@ deterministic pipeline step; none should be edited manually. If a file is
 missing or corrupted, re-run the appropriate step to recreate it.
 
 **Key principle:** the source of truth for all outputs is the combination of:
-- `src/methods_dsl/examples_methods.py` (the worked example methods)
-- `src/methods_dsl/*.py` (model, validation, compilation, export, trust logic)
+- `src/template_methods_paper/methods_dsl/examples_methods.py` (the worked example methods)
+- `src/template_methods_paper/methods_dsl/*.py` (model, validation, compilation, export, trust logic)
 - `scripts/methods_analysis.py` (orchestration: gates + compile + export + plot)
 - `scripts/z_generate_manuscript_variables.py` (token generation + injection)
 - `manuscript/config.yaml` (paper/publication metadata)
@@ -84,7 +84,7 @@ flowchart TB
   1. Document it in [`output_inventory.md`](output_inventory.md) with its
      producer and stage.
   2. Write it from `scripts/methods_analysis.py`, sourcing the content from
-     a tested `src/methods_dsl/` function.
+     a tested `src/template_methods_paper/methods_dsl/` function.
   3. Reference it from the manuscript with a `{{TOKEN}}` or a `{#fig:label}`.
 
 ## Troubleshooting

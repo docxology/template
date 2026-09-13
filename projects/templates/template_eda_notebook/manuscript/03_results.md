@@ -4,7 +4,7 @@ This section presents the exploratory analysis of the shipped dataset. Every
 figure and the summary table are produced by the
 [EDA analysis orchestrator](https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py)
 (`scripts/eda_analysis.py`),
-which calls the tested figure-data preparers in `src/eda/figures.py`. Running
+which calls the tested figure-data preparers in `src/template_eda_notebook/eda/figures.py`. Running
 the script regenerates the figures under `output/figures/` and the summary CSV
 under `output/data/`; the prose below describes what those artifacts show.
 
@@ -23,7 +23,7 @@ leaving a complete-case dataset for the analysis below.
 complete-case dataset, binned by `histogram_data()` and plotted by the analysis
 script.
 
-![Height distribution: bin counts produced by `histogram_data(frame, "height_cm", bins=10)` in `src/eda/figures.py` and plotted as a bar chart by `scripts/eda_analysis.py`. The bin counts sum to the number of complete-case rows; the shape is the roughly bell-shaped spread expected from the generating process.](../output/figures/height_histogram.png){#fig:height_histogram}
+![Height distribution: bin counts produced by `histogram_data(frame, "height_cm", bins=10)` in `src/template_eda_notebook/eda/figures.py` and plotted as a bar chart by `scripts/eda_analysis.py`. The bin counts sum to the number of complete-case rows; the shape is the roughly bell-shaped spread expected from the generating process.](../output/figures/height_histogram.png){#fig:height_histogram}
 
 ## Group composition
 
@@ -62,7 +62,7 @@ minimum, median, and maximum for one numeric feature.
 | `resting_hr_bpm` | count, mean, std, min, median, max |
 
 : Summary-statistics table written by the analysis script from
-`src/eda/statistics.py::summary_statistics()`. The concrete numbers are
+`src/template_eda_notebook/eda/statistics.py::summary_statistics()`. The concrete numbers are
 reproduced verbatim by running the script — the manuscript intentionally does
 not transcribe volatile values, so prose and CSV cannot drift. {#tbl:summary_statistics}
 

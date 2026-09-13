@@ -1,4 +1,4 @@
-# `template_methods_paper/src/methods_dsl/` - agent guide
+# `template_methods_paper/src/template_methods_paper/methods_dsl/` - agent guide
 
 ## Purpose
 

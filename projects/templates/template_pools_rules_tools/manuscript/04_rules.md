@@ -72,10 +72,10 @@ In the current pipeline run, **{{RULES_SETS_OK}} of {{RULES_SETS_TOTAL}} rule se
 
 ## Rule Application Module
 
-The `src/rules/rules_applier.py` module exposes three functions:
+The `src/template_pools_rules_tools/rules/rules_applier.py` module exposes three functions:
 
 ```python
-from src.rules.rules_applier import (
+from template_pools_rules_tools.rules.rules_applier import (
     load_soft_rules,
     load_strong_rules,
     validate_against_rules,
@@ -95,10 +95,10 @@ Strong rule validation counts are injected into the manuscript through the token
 
 ## Beyond Structural Validation: Semantic Rule Evaluation
 
-`validate_against_rules()` (described above) performs *structural* validation only: it confirms that `rules.yaml` and every file in `soft/`/`strong/` parse as YAML. It does not check whether the constraints those strong-rule files declare are actually satisfied by the current project. That semantic layer lives in a separate module, `src/rules/strong_rule_evaluator.py`, exposed via `scripts/04_validate_strong_rules.py`:
+`validate_against_rules()` (described above) performs *structural* validation only: it confirms that `rules.yaml` and every file in `soft/`/`strong/` parse as YAML. It does not check whether the constraints those strong-rule files declare are actually satisfied by the current project. That semantic layer lives in a separate module, `src/template_pools_rules_tools/rules/strong_rule_evaluator.py`, exposed via `scripts/04_validate_strong_rules.py`:
 
 ```python
-from src.rules.strong_rule_evaluator import evaluate_strong_rules, load_rule_context_from_project
+from template_pools_rules_tools.rules.strong_rule_evaluator import evaluate_strong_rules, load_rule_context_from_project
 
 context = load_rule_context_from_project(project_root)
 result = evaluate_strong_rules("template_project_rules", context)

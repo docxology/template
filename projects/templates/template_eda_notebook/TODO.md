@@ -20,7 +20,7 @@ keeps a capability blocked rather than silently promoting it.
   EDA / computational-notebook research projects.
 - Keep all figures and the summary table generated from `scripts/eda_analysis.py`,
   not hand-maintained `output/` snapshots.
-- Keep `src/eda/` free of plotting and `infrastructure.*` imports.
+- Keep `src/template_eda_notebook/eda/` free of plotting and `infrastructure.*` imports.
 
 ## Configurable-surface gaps
 
@@ -46,7 +46,7 @@ keeps a capability blocked rather than silently promoting it.
   remain synchronized as the public `src` surface grows.
 - Byte-exact regeneration of `data/measurements.csv` remains intentionally out
   of scope: the original fixture's random draw order is not recoverable, and
-  the generator (`src/eda/generate.py`) deliberately reproduces the fixture's
+  the generator (`src/template_eda_notebook/eda/generate.py`) deliberately reproduces the fixture's
   documented contract (schema, size, missingness, correlation signs) rather
   than claiming a false byte-exact clone. If the dataset is ever regenerated
   from scratch, check in the new CSV and keep `DatasetSchema` in sync.

@@ -6,7 +6,7 @@
 
 The two exemplars sit at different points on the abstraction spectrum.
 
-- `template_code_project` owns its **own algorithm** (`src/optimizer.py`); the algorithm has no upstream dependency, so `src/` can be infrastructure-free.
+- `template_code_project` owns its **own algorithm** (`src/template_code_project/core/optimizer.py`); the algorithm has no upstream dependency, so `src/` can be infrastructure-free.
 - `template_search_project` has **no algorithm of its own**. Its value is in being a thin orchestration layer over `infrastructure.search.literature`, `infrastructure.reference.citation`, and `infrastructure.llm`. Forbidding those imports in `src/` would force the orchestration into `scripts/` — which would push every contributor towards mocking the infrastructure, defeating the zero-mock policy.
 
 The boundary is preserved differently here: `src/pipeline/pipeline.py` and `src/search/deep_search.py` are the **only** modules that touch `infrastructure.search.*`; the rest of `src/` (figures, report, manuscript_variables, analysis, search_invariants) is pure.

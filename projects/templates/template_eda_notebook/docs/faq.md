@@ -2,9 +2,9 @@
 
 ## Architecture and workflow
 
-### Why can't `src/eda/` import from `infrastructure/`?
+### Why can't `src/template_eda_notebook/eda/` import from `infrastructure/`?
 
-`src/eda/` is pure data logic. It must run in any Python environment with only
+`src/template_eda_notebook/eda/` is pure data logic. It must run in any Python environment with only
 numpy and pandas installed. All cross-cutting concerns (rendering, validation,
 logging) are delegated to `infrastructure/` and called from `scripts/`. This
 keeps the library testable with zero mocks and reusable outside the pipeline.
@@ -14,12 +14,12 @@ keeps the library testable with zero mocks and reusable outside the pipeline.
 The notebook and `scripts/eda_analysis.py` should not implement analysis logic.
 They should:
 
-- Import functions from `src/eda/`.
+- Import functions from `src/template_eda_notebook/eda/`.
 - Plot the returned data with matplotlib.
 - Write outputs to `output/`.
 
 If you find yourself computing a statistic or correlation inside a cell or
-script, move it to `src/eda/` and add a test.
+script, move it to `src/template_eda_notebook/eda/` and add a test.
 
 ### Why are mocks forbidden?
 
@@ -32,7 +32,7 @@ break the reproducibility guarantee.
 
 ### Why 90% coverage? Can I lower it?
 
-The gate ensures `src/eda/` logic is thoroughly exercised. If coverage drops, it
+The gate ensures `src/template_eda_notebook/eda/` logic is thoroughly exercised. If coverage drops, it
 signals a missing test — add it, don't lower the gate.
 
 ### My new function lowered coverage. What now?
@@ -45,14 +45,14 @@ exact.
 
 Yes. `tests/test_eda_analysis_script.py` runs `run_eda()` against a temp output
 root and asserts real artifacts are written. `tests/test_notebook.py` checks the
-notebook is valid nbformat, binds to `src.__all__`, and carries no logic in
+notebook is valid nbformat, binds to `template_eda_notebook.__all__`, and carries no logic in
 cells.
 
 ## Manuscript and rendering
 
 ### How do I add a new figure?
 
-1. Add a figure-data preparer to `src/eda/figures.py` (returns a dataclass of
+1. Add a figure-data preparer to `src/template_eda_notebook/eda/figures.py` (returns a dataclass of
    numbers; no matplotlib) with a test in `tests/test_figures.py`.
 2. Plot it in `scripts/eda_analysis.py` and write the PNG to `output/figures/`.
 3. In `manuscript/03_results.md`, add a Pandoc image line:
@@ -71,9 +71,9 @@ values.
 
 ## Common pitfalls
 
-### I imported `infrastructure` in `src/eda/` and tests broke
+### I imported `infrastructure` in `src/template_eda_notebook/eda/` and tests broke
 
-`src/eda/` must stay infrastructure-free. Move that code to `scripts/`.
+`src/template_eda_notebook/eda/` must stay infrastructure-free. Move that code to `scripts/`.
 
 ### My test uses `unittest.mock` and the drift gate failed
 

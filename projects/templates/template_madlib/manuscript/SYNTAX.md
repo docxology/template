@@ -36,7 +36,7 @@ The PDF cover image is declared with `paper.cover.image` and generated as
 Keep Methods content large-grain. Do not replace `{{METHODS_BODY}}` with hand-authored prose in
 `manuscript/02_methodology.md`; expand `madlib.method_protocol`, `madlib.pipeline_phases`,
 `madlib.quality_probes`, `madlib.failure_modes`, `madlib.audit_rules`, `madlib.contribution_claims`,
-and `src/composition.py` instead. Generated output under `output/manuscript/`, rendered PDF/HTML/slides,
+and `src/template_madlib/composition.py` instead. Generated output under `output/manuscript/`, rendered PDF/HTML/slides,
 and copied deliverables are disposable Stage 02-05 products.
 
 Do not hard-code review-packet lists, token-selection invariants, claim-ledger boundaries, or fork-migration
