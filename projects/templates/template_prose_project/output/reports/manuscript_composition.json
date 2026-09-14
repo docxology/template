@@ -1,9 +1,9 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "f7ea318657a01cc137cbe04d5e7f701e0276abf86b66628ddf996f7d73538456",
+  "binding_sha256": "43480cb750de43fa895a412235db4e6e88605fc62a2bd22244972cdff94e4ddb",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "9be265877c9e87973e0b27b1567e04b165f8fbe1de51a5a33e8e821e34774eb1",
-  "combined_size_bytes": 22614,
+  "combined_sha256": "c56472ee20757fda8185e4b2caef5104efd562853f85f0c7edd14d9122dc191f",
+  "combined_size_bytes": 22672,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {
@@ -21,14 +21,14 @@
     {
       "ordinal": 3,
       "path": "output/manuscript/01_introduction.md",
-      "sha256": "7a9ce953c4c394d578f99aec0cf3740c1354698d410549af02005ebc297fc219",
-      "size_bytes": 2344
+      "sha256": "558979b7385b224b15dc908f27ad4e96825842086492a21607abec82d2509213",
+      "size_bytes": 2364
     },
     {
       "ordinal": 4,
       "path": "output/manuscript/02_methodology.md",
-      "sha256": "cd8aa4fc32077f009eb3ec456ae1fd9a3432db030ce4e025b9697cfb05644b49",
-      "size_bytes": 4997
+      "sha256": "113533f5e20eb94cefa182f056fac882dbf073f0f11b26f98b3e4ca420d2c25f",
+      "size_bytes": 5017
     },
     {
       "ordinal": 5,
@@ -39,8 +39,8 @@
     {
       "ordinal": 6,
       "path": "output/manuscript/04_conclusion.md",
-      "sha256": "ff67498297de15a3420125bca6c0b1d690902ce63fa448ed178c2a03a520bdb2",
-      "size_bytes": 1894
+      "sha256": "3713bd3c6ffd2280728c195f50fdfa672072b616f960306c5891da47b5f68a0c",
+      "size_bytes": 1903
     },
     {
       "ordinal": 7,
@@ -57,8 +57,8 @@
     {
       "ordinal": 9,
       "path": "output/manuscript/99_references.md",
-      "sha256": "8c04264bafcc2745d57027c8f8930b4c2079f3afbc2b60c5310337d932f8f877",
-      "size_bytes": 917
+      "sha256": "f08a9d36ae4a4975e91532ea2d7064c10cfeaa033c37b6388b03d281ffdb43b4",
+      "size_bytes": 926
     },
     {
       "ordinal": 10,
@@ -67,7 +67,7 @@
       "size_bytes": 543
     }
   ],
-  "ordered_inputs_sha256": "a5ab0f47a4a4bd674b13a5f7738e1578f3887d1f67ca853de039c24503fd169f",
+  "ordered_inputs_sha256": "be1342e0a384af14c9f18a243c5632175c1f36dbeff110b4095de6999823aaff",
   "project": "templates/template_prose_project",
   "schema_version": "template-manuscript-composition-v1"
 }

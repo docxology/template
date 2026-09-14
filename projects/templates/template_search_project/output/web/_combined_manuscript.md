@@ -35,7 +35,7 @@ Reproducible computational research demands that every claim be traceable back t
 
 * The discovery side ([`infrastructure/search/`](../../../../infrastructure/search/)) provides multi-source paper search with failure-isolated aggregation, DOI/arXiv-aware deduplication, and deterministic JSON caching keyed on canonical query identity.
 * The export side ([`infrastructure/reference/`](../../../../infrastructure/reference/)) provides BibTeX read/write/convert facilities byte-compatible with the existing exemplar `references.bib`, suitable for the combined-PDF pipeline (Pandoc `--natbib` + BibTeX).
-* A small project-local synthesis layer (in [`src/synthesis.py`](../src/synthesis.py)) takes enriched papers, builds reproducible LLM prompts, and assembles a markdown reading report.
+* A small project-local synthesis layer (in [`src/pipeline/synthesis.py`](../src/template_search_project/pipeline/synthesis.py)) takes enriched papers, builds reproducible LLM prompts, and assembles a markdown reading report.
 
 The project is *configurable* via a single `manuscript/config.yaml`: changing the topic, year filters, backend set, enrichment level, and LLM parameters never requires editing code. The project is *modular* in the strict sense the template uses: every reusable component lives in `infrastructure/`, and `src/` contains only project-specific orchestration.
 
@@ -51,8 +51,8 @@ The contribution of this exemplar is therefore not a new algorithm; it is a **de
 
 Two distinct workflows run on top of `infrastructure/search/literature` and `infrastructure/reference/citation`:
 
-* **Standard pipeline** (`scripts/run_search_pipeline.py` → `src/pipeline.py::run_literature_pipeline`) — single `SearchQuery`. Four pure-orchestration stages with no LLM dependency: (1) search via `LiteratureClient`, (2) enrichment via `AbstractFetcher` and (optional) `FulltextFetcher`, (3) collision-free citation-key generation in `_build_citation_keys`, (4) writing `output/corpus.json` + `manuscript/references.bib` + `output/enrichment_log.json`. The orchestrator script then optionally calls `src/synthesis.py` for per-paper and corpus LLM synthesis and `src/report.py` for the final reading report.
-* **Deep search** (`scripts/run_deep_search.py` → `src/deep_search.py::run_deep_search`) — multi-keyword fan-out: each keyword runs its own `SearchQuery` capped at `max_results_per_keyword` (100 by default), every paper is fully enriched (abstract + PDF fulltext when available), and an LLM-driven multi-section deep summary (CONTRIBUTION / METHOD / EVIDENCE / LIMITATIONS / CONNECTIONS / SIGNIFICANCE / TAGS) is written for each paper as a standalone markdown reading note. Output lands under `output/deep_search/<keyword_slug>/` plus aggregate `aggregate.json`, `aggregate_report.md`, and a unified, deduplicated `manuscript/references_deep.bib` with collision-free citation keys.
+* **Standard pipeline** (`scripts/run_search_pipeline.py` → `src/pipeline/pipeline.py::run_literature_pipeline`) — single `SearchQuery`. Four pure-orchestration stages with no LLM dependency: (1) search via `LiteratureClient`, (2) enrichment via `AbstractFetcher` and (optional) `FulltextFetcher`, (3) collision-free citation-key generation in `_build_citation_keys`, (4) writing `output/corpus.json` + `manuscript/references.bib` + `output/enrichment_log.json`. The orchestrator script then optionally calls `src/pipeline/synthesis.py` for per-paper and corpus LLM synthesis and `src/analysis/report.py` for the final reading report.
+* **Deep search** (`scripts/run_deep_search.py` → `src/search/deep_search.py::run_deep_search`) — multi-keyword fan-out: each keyword runs its own `SearchQuery` capped at `max_results_per_keyword` (100 by default), every paper is fully enriched (abstract + PDF fulltext when available), and an LLM-driven multi-section deep summary (CONTRIBUTION / METHOD / EVIDENCE / LIMITATIONS / CONNECTIONS / SIGNIFICANCE / TAGS) is written for each paper as a standalone markdown reading note. Output lands under `output/deep_search/<keyword_slug>/` plus aggregate `aggregate.json`, `aggregate_report.md`, and a unified, deduplicated `manuscript/references_deep.bib` with collision-free citation keys.
 
 The standard pipeline is described first in this section; the deep-search workflow is documented in [@sec:deep_search]. Diagnostic figures for the latest pipeline run appear at the end of this section.
 
@@ -100,18 +100,18 @@ A `BibDatabase` collects these entries and `write_bibfile` renders them in the p
 
 ## Synthesis
 
-Two LLM passes produce the reading report (see `src/synthesis.py`):
+Two LLM passes produce the reading report (see `src/pipeline/synthesis.py`):
 
 * **Per-paper synthesis** — `build_paper_block(paper, citation_key, max_fulltext=4000)` renders the paper as a markdown block; `synthesise_per_paper` formats `PROMPT_PER_PAPER` and calls the injected `llm` callable. The prompt requests five sections: CONTRIBUTION, METHOD, EVIDENCE, LIMITATION, TAGS, plus a citation-key reference.
 * **Corpus synthesis** — `build_corpus_block` concatenates every paper into a single citation-keyed block; `synthesise_corpus` formats `PROMPT_CORPUS`, which asks for 3–7 thematic clusters, methodological agreements / disagreements (≥ 2 papers each), and three open questions that the corpus does not answer.
 
 Both functions return a `SynthesisResult(kind, prompt, text, paper_id)` record so the prompt is recoverable for reproducibility. The synthesis layer takes a callable `llm: (str) -> str` so tests pass a deterministic local function (no Ollama dependency) and runtime callers pass a thin adapter around `infrastructure.llm.LLMClient`. Determinism in production runs is enforced by `OllamaClientConfig(seed=42, temperature=0.0)`.
 
-The deep-search workflow uses a richer prompt (`src/deep_search.py::DEEP_PROMPT`) with seven sections (CONTRIBUTION / METHOD / EVIDENCE / LIMITATIONS / CONNECTIONS / SIGNIFICANCE / TAGS) and a much larger `max_fulltext` budget (400000 characters by default).
+The deep-search workflow uses a richer prompt (`src/search/deep_search.py::DEEP_PROMPT`) with seven sections (CONTRIBUTION / METHOD / EVIDENCE / LIMITATIONS / CONNECTIONS / SIGNIFICANCE / TAGS) and a much larger `max_fulltext` budget (400000 characters by default).
 
 ## Report
 
-`src/report.py::write_reading_report` assembles a markdown file with:
+`src/analysis/report.py::write_reading_report` assembles a markdown file with:
 
 * Topic, result count, year filter, and any backend errors at the top.
 * A per-source count table.
@@ -123,19 +123,19 @@ Citation keys appear in `[brackets]` so a downstream tool — for example a Pand
 
 ## Diagnostic figures
 
-`scripts/y_generate_search_figures.py` (a thin orchestrator over `src/figures.py`) writes three diagnostic plots into `../figures/` from `output/search/results.json`. Each figure uses Matplotlib's `Agg` backend so the pipeline runs headlessly in CI; the colour palette is colourblind-safe (Wong, *Nature Methods* 2011).
+`scripts/y_generate_search_figures.py` (a thin orchestrator over `src/publish/figures.py`) writes three diagnostic plots into `../figures/` from `output/search/results.json`. Each figure uses Matplotlib's `Agg` backend so the pipeline runs headlessly in CI; the colour palette is colourblind-safe (Wong, *Nature Methods* 2011).
 
 [@fig:papers_per_source] reports the per-backend contribution counts before deduplication, surfacing which sources actually returned coverage for the configured query. The bar values are read directly from `SearchResult.per_source_counts` (set by `LiteratureClient` *before* the DOI / arXiv-id / title merge step), so a backend that returned five papers all duplicating arXiv hits still scores five here.
 
-![Per-source paper counts read from `SearchResult.per_source_counts` (pre-deduplication contribution per backend). The numeric label above each bar reports the raw count; the y-axis spans `[0, max + headroom]`. Bar order follows `project_config.search.sources`. Empty runs render `(no results)` centred. Generated by `src/figures.py::plot_papers_per_source`.](../figures/papers_per_source.png){#fig:papers_per_source}
+![Per-source paper counts read from `SearchResult.per_source_counts` (pre-deduplication contribution per backend). The numeric label above each bar reports the raw count; the y-axis spans `[0, max + headroom]`. Bar order follows `project_config.search.sources`. Empty runs render `(no results)` centred. Generated by `src/publish/figures.py::plot_papers_per_source`.](../figures/papers_per_source.png){#fig:papers_per_source}
 
 [@fig:year_histogram] shows the publication-year distribution *after* the merge step (one bar per unique paper, not per backend hit) — useful for spotting backend coverage gaps in older / newer literature. Papers with no `year` field are dropped silently from the histogram (they remain in the corpus).
 
-![Publication-year histogram of the deduplicated paper roster. One bin per year (no smoothing); the x-axis spans the observed `[min(year), max(year)]` from `result.papers`. Papers with `year is None` are dropped; the y-axis is per-year paper count. Generated by `src/figures.py::plot_year_histogram`.](../figures/year_histogram.png){#fig:year_histogram}
+![Publication-year histogram of the deduplicated paper roster. One bin per year (no smoothing); the x-axis spans the observed `[min(year), max(year)]` from `result.papers`. Papers with `year is None` are dropped; the y-axis is per-year paper count. Generated by `src/publish/figures.py::plot_year_histogram`.](../figures/year_histogram.png){#fig:year_histogram}
 
 [@fig:score_distribution] shows the per-paper relevance scores returned by the backends, ranked descending. Papers from backends without an explicit ranking signal (e.g. `LocalBackend`, the offline default) carry `Paper.score = 0.0`; their bars therefore have zero length but still appear as ticks on the y-axis so the reader can see how many unranked papers exist.
 
-![Per-paper backend-reported relevance scores ranked descending (highest at top). Each horizontal bar is one `Paper.score`; long y-tick titles are truncated with an ellipsis. Backends without scoring (notably `LocalBackend`) report `Paper.score = 0.0` so those bars have zero length. Generated by `src/figures.py::plot_score_distribution`.](../figures/score_distribution.png){#fig:score_distribution}
+![Per-paper backend-reported relevance scores ranked descending (highest at top). Each horizontal bar is one `Paper.score`; long y-tick titles are truncated with an ellipsis. Backends without scoring (notably `LocalBackend`) report `Paper.score = 0.0` so those bars have zero length. Generated by `src/publish/figures.py::plot_score_distribution`.](../figures/score_distribution.png){#fig:score_distribution}
 
 
 
@@ -229,7 +229,7 @@ This supplemental section documents the data structures and on-disk artifacts th
 
 ## Data structures
 
-The Mermaid class diagram in this subsection shows the canonical fields each record carries through the pipeline. Records have additional optional metadata (e.g. `Paper.url`, `Paper.publisher`, `Paper.isbn`, `Paper.raw`) omitted for readability — consult `infrastructure/search/literature/models.py` ([source on GitHub](https://github.com/docxology/template/tree/main/infrastructure/search/literature)) and `src/pipeline.py` ([source on GitHub](https://github.com/docxology/template/tree/main/projects/templates/template_search_project/src)) for the full schema.
+The Mermaid class diagram in this subsection shows the canonical fields each record carries through the pipeline. Records have additional optional metadata (e.g. `Paper.url`, `Paper.publisher`, `Paper.isbn`, `Paper.raw`) omitted for readability — consult `infrastructure/search/literature/models.py` ([source on GitHub](https://github.com/docxology/template/tree/main/infrastructure/search/literature)) and `src/pipeline/pipeline.py` ([source on GitHub](https://github.com/docxology/template/tree/main/projects/templates/template_search_project/src)) for the full schema.
 
 ```mermaid
 classDiagram
@@ -400,9 +400,9 @@ flowchart TB
 
 ## Citation-key collision handling
 
-`paper_to_bibentry()` generates citation keys as `<author><year><title-word>` (with stop-words filtered and unicode folded). When two papers in the same result set produce the same key — common when one author publishes multiple papers in the same year on closely related topics — `src/pipeline.py::_disambiguate_citation_key` appends a deterministic suffix from the alphabet (`a`, `b`, …, `z`, then two-letter combinations `aa`, `ab`, …) until uniqueness is restored, with a numeric `_1`, `_2`, … fallback for the pathological case. The mapping is exposed to downstream stages via `LiteratureRunArtifacts.citation_keys`, and the report uses these keys verbatim, so the LLM synthesis and the BibTeX file always agree.
+`paper_to_bibentry()` generates citation keys as `<author><year><title-word>` (with stop-words filtered and unicode folded). When two papers in the same result set produce the same key — common when one author publishes multiple papers in the same year on closely related topics — `src/pipeline/pipeline.py::_disambiguate_citation_key` appends a deterministic suffix from the alphabet (`a`, `b`, …, `z`, then two-letter combinations `aa`, `ab`, …) until uniqueness is restored, with a numeric `_1`, `_2`, … fallback for the pathological case. The mapping is exposed to downstream stages via `LiteratureRunArtifacts.citation_keys`, and the report uses these keys verbatim, so the LLM synthesis and the BibTeX file always agree.
 
-The deep-search workflow has its own collision handler in `src/deep_search.py::run_deep_search` that operates over the post-deduplication aggregate roster — see [@sec:deep_search] — and the unified `references_deep.bib` reflects the same mapping.
+The deep-search workflow has its own collision handler in `src/search/deep_search.py::run_deep_search` that operates over the post-deduplication aggregate roster — see [@sec:deep_search] — and the unified `references_deep.bib` reflects the same mapping.
 
 ## Failure isolation
 

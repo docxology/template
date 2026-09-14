@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Staged Validation and Deterministic Compilation for Method Specification, Informed by BPL" />
@@ -264,6 +264,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -274,14 +283,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -312,12 +353,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -329,7 +414,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -387,6 +483,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -394,13 +492,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -481,8 +634,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -531,6 +683,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -545,6 +703,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -737,7 +901,7 @@ Template</a>. Unlike a results paper, this manuscript’s subject is the
 methodology itself: a controlled vocabulary, a unit system with
 dimensional safety, four staged validation gates, and a deterministic
 compiler, implemented in
-<code>projects/templates/template_methods_paper/src/methods_dsl/</code>
+<code>projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/</code>
 and described section by section in sec. <a
 href="#sec:methodology">3</a>. The domain language’s vocabulary is
 informed by BPL (Biology Programming Language, <span class="citation"
@@ -749,18 +913,19 @@ BPL’s intent vocabulary and pipeline shape from wet-lab protocols to any
 controlled procedure.</p>
 <p>A <code>Method</code> is a name, a set of typed parameters and
 resources, and an ordered, dependent set of steps — constructed directly
-as frozen Python dataclasses (<code>src/methods_dsl/model.py</code>)
-rather than parsed from new text syntax. Every <code>Quantity</code>
-carries a unit that resolves to one of 18 controlled units across eight
+as frozen Python dataclasses
+(<code>src/template_methods_paper/methods_dsl/model.py</code>) rather
+than parsed from new text syntax. Every <code>Quantity</code> carries a
+unit that resolves to one of 18 controlled units across eight
 dimensions, and every step names one of 9 controlled-vocabulary intents
-(<code>src/methods_dsl/vocabulary.py</code>), executable on one of 3
-backends. 4 staged gates — structural, semantic, plan, and target —
-validate a method before <code>compile_method</code>
-(<code>src/methods_dsl/compiler.py</code>) deterministically schedules
-it with Kahn’s algorithm <span class="citation"
-data-cites="kahn1962topological">(<a href="#ref-kahn1962topological"
-role="doc-biblioref">Kahn 1962</a>)</span> and hashes the canonical plan
-with SHA-256.</p>
+(<code>src/template_methods_paper/methods_dsl/vocabulary.py</code>),
+executable on one of 3 backends. 4 staged gates — structural, semantic,
+plan, and target — validate a method before <code>compile_method</code>
+(<code>src/template_methods_paper/methods_dsl/compiler.py</code>)
+deterministically schedules it with Kahn’s algorithm <span
+class="citation" data-cites="kahn1962topological">(<a
+href="#ref-kahn1962topological" role="doc-biblioref">Kahn
+1962</a>)</span> and hashes the canonical plan with SHA-256.</p>
 <p>We demonstrate the language on 2 worked example methods spanning both
 domains BPL’s design targets and the domains it generalizes to: a manual
 wet-lab preparation (<code>PBSPreparation</code>, 5 steps, target
@@ -770,8 +935,9 @@ automated instrument-calibration procedure
 <code>automated</code>, plan hash <code>d89cced19be6</code>). Live
 re-compilation determinism check: <strong>Yes</strong>. Across both
 methods, 8 of 8 staged-gate evaluations pass. A demonstration provenance
-hash-chain (<code>src/methods_dsl/trust.py</code>) of length 3 verifies
-as <strong>Yes</strong>.</p>
+hash-chain
+(<code>src/template_methods_paper/methods_dsl/trust.py</code>) of length
+3 verifies as <strong>Yes</strong>.</p>
 <p>Contributions are <strong>methodological</strong> and
 <strong>architectural</strong>. On the methods side, we show that a
 controlled vocabulary expressed as typed dataclasses — not a parsed
@@ -782,7 +948,7 @@ DSL is exercised by a zero-mock test suite under the repository’s
 configured project coverage gate, generates 19 artifacts (1 figures, 7
 data files, 11 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash <code>a0f000565bef6a79</code>, build
-timestamp <code>2026-08-14T14:20:53Z</code>) into sec. <a
+timestamp <code>2026-09-13T22:27:42Z</code>) into sec. <a
 href="#sec:reproducibility">7</a>.</p>
 <p><strong>Keywords:</strong> methods paper, domain-specific language,
 controlled methods, deterministic compilation, staged validation,
@@ -827,37 +993,40 @@ lower, schedule, execute, export — over a biology-native type system
 (units, dimensional analysis, MW-aware concentration), staged validation
 gates, and deterministic compilation with a stable plan hash. Three
 design choices carry over directly into
-<code>src/methods_dsl/</code>:</p>
+<code>src/template_methods_paper/methods_dsl/</code>:</p>
 <ol type="1">
 <li><strong>Intent over instruction.</strong> BPL users write high-level
 intents (<code>transfer</code>, <code>add_reagent</code>,
 <code>incubate</code>); a compiler lowers them to backend-specific
-primitives. <code>src/methods_dsl/vocabulary.py</code>’s
+primitives.
+<code>src/template_methods_paper/methods_dsl/vocabulary.py</code>’s
 <code>StepKind</code> enum is the same idea, generalized:
 <code>TRANSFER</code>/<code>ADD</code>/<code>MIX</code> name
 <em>what</em> happens, never <em>how</em> a particular backend performs
 it.</li>
 <li><strong>Dimensional safety.</strong> BPL’s type system catches
 <code>mL + g</code> at compile time, not at the bench.
-<code>src/methods_dsl/units.py</code> implements the same guarantee with
-a small <code>Dimension</code>/<code>Quantity</code> system rather than
-a full unit library.</li>
+<code>src/template_methods_paper/methods_dsl/units.py</code> implements
+the same guarantee with a small
+<code>Dimension</code>/<code>Quantity</code> system rather than a full
+unit library.</li>
 <li><strong>Deterministic compilation.</strong> Same source, same
 options, same plan hash.
-<code>src/methods_dsl/compiler.py::compile_method</code> reproduces this
-with a canonical-JSON SHA-256 hash over a Kahn’s-algorithm <span
-class="citation" data-cites="kahn1962topological">(<a
-href="#ref-kahn1962topological" role="doc-biblioref">Kahn
-1962</a>)</span> schedule.</li>
+<code>src/template_methods_paper/methods_dsl/compiler.py::compile_method</code>
+reproduces this with a canonical-JSON SHA-256 hash over a
+Kahn’s-algorithm <span class="citation"
+data-cites="kahn1962topological">(<a href="#ref-kahn1962topological"
+role="doc-biblioref">Kahn 1962</a>)</span> schedule.</li>
 </ol>
 <p>What this exemplar does <strong>not</strong> carry over is BPL’s text
 grammar and parser: a <code>Method</code> here is constructed directly
-as frozen Python dataclasses (<code>src/methods_dsl/model.py</code>),
-not parsed from <code>.bpl</code> source. This keeps the DSL’s
-discipline in its typed, validated shape rather than in new concrete
-syntax — appropriate for a template exemplar’s scope — while the
-controlled vocabulary, dimensional safety, and deterministic compilation
-generalize unchanged from wet-lab protocols to any controlled procedure,
+as frozen Python dataclasses
+(<code>src/template_methods_paper/methods_dsl/model.py</code>), not
+parsed from <code>.bpl</code> source. This keeps the DSL’s discipline in
+its typed, validated shape rather than in new concrete syntax —
+appropriate for a template exemplar’s scope — while the controlled
+vocabulary, dimensional safety, and deterministic compilation generalize
+unchanged from wet-lab protocols to any controlled procedure,
 demonstrated in sec. <a href="#sec:results">4</a> by one
 wet-lab-flavored method and one instrument-calibration method.</p>
 <h2 data-number="2.3" id="template-architecture-context"><span
@@ -865,11 +1034,11 @@ class="header-section-number">2.3</span> Template architecture
 context</h2>
 <p>The project sits on the repository’s three pillars:</p>
 <ol type="1">
-<li><strong><code>src/methods_dsl/</code> library</strong>: pure,
-side-effect-free dataclasses and functions — no plotting, no file I/O,
-and (with one declared logging exception) no <code>infrastructure</code>
-imports. This purity is what makes the library forkable and trivially
-testable.</li>
+<li><strong><code>src/template_methods_paper/methods_dsl/</code>
+library</strong>: pure, side-effect-free dataclasses and functions — no
+plotting, no file I/O, and (with one declared logging exception) no
+<code>infrastructure</code> imports. This purity is what makes the
+library forkable and trivially testable.</li>
 <li><strong><code>tests/</code> framework</strong>: a zero-mock suite
 that exercises every gate, the compiler, and the exporters against real
 <code>Method</code> fixtures covering both the success path and every
@@ -881,7 +1050,7 @@ operational rules that govern agents editing this tree.</li>
 <h2 data-number="2.4" id="the-worked-examples"><span
 class="header-section-number">2.4</span> The worked examples</h2>
 <p>We specify two methods with <code>all_example_methods()</code>
-(<code>src/methods_dsl/examples_methods.py</code>):
+(<code>src/template_methods_paper/methods_dsl/examples_methods.py</code>):
 <code>PBSPreparation</code>, an original — not copied from BPL’s shipped
 examples — manual bench preparation in BPL’s own domain, and
 <code>SensorCalibrationSweep</code>, a non-biology controlled procedure
@@ -894,7 +1063,8 @@ class="header-section-number">2.5</span> Reader’s guide to the
 manuscript</h2>
 <ul>
 <li><strong>sec. <a href="#sec:methodology">3</a></strong> ties each
-pipeline stage to its module in <code>src/methods_dsl/</code>.</li>
+pipeline stage to its module in
+<code>src/template_methods_paper/methods_dsl/</code>.</li>
 <li><strong>sec. <a href="#sec:results">4</a></strong> is
 artifact-centric: every reported number names the function or report
 file that produced it.</li>
@@ -911,13 +1081,13 @@ protocol-execution system.</li>
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
 <p>The DSL is implemented as eight cooperating modules under
-<code>src/methods_dsl/</code>, each corresponding to one stage of a
-BPL-inspired pipeline <span class="citation" data-cites="bpl2026">(<a
-href="#ref-bpl2026" role="doc-biblioref">Bota Biosciences
-2026</a>)</span>. This section walks the pipeline stage by stage, naming
-the function or class that implements each design decision so every
-claim below is directly checkable against
-<code>src/methods_dsl/</code>.</p>
+<code>src/template_methods_paper/methods_dsl/</code>, each corresponding
+to one stage of a BPL-inspired pipeline <span class="citation"
+data-cites="bpl2026">(<a href="#ref-bpl2026" role="doc-biblioref">Bota
+Biosciences 2026</a>)</span>. This section walks the pipeline stage by
+stage, naming the function or class that implements each design decision
+so every claim below is directly checkable against
+<code>src/template_methods_paper/methods_dsl/</code>.</p>
 <h2 data-number="3.1" id="controlled-vocabulary-vocabulary.py"><span
 class="header-section-number">3.1</span> Controlled vocabulary
 (<code>vocabulary.py</code>)</h2>
@@ -1080,10 +1250,11 @@ equality live, rather than asserting against a hardcoded hash literal —
 a literal would silently stop testing the moment the compiler’s hash
 input changed.</li>
 <li><strong>Coverage gate</strong>: CI enforces a ≥90%
-statement-coverage gate on
+statement-coverage gate on Falling below that floor fails the gate
+outright (<code>--cov-fail-under</code> enforces it).
 <code>projects/templates/template_methods_paper/src/</code>; the live
 figure is tracked in <a
-href="../../../../docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.</li>
+href="https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.</li>
 </ol>
 <hr />
 <h1 data-number="4" id="sec:results"><span
@@ -1093,14 +1264,14 @@ methods. Every number below is produced by the <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_methods_paper/scripts/methods_analysis.py">methods
 analysis orchestrator</a> (<code>scripts/methods_analysis.py</code>),
 which calls <code>run_all_gates</code> and <code>compile_method</code>
-from <code>src/methods_dsl/</code> and writes
+from <code>src/template_methods_paper/methods_dsl/</code> and writes
 <code>output/data/compiled_plans.json</code>,
 <code>output/reports/gate_report.json</code>, and
 <code>output/reports/trust_chain_report.json</code>. Running the script
 regenerates every artifact this section references.</p>
 <h2 data-number="4.1" id="compiled-plan-summary"><span
 class="header-section-number">4.1</span> Compiled-plan summary</h2>
-<table id="tbl:compiled_plans">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 1: Compiled-plan summary from output/data/compiled_plans.json , generated by compile_method for each of 2 worke…"><table id="tbl:compiled_plans" data-responsive-table="true">
 <caption>Table 1: Compiled-plan summary from
 <code>output/data/compiled_plans.json</code>, generated by
 <code>compile_method</code> for each of 2 worked example
@@ -1127,7 +1298,7 @@ methods.</caption>
 <td><code>d89cced19be6</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>tbl. <a href="#tbl:compiled_plans">1</a> shows
 <code>PBSPreparation</code> (a manual, <code>HUMAN</code>-target bench
 preparation) alongside <code>SensorCalibrationSweep</code> (a mixed
@@ -1140,7 +1311,7 @@ class="header-section-number">4.2</span> Step-count comparison</h2>
 <p>fig. <a href="#fig:step_counts">1</a> plots the step count for each
 compiled method.</p>
 <figure id="fig:step_counts">
-<a class="figure-full-size-link" href="../figures/step_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/step_counts.png"
+<a class="figure-full-size-link" href="../figures/step_counts.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Steps per example method: a bar chart built from len(plan.steps)"><img src="../figures/step_counts.png"
 alt="Two vertical bars compare the compiled step counts for PBS preparation and sensor calibration; the sensor-calibration plan contains the taller bar." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Steps per example method: a bar
 chart built from <code>len(plan.steps)</code> for each plan in
@@ -1163,10 +1334,11 @@ class="header-section-number">4.4</span> Determinism</h2>
 <p>Recompiling each example method twice and comparing
 <code>plan_hash</code> values yields: <strong>determinism check =
 Yes</strong>. This is a live re-compilation comparison performed by
-<code>src/manuscript_variables.py</code> at manuscript-build time, not a
-value asserted once and then transcribed — the same property sec. <a
-href="#sec:methodology">3</a> claims for <code>compile_method</code> is
-checked again here, independently, against the live build.</p>
+<code>src/template_methods_paper/manuscript_variables.py</code> at
+manuscript-build time, not a value asserted once and then transcribed —
+the same property sec. <a href="#sec:methodology">3</a> claims for
+<code>compile_method</code> is checked again here, independently,
+against the live build.</p>
 <h2 data-number="4.5" id="provenance-demonstration"><span
 class="header-section-number">4.5</span> Provenance demonstration</h2>
 <p><code>scripts/methods_analysis.py</code> appends a 3-record
@@ -1199,12 +1371,13 @@ mocks.</p>
 class="header-section-number">4.7</span> Discussion</h2>
 <p>The results confirm the pipeline end to end: both worked examples
 pass every staged gate, compile deterministically, and produce a stable
-plan hash across repeated builds. The same <code>src/methods_dsl/</code>
-functions back the analysis script, the test suite, and this manuscript
-— which is the architectural point of the exemplar. Because every number
-here is produced by a tested function and regenerated on demand, the
-prose describes structure and provenance rather than transcribing values
-that would drift the moment the example methods changed.</p>
+plan hash across repeated builds. The same
+<code>src/template_methods_paper/methods_dsl/</code> functions back the
+analysis script, the test suite, and this manuscript — which is the
+architectural point of the exemplar. Because every number here is
+produced by a tested function and regenerated on demand, the prose
+describes structure and provenance rather than transcribing values that
+would drift the moment the example methods changed.</p>
 <hr />
 <h1 data-number="5" id="sec:conclusion"><span
 class="header-section-number">5</span> Conclusion</h1>
@@ -1223,11 +1396,11 @@ class="header-section-number">5.1</span> Exemplar achievements</h2>
 Template methodology, the project deployed the three foundational
 pillars:</p>
 <ol type="1">
-<li><strong><code>src/methods_dsl/</code> library</strong>: a controlled
-vocabulary, a dimensional unit system, four staged validation gates, a
-deterministic compiler, and four export formats — with no plotting, no
-file I/O, and (with one declared logging exception) no
-<code>infrastructure</code> imports.</li>
+<li><strong><code>src/template_methods_paper/methods_dsl/</code>
+library</strong>: a controlled vocabulary, a dimensional unit system,
+four staged validation gates, a deterministic compiler, and four export
+formats — with no plotting, no file I/O, and (with one declared logging
+exception) no <code>infrastructure</code> imports.</li>
 <li><strong><code>tests/</code> integrity</strong>: a zero-mock suite
 over real <code>Method</code> fixtures covering the success path and
 every gate-failure mode, under a ≥90% project coverage gate.</li>
@@ -1313,7 +1486,7 @@ software environment used to produce the results.</p>
 class="header-section-number">6.1</span> Controlled vocabulary</h2>
 <p>The DSL’s vocabulary is declared once in code and consulted by every
 gate and the compiler — never re-declared per method:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -1328,29 +1501,29 @@ gate and the compiler — never re-declared per method:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>src/methods_dsl/vocabulary.py</code></td>
+<td><code>src/template_methods_paper/methods_dsl/vocabulary.py</code></td>
 <td><code>StepKind</code>, <code>Target</code>,
 <code>target_accepts</code></td>
 <td>9 step kinds, 3 targets</td>
 </tr>
 <tr>
-<td><code>src/methods_dsl/units.py</code></td>
+<td><code>src/template_methods_paper/methods_dsl/units.py</code></td>
 <td><code>Dimension</code>, <code>Quantity</code>, the unit table</td>
 <td>18 controlled units across 8 dimensions</td>
 </tr>
 <tr>
-<td><code>src/methods_dsl/validation.py</code></td>
+<td><code>src/template_methods_paper/methods_dsl/validation.py</code></td>
 <td>The four staged gates</td>
 <td>4 gates, fixed order</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="6.2" id="worked-examples"><span
 class="header-section-number">6.2</span> Worked examples</h2>
 <p><code>all_example_methods()</code>
-(<code>src/methods_dsl/examples_methods.py</code>) returns 2
-methods:</p>
-<table>
+(<code>src/template_methods_paper/methods_dsl/examples_methods.py</code>)
+returns 2 methods:</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -1382,7 +1555,7 @@ step</td>
 a <code>HUMAN</code> <code>ANNOTATE</code> sign-off step</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The second example exists specifically to demonstrate that the
 controlled vocabulary generalizes beyond wet-lab protocols, as sec. <a
 href="#sec:introduction">2</a> claims.</p>
@@ -1409,13 +1582,13 @@ evaluations a method’s steps satisfy.</p>
 <h2 data-number="6.4" id="computational-environment"><span
 class="header-section-number">6.4</span> Computational environment</h2>
 <ul>
-<li><strong>Language</strong>: Python 3.12.12 on Darwin arm64 (see root
+<li><strong>Language</strong>: Python 3.12.13 on Darwin arm64 (see root
 <code>pyproject.toml</code> for the supported version range).</li>
 <li><strong>Core dependencies</strong>: <code>pyyaml</code>,
 <code>matplotlib</code> (declared in
 <code>domain_profile.yaml::required_packages</code>); the DSL library
-itself (<code>src/methods_dsl/</code>) has zero third-party dependencies
-beyond the standard library, with one declared
+itself (<code>src/template_methods_paper/methods_dsl/</code>) has zero
+third-party dependencies beyond the standard library, with one declared
 <code>infrastructure</code> logging exception
 (<code>_logging.py</code>).</li>
 <li><strong>Headless plotting</strong>: the analysis script sets
@@ -1438,7 +1611,7 @@ prose match the analysis that just completed.</li>
 </ol>
 <h2 data-number="6.6" id="relation-to-results"><span
 class="header-section-number">6.6</span> Relation to results</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -1447,7 +1620,8 @@ class="header-section-number">6.6</span> Relation to results</h2>
 <thead>
 <tr>
 <th>Result (sec. <a href="#sec:results">4</a>)</th>
-<th>Producing function (<code>src/methods_dsl/</code>)</th>
+<th>Producing function
+(<code>src/template_methods_paper/methods_dsl/</code>)</th>
 <th>Primary inputs</th>
 </tr>
 </thead>
@@ -1478,7 +1652,7 @@ class="header-section-number">6.6</span> Relation to results</h2>
 <td>Demonstration chain in <code>scripts/methods_analysis.py</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>This table is descriptive documentation only; it is not executed as
 code during the build.</p>
 <hr />
@@ -1514,7 +1688,7 @@ class="header-section-number">7.2</span> Generated artifact
 registry</h2>
 <p>The analysis script writes the following artifacts under
 <code>projects/templates/template_methods_paper/output/</code>:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -1545,7 +1719,7 @@ registry</h2>
 <tr>
 <td><code>data/compiled_plans.json</code></td>
 <td>Per-method plan summary, consumed by
-<code>src/manuscript_variables.py</code></td>
+<code>src/template_methods_paper/manuscript_variables.py</code></td>
 </tr>
 <tr>
 <td><code>reports/gate_report.json</code></td>
@@ -1566,7 +1740,7 @@ demonstration chain</td>
 <code>z_generate_manuscript_variables.py</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The <code>output/</code> tree is disposable and regenerated on every
 run; it is not the source of truth.</p>
 <h2 data-number="7.3" id="determinism-1"><span
@@ -1580,7 +1754,8 @@ never from a wall-clock timestamp or a UUID.</li>
 <li><code>topological_order()</code> breaks scheduling ties by ascending
 <code>step_id</code>, so the same <code>Method</code> object always
 yields the same step order across processes and platforms.</li>
-<li>Yes — <code>src/manuscript_variables.py::generate_variables</code>
+<li>Yes —
+<code>src/template_methods_paper/manuscript_variables.py::generate_variables</code>
 recompiles every example method twice at manuscript-build time and
 compares hashes live, so this guarantee is checked on every build, not
 merely asserted once in a test.</li>
@@ -1596,7 +1771,7 @@ validation. The manuscript intentionally does not hand-transcribe
 volatile values, so prose and artifacts cannot disagree. Configuration
 provenance is itself injected: <code>a0f000565bef6a79</code> is the
 SHA-256 of <code>manuscript/config.yaml</code> at build time, and
-<code>2026-08-14T14:20:53Z</code> records when the variables were
+<code>2026-09-13T22:27:42Z</code> records when the variables were
 generated (honoring <code>SOURCE_DATE_EPOCH</code> for byte-reproducible
 builds).</p>
 <hr />
@@ -1672,13 +1847,14 @@ class="header-section-number">8.3</span> What this project proves about
 the template</h2>
 <p>The validation and compilation steps here are a deliberately small
 subset of BPL’s. The <strong>non-standard</strong> contribution is
-procedural: the same tested functions in <code>src/methods_dsl/</code>
-back the analysis script, the test suite, and this manuscript, so the
-compiled-plan table and the figure always refer to the same code. That
-pattern — and the specific generalization from a biology-only domain
-language to a domain-neutral one — is what downstream projects should
-copy, whether the controlled procedure is a wet-lab protocol, an
-instrument calibration sweep, or a computational pipeline.</p>
+procedural: the same tested functions in
+<code>src/template_methods_paper/methods_dsl/</code> back the analysis
+script, the test suite, and this manuscript, so the compiled-plan table
+and the figure always refer to the same code. That pattern — and the
+specific generalization from a biology-only domain language to a
+domain-neutral one — is what downstream projects should copy, whether
+the controlled procedure is a wet-lab protocol, an instrument
+calibration sweep, or a computational pipeline.</p>
 <h2 data-number="8.4" id="explicit-limitations"><span
 class="header-section-number">8.4</span> Explicit limitations</h2>
 <ol type="1">
@@ -1704,7 +1880,7 @@ under a compiler implementation at BPL’s full scale.</p>
 <h1 data-number="9" id="sec:references"><span
 class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
-href="references.bib"><code>manuscript/references.bib</code></a> and is
+href="https://github.com/docxology/template/blob/main/projects/templates/template_methods_paper/manuscript/references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF render. The build pipeline invokes Pandoc with
 <code>--natbib</code>, so every <code>[@key]</code> citation in the
 manuscript is rewritten to the appropriate

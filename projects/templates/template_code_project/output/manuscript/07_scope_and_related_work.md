@@ -17,7 +17,7 @@ The scientific claims through [@sec:introduction], [@sec:methodology], and [@sec
 ## Explicit limitations
 
 1. **Dimensionality**: Default experiments emphasize $d = 1$ with $A = I$ for transparent plotting; the benchmark figure explores $d > 1$ only with identity Hessians, so no ill-conditioning effects appear.
-2. **Step-size policy**: Only constant $\alpha$ is implemented in `src/optimizer.py`; there is no Wolfe or Armijo backtracking.
+2. **Step-size policy**: Only constant $\alpha$ is implemented in `src/template_code_project/core/optimizer.py`; there is no Wolfe or Armijo backtracking.
 3. **Global optimization**: Convexity is assumed; no basin-hopping or restarts are studied.
 4. **Numerical model**: Double-precision floating point only; no interval or arbitrary-precision analysis.
 

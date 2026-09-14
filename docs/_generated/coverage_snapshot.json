@@ -11,7 +11,7 @@
     },
     "template_autopoiesis": {
       "coverage_pct": "96.92 %",
-      "source_hash": "a0acefc5c72af509bc950cc145b9e9e9e2637c75b18cac800b91ded3a8a015df"
+      "source_hash": "2f6a4618d626e157639917287ff41a120784019fcf20761015e6225e9170399c"
     },
     "template_autoresearch_project": {
       "coverage_pct": "96.33 %",
@@ -35,7 +35,7 @@
     },
     "template_formal": {
       "coverage_pct": "94.50 %",
-      "source_hash": "0e3394c9fd914b4fadd5a6b0953e54432c4450c938df4e1f8517132684a51d82"
+      "source_hash": "763394f8a02bde58ab083c6b8b0f77ee0dda900b918d6400014fd40a01de7f32"
     },
     "template_gold_refinement": {
       "coverage_pct": "92.19 %",
@@ -47,7 +47,7 @@
     },
     "template_madlib": {
       "coverage_pct": "98.95 %",
-      "source_hash": "5942cb49986ed0ec62caa08f3b8df267196e6b91b29c4b5a4b24e3277cbadb32"
+      "source_hash": "d86f060abe13eb31b63dde27e3edd5b5b1880fd4fc5120aad81bc5711b519ebf"
     },
     "template_methods_paper": {
       "coverage_pct": "99.00 %",
@@ -67,7 +67,7 @@
     },
     "template_prose_project": {
       "coverage_pct": "95.87 %",
-      "source_hash": "d8b6d966150efc3585566e83d57f8ca04cb4ce1ccf19104dfd88a4f8c485765b"
+      "source_hash": "1b52926fbf0b8e18458d80135d551a02ce5dfa13f09ff7fd4eaa3618fd1616e3"
     },
     "template_redacted_report": {
       "coverage_pct": "97.03 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "a30396c0b7b13fbeafe89dea9e68dd9caf042ef6",
+  "source_commit": "2fa432085c0142a7c718fd23d094ad367b1a425b",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -186,21 +186,21 @@
     "projects": {
       "template_active_inference": "7822d247925e14b0e823109ea67f9b13f272e61b3e87fe560006cb1364b3c4bb",
       "template_advanced_literature_review": "fe8a2bcffe44383609253860793699d36b854e9962d32e6e072511d6dc629807",
-      "template_autopoiesis": "a0acefc5c72af509bc950cc145b9e9e9e2637c75b18cac800b91ded3a8a015df",
+      "template_autopoiesis": "2f6a4618d626e157639917287ff41a120784019fcf20761015e6225e9170399c",
       "template_autoresearch_project": "f3716141477dccf974e9b7c51fc4fd0ce79ca67a3bb01fc06d59df694dc6882e",
       "template_autoscientists": "f5cb93abaa81a7941968f47f39056fd1ac7e7b41038b64a72d8623675d60f438",
       "template_code_project": "1d41e18b4e99c2be4a0e4aacb71b2732aa56d01235c2f62ce9910ee7f00080d8",
       "template_data_descriptor": "ec58ba3e75bcd7e89fd89f87e6695b4574d81ff13b2763b0b710059860f4b2ff",
       "template_eda_notebook": "ebcd1adeaef79efc866ac197024fe37ebdc856dcf99f0a2c6fb46579c717c710",
-      "template_formal": "0e3394c9fd914b4fadd5a6b0953e54432c4450c938df4e1f8517132684a51d82",
+      "template_formal": "763394f8a02bde58ab083c6b8b0f77ee0dda900b918d6400014fd40a01de7f32",
       "template_gold_refinement": "c2da5d079d6212ec03364801604d2ef1c86945e65b0388a50559f31218e97d63",
       "template_literature_meta_analysis": "8cdc2cae7ebf97a2b2573d3752c4fb8445431df068035f49f9af60d4ca0fc70a",
-      "template_madlib": "5942cb49986ed0ec62caa08f3b8df267196e6b91b29c4b5a4b24e3277cbadb32",
+      "template_madlib": "d86f060abe13eb31b63dde27e3edd5b5b1880fd4fc5120aad81bc5711b519ebf",
       "template_methods_paper": "5682da6308df1288fe59e57a2a2735fe56d1b4cf2476f31e271435dfee280912",
       "template_newspaper": "ec3d1a4eff050f5a8655c87ef2b58c473cfe35b784a84edd0a3647d375e6a2bd",
       "template_pitch_deck": "c3ffeb622fab0879acc92a9ed2b7f58ac497a66205623539cbd83405ae6f8bd9",
       "template_pools_rules_tools": "f55d392d3c61ddf3ba17ef0ed31f087afd311464104f1101ff952e810b8d8ee4",
-      "template_prose_project": "d8b6d966150efc3585566e83d57f8ca04cb4ce1ccf19104dfd88a4f8c485765b",
+      "template_prose_project": "1b52926fbf0b8e18458d80135d551a02ce5dfa13f09ff7fd4eaa3618fd1616e3",
       "template_redacted_report": "3911790e47cc50f561a26502fc1bdb5ac56db9bdd820ad34a16c1abd8eeb8aff",
       "template_registered_report": "7e62e8f6f8d63799c49021292074d1d22a1172477a8d1613a39c77de4cbda2da",
       "template_search_project": "9b8a1d643d6067f5a56fd7e733c11f51a5af3614ab9b2eaf31e594dd662cc4d6",

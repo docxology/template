@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>06_limitations.md.web</title>
   <style>
@@ -202,12 +202,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -219,7 +263,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -277,6 +332,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -284,13 +341,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -371,8 +483,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -421,6 +532,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -437,6 +554,12 @@ mjx-container[display="true"] {
   text-align: center;
 }
 
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 </style>
 </head>
 <body>
@@ -448,8 +571,8 @@ what it does. Coverage and test-count figures are not restated as
 literal numbers here — those live only in the <code>528</code> /
 <code>95.33</code> tokens, resolved at render time from a live
 measurement
-(<code>src/manuscript_variables.py::measure_test_summary</code>), not
-hand-typed.</p>
+(<code>src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary</code>),
+not hand-typed.</p>
 <h3
 id="reserved-slots-are-excluded-from-the-effective-product-space">Reserved
 slots are excluded from the effective product space</h3>
@@ -467,12 +590,13 @@ distinct seeds can produce a nominally distinct <code>spec_hash</code>
 while materializing byte-identical children, since only three slots vary
 output. That inflation, 360 nominal vs. 45 effective, is disclosed
 rather than hidden: <code>generate_variables</code>
-(<code>src/manuscript_variables.py</code>) exposes both
-<code>PRODUCT_SIZE</code> and <code>EFFECTIVE_PRODUCT_SIZE</code> as
-separate tokens, so nowhere in this manuscript can the larger, nominal
-number be quoted without the smaller, effective one appearing beside it.
-Wiring the reserved slots into <code>materialize()</code> is an open
-item, not a claimed capability.</p>
+(<code>src/template_autopoiesis/manuscript/manuscript_variables.py</code>)
+exposes both <code>PRODUCT_SIZE</code> and
+<code>EFFECTIVE_PRODUCT_SIZE</code> as separate tokens, so nowhere in
+this manuscript can the larger, nominal number be quoted without the
+smaller, effective one appearing beside it. Wiring the reserved slots
+into <code>materialize()</code> is an open item, not a claimed
+capability.</p>
 <h3 id="no-child-pdf-rendering-in-ci">No child-PDF rendering in CI</h3>
 <p><code>realize.py::render_child_manuscript()</code> writes manuscript
 stubs for a generated child but does not invoke Pandoc or Chrome. Absent
@@ -505,7 +629,8 @@ regenerates its own constitutive components through its own operation
 (<code>manuscript/config.yaml</code>) is fixed input;
 <code>parse_grammar</code> and <code>expand</code> are pure functions of
 that input plus a seed; no code path feeds a materialized child back
-into the grammar or rewrites <code>src/grammar.py</code>. Children are
+into the grammar or rewrites
+<code>src/template_autopoiesis/core/grammar.py</code>. Children are
 causally downstream of the grammar — the reverse direction does not
 occur in the current codebase. The name is a provocation about what
 genuine self-production would require, not a claim this exemplar
@@ -516,7 +641,8 @@ verification checks self-consistency, not tamper-proofing</h3>
 <p><code>verify_child</code> recomputes a tree hash from the files
 <em>listed inside</em> <code>provenance.json</code> and compares it
 against the <code>tree_hash</code> field stored in that same file
-(<code>src/verify.py</code>, <code>src/materialize.py</code>). Both the
+(<code>src/template_autopoiesis/gates/verify.py</code>,
+<code>src/template_autopoiesis/gates/materialize.py</code>). Both the
 manifest and the expected hash are self-reported at materialization
 time; nothing external anchors them. An actor who can rewrite
 <code>provenance.json</code> can edit its <code>files</code> list and
@@ -549,13 +675,14 @@ As of this measurement no module sits below the 90% branch-coverage line
 data-cites="fig:coverage_by_module">[@fig:coverage_by_module]</span>):
 dedicated tests were added for <code>common.py</code>’s
 <code>trunc()</code> clipping branch and <code>CheckReport.failed</code>
-(<code>tests/test_common.py</code>, new this session),
+(<code>tests/core/test_common.py</code>, new this session),
 <code>figures.py</code>’s <code>list</code>/<code>tuple</code> input
 branch of <code>_first_plottable_array</code>, the generic
 <code>repr()</code> fallback in <code>_scalar_summary_lines</code>, and
 the array-plotting branch of <code>render_primitive_figure</code>
-(<code>tests/test_figures.py</code>), and <code>cover_art.py</code>’s
-QR-seal drawing branch (<code>tests/test_cover_art.py</code>,
+(<code>tests/figures/test_figures.py</code>), and
+<code>cover_art.py</code>’s QR-seal drawing branch
+(<code>tests/figures/test_cover_art.py</code>,
 <code>test_render_cover_with_grammar_hash_*</code>) — the same branch
 identified above as running in production but previously untested.</p>
 <p>Smaller residual gaps remain in modules that are otherwise well above
@@ -575,13 +702,13 @@ smaller gaps live — which is the reason this section, and <span
 class="citation"
 data-cites="fig:coverage_by_module">[@fig:coverage_by_module]</span>,
 exist as a per-module view rather than trusting one headline number.
-Property-based tests (<code>tests/test_property_invariants.py</code>,
-Hypothesis) and a stress/edge suite
-(<code>tests/test_stress_edge_cases.py</code>) cover invariants like
-boundary seeds and all-reserved-slot configurations
-[claessen2000quickcheck; maciver2019hypothesis], but generated inputs
-are not a substitute for direct tests of the specific branches named
-above.</p>
+Property-based tests
+(<code>tests/gates/test_property_invariants.py</code>, Hypothesis) and a
+stress/edge suite (<code>tests/core/test_stress_edge_cases.py</code>)
+cover invariants like boundary seeds and all-reserved-slot
+configurations [claessen2000quickcheck; maciver2019hypothesis], but
+generated inputs are not a substitute for direct tests of the specific
+branches named above.</p>
 <p>This whole section is itself evidence for a point made elsewhere in
 this manuscript: a coverage ranking is a measurement, not a fact about
 the code — each of its two prior versions was accurate when written and
@@ -598,9 +725,10 @@ seed-derived dot placement. That is no longer accurate and is corrected
 here rather than left to silently drift:
 <code>scripts/generate_cover_art.py</code> now calls
 <code>render_cover(..., grammar_hash=grammar.grammar_hash)</code>, and
-<code>src/cover_art.py</code> draws all three elements unconditionally
-except the QR seal, which is drawn whenever <code>grammar_hash</code> is
-not <code>None</code> — the shipped <code>paper.cover.image</code>
+<code>src/template_autopoiesis/figures/cover_art.py</code> draws all
+three elements unconditionally except the QR seal, which is drawn
+whenever <code>grammar_hash</code> is not <code>None</code> — the
+shipped <code>paper.cover.image</code>
 (<code>../figures/cover_art.png</code>) is generated by exactly this
 call, so the rendered title page carries a real gradient glow, real
 seed-derived dot scatter, and a real QR-style pixel grid encoding
@@ -608,10 +736,10 @@ seed-derived dot scatter, and a real QR-style pixel grid encoding
 beneath it. An earlier draft of this section also noted that no test
 called <code>render_cover</code> with an explicit
 <code>grammar_hash=</code>, leaving the QR-drawing branch
-(<code>src/cover_art.py</code>, the
+(<code>src/template_autopoiesis/figures/cover_art.py</code>, the
 <code>if grammar_hash is not None:</code> block) exercised in production
 but untested; that gap is now closed by
-<code>tests/test_cover_art.py::test_render_cover_with_grammar_hash_*</code>,
+<code>tests/figures/test_cover_art.py::test_render_cover_with_grammar_hash_*</code>,
 added this session (see “Coverage is uneven across modules” below).</p>
 <p>Separately, for most of this project’s life
 <code>manuscript/references.bib</code> held a single self-referential

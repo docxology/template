@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-08-14T14:20:53+00:00",
+  "timestamp": "1970-01-01T00:00:00+00:00 (SOURCE_DATE_EPOCH unset)",
   "infrastructure": {},
   "project": {
     "passed": 528,
@@ -11,12 +11,12 @@
     "discovery_count": 528,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 9.63,
-      "collection": 9.63,
-      "execution": 9.63
+      "setup": 63.25,
+      "collection": 63.25,
+      "execution": 63.25
     },
     "test_categories": {},
-    "coverage_percent": 97.03196347031964,
+    "coverage_percent": 96.87964338781575,
     "failed_tests": []
   },
   "summary": {
@@ -25,15 +25,15 @@
     "total_skipped": 0,
     "total_tests": 528,
     "all_passed": true,
-    "project_coverage": 97.03196347031964
+    "project_coverage": 96.87964338781575
   },
   "coverage_details": {
     "project": {
-      "overall_coverage": 97.03196347031964,
-      "total_executed": 1275,
-      "total_missing": 39,
+      "overall_coverage": 96.87964338781575,
+      "total_executed": 1304,
+      "total_missing": 42,
       "total_excluded": 2,
-      "total_lines": 1314,
+      "total_lines": 1346,
       "file_coverage": {
         "src/__init__.py": {
           "coverage_percent": 100.0,
@@ -42,173 +42,208 @@
           "excluded_lines": 0,
           "total_lines": 0
         },
-        "src/cli.py": {
+        "src/template_autopoiesis/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 0,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 0
+        },
+        "src/template_autopoiesis/core/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 7,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 7
+        },
+        "src/template_autopoiesis/core/cli.py": {
           "coverage_percent": 95.18072289156626,
           "executed_lines": 79,
           "missing_lines": 4,
           "excluded_lines": 0,
           "total_lines": 83
         },
-        "src/common.py": {
+        "src/template_autopoiesis/core/common.py": {
           "coverage_percent": 100.0,
           "executed_lines": 23,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 23
         },
-        "src/cover_art.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 105,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 105
-        },
-        "src/emit_templates.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 29,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 29
-        },
-        "src/expand.py": {
+        "src/template_autopoiesis/core/expand.py": {
           "coverage_percent": 97.72727272727273,
           "executed_lines": 86,
           "missing_lines": 2,
           "excluded_lines": 0,
           "total_lines": 88
         },
-        "src/figures.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 47,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 47
-        },
-        "src/grammar.py": {
+        "src/template_autopoiesis/core/grammar.py": {
           "coverage_percent": 94.96402877697842,
           "executed_lines": 132,
           "missing_lines": 7,
           "excluded_lines": 0,
           "total_lines": 139
         },
-        "src/honesty.py": {
+        "src/template_autopoiesis/core/honesty.py": {
           "coverage_percent": 94.64285714285714,
           "executed_lines": 53,
           "missing_lines": 3,
           "excluded_lines": 0,
           "total_lines": 56
         },
-        "src/integrity.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 24,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 24
-        },
-        "src/manuscript_contract.py": {
-          "coverage_percent": 83.78378378378379,
-          "executed_lines": 31,
-          "missing_lines": 6,
-          "excluded_lines": 0,
-          "total_lines": 37
-        },
-        "src/manuscript_figures.py": {
-          "coverage_percent": 99.07407407407408,
-          "executed_lines": 107,
-          "missing_lines": 1,
-          "excluded_lines": 0,
-          "total_lines": 108
-        },
-        "src/manuscript_variables.py": {
-          "coverage_percent": 93.90243902439025,
-          "executed_lines": 77,
-          "missing_lines": 5,
-          "excluded_lines": 0,
-          "total_lines": 82
-        },
-        "src/materialize.py": {
-          "coverage_percent": 97.3913043478261,
-          "executed_lines": 112,
-          "missing_lines": 3,
-          "excluded_lines": 0,
-          "total_lines": 115
-        },
-        "src/primitives/__init__.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 6,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 6
-        },
-        "src/primitives/base.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 13,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 13
-        },
-        "src/primitives/dynamics.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 28,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 28
-        },
-        "src/primitives/graph.py": {
-          "coverage_percent": 97.95918367346938,
-          "executed_lines": 48,
-          "missing_lines": 1,
-          "excluded_lines": 0,
-          "total_lines": 49
-        },
-        "src/primitives/optimization.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 34,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 34
-        },
-        "src/primitives/signal.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 27,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 27
-        },
-        "src/primitives/statistics.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 27,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 27
-        },
-        "src/project_paths.py": {
+        "src/template_autopoiesis/core/project_paths.py": {
           "coverage_percent": 100.0,
           "executed_lines": 8,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 8
         },
-        "src/realize.py": {
+        "src/template_autopoiesis/figures/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 3,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 3
+        },
+        "src/template_autopoiesis/figures/cover_art.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 105,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 105
+        },
+        "src/template_autopoiesis/figures/figures.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 47,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 47
+        },
+        "src/template_autopoiesis/gates/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 6,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 6
+        },
+        "src/template_autopoiesis/gates/integrity.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 24,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 24
+        },
+        "src/template_autopoiesis/gates/materialize.py": {
+          "coverage_percent": 97.3913043478261,
+          "executed_lines": 112,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 115
+        },
+        "src/template_autopoiesis/gates/realize.py": {
           "coverage_percent": 90.9090909090909,
           "executed_lines": 50,
           "missing_lines": 5,
           "excluded_lines": 0,
           "total_lines": 55
         },
-        "src/sealing.py": {
+        "src/template_autopoiesis/gates/sealing.py": {
           "coverage_percent": 98.4375,
           "executed_lines": 63,
           "missing_lines": 1,
           "excluded_lines": 0,
           "total_lines": 64
         },
-        "src/verify.py": {
+        "src/template_autopoiesis/gates/verify.py": {
           "coverage_percent": 98.50746268656717,
           "executed_lines": 66,
           "missing_lines": 1,
           "excluded_lines": 2,
           "total_lines": 67
+        },
+        "src/template_autopoiesis/manuscript/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 5,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 5
+        },
+        "src/template_autopoiesis/manuscript/emit_templates.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 29,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 29
+        },
+        "src/template_autopoiesis/manuscript/manuscript_contract.py": {
+          "coverage_percent": 83.78378378378379,
+          "executed_lines": 31,
+          "missing_lines": 6,
+          "excluded_lines": 0,
+          "total_lines": 37
+        },
+        "src/template_autopoiesis/manuscript/manuscript_figures.py": {
+          "coverage_percent": 99.08256880733946,
+          "executed_lines": 108,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 109
+        },
+        "src/template_autopoiesis/manuscript/manuscript_variables.py": {
+          "coverage_percent": 91.30434782608695,
+          "executed_lines": 84,
+          "missing_lines": 8,
+          "excluded_lines": 0,
+          "total_lines": 92
+        },
+        "src/template_autopoiesis/primitives/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 6,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 6
+        },
+        "src/template_autopoiesis/primitives/base.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 13,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 13
+        },
+        "src/template_autopoiesis/primitives/dynamics.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 28,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 28
+        },
+        "src/template_autopoiesis/primitives/graph.py": {
+          "coverage_percent": 97.95918367346938,
+          "executed_lines": 48,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 49
+        },
+        "src/template_autopoiesis/primitives/optimization.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 34,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 34
+        },
+        "src/template_autopoiesis/primitives/signal.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 27,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 27
+        },
+        "src/template_autopoiesis/primitives/statistics.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 27,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 27
         }
       }
     }

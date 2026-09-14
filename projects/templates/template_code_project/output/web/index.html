@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Theoretical Bounds and Empirical Performance in Quadratic Minimization" />
@@ -264,6 +264,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -274,14 +283,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -312,12 +353,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -329,7 +414,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -387,6 +483,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -394,13 +492,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -481,8 +634,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -531,6 +683,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -545,6 +703,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -818,7 +982,7 @@ class="toc-section-number">9</span> References</a></li>
 <p><strong>State:</strong> unpublished / pending pairing</p>
 <p><strong>Pairing:</strong> pending — unresolved: - ✗ GitHub release
 URL: <code>pending</code> - ✗ PDF SHA-256: <code>pending</code></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -864,7 +1028,7 @@ href="https://zenodo.org/records/20417136">https://zenodo.org/records/20417136</
 <td>pending</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <ul>
 <li>Scan <strong>Integrity</strong> QR and compare the embedded SHA-256
 prefix to the table above.</li>
@@ -874,14 +1038,14 @@ confirm they resolve to this release pairing.</li>
 <code>../data/transmission_manifest.json</code>.</li>
 </ul>
 <figure>
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_integrity_strip.png"
+<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Integrity QR strip"><img src="../figures/transmission_integrity_strip.png"
 style="width:98.0%" alt="Integrity QR strip" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Integrity QR strip</figcaption>
 </figure>
 <p>Structured manifest:
 <code>../data/transmission_manifest.json</code></p>
 <figure>
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/transmission_pairing.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_pairing.png" style="width:35.0%"
+<a class="figure-full-size-link" href="../figures/transmission_pairing.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Publication pairing flow"><img src="../figures/transmission_pairing.png" style="width:35.0%"
 alt="Publication pairing flow" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Publication pairing flow</figcaption>
 </figure>
@@ -896,7 +1060,7 @@ gradient descent</strong> on a convex quadratic, framed as the
 computational exemplar of the <a
 href="https://github.com/docxology/template">Research Project
 Template</a>. The implementation lives in
-<code>projects/templates/template_code_project/src/optimizer.py</code>;
+<code>projects/templates/template_code_project/src/template_code_project/core/optimizer.py</code>;
 experiments and figures are orchestrated by
 <code>projects/templates/template_code_project/scripts/optimization_analysis.py</code>
 and hydrated into the manuscript through
@@ -912,8 +1076,9 @@ infrastructure end-to-end: scientific helpers
 <code>infrastructure.scientific.benchmarking</code>), validation,
 rendering (<code>infrastructure/rendering/pdf_renderer.py</code>), and
 reporting. Accessibility-oriented plotting defaults (colourblind-safe
-palette, 300 dpi exports) are centralized in <code>src/figures/</code>
-and <code>src/analysis/</code>.</p>
+palette, 300 dpi exports) are centralized in
+<code>src/template_code_project/figures/</code> and
+<code>src/template_code_project/analysis/</code>.</p>
 <p>Contributions are <strong>methodological</strong> and
 <strong>architectural</strong>. On the methods side, we relate empirical
 iteration counts and error decay to the scalar contraction factor <span
@@ -922,7 +1087,7 @@ cases where runs hit <span class="math inline">\(N_{\max} =
 1000\)</span> before meeting the gradient tolerance. On the architecture
 side, we demonstrate a zero-mock test suite on project <code>src/</code>
 (see <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/test_optimizer.py">test_optimizer.py</a>),
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/core/test_optimizer.py">test_optimizer.py</a>),
 automated six-figure analysis, and reproducibility metadata
 (configuration hash, artifact counts) injected into sec. <a
 href="#sec:reproducibility">7</a>.</p>
@@ -980,7 +1145,7 @@ optimization problems is used as the vehicle to demonstrate these
 pillars. The theoretical problem stated in
 eq. <strong>¿eq:optimization_problem?</strong> is mapped
 programmatically inside the <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py">optimizer
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/template_code_project/core/optimizer.py">optimizer
 module</a>:</p>
 <p><span class="math display">\[\begin{equation}
 \label{eq:optimization_problem}
@@ -1052,7 +1217,7 @@ checks and benchmarks call into
 <code>infrastructure.scientific</code>.</li>
 <li><strong>sec. <a href="#sec:results">4</a></strong> is
 figure-centric: every panel references a generator in
-<code>src/figures/</code> (orchestrated via
+<code>src/template_code_project/figures/</code> (orchestrated via
 <code>scripts/optimization_analysis.py</code>) and uses
 <code>CONFIG_*</code> / <code>RESULT_*</code> template tokens for
 numeric values.</li>
@@ -1095,7 +1260,7 @@ class="header-section-number">3.1.1</span> Gradient Descent
 Algorithm</h3>
 <p>The core algorithm implements the iterative procedure for
 unconstrained optimization. The <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py"><code>optimizer</code>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/template_code_project/core/optimizer.py"><code>optimizer</code>
 module</a> uses the standard-library <code>logging</code> logger for
 optional verbose diagnostics; the <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/scripts/optimization_analysis.py">analysis
@@ -1105,7 +1270,7 @@ under the hermetic boundaries defined in the <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/conftest.py">test
 configuration</a>.</p>
 <p><strong>Algorithm — Gradient Descent (implemented in the <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/optimizer.py#L87-L173">optimizer
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/src/template_code_project/core/optimizer.py#L87-L173">optimizer
 module</a>)</strong></p>
 <blockquote>
 <p><strong>Input:</strong> Initial point <span
@@ -1181,9 +1346,10 @@ class="header-section-number">3.4.1</span> Step Size Analysis</h3>
 <p>Step sizes are not chosen ad hoc in the manuscript: they are read
 from <code>experiment.step_sizes</code> in
 <code>manuscript/config.yaml</code> and passed through
-<code>run_convergence_experiment()</code> in <code>src/analysis/</code>
-(entry: <code>scripts/optimization_analysis.py</code>). The active grid
-for this build is:</p>
+<code>run_convergence_experiment()</code> in
+<code>src/template_code_project/analysis/</code> (entry:
+<code>scripts/optimization_analysis.py</code>). The active grid for this
+build is:</p>
 <ul>
 <li><span class="math inline">\(\alpha = 0.01\)</span>
 (conservative)</li>
@@ -1216,13 +1382,18 @@ Methodology</h3>
 validation framework. The project is governed by a strict Zero-Mock
 testing policy, evaluated actively by executing
 <code>uv run pytest projects/templates/template_code_project/tests/</code>
-during the infrastructure build phase.</p>
+during the infrastructure build phase (negative control: the repository
+lexical no-mock gate
+<code>scripts/audit/verify_no_mocks.py --inventory</code> flags any
+prohibited mock import or call and fails on dependency-replacement
+debt).</p>
 <ol type="1">
 <li><strong>Project tests</strong>: <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/test_optimizer.py">the
-project optimizer test suite</a> exercises <code>src/optimizer.py</code>
-(typical, edge, boundary, and pathological inputs including NaN/Inf and
-zero gradients) and, when infrastructure imports succeed, call into
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/core/test_optimizer.py">the
+project optimizer test suite</a> exercises
+<code>src/template_code_project/core/optimizer.py</code> (typical, edge,
+boundary, and pathological inputs including NaN/Inf and zero gradients)
+and, when infrastructure imports succeed, call into
 <code>optimization_analysis.py</code> helpers—without mocks. Suite size:
 <a
 href="https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md">the
@@ -1235,7 +1406,11 @@ manuscript.</li>
 href="https://github.com/docxology/template/blob/main/.github/workflows/ci.yml">GitHub
 Actions CI workflow</a> enforces a mandatory ≥90% statement coverage
 gate on <code>projects/templates/template_code_project/src/</code> prior
-to treating the project as build-green.</li>
+to treating the project as build-green. Coverage below the floor fails
+the test process through <code>--cov-fail-under</code>, so build-green
+status cannot be reached while silently skipping weakened coverage.
+Falling below that floor fails the gate outright
+(<code>--cov-fail-under</code> enforces it).</li>
 </ol>
 <h3 data-number="3.4.3" id="stopping-rule-and-reporting"><span
 class="header-section-number">3.4.3</span> Stopping rule and
@@ -1257,13 +1432,14 @@ drift from the last analysis run.</p>
 class="header-section-number">3.4.4</span> Figure generation
 contract</h3>
 <p>Each figure in <code>03_results.md</code> maps to a generator in
-<code>src/figures/</code> (<code>generate_convergence_plot</code>,
+<code>src/template_code_project/figures/</code>
+(<code>generate_convergence_plot</code>,
 <code>generate_step_size_sensitivity_plot</code>,
 <code>generate_convergence_rate_plot</code>,
 <code>generate_complexity_visualization</code>,
 <code>generate_stability_visualization</code>,
 <code>generate_benchmark_visualization</code>), orchestrated by
-<code>src/analysis/</code> /
+<code>src/template_code_project/analysis/</code> /
 <code>scripts/optimization_analysis.py</code>. Captions in the markdown
 intentionally name the function and the key parameters (tolerance lines,
 grids, dimensions) so reviewers can navigate from PDF to code without
@@ -1309,7 +1485,7 @@ initial point <span class="math inline">\(x_0 = 0\)</span>. The
 algorithm iteratively updates the solution using the rule <span
 class="math inline">\(x_{k+1} = x_k - \alpha \nabla f(x_k)\)</span>.</p>
 <figure id="fig:convergence">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/convergence_plot.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/convergence_plot.png"
+<a class="figure-full-size-link" href="../figures/convergence_plot.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Objective value f(x_k)=\tfrac{1}{2}x_k^2 - x_k versus iteration k"><img src="../figures/convergence_plot.png"
 alt="Objective value over iterations for each declared step size; lower curves indicate faster convergence." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Objective value <span
 class="math inline">\(f(x_k)=\tfrac{1}{2}x_k^2 - x_k\)</span> versus
@@ -1318,8 +1494,8 @@ six step sizes (legend colours follow the agency taxonomy in sec. <a
 href="#sec:methodology">3</a>: blue = conservative, green =
 near-optimal, orange = aggressive, red = divergent). Trajectories are
 produced by <code>simulate_trajectory()</code> in
-<code>src/optimizer.py</code>, which calls the same
-<code>gradient_descent()</code> used in tbl. <a
+<code>src/template_code_project/core/optimizer.py</code>, which calls
+the same <code>gradient_descent()</code> used in tbl. <a
 href="#tbl:opt_results">1</a>; the upper bound on the y-axis clips the
 divergent <span class="math inline">\(\alpha=2.5\)</span> curve so that
 stable trajectories remain visible. Dashed grey reference line marks the
@@ -1353,7 +1529,7 @@ step size affects the convergence path and solution quality. The
 analysis reveals the trade-off between convergence speed and numerical
 stability.</p>
 <figure id="fig:step_sensitivity">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/step_size_sensitivity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/step_size_sensitivity.png"
+<a class="figure-full-size-link" href="../figures/step_size_sensitivity.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Sensitivity sweep produced by generate_step_size_sensitivity_plot() over an independent…"><img src="../figures/step_size_sensitivity.png"
 alt="Comparison of convergence iterations and final solution quality across the configured step-size grid." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Sensitivity sweep produced by
 <code>generate_step_size_sensitivity_plot()</code> over an independent
@@ -1386,7 +1562,7 @@ follow <code>experiment.step_sizes</code> in <code>config.yaml</code>;
 the body rows below are injected at render time from that CSV
 (<code>RESULT_TABLE_ROWS</code> in
 <code>scripts/z_generate_manuscript_variables.py</code>).</p>
-<table id="tbl:opt_results" style="width:100%;">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 1: Gradient descent outcomes per configured step size: state at termination, iteration count capped by \(N_{\ma…"><table id="tbl:opt_results" style="width:100%;" data-responsive-table="true">
 <caption>Table 1: Gradient descent outcomes per configured step size:
 state at termination, iteration count capped by <span
 class="math inline">\(N_{\max} = 1000\)</span>, the
@@ -1463,7 +1639,7 @@ iterate.</caption>
 <td>non_finite</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="4.3" id="convergence-rate-analysis"><span
 class="header-section-number">4.3</span> Convergence Rate Analysis</h2>
 <h3 data-number="4.3.1" id="theoretical-vs-empirical-convergence"><span
@@ -1477,7 +1653,7 @@ href="#ref-nesterov2013gradient" role="doc-biblioref">Nesterov
 analysis of convergence rates across different step sizes, validating
 theoretical predictions against empirical results.</p>
 <figure id="fig:convergence_rate">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/convergence_rate_comparison.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/convergence_rate_comparison.png"
+<a class="figure-full-size-link" href="../figures/convergence_rate_comparison.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Absolute objective error |f(x_k)-f(x^\ast)| versus iteration on a logarithmic y-axis…"><img src="../figures/convergence_rate_comparison.png"
 alt="Log-scale comparison of convergence error across step sizes, showing the stable and aggressive regimes." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Absolute objective error <span
 class="math inline">\(|f(x_k)-f(x^\ast)|\)</span> versus iteration on a
@@ -1651,7 +1827,7 @@ Visualization</h3>
 algorithm’s computational characteristics, including time and space
 complexity analysis across different problem scales.</p>
 <figure id="fig:complexity">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/algorithm_complexity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/algorithm_complexity.png"
+<a class="figure-full-size-link" href="../figures/algorithm_complexity.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Six-panel diagnostic from generate_complexity_visualization() (3×2 grid)."><img src="../figures/algorithm_complexity.png"
 alt="Deterministic proxy for optimization work by problem dimension and recorded iteration count." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Six-panel diagnostic from
 <code>generate_complexity_visualization()</code> (3×2 grid). <strong>Top
@@ -1712,7 +1888,7 @@ work and convergence iterations for <code>gradient_descent()</code> on
 identity-Hessian quadratics of dimension <span class="math inline">\(d
 \in \{1, 2, 5, 10, 20, 50\}\)</span>.</p>
 <figure id="fig:benchmark">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/performance_benchmark.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/performance_benchmark.png"
+<a class="figure-full-size-link" href="../figures/performance_benchmark.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Deterministic dimensional benchmark from generate_benchmark_visualization() ."><img src="../figures/performance_benchmark.png"
 alt="Deterministic objective-evaluation observations; host-dependent wall-clock timing is excluded from the claim." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Deterministic dimensional
 benchmark from <code>generate_benchmark_visualization()</code>.
@@ -1740,7 +1916,7 @@ across a grid of 8 starting points (<span class="math inline">\(x_0 \in
 <code>gradient_descent()</code>, <code>quadratic_function()</code>, and
 <code>compute_gradient()</code> across the parameter space.</p>
 <figure id="fig:stability">
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/stability_analysis.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/stability_analysis.png"
+<a class="figure-full-size-link" href="../figures/stability_analysis.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 6, Numerical stability heatmap from generate_stability_visualization() ."><img src="../figures/stability_analysis.png"
 alt="Numerical stability score and recommendations produced by the configured stability checks." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 6: Numerical stability heatmap
 from <code>generate_stability_visualization()</code>. Each cell shows
@@ -2007,10 +2183,10 @@ make microsecond values unsuitable as pinned reproducibility claims.</p>
 <h2 data-number="6.5" id="computational-environment"><span
 class="header-section-number">6.5</span> Computational Environment</h2>
 <ul>
-<li><strong>Python</strong>: 3.12.12</li>
+<li><strong>Python</strong>: 3.12.13</li>
 <li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-08-14T14:20:53Z</li>
+<li><strong>Generated</strong>: 2026-09-13T21:49:02Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>
@@ -2033,7 +2209,7 @@ that figure paths and numeric tables match the analysis that just
 completed.</p>
 <h2 data-number="6.7" id="relation-to-figures"><span
 class="header-section-number">6.7</span> Relation to figures</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 52%" />
 <col style="width: 47%" />
@@ -2077,7 +2253,7 @@ class="math inline">\(\alpha=0.1\)</span>, internal tol <span
 class="math inline">\(10^{-10}\)</span></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>This table is descriptive documentation only; it is not executed as
 code during the build.</p>
 <hr />
@@ -2091,7 +2267,7 @@ establishing a cryptographic chain of custody from configuration to
 publication.</p>
 <h2 data-number="7.1" id="configuration-provenance"><span
 class="header-section-number">7.1</span> Configuration Provenance</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 61%" />
 <col style="width: 38%" />
@@ -2122,7 +2298,7 @@ numerical methods, mathematical programming, reproducible research,
 infrastructure automation</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The configuration hash changes whenever any parameter in
 <code>config.yaml</code> is modified, ensuring that every rendered PDF
 is traceable to a specific configuration state.</p>
@@ -2132,7 +2308,7 @@ Registry</h2>
 <p>The analysis pipeline produced the following artifacts, each
 validated by
 <code>infrastructure.validation.output.validator</code>:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Category</th>
@@ -2157,7 +2333,7 @@ validated by
 <td><strong>16</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="7.3" id="numerical-validation-summary"><span
 class="header-section-number">7.3</span> Numerical Validation
 Summary</h2>
@@ -2189,12 +2365,12 @@ class="header-section-number">7.3.3</span> Benchmark Demonstration</h3>
 <p>This exemplar also demonstrates
 <code>infrastructure.benchmark</code>. The thin orchestrator
 <code>scripts/04_benchmark_stage.py</code> calls
-<code>src/benchmark_support.py</code>, which evaluates the pure
-<code>quadratic_function</code> across fixed seeded inputs and turns
-reproducible completion, finiteness, and output-stability facts into
-boolean rubric checks. Those checks are scored through
-<code>infrastructure.benchmark.score_rubric</code> against a weighted
-<code>RubricSet</code>, then rendered with
+<code>src/template_code_project/core/benchmark_support.py</code>, which
+evaluates the pure <code>quadratic_function</code> across fixed seeded
+inputs and turns reproducible completion, finiteness, and
+output-stability facts into boolean rubric checks. Those checks are
+scored through <code>infrastructure.benchmark.score_rubric</code>
+against a weighted <code>RubricSet</code>, then rendered with
 <code>scores_to_markdown</code> into the byte-stable
 <code>output/reports/benchmark_report.json</code> with a deterministic
 objective-value figure. Real timing still executes as a runtime
@@ -2291,8 +2467,8 @@ class="math inline">\(d = 1\)</span> with <span class="math inline">\(A
 Hessians, so no ill-conditioning effects appear.</li>
 <li><strong>Step-size policy</strong>: Only constant <span
 class="math inline">\(\alpha\)</span> is implemented in
-<code>src/optimizer.py</code>; there is no Wolfe or Armijo
-backtracking.</li>
+<code>src/template_code_project/core/optimizer.py</code>; there is no
+Wolfe or Armijo backtracking.</li>
 <li><strong>Global optimization</strong>: Convexity is assumed; no
 basin-hopping or restarts are studied.</li>
 <li><strong>Numerical model</strong>: Double-precision floating point
@@ -2322,7 +2498,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <code>10.5281/zenodo.20417136</code> · SHA-256 <code>pending…</code> ·
 pairing pending</p>
 <figure>
-<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_integrity_strip.png"
+<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Integrity QR strip"><img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Integrity QR strip</figcaption>
 </figure>

@@ -83,7 +83,7 @@ Editorial review is one of the longest-lived bottlenecks in scientific writing �
 
 `template_prose_project` exists to demonstrate that the editorial-review pass can be expressed as a **deterministic, configurable, infrastructure-backed pipeline**. This project carries no novel research contribution of its own; its purpose is to show how to compose existing template infrastructure into a complete, reproducible editorial workflow.
 
-The architecture is simple. `manuscript/config.yaml` defines policy: target grade-level band, citation-density floor, heading-structure rules, bibliography-consistency policy. The orchestrator script `scripts/run_prose_pipeline.py` reads the manuscript directory and calls [`infrastructure.prose.analyze_manuscript`](../../../../infrastructure/prose/SKILL.md) to produce a `ManuscriptReport`; `src/pipeline/__init__.py::run_prose_pipeline` then cross-checks the cited keys against the `references.bib` (via the project-owned `src.prose_facade.parse_bib_keys` helper), evaluates each configured check, and writes the JSON artefacts, while `src/report.py::write_review_report` assembles the markdown review and three diagnostic figures are rendered from the report. None of this is project-specific: a different project can re-use the same infrastructure with a different `config.yaml` and a different manuscript directory.
+The architecture is simple. `manuscript/config.yaml` defines policy: target grade-level band, citation-density floor, heading-structure rules, bibliography-consistency policy. The orchestrator script `scripts/run_prose_pipeline.py` reads the manuscript directory and calls [`infrastructure.prose.analyze_manuscript`](../../../../infrastructure/prose/SKILL.md) to produce a `ManuscriptReport`; `src/pipeline/__init__.py::run_prose_pipeline` then cross-checks the cited keys against the `references.bib` (via the project-owned `src.pipeline.prose_facade.parse_bib_keys` helper), evaluates each configured check, and writes the JSON artefacts, while `src/manuscript/report.py::write_review_report` assembles the markdown review and three diagnostic figures are rendered from the report. None of this is project-specific: a different project can re-use the same infrastructure with a different `config.yaml` and a different manuscript directory.
 
 The remainder of this paper documents the methodology ([@sec:methodology]), the run-time results on the bundled manuscript ([@sec:results]), and the architectural lessons drawn from wiring prose analysis through the template pipeline ([@sec:conclusion]).
 
@@ -124,7 +124,7 @@ Every cited key is matched against the BibTeX file at `bibliography.references_p
 | `fail_on_unused: true` | Bib entries that are never cited fail the check. |
 | `fail_on_unused: false` | Unused entries are warned but do not fail. |
 
-The check compares the cited keys from the `ManuscriptReport` against the BibTeX keys returned by `src.prose_facade.parse_bib_keys` — a deliberately minimal regex that skips `@comment` blocks. (Forks that need dialect-complete BibTeX parsing can swap in [`infrastructure.reference.citation.parse_bibfile`](../../../../infrastructure/reference/citation/SKILL.md) at the script layer; the exemplar's own gate does not require it.)
+The check compares the cited keys from the `ManuscriptReport` against the BibTeX keys returned by `src.pipeline.prose_facade.parse_bib_keys` — a deliberately minimal regex that skips `@comment` blocks. (Forks that need dialect-complete BibTeX parsing can swap in [`infrastructure.reference.citation.parse_bibfile`](../../../../infrastructure/reference/citation/SKILL.md) at the script layer; the exemplar's own gate does not require it.)
 
 ## Evaluate
 
@@ -142,7 +142,7 @@ The thresholds each check applies come from `manuscript/config.yaml`. A `prose.p
 
 ## Render
 
-`src/report.py::write_review_report` writes a markdown file with:
+`src/manuscript/report.py::write_review_report` writes a markdown file with:
 
 * Top-line counts (files, words, sentences, paragraphs, averages).
 * A pass/fail table for every check.
@@ -212,7 +212,7 @@ The full pass/fail summary lands in `output/review_report.md`, which is itself a
 This exemplar follows a single house style:
 
 * `manuscript/config.yaml` is the only place run policy lives.
-* `src/` is deliberately `infrastructure`-free: the report Protocols and the `parse_bib_keys`/`render_outline` helpers in `src/prose_facade.py` are the decoupling seam.
+* `src/` is deliberately `infrastructure`-free: the report Protocols and the `parse_bib_keys`/`render_outline` helpers in `src/pipeline/prose_facade.py` are the decoupling seam.
 * Scripts in `scripts/` do only filesystem I/O, CLI argument handling, and the `infrastructure/` calls (e.g. `infrastructure.prose.analyze_manuscript`) on `src/`'s behalf.
 * Every artefact in `output/` is regeneratable; `manuscript/references.bib` is curated and validated read-only by this project.
 
@@ -378,7 +378,7 @@ The diff should be empty. If it is not, the pipeline has acquired non-determinis
 
 Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
 
-This project does not auto-generate the bibliography — it **validates** that every `[@key]` cited in the prose has a matching entry, via the project's own `src.prose_facade.parse_bib_keys` helper (a lightweight BibTeX-key regex that skips `@comment` blocks). The check policy is configured under `bibliography:` in [`config.yaml`](config.yaml).
+This project does not auto-generate the bibliography — it **validates** that every `[@key]` cited in the prose has a matching entry, via the project's own `src.pipeline.prose_facade.parse_bib_keys` helper (a lightweight BibTeX-key regex that skips `@comment` blocks). The check policy is configured under `bibliography:` in [`config.yaml`](config.yaml).
 
 To validate that `references.bib` is syntactically clean:
 

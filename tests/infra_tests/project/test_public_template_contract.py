@@ -39,6 +39,18 @@ def test_public_contract_rejects_empty_test_scope(tmp_path: Path) -> None:
     assert any(item.code == "EMPTY-TEST-SCOPE" for item in report.findings)
 
 
+def test_public_contract_accepts_subpackaged_tests(tmp_path: Path) -> None:
+    """Exemplars shipping tests only under ``tests/<subpackage>/`` satisfy the contract."""
+    _scaffold(tmp_path, "templates/example", with_tests=False)
+    packaged = tmp_path / "projects" / "templates" / "example" / "tests" / "core"
+    packaged.mkdir(parents=True)
+    (packaged / "test_contract.py").write_text("def test_contract():\n    assert True\n", encoding="utf-8")
+
+    report = validate_public_template_contract(tmp_path, public_names=("templates/example",))
+
+    assert report.passed
+
+
 def test_public_contract_rejects_symlinked_root(tmp_path: Path) -> None:
     _scaffold(tmp_path, "private/example")
     target = tmp_path / "projects" / "private" / "example"

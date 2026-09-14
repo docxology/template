@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>04_honesty.md.web</title>
   <style>
@@ -267,12 +267,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -284,7 +328,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -342,6 +397,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -349,13 +406,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -436,8 +548,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -486,6 +597,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -502,6 +619,12 @@ mjx-container[display="true"] {
   text-align: center;
 }
 
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 </style>
 </head>
 <body>
@@ -516,11 +639,11 @@ exactly this failure once — a hand-written test-count and coverage line
 that no generator step had computed — and was corrected by replacing the
 literal numbers with <code>528</code> / <code>95.33</code> tokens filled
 in at render time by <code>scripts/02_measure_test_coverage.py</code>.
-<code>src/honesty.py</code> exists to make that class of failure
-structurally harder: every load-bearing claim in this manuscript must
-resolve to a named function in a named file, and a dedicated module
-inspects the source tree to confirm that resolution rather than trusting
-the prose that asserts it.</p>
+<code>src/template_autopoiesis/core/honesty.py</code> exists to make
+that class of failure structurally harder: every load-bearing claim in
+this manuscript must resolve to a named function in a named file, and a
+dedicated module inspects the source tree to confirm that resolution
+rather than trusting the prose that asserts it.</p>
 <p>The framing is not incidental to a project named
 <code>template_autopoiesis</code>. An autopoietic system, in Maturana
 and Varela’s original sense, is one whose components participate in
@@ -530,11 +653,12 @@ assertion. The honesty manifest is the narrow, literal, code-level
 analogue of that closure: the manuscript’s claims about the code are
 checked <em>by the code</em>, not by a separate act of faith from the
 author. The analogy should not be over-read —
-<code>src/honesty.py</code> is a static AST scan, not a self-maintaining
-living system — but it is the reason this mechanism exists at all rather
-than a simple “trust me” comment block.</p>
+<code>src/template_autopoiesis/core/honesty.py</code> is a static AST
+scan, not a self-maintaining living system — but it is the reason this
+mechanism exists at all rather than a simple “trust me” comment
+block.</p>
 <h3 id="ground-truth-table">Ground-truth table</h3>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -550,42 +674,44 @@ than a simple “trust me” comment block.</p>
 <tbody>
 <tr>
 <td>Grammar parses</td>
-<td><code>src/grammar.py::parse_grammar</code></td>
+<td><code>src/template_autopoiesis/core/grammar.py::parse_grammar</code></td>
 <td><code>test_grammar_and_expand.py</code></td>
 </tr>
 <tr>
 <td>Expansion is deterministic</td>
-<td><code>src/expand.py::expand</code>, <code>_digest_index</code></td>
+<td><code>src/template_autopoiesis/core/expand.py::expand</code>,
+<code>_digest_index</code></td>
 <td><code>test_grammar_and_expand.py</code></td>
 </tr>
 <tr>
 <td>Materialize writes files</td>
-<td><code>src/materialize.py::materialize</code></td>
+<td><code>src/template_autopoiesis/gates/materialize.py::materialize</code></td>
 <td><code>test_materialize.py</code></td>
 </tr>
 <tr>
 <td>Integrity hashes</td>
-<td><code>src/integrity.py::tree_hash_from_content_hashes</code></td>
+<td><code>src/template_autopoiesis/gates/integrity.py::tree_hash_from_content_hashes</code></td>
 <td><code>test_integrity_and_verify.py</code></td>
 </tr>
 <tr>
 <td>Verify recomputes</td>
-<td><code>src/verify.py::verify_child</code></td>
+<td><code>src/template_autopoiesis/gates/verify.py::verify_child</code></td>
 <td><code>test_integrity_and_verify.py</code></td>
 </tr>
 <tr>
 <td>Primitives collected</td>
-<td><code>src/primitives/__init__.py::collect_primitives</code></td>
+<td><code>src/template_autopoiesis/primitives/__init__.py::collect_primitives</code></td>
 <td><code>test_primitives_registry.py</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Each row is not prose describing an intention — it is a key into
 <code>STRUCTURAL_EVIDENCE</code>, the dict in
-<code>src/honesty.py</code> that the code below walks mechanically. If a
-row’s evidence path stops existing, the manifest fails and
-<code>test_honesty.py</code> fails with it; the table cannot silently
-drift out of sync with the source tree without a red test.</p>
+<code>src/template_autopoiesis/core/honesty.py</code> that the code
+below walks mechanically. If a row’s evidence path stops existing, the
+manifest fails and <code>test_honesty.py</code> fails with it; the table
+cannot silently drift out of sync with the source tree without a red
+test.</p>
 <h3 id="the-structural-evidence-catalogue">The structural evidence
 catalogue</h3>
 <p><code>STRUCTURAL_EVIDENCE</code> is a
@@ -672,13 +798,13 @@ calls <code>build_manifest</code>, then — if a <code>manuscript/</code>
 directory exists — reads every <code>*.md</code> file in it and scans
 for a fixed, case-insensitive regex over six absolute-certainty words
 and one hard percentage figure, defined verbatim in
-<code>_UNSUPPORTED_CLAIM_PATTERN</code> in <code>src/honesty.py</code>
-(deliberately not quoted here: a plain-text regex has no exemption for
-markdown code spans, and an earlier draft of this very paragraph
-reproduced the list inside backticks — which tripped the gate it was
-describing, during this session’s own manuscript-expansion pass, and had
-to be rewritten). Each match is recorded as
-<code>"{filename}:{offset}: '{match}'"</code> in
+<code>_UNSUPPORTED_CLAIM_PATTERN</code> in
+<code>src/template_autopoiesis/core/honesty.py</code> (deliberately not
+quoted here: a plain-text regex has no exemption for markdown code
+spans, and an earlier draft of this very paragraph reproduced the list
+inside backticks — which tripped the gate it was describing, during this
+session’s own manuscript-expansion pass, and had to be rewritten). Each
+match is recorded as <code>"{filename}:{offset}: '{match}'"</code> in
 <code>manifest.unsupported_claims</code>.</p>
 <p>Two honesty points about this scanner, stated plainly rather than
 left implicit. First, it is a fixed lexical denylist, not a semantic
@@ -691,13 +817,14 @@ the two paths through this module:
 <code>HonestyManifest.all_passed</code> is a conjunction over
 <code>evidence</code>, <code>missing_calls</code>, <em>and</em>
 <code>unsupported_claims</code>, and
-<code>src/cli.py::cmd_honesty</code> calls <code>verify_honesty()</code>
-(the function that populates all three) and exits the process with code
-1 whenever <code>all_passed</code> is false —
-<code>tests/test_cli.py::test_main_honesty_exits_zero</code> pins
+<code>src/template_autopoiesis/core/cli.py::cmd_honesty</code> calls
+<code>verify_honesty()</code> (the function that populates all three)
+and exits the process with code 1 whenever <code>all_passed</code> is
+false —
+<code>tests/core/test_cli.py::test_main_honesty_exits_zero</code> pins
 exactly this behavior. The one place prose hits are <em>not</em>
 enforced is <code>test_verify_honesty_all_passed</code> in
-<code>tests/test_honesty.py</code>, which asserts only
+<code>tests/core/test_honesty.py</code>, which asserts only
 <code>all(m.evidence.values())</code> by design, deliberately leaving
 prose style out of that particular assertion. Reading only that one test
 in isolation would suggest the prose scanner is a lint rather than a
@@ -711,8 +838,9 @@ mutation gate: proving the acceptance criteria have teeth</h3>
 “would a fake implementation of it get away with passing.” It is
 parametrized via the
 <code>pytest.mark.parametrize("domain", list(KNOWN_DOMAINS))</code>
-decorator over all 5 primitive domains from <code>src/grammar.py</code>,
-and runs three checks per domain:</p>
+decorator over all 5 primitive domains from
+<code>src/template_autopoiesis/core/grammar.py</code>, and runs three
+checks per domain:</p>
 <ol type="1">
 <li><strong><code>test_stub_fails_gate_per_domain</code></strong> —
 <code>_stub_run_analysis</code> is a constant-success stub that returns
@@ -757,9 +885,9 @@ with a stub and nothing downstream notices.</p>
 does not</h3>
 <p>The honesty manifest and the mutation gate are complementary, not
 redundant, but both are narrower than they might sound.
-<code>src/honesty.py</code>’s AST check covers exactly the six
-<code>STRUCTURAL_EVIDENCE</code> entries (<code>grammar parses</code>,
-<code>expand deterministic</code>,
+<code>src/template_autopoiesis/core/honesty.py</code>’s AST check covers
+exactly the six <code>STRUCTURAL_EVIDENCE</code> entries
+(<code>grammar parses</code>, <code>expand deterministic</code>,
 <code>materialize writes files</code>, <code>integrity hashes</code>,
 <code>verify recomputes</code>, <code>primitives collected</code>) — it
 does not scan this manuscript for every function or variable name it
@@ -768,13 +896,15 @@ six would not be caught by this mechanism. (This is not a hypothetical
 gap: an earlier draft of the Limitations section below claimed
 <code>generate_variables</code> exposed a
 <code>NOMINAL_OVER_EFFECTIVE</code> token that does not exist anywhere
-in <code>src/manuscript_variables.py</code>; the honesty AST check did
-not catch it because that variable isn’t one of the six covered entries
-— a Forge cross-vendor review caught it instead, by reading the source
-directly.) <code>test_meta_teeth.py</code> similarly guarantees only
-that the acceptance tests covering the primitives it targets cannot be
-satisfied by code that does nothing; it says nothing about the dozens of
-other functions and tests named elsewhere in this manuscript. Neither
+in
+<code>src/template_autopoiesis/manuscript/manuscript_variables.py</code>;
+the honesty AST check did not catch it because that variable isn’t one
+of the six covered entries — a Forge cross-vendor review caught it
+instead, by reading the source directly.)
+<code>test_meta_teeth.py</code> similarly guarantees only that the
+acceptance tests covering the primitives it targets cannot be satisfied
+by code that does nothing; it says nothing about the dozens of other
+functions and tests named elsewhere in this manuscript. Neither
 mechanism proves the primitives are numerically correct in any deeper
 sense than “the first <code>PrimitiveSpec</code> in each domain returns
 domain-shaped keys on its example input” — correctness of the underlying

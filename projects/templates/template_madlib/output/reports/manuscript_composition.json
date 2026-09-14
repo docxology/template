@@ -1,9 +1,9 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "4698df556fbbe63ce3f833ac545e7896578424614954ba1c152a9f38e8a116d4",
+  "binding_sha256": "6e9583cea5f2d2a2fa58a3e1465dcfa96d799210152319a58809059d9f9a35cb",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "f95f80e1f1cdf459932df236568f90adc6def94a992a1ed2eb2ecbc2baf9bb49",
-  "combined_size_bytes": 72966,
+  "combined_sha256": "0c0f8fc86b5b02b713c2c926b5054191e67d2ca13772f17a206a5e3a7acebdbf",
+  "combined_size_bytes": 73030,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {
@@ -45,20 +45,20 @@
     {
       "ordinal": 7,
       "path": "output/manuscript/06_evaluation.md",
-      "sha256": "d196632680875500827f853608a0fc8175ddf49b2caa9bba793889d74c492e07",
-      "size_bytes": 6812
+      "sha256": "ff00cb80fe17d7b3ffe815742853e388abe0196dcd1fcbcf6cba1f72f308f9da",
+      "size_bytes": 6828
     },
     {
       "ordinal": 8,
       "path": "output/manuscript/07_reproducibility.md",
-      "sha256": "571cea4e24b6e922fb6c739ca627e633d59474c18dfb8afc327d0739b6030a7e",
-      "size_bytes": 1684
+      "sha256": "73547398343ff1971963643bd12cf6a0675bb4cdf7d15adf64ca07f9b72c891c",
+      "size_bytes": 1700
     },
     {
       "ordinal": 9,
       "path": "output/manuscript/08_limitations.md",
-      "sha256": "319cf89af2df580dc0fb97adf985ea868d586a72c57c1d9e6a44ab043ba49ffd",
-      "size_bytes": 4874
+      "sha256": "4f1c72efe5a25e6719e4e2b6e809efe3a2ad47150bd554d38fcd0c7fda39cecf",
+      "size_bytes": 4890
     },
     {
       "ordinal": 10,
@@ -69,8 +69,8 @@
     {
       "ordinal": 11,
       "path": "output/manuscript/10_authoring_contract.md",
-      "sha256": "dd3ef8190a6d40a641ba83160d69b5cb107dec60a56af89465155a3f47738baa",
-      "size_bytes": 2776
+      "sha256": "25a69df1271fc5ba7974701eaf7d91ba156ee7ecb93e86976646b94fdc34a956",
+      "size_bytes": 2792
     },
     {
       "ordinal": 12,
@@ -79,7 +79,7 @@
       "size_bytes": 13
     }
   ],
-  "ordered_inputs_sha256": "f9200831c244e383e09aaf803c7e32f669ee81ae310e0cdd740afa842fee12fc",
+  "ordered_inputs_sha256": "0fc3fd76820ce4f7e5221d23f29a6ab2dd11887d4524971ec152acc78605c926",
   "project": "templates/template_madlib",
   "schema_version": "template-manuscript-composition-v1"
 }

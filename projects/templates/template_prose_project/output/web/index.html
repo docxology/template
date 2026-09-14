@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Readability, structural, and citation-density gating for research manuscripts" />
@@ -265,6 +265,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -275,14 +284,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -313,12 +354,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -330,7 +415,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -388,6 +484,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -395,13 +493,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -482,8 +635,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -532,6 +684,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -546,6 +704,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -609,7 +773,7 @@ class="toc-section-number">8</span> References</a></li>
 <p><strong>State:</strong> published</p>
 <p><strong>Pairing:</strong> complete (DOI, GitHub, SHA-256, Zenodo
 URL)</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -657,7 +821,7 @@ href="https://zenodo.org/records/20417104">https://zenodo.org/records/20417104</
 <td>pending</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <ul>
 <li>Scan <strong>Integrity</strong> QR and compare the embedded SHA-256
 prefix to the table above.</li>
@@ -667,14 +831,14 @@ confirm they resolve to this release pairing.</li>
 <code>../data/transmission_manifest.json</code>.</li>
 </ul>
 <figure>
-<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_integrity_strip.png"
+<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Integrity QR strip"><img src="../figures/transmission_integrity_strip.png"
 style="width:98.0%" alt="Integrity QR strip" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Integrity QR strip</figcaption>
 </figure>
 <p>Structured manifest:
 <code>../data/transmission_manifest.json</code></p>
 <figure>
-<a class="figure-full-size-link" href="../figures/transmission_pairing.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_pairing.png" style="width:35.0%"
+<a class="figure-full-size-link" href="../figures/transmission_pairing.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Publication pairing flow"><img src="../figures/transmission_pairing.png" style="width:35.0%"
 alt="Publication pairing flow" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Publication pairing flow</figcaption>
 </figure>
@@ -754,17 +918,17 @@ defines policy: target grade-level band, citation-density floor,
 heading-structure rules, bibliography-consistency policy. The
 orchestrator script <code>scripts/run_prose_pipeline.py</code> reads the
 manuscript directory and calls <a
-href="../../../../infrastructure/prose/SKILL.md"><code>infrastructure.prose.analyze_manuscript</code></a>
+href="https://github.com/docxology/template/blob/main/infrastructure/prose/SKILL.md"><code>infrastructure.prose.analyze_manuscript</code></a>
 to produce a <code>ManuscriptReport</code>;
 <code>src/pipeline/__init__.py::run_prose_pipeline</code> then
 cross-checks the cited keys against the <code>references.bib</code> (via
-the project-owned <code>src.prose_facade.parse_bib_keys</code> helper),
-evaluates each configured check, and writes the JSON artefacts, while
-<code>src/report.py::write_review_report</code> assembles the markdown
-review and three diagnostic figures are rendered from the report. None
-of this is project-specific: a different project can re-use the same
-infrastructure with a different <code>config.yaml</code> and a different
-manuscript directory.</p>
+the project-owned <code>src.pipeline.prose_facade.parse_bib_keys</code>
+helper), evaluates each configured check, and writes the JSON artefacts,
+while <code>src/manuscript/report.py::write_review_report</code>
+assembles the markdown review and three diagnostic figures are rendered
+from the report. None of this is project-specific: a different project
+can re-use the same infrastructure with a different
+<code>config.yaml</code> and a different manuscript directory.</p>
 <p>The remainder of this paper documents the methodology (sec. <a
 href="#sec:methodology">3</a>), the run-time results on the bundled
 manuscript (sec. <a href="#sec:results">4</a>), and the architectural
@@ -821,7 +985,7 @@ class="header-section-number">3.3</span> Cross-check</h2>
 <p>Every cited key is matched against the BibTeX file at
 <code>bibliography.references_path</code>. The check has four tunable
 behaviours via <code>config.yaml</code>:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -851,13 +1015,13 @@ the check.</td>
 <td>Unused entries are warned but do not fail.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The check compares the cited keys from the
 <code>ManuscriptReport</code> against the BibTeX keys returned by
-<code>src.prose_facade.parse_bib_keys</code> — a deliberately minimal
-regex that skips <code>@comment</code> blocks. (Forks that need
+<code>src.pipeline.prose_facade.parse_bib_keys</code> — a deliberately
+minimal regex that skips <code>@comment</code> blocks. (Forks that need
 dialect-complete BibTeX parsing can swap in <a
-href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
+href="https://github.com/docxology/template/blob/main/infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
 at the script layer; the exemplar’s own gate does not require it.)</p>
 <h2 data-number="3.4" id="evaluate"><span
 class="header-section-number">3.4</span> Evaluate</h2>
@@ -887,8 +1051,8 @@ YAML does not set explicitly, so a fork can adopt a named editorial
 profile in one line and override individual knobs afterwards.</p>
 <h2 data-number="3.5" id="render"><span
 class="header-section-number">3.5</span> Render</h2>
-<p><code>src/report.py::write_review_report</code> writes a markdown
-file with:</p>
+<p><code>src/manuscript/report.py::write_review_report</code> writes a
+markdown file with:</p>
 <ul>
 <li>Top-line counts (files, words, sentences, paragraphs,
 averages).</li>
@@ -1011,7 +1175,7 @@ lives.</li>
 <li><code>src/</code> is deliberately <code>infrastructure</code>-free:
 the report Protocols and the
 <code>parse_bib_keys</code>/<code>render_outline</code> helpers in
-<code>src/prose_facade.py</code> are the decoupling seam.</li>
+<code>src/pipeline/prose_facade.py</code> are the decoupling seam.</li>
 <li>Scripts in <code>scripts/</code> do only filesystem I/O, CLI
 argument handling, and the <code>infrastructure/</code> calls
 (e.g. <code>infrastructure.prose.analyze_manuscript</code>) on
@@ -1177,7 +1341,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="
 non-determinism — file an issue.</p>
 <h2 data-number="7.2" id="determinism-guarantees"><span
 class="header-section-number">7.2</span> Determinism guarantees</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -1223,12 +1387,12 @@ class="header-section-number">7.2</span> Determinism guarantees</h2>
 <td>derived from the deterministic JSON report</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h1 data-number="8" id="sec:references"><span
 class="header-section-number">8</span> References</h1>
 <p>Bibliography lives in <a
-href="references.bib"><code>manuscript/references.bib</code></a> and is
+href="https://github.com/docxology/template/blob/main/projects/templates/template_prose_project/manuscript/references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF render. The build pipeline invokes Pandoc with
 <code>--natbib</code>, so every <code>[@key]</code> citation in the
 manuscript is rewritten to the appropriate
@@ -1237,10 +1401,10 @@ command and resolved against the bib file.</p>
 <p>This project does not auto-generate the bibliography — it
 <strong>validates</strong> that every <code>[@key]</code> cited in the
 prose has a matching entry, via the project’s own
-<code>src.prose_facade.parse_bib_keys</code> helper (a lightweight
-BibTeX-key regex that skips <code>@comment</code> blocks). The check
-policy is configured under <code>bibliography:</code> in <a
-href="config.yaml"><code>config.yaml</code></a>.</p>
+<code>src.pipeline.prose_facade.parse_bib_keys</code> helper (a
+lightweight BibTeX-key regex that skips <code>@comment</code> blocks).
+The check policy is configured under <code>bibliography:</code> in <a
+href="https://github.com/docxology/template/blob/main/projects/templates/template_prose_project/manuscript/config.yaml"><code>config.yaml</code></a>.</p>
 <p>To validate that <code>references.bib</code> is syntactically
 clean:</p>
 <div class="sourceCode" id="cb4"><pre
@@ -1251,7 +1415,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="
 <code>10.5281/zenodo.20417104</code> · SHA-256
 <code>290d21b10bd5…</code> · pairing complete</p>
 <figure>
-<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_integrity_strip.png"
+<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Integrity QR strip"><img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Integrity QR strip</figcaption>
 </figure>

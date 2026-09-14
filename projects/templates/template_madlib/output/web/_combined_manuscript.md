@@ -534,7 +534,7 @@ The QA probes are Method row completeness, Field-origin visibility, Placeholder 
 | Evidence cleanliness | Do generated claims stay within local evidence boundaries? | Evidence registry validation passes without unsupported claims. | `output/reports/evidence_registry.json` |
 | Fork readiness | Does the authoring contract tell downstream forks what to extend before adding domain claims? | Authoring obligations cite config diffs, claim ledger updates, validators, and full reruns. | `output/manuscript/10_authoring_contract.md` |
 | Copied-output parity | Did copied deliverables preserve the validated project output surface? | Copy-stage statistics include PDF, HTML, slides, figures, data, and reports. | `output/templates/template_madlib` |
-| Digest invariant review | Are the allowed token-selection inputs documented and protected by tests? | Methods prose names the digest inputs and token tests prove seed/category sensitivity. | `src/tokens.py and output/manuscript/02_methodology.md` |
+| Digest invariant review | Are the allowed token-selection inputs documented and protected by tests? | Methods prose names the digest inputs and token tests prove seed/category sensitivity. | `src/template_madlib/tokens.py and output/manuscript/02_methodology.md` |
 | Claim-ledger alignment | Do method and documentation claims point to config, source, generated artifacts, or explicit non-claim boundaries? | Claim-ledger rows cover expanded method protocol and fork-validator boundaries. | `data/claim_ledger.yaml` |
 | Review packet completeness | Can a reviewer inspect every output surface needed to audit the method? | Copied outputs include manuscript, web, slides, figures, data, reports, validation, and copy statistics. | `output/templates/template_madlib and output/reports/output_statistics.json` |
 | Fork migration sufficiency | Does the documentation tell forks which surfaces to change before adding domain claims? | README, STANDALONE, manuscript README, and Authoring Contract list config, source, test, validator, and claim-ledger obligations. | `README.md, STANDALONE.md, manuscript/README.md, and output/manuscript/10_authoring_contract.md` |
@@ -553,11 +553,11 @@ The protocol emits MadlibConfig, review scenario, explicit/default path inventor
 
 The copied root output is therefore a consequence of local source and config. Generated files remain disposable; the durable contract is the ability to regenerate them from the tracked project tree and to observe the same validation gates passing.
 
-- Config hash: `1af3356c12013333`
-- Generated: `2026-08-14T14:20:53Z` (derived from `SOURCE_DATE_EPOCH`; an
+- Config hash: `f64d6e672cc03a9f`
+- Generated: `not-recorded (set SOURCE_DATE_EPOCH)` (derived from `SOURCE_DATE_EPOCH`; an
   explicit `not-recorded` marker is emitted when the reproducible timestamp is
   not supplied)
-- Python: `3.12.12`
+- Python: `3.12.13`
 - Platform: `Darwin arm64`
 
 
@@ -587,7 +587,7 @@ The author remains responsible for theory, citations, reader expectations, and d
 | Field-origin opacity | A rendered field appears configured even though it came from a loader default. | configured_field_inventory.json and configured-field summary figures. | Expose explicit/default counts in the manuscript and review optional defaults before release. |
 | Visual-method mismatch | A figure implies a method claim that is not backed by generated data or registry metadata. | Figure registry validation, nonblank figure tests, and manual visual QA. | Generate figures only from config, TokenPlan, and inventory data, then rerun validation. |
 | Fork without validators | A downstream project changes vocabulary or claims but keeps only the exemplar's generic gates. | Authoring contract review and claim ledger review. | Add domain validators, domain evidence artifacts, and claim-ledger entries before asserting domain findings. |
-| Digest invariant drift | A future edit lets renderer state, file order, or ambient prose influence token selection. | Seed-stability, category-sensitivity, and method-invariant tests. | Keep token selection isolated in src/tokens.py and document allowed digest inputs in Methods. |
+| Digest invariant drift | A future edit lets renderer state, file order, or ambient prose influence token selection. | Seed-stability, category-sensitivity, and method-invariant tests. | Keep token selection isolated in src/template_madlib/tokens.py and document allowed digest inputs in Methods. |
 | Claim ledger omission | A generated claim appears in prose or documentation without a matching local evidence row or non-claim boundary. | Claim ledger review, evidence registry validation, and documentation review. | Add claim-ledger rows or remove the unsupported claim before rendering copied outputs. |
 | Review packet incompleteness | A reviewer receives PDF or HTML without the data, reports, figures, validation output, or copy statistics needed to inspect the method. | Stage 05 output statistics and copied-output validation. | Regenerate Stages 02-05 and include the full copied output surface in review. |
 | Fork migration ambiguity | A fork leaves authors unsure which exemplar surfaces must change for a domain-specific manuscript. | README, STANDALONE notes, manuscript README, and Authoring Contract review. | Document required config, source, test, claim-ledger, validator, and pipeline changes before making domain claims. |
@@ -629,7 +629,7 @@ The quality standard is claim humility. A fork that only changes words has not p
 | Extend claim evidence | Update the claim ledger when generated prose adds a new claim boundary. | `data/claim_ledger.yaml` |
 | Add domain validators | Add tests and validation artifacts before using the template for domain-specific claims. | `tests and output/reports` |
 | Rerun the full project path | Regenerate analysis artifacts, render outputs, validate outputs, and copy deliverables. | `pipeline command logs` |
-| Review method invariants | Confirm changed tokens are explained only by seed, slot, category, ordinal, or category inventory changes. | `src/tokens.py, token_inventory.json, and output/manuscript/02_methodology.md` |
+| Review method invariants | Confirm changed tokens are explained only by seed, slot, category, ordinal, or category inventory changes. | `src/template_madlib/tokens.py, token_inventory.json, and output/manuscript/02_methodology.md` |
 | Assemble reviewer packet | Provide hydrated manuscript, rendered outputs, figures, data, reports, validation report, and output statistics together. | `output/templates/template_madlib` |
 | Write fork migration notes | Document config, source, test, validator, and claim-ledger changes required by a domain fork. | `README.md, STANDALONE.md, and data/claim_ledger.yaml` |
 

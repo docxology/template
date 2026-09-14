@@ -165,3 +165,73 @@ def test_deployed_web_link_issues_rejects_unsupported_img_schemes(tmp_path: Path
 
     assert len(issues) == 1
     assert "unsupported img src scheme" in issues[0]
+
+
+def test_repository_link_rewrite_resolves_authored_links_from_injected_copies(
+    tmp_path: Path,
+) -> None:
+    """Hydrated ``output/manuscript`` copies resolve links authored in ``manuscript/``."""
+    repository_root = repository_root_for(Path(__file__))
+    injected = repository_root / "projects/templates/template_search_project/output/manuscript/00_abstract.md"
+    html_file = tmp_path / "manuscript__00_abstract.html"
+    html_file.write_text(
+        '<a href="../../../../infrastructure/search/">Discovery</a>'
+        '<a href="../../template_code_project/manuscript/references.bib">Bibliography</a>',
+        encoding="utf-8",
+    )
+
+    rewrite_repository_links(
+        html_file,
+        repository_root=repository_root,
+        rendered_sources={injected: html_file.name},
+    )
+
+    content = html_file.read_text(encoding="utf-8")
+    assert 'href="https://github.com/docxology/template/tree/main/infrastructure/search/"' in content
+    assert (
+        'href="https://github.com/docxology/template/blob/main/'
+        'projects/templates/template_code_project/manuscript/references.bib"' in content
+    )
+
+
+def test_repository_link_rewrite_fails_closed_without_authored_counterpart(
+    tmp_path: Path,
+) -> None:
+    """A hydrated non-manuscript source has no authored sibling: fail closed."""
+    repository_root = repository_root_for(Path(__file__))
+    non_manuscript = repository_root / "projects/templates/template_search_project/output/data/dashboard_payload.json"
+    html_file = tmp_path / "manuscript__00_abstract.html"
+    html_file.write_text(
+        '<a href="../../template_code_project/manuscript/references.bib">Bibliography</a>',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RenderingError, match="Web link target does not exist"):
+        rewrite_repository_links(
+            html_file,
+            repository_root=repository_root,
+            rendered_sources={non_manuscript: html_file.name},
+        )
+
+
+def test_repository_link_rewrite_collapses_hydration_pair_duplicates(tmp_path: Path) -> None:
+    """A bare sibling href present in both hydration copies resolves to the authored file."""
+    repository_root = repository_root_for(Path(__file__))
+    project = repository_root / "projects/templates/template_search_project"
+    injected = project / "output/manuscript/00_abstract.md"
+    authored = project / "manuscript/00_abstract.md"
+    assert (project / "output/manuscript/references.bib").is_file()
+    html_file = tmp_path / "manuscript__99_references.html"
+    html_file.write_text('<a href="references.bib">Bibliography</a>', encoding="utf-8")
+
+    rewrite_repository_links(
+        html_file,
+        repository_root=repository_root,
+        rendered_sources={injected: html_file.name, authored: html_file.name},
+    )
+
+    content = html_file.read_text(encoding="utf-8")
+    assert (
+        'href="https://github.com/docxology/template/blob/main/'
+        'projects/templates/template_search_project/manuscript/references.bib"' in content
+    )

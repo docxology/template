@@ -34,7 +34,7 @@ mechanism exists at all rather than a simple "trust me" comment block.
 | Materialize writes files | `src/template_autopoiesis/gates/materialize.py::materialize` | `test_materialize.py` |
 | Integrity hashes | `src/template_autopoiesis/gates/integrity.py::tree_hash_from_content_hashes` | `test_integrity_and_verify.py` |
 | Verify recomputes | `src/template_autopoiesis/gates/verify.py::verify_child` | `test_integrity_and_verify.py` |
-| Primitives collected | `src/primitives/__init__.py::collect_primitives` | `test_primitives_registry.py` |
+| Primitives collected | `src/template_autopoiesis/primitives/__init__.py::collect_primitives` | `test_primitives_registry.py` |
 
 Each row is not prose describing an intention — it is a key into
 `STRUCTURAL_EVIDENCE`, the dict in `src/template_autopoiesis/core/honesty.py` that the code below

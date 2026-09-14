@@ -42,7 +42,7 @@
     {
       "name": "Review method invariants",
       "obligation": "Confirm changed tokens are explained only by seed, slot, category, ordinal, or category inventory changes.",
-      "review_surface": "src/tokens.py, token_inventory.json, and output/manuscript/02_methodology.md"
+      "review_surface": "src/template_madlib/tokens.py, token_inventory.json, and output/manuscript/02_methodology.md"
     },
     {
       "name": "Assemble reviewer packet",
@@ -399,7 +399,7 @@
     },
     {
       "detection": "Seed-stability, category-sensitivity, and method-invariant tests.",
-      "mitigation": "Keep token selection isolated in src/tokens.py and document allowed digest inputs in Methods.",
+      "mitigation": "Keep token selection isolated in src/template_madlib/tokens.py and document allowed digest inputs in Methods.",
       "name": "Digest invariant drift",
       "risk": "A future edit lets renderer state, file order, or ambient prose influence token selection."
     },
@@ -791,7 +791,7 @@
       "question": "Did copied deliverables preserve the validated project output surface?"
     },
     {
-      "artifact": "src/tokens.py and output/manuscript/02_methodology.md",
+      "artifact": "src/template_madlib/tokens.py and output/manuscript/02_methodology.md",
       "name": "Digest invariant review",
       "passing_signal": "Methods prose names the digest inputs and token tests prove seed/category sensitivity.",
       "question": "Are the allowed token-selection inputs documented and protected by tests?"

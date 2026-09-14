@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>04_rules.md.web</title>
   <style>
@@ -267,12 +267,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -284,7 +328,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -342,6 +397,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -349,13 +406,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -436,8 +548,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -486,6 +597,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -500,6 +617,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -576,7 +699,7 @@ rather than a style preference: coverage below the source-declared
 threshold means tests are missing; a manuscript section without an
 abstract means the document is incomplete.</p>
 <figure id="fig:rulehier">
-<a class="figure-full-size-link" href="../figures/rule_hierarchy.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/rule_hierarchy.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/rule_hierarchy.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Rule hierarchy: the two template rule sets, each split into a machine-enforceable strong/ branch"><img src="../figures/rule_hierarchy.png" style="width:85.0%"
 alt="Hierarchy diagram separating guidance-oriented soft rules from machine-enforced strong rules." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Rule hierarchy: the two template rule
 sets, each split into a machine-enforceable <code>strong/</code> branch
@@ -586,7 +709,7 @@ and a guidance-only <code>soft/</code> branch.</figcaption>
 <h3 id="template_project_rules"><code>template_project_rules</code></h3>
 <p>This rule set governs software projects throughout the template
 repository. Its strong rules currently comprise:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -609,14 +732,14 @@ public API 95%</td>
 <code>scripts/</code>, <code>manuscript/</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Its soft rules provide guidance on code style, commit message
 conventions, and pull-request labelling.</p>
 <h3
 id="template_manuscript_rules"><code>template_manuscript_rules</code></h3>
 <p>This rule set governs research manuscripts. Its strong rules
 comprise:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -637,15 +760,16 @@ comprise:</p>
 <td>Required manuscript sections, ordering, and minimum word counts</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>In the current pipeline run, <strong>2 of 2 rule sets</strong>
 validated successfully (<span class="citation"
 data-cites="fig:counts">@fig:counts</span>).</p>
 <h2 id="rule-application-module">Rule Application Module</h2>
-<p>The <code>src/rules_applier.py</code> module exposes three
-functions:</p>
+<p>The
+<code>src/template_pools_rules_tools/rules/rules_applier.py</code>
+module exposes three functions:</p>
 <div class="sourceCode" id="cb3"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.rules_applier <span class="im">import</span> (</span>
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> template_pools_rules_tools.rules.rules_applier <span class="im">import</span> (</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    load_soft_rules,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    load_strong_rules,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    validate_against_rules,</span>
@@ -682,10 +806,11 @@ Structural Validation: Semantic Rule Evaluation</h2>
 <code>soft/</code>/<code>strong/</code> parse as YAML. It does not check
 whether the constraints those strong-rule files declare are actually
 satisfied by the current project. That semantic layer lives in a
-separate module, <code>src/strong_rule_evaluator.py</code>, exposed via
-<code>scripts/04_validate_strong_rules.py</code>:</p>
+separate module,
+<code>src/template_pools_rules_tools/rules/strong_rule_evaluator.py</code>,
+exposed via <code>scripts/04_validate_strong_rules.py</code>:</p>
 <div class="sourceCode" id="cb4"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.strong_rule_evaluator <span class="im">import</span> evaluate_strong_rules, load_rule_context_from_project</span>
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> template_pools_rules_tools.rules.strong_rule_evaluator <span class="im">import</span> evaluate_strong_rules, load_rule_context_from_project</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>context <span class="op">=</span> load_rule_context_from_project(project_root)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> evaluate_strong_rules(<span class="st">&quot;template_project_rules&quot;</span>, context)</span>
@@ -694,7 +819,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a hr
 file to a rule-kind-specific evaluator function keyed by its declared
 kind, via a small dispatch table covering all four strong-rule kinds
 that exist across both rule sets:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -735,7 +860,7 @@ headings (<code>TODO</code>, <code>Draft</code>, etc.)</td>
 parsed reference entry</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Each evaluator distinguishes structured violation <em>reasons</em>
 rather than collapsing everything to a boolean — for example,
 <code>coverage_threshold</code> reports separately whether a key was

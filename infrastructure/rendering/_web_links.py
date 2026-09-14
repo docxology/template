@@ -141,13 +141,14 @@ def _resolve_repository_href_target(
 
     if page_target is not None:
         target = page_target
-    elif len(source_targets) > 1:
-        raise RenderingError(
-            f"Web link resolves to multiple manuscript targets: {href_path}",
-            context={"page": str(html_file), "targets": [str(path) for path in source_targets]},
-        )
     elif source_targets:
-        target = source_targets[0]
+        candidates = _drop_injected_counterparts(source_targets)
+        if len(candidates) > 1:
+            raise RenderingError(
+                f"Web link resolves to multiple manuscript targets: {href_path}",
+                context={"page": str(html_file), "targets": [str(path) for path in source_targets]},
+            )
+        target = candidates[0]
     elif root_target is not None:
         target = root_target
     else:
@@ -213,6 +214,50 @@ def _renderer_figure_asset_target(html_file: Path, href_path: str) -> Path | Non
     return target
 
 
+def _is_injected_manuscript_copy(path: Path) -> bool:
+    return path.parent.name == "manuscript" and path.parent.parent.name == "output"
+
+
+def _drop_injected_counterparts(targets: list[Path]) -> list[Path]:
+    """Collapse hydration pairs (``output/manuscript`` copy + authored sibling).
+
+    Hydration duplicates manuscript sources into ``output/manuscript``; when
+    both copies surface as candidates for one authored href, they are the
+    same logical file, not two distinct targets. The authored copy wins so
+    deployed links cite the long-lived surface.
+    """
+
+    def _has_authored_sibling(target: Path) -> bool:
+        return _is_injected_manuscript_copy(target) and (
+            target.parent.parent.parent / "manuscript" / target.name in targets
+        )
+
+    return [target for target in targets if not _has_authored_sibling(target)]
+
+
+def _with_authored_counterparts(rendered_sources: Mapping[Path, str], repository_root: Path) -> dict[Path, str]:
+    """Pair hydrated manuscript copies with their authored originals.
+
+    Rendering consumes the injected ``output/manuscript`` copies, but the
+    hrefs inside them were authored relative to the project's ``manuscript``
+    directory; link resolution must see both parent directories, or every
+    authored repo-relative link in a hydrated project fails closed.
+    """
+    augmented: dict[Path, str] = {}
+    for source, output_name in rendered_sources.items():
+        augmented[source] = output_name
+        try:
+            relative = source.resolve(strict=True).relative_to(repository_root)
+        except (OSError, ValueError):
+            continue
+        parts = relative.parts
+        if len(parts) >= 4 and parts[-3] == "output" and parts[-2] == "manuscript":
+            authored = repository_root.joinpath(*parts[:-3], "manuscript", parts[-1])
+            if authored.is_file() and authored not in augmented:
+                augmented[authored] = output_name
+    return augmented
+
+
 def rewrite_repository_links(
     html_file: Path,
     *,
@@ -230,9 +275,10 @@ def rewrite_repository_links(
 
     root = repository_root.resolve(strict=True)
     repository_code = _repository_code_url(root)
-    source_files = tuple(source.resolve(strict=True) for source in rendered_sources)
+    augmented_sources = _with_authored_counterparts(rendered_sources, root)
+    source_files = tuple(source.resolve(strict=True) for source in augmented_sources)
     mapped_sources = {
-        source.resolve(strict=True): Path(output_name) for source, output_name in rendered_sources.items()
+        source.resolve(strict=True): Path(output_name) for source, output_name in augmented_sources.items()
     }
     for output_name in mapped_sources.values():
         if output_name.is_absolute() or ".." in output_name.parts:

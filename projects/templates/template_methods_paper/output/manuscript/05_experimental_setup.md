@@ -10,13 +10,13 @@ and the compiler — never re-declared per method:
 
 | Module | Declares | Cardinality |
 |---|---|---|
-| `src/methods_dsl/vocabulary.py` | `StepKind`, `Target`, `target_accepts` | 9 step kinds, 3 targets |
-| `src/methods_dsl/units.py` | `Dimension`, `Quantity`, the unit table | 18 controlled units across 8 dimensions |
-| `src/methods_dsl/validation.py` | The four staged gates | 4 gates, fixed order |
+| `src/template_methods_paper/methods_dsl/vocabulary.py` | `StepKind`, `Target`, `target_accepts` | 9 step kinds, 3 targets |
+| `src/template_methods_paper/methods_dsl/units.py` | `Dimension`, `Quantity`, the unit table | 18 controlled units across 8 dimensions |
+| `src/template_methods_paper/methods_dsl/validation.py` | The four staged gates | 4 gates, fixed order |
 
 ## Worked examples
 
-`all_example_methods()` (`src/methods_dsl/examples_methods.py`) returns
+`all_example_methods()` (`src/template_methods_paper/methods_dsl/examples_methods.py`) returns
 2 methods:
 
 | Method | Domain | Target | Notable structure |
@@ -47,11 +47,11 @@ evaluations a method's steps satisfy.
 
 ## Computational environment
 
-- **Language**: Python 3.12.12 on Darwin arm64 (see root
+- **Language**: Python 3.12.13 on Darwin arm64 (see root
   `pyproject.toml` for the supported version range).
 - **Core dependencies**: `pyyaml`, `matplotlib` (declared in
   `domain_profile.yaml::required_packages`); the DSL library itself
-  (`src/methods_dsl/`) has zero third-party dependencies beyond the
+  (`src/template_methods_paper/methods_dsl/`) has zero third-party dependencies beyond the
   standard library, with one declared `infrastructure` logging exception
   (`_logging.py`).
 - **Headless plotting**: the analysis script sets `MPLBACKEND=Agg` before
@@ -73,7 +73,7 @@ The typical analysis order is:
 
 ## Relation to results
 
-| Result ([@sec:results]) | Producing function (`src/methods_dsl/`) | Primary inputs |
+| Result ([@sec:results]) | Producing function (`src/template_methods_paper/methods_dsl/`) | Primary inputs |
 |---|---|---|
 | Compiled-plan summary | `compile_method()` | `all_example_methods()` |
 | Step-count figure | `len(plan.steps)` per method | `output/data/compiled_plans.json` |

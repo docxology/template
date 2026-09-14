@@ -162,15 +162,15 @@ is derived deterministically by `child_name(spec)` as
 selected domain and a content-derived identity, without any counter or
 timestamp. `_build_tree` then assembles the file map that will be written:
 
-- **Kernel primitives.** `_vendor_kernel_sources` copies `src/primitives/
-  base.py` and `src/primitives/{domain}.py` for the spec's
+- **Kernel primitives.** `_vendor_kernel_sources` copies `src/template_autopoiesis/primitives/
+  base.py` and `src/template_autopoiesis/primitives/{domain}.py` for the spec's
   `primitive_domain`, rewriting `from src.primitives` / `from .primitives`
   imports to a bare `from primitives` so the copied module resolves
   correctly once it is no longer nested under the parent template's
   package. It also synthesizes a minimal `primitives/__init__.py` whose
   `collect_primitives()` imports only the one selected domain submodule —
   the child ships exactly one domain's kernel, not all five.
-- **Figures source**, vendored verbatim from `src/figures.py` when present.
+- **Figures source**, vendored verbatim from `src/template_autopoiesis/figures/figures.py` when present.
 - **Dependency vendoring.** `_resolve_deps` reads `dep_mode` out of the
   spec's selections (defaulting to `"vendor"`) and, for each name in
   `spec.deps`, resolves the corresponding path from

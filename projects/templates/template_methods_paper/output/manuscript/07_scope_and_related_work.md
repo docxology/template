@@ -51,7 +51,7 @@ compilation to a hashed plan.
 
 The validation and compilation steps here are a deliberately small subset
 of BPL's. The **non-standard** contribution is procedural: the same tested
-functions in `src/methods_dsl/` back the analysis script, the test suite,
+functions in `src/template_methods_paper/methods_dsl/` back the analysis script, the test suite,
 and this manuscript, so the compiled-plan table and the figure always refer
 to the same code. That pattern — and the specific generalization from a
 biology-only domain language to a domain-neutral one — is what downstream

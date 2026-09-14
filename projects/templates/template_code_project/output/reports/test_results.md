@@ -10,14 +10,14 @@ Generated: 1970-01-01T00:00:00+00:00 (SOURCE_DATE_EPOCH unset)
 
 ## Project Tests
 
-- Passed: 264
+- Passed: 260
 - Failed: 0
 - Skipped: 0
-- Coverage: 95.20%
+- Coverage: 91.64%
 
 ## Summary
 
-- Total Passed: 264
+- Total Passed: 260
 - Total Failed: 0
-- Total Tests: 264
+- Total Tests: 260
 - Status: ✅ PASSED

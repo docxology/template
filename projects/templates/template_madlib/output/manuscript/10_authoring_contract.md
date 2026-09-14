@@ -15,6 +15,6 @@ The quality standard is claim humility. A fork that only changes words has not p
 | Extend claim evidence | Update the claim ledger when generated prose adds a new claim boundary. | `data/claim_ledger.yaml` |
 | Add domain validators | Add tests and validation artifacts before using the template for domain-specific claims. | `tests and output/reports` |
 | Rerun the full project path | Regenerate analysis artifacts, render outputs, validate outputs, and copy deliverables. | `pipeline command logs` |
-| Review method invariants | Confirm changed tokens are explained only by seed, slot, category, ordinal, or category inventory changes. | `src/tokens.py, token_inventory.json, and output/manuscript/02_methodology.md` |
+| Review method invariants | Confirm changed tokens are explained only by seed, slot, category, ordinal, or category inventory changes. | `src/template_madlib/tokens.py, token_inventory.json, and output/manuscript/02_methodology.md` |
 | Assemble reviewer packet | Provide hydrated manuscript, rendered outputs, figures, data, reports, validation report, and output statistics together. | `output/templates/template_madlib` |
 | Write fork migration notes | Document config, source, test, validator, and claim-ledger changes required by a domain fork. | `README.md, STANDALONE.md, and data/claim_ledger.yaml` |

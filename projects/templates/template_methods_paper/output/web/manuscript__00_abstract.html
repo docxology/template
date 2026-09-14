@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>00_abstract.md.web</title>
   <style>
@@ -202,12 +202,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -219,7 +263,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -277,6 +332,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -284,13 +341,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -371,8 +483,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -421,6 +532,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -437,6 +554,12 @@ mjx-container[display="true"] {
   text-align: center;
 }
 
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 </style>
 </head>
 <body>
@@ -451,7 +574,7 @@ Template</a>. Unlike a results paper, this manuscript’s subject is the
 methodology itself: a controlled vocabulary, a unit system with
 dimensional safety, four staged validation gates, and a deterministic
 compiler, implemented in
-<code>projects/templates/template_methods_paper/src/methods_dsl/</code>
+<code>projects/templates/template_methods_paper/src/template_methods_paper/methods_dsl/</code>
 and described section by section in <span class="citation"
 data-cites="sec:methodology">[@sec:methodology]</span>. The domain
 language’s vocabulary is informed by BPL (Biology Programming Language,
@@ -461,16 +584,17 @@ compilation; this exemplar generalizes BPL’s intent vocabulary and
 pipeline shape from wet-lab protocols to any controlled procedure.</p>
 <p>A <code>Method</code> is a name, a set of typed parameters and
 resources, and an ordered, dependent set of steps — constructed directly
-as frozen Python dataclasses (<code>src/methods_dsl/model.py</code>)
-rather than parsed from new text syntax. Every <code>Quantity</code>
-carries a unit that resolves to one of 18 controlled units across eight
+as frozen Python dataclasses
+(<code>src/template_methods_paper/methods_dsl/model.py</code>) rather
+than parsed from new text syntax. Every <code>Quantity</code> carries a
+unit that resolves to one of 18 controlled units across eight
 dimensions, and every step names one of 9 controlled-vocabulary intents
-(<code>src/methods_dsl/vocabulary.py</code>), executable on one of 3
-backends. 4 staged gates — structural, semantic, plan, and target —
-validate a method before <code>compile_method</code>
-(<code>src/methods_dsl/compiler.py</code>) deterministically schedules
-it with Kahn’s algorithm [kahn1962topological] and hashes the canonical
-plan with SHA-256.</p>
+(<code>src/template_methods_paper/methods_dsl/vocabulary.py</code>),
+executable on one of 3 backends. 4 staged gates — structural, semantic,
+plan, and target — validate a method before <code>compile_method</code>
+(<code>src/template_methods_paper/methods_dsl/compiler.py</code>)
+deterministically schedules it with Kahn’s algorithm
+[kahn1962topological] and hashes the canonical plan with SHA-256.</p>
 <p>We demonstrate the language on 2 worked example methods spanning both
 domains BPL’s design targets and the domains it generalizes to: a manual
 wet-lab preparation (<code>PBSPreparation</code>, 5 steps, target
@@ -480,8 +604,9 @@ automated instrument-calibration procedure
 <code>automated</code>, plan hash <code>d89cced19be6</code>). Live
 re-compilation determinism check: <strong>Yes</strong>. Across both
 methods, 8 of 8 staged-gate evaluations pass. A demonstration provenance
-hash-chain (<code>src/methods_dsl/trust.py</code>) of length 3 verifies
-as <strong>Yes</strong>.</p>
+hash-chain
+(<code>src/template_methods_paper/methods_dsl/trust.py</code>) of length
+3 verifies as <strong>Yes</strong>.</p>
 <p>Contributions are <strong>methodological</strong> and
 <strong>architectural</strong>. On the methods side, we show that a
 controlled vocabulary expressed as typed dataclasses — not a parsed
@@ -492,7 +617,7 @@ DSL is exercised by a zero-mock test suite under the repository’s
 configured project coverage gate, generates 19 artifacts (1 figures, 7
 data files, 11 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash <code>a0f000565bef6a79</code>, build
-timestamp <code>2026-08-14T14:20:53Z</code>) into <span class="citation"
+timestamp <code>2026-09-13T22:27:42Z</code>) into <span class="citation"
 data-cites="sec:reproducibility">[@sec:reproducibility]</span>.</p>
 <p><strong>Keywords:</strong> methods paper, domain-specific language,
 controlled methods, deterministic compilation, staged validation,

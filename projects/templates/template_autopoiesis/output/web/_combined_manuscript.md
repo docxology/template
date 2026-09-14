@@ -47,7 +47,7 @@ flowchart LR
 
 ```mermaid
 %% noqa: docs-lint — {{...}} tokens are manuscript-variable placeholders
-%% (src/manuscript_variables.py) injected at render time, not literal mermaid
+%% (src/template_autopoiesis/manuscript/manuscript_variables.py) injected at render time, not literal mermaid
 flowchart TB
     A[primitive_domain: 5] --> EP[Effective product: 45 cells]
     T[track: 3] --> EP
@@ -87,7 +87,7 @@ that is copied once, it defines a **grammar** — a finite set of orthogonal
 a single integer seed plus that grammar to one specific, fully-formed child
 project. The grammar lives in `manuscript/config.yaml` under the
 `autopoiesis:` key and is parsed and validated by `parse_grammar()` in
-`src/grammar.py`. Two grammars that differ in even one option, one slot name,
+`src/template_autopoiesis/core/grammar.py`. Two grammars that differ in even one option, one slot name,
 or one dependency string hash to different `grammar_hash` values, because
 `Grammar.grammar_hash` is the truncated SHA-256 of a `sort_keys=True` JSON
 canonicalization of the whole grammar (`Grammar.canonical()`). Nothing about
@@ -180,7 +180,7 @@ Traceability is handled the same way, structurally rather than rhetorically.
 `materialize()` writes a `provenance.json` alongside every generated child
 recording a tree hash computed from the sorted `(path, content_hash)` pairs
 of every file it wrote (`tree_hash_from_content_hashes` in
-`src/integrity.py`), and `verify_child()` does not read that recorded hash
+`src/template_autopoiesis/gates/integrity.py`), and `verify_child()` does not read that recorded hash
 and trust it — it re-reads every file listed in `provenance.json` from disk,
 recomputes the tree hash from what is actually present, and compares the two.
 A file edited after generation, a file deleted after generation, or a
@@ -197,7 +197,7 @@ identically regardless of the order files were written or listed
 This project contributes, as a runnable, tested artifact rather than a
 proposal:
 
-- **A validated combinatoric grammar** (`src/grammar.py`) with explicit
+- **A validated combinatoric grammar** (`src/template_autopoiesis/core/grammar.py`) with explicit
   reserved-slot semantics. Grammars distinguish *effective* slots, which
   multiply into the space of meaningfully distinct children, from *reserved*
   slots (`figure_profile`, `qr_profile`, `integrity_profile`), which vary
@@ -208,7 +208,7 @@ proposal:
   new content — the honesty manifest checks this distinction explicitly
   rather than leaving it to prose.
 - **A seeded, entropy-free expansion function** (`expand()` in
-  `src/expand.py`) whose every selection is reconstructible from `(seed,
+  `src/template_autopoiesis/core/expand.py`) whose every selection is reconstructible from `(seed,
   slot_name, ordinal, options)` alone, with no hidden state.
 - **A materialize/verify pair** (`materialize()` / `verify_child()`) where
   verification is defined as *recomputation from disk*, not as reading
@@ -273,8 +273,8 @@ claimed by this paragraph.
 ### The A→E generation spine
 
 Generation proceeds through five stages, each implemented as a pure function
-in its own module (`src/grammar.py`, `src/expand.py`, `src/materialize.py`,
-`src/verify.py`, `src/sealing.py`). No stage depends on interactive state or
+in its own module (`src/template_autopoiesis/core/grammar.py`, `src/template_autopoiesis/core/expand.py`, `src/template_autopoiesis/gates/materialize.py`,
+`src/template_autopoiesis/gates/verify.py`, `src/template_autopoiesis/gates/sealing.py`). No stage depends on interactive state or
 network access; every stage takes an immutable input and returns an immutable
 (or file-system-materialized) output.
 
@@ -432,15 +432,15 @@ is derived deterministically by `child_name(spec)` as
 selected domain and a content-derived identity, without any counter or
 timestamp. `_build_tree` then assembles the file map that will be written:
 
-- **Kernel primitives.** `_vendor_kernel_sources` copies `src/primitives/
-  base.py` and `src/primitives/{domain}.py` for the spec's
+- **Kernel primitives.** `_vendor_kernel_sources` copies `src/template_autopoiesis/primitives/
+  base.py` and `src/template_autopoiesis/primitives/{domain}.py` for the spec's
   `primitive_domain`, rewriting `from src.primitives` / `from .primitives`
   imports to a bare `from primitives` so the copied module resolves
   correctly once it is no longer nested under the parent template's
   package. It also synthesizes a minimal `primitives/__init__.py` whose
   `collect_primitives()` imports only the one selected domain submodule —
   the child ships exactly one domain's kernel, not all five.
-- **Figures source**, vendored verbatim from `src/figures.py` when present.
+- **Figures source**, vendored verbatim from `src/template_autopoiesis/figures/figures.py` when present.
 - **Dependency vendoring.** `_resolve_deps` reads `dep_mode` out of the
   spec's selections (defaulting to `"vendor"`) and, for each name in
   `spec.deps`, resolves the corresponding path from
@@ -478,7 +478,7 @@ artifact Stage D re-derives from.
 
 ### Stage D — Verification
 
-`verify_child(child_root)` (implemented in `src/verify.py`, not
+`verify_child(child_root)` (implemented in `src/template_autopoiesis/gates/verify.py`, not
 `materialize.py`) loads `provenance.json`, reads back every file named in its
 `files` list, recomputes the tree hash from those live contents via the same
 `tree_hash_from_content_hashes` function used at materialization time, and
@@ -513,7 +513,7 @@ rather than introducing a parallel reporting shape.
 ### Property-based invariants
 
 Beyond the fixed example-based tests enumerated in the Honesty Contract's
-ground-truth table (§4), `tests/test_property_invariants.py` exercises the
+ground-truth table (§4), `tests/gates/test_property_invariants.py` exercises the
 expansion and materialization functions against Hypothesis-generated inputs
 using the property-based testing paradigm [@claessen2000quickcheck; @maciver2019hypothesis]:
 rather than asserting fixed input/output pairs, these tests assert
@@ -547,7 +547,7 @@ checked by content hash rather than by trusting the process that produced
 it. The tree hash's construction — sort every `(path, content)` pair
 lexicographically, join as `"path:content"`, and take one SHA-256 of the
 concatenation — is a flat, single-level structure, not a binary hash tree.
-`src/integrity.py` separately exposes a genuine binary `merkle_root()`
+`src/template_autopoiesis/gates/integrity.py` separately exposes a genuine binary `merkle_root()`
 (pairwise concatenate-and-hash up the tree, duplicating the final odd node
 when a level has odd cardinality), in the spirit of the hash-tree
 provenance idea introduced for digital signatures
@@ -588,10 +588,10 @@ honesty discipline the project asks of its own manuscript elsewhere.
 - **Effective product size** (reserved slots excluded): 45 cells
 - **Reserved slots** (3): `figure_profile, qr_profile, integrity_profile`
 
-![Total, effective, and reserved-only product size for the grammar at seed=42, generated by `fig_product_space_annotation` (`src/manuscript_figures.py`) directly from `Grammar.product_size` / `Grammar.effective_product_size` — not hand-typed.](../figures/fig_product_space.png){#fig:product_space width=80% fig-alt="Bar chart comparing total, effective, and reserved-only grammar product space."}
+![Total, effective, and reserved-only product size for the grammar at seed=42, generated by `fig_product_space_annotation` (`src/template_autopoiesis/manuscript/manuscript_figures.py`) directly from `Grammar.product_size` / `Grammar.effective_product_size` — not hand-typed.](../figures/fig_product_space.png){#fig:product_space width=80% fig-alt="Bar chart comparing total, effective, and reserved-only grammar product space."}
 
 Every row in the table above is a `GrammarSlot` parsed from `manuscript/config.yaml`
-by `parse_grammar()` (`src/grammar.py`). Each slot contributes a multiplicative
+by `parse_grammar()` (`src/template_autopoiesis/core/grammar.py`). Each slot contributes a multiplicative
 factor to `Grammar.product_size`, which is the raw cross-product of all option
 counts — not an estimate, but the literal `n *= len(s.options)` accumulation
 over every slot. The `Grammar.grammar_hash` property serialises the seed, every
@@ -607,11 +607,11 @@ copied into the child project, `track` selects the manuscript's analytical
 posture (`analytical`, `empirical`, or `hybrid`), and `section_set` selects
 which subset of manuscript sections is rendered (`minimal`, `standard`, or
 `extended`). The remaining three — `figure_profile`, `qr_profile`, and
-`integrity_profile` — are declared in `RESERVED_SLOTS` (`src/grammar.py`) and
+`integrity_profile` — are declared in `RESERVED_SLOTS` (`src/template_autopoiesis/core/grammar.py`) and
 govern only *presentational and sealing* behaviour: how many figures are
 generated, whether the sealed payload is rendered as a QR PNG, and whether the
 provenance hash is a flat SHA-256 or a Merkle root over per-file hashes
-(`src/integrity.py::merkle_root`). None of the three reserved slots changes
+(`src/template_autopoiesis/gates/integrity.py::merkle_root`). None of the three reserved slots changes
 which primitive kernel runs or what its output is, which is exactly why
 `Grammar.effective_product_size` — the number that matters when asking "how
 many *scientifically distinct* children can this grammar produce" — divides
@@ -628,7 +628,7 @@ own option counts; no other slot is capable of changing that ratio.
 | section_set | 3 | minimal, standard, extended |
 
 
-`grammar.effective_slots` (`src/grammar.py`) is exactly `grammar.slots` filtered
+`grammar.effective_slots` (`src/template_autopoiesis/core/grammar.py`) is exactly `grammar.slots` filtered
 against `RESERVED_SLOTS` — the same list rendered in the previous section, minus
 the three sealing/presentation dimensions. This is the space a reviewer should
 reason about when asking whether the grammar is a meaningful generator rather
@@ -645,10 +645,10 @@ Each domain in `- optimization
 - dynamics
 - statistics
 - signal
-- graph` is a Python module under `src/primitives/`
+- graph` is a Python module under `src/template_autopoiesis/primitives/`
 exporting a `PRIMITIVES: tuple[PrimitiveSpec, ...]` collected by
-`collect_primitives()` (`src/primitives/__init__.py`). A `PrimitiveSpec`
-(`src/primitives/base.py`) bundles a callable kernel, an example input, an
+`collect_primitives()` (`src/template_autopoiesis/primitives/__init__.py`). A `PrimitiveSpec`
+(`src/template_autopoiesis/primitives/base.py`) bundles a callable kernel, an example input, an
 expected output (or `None` when the check is structural rather than a fixed
 value), a numerical tolerance, and — for five of the eight kernels — a
 `negative_control` callable whose entire purpose is to fail the primary
@@ -658,7 +658,7 @@ eight primitive kernels across them (`test_total_primitive_count`): two in
 `optimization`, one in `dynamics`, one in `statistics`, two in `signal`, and two
 in `graph`.
 
-**Optimization.** `gradient_descent` (`src/primitives/optimization.py`) runs
+**Optimization.** `gradient_descent` (`src/template_autopoiesis/primitives/optimization.py`) runs
 explicit gradient descent on the convex quadratic
 `f(x) = 0.5 (x-c)^T A (x-c)`, whose gradient is `A(x-c)`. Because the problem is
 convex quadratic, its analytic minimiser is known in closed form — `x* = c`,
@@ -674,7 +674,7 @@ away from `c` instead of converging to it, giving the mutation gate (see
 Honesty Contract) something to detect if the sign were ever silently restored
 to "wrong."
 
-**Dynamics.** `damped_oscillator` (`src/primitives/dynamics.py`) integrates the
+**Dynamics.** `damped_oscillator` (`src/template_autopoiesis/primitives/dynamics.py`) integrates the
 damped harmonic oscillator ODE `x'' + 2*zeta*omega*x' + omega^2*x = 0` with
 explicit Euler stepping, and separately computes the closed-form under-damped
 envelope `x0 * exp(-zeta*omega*t)`. The test suite does not merely check that
@@ -693,7 +693,7 @@ flatness directly — so a broken damping term that decayed regardless of the
 damping value would be caught, not just a broken damping term that fails to
 decay at all.
 
-**Statistics.** `ols_fit` (`src/primitives/statistics.py`) solves ordinary
+**Statistics.** `ols_fit` (`src/template_autopoiesis/primitives/statistics.py`) solves ordinary
 least squares via the normal equations, `beta_hat = (X^T X)^{-1} X^T y`, solved
 with `numpy.linalg.solve` rather than an explicit matrix inverse. The example
 input is synthetic, not observational: fifty rows with an intercept column and
@@ -726,7 +726,7 @@ smoothing cannot increase variance
 signal exactly (`atol=1e-12`) — a stronger, algebraically-derived check than
 an arbitrary "looks different" comparison.
 
-**Graph.** `bfs_distances` (`src/primitives/graph.py`) computes shortest-path
+**Graph.** `bfs_distances` (`src/template_autopoiesis/primitives/graph.py`) computes shortest-path
 distances on a fixed five-node undirected graph (`A`–`E`, encoded as an
 adjacency dict) via a plain breadth-first queue. Because the graph is fixed and
 small, the expected distances from source `A` are enumerable by hand and are
@@ -753,7 +753,7 @@ unlikely to satisfy by accident. This mirrors the property-based testing
 tradition [@claessen2000quickcheck; @maciver2019hypothesis]: rather than asserting a single hand-picked
 input/output pair, the suite asserts properties that must hold across a
 class of inputs — the same style used at the grammar level in
-`tests/test_property_invariants.py`, where `hypothesis`-generated seeds are
+`tests/gates/test_property_invariants.py`, where `hypothesis`-generated seeds are
 used to check, for every seed drawn, that `product_size` really is the product
 of option counts and that `effective_product_size` does not exceed it.
 
@@ -777,7 +777,7 @@ Each child project:
 - **Grammar hash**: `a1f3e428cf1fb3e3`
 
 Both the test count and coverage percentage above are produced by
-`measure_test_summary()` (`src/manuscript_variables.py`), which shells out to
+`measure_test_summary()` (`src/template_autopoiesis/manuscript/manuscript_variables.py`), which shells out to
 this project's own `pytest` + `coverage` run (`--cov-branch`, matching the
 repository-root branch-coverage methodology) against `tests/` and `src/` and
 parses the real `passed` count and `coverage.json` totals from that
@@ -818,7 +818,7 @@ capability exists.  The abstract of this manuscript survived exactly this
 failure once — a hand-written test-count and coverage line that no
 generator step had computed — and was corrected by replacing the literal
 numbers with `528` / `95.33` tokens filled in at render
-time by `scripts/02_measure_test_coverage.py`.  `src/honesty.py` exists to
+time by `scripts/02_measure_test_coverage.py`.  `src/template_autopoiesis/core/honesty.py` exists to
 make that class of failure structurally harder: every load-bearing claim in
 this manuscript must resolve to a named function in a named file, and a
 dedicated module inspects the source tree to confirm that resolution rather
@@ -831,7 +831,7 @@ processes that produced them [@maturana_varela_1980] — organizational
 closure, not open-loop assertion. The honesty manifest is the narrow,
 literal, code-level analogue of that closure: the manuscript's claims about
 the code are checked *by the code*, not by a separate act of faith from the
-author. The analogy should not be over-read — `src/honesty.py` is a static
+author. The analogy should not be over-read — `src/template_autopoiesis/core/honesty.py` is a static
 AST scan, not a self-maintaining living system — but it is the reason this
 mechanism exists at all rather than a simple "trust me" comment block.
 
@@ -839,15 +839,15 @@ mechanism exists at all rather than a simple "trust me" comment block.
 
 | Claim | Evidence location | Test |
 |---|---|---|
-| Grammar parses | `src/grammar.py::parse_grammar` | `test_grammar_and_expand.py` |
-| Expansion is deterministic | `src/expand.py::expand`, `_digest_index` | `test_grammar_and_expand.py` |
-| Materialize writes files | `src/materialize.py::materialize` | `test_materialize.py` |
-| Integrity hashes | `src/integrity.py::tree_hash_from_content_hashes` | `test_integrity_and_verify.py` |
-| Verify recomputes | `src/verify.py::verify_child` | `test_integrity_and_verify.py` |
-| Primitives collected | `src/primitives/__init__.py::collect_primitives` | `test_primitives_registry.py` |
+| Grammar parses | `src/template_autopoiesis/core/grammar.py::parse_grammar` | `test_grammar_and_expand.py` |
+| Expansion is deterministic | `src/template_autopoiesis/core/expand.py::expand`, `_digest_index` | `test_grammar_and_expand.py` |
+| Materialize writes files | `src/template_autopoiesis/gates/materialize.py::materialize` | `test_materialize.py` |
+| Integrity hashes | `src/template_autopoiesis/gates/integrity.py::tree_hash_from_content_hashes` | `test_integrity_and_verify.py` |
+| Verify recomputes | `src/template_autopoiesis/gates/verify.py::verify_child` | `test_integrity_and_verify.py` |
+| Primitives collected | `src/template_autopoiesis/primitives/__init__.py::collect_primitives` | `test_primitives_registry.py` |
 
 Each row is not prose describing an intention — it is a key into
-`STRUCTURAL_EVIDENCE`, the dict in `src/honesty.py` that the code below
+`STRUCTURAL_EVIDENCE`, the dict in `src/template_autopoiesis/core/honesty.py` that the code below
 walks mechanically. If a row's evidence path stops existing, the manifest
 fails and `test_honesty.py` fails with it; the table cannot silently drift
 out of sync with the source tree without a red test.
@@ -929,7 +929,7 @@ all must fail every claim, or the checker has no teeth.
 `build_manifest`, then — if a `manuscript/` directory exists — reads every
 `*.md` file in it and scans for a fixed, case-insensitive regex over six
 absolute-certainty words and one hard percentage figure, defined verbatim in
-`_UNSUPPORTED_CLAIM_PATTERN` in `src/honesty.py` (deliberately not quoted
+`_UNSUPPORTED_CLAIM_PATTERN` in `src/template_autopoiesis/core/honesty.py` (deliberately not quoted
 here: a plain-text regex has no exemption for markdown code spans, and an
 earlier draft of this very paragraph reproduced the list inside backticks —
 which tripped the gate it was describing, during this session's own
@@ -944,12 +944,12 @@ that failure mode is closed instead by the `528` token
 substitution, a separate mechanism). Second, `unsupported_claims` *is*
 enforced, but only on one of the two paths through this module:
 `HonestyManifest.all_passed` is a conjunction over `evidence`,
-`missing_calls`, *and* `unsupported_claims`, and `src/cli.py::cmd_honesty`
+`missing_calls`, *and* `unsupported_claims`, and `src/template_autopoiesis/core/cli.py::cmd_honesty`
 calls `verify_honesty()` (the function that populates all three) and exits
 the process with code 1 whenever `all_passed` is false —
-`tests/test_cli.py::test_main_honesty_exits_zero` pins exactly this
+`tests/core/test_cli.py::test_main_honesty_exits_zero` pins exactly this
 behavior. The one place prose hits are *not* enforced is
-`test_verify_honesty_all_passed` in `tests/test_honesty.py`, which asserts
+`test_verify_honesty_all_passed` in `tests/core/test_honesty.py`, which asserts
 only `all(m.evidence.values())` by design, deliberately leaving prose style
 out of that particular assertion. Reading only that one test in isolation
 would suggest the prose scanner is a lint rather than a gate; reading the
@@ -961,7 +961,7 @@ CLI path shows it is a real gate on the `honesty` subcommand specifically.
 "does the claimed function exist" but "would a fake implementation of it get
 away with passing." It is parametrized via the
 `pytest.mark.parametrize("domain", list(KNOWN_DOMAINS))` decorator over all
-5 primitive domains from `src/grammar.py`, and runs three
+5 primitive domains from `src/template_autopoiesis/core/grammar.py`, and runs three
 checks per domain:
 
 1. **`test_stub_fails_gate_per_domain`** — `_stub_run_analysis` is a
@@ -1002,7 +1002,7 @@ with a stub and nothing downstream notices.
 ### What this buys, and what it does not
 
 The honesty manifest and the mutation gate are complementary, not
-redundant, but both are narrower than they might sound. `src/honesty.py`'s
+redundant, but both are narrower than they might sound. `src/template_autopoiesis/core/honesty.py`'s
 AST check covers exactly the six `STRUCTURAL_EVIDENCE` entries (`grammar
 parses`, `expand deterministic`, `materialize writes files`, `integrity
 hashes`, `verify recomputes`, `primitives collected`) — it does not scan
@@ -1011,7 +1011,7 @@ claim about a piece of code outside that list of six would not be caught by
 this mechanism. (This is not a hypothetical gap: an earlier draft of the
 Limitations section below claimed `generate_variables` exposed a
 `NOMINAL_OVER_EFFECTIVE` token that does not exist anywhere in
-`src/manuscript_variables.py`; the honesty AST check did not catch it
+`src/template_autopoiesis/manuscript/manuscript_variables.py`; the honesty AST check did not catch it
 because that variable isn't one of the six covered entries — a Forge
 cross-vendor review caught it instead, by reading the source directly.)
 `test_meta_teeth.py` similarly guarantees only that the acceptance tests
@@ -1039,8 +1039,8 @@ Reproducibility is not a claim this manuscript makes about itself; it is a
 property the code enforces on every run. Every number that appears below the
 Determinism heading — a1f3e428cf1fb3e3, 42, 528,
 95.33 — is a token substituted at render time by
-`src/manuscript_variables.py::generate_variables()` from a live grammar load
-and a live pytest run (`src/manuscript_variables.py::measure_test_summary()`).
+`src/template_autopoiesis/manuscript/manuscript_variables.py::generate_variables()` from a live grammar load
+and a live pytest run (`src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary()`).
 Neither function accepts a hardcoded literal as a fallback: if the subprocess
 pytest run cannot be parsed, `measure_test_summary` returns the string
 `"pending"` for both the test count and the coverage percentage rather than a
@@ -1060,7 +1060,7 @@ byte-identical selections on every invocation, and `materialize` produces a
 byte-identical child project tree. The determinism chain has three concrete
 steps, each implemented as a pure function with no random or wall-clock input:
 
-1. **Selection.** For every grammar slot, `src/expand.py::_digest_index()`
+1. **Selection.** For every grammar slot, `src/template_autopoiesis/core/expand.py::_digest_index()`
    builds the key
    `f"{seed}\x1f{slot_name}\x1f{ordinal}\x1f{','.join(options)}"` (a unit
    separator, `\x1f`, joins the fields so that no combination of seed/name/
@@ -1073,15 +1073,15 @@ steps, each implemented as a pure function with no random or wall-clock input:
    anywhere in the selection path.
 2. **Spec identity.** The resolved selections, together with the grammar hash
    and seed, are assembled into a `Spec` dataclass
-   (`src/expand.py::Spec`). Its `spec_hash` property serializes the full spec
+   (`src/template_autopoiesis/core/expand.py::Spec`). Its `spec_hash` property serializes the full spec
    to canonical JSON (`sort_keys=True`, compact separators) and takes the
    first sixteen hex characters of the SHA-256 of that string. Sorting keys
    before hashing means insertion order in the underlying dict cannot
    perturb the hash — only the actual selections can.
-3. **Tree identity.** `materialize()` (`src/materialize.py`) writes every
+3. **Tree identity.** `materialize()` (`src/template_autopoiesis/gates/materialize.py`) writes every
    vendored and generated file into the child project directory, then folds
    the complete `{relative_path: content}` mapping through
-   `src/integrity.py::tree_hash_from_content_hashes()`. That function sorts
+   `src/template_autopoiesis/gates/integrity.py::tree_hash_from_content_hashes()`. That function sorts
    the mapping lexicographically by path before hashing
    (`"\n".join(f"{k}:{v}" for k, v in sorted(...))`) specifically so that
    filesystem iteration order — which is not stable across
@@ -1092,7 +1092,7 @@ steps, each implemented as a pure function with no random or wall-clock input:
    the source and the seed are unchanged.
 
 Multiple children can be derived from one root seed without collisions: given
-a `base_seed` and an integer `index`, `src/expand.py::derive_seed()` hashes
+a `base_seed` and an integer `index`, `src/template_autopoiesis/core/expand.py::derive_seed()` hashes
 `f"{base_seed}\x1f{index}"` through SHA-256 and folds the first eight bytes to
 a new integer seed. `sample(grammar, count)` calls `expand()` once per derived
 seed, so a batch of `count` children is itself deterministic — the same
@@ -1106,7 +1106,7 @@ second one is optional. `materialize()` writes a `provenance.json`
 into the child root containing the schema version
 (`PROVENANCE_SCHEMA_VERSION = "autopoiesis/provenance/1"`), the full resolved
 spec (`spec.to_dict()`), the tree hash, and the sorted list of every file path
-that was written. This is the record `verify_child()` (`src/verify.py`)
+that was written. This is the record `verify_child()` (`src/template_autopoiesis/gates/verify.py`)
 recomputes against later.
 
 A child project can additionally be **sealed**: `scripts/seal_child.py` (and
@@ -1114,11 +1114,11 @@ the pipeline-facing wrapper `scripts/04_seal.py`, which seals the
 most-recently materialized child under `output/children/`) reads
 `provenance.json`, re-runs `verify_child()` against the live files as a
 pre-seal sanity check, and writes `seal.json` alongside it. The seal payload —
-built by `src/sealing.py::build_payload()` — is a compact JSON object
+built by `src/template_autopoiesis/gates/sealing.py::build_payload()` — is a compact JSON object
 `{"spec_hash": ..., "tree_hash": ..., "seed": ...}`. A shorter,
 colon-delimited variant (`build_barcode_payload()`, truncating each hash to
 its first eight hex characters) exists for embedding into a QR code or
-barcode image via `src/sealing.py::qr_matrix()` / `qr_image()`, so that a
+barcode image via `src/template_autopoiesis/gates/sealing.py::qr_matrix()` / `qr_image()`, so that a
 printed or exported artifact can carry a scannable, self-describing pointer
 back to the exact spec and tree hash that produced it. Both the QR encoder and
 its optional decode path (`read_qr_matrix()`, which depends on `pyzbar` and
@@ -1129,12 +1129,12 @@ an empty string. The seal itself does not gate materialization — a child
 project is fully valid and independently verifiable from `provenance.json`
 alone; `seal.json` is an additive, portable pointer, not a second source of
 truth. Sealing does not currently run inside `verify_child_full()`; it is a
-separate check (`src/verify.py::verify_seal()`) invoked only when a caller
+separate check (`src/template_autopoiesis/gates/verify.py::verify_seal()`) invoked only when a caller
 explicitly asks whether a seal exists, parses, and carries a `spec_hash`.
 
 ### SHA-256 vs. Merkle integrity profiles
 
-`src/integrity.py` provides two distinct ways of turning a collection of
+`src/template_autopoiesis/gates/integrity.py` provides two distinct ways of turning a collection of
 hashes into one summary digest, and the project does not conflate them:
 
 - **`tree_hash_from_content_hashes()`** — the profile used by
@@ -1155,13 +1155,13 @@ hashes into one summary digest, and the project does not conflate them:
   tree-hash profile does not have.
 
 Both are exercised in this codebase, but at present the materialize/verify
-path in `src/materialize.py` and `src/verify.py` uses the flat,
+path in `src/template_autopoiesis/gates/materialize.py` and `src/template_autopoiesis/gates/verify.py` uses the flat,
 order-independent tree hash exclusively; `merkle_root()` is available in
-`src/integrity.py` and covered by its own tests as an independent integrity
+`src/template_autopoiesis/gates/integrity.py` and covered by its own tests as an independent integrity
 primitive, not yet as the provenance root written into `provenance.json`. A
 manuscript describing this project should not claim Merkle-tree provenance for
 `provenance.json` today — that would be exactly the kind of prose-outruns-code
-gap this project's honesty checks exist to catch (`src/honesty.py`).
+gap this project's honesty checks exist to catch (`src/template_autopoiesis/core/honesty.py`).
 
 ### Recompute / verify workflow
 
@@ -1179,7 +1179,7 @@ uv run python scripts/autopoiesis.py verify output/children/<child_name>
 uv run python scripts/seal_child.py output/children/<child_name>
 ```
 
-`verify` (`src/cli.py::cmd_verify` → `src/verify.py::verify_child_full()`)
+`verify` (`src/template_autopoiesis/core/cli.py::cmd_verify` → `src/template_autopoiesis/gates/verify.py::verify_child_full()`)
 performs four checks in sequence and exits non-zero if any fails:
 `provenance_exists`, `provenance_parseable`, `all_files_present` (every path
 listed in `provenance.json["files"]` still exists on disk), and
@@ -1208,7 +1208,7 @@ without trusting any claim made in this document.
   but imported unconditionally at the top of `test_property_invariants.py` —
   a real dependency of that test module, not a soft, try/except-guarded one;
   see Methods)
-- `qrcode`, `pillow` (optional — `src/sealing.py`'s QR/barcode payload
+- `qrcode`, `pillow` (optional — `src/template_autopoiesis/gates/sealing.py`'s QR/barcode payload
   encoding degrades to a deterministic stub when unavailable; `pyzbar` is
   needed only for the optional decode path)
 
@@ -1256,7 +1256,7 @@ This section states what the exemplar does *not* do, alongside what it does.
 Coverage and test-count figures are not restated as literal numbers here —
 those live only in the `528` / `95.33` tokens, resolved
 at render time from a live measurement
-(`src/manuscript_variables.py::measure_test_summary`), not hand-typed.
+(`src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary`), not hand-typed.
 
 ### Reserved slots are excluded from the effective product space
 
@@ -1271,7 +1271,7 @@ consequence: distinct seeds can produce a nominally distinct `spec_hash`
 while materializing byte-identical children, since only three slots vary
 output. That inflation, 360 nominal vs. 45
 effective, is disclosed rather than hidden: `generate_variables`
-(`src/manuscript_variables.py`) exposes both `PRODUCT_SIZE` and
+(`src/template_autopoiesis/manuscript/manuscript_variables.py`) exposes both `PRODUCT_SIZE` and
 `EFFECTIVE_PRODUCT_SIZE` as separate tokens, so nowhere in this manuscript
 can the larger, nominal number be quoted without the smaller, effective one
 appearing beside it. Wiring the reserved slots into `materialize()` is an
@@ -1310,7 +1310,7 @@ constitutive components through its own operation [@maturana_varela_1980].
 Here the grammar (`manuscript/config.yaml`) is fixed input; `parse_grammar`
 and `expand` are pure functions of that input plus a seed; no code path
 feeds a materialized child back into the grammar or rewrites
-`src/grammar.py`. Children are causally downstream of the grammar — the
+`src/template_autopoiesis/core/grammar.py`. Children are causally downstream of the grammar — the
 reverse direction does not occur in the current codebase. The name is a
 provocation about what genuine self-production would require, not a claim
 this exemplar achieves it.
@@ -1319,7 +1319,7 @@ this exemplar achieves it.
 
 `verify_child` recomputes a tree hash from the files *listed inside*
 `provenance.json` and compares it against the `tree_hash` field stored in
-that same file (`src/verify.py`, `src/materialize.py`). Both the manifest
+that same file (`src/template_autopoiesis/gates/verify.py`, `src/template_autopoiesis/gates/materialize.py`). Both the manifest
 and the expected hash are self-reported at materialization time; nothing
 external anchors them. An actor who can rewrite `provenance.json` can edit
 its `files` list and recompute a matching hash from whatever content they
@@ -1343,12 +1343,12 @@ trio — first `sealing.py`/`verify.py`/`cli.py`, then, after those were
 hardened, `common.py`/`figures.py`/`cover_art.py`. As of this measurement no
 module sits below the 90% branch-coverage line
 ([@fig:coverage_by_module]): dedicated tests were added for `common.py`'s
-`trunc()` clipping branch and `CheckReport.failed` (`tests/test_common.py`,
+`trunc()` clipping branch and `CheckReport.failed` (`tests/core/test_common.py`,
 new this session), `figures.py`'s `list`/`tuple` input branch of
 `_first_plottable_array`, the generic `repr()` fallback in
 `_scalar_summary_lines`, and the array-plotting branch of
-`render_primitive_figure` (`tests/test_figures.py`), and `cover_art.py`'s
-QR-seal drawing branch (`tests/test_cover_art.py`,
+`render_primitive_figure` (`tests/figures/test_figures.py`), and `cover_art.py`'s
+QR-seal drawing branch (`tests/figures/test_cover_art.py`,
 `test_render_cover_with_grammar_hash_*`) — the same branch identified above
 as running in production but previously untested.
 
@@ -1364,8 +1364,8 @@ floor (`--cov-fail-under=90`), and the aggregate 95.33 alone would
 obscure exactly where the remaining, smaller gaps live — which is the reason
 this section, and [@fig:coverage_by_module], exist as a per-module view
 rather than trusting one headline number. Property-based tests
-(`tests/test_property_invariants.py`, Hypothesis) and a stress/edge suite
-(`tests/test_stress_edge_cases.py`) cover invariants like boundary seeds and
+(`tests/gates/test_property_invariants.py`, Hypothesis) and a stress/edge suite
+(`tests/core/test_stress_edge_cases.py`) cover invariants like boundary seeds and
 all-reserved-slot configurations [@claessen2000quickcheck;
 @maciver2019hypothesis], but generated inputs are not a substitute for
 direct tests of the specific branches named above.
@@ -1384,7 +1384,7 @@ An earlier draft of this section reported that the title-page cover image
 omitted the originally envisioned QR seal, gradient glow, and seed-derived
 dot placement. That is no longer accurate and is corrected here rather than
 left to silently drift: `scripts/generate_cover_art.py` now calls
-`render_cover(..., grammar_hash=grammar.grammar_hash)`, and `src/cover_art.py`
+`render_cover(..., grammar_hash=grammar.grammar_hash)`, and `src/template_autopoiesis/figures/cover_art.py`
 draws all three elements unconditionally except the QR seal, which is drawn
 whenever `grammar_hash` is not `None` — the shipped `paper.cover.image`
 (`../figures/cover_art.png`) is generated by exactly this call, so the
@@ -1392,9 +1392,9 @@ rendered title page carries a real gradient glow, real seed-derived dot
 scatter, and a real QR-style pixel grid encoding `a1f3e428cf1fb3e3` with the
 hash printed as a text label beneath it. An earlier draft of this section
 also noted that no test called `render_cover` with an explicit
-`grammar_hash=`, leaving the QR-drawing branch (`src/cover_art.py`, the `if
+`grammar_hash=`, leaving the QR-drawing branch (`src/template_autopoiesis/figures/cover_art.py`, the `if
 grammar_hash is not None:` block) exercised in production but untested; that
-gap is now closed by `tests/test_cover_art.py::test_render_cover_with_grammar_hash_*`,
+gap is now closed by `tests/figures/test_cover_art.py::test_render_cover_with_grammar_hash_*`,
 added this session (see "Coverage is uneven across modules" below).
 
 Separately, for most of this project's life `manuscript/references.bib` held
@@ -1439,7 +1439,7 @@ that a bare bibliography entry doesn't carry:
 - **Claessen & Hughes (2000), QuickCheck** [@claessen2000quickcheck] and
   **MacIver et al. (2019), Hypothesis** [@maciver2019hypothesis] — the
   property-based-testing lineage this project's own test suite descends
-  from. `tests/test_property_invariants.py` uses Hypothesis directly (not
+  from. `tests/gates/test_property_invariants.py` uses Hypothesis directly (not
   merely an homage) to check invariants like "expansion is deterministic for
   any seed" across generated inputs rather than hand-picked examples.
 - **Lamb & Zacchiroli (2022), Reproducible Builds** [@reproducible_builds] —
@@ -1449,7 +1449,7 @@ that a bare bibliography entry doesn't carry:
   bit-for-bit-identical (or hash-identical) output, and that this is a
   supply-chain-integrity property, not merely a convenience.
 - **Merkle (1987), digital signatures / hash trees** [@merkle_tree_provenance] —
-  the theoretical basis for `src/integrity.py`'s content-addressed
+  the theoretical basis for `src/template_autopoiesis/gates/integrity.py`'s content-addressed
   provenance: a tree of hashes lets a verifier recompute and confirm the
   integrity of a large structure from its leaves up, without trusting the
   producer's say-so. This project's `integrity_profile: merkle` grammar slot
