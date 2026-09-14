@@ -97,7 +97,7 @@ def categorize_documentation(md_files: list[Path], repo_root: Path) -> dict[str,
         rel_path = str(md_file.relative_to(repo_root))
 
         # Check if this file belongs to a specific project
-        project_category = _get_project_category(rel_path, project_names)
+        project_category = get_project_category(rel_path, project_names)
         if project_category:
             categories[project_category].append(rel_path)
             continue
@@ -123,7 +123,7 @@ def categorize_documentation(md_files: list[Path], repo_root: Path) -> dict[str,
     return dict(categories)
 
 
-def _get_project_category(rel_path: str, project_names: set[str]) -> str | None:
+def get_project_category(rel_path: str, project_names: set[str]) -> str | None:
     """Determine if a file belongs to a specific project and return category."""
     # Check if path contains projects/{name}/
     path_parts = Path(rel_path).parts
@@ -304,12 +304,12 @@ def discover_project_documentation(repo_root: Path) -> dict[str, dict[str, Any]]
                     project_docs[project.name]["test_docs"].append(doc_info)
 
         # Calculate statistics
-        project_docs[project.name]["statistics"] = _calculate_project_stats(project_docs[project.name])
+        project_docs[project.name]["statistics"] = calculate_project_stats(project_docs[project.name])
 
     return project_docs
 
 
-def _calculate_project_stats(project_data: dict[str, Any]) -> dict[str, int]:
+def calculate_project_stats(project_data: dict[str, Any]) -> dict[str, int]:
     """Calculate documentation statistics for a project."""
     # documentation_files already contains all docs; sub-lists are subsets of it.
     # Use only the sub-lists plus any uncategorized docs to avoid double-counting.

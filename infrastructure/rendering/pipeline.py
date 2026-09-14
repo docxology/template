@@ -19,25 +19,25 @@ from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging.utils import get_logger, log_live_resource_usage, log_success
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.rendering._combined_exports import (  # noqa: F401
-    combined_source_files as _combined_source_files,
-    html_combined_source_files as _html_combined_source_files,
-    render_combined_docx as _render_combined_docx,
-    render_combined_epub as _render_combined_epub,
-    render_combined_outputs as _render_combined_outputs,
+    combined_source_files as combined_source_files,
+    html_combined_source_files as html_combined_source_files,
+    render_combined_docx as render_combined_docx,
+    render_combined_epub as render_combined_epub,
+    render_combined_outputs as render_combined_outputs,
 )
 from infrastructure.rendering._manuscript_source import (  # noqa: F401
-    clean_stale_render_deliverables as _clean_stale_render_deliverables,
-    has_generated_manuscript_ordering as _has_generated_manuscript_ordering,
-    is_project_resolved as _is_project_resolved,
-    load_project_config_yaml as _load_project_config_yaml,
-    log_manuscript_composition as _log_manuscript_composition,
-    render_individual_files as _render_individual_files,
-    resolve_manuscript_dir as _resolve_manuscript_dir,
-    run_manuscript_variable_script as _run_manuscript_variable_script,
-    run_override_script as _run_override_script,
-    unresolved_config_tokens as _unresolved_config_tokens,
-    validate_latex_packages as _validate_latex_packages,
-    verify_config_tokens_resolved as _verify_config_tokens_resolved,
+    clean_stale_render_deliverables as clean_stale_render_deliverables,
+    has_generated_manuscript_ordering as has_generated_manuscript_ordering,
+    is_project_resolved as is_project_resolved,
+    load_project_config_yaml as load_project_config_yaml,
+    log_manuscript_composition as log_manuscript_composition,
+    render_individual_files as render_individual_files,
+    resolve_manuscript_dir as resolve_manuscript_dir,
+    run_manuscript_variable_script as run_manuscript_variable_script,
+    run_override_script as run_override_script,
+    unresolved_config_tokens as unresolved_config_tokens,
+    validate_latex_packages as validate_latex_packages,
+    verify_config_tokens_resolved as verify_config_tokens_resolved,
 )
 from infrastructure.rendering._pipeline_summary import (
     generate_rendering_summary,
@@ -64,16 +64,16 @@ class RenderPipelineDependencies:
     """Explicit collaborators for rendering orchestration and behavior tests."""
 
     resolve_project: Callable[[Path, str], Path] = resolve_project_root
-    hydrate_manuscript: Callable[..., int] = _run_manuscript_variable_script
+    hydrate_manuscript: Callable[..., int] = run_manuscript_variable_script
     write_bookends: Callable[..., None] = _write_transmission_bookends
-    run_override: Callable[[Path, Path], int] = _run_override_script
-    validate_latex: Callable[..., int] = _validate_latex_packages
+    run_override: Callable[[Path, Path], int] = run_override_script
+    validate_latex: Callable[..., int] = validate_latex_packages
     verify_figures: Callable[[Path, Path], dict[str, Any]] = verify_figures_exist
     discover_manuscript: Callable[[Path], list[Path]] = discover_manuscript_files
-    load_project_config: Callable[[Path], dict[str, Any] | None] = _load_project_config_yaml
+    load_project_config: Callable[[Path], dict[str, Any] | None] = load_project_config_yaml
     manager_factory: Callable[..., RenderManager] = RenderManager
-    render_individual: Callable[..., tuple[int, list[str]]] = _render_individual_files
-    render_combined: Callable[..., None] = _render_combined_outputs
+    render_individual: Callable[..., tuple[int, list[str]]] = render_individual_files
+    render_combined: Callable[..., None] = render_combined_outputs
     generate_summary: Callable[..., dict[str, Any]] = generate_rendering_summary
     log_summary: Callable[[dict[str, Any]], None] = log_rendering_summary
     verify_outputs: Callable[..., bool] = verify_render_outputs
@@ -107,7 +107,7 @@ def _render_pipeline_impl(
         return 1
 
     try:
-        manuscript_dir = _resolve_manuscript_dir(project_root)
+        manuscript_dir = resolve_manuscript_dir(project_root)
     except ValidationError as exc:
         # config.yaml feeds the PDF title page; an unresolved {{TOKEN}} there
         # would print verbatim on the published cover. Fail closed instead.
@@ -148,7 +148,7 @@ def _render_pipeline_impl(
         logger.error("No manuscript files found; refusing to validate prior render outputs")
         return 1
 
-    _log_manuscript_composition(source_files)
+    log_manuscript_composition(source_files)
 
     try:
         project_yaml = deps.load_project_config(manuscript_dir)
@@ -194,7 +194,7 @@ def _render_pipeline_impl(
 
     md_files = [f for f in source_files if f.suffix == ".md"]
     try:
-        _clean_stale_render_deliverables(manager, source_files, project_name)
+        clean_stale_render_deliverables(manager, source_files, project_name)
     except OSError as exc:
         logger.error("Could not remove stale render deliverable: %s", exc)
         return 1

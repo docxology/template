@@ -32,7 +32,7 @@ from infrastructure.llm.templates.manuscript import (
 )
 
 from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptInputMetrics, estimate_tokens
-from infrastructure.llm.review.quality import validate_review_quality, _is_small_model, ReviewType
+from infrastructure.llm.review.quality import validate_review_quality, is_small_model, ReviewType
 
 # Cross-subsystem import: llm/review depends on validation/pdf_validator for text extraction.
 # This is an intentional seam — PDF text extraction lives in validation because it is also
@@ -107,7 +107,7 @@ def extract_manuscript_text(
         raise PDFValidationError(f"Failed to read PDF file {pdf_path}: {e}") from e
 
 
-def _build_off_topic_retry_prompt(prompt: str, had_off_topic: bool) -> str:
+def build_off_topic_retry_prompt(prompt: str, had_off_topic: bool) -> str:
     """Build a retry prompt, prepending an off-topic guard when the prior attempt drifted."""
     if not had_off_topic:
         return prompt
@@ -188,7 +188,7 @@ def _stream_with_heartbeat(
             raise block_err from e
 
 
-def _deduplicate_response(response: str, best_response: str) -> str:
+def deduplicate_response(response: str, best_response: str) -> str:
     """Deduplicate a review response if heavily repetitive; fall back to best_response."""
     has_rep, _, unique_ratio = detect_repetition(response, similarity_threshold=0.8)
     if not (has_rep and unique_ratio < 0.3):
@@ -237,7 +237,7 @@ def generate_review_with_metrics(
     client.reset()
     template = template_class()
     prompt = template.render(text=text, max_tokens=max_tokens)
-    adjusted_temp = temperature + 0.1 if _is_small_model(model_name) else temperature
+    adjusted_temp = temperature + 0.1 if is_small_model(model_name) else temperature
     options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
 
     start_time = time.time()
@@ -253,7 +253,7 @@ def generate_review_with_metrics(
                 client.reset()
                 adjusted_temp = min(temperature + 0.15 * attempt, 0.8)
                 options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
-                current_prompt = _build_off_topic_retry_prompt(prompt, had_off_topic)
+                current_prompt = build_off_topic_retry_prompt(prompt, had_off_topic)
 
             response = _stream_with_heartbeat(client, current_prompt, options, review_name, max_tokens, config)
 
@@ -287,7 +287,7 @@ def generate_review_with_metrics(
     # 'response' holds the loop's final state: either the last successful attempt, or
     # best_response (set at line 263 when all attempts failed validation). Assign to a
     # named variable to make this post-loop dependency explicit.
-    final_response = _deduplicate_response(response, best_response)
+    final_response = deduplicate_response(response, best_response)
 
     metrics.generation_time_seconds = time.time() - start_time
     metrics.output_chars = len(final_response)
@@ -325,7 +325,7 @@ def generate_translation(
         logger.info("    Consider: export LLM_REVIEW_TIMEOUT=300 (5 minutes) for better reliability")
     template = ManuscriptTranslationAbstract()
     prompt = template.render(text=text, target_language=target_language, max_tokens=max_tokens)
-    temperature = 0.4 if _is_small_model(model_name) else 0.3
+    temperature = 0.4 if is_small_model(model_name) else 0.3
     options = GenerationOptions(temperature=temperature, max_tokens=max_tokens)
 
     start_time = time.time()

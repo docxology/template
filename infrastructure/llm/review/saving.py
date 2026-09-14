@@ -7,9 +7,9 @@ from pathlib import Path
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.llm.review.formatting import (
-    _build_combined_review_content,
-    _build_review_header,
-    _build_review_metadata,
+    build_combined_review_content,
+    build_review_header,
+    build_review_metadata,
 )
 from infrastructure.llm.review.metrics import ReviewMetrics, SessionMetrics
 from infrastructure.llm.templates import TRANSLATION_LANGUAGES
@@ -50,7 +50,7 @@ def save_review_outputs(
         filepath = output_dir / f"{name}.md"
         try:
             metrics = session_metrics.reviews.get(name, ReviewMetrics())
-            header = _build_review_header(name, model_name, date_str, metrics)
+            header = build_review_header(name, model_name, date_str, metrics)
             _tmp = filepath.with_suffix(filepath.suffix + ".tmp")
             try:
                 _tmp.write_text(header + content, encoding="utf-8")
@@ -75,7 +75,7 @@ def save_review_outputs(
     # Save combined review
     combined_path = output_dir / "combined_review.md"
     try:
-        combined_content = _build_combined_review_content(
+        combined_content = build_combined_review_content(
             reviews,
             model_name,
             pdf_path,
@@ -98,7 +98,7 @@ def save_review_outputs(
     # Save metadata
     metadata_path = output_dir / "review_metadata.json"
     try:
-        metadata = _build_review_metadata(
+        metadata = build_review_metadata(
             reviews,
             model_name,
             pdf_path,
@@ -155,7 +155,7 @@ def save_single_review(
     # Create header with metadata
     timestamp = datetime.now().isoformat()
     date_str = timestamp[:10]
-    header = _build_review_header(review_name, model_name, date_str, metrics)
+    header = build_review_header(review_name, model_name, date_str, metrics)
 
     # Write file
     try:

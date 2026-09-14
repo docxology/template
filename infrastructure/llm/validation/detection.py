@@ -9,8 +9,8 @@ from typing import Any, NamedTuple
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.validation.similarity import (
-    _calculate_similarity,
-    _normalize_for_comparison,
+    calculate_similarity,
+    normalize_for_comparison,
 )
 
 logger = get_logger(__name__)
@@ -56,7 +56,7 @@ def calculate_unique_content_ratio(text: str, chunk_size: int = 200) -> float:
         return 1.0
 
     # Count unique chunks using normalized comparison
-    normalized_chunks = [_normalize_for_comparison(c) for c in chunks]
+    normalized_chunks = [normalize_for_comparison(c) for c in chunks]
     unique_chunks = set()
 
     for normalized in normalized_chunks:
@@ -115,7 +115,7 @@ def detect_repetition(
         return RepetitionResult(False, [], 1.0)
 
     # Normalize chunks for comparison
-    normalized_chunks = [_normalize_for_comparison(c) for c in chunks]
+    normalized_chunks = [normalize_for_comparison(c) for c in chunks]
 
     # Find duplicates using improved similarity methods
     duplicates = []
@@ -135,7 +135,7 @@ def detect_repetition(
     # Check for high semantic similarity using improved methods
     for i in range(len(normalized_chunks)):
         for j in range(i + 1, len(normalized_chunks)):
-            similarity = _calculate_similarity(normalized_chunks[i], normalized_chunks[j], method=similarity_method)
+            similarity = calculate_similarity(normalized_chunks[i], normalized_chunks[j], method=similarity_method)
             if similarity >= similarity_threshold:
                 if chunks[j] not in duplicates:
                     duplicates.append(chunks[j][:100] + "..." if len(chunks[j]) > 100 else chunks[j])
@@ -171,14 +171,14 @@ def _deduplicate_paragraphs(
             result_paragraphs.append(para)
             continue
 
-        normalized = _normalize_for_comparison(para)
+        normalized = normalize_for_comparison(para)
         # Use larger comparison window for paragraphs
         key = normalized[:300] if len(normalized) > 300 else normalized
 
         # Check similarity against existing paragraphs
         is_duplicate = False
         for existing_key, existing_data in seen_content.items():
-            similarity = _calculate_similarity(key, existing_key, method="hybrid")
+            similarity = calculate_similarity(key, existing_key, method="hybrid")
             if similarity >= similarity_threshold:
                 existing_data["count"] += 1
                 if existing_data["count"] >= max_repetitions:
@@ -273,13 +273,13 @@ def deduplicate_sections(
 
             # Use larger comparison window (500 chars instead of 200)
             comparison_text = header + content[:500]
-            normalized = _normalize_for_comparison(comparison_text)
+            normalized = normalize_for_comparison(comparison_text)
 
             # Check similarity against existing sections
             is_duplicate = False
 
             for existing_key, existing_data in seen_sections.items():
-                similarity = _calculate_similarity(normalized, existing_key, method="hybrid")
+                similarity = calculate_similarity(normalized, existing_key, method="hybrid")
                 if similarity >= similarity_threshold:
                     existing_data["count"] += 1
                     if existing_data["count"] >= max_repetitions:
