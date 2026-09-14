@@ -146,8 +146,9 @@ This creates `.venv/`, pins the Python version, and installs all packages. Takes
 ## Step 3: Install pre-commit hooks (mirrors CI lint)
 
 ```bash
-pre-commit install
-pre-commit install --hook-type pre-push
+# after `uv sync` so pre-commit resolves from the project environment
+uv run pre-commit install
+uv run pre-commit install --hook-type pre-push
 ```
 
 These run Ruff, mypy, Bandit, and smoke tests automatically on every commit and push.
@@ -251,6 +252,15 @@ docs/               Documentation corpus (hierarchy and index in docs/AGENTS.md
 | Pipeline stage fails | See [`docs/guides/startup-and-setup.md`](docs/guides/startup-and-setup.md) §Triage |
 
 Full troubleshooting: [`docs/operational/troubleshooting/README.md`](docs/operational/troubleshooting/README.md)
+
+### Optional: Graft local code graph
+
+Like CodeGraph and LEANN, Graft is an optional local navigation aid for agents
+understanding how the repo works or scoping a change (`graft map`,
+`graft ask "<question>" --source`, `graft grep "<literal>"`). It is **not** a
+dependency, pipeline stage, CI requirement, or manuscript evidence source; its
+cache directory is git-ignored. See root [`AGENTS.md`](AGENTS.md) for the
+CodeGraph/LEANN local-only wording precedent.
 
 ## Agent orientation ladder
 
