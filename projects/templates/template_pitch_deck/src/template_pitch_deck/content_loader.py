@@ -14,7 +14,7 @@ import yaml
 
 from infrastructure.rendering.slide_deck import DeckContent, Slide
 
-from token_resolution import resolve_tokens
+from template_pitch_deck.token_resolution import resolve_tokens
 
 
 def load_deck_yaml(path: Path) -> dict:

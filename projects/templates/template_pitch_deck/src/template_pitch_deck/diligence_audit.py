@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from token_resolution import find_tokens
+from template_pitch_deck.token_resolution import find_tokens
 
 FACT_TOKEN_PREFIXES: tuple[str, ...] = ("PITCH_SUBJECT_", "EXEMPLAR_", "SECOND_EXEMPLAR_", "INFRA_", "PITCH_DECK_")
 
