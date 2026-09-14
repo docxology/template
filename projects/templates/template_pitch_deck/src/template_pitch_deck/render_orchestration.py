@@ -10,11 +10,11 @@ from typing import cast
 
 import yaml
 
-from content_loader import build_deck_content, load_deck_yaml
-from deck_audit import audit_deck
-from deck_tokens import build_deck_tokens
-from diligence_audit import uncited_fact_slides
-from standalone_slides import attach_qr_urls, write_standalone_slides
+from template_pitch_deck.content_loader import build_deck_content, load_deck_yaml
+from template_pitch_deck.deck_audit import audit_deck
+from template_pitch_deck.deck_tokens import build_deck_tokens
+from template_pitch_deck.diligence_audit import uncited_fact_slides
+from template_pitch_deck.standalone_slides import attach_qr_urls, write_standalone_slides
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.slide_deck import (

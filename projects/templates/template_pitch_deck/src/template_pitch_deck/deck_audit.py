@@ -6,9 +6,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from cliche_lint import lint_deck_texts
-from content_loader import raw_deck_texts
-from token_resolution import UnresolvedTokenError, resolve_deck_tokens
+from template_pitch_deck.cliche_lint import lint_deck_texts
+from template_pitch_deck.content_loader import raw_deck_texts
+from template_pitch_deck.token_resolution import UnresolvedTokenError, resolve_deck_tokens
 
 
 @dataclass(frozen=True)

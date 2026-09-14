@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from paths import locate_repo_root, project_root
+from template_pitch_deck.paths import locate_repo_root, project_root
 
 
 def test_locate_repo_root_finds_real_repo_from_this_project():

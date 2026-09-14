@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from cliche_lint import DENYLIST, lint_deck_texts, lint_text
+from template_pitch_deck.cliche_lint import DENYLIST, lint_deck_texts, lint_text
 
 
 def test_denylist_has_at_least_fifteen_terms():

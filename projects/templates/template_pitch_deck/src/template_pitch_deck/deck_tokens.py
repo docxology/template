@@ -18,8 +18,8 @@ from pathlib import Path
 from typing import cast
 
 import yaml
-from coverage_chart_data import COUNTS_ROW_RE
-from infra_facts import build_infra_tokens
+from template_pitch_deck.coverage_chart_data import COUNTS_ROW_RE
+from template_pitch_deck.infra_facts import build_infra_tokens
 
 from infrastructure.project.public_scope import public_project_names
 from infrastructure.publishing.status_report import PublicationState, compile_publishing_status
