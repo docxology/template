@@ -9,6 +9,19 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Entry-doc accuracy and backlog reconciliation (2026-09-14)
+
+- `START_HERE.md` Step 3 now uses `uv run pre-commit install ...` (STARTHERE-PRECOMMIT-1)
+  and documents the optional local Graft code graph as navigation-only alongside
+  CodeGraph/LEANN (STARTHERE-GRAFT-1).
+- `check_documented_commands` now scans root `START_HERE.md`, `CLAUDE.md`, and
+  `AGENTS.md` in addition to `README.md` and `docs/*.md`, with a negative control
+  (GRAFT-DOCACCURACY-1; scanner landed, drift triage pending).
+- Backlog rows closed as verified-complete on main: `CONFTEST-DUP-1` (duplicates
+  already removed; `repo_root`/`MPLBACKEND` defined only in the root conftest) and
+  `SEC-SECRET-PATTERNS-1` (Slack/HuggingFace token patterns present in
+  `infrastructure/project/git_guards.py` since d5a375f5a).
+
 ### Receipt cleanup and docs accuracy pass (2026-09-11)
 
 - Deleted every dated point-in-time receipt from the repository per
