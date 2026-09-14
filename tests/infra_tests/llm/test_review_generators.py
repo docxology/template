@@ -10,8 +10,8 @@ from pytest_httpserver import HTTPServer
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import OllamaClientConfig
 from infrastructure.llm.review.generation import (
-    _build_off_topic_retry_prompt,
-    _deduplicate_response,
+    build_off_topic_retry_prompt,
+    deduplicate_response,
 )
 from infrastructure.llm.review.generator import (
     extract_manuscript_text,
@@ -122,7 +122,7 @@ class TestExtractManuscriptText:
 class TestGenerationHelpers:
     @pytest.mark.parametrize("had_off_topic", [False, True])
     def test_build_off_topic_retry_prompt(self, had_off_topic):
-        result = _build_off_topic_retry_prompt("Original prompt", had_off_topic=had_off_topic)
+        result = build_off_topic_retry_prompt("Original prompt", had_off_topic=had_off_topic)
         if had_off_topic:
             assert "IMPORTANT" in result or "Original prompt" in result
         else:
@@ -138,7 +138,7 @@ class TestGenerationHelpers:
         ],
     )
     def test_deduplicate_response_non_repetitive(self, response, fallback, expect_same):
-        result = _deduplicate_response(response, fallback)
+        result = deduplicate_response(response, fallback)
         if expect_same:
             assert result == response
         else:
@@ -146,7 +146,7 @@ class TestGenerationHelpers:
 
     def test_deduplicate_response_highly_repetitive(self):
         repeated = "The same sentence repeated. " * 50
-        result = _deduplicate_response(repeated, "best fallback response")
+        result = deduplicate_response(repeated, "best fallback response")
         assert len(result) > 0
 
 

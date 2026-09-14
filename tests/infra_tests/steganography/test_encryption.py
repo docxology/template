@@ -8,12 +8,20 @@ from pathlib import Path
 import pytest
 
 from infrastructure.steganography.encryption import (
-    _CRYPTOGRAPHY_AVAILABLE,
     decrypt_payload,
     encrypt_payload,
     generate_document_id,
     generate_fingerprint,
 )
+
+# Observable availability probe: import the real dependency instead of reading
+# a private module flag (no mocks, no private seams).
+try:
+    import cryptography  # noqa: F401
+
+    CRYPTOGRAPHY_AVAILABLE = True
+except ImportError:  # pragma: no cover - depends on environment extras
+    CRYPTOGRAPHY_AVAILABLE = False
 from tests.infra_tests.steganography.conftest import has_pypdf
 
 
@@ -71,7 +79,7 @@ class TestEncryption:
 
 
 class TestEncryptDecryptRoundtrip:
-    @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
+    @pytest.mark.skipif(not CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
     def test_roundtrip(self):
         plaintext = "Hello, World! This is secret data."
         encrypted = encrypt_payload(plaintext)
@@ -82,28 +90,28 @@ class TestEncryptDecryptRoundtrip:
         decrypted = decrypt_payload(encrypted["ciphertext"], encrypted["nonce"], encrypted["key"])
         assert decrypted == plaintext
 
-    @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
+    @pytest.mark.skipif(not CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
     def test_roundtrip_unicode(self):
         plaintext = "Unicode: 你好世界 こんにちは مرحبا"
         encrypted = encrypt_payload(plaintext)
         decrypted = decrypt_payload(encrypted["ciphertext"], encrypted["nonce"], encrypted["key"])
         assert decrypted == plaintext
 
-    @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
+    @pytest.mark.skipif(not CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
     def test_roundtrip_empty(self):
         plaintext = ""
         encrypted = encrypt_payload(plaintext)
         decrypted = decrypt_payload(encrypted["ciphertext"], encrypted["nonce"], encrypted["key"])
         assert decrypted == plaintext
 
-    @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
+    @pytest.mark.skipif(not CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
     def test_roundtrip_long_text(self):
         plaintext = "A" * 100_000
         encrypted = encrypt_payload(plaintext)
         decrypted = decrypt_payload(encrypted["ciphertext"], encrypted["nonce"], encrypted["key"])
         assert decrypted == plaintext
 
-    @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
+    @pytest.mark.skipif(not CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
     def test_custom_key(self):
         from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
@@ -114,7 +122,7 @@ class TestEncryptDecryptRoundtrip:
         decrypted = decrypt_payload(encrypted["ciphertext"], encrypted["nonce"], encrypted["key"])
         assert decrypted == plaintext
 
-    @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
+    @pytest.mark.skipif(not CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
     def test_different_keys_different_ciphertext(self):
         plaintext = "same data"
         enc1 = encrypt_payload(plaintext)
@@ -122,7 +130,7 @@ class TestEncryptDecryptRoundtrip:
         # Different random keys should produce different ciphertext
         assert enc1["ciphertext"] != enc2["ciphertext"]
 
-    @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
+    @pytest.mark.skipif(not CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
     def test_wrong_key_fails(self):
         plaintext = "secret"
         encrypted = encrypt_payload(plaintext)

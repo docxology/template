@@ -202,11 +202,11 @@ class TestFindCombinedPdfReexports:
 
     def test_validator_reexport_still_importable(self) -> None:
         from infrastructure.validation.output.validator import (
-            _find_combined_pdf,
+            find_combined_pdf,
         )
 
         # Should be the same callable (or a rebinding) as the canonical helper.
-        assert callable(_find_combined_pdf)
+        assert callable(find_combined_pdf)
 
     def test_pdf_locator_is_canonical_source(self) -> None:
         from infrastructure.core.files import find_combined_pdf as reexported

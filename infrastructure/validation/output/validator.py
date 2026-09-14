@@ -8,7 +8,7 @@ from collections.abc import Collection
 from pathlib import Path
 from typing import Any, TypedDict
 
-from infrastructure.core.files.pdf_locator import find_combined_pdf as _find_combined_pdf
+from infrastructure.core.files.pdf_locator import find_combined_pdf as find_combined_pdf
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.core.pipeline.artifacts import (
     STABLE_OUTPUT_INVENTORY_MODE,
@@ -174,7 +174,7 @@ def validate_copied_outputs(
         # effective render configuration.
         combined_pdf_found = False
         if inferred_project_name:
-            pdf_result = _find_combined_pdf(output_dir, inferred_project_name)
+            pdf_result = find_combined_pdf(output_dir, inferred_project_name)
             if pdf_result:
                 _pdf_path, size_mb = pdf_result
                 log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
@@ -565,7 +565,7 @@ def validate_output_structure(
     pdf_size_mb = 0.0
 
     if require_pdf and project_name:
-        pdf_result = _find_combined_pdf(output_dir, project_name)
+        pdf_result = find_combined_pdf(output_dir, project_name)
         pdf_is_stable = bool(pdf_result and pdf_result[0].absolute() in current.files)
         if pdf_result and not pdf_is_stable and inventory is None:
             candidate = pdf_result[0].absolute()

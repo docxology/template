@@ -9,9 +9,9 @@ from pathlib import Path
 
 
 from infrastructure.llm.review.formatting import (
-    _build_combined_review_content,
-    _build_review_header,
-    _build_review_metadata,
+    build_combined_review_content,
+    build_review_header,
+    build_review_metadata,
 )
 from infrastructure.llm.review.metrics import (
     ManuscriptInputMetrics,
@@ -70,11 +70,11 @@ def _make_session_metrics(
 
 
 class TestBuildReviewHeader:
-    """Tests for _build_review_header."""
+    """Tests for build_review_header."""
 
     def test_basic_header(self):
         metrics = ReviewMetrics(output_chars=500, output_words=100, generation_time_seconds=5.0)
-        header = _build_review_header("executive_summary", "gemma3:4b", "2026-01-15", metrics)
+        header = build_review_header("executive_summary", "gemma3:4b", "2026-01-15", metrics)
         assert "Executive Summary" in header
         assert "gemma3:4b" in header
         assert "2026-01-15" in header
@@ -83,18 +83,18 @@ class TestBuildReviewHeader:
 
     def test_header_formatting(self):
         metrics = ReviewMetrics()
-        header = _build_review_header("quality_review", "model", "2026-01-01", metrics)
+        header = build_review_header("quality_review", "model", "2026-01-01", metrics)
         assert header.startswith("#")
         assert "---" in header
 
     def test_translation_name_formatted(self):
         metrics = ReviewMetrics()
-        header = _build_review_header("translation_zh", "model", "2026-01-01", metrics)
+        header = build_review_header("translation_zh", "model", "2026-01-01", metrics)
         assert "Translation Zh" in header
 
 
 class TestBuildCombinedReviewContent:
-    """Tests for _build_combined_review_content."""
+    """Tests for build_combined_review_content."""
 
     def test_basic_combined_content(self):
         reviews = {
@@ -102,7 +102,7 @@ class TestBuildCombinedReviewContent:
             "quality_review": "Quality review content.",
         }
         metrics = _make_session_metrics(list(reviews.keys()))
-        content = _build_combined_review_content(
+        content = build_combined_review_content(
             reviews, "test-model", Path("test.pdf"), metrics, "2026-01-15T10:00:00", "2026-01-15"
         )
         assert "LLM Manuscript Review" in content
@@ -117,7 +117,7 @@ class TestBuildCombinedReviewContent:
             "translation_zh": "Chinese translation.",
         }
         metrics = _make_session_metrics(list(reviews.keys()))
-        content = _build_combined_review_content(
+        content = build_combined_review_content(
             reviews, "model", Path("test.pdf"), metrics, "2026-01-15T10:00:00", "2026-01-15"
         )
         assert "Translation" in content
@@ -126,7 +126,7 @@ class TestBuildCombinedReviewContent:
     def test_combined_has_navigation(self):
         reviews = {"executive_summary": "Content."}
         metrics = _make_session_metrics(["executive_summary"])
-        content = _build_combined_review_content(
+        content = build_combined_review_content(
             reviews, "model", Path("test.pdf"), metrics, "2026-01-15T10:00:00", "2026-01-15"
         )
         assert "Quick Navigation" in content
@@ -135,7 +135,7 @@ class TestBuildCombinedReviewContent:
     def test_combined_has_metrics_section(self):
         reviews = {"executive_summary": "Content."}
         metrics = _make_session_metrics(["executive_summary"])
-        content = _build_combined_review_content(
+        content = build_combined_review_content(
             reviews, "model", Path("test.pdf"), metrics, "2026-01-15T10:00:00", "2026-01-15"
         )
         assert "Generation Metrics" in content
@@ -143,12 +143,12 @@ class TestBuildCombinedReviewContent:
 
 
 class TestBuildReviewMetadata:
-    """Tests for _build_review_metadata."""
+    """Tests for build_review_metadata."""
 
     def test_basic_metadata(self):
         reviews = {"executive_summary": "Content."}
         metrics = _make_session_metrics(["executive_summary"])
-        metadata = _build_review_metadata(reviews, "test-model", Path("test.pdf"), metrics, "2026-01-15T10:00:00")
+        metadata = build_review_metadata(reviews, "test-model", Path("test.pdf"), metrics, "2026-01-15T10:00:00")
         assert metadata["model"] == "test-model"
         assert "executive_summary" in metadata["reviews_generated"]
         assert "manuscript_metrics" in metadata
@@ -158,24 +158,24 @@ class TestBuildReviewMetadata:
     def test_metadata_has_config(self):
         reviews = {"executive_summary": "Content."}
         metrics = _make_session_metrics(["executive_summary"])
-        metadata = _build_review_metadata(reviews, "model", Path("test.pdf"), metrics, "2026-01-15T10:00:00")
+        metadata = build_review_metadata(reviews, "model", Path("test.pdf"), metrics, "2026-01-15T10:00:00")
         assert "config" in metadata
         assert "timeout_seconds" in metadata["config"]
 
     def test_metadata_compliance_rate(self):
         reviews = {"executive_summary": "Content.", "quality_review": "Quality."}
         metrics = _make_session_metrics(list(reviews.keys()))
-        metadata = _build_review_metadata(reviews, "model", Path("test.pdf"), metrics, "2026-01-15T10:00:00")
+        metadata = build_review_metadata(reviews, "model", Path("test.pdf"), metrics, "2026-01-15T10:00:00")
         assert "overall_rate" in metadata["format_compliance"]
         assert metadata["format_compliance"]["total_reviews"] == 2
 
 
 class TestBuildReviewHeaderFromReviewFormatting:
-    """Test _build_review_header."""
+    """Test build_review_header."""
 
     def test_basic_header(self):
         metrics = _make_metrics()
-        header = _build_review_header("executive_summary", "gemma3:4b", "2025-01-15", metrics)
+        header = build_review_header("executive_summary", "gemma3:4b", "2025-01-15", metrics)
         assert "Executive Summary" in header
         assert "gemma3:4b" in header
         assert "2025-01-15" in header
@@ -183,12 +183,12 @@ class TestBuildReviewHeaderFromReviewFormatting:
 
     def test_translation_header(self):
         metrics = _make_metrics()
-        header = _build_review_header("translation_zh", "llama3", "2025-03-01", metrics)
+        header = build_review_header("translation_zh", "llama3", "2025-03-01", metrics)
         assert "Translation Zh" in header
 
 
 class TestBuildCombinedReviewContentFromReviewFormatting:
-    """Test _build_combined_review_content."""
+    """Test build_combined_review_content."""
 
     def test_basic_combined(self):
         reviews = {
@@ -196,7 +196,7 @@ class TestBuildCombinedReviewContentFromReviewFormatting:
             "quality_review": "## Quality\n\nWell written.",
         }
         metrics = _make_session_metrics()
-        content = _build_combined_review_content(
+        content = build_combined_review_content(
             reviews,
             "gemma3:4b",
             Path("/fake/paper.pdf"),
@@ -223,7 +223,7 @@ class TestBuildCombinedReviewContentFromReviewFormatting:
                 "translation_hi": _make_metrics(),
             }
         )
-        content = _build_combined_review_content(
+        content = build_combined_review_content(
             reviews,
             "model",
             Path("/paper.pdf"),
@@ -237,7 +237,7 @@ class TestBuildCombinedReviewContentFromReviewFormatting:
     def test_missing_reviews(self):
         reviews = {}
         metrics = _make_session_metrics(reviews={})
-        content = _build_combined_review_content(
+        content = build_combined_review_content(
             reviews,
             "model",
             Path("/paper.pdf"),
@@ -249,7 +249,7 @@ class TestBuildCombinedReviewContentFromReviewFormatting:
 
 
 class TestBuildReviewMetadataFromReviewFormatting:
-    """Test _build_review_metadata."""
+    """Test build_review_metadata."""
 
     def test_basic_metadata(self):
         reviews = {
@@ -257,7 +257,7 @@ class TestBuildReviewMetadataFromReviewFormatting:
             "quality_review": "## Quality\n\nAssessment.",
         }
         metrics = _make_session_metrics()
-        metadata = _build_review_metadata(
+        metadata = build_review_metadata(
             reviews,
             "gemma3:4b",
             Path("/fake/paper.pdf"),
@@ -281,7 +281,7 @@ class TestBuildReviewMetadataFromReviewFormatting:
                 "bad_review": _make_metrics(),
             }
         )
-        metadata = _build_review_metadata(
+        metadata = build_review_metadata(
             reviews,
             "model",
             Path("/paper.pdf"),
@@ -295,7 +295,7 @@ class TestBuildReviewMetadataFromReviewFormatting:
     def test_empty_reviews(self):
         reviews = {}
         metrics = _make_session_metrics(reviews={})
-        metadata = _build_review_metadata(
+        metadata = build_review_metadata(
             reviews,
             "model",
             Path("/paper.pdf"),

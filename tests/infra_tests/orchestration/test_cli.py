@@ -11,11 +11,11 @@ from pathlib import Path
 import pytest
 
 from infrastructure.orchestration.cli import (
-    _cmd_list_projects,
-    _cmd_menu,
-    _cmd_promotion_check,
-    _default_project_name,
-    _resolve_repo_root,
+    cmd_list_projects,
+    cmd_menu,
+    cmd_promotion_check,
+    default_project_name,
+    resolve_repo_root,
     build_parser,
     main,
 )
@@ -34,11 +34,11 @@ def test_default_project_name_matches_canonical_qualified() -> None:
         "templates/template_code_project",
         "templates/template_prose_project",
     ]
-    assert _default_project_name(qualified) == "templates/template_code_project"
+    assert default_project_name(qualified) == "templates/template_code_project"
     # Bare names still work (back-compat).
-    assert _default_project_name(["template_active_inference", "template_code_project"]) == "template_code_project"
+    assert default_project_name(["template_active_inference", "template_code_project"]) == "template_code_project"
     # Falls back to the first name when the canonical project is absent.
-    assert _default_project_name(["templates/template_newspaper", "templates/template_sia"]) == (
+    assert default_project_name(["templates/template_newspaper", "templates/template_sia"]) == (
         "templates/template_newspaper"
     )
 
@@ -101,7 +101,7 @@ promotion:
     )
     parser = build_parser()
     ns = parser.parse_args(["promotion-check", "--attestation", str(attestation)])
-    assert _cmd_promotion_check(ns) == 0
+    assert cmd_promotion_check(ns) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["approved"] is True
     assert payload["project"] == "working/example"
@@ -165,7 +165,7 @@ def test_build_parser_unknown_subcommand_raises() -> None:
 def test_resolve_repo_root_default_points_to_repo() -> None:
     parser = build_parser()
     ns = parser.parse_args([])
-    root = _resolve_repo_root(ns)
+    root = resolve_repo_root(ns)
     # Default points 2 parents up from the orchestration package, which
     # must contain an `infrastructure/` directory.
     assert (root / "infrastructure").is_dir()
@@ -174,13 +174,13 @@ def test_resolve_repo_root_default_points_to_repo() -> None:
 def test_resolve_repo_root_respects_override(tmp_path: Path) -> None:
     parser = build_parser()
     ns = parser.parse_args(["--repo-root", str(tmp_path), "list-projects"])
-    assert _resolve_repo_root(ns) == tmp_path
+    assert resolve_repo_root(ns) == tmp_path
 
 
 def test_cmd_menu_prints_to_stdout(fake_repo: Path, capsys: pytest.CaptureFixture[str]) -> None:
     parser = build_parser()
     ns = parser.parse_args(["--repo-root", str(fake_repo), "menu", "--project", "template_code_project"])
-    rc = _cmd_menu(ns)
+    rc = cmd_menu(ns)
     captured = capsys.readouterr()
     assert rc == 0
     assert "MANUSCRIPT PIPELINE" in captured.out
@@ -190,7 +190,7 @@ def test_cmd_menu_prints_to_stdout(fake_repo: Path, capsys: pytest.CaptureFixtur
 def test_cmd_list_projects(fake_repo: Path, capsys: pytest.CaptureFixture[str]) -> None:
     parser = build_parser()
     ns = parser.parse_args(["--repo-root", str(fake_repo), "list-projects"])
-    rc = _cmd_list_projects(ns)
+    rc = cmd_list_projects(ns)
     captured = capsys.readouterr()
     assert rc == 0
     assert "template_code_project" in captured.out

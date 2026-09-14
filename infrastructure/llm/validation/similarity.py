@@ -13,7 +13,7 @@ import re
 from collections import Counter
 
 
-def _normalize_for_comparison(text: str) -> str:
+def normalize_for_comparison(text: str) -> str:
     """Normalize text for comparison by removing whitespace variations.
 
     Args:
@@ -31,7 +31,7 @@ def _normalize_for_comparison(text: str) -> str:
     return normalized
 
 
-def _jaccard_similarity(text1: str, text2: str) -> float:
+def jaccard_similarity(text1: str, text2: str) -> float:
     """Calculate Jaccard similarity (word overlap)."""
     words1 = set(text1.split())
     words2 = set(text2.split())
@@ -45,7 +45,7 @@ def _jaccard_similarity(text1: str, text2: str) -> float:
     return len(intersection) / len(union) if union else 0.0
 
 
-def _tf_cosine_similarity(text1: str, text2: str) -> float:
+def tf_cosine_similarity(text1: str, text2: str) -> float:
     """Calculate TF cosine similarity for semantic matching."""
     # Tokenize and count
     words1 = Counter(text1.split())
@@ -72,7 +72,7 @@ def _tf_cosine_similarity(text1: str, text2: str) -> float:
     return dot_product / (norm1 * norm2)
 
 
-def _sequence_similarity(text1: str, text2: str) -> float:
+def sequence_similarity(text1: str, text2: str) -> float:
     """Calculate sequence-based similarity using n-gram overlap."""
 
     def get_ngrams(text: str, n: int = 3) -> list[str]:
@@ -92,7 +92,7 @@ def _sequence_similarity(text1: str, text2: str) -> float:
     return len(intersection) / len(union) if union else 0.0
 
 
-def _calculate_similarity(text1: str, text2: str, method: str = "hybrid") -> float:
+def calculate_similarity(text1: str, text2: str, method: str = "hybrid") -> float:
     """Calculate similarity between two texts using multiple methods.
 
     Uses a hybrid approach combining Jaccard similarity, TF-IDF cosine similarity,
@@ -110,17 +110,17 @@ def _calculate_similarity(text1: str, text2: str, method: str = "hybrid") -> flo
         return 0.0
 
     # Normalize texts for comparison
-    norm1 = _normalize_for_comparison(text1)
-    norm2 = _normalize_for_comparison(text2)
+    norm1 = normalize_for_comparison(text1)
+    norm2 = normalize_for_comparison(text2)
 
     if method == "jaccard":
-        return _jaccard_similarity(norm1, norm2)
+        return jaccard_similarity(norm1, norm2)
     elif method == "tfidf":
-        return _tf_cosine_similarity(norm1, norm2)
+        return tf_cosine_similarity(norm1, norm2)
     else:  # hybrid
-        jaccard_sim = _jaccard_similarity(norm1, norm2)
-        tfidf_sim = _tf_cosine_similarity(norm1, norm2)
-        sequence_sim = _sequence_similarity(norm1, norm2)
+        jaccard_sim = jaccard_similarity(norm1, norm2)
+        tfidf_sim = tf_cosine_similarity(norm1, norm2)
+        sequence_sim = sequence_similarity(norm1, norm2)
 
         # Weighted combination: favor TF-IDF and sequence similarity
         return 0.3 * jaccard_sim + 0.4 * tfidf_sim + 0.3 * sequence_sim

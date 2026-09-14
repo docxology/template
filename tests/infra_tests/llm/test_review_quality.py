@@ -1,37 +1,37 @@
 """Tests for infrastructure.llm.review.quality — comprehensive coverage."""
 
 from infrastructure.llm.review.quality import (
-    _is_small_model,
+    is_small_model,
     validate_review_quality,
-    _validate_executive_summary_section,
-    _validate_quality_review_section,
-    _validate_methodology_review_section,
-    _validate_improvement_suggestions_section,
-    _validate_translation_section,
+    validate_executive_summary_section,
+    validate_quality_review_section,
+    validate_methodology_review_section,
+    validate_improvement_suggestions_section,
+    validate_translation_section,
 )
 
 
 class TestIsSmallModel:
     def test_small_3b(self):
-        assert _is_small_model("gemma:3b") is True
+        assert is_small_model("gemma:3b") is True
 
     def test_small_4b(self):
-        assert _is_small_model("gemma3:4b") is True
+        assert is_small_model("gemma3:4b") is True
 
     def test_small_7b(self):
-        assert _is_small_model("mistral:7b") is True
+        assert is_small_model("mistral:7b") is True
 
     def test_small_8b(self):
-        assert _is_small_model("llama3:8b") is True
+        assert is_small_model("llama3:8b") is True
 
     def test_large_70b(self):
-        assert _is_small_model("llama3:70b") is False
+        assert is_small_model("llama3:70b") is False
 
     def test_empty(self):
-        assert _is_small_model("") is False
+        assert is_small_model("") is False
 
     def test_case_insensitive(self):
-        assert _is_small_model("Gemma:4B") is True
+        assert is_small_model("Gemma:4B") is True
 
 
 class TestValidateReviewQualityExecutiveSummary:
@@ -204,7 +204,7 @@ class TestValidateHelpers:
     def test_executive_summary_section_direct(self):
         details: dict = {"sections_found": [], "sections_required": 0}
         issues: list = []
-        _validate_executive_summary_section(
+        validate_executive_summary_section(
             "the overview shows key contributions and methodology with results of significance",
             details,
             issues,
@@ -215,24 +215,24 @@ class TestValidateHelpers:
     def test_quality_review_section_rating_pattern(self):
         details: dict = {"scores_found": [], "has_assessment": False}
         issues: list = []
-        _validate_quality_review_section("rating: 4", details, issues)
+        validate_quality_review_section("rating: 4", details, issues)
         assert len(details["scores_found"]) > 0
 
     def test_methodology_review_approach(self):
         details: dict = {"sections_found": []}
         issues: list = []
-        _validate_methodology_review_section("the approach is solid with good experimental design", details, issues)
+        validate_methodology_review_section("the approach is solid with good experimental design", details, issues)
         assert details.get("has_methodology_content") is True
 
     def test_improvement_suggestions_cosmetic(self):
         details: dict = {"priorities_found": []}
         issues: list = []
-        _validate_improvement_suggestions_section("cosmetic changes needed and consider updating", details, issues)
+        validate_improvement_suggestions_section("cosmetic changes needed and consider updating", details, issues)
         assert "low" in details.get("priorities_found", [])
 
     def test_translation_hindi(self):
         details: dict = {}
         issues: list = []
-        _validate_translation_section("english abstract followed by hindi translation", details, issues)
+        validate_translation_section("english abstract followed by hindi translation", details, issues)
         assert details["has_english_section"] is True
         assert details["has_translation_section"] is True
