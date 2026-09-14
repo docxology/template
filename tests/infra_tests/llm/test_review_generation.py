@@ -2,8 +2,8 @@
 
 from infrastructure.llm.review.generation import (
     extract_manuscript_text,
-    _build_off_topic_retry_prompt,
-    _deduplicate_response,
+    build_off_topic_retry_prompt,
+    deduplicate_response,
 )
 
 
@@ -64,12 +64,12 @@ class TestExtractManuscriptText:
 class TestBuildOffTopicRetryPrompt:
     def test_no_off_topic(self):
         prompt = "Review this paper"
-        result = _build_off_topic_retry_prompt(prompt, had_off_topic=False)
+        result = build_off_topic_retry_prompt(prompt, had_off_topic=False)
         assert result == prompt
 
     def test_off_topic_adds_prefix(self):
         prompt = "Review this paper"
-        result = _build_off_topic_retry_prompt(prompt, had_off_topic=True)
+        result = build_off_topic_retry_prompt(prompt, had_off_topic=True)
         assert "IMPORTANT" in result
         assert prompt in result
 
@@ -77,7 +77,7 @@ class TestBuildOffTopicRetryPrompt:
 class TestDeduplicateResponse:
     def test_no_dedup_needed(self):
         response = "This is a unique response with diverse content about many different topics."
-        result = _deduplicate_response(response, "fallback")
+        result = deduplicate_response(response, "fallback")
         assert result == response
 
     def test_heavily_repetitive(self):
@@ -85,7 +85,7 @@ class TestDeduplicateResponse:
         sentence = "The methodology is sound and well-described. "
         response = sentence * 100
         best = "This is the best response."
-        result = _deduplicate_response(response, best)
+        result = deduplicate_response(response, best)
         # Either deduped or falls back to best
         assert isinstance(result, str)
         assert len(result) > 0
@@ -94,5 +94,5 @@ class TestDeduplicateResponse:
         # Some repetition but not severe
         parts = [f"Point {i}: This is a unique observation about topic {i}." for i in range(20)]
         response = "\n".join(parts)
-        result = _deduplicate_response(response, "fallback")
+        result = deduplicate_response(response, "fallback")
         assert result == response  # Should keep original

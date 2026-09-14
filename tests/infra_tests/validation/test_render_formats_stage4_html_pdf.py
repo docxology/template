@@ -5,7 +5,7 @@ import subprocess
 from infrastructure.core.pipeline.artifacts import collect_stable_output_inventory, output_inventory_mode_for_project
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.validation.output.pipeline import (
-    _build_core_checks,
+    build_core_checks,
     execute_validation_pipeline,
     verify_outputs_exist,
 )
@@ -16,7 +16,7 @@ from tests.infra_tests.validation._render_formats_helpers import _minimal_pdf, _
 def test_stage4_html_only_accepts_clean_tree(tmp_path) -> None:
     _html_only_project(tmp_path)
 
-    checks = {check.name: check.run for check in _build_core_checks("demo", repo_root=tmp_path)}
+    checks = {check.name: check.run for check in build_core_checks("demo", repo_root=tmp_path)}
 
     assert "PDF validation" not in checks
     assert "Transmission bookends" not in checks
@@ -64,7 +64,7 @@ def test_stage4_html_only_rejects_stale_disabled_pdf(tmp_path) -> None:
     stale_pdf.parent.mkdir(parents=True)
     stale_pdf.write_bytes(_minimal_pdf())
 
-    checks = {check.name: check.run for check in _build_core_checks("demo", repo_root=tmp_path)}
+    checks = {check.name: check.run for check in build_core_checks("demo", repo_root=tmp_path)}
 
     assert checks["Enabled render outputs"]() is False
 
@@ -82,7 +82,7 @@ def test_stage4_pdf_requires_canonical_combined_pdf(tmp_path) -> None:
     pdf_dir.mkdir(parents=True)
     (pdf_dir / "other_valid.pdf").write_bytes(_minimal_pdf())
 
-    checks = {check.name: check.run for check in _build_core_checks("demo", repo_root=tmp_path)}
+    checks = {check.name: check.run for check in build_core_checks("demo", repo_root=tmp_path)}
 
     assert checks["PDF validation"]() is True
     assert checks["Enabled render outputs"]() is False
@@ -137,7 +137,7 @@ def test_managed_external_project_accepts_valid_ignored_local_pdf(tmp_path) -> N
     assert resolved == external_project.resolve()
     assert inventory.mode == "stable-local-output-v1"
     assert pdf.absolute() in inventory.files
-    checks = {check.name: check.run for check in _build_core_checks("working/demo", repo_root=repo_root)}
+    checks = {check.name: check.run for check in build_core_checks("working/demo", repo_root=repo_root)}
     assert checks["Enabled render outputs"]() is True
     assert (
         validate_enabled_render_outputs(

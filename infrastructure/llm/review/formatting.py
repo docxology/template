@@ -17,7 +17,7 @@ from infrastructure.llm.templates import TRANSLATION_LANGUAGES
 from infrastructure.llm.validation.format import check_format_compliance
 
 
-def _build_review_header(name: str, model_name: str, date_str: str, metrics: ReviewMetrics) -> str:
+def build_review_header(name: str, model_name: str, date_str: str, metrics: ReviewMetrics) -> str:
     """Build the standard markdown header for a single review file."""
     return f"""# {name.replace("_", " ").title()}
 
@@ -29,7 +29,7 @@ def _build_review_header(name: str, model_name: str, date_str: str, metrics: Rev
 """
 
 
-def _build_combined_review_content(
+def build_combined_review_content(
     reviews: dict[str, str],
     model_name: str,
     pdf_path: Path,
@@ -176,7 +176,7 @@ The following items are extracted from the review for easy tracking:
 """
 
 
-def _build_review_metadata(
+def build_review_metadata(
     reviews: dict[str, str],
     model_name: str,
     pdf_path: Path,
