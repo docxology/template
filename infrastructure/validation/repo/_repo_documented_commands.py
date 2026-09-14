@@ -17,6 +17,11 @@ def _candidate_script_paths(repo_root: Path, script_ref: str) -> list[Path]:
     if ref_path.name:
         candidates.append(repo_root / "scripts" / ref_path.name)
         candidates.append(repo_root / "repo_utilities" / ref_path.name)
+        scripts_dir = repo_root / "scripts"
+        if scripts_dir.is_dir():
+            for sub in scripts_dir.iterdir():
+                if sub.is_dir():
+                    candidates.append(sub / ref_path.name)
         if ref_path.name in {"run.sh", "secure_run.sh"}:
             candidates.append(repo_root / ref_path.name)
 
@@ -32,15 +37,20 @@ def check_documented_commands(
     repo_root: Path,
     src_modules: set[str],
 ) -> list[ScanAccuracyIssue]:
-    """Scan README and docs/*.md for backticked script paths; report missing files."""
+    """Scan README, root agent docs, and docs/*.md for backticked script paths; report missing files."""
     issues: list[ScanAccuracyIssue] = []
 
-    md_candidates = [repo_root / "README.md"]
+    md_candidates = [
+        repo_root / "README.md",
+        repo_root / "START_HERE.md",
+        repo_root / "CLAUDE.md",
+        repo_root / "AGENTS.md",
+    ]
     docs_dir = repo_root / "docs"
     if docs_dir.is_dir():
         md_candidates.extend(docs_dir.glob("*.md"))
 
-    for md_file in md_candidates:
+    for md_file in dict.fromkeys(md_candidates):
         if not md_file.exists():
             continue
         try:
