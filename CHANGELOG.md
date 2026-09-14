@@ -16,7 +16,8 @@ not to the contents of any specific workspace.
   CodeGraph/LEANN (STARTHERE-GRAFT-1).
 - `check_documented_commands` now scans root `START_HERE.md`, `CLAUDE.md`, and
   `AGENTS.md` in addition to `README.md` and `docs/*.md`, with a negative control
-  (GRAFT-DOCACCURACY-1; scanner landed, drift triage pending).
+  (GRAFT-DOCACCURACY-1). Drift triage over the entry docs returned 0 missing
+  script paths (strict empty-allowlist scan); row closed.
 - Backlog rows closed as verified-complete on main: `CONFTEST-DUP-1` (duplicates
   already removed; `repo_root`/`MPLBACKEND` defined only in the root conftest) and
   `SEC-SECRET-PATTERNS-1` (Slack/HuggingFace token patterns present in
