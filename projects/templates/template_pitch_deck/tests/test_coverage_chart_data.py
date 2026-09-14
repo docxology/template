@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from coverage_chart_data import read_all_exemplar_coverage
-from paths import locate_repo_root, project_root
+from template_pitch_deck.coverage_chart_data import read_all_exemplar_coverage
+from template_pitch_deck.paths import locate_repo_root, project_root
 
 
 @pytest.fixture(scope="module")

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from deck_audit import audit_deck
+from template_pitch_deck.deck_audit import audit_deck
 
 
 def test_audit_deck_ok_when_tokens_resolve_and_no_cliche():

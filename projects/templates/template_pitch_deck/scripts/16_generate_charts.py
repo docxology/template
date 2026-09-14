@@ -28,15 +28,15 @@ def main(argv: list[str] | None = None) -> int:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    from chart_rendering import (
+    from template_pitch_deck.chart_rendering import (
         render_coverage_bar_chart,
         render_infra_subpackage_donut,
         render_test_count_vs_coverage_scatter,
     )
-    from coverage_chart_data import read_all_exemplar_coverage
-    from infra_facts import infra_subpackage_python_counts
-    from paths import locate_repo_root
-    from render_orchestration import _resolve_theme, load_deck_config
+    from template_pitch_deck.coverage_chart_data import read_all_exemplar_coverage
+    from template_pitch_deck.infra_facts import infra_subpackage_python_counts
+    from template_pitch_deck.paths import locate_repo_root
+    from template_pitch_deck.render_orchestration import _resolve_theme, load_deck_config
 
     root = project_root()
     repo_root = locate_repo_root(root)

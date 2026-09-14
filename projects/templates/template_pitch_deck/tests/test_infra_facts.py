@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from infra_facts import InfraIntrospectionError, build_infra_tokens, infra_subpackage_python_counts
-from paths import locate_repo_root, project_root
+from template_pitch_deck.infra_facts import InfraIntrospectionError, build_infra_tokens, infra_subpackage_python_counts
+from template_pitch_deck.paths import locate_repo_root, project_root
 
 
 @pytest.fixture(scope="module")
