@@ -144,6 +144,9 @@ projects/templates/*
 !projects/templates/DESIGN.md
 !projects/templates/template_code_project/
 !projects/templates/template_code_project/**
+!projects/templates/template_experiment_tree/
+!projects/templates/template_experiment_tree/**
+projects/templates/template_experiment_tree/output/*
 !projects/templates/template_data_descriptor/
 !projects/templates/template_data_descriptor/**
 !projects/templates/template_literature_meta_analysis/
