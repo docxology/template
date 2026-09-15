@@ -101,6 +101,99 @@ def _make_block(kind: str, block_id: str, body: str, attrs: dict[str, str], line
     raise ReaderError(f"unsupported div class {kind!r}", line_no)
 
 
+def read_blocks_with_errors(
+    text: str,
+) -> tuple[tuple[Block, ...], tuple[Diagnostic, ...]]:
+    """Tolerant variant of :func:`read_blocks` for round-tripping real
+    manuscripts: per-div problems (unknown class, missing id, bad tier)
+    are returned as ``FORMAL.READER_PARSE`` diagnostics and the affected
+    div is skipped, instead of aborting the whole parse. Structural
+    errors that leave the state machine ambiguous (an unclosed div) still
+    raise ``ReaderError``."""
+    blocks: list[Block] = []
+    errors: list[Diagnostic] = []
+    current_section: Section | None = None
+    in_div = False
+    div_kind = ""
+    div_id = ""
+    div_attrs: dict[str, str] = {}
+    div_body: list[str] = []
+    div_line = 0
+
+    for line_no, raw in enumerate(text.splitlines(), start=1):
+        line = raw.strip()
+        if in_div:
+            if line == _DIV_CLOSE:
+                if div_kind != "__skip__":
+                    try:
+                        blocks.append(_make_block(div_kind, div_id, "\n".join(div_body), div_attrs, div_line))
+                    except ReaderError as exc:
+                        errors.append(exc.diagnostic)
+                in_div = False
+                div_body = []
+            else:
+                div_body.append(raw)
+            continue
+        if line.startswith(":::"):
+            if line == _DIV_CLOSE:
+                continue  # stray close; ignore
+            try:
+                classes, attrs = _parse_attrs(line[3:], line_no)
+                kind = classes[0]
+                block_id = attrs.pop("id", classes[1] if len(classes) > 1 else "")
+                if not block_id:
+                    raise ReaderError("div has no id", line_no)
+            except ReaderError as exc:
+                errors.append(exc.diagnostic)
+                in_div = True  # still consume the body until its close
+                div_kind, div_id, div_attrs, div_body, div_line = (
+                    "__skip__",
+                    "",
+                    {},
+                    [],
+                    line_no,
+                )
+                continue
+            if kind == "section":
+                current_section = Section(id=block_id, title=attrs.get("title", ""))
+                blocks.append(current_section)
+                continue
+            in_div, div_kind, div_id, div_attrs, div_body, div_line = (
+                True,
+                kind,
+                block_id,
+                attrs,
+                [],
+                line_no,
+            )
+            continue
+        if line.startswith("#") and not line.startswith("##"):
+            current_section = Section(id=f"sec:{line.lstrip('#').strip().lower().replace(' ', '-')}")
+            blocks.append(current_section)
+            continue
+
+    if in_div:
+        raise ReaderError(f"unclosed div starting at line {div_line}", div_line)
+
+    # Attach non-section blocks to the most recent section, in document order.
+    attached: list[Block] = []
+    children: dict[str, list[str]] = {}
+    last_section: Section | None = None
+    for block in blocks:
+        attached.append(block)
+        if isinstance(block, Section):
+            last_section = block
+            children.setdefault(block.id, [])
+        elif last_section is not None:
+            children[last_section.id].append(block.id)
+    sections = {
+        b.id: Section(id=b.id, title=b.title, children=tuple(children[b.id]))
+        for b in attached
+        if isinstance(b, Section)
+    }
+    return tuple(sections.get(b.id, b) for b in attached), tuple(errors)
+
+
 def read_blocks(text: str) -> tuple[Block, ...]:
     """Parse markdown formalism divs and headings into typed blocks."""
     blocks: list[Block] = []
