@@ -10,7 +10,10 @@ from manuscript.sheaf import compose_all_sections
 from gates.validation import validate_manuscript
 from gate_support import ensure_gate_artifacts
 
-pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(300)]
+# WHY timeout(600): these tests compose and validate the whole real project
+# tree; measured 272s call on high-latency storage flaked the old 300s
+# ceiling (same class of work already uses 600 in test_roadmap_promotion.py).
+pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
 
 
 @pytest.fixture(scope="module")
