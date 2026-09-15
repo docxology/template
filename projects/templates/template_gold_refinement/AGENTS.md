@@ -7,25 +7,25 @@ manuscript composition via mega-madlib token injection.
 
 | Surface | Source of truth |
 | --- | --- |
-| Refinery stages and purity targets | `src/refinery.py` |
-| Karat grading and purity computation | `src/purity.py` |
-| Mega-madlib config schema | `src/config.py` |
-| Token selection (deterministic digest) | `src/composition.py` |
-| Source-owned equation registry | `src/formalisms.py` |
-| Scientific-integrity dimensions and evidence tiers | `src/integrity.py` |
+| Refinery stages and purity targets | `src/template_gold_refinement/refinery.py` |
+| Karat grading and purity computation | `src/template_gold_refinement/purity.py` |
+| Mega-madlib config schema | `src/template_gold_refinement/config.py` |
+| Token selection (deterministic digest) | `src/template_gold_refinement/composition.py` |
+| Source-owned equation registry | `src/template_gold_refinement/formalisms.py` |
+| Scientific-integrity dimensions and evidence tiers | `src/template_gold_refinement/integrity.py` |
 | Figure specs, layouts, SVG output, and quality report | `src/figures/` (`FIGURE_SPECS` in `_common.py`) |
-| Manuscript variable map | `src/manuscript_variables.py` |
-| Claim-vs-evidence assay (the assaying stage) | `src/assay.py` |
-| Evidence registry: cross-checks contribution claims against sources | `src/evidence.py` |
-| Domain adapter profile (remap domain metrics onto the purity scale) | `src/domain_adapter.py` |
-| Secure-pipeline policy: steganography and LLM review gating | `src/pipeline_policy.py` |
-| Interactive HTML dashboard | `src/dashboard.py` |
-| Security assay records and summary | `src/security_assay.py` |
-| Bounded analogy predicate and negative control | `src/analogy_boundary.py` |
-| Transmission bookend validation | `src/transmission.py` |
-| Shared boolean coercion helper | `src/coercion.py` |
-| Shared parsing and I/O helpers | `src/parsing.py` |
-| Cover visualization (matplotlib composite figure) | `src/cover_visualization.py` |
+| Manuscript variable map | `src/template_gold_refinement/manuscript_variables.py` |
+| Claim-vs-evidence assay (the assaying stage) | `src/template_gold_refinement/assay.py` |
+| Evidence registry: cross-checks contribution claims against sources | `src/template_gold_refinement/evidence.py` |
+| Domain adapter profile (remap domain metrics onto the purity scale) | `src/template_gold_refinement/domain_adapter.py` |
+| Secure-pipeline policy: steganography and LLM review gating | `src/template_gold_refinement/pipeline_policy.py` |
+| Interactive HTML dashboard | `src/template_gold_refinement/dashboard.py` |
+| Security assay records and summary | `src/template_gold_refinement/security_assay.py` |
+| Bounded analogy predicate and negative control | `src/template_gold_refinement/analogy_boundary.py` |
+| Transmission bookend validation | `src/template_gold_refinement/transmission.py` |
+| Shared boolean coercion helper | `src/template_gold_refinement/coercion.py` |
+| Shared parsing and I/O helpers | `src/template_gold_refinement/parsing.py` |
+| Cover visualization (matplotlib composite figure) | `src/template_gold_refinement/cover_visualization.py` |
 | Experiment parameters and metadata | `manuscript/config.yaml` |
 | Open follow-up scope | `TODO.md` |
 
@@ -73,19 +73,19 @@ numbers.
 ## Edit Rules
 
 - Add vocabulary in `manuscript/config.yaml` under `gold_refinement.lexicon`.
-- Add refinement stages or modify purity targets in `src/refinery.py` and
-  `src/purity.py` together — purity must increase monotonically across stages.
-- Change `src/config.py` only when the schema changes, and cover new validation
+- Add refinement stages or modify purity targets in `src/template_gold_refinement/refinery.py` and
+  `src/template_gold_refinement/purity.py` together — purity must increase monotonically across stages.
+- Change `src/template_gold_refinement/config.py` only when the schema changes, and cover new validation
   behavior in `tests/test_config.py`.
 - Keep manuscript figures behind generated figure-group variables.
 - Add or rename figures only by editing `FIGURE_SPECS`, generator functions,
   manuscript variables, and registry/quality tests together.
-- Add equation-backed claims through `src/formalisms.py`, not by hand-numbering
+- Add equation-backed claims through `src/template_gold_refinement/formalisms.py`, not by hand-numbering
   equations in manuscript prose.
-- Add integrity claims through `src/integrity.py` and the claim ledger before
+- Add integrity claims through `src/template_gold_refinement/integrity.py` and the claim ledger before
   strengthening manuscript language.
 - Add new manuscript placeholders only after adding variables in
-  `src/manuscript_variables.py` and coverage in `tests/test_manuscript_variables.py`.
+  `src/template_gold_refinement/manuscript_variables.py` and coverage in `tests/test_manuscript_variables.py`.
 - Regenerate output through Stages 02-05 after source or config edits.
 
 ## Verification

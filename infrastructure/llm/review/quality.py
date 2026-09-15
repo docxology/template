@@ -18,7 +18,7 @@ logger = get_logger(__name__)
 _SMALL_MODEL_SUFFIXES = frozenset(["3b", "4b", "7b", "8b"])
 
 
-def _is_small_model(model_name: str) -> bool:
+def is_small_model(model_name: str) -> bool:
     """Return True if model_name indicates a small parameter-count model."""
     lower = model_name.lower()
     return any(s in lower for s in _SMALL_MODEL_SUFFIXES)
@@ -94,7 +94,7 @@ def validate_review_quality(
         details["format_warnings"] = format_issues
 
     default_min = REVIEW_MIN_WORDS.get(review_type, 200)
-    if _is_small_model(model_name):
+    if is_small_model(model_name):
         default_min = int(default_min * 0.8)
     min_word_count = min_words or default_min
 
@@ -118,7 +118,7 @@ def validate_review_quality(
     return is_valid, issues, details
 
 
-def _validate_executive_summary_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
+def validate_executive_summary_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
     header_variations = [
         (["overview", "summary", "introduction", "abstract"], "overview"),
         (
@@ -136,7 +136,7 @@ def _validate_executive_summary_section(response_lower: str, details: ReviewQual
         issues.append("Missing expected structure (found: none of 5 expected sections)")
 
 
-def _validate_quality_review_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
+def validate_quality_review_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
     score_patterns = [
         (r"\*\*score:\s*(\d)/5\*\*", "**Score: X/5**"),
         (r"score:\s*(\d)/5", "Score: X/5"),
@@ -157,7 +157,7 @@ def _validate_quality_review_section(response_lower: str, details: ReviewQuality
         issues.append("Missing scoring or quality assessment")
 
 
-def _validate_methodology_review_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
+def validate_methodology_review_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
     methodology_sections = [
         (["strengths", "strong points", "advantages", "positives", "pros"], "strengths"),
         (
@@ -176,7 +176,7 @@ def _validate_methodology_review_section(response_lower: str, details: ReviewQua
         issues.append(f"Missing expected sections (found: {found_sections or 'none'})")
 
 
-def _validate_improvement_suggestions_section(
+def validate_improvement_suggestions_section(
     response_lower: str, details: ReviewQualityDetails, issues: list[str]
 ) -> None:
     priority_variations = [
@@ -194,7 +194,7 @@ def _validate_improvement_suggestions_section(
         issues.append("Missing priority sections or recommendations")
 
 
-def _validate_translation_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
+def validate_translation_section(response_lower: str, details: ReviewQualityDetails, issues: list[str]) -> None:
     has_english = (
         "english abstract" in response_lower
         or "## english" in response_lower
@@ -214,9 +214,9 @@ def _validate_translation_section(response_lower: str, details: ReviewQualityDet
 # Module-level dispatch table — built once after all validators are defined.
 _ValidatorFn = Callable[[str, ReviewQualityDetails, list[str]], None]
 _REVIEW_TYPE_VALIDATORS: dict[str, _ValidatorFn] = {
-    "executive_summary": _validate_executive_summary_section,
-    "quality_review": _validate_quality_review_section,
-    "methodology_review": _validate_methodology_review_section,
-    "improvement_suggestions": _validate_improvement_suggestions_section,
-    "translation": _validate_translation_section,
+    "executive_summary": validate_executive_summary_section,
+    "quality_review": validate_quality_review_section,
+    "methodology_review": validate_methodology_review_section,
+    "improvement_suggestions": validate_improvement_suggestions_section,
+    "translation": validate_translation_section,
 }

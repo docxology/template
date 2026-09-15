@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from purity import NINE_NINES_PURITY
-from refinery import (
+from template_gold_refinement.purity import NINE_NINES_PURITY
+from template_gold_refinement.refinery import (
     CANONICAL_STAGES,
     RefinementStage,
     run_refinery,
@@ -116,8 +116,8 @@ class TestRunRefinery:
 
     def test_purity_sequence_empty_stages(self):
         """RefineryResult with empty stages tuple returns empty purity_sequence."""
-        from refinery import RefineryResult
-        from purity import karat_for_purity
+        from template_gold_refinement.refinery import RefineryResult
+        from template_gold_refinement.purity import karat_for_purity
 
         result = RefineryResult(
             stages=(),

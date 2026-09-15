@@ -10,7 +10,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pytest
 
-from chart_rendering import (
+from template_pitch_deck.chart_rendering import (
     _apply_donut_autotext_contrast,
     _contrast_ratio,
     _hex_rgb,

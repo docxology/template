@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from diligence_audit import diligence_rows, slide_cites_a_fact, slide_text_blob, uncited_fact_slides
+from template_pitch_deck.diligence_audit import diligence_rows, slide_cites_a_fact, slide_text_blob, uncited_fact_slides
 
 
 def test_slide_text_blob_concatenates_prose_fields():

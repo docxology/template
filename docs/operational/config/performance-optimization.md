@@ -72,6 +72,61 @@ uv run pytest tests/ -n auto
 uv run pytest tests/ -m "not slow"
 ```
 
+### 1a. Fast local test loop (agent iteration)
+
+For tight agent edit/test loops, run a fixed high-signal subset instead of the
+whole suite. The full infrastructure gate
+(`scripts/pipeline/stage_01_test.py --infra-only --infra-scope full`) remains
+the merge authority; the fast loop is only for iteration speed and is
+negative-control-protected by
+`tests/infra_tests/git_hook_smoke/test_fast_loop_selector.py`, which fails when
+a fast-loop entry is deleted, renamed, or stops collecting tests.
+
+```bash
+# Highest-signal subset; -p no:cacheprovider avoids cache writes on slow disks
+uv run --frozen pytest \
+  tests/infra_tests/git_hook_smoke \
+  tests/infra_tests/core/test_pytest_orchestration.py \
+  tests/infra_tests/core/test_pipeline.py \
+  -q -p no:cacheprovider
+```
+
+Measured cost drivers on a slow external-drive checkout (2026-09-14, macOS
+ARM, repo on an external HDD/SSD-grade volume):
+
+| Cost | Measured | Note |
+| ---- | -------- | ---- |
+| `uv run python -m infrastructure.validation.cli --help` (cold) | ~64 s | uv re-verifies the lockfile against the tree on every invocation |
+| same with `uv run --frozen` | ~17 s | `--frozen` skips lock verification; use whenever the venv is already synced |
+| full smoke lane on the same checkout | >2 min, subprocess tests hit pytest-timeout | dominated by per-CLI-test `uv run` subprocess cost and discovery globs over `projects/` |
+
+Practical rules:
+
+- **Prefer `uv run --frozen`** for test/CLI invocations once `uv sync` has run;
+  it is the single largest per-subprocess win (measured ~4x on this checkout).
+- **Batch CLI tests**: every test that spawns `uv run` pays the full uv
+  resolution + interpreter + import cost; prefer in-process module imports for
+  unit-level assertions and reserve subprocess smoke tests for real CLI paths.
+- **Per-project suites stay per-project**: one pytest process per
+  `projects/<name>/tests/` remains canonical (conftest plugin-name collisions);
+  do not merge processes to save time.
+- **pytest-xdist**: `resolve_xdist_args` already bounds inner parallelism and
+  macOS full-coverage lanes stay at <=2 workers; the not-xdist-safe suites
+  (notably `template_active_inference`) remain excluded from parallel lanes.
+- **Hypothesis profiles**: set `HYPOTHESIS_PROFILE=fast` (registered in
+  `tests/conftest.py`, max_examples=5, deadline=None) for smoke/agent loops;
+  unset it for full-profile scheduled runs. Opt-in only; the variable costs
+  nothing when absent.
+- **Select by path, never by full-tree collection**: on a slow external-drive
+  checkout, `pytest tests/infra_tests --collect-only` alone was measured I/O-bound
+  at >15 minutes (near-zero CPU, blocked in scandir). Always point pytest at the
+  specific file(s)/directory you changed; subset collection is seconds.
+- **TMPDIR locality**: pytest `tmp_path` already lands on the OS temp dir
+  (local SSD via `/var/folders` on macOS). Do not silently redirect the global
+  `TMPDIR` for other consumers; if a checkout lives on a slow external drive,
+  the dominant I/O cost is the repo tree itself (collection and git scans),
+  which only a faster checkout location removes.
+
 ### 2. PDF Rendering
 
 **Bottleneck**: LaTeX compilation is CPU-intensive

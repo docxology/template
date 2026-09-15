@@ -9,6 +9,11 @@ runs:
     - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
       with:
         node-version: "20"
+        # CI-FAST-DOCSLINT-NPM-1: cache the npm download cache keyed on the
+        # lockfile; `npm ci` semantics stay unchanged (deterministic reinstall),
+        # only tarball downloads are skipped. `setup-node` keys this on
+        # package-lock.json automatically.
+        cache: npm
 
     - name: Cache puppeteer / chrome-headless-shell
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0

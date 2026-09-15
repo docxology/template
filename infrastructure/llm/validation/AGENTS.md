@@ -226,8 +226,8 @@ is_valid, issues, details = validate_response_structure(
 
 **Internal module — do not import directly.** Used by `detection.py`.
 
-Provides `_jaccard_similarity`, `_tf_cosine_similarity`, `_sequence_similarity`,
-`_calculate_similarity` (hybrid combiner), and `_normalize_for_comparison`.
+Provides `jaccard_similarity`, `tf_cosine_similarity`, `sequence_similarity`,
+`calculate_similarity` (hybrid combiner), and `normalize_for_comparison`.
 
 ## Validation Integration
 

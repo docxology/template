@@ -53,7 +53,7 @@ def test_figure_registry_fail_closed_on_unknown_token(project_root: Path) -> Non
 
 @pytest.mark.timeout(300)
 def test_all_generators_write_png(project_root: Path) -> None:
-    from analysis import run_analysis
+    from template_active_inference.analysis import run_analysis
     from manuscript.sheaf.coverage import emit_coverage_artifacts
     from simulation.si_runner import pymdp_available, run_and_persist
 
@@ -70,7 +70,7 @@ def test_all_generators_write_png(project_root: Path) -> None:
 
 
 def test_free_energy_grid_matches_ssot(project_root: Path) -> None:
-    from analysis import run_analysis
+    from template_active_inference.analysis import run_analysis
 
     run_analysis(project_root)
     sweep_path = project_root / "output" / "data" / "parameter_sweep.csv"
@@ -81,7 +81,7 @@ def test_free_energy_grid_matches_ssot(project_root: Path) -> None:
 
 @pytest.mark.timeout(300)
 def test_generate_all_figures_complete(project_root: Path) -> None:
-    from analysis import run_analysis
+    from template_active_inference.analysis import run_analysis
     from simulation.si_runner import pymdp_available, run_and_persist
 
     run_analysis(project_root)
@@ -247,7 +247,7 @@ def test_layout_sensitive_figures_have_publication_dimensions(project_root: Path
 
 
 def test_figure_ising_mi_curve_dimensions(project_root: Path) -> None:
-    from analysis import run_analysis
+    from template_active_inference.analysis import run_analysis
 
     run_analysis(project_root)
     path = figure_ising_mi_curve(project_root)
@@ -302,7 +302,7 @@ def test_visualization_quality_audit_rejects_live_blank_render(project_root: Pat
         write_visualization_quality_audit,
     )
 
-    from analysis import run_analysis
+    from template_active_inference.analysis import run_analysis
     from simulation.si_runner import pymdp_available, run_and_persist
 
     run_analysis(project_root)

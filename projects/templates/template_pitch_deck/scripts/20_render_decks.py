@@ -26,8 +26,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pitch-subject", default=None, help="Opt-in configured subject to render")
     args = parser.parse_args(argv)
 
-    from paths import locate_repo_root
-    from render_orchestration import DeckAuditFailure, DiligenceAuditFailure, render_all_decks
+    from template_pitch_deck.paths import locate_repo_root
+    from template_pitch_deck.render_orchestration import DeckAuditFailure, DiligenceAuditFailure, render_all_decks
 
     from infrastructure.core.exceptions import RenderingError
 

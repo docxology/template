@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import pytest
 
-from deck_tokens import (
+from template_pitch_deck.deck_tokens import (
     _display_platform_name,
     _read_own_deck_doi_status,
     _second_example_name,
     _validate_project_name,
     build_deck_tokens,
 )
-from paths import locate_repo_root, project_root
+from template_pitch_deck.paths import locate_repo_root, project_root
 
 
 @pytest.fixture(scope="module")
@@ -197,7 +197,7 @@ def test_read_pitch_subject_config_null_paper_key_does_not_crash(tmp_path):
     absent) must not raise AttributeError from a bare `.get(key, {})`
     pattern — `dict.get` only substitutes the default when the key is
     *absent*, not when it's present with value `None`."""
-    from deck_tokens import _read_pitch_subject_config
+    from template_pitch_deck.deck_tokens import _read_pitch_subject_config
 
     subject_dir = tmp_path / "projects" / "templates" / "null_paper_subject" / "manuscript"
     subject_dir.mkdir(parents=True)

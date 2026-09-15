@@ -55,15 +55,15 @@ flowchart TB
     LINT --> SEC[security]
     LINT --> DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
-    VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12/3.13/3.14 + macOS × 3.14<br/>codecov on 3.14/ubuntu only]
+    DETP -.->|infra_matrix output| TI
+    VNM --> TI[test-infra<br/>dynamic matrix from detect-projects<br/>push/schedule: ubuntu × 3.10-3.14 + macOS × 3.14<br/>PR: ubuntu-3.14 + macOS-3.14 only<br/>codecov on 3.14/ubuntu only]
     VNM --> TR[test-regression<br/>claim-binding pins · tests/regression/]
     VNM --> TP[test-project<br/>capability manifest roster × canonical Python versions<br/>stage_01_test.py --project per cell]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
     DET --> SHW
     DET --> FL
     DETP --> TP
-    TI --> PERF[performance]
-    TP --> PERF
+    PERF[performance<br/>no needs · CI-FAST-PERF-1]
 
     classDef gate fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef matrix fill:#0f766e,stroke:#0f172a,color:#fff
@@ -141,6 +141,7 @@ A negative control backs this contract: deliberately breaking any represented st
 #### 4. Infrastructure Tests (`test-infra`)
 
 - **Matrix:** `ubuntu-latest` × `3.10`, `3.11`, `3.12`, `3.13`, `3.14`, plus an `include:` of `macos-latest` × `3.14` (6 cells). macOS legs are ~10x cost and rarely surface OS-specific breakage beyond the 3.14 cell, so only the 3.14 smoke runs there.
+- **Event gating (CI-FAST-INFRA-COMPAT-1):** on `pull_request` only the ubuntu/py3.14 (coverage-bearing) and macOS/py3.14 cells run; the py3.10-3.13 compatibility legs run on `push` to `main`, the weekly `schedule`, and `workflow_dispatch`. Implementation: the `detect-projects` job emits the event-shaped matrix (`infra_matrix` output) because the `matrix` context is NOT valid in a job-level `if` (actionlint rejects it); `test-infra` now `needs: [verify-no-mocks, detect-projects]` and consumes the dynamic matrix. Measured: those legs are 6-8 min each, never the PR critical path, and occupy 4 runner slots that deepen wave-2 queue spill for the 48-cell project matrix. Known cost, stated honestly: infra-layer 3.10-3.13 compatibility is proven on the same-day main push / weekly lane rather than pre-merge. Project-floor py3.10 coverage is unaffected (project matrix cells keep py3.10 + py3.14 on PRs); the full matrix still gates every main push, so a merged 3.10-incompatible change fails the exact-commit run.
 - **Coverage threshold:** 60% (`--cov-fail-under=60`)
 - **Coverage file:** `.coverage.infra` (isolated from project coverage)
 - **Browser reflow:** the Ubuntu/Python 3.14 cell runs the real Chromium MathJax regression after infrastructure tests. It provisions `@playwright/test@1.62.1` and Chromium, waits for completed typesetting, and verifies visible equation numbers across live viewport changes. CDN access is required; a browser or MathJax failure fails the cell.
@@ -212,7 +213,7 @@ This skip list bounds what the linter checks: it scans tracked documentation onl
 #### 10. Performance Check (`performance`)
 
 - **Runner:** `ubuntu-latest` / Python 3.14
-- **Depends on:** `test-infra` + `test-project`
+- **Depends on:** nothing (CI-FAST-PERF-1 — the job consumes no upstream artifacts, so no `needs:`; `ci-gate` still requires it). It therefore runs in the first wave instead of after the slowest project cell.
 - **Threshold:** each `infrastructure.core` or public project `src` cold import from `infrastructure.project.public_scope` must complete in ≤ 5 seconds
 - **Per-module timing** and the roster-dependent total are reported to stdout for trend analysis
 

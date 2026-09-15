@@ -13,8 +13,8 @@ from pypdf import PdfReader
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.slide_deck import Slide
 
-from paths import locate_repo_root, project_root
-from render_orchestration import (
+from template_pitch_deck.paths import locate_repo_root, project_root
+from template_pitch_deck.render_orchestration import (
     DeckAuditFailure,
     DiligenceAuditFailure,
     _configured_formats,
@@ -114,7 +114,7 @@ def test_subject_content_prefix_handles_malformed_subjects_shapes():
 
 
 def test_render_one_length_writes_real_pdf(tmp_path: Path, repo_root):
-    from deck_tokens import build_deck_tokens
+    from template_pitch_deck.deck_tokens import build_deck_tokens
     from infrastructure.rendering.slide_deck import DeckTheme
 
     tokens = build_deck_tokens(repo_root)
@@ -215,7 +215,7 @@ def test_render_one_length_raises_on_uncited_fact_slide(tmp_path: Path, repo_roo
 
 
 def test_render_one_length_supports_second_configured_subject(tmp_path: Path, repo_root):
-    from deck_tokens import build_deck_tokens
+    from template_pitch_deck.deck_tokens import build_deck_tokens
     from infrastructure.rendering.slide_deck import DeckTheme
 
     tokens = build_deck_tokens(repo_root, pitch_subject="template_methods_paper")
@@ -258,7 +258,7 @@ def test_preflight_rejects_later_length_before_any_render(tmp_path: Path, repo_r
 
 
 def test_current_decks_pass_shared_layout_preflight(repo_root):
-    from deck_tokens import build_deck_tokens
+    from template_pitch_deck.deck_tokens import build_deck_tokens
 
     _preflight_all_lengths(
         manuscript_dir=project_root() / "manuscript",
@@ -364,8 +364,8 @@ def test_rendered_output_actually_reflects_token_value_not_a_cached_default(tmp_
     rendered PDF text changes accordingly — proves the pipeline actually
     threads the live-sourced value through to the artifact, rather than a
     hardcoded default that happens to match."""
-    from content_loader import build_deck_content, load_deck_yaml
-    from deck_tokens import build_deck_tokens
+    from template_pitch_deck.content_loader import build_deck_content, load_deck_yaml
+    from template_pitch_deck.deck_tokens import build_deck_tokens
     from infrastructure.rendering.slide_deck import SlideBudget, filter_deck_for_budget, render_pdf
 
     tokens = build_deck_tokens(repo_root)
@@ -427,7 +427,7 @@ def test_budget_filter_property_is_prefix_preserving(slide_count: int):
     ),
 )
 def test_token_resolution_handles_adversarial_uppercase_token_sequences(names):
-    from token_resolution import resolve_tokens
+    from template_pitch_deck.token_resolution import resolve_tokens
 
     source = " ".join(f"{{{{{name}}}}}" for name in names)
     values = {name: f"value-{index}" for index, name in enumerate(names)}

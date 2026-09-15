@@ -9,7 +9,7 @@ from typing import Any
 
 
 from manuscript.sheaf.coverage import load_sheaf_coverage_context
-from yaml_io import load_yaml as _load_yaml
+from template_active_inference.yaml_io import load_yaml as _load_yaml
 
 STATUS_MATRIX_SCHEMA = "template_active_inference.sheaf_section_status_matrix.v1"
 RENDER_LOG_SCHEMA = "template_active_inference.sheaf_render_log.v1"

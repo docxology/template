@@ -5,19 +5,19 @@
 claims:
   - id: "claim:five_stages"
     statement: "The refinery pipeline has 5 canonical stages."
-    source: "src/refinery.py::CANONICAL_STAGES"
+    source: "src/template_gold_refinement/refinery.py::CANONICAL_STAGES"
     evidence_type: "code"
     boundary: "local"
 
   - id: "claim:monotone_purity"
     statement: "Purity increases monotonically across all refinery stages."
-    source: "src/purity.py::assert_monotone_increase"
+    source: "src/template_gold_refinement/purity.py::assert_monotone_increase"
     evidence_type: "code"
     boundary: "local"
 
   - id: "claim:nine_nines"
     statement: "The certification stage achieves 99.9999999% purity (nine-nines)."
-    source: "src/purity.py::NINE_NINES_PURITY"
+    source: "src/template_gold_refinement/purity.py::NINE_NINES_PURITY"
     evidence_type: "code"
     boundary: "local"
 
@@ -29,13 +29,13 @@ claims:
 
   - id: "claim:sha256_digest"
     statement: "Token selection uses SHA-256 digest over seed, slot, category, ordinal, and inventory."
-    source: "src/composition.py::_choose_value"
+    source: "src/template_gold_refinement/composition.py::_choose_value"
     evidence_type: "code"
     boundary: "local"
 
   - id: "claim:formalism_registry"
     statement: "The manuscript exposes 7 source-owned formalisms with equation labels."
-    source: "src/formalisms.py::FORMALISMS"
+    source: "src/template_gold_refinement/formalisms.py::FORMALISMS"
     evidence_type: "code"
     boundary: "local"
 
@@ -53,13 +53,13 @@ claims:
 
   - id: "claim:scientific_integrity_risk_model"
     statement: "The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations."
-    source: "src/integrity.py::build_integrity_dimensions"
+    source: "src/template_gold_refinement/integrity.py::build_integrity_dimensions"
     evidence_type: "code"
     boundary: "local"
 
   - id: "claim:adversarial_security_assay"
     statement: "The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries."
-    source: "src/security_assay.py::build_security_assay"
+    source: "src/template_gold_refinement/security_assay.py::build_security_assay"
     evidence_type: "code"
     boundary: "local"
 
@@ -67,8 +67,8 @@ claims:
     kind: "equation"
     value: "eq:purity_functional"
     statement: "The generated manuscript defines the purity functional equation label."
-    source: "src/formalisms.py::FORMALISMS"
-    artifact_path: "src/formalisms.py"
+    source: "src/template_gold_refinement/formalisms.py::FORMALISMS"
+    artifact_path: "src/template_gold_refinement/formalisms.py"
     source_tier: "claim_ledger"
     freshness: "active"
 
@@ -76,8 +76,8 @@ claims:
     kind: "equation"
     value: "eq:monotone_refinery"
     statement: "The generated manuscript defines the monotone refinery equation label."
-    source: "src/formalisms.py::FORMALISMS"
-    artifact_path: "src/formalisms.py"
+    source: "src/template_gold_refinement/formalisms.py::FORMALISMS"
+    artifact_path: "src/template_gold_refinement/formalisms.py"
     source_tier: "claim_ledger"
     freshness: "active"
 
@@ -85,8 +85,8 @@ claims:
     kind: "equation"
     value: "eq:token_digest"
     statement: "The generated manuscript defines the token digest equation label."
-    source: "src/formalisms.py::FORMALISMS"
-    artifact_path: "src/formalisms.py"
+    source: "src/template_gold_refinement/formalisms.py::FORMALISMS"
+    artifact_path: "src/template_gold_refinement/formalisms.py"
     source_tier: "claim_ledger"
     freshness: "active"
 
@@ -94,8 +94,8 @@ claims:
     kind: "equation"
     value: "eq:claim_support"
     statement: "The generated manuscript defines the claim support equation label."
-    source: "src/formalisms.py::FORMALISMS"
-    artifact_path: "src/formalisms.py"
+    source: "src/template_gold_refinement/formalisms.py::FORMALISMS"
+    artifact_path: "src/template_gold_refinement/formalisms.py"
     source_tier: "claim_ledger"
     freshness: "active"
 
@@ -103,8 +103,8 @@ claims:
     kind: "equation"
     value: "eq:integrity_vector"
     statement: "The generated manuscript defines the integrity vector equation label."
-    source: "src/formalisms.py::FORMALISMS"
-    artifact_path: "src/formalisms.py"
+    source: "src/template_gold_refinement/formalisms.py::FORMALISMS"
+    artifact_path: "src/template_gold_refinement/formalisms.py"
     source_tier: "claim_ledger"
     freshness: "active"
 
@@ -112,8 +112,8 @@ claims:
     kind: "equation"
     value: "eq:certification_predicate"
     statement: "The generated manuscript defines the certification predicate equation label."
-    source: "src/formalisms.py::FORMALISMS"
-    artifact_path: "src/formalisms.py"
+    source: "src/template_gold_refinement/formalisms.py::FORMALISMS"
+    artifact_path: "src/template_gold_refinement/formalisms.py"
     source_tier: "claim_ledger"
     freshness: "active"
 
@@ -121,8 +121,8 @@ claims:
     kind: "equation"
     value: "eq:adversarial_assay"
     statement: "The generated manuscript defines the adversarial assay equation label."
-    source: "src/formalisms.py::FORMALISMS"
-    artifact_path: "src/formalisms.py"
+    source: "src/template_gold_refinement/formalisms.py::FORMALISMS"
+    artifact_path: "src/template_gold_refinement/formalisms.py"
     source_tier: "claim_ledger"
     freshness: "active"
 
@@ -130,8 +130,8 @@ claims:
     kind: "number"
     value: 12
     statement: "The token digest formalism uses a 12-character hexadecimal prefix."
-    source: "src/formalisms.py::FORMALISMS.eq_token_digest"
-    artifact_path: "src/formalisms.py"
+    source: "src/template_gold_refinement/formalisms.py::FORMALISMS.eq_token_digest"
+    artifact_path: "src/template_gold_refinement/formalisms.py"
     source_tier: "claim_ledger"
     freshness: "active"
 
@@ -139,8 +139,8 @@ claims:
     kind: "number"
     value: 16
     statement: "The token digest formalism interprets the hexadecimal prefix in base 16."
-    source: "src/formalisms.py::FORMALISMS.eq_token_digest"
-    artifact_path: "src/formalisms.py"
+    source: "src/template_gold_refinement/formalisms.py::FORMALISMS.eq_token_digest"
+    artifact_path: "src/template_gold_refinement/formalisms.py"
     source_tier: "claim_ledger"
     freshness: "active"
 
@@ -148,8 +148,8 @@ claims:
     kind: "number"
     value: 9
     statement: "The source-owned integrity model emits 9 integrity dimensions."
-    source: "src/integrity.py::build_integrity_dimensions"
-    artifact_path: "src/integrity.py"
+    source: "src/template_gold_refinement/integrity.py::build_integrity_dimensions"
+    artifact_path: "src/template_gold_refinement/integrity.py"
     source_tier: "claim_ledger"
     freshness: "active"
 
@@ -157,8 +157,8 @@ claims:
     kind: "number"
     value: 5
     statement: "The source-owned adversarial security assay emits 5 configured rows."
-    source: "src/security_assay.py::build_security_assay"
-    artifact_path: "src/security_assay.py"
+    source: "src/template_gold_refinement/security_assay.py::build_security_assay"
+    artifact_path: "src/template_gold_refinement/security_assay.py"
     source_tier: "claim_ledger"
     freshness: "active"
 

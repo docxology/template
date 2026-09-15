@@ -14,9 +14,9 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-from json_io import json_payloads_equal
-from json_io import load_json as _load_json
-from json_io import write_json as _write_json
+from template_active_inference.json_io import json_payloads_equal
+from template_active_inference.json_io import load_json as _load_json
+from template_active_inference.json_io import write_json as _write_json
 
 SUPPLEMENTAL_ARTIFACTS: dict[str, str] = {
     "proof_dependency_graph": "output/data/proof_dependency_graph.json",

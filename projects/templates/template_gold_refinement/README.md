@@ -2,11 +2,11 @@
 
 > **Domain-skin variant of [`template_madlib`](../template_madlib/README.md).**
 > This exemplar reuses the same deterministic token-injection composition core
-> as `template_madlib` (`src/composition.py`, `src/config.py`,
-> `src/manuscript_variables.py`, and a near-identical `manuscript/config.yaml`
+> as `template_madlib` (`src/template_gold_refinement/composition.py`, `src/template_gold_refinement/config.py`,
+> `src/template_gold_refinement/manuscript_variables.py`, and a near-identical `manuscript/config.yaml`
 > schema) and shows how to specialize that mega-madlib engine to a concrete
-> domain. The metallurgy skin (`src/assay.py`, `src/purity.py`,
-> `src/refinery.py`, `src/domain_adapter.py`) maps the abstract composition
+> domain. The metallurgy skin (`src/template_gold_refinement/assay.py`, `src/template_gold_refinement/purity.py`,
+> `src/template_gold_refinement/refinery.py`, `src/template_gold_refinement/domain_adapter.py`) maps the abstract composition
 > pipeline onto a real refinement sequence:
 > ore → smelting → assaying → cupellation → certification. Read
 > [`template_madlib`](../template_madlib/README.md) first for the generic engine;
@@ -109,14 +109,14 @@ All rendered artifacts are source-owned and disposable. Do not hand-edit
 
 | Artifact | Source owner | Purpose |
 | --- | --- | --- |
-| `output/data/refinery_results.json` | `src/refinery.py`, `src/purity.py` | Canonical purity sequence and certification result |
-| `output/reports/token_plan.json` | `src/composition.py`, `manuscript/config.yaml` | Deterministic mega-madlib token choices and provenance |
-| `output/reports/claim_support_registry.json` | `src/evidence.py` | Project-local contribution-claim assay |
+| `output/data/refinery_results.json` | `src/template_gold_refinement/refinery.py`, `src/template_gold_refinement/purity.py` | Canonical purity sequence and certification result |
+| `output/reports/token_plan.json` | `src/template_gold_refinement/composition.py`, `manuscript/config.yaml` | Deterministic mega-madlib token choices and provenance |
+| `output/reports/claim_support_registry.json` | `src/template_gold_refinement/evidence.py` | Project-local contribution-claim assay |
 | `output/reports/evidence_registry.json` | template evidence validator | Shared evidence facts consumed by validation gates |
 | `output/figures/figure_registry.json` | `src/figures/_common.py::FIGURE_SPECS` | Figure label/path/caption/source registry |
 | `output/reports/figure_quality_report.json` | `src/figures/registry.py::write_figure_quality_report` | PNG/SVG existence, dimensions, nonblank pixels, color variance, and registry parity |
-| `output/figures/cover_visualization.png` | `src/cover_visualization.py::generate_cover_visualization` | Standalone publication cover visual; not part of the stable 12-figure manuscript registry |
-| `output/reports/cover_visualization.json` | `src/cover_visualization.py::write_cover_visualization` | Cover dimensions, byte sizes, nonwhite fraction, and color variance |
+| `output/figures/cover_visualization.png` | `src/template_gold_refinement/cover_visualization.py::generate_cover_visualization` | Standalone publication cover visual; not part of the stable 12-figure manuscript registry |
+| `output/reports/cover_visualization.json` | `src/template_gold_refinement/cover_visualization.py::write_cover_visualization` | Cover dimensions, byte sizes, nonwhite fraction, and color variance |
 
 ## Visualization and scientific-integrity surface
 
@@ -177,7 +177,7 @@ including `networkx>=3.4.2` for deterministic graph layouts.
 - **Multi-objective purity**: keeps stage completion, claim support, token provenance, and figure quality separate without compensatory averaging
 - **Nine-nines certification**: extends purity to 99.9999999% for the final stage
 - **Manuscript variable generation**: every prose number is a `{{TOKEN}}` from one Python function
-- **Source-owned formalisms**: auto-numbered equation blocks from `src/formalisms.py`
+- **Source-owned formalisms**: auto-numbered equation blocks from `src/template_gold_refinement/formalisms.py`
 - **Scientific-integrity gates**: claim support, evidence tiers, source owners, and risk dimensions from source registries
 - **Technical visualization QA**: PNG+SVG generation, registry parity, nonblank pixel checks, and color-variance checks
 - **Zero-mock test suite**: real data, real computation, real files

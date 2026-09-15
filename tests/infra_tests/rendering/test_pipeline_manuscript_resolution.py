@@ -1,6 +1,6 @@
 """Tests for infrastructure.rendering.pipeline manuscript resolution.
 
-Covers _resolve_manuscript_dir injection/fallback behavior, project-resolved
+Covers resolve_manuscript_dir injection/fallback behavior, project-resolved
 config ownership, and the unresolved-token guard that fails the render closed.
 """
 
@@ -12,16 +12,16 @@ import pytest
 
 from infrastructure.core.exceptions import ValidationError
 from infrastructure.rendering.pipeline import (
-    _has_generated_manuscript_ordering,
-    _is_project_resolved,
-    _resolve_manuscript_dir,
-    _unresolved_config_tokens,
-    _verify_config_tokens_resolved,
+    has_generated_manuscript_ordering,
+    is_project_resolved,
+    resolve_manuscript_dir,
+    unresolved_config_tokens,
+    verify_config_tokens_resolved,
 )
 
 
 # ---------------------------------------------------------------------------
-# _resolve_manuscript_dir
+# resolve_manuscript_dir
 # ---------------------------------------------------------------------------
 
 
@@ -31,7 +31,7 @@ def test_resolve_manuscript_dir_uses_injected_when_present(tmp_path: Path) -> No
     injected.mkdir(parents=True)
     (injected / "01_intro.md").write_text("# Intro")
 
-    result = _resolve_manuscript_dir(tmp_path)
+    result = resolve_manuscript_dir(tmp_path)
 
     assert result == injected
 
@@ -50,7 +50,7 @@ def test_resolve_manuscript_dir_refreshes_injected_auxiliary_files(tmp_path: Pat
     (source / "references.bib").write_text("@book{fresh,title={Fresh}}\n", encoding="utf-8")
     (injected / "references.bib").write_text("@book{stale,title={Stale}}\n", encoding="utf-8")
 
-    result = _resolve_manuscript_dir(tmp_path)
+    result = resolve_manuscript_dir(tmp_path)
 
     assert result == injected
     assert "Fresh" in (injected / "config.yaml").read_text(encoding="utf-8")
@@ -61,7 +61,7 @@ def test_resolve_manuscript_dir_refreshes_injected_auxiliary_files(tmp_path: Pat
 
 def test_resolve_manuscript_dir_falls_back_to_source(tmp_path: Path) -> None:
     """Falls back to manuscript/ when injected dir is absent."""
-    result = _resolve_manuscript_dir(tmp_path)
+    result = resolve_manuscript_dir(tmp_path)
 
     assert result == tmp_path / "manuscript"
 
@@ -72,7 +72,7 @@ def test_resolve_manuscript_dir_falls_back_to_docs_source(tmp_path: Path) -> Non
     source.mkdir(parents=True)
     (source / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
 
-    result = _resolve_manuscript_dir(tmp_path)
+    result = resolve_manuscript_dir(tmp_path)
 
     assert result == source
 
@@ -89,7 +89,7 @@ def test_resolve_manuscript_dir_refreshes_injected_config_from_docs_source(tmp_p
     (injected / "01_intro.md").write_text("# Injected\n", encoding="utf-8")
     (injected / "config.yaml").write_text("paper:\n  title: Stale\n", encoding="utf-8")
 
-    result = _resolve_manuscript_dir(tmp_path)
+    result = resolve_manuscript_dir(tmp_path)
 
     assert result == injected
     assert "Fresh docs config" in (injected / "config.yaml").read_text(encoding="utf-8")
@@ -101,7 +101,7 @@ def test_resolve_manuscript_dir_returns_manuscript_path_when_absent(tmp_path: Pa
     project_root = tmp_path / "project"
     project_root.mkdir()
 
-    result = _resolve_manuscript_dir(project_root)
+    result = resolve_manuscript_dir(project_root)
 
     assert result == project_root / "manuscript"
 
@@ -119,7 +119,7 @@ def test_resolve_manuscript_dir_preserves_generated_config_ordering(tmp_path: Pa
         encoding="utf-8",
     )
 
-    result = _resolve_manuscript_dir(tmp_path)
+    result = resolve_manuscript_dir(tmp_path)
 
     assert result == injected
     assert "Generated" in (injected / "config.yaml").read_text(encoding="utf-8")
@@ -132,7 +132,7 @@ def test_resolve_manuscript_dir_falls_back_when_injected_empty(tmp_path: Path) -
     injected.mkdir(parents=True)
     # directory exists but no .md files
 
-    result = _resolve_manuscript_dir(tmp_path)
+    result = resolve_manuscript_dir(tmp_path)
 
     assert result == tmp_path / "manuscript"
 
@@ -143,7 +143,7 @@ def test_resolve_manuscript_dir_ignores_non_md_files_in_injected(tmp_path: Path)
     injected.mkdir(parents=True)
     (injected / "notes.txt").write_text("just a note")
 
-    result = _resolve_manuscript_dir(tmp_path)
+    result = resolve_manuscript_dir(tmp_path)
 
     assert result == tmp_path / "manuscript"
 
@@ -168,7 +168,7 @@ def test_resolve_manuscript_dir_preserves_project_resolved_config(tmp_path: Path
     (source / "config.yaml").write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
     (injected / "config.yaml").write_text('paper:\n  title: "Resolved Title"\n', encoding="utf-8")
 
-    result = _resolve_manuscript_dir(tmp_path)
+    result = resolve_manuscript_dir(tmp_path)
 
     assert result == injected
     rendered_config = (injected / "config.yaml").read_text(encoding="utf-8")
@@ -189,7 +189,7 @@ def test_resolve_manuscript_dir_preserves_config_with_explicit_project_marker(tm
         encoding="utf-8",
     )
 
-    result = _resolve_manuscript_dir(tmp_path)
+    result = resolve_manuscript_dir(tmp_path)
 
     assert result == injected
     assert "Project Owned" in (injected / "config.yaml").read_text(encoding="utf-8")
@@ -200,8 +200,8 @@ def test_is_project_resolved_preserves_generated_ordering_branch(tmp_path: Path)
     cfg = tmp_path / "config.yaml"
     cfg.write_text("# Generated manuscript ordering\npaper:\n  title: X\n", encoding="utf-8")
 
-    assert _is_project_resolved(cfg) is True
-    assert _has_generated_manuscript_ordering(cfg) is True
+    assert is_project_resolved(cfg) is True
+    assert has_generated_manuscript_ordering(cfg) is True
 
 
 def test_is_project_resolved_false_for_plain_injected_config(tmp_path: Path) -> None:
@@ -211,7 +211,7 @@ def test_is_project_resolved_false_for_plain_injected_config(tmp_path: Path) -> 
     source_cfg.write_text("paper:\n  title: Source\n", encoding="utf-8")
     injected_cfg.write_text("paper:\n  title: Stale\n", encoding="utf-8")
 
-    assert _is_project_resolved(injected_cfg, source_cfg) is False
+    assert is_project_resolved(injected_cfg, source_cfg) is False
 
 
 def test_is_project_resolved_false_when_injected_still_holds_the_token(tmp_path: Path) -> None:
@@ -221,7 +221,7 @@ def test_is_project_resolved_false_when_injected_still_holds_the_token(tmp_path:
     source_cfg.write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
     injected_cfg.write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
 
-    assert _is_project_resolved(injected_cfg, source_cfg) is False
+    assert is_project_resolved(injected_cfg, source_cfg) is False
 
 
 # ---------------------------------------------------------------------------
@@ -240,7 +240,7 @@ def test_resolve_manuscript_dir_rejects_unresolved_token_in_injected_config(tmp_
     (injected / "config.yaml").write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
 
     with pytest.raises(ValidationError) as excinfo:
-        _resolve_manuscript_dir(tmp_path)
+        resolve_manuscript_dir(tmp_path)
 
     assert "PAPER_TITLE" in str(excinfo.value)
 
@@ -253,7 +253,7 @@ def test_resolve_manuscript_dir_rejects_unresolved_token_in_source_config(tmp_pa
     (source / "config.yaml").write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
 
     with pytest.raises(ValidationError) as excinfo:
-        _resolve_manuscript_dir(tmp_path)
+        resolve_manuscript_dir(tmp_path)
 
     assert "PAPER_TITLE" in str(excinfo.value)
 
@@ -271,8 +271,8 @@ def test_unresolved_config_tokens_ignores_documented_token_in_code_span(tmp_path
         encoding="utf-8",
     )
 
-    assert _unresolved_config_tokens(cfg) == []
-    _verify_config_tokens_resolved(cfg)
+    assert unresolved_config_tokens(cfg) == []
+    verify_config_tokens_resolved(cfg)
 
 
 def test_unresolved_config_tokens_reports_sorted_unique_tokens(tmp_path: Path) -> None:
@@ -283,10 +283,10 @@ def test_unresolved_config_tokens_reports_sorted_unique_tokens(tmp_path: Path) -
         encoding="utf-8",
     )
 
-    assert _unresolved_config_tokens(cfg) == ["ABSTRACT", "PAPER_TITLE"]
+    assert unresolved_config_tokens(cfg) == ["ABSTRACT", "PAPER_TITLE"]
 
 
 def test_unresolved_config_tokens_missing_file(tmp_path: Path) -> None:
     """An absent config has no tokens and never fails the render."""
-    assert _unresolved_config_tokens(tmp_path / "missing.yaml") == []
-    _verify_config_tokens_resolved(tmp_path / "missing.yaml")
+    assert unresolved_config_tokens(tmp_path / "missing.yaml") == []
+    verify_config_tokens_resolved(tmp_path / "missing.yaml")

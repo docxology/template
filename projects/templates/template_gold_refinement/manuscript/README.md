@@ -27,7 +27,7 @@ Source manuscript files for `template_gold_refinement`.
 Manuscript source files should contain prose, cross-reference labels, and
 `{{TOKEN}}` placeholders. Generated numbers, figure blocks, formalism rows,
 claim-support summaries, evidence-tier summaries, and figure-quality summaries
-come from `src/manuscript_variables.py` and `output/data/manuscript_variables.json`.
+come from `src/template_gold_refinement/manuscript_variables.py` and `output/data/manuscript_variables.json`.
 
 Do not hard-code figure numbers, equation numbers, table numbers, generated
 counts, support rates, evidence fact counts, or figure-quality totals in
