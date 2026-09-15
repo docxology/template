@@ -71,14 +71,14 @@ or manual dispatch.**
 | 5 | `health` | Static Health Report | lint | 3.14 | ubuntu |
 | 6 | `verify-no-mocks` | Verify No Mocks Policy | — (parallel with `lint`) | 3.14 | ubuntu |
 | 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.14 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
-| 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.14 | ubuntu (×3.10/3.11/3.12/3.13/3.14) + macOS (3.14 only) — 6 cells |
+| 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks, detect-projects | 3.10–3.14 | ubuntu (×3.10/3.11/3.12/3.13/3.14) + macOS (3.14 only) — 6 cells; PR lanes run only ubuntu+macOS 3.14 (CI-FAST-INFRA-COMPAT-1 — dynamic `infra_matrix` output from `detect-projects`) |
 | 9 | `test-regression` | Regression Tier (claim-binding pins) | verify-no-mocks | 3.14 | ubuntu |
 | 10 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | capability-manifest versions | ubuntu only — exact project/Python include matrix from `public_capabilities.py` |
 | 11 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.14 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
 | 12 | `validate` | Validate Manuscripts | lint | 3.14 | ubuntu |
 | 13 | `security` | Security Scan | lint | 3.14 | ubuntu |
 | 14 | `docs-lint` | Documentation Lint | lint | 3.14 | ubuntu |
-| 15 | `performance` | Performance Check | test-infra + test-project | 3.14 | ubuntu |
+| 15 | `performance` | Performance Check | — (no `needs:`; CI-FAST-PERF-1) | 3.14 | ubuntu |
 | 16 | `public-matrix-receipt` | Public Matrix Receipt (receipt-bearing full matrix) | — | 3.14 | ubuntu · schedule/manual only |
 | 17 | `test-infra-slow` | Infra Slow Lane (`pytest.mark.slow`) | verify-no-mocks | 3.14 | ubuntu · schedule/manual only — exercises the slow-marked suite PR lanes deselect |
 | 18 | `test-integration` | Integration Tier (run.sh + pipeline CLI) | verify-no-mocks | 3.14 | ubuntu — runs the registered `tests/integration/` suite on every push/PR (CI-WIRING-1) |
@@ -187,7 +187,7 @@ severity as the CI `security` job, so contributors hear it before CI does.
 
 Required checks must match the **`name:`** field of each job in [`workflows/ci.yml`](workflows/ci.yml). `main` is currently unprotected, so the contexts below are **illustrative**. Matrix jobs expand to one check per cell:
 
-- **`test-infra`** → **Infra Tests (`<os>`, Python `<ver>`)** — 6 cells: `ubuntu-latest × 3.10/3.11/3.12/3.13/3.14` plus `macos-latest × 3.14`.
+- **`test-infra`** → **Infra Tests (`<os>`, Python `<ver>`)** — 6 cells: `ubuntu-latest × 3.10/3.11/3.12/3.13/3.14` plus `macos-latest × 3.14`. Note: on PRs only the two 3.14 cells run (CI-FAST-INFRA-COMPAT-1); requiring the 3.10-3.13 contexts as PR checks would wedge every PR — gate PRs via `CI Gate` instead.
 - **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — one cell for every entry emitted by the validated capability manifest. Its current canonical versions are py3.10 and py3.14, ubuntu-latest only.
 
 Require the combinations you care about, or use GitHub rulesets that treat required checks flexibly.
