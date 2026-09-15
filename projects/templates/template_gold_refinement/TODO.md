@@ -21,7 +21,7 @@ keeps a capability blocked rather than silently promoting it.
   across stages.
 - Keep mega-madlib token injection deterministic, seeded, and config-owned
   (lexicon in config, no hardcoded selections).
-- Keep `src/evidence.py` cross-checking every manuscript contribution claim
+- Keep `src/template_gold_refinement/evidence.py` cross-checking every manuscript contribution claim
   against its evidence source, including dotted Python member paths.
 - Transmission bookends (`transmission_begin` / `transmission_end`) frame the
   certified output and remain validated as a pair.
@@ -43,7 +43,7 @@ keeps a capability blocked rather than silently promoting it.
 
 - Keep README and AGENTS clear that Stage 02 generates figures and the
   evidence/figure registries while Stage 03 renders the certified manuscript.
-- Keep `docs/domain_fork_guide.md` and `src/domain_adapter.py` cross-linked so
+- Keep `docs/domain_fork_guide.md` and `src/template_gold_refinement/domain_adapter.py` cross-linked so
   forkers can remap stages (clinical evidence, legal citation, engineering spec).
 - Keep the analogy-break boundary documented: where gold-refining fails as a
   model for manuscript composition.

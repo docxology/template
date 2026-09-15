@@ -19,7 +19,7 @@ import yaml
 try:
     from .config import GoldRefinementConfig
 except ImportError:
-    from config import GoldRefinementConfig  # type: ignore[no-redef]
+    from template_gold_refinement.config import GoldRefinementConfig  # type: ignore[no-redef]
 
 import logging
 
@@ -204,7 +204,7 @@ class EvidenceRegistry:
 def _check_evidence_source(source: str, project_root: Path) -> tuple[bool, str]:
     """Check if an evidence source exists.
 
-    Sources are strings like ``src/refinery.py::CANONICAL_STAGES`` or
+    Sources are strings like ``src/template_gold_refinement/refinery.py::CANONICAL_STAGES`` or
     ``manuscript/config.yaml#gold_refinement.seed``.
     """
     # Split on :: or #

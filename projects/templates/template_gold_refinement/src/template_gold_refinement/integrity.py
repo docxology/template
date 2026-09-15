@@ -46,7 +46,7 @@ class EvidenceTier:
 _FALLBACK_FAILURES = {
     "Non-monotone purity": (
         "A stage has lower output purity than input.",
-        "Fix stage purity targets in src/refinery.py.",
+        "Fix stage purity targets in src/template_gold_refinement/refinery.py.",
     ),
     "Empty lexicon category": (
         "A required lexicon category is empty or missing.",
@@ -54,7 +54,7 @@ _FALLBACK_FAILURES = {
     ),
     "Unresolved token": (
         "A manuscript placeholder has no generated variable.",
-        "Add variable in src/manuscript_variables.py.",
+        "Add variable in src/template_gold_refinement/manuscript_variables.py.",
     ),
     "Rhetorical-only analogy": (
         "The analogy is decorative with no operational mapping.",
@@ -112,7 +112,7 @@ def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
             non_monotone_risk,
             4,
             5,
-            "src/purity.py::assert_monotone_increase",
+            "src/template_gold_refinement/purity.py::assert_monotone_increase",
             _audit(config, "purity", "tests/test_refinery.py"),
             "source code",
             "source_code",
@@ -136,7 +136,7 @@ def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
             token_risk,
             5,
             5,
-            "src/manuscript_variables.py::generate_variables",
+            "src/template_gold_refinement/manuscript_variables.py::generate_variables",
             _audit(config, "token coverage", "tests/test_manuscript_variables.py"),
             "generated variables",
             "generated_metric",
@@ -160,7 +160,7 @@ def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
             f"{claim_count} configured contribution claims require local evidence pointers.",
             5,
             4,
-            "src/evidence.py::build_evidence_registry",
+            "src/template_gold_refinement/evidence.py::build_evidence_registry",
             "output/reports/claim_support_registry.json",
             "evidence assay",
             "artifact",
@@ -208,7 +208,7 @@ def build_integrity_dimensions(config: Any) -> tuple[IntegrityDimension, ...]:
             security_risk,
             5,
             3,
-            "src/security_assay.py::build_security_assay",
+            "src/template_gold_refinement/security_assay.py::build_security_assay",
             _audit(config, "security assay", "tests/test_security_assay.py"),
             "security assay",
             "source_code",

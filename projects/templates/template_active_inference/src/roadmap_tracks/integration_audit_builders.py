@@ -14,10 +14,10 @@ from pathlib import Path
 from typing import Any
 
 
-from json_io import load_json as _load_json
-from json_io import write_json as _write_json  # noqa: F401  (re-exported for integration_audit)
+from template_active_inference.json_io import load_json as _load_json
+from template_active_inference.json_io import write_json as _write_json  # noqa: F401  (re-exported for integration_audit)
 from roadmap_tracks.row_aggregates import all_rows
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 
 TOKEN_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)(?::\.[0-9]+f)?\}\}")
 TOKEN_MATCH_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)(?::\.(\d+)f)?\}\}")

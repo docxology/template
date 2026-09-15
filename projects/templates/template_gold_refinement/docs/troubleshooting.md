@@ -24,7 +24,7 @@ uv run python scripts/z_generate_manuscript_variables.py --allow-draft
 ValueError: Purity must increase monotonically: stage 0 = 0.5, stage 1 = 0.3
 ```
 
-**Fix:** Stage purity values in `src/refinery.py` must be strictly increasing.
+**Fix:** Stage purity values in `src/template_gold_refinement/refinery.py` must be strictly increasing.
 Check `CANONICAL_STAGES` and ensure each `output_purity > input_purity`.
 
 ### "lexicon category 'X' must be a non-empty list"
@@ -45,7 +45,7 @@ AssertionError: Manuscript tokens not produced by generate_variables()
 ```
 
 **Fix:** A `{{TOKEN}}` in a manuscript file has no corresponding variable.
-Add the variable in `src/manuscript_variables.py` or fix the token name
+Add the variable in `src/template_gold_refinement/manuscript_variables.py` or fix the token name
 in the manuscript source.
 
 ### "slot category 'X' not found in lexicon"

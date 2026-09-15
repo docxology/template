@@ -9,7 +9,7 @@ Rules:
 - Keep tables generated from source functions, not hand-authored.
 - Keep figure references behind generated variables.
 - Add new placeholders only after adding corresponding keys in
-  `src/manuscript_variables.py` and tests in `tests/test_manuscript_variables.py`.
+  `src/template_gold_refinement/manuscript_variables.py` and tests in `tests/test_manuscript_variables.py`.
 
 ```bash
 uv run python projects/templates/template_gold_refinement/scripts/z_generate_manuscript_variables.py

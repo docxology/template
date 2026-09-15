@@ -94,7 +94,7 @@ The provenance flow in [@fig:provenance_sankey] makes the refinement analogy
 auditable as a directed source path rather than a decorative metaphor. The graph
 starts from the same stage sequence used in the purity table and carries that
 sequence forward to certification, with edge width proportional to the purity
-gain owned by `src/refinery.py::run_refinery`. A reader can therefore ask where
+gain owned by `src/template_gold_refinement/refinery.py::run_refinery`. A reader can therefore ask where
 each improvement enters the pipeline and whether it is supported by the same
 source that generated the reported purity numbers.
 
@@ -123,7 +123,7 @@ into an inspectable sensitivity surface. The manuscript uses seed 431
 for the reported token plan, but the figure asks a neighboring question: how do
 selected inventory indices move when seeds and lexicon categories vary? This is
 not a stochastic robustness claim. It is a deterministic audit of the digest
-rule in `src/composition.py::generate_token_plan` against the configured
+rule in `src/template_gold_refinement/composition.py::generate_token_plan` against the configured
 lexicon inventories in `manuscript/config.yaml`.
 
 This view separates three issues that prose alone tends to blur. First, token
@@ -172,7 +172,7 @@ identifier and to the source surface that emits it. That linkage is important
 because equation labels can otherwise create a false sense of rigor: a numbered
 equation looks formal even when its assumptions, variables, and implementation
 owner are not recoverable. Here the formal object must remain connected to
-`src/formalisms.py`, the generated registry table, and the manuscript reference
+`src/template_gold_refinement/formalisms.py`, the generated registry table, and the manuscript reference
 that consumes it.
 
 The graph also helps distinguish formal support from decorative notation. A
@@ -292,7 +292,7 @@ The adversarial assay reports 5 adversarial assay rows, 5 schema-complete, mappi
 
 | ID | Threat | Standard or guidance | Evidence surface | Validator or gate | Claim boundary |
 |----|--------|----------------------|------------------|-------------------|----------------|
-| S1 | implicit trust in generated artifacts | NIST SP 800-207 zero trust | output/reports/evidence_registry.json and src/security_assay.py | infrastructure.validation.cli evidence --fail-on-issues | documents a verification posture, not a deployed zero-trust architecture |
+| S1 | implicit trust in generated artifacts | NIST SP 800-207 zero trust | output/reports/evidence_registry.json and src/template_gold_refinement/security_assay.py | infrastructure.validation.cli evidence --fail-on-issues | documents a verification posture, not a deployed zero-trust architecture |
 | S2 | incomplete secure-development evidence | NIST SP 800-218 secure software development framework | tests/, pre-render validation, and claim ledger | project test suite and template validation gates | maps local practices to SSDF concepts without claiming SSDF compliance |
 | S3 | supply-chain or build provenance compromise | SLSA v1.2, Sigstore, SPDX, and CycloneDX | config hash, artifact counts, and publication metadata | pipeline regeneration and artifact registry checks | identifies provenance requirements but does not assert signed SBOM or provenance is present |
 | S4 | unvalidated vulnerability narrative | MITRE ATT&CK and Codex Security scan phases | security assay table and future scan artifacts | Codex Security threat-model, discovery, validation, and attack-path receipts when run | no real scan finding is claimed in this manuscript pass |
@@ -303,15 +303,15 @@ The adversarial assay reports 5 adversarial assay rows, 5 schema-complete, mappi
 
 | Claim | Statement | Evidence | Boundary |
 |-------|-----------|----------|----------|
-| Five-stage refinery | The refinery pipeline has 5 canonical stages from ore to nine-nines. | src/refinery.py::CANONICAL_STAGES | local |
-| Monotone purity | Purity increases strictly across all refinery stages. | src/purity.py::assert_monotone_increase | local |
-| Nine-nines certification | The certification stage achieves 99.9999999% purity. | src/purity.py::NINE_NINES_PURITY | local |
-| Deterministic tokens | Token selection is deterministic via seeded SHA-256 digest. | src/composition.py::_choose_value | local |
-| Formalism registry | The manuscript exposes 7 source-owned formalisms with equation labels. | src/formalisms.py::FORMALISMS | local |
+| Five-stage refinery | The refinery pipeline has 5 canonical stages from ore to nine-nines. | src/template_gold_refinement/refinery.py::CANONICAL_STAGES | local |
+| Monotone purity | Purity increases strictly across all refinery stages. | src/template_gold_refinement/purity.py::assert_monotone_increase | local |
+| Nine-nines certification | The certification stage achieves 99.9999999% purity. | src/template_gold_refinement/purity.py::NINE_NINES_PURITY | local |
+| Deterministic tokens | Token selection is deterministic via seeded SHA-256 digest. | src/template_gold_refinement/composition.py::_choose_value | local |
+| Formalism registry | The manuscript exposes 7 source-owned formalisms with equation labels. | src/template_gold_refinement/formalisms.py::FORMALISMS | local |
 | Claim-support report separation | The project-local contribution-claim report is written to claim_support_registry.json. | scripts/refinement_analysis.py::CLAIM_SUPPORT_REGISTRY_NAME | local |
 | Implementation-linked visualizations | The manuscript includes generated visualizations that link the refinery analogy to source code, variables, evidence, and validation gates. | src/figures/diagrams.py::generate_implementation_circuit | local |
-| Scientific-integrity risk model | The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations. | src/integrity.py::build_integrity_dimensions | local |
-| Adversarial security assay | The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries. | src/security_assay.py::build_security_assay | local |
+| Scientific-integrity risk model | The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations. | src/template_gold_refinement/integrity.py::build_integrity_dimensions | local |
+| Adversarial security assay | The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries. | src/template_gold_refinement/security_assay.py::build_security_assay | local |
 
 The project-local claim-support assay reports 9 supported claims out of 9 total claims, for 100.00% support. Unsupported claims: 0. The generated project report path is `output/reports/claim_support_registry.json`; the shared template evidence report remains `output/reports/evidence_registry.json`.
 

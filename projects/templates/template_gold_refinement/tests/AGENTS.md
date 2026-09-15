@@ -23,16 +23,16 @@ computation — no mocks.
 | `test_scripts_smoke.py` | Analysis and manuscript-variable scripts, generated reports, SVG companions |
 | `test_cover_visualization.py` | Cover-image generation script, generated PNG dimensions and non-blank content |
 | `test_coercion.py` | Strict boolean coercion helper used by config parsing |
-| `test_dashboard.py` | Interactive HTML dashboard generation from `src/dashboard.py` |
+| `test_dashboard.py` | Interactive HTML dashboard generation from `src/template_gold_refinement/dashboard.py` |
 | `test_domain_adapter.py` | `domain_profile.yaml` loading and domain-adapter schema validation |
 | `test_edge_cases.py` | Uncovered-path edge cases for evidence, dashboard, figures, and manuscript variables |
-| `test_evidence.py` | Evidence registry construction and claim-ledger alignment (`src/evidence.py`) |
+| `test_evidence.py` | Evidence registry construction and claim-ledger alignment (`src/template_gold_refinement/evidence.py`) |
 | `test_negative_controls.py` | Deliberately broken inputs must fail correctly (negative-control proof for config/composition gates) |
 | `test_parsing.py` | Shared parsing helpers used across config and manuscript-variable modules |
 | `test_pipeline_policy.py` | `pipeline_policy.py` LLM-review gate reasoning and enablement logic |
 | `test_property_monotonicity.py` | Hypothesis property-based tests for monotone purity across refinery stages |
 | `test_security_assay.py` | Security assay record construction, table rendering, and claim-boundary summary |
-| `test_analogy_boundary.py` | Bounded analogy-boundary predicate and its negative control (`src/analogy_boundary.py` + `domain_profile.yaml`) |
+| `test_analogy_boundary.py` | Bounded analogy-boundary predicate and its negative control (`src/template_gold_refinement/analogy_boundary.py` + `domain_profile.yaml`) |
 | `test_transmission.py` | Transmission bookend validation for the manuscript pair (`00_000_transmission_begin.md` / `99_999_transmission_end.md`) |
 
 `__init__.py` and `conftest.py` are package/fixture scaffolding, not test files, and are omitted from the table above.

@@ -16,10 +16,10 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from json_io import load_json_strict as _load_json
+from template_active_inference.json_io import load_json_strict as _load_json
 from roadmap_tracks.sheaf_tracks_registry import HASH_CYCLE_AUTHORITY, hash_cycle_excluded
 from roadmap_tracks.image_content_hash import image_content_sha256, is_image_artifact
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 
 CORE_ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/data/parameter_sweep.csv": "run_analytical_sweep.py",

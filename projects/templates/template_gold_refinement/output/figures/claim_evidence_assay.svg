@@ -1150,7 +1150,7 @@ L 462.166058 450.770925
 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="text_13">
-    <!-- src/refinery.py::CANONICAL_STAGES -->
+    <!-- src/template_gold_refinement/refinery.py::CANONICAL_STAGES -->
     <g style="fill: #111827" transform="translate(312.583498 417.385158) scale(0.07 -0.07)">
      <defs>
       <path id="DejaVuSans-12" d="M 1625 4666
@@ -1289,7 +1289,7 @@ z
     </g>
    </g>
    <g id="text_14">
-    <!-- src/purity.py::assert_monotone_increase -->
+    <!-- src/template_gold_refinement/purity.py::assert_monotone_increase -->
     <g style="fill: #111827" transform="translate(297.524748 373.379658) scale(0.07 -0.07)">
      <use xlink:href="#DejaVuSans-56"/>
      <use xlink:href="#DejaVuSans-55" transform="translate(52.09375 0)"/>
@@ -1333,7 +1333,7 @@ z
     </g>
    </g>
    <g id="text_15">
-    <!-- src/purity.py::NINE_NINES_PURITY -->
+    <!-- src/template_gold_refinement/purity.py::NINE_NINES_PURITY -->
     <g style="fill: #111827" transform="translate(320.940841 329.374158) scale(0.07 -0.07)">
      <defs>
       <path id="DejaVuSans-33" d="M 1259 4147
@@ -1450,7 +1450,7 @@ z
     </g>
    </g>
    <g id="text_16">
-    <!-- src/composition.py::_choose_value -->
+    <!-- src/template_gold_refinement/composition.py::_choose_value -->
     <g style="fill: #111827" transform="translate(317.121466 285.368658) scale(0.07 -0.07)">
      <defs>
       <path id="DejaVuSans-4b" d="M 3513 2113
@@ -1509,7 +1509,7 @@ z
     </g>
    </g>
    <g id="text_17">
-    <!-- src/formalisms.py::FORMALISMS -->
+    <!-- src/template_gold_refinement/formalisms.py::FORMALISMS -->
     <g style="fill: #111827" transform="translate(325.991779 241.363158) scale(0.07 -0.07)">
      <defs>
       <path id="DejaVuSans-49" d="M 2375 4863
@@ -1666,7 +1666,7 @@ z
     </g>
    </g>
    <g id="text_20">
-    <!-- src/integrity.py::build_integrity_dimensions -->
+    <!-- src/template_gold_refinement/integrity.py::build_integrity_dimensions -->
     <g style="fill: #111827" transform="translate(288.429123 109.346658) scale(0.07 -0.07)">
      <defs>
       <path id="DejaVuSans-45" d="M 3116 1747
@@ -1743,7 +1743,7 @@ z
     </g>
    </g>
    <g id="text_21">
-    <!-- src/security_assay.py::build_security_assay -->
+    <!-- src/template_gold_refinement/security_assay.py::build_security_assay -->
     <g style="fill: #111827" transform="translate(288.080216 65.341158) scale(0.07 -0.07)">
      <use xlink:href="#DejaVuSans-56"/>
      <use xlink:href="#DejaVuSans-55" transform="translate(52.09375 0)"/>

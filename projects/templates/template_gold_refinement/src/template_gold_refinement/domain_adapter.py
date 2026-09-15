@@ -12,7 +12,7 @@ try:
         load_yaml_dict,
     )
 except ImportError:
-    from parsing import (  # type: ignore[no-redef]
+    from template_gold_refinement.parsing import (  # type: ignore[no-redef]
         as_bool as _as_bool,
         as_float as _as_float,
         as_str_tuple as _as_str_tuple,

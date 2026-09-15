@@ -10,12 +10,12 @@ from __future__ import annotations
 import pytest
 from hypothesis import given, settings, strategies as st
 
-from purity import (
+from template_gold_refinement.purity import (
     assert_monotone_increase,
     karat_for_purity,
     purity_to_nines,
 )
-from refinery import CANONICAL_STAGES, run_refinery
+from template_gold_refinement.refinery import CANONICAL_STAGES, run_refinery
 
 
 class TestMonotoneIncreaseProperty:

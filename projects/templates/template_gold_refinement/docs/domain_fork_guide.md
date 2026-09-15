@@ -22,7 +22,7 @@ This exemplar is designed to be forked, but only after the analogy is remapped t
 
 ## Domain adapter pattern
 
-Use `src/domain_adapter.py` as the translation layer:
+Use `src/template_gold_refinement/domain_adapter.py` as the translation layer:
 
 - `domain_profile.yaml` owns the stage map, metric weights, and boundary notes.
 - `load_domain_profile()` reads the profile from disk.
@@ -38,7 +38,7 @@ The gold-refinement exemplar now carries two explicit policy surfaces in `manusc
 - `steganography:` for secure PDF post-processing
 - `llm.reviews:` for optional review generation when Ollama is available and the run is explicitly opted in
 
-Use `src/pipeline_policy.py` to evaluate those gates. The secure-pipeline profile should stay declarative so a fork can tell, before execution, whether the pipeline is meant to watermark, seal, or encrypt outputs.
+Use `src/template_gold_refinement/pipeline_policy.py` to evaluate those gates. The secure-pipeline profile should stay declarative so a fork can tell, before execution, whether the pipeline is meant to watermark, seal, or encrypt outputs.
 
 ## Analogy boundary
 

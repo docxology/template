@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
-from json_io import json_payloads_equal
+from template_active_inference.json_io import json_payloads_equal
 
 from . import sheaf_tracks as _tracks
 from .row_aggregates import all_rows

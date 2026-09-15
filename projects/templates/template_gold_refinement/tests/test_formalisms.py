@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from formalisms import (
+from template_gold_refinement.formalisms import (
     FORMALISMS,
     equation_labels,
     formalism_equation_blocks,

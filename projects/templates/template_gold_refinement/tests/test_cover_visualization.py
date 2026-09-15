@@ -8,7 +8,7 @@ from pathlib import Path
 import matplotlib.image as mpimg
 import numpy as np
 
-from cover_visualization import (
+from template_gold_refinement.cover_visualization import (
     COVER_REPORT,
     cover_visualization_manifest,
     generate_cover_visualization,

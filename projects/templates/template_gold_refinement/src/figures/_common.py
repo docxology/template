@@ -86,7 +86,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
             "cupellation, and certification, ending at nine-nines purity."
         ),
         "src/figures/charts.py::generate_purity_progression",
-        ("src/refinery.py::run_refinery", "src/purity.py::purity_to_nines"),
+        (
+            "src/template_gold_refinement/refinery.py::run_refinery",
+            "src/template_gold_refinement/purity.py::purity_to_nines",
+        ),
         "bars encode stage gain; line encodes cumulative purity; inset encodes nines gained",
     ),
     FigureSpec(
@@ -99,7 +102,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
             "showing where each successive refinery stage lands."
         ),
         "src/figures/charts.py::generate_karat_grading_chart",
-        ("src/purity.py::KARAT_GRADES", "src/refinery.py::run_refinery"),
+        (
+            "src/template_gold_refinement/purity.py::KARAT_GRADES",
+            "src/template_gold_refinement/refinery.py::run_refinery",
+        ),
         "horizontal threshold bands with refinery-stage markers",
     ),
     FigureSpec(
@@ -112,7 +118,7 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
             "and lexicon categories, exposing where the template concentrates configurable prose."
         ),
         "src/figures/charts.py::generate_token_density_chart",
-        ("output/reports/token_plan.json", "src/composition.py::generate_token_plan"),
+        ("output/reports/token_plan.json", "src/template_gold_refinement/composition.py::generate_token_plan"),
         "ordered bars encode token counts by section and lexicon category",
     ),
     FigureSpec(
@@ -125,7 +131,7 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
             "edge widths increase with each stage's purity gain."
         ),
         "src/figures/diagrams.py::generate_provenance_sankey",
-        ("src/refinery.py::run_refinery",),
+        ("src/template_gold_refinement/refinery.py::run_refinery",),
         "directed stage graph with edge widths proportional to purity gain",
     ),
     FigureSpec(
@@ -138,7 +144,7 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
             "claim-support value, separating stage refinement from the project-level evidence assay."
         ),
         "src/figures/diagrams.py::generate_purity_claim_scatter",
-        ("output/reports/claim_support_registry.json", "src/refinery.py::run_refinery"),
+        ("output/reports/claim_support_registry.json", "src/template_gold_refinement/refinery.py::run_refinery"),
         "x positions encode stage output purity; the shared y position encodes the project-level claim-support rate",
     ),
     FigureSpec(
@@ -151,7 +157,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
             "identify the selected inventory index for that seed-category pair."
         ),
         "src/figures/diagrams.py::generate_token_heatmap",
-        ("manuscript/config.yaml#gold_refinement.lexicon", "src/composition.py::generate_token_plan"),
+        (
+            "manuscript/config.yaml#gold_refinement.lexicon",
+            "src/template_gold_refinement/composition.py::generate_token_plan",
+        ),
         "heatmap cells encode deterministic selected inventory index across seeds",
     ),
     FigureSpec(
@@ -177,7 +186,7 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
             "source module that owns the supporting definition."
         ),
         "src/figures/diagrams.py::generate_formalism_traceability",
-        ("src/formalisms.py::FORMALISMS",),
+        ("src/template_gold_refinement/formalisms.py::FORMALISMS",),
         "bipartite graph links formalisms to equation labels and source owners",
     ),
     FigureSpec(
@@ -192,9 +201,9 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
         "src/figures/diagrams.py::generate_implementation_circuit",
         (
             "manuscript/config.yaml",
-            "src/refinery.py",
-            "src/composition.py",
-            "src/formalisms.py",
+            "src/template_gold_refinement/refinery.py",
+            "src/template_gold_refinement/composition.py",
+            "src/template_gold_refinement/formalisms.py",
             "src/figures/diagrams.py",
         ),
         "directed graph encodes source, generated, validation, and publication layers",
@@ -209,7 +218,10 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
             "evidence surfaces and explicit boundary classifications."
         ),
         "src/figures/diagrams.py::generate_claim_evidence_assay",
-        ("manuscript/config.yaml#gold_refinement.contribution_claims", "src/evidence.py::build_evidence_registry"),
+        (
+            "manuscript/config.yaml#gold_refinement.contribution_claims",
+            "src/template_gold_refinement/evidence.py::build_evidence_registry",
+        ),
         "support bars plus claim to evidence to boundary graph topology",
     ),
     FigureSpec(
@@ -222,7 +234,7 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
             "risk and color identifies the evidence-source tier."
         ),
         "src/figures/diagrams.py::generate_integrity_risk_matrix",
-        ("src/integrity.py::build_integrity_dimensions",),
+        ("src/template_gold_refinement/integrity.py::build_integrity_dimensions",),
         "scatter positions encode severity and detectability; marker size encodes residual risk; color encodes source tier",
     ),
     FigureSpec(
@@ -235,7 +247,7 @@ FIGURE_SPECS: tuple[FigureSpec, ...] = (
             "annotated by its registry count and percentage."
         ),
         "src/figures/diagrams.py::generate_evidence_tier_ladder",
-        ("output/reports/evidence_registry.json", "src/integrity.py::build_evidence_tiers"),
+        ("output/reports/evidence_registry.json", "src/template_gold_refinement/integrity.py::build_evidence_tiers"),
         "ordered horizontal bars encode counts and percentages by evidence source tier",
     ),
 )

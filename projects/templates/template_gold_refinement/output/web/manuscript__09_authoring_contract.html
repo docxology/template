@@ -594,16 +594,16 @@ clear boundary between findings, mitigations, and remaining scope.</p>
 <h2 id="fork-checklist">Fork checklist</h2>
 <ol type="1">
 <li>Remap metallurgical stages to domain operations in
-<code>src/refinery.py</code></li>
+<code>src/template_gold_refinement/refinery.py</code></li>
 <li>Update lexicon categories in <code>manuscript/config.yaml</code>
 under <code>gold_refinement.lexicon</code></li>
 <li>Update <code>contribution_claims</code> with domain-specific
 evidence pointers</li>
 <li>Add domain validators beyond the exemplar’s generic gates</li>
-<li>Replace or extend <code>src/integrity.py</code> dimensions when the
+<li>Replace or extend <code>src/template_gold_refinement/integrity.py</code> dimensions when the
 fork introduces new failure modes</li>
 <li>Update <code>domain_profile.yaml</code>,
-<code>src/domain_adapter.py</code>, and
+<code>src/template_gold_refinement/domain_adapter.py</code>, and
 <code>docs/domain_fork_guide.md</code> when the analogy is forked into a
 new domain</li>
 <li>Keep <code>steganography</code> and <code>llm</code> policy blocks

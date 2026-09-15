@@ -14,8 +14,8 @@ try:
     from .parsing import build_timestamp as _build_timestamp
     from .refinery import run_refinery
 except ImportError:
-    from parsing import build_timestamp as _build_timestamp  # type: ignore[no-redef]
-    from refinery import run_refinery  # type: ignore[no-redef]
+    from template_gold_refinement.parsing import build_timestamp as _build_timestamp  # type: ignore[no-redef]
+    from template_gold_refinement.refinery import run_refinery  # type: ignore[no-redef]
 
 import logging
 

@@ -464,7 +464,7 @@ mjx-container[display="true"] {
 <td>Monotone purity</td>
 <td>Does purity increase strictly across all refinery stages?</td>
 <td>assert_monotone_increase passes on the purity sequence.</td>
-<td>src/refinery.py and output/data/refinery_results.json</td>
+<td>src/template_gold_refinement/refinery.py and output/data/refinery_results.json</td>
 </tr>
 <tr>
 <td>Token provenance</td>
@@ -477,7 +477,7 @@ and config key?</td>
 <td>Karat grade correctness</td>
 <td>Does each stage map to the correct karat grade?</td>
 <td>karat_for_purity returns the expected grade for each stage.</td>
-<td>src/purity.py</td>
+<td>src/template_gold_refinement/purity.py</td>
 </tr>
 <tr>
 <td>Integrity risk visibility</td>
@@ -485,7 +485,7 @@ and config key?</td>
 validator or artifact that detects them?</td>
 <td>The integrity risk model emits dimensions, owners, residual risk
 scores, and evidence-tier rows.</td>
-<td>src/integrity.py and ../figures/integrity_risk_matrix.png</td>
+<td>src/template_gold_refinement/integrity.py and ../figures/integrity_risk_matrix.png</td>
 </tr>
 <tr>
 <td>Scholarship boundary</td>
@@ -527,7 +527,7 @@ scan evidence and external compliance?</td>
 <td>The security assay emits threats, standards, evidence surfaces,
 validators, and claim boundaries without claiming Codex Security
 findings.</td>
-<td>src/security_assay.py, manuscript/config.yaml, and
+<td>src/template_gold_refinement/security_assay.py, manuscript/config.yaml, and
 manuscript/03_results.md</td>
 </tr>
 </tbody>

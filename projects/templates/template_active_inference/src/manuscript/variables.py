@@ -8,8 +8,8 @@ from typing import Any
 
 from analytical.hyperparameters import load_hyperparameters
 from contracts.artifact_contract import VARIABLE_ARTIFACTS
-from json_io import load_json
-from yaml_io import load_yaml
+from template_active_inference.json_io import load_json
+from template_active_inference.yaml_io import load_yaml
 from analytical.sweep_io import read_parameter_sweep
 from gnn.concordance import BERNOULLI_EXPECTED_TERMS
 from manuscript.invariant_counts import load_invariant_counts

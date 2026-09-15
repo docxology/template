@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from analysis import run_analysis, write_analysis_statistics
+from template_active_inference.analysis import run_analysis, write_analysis_statistics
 from manuscript.variables import generate_variables
 from manuscript.hydrate import write_resolved_manuscript
 from manuscript.sheaf import compose_all_sections
@@ -43,7 +43,7 @@ _BOOTSTRAPPED_SIGNATURES: dict[Path, str] = {}
 _ALLOW_GATE_REBUILD_ENV = "TEMPLATE_ACTIVE_INFERENCE_ALLOW_GATE_REBUILD"
 
 from contracts.artifact_contract import REQUIRED_GATE_ARTIFACTS as _REQUIRED_GATE_ARTIFACTS
-from json_io import write_json
+from template_active_inference.json_io import write_json
 
 
 def _validate_semantic_gluing(project_root: Path) -> list[str]:

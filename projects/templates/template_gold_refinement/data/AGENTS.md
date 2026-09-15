@@ -1,6 +1,6 @@
 # AGENTS.md — template_gold_refinement/data
 
-Static data assets consumed by `src/integrity.py`.
+Static data assets consumed by `src/template_gold_refinement/integrity.py`.
 
 ## Files
 

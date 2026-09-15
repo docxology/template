@@ -4,7 +4,7 @@ from __future__ import annotations
 from enum import Enum
 from pathlib import Path
 from typing import Any
-from json_io import load_json_strict, write_json
+from template_active_inference.json_io import load_json_strict, write_json
 
 
 class ManuscriptRefreshPhase(str, Enum):

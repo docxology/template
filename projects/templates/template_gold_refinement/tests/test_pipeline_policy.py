@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from pipeline_policy import llm_review_gate_reason, llm_review_is_enabled, load_pipeline_policy
+from template_gold_refinement.pipeline_policy import llm_review_gate_reason, llm_review_is_enabled, load_pipeline_policy
 
 
 def _write_policy_config(tmp_path: Path, *, llm_enabled: bool = False) -> Path:

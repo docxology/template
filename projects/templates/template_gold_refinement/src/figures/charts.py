@@ -33,10 +33,10 @@ try:
     from ..purity import KARAT_GRADES, NINE_NINES_PURITY, format_purity
     from ..refinery import run_refinery
 except ImportError:  # pragma: no cover - flat-layout fallback
-    from composition import generate_token_plan  # type: ignore[no-redef]
-    from config import load_gold_refinement_config  # type: ignore[no-redef]
-    from purity import KARAT_GRADES, NINE_NINES_PURITY, format_purity  # type: ignore[no-redef]
-    from refinery import run_refinery  # type: ignore[no-redef]
+    from template_gold_refinement.composition import generate_token_plan
+    from template_gold_refinement.config import load_gold_refinement_config
+    from template_gold_refinement.purity import KARAT_GRADES, NINE_NINES_PURITY, format_purity
+    from template_gold_refinement.refinery import run_refinery
 
 
 def generate_purity_progression(
