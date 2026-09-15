@@ -27,6 +27,8 @@ For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-s
 
 **Thin-orchestrator gates:** `uv run python scripts/audit/check_template_drift.py --strict`, `uv run python scripts/gates/module_line_count_check.py`, `uv run python -m infrastructure.core.health` — details in [`docs/architecture/thin-orchestrator-summary.md`](docs/architecture/thin-orchestrator-summary.md).
 
+**Fast local test loop:** for agent edit/test iterations, run the documented high-signal subset (`uv run --frozen pytest tests/infra_tests/git_hook_smoke tests/infra_tests/core/test_pytest_orchestration.py tests/infra_tests/core/test_pipeline.py -q`) — see [`docs/operational/config/performance-optimization.md`](docs/operational/config/performance-optimization.md). The full infrastructure gate remains the merge authority.
+
 **Assistants and editors:** [`.cursorrules`](.cursorrules) summarizes architecture and tooling for Cursor; [`CLAUDE.md`](CLAUDE.md) is the command cheat sheet; [`AGENTS.md`](AGENTS.md) is the full system manual (pipeline, validation, configuration). For routable agent workflows, start at [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) and the generated skill index [`docs/_generated/skills_index.md`](docs/_generated/skills_index.md).
 
 **Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/README.md`](.github/README.md) ([agent entry point](.github/README.md#agent--automation-entry-point), doc map, CI inventory) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
