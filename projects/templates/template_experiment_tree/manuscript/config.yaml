@@ -1,0 +1,35 @@
+paper:
+  title: "A Living Research Record: Version-Controlled Experiment Trees with Frozen Nodes"
+  subtitle: "Every experiment is a node; the paper is the projection"
+  version: "1.0"
+  abstract: "We demonstrate a research-log discipline in which every experiment is a node in a durable, version-controlled tree. Nodes move from provisional to frozen (preregistered, immutable) to answered (terminal, carrying an outcome). Answered nodes form the results table, frozen nodes the in-progress register, and dead ends the discussion of negative results. All manuscript numbers are generated from the tree state and never hand-typed."
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+publication:
+  doi: ""
+  journal: ""
+
+keywords:
+  - "reproducible research"
+  - "experiment tracking"
+  - "preregistration"
+  - "living documents"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+render:
+  formats:
+    pdf: true
+
+analysis:
+  scripts:
+    - "report.py"
+    - "z_generate_manuscript_variables.py"

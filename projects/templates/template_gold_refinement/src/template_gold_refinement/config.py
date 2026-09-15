@@ -215,7 +215,7 @@ def load_gold_refinement_config(
 
     Returns defaults when the file or block is missing.
     """
-    root = project_root or Path(__file__).resolve().parent.parent
+    root = project_root or Path(__file__).resolve().parents[2]
     config_path = root / "manuscript" / "config.yaml"
     if not config_path.exists():
         return _default_config()
