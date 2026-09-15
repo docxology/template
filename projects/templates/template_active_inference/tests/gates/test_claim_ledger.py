@@ -8,7 +8,9 @@ from pathlib import Path
 from gates.validation import validate_manuscript
 import pytest
 
-pytestmark = [pytest.mark.timeout(300)]
+# WHY timeout(600): validate_manuscript reads the entire real tree;
+# measured 272s call flaked the old 300s ceiling on high-latency storage.
+pytestmark = [pytest.mark.timeout(600)]
 
 
 def test_validate_manuscript_claim_ledger_missing_file_negative(project_root: Path, tmp_path: Path) -> None:
