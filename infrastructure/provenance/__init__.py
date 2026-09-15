@@ -42,6 +42,14 @@ from infrastructure.provenance.review import (
     review_provenance_store,
 )
 from infrastructure.provenance.store import Provenance, ProvenanceStoreError
+from infrastructure.provenance.tree import (
+    ExperimentCode,
+    ExperimentKind,
+    ExperimentNode,
+    ExperimentStatus,
+    ExperimentTree,
+    validate_experiment_tree,
+)
 from infrastructure.provenance.validation import (
     ProvenanceValidationFinding,
     ProvenanceValidationReport,
@@ -62,6 +70,13 @@ __all__ = [
     # Store
     "Provenance",
     "ProvenanceStoreError",
+    # Experiment tree
+    "ExperimentCode",
+    "ExperimentKind",
+    "ExperimentNode",
+    "ExperimentStatus",
+    "ExperimentTree",
+    "validate_experiment_tree",
     # Review
     "Finding",
     "Review",
