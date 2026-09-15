@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from infrastructure.formal_contracts.checker import check_manuscript, compose
@@ -15,7 +17,7 @@ from infrastructure.formal_contracts.model import (
     Section,
     Table,
 )
-from infrastructure.formal_contracts.reader import ReaderError, read_blocks
+from infrastructure.formal_contracts.reader import ReaderError, read_blocks, read_blocks_with_errors
 
 FULL_MD = """# Introduction
 
@@ -143,3 +145,57 @@ def test_blocks_before_any_section_stay_orphans() -> None:
     ms = compose(list(blocks))
     report = check_manuscript(ms)
     assert report.has("FORMAL.ORPHAN_BLOCK")
+
+
+def test_read_blocks_with_errors_reports_and_skips() -> None:
+    md = "::: {.callout-note}\nunsupported body\n:::\n\n::: {.evidence #ev:ok tier=strong}\n:::\n"
+    blocks, errors = read_blocks_with_errors(md)
+    assert [type(b).__name__ for b in blocks] == ["Evidence"]
+    assert len(errors) == 1
+    assert errors[0].code == "FORMAL.READER_PARSE"
+
+
+def test_read_blocks_with_errors_reports_unsupported_class_with_name() -> None:
+    md = "::: {.bananas #b:id}\nbody\n:::\n"
+    blocks, errors = read_blocks_with_errors(md)
+    assert blocks == ()
+    assert len(errors) == 1
+    assert "bananas" in errors[0].message
+
+
+def test_read_blocks_with_errors_missing_id() -> None:
+    md = "::: {.claim}\nbody\n:::\n"
+    blocks, errors = read_blocks_with_errors(md)
+    assert blocks == ()
+    assert len(errors) == 1
+    assert errors[0].code == "FORMAL.READER_PARSE"
+
+
+def test_read_blocks_with_errors_bad_tier_skips_div() -> None:
+    md = "::: {.evidence #ev:bad tier=nonsense}\n:::\n"
+    blocks, errors = read_blocks_with_errors(md)
+    assert blocks == ()
+    assert len(errors) == 1
+
+
+def test_read_blocks_with_errors_unclosed_still_raises() -> None:
+    with pytest.raises(ReaderError):
+        read_blocks_with_errors("::: {.claim #c}\nnever closed\n")
+
+
+def test_real_exemplar_manuscript_divs_do_not_crash_reader() -> None:
+    """Round-trip probe: real public-exemplar manuscripts use other div
+    conventions ({#refs}, .callout-note, layout-ncol=2). The tolerant
+    reader must digest them, reporting unsupported classes as
+    diagnostics instead of raising."""
+    repo_root = Path(__file__).resolve().parents[3]
+    examples = [
+        repo_root / "projects/templates/template_pitch_deck/manuscript/99_references.md",
+        repo_root / "projects/templates/template_textbook/manuscript/appendices/appendix_format_gallery.md",
+    ]
+    for path in examples:
+        assert path.exists(), path
+        blocks, errors = read_blocks_with_errors(path.read_text())
+        assert isinstance(blocks, tuple)
+        for error in errors:
+            assert error.code == "FORMAL.READER_PARSE"
