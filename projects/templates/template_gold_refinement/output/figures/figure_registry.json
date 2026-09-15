@@ -7,8 +7,8 @@
       "caption": "Purity progression across the five refinery stages from ore (9K) to nine-nines certification.",
       "generated_by": "src/figures/charts.py::generate_purity_progression",
       "data_sources": [
-        "src/refinery.py::run_refinery",
-        "src/purity.py::purity_to_nines"
+        "src/template_gold_refinement/refinery.py::run_refinery",
+        "src/template_gold_refinement/purity.py::purity_to_nines"
       ],
       "visual_encoding": "bars encode stage gain; line encodes cumulative purity; inset encodes nines gained",
       "alt": "Bars and a cumulative line rise monotonically across ore, smelting, assaying, cupellation, and certification, ending at nine-nines purity.",
@@ -21,8 +21,8 @@
       "caption": "Gold karat grading scale (9K–24K + nine-nines) with refinery stage markers.",
       "generated_by": "src/figures/charts.py::generate_karat_grading_chart",
       "data_sources": [
-        "src/purity.py::KARAT_GRADES",
-        "src/refinery.py::run_refinery"
+        "src/template_gold_refinement/purity.py::KARAT_GRADES",
+        "src/template_gold_refinement/refinery.py::run_refinery"
       ],
       "visual_encoding": "horizontal threshold bands with refinery-stage markers",
       "alt": "A horizontal purity scale spans 9K through 24K and 99.999 percent, with markers showing where each successive refinery stage lands.",
@@ -36,7 +36,7 @@
       "generated_by": "src/figures/charts.py::generate_token_density_chart",
       "data_sources": [
         "output/reports/token_plan.json",
-        "src/composition.py::generate_token_plan"
+        "src/template_gold_refinement/composition.py::generate_token_plan"
       ],
       "visual_encoding": "ordered bars encode token counts by section and lexicon category",
       "alt": "Ordered bars compare the number of injected manuscript tokens across sections and lexicon categories, exposing where the template concentrates configurable prose.",
@@ -49,7 +49,7 @@
       "caption": "Provenance trace: ore → stages → certification purity flow.",
       "generated_by": "src/figures/diagrams.py::generate_provenance_sankey",
       "data_sources": [
-        "src/refinery.py::run_refinery"
+        "src/template_gold_refinement/refinery.py::run_refinery"
       ],
       "visual_encoding": "directed stage graph with edge widths proportional to purity gain",
       "alt": "A directed left-to-right flow links ore through four refining stages to certification; edge widths increase with each stage's purity gain.",
@@ -63,7 +63,7 @@
       "generated_by": "src/figures/diagrams.py::generate_purity_claim_scatter",
       "data_sources": [
         "output/reports/claim_support_registry.json",
-        "src/refinery.py::run_refinery"
+        "src/template_gold_refinement/refinery.py::run_refinery"
       ],
       "visual_encoding": "x positions encode stage output purity; the shared y position encodes the project-level claim-support rate",
       "alt": "Five stage points progress rightward with increasing purity while sharing one vertical claim-support value, separating stage refinement from the project-level evidence assay.",
@@ -77,7 +77,7 @@
       "generated_by": "src/figures/diagrams.py::generate_token_heatmap",
       "data_sources": [
         "manuscript/config.yaml#gold_refinement.lexicon",
-        "src/composition.py::generate_token_plan"
+        "src/template_gold_refinement/composition.py::generate_token_plan"
       ],
       "visual_encoding": "heatmap cells encode deterministic selected inventory index across seeds",
       "alt": "A heatmap crosses deterministic seeds with lexicon categories; each cell color and label identify the selected inventory index for that seed-category pair.",
@@ -103,7 +103,7 @@
       "caption": "Formalism traceability from source-owned equation identifiers to source evidence.",
       "generated_by": "src/figures/diagrams.py::generate_formalism_traceability",
       "data_sources": [
-        "src/formalisms.py::FORMALISMS"
+        "src/template_gold_refinement/formalisms.py::FORMALISMS"
       ],
       "visual_encoding": "bipartite graph links formalisms to equation labels and source owners",
       "alt": "A bipartite network connects each named formalism to its equation label and then to the source module that owns the supporting definition.",
@@ -117,9 +117,9 @@
       "generated_by": "src/figures/diagrams.py::generate_implementation_circuit",
       "data_sources": [
         "manuscript/config.yaml",
-        "src/refinery.py",
-        "src/composition.py",
-        "src/formalisms.py",
+        "src/template_gold_refinement/refinery.py",
+        "src/template_gold_refinement/composition.py",
+        "src/template_gold_refinement/formalisms.py",
         "src/figures/diagrams.py"
       ],
       "visual_encoding": "directed graph encodes source, generated, validation, and publication layers",
@@ -134,7 +134,7 @@
       "generated_by": "src/figures/diagrams.py::generate_claim_evidence_assay",
       "data_sources": [
         "manuscript/config.yaml#gold_refinement.contribution_claims",
-        "src/evidence.py::build_evidence_registry"
+        "src/template_gold_refinement/evidence.py::build_evidence_registry"
       ],
       "visual_encoding": "support bars plus claim to evidence to boundary graph topology",
       "alt": "Support bars summarize each contribution claim while a companion topology links claims to concrete evidence surfaces and explicit boundary classifications.",
@@ -147,7 +147,7 @@
       "caption": "Scientific-integrity risk matrix plotting severity, detectability, residual risk, and owning evidence surface.",
       "generated_by": "src/figures/diagrams.py::generate_integrity_risk_matrix",
       "data_sources": [
-        "src/integrity.py::build_integrity_dimensions"
+        "src/template_gold_refinement/integrity.py::build_integrity_dimensions"
       ],
       "visual_encoding": "scatter positions encode severity and detectability; marker size encodes residual risk; color encodes source tier",
       "alt": "A scatter matrix positions integrity risks by severity and detectability; marker size encodes residual risk and color identifies the evidence-source tier.",
@@ -161,7 +161,7 @@
       "generated_by": "src/figures/diagrams.py::generate_evidence_tier_ladder",
       "data_sources": [
         "output/reports/evidence_registry.json",
-        "src/integrity.py::build_evidence_tiers"
+        "src/template_gold_refinement/integrity.py::build_evidence_tiers"
       ],
       "visual_encoding": "ordered horizontal bars encode counts and percentages by evidence source tier",
       "alt": "Ordered horizontal bars form a ladder from weaker to stronger evidence-source tiers, with each bar annotated by its registry count and percentage.",

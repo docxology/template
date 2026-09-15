@@ -19,9 +19,9 @@ try:
     from ..purity import format_purity
     from ..refinery import run_refinery
 except ImportError:  # pragma: no cover - flat-layout fallback
-    from formalisms import FORMALISMS  # type: ignore[no-redef]
-    from purity import format_purity  # type: ignore[no-redef]
-    from refinery import run_refinery  # type: ignore[no-redef]
+    from template_gold_refinement.formalisms import FORMALISMS
+    from template_gold_refinement.purity import format_purity
+    from template_gold_refinement.refinery import run_refinery
 
 
 def build_provenance_flow_graph() -> tuple[nx.DiGraph, list[float]]:

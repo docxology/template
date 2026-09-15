@@ -11,7 +11,7 @@ logic here — all computation lives in `src/`.
 |--------|------|
 | `refinement_analysis.py` | Run the refinery pipeline, write `output/data/refinery_results.json` and `output/reports/token_plan.json` |
 | `z_generate_manuscript_variables.py` | Generate `{{TOKEN}}` variables, write `output/data/manuscript_variables.json`, inject into `output/manuscript/` |
-| `zz_generate_cover_visualization.py` | Generate the manuscript cover image (`figures/cover_visualization.png`) from `src/cover_visualization.py` |
+| `zz_generate_cover_visualization.py` | Generate the manuscript cover image (`figures/cover_visualization.png`) from `src/template_gold_refinement/cover_visualization.py` |
 
 The `z_`/`zz_` prefixes encode run order: both scripts run **after** analysis
 and consume `output/data/refinery_results.json`; `zz_generate_cover_visualization.py`

@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any
 from contracts.artifact_contract import EXPERIMENT_PLAN_METRIC_KEYS, PROMOTED_ARTIFACTS
 from gates.output_checks_simulation import efe_values_explained
-from json_io import read_json
+from template_active_inference.json_io import read_json
 
 
 def load_promoted_artifacts(root: Path) -> dict[str, dict]:

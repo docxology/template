@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from analysis import summarize_sweep, write_analysis_statistics
+from template_active_inference.analysis import summarize_sweep, write_analysis_statistics
 from simulation.statistics import load_si_artifacts, summarize_si_trace
 
 
@@ -97,7 +97,7 @@ def test_summarize_sweep(tmp_path: Path) -> None:
 
 
 def test_write_analysis_statistics(project_root: Path, tmp_path: Path) -> None:
-    from analysis import run_analysis
+    from template_active_inference.analysis import run_analysis
     from simulation.si_runner import pymdp_available, run_and_persist
 
     run_analysis(project_root)

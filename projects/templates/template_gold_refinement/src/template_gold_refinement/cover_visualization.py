@@ -11,18 +11,18 @@ import numpy as np
 from matplotlib.patches import Circle, FancyBboxPatch, Polygon, Wedge
 
 from figures._common import FIGURE_DPI, PNG_METADATA, STAGE_COLORS, SVG_METADATA, _normalize_svg_whitespace
-from formalisms import formalism_count
-from integrity import build_integrity_dimensions
-from security_assay import build_security_assay
+from template_gold_refinement.formalisms import formalism_count
+from template_gold_refinement.integrity import build_integrity_dimensions
+from template_gold_refinement.security_assay import build_security_assay
 
 try:
     from .config import load_gold_refinement_config
     from .evidence import build_evidence_registry
     from .refinery import run_refinery
 except ImportError:
-    from config import load_gold_refinement_config  # type: ignore[no-redef]
-    from evidence import build_evidence_registry  # type: ignore[no-redef]
-    from refinery import run_refinery  # type: ignore[no-redef]
+    from template_gold_refinement.config import load_gold_refinement_config  # type: ignore[no-redef]
+    from template_gold_refinement.evidence import build_evidence_registry  # type: ignore[no-redef]
+    from template_gold_refinement.refinery import run_refinery  # type: ignore[no-redef]
 
 
 COVER_PNG = "cover_visualization.png"
@@ -282,7 +282,7 @@ def cover_visualization_manifest(image_path: Path) -> dict[str, Any]:
         "schema": "template-gold-refinement-cover-v1",
         "png_path": "output/figures/cover_visualization.png",
         "svg_path": "output/figures/cover_visualization.svg",
-        "generated_by": "src/cover_visualization.py::generate_cover_visualization",
+        "generated_by": "src/template_gold_refinement/cover_visualization.py::generate_cover_visualization",
         "width_px": int(width),
         "height_px": int(height),
         "nonwhite_fraction": round(float(np.mean(nonwhite)), 6),

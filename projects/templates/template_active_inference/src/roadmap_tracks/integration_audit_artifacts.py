@@ -11,7 +11,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 
 
 from .integration_audit_builders import (

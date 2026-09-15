@@ -7,10 +7,10 @@ import sys
 
 import pytest
 
-import textbook_io
-import textbook_logging
-import textbook_paths
-import textbook_visuals
+import template_textbook.textbook_io as textbook_io
+import template_textbook.textbook_logging as textbook_logging
+import template_textbook.textbook_paths as textbook_paths
+import template_textbook.textbook_visuals as textbook_visuals
 
 
 def test_write_text_atomic_roundtrip(tmp_path):

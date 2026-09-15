@@ -105,28 +105,28 @@
           "excluded_lines": 0,
           "total_lines": 35
         },
-        "src/textbook_io.py": {
+        "src/template_textbook/textbook_io.py": {
           "coverage_percent": 100.0,
           "executed_lines": 18,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 18
         },
-        "src/textbook_logging.py": {
+        "src/template_textbook/textbook_logging.py": {
           "coverage_percent": 100.0,
           "executed_lines": 14,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 14
         },
-        "src/textbook_paths.py": {
+        "src/template_textbook/textbook_paths.py": {
           "coverage_percent": 98.36065573770492,
           "executed_lines": 41,
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 41
         },
-        "src/textbook_visuals.py": {
+        "src/template_textbook/textbook_visuals.py": {
           "coverage_percent": 92.3076923076923,
           "executed_lines": 12,
           "missing_lines": 1,

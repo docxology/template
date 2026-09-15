@@ -8,8 +8,8 @@ from pathlib import Path
 from typing import Any
 
 
-from json_io import write_json as _write_json
-from yaml_io import load_yaml as _load_yaml
+from template_active_inference.json_io import write_json as _write_json
+from template_active_inference.yaml_io import load_yaml as _load_yaml
 
 SCHOLARSHIP_SCHEMA = "template_active_inference.scholarship_source_matrix.v1"
 

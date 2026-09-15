@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from json_io import load_json, write_json
+from template_active_inference.json_io import load_json, write_json
 from roadmap_tracks.row_aggregates import all_rows
 from roadmap_tracks.toy_sweep_builders import (
     _graph_world_trace_invariants,

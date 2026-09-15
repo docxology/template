@@ -814,7 +814,7 @@ the refinement analogy auditable as a directed source path rather than a
 decorative metaphor. The graph starts from the same stage sequence used
 in the purity table and carries that sequence forward to certification,
 with edge width proportional to the purity gain owned by
-<code>src/refinery.py::run_refinery</code>. A reader can therefore ask
+<code>src/template_gold_refinement/refinery.py::run_refinery</code>. A reader can therefore ask
 where each improvement enters the pipeline and whether it is supported
 by the same source that generated the reported purity numbers.</p>
 <p>The main result is structural: certification is not allowed to appear
@@ -859,7 +859,7 @@ manuscript uses seed 431 for the reported token plan, but the figure
 asks a neighboring question: how do selected inventory indices move when
 seeds and lexicon categories vary? This is not a stochastic robustness
 claim. It is a deterministic audit of the digest rule in
-<code>src/composition.py::generate_token_plan</code> against the
+<code>src/template_gold_refinement/composition.py::generate_token_plan</code> against the
 configured lexicon inventories in
 <code>manuscript/config.yaml</code>.</p>
 <p>This view separates three issues that prose alone tends to blur.
@@ -923,7 +923,7 @@ identifier and to the source surface that emits it. That linkage is
 important because equation labels can otherwise create a false sense of
 rigor: a numbered equation looks formal even when its assumptions,
 variables, and implementation owner are not recoverable. Here the formal
-object must remain connected to <code>src/formalisms.py</code>, the
+object must remain connected to <code>src/template_gold_refinement/formalisms.py</code>, the
 generated registry table, and the manuscript reference that consumes
 it.</p>
 <p>The graph also helps distinguish formal support from decorative
@@ -1151,7 +1151,7 @@ the stable 12-figure contract.</p>
 <td>S1</td>
 <td>implicit trust in generated artifacts</td>
 <td>NIST SP 800-207 zero trust</td>
-<td>output/reports/evidence_registry.json and src/security_assay.py</td>
+<td>output/reports/evidence_registry.json and src/template_gold_refinement/security_assay.py</td>
 <td>infrastructure.validation.cli evidence –fail-on-issues</td>
 <td>documents a verification posture, not a deployed zero-trust
 architecture</td>
@@ -1215,32 +1215,32 @@ security</td>
 <td>Five-stage refinery</td>
 <td>The refinery pipeline has 5 canonical stages from ore to
 nine-nines.</td>
-<td>src/refinery.py::CANONICAL_STAGES</td>
+<td>src/template_gold_refinement/refinery.py::CANONICAL_STAGES</td>
 <td>local</td>
 </tr>
 <tr>
 <td>Monotone purity</td>
 <td>Purity increases strictly across all refinery stages.</td>
-<td>src/purity.py::assert_monotone_increase</td>
+<td>src/template_gold_refinement/purity.py::assert_monotone_increase</td>
 <td>local</td>
 </tr>
 <tr>
 <td>Nine-nines certification</td>
 <td>The certification stage achieves 99.9999999% purity.</td>
-<td>src/purity.py::NINE_NINES_PURITY</td>
+<td>src/template_gold_refinement/purity.py::NINE_NINES_PURITY</td>
 <td>local</td>
 </tr>
 <tr>
 <td>Deterministic tokens</td>
 <td>Token selection is deterministic via seeded SHA-256 digest.</td>
-<td>src/composition.py::_choose_value</td>
+<td>src/template_gold_refinement/composition.py::_choose_value</td>
 <td>local</td>
 </tr>
 <tr>
 <td>Formalism registry</td>
 <td>The manuscript exposes 7 source-owned formalisms with equation
 labels.</td>
-<td>src/formalisms.py::FORMALISMS</td>
+<td>src/template_gold_refinement/formalisms.py::FORMALISMS</td>
 <td>local</td>
 </tr>
 <tr>
@@ -1262,7 +1262,7 @@ gates.</td>
 <td>Scientific-integrity risk model</td>
 <td>The manuscript includes a source-owned integrity risk model linking
 failure modes, validators, evidence surfaces, and fork obligations.</td>
-<td>src/integrity.py::build_integrity_dimensions</td>
+<td>src/template_gold_refinement/integrity.py::build_integrity_dimensions</td>
 <td>local</td>
 </tr>
 <tr>
@@ -1270,7 +1270,7 @@ failure modes, validators, evidence surfaces, and fork obligations.</td>
 <td>The manuscript includes a source-owned security assay mapping
 adversarial threats and standards to local evidence surfaces,
 validators, and claim boundaries.</td>
-<td>src/security_assay.py::build_security_assay</td>
+<td>src/template_gold_refinement/security_assay.py::build_security_assay</td>
 <td>local</td>
 </tr>
 </tbody>

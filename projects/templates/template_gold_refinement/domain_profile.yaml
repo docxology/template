@@ -31,15 +31,15 @@ stage_mappings:
   - refinery_stage: smelting
     domain_operation: remove unsupported prose and duplicated claims
     purity_target: 0.750
-    evidence_surface: src/composition.py
+    evidence_surface: src/template_gold_refinement/composition.py
   - refinery_stage: assaying
     domain_operation: validate claims against evidence and citations
     purity_target: 0.9167
-    evidence_surface: src/evidence.py
+    evidence_surface: src/template_gold_refinement/evidence.py
   - refinery_stage: cupellation
     domain_operation: resolve cross-references and citation integrity
     purity_target: 0.999
-    evidence_surface: src/formalisms.py
+    evidence_surface: src/template_gold_refinement/formalisms.py
   - refinery_stage: certification
     domain_operation: run render and validation gates
     purity_target: 0.999999999

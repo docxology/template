@@ -7,7 +7,7 @@ from typing import Any
 
 import yaml
 
-from textbook_logging import get_logger
+from template_textbook.textbook_logging import get_logger
 
 from .renderer import MermaidRenderer, RenderResult
 

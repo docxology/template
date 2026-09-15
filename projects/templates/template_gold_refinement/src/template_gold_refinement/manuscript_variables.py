@@ -2,9 +2,9 @@
 
 Reads:
 - ``manuscript/config.yaml`` — gold_refinement block and paper metadata
-- ``src/refinery.py`` — canonical refinery stages and purity values
-- ``src/purity.py`` — karat grades and nine-nines
-- ``src/composition.py`` — token plan and section bodies
+- ``src/template_gold_refinement/refinery.py`` — canonical refinery stages and purity values
+- ``src/template_gold_refinement/purity.py`` — karat grades and nine-nines
+- ``src/template_gold_refinement/composition.py`` — token plan and section bodies
 
 Returns a flat ``dict[str, str]`` of UPPERCASE_KEY → value for
 ``{{TOKEN}}`` substitution via
@@ -50,18 +50,18 @@ try:
         security_assay_table_rows,
     )
 except ImportError:  # pragma: no cover
-    from composition import generate_token_plan  # type: ignore[no-redef]
-    from config import load_gold_refinement_config  # type: ignore[no-redef]
-    from evidence import build_evidence_registry  # type: ignore[no-redef]
-    from figures._common import figure_markdown_variables  # type: ignore[no-redef]
-    from formalisms import (  # type: ignore[no-redef]
+    from template_gold_refinement.composition import generate_token_plan  # type: ignore[no-redef]
+    from template_gold_refinement.config import load_gold_refinement_config  # type: ignore[no-redef]
+    from template_gold_refinement.evidence import build_evidence_registry  # type: ignore[no-redef]
+    from figures._common import figure_markdown_variables
+    from template_gold_refinement.formalisms import (  # type: ignore[no-redef]
         equation_labels,
         formalism_count,
         formalism_equation_blocks,
         formalism_table_rows,
         formalism_traceability_rows,
     )
-    from integrity import (  # type: ignore[no-redef]
+    from template_gold_refinement.integrity import (  # type: ignore[no-redef]
         build_evidence_tiers,
         build_integrity_dimensions,
         evidence_tier_table_rows,
@@ -69,10 +69,10 @@ except ImportError:  # pragma: no cover
         integrity_owner_table_rows,
         integrity_summary_line,
     )
-    from parsing import build_timestamp, load_json_object, load_manuscript_config  # type: ignore[no-redef]
-    from purity import format_purity, purity_to_nines  # type: ignore[no-redef]
-    from refinery import run_refinery  # type: ignore[no-redef]
-    from security_assay import (  # type: ignore[no-redef]
+    from template_gold_refinement.parsing import build_timestamp, load_json_object, load_manuscript_config  # type: ignore[no-redef]
+    from template_gold_refinement.purity import format_purity, purity_to_nines  # type: ignore[no-redef]
+    from template_gold_refinement.refinery import run_refinery  # type: ignore[no-redef]
+    from template_gold_refinement.security_assay import (  # type: ignore[no-redef]
         build_security_assay,
         security_assay_summary_line,
         security_assay_table_rows,

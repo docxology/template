@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from transmission import validate_transmission_bookends
+from template_gold_refinement.transmission import validate_transmission_bookends
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 

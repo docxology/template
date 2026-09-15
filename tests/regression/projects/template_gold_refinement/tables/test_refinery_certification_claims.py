@@ -24,7 +24,7 @@ No mocks: real deterministic objects only, in line with the repo no-mock policy.
 
 from __future__ import annotations
 
-import importlib.util
+import importlib
 from pathlib import Path
 import sys
 from types import ModuleType
@@ -35,45 +35,28 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[5]
 PROJECT_ROOT = REPO_ROOT / "projects" / "templates" / "template_gold_refinement"
+SRC_DIR = PROJECT_ROOT / "src"
 
-_PKG_ALIAS = "_gold_refinement_src"
 
+def _submodule(name: str) -> ModuleType:
+    """Import this exemplar's unique ``src/template_gold_refinement`` submodule directly.
 
-def _load_src_package() -> ModuleType:
-    """Load this exemplar's ``src`` package under a project-unique alias.
-
-    Every public exemplar ships a top-level ``src`` package, so a bare
-    ``sys.path.insert`` + ``from src...`` collides on ``sys.modules['src']``
-    once a second project's regression test joins the same pytest session.
-    Registering under a namespaced key keeps the real tested functions in
-    scope (no mocks) and stays collision-free regardless of collection order.
+    The exemplar now ships every module under its unique package
+    ``src/template_gold_refinement/``, so a plain import of the real package
+    (with ``src/`` on ``sys.path``) replaces the former alias loader: the
+    package name itself is project-unique, so no ``sys.modules['src']``
+    collision is possible regardless of collection order.
     """
-
-    if _PKG_ALIAS in sys.modules:
-        return sys.modules[_PKG_ALIAS]
-    src_init = PROJECT_ROOT / "src" / "__init__.py"
-    spec = importlib.util.spec_from_file_location(
-        _PKG_ALIAS,
-        src_init,
-        submodule_search_locations=[str(PROJECT_ROOT / "src")],
-    )
-    assert spec is not None and spec.loader is not None, f"cannot load {src_init}"
-    package = importlib.util.module_from_spec(spec)
-    sys.modules[_PKG_ALIAS] = package
-    spec.loader.exec_module(package)
-    return package
+    if str(SRC_DIR) not in sys.path:
+        sys.path.insert(0, str(SRC_DIR))
+    return importlib.import_module(f"template_gold_refinement.{name}")
 
 
-def _import_submodule(dotted: str) -> ModuleType:
-    _load_src_package()
-    return importlib.import_module(f"{_PKG_ALIAS}.{dotted}")
-
-
-run_refinery = _import_submodule("refinery").run_refinery
-purity_to_nines = _import_submodule("purity").purity_to_nines
-formalism_count = _import_submodule("formalisms").formalism_count
-load_gold_refinement_config = _import_submodule("config").load_gold_refinement_config
-build_evidence_registry = _import_submodule("evidence").build_evidence_registry
+run_refinery = _submodule("refinery").run_refinery
+purity_to_nines = _submodule("purity").purity_to_nines
+formalism_count = _submodule("formalisms").formalism_count
+load_gold_refinement_config = _submodule("config").load_gold_refinement_config
+build_evidence_registry = _submodule("evidence").build_evidence_registry
 
 
 def _pin(pinned: dict[str, Any], key: str) -> dict[str, Any]:

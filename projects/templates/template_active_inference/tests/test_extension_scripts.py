@@ -63,7 +63,7 @@ def test_render_animation_skip_exits_clean(project_root: Path) -> None:
 
 
 def test_render_animation_writes_gif_when_si_figure_present(project_root: Path) -> None:
-    from analysis import run_analysis
+    from template_active_inference.analysis import run_analysis
     from simulation.si_runner import pymdp_available, run_and_persist
 
     run_analysis(project_root)

@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from analogy_boundary import analogy_boundary_theorem, validate_analogy_boundary
-from domain_adapter import load_domain_profile
+from template_gold_refinement.analogy_boundary import analogy_boundary_theorem, validate_analogy_boundary
+from template_gold_refinement.domain_adapter import load_domain_profile
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 

@@ -24,21 +24,21 @@ keep these surfaces aligned:
 - `manuscript/config.yaml` owns the `gold_refinement:` schema: seed, lexicon,
   slots, section conditions, section titles, narrative moves, design
   principles, quality probes, failure modes, and authoring obligations.
-- `src/refinery.py` owns the five refinery stages and monotone purity enforcement.
-- `src/purity.py` owns karat grading and nine-nines certification.
-- `src/config.py` owns schema validation and the mega-madlib config dataclass.
-- `src/composition.py` owns deterministic token selection and section composition.
-- `src/assay.py` owns claim-evidence validation.
-- `src/pipeline_policy.py` owns the secure-pipeline profile and optional LLM review gates.
-- `src/domain_adapter.py` owns domain metric translation into the refinery purity scale.
-- `src/manuscript_variables.py` owns the hydrated manuscript variable map.
+- `src/template_gold_refinement/refinery.py` owns the five refinery stages and monotone purity enforcement.
+- `src/template_gold_refinement/purity.py` owns karat grading and nine-nines certification.
+- `src/template_gold_refinement/config.py` owns schema validation and the mega-madlib config dataclass.
+- `src/template_gold_refinement/composition.py` owns deterministic token selection and section composition.
+- `src/template_gold_refinement/assay.py` owns claim-evidence validation.
+- `src/template_gold_refinement/pipeline_policy.py` owns the secure-pipeline profile and optional LLM review gates.
+- `src/template_gold_refinement/domain_adapter.py` owns domain metric translation into the refinery purity scale.
+- `src/template_gold_refinement/manuscript_variables.py` owns the hydrated manuscript variable map.
 - `scripts/z_generate_manuscript_variables.py` owns writing `output/manuscript/`.
 
 See `docs/domain_fork_guide.md` for the stage-remap template and boundary rules.
 
 Before a fork claims a new method, update the config-owned method surface first:
 
-- Add or revise refinery stages in `src/refinery.py` with matching purity targets.
+- Add or revise refinery stages in `src/template_gold_refinement/refinery.py` with matching purity targets.
 - Update lexicon categories in `manuscript/config.yaml` to reflect domain vocabulary.
 - Connect refinery stages to real domain operations (not just decorative labels).
 - Add `design_principles`, `quality_probes`, and `failure_modes` that can catch

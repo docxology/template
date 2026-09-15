@@ -6,7 +6,7 @@ import pytest
 import yaml
 from pathlib import Path
 
-from config import (
+from template_gold_refinement.config import (
     COMPOSITION_DEPTHS,
     DEFAULT_SECTION_TITLES,
     GOLD_REFINEMENT_SCHEMA_FIELDS,
@@ -89,7 +89,9 @@ class TestLoadConfig:
         assert not any("Unknown config key 'gold_refinement'" in record.message for record in caplog.records)
 
     def test_src_config_does_not_import_infrastructure(self):
-        source = (Path(__file__).resolve().parent.parent / "src" / "config.py").read_text(encoding="utf-8")
+        source = (Path(__file__).resolve().parent.parent / "src" / "template_gold_refinement" / "config.py").read_text(
+            encoding="utf-8"
+        )
         assert "from infrastructure." not in source
         assert "import infrastructure." not in source
         assert PROJECT_SCHEMA_EXTENSION == {"gold_refinement": dict}

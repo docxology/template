@@ -64,7 +64,7 @@ class TestCheckEvidenceSourcePaths:
     """Directly test _check_evidence_source for uncovered branches."""
 
     def _check(self, source: str, project_root: Path) -> tuple[bool, str]:
-        from evidence import _check_evidence_source  # type: ignore[attr-defined]
+        from template_gold_refinement.evidence import _check_evidence_source  # type: ignore[attr-defined]
 
         return _check_evidence_source(source, project_root)
 
@@ -111,13 +111,13 @@ class TestEvidenceRegistryZeroClaims:
     """EvidenceRegistry with zero claims — support_rate and is_passing."""
 
     def test_zero_total_support_rate(self):
-        from evidence import EvidenceRegistry
+        from template_gold_refinement.evidence import EvidenceRegistry
 
         reg = EvidenceRegistry(entries=[], total_claims=0, supported_claims=0, unsupported_claims=0)
         assert reg.support_rate == 0.0
 
     def test_zero_total_is_not_passing(self):
-        from evidence import EvidenceRegistry
+        from template_gold_refinement.evidence import EvidenceRegistry
 
         reg = EvidenceRegistry(entries=[], total_claims=0, supported_claims=0, unsupported_claims=0)
         assert reg.is_passing is False
@@ -127,8 +127,8 @@ class TestCheckClaimLedgerMismatch:
     """check_claim_ledger_alignment returns mismatches for unmatched claims."""
 
     def test_unmatched_claim_returns_mismatch(self, tmp_path):
-        from config import GoldRefinementConfig
-        from evidence import check_claim_ledger_alignment
+        from template_gold_refinement.config import GoldRefinementConfig
+        from template_gold_refinement.evidence import check_claim_ledger_alignment
 
         # A config with a contribution claim that has no ledger match
         cfg = GoldRefinementConfig(
@@ -151,7 +151,7 @@ class TestCheckClaimLedgerMismatch:
         assert "src/refinery.py::NOT_REAL" in mismatches[0]
 
     def test_path_escape_is_rejected(self, tmp_path):
-        from evidence import _check_evidence_source
+        from template_gold_refinement.evidence import _check_evidence_source
 
         outside = tmp_path.parent / "outside.py"
         outside.write_text("SECRET = 1\n", encoding="utf-8")
@@ -170,7 +170,7 @@ class TestDashboardWithPopulatedData:
 
     def test_token_category_rows_rendered(self, tmp_path):
         """Token category count rows appear in dashboard HTML."""
-        from dashboard import build_dashboard_html
+        from template_gold_refinement.dashboard import build_dashboard_html
 
         token_data = {
             "total_tokens": 6,
@@ -184,7 +184,7 @@ class TestDashboardWithPopulatedData:
 
     def test_evidence_entry_rows_rendered(self, tmp_path):
         """Evidence entry rows (✅/❌) appear in dashboard HTML when entries provided."""
-        from dashboard import build_dashboard_html
+        from template_gold_refinement.dashboard import build_dashboard_html
 
         evidence_data = {
             "total_claims": 2,
@@ -212,7 +212,7 @@ class TestDashboardWithPopulatedData:
 
     def test_dashboard_with_all_data_files(self, tmp_path):
         """Dashboard correctly reads and renders all three data files from disk."""
-        from dashboard import build_dashboard_html
+        from template_gold_refinement.dashboard import build_dashboard_html
 
         data_dir = tmp_path / "output" / "data"
         reports_dir = tmp_path / "output" / "reports"
@@ -370,7 +370,7 @@ class TestManuscriptVariablesStalenessDetection:
 
     def test_stale_when_output_manuscript_missing(self, tmp_path):
         """When output/manuscript/ doesn't exist, status is 'stale'."""
-        from manuscript_variables import generate_variables
+        from template_gold_refinement.manuscript_variables import generate_variables
 
         root = _minimal_manuscript(tmp_path)
         v = generate_variables(root)
@@ -378,7 +378,7 @@ class TestManuscriptVariablesStalenessDetection:
 
     def test_stale_when_source_file_missing_from_output(self, tmp_path):
         """When a source *.md is missing from output/manuscript/, status is 'stale'."""
-        from manuscript_variables import generate_variables
+        from template_gold_refinement.manuscript_variables import generate_variables
 
         root = _minimal_manuscript(tmp_path)
         # Create source section file
@@ -391,7 +391,7 @@ class TestManuscriptVariablesStalenessDetection:
     def test_stale_when_source_is_newer_than_output(self, tmp_path):
         """When source file is newer than rendered output, status is 'stale'."""
         import time
-        from manuscript_variables import generate_variables
+        from template_gold_refinement.manuscript_variables import generate_variables
 
         root = _minimal_manuscript(tmp_path)
         src_file = root / "manuscript" / "00_abstract.md"
@@ -410,7 +410,7 @@ class TestManuscriptVariablesStalenessDetection:
     def test_fresh_when_output_is_up_to_date(self, tmp_path):
         """When all output files are newer than source files, status is 'fresh'."""
         import time
-        from manuscript_variables import generate_variables
+        from template_gold_refinement.manuscript_variables import generate_variables
 
         root = _minimal_manuscript(tmp_path)
         src_file = root / "manuscript" / "00_abstract.md"
@@ -432,7 +432,7 @@ class TestSourceDateEpoch:
     def test_source_date_epoch_used(self, monkeypatch):
         """When SOURCE_DATE_EPOCH is set, timestamp is deterministic."""
         monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
-        from parsing import build_timestamp  # type: ignore[attr-defined]
+        from template_gold_refinement.parsing import build_timestamp  # type: ignore[attr-defined]
 
         ts = build_timestamp()
         assert ts == "1970-01-01T00:00:00Z"
@@ -440,7 +440,7 @@ class TestSourceDateEpoch:
     def test_source_date_epoch_not_set_returns_current(self, monkeypatch):
         """When SOURCE_DATE_EPOCH is unset, timestamp matches current UTC roughly."""
         monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
-        from parsing import build_timestamp  # type: ignore[attr-defined]
+        from template_gold_refinement.parsing import build_timestamp  # type: ignore[attr-defined]
 
         ts = build_timestamp()
         assert ts.endswith("Z")
@@ -464,12 +464,12 @@ class TestPublicAPIImport:
             sys.path.insert(0, pkg_path)
         # The __init__.py uses relative imports; we access via direct import
         # of each module (conftest adds src/ to path already)
-        from refinery import run_refinery, CANONICAL_STAGES
-        from purity import NINE_NINES_PURITY
-        from config import GoldRefinementConfig
-        from assay import ClaimRecord
-        from evidence import EvidenceRegistry
-        from dashboard import build_dashboard_html
+        from template_gold_refinement.refinery import run_refinery, CANONICAL_STAGES
+        from template_gold_refinement.purity import NINE_NINES_PURITY
+        from template_gold_refinement.config import GoldRefinementConfig
+        from template_gold_refinement.assay import ClaimRecord
+        from template_gold_refinement.evidence import EvidenceRegistry
+        from template_gold_refinement.dashboard import build_dashboard_html
 
         # Verify key imports resolve
         assert run_refinery is not None

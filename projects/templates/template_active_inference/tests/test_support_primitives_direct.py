@@ -5,7 +5,7 @@ failure paths only ran when a gate happened to rebuild the tracked snapshot:
 
 * ``json_io.load_json_strict`` -- the missing-file short circuit and the
   fail-loud ``ValueError`` raised on a present-but-malformed artifact
-  (``src/json_io.py`` lines 31, 34-35), plus the non-dict fallthrough.
+  (``src/template_active_inference/json_io.py`` lines 31, 34-35), plus the non-dict fallthrough.
 * ``roadmap_tracks.row_aggregates.all_field_present`` -- the whole helper
   (``src/roadmap_tracks/row_aggregates.py`` lines 26-27), including the
   negative control that forces the every-row-has-every-field claim False.
@@ -20,8 +20,8 @@ from pathlib import Path
 
 import pytest
 
-from json_io import json_payloads_equal, load_json, load_json_strict, read_json, write_json
-from yaml_io import load_yaml, read_yaml
+from template_active_inference.json_io import json_payloads_equal, load_json, load_json_strict, read_json, write_json
+from template_active_inference.yaml_io import load_yaml, read_yaml
 from roadmap_tracks.row_aggregates import all_field_present, all_rows, rows
 
 

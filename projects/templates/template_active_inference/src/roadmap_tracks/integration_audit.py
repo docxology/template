@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from json_io import json_payloads_equal
+from template_active_inference.json_io import json_payloads_equal
 from roadmap_tracks.row_aggregates import all_rows
 
 from .figure_provenance import _figure_sources_mapped

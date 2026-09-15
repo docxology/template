@@ -25,8 +25,8 @@ def main() -> int:
     """CLI entry point."""
     from textbook import content
     from textbook.config import iter_chapters, iter_unit_intros, load_config
-    from textbook_io import write_text_atomic
-    from textbook_logging import get_logger
+    from template_textbook.textbook_io import write_text_atomic
+    from template_textbook.textbook_logging import get_logger
 
     logger = get_logger(__name__)
     parser = argparse.ArgumentParser(description="Scaffold missing textbook stub files")
