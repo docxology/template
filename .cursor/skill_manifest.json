@@ -693,6 +693,12 @@
       "cursor_at": "infrastructure/fonds/SKILL.md"
     },
     {
+      "name": "infrastructure-formal-contracts",
+      "description": "Skill for the typed formal-contracts package — composing and machine-checking well-typed manuscripts (typed claims, evidence tiers, resolvable formal statements, acyclic dependency DAGs).",
+      "path": "infrastructure/formal_contracts/SKILL.md",
+      "cursor_at": "infrastructure/formal_contracts/SKILL.md"
+    },
+    {
       "name": "infrastructure-llm",
       "description": "Skill for the LLM infrastructure module providing local Large Language Model integration via Ollama. Covers client initialization, prompt templates, output validation, manuscript review generation, conversation context, and CLI usage. Use when querying LLMs, generating manuscript reviews, validating LLM outputs, or managing Ollama models.",
       "path": "infrastructure/llm/SKILL.md",
