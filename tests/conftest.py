@@ -18,6 +18,21 @@ import pytest
 # Force headless backend for matplotlib in tests
 os.environ.setdefault("MPLBACKEND", "Agg")
 
+# Optional Hypothesis profile switching (opt-in, zero cost when unset).
+# ``HYPOTHESIS_PROFILE=fast`` shrinks example counts for smoke/agent loops;
+# CI and scheduled lanes keep the library default by not setting the variable.
+# Importing hypothesis here is deferred so suites that never use it pay nothing.
+_hypothesis_profile = os.environ.get("HYPOTHESIS_PROFILE", "").strip()
+if _hypothesis_profile:
+    import hypothesis
+
+    hypothesis.settings.register_profile(
+        _hypothesis_profile,
+        max_examples=5 if _hypothesis_profile == "fast" else 100,
+        deadline=None,
+    )
+    hypothesis.settings.load_profile(_hypothesis_profile)
+
 # A user-level ``core.fsmonitor=true`` makes every temporary Git repository in
 # the infrastructure suite start a detached fsmonitor daemon. Those daemons can
 # outlive ``tmp_path`` cleanup and accumulate across xdist workers. Keep the
