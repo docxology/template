@@ -9,7 +9,7 @@ completed cleanup so `TODO.md` stays future-only.
 
 Nine call sites carried their own `_load_json` / `_write_json` copies with
 subtly different error handling. They now delegate to the single implementation
-in [`../src/json_io.py`](../src/json_io.py):
+in [`../src/template_active_inference/json_io.py`](../src/template_active_inference/json_io.py):
 
 | Function | Missing file | Malformed JSON |
 | --- | --- | --- |

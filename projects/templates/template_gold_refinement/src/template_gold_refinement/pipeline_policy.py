@@ -125,7 +125,7 @@ class PipelinePolicy:
 
 def load_steganography_profile(project_root: Path | None = None) -> SteganographyProfile:
     """Load steganography profile from a file."""
-    root = project_root or Path(__file__).resolve().parent.parent
+    root = project_root or Path(__file__).resolve().parents[2]
     config = _load_project_config(root)
     raw = config.get("steganography", {})
     if not isinstance(raw, dict):
@@ -177,7 +177,7 @@ def load_steganography_profile(project_root: Path | None = None) -> Steganograph
 
 def load_llm_review_policy(project_root: Path | None = None) -> LLMReviewPolicy:
     """Load llm review policy from a file."""
-    root = project_root or Path(__file__).resolve().parent.parent
+    root = project_root or Path(__file__).resolve().parents[2]
     config = _load_project_config(root)
     raw = config.get("llm", {})
     if not isinstance(raw, dict):

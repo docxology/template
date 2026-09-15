@@ -921,6 +921,12 @@
       "cursor_at": "projects/templates/template_eda_notebook/.agents/skills/template-eda-notebook/SKILL.md"
     },
     {
+      "name": "template-experiment-tree",
+      "description": "Use when working inside template_experiment_tree — a living research record with a version-controlled experiment tree with frozen nodes. Answers, freezes, reports, and manuscript hydration all flow through the tree store.",
+      "path": "projects/templates/template_experiment_tree/.agents/skills/template-experiment-tree/SKILL.md",
+      "cursor_at": "projects/templates/template_experiment_tree/.agents/skills/template-experiment-tree/SKILL.md"
+    },
+    {
       "name": "template-formal",
       "description": "Strongly-typed multiagent ant-robot colony exemplar — ADTs, session-typed protocols, affine-discipline resource handles, storage-as-functor framing, Active-Inference-flavored decision loop, mypy-as-oracle negative controls.",
       "path": "projects/templates/template_formal/.agents/skills/template-formal/SKILL.md",

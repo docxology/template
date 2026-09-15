@@ -45,9 +45,8 @@ def generate_variables(
     if require_answered and not tree.has_answered():
         raise ManuscriptVariablesError("tree has no answered nodes and require_answered=True")
 
-    variables = render_variables(tree)
-    sections = flatten_sections(tree)
-    variables["exp_sections"] = sections
+    variables: dict[str, Any] = dict(render_variables(tree))
+    variables["exp_sections"] = flatten_sections(tree)
     target = Path(output_path)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(variables, indent=2, sort_keys=False) + "\n", encoding="utf-8")
@@ -60,10 +59,11 @@ def resolve_tokens(tokens: dict[str, Any], variables: dict[str, Any]) -> dict[st
     Raises:
         ManuscriptVariablesError: If a token has no tree-derived backing.
     """
-    try:
-        from template_experiment_tree.report import resolve_token_map
+    from template_experiment_tree.report import resolve_token_map as _resolve
 
-        return resolve_token_map(tokens, variables)
+    try:
+        resolved: dict[str, Any] = dict(_resolve(tokens, variables))
+        return resolved
     except KeyError as exc:
         raise ManuscriptVariablesError(str(exc)) from exc
 

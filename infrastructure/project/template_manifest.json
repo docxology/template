@@ -58,6 +58,14 @@
       "coverage_floor": 90
     },
     {
+      "name": "template_experiment_tree",
+      "qualified_name": "templates/template_experiment_tree",
+      "title": "template_experiment_tree",
+      "use_when": "Use `template_experiment_tree` when the deliverable is a research log that stays honest over months: you want planned, preregistered, and answered experiments in one durable tree, negative results registered (not buried), and a manuscript that regenerates from the tree instead of drifting from it.",
+      "test_file_count": 5,
+      "coverage_floor": 90
+    },
+    {
       "name": "template_formal",
       "qualified_name": "templates/template_formal",
       "title": "Formal — Strongly-Typed Multiagent Ant-Robot Colony Exemplar",

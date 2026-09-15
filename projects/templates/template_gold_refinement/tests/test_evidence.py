@@ -52,7 +52,7 @@ class TestBuildEvidenceRegistry:
     def test_dotted_python_symbol_source_must_resolve_exactly(self):
         project_root = Path(__file__).resolve().parent.parent
         supported, notes = _check_evidence_source(
-            "src/formalisms.py::FORMALISMS.eq_token_digest",
+            "src/template_gold_refinement/formalisms.py::FORMALISMS.eq_token_digest",
             project_root,
         )
         assert supported is True

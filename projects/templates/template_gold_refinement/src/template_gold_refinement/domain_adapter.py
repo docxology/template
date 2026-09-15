@@ -218,7 +218,7 @@ def _boundary_parts(data: Any) -> tuple[str, tuple[str, ...], tuple[str, ...]]:
 
 def load_domain_profile(project_root: Path | None = None) -> DomainAdapterProfile:
     """Load domain profile from a file."""
-    root = project_root or Path(__file__).resolve().parent.parent
+    root = project_root or Path(__file__).resolve().parents[2]
     data = _load_domain_profile_data(root)
     boundary_thesis, boundary_limits, boundary_non_claims = _boundary_parts(data.get("analogy_boundary", {}))
     return DomainAdapterProfile(
