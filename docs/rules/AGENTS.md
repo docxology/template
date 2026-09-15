@@ -30,6 +30,7 @@ This directory contains development standards, coding guidelines, and best pract
 | [reporting.md](reporting.md) | Reporting module standards and outputs | Using reporting utilities |
 | [refactoring.md](refactoring.md) | Refactoring and modularization standards | Refactoring code with clean breaks |
 | [memory_and_decision_records.md](memory_and_decision_records.md) | Decision memory, ADRs, local agent memory, and RedTeam negative controls | Capturing rationale without stale parallel ledgers |
+| [evidence_validation.md](evidence_validation.md) | Evidence-validation rule: run logs as evidence, exit status is not a result, truncated output is not evidence of absence | Accepting or citing run-derived claims |
 
 ## Key Principles
 
@@ -591,6 +592,6 @@ When creating a new rules file:
 
 **Version**: 3.3.1
 **Last Updated**: 2026-06-08
-**Files**: 18 (AGENTS.md + README.md + 16 guideline files)
+**Files**: 19 (AGENTS.md + README.md + 17 guideline files)
 **Status**: All 16 guideline files cross-referenced
 **Updates**: All development rules and standards synchronized with docs/

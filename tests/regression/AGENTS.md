@@ -59,3 +59,4 @@ tests/regression/
 - [`README.md`](README.md) — full philosophy and rationale
 - [`../../docs/maintenance/regression-testing.md`](../../docs/maintenance/regression-testing.md) — long-horizon design
 - [`../../docs/development/testing/`](../../docs/development/testing/) — wider testing strategy
+- [`../../docs/rules/evidence_validation.md`](../../docs/rules/evidence_validation.md) — evidence-validation rule (run logs as evidence; exit status is not a result; truncated output is not evidence of absence)
