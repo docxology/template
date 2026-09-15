@@ -12,11 +12,11 @@ from typing import Any
 # Re-exported for the sheaf-track builder modules that import ``_load_json`` /
 # ``_write_json`` from this module; the canonical implementations live in
 # ``json_io`` so read/write behaviour stays identical across the package.
-from json_io import load_json as _load_json
-from json_io import write_json as _write_json  # noqa: F401  (re-exported for sheaf_tracks_write)
+from template_active_inference.json_io import load_json as _load_json
+from template_active_inference.json_io import write_json as _write_json  # noqa: F401  (re-exported for sheaf_tracks_write)
 
 
-from yaml_io import load_yaml as _load_yaml
+from template_active_inference.yaml_io import load_yaml as _load_yaml
 
 
 def _load_structured(path: Path) -> dict[str, Any]:

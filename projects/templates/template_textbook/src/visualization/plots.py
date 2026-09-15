@@ -20,8 +20,8 @@ import numpy as np
 from textbook import models
 from textbook.analysis import load_case_study_observations
 from textbook.config import iter_chapters, load_config
-from textbook_logging import get_logger
-from textbook_paths import MANUSCRIPT
+from template_textbook.textbook_logging import get_logger
+from template_textbook.textbook_paths import MANUSCRIPT
 
 from ._scaffold import BLUE, GRAY, GREEN, ORANGE, SERIES, new_figure, save_figure
 

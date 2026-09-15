@@ -314,7 +314,7 @@ def _validate_fixed_point(root: Path) -> list[str]:
     issues.extend(validate_sheaf_track_artifacts(root))
     variables_path = root / "output" / "data" / "manuscript_variables.json"
     try:
-        from json_io import load_json_strict
+        from template_active_inference.json_io import load_json_strict
 
         variables = load_json_strict(variables_path)
     except ValueError as exc:

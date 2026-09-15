@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dashboard import build_dashboard_html, write_dashboard
+from template_gold_refinement.dashboard import build_dashboard_html, write_dashboard
 
 
 class TestBuildDashboardHtml:

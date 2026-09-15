@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from domain_adapter import load_domain_profile
+from template_gold_refinement.domain_adapter import load_domain_profile
 
 
 def _write_domain_profile(tmp_path: Path) -> Path:

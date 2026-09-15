@@ -126,7 +126,7 @@ SELF_REFERENTIAL_STABILITY_EXEMPT_OUTPUTS = {
 
 def test_validate_outputs_after_analysis() -> None:
     root = Path(__file__).resolve().parents[2]
-    from analysis import run_analysis
+    from template_active_inference.analysis import run_analysis
 
     run_analysis(root)
     checks = validate_outputs(root)
@@ -225,7 +225,7 @@ def test_write_invariants_report_preserves_simulation_merge(project_root: Path) 
     inv_path = project_root / "output" / "reports" / "invariants.json"
     si_summary = project_root / "output" / "data" / "si_tmaze_summary.json"
     if not inv_path.is_file() or not si_summary.is_file():
-        from analysis import run_analysis
+        from template_active_inference.analysis import run_analysis
         from simulation.si_runner import pymdp_available, run_and_persist
 
         run_analysis(project_root)

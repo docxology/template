@@ -932,8 +932,8 @@ class="header-section-number">3.2</span> The analogy as pipeline</h2>
 input purity, and an output purity. Purity increases monotonically,
 stage order is sequential, and each stage input must equal the preceding
 output. These invariants are enforced by
-<code>src/refinery.py::run_refinery</code> and
-<code>src/purity.py::assert_monotone_increase</code> and exercised by
+<code>src/template_gold_refinement/refinery.py::run_refinery</code> and
+<code>src/template_gold_refinement/purity.py::assert_monotone_increase</code> and exercised by
 positive and negative tests. <code>stages_to_target()</code> supplies
 the inverse query: given a target, return the shortest valid prefix
 rather than selecting later stages out of order.</p>
@@ -962,9 +962,9 @@ obligation and domain validator where the analogy must stop.</p>
 class="header-section-number">3.4</span> Implementation circuit</h2>
 <p>The metaphor becomes operational only when every transformation has
 an implementation owner. In this exemplar, configuration creates the
-ore, <code>src/refinery.py</code> defines the purity stages,
-<code>src/composition.py</code> turns slots into deterministic tokens,
-<code>src/formalisms.py</code> owns the equation registry, the
+ore, <code>src/template_gold_refinement/refinery.py</code> defines the purity stages,
+<code>src/template_gold_refinement/composition.py</code> turns slots into deterministic tokens,
+<code>src/template_gold_refinement/formalisms.py</code> owns the equation registry, the
 <code>src/figures/</code> package turns those sources into registered
 visuals, and the template validators decide whether the hydrated
 manuscript can be treated as publication metal. The loop is deliberately
@@ -1161,7 +1161,7 @@ measure</h2>
 <p>Each stage record contains an order, a metallurgical operation, its
 manuscript analogue, an input purity, and an output purity. The
 canonical values are design parameters declared in
-<code>src/refinery.py</code>; they are not estimated from a corpus or
+<code>src/template_gold_refinement/refinery.py</code>; they are not estimated from a corpus or
 calibrated against external ratings. Their methodological role is to
 create a transparent ordinal progression on the bounded interval <span
 class="math inline">\([0,1]\)</span>.</p>
@@ -1187,7 +1187,7 @@ analysis is descriptive and deterministic; no uncertainty interval or
 significance test is appropriate.</p>
 <h2 data-number="4.6" id="formalism-registry"><span
 class="header-section-number">4.6</span> Formalism registry</h2>
-<p>The formal layer is generated from <code>src/formalisms.py</code>,
+<p>The formal layer is generated from <code>src/template_gold_refinement/formalisms.py</code>,
 not hand-numbered prose. tbl. <a href="#tbl:formalism_registry">1</a>
 lists the source evidence for each equation, and the equation blocks
 below are auto-numbered by the renderer.</p>
@@ -1212,25 +1212,25 @@ below are auto-numbered by the renderer.</p>
 <td>F1</td>
 <td>Purity functional</td>
 <td>eq. <a href="#eq:purity_functional">1</a></td>
-<td><code>src/purity.py::format_purity</code></td>
+<td><code>src/template_gold_refinement/purity.py::format_purity</code></td>
 </tr>
 <tr>
 <td>F2</td>
 <td>Monotone refinement</td>
 <td>eq. <a href="#eq:monotone_refinery">2</a></td>
-<td><code>src/purity.py::assert_monotone_increase</code></td>
+<td><code>src/template_gold_refinement/purity.py::assert_monotone_increase</code></td>
 </tr>
 <tr>
 <td>F3</td>
 <td>Token-selection digest</td>
 <td>eq. <a href="#eq:token_digest">3</a></td>
-<td><code>src/composition.py::_choose_value</code></td>
+<td><code>src/template_gold_refinement/composition.py::_choose_value</code></td>
 </tr>
 <tr>
 <td>F4</td>
 <td>Claim-support fraction</td>
 <td>eq. <a href="#eq:claim_support">4</a></td>
-<td><code>src/evidence.py::EvidenceRegistry.support_rate</code></td>
+<td><code>src/template_gold_refinement/evidence.py::EvidenceRegistry.support_rate</code></td>
 </tr>
 <tr>
 <td>F5</td>
@@ -1242,13 +1242,13 @@ below are auto-numbered by the renderer.</p>
 <td>F6</td>
 <td>Certification predicate</td>
 <td>eq. <a href="#eq:certification_predicate">6</a></td>
-<td><code>src/refinery.py::RefineryResult.is_nine_nines_certified</code></td>
+<td><code>src/template_gold_refinement/refinery.py::RefineryResult.is_nine_nines_certified</code></td>
 </tr>
 <tr>
 <td>F7</td>
 <td>Adversarial assay</td>
 <td>eq. <a href="#eq:adversarial_assay">7</a></td>
-<td><code>src/security_assay.py::build_security_assay</code></td>
+<td><code>src/template_gold_refinement/security_assay.py::build_security_assay</code></td>
 </tr>
 </tbody>
 </table>
@@ -1259,14 +1259,14 @@ as a bounded fraction mapped to a reader-facing grade.</p>
 \qquad{(1)}\]</span></span></p>
 <p>The value is descriptive: it summarizes local validation state rather
 than external quality. Source:
-<code>src/purity.py::format_purity</code>.</p>
+<code>src/template_gold_refinement/purity.py::format_purity</code>.</p>
 <p><strong>F2: Monotone refinement.</strong> A valid refinery run
 requires every stage to improve the previous purity state.</p>
 <p><span id="eq:monotone_refinery"><span class="math display">\[
 \pi_0 &lt; \pi_1 &lt; \cdots &lt; \pi_n
 \qquad{(2)}\]</span></span></p>
 <p>The test suite rejects equal or decreasing stage outputs. Source:
-<code>src/purity.py::assert_monotone_increase</code>.</p>
+<code>src/template_gold_refinement/purity.py::assert_monotone_increase</code>.</p>
 <p><strong>F3: Token-selection digest.</strong> Every mega-madlib token
 is selected from config-owned inventory by a deterministic digest.</p>
 <p><span id="eq:token_digest"><span class="math display">\[
@@ -1276,7 +1276,7 @@ inventory \rvert
 \qquad{(3)}\]</span></span></p>
 <p>Changing the seed or inventory changes the plan; replaying both
 reproduces it. Source:
-<code>src/composition.py::_choose_value</code>.</p>
+<code>src/template_gold_refinement/composition.py::_choose_value</code>.</p>
 <p><strong>F4: Claim-support fraction.</strong> Contribution claims are
 assayed by counting supported local evidence pointers.</p>
 <p><span id="eq:claim_support"><span class="math display">\[
@@ -1284,7 +1284,7 @@ assayed by counting supported local evidence pointers.</p>
 \qquad{(4)}\]</span></span></p>
 <p>The numerator and denominator come from the project-local
 claim-support registry. Source:
-<code>src/evidence.py::EvidenceRegistry.support_rate</code>.</p>
+<code>src/template_gold_refinement/evidence.py::EvidenceRegistry.support_rate</code>.</p>
 <p><strong>F5: Integrity vector.</strong> Scientific integrity is
 represented as a vector of gate outcomes rather than one scalar
 badge.</p>
@@ -1303,7 +1303,7 @@ gates(r)
 \qquad{(6)}\]</span></span></p>
 <p>The predicate binds the nine-nines metaphor to the actual validation
 chain. Source:
-<code>src/refinery.py::RefineryResult.is_nine_nines_certified</code>.</p>
+<code>src/template_gold_refinement/refinery.py::RefineryResult.is_nine_nines_certified</code>.</p>
 <p><strong>F7: Adversarial assay.</strong> Certification requires an
 explicit adversarial and supply-chain scope, not only ordinary gate
 success.</p>
@@ -1314,7 +1314,7 @@ validator(a) \land boundary(a)
 \qquad{(7)}\]</span></span></p>
 <p>The adversarial assay defines scope and evidence requirements; it is
 not proof of compliance or live scan findings. Source:
-<code>src/security_assay.py::build_security_assay</code>.</p>
+<code>src/template_gold_refinement/security_assay.py::build_security_assay</code>.</p>
 <h2 data-number="4.7" id="deterministic-token-composition"><span
 class="header-section-number">4.7</span> Deterministic token
 composition</h2>
@@ -1422,7 +1422,7 @@ role="doc-biblioref">London Bullion Market Association
 <li>24K = 99.9% (cupellation stage)</li>
 <li>Nine-nines = 99.9999999% (certification stage)</li>
 </ul>
-<p><code>src/purity.py::karat_for_purity()</code> assigns the highest
+<p><code>src/template_gold_refinement/purity.py::karat_for_purity()</code> assigns the highest
 configured grade whose threshold does not exceed the stage purity. The
 nine-nines label is a deliberately stringent local predicate. It is
 neither a continuous measure of manuscript quality nor an assertion
@@ -1603,7 +1603,7 @@ role="doc-biblioref">Cybersecurity and Infrastructure Security Agency
 2026</a>)</span>.</p>
 <p>The assay is implemented as source-owned rows in
 <code>gold_refinement.security_assay</code> and generated records from
-<code>src/security_assay.py</code>. Each row must name a threat,
+<code>src/template_gold_refinement/security_assay.py</code>. Each row must name a threat,
 standard or guidance source, local evidence surface, validator, and
 claim boundary, as specified by eq. <a
 href="#eq:adversarial_assay">7</a> and reported in tbl. <a
@@ -1774,7 +1774,7 @@ them as hand-maintained facts.</p>
 <h3 data-number="4.12.3" id="multi-objective-purity"><span
 class="header-section-number">4.12.3</span> Multi-objective purity</h3>
 <p>Scalar stage purity is retained only as the state variable of the
-refinery analogy. <code>src/purity.py::PurityVector</code> separately
+refinery analogy. <code>src/template_gold_refinement/purity.py::PurityVector</code> separately
 records stage completion, claim support, token provenance, and figure
 quality on <span class="math inline">\([0,1]\)</span>. The vector
 exposes its weakest dimension and a conjunctive all-complete predicate
@@ -2189,7 +2189,7 @@ makes the refinement analogy auditable as a directed source path rather
 than a decorative metaphor. The graph starts from the same stage
 sequence used in the purity table and carries that sequence forward to
 certification, with edge width proportional to the purity gain owned by
-<code>src/refinery.py::run_refinery</code>. A reader can therefore ask
+<code>src/template_gold_refinement/refinery.py::run_refinery</code>. A reader can therefore ask
 where each improvement enters the pipeline and whether it is supported
 by the same source that generated the reported purity numbers.</p>
 <p>The main result is structural: certification is not allowed to appear
@@ -2237,7 +2237,7 @@ reported token plan, but the figure asks a neighboring question: how do
 selected inventory indices move when seeds and lexicon categories vary?
 This is not a stochastic robustness claim. It is a deterministic audit
 of the digest rule in
-<code>src/composition.py::generate_token_plan</code> against the
+<code>src/template_gold_refinement/composition.py::generate_token_plan</code> against the
 configured lexicon inventories in
 <code>manuscript/config.yaml</code>.</p>
 <p>This view separates three issues that prose alone tends to blur.
@@ -2301,7 +2301,7 @@ identifier and to the source surface that emits it. That linkage is
 important because equation labels can otherwise create a false sense of
 rigor: a numbered equation looks formal even when its assumptions,
 variables, and implementation owner are not recoverable. Here the formal
-object must remain connected to <code>src/formalisms.py</code>, the
+object must remain connected to <code>src/template_gold_refinement/formalisms.py</code>, the
 generated registry table, and the manuscript reference that consumes
 it.</p>
 <p>The graph also helps distinguish formal support from decorative
@@ -2534,7 +2534,7 @@ the stable 12-figure contract.</p>
 <td>S1</td>
 <td>implicit trust in generated artifacts</td>
 <td>NIST SP 800-207 zero trust</td>
-<td>output/reports/evidence_registry.json and src/security_assay.py</td>
+<td>output/reports/evidence_registry.json and src/template_gold_refinement/security_assay.py</td>
 <td>infrastructure.validation.cli evidence –fail-on-issues</td>
 <td>documents a verification posture, not a deployed zero-trust
 architecture</td>
@@ -2599,32 +2599,32 @@ class="header-section-number">5.15</span> Contribution claims</h2>
 <td>Five-stage refinery</td>
 <td>The refinery pipeline has 5 canonical stages from ore to
 nine-nines.</td>
-<td>src/refinery.py::CANONICAL_STAGES</td>
+<td>src/template_gold_refinement/refinery.py::CANONICAL_STAGES</td>
 <td>local</td>
 </tr>
 <tr>
 <td>Monotone purity</td>
 <td>Purity increases strictly across all refinery stages.</td>
-<td>src/purity.py::assert_monotone_increase</td>
+<td>src/template_gold_refinement/purity.py::assert_monotone_increase</td>
 <td>local</td>
 </tr>
 <tr>
 <td>Nine-nines certification</td>
 <td>The certification stage achieves 99.9999999% purity.</td>
-<td>src/purity.py::NINE_NINES_PURITY</td>
+<td>src/template_gold_refinement/purity.py::NINE_NINES_PURITY</td>
 <td>local</td>
 </tr>
 <tr>
 <td>Deterministic tokens</td>
 <td>Token selection is deterministic via seeded SHA-256 digest.</td>
-<td>src/composition.py::_choose_value</td>
+<td>src/template_gold_refinement/composition.py::_choose_value</td>
 <td>local</td>
 </tr>
 <tr>
 <td>Formalism registry</td>
 <td>The manuscript exposes 7 source-owned formalisms with equation
 labels.</td>
-<td>src/formalisms.py::FORMALISMS</td>
+<td>src/template_gold_refinement/formalisms.py::FORMALISMS</td>
 <td>local</td>
 </tr>
 <tr>
@@ -2646,7 +2646,7 @@ gates.</td>
 <td>Scientific-integrity risk model</td>
 <td>The manuscript includes a source-owned integrity risk model linking
 failure modes, validators, evidence surfaces, and fork obligations.</td>
-<td>src/integrity.py::build_integrity_dimensions</td>
+<td>src/template_gold_refinement/integrity.py::build_integrity_dimensions</td>
 <td>local</td>
 </tr>
 <tr>
@@ -2654,7 +2654,7 @@ failure modes, validators, evidence surfaces, and fork obligations.</td>
 <td>The manuscript includes a source-owned security assay mapping
 adversarial threats and standards to local evidence surfaces,
 validators, and claim boundaries.</td>
-<td>src/security_assay.py::build_security_assay</td>
+<td>src/template_gold_refinement/security_assay.py::build_security_assay</td>
 <td>local</td>
 </tr>
 </tbody>
@@ -2942,7 +2942,7 @@ as validated quality measurements.</li>
 <li><strong>Mega-madlib composition</strong>: reuse the deterministic
 token engine for any config-owned lexical composition task.</li>
 <li><strong>Domain adapters</strong>: use
-<code>src/domain_adapter.py</code> and <code>domain_profile.yaml</code>
+<code>src/template_gold_refinement/domain_adapter.py</code> and <code>domain_profile.yaml</code>
 to translate a domain’s own metrics into the same purity scale before
 reusing certification language.</li>
 <li><strong>Research compendia</strong>: package manuscript shells,
@@ -2974,7 +2974,7 @@ class="header-section-number">6.3</span> Misuse modes</h2>
 <td>Non-monotone purity</td>
 <td>A stage has lower output purity than input.</td>
 <td>assert_monotone_increase raises ValueError.</td>
-<td>Fix stage purity targets in src/refinery.py.</td>
+<td>Fix stage purity targets in src/template_gold_refinement/refinery.py.</td>
 </tr>
 <tr>
 <td>Empty lexicon category</td>
@@ -2986,7 +2986,7 @@ class="header-section-number">6.3</span> Misuse modes</h2>
 <td>Unresolved token</td>
 <td>A manuscript placeholder has no generated variable.</td>
 <td>test_all_manuscript_tokens_are_generated fails.</td>
-<td>Add variable in src/manuscript_variables.py.</td>
+<td>Add variable in src/template_gold_refinement/manuscript_variables.py.</td>
 </tr>
 <tr>
 <td>Rhetorical-only analogy</td>
@@ -3341,7 +3341,7 @@ optional LLM review gates are declared in
 <code>manuscript/config.yaml</code> under <code>gold_refinement:</code>,
 <code>steganography:</code>, and <code>llm:</code>. The config is the
 source of truth; generated prose is disposable.</p>
-<p><code>src/pipeline_policy.py</code> turns those policy blocks into an
+<p><code>src/template_gold_refinement/pipeline_policy.py</code> turns those policy blocks into an
 explicit secure-pipeline hook. That keeps the optional hardening path
 visible before execution instead of burying it in shell glue or
 prose.</p>
@@ -3569,7 +3569,7 @@ class="header-section-number">9.3</span> Responsible forking</h2>
 <li>Update lexicon categories to reflect domain vocabulary</li>
 <li>Connect refinery stages to real domain operations</li>
 <li>Add domain validators beyond the exemplar’s generic gates</li>
-<li>Use <code>src/domain_adapter.py</code> and
+<li>Use <code>src/template_gold_refinement/domain_adapter.py</code> and
 <code>docs/domain_fork_guide.md</code> to remap domain metrics and
 boundary notes</li>
 <li>Cite the exact software/template release and environment used for
@@ -3626,7 +3626,7 @@ class="header-section-number">10.1</span> QA probes</h2>
 <td>Monotone purity</td>
 <td>Does purity increase strictly across all refinery stages?</td>
 <td>assert_monotone_increase passes on the purity sequence.</td>
-<td>src/refinery.py and output/data/refinery_results.json</td>
+<td>src/template_gold_refinement/refinery.py and output/data/refinery_results.json</td>
 </tr>
 <tr>
 <td>Token provenance</td>
@@ -3639,7 +3639,7 @@ and config key?</td>
 <td>Karat grade correctness</td>
 <td>Does each stage map to the correct karat grade?</td>
 <td>karat_for_purity returns the expected grade for each stage.</td>
-<td>src/purity.py</td>
+<td>src/template_gold_refinement/purity.py</td>
 </tr>
 <tr>
 <td>Integrity risk visibility</td>
@@ -3647,7 +3647,7 @@ and config key?</td>
 validator or artifact that detects them?</td>
 <td>The integrity risk model emits dimensions, owners, residual risk
 scores, and evidence-tier rows.</td>
-<td>src/integrity.py and ../figures/integrity_risk_matrix.png</td>
+<td>src/template_gold_refinement/integrity.py and ../figures/integrity_risk_matrix.png</td>
 </tr>
 <tr>
 <td>Scholarship boundary</td>
@@ -3689,7 +3689,7 @@ scan evidence and external compliance?</td>
 <td>The security assay emits threats, standards, evidence surfaces,
 validators, and claim boundaries without claiming Codex Security
 findings.</td>
-<td>src/security_assay.py, manuscript/config.yaml, and
+<td>src/template_gold_refinement/security_assay.py, manuscript/config.yaml, and
 manuscript/03_results.md</td>
 </tr>
 </tbody>
@@ -3975,16 +3975,16 @@ clear boundary between findings, mitigations, and remaining scope.</p>
 class="header-section-number">11.2</span> Fork checklist</h2>
 <ol type="1">
 <li>Remap metallurgical stages to domain operations in
-<code>src/refinery.py</code></li>
+<code>src/template_gold_refinement/refinery.py</code></li>
 <li>Update lexicon categories in <code>manuscript/config.yaml</code>
 under <code>gold_refinement.lexicon</code></li>
 <li>Update <code>contribution_claims</code> with domain-specific
 evidence pointers</li>
 <li>Add domain validators beyond the exemplar’s generic gates</li>
-<li>Replace or extend <code>src/integrity.py</code> dimensions when the
+<li>Replace or extend <code>src/template_gold_refinement/integrity.py</code> dimensions when the
 fork introduces new failure modes</li>
 <li>Update <code>domain_profile.yaml</code>,
-<code>src/domain_adapter.py</code>, and
+<code>src/template_gold_refinement/domain_adapter.py</code>, and
 <code>docs/domain_fork_guide.md</code> when the analogy is forked into a
 new domain</li>
 <li>Keep <code>steganography</code> and <code>llm</code> policy blocks

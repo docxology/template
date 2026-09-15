@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any, cast
 
-from json_io import json_payloads_equal
+from template_active_inference.json_io import json_payloads_equal
 from manuscript.sheaf.semantic_certificate import build_semantic_gluing_certificate
 from manuscript.sheaf.semantic_evidence import build_evidence_crosswalk, build_validation_dependency_graph
 from manuscript.sheaf.semantic_issues import semantic_gluing_issues

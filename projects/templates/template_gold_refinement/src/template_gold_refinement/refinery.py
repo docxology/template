@@ -26,7 +26,7 @@ try:
         karat_for_purity,
     )
 except ImportError:
-    from purity import (  # type: ignore[no-redef]
+    from template_gold_refinement.purity import (  # type: ignore[no-redef]
         NINE_NINES_PURITY,
         KaratGrade,
         assert_monotone_increase,

@@ -35,7 +35,7 @@ A fork must:
 2. Update lexicon categories to reflect domain vocabulary
 3. Connect refinery stages to real domain operations
 4. Add domain validators beyond the exemplar's generic gates
-5. Use `src/domain_adapter.py` and `docs/domain_fork_guide.md` to remap domain metrics and boundary notes
+5. Use `src/template_gold_refinement/domain_adapter.py` and `docs/domain_fork_guide.md` to remap domain metrics and boundary notes
 6. Cite the exact software/template release and environment used for the fork
 7. Update the adversarial security assay when the fork changes threat scope or supply-chain evidence
 8. Regenerate all outputs through the pipeline

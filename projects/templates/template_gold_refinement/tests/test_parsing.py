@@ -3,7 +3,7 @@
 from __future__ import annotations
 from pathlib import Path
 import pytest
-from parsing import build_timestamp, load_yaml_dict
+from template_gold_refinement.parsing import build_timestamp, load_yaml_dict
 
 
 def test_load_yaml_dict_reads_mapping(tmp_path: Path) -> None:

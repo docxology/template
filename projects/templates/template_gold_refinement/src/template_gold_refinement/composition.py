@@ -13,7 +13,7 @@ from dataclasses import asdict, dataclass
 try:
     from .config import GoldRefinementConfig, SlotSpec
 except ImportError:
-    from config import GoldRefinementConfig, SlotSpec  # type: ignore[no-redef]
+    from template_gold_refinement.config import GoldRefinementConfig, SlotSpec  # type: ignore[no-redef]
 
 
 @dataclass(frozen=True)

@@ -16,7 +16,7 @@ import yaml
 try:
     from .purity import PURITY_VECTOR_DIMENSIONS
 except ImportError:
-    from purity import PURITY_VECTOR_DIMENSIONS  # type: ignore[no-redef]
+    from template_gold_refinement.purity import PURITY_VECTOR_DIMENSIONS  # type: ignore[no-redef]
 
 PROJECT_SCHEMA_EXTENSION = {"gold_refinement": dict}
 

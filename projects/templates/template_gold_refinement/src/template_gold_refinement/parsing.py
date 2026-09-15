@@ -13,7 +13,7 @@ import yaml
 try:
     from .coercion import coerce_bool
 except ImportError:
-    from coercion import coerce_bool  # type: ignore[no-redef]
+    from template_gold_refinement.coercion import coerce_bool  # type: ignore[no-redef]
 
 
 def build_timestamp() -> str:

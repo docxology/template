@@ -8,7 +8,7 @@
     {
       "claim_name": "Five-stage refinery",
       "claim_statement": "The refinery pipeline has 5 canonical stages from ore to nine-nines.",
-      "evidence_source": "src/refinery.py::CANONICAL_STAGES",
+      "evidence_source": "src/template_gold_refinement/refinery.py::CANONICAL_STAGES",
       "boundary": "local",
       "supported": true,
       "notes": ""
@@ -16,7 +16,7 @@
     {
       "claim_name": "Monotone purity",
       "claim_statement": "Purity increases strictly across all refinery stages.",
-      "evidence_source": "src/purity.py::assert_monotone_increase",
+      "evidence_source": "src/template_gold_refinement/purity.py::assert_monotone_increase",
       "boundary": "local",
       "supported": true,
       "notes": ""
@@ -24,7 +24,7 @@
     {
       "claim_name": "Nine-nines certification",
       "claim_statement": "The certification stage achieves 99.9999999% purity.",
-      "evidence_source": "src/purity.py::NINE_NINES_PURITY",
+      "evidence_source": "src/template_gold_refinement/purity.py::NINE_NINES_PURITY",
       "boundary": "local",
       "supported": true,
       "notes": ""
@@ -32,7 +32,7 @@
     {
       "claim_name": "Deterministic tokens",
       "claim_statement": "Token selection is deterministic via seeded SHA-256 digest.",
-      "evidence_source": "src/composition.py::_choose_value",
+      "evidence_source": "src/template_gold_refinement/composition.py::_choose_value",
       "boundary": "local",
       "supported": true,
       "notes": ""
@@ -40,7 +40,7 @@
     {
       "claim_name": "Formalism registry",
       "claim_statement": "The manuscript exposes 7 source-owned formalisms with equation labels.",
-      "evidence_source": "src/formalisms.py::FORMALISMS",
+      "evidence_source": "src/template_gold_refinement/formalisms.py::FORMALISMS",
       "boundary": "local",
       "supported": true,
       "notes": ""
@@ -64,7 +64,7 @@
     {
       "claim_name": "Scientific-integrity risk model",
       "claim_statement": "The manuscript includes a source-owned integrity risk model linking failure modes, validators, evidence surfaces, and fork obligations.",
-      "evidence_source": "src/integrity.py::build_integrity_dimensions",
+      "evidence_source": "src/template_gold_refinement/integrity.py::build_integrity_dimensions",
       "boundary": "local",
       "supported": true,
       "notes": ""
@@ -72,7 +72,7 @@
     {
       "claim_name": "Adversarial security assay",
       "claim_statement": "The manuscript includes a source-owned security assay mapping adversarial threats and standards to local evidence surfaces, validators, and claim boundaries.",
-      "evidence_source": "src/security_assay.py::build_security_assay",
+      "evidence_source": "src/template_gold_refinement/security_assay.py::build_security_assay",
       "boundary": "local",
       "supported": true,
       "notes": ""

@@ -238,7 +238,7 @@ Total documented definitions: 867
 | 164 | `function` | `parse_gnn` | docstring | Parse gnn. |
 | 196 | `function` | `parse_gnn_file` | docstring | Parse gnn file. |
 
-## `src/json_io.py`
+## `src/template_active_inference/json_io.py`
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
@@ -1395,7 +1395,7 @@ Total documented definitions: 867
 | 45 | `function` | `_scan_lean_file` | inventory fallback | Inventory fallback for function `_scan_lean_file` defined at `src/visualizations/lean_boundary.py:45`. |
 | 58 | `function` | `load_lean_boundary_rows` | docstring | Load lean boundary rows from a file. |
 
-## `src/yaml_io.py`
+## `src/template_active_inference/yaml_io.py`
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |

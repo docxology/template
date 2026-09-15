@@ -505,7 +505,7 @@ as validated quality measurements.</li>
 <li><strong>Mega-madlib composition</strong>: reuse the deterministic
 token engine for any config-owned lexical composition task.</li>
 <li><strong>Domain adapters</strong>: use
-<code>src/domain_adapter.py</code> and <code>domain_profile.yaml</code>
+<code>src/template_gold_refinement/domain_adapter.py</code> and <code>domain_profile.yaml</code>
 to translate a domain’s own metrics into the same purity scale before
 reusing certification language.</li>
 <li><strong>Research compendia</strong>: package manuscript shells,
@@ -534,7 +534,7 @@ files [marwick2018packaging].</li>
 <td>Non-monotone purity</td>
 <td>A stage has lower output purity than input.</td>
 <td>assert_monotone_increase raises ValueError.</td>
-<td>Fix stage purity targets in src/refinery.py.</td>
+<td>Fix stage purity targets in src/template_gold_refinement/refinery.py.</td>
 </tr>
 <tr>
 <td>Empty lexicon category</td>
@@ -546,7 +546,7 @@ files [marwick2018packaging].</li>
 <td>Unresolved token</td>
 <td>A manuscript placeholder has no generated variable.</td>
 <td>test_all_manuscript_tokens_are_generated fails.</td>
-<td>Add variable in src/manuscript_variables.py.</td>
+<td>Add variable in src/template_gold_refinement/manuscript_variables.py.</td>
 </tr>
 <tr>
 <td>Rhetorical-only analogy</td>

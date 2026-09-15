@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 from manuscript.sheaf.models import TrackRegistry, TrackSpec
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 
 
 def load_track_registry(registry_path: Path) -> TrackRegistry:
