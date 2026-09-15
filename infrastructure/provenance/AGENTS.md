@@ -18,7 +18,8 @@ session provenance with full transitive lineage queries.
 | `store.py` | Content-addressed JSON store; `Provenance` namespace with `record`, `link`, `get`, `query`, `list`, `clear`, `path` |
 | `review.py` | Reviewer finding system; `Review` namespace with `record`, `findings_for_node` |
 | `validation.py` | DAG structural and topological validator (`ProvenanceValidationReport`, `validate_provenance_dag`) |
-| `cli.py` | CLI commands: `record-artifact`, `list`, `review`, `validate` |
+| `cli.py` | CLI commands: `record-artifact`, `list`, `review`, `validate`, `experiment-add`, `experiment-update`, `experiment-validate` |
+| `tree.py` | ExperimentNode tree with frozen semantics (`ExperimentTree`, `validate_experiment_tree`, `ExperimentCode`) |
 | `__main__.py` | `python -m infrastructure.provenance` entry point |
 
 ## Architecture
@@ -69,6 +70,30 @@ The core store has no implicit environment-variable resolution:
 
 `ProvenanceConfig` can supply a project-specific output directory, but callers
 must resolve that configuration and pass the resulting path to the store.
+
+## Experiment tree (`tree.py`)
+
+An OpenResearch-style experiment tree layered on the same store: nodes are
+stored as ``run`` provenance nodes carrying an ``experiment`` metadata block,
+so persistence and acyclicity reuse the existing content-addressed store.
+
+- Node: ``experiment_id`` (``_sha256_id`` convention), ``kind``
+  (``baseline`` | ``child``), ``status`` (``provisional`` | ``frozen`` |
+  ``answered``), ``run_command``, ``parent_id``, ``payload``.
+- Discipline: ``answered`` nodes are immutable
+  (``EXPERIMENT.ANSWERED_IMMUTABLE``); one fixed ``run_command`` per tree
+  (``EXPERIMENT.RUN_COMMAND_MISMATCH``); acyclicity is delegated to
+  ``validate_provenance_dag`` (``EXPERIMENT.CYCLE_DETECTED``); exactly one
+  baseline root (``EXPERIMENT.MULTIPLE_BASELINES``).
+- Diagnostic codes follow the ``NAMESPACE.SCREAMING_SNAKE_CASE`` convention of
+  ``infrastructure/validation/content/diagnostic_codes.py``.
+
+```bash
+python -m infrastructure.provenance experiment-add baseline --run-command "uv run python run.py"
+python -m infrastructure.provenance experiment-add child1 --run-command "uv run python run.py" --parent <id>
+python -m infrastructure.provenance experiment-update <id> --status answered
+python -m infrastructure.provenance experiment-validate --json
+```
 
 ## Boundaries
 
