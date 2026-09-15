@@ -126,6 +126,24 @@ class Provenance:
             self._save()
         return edge
 
+    def update_node(self, node: ProvenanceNode) -> ProvenanceNode:
+        """Overwrite an already-recorded node (unlike the idempotent ``record``).
+
+        Args:
+            node: The node whose ``node_id`` already exists in the store.
+
+        Returns:
+            The updated node.
+
+        Raises:
+            KeyError: When *node.node_id* is not recorded.
+        """
+        if node.node_id not in self._nodes:
+            raise KeyError(f"Node '{node.node_id}' not found in provenance store")
+        self._nodes[node.node_id] = node.to_dict()
+        self._save()
+        return node
+
     def clear(self) -> tuple[int, int]:
         """Remove all nodes and edges.
 
