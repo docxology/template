@@ -15,7 +15,9 @@ from gates.validation import validate_outputs
 
 from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
 
-pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(300)]
+# WHY timeout(600): whole-real-tree gate composition; 300s flaked on
+# high-latency storage (measured 272s single call).
+pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
 
 
 @pytest.fixture
