@@ -117,6 +117,10 @@ Practical rules:
   `tests/conftest.py`, max_examples=5, deadline=None) for smoke/agent loops;
   unset it for full-profile scheduled runs. Opt-in only; the variable costs
   nothing when absent.
+- **Select by path, never by full-tree collection**: on a slow external-drive
+  checkout, `pytest tests/infra_tests --collect-only` alone was measured I/O-bound
+  at >15 minutes (near-zero CPU, blocked in scandir). Always point pytest at the
+  specific file(s)/directory you changed; subset collection is seconds.
 - **TMPDIR locality**: pytest `tmp_path` already lands on the OS temp dir
   (local SSD via `/var/folders` on macOS). Do not silently redirect the global
   `TMPDIR` for other consumers; if a checkout lives on a slow external drive,
