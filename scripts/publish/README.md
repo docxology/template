@@ -22,7 +22,7 @@ GitHub mirror, real Zenodo DOI, optional mirrors, and archival handoff, start at
 
 ## Bridge: template/ → docxology/publishing
 
-The `export_for_publishing.py` script is the formal handoff point between this repo's rendering pipeline and the downstream publishing pipeline in `~/Documents/GitHub/publishing/`.
+The `export_for_publishing.py` script is the formal handoff point between this repo's rendering pipeline and the downstream publishing checkout (DAF working-stack layout: a `publishing` checkout under `projects/ongoing/DAF/`, sibling to this clone; standalone layout: `~/Documents/GitHub/publishing`).
 
 ### Two-repo architecture
 
@@ -56,7 +56,7 @@ uv run python scripts/publish/export_for_publishing.py \
     --project templates/my_book
 
 # Step 3: in the publishing repo
-cd ~/Documents/GitHub/publishing
+cd ../projects/ongoing/DAF/publishing  # DAF working-stack checkout; standalone clones: cd ~/Documents/GitHub/publishing
 uv run docpub import workspace/imports/my_book-latest/manifest.json
 uv run docpub distribute --platform gumroad
 ```
@@ -66,7 +66,7 @@ uv run docpub distribute --platform gumroad
 1. Resolves the project root from the qualified project name
 2. Reads `manuscript/config.yaml` for title, author, and metadata
 3. Scans `output/pdf/`, `output/ebook/`, and `output/metadata/` for generated artifacts
-4. Creates a timestamped subdirectory under `--output-dir` (default: `~/Documents/GitHub/publishing/workspace/imports/`)
+4. Creates a timestamped subdirectory under `--output-dir` (default: the publishing checkout's `workspace/imports/`, auto-detected — the DAF working-stack checkout sibling to this clone when present, else `~/Documents/GitHub/publishing/workspace/imports/`)
 5. Copies all discovered artifacts into the bundle subdirectory
 6. Writes `manifest.json` with paths, checksums, timestamps, and config metadata
 7. Creates/updates the `latest` symlink pointing to the new export
@@ -96,7 +96,7 @@ uv run docpub distribute --platform gumroad
 ### Prerequisites
 
 - The template pipeline has been run and `output/` is populated
-- `~/Documents/GitHub/publishing/` exists (clone of docxology/publishing)
+- A publishing checkout exists and is auto-detected (DAF working-stack layout: `projects/ongoing/DAF/publishing` sibling to this clone; standalone layout: `~/Documents/GitHub/publishing`) — clone of docxology/publishing
 - The `workspace/imports/` directory exists (created automatically if missing)
 
 ---
@@ -167,7 +167,7 @@ Check that `output/pdf/` contains files after the render stage.
 
 The script removes the old symlink before creating a new one. If it fails (e.g. permissions), delete manually:
 ```bash
-rm ~/Documents/GitHub/publishing/workspace/imports/latest
+rm <auto-detected publishing checkout>/workspace/imports/latest
 ```
 
 ## See also

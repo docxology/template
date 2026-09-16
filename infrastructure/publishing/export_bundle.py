@@ -52,7 +52,26 @@ sys.path.insert(0, str(REPO))
 
 # --- defaults -----------------------------------------------------------------
 
-DEFAULT_OUTPUT_DIR = Path.home() / "Documents" / "GitHub" / "publishing" / "workspace" / "imports"
+
+def _default_output_dir() -> Path:
+    """Resolve where an export bundle lands by default.
+
+    The bundle must be written where the publishing repo's importer reads
+    it (``workspace/imports/`` under a publishing checkout). The first
+    candidate whose publishing checkout exists wins: the DAF working-stack
+    checkout sibling to this template clone, then the standalone legacy
+    location. With neither present (fresh public clone), the legacy home
+    location is returned and created on demand by the export pipeline.
+    """
+    candidates = (
+        REPO.parent / "projects" / "ongoing" / "DAF" / "publishing" / "workspace" / "imports",
+        Path.home() / "Documents" / "GitHub" / "publishing" / "workspace" / "imports",
+    )
+    for candidate in candidates:
+        if candidate.parents[1].is_dir():
+            return candidate
+    return candidates[-1]
+
 
 # --- helpers ------------------------------------------------------------------
 
@@ -356,7 +375,10 @@ def export_for_publishing(
         Qualified project name, e.g. ``'templates/my_book'`` or ``'working/draft'``.
     output_dir:
         Root directory under which the timestamped bundle is created.
-        Defaults to ``~/Documents/GitHub/publishing/workspace/imports/``.
+        Defaults to the auto-detected publishing checkout's
+        ``workspace/imports/`` (DAF working-stack sibling checkout first,
+        legacy ``~/Documents/GitHub/publishing`` location as fallback);
+        ``--output-dir`` overrides.
     repo_root:
         Path to the template/ repository root.  Defaults to the repo root
         inferred from this script's location.
@@ -374,7 +396,7 @@ def export_for_publishing(
         If no artifacts were found in output/.
     """
     repo_root = repo_root or REPO
-    output_dir = output_dir or DEFAULT_OUTPUT_DIR
+    output_dir = output_dir or _default_output_dir()
 
     # Resolve project root
     project_root = _resolve_project_root(project, repo_root)
@@ -443,7 +465,11 @@ def main(argv: list[str] | None = None) -> int:
         "--output-dir",
         type=Path,
         default=None,
-        help=(f"Root directory for the export bundle. Defaults to {DEFAULT_OUTPUT_DIR}."),
+        help=(
+            "Root directory for the export bundle. Defaults to the publishing "
+            "checkout's workspace/imports (auto-detected; falls back to "
+            "~/Documents/GitHub/publishing/workspace/imports)."
+        ),
     )
     parser.add_argument(
         "--repo-root",
