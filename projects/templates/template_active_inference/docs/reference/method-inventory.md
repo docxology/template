@@ -238,16 +238,6 @@ Total documented definitions: 867
 | 164 | `function` | `parse_gnn` | docstring | Parse gnn. |
 | 196 | `function` | `parse_gnn_file` | docstring | Parse gnn file. |
 
-## `src/template_active_inference/json_io.py`
-
-| line | kind | name | documentation source | summary |
-| ---: | --- | --- | --- | --- |
-| 10 | `function` | `json_payloads_equal` | docstring | Return type-strict equality for two JSON-serializable values. |
-| 38 | `function` | `load_json` | docstring | Load a JSON object from ``path``; return ``{}`` when missing or invalid. |
-| 49 | `function` | `load_json_strict` | docstring | Load a JSON object from ``path``, failing loudly on malformed content. |
-| 67 | `function` | `read_json` | docstring | Alias for :func:`load_json`. |
-| 72 | `function` | `write_json` | docstring | Write ``payload`` as sorted JSON and return ``path``. |
-
 ## `src/manuscript/hydrate.py`
 
 | line | kind | name | documentation source | summary |
@@ -665,7 +655,7 @@ Total documented definitions: 867
 | 347 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:347`. |
 | 369 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:369`. |
 | 389 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
-| 405 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
+| 421 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
 
 ## `src/roadmap_tracks/formal_interop.py`
 
@@ -738,9 +728,9 @@ Total documented definitions: 867
 | 267 | `function` | `build_manuscript_token_provenance` | docstring | Build manuscript token provenance. |
 | 337 | `function` | `_expected_token_value` | inventory fallback | Inventory fallback for function `_expected_token_value` defined at `src/roadmap_tracks/integration_audit_builders.py:337`. |
 | 350 | `function` | `build_manuscript_staleness_report` | docstring | Compare hydrated manuscript tokens against the current generated variables. |
-| 413 | `function` | `build_claim_evidence_audit` | docstring | Build claim evidence audit. |
-| 440 | `function` | `build_validation_gate_index` | docstring | Build validation gate index. |
-| 444 | `function` | `build_validation_gate_index.gate` | docstring | Process gate. |
+| 425 | `function` | `build_claim_evidence_audit` | docstring | Build claim evidence audit. |
+| 452 | `function` | `build_validation_gate_index` | docstring | Build validation gate index. |
+| 456 | `function` | `build_validation_gate_index.gate` | docstring | Process gate. |
 
 ## `src/roadmap_tracks/integration_audit_figures.py`
 
@@ -1209,41 +1199,59 @@ Total documented definitions: 867
 | 27 | `function` | `spec_from_config` | docstring | Process spec from config. |
 | 41 | `function` | `build_tmaze_generative_model` | docstring | Return A, B, C, D for a 2-state start/goal POMDP (single factor). |
 
+## `src/template_active_inference/json_io.py`
+
+| line | kind | name | documentation source | summary |
+| ---: | --- | --- | --- | --- |
+| 10 | `function` | `json_payloads_equal` | docstring | Return type-strict equality for two JSON-serializable values. |
+| 38 | `function` | `load_json` | docstring | Load a JSON object from ``path``; return ``{}`` when missing or invalid. |
+| 49 | `function` | `load_json_strict` | docstring | Load a JSON object from ``path``, failing loudly on malformed content. |
+| 67 | `function` | `read_json` | docstring | Alias for :func:`load_json`. |
+| 72 | `function` | `write_json` | docstring | Write ``payload`` as sorted JSON and return ``path``. |
+
+## `src/template_active_inference/yaml_io.py`
+
+| line | kind | name | documentation source | summary |
+| ---: | --- | --- | --- | --- |
+| 14 | `function` | `_parse_yaml_cached` | docstring | Parse exact YAML bytes, memoized on (path, content). |
+| 26 | `function` | `load_yaml` | docstring | Load a YAML mapping from ``path``; return ``{}`` when missing or invalid. |
+| 39 | `function` | `read_yaml` | docstring | Alias for :func:`load_yaml`. |
+
 ## `src/validation_spine/artifacts.py`
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 72 | `function` | `_sha256` | inventory fallback | Inventory fallback for function `_sha256` defined at `src/validation_spine/artifacts.py:72`. |
-| 83 | `function` | `_file_fingerprint` | inventory fallback | Inventory fallback for function `_file_fingerprint` defined at `src/validation_spine/artifacts.py:83`. |
-| 96 | `function` | `_configured_analysis_scripts` | inventory fallback | Inventory fallback for function `_configured_analysis_scripts` defined at `src/validation_spine/artifacts.py:96`. |
-| 102 | `function` | `_config_digest` | inventory fallback | Inventory fallback for function `_config_digest` defined at `src/validation_spine/artifacts.py:102`. |
-| 114 | `function` | `_deterministic_seed` | inventory fallback | Inventory fallback for function `_deterministic_seed` defined at `src/validation_spine/artifacts.py:114`. |
-| 121 | `function` | `_source_commit` | inventory fallback | Inventory fallback for function `_source_commit` defined at `src/validation_spine/artifacts.py:121`. |
-| 135 | `function` | `_artifact_record` | inventory fallback | Inventory fallback for function `_artifact_record` defined at `src/validation_spine/artifacts.py:135`. |
-| 162 | `function` | `_config_record` | inventory fallback | Inventory fallback for function `_config_record` defined at `src/validation_spine/artifacts.py:162`. |
-| 172 | `function` | `build_artifact_provenance` | docstring | Build deterministic artifact lineage and hash records. |
-| 212 | `function` | `_same_json` | inventory fallback | Inventory fallback for function `_same_json` defined at `src/validation_spine/artifacts.py:212`. |
-| 218 | `function` | `_copy_replay_inputs` | inventory fallback | Inventory fallback for function `_copy_replay_inputs` defined at `src/validation_spine/artifacts.py:218`. |
-| 227 | `function` | `build_reproducibility_replay` | docstring | Replay deterministic toy producers in a temporary tree and compare outputs. |
-| 304 | `function` | `build_counterexample_matrix` | docstring | Document expected-failure fixtures that keep the gates falsifiable. |
-| 403 | `function` | `write_validation_spine_artifacts` | docstring | Write provenance, replay, and counterexample artifacts. |
-| 430 | `function` | `validate_artifact_provenance` | docstring | Validate artifact provenance. |
-| 483 | `function` | `validate_reproducibility_replay` | docstring | Validate reproducibility replay. |
-| 535 | `function` | `validate_counterexample_matrix` | docstring | Validate counterexample matrix. |
-| 564 | `function` | `validate_validation_spine` | docstring | Return all validation-spine artifact issues. |
+| 73 | `function` | `_sha256` | inventory fallback | Inventory fallback for function `_sha256` defined at `src/validation_spine/artifacts.py:73`. |
+| 84 | `function` | `_file_fingerprint` | inventory fallback | Inventory fallback for function `_file_fingerprint` defined at `src/validation_spine/artifacts.py:84`. |
+| 97 | `function` | `_configured_analysis_scripts` | inventory fallback | Inventory fallback for function `_configured_analysis_scripts` defined at `src/validation_spine/artifacts.py:97`. |
+| 103 | `function` | `_config_digest` | inventory fallback | Inventory fallback for function `_config_digest` defined at `src/validation_spine/artifacts.py:103`. |
+| 115 | `function` | `_deterministic_seed` | inventory fallback | Inventory fallback for function `_deterministic_seed` defined at `src/validation_spine/artifacts.py:115`. |
+| 122 | `function` | `_source_commit` | inventory fallback | Inventory fallback for function `_source_commit` defined at `src/validation_spine/artifacts.py:122`. |
+| 136 | `function` | `_artifact_record` | inventory fallback | Inventory fallback for function `_artifact_record` defined at `src/validation_spine/artifacts.py:136`. |
+| 170 | `function` | `_config_record` | inventory fallback | Inventory fallback for function `_config_record` defined at `src/validation_spine/artifacts.py:170`. |
+| 180 | `function` | `build_artifact_provenance` | docstring | Build deterministic artifact lineage and hash records. |
+| 220 | `function` | `_same_json` | inventory fallback | Inventory fallback for function `_same_json` defined at `src/validation_spine/artifacts.py:220`. |
+| 226 | `function` | `_copy_replay_inputs` | inventory fallback | Inventory fallback for function `_copy_replay_inputs` defined at `src/validation_spine/artifacts.py:226`. |
+| 235 | `function` | `build_reproducibility_replay` | docstring | Replay deterministic toy producers in a temporary tree and compare outputs. |
+| 312 | `function` | `build_counterexample_matrix` | docstring | Document expected-failure fixtures that keep the gates falsifiable. |
+| 411 | `function` | `write_validation_spine_artifacts` | docstring | Write provenance, replay, and counterexample artifacts. |
+| 438 | `function` | `validate_artifact_provenance` | docstring | Validate artifact provenance. |
+| 491 | `function` | `validate_reproducibility_replay` | docstring | Validate reproducibility replay. |
+| 543 | `function` | `validate_counterexample_matrix` | docstring | Validate counterexample matrix. |
+| 572 | `function` | `validate_validation_spine` | docstring | Return all validation-spine artifact issues. |
 
 ## `src/visualizations/animation.py`
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 14 | `function` | `_load_trace_steps` | inventory fallback | Inventory fallback for function `_load_trace_steps` defined at `src/visualizations/animation.py:14`. |
-| 29 | `function` | `write_belief_trajectory_gif` | docstring | Write a deterministic multi-frame GIF from trace entropy/action state. |
-| 67 | `function` | `_frame_sha256` | inventory fallback | Inventory fallback for function `_frame_sha256` defined at `src/visualizations/animation.py:67`. |
-| 73 | `function` | `_perceptual_hash` | docstring | Return a deterministic 8x8 average hash for a frame. |
-| 85 | `function` | `build_animation_frame_deltas` | docstring | Compute a deterministic manifest proving adjacent GIF frames change. |
-| 155 | `function` | `write_animation_frame_deltas` | docstring | Write the frame-delta manifest for the deterministic animation track. |
-| 164 | `function` | `_live_animation_contract` | inventory fallback | Inventory fallback for function `_live_animation_contract` defined at `src/visualizations/animation.py:164`. |
-| 194 | `function` | `validate_animation_frame_deltas` | docstring | Return frame-delta manifest issues. |
+| 15 | `function` | `_load_trace_steps` | inventory fallback | Inventory fallback for function `_load_trace_steps` defined at `src/visualizations/animation.py:15`. |
+| 30 | `function` | `write_belief_trajectory_gif` | docstring | Write a deterministic multi-frame GIF from trace entropy/action state. |
+| 84 | `function` | `_frame_sha256` | inventory fallback | Inventory fallback for function `_frame_sha256` defined at `src/visualizations/animation.py:84`. |
+| 90 | `function` | `_perceptual_hash` | docstring | Return a deterministic 8x8 average hash for a frame. |
+| 102 | `function` | `build_animation_frame_deltas` | docstring | Compute a deterministic manifest proving adjacent GIF frames change. |
+| 172 | `function` | `write_animation_frame_deltas` | docstring | Write the frame-delta manifest for the deterministic animation track. |
+| 181 | `function` | `_live_animation_contract` | inventory fallback | Inventory fallback for function `_live_animation_contract` defined at `src/visualizations/animation.py:181`. |
+| 211 | `function` | `validate_animation_frame_deltas` | docstring | Return frame-delta manifest issues. |
 
 ## `src/visualizations/figure_helpers.py`
 
@@ -1394,14 +1402,6 @@ Total documented definitions: 867
 | 36 | `function` | `_declaration_block` | docstring | Return the declaration body from ``start`` until the next top-level def/theorem. |
 | 45 | `function` | `_scan_lean_file` | inventory fallback | Inventory fallback for function `_scan_lean_file` defined at `src/visualizations/lean_boundary.py:45`. |
 | 58 | `function` | `load_lean_boundary_rows` | docstring | Load lean boundary rows from a file. |
-
-## `src/template_active_inference/yaml_io.py`
-
-| line | kind | name | documentation source | summary |
-| ---: | --- | --- | --- | --- |
-| 14 | `function` | `_parse_yaml_cached` | docstring | Parse exact YAML bytes, memoized on (path, content). |
-| 26 | `function` | `load_yaml` | docstring | Load a YAML mapping from ``path``; return ``{}`` when missing or invalid. |
-| 39 | `function` | `read_yaml` | docstring | Alias for :func:`load_yaml`. |
 
 ## `scripts/check_documentation_contract.py`
 
