@@ -19,8 +19,8 @@ ensure_project_paths()
 def main() -> int:
     """CLI entry point."""
     from textbook.analysis import build_worked_model_summary
-    from textbook_io import write_text_atomic
-    from textbook_logging import get_logger
+    from template_textbook.textbook_io import write_text_atomic
+    from template_textbook.textbook_logging import get_logger
 
     logger = get_logger(__name__)
     parser = argparse.ArgumentParser(description="Compute worked-model summary data")

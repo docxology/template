@@ -9,6 +9,37 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Entry-doc accuracy and backlog reconciliation (2026-09-14)
+### Root backlog reconciliation — batch 2 (2026-09-15)
+
+- Closed as verified-satisfied on main (hosted receipts via merged PRs #98–#101;
+  PRs #82–#85 were closed unmerged with content landed through those squash merges):
+  `CI-UV-CACHE-1`, `CI-COV-SCOPE-1`, `CI-PLAYWRIGHT-SCHEDULE-1`, `CI-LEAN-CACHE-1`
+  (d5a375f5a) and `REHEARSAL-SCHEDULE-1`, `REHEARSAL-ARTIFACT-1`, `REHEARSAL-SUMMARY-1`
+  (115f7286f via #98).
+- `TEST-MODULE-LINE-1` closed: no test module exceeds 800 lines (slides-accessibility
+  suite already cluster-split; largest 459 lines);
+  `scripts/gates/module_line_count_check.py --include-tests` exits 0.
+- `PRIVATE-IMPORT-1` closed by commit 163613937:
+  `grep -rEn "from infrastructure\.[a-z.]+ import _" tests/` returns 0 hits.
+- `TEST-ISOLATION-SYSPATH-1` progress landed by commits 414b8496c + 91e13c290
+  (pitch_deck move; flat-module moves, tests/__init__ shim deletions, regression-loader
+  retargets). Row stays open pending a green hosted py3.10 run for template_madlib and
+  template_prose_project (main run 34861843634 red on those cells at 2d7fd304a).
+
+
+- `START_HERE.md` Step 3 now uses `uv run pre-commit install ...` (STARTHERE-PRECOMMIT-1)
+  and documents the optional local Graft code graph as navigation-only alongside
+  CodeGraph/LEANN (STARTHERE-GRAFT-1).
+- `check_documented_commands` now scans root `START_HERE.md`, `CLAUDE.md`, and
+  `AGENTS.md` in addition to `README.md` and `docs/*.md`, with a negative control
+  (GRAFT-DOCACCURACY-1). Drift triage over the entry docs returned 0 missing
+  script paths (strict empty-allowlist scan); row closed.
+- Backlog rows closed as verified-complete on main: `CONFTEST-DUP-1` (duplicates
+  already removed; `repo_root`/`MPLBACKEND` defined only in the root conftest) and
+  `SEC-SECRET-PATTERNS-1` (Slack/HuggingFace token patterns present in
+  `infrastructure/project/git_guards.py` since d5a375f5a).
+
 ### Receipt cleanup and docs accuracy pass (2026-09-11)
 
 - Deleted every dated point-in-time receipt from the repository per

@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path, PureWindowsPath
 from typing import cast
 
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 from .models import (
     DEFAULT_MANIFEST_REL,
     DEFAULT_REGISTRY_REL,

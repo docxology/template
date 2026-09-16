@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from config import load_gold_refinement_config
-from security_assay import (
+from template_gold_refinement.config import load_gold_refinement_config
+from template_gold_refinement.security_assay import (
     SecurityAssayRecord,
     build_security_assay,
     security_assay_records,

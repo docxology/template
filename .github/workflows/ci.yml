@@ -74,6 +74,7 @@ jobs:
       contents: read
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
+      infra_matrix: ${{ steps.matrix.outputs.infra_matrix }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -88,6 +89,21 @@ jobs:
           set -euo pipefail
           matrix="$(uv run python scripts/gates/public_capabilities.py --ci-matrix-json)"
           echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+          # CI-FAST-INFRA-COMPAT-1: the infra test matrix is event-shaped here —
+          # full py3.10-3.13 compatibility legs on push/schedule/dispatch, only
+          # the coverage-bearing py3.14 leg on PRs. `matrix` context is NOT
+          # valid in a job-level `if` (actionlint rejects it), so the shape is
+          # decided in this step and passed as a dynamic matrix. Known cost,
+          # stated honestly: infra-layer 3.10-3.13 compatibility is proven on
+          # the same-day main push / weekly lane instead of pre-merge.
+          # Project-floor py3.10 coverage is NOT weakened - project matrix
+          # cells keep py3.10 + py3.14 on PRs.
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            versions='["3.14"]'
+          else
+            versions='["3.10", "3.11", "3.12", "3.13", "3.14"]'
+          fi
+          echo "infra_matrix={\"os\":[\"ubuntu-latest\"],\"python-version\":${versions},\"include\":[{\"os\":\"macos-latest\",\"python-version\":\"3.14\"}]}" >> "$GITHUB_OUTPUT"
 
   # ───────────────────────────────────────────────────────────────────────────
   # Job 0b — Actionlint (workflow syntax gate; independent of project setup)
@@ -334,24 +350,27 @@ jobs:
     name: "Infra Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
-    needs: [verify-no-mocks]
+    needs: [verify-no-mocks, detect-projects]
     permissions:
       contents: read
     env:
       # Override the repository's .python-version so uv uses the interpreter
       # selected by this matrix cell, including its moving patch release.
       UV_PYTHON: ${{ matrix.python-version }}
+    # CI-FAST-INFRA-COMPAT-1: the matrix comes from detect-projects —
+    # PR lanes run only the py3.14 ubuntu cell (coverage evidence) and the
+    # macOS 3.14 smoke; the py3.10-3.13 compatibility legs run on push-to-main,
+    # weekly schedule, and manual dispatch. Those legs measured 6-8 min each
+    # and are never the PR critical path, but they occupy 4 runner slots that
+    # measurably deepen wave-2 queue spill for the ~48-cell project matrix.
+    # A job-level `if` with `matrix` context is invalid (actionlint rejects
+    # it), so the event shape is decided in the detect-projects step above.
     strategy:
       fail-fast: false
-      matrix:
-        # ubuntu covers all five Python versions; macOS runs only the 3.14
-        # smoke (macOS legs are ~10x cost and rarely surface OS-specific project
-        # breakage beyond what the 3.12 cell catches).
-        os: [ubuntu-latest]
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
-        include:
-          - os: macos-latest
-            python-version: "3.14"
+      # macOS runs only the 3.14 smoke (macOS legs are ~10x cost and rarely
+      # surface OS-specific project breakage beyond what the 3.12 cell
+      # catches).
+      matrix: ${{ fromJSON(needs.detect-projects.outputs.infra_matrix) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -1057,7 +1076,10 @@ jobs:
     name: Performance Check
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [test-infra, test-project]
+    # CI-FAST-PERF-1: no `needs:` - this job consumes no upstream artifacts
+    # (import benchmarks + informational microbenches only), so declaring
+    # `needs: [test-infra, test-project]` only serialized it after the slowest
+    # project cell (~35-53 min) for no gate benefit. `ci-gate` still requires it.
     permissions:
       actions: read
       contents: read

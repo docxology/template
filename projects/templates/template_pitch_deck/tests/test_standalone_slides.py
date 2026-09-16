@@ -8,7 +8,7 @@ import pytest
 
 from infrastructure.rendering.slide_deck import DeckContent, Slide
 
-from standalone_slides import (
+from template_pitch_deck.standalone_slides import (
     attach_qr_urls,
     standalone_slide_markdown,
     standalone_slide_relpath,

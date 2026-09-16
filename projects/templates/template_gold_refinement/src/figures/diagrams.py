@@ -47,11 +47,11 @@ try:
     from ..integrity import build_evidence_tiers, build_integrity_dimensions
     from ..refinery import run_refinery
 except ImportError:  # pragma: no cover - flat-layout fallback
-    from composition import generate_token_plan  # type: ignore[no-redef]
-    from config import load_gold_refinement_config  # type: ignore[no-redef]
-    from evidence import build_evidence_registry  # type: ignore[no-redef]
-    from integrity import build_evidence_tiers, build_integrity_dimensions  # type: ignore[no-redef]
-    from refinery import run_refinery  # type: ignore[no-redef]
+    from template_gold_refinement.composition import generate_token_plan
+    from template_gold_refinement.config import load_gold_refinement_config
+    from template_gold_refinement.evidence import build_evidence_registry
+    from template_gold_refinement.integrity import build_evidence_tiers, build_integrity_dimensions
+    from template_gold_refinement.refinery import run_refinery
 
 
 def generate_provenance_sankey(

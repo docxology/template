@@ -508,8 +508,8 @@ ioannidis2005false].</p>
 input purity, and an output purity. Purity increases monotonically,
 stage order is sequential, and each stage input must equal the preceding
 output. These invariants are enforced by
-<code>src/refinery.py::run_refinery</code> and
-<code>src/purity.py::assert_monotone_increase</code> and exercised by
+<code>src/template_gold_refinement/refinery.py::run_refinery</code> and
+<code>src/template_gold_refinement/purity.py::assert_monotone_increase</code> and exercised by
 positive and negative tests. <code>stages_to_target()</code> supplies
 the inverse query: given a target, return the shortest valid prefix
 rather than selecting later stages out of order.</p>
@@ -532,9 +532,9 @@ obligation and domain validator where the analogy must stop.</p>
 <h2 id="implementation-circuit">Implementation circuit</h2>
 <p>The metaphor becomes operational only when every transformation has
 an implementation owner. In this exemplar, configuration creates the
-ore, <code>src/refinery.py</code> defines the purity stages,
-<code>src/composition.py</code> turns slots into deterministic tokens,
-<code>src/formalisms.py</code> owns the equation registry, the
+ore, <code>src/template_gold_refinement/refinery.py</code> defines the purity stages,
+<code>src/template_gold_refinement/composition.py</code> turns slots into deterministic tokens,
+<code>src/template_gold_refinement/formalisms.py</code> owns the equation registry, the
 <code>src/figures/</code> package turns those sources into registered
 visuals, and the template validators decide whether the hydrated
 manuscript can be treated as publication metal. The loop is deliberately

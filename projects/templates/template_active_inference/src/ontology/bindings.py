@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 from gnn.concordance import BERNOULLI_EXPECTED_TERMS, BERNOULLI_SYMBOL_MAP, parity_gaps
 from gnn.parser import parse_gnn_file
 

@@ -54,7 +54,7 @@ The provenance flow in [@fig:provenance_sankey] makes the refinement analogy
 auditable as a directed source path rather than a decorative metaphor. The graph
 starts from the same stage sequence used in the purity table and carries that
 sequence forward to certification, with edge width proportional to the purity
-gain owned by `src/refinery.py::run_refinery`. A reader can therefore ask where
+gain owned by `src/template_gold_refinement/refinery.py::run_refinery`. A reader can therefore ask where
 each improvement enters the pipeline and whether it is supported by the same
 source that generated the reported purity numbers.
 
@@ -83,7 +83,7 @@ into an inspectable sensitivity surface. The manuscript uses seed {{TOKEN_SEED}}
 for the reported token plan, but the figure asks a neighboring question: how do
 selected inventory indices move when seeds and lexicon categories vary? This is
 not a stochastic robustness claim. It is a deterministic audit of the digest
-rule in `src/composition.py::generate_token_plan` against the configured
+rule in `src/template_gold_refinement/composition.py::generate_token_plan` against the configured
 lexicon inventories in `manuscript/config.yaml`.
 
 This view separates three issues that prose alone tends to blur. First, token
@@ -132,7 +132,7 @@ identifier and to the source surface that emits it. That linkage is important
 because equation labels can otherwise create a false sense of rigor: a numbered
 equation looks formal even when its assumptions, variables, and implementation
 owner are not recoverable. Here the formal object must remain connected to
-`src/formalisms.py`, the generated registry table, and the manuscript reference
+`src/template_gold_refinement/formalisms.py`, the generated registry table, and the manuscript reference
 that consumes it.
 
 The graph also helps distinguish formal support from decorative notation. A

@@ -5,12 +5,12 @@ from __future__ import annotations
 import pytest
 
 from infrastructure.llm.review.quality import (
-    _is_small_model,
-    _validate_executive_summary_section,
-    _validate_improvement_suggestions_section,
-    _validate_methodology_review_section,
-    _validate_quality_review_section,
-    _validate_translation_section,
+    is_small_model,
+    validate_executive_summary_section,
+    validate_improvement_suggestions_section,
+    validate_methodology_review_section,
+    validate_quality_review_section,
+    validate_translation_section,
     validate_review_quality,
 )
 
@@ -21,14 +21,14 @@ class TestIsSmallModel:
         ["gemma3:4b", "llama:7b", "mistral:3b", "qwen:8b", "Gemma3:4B"],
     )
     def test_small_models(self, model_name):
-        assert _is_small_model(model_name) is True
+        assert is_small_model(model_name) is True
 
     @pytest.mark.parametrize(
         "model_name",
         ["llama3:70b", "gpt-4", "claude-3-opus"],
     )
     def test_large_models(self, model_name):
-        assert _is_small_model(model_name) is False
+        assert is_small_model(model_name) is False
 
 
 class TestValidateTranslationSection:
@@ -55,7 +55,7 @@ class TestValidateTranslationSection:
     def test_translation_section(self, text, expect_english, expect_translation, expected_issue):
         details: dict = {}
         issues: list = []
-        _validate_translation_section(text, details, issues)
+        validate_translation_section(text, details, issues)
         assert details["has_english_section"] is expect_english
         assert details["has_translation_section"] is expect_translation
         if expected_issue is None:
@@ -69,7 +69,7 @@ class TestValidateExecutiveSummarySection:
         text = "overview of the paper, key contributions, methodology, results and significance"
         details: dict = {}
         issues: list = []
-        _validate_executive_summary_section(text, details, issues)
+        validate_executive_summary_section(text, details, issues)
         assert len(details["sections_found"]) >= 4
         assert issues == []
 
@@ -77,7 +77,7 @@ class TestValidateExecutiveSummarySection:
         text = "just some random text without any expected headers or keywords"
         details: dict = {}
         issues: list = []
-        _validate_executive_summary_section(text, details, issues)
+        validate_executive_summary_section(text, details, issues)
         assert "Missing expected structure" in issues[0]
 
 
@@ -98,7 +98,7 @@ class TestValidateQualityReviewSection:
     def test_quality_section(self, text, expect_scores, expect_assessment, expect_issue):
         details: dict = {}
         issues: list = []
-        _validate_quality_review_section(text, details, issues)
+        validate_quality_review_section(text, details, issues)
         if expect_scores:
             assert len(details["scores_found"]) > 0
         if expect_assessment:
@@ -126,7 +126,7 @@ class TestValidateMethodologyReviewSection:
     def test_methodology_section(self, text, min_sections, expect_methodology, expect_issues):
         details: dict = {}
         issues: list = []
-        _validate_methodology_review_section(text, details, issues)
+        validate_methodology_review_section(text, details, issues)
         if min_sections:
             assert len(details["sections_found"]) >= min_sections
         if expect_methodology:
@@ -159,7 +159,7 @@ class TestValidateImprovementSuggestionsSection:
     def test_improvement_section(self, text, min_priorities, expect_recommendations, expect_issues):
         details: dict = {}
         issues: list = []
-        _validate_improvement_suggestions_section(text, details, issues)
+        validate_improvement_suggestions_section(text, details, issues)
         if min_priorities:
             assert len(details["priorities_found"]) >= min_priorities
         if expect_recommendations:

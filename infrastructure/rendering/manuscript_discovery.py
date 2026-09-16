@@ -21,6 +21,7 @@ EXCLUDE_NAMES = {
     "AGENTS.md",
     "README.md",
     "SYNTAX.md",
+    "MANUSCRIPT_STATUS.md",
     "config.yaml",
     "config.yaml.example",
     "references.bib",

@@ -27,7 +27,7 @@ logger = get_logger(__name__)
 # ---------------------------------------------------------------------------
 
 
-def _infer_package_name(files: list[Path]) -> str:
+def infer_package_name(files: list[Path]) -> str:
     """Best-effort package name from wheel / sdist filenames.
 
     Wheel filename format: ``{name}-{version}-...whl``
@@ -44,7 +44,7 @@ def _infer_package_name(files: list[Path]) -> str:
     return "unknown"
 
 
-def _infer_version(files: list[Path]) -> str | None:
+def infer_version(files: list[Path]) -> str | None:
     """Best-effort version string from wheel / sdist filenames."""
     for f in files:
         stem = f.stem
@@ -126,8 +126,8 @@ def upload_dist(
 
     wheels, sdists = list_dist_files(dist_dir)
     all_files = wheels + sdists
-    package_name = _infer_package_name(all_files)
-    version = _infer_version(all_files)
+    package_name = infer_package_name(all_files)
+    version = infer_version(all_files)
 
     if dry_run:
         logger.info(

@@ -6,8 +6,8 @@ See [AGENTS.md](AGENTS.md) for the technical contract.
 
 ```python
 from src import PurityVector, generate_token_plan, load_gold_refinement_config, run_refinery, stages_to_target
-from domain_adapter import load_domain_profile
-from pipeline_policy import load_pipeline_policy
+from template_gold_refinement.domain_adapter import load_domain_profile
+from template_gold_refinement.pipeline_policy import load_pipeline_policy
 
 result = run_refinery()
 print(f"Final purity: {result.final_purity}, Karat: {result.final_karat.label}")

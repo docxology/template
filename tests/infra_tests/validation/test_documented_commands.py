@@ -78,3 +78,28 @@ class TestCheckDocumentedCommands:
         (tmp_path / "README.md").write_text("Run `helper.sh` for help.\n")
         issues = check_documented_commands(tmp_path, set())
         assert issues == []
+
+    def test_root_agent_docs_scanned(self, tmp_path):
+        """CLAUDE.md, AGENTS.md, and START_HERE.md are scanned for script refs."""
+        for name in ("CLAUDE.md", "AGENTS.md", "START_HERE.md"):
+            (tmp_path / name).write_text("Run `scripts/missing.sh` here.\n")
+        issues = check_documented_commands(tmp_path, set())
+        reported = {i.file for i in issues}
+        assert {"CLAUDE.md", "AGENTS.md", "START_HERE.md"} <= reported
+
+    def test_root_agent_docs_valid_script_ok(self, tmp_path):
+        (tmp_path / "scripts").mkdir()
+        (tmp_path / "scripts" / "run.py").write_text("print('hi')\n")
+        (tmp_path / "CLAUDE.md").write_text("Run `scripts/run.py` to start.\n")
+        issues = check_documented_commands(tmp_path, set())
+        assert issues == []
+
+    def test_found_via_scripts_subdirectory_candidate(self, tmp_path):
+        """Bare name found in a scripts/ subdirectory resolves without an issue."""
+        sub = tmp_path / "scripts" / "shell"
+        sub.mkdir(parents=True)
+        (sub / "bootstrap.sh").write_text("#!/bin/bash\n")
+        (tmp_path / "docs").mkdir()
+        (tmp_path / "docs" / "guide.md").write_text("See `bootstrap.sh` for setup.\n")
+        issues = check_documented_commands(tmp_path, set())
+        assert issues == []

@@ -10,7 +10,9 @@ from manuscript.variables import generate_variables
 
 # The full variable/semantic fixed point is a release-lane refresh. Keep the
 # timeout explicit while excluding it from the quick inner loop.
-pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(300)]
+# WHY timeout(600): consumes real hydrated gate artifacts across the whole
+# tree; 300s flaked on high-latency storage.
+pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
 
 
 def test_generate_variables_with_outputs() -> None:
@@ -75,7 +77,7 @@ def test_invariant_counts_include_simulation_when_merged() -> None:
     root = Path(__file__).resolve().parents[1]
     inv_path = root / "output" / "reports" / "invariants.json"
     if not inv_path.is_file():
-        from analysis import run_analysis
+        from template_active_inference.analysis import run_analysis
 
         run_analysis(root)
     if not inv_path.is_file():
@@ -134,7 +136,7 @@ def test_ising_mi_saturation_from_sweep() -> None:
 
     sweep_path = root / "output" / "data" / "parameter_sweep.csv"
     if not sweep_path.is_file():
-        from analysis import run_analysis
+        from template_active_inference.analysis import run_analysis
 
         run_analysis(root)
     rows = list(csv.DictReader(sweep_path.open(newline="", encoding="utf-8")))
@@ -144,7 +146,7 @@ def test_ising_mi_saturation_from_sweep() -> None:
 
 
 def test_variable_helpers_handle_missing_optional_inputs(tmp_path: Path) -> None:
-    from json_io import load_json
+    from template_active_inference.json_io import load_json
 
     assert manuscript_variables._ising_mi_saturation_from_sweep([]) == 0.0
     assert load_json(tmp_path / "missing.json") == {}

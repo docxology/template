@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 
-from json_io import load_json as _load_json
+from template_active_inference.json_io import load_json as _load_json
 from ontology.bindings import (
     BERNOULLI_EXPECTED_TERMS,
     SI_EXPECTED_TERMS,
@@ -15,7 +15,7 @@ from ontology.bindings import (
 from manuscript.sheaf.coverage import load_sheaf_coverage_context
 from manuscript.sheaf.semantic_maps import ARTIFACT_GATES, ARTIFACT_PRODUCERS
 from manuscript.sheaf.semantic_restrictions import _configured_analysis_scripts, _gnn_symbols
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 
 
 def _section_records(project_root: Path) -> list[dict[str, Any]]:

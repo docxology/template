@@ -19,7 +19,7 @@ _DOC_ONLY = frozenset({"AGENTS.md", "README.md", "SYNTAX.md"})
 
 
 def _resolved_manuscript_text() -> str:
-    from manuscript_variables import generate_variables
+    from template_gold_refinement.manuscript_variables import generate_variables
 
     variables = generate_variables(_PROJECT_ROOT)
     parts = []

@@ -17,8 +17,8 @@ import pytest
 from infrastructure.publishing.pypi_release import _display_command, _twine_token_env
 from infrastructure.publishing.pypi.models import PyPIConfig, PyPIResult
 from infrastructure.publishing.pypi.upload import (
-    _infer_package_name,
-    _infer_version,
+    infer_package_name,
+    infer_version,
     check_dist,
     upload_dist,
 )
@@ -210,23 +210,23 @@ def test_testpypi_release_helpers_keep_token_out_of_displayed_command() -> None:
 
 
 # ---------------------------------------------------------------------------
-# _infer_package_name / _infer_version -- pure filename parsing
+# infer_package_name / infer_version -- pure filename parsing
 # ---------------------------------------------------------------------------
 
 
 def test_infer_package_name_from_wheel(tmp_path: Path) -> None:
-    """_infer_package_name extracts the package part from a wheel filename."""
+    """infer_package_name extracts the package part from a wheel filename."""
     whl = tmp_path / "my_package-3.1.4-py3-none-any.whl"
     whl.touch()
 
-    name = _infer_package_name([whl])
+    name = infer_package_name([whl])
 
     # Underscores are normalised to dashes.
     assert name == "my-package"
 
 
 def test_infer_package_name_from_sdist(tmp_path: Path) -> None:
-    """_infer_package_name extracts the first dash-delimited token from a sdist.
+    """infer_package_name extracts the first dash-delimited token from a sdist.
 
     The implementation splits the stem on '-' and returns parts[0].  For a
     single-word package name like 'mypkg-3.1.4.tar.gz' this is the full name.
@@ -236,18 +236,18 @@ def test_infer_package_name_from_sdist(tmp_path: Path) -> None:
     sdist = tmp_path / "mypkg-3.1.4.tar.gz"
     sdist.touch()
 
-    name = _infer_package_name([sdist])
+    name = infer_package_name([sdist])
 
     assert name == "mypkg"
 
 
 def test_infer_package_name_empty_list() -> None:
-    """_infer_package_name on an empty list returns 'unknown'."""
-    assert _infer_package_name([]) == "unknown"
+    """infer_package_name on an empty list returns 'unknown'."""
+    assert infer_package_name([]) == "unknown"
 
 
 def test_infer_version_from_wheel(tmp_path: Path) -> None:
-    """_infer_version returns parts[1] of the dash-split stem.
+    """infer_version returns parts[1] of the dash-split stem.
 
     The implementation splits the stem on '-' and returns parts[1].  For a
     wheel with a single-word (no-hyphen) package name -- e.g.
@@ -259,27 +259,27 @@ def test_infer_version_from_wheel(tmp_path: Path) -> None:
     whl = tmp_path / "mypkg-1.2.3-py3-none-any.whl"
     whl.touch()
 
-    version = _infer_version([whl])
+    version = infer_version([whl])
 
     assert version == "1.2.3"
 
 
 def test_infer_version_from_sdist(tmp_path: Path) -> None:
-    """_infer_version returns parts[1] of the dash-split stem for an sdist.
+    """infer_version returns parts[1] of the dash-split stem for an sdist.
 
     For a single-word package name 'mypkg-4.5.6.tar.gz', parts[1] is '4.5.6'.
     """
     sdist = tmp_path / "mypkg-4.5.6.tar.gz"
     sdist.touch()
 
-    version = _infer_version([sdist])
+    version = infer_version([sdist])
 
     assert version == "4.5.6"
 
 
 def test_infer_version_empty_list() -> None:
-    """_infer_version on an empty list returns None."""
-    assert _infer_version([]) is None
+    """infer_version on an empty list returns None."""
+    assert infer_version([]) is None
 
 
 # ---------------------------------------------------------------------------

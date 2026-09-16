@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from token_resolution import UnresolvedTokenError, find_tokens, resolve_deck_tokens, resolve_tokens
+from template_pitch_deck.token_resolution import UnresolvedTokenError, find_tokens, resolve_deck_tokens, resolve_tokens
 
 
 def test_find_tokens_extracts_uppercase_names():

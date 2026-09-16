@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 
 
 def extract_preamble(preamble_md: Path) -> str:

@@ -266,22 +266,56 @@ def _remove_new_regular_files(
             continue
 
 
-def _restore_snapshots(root: Path, snapshots: dict[Path, bytes]) -> None:
+def _stat_signature(path: Path) -> tuple[int, int] | None:
+    """Return a cheap (size, mtime_ns) identity for *path*, or None if unreadable.
+
+    WHY: the autouse restore fixture runs after EVERY test; on cold or
+    high-latency filesystems the always-read-compare teardown measured ~6s
+    per test (297 snapshot files re-read each time). Mutations through
+    Path.write_text/write_bytes always change size or mtime with nanosecond
+    resolution on CI (APFS/ext4) and local APFS volumes, so a matching
+    (size, mtime_ns) pair is trusted as "unchanged"; anything else falls
+    through to the original byte-exact read-compare-restore below.
+    """
+    try:
+        metadata = path.stat()
+    except OSError:
+        return None
+    return (metadata.st_size, metadata.st_mtime_ns)
+
+
+def _restore_snapshots(
+    root: Path,
+    snapshots: dict[Path, bytes],
+    stats: dict[Path, tuple[int, int]] | None = None,
+) -> None:
     for path, original in snapshots.items():
         if not _is_confined_regular_file(root, path, allow_missing_leaf=True):
             continue
+        recorded = stats.get(path) if stats is not None else None
+        if recorded is not None and _stat_signature(path) == recorded:
+            continue
         try:
             if path.read_bytes() == original:
+                if stats is not None:
+                    stats[path] = _stat_signature(path) or (0, 0)
                 continue
         except OSError:
             pass
         try:
             path.write_bytes(original)
+            if stats is not None:
+                stats[path] = _stat_signature(path) or (0, 0)
         except OSError:
             continue
 
 
 _MutableFileSnapshot = tuple[frozenset[Path], dict[Path, bytes]]
+_MutableFileStats = dict[Path, tuple[int, int]]
+
+
+def _capture_stat_signatures(snapshots: dict[Path, bytes]) -> _MutableFileStats:
+    return {path: sig for path in snapshots for sig in (_stat_signature(path),) if sig is not None}
 
 
 @pytest.fixture(scope="session")
@@ -294,18 +328,34 @@ def _mutable_project_output_snapshots() -> _MutableFileSnapshot:
     return _capture_snapshots(_iter_mutable_project_outputs())
 
 
+@pytest.fixture(scope="session")
+def _mutable_project_source_stats(
+    _mutable_project_source_snapshots: _MutableFileSnapshot,
+) -> _MutableFileStats:
+    return _capture_stat_signatures(_mutable_project_source_snapshots[1])
+
+
+@pytest.fixture(scope="session")
+def _mutable_project_output_stats(
+    _mutable_project_output_snapshots: _MutableFileSnapshot,
+) -> _MutableFileStats:
+    return _capture_stat_signatures(_mutable_project_output_snapshots[1])
+
+
 @pytest.fixture(autouse=True)
 def _restore_mutable_project_state(
     _mutable_project_source_snapshots: _MutableFileSnapshot,
     _mutable_project_output_snapshots: _MutableFileSnapshot,
+    _mutable_project_source_stats: _MutableFileStats,
+    _mutable_project_output_stats: _MutableFileStats,
 ) -> Iterator[None]:
     yield
     source_paths, source_snapshots = _mutable_project_source_snapshots
     output_paths, output_snapshots = _mutable_project_output_snapshots
     _remove_new_regular_files(PROJECT_ROOT, source_paths, _iter_mutable_project_sources())
     _remove_new_regular_files(PROJECT_ROOT, output_paths, _iter_mutable_project_outputs())
-    _restore_snapshots(PROJECT_ROOT, source_snapshots)
-    _restore_snapshots(PROJECT_ROOT, output_snapshots)
+    _restore_snapshots(PROJECT_ROOT, source_snapshots, _mutable_project_source_stats)
+    _restore_snapshots(PROJECT_ROOT, output_snapshots, _mutable_project_output_stats)
 
 
 @pytest.fixture

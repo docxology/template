@@ -491,11 +491,18 @@ def test_ci_workflow_consumes_only_the_capability_matrix() -> None:
     matrix_step = next(step for step in detect["steps"] if step.get("id") == "matrix")
     strategy = workflow["jobs"]["test-project"]["strategy"]
 
-    assert detect["outputs"] == {"matrix": "${{ steps.matrix.outputs.matrix }}"}
+    assert detect["outputs"] == {
+        "matrix": "${{ steps.matrix.outputs.matrix }}",
+        "infra_matrix": "${{ steps.matrix.outputs.infra_matrix }}",
+    }
     assert "scripts/gates/public_capabilities.py --ci-matrix-json" in matrix_step["run"]
     assert strategy["matrix"] == "${{ fromJSON(needs.detect-projects.outputs.matrix) }}"
     assert workflow["jobs"]["test-project"]["env"]["UV_PYTHON"] == "${{ matrix.python-version }}"
     assert workflow["jobs"]["test-infra"]["env"]["UV_PYTHON"] == "${{ matrix.python-version }}"
+    assert (
+        workflow["jobs"]["test-infra"]["strategy"]["matrix"]
+        == "${{ fromJSON(needs.detect-projects.outputs.infra_matrix) }}"
+    )
     assert (
         sum(step.get("name") == "Verify selected Python minor" for step in workflow["jobs"]["test-project"]["steps"])
         == 1

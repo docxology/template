@@ -12,13 +12,13 @@ from pathlib import Path
 import pytest
 
 from infrastructure.rendering.pipeline import (
-    _run_manuscript_variable_script,
-    _run_override_script,
+    run_manuscript_variable_script,
+    run_override_script,
 )
 
 
 # ---------------------------------------------------------------------------
-# _run_override_script  (real subprocess — no mocking)
+# run_override_script  (real subprocess — no mocking)
 # ---------------------------------------------------------------------------
 
 
@@ -28,7 +28,7 @@ def test_run_override_script_success(tmp_path: Path) -> None:
     override.parent.mkdir(parents=True)
     override.write_text("import sys\nsys.exit(0)\n")
 
-    result = _run_override_script(tmp_path, override)
+    result = run_override_script(tmp_path, override)
 
     assert result == 0
 
@@ -39,7 +39,7 @@ def test_run_override_script_failure(tmp_path: Path) -> None:
     override.parent.mkdir(parents=True)
     override.write_text("import sys\nsys.exit(1)\n")
 
-    result = _run_override_script(tmp_path, override)
+    result = run_override_script(tmp_path, override)
 
     assert result == 1
 
@@ -50,7 +50,7 @@ def test_run_override_script_non_zero_exit_code(tmp_path: Path) -> None:
     override.parent.mkdir(parents=True)
     override.write_text("import sys\nsys.exit(42)\n")
 
-    result = _run_override_script(tmp_path, override)
+    result = run_override_script(tmp_path, override)
 
     assert result == 42
 
@@ -63,7 +63,7 @@ def test_run_override_script_subprocess_error(tmp_path: Path) -> None:
     # bytes were accepted as an empty script by one supported interpreter.
     override.write_text("def broken(:\n", encoding="utf-8")
 
-    result = _run_override_script(tmp_path, override)
+    result = run_override_script(tmp_path, override)
 
     # Malformed source run through Python must fail (exit non-zero or raise).
     assert result != 0
@@ -73,7 +73,7 @@ def test_run_override_script_missing_file(tmp_path: Path) -> None:
     """Returns non-zero when the override script path does not exist."""
     missing = tmp_path / "scripts" / "nonexistent.py"
 
-    result = _run_override_script(tmp_path, missing)
+    result = run_override_script(tmp_path, missing)
 
     assert result != 0
 
@@ -109,7 +109,7 @@ def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path)
     template_root = tmp_path / "template"
     template_root.mkdir()
 
-    result = _run_manuscript_variable_script(project, template_repo_root=template_root)
+    result = run_manuscript_variable_script(project, template_repo_root=template_root)
 
     assert result == 0
     executable, injected_template_root = (project / "hydration_result.txt").read_text(encoding="utf-8").splitlines()

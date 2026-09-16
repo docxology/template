@@ -584,7 +584,7 @@ optional LLM review gates are declared in
 <code>manuscript/config.yaml</code> under <code>gold_refinement:</code>,
 <code>steganography:</code>, and <code>llm:</code>. The config is the
 source of truth; generated prose is disposable.</p>
-<p><code>src/pipeline_policy.py</code> turns those policy blocks into an
+<p><code>src/template_gold_refinement/pipeline_policy.py</code> turns those policy blocks into an
 explicit secure-pipeline hook. That keeps the optional hardening path
 visible before execution instead of burying it in shell glue or
 prose.</p>

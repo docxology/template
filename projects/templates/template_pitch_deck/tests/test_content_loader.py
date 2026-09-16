@@ -7,11 +7,11 @@ from pathlib import Path
 import pytest
 import yaml
 
-from content_loader import build_deck_content, load_deck_yaml, raw_deck_texts
-from deck_tokens import build_deck_tokens
+from template_pitch_deck.content_loader import build_deck_content, load_deck_yaml, raw_deck_texts
+from template_pitch_deck.deck_tokens import build_deck_tokens
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rendering.slide_deck import SlideBudget
-from paths import locate_repo_root, project_root
+from template_pitch_deck.paths import locate_repo_root, project_root
 
 _ROSTER_TITLE = "The full roster, not one cherry-picked example"
 _CONTRACT_TITLE = "One contract across all public exemplars"

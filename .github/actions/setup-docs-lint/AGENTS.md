@@ -7,6 +7,10 @@ must call this action before running `scripts/audit/lint_docs.py`.
 ## Invariants
 
 - `actions/setup-node` and `actions/cache` remain pinned to full SHAs.
+- `setup-node` enables `cache: npm` (CI-FAST-DOCSLINT-NPM-1): the npm
+  download cache is keyed on the lockfile by the official action; `npm ci`
+  semantics stay unchanged (deterministic reinstall), only tarball
+  downloads are skipped.
 - Mermaid diagrams are rendered by the real `mmdc` command against a real
   `chrome-headless-shell`; missing tools fail closed.
 - The resolved Chrome path is exported through `GITHUB_ENV` for later workflow

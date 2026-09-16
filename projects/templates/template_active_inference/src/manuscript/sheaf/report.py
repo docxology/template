@@ -8,7 +8,7 @@ from typing import Any
 
 
 from .models import CoverageMatrix, ImradBlock, SheafManifest
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 
 
 @dataclass(frozen=True)

@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from manuscript_variables import generate_variables, save_variables
+from template_gold_refinement.manuscript_variables import generate_variables, save_variables
 
 # --------------------------------------------------------------------------- #
 # Helpers

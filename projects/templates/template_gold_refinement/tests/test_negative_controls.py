@@ -6,9 +6,9 @@ import pytest
 import yaml
 from pathlib import Path
 
-from config import GoldRefinementConfigError, load_gold_refinement_config
-from purity import karat_for_purity, assert_monotone_increase
-from refinery import RefinementStage, run_refinery
+from template_gold_refinement.config import GoldRefinementConfigError, load_gold_refinement_config
+from template_gold_refinement.purity import karat_for_purity, assert_monotone_increase
+from template_gold_refinement.refinery import RefinementStage, run_refinery
 
 
 class TestBrokenConfig:

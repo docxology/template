@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from config import load_gold_refinement_config
-from integrity import (
+from template_gold_refinement.config import load_gold_refinement_config
+from template_gold_refinement.integrity import (
     build_evidence_tiers,
     build_integrity_dimensions,
     evidence_tier_records,
