@@ -24,3 +24,13 @@ Technical reference for the living-record exemplar. Companion to
 - Deterministic, offline, no mocks; 90% coverage floor on `src/`.
 - Scripts are thin orchestrators importing from `src/`.
 - Qualified pipeline name: `templates/template_experiment_tree`.
+
+
+## Ground Truth
+
+| Surface | Source of truth |
+| --- | --- |
+| Tree structure and node statuses | `output/data/experiment_tree.json` (committed) — frozen nodes are immutable |
+| Run command contract | identical across every node in one tree; validated by `src/template_experiment_tree/tree.py` |
+| Manuscript values | generated `{{EXP_*}}` variables from `manuscript_variables.json`; a token with no tree backing fails |
+| Configuration | `manuscript/config.yaml` |

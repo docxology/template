@@ -1,0 +1,15 @@
+conditions:
+  - name: baseline_record
+    role: reference
+    description: "Empty tree with only the baseline node; manuscript renders the empty-record contract."
+  - name: answered_round
+    role: proposed
+    description: "One answered round (win + dead_end) exercising the results and dead-end projections."
+  - name: frozen_pending
+    role: variant
+    description: "Frozen-but-unanswered nodes; verifies the in-progress projection stays honest."
+metrics:
+  primary:
+    name: answered_nodes
+    direction: maximize
+protocol: "Record experiments through scripts/record_experiment.py; never edit answered nodes; regenerate the manuscript from the tree."
