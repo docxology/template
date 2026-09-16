@@ -623,6 +623,108 @@ validate_fond_structure(fond_dir: Path) -> tuple[bool, str]
 
 Validate that fond has the required structure.
 
+## Package: `infrastructure.formal_contracts`
+
+### `ALL_BLOCK_TYPES`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `Block`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `check_manuscript`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `Claim`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `compose`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `compose_manuscripts`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `CompositionError`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `Dataset`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `DependencyEdge`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `Derivation`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `Diagnostic`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `EdgeKind`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `EMPTY_MANUSCRIPT`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `Evidence`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `EvidenceTier`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `Figure`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `FormalCode`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `FormalStatement`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `Manuscript`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `MatchPolicy`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `read_blocks`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `ReaderError`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `Report`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `Section`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
+### `Table`
+
+*symbol — defined in `infrastructure.formal_contracts`*
+
 ## Package: `infrastructure.llm`
 
 ### `generate_review_with_metrics`
@@ -1497,6 +1599,56 @@ class EdgeRelation(str, Enum)
 
 Directed relationship type between two provenance nodes.
 
+### `ExperimentCode`
+
+*class — defined in `infrastructure.provenance.tree`*
+
+```python
+class ExperimentCode
+```
+
+Stable dotted diagnostic IDs for experiment-tree findings.
+
+### `ExperimentKind`
+
+*class — defined in `infrastructure.provenance.tree`*
+
+```python
+class ExperimentKind(str, Enum)
+```
+
+Role of an experiment node within its tree.
+
+### `ExperimentNode`
+
+*class — defined in `infrastructure.provenance.tree`*
+
+```python
+class ExperimentNode
+```
+
+A node in an experiment tree, persisted in the provenance store.
+
+### `ExperimentStatus`
+
+*class — defined in `infrastructure.provenance.tree`*
+
+```python
+class ExperimentStatus(str, Enum)
+```
+
+Lifecycle status of an experiment node.
+
+### `ExperimentTree`
+
+*class — defined in `infrastructure.provenance.tree`*
+
+```python
+class ExperimentTree(store: Provenance)
+```
+
+Experiment-tree discipline layered on an existing :class:`Provenance` store.
+
 ### `Finding`
 
 *class — defined in `infrastructure.provenance.review`*
@@ -1654,6 +1806,16 @@ class SourceNode(NodeBase)
 ```
 
 Provenance node for an external data source or reference.
+
+### `validate_experiment_tree`
+
+*function — defined in `infrastructure.provenance.tree`*
+
+```python
+validate_experiment_tree(tree: ExperimentTree) -> ProvenanceValidationReport
+```
+
+Validate tree discipline: fixed run contract, acyclicity, single baseline.
 
 ### `validate_provenance_dag`
 
