@@ -544,7 +544,7 @@
       "module": "infrastructure.provenance",
       "invocation": "python -m infrastructure.provenance",
       "source_path": "infrastructure/provenance/cli.py",
-      "purpose": "CLI for the provenance DAG — ``record-artifact``, ``list``, and ``review`` subcommands.",
+      "purpose": "CLI for the provenance DAG — ``record-artifact``, ``list``, ``review``, and experiment-tree subcommands.",
       "subcommands": [
         {
           "name": "list",
@@ -561,6 +561,18 @@
         {
           "name": "validate",
           "help": "Validate provenance DAG structure and acyclicity"
+        },
+        {
+          "name": "experiment-add",
+          "help": "Add an experiment node (baseline, or child with --parent)"
+        },
+        {
+          "name": "experiment-update",
+          "help": "Update an experiment node's status"
+        },
+        {
+          "name": "experiment-validate",
+          "help": "Validate experiment-tree discipline"
         }
       ],
       "exports": [
@@ -575,6 +587,12 @@
         "node_from_dict",
         "Provenance",
         "ProvenanceStoreError",
+        "ExperimentCode",
+        "ExperimentKind",
+        "ExperimentNode",
+        "ExperimentStatus",
+        "ExperimentTree",
+        "validate_experiment_tree",
         "Finding",
         "Review",
         "ReviewResult",
