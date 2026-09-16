@@ -12,8 +12,11 @@ authors:
     corresponding: true
 
 publication:
-  doi: ""
-  journal: ""
+  status: draft
+  doi_status: "forthcoming"
+  github_repository: "docxology/template_experiment_tree"
+  repository_url: "https://github.com/docxology/template_experiment_tree"
+  license: "MIT"
 
 keywords:
   - "reproducible research"
