@@ -137,6 +137,10 @@ def _collect_artifacts(output_root: Path, *, output_fd: int | None = None) -> di
         "pdf": ("pdf", (".pdf",)),
         "epub": ("ebook", (".epub", ".mobi")),
         "metadata": ("metadata", (".xml", ".json", ".opf")),
+        # docpub export lists (added for daf-press cycle-1, dp-B16): the
+        # publishing config's exports include DOCX; bucket only appears
+        # non-empty in bundles, so projects without output/docx/ are unaffected.
+        "docx": ("docx", (".docx",)),
     }
     result: dict[str, list[dict[str, Any]]] = {}
     # Resolve before opening only for the standalone helper; production already
