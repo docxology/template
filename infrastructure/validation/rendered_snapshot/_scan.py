@@ -238,15 +238,27 @@ def source_repository_boundary(
             "project source is not represented below the template projects directory",
         ) from exc
 
+    if projects_root.is_symlink():
+        raise RenderedSnapshotError(
+            "PROJECT_LINK_INVALID",
+            "projects directory itself must not be a symlink",
+        )
+
+    # A category mirror nested inside a lifecycle directory may legitimately
+    # be a symlink into the private sidecar (the documented sidecar topology
+    # ``projects/<lifecycle>/<category>/<name>`` with a redirected category).
+    # A symlink that replaces a lifecycle directory itself — a direct child of
+    # ``projects_root`` — repoints a structural anchor and stays rejected.
+    # Deeper intermediate components are accepted: the lexical ancestry check
+    # above and the resolved-project authorization below still bound what the
+    # alias can authorize.
     current = lexical.parent
-    while True:
-        if current.is_symlink():
+    while current != projects_root:
+        if current.is_symlink() and current.parent == projects_root:
             raise RenderedSnapshotError(
                 "PROJECT_LINK_INVALID",
-                f"project source has an intermediate symlink: {current}",
+                f"project source has a symlinked lifecycle directory: {current}",
             )
-        if current == projects_root:
-            break
         if current == current.parent:
             raise RenderedSnapshotError(
                 "PROJECT_LINK_INVALID",
@@ -266,7 +278,14 @@ def source_repository_boundary(
         return repository
 
     is_direct_leaf = len(parts) == 2
-    is_category_leaf = len(parts) == 3 and parts[1].startswith("_")
+    # A nested alias (``<lifecycle>/<category>/<name>``) is a category leaf
+    # when every component between the lifecycle root and the project name is
+    # an intermediate grouping; the underscore-prefixed form used by
+    # ``infrastructure.project.discovery`` is the common case, but sidecar
+    # categories choose their own names. Authorization rests on the lifecycle
+    # root, the leaf symlink, and the resolved-project match below — not on
+    # the category's spelling.
+    is_category_leaf = len(parts) >= 3
     if (
         not parts
         or parts[0] not in LIFECYCLE_SUBDIRS
