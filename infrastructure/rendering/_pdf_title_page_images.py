@@ -75,7 +75,9 @@ def _configured_image_path(raw_image: object, config_file: Path) -> Path | None:
         return image_path
     candidates = [config_file.parent / image_path]
     project_roots = [config_file.parent.parent]
-    if config_file.parent.name == "manuscript" and config_file.parent.parent.name == "output":
+    if config_file.parent.name == "manuscript" and config_file.parent.parent.name in ("output", "docs"):
+        # Injected (output/manuscript) or source (docs/manuscript) layouts:
+        # the project root is one level above the layout parent.
         project_roots.append(config_file.parent.parent.parent)
     for root in project_roots:
         candidates.extend(
