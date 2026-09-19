@@ -176,6 +176,8 @@ def _render_pipeline_impl(
             enable_slides=env_config.enable_slides,
             enable_docx=env_config.enable_docx,
             enable_epub=env_config.enable_epub,
+            latex_compiler=env_config.latex_compiler,
+            pandoc_path=env_config.pandoc_path,
         )
         manager = deps.manager_factory(
             config,
