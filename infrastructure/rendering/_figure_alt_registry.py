@@ -243,13 +243,32 @@ def _parse_record(
             context={"registry": str(registry_path)},
         )
 
+    # Contract: a record that declares no filename/path (e.g. an inline
+    # mermaid figure that cannot be embedded as a file) is tolerated, as long
+    # as it still carries alt/alt_text/long_description accessibility text;
+    # it is skipped entirely (None) so it contributes no filename mapping.
+    # A record with neither a filename nor any alt text is genuinely broken.
     declared_filenames = [record[field] for field in ("filename", "path") if field in record]
     normalized_filenames = [normalize_registry_filename(value) for value in declared_filenames]
-    if not declared_filenames or any(value is None for value in normalized_filenames):
-        raise RenderingError(
-            f"Figure registry record requires a safe relative filename/path for {label}",
-            context={"registry": str(registry_path)},
+    metadata = record.get("metadata")
+    metadata_dict = metadata if isinstance(metadata, dict) else {}
+    has_alt = any(
+        value is not None
+        for value in (
+            _normalized_alt(record.get("alt_text")),
+            _normalized_alt(record.get("alt")),
+            _normalized_alt(metadata_dict.get("alt_text")),
+            _normalized_long_description(record.get("long_description")),
+            _normalized_long_description(metadata_dict.get("long_description")),
         )
+    )
+    if not declared_filenames or any(value is None for value in normalized_filenames):
+        if not has_alt:
+            raise RenderingError(
+                f"Figure registry record requires a safe relative filename/path for {label}",
+                context={"registry": str(registry_path)},
+            )
+        return None
     filenames = {value for value in normalized_filenames if value is not None}
     if len(filenames) > 1:
         raise RenderingError(
