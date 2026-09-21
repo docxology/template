@@ -59,6 +59,7 @@ the current public exemplars but does not replace either generated source of tru
 | [`templates/template_code_project/`](templates/template_code_project/) | Code-centric (numerical experiment + analysis) | yes (`src/core/optimizer.py`, `src/core/invariants.py`) | curated read-only | 6 figures | see canonical facts | see canonical facts |
 | [`templates/template_data_descriptor/`](templates/template_data_descriptor/) | Dataset descriptor/data-paper scaffold (schema, file inventory, provenance chain, data dictionary, quality checks, license boundary) | yes (`src/data_descriptor/*`) | curated read-only | n/a | see canonical facts | see canonical facts |
 | [`templates/template_eda_notebook/`](templates/template_eda_notebook/) | Exploratory data analysis notebook exemplar (notebook imports tested `src/eda/*`, no notebook-owned business logic) | yes (`src/eda/*`) | n/a | 2 figures | see canonical facts | see canonical facts |
+| [`templates/template_experiment_tree/`](templates/template_experiment_tree/) | Experiment-tree provenance exemplar (frozen-node replay tested `src/template_experiment_tree/*`) | yes (`src/template_experiment_tree/*`) | n/a | 2 figures | see canonical facts | see canonical facts |
 | [`templates/template_formal/`](templates/template_formal/) | Strongly-typed multiagent ant-robot colony exemplar (ADTs, session types, affine-discipline resource handles, decentralized per-agent storage/network) | yes (`src/template_formal/colony/*`) | curated read-only | 2 figures | see canonical facts | see canonical facts |
 | [`templates/template_gold_refinement/`](templates/template_gold_refinement/) | Metallurgical gold-refining analogy for manuscript composition (ore → smelting → assaying → cupellation → nine-nines certification, mega-madlib token injection) | yes (`src/refinery.py`, `src/composition.py`) | curated read-only | 12 registry figures + cover (`FIGURE_SPECS` in `src/figures/`) | see canonical facts | see canonical facts |
 | [`templates/template_literature_meta_analysis/`](templates/template_literature_meta_analysis/) | Literature meta-analysis (multi-engine retrieval, de-duplication, bibliometrics, embeddings, optional KG) | yes (`src/literature/*`, `src/analysis/*`, `src/knowledge_graph/*`) | curated + fixture-backed | registry-backed | see canonical facts | see canonical facts |
@@ -151,6 +152,7 @@ graph TD
         P10[templates/template_literature_meta_analysis<br/>Literature meta-analysis exemplar · see canonical facts]
         P11[templates/template_gold_refinement<br/>Gold-refining analogy exemplar · see canonical facts]
         P12[templates/template_eda_notebook<br/>EDA notebook exemplar · see canonical facts]
+        P13[templates/template_experiment_tree<br/>Experiment-tree provenance exemplar · see canonical facts]
         P13[templates/template_methods_paper<br/>Methods-paper exemplar · see canonical facts]
         P14[templates/template_search_project<br/>Literature-search exemplar · see canonical facts]
         P15[templates/template_storybook<br/>Storybook exemplar · see canonical facts]
