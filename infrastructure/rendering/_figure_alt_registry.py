@@ -254,7 +254,7 @@ def _parse_record(
     if not declared_filenames:
         output_path = record.get("output_path")
         if isinstance(output_path, str) and output_path.startswith("output/figures/"):
-            declared_filenames = [output_path[len("output/figures/"):]]
+            declared_filenames = [output_path[len("output/figures/") :]]
     normalized_filenames = [normalize_registry_filename(value) for value in declared_filenames]
     if not declared_filenames or any(value is None for value in normalized_filenames):
         raise RenderingError(

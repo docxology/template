@@ -49,7 +49,7 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfgen import canvas
 
-from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.exceptions import RenderingError as RenderingError
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
