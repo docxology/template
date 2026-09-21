@@ -18,7 +18,7 @@ from reproducibility.extraction import (
     extract_workflow_nodes,
 )
 from reproducibility.models import NodeType, WorkflowNode, build_workflow_graph
-from tests.knowledge_graph.llm_extraction_fixtures import httpserver_base_url, make_paper
+from llm_extraction_fixtures import httpserver_base_url, make_paper
 
 
 def _valid_workflow_response() -> list[dict]:
