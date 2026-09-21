@@ -133,10 +133,11 @@ Result: **643** project-scope infrastructure tests collected and **873** publish
 | `template_code_project` | 264 | 95.28 % |
 | `template_data_descriptor` | 78 | 96.13 % |
 | `template_eda_notebook` | 83 | 90.03 % |
+| `template_experiment_tree` | 29 | 91.85 % |
 | `template_formal` | 285 | 94.50 % |
 | `template_gold_refinement` | 337 | 92.19 % |
 | `template_literature_meta_analysis` | 1215 | 95.92 % |
-| `template_madlib` | 192 | 98.95 % |
+| `template_madlib` | 192 | 99.11 % |
 | `template_methods_paper` | 94 | 99.00 % |
 | `template_newspaper` | 153 | 99.25 % |
 | `template_pitch_deck` | 149 | 97.27 % |
