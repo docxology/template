@@ -243,7 +243,18 @@ def _parse_record(
             context={"registry": str(registry_path)},
         )
 
+    # Registry filename sources: canonical ``filename``/``path`` (relative to
+    # the registry directory), plus the repo-root-relative ``output_path``
+    # emitted by generators that write figures under output/figures/ (e.g.
+    # mermaid renderers). output_path entries are translated to registry-dir
+    # relative form by stripping the documented output/figures/ prefix; a
+    # translated value still passes the same safe-relative normalization and
+    # security checks as a canonical filename.
     declared_filenames = [record[field] for field in ("filename", "path") if field in record]
+    if not declared_filenames:
+        output_path = record.get("output_path")
+        if isinstance(output_path, str) and output_path.startswith("output/figures/"):
+            declared_filenames = [output_path[len("output/figures/"):]]
     normalized_filenames = [normalize_registry_filename(value) for value in declared_filenames]
     if not declared_filenames or any(value is None for value in normalized_filenames):
         raise RenderingError(
