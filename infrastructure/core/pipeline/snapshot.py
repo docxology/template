@@ -5,10 +5,9 @@ from __future__ import annotations
 import argparse
 import json
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-
+from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.files.serialization import read_json_object as _read_json_object
 from infrastructure.core.pipeline.artifacts import compute_sha256
 
@@ -24,7 +23,7 @@ class PipelineSnapshot:
     artifacts: dict[str, str]
     validation_summary: dict[str, Any]
     evidence_fact_count: int
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat(timespec="seconds"))
+    cleanup: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize snapshot metadata."""
@@ -63,6 +62,7 @@ def create_snapshot(output_dir: Path, *, stage_num: int, stage_name: str) -> Pip
     manifest_path = reports_dir / "artifact_manifest.json"
     registry_path = reports_dir / "evidence_registry.json"
     validation_path = reports_dir / "validation_report.json"
+    cleanup_report_path = reports_dir / "cleanup_report.json"
     artifacts = _artifact_hashes(manifest_path)
     snapshot = PipelineSnapshot(
         path=_snapshot_path(output_dir, stage_num, stage_name),
@@ -70,12 +70,26 @@ def create_snapshot(output_dir: Path, *, stage_num: int, stage_name: str) -> Pip
         stage_name=stage_name,
         artifact_manifest_hash=compute_sha256(manifest_path) if manifest_path.exists() else "",
         artifacts=artifacts,
-        validation_summary=_validation_summary(validation_path),
         evidence_fact_count=_evidence_fact_count(registry_path),
+        validation_summary=_validation_summary(validation_path),
+        cleanup=_cleanup_summary(cleanup_report_path),
     )
     snapshot.path.parent.mkdir(parents=True, exist_ok=True)
     snapshot.path.write_text(json.dumps(snapshot.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return snapshot
+
+
+def _cleanup_summary(cleanup_report_path: Path) -> dict[str, Any]:
+    """Load the stage-01 cleanup report so snapshots carry the skipped-tracked record."""
+    if not cleanup_report_path.exists():
+        return {}
+    try:
+        payload = json.loads(cleanup_report_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        raise FileOperationError(f"Failed to read cleanup report {cleanup_report_path}: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise FileOperationError(f"Cleanup report {cleanup_report_path} must be a JSON object")
+    return payload
 
 
 def compare_snapshots(left: Path, right: Path) -> SnapshotComparison:
