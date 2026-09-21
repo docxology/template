@@ -18,8 +18,9 @@ import json
 import logging
 from pathlib import Path
 
-from config import CORPUS_PATH as DEFAULT_CORPUS_PATH
 from config_loader import load_fulltext_config, resolve_fulltext_directory
+
+from config import CORPUS_PATH as DEFAULT_CORPUS_PATH
 from literature.corpus import Corpus
 from literature.fulltext_download import (
     assess_fulltext_extraction,

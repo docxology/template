@@ -20,8 +20,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-
 from config_loader import _load_yaml
+
 from literature.corpus import Corpus
 from literature.models import Paper
 from literature.search_runner import run_literature_search
