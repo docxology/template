@@ -144,11 +144,6 @@ def _exact_render_record(
                     "rendered_filename": filename,
                 },
             )
-        if filename is not None and len(registry.by_filename(filename)) > 1:
-            raise RenderingError(
-                f"Rendered figure path maps to multiple registry records: {filename}",
-                context={"registry": str(registry.path)},
-            )
         return label_record
     filename_records = registry.by_filename(filename)
     if len(filename_records) > 1:
