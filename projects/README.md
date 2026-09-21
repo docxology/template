@@ -36,6 +36,8 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_advanced_literature_review/`](templates/template_advanced_literature_review/) — advanced multi-phase literature-review exemplar with phase provenance and deterministic offline replay
 - [`templates/template_autopoiesis/`](templates/template_autopoiesis/) — combinatoric grammar generating whole runnable child projects (src/tests/scripts/manuscript) from a seed
 - [`templates/template_eda_notebook/`](templates/template_eda_notebook/) — EDA notebook exemplar with notebook-to-src binding and deterministic analysis outputs
+- [`templates/template_experiment_tree/`](templates/template_experiment_tree/) — experiment-tree provenance exemplar with frozen-node determinism and claim ledger
+- [`templates/template_formal/`](templates/template_formal/) — strongly-typed multiagent ant-robot colony exemplar (ADTs, session types, affine-discipline resource handles, decentralized per-agent storage/network)
 - [`templates/template_madlib/`](templates/template_madlib/) — conditional token-injection manuscript generator with QA probes and authoring contract
 - [`templates/template_newspaper/`](templates/template_newspaper/) — newspaper layout/typography exemplar
 - [`templates/template_pitch_deck/`](templates/template_pitch_deck/) — pitch deck / slide deck scaffold exemplar
@@ -45,7 +47,7 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_storybook/`](templates/template_storybook/) — full-page illustrated storybook PDF exemplar
 - [`templates/template_template/`](templates/template_template/) — meta-template (introspects `infrastructure/` and the public exemplar roster)
 - [`templates/template_textbook/`](templates/template_textbook/) — modular fillable textbook scaffold
-- [`templates/template_formal/`](templates/template_formal/) — strongly-typed multiagent ant-robot colony exemplar (ADTs, session types, affine-discipline resource handles, decentralized per-agent storage/network)
+
 
 They share the same core layout (`src/`, `tests/`, `scripts/`, `manuscript/`,
 root `README.md`/`AGENTS.md`) plus a tested forkability contract:
@@ -78,6 +80,7 @@ local private symlinks and is intentionally broader.
 | [`template_active_inference`](templates/template_active_inference/) | Active Inference multi-track research | yes (multiple tracks) | no (curated) | yes | see canonical facts | see canonical facts |
 | [`template_advanced_literature_review`](templates/template_advanced_literature_review/) | Advanced multi-phase literature review | yes (`src/multi_phase/*`) | fixture-backed | yes | see canonical facts | see canonical facts |
 | [`template_eda_notebook`](templates/template_eda_notebook/) | Exploratory data analysis notebook | yes (`src/eda/*`) | n/a | yes (analysis figures) | see canonical facts | see canonical facts |
+| [`template_experiment_tree`](templates/template_experiment_tree/) | Experiment-tree provenance exemplar | yes (`src/template_experiment_tree/*`) | no (curated) | deterministic tree replay | see canonical facts | see canonical facts |
 | [`template_formal`](templates/template_formal/) | Strongly-typed multiagent ant-robot colony (ADTs, session types, affine-discipline handles) | yes (`src/template_formal/colony/*`) | no (curated) | yes (2 figures) | see canonical facts | see canonical facts |
 | [`template_madlib`](templates/template_madlib/) | Conditional token-injection manuscript generator | yes (`src/tokens.py`, `src/composition.py`) | no (curated) | token-density figure | see canonical facts | see canonical facts |
 | [`template_methods_paper`](templates/template_methods_paper/) | Controlled-method specification DSL with staged validation | yes (`src/methods_dsl/*`) | no (curated) | step-count figure | see canonical facts | see canonical facts |
@@ -204,6 +207,7 @@ between lifecycle folders instead of committing it here.
 | `templates/template_autoresearch_project/` | AutoResearch exemplar (deterministic readiness loop) | see canonical facts | see canonical facts |
 | `templates/template_autoscientists/` | AutoScientists coordination-mechanism testbed | see canonical facts | see canonical facts |
 | `templates/template_eda_notebook/` | EDA notebook exemplar (notebook imports tested `src/eda/*`) | see canonical facts | see canonical facts |
+| `templates/template_experiment_tree/` | Experiment-tree provenance exemplar (frozen-node replay tested `src/template_experiment_tree/*`) | see canonical facts | see canonical facts |
 | `templates/template_formal/` | Strongly-typed multiagent ant-robot colony exemplar (ADTs, session types, affine-discipline handles) | see canonical facts | see canonical facts |
 | `templates/template_madlib/` | Conditional token-injection manuscript exemplar | see canonical facts | see canonical facts |
 | `templates/template_methods_paper/` | Methods-paper exemplar (controlled-method specification DSL) | see canonical facts | see canonical facts |
@@ -980,6 +984,7 @@ infrastructure compliance:
 - **template_code_project**: Optimization research exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_data_descriptor**: Dataset descriptor/data-paper exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_eda_notebook**: EDA notebook exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_experiment_tree**: experiment-tree provenance exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_formal**: Strongly-typed multiagent ant-robot colony exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_gold_refinement**: Metallurgical gold-refining analogy exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_literature_meta_analysis**: Generic literature meta-analysis exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
