@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
+from infrastructure.core.subprocess_policy import BoundedSubprocessResult, SubprocessPolicy, run_with_policy
 from infrastructure.core.logging.constants import BANNER_WIDTH
 
 SEVERITY_LEVELS = ("LOW", "MEDIUM", "HIGH")
@@ -16,7 +16,13 @@ OPTIONAL_TOOLS = ("safety",)
 TOOLS = (*REQUIRED_TOOLS, *OPTIONAL_TOOLS)
 
 
-def _run_security_command(repo_root: Path, argv: list[str], *, tool: str, timeout: int = 300):
+def _run_security_command(
+    repo_root: Path,
+    argv: list[str],
+    *,
+    tool: str,
+    timeout: int = 300,
+) -> BoundedSubprocessResult:
     """Run a security tool through the shared bounded credential-free policy."""
     return run_with_policy(
         argv,

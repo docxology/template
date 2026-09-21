@@ -368,6 +368,7 @@ __all__ = [
     "LinkClassification",
     "build_bounded_env",
     "build_bounded_run_env",
+    "_complete_bounded_run_cleanup",
     "classify_lifecycle_link",
     "run_bounded_subprocess",
     "terminate_bounded_run_processes",
