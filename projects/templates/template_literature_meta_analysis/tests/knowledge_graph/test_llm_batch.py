@@ -11,7 +11,7 @@ from knowledge_graph.llm_extraction import (
     LLMConfig,
     extract_assertions_llm,
 )
-from tests.knowledge_graph.llm_extraction_fixtures import (
+from llm_extraction_fixtures import (
     httpserver_base_url,
     make_paper,
     valid_llm_response,

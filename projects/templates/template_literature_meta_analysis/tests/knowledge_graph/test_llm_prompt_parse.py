@@ -11,7 +11,7 @@ from knowledge_graph.llm_extraction import (
     build_prompt,
     _hypothesis_dicts,
 )
-from tests.knowledge_graph.llm_extraction_fixtures import (
+from llm_extraction_fixtures import (
     make_paper,
     valid_llm_response,
 )

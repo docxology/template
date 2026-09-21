@@ -6,7 +6,7 @@ from __future__ import annotations
 from knowledge_graph.llm_extraction import (
     LLMConfig,
 )
-from tests.knowledge_graph.llm_extraction_fixtures import (
+from llm_extraction_fixtures import (
     make_paper,
     valid_llm_response,
 )

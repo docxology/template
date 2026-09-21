@@ -22,25 +22,19 @@ hand-copying a number from the rendered manuscript.
 
 No mocks: real deterministic objects only, in line with the repo no-mock policy.
 
-Import-isolation note: ``template_madlib``'s ``src`` package uses ordinary
-relative intra-package imports (``from .config import ...``), the same shape
-as the other exemplars, and it ships ``config`` / ``tokens`` / ``analysis`` /
-``manuscript_variables`` submodule names that also exist in other exemplars'
-``src`` packages. ``_load_src_package`` therefore uses the same
-``spec_from_file_location`` alias-exec pattern as ``_autoscientists_src``:
-register ``src/__init__.py`` under a project-unique ``_madlib_src`` key in
-``sys.modules`` *before* executing it (with ``submodule_search_locations``
-pointing at ``src/``) so every relative import inside the package — and
-inside submodules imported afterward via ``_madlib_src.<name>`` — resolves
+Import-isolation note: the exemplar's modules live in
+``src/template_madlib/`` (``SRC_DIR`` in this module), and they ship
+submodule names (``config`` / ``tokens`` / ``analysis`` /
+``manuscript_variables``) that also exist in other exemplars'
+``src`` packages. ``_load_src_package`` therefore registers
+``src/template_madlib/__init__.py`` in ``sys.modules`` under the
+transient project-unique ``_madlib_src`` alias — via
+``spec_from_file_location`` with ``submodule_search_locations``
+pointing at ``SRC_DIR`` — so the legacy modules import under their
+unique package: every relative import inside the package — and inside
+submodules imported afterward via ``_madlib_src.<name>`` — resolves
 against the alias, not the bare top-level name, and stays collision-free
 regardless of collection order.
-
-(A prior version of this loader assumed ``template_madlib/src`` used *bare*
-intra-package imports and execed each submodule as a standalone top-level
-module — that assumption was stale relative to the actual source, which has
-used relative imports throughout since the module was split into multiple
-files, so the bare-exec approach raised ``ImportError: attempted relative
-import with no known parent package`` and could not even collect.)
 """
 
 from __future__ import annotations
@@ -63,14 +57,16 @@ _PKG_ALIAS = "_madlib_src"
 
 
 def _load_src_package() -> ModuleType:
-    """Load this exemplar's ``src`` package under a project-unique alias.
+    """Load this exemplar's ``src/template_madlib`` package under a unique alias.
 
     Every public exemplar ships a top-level ``src`` package, so a bare
     ``sys.path.insert`` + ``from src...`` collides on ``sys.modules['src']``
     once a second project's regression test joins the same pytest session.
-    Registering ``src/__init__.py`` under a namespaced key *before* executing
-    it (with ``submodule_search_locations`` set) lets every relative import
-    inside the package — and inside submodules imported afterward via
+    Registering ``src/template_madlib/__init__.py`` in ``sys.modules``
+    under the transient ``_madlib_src`` alias — via
+    ``spec_from_file_location`` with ``submodule_search_locations``
+    pointing at ``SRC_DIR`` — lets every relative import inside the
+    package — and inside submodules imported afterward via
     ``_madlib_src.<name>`` — resolve against the alias, keeping the real
     tested functions in scope (no mocks) and staying collision-free
     regardless of collection order.
