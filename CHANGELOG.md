@@ -9,6 +9,8 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+## [3.8.0] - 2026-09-21
+
 ### Entry-doc accuracy and backlog reconciliation (2026-09-14)
 ### Root backlog reconciliation — batch 2 (2026-09-15)
 

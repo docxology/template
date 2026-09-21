@@ -3,16 +3,15 @@
 This repository currently has two distinct release surfaces that must not be
 treated as interchangeable:
 
-- The root package metadata and repository tag are `3.6.0` / `v3.6.0`.
+- The root package metadata and repository tag are `3.8.0` / `v3.8.0`.
 - The GitHub release list also contains a newer-published `v1.0.1` entry from
   the standalone publication lane. That entry is not the root package's next
   semantic version and does not version the root `[Unreleased]` notes.
 
-The root checkout therefore remains **unreleased relative to the current
-`CHANGELOG.md` `[Unreleased]` section**. The package version, `v3.6.0` tag, and
-the version badge describe the last root release boundary; they do not claim
-that the current unreleased changes have changelog parity with a new tag or
-GitHub release.
+The `3.8.0` minor release (2026-09-21) carries the TEST-ISOLATION-SYSPATH-1
+completion, the START_HERE deep-audit rework, the cleanup-report snapshot
+thread, and the provenance refresh; it lands via PR #108 and the `v3.8.0` tag
+(the `release.yml` workflow creates the GitHub release on tag push).
 
 Before the next root release, reconcile these surfaces together:
 
