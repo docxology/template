@@ -16,7 +16,7 @@ from _bootstrap import bootstrap_project
 
 PROJECT_ROOT = bootstrap_project()
 
-from knowledge_graph.kg_runner import run_knowledge_graph_pipeline
+from template_literature_meta_analysis.knowledge_graph.kg_runner import run_knowledge_graph_pipeline
 
 from config import (
     CORPUS_PATH as DEFAULT_CORPUS_PATH,
