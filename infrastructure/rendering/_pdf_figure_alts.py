@@ -153,6 +153,11 @@ def _exact_registry_record(
                 f"Tagged-PDF figure label/path mismatch: {label} does not render {label_record.filename}",
                 context={"figure": label, "path": filename, "registry": str(registry.path)},
             )
+        if filename is not None and len(registry.by_filename(filename)) > 1:
+            raise RenderingError(
+                f"Tagged-PDF figure path maps to multiple registry records: {filename}",
+                context={"path": filename, "registry": str(registry.path)},
+            )
         return label_record
     path_records = registry.by_filename(filename)
     if len(path_records) > 1:
