@@ -127,3 +127,13 @@ def test_clean_refuses_to_delete_when_git_cannot_be_consulted(tmp_path: Path, mo
         clean_output_dir_contents(output_dir, set())
 
     assert (output_dir / "file.txt").read_text(encoding="utf-8") == "data"
+
+
+def test_snapshot_fails_closed_on_non_object_cleanup_report(tmp_path: Path) -> None:
+    """Fail-closed: a non-object cleanup_report.json blocks the snapshot instead of NameError."""
+    output_dir = tmp_path / "output"
+    (output_dir / "reports").mkdir(parents=True)
+    (output_dir / "reports" / "cleanup_report.json").write_text("[]", encoding="utf-8")
+
+    with pytest.raises(FileOperationError):
+        create_snapshot(output_dir, stage_num=1, stage_name="Clean Output Directories")
