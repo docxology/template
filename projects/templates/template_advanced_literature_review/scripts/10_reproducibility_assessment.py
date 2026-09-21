@@ -16,7 +16,7 @@ from _bootstrap import bootstrap_project
 
 PROJECT_ROOT = bootstrap_project()
 
-from reproducibility.runner import run_reproducibility_pipeline
+from template_literature_meta_analysis.reproducibility.runner import run_reproducibility_pipeline
 
 from config import (
     CORPUS_PATH as DEFAULT_CORPUS_PATH,

@@ -19,7 +19,7 @@ from _bootstrap import bootstrap_project
 
 bootstrap_project(include_infrastructure=True)
 
-from visualization.figure_runner import generate_all_figures
+from template_literature_meta_analysis.visualization.figure_runner import generate_all_figures
 
 from config import DATA_DIR as DEFAULT_DATA_DIR
 from config import DEFAULT_DPI

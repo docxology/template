@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from config_loader import _load_yaml
+from template_literature_meta_analysis.config_loader import _load_yaml
 
 from literature.corpus import Corpus
 from literature.models import Paper

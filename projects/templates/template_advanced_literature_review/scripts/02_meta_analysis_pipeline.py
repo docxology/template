@@ -16,7 +16,7 @@ from _bootstrap import bootstrap_project
 
 PROJECT_ROOT = bootstrap_project()
 
-from analysis.pipeline_runner import run_meta_analysis_pipeline
+from template_literature_meta_analysis.analysis.pipeline_runner import run_meta_analysis_pipeline
 
 from config import (
     CORPUS_PATH as DEFAULT_CORPUS_PATH,

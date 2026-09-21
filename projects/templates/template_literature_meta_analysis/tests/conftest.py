@@ -1,5 +1,6 @@
 """Pytest configuration for template_literature_meta_analysis tests."""
 
+import importlib.util
 import os
 import sys
 import tempfile
@@ -27,8 +28,6 @@ for _path in (REPO_ROOT, SRC):
 # merge with this exemplar's tests/ tree, so ``from tests.knowledge_graph...``
 # imports cannot resolve now that the exemplar tests shim is deleted. Register
 # the shared LLM-extraction fixtures module directly instead.
-import importlib.util
-
 _FIXTURES_PATH = os.path.join(ROOT, "tests", "knowledge_graph", "llm_extraction_fixtures.py")
 _fixtures_spec = importlib.util.spec_from_file_location("llm_extraction_fixtures", _FIXTURES_PATH)
 _llm_extraction_fixtures = importlib.util.module_from_spec(_fixtures_spec)
