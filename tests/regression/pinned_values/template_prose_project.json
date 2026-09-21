@@ -13,7 +13,7 @@
       "commit": "64f665eb",
       "date": "2026-07-01",
       "reason": "Number of manuscript markdown files analysed by analyze_manuscript over the committed manuscript/ tree; substituted into the abstract Run snapshot as {{FILES_ANALYSED}}.",
-      "script": "PYTHONPATH=projects/templates/template_prose_project:projects/templates/template_prose_project/src:. uv run python -c 'from infrastructure.prose import analyze_manuscript; from src.pipeline.config import load_project_config; from src.manuscript.manuscript_variables import compute_variables; c=load_project_config(\"projects/templates/template_prose_project/manuscript/config.yaml\"); r=analyze_manuscript(\"projects/templates/template_prose_project/manuscript\", long_sentence_threshold=c.prose.long_sentence_threshold); print(compute_variables(config_title=c.title, manuscript_report=r.to_dict()).files_analysed)'"
+      "script": "PYTHONPATH=projects/templates/template_prose_project/src:. uv run python -c 'from infrastructure.prose import analyze_manuscript; from template_prose_project.pipeline.config import load_project_config; from template_prose_project.manuscript.manuscript_variables import compute_variables; c=load_project_config(\"projects/templates/template_prose_project/manuscript/config.yaml\"); r=analyze_manuscript(\"projects/templates/template_prose_project/manuscript\", long_sentence_threshold=c.prose.long_sentence_threshold); print(compute_variables(config_title=c.title, manuscript_report=r.to_dict()).files_analysed)'"
     },
     "abstract_total_words": {
       "commit": "cb53ae389",
@@ -42,7 +42,7 @@
     "bibliography_unused_entries": {
       "commit": "64f665eb",
       "date": "2026-07-01",
-      "reason": "Count of BibTeX entries present in the committed references.bib but never cited in the prose. The Results section claims every cited key resolves and (with the bundled config) the run is green; the committed source has 6 cited / 6 in bib / 0 missing / 0 unused. Re-derived via src.pipeline.prose_facade.parse_bib_keys set-difference against analyze_manuscript citation_keys. NOTE: the stale output/checks.json reports bib_count=7 / 1 unused ('Hand-curated') from a superseded parser run — the pin binds the committed source, not the stale artifact.",
+      "reason": "Count of BibTeX entries present in the committed references.bib but never cited in the prose. The Results section claims every cited key resolves and (with the bundled config) the run is green; the committed source has 6 cited / 6 in bib / 0 missing / 0 unused. Re-derived via template_prose_project.pipeline.prose_facade.parse_bib_keys set-difference against analyze_manuscript citation_keys. NOTE: the stale output/checks.json reports bib_count=7 / 1 unused ('Hand-curated') from a superseded parser run — the pin binds the committed source, not the stale artifact."
       "script": "PYTHONPATH=projects/templates/template_prose_project:projects/templates/template_prose_project/src:. uv run python -c 'from infrastructure.prose import analyze_manuscript; from src.pipeline.config import load_project_config; from src.pipeline.prose_facade import parse_bib_keys; from pathlib import Path; c=load_project_config(\"projects/templates/template_prose_project/manuscript/config.yaml\"); md=Path(\"projects/templates/template_prose_project/manuscript\"); r=analyze_manuscript(md, long_sentence_threshold=c.prose.long_sentence_threshold); bib=parse_bib_keys(md/\"references.bib\"); print(len(sorted(bib - set(r.citation_keys))))'"
     }
   },
