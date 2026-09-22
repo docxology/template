@@ -1,6 +1,6 @@
 # Test Results Summary
 
-Generated: 1970-01-01T00:00:00+00:00 (SOURCE_DATE_EPOCH unset)
+Generated: 2026-08-14T14:20:53+00:00
 
 ## Infrastructure Tests
 
@@ -10,14 +10,14 @@ Generated: 1970-01-01T00:00:00+00:00 (SOURCE_DATE_EPOCH unset)
 
 ## Project Tests
 
-- Passed: 247
+- Passed: 233
 - Failed: 0
 - Skipped: 0
-- Coverage: 96.08%
+- Coverage: 95.69%
 
 ## Summary
 
-- Total Passed: 247
+- Total Passed: 233
 - Total Failed: 0
-- Total Tests: 247
+- Total Tests: 233
 - Status: ✅ PASSED
