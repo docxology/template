@@ -37,7 +37,7 @@ runs:
       shell: bash
       run: |
         set -euo pipefail
-        CHROME_PATH=$(find "$HOME/.cache/puppeteer/chrome-headless-shell" -type f -name 'chrome-headless-shell' | head -n1)
+        CHROME_PATH=$(find "$HOME/.cache/puppeteer" \( -type f -o -type l \) -name 'chrome-headless-shell' 2>/dev/null | head -n1)
         if [ -z "$CHROME_PATH" ]; then
           echo "ERROR: chrome-headless-shell binary not found"
           exit 1
