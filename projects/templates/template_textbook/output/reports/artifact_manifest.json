@@ -948,8 +948,8 @@
     {
       "contract_match": true,
       "path": "output/reports/test_results.json",
-      "sha256": "0146c9a524cf60f4f7be9503d26975af159f82b7266337e23ef4f9047362993d",
-      "size_bytes": 4683,
+      "sha256": "9477f52abfffbe6c4896a6539fc25e4a86e8af5d4974e1c458fcaea7f3e47056",
+      "size_bytes": 4755,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
