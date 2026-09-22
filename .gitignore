@@ -147,6 +147,12 @@ projects/templates/*
 !projects/templates/template_experiment_tree/
 !projects/templates/template_experiment_tree/**
 projects/templates/template_experiment_tree/output/*
+!projects/templates/template_experiment_tree/output/data/
+projects/templates/template_experiment_tree/output/data/*
+!projects/templates/template_experiment_tree/output/data/experiment_tree.json
+!projects/templates/template_experiment_tree/output/reports/
+projects/templates/template_experiment_tree/output/reports/*
+!projects/templates/template_experiment_tree/output/reports/artifact_manifest.json
 !projects/templates/template_data_descriptor/
 !projects/templates/template_data_descriptor/**
 !projects/templates/template_literature_meta_analysis/
