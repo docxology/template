@@ -157,10 +157,10 @@ class ExemplarSnapshot:
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_active_inference", "91.88 %"),
     ExemplarSnapshot("template_advanced_literature_review", "91.96 %"),
-    ExemplarSnapshot("template_autopoiesis", "96.92 %"),
+    ExemplarSnapshot("template_autopoiesis", "96.88 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.33 %"),
     ExemplarSnapshot("template_autoscientists", "97.16 %"),
-    ExemplarSnapshot("template_code_project", "95.27 %"),
+    ExemplarSnapshot("template_code_project", "95.28 %"),
     ExemplarSnapshot("template_data_descriptor", "96.13 %"),
     ExemplarSnapshot("template_eda_notebook", "90.03 %"),
     ExemplarSnapshot("template_formal", "94.50 %"),
@@ -174,11 +174,11 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_prose_project", "95.87 %"),
     ExemplarSnapshot("template_redacted_report", "97.03 %"),
     ExemplarSnapshot("template_registered_report", "94.35 %"),
-    ExemplarSnapshot("template_search_project", "96.28 %"),
+    ExemplarSnapshot("template_search_project", "96.37 %"),
     ExemplarSnapshot("template_sia", "94.39 %"),
-    ExemplarSnapshot("template_storybook", "93.91 %"),
+    ExemplarSnapshot("template_storybook", "95.38 %"),
     ExemplarSnapshot("template_template", "97.56 %"),
-    ExemplarSnapshot("template_textbook", "96.08 %"),
+    ExemplarSnapshot("template_textbook", "96.36 %"),
 )
 
 
