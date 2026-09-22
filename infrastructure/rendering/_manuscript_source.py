@@ -230,7 +230,7 @@ def run_manuscript_variable_script(
             cwd=str(project_root),
             env=env,
             check=False,
-            timeout=300,
+            timeout=900,
         )
     except (subprocess.SubprocessError, OSError) as exc:
         logger.error("Manuscript variable hydration failed to execute: %s", exc)
