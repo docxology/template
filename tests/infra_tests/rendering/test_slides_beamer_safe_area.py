@@ -253,7 +253,9 @@ print("archive-ok; accessible-failed-loud")
     )
 
     assert completed.returncode == 0, completed.stderr
-    assert completed.stdout.strip().endswith("archive-ok; accessible-failed-loud")
+    # uv prints build progress (Building research-project-template ...) to
+    # stdout before the probe output; the probe's final line is the contract.
+    assert "archive-ok; accessible-failed-loud" in completed.stdout
 
 
 @pytest.mark.slow
