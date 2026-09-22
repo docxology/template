@@ -1,0 +1,15 @@
+claims:
+  - id: experiment-tree-frozen-nodes
+    claim: "Answered experiment-tree nodes are frozen; mutation attempts fail closed."
+    evidence:
+      - "src/template_experiment_tree/tree.py"
+      - "tests/test_manuscript_variables.py"
+  - id: experiment-tree-store-roundtrip
+    claim: "The committed tree store round-trips records without rewriting history."
+    evidence:
+      - "src/template_experiment_tree/store.py"
+  - id: experiment-tree-report-projection
+    claim: "Manuscript values project only from answered nodes in the committed tree."
+    evidence:
+      - "src/template_experiment_tree/report.py"
+      - "tests/test_report.py"
