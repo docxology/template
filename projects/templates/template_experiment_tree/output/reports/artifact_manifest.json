@@ -1,0 +1,15 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/data/experiment_tree.json",
+      "sha256": "51b1bafdf4dcc1c914c04e6ccf55614c9f312f229834aa2ba0ad4f1876895d98",
+      "size_bytes": 1081,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    }
+  ],
+  "inventory_mode": "stable-shippable-output-v1",
+  "issues": []
+}

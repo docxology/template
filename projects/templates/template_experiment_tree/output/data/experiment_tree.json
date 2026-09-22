@@ -1,0 +1,40 @@
+{
+  "schema_version": "experiment-tree-v1",
+  "nodes": [
+    {
+      "node_id": "E001",
+      "title": "Baseline: gradient step size sweep",
+      "parent_id": null,
+      "status": "provisional",
+      "run_command": "python scripts/run_baseline.py --steps 5",
+      "answer": null,
+      "outcome": null,
+      "round_number": 1,
+      "notes": [
+        "Root of the experiment tree; all children refine the baseline."
+      ]
+    },
+    {
+      "node_id": "E002",
+      "title": "Child: halve the step size",
+      "parent_id": "E001",
+      "status": "provisional",
+      "run_command": "python scripts/run_baseline.py --steps 5 --scale 0.5",
+      "answer": null,
+      "outcome": null,
+      "round_number": 1,
+      "notes": []
+    },
+    {
+      "node_id": "E003",
+      "title": "Frozen preregistration: momentum follow-up",
+      "parent_id": "E001",
+      "status": "frozen",
+      "run_command": "python scripts/run_baseline.py --steps 10 --scale 0.5 --momentum 0.9",
+      "answer": null,
+      "outcome": null,
+      "round_number": 2,
+      "notes": []
+    }
+  ]
+}
