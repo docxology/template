@@ -430,3 +430,6 @@ run.config.yml
 
 # Agent-ergonomics fleet scratch archive (round 2, 2026-08-31); owner-curated, local-only
 _agent_erg_archive_*/
+
+# omp session-local state (harness-managed, never project content)
+.omp/
