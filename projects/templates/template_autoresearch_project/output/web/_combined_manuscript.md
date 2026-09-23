@@ -400,7 +400,13 @@ The run follows `7` configured stages:
 - Resolve the human-authored program, project topic, and research questions.
 - Build an `AutoResearchPlan` from the domain profile, experiment plan, and
   pipeline DAG.
-- Validate exact stage-gate names declared in `autoresearch.yaml`.
+- Validate exact stage-gate names declared in `autoresearch.yaml`: an entry
+Validation rejects unknown stage names — misspelling a gate name halts configuration before any phase executes.
+  naming a stage absent from `pipeline.yaml` is a validation error
+  (`AUTORESEARCH.STAGE_UNKNOWN`), never silently skipped. The claim substance
+  gate has negative controls in `tests/test_gate_negative_controls.py`, which
+  feeds missing, hollow, and garbage evidence artifacts and asserts each claim
+  is rejected.
 - Evaluate the configured `MNIST` candidate set up to the
   configured iteration budget.
 - Generate claims only from configured questions and local artifact paths.

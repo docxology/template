@@ -112,13 +112,13 @@ missing-data path honestly.
 # Methodology {#sec:methodology}
 
 This section maps each step of the exploratory analysis to the tested function
-that implements it. Every function lives in `src/eda/`, takes a
+that implements it. Every function lives in `src/template_eda_notebook/eda/`, takes a
 `pandas.DataFrame` in, and returns data out — no plotting, no file I/O — so the
 notebook, the analysis script, and this manuscript all reach the same code.
 
 ## Dataset loading and schema
 
-`src/eda/dataset.py::load_dataset()` reads the shipped CSV and coerces the
+`src/template_eda_notebook/eda/dataset.py::load_dataset()` reads the shipped CSV and coerces the
 numeric columns with `pandas.to_numeric(errors="coerce")`. Coercion is
 deliberate: a blank or non-numeric cell becomes `NaN` rather than raising or
 being silently dropped, so missingness is *surfaced* and handled in an explicit
@@ -128,7 +128,7 @@ which downstream functions consult instead of re-sniffing dtypes.
 
 ## Cleaning: explicit, reported row removal
 
-`src/eda/cleaning.py::clean_dataset()` drops any row missing a numeric feature
+`src/template_eda_notebook/eda/cleaning.py::clean_dataset()` drops any row missing a numeric feature
 and returns a `CleaningReport` recording how many rows entered, how many
 remained, and how many were dropped. This exemplar makes a deliberate choice —
 listwise deletion with a visible count — rather than imputation, because a first
@@ -139,7 +139,7 @@ zeros instead of producing `inf`/`NaN`.
 
 ## Descriptive statistics
 
-`src/eda/statistics.py::summary_statistics()` returns one `ColumnSummary` per
+`src/template_eda_notebook/eda/statistics.py::summary_statistics()` returns one `ColumnSummary` per
 numeric column — count of non-missing observations, mean, sample standard
 deviation, minimum, median, and maximum — computed with real pandas
 aggregation. `group_means()` returns the mean of each numeric feature grouped by
@@ -147,7 +147,7 @@ the categorical column, sorted by group name for deterministic output.
 
 ## Correlation structure
 
-`src/eda/correlation.py::correlation_matrix()` returns the Pearson correlation
+`src/template_eda_notebook/eda/correlation.py::correlation_matrix()` returns the Pearson correlation
 matrix of the numeric columns [@tukey1977eda]. The companion
 `strongest_pairs(matrix, top_n)` ranks the distinct off-diagonal feature pairs
 by absolute correlation while preserving sign — usually the single most useful
@@ -156,7 +156,7 @@ investigating. Each unordered pair appears exactly once.
 
 ## Figure-data preparers
 
-Plotting is kept out of the library entirely. `src/eda/figures.py` returns
+Plotting is kept out of the library entirely. `src/template_eda_notebook/eda/figures.py` returns
 *plot-ready data structures* — bin counts and edges for a histogram, a square
 value grid plus labels for a correlation heatmap, and sorted category counts for
 a bar chart — as frozen dataclasses of plain numbers. The thin analysis script
@@ -179,13 +179,19 @@ The project is governed by a strict zero-mock policy, evaluated by running
    that every name imported `from src` exists in the library's public surface,
    and that no cell defines its own `def`/`class`.
 4. **Coverage gate**: CI enforces a ≥90% statement-coverage gate on
-   `projects/templates/template_eda_notebook/src/`; the live figure is tracked in
-   [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
+Falling below that floor fails the gate outright (`--cov-fail-under` enforces it).
+   `projects/templates/template_eda_notebook/src/`; because the threshold is
+   wired through `--cov-fail-under`, any drop below the floor fails the test
+   process itself rather than producing a warning. The live figure is tracked in
+   [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md). Negative
+   control: `tests/test_cleaning.py::TestCleanDataset::test_all_rows_missing_yields_empty`
+   feeds an all-invalid input frame and asserts the documented empty-frame result,
+   so the measured coverage exercises failure behavior, not only happy paths.
 
 ## Figure generation contract
 
 Each figure in `03_results.md` maps to a figure-data preparer in
-`src/eda/figures.py`: `histogram_data` → height histogram,
+`src/template_eda_notebook/eda/figures.py`: `histogram_data` → height histogram,
 `correlation_heatmap_data` → feature-correlation heatmap, and `group_count_data`
 → per-group row counts. Captions name the preparer and the key parameters (bin
 count, value range) so reviewers can navigate from the PDF to the code without
@@ -203,7 +209,7 @@ This section presents the exploratory analysis of the shipped dataset. Every
 figure and the summary table are produced by the
 [EDA analysis orchestrator](https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py)
 (`scripts/eda_analysis.py`),
-which calls the tested figure-data preparers in `src/eda/figures.py`. Running
+which calls the tested figure-data preparers in `src/template_eda_notebook/eda/figures.py`. Running
 the script regenerates the figures under `../figures/` and the summary CSV
 under `output/data/`; the prose below describes what those artifacts show.
 
@@ -222,7 +228,7 @@ leaving a complete-case dataset for the analysis below.
 complete-case dataset, binned by `histogram_data()` and plotted by the analysis
 script.
 
-![Height distribution: bin counts produced by `histogram_data(frame, "height_cm", bins=10)` in `src/eda/figures.py` and plotted as a bar chart by `scripts/eda_analysis.py`. The bin counts sum to the number of complete-case rows; the shape is the roughly bell-shaped spread expected from the generating process.](../figures/height_histogram.png){#fig:height_histogram}
+![Height distribution: bin counts produced by `histogram_data(frame, "height_cm", bins=10)` in `src/template_eda_notebook/eda/figures.py` and plotted as a bar chart by `scripts/eda_analysis.py`. The bin counts sum to the number of complete-case rows; the shape is the roughly bell-shaped spread expected from the generating process.](../figures/height_histogram.png){#fig:height_histogram}
 
 ## Group composition
 
@@ -261,7 +267,7 @@ minimum, median, and maximum for one numeric feature.
 | `resting_hr_bpm` | count, mean, std, min, median, max |
 
 : Summary-statistics table written by the analysis script from
-`src/eda/statistics.py::summary_statistics()`. The concrete numbers are
+`src/template_eda_notebook/eda/statistics.py::summary_statistics()`. The concrete numbers are
 reproduced verbatim by running the script — the manuscript intentionally does
 not transcribe volatile values, so prose and CSV cannot drift. {#tbl:summary_statistics}
 
@@ -395,7 +401,7 @@ contains 120 subject records with the following columns:
 | `weight_kg` | numeric feature | float |
 | `resting_hr_bpm` | numeric feature | float |
 
-These roles are declared once in `src/eda/dataset.py::DatasetSchema`, which the
+These roles are declared once in `src/template_eda_notebook/eda/dataset.py::DatasetSchema`, which the
 statistics, correlation, and figure functions consult. The generating process
 makes weight depend positively on height (a strong correlation) while resting
 heart rate is only weakly related, and a few numeric cells are left blank to
@@ -434,7 +440,7 @@ The typical analysis order is:
 
 ## Relation to figures
 
-| Figure ([@sec:results]) | Figure-data preparer (`src/eda/figures.py`) | Primary inputs |
+| Figure ([@sec:results]) | Figure-data preparer (`src/template_eda_notebook/eda/figures.py`) | Primary inputs |
 |---|---|---|
 | Height histogram | `histogram_data()` | `height_cm` column, 10 bins |
 | Rows per group | `group_count_data()` | `group` column |
