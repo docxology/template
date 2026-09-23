@@ -1213,7 +1213,7 @@ jobs:
         run: >-
           uv run python scripts/pipeline/stage_01_test.py
           --project-only --all-projects --public-projects
-          --project-workers 2
+          --project-workers auto
           --receipt public_matrix_receipt.json
 
       - name: Upload public-matrix receipt
