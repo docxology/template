@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>appendix_format_gallery.md.web</title>
   <style>
@@ -243,6 +243,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -253,14 +262,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -291,12 +332,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -308,7 +393,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -366,6 +462,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -373,13 +471,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -460,8 +613,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -510,6 +662,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -524,6 +682,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -644,7 +808,7 @@ otherwise it renders as a normal block.</p>
 <p>A simple table with column alignment and a cross-referencable caption
 (<span class="citation"
 data-cites="tbl:gallery_alignment">[@tbl:gallery_alignment]</span>):</p>
-<table id="tbl:gallery_alignment">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Column alignment — left, centre, right."><table id="tbl:gallery_alignment" data-responsive-table="true">
 <caption>Column alignment — left, centre, right.</caption>
 <thead>
 <tr>
@@ -670,14 +834,14 @@ data-cites="tbl:gallery_alignment">[@tbl:gallery_alignment]</span>):</p>
 <td style="text-align: right;">0.125</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The values above are mirrored in
 <code>manuscript/assets/data/format_gallery.csv</code> so rendering
 examples remain evidence-addressable fixtures rather than anonymous
 literals.</p>
 <p>A multi-line / grid table (cells may contain longer wrapped
 text):</p>
-<table style="width:93%;">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:93%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 23%" />
 <col style="width: 45%" />
@@ -702,7 +866,7 @@ text):</p>
 <td>problem- dependent</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 id="mathematics-and-units">5. Mathematics and units</h2>
 <p>Inline math: the half-life is <span class="math inline">\(t_{1/2} =
@@ -740,7 +904,7 @@ math-mode units are the portable choice.)</p>
 as <span class="citation"
 data-cites="fig:gallery_line">[@fig:gallery_line]</span>:</p>
 <figure id="fig:gallery_line">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_line.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_line.png" style="width:80.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_line.png" target="_blank" rel="noopener" aria-label="Open full-size figure, A multi-series line plot of three sine waves, produced by visualization.gallery.line_plot ."><img src="../figures/gallery/gallery_line.png" style="width:80.0%"
 alt="Three sinusoidal curves share one time axis, with progressively higher oscillation frequency." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>A multi-series line plot of three sine
 waves, produced by
@@ -751,12 +915,12 @@ waves, produced by
 stacked):</p>
 <div data-layout-ncol="2">
 <figure id="fig:gallery_bar">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_bar.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_bar.png" style="width:48.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_bar.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Bar chart."><img src="../figures/gallery/gallery_bar.png" style="width:48.0%"
 alt="A vertical bar chart compares several labeled categories, with bar height encoding each category&#x27;s value." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Bar chart.</figcaption>
 </figure>
 <figure id="fig:gallery_pie">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_pie.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_pie.png" style="width:48.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_pie.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Pie chart."><img src="../figures/gallery/gallery_pie.png" style="width:48.0%"
 alt="A circular chart is divided into labeled slices whose angles encode category proportions." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Pie chart.</figcaption>
 </figure>
@@ -764,7 +928,7 @@ alt="A circular chart is divided into labeled slices whose angles encode categor
 <p>A multi-panel composite (<span class="citation"
 data-cites="fig:gallery_multipanel">[@fig:gallery_multipanel]</span>):</p>
 <figure id="fig:gallery_multipanel">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_multipanel.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_multipanel.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_multipanel.png" target="_blank" rel="noopener" aria-label="Open full-size figure, A 2×2 composite: line, scatter, bar, and histogram panels."><img src="../figures/gallery/gallery_multipanel.png" style="width:85.0%"
 alt="A two-by-two composite contains a line chart, scatter plot, bar chart, and histogram." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>A 2×2 composite: line, scatter, bar, and
 histogram panels.</figcaption>
@@ -852,7 +1016,7 @@ effect first. A locator narrows the reference [patel2018models].</p>
 <p>Embedded raster image (any PNG/JPG works the same way as a
 figure):</p>
 <figure id="fig:gallery_media">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_heatmap.png" style="width:60.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure, A generated heatmap embedded as a raster image."><img src="../figures/gallery/gallery_heatmap.png" style="width:60.0%"
 alt="A rectangular heatmap uses a light-to-dark color scale to encode values across rows and columns." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>A generated heatmap embedded as a raster
 image.</figcaption>
@@ -863,9 +1027,9 @@ Syntax:</p>
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="al">![Caption for an audio clip.](../assets/media/clip.mp3)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="al">![Caption for a video.](../assets/media/demo.mp4)</span>{width=70%}</span></code></pre></div>
 <p>A downloadable data file lives at <a
-href="../assets/data/sample_dataset.csv"><code>assets/data/sample_dataset.csv</code></a>;
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/assets/data/sample_dataset.csv"><code>assets/data/sample_dataset.csv</code></a>;
 its contents as a table:</p>
-<table id="tbl:gallery_data">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Sample dataset (mirrors assets/data/sample_dataset.csv )."><table id="tbl:gallery_data" data-responsive-table="true">
 <caption>Sample dataset (mirrors
 <code>assets/data/sample_dataset.csv</code>).</caption>
 <thead>
@@ -902,12 +1066,12 @@ its contents as a table:</p>
 <td style="text-align: right;">0.35</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The error-bar figure <span class="citation"
 data-cites="fig:gallery_errorbar">[@fig:gallery_errorbar]</span>
 visualises this kind of data:</p>
 <figure id="fig:gallery_errorbar">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_errorbar.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_errorbar.png" style="width:70.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_errorbar.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Means with standard-error bars."><img src="../figures/gallery/gallery_errorbar.png" style="width:70.0%"
 alt="Six condition means rise from left to right; every point has a vertical standard-error interval." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Means with standard-error
 bars.</figcaption>

@@ -50,9 +50,9 @@
     },
     {
       "rendered_path": "output/manuscript/08_methods_sheaf.md",
-      "rendered_sha256": "cf7738527835c83ffc548d35d353beb646711f4f882514ffabf270f8294071c2",
+      "rendered_sha256": "1751a13c22ffeedeb076e4b53a2882d506b2d26847a4b43385e0e35b77cef78e",
       "source_path": "manuscript/08_methods_sheaf.md",
-      "source_sha256": "76f9912649db83af34e447edda46f478d040d33ec793a41987065c6826b964c5"
+      "source_sha256": "86d291c774e026877483434765134ccc1b12621db3d4cbf5f1c0ee2f3db1a402"
     },
     {
       "rendered_path": "output/manuscript/10_results_mi_sweep.md",
@@ -112,22 +112,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "a548ab282d9bf49bdbff01b3d8d7e39dec2116d08824ea495dd341a2e051c5df",
-      "size_bytes": 58470
+      "sha256": "e111be97c4091eab495d58aa179cf0e835d527ec97b5fd78615a7e454ecb10c9",
+      "size_bytes": 54047
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "e70cacf47015fc303415ddd018df0d18b0a3a041705777e7eef4c6bbabe63615",
-      "size_bytes": 137377
+      "sha256": "dfad0f20fe9a3cc8278ecf9423949caeddebc2fc0127682e1709909c2e74cfdc",
+      "size_bytes": 138192
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "b64f631c785ec9d866ffb937d6e2abf75ad0a6760ec79fd5715b1067d3a95958",
+      "sha256": "082d65062a800747d9d5b6685aacfd81ba768ffbf58a86bef9948edb1d9814b4",
       "size_bytes": 4180
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "a4916bc79dda045bbbb28056bed1a7771ce9e58eb6cea87ec1fda14151628abe",
+      "sha256": "fd46561ffb64710bd85d4931303dc6c10ac27c2be598c12f8b701505ec977ca5",
       "size_bytes": 15046
     }
   },
@@ -135,19 +135,19 @@
   "fingerprints": {
     "config": {
       "file_count": 26,
-      "sha256": "2bd29a2af2c87b8a6be0dd401ca7f4e23336c869f31a51b98133586e41bf207c"
+      "sha256": "fba4ac92326b00c1b8b3310e521d9530bbe174f07d26809f5e5bd515a69bee89"
     },
     "output": {
       "file_count": 177,
-      "sha256": "4f1b2c4fc830dbe9e35c197da9e1c7959071df1e2cd702101cda0c49ad662111"
+      "sha256": "b14364b3b98d92457d2b0a89ea0b6d7fdd0941646cedde25d31d6b230d7efa82"
     },
     "source": {
-      "file_count": 277,
-      "sha256": "4f466519a3e83170699c15bf0b7275b61838fc252f71bcf98d19dc6d198ebeb0"
+      "file_count": 280,
+      "sha256": "aa5db4e66717dba6f1f22effb4060f7fa1570890ad275bd8adbb412e153637f9"
     },
     "stage": {
-      "file_count": 1245,
-      "sha256": "995e28968b759eff7a40a013636e8ba22c114cb59c67b7b15c80e2799e9e1149"
+      "file_count": 1347,
+      "sha256": "f9d8ed68770fecb9076b923aa9db4556c1761a9ac0ebb57bffb33ee0a57ea8d3"
     }
   },
   "project": "templates/template_active_inference",

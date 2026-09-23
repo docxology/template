@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>appendix_authoring_guide.md.web</title>
   <style>
@@ -267,12 +267,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -284,7 +328,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -342,6 +397,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -349,13 +406,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -436,8 +548,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -486,6 +597,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -500,6 +617,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -522,7 +645,7 @@ work.</p>
 <h2 id="the-big-idea-one-source-of-truth">The Big Idea: One Source of
 Truth</h2>
 <p>The book is <strong>data-driven from <a
-href="../config.yaml"><code>config.yaml</code></a></strong>. The list of
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/config.yaml"><code>config.yaml</code></a></strong>. The list of
 parts, chapters, labs, question banks, and reference appendices lives
 there and nowhere else. The Python engine in <code>src/textbook/</code>
 reads that file and the scaffolding scripts in <code>scripts/</code>
@@ -534,8 +657,8 @@ render time from the labels you write.</p>
       -&gt;  add figures / glossary terms / references  -&gt;  audit + tests</code></pre>
 <h2 id="step-1-decide-the-structure-in-config.yaml">Step 1 — Decide the
 Structure in <code>config.yaml</code></h2>
-<p>Open <a href="../config.yaml"><code>config.yaml</code></a>. To add or
-rename a chapter, edit the <code>parts:</code> tree (each chapter has a
+<p>Open <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/config.yaml"><code>config.yaml</code></a>. To add or
+rename a chapter, edit the <code>units:</code> tree (each chapter has a
 <code>stem</code> and a <code>title</code>); to add a lab or question
 bank, add an entry under <code>appendices.labs</code> /
 <code>appendices.questions</code> for the matching part. The stem drives
@@ -596,7 +719,7 @@ chapter matures.</p>
 <p>Figures are deterministic matplotlib output. Each chapter expects a
 placeholder named <code>&lt;part_id&gt;_&lt;stem&gt;.png</code>. To make
 it real, add or edit a function in <a
-href="../../src/visualization/plots.py"><code>src/visualization/plots.py</code></a>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/src/visualization/plots.py"><code>src/visualization/plots.py</code></a>
 (the four worked figures show the pattern), then regenerate:</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/generate_figures.py</span></code></pre></div>
@@ -609,16 +732,16 @@ fallback). Reference the figure in prose with
 term you must update <strong>both</strong>:</p>
 <ol type="1">
 <li><code>GLOSSARY_ANCHORS</code> in <a
-href="../../src/textbook/constants.py"><code>src/textbook/constants.py</code></a></li>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/src/textbook/constants.py"><code>src/textbook/constants.py</code></a></li>
 <li>the matching entry in <a
-href="../glossary.md"><code>glossary.md</code></a></li>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/glossary.md"><code>glossary.md</code></a></li>
 </ol>
 <p>Link a term in prose as <code>[**term**](#gl:&lt;anchor&gt;)</code>.
 The current anchors are
 <code>system, model, parameter, variable, equilibrium, feedback, gradient, threshold, network, dynamics, emergence, regulation, boundary, state, observable</code>.</p>
 <h2 id="step-6-add-a-reference">Step 6 — Add a Reference</h2>
 <p>Citations are <code>[key]</code> and must resolve in <a
-href="../references.bib"><code>references.bib</code></a>. Add a BibTeX
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/references.bib"><code>references.bib</code></a>. Add a BibTeX
 entry, then cite it. Keep <code>CITATION_KEYS</code> in
 <code>constants.py</code> in sync if you add a key that the structural
 contract should track.</p>
@@ -649,9 +772,9 @@ normal state of a freshly scaffolded chapter.</p>
 </ol>
 <!-- STUB: project-specific authoring notes — house style, citation policy,
 figure conventions — go here once you adopt the template. -->
-<p>See also: <a href="appendix_notation.md">Appendix B — Notation</a>,
-<a href="appendix_math_review.md">Appendix C — Mathematical Review</a>,
-and the <a href="README.md">appendices README</a>.</p>
+<p>See also: <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/appendices/appendix_notation.md">Appendix B — Notation</a>,
+<a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/appendices/appendix_math_review.md">Appendix C — Mathematical Review</a>,
+and the <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/appendices/README.md">appendices README</a>.</p>
 </main>
 </body>
 </html>

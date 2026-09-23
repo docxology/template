@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Notebook-to-Tested-Source Extraction for Computational Research" />
@@ -265,6 +265,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -275,14 +284,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -313,12 +354,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -330,7 +415,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -388,6 +484,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -395,13 +493,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -482,8 +635,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -532,6 +684,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -546,6 +704,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -841,13 +1005,14 @@ EDA toolkit.</li>
 class="header-section-number">3</span> Methodology</h1>
 <p>This section maps each step of the exploratory analysis to the tested
 function that implements it. Every function lives in
-<code>src/eda/</code>, takes a <code>pandas.DataFrame</code> in, and
-returns data out — no plotting, no file I/O — so the notebook, the
-analysis script, and this manuscript all reach the same code.</p>
+<code>src/template_eda_notebook/eda/</code>, takes a
+<code>pandas.DataFrame</code> in, and returns data out — no plotting, no
+file I/O — so the notebook, the analysis script, and this manuscript all
+reach the same code.</p>
 <h2 data-number="3.1" id="dataset-loading-and-schema"><span
 class="header-section-number">3.1</span> Dataset loading and schema</h2>
-<p><code>src/eda/dataset.py::load_dataset()</code> reads the shipped CSV
-and coerces the numeric columns with
+<p><code>src/template_eda_notebook/eda/dataset.py::load_dataset()</code>
+reads the shipped CSV and coerces the numeric columns with
 <code>pandas.to_numeric(errors="coerce")</code>. Coercion is deliberate:
 a blank or non-numeric cell becomes <code>NaN</code> rather than raising
 or being silently dropped, so missingness is <em>surfaced</em> and
@@ -858,30 +1023,31 @@ consult instead of re-sniffing dtypes.</p>
 <h2 data-number="3.2" id="cleaning-explicit-reported-row-removal"><span
 class="header-section-number">3.2</span> Cleaning: explicit, reported
 row removal</h2>
-<p><code>src/eda/cleaning.py::clean_dataset()</code> drops any row
-missing a numeric feature and returns a <code>CleaningReport</code>
-recording how many rows entered, how many remained, and how many were
-dropped. This exemplar makes a deliberate choice — listwise deletion
-with a visible count — rather than imputation, because a first EDA pass
-should <em>see</em> the missingness, not paper over it. A separate
+<p><code>src/template_eda_notebook/eda/cleaning.py::clean_dataset()</code>
+drops any row missing a numeric feature and returns a
+<code>CleaningReport</code> recording how many rows entered, how many
+remained, and how many were dropped. This exemplar makes a deliberate
+choice — listwise deletion with a visible count — rather than
+imputation, because a first EDA pass should <em>see</em> the
+missingness, not paper over it. A separate
 <code>normalize_numeric()</code> z-score standardizes the numeric
 columns (mean 0, sample standard deviation 1), with a guard that maps a
 constant or single-row column to zeros instead of producing
 <code>inf</code>/<code>NaN</code>.</p>
 <h2 data-number="3.3" id="descriptive-statistics"><span
 class="header-section-number">3.3</span> Descriptive statistics</h2>
-<p><code>src/eda/statistics.py::summary_statistics()</code> returns one
-<code>ColumnSummary</code> per numeric column — count of non-missing
-observations, mean, sample standard deviation, minimum, median, and
-maximum — computed with real pandas aggregation.
+<p><code>src/template_eda_notebook/eda/statistics.py::summary_statistics()</code>
+returns one <code>ColumnSummary</code> per numeric column — count of
+non-missing observations, mean, sample standard deviation, minimum,
+median, and maximum — computed with real pandas aggregation.
 <code>group_means()</code> returns the mean of each numeric feature
 grouped by the categorical column, sorted by group name for
 deterministic output.</p>
 <h2 data-number="3.4" id="correlation-structure"><span
 class="header-section-number">3.4</span> Correlation structure</h2>
-<p><code>src/eda/correlation.py::correlation_matrix()</code> returns the
-Pearson correlation matrix of the numeric columns <span class="citation"
-data-cites="tukey1977eda">(<a href="#ref-tukey1977eda"
+<p><code>src/template_eda_notebook/eda/correlation.py::correlation_matrix()</code>
+returns the Pearson correlation matrix of the numeric columns <span
+class="citation" data-cites="tukey1977eda">(<a href="#ref-tukey1977eda"
 role="doc-biblioref">Tukey 1977</a>)</span>. The companion
 <code>strongest_pairs(matrix, top_n)</code> ranks the distinct
 off-diagonal feature pairs by absolute correlation while preserving sign
@@ -891,14 +1057,15 @@ pair appears exactly once.</p>
 <h2 data-number="3.5" id="figure-data-preparers"><span
 class="header-section-number">3.5</span> Figure-data preparers</h2>
 <p>Plotting is kept out of the library entirely.
-<code>src/eda/figures.py</code> returns <em>plot-ready data
-structures</em> — bin counts and edges for a histogram, a square value
-grid plus labels for a correlation heatmap, and sorted category counts
-for a bar chart — as frozen dataclasses of plain numbers. The thin
-analysis script (<code>scripts/eda_analysis.py</code>) and notebook
-cells consume these structures and call matplotlib. This keeps the
-library importable on a headless machine and makes every preparer
-testable without a display backend.</p>
+<code>src/template_eda_notebook/eda/figures.py</code> returns
+<em>plot-ready data structures</em> — bin counts and edges for a
+histogram, a square value grid plus labels for a correlation heatmap,
+and sorted category counts for a bar chart — as frozen dataclasses of
+plain numbers. The thin analysis script
+(<code>scripts/eda_analysis.py</code>) and notebook cells consume these
+structures and call matplotlib. This keeps the library importable on a
+headless machine and makes every preparer testable without a display
+backend.</p>
 <h2 data-number="3.6" id="zero-mock-testing-methodology"><span
 class="header-section-number">3.6</span> Zero-mock testing
 methodology</h2>
@@ -921,20 +1088,29 @@ and asserts it is valid nbformat, that every name imported
 <code>from src</code> exists in the library’s public surface, and that
 no cell defines its own <code>def</code>/<code>class</code>.</li>
 <li><strong>Coverage gate</strong>: CI enforces a ≥90%
-statement-coverage gate on
-<code>projects/templates/template_eda_notebook/src/</code>; the live
-figure is tracked in <a
-href="../../../../docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.</li>
+statement-coverage gate on Falling below that floor fails the gate
+outright (<code>--cov-fail-under</code> enforces it).
+<code>projects/templates/template_eda_notebook/src/</code>; because the
+threshold is wired through <code>--cov-fail-under</code>, any drop below
+the floor fails the test process itself rather than producing a warning.
+The live figure is tracked in <a
+href="https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.
+Negative control:
+<code>tests/test_cleaning.py::TestCleanDataset::test_all_rows_missing_yields_empty</code>
+feeds an all-invalid input frame and asserts the documented empty-frame
+result, so the measured coverage exercises failure behavior, not only
+happy paths.</li>
 </ol>
 <h2 data-number="3.7" id="figure-generation-contract"><span
 class="header-section-number">3.7</span> Figure generation contract</h2>
 <p>Each figure in <code>03_results.md</code> maps to a figure-data
-preparer in <code>src/eda/figures.py</code>: <code>histogram_data</code>
-→ height histogram, <code>correlation_heatmap_data</code> →
-feature-correlation heatmap, and <code>group_count_data</code> →
-per-group row counts. Captions name the preparer and the key parameters
-(bin count, value range) so reviewers can navigate from the PDF to the
-code without inferring hidden defaults.</p>
+preparer in <code>src/template_eda_notebook/eda/figures.py</code>:
+<code>histogram_data</code> → height histogram,
+<code>correlation_heatmap_data</code> → feature-correlation heatmap, and
+<code>group_count_data</code> → per-group row counts. Captions name the
+preparer and the key parameters (bin count, value range) so reviewers
+can navigate from the PDF to the code without inferring hidden
+defaults.</p>
 <hr />
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results</h1>
@@ -943,10 +1119,10 @@ dataset. Every figure and the summary table are produced by the <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py">EDA
 analysis orchestrator</a> (<code>scripts/eda_analysis.py</code>), which
 calls the tested figure-data preparers in
-<code>src/eda/figures.py</code>. Running the script regenerates the
-figures under <code>../figures/</code> and the summary CSV under
-<code>output/data/</code>; the prose below describes what those
-artifacts show.</p>
+<code>src/template_eda_notebook/eda/figures.py</code>. Running the
+script regenerates the figures under <code>../figures/</code> and the
+summary CSV under <code>output/data/</code>; the prose below describes
+what those artifacts show.</p>
 <h2 data-number="4.1" id="dataset-and-missingness"><span
 class="header-section-number">4.1</span> Dataset and missingness</h2>
 <p>The dataset contains 120 subject records across three groups
@@ -963,14 +1139,14 @@ class="header-section-number">4.2</span> Distributions</h2>
 height across the complete-case dataset, binned by
 <code>histogram_data()</code> and plotted by the analysis script.</p>
 <figure id="fig:height_histogram">
-<a class="figure-full-size-link" href="../figures/height_histogram.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/height_histogram.png"
+<a class="figure-full-size-link" href="../figures/height_histogram.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Height distribution: bin counts produced by histogram_data(frame, &quot;height_cm&quot;, bins=10) in…"><img src="../figures/height_histogram.png"
 alt="10-bin histogram of 116 non-missing height_cm observations from 142.59 to 193.71. The tallest bar count is 33 in 168.15 to 173.26. Bars encode counts; missing values are excluded and no fitted distribution is implied." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Height distribution: bin counts
 produced by <code>histogram_data(frame, "height_cm", bins=10)</code> in
-<code>src/eda/figures.py</code> and plotted as a bar chart by
-<code>scripts/eda_analysis.py</code>. The bin counts sum to the number
-of complete-case rows; the shape is the roughly bell-shaped spread
-expected from the generating process.</figcaption>
+<code>src/template_eda_notebook/eda/figures.py</code> and plotted as a
+bar chart by <code>scripts/eda_analysis.py</code>. The bin counts sum to
+the number of complete-case rows; the shape is the roughly bell-shaped
+spread expected from the generating process.</figcaption>
 </figure>
 <h2 data-number="4.3" id="group-composition"><span
 class="header-section-number">4.3</span> Group composition</h2>
@@ -978,7 +1154,7 @@ class="header-section-number">4.3</span> Group composition</h2>
 rows fall in each group, computed by <code>group_count_data()</code>
 (labels sorted for deterministic output).</p>
 <figure id="fig:group_counts">
-<a class="figure-full-size-link" href="../figures/group_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/group_counts.png"
+<a class="figure-full-size-link" href="../figures/group_counts.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Rows per group: sorted category labels and aligned counts from group_count_data() ."><img src="../figures/group_counts.png"
 alt="3 bars encode complete-case row counts: alpha: 38; beta: 34; gamma: 44. Largest count 44 occurs for gamma; smallest count 34 occurs for beta. These counts describe sample composition, not group effects." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Rows per group: sorted category
 labels and aligned counts from <code>group_count_data()</code>. The
@@ -993,7 +1169,7 @@ correlation matrix of the three numeric features, computed by
 <code>correlation_heatmap_data()</code>. The diagonal is unity by
 construction and the matrix is symmetric.</p>
 <figure id="fig:correlation_heatmap">
-<a class="figure-full-size-link" href="../figures/correlation_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/correlation_heatmap.png"
+<a class="figure-full-size-link" href="../figures/correlation_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Feature correlation heatmap: values from correlation_heatmap_data()"><img src="../figures/correlation_heatmap.png"
 alt="3-by-3 Pearson correlation heatmap for height_cm, weight_kg, resting_hr_bpm on a fixed minus-one-to-one diverging scale. The diagonal is 1.00. Off-diagonal pairs are height_cm with weight_kg: 0.72; height_cm with resting_hr_bpm: -0.12; weight_kg with resting_hr_bpm: -0.08. Correlations are descriptive and do not establish causation." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Feature correlation heatmap:
 values from <code>correlation_heatmap_data()</code> (which wraps
@@ -1017,9 +1193,10 @@ class="header-section-number">4.5</span> Summary statistics</h2>
 <code>summary_statistics()</code>. Each row reports the count of
 non-missing observations, mean, sample standard deviation, minimum,
 median, and maximum for one numeric feature.</p>
-<table id="tbl:summary_statistics">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 1: Summary-statistics table written by the analysis script from src/template_eda_notebook/eda/statistics.py::su…"><table id="tbl:summary_statistics" data-responsive-table="true">
 <caption>Table 1: Summary-statistics table written by the analysis
-script from <code>src/eda/statistics.py::summary_statistics()</code>.
+script from
+<code>src/template_eda_notebook/eda/statistics.py::summary_statistics()</code>.
 The concrete numbers are reproduced verbatim by running the script — the
 manuscript intentionally does not transcribe volatile values, so prose
 and CSV cannot drift.</caption>
@@ -1043,7 +1220,7 @@ and CSV cannot drift.</caption>
 <td>count, mean, std, min, median, max</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><code>group_means()</code> complements this with the mean of each
 numeric feature within each group; the three group means for height are
 close but not equal, reflecting the mild group structure in the
@@ -1170,7 +1347,7 @@ class="header-section-number">6.1</span> Dataset</h2>
 (<code>data/measurements.csv</code>): a static, committed file with
 fixed content. It contains 120 subject records with the following
 columns:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Column</th>
@@ -1206,13 +1383,13 @@ columns:</p>
 <td>float</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>These roles are declared once in
-<code>src/eda/dataset.py::DatasetSchema</code>, which the statistics,
-correlation, and figure functions consult. The generating process makes
-weight depend positively on height (a strong correlation) while resting
-heart rate is only weakly related, and a few numeric cells are left
-blank to exercise the missing-data path.</p>
+<code>src/template_eda_notebook/eda/dataset.py::DatasetSchema</code>,
+which the statistics, correlation, and figure functions consult. The
+generating process makes weight depend positively on height (a strong
+correlation) while resting heart rate is only weakly related, and a few
+numeric cells are left blank to exercise the missing-data path.</p>
 <h2 data-number="6.2" id="analysis-conditions"><span
 class="header-section-number">6.2</span> Analysis conditions</h2>
 <p>The experiment overlay (<code>experiment_plan.yaml</code>) declares
@@ -1254,7 +1431,7 @@ that just completed.</li>
 </ol>
 <h2 data-number="6.5" id="relation-to-figures"><span
 class="header-section-number">6.5</span> Relation to figures</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -1263,7 +1440,8 @@ class="header-section-number">6.5</span> Relation to figures</h2>
 <thead>
 <tr>
 <th>Figure (sec. <a href="#sec:results">4</a>)</th>
-<th>Figure-data preparer (<code>src/eda/figures.py</code>)</th>
+<th>Figure-data preparer
+(<code>src/template_eda_notebook/eda/figures.py</code>)</th>
 <th>Primary inputs</th>
 </tr>
 </thead>
@@ -1284,7 +1462,7 @@ class="header-section-number">6.5</span> Relation to figures</h2>
 <td>all numeric features</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>This table is descriptive documentation only; it is not executed as
 code during the build.</p>
 <hr />
@@ -1316,7 +1494,7 @@ class="header-section-number">7.2</span> Generated artifact
 registry</h2>
 <p>The analysis scripts write the following artifacts under
 <code>projects/templates/template_eda_notebook/output/</code>:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -1349,7 +1527,7 @@ registry</h2>
 <td><code>generate_measurements()</code> + generator script</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The <code>output/</code> tree is disposable and regenerated on every
 run; it is not the source of truth.</p>
 <h2 data-number="7.3" id="determinism"><span
@@ -1457,7 +1635,7 @@ analytical complexity.</p>
 <h1 data-number="9" id="sec:references"><span
 class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
-href="references.bib"><code>manuscript/references.bib</code></a> and is
+href="https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/manuscript/references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF render. The build pipeline invokes Pandoc with
 <code>--natbib</code>, so every <code>[@key]</code> citation in the
 manuscript is rewritten to the appropriate

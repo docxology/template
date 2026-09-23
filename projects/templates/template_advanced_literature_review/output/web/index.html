@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Synthetic Fixture Exemplar with Source-Aware Retrieval and Optional LLM Analysis" />
@@ -265,6 +265,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -275,14 +284,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -313,12 +354,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -330,7 +415,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -388,6 +484,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -395,13 +493,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -482,8 +635,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -532,6 +684,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -546,6 +704,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -1103,7 +1267,7 @@ URL constant, a pure <code>_parse_*</code> parser function, and a
 error handling. All functions accept an injectable <code>base_url</code>
 parameter for hermetic testing with <code>pytest-httpserver</code> — no
 engine hardcodes its URL inside the function body.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -1174,7 +1338,7 @@ engine hardcodes its URL inside the function body.</p>
 <td>Keyless</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Every new search writes
 <code>output/data/retrieval_report.json</code>, a timestamp-free report
 that records each attempted, skipped, or failed source with fetched,
@@ -1588,7 +1752,7 @@ Evidence</h1>
 research. Their names, scopes, relevant phases, and scores are emitted
 from the knowledge-graph artifacts rather than typed into the
 manuscript.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>ID</th>
@@ -1623,7 +1787,7 @@ manuscript.</p>
 <td>pending</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Scores are descriptive evidence summaries, not calibrated
 probabilities or causal effects. If the knowledge-graph stage is
 disabled, if a live language model is not available, or if the corpus is
@@ -1661,7 +1825,7 @@ first-order descriptive summary of the retained corpus; it is not a
 field-wide estimate of research activity.</p>
 <!-- FIGURE: growth_curve.png -->
 <figure id="fig:growth_curve">
-<a class="figure-full-size-link" href="../figures/growth_curve.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/growth_curve.png" title="Publication Growth Curve"
+<a class="figure-full-size-link" href="../figures/growth_curve.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Publication growth curve for Exoplanet Atmospheres."><img src="../figures/growth_curve.png" title="Publication Growth Curve"
 alt="Dual-axis time series with annual publication counts as bars, a dashed moving-average line, and cumulative publications as a marked line. Annotations identify the peak year, median year, total N, span, and CAGR." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Publication growth curve for
 Exoplanet Atmospheres. Annual publication counts (bars) and cumulative
@@ -1679,7 +1843,7 @@ that count may reflect both publication activity and delays or
 differences in source indexing, so it should not be interpreted as a
 causal trend without a live coverage audit.</p>
 <p><strong>Table 1. Top publication years.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Year</th>
@@ -1728,7 +1892,7 @@ causal trend without a live coverage audit.</p>
 <td>9</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="11.2" id="rq2-subfield-composition"><span
 class="header-section-number">11.2</span> RQ2: Subfield Composition</h2>
 <p>Records distribute across the 4 configured subfields as shown in
@@ -1738,7 +1902,7 @@ Methods is a property of the configured taxonomy and retained corpus. It
 is not a domain prevalence estimate without a live, source-backed review
 and a documented coverage assessment.</p>
 <p><strong>Table 2. Subfield distribution.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Subfield</th>
@@ -1768,10 +1932,10 @@ and a documented coverage assessment.</p>
 <td>14.3%</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- FIGURE: field_summary.png -->
 <figure id="fig:field_summary">
-<a class="figure-full-size-link" href="../figures/field_summary.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/field_summary.png" title="Field Summary"
+<a class="figure-full-size-link" href="../figures/field_summary.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Field summary dashboard for Exoplanet Atmospheres."><img src="../figures/field_summary.png" title="Field Summary"
 alt="Horizontal bars run from zero to each configured subfield&#x27;s paper count; labels at the bar ends give both the count and its percentage of the current corpus, while the title reports the corpus total." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Field summary dashboard for
 Exoplanet Atmospheres. The dashboard combines corpus size, temporal
@@ -1780,7 +1944,7 @@ single overview panel.</figcaption>
 </figure>
 <!-- FIGURE: subfield_distribution.png -->
 <figure id="fig:subfield_distribution">
-<a class="figure-full-size-link" href="../figures/subfield_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/subfield_distribution.png"
+<a class="figure-full-size-link" href="../figures/subfield_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Subfield distribution for Exoplanet Atmospheres."><img src="../figures/subfield_distribution.png"
 title="Subfield Distribution"
 alt="Donut chart partitions the current corpus by configured subfield. Each slice is labelled with its percentage, the centre reports total N, and subfields below two percent are pooled into an Other slice." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Subfield distribution for
@@ -1790,7 +1954,7 @@ of each configured sub-area, with Observational Methods dominant at
 </figure>
 <!-- FIGURE: subfield_timeline.png -->
 <figure id="fig:subfield_timeline">
-<a class="figure-full-size-link" href="../figures/subfield_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/subfield_timeline.png" title="Subfield Timeline"
+<a class="figure-full-size-link" href="../figures/subfield_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Subfield timeline for Exoplanet Atmospheres."><img src="../figures/subfield_timeline.png" title="Subfield Timeline"
 alt="Stacked area chart of publication counts by year. Coloured bands identify configured subfields, and their combined height at each year gives the annual corpus total; an inset reports total N across all bands." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Subfield timeline for Exoplanet
 Atmospheres. Stacked annual publication counts by subfield show how each
@@ -1815,7 +1979,7 @@ The Gini coefficient of citation concentration is 0.421. This statistic
 describes concentration within the retained corpus and should not be
 generalized to citation behavior in the field.</p>
 <p><strong>Table 3. Citation count distribution.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Citations</th>
@@ -1848,10 +2012,10 @@ generalized to citation behavior in the field.</p>
 <td>0</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- FIGURE: citation_distribution.png -->
 <figure id="fig:citation_distribution">
-<a class="figure-full-size-link" href="../figures/citation_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/citation_distribution.png"
+<a class="figure-full-size-link" href="../figures/citation_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Citation distribution for Exoplanet Atmospheres."><img src="../figures/citation_distribution.png"
 title="Citation Distribution"
 alt="Vertical bars show how many retained papers fall in each citation-count bucket; bar-top labels give bucket counts, and the title reports the corpus size, total citations, and Gini concentration coefficient." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Citation distribution for
@@ -1861,7 +2025,7 @@ distribution is a descriptive property of the retained
 corpus.</figcaption>
 </figure>
 <p><strong>Table 4. Top publication venues.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Venue</th>
@@ -1902,10 +2066,10 @@ corpus.</figcaption>
 <td>5</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- FIGURE: top_venues.png -->
 <figure id="fig:top_venues">
-<a class="figure-full-size-link" href="../figures/top_venues.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/top_venues.png" title="Top Venues"
+<a class="figure-full-size-link" href="../figures/top_venues.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 6, Top publication venues for Exoplanet Atmospheres."><img src="../figures/top_venues.png" title="Top Venues"
 alt="Descending horizontal bars rank up to fifteen publication venues by the number of retained corpus papers. Venue names appear on the vertical axis and bar length measures the paper count represented in the current evidence snapshot." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 6: Top publication venues for
 Exoplanet Atmospheres. The horizontal bar chart shows the venues with
@@ -1913,7 +2077,7 @@ the most retained records; it describes this corpus rather than the
 complete field.</figcaption>
 </figure>
 <p><strong>Table 5. Top authors by publication count.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Rank</th>
@@ -1973,10 +2137,10 @@ complete field.</figcaption>
 <td>3</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- FIGURE: author_productivity.png -->
 <figure id="fig:author_productivity">
-<a class="figure-full-size-link" href="../figures/author_productivity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/author_productivity.png"
+<a class="figure-full-size-link" href="../figures/author_productivity.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 7, Author productivity for Exoplanet Atmospheres."><img src="../figures/author_productivity.png"
 title="Author Productivity"
 alt="Descending horizontal bars rank up to twenty authors by their number of retained corpus publications. Author names appear on the vertical axis and bar length encodes publication count after the pipeline&#x27;s record deduplication." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 7: Author productivity for
@@ -2005,7 +2169,7 @@ keyword lists, and phase relevance should be reviewed together.</p>
 and annual breakdown. Where the fixture corpus is used, these values
 demonstrate classification behavior only and are marked synthetic in the
 evidence registry.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Subfield</th>
@@ -2035,7 +2199,7 @@ evidence registry.</p>
 <td>14.3%</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h1 data-number="13" id="results-language-topics-and-embeddings"><span
 class="header-section-number">13</span> Results: Language, Topics, and
@@ -2052,7 +2216,7 @@ assumptions, opacity, retrievals, sources, stellar, coverage, evaluated,
 observed, across, composition, models, provide, competing,
 retrieval.</p>
 <p><strong>Table 3. NMF topics extracted from the corpus.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -2090,7 +2254,7 @@ separates, specific</td>
 dependencies</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The topic labels are computed from the retained corpus and are not
 hand-assigned. Their interpretation should be checked against the
 generated topic-term weights and the configured subfield taxonomy;
@@ -2098,7 +2262,7 @@ fixture-derived topics describe synthetic text patterns, not the
 scientific field.</p>
 <!-- FIGURE: topic_term_bars.png -->
 <figure id="fig:topic_term_bars">
-<a class="figure-full-size-link" href="../figures/topic_term_bars.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
+<a class="figure-full-size-link" href="../figures/topic_term_bars.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 8, Topic-term bar charts for Exoplanet Atmospheres."><img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
 alt="Grid of horizontal bar charts, one panel per NMF topic. Each panel lists up to ten leading terms on the vertical axis, and bar length represents that term&#x27;s weight in the topic." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 8: Topic-term bar charts for
 Exoplanet Atmospheres. Each panel shows the top weighted terms for one
@@ -2115,7 +2279,7 @@ matrix, nearest-neighbour lists, clusters, and two-dimensional
 projection are all reproducible.</p>
 <!-- FIGURE: pca_embeddings.png -->
 <figure id="fig:pca_embeddings">
-<a class="figure-full-size-link" href="../figures/pca_embeddings.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/pca_embeddings.png" title="PCA Embeddings"
+<a class="figure-full-size-link" href="../figures/pca_embeddings.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 9, PCA projection of document embeddings for Exoplanet Atmospheres."><img src="../figures/pca_embeddings.png" title="PCA Embeddings"
 alt="Scatter plot projecting document TF-IDF vectors onto the first two principal components. Points are coloured by configured subfield, axes state explained variance, and arrows label the strongest well-separated term loadings." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 9: PCA projection of document
 embeddings for Exoplanet Atmospheres. Each point represents one document
@@ -2125,7 +2289,7 @@ geography relates to the keyword taxonomy.</figcaption>
 </figure>
 <!-- FIGURE: dendrogram.png -->
 <figure id="fig:dendrogram">
-<a class="figure-full-size-link" href="../figures/dendrogram.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/dendrogram.png" title="Document Dendrogram"
+<a class="figure-full-size-link" href="../figures/dendrogram.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 10, Hierarchical clustering dendrogram of document embeddings."><img src="../figures/dendrogram.png" title="Document Dendrogram"
 alt="Ward-linkage dendrogram clustering configured subfields by their mean TF-IDF vectors. Leaves name subfields, branch height gives Ward distance, and an inset reports the cophenetic correlation of the hierarchy." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 10: Hierarchical clustering
 dendrogram of document embeddings. The tree shows the similarity
@@ -2140,7 +2304,7 @@ subfields: terms with high between-subfield variance (rather than high
 global mean) are selected for display.</p>
 <!-- FIGURE: term_heatmap.png -->
 <figure id="fig:term_heatmap">
-<a class="figure-full-size-link" href="../figures/term_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/term_heatmap.png" title="Term Heatmap"
+<a class="figure-full-size-link" href="../figures/term_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 11, Term heatmap for Exoplanet Atmospheres."><img src="../figures/term_heatmap.png" title="Term Heatmap"
 alt="Heatmap with configured subfields as rows and the twenty terms with greatest between-subfield variance as columns. Cell colour from pale yellow to dark red encodes the subfield&#x27;s mean TF-IDF weight for each term." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 11: Term heatmap for Exoplanet
 Atmospheres. Each cell shows the mean TF-IDF weight of a term within a
@@ -2155,7 +2319,7 @@ entities. The most frequent entities reflect the retained corpus and the
 configured extraction rules; source coverage and fixture status
 determine how they may be interpreted.</p>
 <p><strong>Table 4. Top named entities in abstracts.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Entity</th>
@@ -2168,10 +2332,10 @@ determine how they may be interpreted.</p>
 <td>17</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- FIGURE: entity_bar_chart.png -->
 <figure id="fig:entity_bar_chart">
-<a class="figure-full-size-link" href="../figures/entity_bar_chart.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/entity_bar_chart.png" title="Named Entities"
+<a class="figure-full-size-link" href="../figures/entity_bar_chart.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 12, Top named entities for Exoplanet Atmospheres."><img src="../figures/entity_bar_chart.png" title="Named Entities"
 alt="Descending horizontal bars rank up to twenty named entities extracted from abstracts. Entity labels appear on the vertical axis and bar length represents the number of extracted occurrences in the current corpus." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 12: Top named entities for
 Exoplanet Atmospheres. The horizontal bar chart shows the 20 most
@@ -2180,7 +2344,7 @@ objects, instruments, methods, and concepts in the retained
 corpus.</figcaption>
 </figure>
 <p><strong>Table 5. Top keyphrases by TF-IDF score.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Keyphrase</th>
@@ -2249,7 +2413,7 @@ corpus.</figcaption>
 <td>0.0385</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="13.5" id="embedding-similarity-and-clustering"><span
 class="header-section-number">13.5</span> Embedding Similarity and
 Clustering</h2>
@@ -2259,7 +2423,7 @@ vector space. K-means clustering with <span class="math inline">\(k =
 groups. The top similar document pairs, ranked by cosine similarity,
 reveal the most closely related works in the corpus.</p>
 <p><strong>Table 6. Top 10 most similar document pairs.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -2324,10 +2488,10 @@ reveal the most closely related works in the corpus.</p>
 <td>1.0000</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- FIGURE: similarity_heatmap.png -->
 <figure id="fig:similarity_heatmap">
-<a class="figure-full-size-link" href="../figures/similarity_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/similarity_heatmap.png"
+<a class="figure-full-size-link" href="../figures/similarity_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 13, Document similarity for Exoplanet Atmospheres."><img src="../figures/similarity_heatmap.png"
 title="Similar Document Pairs"
 alt="Ranked horizontal bars, despite the legacy heatmap filename, compare up to fifteen document pairs. Each label identifies a pair of paper IDs and bar length gives cosine similarity on a fixed zero-to-one axis." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 13: Document similarity for
@@ -2338,7 +2502,7 @@ content.</figcaption>
 </figure>
 <!-- FIGURE: word_cloud.png -->
 <figure id="fig:word_cloud">
-<a class="figure-full-size-link" href="../figures/word_cloud.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/word_cloud.png" title="Term Cloud"
+<a class="figure-full-size-link" href="../figures/word_cloud.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 14, Term cloud for Exoplanet Atmospheres."><img src="../figures/word_cloud.png" title="Term Cloud"
 alt="Term cloud derived from topic-term weights: more heavily weighted corpus terms appear in larger type, with a fixed layout seed and a cividis colour scale; word position and colour do not encode additional quantities." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 14: Term cloud for Exoplanet
 Atmospheres. Term sizes are proportional to their TF-IDF weights across
@@ -2347,7 +2511,7 @@ vocabulary.</figcaption>
 </figure>
 <!-- FIGURE: cooccurrence_matrix.png -->
 <figure id="fig:cooccurrence_matrix">
-<a class="figure-full-size-link" href="../figures/cooccurrence_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/cooccurrence_matrix.png" title="Term Co-occurrence"
+<a class="figure-full-size-link" href="../figures/cooccurrence_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 15, Term co-occurrence matrix for Exoplanet Atmospheres."><img src="../figures/cooccurrence_matrix.png" title="Term Co-occurrence"
 alt="Symmetric square matrix for the thirty most frequent document-level terms. Rows and columns list the same terms; increasingly dark blue cells indicate larger normalized within-document co-occurrence, with a zero diagonal." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 15: Term co-occurrence matrix for
 Exoplanet Atmospheres. Each cell shows the normalized co-occurrence
@@ -2387,7 +2551,7 @@ ranked with a stable tiebreaker so the reported hub and authority
 rankings are byte-reproducible across runs despite the floating-point
 non-associativity of the underlying iterative solvers.</p>
 <p><strong>Table 4. Top 5 papers by PageRank.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Rank</th>
@@ -2422,9 +2586,9 @@ non-associativity of the underlying iterative solvers.</p>
 <td>0.034905</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Table 5. Top 5 authority papers (HITS).</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Rank</th>
@@ -2459,9 +2623,9 @@ non-associativity of the underlying iterative solvers.</p>
 <td>0.053951</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Table 6. Top 5 hub papers (HITS).</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Rank</th>
@@ -2496,7 +2660,7 @@ non-associativity of the underlying iterative solvers.</p>
 <td>0.065418</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The highest-ranked paper by PageRank (DOI 10.5555/exoplanet
 atmospheres.0000) is a central node in the retained citation graph. Its
 score indicates relative centrality within this graph, not scientific
@@ -2505,7 +2669,7 @@ may connect threads of the retrieved literature, but their role should
 be checked against their source type and content.</p>
 <!-- FIGURE: citation_network.png -->
 <figure id="fig:citation_network">
-<a class="figure-full-size-link" href="../figures/citation_network.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/citation_network.png" title="Citation Network"
+<a class="figure-full-size-link" href="../figures/citation_network.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 16, Citation network for Exoplanet Atmospheres."><img src="../figures/citation_network.png" title="Citation Network"
 alt="Directed spring-layout citation graph in which arrows represent citation links, node area increases with in-degree, and node colour denotes detected community when available. The five highest-in-degree papers are labelled." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 16: Citation network for Exoplanet
 Atmospheres. Nodes represent papers; directed edges represent citation
@@ -2515,7 +2679,7 @@ algorithm with a fixed seed for reproducibility.</figcaption>
 </figure>
 <!-- FIGURE: degree_distribution.png -->
 <figure id="fig:degree_distribution">
-<a class="figure-full-size-link" href="../figures/degree_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/degree_distribution.png"
+<a class="figure-full-size-link" href="../figures/degree_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 17, Degree distribution for the Exoplanet Atmospheres citation network."><img src="../figures/degree_distribution.png"
 title="Degree Distribution"
 alt="Histogram of paper in-degree in the directed citation graph, with the horizontal axis giving citations received and the vertical axis giving the number of papers; logarithmic axes are used when the degree range is large." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 17: Degree distribution for the
@@ -2542,7 +2706,7 @@ that highly-cited papers tend to cite less-cited papers (dissortative
 mixing), which is typical of citation networks where review papers (high
 in-degree) cite many primary studies (low in-degree).</p>
 <p><strong>Table 7. Top 5 papers by betweenness centrality.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Rank</th>
@@ -2577,7 +2741,7 @@ in-degree) cite many primary studies (low in-degree).</p>
 <td>0.009626</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Papers with high betweenness centrality occupy shortest paths between
 communities in the retained graph. Removing one may alter connectivity,
 but that graph operation does not by itself establish that the paper is
@@ -2601,7 +2765,7 @@ class="header-section-number">15.1</span> Low-Scoring Papers</h2>
 scores, alongside their content and structural component scores.</p>
 <p><strong>Table 8. Low-scoring papers by composite reproducibility
 score.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Paper</th>
@@ -2612,7 +2776,7 @@ score.</strong></p>
 </thead>
 <tbody>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="15.2" id="gating-and-defaults-1"><span
 class="header-section-number">15.2</span> Gating and Defaults</h2>
 <p>This stage is optional and gated by full-text availability. With no
@@ -2620,7 +2784,7 @@ fulltext available and no language model configured, the stage is
 skipped and the reproducibility aggregates read <em>pending</em> — the
 same graceful-degradation convention used by the knowledge-graph
 assertion-extraction stage (see <a
-href="02d_methods_knowledge_graph.md"><code>02d_methods_knowledge_graph.md</code></a>).
+href="manuscript__02d_methods_knowledge_graph.html"><code>02d_methods_knowledge_graph.md</code></a>).
 When fulltext is available and a language model is explicitly
 configured, the mean score, low-score count, and per-paper table are
 populated from extracted workflow graphs. The default fixture run does
@@ -2671,7 +2835,7 @@ class="header-section-number">16.2</span> Knowledge Graph Results</h2>
 assertions from the eligible sample. The configuration-derived
 hypothesis table is the authoritative mapping from review question to
 score:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>ID</th>
@@ -2706,7 +2870,7 @@ score:</p>
 <td>pending</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The configured scores are descriptive evidence summaries, not
 calibrated probabilities, causal effects, or conclusions about
 instrument performance. The table should be read together with the claim
@@ -2996,7 +3160,7 @@ hypotheses.</p>
 class="header-section-number">20.6</span> Artifacts</h2>
 <p>Intermediate and final outputs live under <code>output/</code> and
 are disposable and regenerable:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -3072,7 +3236,7 @@ hypothesis-score claim boundary</td>
 <td>Abstract/OA/PDF coverage report</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h1 data-number="21" id="appendix-c-accessibility-and-provenance"><span
 class="header-section-number">21</span> Appendix C: Accessibility and
@@ -3139,7 +3303,7 @@ regenerated artifacts and source-level provenance.</p>
 <hr />
 <h1 data-number="22" id="glossary"><span
 class="header-section-number">22</span> Glossary</h1>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -3212,7 +3376,7 @@ corpus).</td>
 number regenerable.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h1 data-number="23" id="references"><span
 class="header-section-number">23</span> References</h1>

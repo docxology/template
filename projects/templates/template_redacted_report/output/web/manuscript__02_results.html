@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_results.md.web</title>
   <style>
@@ -202,12 +202,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -219,7 +263,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -277,6 +332,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -284,13 +341,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -371,8 +483,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -421,6 +532,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -435,6 +552,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -468,7 +591,7 @@ markers in sanitized text.</li>
 <p>The canonical run’s measured values are bound to
 <code>output/reports/redaction_audit.json</code> by the
 manuscript-binding tests:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Metric</th>
@@ -517,7 +640,7 @@ manuscript-binding tests:</p>
 <td>3</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Because the intelligence policy blocks on warnings and the fixture
 retains two warning-level residual markers,
 <code>final_release_recommended</code> is false even though the packet
@@ -556,7 +679,9 @@ the audited version without comparing source text directly.</p>
 <h2 id="review-gate">Review Gate</h2>
 <p>The release gate requires three reviewer roles: originator,
 classification reviewer, and release authority. Each reviewer provides a
-non-empty rationale. The fixture reviews all approve, yielding:</p>
+non-empty rationale. The fixture reviews all approve, yielding: The
+complementary input is also enforced: missing roles or empty rationales
+mean the release gate fails closed.</p>
 <ul>
 <li><strong>Approved</strong>: true.</li>
 <li><strong>Approval count</strong>: 3.</li>
@@ -579,7 +704,7 @@ records:</p>
 <li>Kmyth sidecar count and filenames (when Kmyth is available).</li>
 </ul>
 <figure id="fig:disclosure_control_matrix">
-<a class="figure-full-size-link" href="../figures/disclosure_control_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/disclosure_control_matrix.png"
+<a class="figure-full-size-link" href="../figures/disclosure_control_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Development proof matrix: four redaction styles"><img src="../figures/disclosure_control_matrix.png"
 alt="A four-by-four grid of redaction style tokens (blackout, whiteout, grayout, blur) on PDF backgrounds (white, gray, black, blur), with the note that all sixteen variants apply identical source-safe redaction decisions." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Development proof matrix: four redaction
 styles (blackout, whiteout, grayout, blur) rendered across four PDF
@@ -610,7 +735,7 @@ did not exhaust the swtpm transient object slots.</p>
 <h2 id="residual-risk-detection">Residual Risk Detection</h2>
 <p>The residual-risk detector scans sanitized text for common
 public-release leaks:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 56%" />
 <col style="width: 43%" />
@@ -656,7 +781,7 @@ public-release leaks:</p>
 <code>selector</code>, <code>location</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Each detected marker generates a warning finding. The mosaic risk
 score aggregates residual markers across all segments.</p>
 <h1 id="discussion">Discussion</h1>
