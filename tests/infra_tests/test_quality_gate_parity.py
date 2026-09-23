@@ -60,7 +60,7 @@ def test_ci_public_matrix_uses_current_stage_cli_contract() -> None:
     workflow = (REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
 
     assert "--project-only --all-projects --public-projects" in workflow
-    assert "--project-workers 2" in workflow
+    assert "--project-workers auto" in workflow
     assert "--public-scope" not in workflow
     assert "--workers 2" not in workflow
 
