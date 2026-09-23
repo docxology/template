@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>08_methods_sheaf.md.web</title>
   <style>
@@ -243,6 +243,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -253,14 +262,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -291,12 +332,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -308,7 +393,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -366,6 +462,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -373,13 +471,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -460,8 +613,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -510,6 +662,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -524,6 +682,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -561,14 +725,28 @@ alt/caption metadata; the all-quality flag is <code>true</code>.</p>
 <p>The visualization gate is deliberately row-level. It requires
 declared visual/evidence roles (<code>true</code>), artifact-backed
 paper claims (<code>true</code>), section bindings (<code>true</code>),
-RGB nonblank image renders, hashes, and source-map agreement. The
-statistical bridge then expands 7 statistically backed figures into 7
-figure-source-scholarship rows with connected status <code>true</code>,
-manuscript-reference status <code>true</code>, and visualization-bound
-reference status <code>true</code>.</p>
-<p>The claim ledger is also checked at row level rather than as prose
-metadata. <code>claim_evidence_audit.json</code> resolves 97 claim rows
-to live artifacts (<code>true</code>) and replays their typed predicates
+RGB nonblank image renders, hashes, and source-map agreement. A
+registered figure whose render, hash, or source map is absent or
+mismatched fails the row-level audit (negative control: deleting an
+output render flips <code>true</code> to false during recomposition).
+Rows missing a declared role still fail the all-quality flag — a
+known-wrong row is flagged by the audit rather than implicitly satisfied
+(negative control:
+<code>tests/test_figures.py::test_visualization_quality_audit_rejects_stale_section_and_source_rows</code>).
+The statistical bridge then expands 7 statistically backed figures into
+7 figure-source-scholarship rows with connected status
+<code>true</code>, manuscript-reference status <code>true</code>, and
+visualization-bound reference status <code>true</code>. Rows lacking
+declared roles are rejected outright — an undeclared visualization
+cannot slip past the gate.</p>
+<p>Negative controls for these gates live in <code>tests/gates/</code>
+(e.g. <code>test_validate_outputs_negative_missing_sheaf_matrix</code>,
+<code>test_figures_nonblank_negative_blank_png</code>) and
+<code>tests/test_track_consolidation_negative.py</code> asserts forged
+or missing rows fail closed. The claim ledger is also checked at row
+level rather than as prose metadata.
+<code>claim_evidence_audit.json</code> resolves 97 claim rows to live
+artifacts (<code>true</code>) and replays their typed predicates
 (<code>true</code>), yielding the promoted completeness flag
 <code>true</code>.</p>
 <h2 id="compose-commands">Compose commands</h2>
@@ -717,7 +895,7 @@ a content-level audit over the same base, not an additional topological
 law.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:sheaf_layers_overview">
-<a class="figure-full-size-link" href="../figures/sheaf_layers_overview.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/sheaf_layers_overview.png" style="width:98.0%"
+<a class="figure-full-size-link" href="../figures/sheaf_layers_overview.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Sheaf layers overview: registry stack"><img src="../figures/sheaf_layers_overview.png" style="width:98.0%"
 data-fig-alt="Two-panel overview of sheaf fragment layers. Left panel shows 34 composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across 17 manifest rows and 34 tracks."
 alt="Two-panel overview of sheaf fragment layers. Left panel shows 34 composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across 17 manifest rows and 34 tracks." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Sheaf layers overview: registry stack
@@ -727,7 +905,7 @@ generated from
 <code>output/data/sheaf_coverage_matrix.json</code>.</figcaption>
 </figure>
 <figure id="fig:semantic_gluing_graph">
-<a class="figure-full-size-link" href="../figures/semantic_gluing_graph.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/semantic_gluing_graph.png" style="width:95.0%"
+<a class="figure-full-size-link" href="../figures/semantic_gluing_graph.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Semantic gluing graph: configured producers, generated evidence artifacts"><img src="../figures/semantic_gluing_graph.png" style="width:95.0%"
 data-fig-alt="Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate."
 alt="Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Semantic gluing graph: configured
@@ -735,7 +913,7 @@ producers, generated evidence artifacts, and validation consumers for
 the multi-track sheaf certificate.</figcaption>
 </figure>
 <figure id="fig:track_lane_promotion_map">
-<a class="figure-full-size-link" href="../figures/track_lane_promotion_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/track_lane_promotion_map.png" style="width:98.0%"
+<a class="figure-full-size-link" href="../figures/track_lane_promotion_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Track-lane promotion map: 32 pipeline-to-sheaf rows with complete promotion status true."><img src="../figures/track_lane_promotion_map.png" style="width:98.0%"
 data-fig-alt="Two-panel matrix generated from track_lane_matrix.json. The left panel lists pipeline tracks against producer, artifact, manuscript consumer, typed claim, semantic restriction, validation gate, and negative control obligations. The right panel shows the sheaf fragment lanes bound to each pipeline track."
 alt="Two-panel matrix generated from track_lane_matrix.json. The left panel lists pipeline tracks against producer, artifact, manuscript consumer, typed claim, semantic restriction, validation gate, and negative control obligations. The right panel shows the sheaf fragment lanes bound to each pipeline track." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Track-lane promotion map: 32
@@ -743,7 +921,7 @@ pipeline-to-sheaf rows with complete promotion status true. Left: seven
 promotion-rule obligations; right: sheaf fragment bindings.</figcaption>
 </figure>
 <figure id="fig:artifact_contract_map">
-<a class="figure-full-size-link" href="../figures/artifact_contract_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/artifact_contract_map.png" style="width:98.0%"
+<a class="figure-full-size-link" href="../figures/artifact_contract_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Artifact contract map: 86 generated artifact rows with complete contract status true"><img src="../figures/artifact_contract_map.png" style="width:98.0%"
 data-fig-alt="Matrix generated from artifact_contract_index.json. Rows are generated artifacts; columns show producer configured, source present, claim bound or exempt, validation gate, negative control, freshness hash, copied-output parity, and complete contract status."
 alt="Matrix generated from artifact_contract_index.json. Rows are generated artifacts; columns show producer configured, source present, claim bound or exempt, validation gate, negative control, freshness hash, copied-output parity, and complete contract status." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Artifact contract map: 86 generated
@@ -752,7 +930,7 @@ parity complete true. Cycle rows are explicit in
 <code>output/data/artifact_contract_index.json</code>.</figcaption>
 </figure>
 <figure id="fig:scholarship_source_map">
-<a class="figure-full-size-link" href="../figures/scholarship_source_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/scholarship_source_map.png" style="width:95.0%"
+<a class="figure-full-size-link" href="../figures/scholarship_source_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Scholarship source map: 21 source rows across 21 method roles and 10 source families."><img src="../figures/scholarship_source_map.png" style="width:95.0%"
 data-fig-alt="Five-column source map generated from the scholarship source matrix. Each row links a bibliography key to a DOI or URL locator, manuscript citation status, guarded scope boundary, method role, and generated evidence artifact; green borders mark rows rederived from bibliography entries, manuscript citations, registered tracks, bound manuscript sections, and existing artifacts."
 alt="Five-column source map generated from the scholarship source matrix. Each row links a bibliography key to a DOI or URL locator, manuscript citation status, guarded scope boundary, method role, and generated evidence artifact; green borders mark rows rederived from bibliography entries, manuscript citations, registered tracks, bound manuscript sections, and existing artifacts." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Scholarship source map: 21 source rows
@@ -760,7 +938,7 @@ across 21 method roles and 10 source families. Connected status: true;
 row evidence rederived: true.</figcaption>
 </figure>
 <figure id="fig:security_posture_map">
-<a class="figure-full-size-link" href="../figures/security_posture_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/security_posture_map.png" style="width:96.0%"
+<a class="figure-full-size-link" href="../figures/security_posture_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Security posture map: 9 controls, 7 enforced"><img src="../figures/security_posture_map.png" style="width:96.0%"
 data-fig-alt="Matrix generated from security_posture_audit.json. Rows are defensive controls such as public data boundary, offline reproducibility, hash integrity, release parity, claim traceability, formal boundary, secret scan, signed attestation, and zero-trust runtime boundary; columns show evidence, validator, negative-control, scoping, and overall status."
 alt="Matrix generated from security_posture_audit.json. Rows are defensive controls such as public data boundary, offline reproducibility, hash integrity, release parity, claim traceability, formal boundary, secret scan, signed attestation, and zero-trust runtime boundary; columns show evidence, validator, negative-control, scoping, and overall status." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Security posture map: 9 controls, 7
@@ -916,7 +1094,7 @@ validation failure before PDF or web outputs are accepted.</p>
 registry</h2>
 <p>Compose order and renderer bindings from
 <code>manuscript/sheaf/tracks.yaml</code>.</p>
-<table style="width:100%;">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 13%" />
@@ -1271,7 +1449,7 @@ evidence.</td>
 <td>No</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Track count:</strong> 34 registered fragment types.</p>
 <!-- sheaf-layers:binding-matrix -->
 <h2 id="imrad-binding-matrix">IMRAD binding matrix</h2>
@@ -1282,7 +1460,7 @@ not listed for a row is absent (not bound).</p>
 <code>output/data/sheaf_coverage_matrix.json</code> and visualized in
 <span class="citation"
 data-cites="fig:sheaf_coverage_heatmap">[@fig:sheaf_coverage_heatmap]</span>.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -1417,10 +1595,10 @@ data-cites="fig:sheaf_coverage_heatmap">[@fig:sheaf_coverage_heatmap]</span>.</p
 <td>—</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Totals:</strong> 95 present / 95 bound / 0 missing.</p>
 <!-- sheaf-layers:legend -->
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Symbol</th>
@@ -1445,12 +1623,12 @@ data-cites="fig:sheaf_coverage_heatmap">[@fig:sheaf_coverage_heatmap]</span>.</p
 <td><strong>Missing</strong> (bound but fragment file absent)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- sheaf-layers:section-status -->
 <h2 id="section-track-status">Section-track status</h2>
 <p>Generated status for the current manuscript sheaf, summarized per
 composable section.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 14%" />
 <col style="width: 14%" />
@@ -1567,12 +1745,12 @@ composable section.</p>
 <td><code>fully_sheafed</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Section status:</strong> 12 / 12 composable sections fully
 sheafed; 0 required bound fragments missing.</p>
 <!-- sheaf-layers:track-status -->
 <h2 id="track-status">Track status</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 12%" />
 <col style="width: 12%" />
@@ -1901,11 +2079,11 @@ sheafed; 0 required bound fragments missing.</p>
 <td><code>complete</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Status cells:</strong> 578 section-track cells.</p>
 <!-- sheaf-layers:render-log -->
 <h2 id="render-and-logging-summary">Render and logging summary</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 20%" />
@@ -1980,11 +2158,11 @@ sheafed; 0 required bound fragments missing.</p>
 <td>16 composed markdown files</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Render events:</strong> 8.</p>
 <!-- sheaf-layers:evidence-crosswalk -->
 <h2 id="evidence-crosswalk">Evidence crosswalk</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -2049,11 +2227,11 @@ sheafed; 0 required bound fragments missing.</p>
 <td>validate_outputs, figure_registry</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Claim rows:</strong> 97 typed evidence claims.</p>
 <!-- sheaf-layers:artifact-producers -->
 <h2 id="artifact-producer-graph">Artifact producer graph</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -2526,11 +2704,11 @@ sheafed; 0 required bound fragments missing.</p>
 <td>methods_sheaf, appendix_full_sheaf</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Producer issues:</strong> 0.</p>
 <!-- sheaf-layers:semantic-restrictions -->
 <h2 id="semantic-gluing-restrictions">Semantic gluing restrictions</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Restriction</th>
@@ -2639,14 +2817,14 @@ sheafed; 0 required bound fragments missing.</p>
 <td><code>True</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- sheaf-layers:track-lane-matrix -->
 <h2 id="track-lane-matrix">Track-lane matrix</h2>
 <p>Every pipeline row is shown below in canonical order. The
 source-owned full matrix in output/data/track_lane_matrix.json remains
 the authority for exact source paths, claim IDs, semantic-restriction
 IDs, gate IDs, negative-control IDs, and promotion cells.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -2991,7 +3169,7 @@ consumers; 44 claims; 2 semantic restrictions. Gates: validate
 manuscript. Negative control: track lane matrix row only forgery.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Pipeline rows:</strong> 32 total; 31 required; every row
 shown.</p>
 <!-- sheaf-layers:track-improvement-scope -->
@@ -3000,7 +3178,7 @@ shown.</p>
 full matrix in output/data/track_improvement_scope.json remains the
 authority for exact priorities, scope text, gate or predicate IDs,
 negative-control IDs, and promotion fields.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -3339,7 +3517,7 @@ licensing/privacy, deterministic replay, and typed claim gates
 exist.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Improvement rows:</strong> 39 total; 32 live / 2 optional / 5
 blocked; every row shown.</p>
 </main>
