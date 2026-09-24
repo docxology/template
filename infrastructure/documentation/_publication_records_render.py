@@ -139,12 +139,16 @@ def render_publication_records_doc(
             _relative_link(record.config_path, repo_root, repo_root / "docs" / "_generated"),
         )
         citation_link = _markdown_link(
-            "`CITATION.cff`",
-            _relative_link(record.citation_path, repo_root, repo_root / "docs" / "_generated"),
+            "`CITATION.cff`" if record.citation_path.is_file() else "missing",
+            _relative_link(record.citation_path, repo_root, repo_root / "docs" / "_generated")
+            if record.citation_path.is_file()
+            else "",
         )
         zenodo_link = _markdown_link(
-            "`.zenodo.json`",
-            _relative_link(record.zenodo_json_path, repo_root, repo_root / "docs" / "_generated"),
+            "`.zenodo.json`" if record.zenodo_json_path.is_file() else "missing",
+            _relative_link(record.zenodo_json_path, repo_root, repo_root / "docs" / "_generated")
+            if record.zenodo_json_path.is_file()
+            else "",
         )
         codemeta_link = _markdown_link(
             "`codemeta.json`" if record.codemeta_path.is_file() else "missing",
