@@ -279,7 +279,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 7.079324722290039
+      "total_size_mb": 7.079327583312988
     },
     "figures": {
       "files": 13,
@@ -288,7 +288,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.44794464111328125
+      "size_mb": 0.44794654846191406
     },
     "stable_inventory": {
       "categories": {
@@ -310,7 +310,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 469704
+          "size_bytes": 469706
         },
         "reports": {
           "files": 5,
@@ -330,7 +330,7 @@
         },
         "slides": {
           "files": 10,
-          "size_bytes": 658673
+          "size_bytes": 658674
         },
         "web": {
           "files": 14,
@@ -339,7 +339,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 384,
-      "total_size_bytes": 7423210
+      "total_size_bytes": 7423213
     }
   },
   "recommendations": [],
@@ -350,11 +350,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-23T18:03:20Z",
+  "timestamp": "2026-09-23T21:54:53Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "1118538105004f659ba000edaf5d956b1279f8585545739d36e5b47ab9b53518",
+      "sha256": "ac129967f3c7391906ac3e0a037cc61126c70fafa27c59b0ed33d5ca1aa92221",
       "size_bytes": 129209
     },
     "combined_manuscript": {
@@ -432,11 +432,11 @@
     "fingerprints": {
       "config": {
         "file_count": 18,
-        "sha256": "d80e567a9b712f0c267d4eddbe0aafa4baf309e0b983e8b5440015e74be28455"
+        "sha256": "e129556f0e6339f7f1b9d25cc364a1045047873904e80add2c582bb792a8848a"
       },
       "output": {
         "file_count": 384,
-        "sha256": "762b40188ff51967501609fabcfcc9e85106d059719e0208539a62d4959da4d9"
+        "sha256": "32368dfade9663336416a16f5d6ec78c040536c8001d9b395ecb2fe0fc588134"
       },
       "source": {
         "file_count": 48,

@@ -14,9 +14,11 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[4]))  # repo root (for `infrastructure`)
 
 from template_experiment_tree import ManuscriptVariablesError, generate_variables  # noqa: E402
 from template_experiment_tree.store import default_store_path  # noqa: E402
+from infrastructure.rendering import write_resolved_manuscript_tree  # noqa: E402
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -33,6 +35,14 @@ def main(argv: list[str] | None = None) -> int:
     except ManuscriptVariablesError as exc:
         print(f"FAILED: {exc}")
         return 1
+    flat: dict[str, str] = {}
+    for key, value in variables.items():
+        if key == "exp_sections" and isinstance(value, dict):
+            for section_name, section_text in value.items():
+                flat["EXP_SECTIONS_" + section_name.upper()] = str(section_text)
+        else:
+            flat[key.upper()] = value if isinstance(value, str) else json.dumps(value)
+    write_resolved_manuscript_tree(PROJECT_ROOT, flat)
     print(f"wrote {out} ({len(variables)} variables)")
     print(json.dumps({k: v for k, v in variables.items() if not isinstance(v, dict)}, indent=2))
     return 0
