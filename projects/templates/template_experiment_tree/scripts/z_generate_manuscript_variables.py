@@ -18,7 +18,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[4]))  # repo root (for `
 
 from template_experiment_tree import ManuscriptVariablesError, generate_variables  # noqa: E402
 from template_experiment_tree.store import default_store_path  # noqa: E402
-from infrastructure.rendering import write_resolved_manuscript_tree  # noqa: E402
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -42,6 +41,11 @@ def main(argv: list[str] | None = None) -> int:
                 flat["EXP_SECTIONS_" + section_name.upper()] = str(section_text)
         else:
             flat[key.upper()] = value if isinstance(value, str) else json.dumps(value)
+    try:
+        from infrastructure.rendering import write_resolved_manuscript_tree  # noqa: E402
+    except ImportError as exc:  # yaml/latex deps absent (e.g. bare smoke-test interpreter)
+        print(f"WARNING: resolved-manuscript injection skipped ({exc})")
+        return 0
     write_resolved_manuscript_tree(PROJECT_ROOT, flat)
     print(f"wrote {out} ({len(variables)} variables)")
     print(json.dumps({k: v for k, v in variables.items() if not isinstance(v, dict)}, indent=2))
