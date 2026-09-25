@@ -803,8 +803,8 @@ Executable-publication scholarship sharpens that norm. Executable research compe
 
 - **Seed:** 431
 - **Config hash:** 1dc0b6fceacf6b95
-- **Generation timestamp:** 2026-09-24T17:14:30Z
-- **Python version:** 3.12.13
+- **Generation timestamp:** 2026-09-25T17:34:30Z
+- **Python version:** 3.14.6
 
 ## Artifact inventory
 
@@ -828,7 +828,7 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 ./run.sh --project templates/template_gold_refinement --pipeline --core-only
 ```
 
-A reproduction report should record command exit status, the source revision, `1dc0b6fceacf6b95`, Python 3.12.13, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
+A reproduction report should record command exit status, the source revision, `1dc0b6fceacf6b95`, Python 3.14.6, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
 
 ## Config ownership
 

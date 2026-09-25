@@ -199,7 +199,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 0.75091552734375
+      "total_size_mb": 0.7509078979492188
     },
     "figures": {
       "files": 4,
@@ -208,7 +208,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.1541748046875
+      "size_mb": 0.1541767120361328
     },
     "stable_inventory": {
       "categories": {
@@ -222,7 +222,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 161664
+          "size_bytes": 161666
         },
         "reports": {
           "files": 3,
@@ -230,7 +230,7 @@
         },
         "slides": {
           "files": 9,
-          "size_bytes": 320002
+          "size_bytes": 319992
         },
         "web": {
           "files": 12,
@@ -239,7 +239,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 32,
-      "total_size_bytes": 787392
+      "total_size_bytes": 787384
     }
   },
   "recommendations": [],
@@ -250,11 +250,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-23T21:54:53Z",
+  "timestamp": "2026-09-25T16:18:50Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "8cf4fbe6d458e17c73066e59a3fd6c77d3d7c6c7f6120b784ef10cdb393e926a",
+      "sha256": "45bab9b3fb2239d8bdec3ccd59297ef3c54190e8dde042115b6c6e95b3646a83",
       "size_bytes": 9721
     },
     "combined_manuscript": {
@@ -326,19 +326,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "e26fd90e2e3bbdaed35fabf0c7ae59cc25907314851343440705e590a4b43677"
+        "sha256": "ecf187a8fa8c06d78d545f126c68f740e356ff915de973de330b4b3b88197522"
       },
       "output": {
         "file_count": 32,
-        "sha256": "ff8129099209febc1a7fe1b2987e5e67fe9059cb452bfcfa0817d1aa5ca71563"
+        "sha256": "13889f5eda535fb779ec4564cd0f0c1b3f527a35c5922dcc70de54be1f76ff7b"
       },
       "source": {
         "file_count": 35,
         "sha256": "34b88a47e99aa21b76af5a437bdd7157d8e8c0eaeb0205f725b48a98666a6ac5"
       },
       "stage": {
-        "file_count": 1347,
-        "sha256": "f9d8ed68770fecb9076b923aa9db4556c1761a9ac0ebb57bffb33ee0a57ea8d3"
+        "file_count": 1221,
+        "sha256": "235cf555bdfab6321e7f19d29d2f370de85a32bd255882e11878403102049041"
       }
     },
     "project": "templates/template_eda_notebook",
