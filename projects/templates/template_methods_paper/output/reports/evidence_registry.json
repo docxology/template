@@ -1970,7 +1970,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:36Z",
+      "checked_at": "2026-09-25T18:01:05Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes",
       "source_field": "$.combined_size_bytes",
@@ -1978,11 +1978,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "37291"
+      "value": "37290"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:36Z",
+      "checked_at": "2026-09-25T18:01:05Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes (numeric variant)",
       "source_field": "$.combined_size_bytes",
@@ -1990,7 +1990,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "372.91"
+      "value": "372.9"
     },
     {
       "active": true,
@@ -2138,7 +2138,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:36Z",
+      "checked_at": "2026-09-25T18:01:05Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[5].size_bytes",
       "source_field": "$.ordered_inputs[5].size_bytes",
@@ -2146,11 +2146,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "4070"
+      "value": "4069"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:29:36Z",
+      "checked_at": "2026-09-25T18:01:05Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[5].size_bytes (numeric variant)",
       "source_field": "$.ordered_inputs[5].size_bytes",
@@ -2158,7 +2158,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "40.7"
+      "value": "40.69"
     },
     {
       "active": true,

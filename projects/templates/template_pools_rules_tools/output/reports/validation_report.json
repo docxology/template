@@ -215,7 +215,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 4.125592231750488
+      "total_size_mb": 4.125612258911133
     },
     "figures": {
       "files": 10,
@@ -250,7 +250,7 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 1423294
+          "size_bytes": 1423315
         },
         "web": {
           "files": 11,
@@ -259,7 +259,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 45,
-      "total_size_bytes": 4325997
+      "total_size_bytes": 4326018
     }
   },
   "recommendations": [],
@@ -270,11 +270,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-23T21:54:53Z",
+  "timestamp": "2026-09-25T17:54:08Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "a938c9792ec430ec6cfc1986ec1a4ac45c84df276330e7d00313e6962f4a1819",
+      "sha256": "c66d876c1168f866b31b8252c0ffba2a895fedcc714b19b95874c3b3110291af",
       "size_bytes": 13479
     },
     "combined_manuscript": {
@@ -340,19 +340,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "1073240b158296dc0e81f714460bd5297ef1366760beefd05176392d2d9e4ec3"
+        "sha256": "8927ed27420e07da73cb44b7b687a336608993c8249fc8f58c960ea06f275756"
       },
       "output": {
         "file_count": 45,
-        "sha256": "1b1f9d7d0a725f96867ce5b69b4cb168d04e278b051c9c275c6a25719e9302fd"
+        "sha256": "1f878987a54fbccbcbdb9ca5ac98e6f71f9303379f2c722b6986f89fb017908d"
       },
       "source": {
         "file_count": 50,
         "sha256": "13e8871487de436275e039b0b0d0dcec56ac3775a67d35ce1b015ead01b6e69c"
       },
       "stage": {
-        "file_count": 1347,
-        "sha256": "f9d8ed68770fecb9076b923aa9db4556c1761a9ac0ebb57bffb33ee0a57ea8d3"
+        "file_count": 1221,
+        "sha256": "235cf555bdfab6321e7f19d29d2f370de85a32bd255882e11878403102049041"
       }
     },
     "project": "templates/template_pools_rules_tools",
