@@ -11,6 +11,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.files.git_tracked import tracked_files_under
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -94,13 +95,22 @@ def clean_output_dir_contents(
     output_dir: Path,
     preserved_relative_paths: set[Path],
     preserved_subtree_names: frozenset[str] = frozenset(),
-) -> None:
-    """Remove all contents of output_dir except .checkpoints and preserved paths.
+) -> list[Path]:
+    """Remove all contents of output_dir except tracked, checkpoint, and preserved paths.
 
     Paths in preserved_relative_paths are relative to output_dir.
     The .checkpoints directory is always kept to support pipeline resume.
+    Git-tracked files (committed release artifacts such as PDFs, SHA256SUMS,
+    and manifests) are never destroyed: before any deletion, one batched
+    ``git ls-files`` enumerates them, they join the preserved set, and every
+    skipped path is returned to the caller for reporting. When git cannot be
+    consulted inside a repository, the consultation raises and nothing is
+    deleted (fail-closed).
 
     Args:
+        output_dir: Directory whose contents are removed.
+        preserved_relative_paths: Paths (relative to output_dir) kept across
+            runs to support incremental processing.
         preserved_subtree_names: Top-level subdirectory names (e.g. ``"data"``)
             to skip wholesale, same treatment as ``.checkpoints``. For a
             project whose test suite treats output/ as a committed
@@ -108,7 +118,14 @@ def clean_output_dir_contents(
             (declared via a project-local preserve manifest — see
             ``clean_output_directories``), this avoids a fresh pipeline run
             silently deleting fixtures the test suite expects to find.
+
+    Returns:
+        Sorted tracked paths (relative to output_dir) that were skipped.
     """
+    tracked = tracked_files_under(output_dir)
+    skipped = sorted(rel for rel in tracked if (output_dir / rel).is_file())
+    protected = preserved_relative_paths | set(tracked)
+
     for item in output_dir.iterdir():
         if item.is_dir():
             # Preserve .checkpoints directory to maintain pipeline resume capability
@@ -120,16 +137,18 @@ def clean_output_dir_contents(
                 logger.debug(f"  Preserving {item.name}/ directory (project preserve manifest)")
                 continue
 
-            # Check if this subdirectory contains any preserved files
-            has_preserved = any(p.parts[0] == item.name for p in preserved_relative_paths)
-            if has_preserved:
-                # Selectively clean: remove everything except preserved files
-                clean_dir_preserving(item, output_dir, preserved_relative_paths, logger)
+            # Check if this subdirectory contains any preserved or tracked files
+            has_protected = any(p.parts[0] == item.name for p in protected)
+            if has_protected:
+                # Selectively clean: remove everything except protected files
+                clean_dir_preserving(item, output_dir, protected, logger)
             else:
                 remove_output_entry(item)
         else:
             # Root-level files: preserve if in the preserve set (incremental pipeline)
-            if Path(item.name) in preserved_relative_paths:
+            if Path(item.name) in protected:
                 logger.debug(f"  Preserving file for incremental processing: {item.name}")
             else:
                 item.unlink()
+
+    return skipped

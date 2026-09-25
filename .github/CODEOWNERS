@@ -36,6 +36,7 @@
 /projects/templates/template_code_project/ @docxology
 /projects/templates/template_data_descriptor/ @docxology
 /projects/templates/template_eda_notebook/ @docxology
+/projects/templates/template_experiment_tree/ @docxology
 /projects/templates/template_formal/ @docxology
 /projects/templates/template_literature_meta_analysis/ @docxology
 /projects/templates/template_madlib/ @docxology

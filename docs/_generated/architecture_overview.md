@@ -12,6 +12,7 @@ screen-reader-friendly and text-searchable representation.
 | Infrastructure · Python | `infrastructure/doctor/` | Reusable Layer 1 package |
 | Infrastructure · Python | `infrastructure/documentation/` | Reusable Layer 1 package |
 | Infrastructure · Python | `infrastructure/fonds/` | Reusable Layer 1 package |
+| Infrastructure · Python | `infrastructure/formal_contracts/` | Reusable Layer 1 package |
 | Infrastructure · Python | `infrastructure/llm/` | Reusable Layer 1 package |
 | Infrastructure · Python | `infrastructure/metadata/` | Reusable Layer 1 package |
 | Infrastructure · Python | `infrastructure/methods/` | Reusable Layer 1 package |
@@ -44,6 +45,7 @@ screen-reader-friendly and text-searchable representation.
 | Projects · public CI scope | `projects/templates/template_code_project/` | Canonical Layer 2 exemplar |
 | Projects · public CI scope | `projects/templates/template_data_descriptor/` | Canonical Layer 2 exemplar |
 | Projects · public CI scope | `projects/templates/template_eda_notebook/` | Canonical Layer 2 exemplar |
+| Projects · public CI scope | `projects/templates/template_experiment_tree/` | Canonical Layer 2 exemplar |
 | Projects · public CI scope | `projects/templates/template_formal/` | Canonical Layer 2 exemplar |
 | Projects · public CI scope | `projects/templates/template_gold_refinement/` | Canonical Layer 2 exemplar |
 | Projects · public CI scope | `projects/templates/template_literature_meta_analysis/` | Canonical Layer 2 exemplar |

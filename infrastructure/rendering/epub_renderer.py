@@ -23,6 +23,7 @@ from pathlib import Path, PurePosixPath
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._epub_cover_accessibility import apply_epub_cover_accessibility
+from infrastructure.rendering._epub_xhtml_sanitizer import sanitize_epub_xhtml
 from infrastructure.rendering._epub_package_validation import (
     _CONTAINER_MEMBER,
     _CONTAINER_NAMESPACE,
@@ -437,6 +438,15 @@ def render_epub(
             # cover accessibility pass may inspect a member payload.
             with zipfile.ZipFile(rendered_path) as archive:
                 _preflight_members(archive.infolist())
+            # Raw HTML in source markdown survives Pandoc as raw markup and
+            # leaves individual chapter documents not well-formed XML. Repair
+            # exactly those members before any other pass parses chapter
+            # payloads — the cover-accessibility pass reads every manifested
+            # XHTML member and would otherwise reject the whole package on
+            # the damaged chapter. Intact members are never rewritten, and a
+            # member the repair cannot make well-formed still fails
+            # validation below.
+            sanitize_epub_xhtml(rendered_path)
             if cover_image is not None:
                 apply_epub_cover_accessibility(rendered_path, normalized_cover_alt)
             # Re-run the complete package contract after cover processing and

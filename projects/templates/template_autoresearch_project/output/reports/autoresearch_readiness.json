@@ -433,6 +433,21 @@
         ]
       },
       {
+        "definition_of_done": "A conforming .docx and .docxplus carrying the project source tree are written, or the stage is gracefully skipped when the optional docxplus extra is not installed.",
+        "depends_on": [
+          "PDF Rendering"
+        ],
+        "failure_code": "DOCXPLUS_EXPORT_FAILED",
+        "gate": null,
+        "input_artifacts": [
+          "projects/{project}/"
+        ],
+        "name": "docxplus Export",
+        "output_artifacts": [
+          "projects/{project}/output/docxplus/"
+        ]
+      },
+      {
         "definition_of_done": "Executable reproducibility bundle is written or reports why it was skipped.",
         "depends_on": [
           "PDF Rendering"

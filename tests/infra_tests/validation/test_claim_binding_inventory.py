@@ -13,7 +13,7 @@ def test_public_claim_binding_inventory_is_complete() -> None:
     root = Path(__file__).resolve().parents[3]
     report = validate_claim_bindings(root)
     assert report.errors == ()
-    assert len(report.projects) == 24
+    assert len(report.projects) == 25
     assert any(record.state == "bound" for record in report.projects)
     assert any(record.state == "not_applicable" for record in report.projects)
 

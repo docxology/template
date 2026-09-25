@@ -9,7 +9,7 @@ Scripts **coordinate** — they never **compute**:
 
 ```python
 # ✅ CORRECT: import tested functions, then plot/write
-from src.eda import clean_dataset, load_dataset, histogram_data
+from template_eda_notebook.eda import clean_dataset, load_dataset, histogram_data
 
 clean, report = clean_dataset(load_dataset())
 hist = histogram_data(clean, "height_cm", bins=10)
@@ -19,11 +19,11 @@ hist = histogram_data(clean, "height_cm", bins=10)
 ```python
 # ❌ WRONG: script computes statistics directly
 def my_summary(frame):
-    return frame.mean()  # Data logic belongs in src/eda/
+    return frame.mean()  # Data logic belongs in src/template_eda_notebook/eda/
 ```
 
 If you find yourself writing analysis logic in `scripts/`, move it to
-`src/eda/` first (with a test).
+`src/template_eda_notebook/eda/` first (with a test).
 
 ## Headless plotting
 
@@ -50,7 +50,7 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "src", PROJECT_ROOT.parents[2]):
         sys.path.insert(0, str(_path))
 
 import matplotlib.pyplot as plt  # noqa: E402
-from src.eda import load_dataset, clean_dataset  # noqa: E402
+from template_eda_notebook.eda import load_dataset, clean_dataset  # noqa: E402
 ```
 
 - Use explicit imports (not `from module import *`).
@@ -58,7 +58,7 @@ from src.eda import load_dataset, clean_dataset  # noqa: E402
 
 ## Output Directory Structure
 
-Scripts write to the standard output layout via `src/project_paths.py`:
+Scripts write to the standard output layout via `src/template_eda_notebook/project_paths.py`:
 
 ```mermaid
 flowchart LR
@@ -72,7 +72,7 @@ flowchart LR
 ```
 
 ```python
-from src.project_paths import project_output_dirs
+from template_eda_notebook.project_paths import project_output_dirs
 
 dirs = project_output_dirs()
 dirs["figures"].mkdir(parents=True, exist_ok=True)
@@ -92,7 +92,7 @@ for path in run_eda():
 
 Before submitting a new or modified script, verify:
 
-- [ ] All analysis logic lives in `src/eda/`, not in the script.
+- [ ] All analysis logic lives in `src/template_eda_notebook/eda/`, not in the script.
 - [ ] `MPLBACKEND=Agg` is set before importing pyplot.
 - [ ] Output goes to standard `output/` subdirectories via `project_output_dirs`.
 - [ ] `Path` objects are used (no string concatenation) for file paths.

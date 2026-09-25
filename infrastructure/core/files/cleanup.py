@@ -10,11 +10,11 @@ Sub-modules:
     cleanup_root    -- root output directory cleanup
 """
 
+import json
 from pathlib import Path
 
 from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.files.cleanup_helpers import (
-    archive_output_logs,
     clean_output_dir_contents,
     remove_output_entry,
 )
@@ -109,19 +109,31 @@ def _load_output_preserve_manifest(project_dir: Path) -> frozenset[str]:
     return frozenset(names)
 
 
-def clean_output_directories(repo_root: Path, project_name: str = "project", subdirs: list[str] | None = None) -> None:
+def clean_output_directories(
+    repo_root: Path,
+    project_name: str = "project",
+    subdirs: list[str] | None = None,
+) -> list[Path]:
     """Clean output directories for a fresh pipeline start.
 
     Removes all contents from both projects/{project_name}/output/ and output/{project_name}/
-    directories, then recreates the expected subdirectory structure.
+    directories, then recreates the expected subdirectory structure. Git-tracked
+    files under either directory are never destroyed; each skipped path is
+    recorded in ``output/reports/cleanup_report.json`` and returned.
 
-    Log files are archived to logs/archive/ before cleanup to preserve execution history.
     Also cleans root-level directories from output/ that should not exist.
 
     Args:
         repo_root: Repository root directory
         project_name: Name of project in projects/ directory (default: "project")
         subdirs: List of subdirectories to recreate. If None, uses default list.
+
+    Returns:
+        Repo-relative paths of every git-tracked file skipped by the clean.
+
+    Raises:
+        FileOperationError: If git cannot be consulted inside a repository
+            (fail-closed: nothing is deleted).
     """
     project_name = validate_project_name(project_name)
 
@@ -157,15 +169,17 @@ def clean_output_directories(repo_root: Path, project_name: str = "project", sub
         project_dir / "output",
         repo_root / "output" / project_name,
     ]
-
+    skipped: list[Path] = []
     for output_dir in output_dirs:
         _reject_symlink_directory(output_dir)
         relative_path = output_dir.relative_to(repo_root)
 
         if output_dir.exists():
             logger.info(f"  Cleaning {relative_path}/...")
-            archive_output_logs(output_dir)
-            clean_output_dir_contents(output_dir, preserved_relative_paths, preserved_subtree_names)
+            skipped.extend(
+                output_dir / rel
+                for rel in clean_output_dir_contents(output_dir, preserved_relative_paths, preserved_subtree_names)
+            )
         else:
             logger.info(f"  Creating {relative_path}/...")
 
@@ -173,5 +187,27 @@ def clean_output_directories(repo_root: Path, project_name: str = "project", sub
             (output_dir / subdir).mkdir(parents=True, exist_ok=True)
 
         log_success(f"Cleaned {relative_path}/ (recreated subdirectories)", logger)
-
+    _write_cleanup_report(repo_root, project_dir, skipped)
     log_success(f"Output directories cleaned for project '{project_name}' - fresh start", logger)
+    return skipped
+
+
+def _write_cleanup_report(repo_root: Path, project_dir: Path, skipped: list[Path]) -> None:
+    """Persist the skipped-tracked-files report consumed by snapshots and CI.
+
+    ``skipped`` holds absolute paths; the report records them repo-relative.
+    """
+    repo_relative = sorted(
+        p.relative_to(repo_root).as_posix() if p.is_relative_to(repo_root) else p.as_posix() for p in skipped
+    )
+    report_dir = project_dir / "output" / "reports"
+    report_dir.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "skipped_tracked_count": len(repo_relative),
+        "skipped_tracked": repo_relative,
+    }
+    report_path = report_dir / "cleanup_report.json"
+    try:
+        report_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    except OSError as exc:
+        raise FileOperationError(f"Failed to write cleanup report {report_path}: {exc}") from exc

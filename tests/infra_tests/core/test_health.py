@@ -188,11 +188,13 @@ class TestGateTimeoutResolution:
 class TestSubsetSelection:
     """``gates=[...]`` must run only the requested gates."""
 
+    @pytest.mark.timeout(300)  # real no-mocks gate subprocess exceeds the 10s default
     def test_subset_runs_only_named_gates(self) -> None:
         report = run_health_checks(REPO_ROOT, gates=["no-mocks"])
         assert isinstance(report, HealthReport)
         assert [r.name for r in report.results] == ["no-mocks"]
 
+    @pytest.mark.timeout(300)  # two real gate subprocesses in parallel exceed the 10s default
     def test_parallel_subset_preserves_requested_order(self) -> None:
         report = run_health_checks(
             REPO_ROOT,
@@ -243,6 +245,7 @@ class TestSubsetSelection:
 class TestRealGate:
     """Run a real gate against the live tree and assert it passes."""
 
+    @pytest.mark.timeout(300)  # real no-mocks gate subprocess exceeds the 10s default
     def test_no_mocks_gate_passes_on_clean_tree(self) -> None:
         report = run_health_checks(REPO_ROOT, gates=["no-mocks"])
         assert report.passed is True, f"verify_no_mocks failed unexpectedly:\n{report.results[0].output}"
@@ -253,6 +256,7 @@ class TestRealGate:
 class TestRendering:
     """``format_report_table`` produces sensible plain and coloured output."""
 
+    @pytest.mark.timeout(300)  # real no-mocks gate subprocess exceeds the 10s default
     def test_plain_table_contains_gate_names_and_overall(self) -> None:
         report = run_health_checks(REPO_ROOT, gates=["no-mocks"])
         text = format_report_table(report, color=False)
@@ -262,6 +266,7 @@ class TestRendering:
         # No ANSI escape when colour is disabled.
         assert "\033[" not in text
 
+    @pytest.mark.timeout(300)  # real no-mocks gate subprocess exceeds the 10s default
     def test_colored_table_contains_ansi(self) -> None:
         report = run_health_checks(REPO_ROOT, gates=["no-mocks"])
         text = format_report_table(report, color=True)
@@ -271,6 +276,7 @@ class TestRendering:
 class TestCLI:
     """The ``python -m infrastructure.core.health`` entry point."""
 
+    @pytest.mark.timeout(300)  # real no-mocks gate subprocess exceeds the 10s default
     def test_json_output_is_parseable(self) -> None:
         proc = _run_module_cli("--json", "--gates=no-mocks", "--quiet")
         assert proc.returncode == 0, proc.stderr
@@ -367,6 +373,7 @@ class TestFailureDiagnosticsReachStderr:
         assert "── ruff ──" in proc.stderr
         assert "gate timed out" in proc.stderr
 
+    @pytest.mark.timeout(300)  # real ruff gate subprocess exceeds the 10s default
     def test_module_cli_wiring_keeps_stdout_pure_json_with_stderr_verdict(
         self,
     ) -> None:

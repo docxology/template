@@ -143,7 +143,7 @@ slides:
       - "Every number on the previous two slides was read live from {{PITCH_SUBJECT_NAME}}'s own manuscript/config.yaml and this monorepo's generated coverage report — not typed into this YAML file by hand."
       - "src/deck_tokens.py::build_deck_tokens is the function that did the reading; you can run it yourself and get the same numbers."
       - "A token-resolution audit fails this deck's own build if any of these values ever go missing."
-    source: "projects/templates/template_pitch_deck/src/deck_tokens.py"
+    source: "projects/templates/template_pitch_deck/src/template_pitch_deck/deck_tokens.py"
 
   - kind: section
     title: "The pattern generalizes"
@@ -216,7 +216,7 @@ slides:
   - kind: diagram
     title: "The integrity stack, gate by gate"
     figure: "integrity_stack.png"
-    source: "projects/templates/template_pitch_deck/src/token_resolution.py"
+    source: "projects/templates/template_pitch_deck/src/template_pitch_deck/token_resolution.py"
 
   - kind: content
     title: "Why gates instead of a style guide"
@@ -224,7 +224,7 @@ slides:
       - "A style guide is a request; a gate is a build failure — the difference between 'we ask reviewers to check citations' and 'the render script exits non-zero if one is missing'."
       - "Each gate here targets one specific failure mode it was built to catch: a stale token, a cliche phrase, an uncited fact, a non-reproducible artifact."
       - "None of these gates existed before this exemplar needed them — each was added because a real defect surfaced during this project's own development, not speculatively."
-    source: "projects/templates/template_pitch_deck/src/diligence_audit.py"
+    source: "projects/templates/template_pitch_deck/src/template_pitch_deck/diligence_audit.py"
 
   - kind: content
     title: "What happens when a gate fails"
@@ -257,7 +257,7 @@ slides:
       - "src/token_resolution.py fails the build on any unresolved double-curly-brace placeholder — the same discipline this slide's own {{PITCH_SUBJECT_NAME}} token was resolved by."
       - "src/cliche_lint.py and src/diligence_audit.py both run inside render_orchestration.py itself, before that deck length's own PDF/PPTX is written — a slide referencing a live-sourced token with no citation blocks that length's render, it does not just fail a separate, skippable check."
       - "None of these checks are generic infrastructure — they are this project's own src/, built specifically because a pitch deck is exactly the kind of document that tempts unverifiable claims."
-    source: "projects/templates/template_pitch_deck/src/diligence_audit.py"
+    source: "projects/templates/template_pitch_deck/src/template_pitch_deck/diligence_audit.py"
 
   - kind: content
     title: "The chain of custody: slide → QR → GitHub"
@@ -265,7 +265,7 @@ slides:
       - "Every slide in this deck carries its own QR code, linking to a standalone, real Markdown page for that exact slide under output/slides_standalone/."
       - "Once this output/ directory is committed and pushed, a photo of a projected or printed slide can be traced back to its precise source page on GitHub — not just to the deck as a whole. Locally, the generated page already exists; the QR only resolves once it is actually published."
       - "Mechanically, this is the same source-citation system with one more hop: a citation links out to evidence; the QR links to the slide's own generated page, which repeats that same citation."
-    source: "projects/templates/template_pitch_deck/src/standalone_slides.py"
+    source: "projects/templates/template_pitch_deck/src/template_pitch_deck/standalone_slides.py"
 
   - kind: content
     title: "Cite this deck"
@@ -286,12 +286,12 @@ slides:
       - "The largest single subpackage, {{INFRA_LARGEST_SUBPACKAGE}}, holds {{INFRA_LARGEST_SUBPACKAGE_COUNT}} files — still a minority of the whole, not a monolith wearing a modular label."
       - "Every number on this slide is computed live by src/infra_facts.py at render time, reusing the exact same counters docs/_generated/COUNTS.md is built from."
       - "The next chart narrows the total to importable subpackages, excluding {{INFRA_UNATTRIBUTED_FILE_COUNT}} top-level file(s): infrastructure/__init__.py and mcp_server.py."
-    source: "projects/templates/template_pitch_deck/src/infra_facts.py"
+    source: "projects/templates/template_pitch_deck/src/template_pitch_deck/infra_facts.py"
 
   - kind: diagram
     title: "infrastructure/, by subpackage"
     figure: "infra_subpackage_sizes.png"
-    source: "projects/templates/template_pitch_deck/src/infra_facts.py"
+    source: "projects/templates/template_pitch_deck/src/template_pitch_deck/infra_facts.py"
 
   - kind: content
     title: "Why partition it this way"
