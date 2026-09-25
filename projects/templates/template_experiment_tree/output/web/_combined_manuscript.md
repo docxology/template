@@ -1,6 +1,6 @@
 # Abstract
 
-This living record tracks {{EXP_TOTAL}} experiments organized as a version-controlled tree with frozen nodes. Of these, {{EXP_ANSWERED}} are answered ({{EXP_WINS}} wins, {{EXP_DEAD_ENDS}} dead ends), {{EXP_FROZEN}} are frozen preregistrations, and {{EXP_PROVISIONAL}} are provisional plans. The paper you are reading is generated from the tree state; answering or freezing a node regenerates it.
+This living record tracks 3 experiments organized as a version-controlled tree with frozen nodes. Of these, 0 are answered (0 wins, 0 dead ends), 1 are frozen preregistrations, and 2 are provisional plans. The paper you are reading is generated from the tree state; answering or freezing a node regenerates it.
 
 
 
@@ -32,11 +32,11 @@ Each node carries a status from the ladder {provisional, frozen, answered}. A pr
 
 ## Answered nodes
 
-{{EXP_SECTIONS_RESULTS}}
+No answered experiments yet.
 
 ## Winners per round
 
-{{EXP_WINNERS_PER_ROUND}}
+{}
 
 
 
@@ -48,11 +48,11 @@ Each node carries a status from the ladder {provisional, frozen, answered}. A pr
 
 Negative results are first-class: every answered node with outcome `dead_end` is registered below, keeping future rounds away from retired directions.
 
-{{EXP_SECTIONS_DEAD_ENDS}}
+No dead ends recorded.
 
 ## In progress (frozen preregistrations)
 
-{{EXP_SECTIONS_IN_PROGRESS}}
+- E003: Frozen preregistration: momentum follow-up
 
 
 

@@ -66,8 +66,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_eda_notebook_combined.pdf",
-      "sha256": "8e8d7e2a0eda5f1f7b45a9ccd2093e7b6efb927be9767f51e973014aea6ddb0b",
-      "size_bytes": 161660,
+      "sha256": "2a14134e7f20a3989e86aba0a46ab19871587fa0ed187a8d524fb08eaa4eea14",
+      "size_bytes": 161664,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -102,7 +102,7 @@
     {
       "contract_match": true,
       "path": "output/slides/00_abstract_slides.pdf",
-      "sha256": "bc8e8600ddb0e987b7b9d5f325cbb9c4650ee797907996576eaf0f24fdbd8fa6",
+      "sha256": "a3da67ba70815ca0c113bf1280a6d3c433ccb1d3842c9c72eeb8e0f639887035",
       "size_bytes": 17354,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -111,7 +111,7 @@
     {
       "contract_match": true,
       "path": "output/slides/01_introduction_slides.pdf",
-      "sha256": "6f941bb21021976384bd0297f21d1793a4ec72f095f2e082ed00186dc5d73ef1",
+      "sha256": "a3fa84d1e074b010e603f2b4b75a53b3da09a7408714d62e03ad41d886862565",
       "size_bytes": 31387,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -120,7 +120,7 @@
     {
       "contract_match": true,
       "path": "output/slides/02_methodology_slides.pdf",
-      "sha256": "76d6a12dcb342ea26fc1fd7d4a65d033270660a4e41ae5ef6408e9925f013a67",
+      "sha256": "2e32987300551b050ff1d7d260423f1ea12fda799e37060e37f861352007f9df",
       "size_bytes": 37338,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -129,7 +129,7 @@
     {
       "contract_match": true,
       "path": "output/slides/03_results_slides.pdf",
-      "sha256": "4884f00d7e2345557075f950b482190a6fdb64fa49e228cdd3c3f36ea42785d5",
+      "sha256": "8ce6ef9b80f44e0d35ab9f99b609857297dc5c8938c1dfe38e35a99d466d32fc",
       "size_bytes": 90736,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -138,8 +138,8 @@
     {
       "contract_match": true,
       "path": "output/slides/04_conclusion_slides.pdf",
-      "sha256": "7d0bbb658df42e27fe66ec6ae9d14dfff2589a69f0f6fc41511eec2e2af307d5",
-      "size_bytes": 33318,
+      "sha256": "3c1a583dc782ee7f7f09fcc1ba7e57e18542591eb44197d28bb3fad07ff4f1da",
+      "size_bytes": 33317,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -147,8 +147,8 @@
     {
       "contract_match": true,
       "path": "output/slides/05_experimental_setup_slides.pdf",
-      "sha256": "c59fe5eadc7506384ef2a6340ba6730f7107d633145f4fad0d41ec525fbb366b",
-      "size_bytes": 38455,
+      "sha256": "915b25b6c342056c7b83162cf875c6eb5543e66042b6c20a6aa0ee780e267c59",
+      "size_bytes": 38454,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -156,8 +156,8 @@
     {
       "contract_match": true,
       "path": "output/slides/06_reproducibility_slides.pdf",
-      "sha256": "43ac998462e51897f031724ae9cd69540f3270aa0c7c77095a0e92c3009117a8",
-      "size_bytes": 36412,
+      "sha256": "5a9360b7845342dc26c43bb7b077f88429298cd28529c3959e4a9a1fcad1b307",
+      "size_bytes": 36411,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -165,8 +165,8 @@
     {
       "contract_match": true,
       "path": "output/slides/07_scope_and_related_work_slides.pdf",
-      "sha256": "5a66f42c139f4be9ff5c9d42faba01d2159063a0a282f3bd53a6f8ab5e1c1872",
-      "size_bytes": 23050,
+      "sha256": "557e5fe8cc9c7a3b5b065764f8dc080d93eb3225ceda68617b572feec256a319",
+      "size_bytes": 23049,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -174,7 +174,7 @@
     {
       "contract_match": true,
       "path": "output/slides/99_references_slides.pdf",
-      "sha256": "d53977b9e80975600e4b2373714423e94a05de885389dfd28d1537b105a02026",
+      "sha256": "ab206a7e236c7070bfd1dc7a0d099ac6c505fb0b6cbc582f1282bcd23fba8f55",
       "size_bytes": 11956,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

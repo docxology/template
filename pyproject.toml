@@ -194,6 +194,7 @@ public-exemplars = [
     {include-group = "llm"},
     {include-group = "monitoring"},
     {include-group = "rendering-pptx"},
+    "pyyaml>=6.0",
     "bibtexparser>=1.4.0",
     "fuzzywuzzy>=0.18.0",
     "jsonschema>=4.0.0",
