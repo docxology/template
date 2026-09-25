@@ -209,7 +209,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 0.17039871215820312
+      "total_size_mb": 0.17041015625
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
@@ -232,7 +232,7 @@
         },
         "slides": {
           "files": 6,
-          "size_bytes": 50625
+          "size_bytes": 50637
         },
         "web": {
           "files": 9,
@@ -241,7 +241,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 18,
-      "total_size_bytes": 178676
+      "total_size_bytes": 178688
     }
   },
   "recommendations": [],
@@ -252,11 +252,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-23T21:54:53Z",
+  "timestamp": "2026-09-25T16:18:50Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "a8b03ff8a2089bf13e2d229059147b60a421e02cea77c8a3ac29e37cb4ae77a9",
+      "sha256": "4f59e1edbf54bfc4e9ced13986329ef57ba54c8ba7f9dad67fca24cf695ae1c0",
       "size_bytes": 5481
     },
     "combined_manuscript": {
@@ -310,19 +310,19 @@
     "fingerprints": {
       "config": {
         "file_count": 11,
-        "sha256": "cf8cb323e1fe3e7552d13853359053d32d0bfa9426b8a6fceeb0bcc7c585e80b"
+        "sha256": "2815d4109c3d9b6525e0676aa081d77bb546df9457648db1103b110feb5643bd"
       },
       "output": {
         "file_count": 18,
-        "sha256": "50627fea8a01ddf98efa8232476e7fb549b953348637be3ff4957ff1131e6bc3"
+        "sha256": "a932af79c709320b4c88c9d8ce9abc29b12c410c25d9bf1b45b4797aaf6bab60"
       },
       "source": {
         "file_count": 22,
-        "sha256": "5331ce89e3062e655c4b9fba0b8967b05fea127489363643879d3ec6bdbe0cfb"
+        "sha256": "4e90fe443c8fbb711a20aa46d993a287c527800d1e6fbbe20e9549d3d2300b25"
       },
       "stage": {
-        "file_count": 1347,
-        "sha256": "f9d8ed68770fecb9076b923aa9db4556c1761a9ac0ebb57bffb33ee0a57ea8d3"
+        "file_count": 1221,
+        "sha256": "235cf555bdfab6321e7f19d29d2f370de85a32bd255882e11878403102049041"
       }
     },
     "project": "templates/template_experiment_tree",

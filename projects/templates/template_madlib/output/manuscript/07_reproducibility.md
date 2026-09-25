@@ -10,5 +10,5 @@ The copied root output is therefore a consequence of local source and config. Ge
 - Generated: `not-recorded (set SOURCE_DATE_EPOCH)` (derived from `SOURCE_DATE_EPOCH`; an
   explicit `not-recorded` marker is emitted when the reproducible timestamp is
   not supplied)
-- Python: `3.12.13`
+- Python: `3.14.6`
 - Platform: `Darwin arm64`

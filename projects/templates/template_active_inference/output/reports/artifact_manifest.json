@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "f61a2c5d9f90c9c0534d9d68219e747b3e79a068c7071c3f210e46bc7cbfd60d",
+      "sha256": "af11dcd4b1a3d69cdd1a72f52df3e32d22f341bc53e429f4aba5946640a44b48",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1128,7 +1128,7 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_active_inference_combined.pdf",
-      "sha256": "5b5e6425e4ae3242e9dbb1081098c3f61d59d42253df8a33ce60c255daaae3d9",
+      "sha256": "01c5dd6149ed371269cdc7a5dab62add4a3cb38dad293870dab2b26f89cda067",
       "size_bytes": 4110698,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

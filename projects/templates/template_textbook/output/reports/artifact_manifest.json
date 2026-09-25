@@ -30,7 +30,7 @@
     {
       "contract_match": true,
       "path": "output/docx/template_textbook_combined.docx",
-      "sha256": "65788899d1e2f41897eb112b82024cae13f55641224116709808171274004e22",
+      "sha256": "2891de4005e6407ee216760f934489420e35ebc0476d2d65847f64e2b3e12d95",
       "size_bytes": 655861,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -912,8 +912,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_textbook_combined.pdf",
-      "sha256": "a6649c37a17d3b94d13ccf0632c80db72000ce1addb7086eb55fc590a37b4196",
-      "size_bytes": 1003371,
+      "sha256": "c125c7b7a59a01281d9747ed4c4b1e0d2f3a798becbff56853593ad1137ee85e",
+      "size_bytes": 1003367,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

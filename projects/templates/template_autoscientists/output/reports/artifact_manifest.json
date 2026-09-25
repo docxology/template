@@ -66,7 +66,7 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_autoscientists_combined.pdf",
-      "sha256": "87e968106ce2877c4467b224b813930de98492bbb71c7bf709a65fb7e7ba2598",
+      "sha256": "abfb47539f7172156a46b34d16f7d60cfbe13c856305f5c71b969f42316452cb",
       "size_bytes": 272007,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
