@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from assay import (
+from template_gold_refinement.assay import (
     AssayReport,
     ClaimRecord,
     assay_claims,

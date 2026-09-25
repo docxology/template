@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_results_discussion.md.web</title>
   <style>
@@ -178,6 +178,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -188,14 +197,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -226,12 +267,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -243,7 +328,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -301,6 +397,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -308,13 +406,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -395,8 +548,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -445,6 +597,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -459,6 +617,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -583,7 +747,7 @@ ticks and reaches <span class="math inline">\(1.0\)</span> by the final
 tick — computed from real per-agent state.</li>
 </ol>
 <figure id="fig:demo-convergence">
-<a class="figure-full-size-link" href="../figures/colony_demo_convergence.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/colony_demo_convergence.png"
+<a class="figure-full-size-link" href="../figures/colony_demo_convergence.png" target="_blank" rel="noopener" aria-label="Open full-size figure, The deterministic demo colony’s real concentration_history"><img src="../figures/colony_demo_convergence.png"
 alt="Two-panel line chart across 5 ticks: north changes from 2.94 to 14.12, south changes from 0.00 to 0.00; north&#x27;s share of total concentration changes from 1.00 to 1.00." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>The deterministic demo colony’s real
 <code>concentration_history</code>
@@ -691,7 +855,7 @@ extreme configuration</em> (<code>decay=0.97</code>,
 <code>n=50</code>/<code>seed_base=0</code> as the positive control
 above), asking a narrower, precisely-stated question:</p>
 <p><strong>Real result:</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -720,7 +884,7 @@ above), asking a narrower, precisely-stated question:</p>
 <td>(0.0000, 0.0713)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>A two-sided Fisher’s exact test on this pairwise comparison (the
 correct small-sample test here, matching this section’s own precedent at
 the decay sweep’s <span class="math inline">\(100\%\)</span>-boundary
@@ -758,7 +922,7 @@ result. Gated by
 <code>test_extreme_zero_deposit_pheromone_channel_still_contributes_under_severe_decay_and_noise</code>
 in <code>test_colony_experiments_extended.py</code>.</p>
 <figure id="fig:convergence-tick-distribution">
-<a class="figure-full-size-link" href="../figures/colony_convergence_tick_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/colony_convergence_tick_distribution.png"
+<a class="figure-full-size-link" href="../figures/colony_convergence_tick_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Convergence-tick distribution from this template’s own demo statistics sweep"><img src="../figures/colony_convergence_tick_distribution.png"
 alt="Histogram and empirical CDF summarize 37 of 40 converged trials, ranging from tick 0 to tick 29; 28 reached consensus at tick zero and the mean convergence tick is 4.1." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Convergence-tick distribution from this
 template’s own demo statistics sweep
@@ -821,7 +985,7 @@ id="experiment-a-does-convergence-rate-vary-monotonically-with-decay">Experiment
 A — does convergence rate vary monotonically with decay?</h3>
 <p><strong>Real result</strong> (<code>n=60</code> independently-seeded
 trials per value, <code>seed_base=0</code>):</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>decay</th>
@@ -868,7 +1032,7 @@ trials per value, <code>seed_base=0</code>):</p>
 <td>(0.8407, 0.9738)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><span class="math inline">\(H_0\)</span> is
 <strong>rejected</strong>: decay <span class="math inline">\(\in \{0.60,
 0.80\}\)</span> both reach <span class="math inline">\(100\%\)</span>
@@ -1005,7 +1169,7 @@ cherry-picked edge.</p>
 trials per value, identical <code>seed_base=0</code>, identical
 calibrated baseline configuration except
 <code>sensed_concentration_cap=13.0</code>):</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>decay</th>
@@ -1045,7 +1209,7 @@ calibrated baseline configuration except
 <td>(0.9398, 1.0000)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><span class="math inline">\(H_0\)</span> is
 <strong>rejected</strong>, decisively: capping alone flips both decay
 values from near-certain non-convergence to certain convergence — the
@@ -1111,7 +1275,7 @@ only a direct call. <strong>Real result</strong> (<span
 class="math inline">\(n=60\)</span> per value, identical
 <code>seed_base=0</code>, <code>decay=0.10</code> fixed, otherwise the
 identical calibrated baseline):</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>cap</th>
@@ -1164,7 +1328,7 @@ identical calibrated baseline):</p>
 <td>(0.0000, 0.0602)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><span class="math inline">\(H_0\)</span> (no variation) is
 <strong>rejected</strong>: the rate declines monotonically
 (non-increasing at every step — a Cochran–Armitage trend test over the
@@ -1244,7 +1408,7 @@ B — does the real mechanism beat a random-choice baseline?</h3>
 class="math inline">\(N=150\)</span> trials each, identical seed
 sequence <code>seed_base=0</code>, calibrated baseline configuration,
 <code>decay=0.46</code>):</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>harness</th>
@@ -1267,7 +1431,7 @@ sequence <code>seed_base=0</code>, calibrated baseline configuration,
 <td>(0.0012, 0.0368)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><span class="math inline">\(H_0\)</span> is <strong>decisively
 rejected</strong>: the two Wilson intervals do not overlap — the real
 mechanism’s lower bound (<span class="math inline">\(0.8816\)</span>)
@@ -1314,7 +1478,7 @@ configuration and constructs without error.)</p>
 class="math inline">\(N=150\)</span> trials, identical seed sequence
 <code>seed_base=0</code>, identical calibrated baseline configuration
 except <code>deposit_amount=0.0</code>):</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -1349,7 +1513,7 @@ except <code>deposit_amount=0.0</code>):</p>
 <td>(0.0012, 0.0368)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><span class="math inline">\(H_0\)</span> <strong>survives</strong>:
 the zero-deposit condition’s Wilson lower bound (<span
 class="math inline">\(0.0000\)</span>) does not exceed the null model’s
@@ -1400,7 +1564,7 @@ C — does convergence rate decrease monotonically with heterogeneity
 magnitude?</h3>
 <p><strong>Real result</strong> (<code>n=60</code> per condition,
 <code>seed_base=0</code>):</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>condition</th>
@@ -1445,7 +1609,7 @@ magnitude?</h3>
 <td>(0.0092, 0.1136)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><span class="math inline">\(H_0\)</span> <strong>survives</strong>
 this experiment: the rate strictly decreases at every step of the sweep
 (<span class="math inline">\(1.0000 &gt; 0.9333 &gt; 0.2500 &gt;
@@ -1503,7 +1667,7 @@ seed blocks.</p>
 <p><strong>Real result</strong> (<code>n=60</code> for
 <code>very-wide</code>, <code>N=150</code> for the null model, each seed
 base’s null-model run freshly computed at that seed base):</p>
-<table style="width:100%;">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 14%" />
 <col style="width: 14%" />
@@ -1544,7 +1708,7 @@ base’s null-model run freshly computed at that seed base):</p>
 <td>0.00168</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><span class="math inline">\(H_0\)</span> gives a genuinely different
 answer at the two seed bases, and both are reported rather than one
 being selected as “the” result. At <code>seed_base=0</code>, <span

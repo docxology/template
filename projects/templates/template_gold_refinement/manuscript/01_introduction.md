@@ -16,7 +16,7 @@ We map five gold-refining stages onto manuscript operations:
 
 {{REFINERY_STAGE_LABELS}}
 
-Each stage has a metallurgical operation, a manuscript operation, an input purity, and an output purity. Purity increases monotonically, stage order is sequential, and each stage input must equal the preceding output. These invariants are enforced by `src/refinery.py::run_refinery` and `src/purity.py::assert_monotone_increase` and exercised by positive and negative tests. `stages_to_target()` supplies the inverse query: given a target, return the shortest valid prefix rather than selecting later stages out of order.
+Each stage has a metallurgical operation, a manuscript operation, an input purity, and an output purity. Purity increases monotonically, stage order is sequential, and each stage input must equal the preceding output. These invariants are enforced by `src/template_gold_refinement/refinery.py::run_refinery` and `src/template_gold_refinement/purity.py::assert_monotone_increase` and exercised by positive and negative tests. `stages_to_target()` supplies the inverse query: given a target, return the shortest valid prefix rather than selecting later stages out of order.
 
 ## Mega-madlib token engine
 
@@ -26,7 +26,7 @@ The deeper token inventory is deliberately spread across the paper. Introduction
 
 ## Implementation circuit
 
-The metaphor becomes operational only when every transformation has an implementation owner. In this exemplar, configuration creates the ore, `src/refinery.py` defines the purity stages, `src/composition.py` turns slots into deterministic tokens, `src/formalisms.py` owns the equation registry, the `src/figures/` package turns those sources into registered visuals, and the template validators decide whether the hydrated manuscript can be treated as publication metal. The loop is deliberately closed: failures from the validators point back to source files, not to hand-polished output.
+The metaphor becomes operational only when every transformation has an implementation owner. In this exemplar, configuration creates the ore, `src/template_gold_refinement/refinery.py` defines the purity stages, `src/template_gold_refinement/composition.py` turns slots into deterministic tokens, `src/template_gold_refinement/formalisms.py` owns the equation registry, the `src/figures/` package turns those sources into registered visuals, and the template validators decide whether the hydrated manuscript can be treated as publication metal. The loop is deliberately closed: failures from the validators point back to source files, not to hand-polished output.
 
 ## Open question pinned
 

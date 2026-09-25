@@ -18,7 +18,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 from infrastructure.publishing.rehearsal import (  # noqa: E402
-    _rehearsal_exit_code,
+    rehearsal_exit_code,
     build_clean_checkout_plan,
     consolidate_rehearsal_shards,
     run_clean_checkout_rehearsal,
@@ -88,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
         receipt = consolidate_rehearsal_shards(shards, platform_name=platform.system().lower())
         write_receipt(args.receipt, receipt)
         print(json.dumps(receipt.to_dict(), indent=2, sort_keys=True))
-        return _rehearsal_exit_code(receipt)
+        return rehearsal_exit_code(receipt)
 
     if args.shard_index is not None:
         if args.receipt is None:
@@ -102,7 +102,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         write_receipt(args.receipt, shard)
         print(json.dumps(shard.to_dict(), indent=2, sort_keys=True))
-        return _rehearsal_exit_code(shard)
+        return rehearsal_exit_code(shard)
 
     if not args.execute:
         payload = {"schema_version": "template-release-rehearsal-plan/v1", **plan.to_dict()}
@@ -115,7 +115,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.receipt:
         write_receipt(args.receipt, receipt)
     print(json.dumps(receipt.to_dict(), indent=2, sort_keys=True))
-    return _rehearsal_exit_code(receipt)
+    return rehearsal_exit_code(receipt)
 
 
 if __name__ == "__main__":  # pragma: no cover

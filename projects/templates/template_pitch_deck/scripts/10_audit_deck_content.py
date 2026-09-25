@@ -22,10 +22,10 @@ DECK_LENGTHS = ("short", "medium", "long")
 
 
 def main(argv: list[str] | None = None) -> int:
-    from content_loader import load_deck_yaml
-    from deck_audit import audit_deck
-    from deck_tokens import build_deck_tokens
-    from paths import locate_repo_root
+    from template_pitch_deck.content_loader import load_deck_yaml
+    from template_pitch_deck.deck_audit import audit_deck
+    from template_pitch_deck.deck_tokens import build_deck_tokens
+    from template_pitch_deck.paths import locate_repo_root
 
     root = project_root()
     repo_root = locate_repo_root(root)

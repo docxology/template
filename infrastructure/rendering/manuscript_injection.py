@@ -17,7 +17,7 @@ Usage pattern (project-level)::
 
 The PDF-rendering pipeline reads from ``output/manuscript/`` when that
 directory contains markdown (see
-:func:`infrastructure.rendering.pipeline._resolve_manuscript_dir`).
+:func:`infrastructure.rendering.pipeline.resolve_manuscript_dir`).
 """
 
 import re
@@ -90,7 +90,7 @@ def write_resolved_manuscript_tree(
     output so they remain visible if the rendered PDF is inspected.
 
     The PDF-rendering pipeline prefers ``output/manuscript/`` when it contains
-    markdown (see :func:`infrastructure.rendering.pipeline._resolve_manuscript_dir`).
+    markdown (see :func:`infrastructure.rendering.pipeline.resolve_manuscript_dir`).
 
     Args:
         project_root: Root directory of the project (contains ``manuscript/``

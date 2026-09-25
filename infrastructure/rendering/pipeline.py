@@ -19,25 +19,25 @@ from infrastructure.core.exceptions import ValidationError
 from infrastructure.core.logging.utils import get_logger, log_live_resource_usage, log_success
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.rendering._combined_exports import (  # noqa: F401
-    combined_source_files as _combined_source_files,
-    html_combined_source_files as _html_combined_source_files,
-    render_combined_docx as _render_combined_docx,
-    render_combined_epub as _render_combined_epub,
-    render_combined_outputs as _render_combined_outputs,
+    combined_source_files as combined_source_files,
+    html_combined_source_files as html_combined_source_files,
+    render_combined_docx as render_combined_docx,
+    render_combined_epub as render_combined_epub,
+    render_combined_outputs as render_combined_outputs,
 )
 from infrastructure.rendering._manuscript_source import (  # noqa: F401
-    clean_stale_render_deliverables as _clean_stale_render_deliverables,
-    has_generated_manuscript_ordering as _has_generated_manuscript_ordering,
-    is_project_resolved as _is_project_resolved,
-    load_project_config_yaml as _load_project_config_yaml,
-    log_manuscript_composition as _log_manuscript_composition,
-    render_individual_files as _render_individual_files,
-    resolve_manuscript_dir as _resolve_manuscript_dir,
-    run_manuscript_variable_script as _run_manuscript_variable_script,
-    run_override_script as _run_override_script,
-    unresolved_config_tokens as _unresolved_config_tokens,
-    validate_latex_packages as _validate_latex_packages,
-    verify_config_tokens_resolved as _verify_config_tokens_resolved,
+    clean_stale_render_deliverables as clean_stale_render_deliverables,
+    has_generated_manuscript_ordering as has_generated_manuscript_ordering,
+    is_project_resolved as is_project_resolved,
+    load_project_config_yaml as load_project_config_yaml,
+    log_manuscript_composition as log_manuscript_composition,
+    render_individual_files as render_individual_files,
+    resolve_manuscript_dir as resolve_manuscript_dir,
+    run_manuscript_variable_script as run_manuscript_variable_script,
+    run_override_script as run_override_script,
+    unresolved_config_tokens as unresolved_config_tokens,
+    validate_latex_packages as validate_latex_packages,
+    verify_config_tokens_resolved as verify_config_tokens_resolved,
 )
 from infrastructure.rendering._pipeline_summary import (
     generate_rendering_summary,
@@ -53,6 +53,50 @@ from infrastructure.core.logging.diagnostic import DiagnosticReporter
 logger = get_logger(__name__)
 
 
+def _write_override_composition(project_root: Path, project_name: str) -> None:
+    """Bind a render-boundary composition receipt for custom-PDF lanes.
+
+    The shared web/combined lanes emit ``manuscript_composition.json``
+    (consumed by the rendered-provenance validation check); a project
+    ``scripts/_render_pdf_override.py`` builds its combined PDF directly
+    and would otherwise render without that receipt.  The override's
+    token-substituted combined markdown (``output/pdf/temp_combined.md``)
+    is promoted to the stable combined artifact and the receipt binds it
+    to the discovered canonical manuscript inputs, mirroring
+    :func:`~infrastructure.rendering.manuscript_composition.write_manuscript_composition`
+    usage in the standard lanes.
+    """
+    from infrastructure.rendering._manuscript_source import resolve_source_manuscript_dir
+    from infrastructure.rendering.manuscript_composition import write_manuscript_composition
+    from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
+
+    try:
+        source_dir = resolve_source_manuscript_dir(project_root)
+        rendered_inputs = discover_manuscript_files(source_dir)
+        if not rendered_inputs:
+            logger.warning("Override composition skipped: no canonical manuscript inputs")
+            return
+        temp_combined = project_root / "output" / "pdf" / "temp_combined.md"
+        if not temp_combined.is_file():
+            logger.warning("Override composition skipped: no combined markdown from override render")
+            return
+        combined_md = project_root / "output" / "web" / "_combined_manuscript.md"
+        combined_text = temp_combined.read_text(encoding="utf-8")
+        if not combined_md.exists() or combined_md.read_text(encoding="utf-8") != combined_text:
+            combined_md.parent.mkdir(parents=True, exist_ok=True)
+            combined_md.write_text(combined_text, encoding="utf-8")
+        write_manuscript_composition(
+            project_root,
+            project_name,
+            rendered_inputs,
+            combined_md,
+            algorithm="shared-combined-markdown-v1",
+        )
+        logger.info("Override render composition receipt bound to: %s", combined_md)
+    except Exception as exc:  # noqa: BLE001 — provenance must not fail the render
+        logger.warning("Override composition receipt could not be written: %s", exc)
+
+
 def _write_transmission_bookends(project_root: Path, project_name: str, *, repo_root: Path) -> None:
     from infrastructure.transmission.transmission_bookends import write_transmission_bookends
 
@@ -64,16 +108,16 @@ class RenderPipelineDependencies:
     """Explicit collaborators for rendering orchestration and behavior tests."""
 
     resolve_project: Callable[[Path, str], Path] = resolve_project_root
-    hydrate_manuscript: Callable[..., int] = _run_manuscript_variable_script
+    hydrate_manuscript: Callable[..., int] = run_manuscript_variable_script
     write_bookends: Callable[..., None] = _write_transmission_bookends
-    run_override: Callable[[Path, Path], int] = _run_override_script
-    validate_latex: Callable[..., int] = _validate_latex_packages
+    run_override: Callable[[Path, Path], int] = run_override_script
+    validate_latex: Callable[..., int] = validate_latex_packages
     verify_figures: Callable[[Path, Path], dict[str, Any]] = verify_figures_exist
     discover_manuscript: Callable[[Path], list[Path]] = discover_manuscript_files
-    load_project_config: Callable[[Path], dict[str, Any] | None] = _load_project_config_yaml
+    load_project_config: Callable[[Path], dict[str, Any] | None] = load_project_config_yaml
     manager_factory: Callable[..., RenderManager] = RenderManager
-    render_individual: Callable[..., tuple[int, list[str]]] = _render_individual_files
-    render_combined: Callable[..., None] = _render_combined_outputs
+    render_individual: Callable[..., tuple[int, list[str]]] = render_individual_files
+    render_combined: Callable[..., None] = render_combined_outputs
     generate_summary: Callable[..., dict[str, Any]] = generate_rendering_summary
     log_summary: Callable[[dict[str, Any]], None] = log_rendering_summary
     verify_outputs: Callable[..., bool] = verify_render_outputs
@@ -107,7 +151,7 @@ def _render_pipeline_impl(
         return 1
 
     try:
-        manuscript_dir = _resolve_manuscript_dir(project_root)
+        manuscript_dir = resolve_manuscript_dir(project_root)
     except ValidationError as exc:
         # config.yaml feeds the PDF title page; an unresolved {{TOKEN}} there
         # would print verbatim on the published cover. Fail closed instead.
@@ -129,7 +173,10 @@ def _render_pipeline_impl(
         except OSError as exc:
             logger.error("Could not remove stale override PDF %s: %s", stale_override_pdf, exc)
             return 1
-        return deps.run_override(project_root, override_script)
+        exit_code = deps.run_override(project_root, override_script)
+        if exit_code == 0:
+            _write_override_composition(project_root, project_name)
+        return exit_code
 
     if deps.validate_latex() != 0:
         return 1
@@ -148,7 +195,7 @@ def _render_pipeline_impl(
         logger.error("No manuscript files found; refusing to validate prior render outputs")
         return 1
 
-    _log_manuscript_composition(source_files)
+    log_manuscript_composition(source_files)
 
     try:
         project_yaml = deps.load_project_config(manuscript_dir)
@@ -176,6 +223,8 @@ def _render_pipeline_impl(
             enable_slides=env_config.enable_slides,
             enable_docx=env_config.enable_docx,
             enable_epub=env_config.enable_epub,
+            latex_compiler=env_config.latex_compiler,
+            pandoc_path=env_config.pandoc_path,
         )
         manager = deps.manager_factory(
             config,
@@ -194,7 +243,7 @@ def _render_pipeline_impl(
 
     md_files = [f for f in source_files if f.suffix == ".md"]
     try:
-        _clean_stale_render_deliverables(manager, source_files, project_name)
+        clean_stale_render_deliverables(manager, source_files, project_name)
     except OSError as exc:
         logger.error("Could not remove stale render deliverable: %s", exc)
         return 1

@@ -1,0 +1,32 @@
+domain: research_record
+display_name: "Experiment Tree Living Research Record"
+required_packages:
+  - pyyaml
+preferred_outputs:
+  - pdf
+  - html
+validation_gates:
+  - frozen_node_immutability
+  - fixed_run_command
+  - tree_acyclicity
+  - token_tree_backing
+figure_types: []
+citation_policy: generated_from_tree
+source_policy: "Every manuscript value derives from the committed experiment tree; never hand-type a result."
+review_gates:
+  - frozen_node_immutability
+artifact_expectations:
+  - output/data/manuscript_variables.json
+  - output/data/experiment_tree.json
+
+benchmark_rubric:
+  name: experiment-tree-readiness
+  dimensions:
+    - name: frozen_node_immutability
+      weight: 1.0
+    - name: tree_acyclicity
+      weight: 1.0
+    - name: token_tree_backing
+      weight: 1.0
+    - name: artifact_manifest
+      weight: 1.0

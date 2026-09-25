@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from json_io import write_json as _write_json
+from template_active_inference.json_io import write_json as _write_json
 
 SECURITY_POSTURE_SCHEMA = "template_active_inference.security_posture_audit.v1"
 

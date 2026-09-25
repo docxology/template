@@ -97,6 +97,22 @@ python -m infrastructure.provenance review
 python -m infrastructure.provenance validate --json
 ```
 
+## Experiment tree
+
+`tree.py` adds an OpenResearch-style experiment tree on top of the same store:
+`ExperimentNode` (baseline/child, provisional/frozen/answered, fixed
+`run_command`, parent link, payload), `ExperimentTree` for mutation, and
+`validate_experiment_tree` for tree discipline. Answered nodes are frozen —
+mutating one raises `ProvenanceStoreError` with `EXPERIMENT.ANSWERED_IMMUTABLE`.
+
+```python
+tree = ExperimentTree(prov)
+root = tree.add_baseline("baseline", "uv run python run.py")
+child = tree.add_child("tweak", root.experiment_id, "uv run python run.py")
+tree.update_node(child.experiment_id, status=ExperimentStatus.answered)
+validate_experiment_tree(tree)  # is_valid when the whole tree holds discipline
+```
+
 ## Design notes
 
 - **Content addressing**: `content_id(payload)` = 16-hex-char SHA-256 prefix

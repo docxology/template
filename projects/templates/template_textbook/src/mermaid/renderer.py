@@ -9,8 +9,8 @@ import subprocess  # nosec B404
 from dataclasses import dataclass
 from pathlib import Path
 
-from textbook_io import write_text_atomic
-from textbook_logging import get_logger
+from template_textbook.textbook_io import write_text_atomic
+from template_textbook.textbook_logging import get_logger
 
 logger = get_logger(__name__)
 

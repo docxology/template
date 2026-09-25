@@ -10,9 +10,9 @@ from ontology.bindings import (
     load_section_ontology,
 )
 
-from json_io import load_json_strict as _load_json
+from template_active_inference.json_io import load_json_strict as _load_json
 from manuscript.sheaf.semantic_maps import SEMANTIC_RESTRICTION_LANES
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 
 
 def _rel(root: Path, path: Path) -> str:

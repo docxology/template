@@ -242,7 +242,7 @@ def compile_latex_manuscript(
     # can take several seconds and the suite marks these renders
     # ``@pytest.mark.timeout(90)``, so an 8 s cap made the pipeline flaky on
     # slower machines while still bounding runaway compiles.
-    latex_timeout = 60 if os.environ.get("PYTEST_CURRENT_TEST") else 600
+    latex_timeout = 60 if os.environ.get("PYTEST_CURRENT_TEST") else int(os.environ.get("LATEX_TIMEOUT", "600"))
 
     logger.info(f"Rendering combined manuscript to PDF: {output_file.name}")
     logger.info(f"  Source files: {len(source_files)}")

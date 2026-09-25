@@ -13,7 +13,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from textbook_logging import get_logger
+from template_textbook.textbook_logging import get_logger
 
 logger = get_logger(__name__)
 

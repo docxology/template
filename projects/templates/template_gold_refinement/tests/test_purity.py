@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from purity import (
+from template_gold_refinement.purity import (
     KARAT_GRADES,
     NINE_NINES_PURITY,
     PURITY_VECTOR_DIMENSIONS,

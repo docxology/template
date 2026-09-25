@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 
 
 ALLOWED_CLAIM_LANES = ("analytical", "formal", "pymdp", "release", "scope", "semantic", "visualization")

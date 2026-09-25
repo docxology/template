@@ -227,7 +227,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 1.375234603881836
+      "total_size_mb": 1.3752317428588867
     },
     "figures": {
       "files": 11,
@@ -236,7 +236,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.4821157455444336
+      "size_mb": 0.4821128845214844
     },
     "stable_inventory": {
       "categories": {
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 505535
+          "size_bytes": 505532
         },
         "reports": {
           "files": 3,
@@ -271,7 +271,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 119,
-      "total_size_bytes": 1442038
+      "total_size_bytes": 1442035
     }
   },
   "recommendations": [],
@@ -282,11 +282,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-13T21:23:53Z",
+  "timestamp": "2026-09-23T18:03:20Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "6e7a5144c21637d21aa42a73f4f21f716c10b3c96bf9c06c6b2d7c2e0ec3922d",
+      "sha256": "8b3db7b698b22e23410ba00aca38bfd365a583c3ca49e52d02f221b6524676aa",
       "size_bytes": 38089
     },
     "combined_manuscript": {
@@ -352,19 +352,19 @@
     "fingerprints": {
       "config": {
         "file_count": 14,
-        "sha256": "d391fcccba01b5b6172b1542b666a540945a2804d6984cf26897eda71fd744f3"
+        "sha256": "4acf8a029ea44c2f3d2557afcbf85df3f211fee227f80e6ff87e83cf8c354f35"
       },
       "output": {
         "file_count": 119,
-        "sha256": "97da69e839b420d9d8fad8b6401b1922899310367eee82b6188acbfc0078e98d"
+        "sha256": "08cd8d34051540d6c92558faab12133e5dbd834e6b7bc9bcfde2bb5890011db8"
       },
       "source": {
         "file_count": 57,
         "sha256": "86f0368fbabba3e7401841e87ab11c82ca12a244e3f5dc85fa9c67af5dcc1e37"
       },
       "stage": {
-        "file_count": 1336,
-        "sha256": "d6ba61354da529d2daf73ca07793521d0c494e84e79886deb2eddf4d916b2fc3"
+        "file_count": 1347,
+        "sha256": "f9d8ed68770fecb9076b923aa9db4556c1761a9ac0ebb57bffb33ee0a57ea8d3"
       }
     },
     "project": "templates/template_autopoiesis",

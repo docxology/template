@@ -9,7 +9,7 @@ from typing import Any
 
 from analytical.bernoulli_toy import ising_mutual_information
 from analytical.hyperparameters import lambda_grid, load_hyperparameters
-from json_io import load_json as _load_json
+from template_active_inference.json_io import load_json as _load_json
 from roadmap_tracks.toy_sweep_helpers import (
     _joint_entropy,
     _marginal_entropy,

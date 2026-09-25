@@ -9,7 +9,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Literal
 
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 
 
 SimulationMode = Literal["state_inference", "policy_inference"]

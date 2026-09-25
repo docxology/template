@@ -28,12 +28,12 @@ CLAIM_SUPPORT_REGISTRY_NAME = "claim_support_registry.json"
 
 def main() -> int:
     """CLI entry point."""
-    from composition import generate_token_plan
-    from config import load_gold_refinement_config
-    from analogy_boundary import validate_analogy_boundary
-    from domain_adapter import load_domain_profile
-    from refinery import run_refinery, stages_to_target
-    from transmission import validate_transmission_bookends
+    from template_gold_refinement.composition import generate_token_plan
+    from template_gold_refinement.config import load_gold_refinement_config
+    from template_gold_refinement.analogy_boundary import validate_analogy_boundary
+    from template_gold_refinement.domain_adapter import load_domain_profile
+    from template_gold_refinement.refinery import run_refinery, stages_to_target
+    from template_gold_refinement.transmission import validate_transmission_bookends
 
     root = _PROJECT_ROOT
 
@@ -119,7 +119,7 @@ def main() -> int:
         print(f"Wrote {fp}")
 
     # Build evidence registry
-    from evidence import build_evidence_registry, write_evidence_registry
+    from template_gold_refinement.evidence import build_evidence_registry, write_evidence_registry
 
     registry = build_evidence_registry(gr_config, root)
     registry_path = reports_dir / CLAIM_SUPPORT_REGISTRY_NAME
@@ -128,7 +128,7 @@ def main() -> int:
     print(f"  Evidence: {registry.supported_claims}/{registry.total_claims} claims supported")
 
     # Build dashboard
-    from dashboard import write_dashboard
+    from template_gold_refinement.dashboard import write_dashboard
 
     dashboard_path = write_dashboard(root)
     print(f"Wrote {dashboard_path}")

@@ -222,7 +222,7 @@ class PublicMatrixReceipt:
 
         return errors
 
-    def _to_dict(self) -> dict:
+    def _to_dict(self) -> dict[str, Any]:
         """Deterministic dict for serialization (sorted lanes)."""
         raw = asdict(self)
         raw["lanes"] = sorted(raw["lanes"], key=lambda l: l["project_name"])

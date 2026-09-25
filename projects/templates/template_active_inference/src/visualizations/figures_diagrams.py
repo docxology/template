@@ -17,7 +17,7 @@ from gnn.parser import parse_gnn_file
 from manuscript.sheaf.counts import structural_counts
 from ontology.bindings import load_section_ontology
 from simulation.tmaze_model import TMazeSpec
-from yaml_io import load_yaml
+from template_active_inference.yaml_io import load_yaml
 from .figure_helpers import (
     configure_axis,
     draw_arrow,

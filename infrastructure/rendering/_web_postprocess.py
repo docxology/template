@@ -133,6 +133,18 @@ def _exact_render_record(
     label: str | None,
     filename: str | None,
 ) -> FigureAltRecord | None:
+    label_record = registry.by_label(label) if label is not None else None
+    if label_record is not None:
+        if label_record.filename != filename:
+            raise RenderingError(
+                f"Rendered figure path does not match registry record for {label_record.label}",
+                context={
+                    "registry": str(registry.path),
+                    "registry_filename": label_record.filename,
+                    "rendered_filename": filename,
+                },
+            )
+        return label_record
     filename_records = registry.by_filename(filename)
     if len(filename_records) > 1:
         raise RenderingError(
@@ -146,18 +158,6 @@ def _exact_render_record(
             f"Rendered figure label/path mismatch: unlabeled != {filename_records[0].label}",
             context={"registry": str(registry.path), "rendered_filename": filename},
         )
-    label_record = registry.by_label(label)
-    if label_record is not None:
-        if label_record.filename != filename:
-            raise RenderingError(
-                f"Rendered figure path does not match registry record for {label_record.label}",
-                context={
-                    "registry": str(registry.path),
-                    "registry_filename": label_record.filename,
-                    "rendered_filename": filename,
-                },
-            )
-        return label_record
     if not filename_records:
         return None
     filename_record = filename_records[0]

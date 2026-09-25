@@ -15,6 +15,7 @@ from infrastructure.validation.publication.rendered_provenance import (
 )
 from infrastructure.validation.rendered_snapshot import (
     RenderedSnapshotError,
+    _source_repository_boundary,
     build_current_rendered_snapshot,
 )
 from infrastructure.validation.output.pipeline import execute_validation_pipeline
@@ -205,3 +206,96 @@ def test_external_snapshot_rejects_source_symlink_outside_private_worktree(tmp_p
         build_current_rendered_snapshot(template_root, EXTERNAL_PROJECT)
 
     assert exc_info.value.code == "SOURCE_SYMLINK_ESCAPE"
+
+
+def _category_stage4_project(tmp_path: Path) -> tuple[Path, Path]:
+    """Create a stage-4 project reached through a symlinked sidecar category.
+
+    The sanctioned sidecar topology links a whole category directory
+    (``projects/<lifecycle>/<category>``) into the private sidecar tree; the
+    project inside it is then a leaf symlink to its own worktree.
+    """
+
+    template_root = tmp_path / "template"
+    sidecar_category = tmp_path / "sidecar" / "ongoing" / "COGSEC"
+    project_repo = tmp_path / "docxology" / "demo"
+    make_project(
+        project_repo,
+        "demo",
+        repo_layout=False,
+        with_manuscript=True,
+        with_output=True,
+    )
+    write_doc(template_root / ".gitignore", "# synthetic template policy\n")
+    write_doc(template_root / "pyproject.toml", '[project]\nname = "synthetic-template"\n')
+    write_doc(
+        template_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml",
+        "stages:\n  - name: Render\n    script: scripts/pipeline/stage_03_render.py\n",
+    )
+    write_doc(template_root / "infrastructure" / "rendering" / "runtime.py", "ENABLED = True\n")
+    write_doc(template_root / "scripts" / "__init__.py", '"""Synthetic stage scripts."""\n')
+    write_doc(template_root / "scripts" / "pipeline" / "stage_03_render.py", 'print("render")\n')
+
+    write_doc(project_repo / ".gitignore", "output/\n")
+    render_config = (
+        "render:\n  formats:\n    pdf: false\n    html: true\n    slides: false\n    docx: false\n    epub: false\n"
+    )
+    write_doc(project_repo / "manuscript" / "config.yaml", render_config)
+    write_doc(project_repo / "manuscript" / "01_intro.md", "# Intro\n\nCurrent prose.\n")
+    write_doc(project_repo / "output" / "manuscript" / "config.yaml", render_config)
+    write_doc(project_repo / "output" / "manuscript" / "01_intro.md", "# Intro\n\nCurrent prose.\n")
+    write_doc(
+        project_repo / "output" / "web" / "index.html",
+        "<!doctype html><html><body>Current prose.</body></html>\n",
+    )
+    combined = project_repo / "output" / "web" / "_combined_manuscript.md"
+    write_doc(combined, "# Intro\n\nCurrent prose.\n")
+    write_manuscript_composition(
+        project_repo,
+        "ongoing/COGSEC/demo",
+        [project_repo / "output" / "manuscript" / "01_intro.md"],
+        combined,
+    )
+
+    sidecar_category.mkdir(parents=True)
+    category_link = template_root / "projects" / "ongoing" / "COGSEC"
+    category_link.parent.mkdir(parents=True)
+    category_link.symlink_to(sidecar_category, target_is_directory=True)
+    (sidecar_category / "demo").symlink_to(project_repo, target_is_directory=True)
+    for repository in (template_root, project_repo):
+        subprocess.run(["git", "init", "-q"], cwd=repository, check=True, capture_output=True)
+        subprocess.run(["git", "add", "."], cwd=repository, check=True, capture_output=True)
+    snapshot_current_artifact_manifest(
+        project_repo / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+    return template_root, project_repo
+
+
+def test_source_repository_boundary_rejects_alias_above_projects_root(tmp_path: Path) -> None:
+    """Lexical ancestry still bounds a project alias to the projects tree."""
+
+    template_root, project_repo = _category_stage4_project(tmp_path)
+    escaped_root = template_root / "outside-projects" / "demo"
+    escaped_root.parent.mkdir()
+    escaped_root.symlink_to(project_repo, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        _source_repository_boundary(
+            template_root,
+            escaped_root,
+            project_repo,
+        )
+
+    assert exc_info.value.code == "PROJECT_LINK_INVALID"
+
+
+def test_external_snapshot_accepts_symlinked_category_sidecar(tmp_path: Path) -> None:
+    """The documented sidecar topology links a category, not only a leaf."""
+
+    template_root, project_repo = _category_stage4_project(tmp_path)
+
+    snapshot = build_current_rendered_snapshot(template_root, "ongoing/COGSEC/demo")
+
+    assert snapshot.project == "ongoing/COGSEC/demo"
+    assert snapshot.source.file_count > 0

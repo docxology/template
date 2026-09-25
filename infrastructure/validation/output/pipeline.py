@@ -84,7 +84,7 @@ class PipelineCheck:
     run: Callable[[], bool]
 
 
-def _build_core_checks(
+def build_core_checks(
     project_name: str,
     *,
     repo_root: Path = _REPO_ROOT,
@@ -390,7 +390,7 @@ def execute_validation_pipeline(
         load_existing=False,
     ).clear_report()
 
-    checks = _build_core_checks(project_name, repo_root=repo_root, prose_validator=prose_validator)
+    checks = build_core_checks(project_name, repo_root=repo_root, prose_validator=prose_validator)
     results = _run_registered_checks(checks)
     figure_issues: list[str] = []
     detailed_validation = None

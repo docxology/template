@@ -23,7 +23,7 @@ for path in (SRC, TESTS):
 # regardless of which pyproject.toml pytest picks as its rootdir/configfile —
 # a standalone single-test-file invocation resolves rootdir to this project's
 # own pyproject.toml, which only puts "." and "src" on pythonpath.
-from paths import locate_repo_root  # noqa: E402
+from template_pitch_deck.paths import locate_repo_root  # noqa: E402
 
 REPO_ROOT = locate_repo_root(ROOT)
 if str(REPO_ROOT) not in sys.path:

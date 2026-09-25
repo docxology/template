@@ -1,7 +1,7 @@
 """Tests for strict boolean coercion in config parsing."""
 
 from __future__ import annotations
-from coercion import coerce_bool
+from template_gold_refinement.coercion import coerce_bool
 
 
 def test_coerce_bool_returns_default_for_none() -> None:
@@ -9,7 +9,7 @@ def test_coerce_bool_returns_default_for_none() -> None:
 
 
 def test_as_bool_wrapper_forwards_default() -> None:
-    from parsing import as_bool
+    from template_gold_refinement.parsing import as_bool
 
     assert as_bool(None, True, field_name="flag") is True
 

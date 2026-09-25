@@ -19,7 +19,7 @@ ensure_project_paths()
 
 def main() -> int:
     """CLI entry point."""
-    from textbook_logging import get_logger
+    from template_textbook.textbook_logging import get_logger
     from visualization.gallery import generate_gallery_figures
     from visualization.plots import generate_all_figures
     from visualization.registry import write_figure_registry

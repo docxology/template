@@ -20,7 +20,7 @@ import numpy as np
 import yaml
 
 from textbook import models
-from textbook_logging import get_logger
+from template_textbook.textbook_logging import get_logger
 
 from ._scaffold import BLUE, GRAY, GREEN, ORANGE, PURPLE, SERIES, VERMILLION, new_figure, save_figure
 

@@ -219,7 +219,7 @@ def _status_paths(status_output: str) -> tuple[str, ...]:
     return tuple(paths)
 
 
-def _clean_generated_render_output(checkout: Path, status_output: str) -> tuple[bool, str]:
+def clean_generated_render_output(checkout: Path, status_output: str) -> tuple[bool, str]:
     """Restore only the representative render's declared generated output.
 
     A representative render is expected to exercise the real renderer, which
@@ -374,7 +374,7 @@ def _execute_clean_checkout_run(
     clean_ok = pre_clean.returncode == 0
     clean_reason = ""
     if clean_ok and pre_clean.stdout.strip():
-        clean_ok, clean_reason = _clean_generated_render_output(checkout, pre_clean.stdout)
+        clean_ok, clean_reason = clean_generated_render_output(checkout, pre_clean.stdout)
     clean = run_with_policy(
         ("git", "status", "--porcelain", "--untracked-files=all"),
         cwd=checkout,
@@ -577,7 +577,7 @@ def consolidate_rehearsal_shards(
     )
 
 
-def _rehearsal_exit_code(receipt: CleanCheckoutReceipt | RehearsalShardReceipt) -> int:
+def rehearsal_exit_code(receipt: CleanCheckoutReceipt | RehearsalShardReceipt) -> int:
     """Exit 0 only for a passing receipt that also validates cleanly.
 
     ``validate()`` accepts well-formed blocked receipts (they are legitimate

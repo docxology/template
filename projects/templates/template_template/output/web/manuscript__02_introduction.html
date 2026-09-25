@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_introduction.md.web</title>
   <style>
@@ -202,12 +202,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -219,7 +263,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -277,6 +332,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -284,13 +341,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -371,8 +483,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -421,6 +532,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -435,6 +552,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -605,14 +728,14 @@ stewardship, and (6) AI-agent collaboration via structured
 documentation. Each existing framework addresses a subset; none provides
 the unified enforcement mechanism. The detailed tool-by-tool comparison
 is developed in the <a
-href="05c_comparison.md#comparison-to-existing-tools">Comparison to
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/05c_comparison.md#comparison-to-existing-tools">Comparison to
 Existing Tools</a> section; the summary table below captures the gap
 landscape.</p>
 <h3 id="summary-gaps-left-by-existing-tools">Summary: Gaps Left by
 Existing Tools</h3>
 <p>The six concerns identified above map onto existing tool categories
 as follows:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 22%" />
 <col style="width: 40%" />
@@ -663,7 +786,7 @@ reasoning)</td>
 <td>All existing tools</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>No existing system addresses all six concerns within a single
 enforced pipeline.</p>
 <h2 id="template-an-integrated-solution"><code>template/</code>: An
@@ -682,15 +805,15 @@ pipeline-enforced system with version-controlled infrastructure
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
 scripts, data). 28 infrastructure subdirectories (25 importable
-packages) comprising ~729 Python modules provide reusable services;
+packages) comprising ~769 Python modules provide reusable services;
 projects consume them without modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: Pipeline advancement is
 contingent on test passage. The configured source-coverage floors are
 60% for infrastructure and 90% for each project. The static gate rejects
 prohibited mock-framework imports, while the suites exercise real
 filesystem and subprocess behavior and use local protocol servers or
-explicitly enabled live services for network boundaries. ~9,874
-infrastructure tests and 5770+ project tests are discovered by the
+explicitly enabled live services for network boundaries. ~10,163
+infrastructure tests and 5880+ project tests are discovered by the
 introspection build.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -731,12 +854,12 @@ computation.</p></li>
 <h2 id="scope-and-contributions">Scope and Contributions</h2>
 <p>This paper is itself a product of the template it describes. The
 metrics populating its tables were computed by the introspection module
-documented in the <a href="03a_architecture.md#methods">Methods</a>; the
+documented in the <a href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/03a_architecture.md#methods">Methods</a>; the
 figures were rendered by the visualization code validated by the test
-suite described in <a href="03e_quality.md#quality-assurance">Quality
+suite described in <a href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/03e_quality.md#quality-assurance">Quality
 Assurance</a>; the PDF carrying these words was assembled by the same
 YAML-declared pipeline whose architecture is the subject of the <a
-href="04_results.md#results">Results</a>. This self-productive
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/04_results.md#results">Results</a>. This self-productive
 loop—where the system that is described is also the system that produces
 the description—is not incidental but structural, a concrete
 demonstration that <code>template/</code> can sustain the full lifecycle
@@ -747,10 +870,11 @@ are:</p>
 <li>A formal description of the Two-Layer Architecture and Standalone
 Project Paradigm that enables N independent research projects to share
 infrastructure without coupling.</li>
-<li>A detailed specification of the 16-stage DAG in
+<li>A detailed specification of the 17-stage DAG in
 <code>infrastructure/core/pipeline/pipeline.yaml</code>: default full
 runs use 10 stages; <code>--core-only</code> runs 8; opt-in ebook,
-metadata, bundle, and archival stages via <code>--tags</code>.</li>
+docxplus, metadata, bundle, and archival stages via
+<code>--tags</code>.</li>
 <li>A comparative analysis positioning <code>template/</code> against
 nine peer tools—Snakemake, Nextflow, CWL, Quarto, Jupyter Book, R
 Markdown, DVC, Overleaf, OpenAI Prism—across fourteen feature
@@ -794,21 +918,21 @@ aligned with the W3C PROV data model [moreau2013provdm] and SLSA
 <code>github.com/docxology/template</code>.</li>
 </ul>
 <h2 id="paper-organization">Paper Organization</h2>
-<p>The <a href="03a_architecture.md#methods">Methods</a> describe the
+<p>The <a href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/03a_architecture.md#methods">Methods</a> describe the
 Two-Layer Architecture, Thin Orchestrator pattern, pipeline stages, and
-AI collaboration model. <a href="04_results.md#results">Results</a>
+AI collaboration model. <a href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/04_results.md#results">Results</a>
 present quantitative metrics from multi-project execution, coverage
 analysis, and steganographic benchmarks. The <a
-href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Discussion</a>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Discussion</a>
 addresses the Zero-Mock tradeoff, scalability implications, a detailed
 tool comparison, and future directions. The <a
-href="06_infrastructure_modules.md#infrastructure-module-reference">Infrastructure
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/06_infrastructure_modules.md#infrastructure-module-reference">Infrastructure
 Module Reference</a> provides detailed documentation for all 28
 subdirectories. <a
-href="07_security_provenance.md#security-and-provenance">Security and
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/07_security_provenance.md#security-and-provenance">Security and
 Provenance</a> describes the steganographic and cryptographic integrity
 layer. The <a
-href="08a_appendix_pipeline.md#appendix-pipeline">Appendices</a> provide
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/08a_appendix_pipeline.md#appendix-pipeline">Appendices</a> provide
 pipeline, configuration, and comparative references.</p>
 </main>
 </body>

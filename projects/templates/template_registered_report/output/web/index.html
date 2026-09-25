@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="A reproducible exemplar for registered analysis plans" />
@@ -265,6 +265,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -275,14 +284,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -313,12 +354,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -330,7 +415,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -388,6 +484,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -395,13 +493,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -482,8 +635,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -532,6 +684,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -546,6 +704,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -728,7 +892,7 @@ renders that binding directly from the frozen registration via
 <code>hypothesis_outcome_map</code>, so the figure cannot silently drift
 from the locked plan.</p>
 <figure id="fig:hypothesis_map">
-<a class="figure-full-size-link" href="../figures/hypothesis_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/hypothesis_map.png"
+<a class="figure-full-size-link" href="../figures/hypothesis_map.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Registered hypothesis-to-outcome-to-analysis mapping for the demonstration registration."><img src="../figures/hypothesis_map.png"
 alt="A four-column mapping contains 1 registered hypothesis row(s) (H1), linking each claim to its outcome, measure, and planned analysis." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Registered
 hypothesis-to-outcome-to-analysis mapping for the demonstration
@@ -765,7 +929,7 @@ is observed, followed by two interpretation stages that run only after
 the deviation ledger is built. fig. <a href="#fig:analysis_dag">2</a>
 shows this ordering and the lock boundary it protects.</p>
 <figure id="fig:analysis_dag">
-<a class="figure-full-size-link" href="../figures/analysis_dag.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/analysis_dag.png"
+<a class="figure-full-size-link" href="../figures/analysis_dag.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Registered-report analysis workflow, rendered from analysis_plan_stages() in…"><img src="../figures/analysis_dag.png"
 alt="6 ordered workflow boxes run from registration freeze through interpretation; a dashed results-revealed boundary separates 4 locked stages from the post-results stages." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Registered-report analysis
 workflow, rendered from <code>analysis_plan_stages()</code> in
@@ -844,7 +1008,7 @@ class="header-section-number">5.1</span> Confirmatory outcome (H1,
 <code>primary_score</code>)</h2>
 <p>On the deterministic demonstration data, the registered two-sided
 permutation test returns:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Quantity</th>
@@ -885,7 +1049,7 @@ permutation test returns:</p>
 <td>significant</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The observed difference of <code>1.003</code> lies far in the right
 tail of the permutation null distribution: none of the <code>2000</code>
 label shuffles produced a mean difference as extreme, so the
@@ -895,7 +1059,7 @@ preregistered <code>alpha = 0.05</code>. H1 is therefore
 href="#fig:permutation_result">3</a> shows the observed statistic
 against the null it was tested against.</p>
 <figure id="fig:permutation_result">
-<a class="figure-full-size-link" href="../figures/permutation_result.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/permutation_result.png"
+<a class="figure-full-size-link" href="../figures/permutation_result.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Registered permutation test on the deterministic demonstration data, rendered by…"><img src="../figures/permutation_result.png"
 alt="A histogram shows 2,000 seeded permutation differences; the observed treatment-control difference is 1.003, with two-sided p=0.0005, which crosses the registered alpha=0.050 threshold." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Registered permutation test on
 the deterministic demonstration data, rendered by
@@ -926,7 +1090,7 @@ class="header-section-number">5.3</span> Sensitivity analysis</h2>
 analysis, and <code>validate_sensitivity_table</code> checks every
 declared row against the registered outcomes and primary model before
 the review packet is built:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -949,7 +1113,7 @@ the review packet is built:</p>
 <td>robust</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The row targets the registered primary outcome with the registered
 primary model and a supported decision, so
 <code>validate_sensitivity_table</code> returns no findings for it and
@@ -979,7 +1143,7 @@ plan-divergent analysis: it adds a <code>secondary_score</code> endpoint
 and swaps the registered <code>permutation_test</code> for a
 <code>linear_model</code>, each accompanied by a rationale. The
 resulting ledger is:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Order</th>
@@ -1016,7 +1180,7 @@ resulting ledger is:</p>
 <td><code>warning</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Because both departures are documented, the review packet remains
 valid: it reports <code>primary_score</code> as the only confirmatory
 outcome, <code>secondary_score</code> as exploratory, and an integrity
@@ -1028,7 +1192,7 @@ same code would have raised a blocking
 invalid. fig. <a href="#fig:deviation_timeline">4</a> plots this
 register along the registered-to-executed axis.</p>
 <figure id="fig:deviation_timeline">
-<a class="figure-full-size-link" href="../figures/deviation_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/deviation_timeline.png"
+<a class="figure-full-size-link" href="../figures/deviation_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Preregistration-versus-executed deviation ledger timeline, rendered by…"><img src="../figures/deviation_timeline.png"
 alt="A horizontal timeline contains 3 decision events: 1 registered, 2 documented deviation(s), and 0 undocumented deviation(s)." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Preregistration-versus-executed
 deviation ledger timeline, rendered by
@@ -1111,7 +1275,7 @@ result prose rewrite the preregistered intent.</p>
 <h1 data-number="8" id="sec:references"><span
 class="header-section-number">8</span> References</h1>
 <p>The bibliography lives in <a
-href="references.bib"><code>manuscript/references.bib</code></a> and is
+href="https://github.com/docxology/template/blob/main/projects/templates/template_registered_report/manuscript/references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF rendering. Every <code>[@key]</code> citation
 in the manuscript is resolved against that file, so the reference list
 below is generated from the cited entries rather than maintained by

@@ -32,7 +32,7 @@ Generated files are observations, not editing surfaces. The analysis writes the 
 
 The purity sequence across all stages is: {{PURITY_SEQUENCE}}
 
-Each stage record contains an order, a metallurgical operation, its manuscript analogue, an input purity, and an output purity. The canonical values are design parameters declared in `src/refinery.py`; they are not estimated from a corpus or calibrated against external ratings. Their methodological role is to create a transparent ordinal progression on the bounded interval $[0,1]$.
+Each stage record contains an order, a metallurgical operation, its manuscript analogue, an input purity, and an output purity. The canonical values are design parameters declared in `src/template_gold_refinement/refinery.py`; they are not estimated from a corpus or calibrated against external ratings. Their methodological role is to create a transparent ordinal progression on the bounded interval $[0,1]$.
 
 The primary invariants are strict monotonicity, sequential stage order, and adjacent-state continuity. `assert_monotone_increase()` raises `ValueError` if a state fails to exceed its predecessor; `run_refinery()` also rejects empty pipelines, nonsequential order, and any stage whose input differs from the preceding output. For stages $s_1, \ldots, s_n$:
 
@@ -44,7 +44,7 @@ The reverse-assay function `stages_to_target()` returns the shortest ordered pre
 
 ## Formalism registry
 
-The formal layer is generated from `src/formalisms.py`, not hand-numbered prose. [@tbl:formalism_registry] lists the source evidence for each equation, and the equation blocks below are auto-numbered by the renderer.
+The formal layer is generated from `src/template_gold_refinement/formalisms.py`, not hand-numbered prose. [@tbl:formalism_registry] lists the source evidence for each equation, and the equation blocks below are auto-numbered by the renderer.
 
 | ID | Formalism | Equation | Source |
 |----|-----------|----------|--------|
@@ -81,7 +81,7 @@ Karat grades map purity fractions to a gold-fineness vocabulary used here as an 
 - 24K = 99.9% (cupellation stage)
 - Nine-nines = 99.9999999% (certification stage)
 
-`src/purity.py::karat_for_purity()` assigns the highest configured grade whose threshold does not exceed the stage purity. The nine-nines label is a deliberately stringent local predicate. It is neither a continuous measure of manuscript quality nor an assertion about a universal gold-market threshold. The grading chart appears in [@fig:karat_grading] (see [@sec:results]).
+`src/template_gold_refinement/purity.py::karat_for_purity()` assigns the highest configured grade whose threshold does not exceed the stage purity. The nine-nines label is a deliberately stringent local predicate. It is neither a continuous measure of manuscript quality nor an assertion about a universal gold-market threshold. The grading chart appears in [@fig:karat_grading] (see [@sec:results]).
 
 ## Execution procedure
 
@@ -117,7 +117,7 @@ The terminal predicate in [@eq:certification_predicate] requires the configured 
 
 The implementation trace handles accidental drift: missing tokens, unsupported claims, malformed citations, stale figures, or broken renders. A security assay adds a different question: could the manuscript sound certified while omitting threat scope, supply-chain provenance, or scan evidence? The assay therefore treats zero trust, secure software development, supply-chain provenance, attack-path modeling, SBOM standards, and secure-by-design guidance as boundary-setting standards rather than proof of compliance [@nist_sp800_207_zero_trust; @nist_sp800_218_ssdf; @slsa_v1_2; @sigstore_docs; @mitre_attack; @cyclonedx_spec; @spdx_spec; @cisa_secure_by_design].
 
-The assay is implemented as source-owned rows in `gold_refinement.security_assay` and generated records from `src/security_assay.py`. Each row must name a threat, standard or guidance source, local evidence surface, validator, and claim boundary, as specified by [@eq:adversarial_assay] and reported in [@tbl:security_assay]. This study did not run Codex Security or Deep Security Scan and reports no vulnerability findings. Completeness of the assay schema therefore supports scope disclosure, not security compliance — the assay checks only that named threats carry local evidence surfaces and validator rows; it does not certify an absence of vulnerabilities (negative control: removing a row's evidence surface fails schema validation rather than being scored as secure).
+The assay is implemented as source-owned rows in `gold_refinement.security_assay` and generated records from `src/template_gold_refinement/security_assay.py`. Each row must name a threat, standard or guidance source, local evidence surface, validator, and claim boundary, as specified by [@eq:adversarial_assay] and reported in [@tbl:security_assay]. This study did not run Codex Security or Deep Security Scan and reports no vulnerability findings. Completeness of the assay schema therefore supports scope disclosure, not security compliance — the assay checks only that named threats carry local evidence surfaces and validator rows; it does not certify an absence of vulnerabilities (negative control: removing a row's evidence surface fails schema validation rather than being scored as secure).
 A row missing any required element is rejected at load time rather than rendered as partial assurance. An assay with zero configured rows reports that no security-scope claim should be made — absence of evidence is rendered as "not configured", never as assurance.
 
 ### Scientific-integrity risk model
@@ -140,7 +140,7 @@ This table also makes generated-number ownership explicit. Counts, support rates
 
 ### Multi-objective purity
 
-Scalar stage purity is retained only as the state variable of the refinery analogy. `src/purity.py::PurityVector` separately records stage completion, claim support, token provenance, and figure quality on $[0,1]$. The vector exposes its weakest dimension and a conjunctive all-complete predicate but intentionally defines no weighted average. This prevents a perfect render or terminal stage value from numerically compensating for unsupported claims or missing provenance. Weighting these dimensions would require an external validation study and is outside the present design.
+Scalar stage purity is retained only as the state variable of the refinery analogy. `src/template_gold_refinement/purity.py::PurityVector` separately records stage completion, claim support, token provenance, and figure quality on $[0,1]$. The vector exposes its weakest dimension and a conjunctive all-complete predicate but intentionally defines no weighted average. This prevents a perfect render or terminal stage value from numerically compensating for unsupported claims or missing provenance. Weighting these dimensions would require an external validation study and is outside the present design.
 
 ## Reproducibility and validity safeguards
 

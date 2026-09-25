@@ -2,8 +2,8 @@
 
 from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.discovery import (
-    _calculate_project_stats,
-    _get_project_category,
+    calculate_project_stats,
+    get_project_category,
     analyze_documentation_file,
     catalog_agents_readme,
     categorize_documentation,
@@ -160,31 +160,31 @@ class TestIdentifyCrossReferences:
 
 class TestGetProjectCategory:
     def test_manuscript_category(self):
-        result = _get_project_category("projects/myproj/manuscript/intro.md", {"myproj"})
+        result = get_project_category("projects/myproj/manuscript/intro.md", {"myproj"})
         assert result == "project_manuscript_myproj"
 
     def test_scripts_category(self):
-        result = _get_project_category("projects/myproj/scripts/run.py", {"myproj"})
+        result = get_project_category("projects/myproj/scripts/run.py", {"myproj"})
         assert result == "project_scripts_myproj"
 
     def test_tests_category(self):
-        result = _get_project_category("projects/myproj/tests/test_foo.py", {"myproj"})
+        result = get_project_category("projects/myproj/tests/test_foo.py", {"myproj"})
         assert result == "project_tests_myproj"
 
     def test_src_category(self):
-        result = _get_project_category("projects/myproj/src/main.py", {"myproj"})
+        result = get_project_category("projects/myproj/src/main.py", {"myproj"})
         assert result == "project_src_myproj"
 
     def test_generic_project_category(self):
-        result = _get_project_category("projects/myproj/README.md", {"myproj"})
+        result = get_project_category("projects/myproj/README.md", {"myproj"})
         assert result == "project_myproj"
 
     def test_non_project_path(self):
-        result = _get_project_category("docs/guide.md", {"myproj"})
+        result = get_project_category("docs/guide.md", {"myproj"})
         assert result is None
 
     def test_unknown_project_name(self):
-        result = _get_project_category("projects/unknown/src/main.py", {"myproj"})
+        result = get_project_category("projects/unknown/src/main.py", {"myproj"})
         assert result is None
 
 
@@ -402,31 +402,31 @@ class TestIdentifyCrossReferencesFromDocsDiscovery:
 
 class TestGetProjectCategoryFromDocsDiscovery:
     def test_manuscript_category(self):
-        result = _get_project_category("projects/alpha/manuscript/paper.md", {"alpha"})
+        result = get_project_category("projects/alpha/manuscript/paper.md", {"alpha"})
         assert result == "project_manuscript_alpha"
 
     def test_scripts_category(self):
-        result = _get_project_category("projects/alpha/scripts/run.md", {"alpha"})
+        result = get_project_category("projects/alpha/scripts/run.md", {"alpha"})
         assert result == "project_scripts_alpha"
 
     def test_tests_category(self):
-        result = _get_project_category("projects/alpha/tests/readme.md", {"alpha"})
+        result = get_project_category("projects/alpha/tests/readme.md", {"alpha"})
         assert result == "project_tests_alpha"
 
     def test_src_category(self):
-        result = _get_project_category("projects/alpha/src/readme.md", {"alpha"})
+        result = get_project_category("projects/alpha/src/readme.md", {"alpha"})
         assert result == "project_src_alpha"
 
     def test_general_project_category(self):
-        result = _get_project_category("projects/alpha/README.md", {"alpha"})
+        result = get_project_category("projects/alpha/README.md", {"alpha"})
         assert result == "project_alpha"
 
     def test_not_a_project(self):
-        result = _get_project_category("docs/guide.md", {"alpha"})
+        result = get_project_category("docs/guide.md", {"alpha"})
         assert result is None
 
     def test_unknown_project_name(self):
-        result = _get_project_category("projects/unknown/README.md", {"alpha"})
+        result = get_project_category("projects/unknown/README.md", {"alpha"})
         assert result is None
 
 
@@ -510,7 +510,7 @@ class TestCalculateProjectStats:
             "script_docs": [],
             "test_docs": [],
         }
-        result = _calculate_project_stats(project_data)
+        result = calculate_project_stats(project_data)
         assert result["total_files"] == 1
         assert result["total_words"] == 100
         assert result["total_lines"] == 20

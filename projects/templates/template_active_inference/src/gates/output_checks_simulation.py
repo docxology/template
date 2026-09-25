@@ -2,7 +2,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any
-from json_io import read_json
+from template_active_inference.json_io import read_json
 
 
 def pymdp_logging_expected(root: Path) -> bool:

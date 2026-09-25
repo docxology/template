@@ -99,6 +99,15 @@ artifacts. Each stage writes to `projects/<name>/output/`:
 | Metadata package (`stage_12_metadata.py`, opt-in) | `output/metadata/` | `onix.xml`, `metadata.json`, `content.opf` |
 | docxplus export (`stage_13_docxplus.py`, opt-in) | `output/docxplus/` | `<name>.docx`, `<name>.docxplus` |
 
+Combined artifact names derive from the project basename — `output/pdf/{basename}_combined.pdf`,
+`output/epub/{basename}_combined.epub`, `output/docx/{basename}_combined.docx` — and no config key
+overrides the stem. When a release requires a different name (for example an already-published
+Zenodo/GitHub release asset), point the leaf project link at a directory bearing the desired name:
+rendering `--project working/NTQR_allotment` (a `projects/working/NTQR_allotment` link to the
+`ntqr_allotment` checkout) emits `NTQR_allotment_combined.pdf` natively, and stage-03's stale-artifact
+sweep removes the lowercase-named leftovers. Rename emitted artifacts only as a last resort, and do it
+before stage-04 validation, which locates the combined PDF by project name.
+
 EPUB, metadata, and docxplus are opt-in stages (tagged `ebook`, `metadata`, and `docxplus`
 respectively; all are filtered out of default pipeline runs — see
 `infrastructure/core/pipeline/pipeline.yaml`). Invoke them explicitly:

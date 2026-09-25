@@ -17,7 +17,7 @@ The same caution applies to checklist-shaped infrastructure. Reporting guideline
 - **Domain-specific refinement pipelines**: fork the exemplar and remap stages to domain operations (e.g., clinical evidence, legal citation, engineering specification).
 - **Staged-state visualization**: reuse the purity and karat vocabulary only when the fork declares what each state means, enforces ordering and continuity, and avoids presenting designed values as validated quality measurements.
 - **Mega-madlib composition**: reuse the deterministic token engine for any config-owned lexical composition task.
-- **Domain adapters**: use `src/domain_adapter.py` and `domain_profile.yaml` to translate a domain's own metrics into the same purity scale before reusing certification language.
+- **Domain adapters**: use `src/template_gold_refinement/domain_adapter.py` and `domain_profile.yaml` to translate a domain's own metrics into the same purity scale before reusing certification language.
 - **Research compendia**: package manuscript shells, token rules, analysis outputs, figures, and validation reports as a single reproducible object rather than a loose bundle of supplementary files [@marwick2018packaging].
 
 ## Misuse modes

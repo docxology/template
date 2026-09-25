@@ -7,7 +7,7 @@ import runpy
 import subprocess
 import sys
 
-from paths import locate_repo_root, project_root
+from template_pitch_deck.paths import locate_repo_root, project_root
 
 
 def test_diagram_sources_leave_newline_serialization_to_renderer():

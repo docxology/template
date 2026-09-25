@@ -4,7 +4,7 @@
     "project_name": "template_template",
     "populated_on": "2026-07-01",
     "populated_by": "Marcus Webb (Engineer)",
-    "note": "First real regression pins for the autopoietic meta-template. This exemplar introspects the LIVE repository (infrastructure/ subdirectory roster, pipeline.yaml DAG, PUBLIC_PROJECT_NAMES) and injects the numbers into its own manuscript via build_manuscript_metrics_dict. Every value below is re-derived by calling the real src.template_template.core.introspection functions on the repo root -- never hand-copied from a rendered ${token}. Two stability tiers are pinned: (1) the declared pipeline.yaml DAG structure and the current confidentiality-controlled public exemplar roster count (24) at tolerance 0; (2) the live infrastructure module_count at abs_tolerance 2, following this exemplar's own convention (manuscript/AGENTS.md: rotating layout facts link to docs/_generated/COUNTS.md) -- the band catches a broken discovery (0, halved) or a large jump while tolerating single-module organic repo growth."
+    "note": "First real regression pins for the autopoietic meta-template. This exemplar introspects the LIVE repository (infrastructure/ subdirectory roster, pipeline.yaml DAG, PUBLIC_PROJECT_NAMES) and injects the numbers into its own manuscript via build_manuscript_metrics_dict. Every value below is re-derived by calling the real src.template_template.core.introspection functions on the repo root -- never hand-copied from a rendered ${token}. Two stability tiers are pinned: (1) the declared pipeline.yaml DAG structure and the current confidentiality-controlled public exemplar roster count (25) at tolerance 0; (2) the live infrastructure module_count at abs_tolerance 2, following this exemplar's own convention (manuscript/AGENTS.md: rotating layout facts link to docs/_generated/COUNTS.md) -- the band catches a broken discovery (0, halved) or a large jump while tolerating single-module organic repo growth."
   },
   "_provenance": {
     "pipeline_stages_declared": {
@@ -87,7 +87,7 @@
   "public_exemplar_roster_count": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 08d_appendix_exemplars.md / ${public_exemplar_list}",
     "claim_text": "an empirical evaluation across the canonical exemplar projects under `projects/templates/` (${public_exemplar_list}) ... The full public exemplar roster is: ${public_exemplar_list}.",
-    "value": 24,
+    "value": 25,
     "abs_tolerance": 0,
     "verifier_function": "infrastructure.project.public_scope.public_project_names",
     "verifier_args": {
@@ -97,15 +97,15 @@
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
     "pinned_at_commit": "691d6ebf",
-    "refreshed_on": "2026-07-15",
-    "refreshed_by": "repo-wide-methods-and-exemplars-review",
+    "refreshed_on": "2026-09-21",
+    "refreshed_by": "test-isolation-syspath-finish",
     "refresh_commit": "working-tree",
-    "refresh_reason": "public_project_names() returns 24 after template_advanced_literature_review joined PUBLIC_PROJECT_NAMES; generated rosters, CI scope, ownership, documentation, claims, and standalone-export gates were updated in the same change."
+    "refresh_reason": "public_project_names() returns 25 after template_experiment_tree joined PUBLIC_PROJECT_NAMES; smoke manifest, generated rosters, and claim bindings were updated in the same change."
   },
   "module_count": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03e_quality.md, 04_results.md, 05b_scalability.md, 06_infrastructure_modules.md, 05d_ai_collaboration.md, 08e_appendix_docs.md / ${module_count}",
     "claim_text": "a Two-Layer Architecture that separates ${module_count} infrastructure subdirectories ... All ${module_count} enumerated subdirectories carry Tier-1/README.md and Tier-2/AGENTS.md coverage",
-    "value": 28,
+    "value": 31,
     "abs_tolerance": 2,
     "verifier_function": "template_template.core.introspection.discover_infrastructure_modules",
     "verifier_args": {
@@ -115,9 +115,9 @@
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
     "pinned_at_commit": "691d6ebf",
-    "refreshed_on": "2026-07-07",
-    "refreshed_by": "EXEMPLAR-AUDIT-2026-07-07",
-    "refresh_commit": "646bb159",
-    "refresh_reason": "discover_infrastructure_modules() returns 28, outside the \u00b12 drift band around the 2026-07-01 pin of 23 \u2014 organic infrastructure/ growth over 6 days, not a broken-discovery signal (0 or halved). Band re-centered on the live count."
+    "refreshed_on": "2026-09-15",
+    "refreshed_by": "orx-mission-formal-contracts-lane",
+    "refresh_commit": "990f3d3fc",
+    "refresh_reason": "discover_infrastructure_modules() returns 31, outside the +-2 drift band around the 2026-07-07 pin of 28 - infrastructure/formal_contracts joined (typed manuscript-contract layer, 5 modules) as part of the well-typed-research mission; organic infrastructure/ growth, not a broken-discovery signal (0 or halved). Band re-centered on the live count."
   }
 }

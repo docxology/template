@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import pytest
 
-from composition import (
+from template_gold_refinement.composition import (
     TokenChoice,
     compose_all_sections,
     compose_section_body,
     generate_token_plan,
 )
-from config import GoldRefinementConfig, load_gold_refinement_config
+from template_gold_refinement.config import GoldRefinementConfig, load_gold_refinement_config
 from pathlib import Path
 
 
@@ -152,8 +152,8 @@ class TestChooseValueEmptyLexicon:
     """_choose_value raises ValueError when lexicon category is empty."""
 
     def test_empty_lexicon_category_raises(self):
-        from composition import _choose_value  # type: ignore[attr-defined]
-        from config import GoldRefinementConfig, SlotSpec
+        from template_gold_refinement.composition import _choose_value  # type: ignore[attr-defined]
+        from template_gold_refinement.config import GoldRefinementConfig, SlotSpec
 
         cfg = GoldRefinementConfig(
             seed=1,
