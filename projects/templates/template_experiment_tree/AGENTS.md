@@ -34,3 +34,7 @@ Technical reference for the living-record exemplar. Companion to
 | Run command contract | identical across every node in one tree; validated by `src/template_experiment_tree/tree.py` |
 | Manuscript values | generated `{{EXP_*}}` variables from `manuscript_variables.json`; a token with no tree backing fails |
 | Configuration | `manuscript/config.yaml` |
+
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md):
+record every experiment as an answered tree node with its evidence path, and
+never edit answered nodes (regenerate the manuscript from the tree instead).

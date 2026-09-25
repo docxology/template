@@ -11,9 +11,9 @@ delegation.
 Scripts **coordinate**; they never **analyze**:
 
 ```python
-# CORRECT — script loads config and calls into src/
-from src.pipeline.config import load_project_config
-from src.pipeline import run_prose_pipeline
+# CORRECT — script loads config and calls into src/template_prose_project/
+from template_prose_project.pipeline.config import load_project_config
+from template_prose_project.pipeline import run_prose_pipeline
 
 def main() -> int:
     args = parse_args()
@@ -36,7 +36,7 @@ def main():
 
 If a script line evaluates a manuscript property (readability,
 heading hierarchy, citation density, BibTeX coverage), the work belongs
-in `src/pipeline/checks.py` as a `_check_<name>` function — write it there and
+in `src/template_prose_project/pipeline/checks.py` as a `_check_<name>` function — write it there and
 test it.
 
 ## File Naming Convention
@@ -65,7 +65,7 @@ import json
 import logging
 
 # 2. Third-party
-# (this project does not use numpy in scripts; figures.py uses matplotlib via src/)
+# (this project does not use numpy in scripts; figures.py uses matplotlib via src/template_prose_project/)
 
 # 3. Path bootstrapping (per project — not a uv workspace member)
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -75,8 +75,8 @@ for p in (REPO_ROOT, PROJECT_ROOT, PROJECT_ROOT / "src"):
         sys.path.insert(0, str(p))
 
 # 4. Project source imports
-from src.pipeline.config import load_project_config
-from src.pipeline import run_prose_pipeline
+from template_prose_project.pipeline.config import load_project_config
+from template_prose_project.pipeline import run_prose_pipeline
 
 # 5. Infrastructure import
 from infrastructure.core.logging.utils import get_logger
@@ -180,7 +180,7 @@ except FileNotFoundError as e:
 
 Before submitting a new or modified script:
 
-- [ ] All analysis lives in `src/pipeline/` or `infrastructure/`, not
+- [ ] All analysis lives in `src/template_prose_project/pipeline/` or `infrastructure/`, not
   in the script.
 - [ ] Uses `logger`, never bare `print()` (except for stdout output paths
   consumed by the pipeline manifest collector).

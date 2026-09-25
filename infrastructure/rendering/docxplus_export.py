@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
+from typing import Any
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
@@ -59,7 +60,7 @@ class ExportResult:
     signed: bool = False
     skipped_reason: str = ""
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "available": self.available,
             "written": [str(p) for p in self.written],

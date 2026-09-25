@@ -11,8 +11,8 @@ from pathlib import Path
 from typing import TypedDict, cast
 
 import requests
+from template_literature_meta_analysis.config_loader import load_search_config
 
-from config_loader import load_search_config
 from literature.corpus import Corpus
 from literature.engine_dispatch import dispatch_ordered
 from literature.models import Paper

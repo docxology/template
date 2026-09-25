@@ -17,7 +17,7 @@ from pytest_httpserver import HTTPServer
 from literature.corpus import Corpus
 from literature.fulltext_download import safe_filename
 from reproducibility.runner import run_reproducibility_pipeline
-from tests.knowledge_graph.llm_extraction_fixtures import httpserver_base_url, make_paper
+from llm_extraction_fixtures import httpserver_base_url, make_paper
 
 
 def _valid_workflow_response() -> list[dict]:

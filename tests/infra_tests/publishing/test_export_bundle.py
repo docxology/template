@@ -74,7 +74,7 @@ def test_collect_artifacts_structure_and_hashes(tmp_path: Path) -> None:
 
     result = _collect_artifacts(output_root)
 
-    assert set(result.keys()) == {"pdf", "epub", "metadata"}
+    assert set(result.keys()) == {"pdf", "epub", "metadata", "docx"}
     assert len(result["pdf"]) == 1
     assert len(result["epub"]) == 1
     assert len(result["metadata"]) == 1
@@ -101,7 +101,7 @@ def test_collect_artifacts_empty_directories(tmp_path: Path) -> None:
     output_root = tmp_path / "output"
     (output_root / "pdf").mkdir(parents=True)
     result = _collect_artifacts(output_root)
-    assert result == {"pdf": [], "epub": [], "metadata": []}
+    assert result == {"pdf": [], "epub": [], "metadata": [], "docx": []}
 
 
 def test_collect_artifacts_skips_empty_files(tmp_path: Path) -> None:

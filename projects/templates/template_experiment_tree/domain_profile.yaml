@@ -18,3 +18,15 @@ review_gates:
 artifact_expectations:
   - output/data/manuscript_variables.json
   - output/data/experiment_tree.json
+
+benchmark_rubric:
+  name: experiment-tree-readiness
+  dimensions:
+    - name: frozen_node_immutability
+      weight: 1.0
+    - name: tree_acyclicity
+      weight: 1.0
+    - name: token_tree_backing
+      weight: 1.0
+    - name: artifact_manifest
+      weight: 1.0

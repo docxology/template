@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import os
 import sys
 from pathlib import Path
@@ -41,7 +42,41 @@ def bootstrap_project(*, include_infrastructure: bool = False) -> Path:
         repo_text = str(_find_repo_root(root))
         if repo_text not in sys.path:
             sys.path.insert(0, repo_text)
+    _register_meta_alias(root)
     return root
+
+
+def _register_meta_alias(project_root: Path) -> None:
+    """Register the sibling meta exemplar's flat ``src`` under the unique alias.
+
+    The meta exemplar (``template_literature_meta_analysis``) keeps a flat
+    ``src/`` package, so its modules cannot be imported under the nested
+    ``template_literature_meta_analysis.*`` name through sys.path alone. Scripts
+    that previously resolved cross-exemplar code through tracked symlinks
+    (``src/analysis``, ``src/config_loader.py``, ...) now reach it through the
+    project-unique alias registration below — the repo's ``_PKG_ALIAS``
+    pattern. The alias registration is idempotent; meta's ``src`` is appended
+    after this project's own ``src`` so its internal absolute imports
+    (``from analysis...``, ``from config_loader...``) resolve without shadowing
+    this project's top-level ``literature``/``config`` packages.
+    """
+    meta_src = project_root.parent / "template_literature_meta_analysis" / "src"
+    if not meta_src.is_dir():
+        return
+    meta_text = str(meta_src)
+    if meta_text not in sys.path:
+        sys.path.append(meta_text)
+    alias = "template_literature_meta_analysis"
+    if alias in sys.modules:
+        return
+    spec = importlib.util.spec_from_file_location(
+        alias, meta_src / "__init__.py", submodule_search_locations=[meta_text]
+    )
+    if spec is None or spec.loader is None:
+        raise ImportError(f"could not build a spec for the {alias} package at {meta_src}")
+    package = importlib.util.module_from_spec(spec)
+    sys.modules[alias] = package
+    spec.loader.exec_module(package)
 
 
 def _consume_project_argument(project_root: Path) -> None:

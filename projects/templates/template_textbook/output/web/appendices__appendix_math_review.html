@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>appendix_math_review.md.web</title>
   <style>
@@ -202,12 +202,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -219,7 +263,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -277,6 +332,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -284,13 +341,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -371,8 +483,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -421,6 +532,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -437,6 +554,12 @@ mjx-container[display="true"] {
   text-align: center;
 }
 
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 </style>
 </head>
 <body>
@@ -450,15 +573,15 @@ models.</p>
 </blockquote>
 <p>A brief refresher on the mathematics the book relies on. Each section
 ties directly to a function in <a
-href="../../src/textbook/models.py"><code>src/textbook/models.py</code></a>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/src/textbook/models.py"><code>src/textbook/models.py</code></a>
 so you can move from formula to tested code without a gap. Replace the
 stubs with the depth your audience needs.</p>
 <h2 id="functions-and-variables">Functions and Variables</h2>
 <!-- STUB -->
 <p>A function maps an input to an output; here state quantities depend
-on a <a href="../glossary.md#gl:variable"><strong>variable</strong></a>
+on a <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/glossary.md#gl:variable"><strong>variable</strong></a>
 such as time, tuned by <a
-href="../glossary.md#gl:parameter"><strong>parameters</strong></a>. See
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/glossary.md#gl:parameter"><strong>parameters</strong></a>. See
 <code>normalize_unit_interval</code> for rescaling inputs to [0, 1].</p>
 <h2 id="growth-and-decay">Growth and Decay</h2>
 <!-- STUB -->
@@ -467,30 +590,30 @@ at the carrying capacity <em>K</em>; exponential decay
 (<code>exponential_decay</code>) falls by a fixed fraction per unit
 time, summarised by the half-life <em>t</em>½ (<code>half_life</code>).
 These are the canonical examples of <a
-href="../glossary.md#gl:dynamics"><strong>dynamics</strong></a>.</p>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/glossary.md#gl:dynamics"><strong>dynamics</strong></a>.</p>
 <h2 id="saturating-responses">Saturating Responses</h2>
 <!-- STUB -->
 <p>The saturating (Michaelis–Menten-style) response
 (<code>saturating_response</code>) climbs toward <em>V</em>max with
 half-maximum at <em>K</em>ₘ — a recurring shape whenever a resource or
 signal becomes limiting near a <a
-href="../glossary.md#gl:threshold"><strong>threshold</strong></a>.</p>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/glossary.md#gl:threshold"><strong>threshold</strong></a>.</p>
 <h2 id="linear-fits">Linear Fits</h2>
 <!-- STUB -->
 <p>Least-squares fitting (<code>linear_fit</code>) returns a slope
 <em>m</em> and intercept <em>b</em> for paired data, the simplest way to
 summarise a trend before reaching for a richer <a
-href="../glossary.md#gl:model"><strong>model</strong></a>.</p>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/glossary.md#gl:model"><strong>model</strong></a>.</p>
 <h2 id="basic-statistics">Basic Statistics</h2>
 <!-- STUB -->
 <p>Descriptive statistics (<code>descriptive_statistics</code>) report
 the mean <em>μ</em> and standard deviation <em>σ</em> — the first
 numbers to compute on any <a
-href="../glossary.md#gl:observable"><strong>observable</strong></a>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/glossary.md#gl:observable"><strong>observable</strong></a>
 before inference.</p>
 <!-- STUB: add worked numeric examples or exercises tied to each function. -->
-<p>See also: <a href="appendix_notation.md">Appendix B — Notation</a>
-and the <a href="appendix_authoring_guide.md">Authoring Guide</a>.</p>
+<p>See also: <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/appendices/appendix_notation.md">Appendix B — Notation</a>
+and the <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/appendices/appendix_authoring_guide.md">Authoring Guide</a>.</p>
 </main>
 </body>
 </html>

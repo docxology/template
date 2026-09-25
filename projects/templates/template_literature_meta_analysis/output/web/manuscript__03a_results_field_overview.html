@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03a_results_field_overview.md.web</title>
   <style>
@@ -178,6 +178,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -188,14 +197,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -226,12 +267,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -243,7 +328,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -301,6 +397,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -308,13 +406,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -395,8 +548,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -445,6 +597,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -461,6 +619,12 @@ mjx-container[display="true"] {
   text-align: center;
 }
 
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 </style>
 </head>
 <body>
@@ -475,7 +639,7 @@ mjx-container[display="true"] {
 signal that the literature is active rather than dormant.</p>
 <!-- FIGURE: growth_curve.png -->
 <figure id="fig:growth_curve">
-<a class="figure-full-size-link" href="../figures/growth_curve.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/growth_curve.png" title="Publication Growth Curve"
+<a class="figure-full-size-link" href="../figures/growth_curve.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Publication growth curve for Modafinil."><img src="../figures/growth_curve.png" title="Publication Growth Curve"
 alt="Dual-axis time series with annual publication counts as bars, a dashed moving-average line, and cumulative publications as a marked line. Annotations identify the peak year, median year, total N, span, and CAGR." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Publication growth curve for Modafinil.
 Annual publication counts (bars) and cumulative total (line) show
@@ -490,7 +654,7 @@ year 2025 with 147 publications likely reflects both genuine research
 activity and the lag between publication and indexing in the source
 databases.</p>
 <p><strong>Table 1. Top publication years.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Year</th>
@@ -539,7 +703,7 @@ databases.</p>
 <td>147</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 id="rq2-subfield-composition">RQ2: Subfield Composition</h2>
 <p>Records distribute across the 6 configured subfields as shown in
 Table 2, with <strong>Clinical Sleep</strong> the largest bucket at
@@ -548,7 +712,7 @@ the clinical primacy of modafinil as a wakefulness-promoting agent: the
 largest body of literature addresses its use in narcolepsy, shift-work
 disorder, and obstructive sleep apnea.</p>
 <p><strong>Table 2. Subfield distribution.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Subfield</th>
@@ -588,10 +752,10 @@ disorder, and obstructive sleep apnea.</p>
 <td>2.2%</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- FIGURE: field_summary.png -->
 <figure id="fig:field_summary">
-<a class="figure-full-size-link" href="../figures/field_summary.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/field_summary.png" title="Field Summary"
+<a class="figure-full-size-link" href="../figures/field_summary.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Field summary dashboard for Modafinil."><img src="../figures/field_summary.png" title="Field Summary"
 alt="Horizontal bars run from zero to each configured subfield&#x27;s paper count; labels at the bar ends give both the count and its percentage of the current corpus, while the title reports the corpus total." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Field summary dashboard for Modafinil.
 The dashboard combines corpus size, temporal range, subfield
@@ -600,7 +764,7 @@ panel.</figcaption>
 </figure>
 <!-- FIGURE: subfield_distribution.png -->
 <figure id="fig:subfield_distribution">
-<a class="figure-full-size-link" href="../figures/subfield_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/subfield_distribution.png"
+<a class="figure-full-size-link" href="../figures/subfield_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Subfield distribution for Modafinil."><img src="../figures/subfield_distribution.png"
 title="Subfield Distribution"
 alt="Donut chart partitions the current corpus by configured subfield. Each slice is labelled with its percentage, the centre reports total N, and subfields below two percent are pooled into an Other slice." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Subfield distribution for Modafinil. The
@@ -609,7 +773,7 @@ with Clinical Sleep dominant at 63.0%.</figcaption>
 </figure>
 <!-- FIGURE: subfield_timeline.png -->
 <figure id="fig:subfield_timeline">
-<a class="figure-full-size-link" href="../figures/subfield_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/subfield_timeline.png" title="Subfield Timeline"
+<a class="figure-full-size-link" href="../figures/subfield_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Subfield timeline for Modafinil."><img src="../figures/subfield_timeline.png" title="Subfield Timeline"
 alt="Stacked area chart of publication counts by year. Coloured bands identify configured subfields, and their combined height at each year gives the annual corpus total; an inset reports total N across all bands." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Subfield timeline for Modafinil. Stacked
 annual publication counts by subfield show how each sub-area has evolved
@@ -632,7 +796,7 @@ corpus. The Gini coefficient of citation concentration is 0.817,
 indicating a highly skewed distribution characteristic of scientific
 literature.</p>
 <p><strong>Table 3. Citation count distribution.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Citations</th>
@@ -665,10 +829,10 @@ literature.</p>
 <td>11</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- FIGURE: citation_distribution.png -->
 <figure id="fig:citation_distribution">
-<a class="figure-full-size-link" href="../figures/citation_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/citation_distribution.png"
+<a class="figure-full-size-link" href="../figures/citation_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Citation distribution for Modafinil."><img src="../figures/citation_distribution.png"
 title="Citation Distribution"
 alt="Vertical bars show how many retained papers fall in each citation-count bucket; bar-top labels give bucket counts, and the title reports the corpus size, total citations, and Gini concentration coefficient." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Citation distribution for Modafinil. The
@@ -677,7 +841,7 @@ the Gini coefficient annotated. The heavy-tailed distribution is
 characteristic of scientific citation networks.</figcaption>
 </figure>
 <p><strong>Table 4. Top publication venues.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Venue</th>
@@ -726,10 +890,10 @@ characteristic of scientific citation networks.</figcaption>
 <td>23</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- FIGURE: top_venues.png -->
 <figure id="fig:top_venues">
-<a class="figure-full-size-link" href="../figures/top_venues.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/top_venues.png" title="Top Venues"
+<a class="figure-full-size-link" href="../figures/top_venues.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Top publication venues for Modafinil."><img src="../figures/top_venues.png" title="Top Venues"
 alt="Descending horizontal bars rank up to fifteen publication venues by the number of retained corpus papers. Venue names appear on the vertical axis and bar length measures the paper count represented in the current evidence snapshot." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Top publication venues for Modafinil. The
 horizontal bar chart shows the 15 venues with the most papers in the
@@ -737,7 +901,7 @@ corpus, revealing where the modafinil literature is
 published.</figcaption>
 </figure>
 <p><strong>Table 5. Top authors by publication count.</strong></p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Rank</th>
@@ -797,10 +961,10 @@ published.</figcaption>
 <td>14</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <!-- FIGURE: author_productivity.png -->
 <figure id="fig:author_productivity">
-<a class="figure-full-size-link" href="../figures/author_productivity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/author_productivity.png"
+<a class="figure-full-size-link" href="../figures/author_productivity.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Author productivity for Modafinil."><img src="../figures/author_productivity.png"
 title="Author Productivity"
 alt="Descending horizontal bars rank up to twenty authors by their number of retained corpus publications. Author names appear on the vertical axis and bar length encodes publication count after the pipeline&#x27;s record deduplication." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Author productivity for Modafinil. The

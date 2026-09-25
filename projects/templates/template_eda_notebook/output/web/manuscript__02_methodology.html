@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_methodology.md.web</title>
   <style>
@@ -202,12 +202,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -219,7 +263,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -277,6 +332,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -284,13 +341,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -371,8 +483,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -421,6 +532,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -437,6 +554,12 @@ mjx-container[display="true"] {
   text-align: center;
 }
 
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 </style>
 </head>
 <body>
@@ -445,12 +568,13 @@ mjx-container[display="true"] {
 <h1 id="sec:methodology">Methodology</h1>
 <p>This section maps each step of the exploratory analysis to the tested
 function that implements it. Every function lives in
-<code>src/eda/</code>, takes a <code>pandas.DataFrame</code> in, and
-returns data out — no plotting, no file I/O — so the notebook, the
-analysis script, and this manuscript all reach the same code.</p>
+<code>src/template_eda_notebook/eda/</code>, takes a
+<code>pandas.DataFrame</code> in, and returns data out — no plotting, no
+file I/O — so the notebook, the analysis script, and this manuscript all
+reach the same code.</p>
 <h2 id="dataset-loading-and-schema">Dataset loading and schema</h2>
-<p><code>src/eda/dataset.py::load_dataset()</code> reads the shipped CSV
-and coerces the numeric columns with
+<p><code>src/template_eda_notebook/eda/dataset.py::load_dataset()</code>
+reads the shipped CSV and coerces the numeric columns with
 <code>pandas.to_numeric(errors="coerce")</code>. Coercion is deliberate:
 a blank or non-numeric cell becomes <code>NaN</code> rather than raising
 or being silently dropped, so missingness is <em>surfaced</em> and
@@ -460,42 +584,45 @@ group column, and three numeric features), which downstream functions
 consult instead of re-sniffing dtypes.</p>
 <h2 id="cleaning-explicit-reported-row-removal">Cleaning: explicit,
 reported row removal</h2>
-<p><code>src/eda/cleaning.py::clean_dataset()</code> drops any row
-missing a numeric feature and returns a <code>CleaningReport</code>
-recording how many rows entered, how many remained, and how many were
-dropped. This exemplar makes a deliberate choice — listwise deletion
-with a visible count — rather than imputation, because a first EDA pass
-should <em>see</em> the missingness, not paper over it. A separate
+<p><code>src/template_eda_notebook/eda/cleaning.py::clean_dataset()</code>
+drops any row missing a numeric feature and returns a
+<code>CleaningReport</code> recording how many rows entered, how many
+remained, and how many were dropped. This exemplar makes a deliberate
+choice — listwise deletion with a visible count — rather than
+imputation, because a first EDA pass should <em>see</em> the
+missingness, not paper over it. A separate
 <code>normalize_numeric()</code> z-score standardizes the numeric
 columns (mean 0, sample standard deviation 1), with a guard that maps a
 constant or single-row column to zeros instead of producing
 <code>inf</code>/<code>NaN</code>.</p>
 <h2 id="descriptive-statistics">Descriptive statistics</h2>
-<p><code>src/eda/statistics.py::summary_statistics()</code> returns one
-<code>ColumnSummary</code> per numeric column — count of non-missing
-observations, mean, sample standard deviation, minimum, median, and
-maximum — computed with real pandas aggregation.
+<p><code>src/template_eda_notebook/eda/statistics.py::summary_statistics()</code>
+returns one <code>ColumnSummary</code> per numeric column — count of
+non-missing observations, mean, sample standard deviation, minimum,
+median, and maximum — computed with real pandas aggregation.
 <code>group_means()</code> returns the mean of each numeric feature
 grouped by the categorical column, sorted by group name for
 deterministic output.</p>
 <h2 id="correlation-structure">Correlation structure</h2>
-<p><code>src/eda/correlation.py::correlation_matrix()</code> returns the
-Pearson correlation matrix of the numeric columns [tukey1977eda]. The
-companion <code>strongest_pairs(matrix, top_n)</code> ranks the distinct
+<p><code>src/template_eda_notebook/eda/correlation.py::correlation_matrix()</code>
+returns the Pearson correlation matrix of the numeric columns
+[tukey1977eda]. The companion
+<code>strongest_pairs(matrix, top_n)</code> ranks the distinct
 off-diagonal feature pairs by absolute correlation while preserving sign
 — usually the single most useful artifact of a first pass, because it
 points directly at the relationships worth investigating. Each unordered
 pair appears exactly once.</p>
 <h2 id="figure-data-preparers">Figure-data preparers</h2>
 <p>Plotting is kept out of the library entirely.
-<code>src/eda/figures.py</code> returns <em>plot-ready data
-structures</em> — bin counts and edges for a histogram, a square value
-grid plus labels for a correlation heatmap, and sorted category counts
-for a bar chart — as frozen dataclasses of plain numbers. The thin
-analysis script (<code>scripts/eda_analysis.py</code>) and notebook
-cells consume these structures and call matplotlib. This keeps the
-library importable on a headless machine and makes every preparer
-testable without a display backend.</p>
+<code>src/template_eda_notebook/eda/figures.py</code> returns
+<em>plot-ready data structures</em> — bin counts and edges for a
+histogram, a square value grid plus labels for a correlation heatmap,
+and sorted category counts for a bar chart — as frozen dataclasses of
+plain numbers. The thin analysis script
+(<code>scripts/eda_analysis.py</code>) and notebook cells consume these
+structures and call matplotlib. This keeps the library importable on a
+headless machine and makes every preparer testable without a display
+backend.</p>
 <h2 id="zero-mock-testing-methodology">Zero-mock testing
 methodology</h2>
 <p>The project is governed by a strict zero-mock policy, evaluated by
@@ -517,19 +644,28 @@ and asserts it is valid nbformat, that every name imported
 <code>from src</code> exists in the library’s public surface, and that
 no cell defines its own <code>def</code>/<code>class</code>.</li>
 <li><strong>Coverage gate</strong>: CI enforces a ≥90%
-statement-coverage gate on
-<code>projects/templates/template_eda_notebook/src/</code>; the live
-figure is tracked in <a
-href="../../../../docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.</li>
+statement-coverage gate on Falling below that floor fails the gate
+outright (<code>--cov-fail-under</code> enforces it).
+<code>projects/templates/template_eda_notebook/src/</code>; because the
+threshold is wired through <code>--cov-fail-under</code>, any drop below
+the floor fails the test process itself rather than producing a warning.
+The live figure is tracked in <a
+href="https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.
+Negative control:
+<code>tests/test_cleaning.py::TestCleanDataset::test_all_rows_missing_yields_empty</code>
+feeds an all-invalid input frame and asserts the documented empty-frame
+result, so the measured coverage exercises failure behavior, not only
+happy paths.</li>
 </ol>
 <h2 id="figure-generation-contract">Figure generation contract</h2>
 <p>Each figure in <code>03_results.md</code> maps to a figure-data
-preparer in <code>src/eda/figures.py</code>: <code>histogram_data</code>
-→ height histogram, <code>correlation_heatmap_data</code> →
-feature-correlation heatmap, and <code>group_count_data</code> →
-per-group row counts. Captions name the preparer and the key parameters
-(bin count, value range) so reviewers can navigate from the PDF to the
-code without inferring hidden defaults.</p>
+preparer in <code>src/template_eda_notebook/eda/figures.py</code>:
+<code>histogram_data</code> → height histogram,
+<code>correlation_heatmap_data</code> → feature-correlation heatmap, and
+<code>group_count_data</code> → per-group row counts. Captions name the
+preparer and the key parameters (bin count, value range) so reviewers
+can navigate from the PDF to the code without inferring hidden
+defaults.</p>
 </main>
 </body>
 </html>

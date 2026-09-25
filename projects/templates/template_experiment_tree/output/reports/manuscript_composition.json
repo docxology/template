@@ -1,0 +1,49 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "472ff43f61adf609b0bdd8e8ab07b11b20611844969f38745c37fbcb505bbcfb",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "10dd369295188001a00ea29105286a5edc7e02c604b28bd703d6a0b80458907e",
+  "combined_size_bytes": 1671,
+  "input_root_kind": "hydrated",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "ba80a4850c0a0bc1f7ec4a9b3bab0e02b5045068033948ca4baa7ecf9127ebeb",
+      "size_bytes": 323
+    },
+    {
+      "ordinal": 2,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "6b3e8b9afa2766c1746cd0fb285798bda438234451f25670317b0f00a6a214cc",
+      "size_bytes": 419
+    },
+    {
+      "ordinal": 3,
+      "path": "output/manuscript/02_methodology.md",
+      "sha256": "c2a9f7f503f5aefb2f4f9968d25c6988cb812db347c492a059298e4c66ef9cf4",
+      "size_bytes": 419
+    },
+    {
+      "ordinal": 4,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "93be41d0471fd83a51873292534cf45a3b77275675657190cb1c872f1c6c24b9",
+      "size_bytes": 85
+    },
+    {
+      "ordinal": 5,
+      "path": "output/manuscript/04_discussion.md",
+      "sha256": "5e00b72d0212fcb5d6dea4f2bba821fb9368ebfcb58afbd79eb38634f480412a",
+      "size_bytes": 297
+    },
+    {
+      "ordinal": 6,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "a6d570f8184ed6541499051f49e534dff5a4e400c9f4294a40cab66b32813444",
+      "size_bytes": 78
+    }
+  ],
+  "ordered_inputs_sha256": "dd8248ed90f32bc351f83bb2b53ad3738286a805198f64820828d0baf598d4b6",
+  "project": "templates/template_experiment_tree",
+  "schema_version": "template-manuscript-composition-v1"
+}
