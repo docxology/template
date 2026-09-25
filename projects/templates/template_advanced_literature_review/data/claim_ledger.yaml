@@ -44,10 +44,10 @@ claims:
   - claim_id: visualization-palette-size
     kind: number
     value: 8
-    source: src/visualization/style.py VIZ_CONFIG.palette length
+    source: projects/templates/template_literature_meta_analysis/src/visualization/style.py VIZ_CONFIG.palette length
     source_tier: method
     freshness: active
-    artifact_path: src/visualization/style.py
+    artifact_path: projects/templates/template_literature_meta_analysis/src/visualization/style.py
   - claim_id: literature-engine-client-count
     kind: number
     value: 9

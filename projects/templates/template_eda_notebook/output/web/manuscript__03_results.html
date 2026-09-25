@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03_results.md.web</title>
   <style>
@@ -178,6 +178,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -188,14 +197,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -226,12 +267,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -243,7 +328,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -301,6 +397,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -308,13 +406,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -395,8 +548,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -445,6 +597,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -461,6 +619,12 @@ mjx-container[display="true"] {
   text-align: center;
 }
 
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 </style>
 </head>
 <body>
@@ -472,10 +636,10 @@ dataset. Every figure and the summary table are produced by the <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py">EDA
 analysis orchestrator</a> (<code>scripts/eda_analysis.py</code>), which
 calls the tested figure-data preparers in
-<code>src/eda/figures.py</code>. Running the script regenerates the
-figures under <code>../figures/</code> and the summary CSV under
-<code>output/data/</code>; the prose below describes what those
-artifacts show.</p>
+<code>src/template_eda_notebook/eda/figures.py</code>. Running the
+script regenerates the figures under <code>../figures/</code> and the
+summary CSV under <code>output/data/</code>; the prose below describes
+what those artifacts show.</p>
 <h2 id="dataset-and-missingness">Dataset and missingness</h2>
 <p>The dataset contains 120 subject records across three groups
 (<code>alpha</code>, <code>beta</code>, <code>gamma</code>) with three
@@ -491,14 +655,14 @@ data-cites="fig:height_histogram">[@fig:height_histogram]</span> shows
 the distribution of height across the complete-case dataset, binned by
 <code>histogram_data()</code> and plotted by the analysis script.</p>
 <figure id="fig:height_histogram">
-<a class="figure-full-size-link" href="../figures/height_histogram.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/height_histogram.png"
+<a class="figure-full-size-link" href="../figures/height_histogram.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Height distribution: bin counts produced by histogram_data(frame, &quot;height_cm&quot;, bins=10) in…"><img src="../figures/height_histogram.png"
 alt="10-bin histogram of 116 non-missing height_cm observations from 142.59 to 193.71. The tallest bar count is 33 in 168.15 to 173.26. Bars encode counts; missing values are excluded and no fitted distribution is implied." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Height distribution: bin counts produced
 by <code>histogram_data(frame, "height_cm", bins=10)</code> in
-<code>src/eda/figures.py</code> and plotted as a bar chart by
-<code>scripts/eda_analysis.py</code>. The bin counts sum to the number
-of complete-case rows; the shape is the roughly bell-shaped spread
-expected from the generating process.</figcaption>
+<code>src/template_eda_notebook/eda/figures.py</code> and plotted as a
+bar chart by <code>scripts/eda_analysis.py</code>. The bin counts sum to
+the number of complete-case rows; the shape is the roughly bell-shaped
+spread expected from the generating process.</figcaption>
 </figure>
 <h2 id="group-composition">Group composition</h2>
 <p><span class="citation"
@@ -507,7 +671,7 @@ many complete-case rows fall in each group, computed by
 <code>group_count_data()</code> (labels sorted for deterministic
 output).</p>
 <figure id="fig:group_counts">
-<a class="figure-full-size-link" href="../figures/group_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/group_counts.png"
+<a class="figure-full-size-link" href="../figures/group_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Rows per group: sorted category labels and aligned counts from group_count_data() ."><img src="../figures/group_counts.png"
 alt="3 bars encode complete-case row counts: alpha: 38; beta: 34; gamma: 44. Largest count 44 occurs for gamma; smallest count 34 occurs for beta. These counts describe sample composition, not group effects." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Rows per group: sorted category labels
 and aligned counts from <code>group_count_data()</code>. The three
@@ -522,7 +686,7 @@ computed by <code>correlation_matrix()</code> and prepared for the
 heatmap by <code>correlation_heatmap_data()</code>. The diagonal is
 unity by construction and the matrix is symmetric.</p>
 <figure id="fig:correlation_heatmap">
-<a class="figure-full-size-link" href="../figures/correlation_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/correlation_heatmap.png"
+<a class="figure-full-size-link" href="../figures/correlation_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Feature correlation heatmap: values from correlation_heatmap_data()"><img src="../figures/correlation_heatmap.png"
 alt="3-by-3 Pearson correlation heatmap for height_cm, weight_kg, resting_hr_bpm on a fixed minus-one-to-one diverging scale. The diagonal is 1.00. Off-diagonal pairs are height_cm with weight_kg: 0.72; height_cm with resting_hr_bpm: -0.12; weight_kg with resting_hr_bpm: -0.08. Correlations are descriptive and do not establish causation." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Feature correlation heatmap: values from
 <code>correlation_heatmap_data()</code> (which wraps
@@ -545,12 +709,12 @@ points directly at the relationship worth modelling next.</p>
 <code>summary_statistics()</code>. Each row reports the count of
 non-missing observations, mean, sample standard deviation, minimum,
 median, and maximum for one numeric feature.</p>
-<table id="tbl:summary_statistics">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Summary-statistics table written by the analysis script from src/template_eda_notebook/eda/statistics.py::summary_sta…"><table id="tbl:summary_statistics" data-responsive-table="true">
 <caption>Summary-statistics table written by the analysis script from
-<code>src/eda/statistics.py::summary_statistics()</code>. The concrete
-numbers are reproduced verbatim by running the script — the manuscript
-intentionally does not transcribe volatile values, so prose and CSV
-cannot drift.</caption>
+<code>src/template_eda_notebook/eda/statistics.py::summary_statistics()</code>.
+The concrete numbers are reproduced verbatim by running the script — the
+manuscript intentionally does not transcribe volatile values, so prose
+and CSV cannot drift.</caption>
 <thead>
 <tr>
 <th>Column</th>
@@ -571,7 +735,7 @@ cannot drift.</caption>
 <td>count, mean, std, min, median, max</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><code>group_means()</code> complements this with the mean of each
 numeric feature within each group; the three group means for height are
 close but not equal, reflecting the mild group structure in the

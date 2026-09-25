@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Architecture and Ergonomics from Configuration through Publication" />
@@ -265,6 +265,15 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -275,14 +284,46 @@ window.normalizeTemplateMathJaxAria = function () {
 };
 window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
     window.MathJax.startup.defaultReady();
-    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
   }
 });
 </script>
 <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
-  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -313,12 +354,56 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -330,7 +415,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -388,6 +484,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -395,13 +493,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -482,8 +635,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -532,6 +684,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -546,6 +704,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -774,10 +938,10 @@ class="toc-section-number">6</span> Infrastructure Module Reference</a>
 id="toc-alphabetical-summaries"><span
 class="toc-section-number">6.1</span> Alphabetical summaries</a>
 <ul>
-<li><a href="#infrastructure.autoresearch-10-files"
-id="toc-infrastructure.autoresearch-10-files"><span
+<li><a href="#infrastructure.autoresearch-11-files"
+id="toc-infrastructure.autoresearch-11-files"><span
 class="toc-section-number">6.1.1</span>
-<code>infrastructure.autoresearch</code> (10 files)</a></li>
+<code>infrastructure.autoresearch</code> (11 files)</a></li>
 <li><a href="#infrastructure.benchmark-4-files"
 id="toc-infrastructure.benchmark-4-files"><span
 class="toc-section-number">6.1.2</span>
@@ -786,10 +950,10 @@ class="toc-section-number">6.1.2</span>
 id="toc-infrastructureconfig-non-package-subdirectory"><span
 class="toc-section-number">6.1.3</span>
 <code>infrastructure/config</code> (non-package subdirectory)</a></li>
-<li><a href="#infrastructure.core-128-files"
-id="toc-infrastructure.core-128-files"><span
+<li><a href="#infrastructure.core-133-files"
+id="toc-infrastructure.core-133-files"><span
 class="toc-section-number">6.1.4</span> <code>infrastructure.core</code>
-(128 files)</a></li>
+(133 files)</a></li>
 <li><a href="#infrastructure.doctor-14-files"
 id="toc-infrastructure.doctor-14-files"><span
 class="toc-section-number">6.1.5</span>
@@ -798,10 +962,10 @@ class="toc-section-number">6.1.5</span>
 id="toc-infrastructure.docker-0-files"><span
 class="toc-section-number">6.1.6</span>
 <code>infrastructure.docker</code> (0 files)</a></li>
-<li><a href="#infrastructure.documentation-17-files"
-id="toc-infrastructure.documentation-17-files"><span
+<li><a href="#infrastructure.documentation-23-files"
+id="toc-infrastructure.documentation-23-files"><span
 class="toc-section-number">6.1.7</span>
-<code>infrastructure.documentation</code> (17 files)</a></li>
+<code>infrastructure.documentation</code> (23 files)</a></li>
 <li><a href="#infrastructure.fonds-6-files"
 id="toc-infrastructure.fonds-6-files"><span
 class="toc-section-number">6.1.8</span>
@@ -810,10 +974,10 @@ class="toc-section-number">6.1.8</span>
 id="toc-infrastructure.llm-55-files"><span
 class="toc-section-number">6.1.9</span> <code>infrastructure.llm</code>
 (55 files)</a></li>
-<li><a href="#infrastructure.methods-5-files"
-id="toc-infrastructure.methods-5-files"><span
+<li><a href="#infrastructure.methods-8-files"
+id="toc-infrastructure.methods-8-files"><span
 class="toc-section-number">6.1.10</span>
-<code>infrastructure.methods</code> (5 files)</a></li>
+<code>infrastructure.methods</code> (8 files)</a></li>
 <li><a href="#infrastructure.orchestration-12-files"
 id="toc-infrastructure.orchestration-12-files"><span
 class="toc-section-number">6.1.11</span>
@@ -826,22 +990,22 @@ class="toc-section-number">6.1.12</span>
 id="toc-infrastructure.prose-9-files"><span
 class="toc-section-number">6.1.13</span>
 <code>infrastructure.prose</code> (9 files)</a></li>
-<li><a href="#infrastructure.provenance-7-files"
-id="toc-infrastructure.provenance-7-files"><span
+<li><a href="#infrastructure.provenance-8-files"
+id="toc-infrastructure.provenance-8-files"><span
 class="toc-section-number">6.1.14</span>
-<code>infrastructure.provenance</code> (7 files)</a></li>
-<li><a href="#infrastructure.publishing-83-files"
-id="toc-infrastructure.publishing-83-files"><span
+<code>infrastructure.provenance</code> (8 files)</a></li>
+<li><a href="#infrastructure.publishing-84-files"
+id="toc-infrastructure.publishing-84-files"><span
 class="toc-section-number">6.1.15</span>
-<code>infrastructure.publishing</code> (83 files)</a></li>
+<code>infrastructure.publishing</code> (84 files)</a></li>
 <li><a href="#infrastructure.reference-16-files"
 id="toc-infrastructure.reference-16-files"><span
 class="toc-section-number">6.1.16</span>
 <code>infrastructure.reference</code> (16 files)</a></li>
-<li><a href="#infrastructure.rendering-69-files"
-id="toc-infrastructure.rendering-69-files"><span
+<li><a href="#infrastructure.rendering-81-files"
+id="toc-infrastructure.rendering-81-files"><span
 class="toc-section-number">6.1.17</span>
-<code>infrastructure.rendering</code> (69 files)</a></li>
+<code>infrastructure.rendering</code> (81 files)</a></li>
 <li><a href="#infrastructure.reporting-58-files"
 id="toc-infrastructure.reporting-58-files"><span
 class="toc-section-number">6.1.18</span>
@@ -858,10 +1022,10 @@ class="toc-section-number">6.1.20</span>
 id="toc-infrastructure.scientific-4-files"><span
 class="toc-section-number">6.1.21</span>
 <code>infrastructure.scientific</code> (4 files)</a></li>
-<li><a href="#infrastructure.search-62-files"
-id="toc-infrastructure.search-62-files"><span
+<li><a href="#infrastructure.search-71-files"
+id="toc-infrastructure.search-71-files"><span
 class="toc-section-number">6.1.22</span>
-<code>infrastructure.search</code> (62 files)</a></li>
+<code>infrastructure.search</code> (71 files)</a></li>
 <li><a href="#infrastructure.sia-10-files"
 id="toc-infrastructure.sia-10-files"><span
 class="toc-section-number">6.1.23</span> <code>infrastructure.sia</code>
@@ -878,10 +1042,10 @@ class="toc-section-number">6.1.25</span>
 id="toc-infrastructure.tools-6-files"><span
 class="toc-section-number">6.1.26</span>
 <code>infrastructure.tools</code> (6 files)</a></li>
-<li><a href="#infrastructure.validation-82-files"
-id="toc-infrastructure.validation-82-files"><span
+<li><a href="#infrastructure.validation-84-files"
+id="toc-infrastructure.validation-84-files"><span
 class="toc-section-number">6.1.27</span>
-<code>infrastructure.validation</code> (82 files)</a></li>
+<code>infrastructure.validation</code> (84 files)</a></li>
 <li><a href="#infrastructurelogrotate.d-0-files"
 id="toc-infrastructurelogrotate.d-0-files"><span
 class="toc-section-number">6.1.28</span>
@@ -960,7 +1124,7 @@ Matrix</a></li>
 <p><strong>State:</strong> published</p>
 <p><strong>Pairing:</strong> complete (DOI, GitHub, SHA-256, Zenodo
 URL)</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -1007,7 +1171,7 @@ href="https://zenodo.org/records/20419007">https://zenodo.org/records/20419007</
 <td>pending</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <ul>
 <li>Scan <strong>Integrity</strong> QR and compare the embedded SHA-256
 prefix to the table above.</li>
@@ -1017,14 +1181,14 @@ confirm they resolve to this release pairing.</li>
 <code>../data/transmission_manifest.json</code>.</li>
 </ul>
 <figure>
-<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_integrity_strip.png"
+<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Integrity QR strip"><img src="../figures/transmission_integrity_strip.png"
 style="width:98.0%" alt="Integrity QR strip" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Integrity QR strip</figcaption>
 </figure>
 <p>Structured manifest:
 <code>../data/transmission_manifest.json</code></p>
 <figure>
-<a class="figure-full-size-link" href="../figures/transmission_pairing.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_pairing.png" style="width:35.0%"
+<a class="figure-full-size-link" href="../figures/transmission_pairing.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Publication pairing flow"><img src="../figures/transmission_pairing.png" style="width:35.0%"
 alt="Publication pairing flow" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Publication pairing flow</figcaption>
 </figure>
@@ -1044,8 +1208,8 @@ and data-versioning tools track artifacts. <code>template/</code>
 combines those concerns with test and provenance gates by applying
 Infrastructure as Code to the research lifecycle. Its Two-Layer
 Architecture separates 28 infrastructure subdirectories (25 importable
-Python packages, ~729 modules, validated by ~9,874 tests) from
-self-contained project workspaces. A YAML-declared pipeline (16 stages;
+Python packages, ~769 modules, validated by ~10,163 tests) from
+self-contained project workspaces. A YAML-declared pipeline (17 stages;
 10 in a default full run) coordinates environment checks, test
 execution, analysis, Pandoc/XeLaTeX rendering, SHA-256 hashing with
 optional steganographic watermarking, structural validation, and
@@ -1083,9 +1247,9 @@ capabilities from versioned interfaces.</p>
 <code>templates/template_template</code>,
 <code>templates/template_textbook</code>) supplies heterogeneous
 control-positive layouts, including optimization
-(<code>template_code_project</code>, 243 discovered tests), prose
+(<code>template_code_project</code>, 246 discovered tests), prose
 (<code>template_prose_project</code>, 151 discovered tests), and
-AutoResearch readiness (<code>template_autoresearch_project</code>, 304
+AutoResearch readiness (<code>template_autoresearch_project</code>, 307
 discovered tests). Each declares the same 90% project-source floor and
 consumes the shared pipeline without project-to-project imports. This
 manuscript adds a reflexive artifact: <code>template_template</code>
@@ -1353,7 +1517,7 @@ repository management, (5) FAIR-aligned software stewardship, and (6)
 AI-agent collaboration via structured documentation. Each existing
 framework addresses a subset; none provides the unified enforcement
 mechanism. The detailed tool-by-tool comparison is developed in the <a
-href="05c_comparison.md#comparison-to-existing-tools">Comparison to
+href="manuscript__05c_comparison.html#comparison-to-existing-tools">Comparison to
 Existing Tools</a> section; the summary table below captures the gap
 landscape.</p>
 <h3 data-number="2.2.6" id="summary-gaps-left-by-existing-tools"><span
@@ -1361,7 +1525,7 @@ class="header-section-number">2.2.6</span> Summary: Gaps Left by
 Existing Tools</h3>
 <p>The six concerns identified above map onto existing tool categories
 as follows:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 22%" />
 <col style="width: 40%" />
@@ -1412,7 +1576,7 @@ reasoning)</td>
 <td>All existing tools</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>No existing system addresses all six concerns within a single
 enforced pipeline.</p>
 <h2 data-number="2.3" id="template-an-integrated-solution"><span
@@ -1438,15 +1602,15 @@ pillars:</p>
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
 scripts, data). 28 infrastructure subdirectories (25 importable
-packages) comprising ~729 Python modules provide reusable services;
+packages) comprising ~769 Python modules provide reusable services;
 projects consume them without modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: Pipeline advancement is
 contingent on test passage. The configured source-coverage floors are
 60% for infrastructure and 90% for each project. The static gate rejects
 prohibited mock-framework imports, while the suites exercise real
 filesystem and subprocess behavior and use local protocol servers or
-explicitly enabled live services for network boundaries. ~9,874
-infrastructure tests and 5770+ project tests are discovered by the
+explicitly enabled live services for network boundaries. ~10,163
+infrastructure tests and 5880+ project tests are discovered by the
 introspection build.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -1496,12 +1660,12 @@ computation.</p></li>
 class="header-section-number">2.4</span> Scope and Contributions</h2>
 <p>This paper is itself a product of the template it describes. The
 metrics populating its tables were computed by the introspection module
-documented in the <a href="03a_architecture.md#methods">Methods</a>; the
+documented in the <a href="manuscript__03a_architecture.html#methods">Methods</a>; the
 figures were rendered by the visualization code validated by the test
-suite described in <a href="03e_quality.md#quality-assurance">Quality
+suite described in <a href="manuscript__03e_quality.html#quality-assurance">Quality
 Assurance</a>; the PDF carrying these words was assembled by the same
 YAML-declared pipeline whose architecture is the subject of the <a
-href="04_results.md#results">Results</a>. This self-productive
+href="manuscript__04_results.html#results">Results</a>. This self-productive
 loop—where the system that is described is also the system that produces
 the description—is not incidental but structural, a concrete
 demonstration that <code>template/</code> can sustain the full lifecycle
@@ -1512,10 +1676,11 @@ are:</p>
 <li>A formal description of the Two-Layer Architecture and Standalone
 Project Paradigm that enables N independent research projects to share
 infrastructure without coupling.</li>
-<li>A detailed specification of the 16-stage DAG in
+<li>A detailed specification of the 17-stage DAG in
 <code>infrastructure/core/pipeline/pipeline.yaml</code>: default full
 runs use 10 stages; <code>--core-only</code> runs 8; opt-in ebook,
-metadata, bundle, and archival stages via <code>--tags</code>.</li>
+docxplus, metadata, bundle, and archival stages via
+<code>--tags</code>.</li>
 <li>A comparative analysis positioning <code>template/</code> against
 nine peer tools—Snakemake, Nextflow, CWL, Quarto, Jupyter Book, R
 Markdown, DVC, Overleaf, OpenAI Prism—across fourteen feature
@@ -1564,21 +1729,21 @@ Foundation 2023</a>)</span>.</li>
 </ul>
 <h2 data-number="2.5" id="paper-organization"><span
 class="header-section-number">2.5</span> Paper Organization</h2>
-<p>The <a href="03a_architecture.md#methods">Methods</a> describe the
+<p>The <a href="manuscript__03a_architecture.html#methods">Methods</a> describe the
 Two-Layer Architecture, Thin Orchestrator pattern, pipeline stages, and
-AI collaboration model. <a href="04_results.md#results">Results</a>
+AI collaboration model. <a href="manuscript__04_results.html#results">Results</a>
 present quantitative metrics from multi-project execution, coverage
 analysis, and steganographic benchmarks. The <a
-href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Discussion</a>
+href="manuscript__05a_zeromock_tradeoff.html#the-zero-mock-tradeoff">Discussion</a>
 addresses the Zero-Mock tradeoff, scalability implications, a detailed
 tool comparison, and future directions. The <a
-href="06_infrastructure_modules.md#infrastructure-module-reference">Infrastructure
+href="manuscript__06_infrastructure_modules.html#infrastructure-module-reference">Infrastructure
 Module Reference</a> provides detailed documentation for all 28
 subdirectories. <a
-href="07_security_provenance.md#security-and-provenance">Security and
+href="manuscript__07_security_provenance.html#security-and-provenance">Security and
 Provenance</a> describes the steganographic and cryptographic integrity
 layer. The <a
-href="08a_appendix_pipeline.md#appendix-pipeline">Appendices</a> provide
+href="manuscript__08a_appendix_pipeline.html#appendix-pipeline">Appendices</a> provide
 pipeline, configuration, and comparative references.</p>
 <hr />
 <h1 data-number="3" id="methods"><span
@@ -1586,7 +1751,7 @@ class="header-section-number">3</span> Methods</h1>
 <p>The <code>template/</code> architecture is deliberately bifurcated
 into a globally shared <code>infrastructure/</code> layer and
 project-specific <code>projects/</code> silos. This section describes
-the four core design patterns, the YAML-declared pipeline (16 stages;
+the four core design patterns, the YAML-declared pipeline (17 stages;
 default full 10) pipeline that operationalizes them, and the AI
 collaboration model that distinguishes this system from conventional
 research templates.</p>
@@ -1595,7 +1760,7 @@ class="header-section-number">3.1</span> The Two-Layer Architecture</h2>
 <p>The repository is organized into two strictly separated layers:</p>
 <p><strong>Infrastructure Layer</strong> (<code>infrastructure/</code>):
 28 infrastructure subdirectories—25 of them independently-importable
-Python packages—comprising ~729 modules and providing reusable services.
+Python packages—comprising ~769 modules and providing reusable services.
 Each importable package has its own <code>__init__.py</code>,
 <code>AGENTS.md</code>, and <code>README.md</code>, and exports a
 well-defined public API (the remaining subdirectories,
@@ -1605,7 +1770,7 @@ provides generic capabilities (logging, rendering, validation,
 steganography) that any project may consume.</p>
 <p><strong>Project Layer</strong> (<code>projects/</code>):
 Self-contained research workspaces. Each project directory contains:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
 <th>Directory</th>
@@ -1642,7 +1807,7 @@ Self-contained research workspaces. Each project directory contains:</p>
 <td>Project-specific architecture documentation</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The two layers communicate exclusively through Python imports and
 filesystem paths. No project modifies infrastructure code; no
 infrastructure module references a specific project by name (except via
@@ -1824,7 +1989,7 @@ structural validation scaffolding. The pipeline shape is identical
 across all four—only the Stage 02 payload differs—which is exactly what
 lets one orchestrator serve heterogeneous research domains. The live
 public roster is generated in <a
-href="../../../../docs/_generated/active_projects.md"><code>active_projects.md</code></a>.</p>
+href="https://github.com/docxology/template/blob/main/docs/_generated/active_projects.md"><code>active_projects.md</code></a>.</p>
 <h3 data-number="3.4.2" id="interactive-orchestration"><span
 class="header-section-number">3.4.2</span> Interactive
 Orchestration</h3>
@@ -1902,7 +2067,7 @@ Protocol</h3>
 <p><code>template/</code> implements a progression of agent-facing
 documentation, escalating in specificity from global constraints to
 module-level API contracts:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 21%" />
 <col style="width: 21%" />
@@ -1940,7 +2105,7 @@ architectural constraints</td>
 imports, usage pattern</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Tier 1 and Tier 2 have direct analogues in the prompt-engineering
 literature: system prompts and retrieval-augmented context <span
 class="citation" data-cites="lau2025aicoding">(<a
@@ -2037,7 +2202,7 @@ href="#ref-yao2023react" role="doc-biblioref">Yao et al.
 tool actions dramatically improves agent reliability in interactive
 settings. The <code>template/</code> skill architecture maps cleanly
 onto these three capabilities: the <code>SKILL.md</code> descriptors
-supply the tool-use layer, the declarative DAG of <code>16</code>
+supply the tool-use layer, the declarative DAG of <code>17</code>
 <code>pipeline.yaml</code> stages (a default full run executes
 <code>10</code>) supplies the planning scaffold, and the per-criterion
 checkpoint system supplies the memory layer.</p>
@@ -2149,7 +2314,7 @@ href="#ref-simmons2011falsepositive" role="doc-biblioref">Simmons et al.
 data-cites="nosek2018preregistration">(<a
 href="#ref-nosek2018preregistration" role="doc-biblioref">Nosek et al.
 2018</a>)</span>—is developed fully in the <a
-href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Zero-Mock
+href="manuscript__05a_zeromock_tradeoff.html#the-zero-mock-tradeoff">Zero-Mock
 Tradeoff</a> discussion.</p>
 <p>The following example, drawn from this meta-project’s own suite,
 illustrates zero-mock compliance:</p>
@@ -2169,7 +2334,7 @@ exist and are discoverable at their expected paths.</p>
 <h3 data-number="3.8.2" id="coverage-thresholds"><span
 class="header-section-number">3.8.2</span> Coverage Thresholds</h3>
 <p>The pipeline enforces two coverage tiers:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 14%" />
 <col style="width: 16%" />
@@ -2204,7 +2369,7 @@ artifact</td>
 <td>Broader shared surface</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>These thresholds are enforced at Stage 01 of the pipeline. A project
 test run below its declared 90% floor fails before downstream
 publication stages. This manuscript deliberately does not quote an
@@ -2214,14 +2379,14 @@ it.</p>
 class="header-section-number">3.8.3</span> Test Suite Composition</h3>
 <p>The repository maintains three test suites:</p>
 <ul>
-<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~9,874
+<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~10,163
 tests validating the 28 infrastructure subdirectories, covering logging,
 rendering, validation, steganography, reporting, and LLM
 integration.</li>
 <li><strong>Project tests</strong> (<code>projects/*/tests/</code>):
 Per-project suites whose sizes scale with each exemplar’s surface area —
-for example 304 tests in <code>template_autoresearch_project</code> and
-243 in <code>template_code_project</code>, with several exemplars larger
+for example 307 tests in <code>template_autoresearch_project</code> and
+246 in <code>template_code_project</code>, with several exemplars larger
 still. (A true min/max span would require dedicated
 <code>project_test_count_min</code>/<code>project_test_count_max</code>
 tokens in <code>build_manuscript_metrics_dict</code>; see the
@@ -2245,13 +2410,13 @@ figure writer.</li>
 <li>No reliance on color alone to convey information—redundant encoding
 via shape, pattern, or annotation is used where applicable.</li>
 </ul>
-<p>The <code>test_architecture_viz.py</code> suite verifies that each
-real figure generator writes a non-empty PNG and that the comparative
-matrix has its declared shape and value domain. The font and
-render-resolution values above are injected from
-<code>viz_palette.py</code>, preventing prose and implementation from
-drifting even though visual accessibility still requires human
-inspection of rendered figures.</p>
+<p>The <code>tests/figures/test_architecture_viz.py</code> suite
+verifies that each real figure generator writes a non-empty PNG and that
+the comparative matrix has its declared shape and value domain. The font
+and render-resolution values above are injected from
+<code>src/template_template/figures/viz_palette.py</code>, preventing
+prose and implementation from drifting even though visual accessibility
+still requires human inspection of rendered figures.</p>
 <hr />
 <h1 data-number="4" id="results"><span
 class="header-section-number">4</span> Results</h1>
@@ -2268,7 +2433,7 @@ public roster through the shared DAG. The table below is a structural
 snapshot, not a timing benchmark: counts come from repository
 introspection, and the coverage column states each exemplar’s declared
 policy floor rather than an unversioned observed percentage.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 12%" />
 <col style="width: 31%" />
@@ -2287,7 +2452,7 @@ policy floor rather than an unversioned observed percentage.</p>
 <tr>
 <td><code>template_code_project</code></td>
 <td>8</td>
-<td style="text-align: right;">243</td>
+<td style="text-align: right;">246</td>
 <td style="text-align: right;">90%</td>
 </tr>
 <tr>
@@ -2299,18 +2464,18 @@ policy floor rather than an unversioned observed percentage.</p>
 <tr>
 <td><code>template_autoresearch_project</code></td>
 <td>8</td>
-<td style="text-align: right;">304</td>
+<td style="text-align: right;">307</td>
 <td style="text-align: right;">90%</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>¹“Core-only” excludes LLM-tagged and other opt-in stages according to
 the YAML stage tags. A fresh run must be used to establish completion
 status or wall-clock performance for a particular machine and dependency
 set.</p>
 <h2 data-number="4.2" id="infrastructure-test-suite"><span
 class="header-section-number">4.2</span> Infrastructure Test Suite</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 53%" />
 <col style="width: 46%" />
@@ -2324,11 +2489,11 @@ class="header-section-number">4.2</span> Infrastructure Test Suite</h2>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>578+</td>
+<td>589+</td>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~9,874</td>
+<td>~10,163</td>
 </tr>
 <tr>
 <td>Infrastructure coverage gate</td>
@@ -2339,7 +2504,7 @@ class="header-section-number">4.2</span> Infrastructure Test Suite</h2>
 <td>Checked by the static no-mocks gate</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Exercises Pandoc/XeLaTeX paths, steganography hashing, telemetry,
 YAML-driven pipeline DAG resolution, HTTPS-bound optional suites
 (<code>pytest-httpserver</code>), and local Ollama-gated subsets.</p>
@@ -2347,10 +2512,10 @@ YAML-driven pipeline DAG resolution, HTTPS-bound optional suites
 class="header-section-number">4.3</span> Infrastructure Module
 Inventory</h2>
 <p>The introspection module
-(<code>template_template.core.introspection</code>) emits the authoritative
-table below—every row reflects
+(<code>template_template.core.introspection</code>) emits the
+authoritative table below—every row reflects
 <code>discover_infrastructure_modules(REPO_ROOT)</code>.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 12%" />
 <col style="width: 20%" />
@@ -2370,7 +2535,7 @@ table below—every row reflects
 <tbody>
 <tr>
 <td><code>autoresearch</code></td>
-<td style="text-align: center;">10</td>
+<td style="text-align: center;">11</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>build_autoresearch_plan</code>, readiness validation CLI</td>
@@ -2391,7 +2556,7 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">128</td>
+<td style="text-align: center;">133</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -2413,7 +2578,7 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>documentation</code></td>
-<td style="text-align: center;">17</td>
+<td style="text-align: center;">23</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>FigureManager</code>, <code>generate_glossary</code></td>
@@ -2441,7 +2606,7 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>methods</code></td>
-<td style="text-align: center;">5</td>
+<td style="text-align: center;">8</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>build_methods_orchestration_plan</code>, methods-stage
@@ -2471,14 +2636,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>provenance</code></td>
-<td style="text-align: center;">7</td>
+<td style="text-align: center;">8</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>—</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">83</td>
+<td style="text-align: center;">84</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -2492,7 +2657,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">69</td>
+<td style="text-align: center;">81</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
@@ -2528,7 +2693,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>search</code></td>
-<td style="text-align: center;">62</td>
+<td style="text-align: center;">71</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>infrastructure.search.literature</code> clients + cache</td>
@@ -2564,13 +2729,13 @@ capture</td>
 </tr>
 <tr>
 <td><code>validation</code></td>
-<td style="text-align: center;">82</td>
+<td style="text-align: center;">84</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF + Markdown + integrity CLIs</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>All 28 enumerated subdirectories carry Tier‑1/<code>README.md</code>
 and Tier‑2/<code>AGENTS.md</code> coverage wherever the Documentation
 Duality standard applies; subsets ship Tier‑3 <code>SKILL.md</code>
@@ -2579,7 +2744,7 @@ generation).</p>
 <h2 data-number="4.4" id="agentic-skill-documentation-coverage"><span
 class="header-section-number">4.4</span> Agentic Skill Documentation
 Coverage</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 53%" />
 <col style="width: 46%" />
@@ -2609,8 +2774,8 @@ Coverage</h2>
 <td>Repository level <code>PAI.md</code> narratives</td>
 </tr>
 </tbody>
-</table>
-<p><code>341+</code> Markdown shards under <code>docs/</code> capture
+</table></div>
+<p><code>411+</code> Markdown shards under <code>docs/</code> capture
 operational knowledge without duplicating auto-generated
 inventories.</p>
 <h2 data-number="4.5" id="dag-reference-declarative-executor"><span
@@ -2619,7 +2784,7 @@ Executor)</h2>
 <p>Stages below mirror <code>pipeline.yaml</code> (executor-topological
 order—not strict numeric script filenames). Scripts live under
 <code>scripts/</code>.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 9%" />
 <col style="width: 37%" />
@@ -2696,7 +2861,7 @@ order—not strict numeric script filenames). Scripts live under
 <td>Soft-fail surfaced in logs</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><code>scripts/pipeline/stage_07_executive_report.py</code> is
 <strong>multi-project orchestration glue</strong> invoked after
 iterating active projects—not a tenth DAG node for single-repo runs
@@ -2716,7 +2881,7 @@ class="header-section-number">4.7</span> Self-Referential Analysis</h2>
 <p>Rendered via <code>projects/templates/template_template</code>
 (<code>generate_manuscript_metrics.py</code> → injected tokens such as
 <code>28</code>). Architecture figures stem from <a
-href="../src/template_template/figures/architecture_viz.py"><code>template_template.figures.architecture_viz</code></a>—font
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/src/template_template/figures/architecture_viz.py"><code>template_template.figures.architecture_viz</code></a>—font
 sizes constrained by §QA.</p>
 <p><img src="../figures/architecture_overview.png"
 alt="Two-Layer Architecture Overview" /> <strong>Figure 1.</strong> Live
@@ -2733,8 +2898,8 @@ infrastructure, and every box was placed from the same live data the
 prose cites.</p>
 <p><img src="../figures/pipeline_stages.png"
 alt="Pipeline Stage Flow" /> <strong>Figure 2.</strong> Pipeline DAG
-with 16 YAML-declared stages (core, LLM, ebook, metadata, bundle,
-archival tags).</p>
+with 17 YAML-declared stages (core, LLM, ebook, docxplus, metadata,
+bundle, archival tags).</p>
 <p><img src="../figures/module_inventory.png"
 alt="Infrastructure Module Inventory" /> <strong>Figure 3.</strong>
 Horizontal file-count histogram of every infrastructure subdirectory,
@@ -2783,13 +2948,13 @@ literature-search workflows.</p></li>
 class="header-section-number">5</span> Discussion</h1>
 <h2 data-number="5.1" id="the-zero-mock-tradeoff"><span
 class="header-section-number">5.1</span> The Zero-Mock Tradeoff</h2>
-<p>The <a href="03e_quality.md#zero-mock-testing-policy">Zero-Mock
+<p>The <a href="manuscript__03e_quality.html#zero-mock-testing-policy">Zero-Mock
 testing policy</a> is <code>template/</code>’s most distinctive design
 decision. By prohibiting all mock objects, we gain confidence that tests
 exercise real code paths—a pytest run against the template genuinely
 invokes <code>pandoc</code>, writes to disk, and parses real YAML. The
-cost is test duration: the full infrastructure test suite (~9,874 tests)
-runs for minutes rather than the sub-second execution typical of
+cost is test duration: the full infrastructure test suite (~10,163
+tests) runs for minutes rather than the sub-second execution typical of
 heavily-mocked suites. This manuscript deliberately reports no
 wall-clock figure, consistent with the Results section’s discipline of
 declining timing claims without a versioned benchmark artifact.</p>
@@ -2886,7 +3051,7 @@ git-tracked public exemplar in the same automated discovery menus.</p>
 <p>Canonical trio:</p>
 <ul>
 <li><strong><code>template_code_project</code></strong>: Numerical
-optimization example with gradient-descent narration and 243 discovered
+optimization example with gradient-descent narration and 246 discovered
 tests. Its <code>pyproject.toml</code> declares the 90% project-source
 floor. Minimal footprint: compact <code>src/</code>, scripted analysis,
 short manuscript sections.</li>
@@ -2912,7 +3077,7 @@ analyzes the repository via <code>src/template_template/</code>
 introspection metrics; it now lives alongside the other public exemplars
 under <code>projects/templates/</code>.</p>
 <p>These workspaces share no project-level code—only Layer 1 (28
-infrastructure subdirectories, ~729 Python files)—validating insulation
+infrastructure subdirectories, ~769 Python files)—validating insulation
 between domain repos and reusable services.</p>
 <h3 data-number="5.2.1" id="multi-project-orchestration"><span
 class="header-section-number">5.2.1</span> Multi-Project
@@ -2928,7 +3093,7 @@ formats. This executive reporting stage provides repository-level
 visibility without requiring any project-specific reporting code.</p>
 <h3 data-number="5.2.2" id="scaling-metrics"><span
 class="header-section-number">5.2.2</span> Scaling Metrics</h3>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 12%" />
 <col style="width: 25%" />
@@ -2959,9 +3124,9 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 </tr>
 <tr>
 <td>Test count</td>
-<td style="text-align: center;">243</td>
+<td style="text-align: center;">246</td>
 <td style="text-align: center;">151</td>
-<td style="text-align: center;">304</td>
+<td style="text-align: center;">307</td>
 </tr>
 <tr>
 <td>Manuscript chapters</td>
@@ -2982,19 +3147,19 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 <td style="text-align: center;">27</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The infrastructure overhead per project is constant regardless of
-project size: the same 28 modules, the same 13 pipeline stages, the same
+project size: the same 28 modules, the same 14 pipeline stages, the same
 rendering and validation logic. This O(1) infrastructure cost is the
 architectural payoff of the Two-Layer separation.</p>
 <hr />
 <h2 data-number="5.3" id="comparison-to-existing-tools"><span
 class="header-section-number">5.3</span> Comparison to Existing
 Tools</h2>
-<p>The <a href="02_introduction.md#the-gap">gap analysis</a> established
+<p>The <a href="manuscript__02_introduction.html#the-gap">gap analysis</a> established
 that no single tool integrates all six cross-cutting concerns. Here we
 synthesize the <a
-href="08f_appendix_matrix.md#appendix-matrix">fourteen-dimension
+href="manuscript__08f_appendix_matrix.html#appendix-matrix">fourteen-dimension
 comparison</a> into three structural insights. First, the landscape
 bifurcates: workflow managers (Snakemake <span class="citation"
 data-cites="koster2012snakemake">(<a href="#ref-koster2012snakemake"
@@ -3060,9 +3225,9 @@ consume. <code>template/</code>’s <code>AGENTS.md</code> +
 <code>SKILL.md</code> layer enables an agent entering the repository to
 discover capabilities, understand API contracts, and invoke modules
 without prior training (<a
-href="03c_documentation.md#documentation-duality-and-ai-collaboration">Documentation
+href="manuscript__03c_documentation.html#documentation-duality-and-ai-collaboration">Documentation
 Duality</a>, <a
-href="05d_ai_collaboration.md#the-ai-collaboration-model">AI
+href="manuscript__05d_ai_collaboration.html#the-ai-collaboration-model">AI
 Collaboration</a>).</p>
 <h3 data-number="5.3.1" id="fair4rs-evolution-20242026"><span
 class="header-section-number">5.3.1</span> FAIR4RS Evolution
@@ -3111,7 +3276,7 @@ embedding layers that ERCs do not address.</p>
 <h2 data-number="5.4" id="the-ai-collaboration-model"><span
 class="header-section-number">5.4</span> The AI Collaboration Model</h2>
 <p>The <a
-href="03c_documentation.md#documentation-duality-and-ai-collaboration">Documentation
+href="manuscript__03c_documentation.html#documentation-duality-and-ai-collaboration">Documentation
 Duality</a> standard and three-tier skill architecture represent an
 empirical bet: that structured, machine-readable documentation
 measurably improves AI agent performance in research codebases. This
@@ -3148,7 +3313,7 @@ coverage; <code>SKILL.md</code> remains a capability-specific layer
 rather than a universal claim about every infrastructure directory.</p>
 <p>This three-tier model is, to our knowledge, novel in the research
 software engineering literature. The scale of the investment is
-substantial: <code>341</code> Markdown files under <code>docs/</code>
+substantial: <code>411</code> Markdown files under <code>docs/</code>
 alone, plus an <code>AGENTS.md</code>/<code>README.md</code> pair in
 every directory and a <code>SKILL.md</code> descriptor on skill-enabled
 infrastructure modules. That count is itself injected from live
@@ -3320,11 +3485,11 @@ href="#ref-wilson2017good" role="doc-biblioref">Wilson et al. 2017</a>;
 role="doc-biblioref">Lamprecht et al. 2020</a>)</span>. The Two-Layer
 Architecture ensures that infrastructure improvements propagate to all
 projects without coupling. The Zero-Mock policy ensures that tests <a
-href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">reflect
+href="manuscript__05a_zeromock_tradeoff.html#the-zero-mock-tradeoff">reflect
 reality</a>. The steganographic provenance layer ensures that published
 artifacts carry their own <a
-href="07_security_provenance.md#security-and-provenance">authentication</a>.
-The <a href="08f_appendix_matrix.md#appendix-matrix">comparative
+href="manuscript__07_security_provenance.html#security-and-provenance">authentication</a>.
+The <a href="manuscript__08f_appendix_matrix.html#appendix-matrix">comparative
 analysis</a> confirms that no existing tool integrates all eleven
 distinctive capabilities—testing enforcement, coverage thresholds,
 cryptographic provenance, steganographic watermarking, multi-project
@@ -3359,12 +3524,12 @@ class="header-section-number">6</span> Infrastructure Module
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
 <code>28</code> <code>discover_infrastructure_modules(repo_root)</code>.
-File totals use <code>729</code> Python sources across infra +
-<code>9,874</code> infra tests guarding them. Documentation Duality =
+File totals use <code>769</code> Python sources across infra +
+<code>10,163</code> infra tests guarding them. Documentation Duality =
 paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <code>SKILL.md</code> manifests feed
 <code>python -m infrastructure.skills</code>.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 12%" />
 <col style="width: 20%" />
@@ -3384,7 +3549,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <tbody>
 <tr>
 <td><code>autoresearch</code></td>
-<td style="text-align: center;">10</td>
+<td style="text-align: center;">11</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>build_autoresearch_plan</code>, readiness validation CLI</td>
@@ -3405,7 +3570,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">128</td>
+<td style="text-align: center;">133</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -3427,7 +3592,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>documentation</code></td>
-<td style="text-align: center;">17</td>
+<td style="text-align: center;">23</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>FigureManager</code>, <code>generate_glossary</code></td>
@@ -3455,7 +3620,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>methods</code></td>
-<td style="text-align: center;">5</td>
+<td style="text-align: center;">8</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>build_methods_orchestration_plan</code>, methods-stage
@@ -3485,14 +3650,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>provenance</code></td>
-<td style="text-align: center;">7</td>
+<td style="text-align: center;">8</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>—</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">83</td>
+<td style="text-align: center;">84</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -3506,7 +3671,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">69</td>
+<td style="text-align: center;">81</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
@@ -3542,7 +3707,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>search</code></td>
-<td style="text-align: center;">62</td>
+<td style="text-align: center;">71</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>infrastructure.search.literature</code> clients + cache</td>
@@ -3578,20 +3743,20 @@ capture</td>
 </tr>
 <tr>
 <td><code>validation</code></td>
-<td style="text-align: center;">82</td>
+<td style="text-align: center;">84</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF + Markdown + integrity CLIs</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2 data-number="6.1" id="alphabetical-summaries"><span
 class="header-section-number">6.1</span> Alphabetical summaries</h2>
 <p>Below, <code>${module_*_python_file_count}</code> placeholders expand
 per subdirectory at render-time.</p>
-<h3 data-number="6.1.1" id="infrastructure.autoresearch-10-files"><span
+<h3 data-number="6.1.1" id="infrastructure.autoresearch-11-files"><span
 class="header-section-number">6.1.1</span>
-<code>infrastructure.autoresearch</code> (10 files)</h3>
+<code>infrastructure.autoresearch</code> (11 files)</h3>
 <p>Readiness planner, validation CLI, and report models for
 AutoResearch-style project promotion
 (<code>infrastructure/autoresearch/</code>).</p>
@@ -3608,9 +3773,9 @@ class="header-section-number">6.1.3</span>
 (<code>.env.template</code>, hardened defaults referenced by Docker +
 CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
 a configuration subdirectory rather than an importable package.</p>
-<h3 data-number="6.1.4" id="infrastructure.core-128-files"><span
+<h3 data-number="6.1.4" id="infrastructure.core-133-files"><span
 class="header-section-number">6.1.4</span>
-<code>infrastructure.core</code> (128 files)</h3>
+<code>infrastructure.core</code> (133 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
@@ -3624,9 +3789,9 @@ class="header-section-number">6.1.6</span>
 <code>infrastructure.docker</code> (0 files)</h3>
 <p>Pinned images / compose scaffolding for reproducible CI + remote
 builds.</p>
-<h3 data-number="6.1.7" id="infrastructure.documentation-17-files"><span
+<h3 data-number="6.1.7" id="infrastructure.documentation-23-files"><span
 class="header-section-number">6.1.7</span>
-<code>infrastructure.documentation</code> (17 files)</h3>
+<code>infrastructure.documentation</code> (23 files)</h3>
 <p>Figure registries plus glossary tooling feeding manuscript
 automation.</p>
 <h3 data-number="6.1.8" id="infrastructure.fonds-6-files"><span
@@ -3644,9 +3809,9 @@ class="header-section-number">6.1.9</span>
 <strong>Literature ingestion now lives primarily in
 <code>search/literature</code> + citation helpers in
 <code>reference/</code>.</strong></p>
-<h3 data-number="6.1.10" id="infrastructure.methods-5-files"><span
+<h3 data-number="6.1.10" id="infrastructure.methods-8-files"><span
 class="header-section-number">6.1.10</span>
-<code>infrastructure.methods</code> (5 files)</h3>
+<code>infrastructure.methods</code> (8 files)</h3>
 <p>Deterministic methods-orchestration contracts
 (<code>MethodStage</code>, <code>MethodsOrchestrationPlan</code>,
 <code>MethodsIssue</code>): builds and validates an ordered methods plan
@@ -3671,9 +3836,9 @@ class="header-section-number">6.1.13</span>
 <code>infrastructure.prose</code> (9 files)</h3>
 <p>Readability metrics + Markdown tooling for prose-centric manuscripts
 / CI gates.</p>
-<h3 data-number="6.1.14" id="infrastructure.provenance-7-files"><span
+<h3 data-number="6.1.14" id="infrastructure.provenance-8-files"><span
 class="header-section-number">6.1.14</span>
-<code>infrastructure.provenance</code> (7 files)</h3>
+<code>infrastructure.provenance</code> (8 files)</h3>
 <p>Content-addressed provenance DAG. Records artifact lineage (which run
 produced which file, from which inputs) as a verifiable graph of
 artifact/run/source/claim nodes connected by
@@ -3681,9 +3846,9 @@ produced/consumed/derived-from/supports/refutes edges. Includes a
 structured Review system with severity (blocking/major/minor/info) and
 verdict (refutes/supports). Features a CLI and pipeline integration
 hooks for automatic lineage recording after every stage.</p>
-<h3 data-number="6.1.15" id="infrastructure.publishing-83-files"><span
+<h3 data-number="6.1.15" id="infrastructure.publishing-84-files"><span
 class="header-section-number">6.1.15</span>
-<code>infrastructure.publishing</code> (83 files)</h3>
+<code>infrastructure.publishing</code> (84 files)</h3>
 <p>Metadata models, APA/BibTeX/MLA formatters, optional Zenodo
 clients.</p>
 <h3 data-number="6.1.16" id="infrastructure.reference-16-files"><span
@@ -3691,9 +3856,9 @@ class="header-section-number">6.1.16</span>
 <code>infrastructure.reference</code> (16 files)</h3>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
-<h3 data-number="6.1.17" id="infrastructure.rendering-69-files"><span
+<h3 data-number="6.1.17" id="infrastructure.rendering-81-files"><span
 class="header-section-number">6.1.17</span>
-<code>infrastructure.rendering</code> (69 files)</h3>
+<code>infrastructure.rendering</code> (81 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
 <h3 data-number="6.1.18" id="infrastructure.reporting-58-files"><span
@@ -3722,17 +3887,22 @@ class="header-section-number">6.1.21</span>
 <code>infrastructure.scientific</code> (4 files)</h3>
 <p>Stability probing, benchmarking hooks—consumed heavily by
 optimization exemplars (<code>template_code_project</code> scripts).</p>
-<h3 data-number="6.1.22" id="infrastructure.search-62-files"><span
+<h3 data-number="6.1.22" id="infrastructure.search-71-files"><span
 class="header-section-number">6.1.22</span>
-<code>infrastructure.search</code> (62 files)</h3>
+<code>infrastructure.search</code> (71 files)</h3>
 <p>Two-tier search architecture: the <code>literature/</code> client
 stack (client.py, backends, caches) powers literature search with arXiv,
 Crossref, local, and Paperclip backends. <code>connectors/</code>
 exposes the built-in scientific database adapters through a uniform
 <code>ConnectorRegistry</code>; OpenAlex, UniProt, PDB, Semantic
 Scholar, European PMC, bioRxiv, and other registered adapters share
-list/search CLI commands with HTTP timeout, retry, and TTL caching. The
-live registry, not this prose, is authoritative for connector count.</p>
+list/search CLI commands with HTTP timeout, retry, and TTL caching.
+<code>monid/</code> provides an opt-in paid gateway
+(<code>discover</code> / <code>inspect</code> / <code>run</code>) with
+offline USD/1k pricing reference in <code>monid/PRICING.md</code>.
+<code>deep_research/</code> dispatches long-horizon provider-neutral
+manuscript research (PAID, opt-in). The live registry, not this prose,
+is authoritative for connector count.</p>
 <h3 data-number="6.1.23" id="infrastructure.sia-10-files"><span
 class="header-section-number">6.1.23</span>
 <code>infrastructure.sia</code> (10 files)</h3>
@@ -3756,9 +3926,9 @@ class="header-section-number">6.1.26</span>
 <p>Invocable tool definitions registered by resource-pool governance;
 tools mirror <code>projects/templates/</code> with git-tracked
 <code>templates/*</code> exemplars.</p>
-<h3 data-number="6.1.27" id="infrastructure.validation-82-files"><span
+<h3 data-number="6.1.27" id="infrastructure.validation-84-files"><span
 class="header-section-number">6.1.27</span>
-<code>infrastructure.validation</code> (82 files)</h3>
+<code>infrastructure.validation</code> (84 files)</h3>
 <p>Markdown + PDF + integrity CLIs underpinning Stage 04
 diagnostics.</p>
 <h3 data-number="6.1.28" id="infrastructurelogrotate.d-0-files"><span
@@ -3902,7 +4072,7 @@ Orchestrator</h2>
 <code>secure_run.sh</code>, a Bash script that wraps the standard
 <code>run.sh</code> pipeline with post-processing steganography:</p>
 <ol type="1">
-<li>Execute the standard YAML-declared pipeline (16 stages; default full
+<li>Execute the standard YAML-declared pipeline (17 stages; default full
 10) pipeline for the target project.</li>
 <li>The <code>secure_run.sh</code> script invokes
 <code>SteganographyProcessor</code>.</li>
@@ -3966,7 +4136,7 @@ Telecommunications and Information Administration 2021</a>)</span>
 further standardize the enumeration of software components and
 dependencies—essential for establishing the provenance lineage of build
 environments. SLSA defines four graduated levels of build integrity:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 27%" />
 <col style="width: 29%" />
@@ -4001,7 +4171,7 @@ environments. SLSA defines four graduated levels of build integrity:</p>
 <td>N – future work</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Future versions of <code>template/</code> may generate
 SLSA-compatible provenance attestations alongside the steganographic
 watermarks, creating a two-layer provenance model: in-toto attests that
@@ -4049,7 +4219,7 @@ class="header-section-number">8</span> Appendices</h1>
 <h2 data-number="8.1" id="appendix-pipeline"><span
 class="header-section-number">8.1</span> Appendix: Pipeline Stage
 Reference</h2>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 13%" />
 <col style="width: 21%" />
@@ -4160,6 +4330,13 @@ Reference</h2>
 <td>opt-in (<code>ebook</code> tag); soft fail</td>
 </tr>
 <tr>
+<td>docxplus Export</td>
+<td><code>scripts/pipeline/stage_13_docxplus.py</code></td>
+<td>project source tree + metadata</td>
+<td><code>output/docxplus/</code> (.docx, .docxplus)</td>
+<td>opt-in (<code>docxplus</code> tag); soft fail</td>
+</tr>
+<tr>
 <td>Metadata Package</td>
 <td><code>scripts/pipeline/stage_12_metadata.py</code></td>
 <td><code>manuscript/config.yaml</code></td>
@@ -4181,7 +4358,7 @@ Reference</h2>
 <td>opt-in (<code>archival</code> tag)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><code>scripts/pipeline/stage_07_executive_report.py</code> is invoked
 <strong>outside</strong> this DAG whenever
 <code>execute_multi_project.py</code> aggregates pipelines—supplying
@@ -4270,8 +4447,8 @@ Structure</h2>
 │   ├── published/               # Non-rendered published (symlinked, private)
 │   ├── archive/                 # Non-rendered retired (symlinked, private)
 │   └── other/                   # Non-rendered misc (symlinked, private)
-├── docs/ (18 top-level areas, 341+ markdown files per live counter)
-├── tests/                       # Infra suites (578+ files)
+├── docs/ (18 top-level areas, 411+ markdown files per live counter)
+├── tests/                       # Infra suites (589+ files)
 ├── AGENTS.md / README.md / CLAUDE.md / pyproject.toml
 ├── run.sh / secure_run.sh
 └── output/ …                    # Mirrors after copy stage</code></pre>
@@ -4310,7 +4487,7 @@ Summary</h2>
 representative sample; a future <code>exemplar_summary_table</code>
 token in <code>build_manuscript_metrics_dict</code> would let this table
 cover every exemplar without hand-editing.</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 21%" />
 <col style="width: 13%" />
@@ -4332,7 +4509,7 @@ cover every exemplar without hand-editing.</p>
 <td><code>template_code_project</code></td>
 <td>Optimization tutorial</td>
 <td>Convex demo figures, scripted tables</td>
-<td style="text-align: center;">243 discovered tests; 90% declared
+<td style="text-align: center;">246 discovered tests; 90% declared
 gate</td>
 <td style="text-align: left;">Controlled matplotlib exports</td>
 </tr>
@@ -4347,11 +4524,11 @@ gate</td>
 <td><code>template_autoresearch_project</code></td>
 <td>AutoResearch readiness</td>
 <td>Planner + validation CLI</td>
-<td style="text-align: center;">304</td>
+<td style="text-align: center;">307</td>
 <td style="text-align: left;">Readiness reports from Stage 02</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Meta manuscript location:</strong> introspective study lives
 in <code>projects/templates/template_template/</code> beside the public
 exemplar set. Discovery now follows the typed <code>projects/</code>
@@ -4366,7 +4543,7 @@ layout—<code>projects/templates/**</code> and
 class="header-section-number">8.5</span> Appendix: Documentation
 Inventory</h2>
 <p>The repository maintains documentation at three levels:</p>
-<table>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 30%" />
 <col style="width: 30%" />
@@ -4389,7 +4566,7 @@ Inventory</h2>
 </tr>
 <tr>
 <td><code>docs/</code> directory</td>
-<td style="text-align: center;">341 files across 18 subdirectories</td>
+<td style="text-align: center;">411 files across 18 subdirectories</td>
 <td>User guides, API reference, troubleshooting</td>
 </tr>
 <tr>
@@ -4411,7 +4588,7 @@ infrastructure module</td>
 <td>Personal AI Infrastructure integration contract</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The <code>docs/</code> subdirectories cover: <code>core/</code>
 (essential docs), <code>guides/</code> (progressive skill-level guides),
 <code>architecture/</code> (system design), <code>usage/</code> (content
@@ -4428,7 +4605,7 @@ decision records), <code>rules/</code> (contributor norms),
 <code>audit/</code> (review reports), plus the machine-generated
 <code>_generated/</code> snippets and <code>images/</code> assets.</p>
 <p>Every count in this appendix is injected from live repository
-introspection rather than hand-maintained: <code>341</code> counts every
+introspection rather than hand-maintained: <code>411</code> counts every
 Markdown file beneath <code>docs/</code> recursively, <code>18</code>
 counts its first-level subdirectories, and <code>22</code> counts the
 workflow subdirectories that each carry a <code>SKILL.md</code>
@@ -4448,9 +4625,9 @@ Matrix</h2>
 <p><strong>Symbol key</strong> (applies to all cells):
 <strong>Y</strong> = full native support · <strong>~</strong> = partial
 or plugin-based · <strong>N</strong> = absent. See also <a
-href="04_results.md#comparative-feature-analysis">Figure 4</a> for a
+href="manuscript__04_results.html#comparative-feature-analysis">Figure 4</a> for a
 colour-coded heatmap rendering of this table.</p>
-<table style="width:100%;">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 13%" />
 <col style="width: 9%" />
@@ -4663,7 +4840,7 @@ colour-coded heatmap rendering of this table.</p>
 <td style="text-align: center;">N</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>¹ Nextflow lineage records operate at workflow scope rather than as a
 rendered-document citation graph. ² DVC provides content-addressed
 versioning for data artifacts via its object store. ³ DVC integrates
@@ -4677,7 +4854,7 @@ changing a cell.</p>
 <code>10.5281/zenodo.20419007</code> · SHA-256
 <code>535bd80943d0…</code> · pairing complete</p>
 <figure>
-<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_integrity_strip.png"
+<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Integrity QR strip"><img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Integrity QR strip</figcaption>
 </figure>

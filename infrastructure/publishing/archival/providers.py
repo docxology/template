@@ -523,7 +523,7 @@ class SoftwareHeritageProvider:
                         extra={**extra, "state": "rate-limited"},
                     )
 
-                save_payload: dict = {}
+                save_payload: dict[str, Any] = {}
                 if save_resp.status_code == 200:
                     try:
                         raw_save = save_resp.json()
@@ -536,7 +536,7 @@ class SoftwareHeritageProvider:
                         save_payload = next((e for e in raw_save if isinstance(e, dict)), {})
                     elif isinstance(raw_save, dict):
                         save_payload = raw_save
-                visits: list = []
+                visits: list[dict[str, Any]] = []
                 if visits_resp.status_code == 200:
                     try:
                         raw_visits = visits_resp.json()

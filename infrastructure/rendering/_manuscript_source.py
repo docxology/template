@@ -187,14 +187,16 @@ def resolve_manuscript_dir(project_root: Path) -> Path:
 
 
 def run_override_script(project_root: Path, override_script: Path) -> int:
-    """Delegate rendering to a project-specific override script."""
+    import os
+
     from infrastructure.core.runtime.environment import get_python_command
 
     logger.info(f"⚡ Found custom render override: {override_script.name}")
     logger.info("Transferring control to project-specific renderer...")
     cmd = get_python_command() + [str(override_script)]
+    override_timeout = int(os.environ.get("MANUSCRIPT_HYDRATION_TIMEOUT", "300"))
     try:
-        result = subprocess.run(cmd, cwd=str(project_root), check=False, timeout=300)  # nosec B603
+        result = subprocess.run(cmd, cwd=str(project_root), check=False, timeout=override_timeout)  # nosec B603
         if result.returncode == 0:
             log_success("Custom PDF rendering completed successfully", logger)
         else:
@@ -224,13 +226,14 @@ def run_manuscript_variable_script(
     env = os.environ.copy()
     if template_repo_root is not None:
         env["TEMPLATE_REPO_ROOT"] = str(template_repo_root)
+    hydration_timeout = int(env.get("MANUSCRIPT_HYDRATION_TIMEOUT", "300"))
     try:
         result = subprocess.run(  # nosec B603
             cmd,
             cwd=str(project_root),
             env=env,
             check=False,
-            timeout=300,
+            timeout=hydration_timeout,
         )
     except (subprocess.SubprocessError, OSError) as exc:
         logger.error("Manuscript variable hydration failed to execute: %s", exc)

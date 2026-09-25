@@ -147,6 +147,24 @@ projects/templates/*
 !projects/templates/template_experiment_tree/
 !projects/templates/template_experiment_tree/**
 projects/templates/template_experiment_tree/output/*
+!projects/templates/template_experiment_tree/output/data/
+projects/templates/template_experiment_tree/output/data/*
+!projects/templates/template_experiment_tree/output/data/experiment_tree.json
+!projects/templates/template_experiment_tree/output/pdf/
+projects/templates/template_experiment_tree/output/pdf/*
+!projects/templates/template_experiment_tree/output/pdf/**
+!projects/templates/template_experiment_tree/output/web/
+projects/templates/template_experiment_tree/output/web/*
+!projects/templates/template_experiment_tree/output/web/**
+!projects/templates/template_experiment_tree/output/slides/
+projects/templates/template_experiment_tree/output/slides/*
+!projects/templates/template_experiment_tree/output/slides/**
+!projects/templates/template_experiment_tree/output/figures/
+projects/templates/template_experiment_tree/output/figures/*
+!projects/templates/template_experiment_tree/output/figures/**
+!projects/templates/template_experiment_tree/output/reports/
+projects/templates/template_experiment_tree/output/reports/*
+!projects/templates/template_experiment_tree/output/reports/**
 !projects/templates/template_data_descriptor/
 !projects/templates/template_data_descriptor/**
 !projects/templates/template_literature_meta_analysis/
@@ -424,3 +442,9 @@ run.config.yml
 
 # Agent-ergonomics fleet scratch archive (round 2, 2026-08-31); owner-curated, local-only
 _agent_erg_archive_*/
+
+# omp session-local state (harness-managed, never project content)
+.omp/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/

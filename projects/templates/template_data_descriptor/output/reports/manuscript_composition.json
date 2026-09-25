@@ -1,9 +1,9 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "77229910262df3b61d5245cb710ac7259ea96130ce077a60fc2fe989b0d4ba1d",
+  "binding_sha256": "46b54230a17a59a39fd947a2eb05323dc1f4b95b6412a4c976fd122a4c6b5006",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "b6138c8bae68f55d106a5e7034d1e3fc96b5b278801d758596e9457d195fe713",
-  "combined_size_bytes": 16346,
+  "combined_sha256": "0d179c6f51163811eadcec18cdb153272136e1a3f9dc416fd2f9cedfd9e9c633",
+  "combined_size_bytes": 16738,
   "input_root_kind": "source",
   "ordered_inputs": [
     {
@@ -33,8 +33,8 @@
     {
       "ordinal": 5,
       "path": "manuscript/04_provenance.md",
-      "sha256": "56291c4774765119ece150a09e4ea3793a9f94e32249e82e648feabda88097e2",
-      "size_bytes": 1737
+      "sha256": "eb2429e8c3ed43f7011fbf6ea738e83b09f95bdf925b331ccae8df04a071a49f",
+      "size_bytes": 2129
     },
     {
       "ordinal": 6,
@@ -55,7 +55,7 @@
       "size_bytes": 829
     }
   ],
-  "ordered_inputs_sha256": "e733a496492408391dfdc604ef51a5ef376e5aa2e4c43fafe8e8b71aff125306",
+  "ordered_inputs_sha256": "d079e20b3434be7356404e72f72c60e7da0909ea3f56559e22ccfdb1ad7a70cb",
   "project": "templates/template_data_descriptor",
   "schema_version": "template-manuscript-composition-v1"
 }

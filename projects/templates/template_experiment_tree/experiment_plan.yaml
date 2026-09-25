@@ -12,4 +12,8 @@ metrics:
   primary:
     name: answered_nodes
     direction: maximize
+baselines:
+  - baseline_record
+ablations:
+  - frozen_pending
 protocol: "Record experiments through scripts/record_experiment.py; never edit answered nodes; regenerate the manuscript from the tree."

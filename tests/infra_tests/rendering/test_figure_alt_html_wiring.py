@@ -302,13 +302,19 @@ def test_registry_replacement_preserves_latex_backslashes_in_alt(tmp_path: Path)
     assert 'alt="Short visible caption"' not in rendered
 
 
-def test_labelled_html_figure_rejects_duplicate_registry_filename_owners(tmp_path: Path) -> None:
+def test_labelled_html_figure_resolves_by_label_despite_alias_filename(tmp_path: Path) -> None:
+    """Labelled figures resolve via their label even when atlas aliases share the filename.
+
+    The registry intentionally records canonical labels plus ``fig:atlas-*``
+    aliases that point at the same PNG; a labelled ``<figure>`` is owned by
+    its label, so alias co-ownership must not reject the render.
+    """
     registry_path = tmp_path / "figure_registry.json"
     registry_path.write_text(
         json.dumps(
             {
                 "fig:dense": {"filename": "shared.png", "alt": "Dense description."},
-                "fig:other": {"filename": "shared.png", "alt": "Other description."},
+                "fig:atlas-shared": {"filename": "shared.png", "alt": "Atlas description."},
             }
         ),
         encoding="utf-8",
@@ -320,8 +326,12 @@ def test_labelled_html_figure_rejects_duplicate_registry_filename_owners(tmp_pat
         encoding="utf-8",
     )
 
-    with pytest.raises(RenderingError, match="multiple registry records"):
-        WebRenderer._enhance_accessibility(html_file, registry_path=registry_path)
+    WebRenderer._enhance_accessibility(html_file, registry_path=registry_path)
+
+    rendered = html_file.read_text(encoding="utf-8")
+    assert 'src="../figures/shared.png"' in rendered
+    assert 'alt="Dense description."' in rendered
+    assert "Atlas description." not in rendered
 
 
 def test_unlabelled_figure_without_registry_match_preserves_authored_alt(tmp_path: Path) -> None:

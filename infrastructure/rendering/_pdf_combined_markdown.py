@@ -19,6 +19,13 @@ _FIG_PATH_REPLACEMENTS = [
     ("output/figures/", "../figures/"),
 ]
 
+# Variable-depth relative figure paths (../../../figures/, ../../../../figures/,
+# ...) escape the combined-markdown output directory by more levels than the
+# fixed table covers (the table handles the 0-2 level forms); normalize any run
+# of TWO OR MORE ../ before figures/ down to the single-level ../figures/ form
+# the renderer resolves. Applied after the fixed table.
+_ANY_DEPTH_FIGURES_RE = re.compile(r"(?:\.\./){2,}figures/")
+
 _PLACEHOLDER_RE = re.compile(r"\{\{([^}]+)\}\}")
 
 # Substitution boundary (do not merge with manuscript_injection.py):
@@ -117,6 +124,12 @@ def preprocess_combined_markdown(
         if count:
             content = content.replace(old_prefix, new_prefix)
             n_fig_paths += count
+    # Variable-depth ../figures/ variants (two or more levels) not covered by
+    # the fixed table; single-level ../figures/ is already the target form.
+    matches = _ANY_DEPTH_FIGURES_RE.findall(content)
+    if matches:
+        content = _ANY_DEPTH_FIGURES_RE.sub("../figures/", content)
+        n_fig_paths += len(matches)
     if n_fig_paths:
         logger.info(f"✓ Normalised {n_fig_paths} figure path(s) to ../figures/ in combined markdown")
 

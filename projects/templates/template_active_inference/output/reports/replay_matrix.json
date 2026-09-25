@@ -386,12 +386,12 @@
         "output/reports/artifact_diffoscope.json": "5952226fe7ac56a942f04b01166fbf73e5037f4112c5f50a6f66347db267b7d7",
         "output/reports/artifact_license_audit.json": "e3bb1fa9bb7a21782048e79f414928873bad7750750d3001c24a6ce80b93769d",
         "output/reports/claim_evidence_audit.json": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
-        "output/reports/figure_hash_manifest.json": "8cfa2c9d69b1698c595125f901ed744dd63f6c1772114b2a283084b8b6faef4b",
+        "output/reports/figure_hash_manifest.json": "b881e143ff12af9aedf0b054f9ee99ee883e902390f5818b961be613066ead83",
         "output/reports/producer_completeness.json": "b599fad7d9b546d3f98a0d77f3efd2cc9c27d1d59ea3ba4338a41d329ad127b4",
         "output/reports/release_notes_evidence.json": "3b5af3ab9c0c215c392aa191a0b8aa9730ebac0bfde3845f68e61d0fa7d3491e",
         "output/reports/scope_boundary_audit.json": "178246924d4af6ddde249a4b7a9219e476008005e0ce0f3c3a4f032a91cdbf12",
         "output/reports/stale_artifact_report.json": "2c8941c5b9e036d421ec5ead14cbc22299e6937021389ccbff05bdde831d3358",
-        "output/reports/visualization_quality_audit.json": "696528a937668d83e047b94d30bfb99c16d5f39e6e4689600924385f4eede109"
+        "output/reports/visualization_quality_audit.json": "15892d6a5a5c2e6b38080d60128dae4b2c468c3a3189dd9a126df973a7aceb30"
       },
       "producer_script": "generate_integration_audit.py",
       "replay_method": "artifact_fingerprint"
@@ -474,9 +474,9 @@
         "output/reports/blocked_scope_manifest.json": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
         "output/reports/counterexample_matrix.json": "75f80abc1e2c8cb1053f637727b2fd3f161831b6f39e48bec76c399b2df7c3a2",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-        "output/reports/release_attestation.json": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
-        "output/reports/release_bundle_manifest.json": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7",
-        "output/reports/security_posture_audit.json": "d5417528780326a1cae12728829ab25307429e88838f2c7b709f982dd708a249",
+        "output/reports/release_attestation.json": "95ad963c61ca4cdae3419c4d14bfed15e11d4c0ec02f7b78355526ccf971971d",
+        "output/reports/release_bundle_manifest.json": "09bb514829c46dc9ec6f8b25917ed32db9914be06373ba3add0555ad45d7cba7",
+        "output/reports/security_posture_audit.json": "2c83552432c11e7d1bb34029e7b3e0106ced39cc54c6fb81b36e98711eb2c9f9",
         "output/reports/sheaf_render_log.json": "32ba5733e8ea1f5100bf8d263c5695ed4382e16d93b855ba8fc3b8d4d3a846b6"
       },
       "producer_script": "generate_sheaf_tracks.py",

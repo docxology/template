@@ -13,12 +13,17 @@ from pathlib import Path
 from typing import Final
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
+from infrastructure.rendering._bibliography import (
+    pandoc_bibliography_args as pandoc_bibliography_args,
+    resolve_bibliography as resolve_bibliography,
+)
 from infrastructure.rendering._pdf_unicode_remap import _T, _map_prose_glyphs
 from infrastructure.rendering._slides_codelisting import make_codelisting_slide_safe
 from infrastructure.rendering._slides_framebreaks import split_long_slide_frames
-from infrastructure.rendering._slides_math_header import write_slides_math_header
-from infrastructure.rendering._slides_tex_figures import normalize_accessible_projection_latex
+from infrastructure.rendering._slides_math_header import write_slides_math_header as write_slides_math_header
+from infrastructure.rendering._slides_tex_figures import (
+    normalize_accessible_projection_latex as normalize_accessible_projection_latex,
+)
 from infrastructure.rendering._slides_tex_tables import inset_accessible_longtables
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_log_quality import parse_latex_log_findings as parse_latex_log_findings
@@ -26,10 +31,10 @@ from infrastructure.rendering._slides_beamer_geometry import (
     reject_accessible_beamer_overflow,
 )
 from infrastructure.rendering.latex_texttt import (
-    constrain_includegraphics_textheight,
-    make_known_literals_breakable,
-    make_long_texttt_breakable,
-    make_pandoc_reference_tokens_breakable,
+    constrain_includegraphics_textheight as constrain_includegraphics_textheight,
+    make_known_literals_breakable as make_known_literals_breakable,
+    make_long_texttt_breakable as make_long_texttt_breakable,
+    make_pandoc_reference_tokens_breakable as make_pandoc_reference_tokens_breakable,
 )
 
 logger = get_logger(__name__)

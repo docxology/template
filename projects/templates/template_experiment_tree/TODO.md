@@ -17,7 +17,31 @@
 ## Test and validator gaps
 - Current test and validator contract covers tree discipline and token backing; missing: a validator for cross-tree node-id reuse and a render-stage admission test for the tracked PDF.
 
-## Upcoming work
-- minor upcoming: admit the combined PDF as tracked evidence once the render pipeline hydrates `{{EXP_*}}` tokens.
-- medium upcoming: tree-state diff report (what changed between renders).
-- major upcoming: round-based branch pruning helpers with frozen-node preservation.
+## Minor upcoming
+
+Admit the combined PDF as tracked evidence once the render pipeline hydrates `{{EXP_*}}` tokens.
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
+
+## Medium upcoming
+
+Tree-state diff report (what changed between renders).
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
+
+## Major upcoming
+
+Round-based branch pruning helpers with frozen-node preservation.
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked row is a deliberate boundary, not a skipped success.

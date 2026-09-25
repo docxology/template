@@ -146,6 +146,14 @@ def _exact_registry_record(
 ) -> FigureAltRecord | None:
     """Return only a registry record whose label and image path both match."""
 
+    label_record = registry.by_label(label) if label is not None else None
+    if label_record is not None:
+        if filename != label_record.filename:
+            raise RenderingError(
+                f"Tagged-PDF figure label/path mismatch: {label} does not render {label_record.filename}",
+                context={"figure": label, "path": filename, "registry": str(registry.path)},
+            )
+        return label_record
     path_records = registry.by_filename(filename)
     if len(path_records) > 1:
         raise RenderingError(
@@ -159,21 +167,12 @@ def _exact_registry_record(
                 context={"path": filename, "registry": str(registry.path)},
             )
         return None
-
-    label_record = registry.by_label(label)
-    if label_record is None:
-        if path_records:
-            raise RenderingError(
-                f"Tagged-PDF figure label/path mismatch: {label} is not the registry owner of {filename}",
-                context={"figure": label, "path": filename, "registry": str(registry.path)},
-            )
-        return None
-    if filename != label_record.filename:
+    if path_records:
         raise RenderingError(
-            f"Tagged-PDF figure label/path mismatch: {label} does not render {label_record.filename}",
+            f"Tagged-PDF figure label/path mismatch: {label} is not the registry owner of {filename}",
             context={"figure": label, "path": filename, "registry": str(registry.path)},
         )
-    return label_record
+    return None
 
 
 def _has_nonblank_authored_alt(options: str) -> bool:
