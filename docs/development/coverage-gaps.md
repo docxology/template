@@ -9,7 +9,7 @@ notes, not live gates.** Live measured coverage and exemplar floors belong in
 read from the generated coverage receipts below rather than copied into this
 document).
 
-**Current evidence:** the 24 public-exemplar coverage rows and source-tree
+**Current evidence:** the 25 public-exemplar coverage rows and source-tree
 identities are maintained in
 [`docs/_generated/coverage_snapshot.json`](../_generated/coverage_snapshot.json)
 and checked by `uv run python scripts/docgen/counts.py --check`. The current

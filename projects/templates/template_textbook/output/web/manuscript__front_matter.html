@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>front_matter.md.web</title>
   <style>
@@ -267,12 +267,56 @@
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
 .theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -284,7 +328,18 @@ body {
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: visible;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+main,
+nav,
+section,
+article,
+figure,
+figcaption {
+  min-width: 0;
 }
 
 .skip-link {
@@ -342,6 +397,8 @@ code {
   padding: 2px 4px;
   border-radius: 3px;
   font-family: 'Liberation Mono', 'Courier New', monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 pre {
@@ -349,13 +406,68 @@ pre {
   color: #ecf0f1;
   padding: 15px;
   border-radius: 5px;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  overflow-wrap: inherit;
+  white-space: inherit;
+  word-break: inherit;
+}
+
+div.sourceCode {
+  max-width: 100%;
+  overflow: visible;
+}
+
+pre.sourceCode {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+
+pre.sourceCode code,
+pre.sourceCode code span {
+  color: inherit;
+}
+
+pre > code.sourceCode {
+  white-space: pre-wrap;
+}
+
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 20px 0;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.table-scroll > table {
+  margin-block: 0;
+  min-width: 100%;
+  width: max-content;
 }
 
 figure {
@@ -436,8 +548,7 @@ a:focus-visible {
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -486,6 +597,12 @@ mjx-container[display="true"] {
 }
 
 @media (min-width: 1000px) {
+  /* Wide figure links stay within the viewport but extend beyond the prose
+     column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -500,6 +617,12 @@ mjx-container[display="true"] {
   color: #4b5563;
   margin-top: 10px;
   text-align: center;
+}
+
+.figure-long-description,
+.figure-exact-values {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 </style>
@@ -525,7 +648,7 @@ book-length technical work, with every structural element in place and
 every author-specific passage left as a marked <strong>stub</strong> for
 you to fill.</p>
 <p>The whole book is <strong>data-driven from a single source of
-truth</strong>, <a href="config.yaml"><code>config.yaml</code></a>. That
+truth</strong>, <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/config.yaml"><code>config.yaml</code></a>. That
 file declares the parts, the chapters inside each part, the front
 matter, the appendices, and the labs and question banks. The table of
 contents, chapter numbering, figure numbering, and the
@@ -540,8 +663,8 @@ Study Blueprint, Learning Objectives, a worked formalism (equation +
 parameter table), an inline Mermaid diagram, and Summary / Key Terms /
 Further Reading / Practice sections.</li>
 <li><strong>A matching lab and question bank</strong> for every chapter,
-under <a href="labs/"><code>labs/</code></a> and <a
-href="questions/"><code>questions/</code></a>.</li>
+under <a href="https://github.com/docxology/template/tree/main/projects/templates/template_textbook/manuscript/labs/"><code>labs/</code></a> and <a
+href="https://github.com/docxology/template/tree/main/projects/templates/template_textbook/manuscript/questions/"><code>questions/</code></a>.</li>
 <li><strong>A tested computational backbone</strong> in
 <code>src/</code> — the worked equations are real, tested Python
 functions (<code>textbook.models</code>), and figures are generated
@@ -556,8 +679,8 @@ structural contract holds as you write.</li>
 marker: <code>&lt;!-- STUB --&gt;</code>, <code>TODO:</code>, or
 <code>TKTK</code>. The quality audit counts these, so your progress
 toward a finished book is measurable. See <a
-href="appendices/appendix_authoring_guide.md">Appendix A — Authoring
-Guide</a> and <a href="AGENTS.md"><code>AGENTS.md</code></a> for the
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/appendices/appendix_authoring_guide.md">Appendix A — Authoring
+Guide</a> and <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/AGENTS.md"><code>AGENTS.md</code></a> for the
 full filling workflow.</p>
 <hr />
 <h2 id="how-to-read-this-book">How to Read This Book</h2>
@@ -583,13 +706,13 @@ meet practice and the edge of what is known.</li>
 to its <strong>lab</strong> (a guided, hands-on exercise) and its
 <strong>question bank</strong> (self-check questions). Work the lab
 after reading; use the question bank to confirm you can recall and apply
-the material. New terms are linked to the <a href="glossary.md">Master
+the material. New terms are linked to the <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/glossary.md">Master
 Glossary</a> the first time they appear.</p>
 <hr />
 <h2 id="methodology-how-this-book-is-generated">Methodology: How This
 Book Is Generated</h2>
 <p>This manuscript is rendered, not typeset by hand. The pipeline reads
-<a href="config.yaml"><code>config.yaml</code></a>, runs the analysis
+<a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/config.yaml"><code>config.yaml</code></a>, runs the analysis
 scripts that produce figures and diagrams, assembles the Markdown
 sections in declared order, and renders a PDF through Pandoc with
 <code>pandoc-crossref</code> resolving every cross-reference and
@@ -599,8 +722,8 @@ citation.</p>
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_02_analysis.py <span class="at">--project</span> templates/template_textbook</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_03_render.py    <span class="at">--project</span> templates/template_textbook</span></code></pre></div>
 <p>or run the full pipeline with <code>./run.sh</code>. See <a
-href="README.md"><code>README.md</code></a> for the manuscript directory
-layout and <a href="SYNTAX.md"><code>SYNTAX.md</code></a> for the exact
+href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/README.md"><code>README.md</code></a> for the manuscript directory
+layout and <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/SYNTAX.md"><code>SYNTAX.md</code></a> for the exact
 authoring syntax.</p>
 <!-- STUB: add a copyright line, ISBN, and edition statement here at
 publication time. The licence and edition are declared in config.yaml. -->

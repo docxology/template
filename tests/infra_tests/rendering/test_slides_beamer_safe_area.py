@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import shutil
 from pathlib import Path
 import subprocess
@@ -225,6 +226,11 @@ print("archive-ok; accessible-failed-loud")
     )
     repo_root = Path(__file__).resolve().parents[3]
 
+    # CI exports UV_FROZEN=true; combined with --no-project newer uv turns it
+    # into a fatal "--frozen has no effect" error inside the isolated probe.
+    # The probe env must not inherit it.
+    probe_env = {key: value for key, value in os.environ.items() if key != "UV_FROZEN"}
+
     completed = subprocess.run(
         [
             uv,
@@ -243,10 +249,13 @@ print("archive-ok; accessible-failed-loud")
         capture_output=True,
         text=True,
         timeout=300,
+        env=probe_env,
     )
 
     assert completed.returncode == 0, completed.stderr
-    assert completed.stdout.strip().endswith("archive-ok; accessible-failed-loud")
+    # uv prints build progress (Building research-project-template ...) to
+    # stdout before the probe output; the probe's final line is the contract.
+    assert "archive-ok; accessible-failed-loud" in completed.stdout
 
 
 @pytest.mark.slow

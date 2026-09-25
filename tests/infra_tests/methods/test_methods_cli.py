@@ -217,6 +217,6 @@ def test_main_all_public_source_audit_returns_aggregate_json() -> None:
 
     assert code == 0
     payload = json.loads(buffer.getvalue())
-    assert payload["project_count"] == 24
+    assert payload["project_count"] == 25
     assert payload["artifact_mode"] == "source"
     assert payload["passed"] is True

@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Sequence
 
 from infrastructure.core.execution_boundary import (
-    BoundedSubprocessResult,
+    BoundedSubprocessResult as BoundedSubprocessResult,
     build_bounded_env,
     run_bounded_subprocess,
 )

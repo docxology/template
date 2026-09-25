@@ -18,6 +18,7 @@ Current entries:
 - `templates/template_code_project`
 - `templates/template_data_descriptor`
 - `templates/template_eda_notebook`
+- `templates/template_experiment_tree`
 - `templates/template_formal`
 - `templates/template_gold_refinement`
 - `templates/template_literature_meta_analysis`

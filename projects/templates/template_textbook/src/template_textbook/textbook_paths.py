@@ -19,7 +19,7 @@ import os
 import sys
 from pathlib import Path
 
-PROJECT = Path(__file__).resolve().parent.parent
+PROJECT = Path(__file__).resolve().parents[2]
 SRC = PROJECT / "src"
 SCRIPTS_DIR = PROJECT / "scripts"
 MANUSCRIPT = PROJECT / "manuscript"

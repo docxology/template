@@ -69,15 +69,21 @@ def test_tagged_pdf_rejects_registry_label_rendering_mismatched_path(tmp_path: P
         apply_pdf_figure_alts(tex, registry_path, tagged_pdf=True)
 
 
-def test_labelled_tagged_pdf_figure_rejects_duplicate_registry_filename_owners(
+def test_labelled_tagged_pdf_figure_resolves_by_label_despite_alias_filename(
     tmp_path: Path,
 ) -> None:
+    """Labelled figures resolve via their label even when atlas aliases share the filename.
+
+    The registry intentionally records canonical labels plus ``fig:atlas-*``
+    aliases that point at the same PNG; a labelled ``includegraphics`` is
+    owned by its label, so alias co-ownership must not reject the render.
+    """
     registry_path = tmp_path / "figure_registry.json"
     registry_path.write_text(
         json.dumps(
             {
                 "fig:dense": {"filename": "shared.png", "alt": "Dense description."},
-                "fig:other": {"filename": "shared.png", "alt": "Other description."},
+                "fig:atlas-shared": {"filename": "shared.png", "alt": "Atlas description."},
             }
         ),
         encoding="utf-8",
@@ -87,8 +93,11 @@ def test_labelled_tagged_pdf_figure_rejects_duplicate_registry_filename_owners(
         r"\caption{Caption}\label{fig:dense}\end{figure}"
     )
 
-    with pytest.raises(RenderingError, match="multiple registry records"):
-        apply_pdf_figure_alts(tex, registry_path, tagged_pdf=True)
+    rendered = apply_pdf_figure_alts(tex, registry_path, tagged_pdf=True)
+
+    assert r"\label{fig:dense}" in rendered
+    assert "alt={Dense description.}" in rendered
+    assert "Atlas description." not in rendered
 
 
 def test_tagged_pdf_unlabelled_registry_reuse_preserves_nonblank_authored_alt(tmp_path: Path) -> None:

@@ -19,6 +19,7 @@ The `infrastructure/core/files/` package contains file cleanup, inventory, and o
 - `inventory_entry.py` - inventory entries
 - `inventory_reports.py` - inventory reporting
 - `pdf_locator.py` - locate generated PDFs for validation and copy stages
+- `git_tracked.py` - batched `git ls-files` queries that identify git-tracked files under a directory, used by cleanup to preserve tracked outputs
 
 ## Confined text writes
 

@@ -522,4 +522,7 @@ def _fill_background(slide: Any, prs: Any, hex_color: str) -> None:
 def _rgb(hex_color: str) -> Any:
     from pptx.dml.color import RGBColor
 
-    return RGBColor.from_string(hex_color.lstrip("#"))
+    # Alias through ``Any``: RGBColor.from_string ships untyped in python-pptx,
+    # so a ``type: ignore`` here is flagged unused by the non-strict gate.
+    rgb_cls: Any = RGBColor
+    return rgb_cls.from_string(hex_color.lstrip("#"))

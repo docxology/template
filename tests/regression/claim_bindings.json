@@ -45,6 +45,11 @@
       "rationale": "Notebook-derived statistics are bound to the deterministic fixture and source module."
     },
     {
+      "project": "templates/template_experiment_tree",
+      "state": "not_applicable",
+      "rationale": "No quantitative regression pin lane is declared yet; tree-engine and token-backing claims remain review-scoped until render provenance pins are added."
+    },
+    {
       "project": "templates/template_formal",
       "state": "not_applicable",
       "rationale": "The current claim surface is typed/runtime/formal invariant evidence; quantitative regression pins are not yet declared."

@@ -122,6 +122,22 @@ def constrain_includegraphics_textheight(
     return updated, occurrences
 
 
+def _unnest_breakseq_in_breaktt(tex_content: str) -> str:
+    """Collapse ``\\breakseq`` inside ``\\breaktt`` back to its literal.
+
+    ``\\breaktt`` already wraps its argument in ``\\seqsplit``; a literal
+    rewritten by :func:`make_known_literals_breakable` inside that argument
+    nests ``\\seqsplit`` in ``\\seqsplit``, which loops XeTeX forever during
+    ship-out. A single level of breaking is sufficient: the inner literal
+    falls back to the breaktt-provided wrapping.
+    """
+
+    def _sub(match: re.Match[str]) -> str:
+        return re.sub(r"\\breakseq\{([^{}]*)\}", r"\1", match.group(0))
+
+    return re.sub(r"\\breaktt\{(?:[^{}]|\{[^{}]*\})*\}", _sub, tex_content)
+
+
 def make_known_literals_breakable(tex_content: str) -> tuple[str, int]:
     """Make recurring long table labels breakable without changing wording."""
     replacements = 0
@@ -134,6 +150,7 @@ def make_known_literals_breakable(tex_content: str) -> tuple[str, int]:
 
         updated, count = pattern.subn(_sub, updated)
         replacements += count
+    updated = _unnest_breakseq_in_breaktt(updated)
     if replacements:
         updated = _ensure_breaktt_preamble(updated)
     return updated, replacements

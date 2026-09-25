@@ -36,6 +36,10 @@ Pinned images / compose scaffolding for reproducible CI + remote builds.
 
 Figure registries plus glossary tooling feeding manuscript automation.
 
+### `infrastructure.formal_contracts` (${module_formal_contracts_python_file_count} files)
+
+Typed, machine-checkable manuscript contract layer: frozen block model, evidence-tier policies, monoidal composition, and a fail-closed checker with stable `FORMAL.*` diagnostics.
+
 ### `infrastructure.fonds` (${module_fonds_python_file_count} files)
 
 Resource pool management for curated fonds (tracked reference datasets, bibliographic collections, and evidence corpora). Fonds mirror `projects/templates/` with git-tracked `templates/*` exemplars and sidecar-linked private lifecycle folders.

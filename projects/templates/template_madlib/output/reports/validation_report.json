@@ -240,7 +240,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.9400014877319336
+      "size_mb": 0.9399995803833008
     },
     "stable_inventory": {
       "categories": {
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 985663
+          "size_bytes": 985661
         },
         "release": {
           "files": 2,
@@ -270,7 +270,7 @@
         },
         "slides": {
           "files": 12,
-          "size_bytes": 985449
+          "size_bytes": 985451
         },
         "web": {
           "files": 15,
@@ -290,11 +290,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-13T21:23:53Z",
+  "timestamp": "2026-09-23T21:54:53Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "1b604b4d3460b01e7e54ac5b068d1fe5f5f481abe2a947346a301a27db62f7a7",
+      "sha256": "d11fbfa71851e3f153a645269f6f9f1d029b658cf5bce2c06be9bed480355ed0",
       "size_bytes": 20229
     },
     "combined_manuscript": {
@@ -384,19 +384,19 @@
     "fingerprints": {
       "config": {
         "file_count": 17,
-        "sha256": "6688b4065cd96ce6966c66323829e312846869cf16e8fb7fc0b141b5a70cf238"
+        "sha256": "51c73dc1c2f2fb665aac365742fd0c77c128811653d2aeefcb3fe0101bc4266e"
       },
       "output": {
         "file_count": 67,
-        "sha256": "e8b4291249327fcab5ab80900a0c8a3fdbe174022df49846ff30ce967b063381"
+        "sha256": "6a3fff33cde101112a108daec145336f8cfb2031c71e3461cb78871e5edbe462"
       },
       "source": {
         "file_count": 42,
         "sha256": "31b80f320559b96569c27ae5be69331e749f8b19ba3075761838cec94c9763f6"
       },
       "stage": {
-        "file_count": 1336,
-        "sha256": "d6ba61354da529d2daf73ca07793521d0c494e84e79886deb2eddf4d916b2fc3"
+        "file_count": 1347,
+        "sha256": "f9d8ed68770fecb9076b923aa9db4556c1761a9ac0ebb57bffb33ee0a57ea8d3"
       }
     },
     "project": "templates/template_madlib",

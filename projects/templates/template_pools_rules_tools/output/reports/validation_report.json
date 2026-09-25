@@ -215,7 +215,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 4.1255903244018555
+      "total_size_mb": 4.125592231750488
     },
     "figures": {
       "files": 10,
@@ -250,7 +250,7 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 1423292
+          "size_bytes": 1423294
         },
         "web": {
           "files": 11,
@@ -259,7 +259,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 45,
-      "total_size_bytes": 4325995
+      "total_size_bytes": 4325997
     }
   },
   "recommendations": [],
@@ -270,11 +270,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-13T21:23:53Z",
+  "timestamp": "2026-09-23T21:54:53Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "c4ee59d3d592c76d60c23d874cd4c1c9db8de083fe531cab72be8b91c02b9562",
+      "sha256": "a938c9792ec430ec6cfc1986ec1a4ac45c84df276330e7d00313e6962f4a1819",
       "size_bytes": 13479
     },
     "combined_manuscript": {
@@ -340,19 +340,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "e7198346523e807e4b7945c7638c55d665770334d076cd8196e477e69a09e8ec"
+        "sha256": "1073240b158296dc0e81f714460bd5297ef1366760beefd05176392d2d9e4ec3"
       },
       "output": {
         "file_count": 45,
-        "sha256": "b4ce5f82335b5455e5f7a79d6ac4bb8382018405306daa054ec456af7f294841"
+        "sha256": "1b1f9d7d0a725f96867ce5b69b4cb168d04e278b051c9c275c6a25719e9302fd"
       },
       "source": {
         "file_count": 50,
         "sha256": "13e8871487de436275e039b0b0d0dcec56ac3775a67d35ce1b015ead01b6e69c"
       },
       "stage": {
-        "file_count": 1336,
-        "sha256": "d6ba61354da529d2daf73ca07793521d0c494e84e79886deb2eddf4d916b2fc3"
+        "file_count": 1347,
+        "sha256": "f9d8ed68770fecb9076b923aa9db4556c1761a9ac0ebb57bffb33ee0a57ea8d3"
       }
     },
     "project": "templates/template_pools_rules_tools",

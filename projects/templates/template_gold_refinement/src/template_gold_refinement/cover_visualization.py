@@ -30,7 +30,7 @@ COVER_REPORT = "cover_visualization.json"
 
 
 def _project_root(project_root: Path | None) -> Path:
-    return project_root or Path(__file__).resolve().parent.parent
+    return project_root or Path(__file__).resolve().parents[2]
 
 
 def _cover_background(width: int = 1200, height: int = 1600) -> np.ndarray:
