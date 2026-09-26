@@ -475,7 +475,7 @@
         "output/reports/counterexample_matrix.json": "75f80abc1e2c8cb1053f637727b2fd3f161831b6f39e48bec76c399b2df7c3a2",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
         "output/reports/release_attestation.json": "95ad963c61ca4cdae3419c4d14bfed15e11d4c0ec02f7b78355526ccf971971d",
-        "output/reports/release_bundle_manifest.json": "5511ac1688900158029dd20b944f28258c04413cddc7e2beab7e069b481224e2",
+        "output/reports/release_bundle_manifest.json": "09bb514829c46dc9ec6f8b25917ed32db9914be06373ba3add0555ad45d7cba7",
         "output/reports/security_posture_audit.json": "2c83552432c11e7d1bb34029e7b3e0106ced39cc54c6fb81b36e98711eb2c9f9",
         "output/reports/sheaf_render_log.json": "32ba5733e8ea1f5100bf8d263c5695ed4382e16d93b855ba8fc3b8d4d3a846b6"
       },

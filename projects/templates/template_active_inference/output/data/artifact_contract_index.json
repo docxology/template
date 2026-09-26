@@ -2760,7 +2760,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "5511ac1688900158029dd20b944f28258c04413cddc7e2beab7e069b481224e2",
+      "source_sha256": "09bb514829c46dc9ec6f8b25917ed32db9914be06373ba3add0555ad45d7cba7",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
