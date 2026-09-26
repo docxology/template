@@ -199,7 +199,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 1.531163215637207
+      "total_size_mb": 1.5311574935913086
     },
     "figures": {
       "files": 8,
@@ -208,7 +208,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.44332313537597656
+      "size_mb": 0.44332408905029297
     },
     "stable_inventory": {
       "categories": {
@@ -222,7 +222,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 464858
+          "size_bytes": 464859
         },
         "reports": {
           "files": 3,
@@ -230,7 +230,7 @@
         },
         "slides": {
           "files": 7,
-          "size_bytes": 492771
+          "size_bytes": 492764
         },
         "web": {
           "files": 10,
@@ -239,7 +239,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 31,
-      "total_size_bytes": 1605541
+      "total_size_bytes": 1605535
     }
   },
   "recommendations": [],
@@ -250,11 +250,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-25T16:18:50Z",
+  "timestamp": "2026-09-25T21:20:57Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "df613a04ad78dd604f2406400252b8346f3c8b5de87345876dce9463ea563725",
+      "sha256": "0d708fe0dc493fd53c60cfbbf13f03ddf23fee43d43db6412b1ff45f35a9a18b",
       "size_bytes": 9597
     },
     "combined_manuscript": {
@@ -314,11 +314,11 @@
     "fingerprints": {
       "config": {
         "file_count": 14,
-        "sha256": "26bceb8ac6a3ac85a3eabe5050abac09d473b931e0d8ee5aaf51257638a016de"
+        "sha256": "dca8ff14d15f06cfb5b571501c9d383a75ac0f7b2e29120513a8978f46591eb7"
       },
       "output": {
         "file_count": 31,
-        "sha256": "8de1792ab9a2595673527f9f06f16f70c869e8d9d9f62b674932b683a508c79c"
+        "sha256": "4c510b092788a63583582ceb35ccfbb28b8671f229e72f6dc146b43e243541d8"
       },
       "source": {
         "file_count": 57,

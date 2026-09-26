@@ -939,7 +939,7 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_autopoiesis_combined.pdf",
-      "sha256": "b3556f5156f924b43f295b7f82a90d737fa767ebfad275dd8500196fb1122c80",
+      "sha256": "e108c5e5718102b1129834e25ede3413445ffae9281a3c021f22b6cebaff9037",
       "size_bytes": 505531,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

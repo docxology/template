@@ -6,7 +6,7 @@
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
-    "all_required_sources_present": true,
+    "all_required_sources_present": false,
     "copied_root": "output/templates/template_active_inference",
     "copied_root_exists": false,
     "parity_authority": "stage_05_copy",
@@ -387,7 +387,7 @@
         "hash_cycle_excluded": true,
         "hash_matches": false,
         "matches_when_copied": true,
-        "source_exists": true,
+        "source_exists": false,
         "source_sha256": "",
         "status": "deferred"
       },
@@ -401,7 +401,7 @@
         "hash_cycle_excluded": true,
         "hash_matches": false,
         "matches_when_copied": true,
-        "source_exists": true,
+        "source_exists": false,
         "source_sha256": "",
         "status": "deferred"
       },
@@ -757,20 +757,20 @@
     },
     {
       "artifact": "output/pdf/template_active_inference_combined.pdf",
-      "deferred_until_render": false,
+      "deferred_until_render": true,
       "hash_authority": "output/reports/artifact_manifest.json",
       "hash_cycle_excluded": true,
       "required_deliverable": true,
-      "source_exists": true,
+      "source_exists": false,
       "source_sha256": ""
     },
     {
       "artifact": "output/web/index.html",
-      "deferred_until_render": false,
+      "deferred_until_render": true,
       "hash_authority": "output/reports/artifact_manifest.json",
       "hash_cycle_excluded": true,
       "required_deliverable": true,
-      "source_exists": true,
+      "source_exists": false,
       "source_sha256": ""
     },
     {
