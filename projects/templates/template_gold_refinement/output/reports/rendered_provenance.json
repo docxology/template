@@ -44,7 +44,7 @@
     },
     {
       "rendered_path": "output/manuscript/06_reproducibility.md",
-      "rendered_sha256": "26b801c09525c4b88a36b9016532ceb9fe29494895a258d5b7390539771faab8",
+      "rendered_sha256": "797a4f87aa2910dc0540f7dae9f7f8b0198199f4549c2d8ffa881233a8bb5e0f",
       "source_path": "manuscript/06_reproducibility.md",
       "source_sha256": "874e1c31eda69dc19d9ed8a419907d191f80e8a9d5641830492e52520f683f62"
     },
@@ -76,22 +76,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "c5163ae01182974956ce19d0300971abaacaccb28b490f285e5d671d962f0384",
+      "sha256": "3813509fc140dc07a3ce3f8f75707cb8f9de5d15bfd8a829aa2de942f95ad258",
       "size_bytes": 21982
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "ac5c3375065c1b7cd40632feb736ece09168c4d16bff6cd98ad7d1406aa4b524",
+      "sha256": "3081575edfff9448d0c1099b2eb8fb26b220717df19b0ee41166a2223eb1280e",
       "size_bytes": 103766
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "0bb9a1c822cacb2426616036aea073a31aa56429138a012c1edf1f77182df464",
+      "sha256": "1ea580bdc66be7478705dcb0cf5c47c39da6cbe8d4df408e8fbbce04d55527de",
       "size_bytes": 2935
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "9d3d7c23929e7d49321cbcbd0a663063c43c563cdc152819b558bd3207506fd1",
+      "sha256": "b79e159ccb482cc2f2fe8d52219c79a0f6ea0b741f89df7b85eb6134dac4f07c",
       "size_bytes": 12978
     }
   },
@@ -99,11 +99,11 @@
   "fingerprints": {
     "config": {
       "file_count": 16,
-      "sha256": "8a9a08eed14beb59c992cd4b780a51820df15b32d2462fe19069f739ead6de48"
+      "sha256": "01ad530a99eeccab716e3873242d54d3a0d73d281ac83219329b92bf1d4d7531"
     },
     "output": {
       "file_count": 73,
-      "sha256": "6d07c5c396d5398a2c10dca8c1983d93a03f5db9bca954aa53294dedd81d1f1b"
+      "sha256": "f16e3924dd48a4d0ed824280addf9592658afb16aeed6d99170245a49063aece"
     },
     "source": {
       "file_count": 46,

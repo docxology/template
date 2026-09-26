@@ -162,6 +162,9 @@ projects/templates/template_experiment_tree/output/slides/*
 !projects/templates/template_experiment_tree/output/figures/
 projects/templates/template_experiment_tree/output/figures/*
 !projects/templates/template_experiment_tree/output/figures/**
+!projects/templates/template_experiment_tree/output/manuscript/
+!projects/templates/template_experiment_tree/output/manuscript/**/
+!projects/templates/template_experiment_tree/output/manuscript/**/*.md
 !projects/templates/template_experiment_tree/output/reports/
 projects/templates/template_experiment_tree/output/reports/*
 !projects/templates/template_experiment_tree/output/reports/**

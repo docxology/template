@@ -1,9 +1,9 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 62,
+  "fact_count": 71,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 18,
+    "artifact": 27,
     "citation": 2,
     "number": 42
   },
@@ -551,6 +551,114 @@
     },
     {
       "active": true,
+      "checked_at": "2026-09-26T00:01:20Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/00_abstract.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/00_abstract.md"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-09-26T00:01:20Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/01_introduction.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/01_introduction.md"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-09-26T00:01:20Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/02_methodology.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/02_methodology.md"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-09-26T00:01:20Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/03_results.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/03_results.md"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-09-26T00:01:20Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/04_discussion.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/04_discussion.md"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-09-26T00:01:20Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/99_references.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/99_references.md"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-09-26T00:01:20Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/config.yaml",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/config.yaml"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-09-26T00:01:20Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/preamble.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/preamble.md"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-09-26T00:01:20Z",
+      "kind": "artifact",
+      "source": "filesystem",
+      "source_field": "",
+      "source_path": "output/manuscript/references.bib",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "output/manuscript/references.bib"
+    },
+    {
+      "active": true,
       "checked_at": "2026-09-23T18:25:24Z",
       "kind": "artifact",
       "source": "filesystem",
@@ -756,7 +864,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 18,
+    "artifact": 27,
     "bibliography": 2,
     "configuration": 7,
     "generated_metric": 35

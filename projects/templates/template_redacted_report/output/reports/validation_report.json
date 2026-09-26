@@ -215,7 +215,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.9718751907348633
+      "total_size_mb": 3.9718666076660156
     },
     "figures": {
       "files": 5,
@@ -224,7 +224,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.2116565704345703
+      "size_mb": 0.2116556167602539
     },
     "stable_inventory": {
       "categories": {
@@ -242,7 +242,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 221938
+          "size_bytes": 221937
         },
         "reports": {
           "files": 4,
@@ -250,7 +250,7 @@
         },
         "slides": {
           "files": 3,
-          "size_bytes": 269649
+          "size_bytes": 269641
         },
         "web": {
           "files": 6,
@@ -259,7 +259,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 69,
-      "total_size_bytes": 4164813
+      "total_size_bytes": 4164804
     }
   },
   "recommendations": [],
@@ -270,11 +270,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-25T16:18:50Z",
+  "timestamp": "2026-09-25T21:20:57Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "748c5fe249a4ab0717852a1155ad08af66ce21281cafcf3b2edaf758f54fbe10",
+      "sha256": "730c397e5f33eb2e5dbc75b061536856e8213809d4e9ad17a243ddadd3b85850",
       "size_bytes": 21684
     },
     "combined_manuscript": {
@@ -310,11 +310,11 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "234b3497965b9fbba39e66cef80882f890c8c7df3abf4754ae1598b853b3927f"
+        "sha256": "2b1cc5833ca66145c386003eabab9d98cf2ad9e79a2676ad51fd73a4ed14187c"
       },
       "output": {
         "file_count": 69,
-        "sha256": "e4ef966ff2f063bc59759754e9464aa35604ca62620dcbd4c03b4d7f1dcb9bd6"
+        "sha256": "cbf320e40c233ceca3eca210ffed3a155e2f1c97e9381448e0cc6da364120819"
       },
       "source": {
         "file_count": 25,
