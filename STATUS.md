@@ -4,7 +4,7 @@
 >
 > Refresh target: every 6 months. Anything older than **183 days** should be treated as potentially dormant.
 
-**Last updated:** 2026-09-05
+**Last updated:** 2026-09-26
 **Maintained by:** Daniel Ari Friedman (see [MAINTAINERS.md](MAINTAINERS.md))
 
 ## Verification ledger
