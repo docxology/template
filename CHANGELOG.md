@@ -9,6 +9,12 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+- Closed `TEST-ISOLATION-SYSPATH-1`, `SLOW-PROFILE-1`, `CI-WIRING-1`,
+  `CI-SLOWMARK-SHARD-1`, and `REHEARSAL-PARALLEL-1` as verified on main:
+  merge `ea32f318c` completed the isolation and CI contracts; CI run
+  `36474651471` passed on the subsequent cache-repair merge; and the two-cell
+  clean-checkout rehearsal `36490425283` passed with its deterministic receipt.
+
 ## [3.8.0] - 2026-09-21
 
 ### Entry-doc accuracy and backlog reconciliation (2026-09-14)
