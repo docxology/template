@@ -215,7 +215,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 17.451568603515625
+      "total_size_mb": 17.451577186584473
     },
     "figures": {
       "files": 19,
@@ -224,7 +224,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 5.441152572631836
+      "size_mb": 5.4411516189575195
     },
     "stable_inventory": {
       "categories": {
@@ -242,7 +242,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 5705462
+          "size_bytes": 5705461
         },
         "reports": {
           "files": 1,
@@ -250,7 +250,7 @@
         },
         "slides": {
           "files": 23,
-          "size_bytes": 6130954
+          "size_bytes": 6130964
         },
         "web": {
           "files": 26,
@@ -259,7 +259,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 101,
-      "total_size_bytes": 18299296
+      "total_size_bytes": 18299305
     }
   },
   "recommendations": [],
@@ -270,11 +270,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-25T21:20:57Z",
+  "timestamp": "2026-09-28T00:33:02Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "2f40c01d5c8c77f377fb34ffc446df74d34163201f6253809aca06ec548146de",
+      "sha256": "cc1f92550c5184e2e46ec5cf26b41d7586f873470b46fcd16c044303a0cd7895",
       "size_bytes": 30892
     },
     "combined_manuscript": {
@@ -434,7 +434,7 @@
       },
       "output": {
         "file_count": 101,
-        "sha256": "28ccc1f34b528881f14f7511ea15ea7a3b6c6bf3dc1f2fac26abccecc89d088d"
+        "sha256": "ddaae3664e35bcd1b56bdc60077d11f5eb7b5261a1b2dd3a07dc801effffe00c"
       },
       "source": {
         "file_count": 99,
@@ -442,7 +442,7 @@
       },
       "stage": {
         "file_count": 1221,
-        "sha256": "235cf555bdfab6321e7f19d29d2f370de85a32bd255882e11878403102049041"
+        "sha256": "71b358c43c0fa7acf048ba8020902f1fcb5ce82c36eba1e499184c58298db48d"
       }
     },
     "project": "templates/template_advanced_literature_review",

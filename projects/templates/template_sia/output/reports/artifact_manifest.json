@@ -147,7 +147,7 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_sia_combined.pdf",
-      "sha256": "236de0e12ee916c2a82ff8142c6086c491df3b19920ab4ed5b57b8543380e481",
+      "sha256": "38282a90dbcb029fd32b9214f3c7ad70afac4929f63b4e057fa49737efbbc532",
       "size_bytes": 196037,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

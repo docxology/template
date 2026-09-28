@@ -203,7 +203,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.932497024536133
+      "total_size_mb": 3.932497978210449
     },
     "figures": {
       "files": 15,
@@ -212,7 +212,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 2,
-      "size_mb": 1.4664630889892578
+      "size_mb": 1.4664621353149414
     },
     "stable_inventory": {
       "categories": {
@@ -226,7 +226,7 @@
         },
         "pdf": {
           "files": 2,
-          "size_bytes": 1537698
+          "size_bytes": 1537697
         },
         "reports": {
           "files": 4,
@@ -234,7 +234,7 @@
         },
         "slides": {
           "files": 6,
-          "size_bytes": 63924
+          "size_bytes": 63926
         },
         "web": {
           "files": 9,
@@ -243,7 +243,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 37,
-      "total_size_bytes": 4123522
+      "total_size_bytes": 4123523
     }
   },
   "recommendations": [],
@@ -254,11 +254,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-25T21:20:57Z",
+  "timestamp": "2026-09-28T00:33:02Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "8e01efe17725056df6f34d236dcee79b1145466523080c84a4c48fb0073cb554",
+      "sha256": "8bb0beff1764c3af870add1c047dc8957ff013d03a0446b59bec8fce0dd481fc",
       "size_bytes": 11414
     },
     "combined_manuscript": {
@@ -316,7 +316,7 @@
       },
       "output": {
         "file_count": 37,
-        "sha256": "43b893eae46267885176755c1f22ceaf64d99d35f8f9b0d0a1b7087ad6ef570b"
+        "sha256": "ceefbf05462fbf082d50a658bbd66230ba508bb4fe7a326c2f9303a790b2fde3"
       },
       "source": {
         "file_count": 35,
@@ -324,7 +324,7 @@
       },
       "stage": {
         "file_count": 1221,
-        "sha256": "235cf555bdfab6321e7f19d29d2f370de85a32bd255882e11878403102049041"
+        "sha256": "71b358c43c0fa7acf048ba8020902f1fcb5ce82c36eba1e499184c58298db48d"
       }
     },
     "project": "templates/template_storybook",
