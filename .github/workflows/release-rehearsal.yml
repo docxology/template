@@ -80,7 +80,7 @@ jobs:
       - name: Warm uv cache
         run: |
           uv cache clean jaxlib
-          uv sync --group public-exemplars
+          uv sync --group public-exemplars --reinstall-package jaxlib
 
       - name: Run deterministic fresh-checkout rehearsal (shard ${{ matrix.run-index }})
         run: >-
