@@ -24,7 +24,11 @@ from infrastructure.rendering._slides_math_header import write_slides_math_heade
 from infrastructure.rendering._slides_tex_figures import (
     normalize_accessible_projection_latex as normalize_accessible_projection_latex,
 )
-from infrastructure.rendering._slides_tex_tables import inset_accessible_longtables
+from infrastructure.rendering._slides_tex_tables import (
+    _inside_spans as _inside_spans,
+    _protected_spans as _protected_spans,
+    inset_accessible_longtables as inset_accessible_longtables,
+)
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_log_quality import parse_latex_log_findings as parse_latex_log_findings
 from infrastructure.rendering._slides_beamer_geometry import (
@@ -231,6 +235,42 @@ def beamer_command(
     return cmd
 
 
+_HREF_URL_ARG_RE: Final[re.Pattern[str]] = re.compile(r"\\href\{([^{}]+)\}\{")
+
+
+def _escape_ampersands_in_href_urls(tex_content: str) -> tuple[str, int]:
+    """Escape ``&`` inside ``\\href`` URL arguments for beamer token safety.
+
+    Beamer freezes every frame body as a token list before executing it, so a
+    raw ``&`` inside a URL is read as an alignment tab when the frame's own
+    table machinery later scans those tokens: inside a longtable cell the URL
+    splits mid-argument and ``\\href`` scans on to the frame's end, where the
+    ``\\par`` beamer issues is a forbidden control sequence. pandoc escapes
+    text-level ``&`` but leaves link URLs raw. Escaping to ``\\&`` is safe in
+    every other context because hyperref's ``\\hyper@normalise`` maps it back
+    to a literal ``&`` (the combined-PDF article path needs no change: it
+    reads tokens fresh). Verbatim spans are protected so literal code
+    examples keep their bytes.
+
+    Returns:
+        The transformed text and the number of URL arguments escaped.
+    """
+    protected = _protected_spans(tex_content)
+    count = 0
+
+    def _escape(match: re.Match[str]) -> str:
+        nonlocal count
+        if _inside_spans(match.start(), protected):
+            return match.group(0)
+        url = match.group(1)
+        if "&" not in url:
+            return match.group(0)
+        count += 1
+        return "\\href{" + url.replace("&", "\\&") + "}{"
+
+    return _HREF_URL_ARG_RE.sub(_escape, tex_content), count
+
+
 def transform_beamer_latex(
     tex_content: str,
     config: RenderingConfig,
@@ -240,9 +280,14 @@ def transform_beamer_latex(
     """Apply ordered slide typography fixes and require wrapping capability.
 
     Cross-deck references and figure paths have already been resolved by the
-    renderer. Preserve this order: listing normalization precedes literal
-    wrapping; accessible capability validation precedes figure normalization.
+    renderer. Preserve this order: URL-ampersand escaping precedes listing
+    normalization; listing normalization precedes literal wrapping;
+    accessible capability validation precedes figure normalization.
     """
+    tex_content, href_escapes = _escape_ampersands_in_href_urls(tex_content)
+    if href_escapes:
+        logger.info("Escaped & in %d \\href URL argument(s) for beamer token safety", href_escapes)
+
     tex_content, codelisting_replacements = make_codelisting_slide_safe(
         tex_content,
         accessible_body_font_pt=(config.slides_body_font_pt if config.slides_profile == "accessible" else None),

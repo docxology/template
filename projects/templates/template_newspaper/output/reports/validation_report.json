@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 0.914463996887207
+      "total_size_mb": 0.9144744873046875
     },
     "figures": {
       "files": 13,
@@ -228,7 +228,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 2,
-      "size_mb": 0.5124759674072266
+      "size_mb": 0.5124721527099609
     },
     "stable_inventory": {
       "categories": {
@@ -242,7 +242,7 @@
         },
         "pdf": {
           "files": 2,
-          "size_bytes": 537370
+          "size_bytes": 537366
         },
         "release": {
           "files": 2,
@@ -254,7 +254,7 @@
         },
         "slides": {
           "files": 6,
-          "size_bytes": 111063
+          "size_bytes": 111078
         },
         "web": {
           "files": 9,
@@ -263,7 +263,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 37,
-      "total_size_bytes": 958885
+      "total_size_bytes": 958896
     }
   },
   "recommendations": [],
@@ -274,11 +274,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-25T21:20:57Z",
+  "timestamp": "2026-09-28T00:33:02Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "5dfabcfd211d7c03cb2cf1086ed993b0652ff36571644e077dc1e809cab73af4",
+      "sha256": "330459ce185da172bea559c4f63cabcdc8b78b6ee75f54959e5736c587f4c84e",
       "size_bytes": 11075
     },
     "combined_manuscript": {
@@ -336,7 +336,7 @@
       },
       "output": {
         "file_count": 37,
-        "sha256": "c383b23834533f10bdda336f29e313ceb8e77351e416e1052942d346451d5ff7"
+        "sha256": "dde037f29c76ecc7d6dd3512ee47415fdfa3d20dfbeb5b63498d04f2e8975038"
       },
       "source": {
         "file_count": 28,
@@ -344,7 +344,7 @@
       },
       "stage": {
         "file_count": 1221,
-        "sha256": "235cf555bdfab6321e7f19d29d2f370de85a32bd255882e11878403102049041"
+        "sha256": "71b358c43c0fa7acf048ba8020902f1fcb5ce82c36eba1e499184c58298db48d"
       }
     },
     "project": "templates/template_newspaper",

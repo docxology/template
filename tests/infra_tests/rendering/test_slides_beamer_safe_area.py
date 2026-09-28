@@ -28,6 +28,7 @@ from infrastructure.rendering._slides_beamer_geometry import (
 )
 from infrastructure.rendering._slides_math_header import write_slides_math_header
 from infrastructure.rendering._slides_tex_tables import inset_accessible_longtables
+from infrastructure.rendering._slides_beamer import _escape_ampersands_in_href_urls
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 
@@ -397,3 +398,27 @@ def test_real_accessible_beamer_confines_two_and_three_column_continuation_table
             )
 
     assert len(table_pages) == 2
+
+
+def test_href_ampersand_url_arguments_escape_for_beamer_token_safety() -> None:
+    """Raw '&' inside a \\href URL must become '\\&' for beamer token-list safety."""
+    longtable_cell = (
+        "\\begin{longtable}{p{0.4\\linewidth}p{0.5\\linewidth}}\n"
+        "Source & \\href{https://example.com/docs?topic=x&section=y}{Docs} \\\\\n"
+        "\\end{longtable}\n"
+    )
+    escaped, count = _escape_ampersands_in_href_urls(longtable_cell)
+    assert count == 1
+    assert "\\href{https://example.com/docs?topic=x\\&section=y}{" in escaped
+    # The longtable alignment tab outside the URL argument stays raw.
+    assert "Source & \\href{" in escaped
+
+    # URLs without '&' pass through byte-identically.
+    plain = "\\href{https://example.com/plain}{P}"
+    assert _escape_ampersands_in_href_urls(plain) == (plain, 0)
+
+    # Verbatim spans keep literal bytes (code examples must not be rewritten).
+    verbatim = "\\begin{verbatim}\\href{https://a.test/?a=1&b=2}{x}\\end{verbatim}"
+    escaped_verbatim, verbatim_count = _escape_ampersands_in_href_urls(verbatim)
+    assert verbatim_count == 0
+    assert verbatim in escaped_verbatim

@@ -231,7 +231,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.386528968811035
+      "total_size_mb": 3.386533737182617
     },
     "figures": {
       "files": 10,
@@ -240,7 +240,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.94000244140625
+      "size_mb": 0.9400005340576172
     },
     "stable_inventory": {
       "categories": {
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 985664
+          "size_bytes": 985662
         },
         "release": {
           "files": 2,
@@ -270,7 +270,7 @@
         },
         "slides": {
           "files": 12,
-          "size_bytes": 985462
+          "size_bytes": 985469
         },
         "web": {
           "files": 15,
@@ -279,7 +279,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 67,
-      "total_size_bytes": 3551033
+      "total_size_bytes": 3551038
     }
   },
   "recommendations": [],
@@ -290,11 +290,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-25T21:20:57Z",
+  "timestamp": "2026-09-28T00:33:02Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "f58b245d07dfefe4ccd6df1ee774a70cf23f2d68c6318aec385867ba1ec2b72b",
+      "sha256": "3bf38b8e4887d975307c1ced9a18cb12cfd6f9cc2b24413a8af4c973cff9bb8c",
       "size_bytes": 20229
     },
     "combined_manuscript": {
@@ -388,7 +388,7 @@
       },
       "output": {
         "file_count": 67,
-        "sha256": "94d39d588e78c9e82c92f0c50163abedd51ac66e8903a74033771e9a11ad6dd8"
+        "sha256": "393df6e26bcd6bd87f21e5c361ce3649b55f9cd89e27f5e05d9a80765163fd45"
       },
       "source": {
         "file_count": 42,
@@ -396,7 +396,7 @@
       },
       "stage": {
         "file_count": 1221,
-        "sha256": "235cf555bdfab6321e7f19d29d2f370de85a32bd255882e11878403102049041"
+        "sha256": "71b358c43c0fa7acf048ba8020902f1fcb5ce82c36eba1e499184c58298db48d"
       }
     },
     "project": "templates/template_madlib",

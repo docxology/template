@@ -231,7 +231,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 6.746349334716797
+      "total_size_mb": 6.746247291564941
     },
     "figures": {
       "files": 28,
@@ -240,7 +240,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 1.2837982177734375
+      "size_mb": 1.2836952209472656
     },
     "stable_inventory": {
       "categories": {
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 1346160
+          "size_bytes": 1346052
         },
         "release": {
           "files": 2,
@@ -270,7 +270,7 @@
         },
         "slides": {
           "files": 6,
-          "size_bytes": 1358091
+          "size_bytes": 1358092
         },
         "web": {
           "files": 9,
@@ -279,7 +279,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 117,
-      "total_size_bytes": 7074060
+      "total_size_bytes": 7073953
     }
   },
   "recommendations": [],
@@ -290,11 +290,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-25T21:20:57Z",
+  "timestamp": "2026-09-28T00:33:02Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "58843f70292df877370944cca3aa4d606831d5e1ddc7095a163d8b78be2cbf10",
+      "sha256": "5e04ac8d087b5f3bf7e0223152da010ca4e4125d68cad4e46259d6821c9950a6",
       "size_bytes": 35363
     },
     "combined_manuscript": {
@@ -364,7 +364,7 @@
       },
       "output": {
         "file_count": 117,
-        "sha256": "9c14507fbc58d30a56d6dcc2f81c04d0b23e4ad48662dd19a11482bd507d3b83"
+        "sha256": "23054198e652a114d1128134aed992018ece3cca250bffe264268a780f58ec80"
       },
       "source": {
         "file_count": 88,
@@ -372,7 +372,7 @@
       },
       "stage": {
         "file_count": 1221,
-        "sha256": "235cf555bdfab6321e7f19d29d2f370de85a32bd255882e11878403102049041"
+        "sha256": "71b358c43c0fa7acf048ba8020902f1fcb5ce82c36eba1e499184c58298db48d"
       }
     },
     "project": "templates/template_autoresearch_project",

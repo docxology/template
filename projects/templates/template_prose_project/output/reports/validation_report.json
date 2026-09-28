@@ -247,7 +247,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 1.1014890670776367
+      "total_size_mb": 1.1013994216918945
     },
     "figures": {
       "files": 10,
@@ -256,7 +256,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.1282024383544922
+      "size_mb": 0.1281108856201172
     },
     "stable_inventory": {
       "categories": {
@@ -274,7 +274,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 134430
+          "size_bytes": 134334
         },
         "release": {
           "files": 2,
@@ -290,7 +290,7 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 216498
+          "size_bytes": 216500
         },
         "web": {
           "files": 11,
@@ -299,7 +299,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 57,
-      "total_size_bytes": 1154995
+      "total_size_bytes": 1154901
     }
   },
   "recommendations": [],
@@ -310,11 +310,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-25T21:20:57Z",
+  "timestamp": "2026-09-28T00:33:02Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "1a70361e0d2554bace9c9ead88f1052d4ea408c502ec142f0198c11c3d8139d0",
+      "sha256": "f1f2d8848783c48d598c45ac00963c31ed11e580c3423de591408884b1cb1a54",
       "size_bytes": 17231
     },
     "combined_manuscript": {
@@ -396,7 +396,7 @@
       },
       "output": {
         "file_count": 57,
-        "sha256": "4f7d6a133043de50a603d3d9971d4c199a5ac0d228716553933d48b2dd9f78c7"
+        "sha256": "da010c0e25a2d63ba94cb14b9fece3e5568e3826e50ef92c7b8779438e590590"
       },
       "source": {
         "file_count": 32,
@@ -404,7 +404,7 @@
       },
       "stage": {
         "file_count": 1221,
-        "sha256": "235cf555bdfab6321e7f19d29d2f370de85a32bd255882e11878403102049041"
+        "sha256": "71b358c43c0fa7acf048ba8020902f1fcb5ce82c36eba1e499184c58298db48d"
       }
     },
     "project": "templates/template_prose_project",
