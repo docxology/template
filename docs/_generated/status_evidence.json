@@ -134,13 +134,13 @@
     },
     {
       "command": "`uv run python scripts/docgen/publication_records.py --check`",
-      "health": "\ud83d\udfe2 boundary documented; next root release remains uncreated",
+      "health": "\ud83d\udfe2 v3.8.0 released 2026-09-26; next root release remains uncreated",
       "id": "STATUS-ROOT-RELEASE-1",
-      "last_verified": "2026-07-17",
+      "last_verified": "2026-09-26",
       "mode": "manual",
       "receipt": "docs/_generated/status_evidence.json",
       "subsystem": "Root release boundary (`pyproject.toml`, tags, GitHub releases, `CHANGELOG.md`)",
-      "verification_scope": "Root package/tag boundary is `3.6.0`/`v3.6.0`; current changes remain under `[Unreleased]`; standalone `v1.0.1` is explicitly excluded from root changelog parity. See `docs/maintenance/release-boundary.md`.",
+      "verification_scope": "Root package/tag boundary is `3.8.0`/`v3.8.0`: `[Unreleased]` moved to the `[3.8.0] - 2026-09-21` changelog section, `pyproject.toml` bumped, boundary doc reconciled. GitHub release **created and verified 2026-09-26**: \"Research Project Template v3.8.0\" published at tag `v3.8.0` (points at `cce833cb0`), with 3 assets (`default.gitignore`, wheel, sdist), after tag re-point from `bbcf891d7`/`4633c140e` and `release.yml` re-dispatch (runs `36213910027` + `36213899705`, both success). Receipt lane: 25/25 receipt refresh (PR #120, `e2beba886`), clean-clone strict rendered audit PASS 0 blocking. See `docs/maintenance/release-boundary.md`.",
       "verified_by": "Daniel (agent session)"
     },
     {
@@ -190,5 +190,5 @@
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "11d730892eaa850b82bea7edf95b7d7690060f334527ac1949ba4a90f2777d86"
+  "source_sha256": "ae08644bedcfc3eac1ecbe0701641e2d2f07a4d8bebf2851880b6fb064fafc76"
 }

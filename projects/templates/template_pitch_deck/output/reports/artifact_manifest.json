@@ -84,8 +84,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_pitch_deck_combined.pdf",
-      "sha256": "c371be8eb3a185fc7a78fa0f08dbda348ea704089b6af6caa3a9407ed49f0afd",
-      "size_bytes": 67616,
+      "sha256": "a122458f48064322e984380dc0f4ad7a3d3b00ea931225d001e0d757f0d26928",
+      "size_bytes": 67617,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

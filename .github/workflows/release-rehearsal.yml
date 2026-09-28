@@ -78,7 +78,9 @@ jobs:
       # Warm the uv cache from the repo lockfile so the rehearsal's fresh
       # clones can satisfy `uv sync --locked --offline` without network.
       - name: Warm uv cache
-        run: uv sync --group public-exemplars
+        run: |
+          uv cache clean jaxlib
+          uv sync --group public-exemplars
 
       - name: Run deterministic fresh-checkout rehearsal (shard ${{ matrix.run-index }})
         run: >-

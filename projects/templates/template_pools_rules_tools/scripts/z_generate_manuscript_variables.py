@@ -22,7 +22,7 @@ import pathlib
 import sys
 
 _PROJECT_DIR = pathlib.Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(_PROJECT_DIR))
+sys.path.insert(0, str(_PROJECT_DIR / "src"))
 # Repo root for `infrastructure.*` imports when the rendering pipeline invokes
 # this script as a subprocess (sibling z_generate convention, e.g. gold_refinement).
 sys.path.insert(0, str(_PROJECT_DIR.parents[2]))

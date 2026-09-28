@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 0.9144744873046875
+      "total_size_mb": 0.9144535064697266
     },
     "figures": {
       "files": 13,
@@ -228,7 +228,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 2,
-      "size_mb": 0.5124721527099609
+      "size_mb": 0.5124731063842773
     },
     "stable_inventory": {
       "categories": {
@@ -242,7 +242,7 @@
         },
         "pdf": {
           "files": 2,
-          "size_bytes": 537366
+          "size_bytes": 537367
         },
         "release": {
           "files": 2,
@@ -254,7 +254,7 @@
         },
         "slides": {
           "files": 6,
-          "size_bytes": 111078
+          "size_bytes": 111055
         },
         "web": {
           "files": 9,
@@ -263,7 +263,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 37,
-      "total_size_bytes": 958896
+      "total_size_bytes": 958874
     }
   },
   "recommendations": [],
@@ -274,11 +274,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-28T00:33:02Z",
+  "timestamp": "2026-09-28T02:24:18Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "330459ce185da172bea559c4f63cabcdc8b78b6ee75f54959e5736c587f4c84e",
+      "sha256": "abb6d659cf8a378a3252e24644f8c2ab1daaa5e94e0c94655495bbaf1a502c87",
       "size_bytes": 11075
     },
     "combined_manuscript": {
@@ -332,11 +332,11 @@
     "fingerprints": {
       "config": {
         "file_count": 28,
-        "sha256": "a0f4297f0a5040502903c725c09f13332f2844eb2c94cbb523ba378b6d2e7080"
+        "sha256": "cbcd697724ab096f7acb5d530f1e87d4413bdc315af1cc99a9674db0ae7132e5"
       },
       "output": {
         "file_count": 37,
-        "sha256": "dde037f29c76ecc7d6dd3512ee47415fdfa3d20dfbeb5b63498d04f2e8975038"
+        "sha256": "afc62b184c55bd43d50e5994e65110b6a3808278802029173976bc0ffdd2bd5b"
       },
       "source": {
         "file_count": 28,

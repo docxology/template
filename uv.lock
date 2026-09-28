@@ -3834,6 +3834,7 @@ dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.4.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pillow" },
+    { name = "pypdf" },
     { name = "pyyaml" },
     { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "typing-extensions", version = "4.15.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -3866,7 +3867,6 @@ publishing = [
 ]
 rendering = [
     { name = "pdfplumber" },
-    { name = "pypdf" },
     { name = "reportlab" },
 ]
 rendering-pptx = [
@@ -3960,7 +3960,6 @@ publishing = [
 ]
 rendering = [
     { name = "pdfplumber" },
-    { name = "pypdf" },
     { name = "reportlab" },
 ]
 rendering-pptx = [
@@ -4004,7 +4003,7 @@ requires-dist = [
     { name = "pillow", specifier = ">=12.3.0" },
     { name = "plotly", marker = "extra == 'dashboard'", specifier = ">=5.0.0" },
     { name = "psutil", marker = "extra == 'monitoring'", specifier = ">=5.9.0" },
-    { name = "pypdf", marker = "extra == 'rendering'", specifier = ">=6.16.1" },
+    { name = "pypdf", specifier = ">=6.16.1" },
     { name = "python-barcode", marker = "extra == 'steganography'", specifier = ">=0.15" },
     { name = "python-dotenv", marker = "extra == 'deep-research'", specifier = ">=1.2.2" },
     { name = "python-dotenv", marker = "extra == 'dotenv'", specifier = ">=1.2.2" },
@@ -4080,7 +4079,6 @@ publishing = [
 ]
 rendering = [
     { name = "pdfplumber", specifier = ">=0.11.0" },
-    { name = "pypdf", specifier = ">=6.16.1" },
     { name = "reportlab", specifier = ">=4.0.0" },
 ]
 rendering-pptx = [{ name = "python-pptx", specifier = ">=1.0.0" }]
