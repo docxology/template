@@ -74,8 +74,8 @@ def test_real_accessible_beamer_preserves_plain_and_linked_image_aspect_ratio(tm
 @pytest.mark.slow
 @pytest.mark.requires_latex
 def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: Path) -> None:
-    if not shutil.which("pandoc"):
-        pytest.skip("Pandoc not installed")
+    if not all(shutil.which(tool) for tool in ("pandoc", "pandoc-crossref", "pdftotext")):
+        pytest.skip("Pandoc, pandoc-crossref, and pdftotext are required")
     compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
     if compiler is None:
         pytest.skip("No LaTeX compiler available")

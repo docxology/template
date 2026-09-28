@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 5.227424621582031
+      "total_size_mb": 5.227426528930664
     },
     "figures": {
       "files": 96,
@@ -238,7 +238,7 @@
         },
         "docx": {
           "files": 2,
-          "size_bytes": 655889
+          "size_bytes": 655891
         },
         "epub": {
           "files": 1,
@@ -267,7 +267,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 159,
-      "total_size_bytes": 5481352
+      "total_size_bytes": 5481354
     }
   },
   "recommendations": [],
@@ -278,11 +278,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-28T00:33:02Z",
+  "timestamp": "2026-09-28T02:24:18Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "f40ac6578bdc89cfe701e71e5b560759607b3185c82fa4d5ffc10c1d87bfe8eb",
+      "sha256": "7ec2f83fb08e71cace69c3bf5ea599523225c5cb5f81b85b471f8ef373e3ee77",
       "size_bytes": 49091
     },
     "combined_manuscript": {
@@ -594,11 +594,11 @@
     "fingerprints": {
       "config": {
         "file_count": 18,
-        "sha256": "dd1ced4edbe15224d49e09787918a676d206082e775a74a641007d8a3f85ea5f"
+        "sha256": "5c919168176a23bec59500302174546faed753e482fa35fcb11778a264ca804a"
       },
       "output": {
         "file_count": 159,
-        "sha256": "ee317a346727229c87b2139597ed75d6cd0348776bc181a14286e826d8081b88"
+        "sha256": "1f8195cc96bdc26a32fde1987cc3ebf02924eb1804901f98862b7e4acc115dee"
       },
       "source": {
         "file_count": 94,

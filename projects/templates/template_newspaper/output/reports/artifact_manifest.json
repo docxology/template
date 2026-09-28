@@ -138,8 +138,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_newspaper_combined.pdf",
-      "sha256": "1908ef1c30e338d3b7273fc0d1be18101b1fb10000a1a5c7c6a5549523b765de",
-      "size_bytes": 57974,
+      "sha256": "9c0db0acef3e2ed7ef3afc917ab4c94f0d8455686c568bbf12c8b018936209b4",
+      "size_bytes": 57975,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -201,8 +201,8 @@
     {
       "contract_match": true,
       "path": "output/slides/00_abstract_slides.pdf",
-      "sha256": "4a4a5a055c223f853401fb80221bc41bcce1be2b0c4f673e8ebc724f9cb7fa14",
-      "size_bytes": 14448,
+      "sha256": "dced1d6fff896b4af37623b9a0dd2095ba174ebfb859ce77836710dc3126a7a9",
+      "size_bytes": 14447,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -210,8 +210,8 @@
     {
       "contract_match": true,
       "path": "output/slides/01_introduction_slides.pdf",
-      "sha256": "71589eaa81542d8726f2a23b79e8ef3c76da2b9937ba5cd76ec596d6e96f05c6",
-      "size_bytes": 17350,
+      "sha256": "775fce823cf54f587a418b33ff4e6c4f25fb2a11f4331f5f1164be50de91dce0",
+      "size_bytes": 17340,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -219,8 +219,8 @@
     {
       "contract_match": true,
       "path": "output/slides/02_engine_architecture_slides.pdf",
-      "sha256": "8f852dbd8efe8720c62f658bffcfd6b2ed7851aa2f0a713f83c75ff3add7b86d",
-      "size_bytes": 30901,
+      "sha256": "f8cea1276fc7a57560f4ea92c4cf5b819f31eff3912ca4254c1cb0a0b1a2f066",
+      "size_bytes": 30899,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -228,8 +228,8 @@
     {
       "contract_match": true,
       "path": "output/slides/03_typography_and_figures_slides.pdf",
-      "sha256": "2fdd985900204b597ac055f99079840e94e0211c9a90d73f099a4b8533aba000",
-      "size_bytes": 14206,
+      "sha256": "c3ba3722c89259ef951d426366801ac56363ee991a182f657242bc012a681af5",
+      "size_bytes": 14205,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -237,8 +237,8 @@
     {
       "contract_match": true,
       "path": "output/slides/04_reproducibility_slides.pdf",
-      "sha256": "24da7a23282ca18e2ef486ada65f2e8384bdaf6b980aba20350528df939b8727",
-      "size_bytes": 16470,
+      "sha256": "b0b6ceeec8913d4e71b1c1160d167091ab0bd603c75fc2bce459dd87e9ace2fb",
+      "size_bytes": 16461,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -246,7 +246,7 @@
     {
       "contract_match": true,
       "path": "output/slides/99_references_slides.pdf",
-      "sha256": "4d2b903888670c7bf999aff0ce397d8b4a894a8d00a7ca6c07600f2b8f0954d2",
+      "sha256": "d113db6515f6d5bef3147cb8c0c71da794aa629ca71241bada2dc3983d6e4d49",
       "size_bytes": 17703,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

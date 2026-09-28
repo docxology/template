@@ -11,7 +11,7 @@
     },
     "template_autopoiesis": {
       "coverage_pct": "96.88 %",
-      "source_hash": "2f6a4618d626e157639917287ff41a120784019fcf20761015e6225e9170399c"
+      "source_hash": "a6c98568a5750e89851949140334108c2fafbde78657272a0e6c8dcfadab1123"
     },
     "template_autoresearch_project": {
       "coverage_pct": "96.33 %",
@@ -23,7 +23,7 @@
     },
     "template_code_project": {
       "coverage_pct": "95.28 %",
-      "source_hash": "1d41e18b4e99c2be4a0e4aacb71b2732aa56d01235c2f62ce9910ee7f00080d8"
+      "source_hash": "cc7b929c13e751d265b3f3989a67772b00179cdfe1993bba49633740c949247c"
     },
     "template_data_descriptor": {
       "coverage_pct": "96.13 %",
@@ -55,7 +55,7 @@
     },
     "template_methods_paper": {
       "coverage_pct": "99.00 %",
-      "source_hash": "5682da6308df1288fe59e57a2a2735fe56d1b4cf2476f31e271435dfee280912"
+      "source_hash": "d2efc6700e02167e23da6d08e8772de4fc79b06f12a5547510932c130d71d79d"
     },
     "template_newspaper": {
       "coverage_pct": "99.25 %",
@@ -67,7 +67,7 @@
     },
     "template_pools_rules_tools": {
       "coverage_pct": "94.73 %",
-      "source_hash": "f55d392d3c61ddf3ba17ef0ed31f087afd311464104f1101ff952e810b8d8ee4"
+      "source_hash": "df5752f76e337a50fde461a9af9b8de7362a7fdcc01149edfff838c3d00a19a0"
     },
     "template_prose_project": {
       "coverage_pct": "95.87 %",
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "38dd40e9050ddfeea9c8f5618cf0ba99fc98c7a9",
+  "source_commit": "530744a9cf6abcde1d296bb7e366364f3cac45ca",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -190,10 +190,10 @@
     "projects": {
       "template_active_inference": "64f6f64ab794c51423eb27918c691faaa793ca2c97adec3ae9374b5876703129",
       "template_advanced_literature_review": "ca3824bd4bdf5f0dd9076be542820b792125ef91bcde6374a906432073eaf100",
-      "template_autopoiesis": "2f6a4618d626e157639917287ff41a120784019fcf20761015e6225e9170399c",
+      "template_autopoiesis": "a6c98568a5750e89851949140334108c2fafbde78657272a0e6c8dcfadab1123",
       "template_autoresearch_project": "f3716141477dccf974e9b7c51fc4fd0ce79ca67a3bb01fc06d59df694dc6882e",
       "template_autoscientists": "45221f8a605a4445b72eceb68da6f7220e941065a46d78aa79285cadf7de0ecc",
-      "template_code_project": "1d41e18b4e99c2be4a0e4aacb71b2732aa56d01235c2f62ce9910ee7f00080d8",
+      "template_code_project": "cc7b929c13e751d265b3f3989a67772b00179cdfe1993bba49633740c949247c",
       "template_data_descriptor": "838ef9338d80feacda26c2a36323c090ebdc0d148f47ede7def8a4df43fc6dd4",
       "template_eda_notebook": "d01a2187db8267193e4ed6cd02c2bf049b2fb0d5558c4ef1a97eda9dc82d60df",
       "template_experiment_tree": "e925018f85bff4a14fdaf858f7ebea6c17b0c8c8099ee8dc3c5426ba2e8202a7",
@@ -201,10 +201,10 @@
       "template_gold_refinement": "e78675e8e38e105fa977282a8cf60aaf2f933d069b3000b41167e054c9299e73",
       "template_literature_meta_analysis": "f63e85e31d39f1449dbae2e16dcada67ed15a8e886485050982bbf9b6f318323",
       "template_madlib": "c632abf8f7a3f88577c4e0dce21ed7a2903689586ede7503d415703ea2437ea8",
-      "template_methods_paper": "5682da6308df1288fe59e57a2a2735fe56d1b4cf2476f31e271435dfee280912",
+      "template_methods_paper": "d2efc6700e02167e23da6d08e8772de4fc79b06f12a5547510932c130d71d79d",
       "template_newspaper": "ace59ac0ae8adb72874acb90cadd2a91030daa967ced7147d43de43e796df586",
       "template_pitch_deck": "0416bc3bbe9a5d0d32a7bf2ec6d0afb300a792fb640d99ffec9bf96bb8182f2e",
-      "template_pools_rules_tools": "f55d392d3c61ddf3ba17ef0ed31f087afd311464104f1101ff952e810b8d8ee4",
+      "template_pools_rules_tools": "df5752f76e337a50fde461a9af9b8de7362a7fdcc01149edfff838c3d00a19a0",
       "template_prose_project": "330178191b834802443c6d8fa085e7ad71c66ba1184959829dec64e0bfd3c6e5",
       "template_redacted_report": "9952c22d2039c5ae801e368dfdb98711ea3abde6ab5828a542c48bc7b9944f71",
       "template_registered_report": "3af77a794718e190e91c2ff65d4ce072a95ec428b7d25dfa03e23d8dcc589889",

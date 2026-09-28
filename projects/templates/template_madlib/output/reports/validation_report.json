@@ -40,7 +40,7 @@
           "file_count": 10,
           "largest_file": "madlib_cover_overview.png",
           "largest_file_path": "figures/madlib_cover_overview.png",
-          "size_mb": "0.82"
+          "size_mb": "0.83"
         },
         "llm": {
           "exists": false,
@@ -64,7 +64,7 @@
           "file_count": 1,
           "largest_file": "template_madlib_combined.pdf",
           "largest_file_path": "pdf/template_madlib_combined.pdf",
-          "size_mb": "0.94"
+          "size_mb": "0.95"
         },
         "release": {
           "exists": true,
@@ -90,7 +90,7 @@
           "file_count": 12,
           "largest_file": "03_results_slides.pdf",
           "largest_file_path": "slides/03_results_slides.pdf",
-          "size_mb": "0.94"
+          "size_mb": "0.95"
         },
         "web": {
           "exists": true,
@@ -122,7 +122,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.94
+            "size_mb": 0.95
           },
           "data": {
             "exists": true,
@@ -152,7 +152,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.82
+            "size_mb": 0.83
           },
           "llm": {
             "exists": false,
@@ -182,7 +182,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.94
+            "size_mb": 0.95
           },
           "release": {
             "exists": true,
@@ -213,7 +213,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.94
+            "size_mb": 0.95
           },
           "web": {
             "exists": true,
@@ -231,16 +231,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.386533737182617
+      "total_size_mb": 3.420620918273926
     },
     "figures": {
       "files": 10,
-      "size_mb": 0.8189239501953125
+      "size_mb": 0.8302097320556641
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.9400005340576172
+      "size_mb": 0.9544496536254883
     },
     "stable_inventory": {
       "categories": {
@@ -250,7 +250,7 @@
         },
         "figures": {
           "files": 10,
-          "size_bytes": 858704
+          "size_bytes": 870538
         },
         "manuscript": {
           "files": 15,
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 985662
+          "size_bytes": 1000813
         },
         "release": {
           "files": 2,
@@ -270,7 +270,7 @@
         },
         "slides": {
           "files": 12,
-          "size_bytes": 985469
+          "size_bytes": 994227
         },
         "web": {
           "files": 15,
@@ -279,7 +279,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 67,
-      "total_size_bytes": 3551038
+      "total_size_bytes": 3586781
     }
   },
   "recommendations": [],
@@ -290,12 +290,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-28T00:33:02Z",
+  "timestamp": "2026-09-28T02:24:18Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "3bf38b8e4887d975307c1ced9a18cb12cfd6f9cc2b24413a8af4c973cff9bb8c",
-      "size_bytes": 20229
+      "sha256": "315d8421be531658d6c928a2b6ca6a2546d01054dde49be7e7ddf9e136c1a60e",
+      "size_bytes": 20231
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -384,11 +384,11 @@
     "fingerprints": {
       "config": {
         "file_count": 17,
-        "sha256": "9b7fa81bd9d517daf31535016aa49d686ede8bc20833e7f8602ef943adab8841"
+        "sha256": "1618f8fe4bd778691731710b2df89c103e31f1fb21978e6af05a7cdc0fc2e87f"
       },
       "output": {
         "file_count": 67,
-        "sha256": "393df6e26bcd6bd87f21e5c361ce3649b55f9cd89e27f5e05d9a80765163fd45"
+        "sha256": "f24758ff1552f142deb84c6d0f8d4b9f893f749a2ca0214b8820a867e9b93694"
       },
       "source": {
         "file_count": 42,
