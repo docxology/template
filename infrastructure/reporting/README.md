@@ -426,3 +426,15 @@ flowchart TB
 - [`AGENTS.md`](AGENTS.md) - reporting module documentation
 - [`../README.md`](../README.md) - Infrastructure layer overview
 - [`../AGENTS.md`](../AGENTS.md) - infrastructure documentation
+
+Candidate and published acceptance use the full source-owned public roster; see
+[`RELEASE_READINESS.md`](RELEASE_READINESS.md) for required evidence and custody.
+
+### Optional plotting imports
+
+Package imports for pipeline reports, statistics, errors and the interactive
+dashboard do not initialize Matplotlib. Requesting `DASHBOARD_AVAILABLE`, an
+optional plotting export, or explicit package enumeration loads the original
+plotting providers once. Their function identities and import-failure behavior
+remain unchanged; the package retains its declared public exports. Import
+observations alone do not establish complete execution or a universal speedup.

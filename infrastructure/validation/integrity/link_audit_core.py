@@ -8,11 +8,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Set, cast
 
+from infrastructure.core.logging.constants import TABLE_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.validation.content.discovery import _LINK_AUDIT_EXCLUDE_PARTS
 from infrastructure.validation.docs.accuracy import extract_headings
 from infrastructure.validation.docs.scan_scope import submodule_paths
-from infrastructure.validation.integrity.check_links import generate_comprehensive_report
 from infrastructure.validation.integrity.link_extract import (
     LinkCheckResult,
     check_file_reference,
@@ -207,3 +207,82 @@ def run_link_audit(repo_root: Path) -> int:
             logger.error(f"Error processing {md_file}: {exc}")
 
     return generate_comprehensive_report(cast(dict[str, list[LinkCheckResult]], issues), len(md_files))
+
+
+def generate_comprehensive_report(issues: dict[str, list[LinkCheckResult]], total_files: int) -> int:
+    """Generate a comprehensive validation report."""
+    total_issues = sum(len(issue_list) for issue_list in issues.values())
+
+    logger.info("=" * TABLE_WIDTH)
+    logger.info("COMPREHENSIVE FILEPATH AND REFERENCE AUDIT REPORT")
+    logger.info("=" * TABLE_WIDTH)
+    logger.info(f"Files scanned: {total_files}")
+    logger.info(f"Total issues found: {total_issues}")
+
+    categories = [
+        (
+            "broken_anchor_links",
+            "Broken Anchor Links",
+            "Anchor links that don't resolve to headings",
+        ),
+        (
+            "broken_file_refs",
+            "Broken File References",
+            "File references that don't exist",
+        ),
+        (
+            "code_block_paths",
+            "Invalid Code Block Paths",
+            "File paths in code blocks that don't exist",
+        ),
+        (
+            "directory_structures",
+            "Directory Structure Issues",
+            "Directory trees that don't match filesystem",
+        ),
+        (
+            "python_imports",
+            "Invalid Python Imports",
+            "Import statements that reference non-existent modules",
+        ),
+        (
+            "placeholder_consistency",
+            "Placeholder Inconsistencies",
+            "Inconsistent use of {name} vs actual project names",
+        ),
+    ]
+
+    has_issues = False
+    for category_key, title, description in categories:
+        issue_list = issues[category_key]
+        if issue_list:
+            has_issues = True
+            logger.warning(f"🚨 {title} ({len(issue_list)} issues)")
+            logger.warning(f"   {description}")
+
+            for i, issue in enumerate(issue_list[:5]):
+                logger.warning(f"   {i + 1}. {issue['file']}:{issue['line']}")
+                logger.warning(f"      Target: {issue['target']}")
+                logger.warning(f"      Issue: {issue['issue']}")
+                if "text" in issue:
+                    logger.warning(f"      Text: {issue['text']}")
+
+            if len(issue_list) > 5:
+                logger.warning(f"   ... and {len(issue_list) - 5} more issues in this category")
+            logger.info("-" * 60)
+
+    if not has_issues:
+        logger.info("✅ ALL VALIDATIONS PASSED!")
+        logger.info("No broken links, missing files, or reference issues found.")
+        return 0
+
+    logger.info("\n📋 SUMMARY BY CATEGORY:")
+    for category_key, title, _ in categories:
+        count = len(issues[category_key])
+        if count > 0:
+            logger.info(f"   • {title}: {count} issues")
+
+    logger.info("\n🔧 Next steps: Run the audit script to generate detailed fix recommendations:")
+    logger.info("   python scripts/audit/audit_filepaths.py")
+
+    return 1

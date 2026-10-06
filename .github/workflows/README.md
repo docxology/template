@@ -8,7 +8,7 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 | File | Trigger | Purpose |
 |---|---|---|
-| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | **16 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; plus 1 schedule/manual-only **`public-matrix-receipt`**; job-level `hashFiles()` is invalid and was removed; see [`AGENTS.md`](AGENTS.md)) |
+| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | **19 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; 2 schedule/manual-only lanes: **`test-infra-slow`** and **`public-matrix-receipt`**; see [`AGENTS.md`](AGENTS.md)) |
 | [`stale.yml`](stale.yml) | Daily 01:00 UTC | Auto-label and close stale issues/PRs |
 | [`release.yml`](release.yml) | `v*.*.*` tag push or manual | Generate GitHub Release with changelog |
 | [`dependabot-automerge.yml`](dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
@@ -17,17 +17,18 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 ### Job Graph
 
-`health`, `validate`, `security`, and `docs-lint` fan out from **`lint`**; `verify-no-mocks` gates the test matrix; **`performance`** waits on **`test-infra`** + **`test-project`**. See [`AGENTS.md`](AGENTS.md).
+`health`, `validate`, `security`, and `docs-lint` run independently alongside **`lint`**; `verify-no-mocks` gates the test matrix. Every job remains required by **`ci-gate`**. See [`AGENTS.md`](AGENTS.md).
 
 ```mermaid
 flowchart TB
-    LINT[lint<br/>Ruff + mypy + exports audit] --> HEALTH[health<br/>blocking static JSON report]
-    LINT --> VNM[verify-no-mocks]
-    LINT --> VAL[validate<br/>markdown + api-ref check + imports]
-    LINT --> SEC[security<br/>pip-audit + bandit -c bandit.yaml]
-    LINT --> DL[docs-lint<br/>mermaid + links + consistency]
+    LINT[lint<br/>Ruff + mypy + exports audit]
+    HEALTH[health<br/>blocking static JSON report]
+    VNM[verify-no-mocks]
+    VAL[validate<br/>markdown + api-ref check + imports]
+    SEC[security<br/>pip-audit + bandit -c bandit.yaml]
+    DL[docs-lint<br/>mermaid + links + consistency]
     VNM --> SHW[setup-hook-windows-smoke<br/>conditional · Windows]
-    VNM --> TI[test-infra<br/>ubuntu × py310–314 + macOS × py314<br/>≥ 60% coverage]
+    VNM --> TI[test-infra<br/>ubuntu × py312–314 + macOS × py314<br/>≥ 60% coverage]
     VNM --> TR[test-regression<br/>claim-binding pins]
     VNM --> TP[test-project<br/>validated capability matrix<br/>each ≥ 90% own src/]
     VNM --> FL[fep-lean optional<br/>gauss + lake · timeout 60m]
@@ -116,20 +117,31 @@ Exempt labels: `pinned` · `security` · `in-progress` · `blocked` · `do-not-c
 
 Triggered on `v*.*.*` tag push or `workflow_dispatch`. The workflow resolves
 the tag before checkout, checks out that exact ref, proves `HEAD` matches the
-dereferenced tag commit, runs the root release contract, and requires
-the no-mocks gate plus the bounded pipeline-smoke infra test lane on the tagged
-SHA, the public capability manifest, clean exported-package install/import
-smoke, and `publication-audit --all-public --strict --rendered` before
-building. The
-source gates fail closed on package/Python, source/test syntax, hydration, and
-standalone import drift; the rendered gate verifies each exemplar's
-deterministic source/config/output and manuscript-consumption receipt. It
+dereferenced tag commit, runs the root release contract, and requires the
+no-mocks gate, bounded pipeline-smoke infra lane, public capability manifest,
+complete installed-wheel matrix on supported runtimes, and
+`publication-audit --all-public --strict --rendered` before building. Root
+major versions 4 and later additionally require an explicit hosted acceptance
+handoff before those checks: the successful run ID, exact
+`platform-required-acceptance` artifact ID, and aggregate receipt SHA256.
+Tag pushes without this handoff stop; use manual dispatch after acceptance.
+The artifact must come from this repository at the tagged SHA and contain only
+bounded, previously absent `output/readiness` files. Its canonical
+`output/readiness/release-candidate/receipt.json` must bind that commit and pass
+every source-owned candidate requirement, including live, sandbox, macOS,
+runtime, domain, installed-package, and format evidence. Partial matrices or
+green static checks cannot substitute for missing requirements.
+
+The merged required-profile producer/upload lane is not present yet. Existing
+CI uploads do not create this complete handoff. Root 4.0.0 remains Unreleased;
+the workflow therefore cannot publish it merely because smoke or structural
+checks pass. The evidence handoff verifies custody and required acceptance;
+it does not perform sandbox or production transfers itself. The workflow
 writes a git-log excerpt to the release body (`generate_release_notes: false`)
-and uses
-`softprops/action-gh-release@v3.0.2`. Tags containing
+and uses `softprops/action-gh-release@v3.0.3`. Tags containing
 `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
 
-Current pinned GitHub Actions use the Node 20 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
+Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
 
 ## Troubleshooting
 

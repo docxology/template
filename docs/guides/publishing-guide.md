@@ -365,7 +365,7 @@ project name from `docs/_generated/publication_records.md`, not the short leaf
 name.
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/<name> --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/<name> --mode core
 uv run python scripts/publish/publish_project_release.py \
   --project templates/<name> \
   --tag vX.Y.Z \
@@ -398,7 +398,7 @@ The render source of truth is still the public monorepo:
 git clone https://github.com/docxology/template
 cd template
 uv sync
-./run.sh --project templates/<name> --pipeline --core-only
+./run.sh --project templates/<name> --pipeline --mode core
 uv run python scripts/pipeline/stage_04_validate.py --project templates/<name>
 uv run python scripts/pipeline/stage_05_copy.py --project templates/<name>
 ```
@@ -548,7 +548,7 @@ Dual-row integrity strip (`output/figures/transmission_integrity_strip.png`): ro
 **`template_code_project` production target:** `publication.github_repository: docxology/template_code_project` with bookends enabled in `projects/templates/template_code_project/manuscript/config.yaml`. Example production release (choose a tag from `paper.version`; keep `publication.doi` as the concept DOI and let the publish flow update `version_doi` / `version_record`):
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --mode core
 ./secure_run.sh --steganography-only --project templates/template_code_project --deterministic
 uv run python scripts/publish/publish_project_release.py \
   --project templates/template_code_project \
@@ -767,7 +767,7 @@ uv run python scripts/publish/upload_gold_refinement.py --commit \
 The script loads the repo-root `.env`, requires the rendered combined PDF
 (`projects/templates/template_gold_refinement/output/pdf/template_gold_refinement_combined.pdf`
 — build it with
-`./run.sh --project templates/template_gold_refinement --pipeline --core-only`),
+`./run.sh --project templates/template_gold_refinement --pipeline --mode core`),
 and writes a JSON receipt to
 `output/templates/template_gold_refinement/upload_receipts.json`.
 

@@ -7,11 +7,12 @@ including PageRank, degree distributions, and community structure.
 from __future__ import annotations
 
 import logging
+import math
 
 import networkx as nx
 from scipy.sparse.linalg import ArpackError
 
-from literature.models import Citation, Paper
+from template_literature_meta_analysis.literature.models import Citation, Paper
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +143,7 @@ def compute_network_metrics(
     # Advanced centrality metrics (computed on large graphs with caps for performance)
     betweenness: dict[str, float] = {}
     closeness: dict[str, float] = {}
-    degree_assortativity: float = 0.0
+    degree_assortativity: float | None = None
     avg_clustering: float = 0.0
 
     if num_nodes > 1:
@@ -162,10 +163,14 @@ def compute_network_metrics(
         except _CENTRALITY_ERRORS as e:
             logger.warning("Closeness centrality failed: %s", e)
 
-        try:
-            degree_assortativity = float(nx.degree_assortativity_coefficient(graph.to_undirected()))
-        except _CENTRALITY_ERRORS as e:
-            logger.warning("Degree assortativity failed: %s", e)
+        if num_edges > 0:
+            try:
+                coefficient = float(nx.degree_assortativity_coefficient(graph.to_undirected()))
+                # Undefined correlation (zero degree variance) is not a measured
+                # zero and must remain interoperable finite JSON as null.
+                degree_assortativity = coefficient if math.isfinite(coefficient) else None
+            except _CENTRALITY_ERRORS as e:
+                logger.warning("Degree assortativity failed: %s", e)
 
         try:
             avg_clustering = float(nx.average_clustering(graph.to_undirected()))

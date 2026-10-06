@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
-from visualization.hypothesis_charts import (
+from template_literature_meta_analysis.visualization.hypothesis_charts import (
     plot_hypothesis_dashboard,
     plot_evidence_timeline,
     plot_assertion_type_breakdown,

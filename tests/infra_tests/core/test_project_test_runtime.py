@@ -1,0 +1,147 @@
+"""Existing-environment admission uses actual child metadata, never resolution."""
+
+from __future__ import annotations
+
+import sys
+import venv
+from pathlib import Path
+
+import pytest
+
+from infrastructure.core.testing.project_test_runtime import (
+    ProjectTestRuntimeError,
+    admit_project_test_runtime,
+    project_test_deadline,
+)
+
+
+@pytest.mark.timeout(90)
+def test_actual_current_prepared_stack_admission(tmp_path: Path) -> None:
+    selected, receipt = admit_project_test_runtime(tmp_path)
+    assert selected == Path(sys.executable).absolute()
+    assert receipt["scope"] == "executable-prefix-metadata-versions"
+    assert receipt["probe"]["missing"] == []
+
+
+@pytest.mark.timeout(90)
+def test_real_empty_existing_venv_is_blocked_without_acquisition(tmp_path: Path) -> None:
+    environment = tmp_path / ".venv"
+    venv.EnvBuilder(with_pip=False).create(environment)
+    before = sorted(str(path.relative_to(environment)) for path in environment.rglob("*"))
+    with pytest.raises(ProjectTestRuntimeError) as refused:
+        admit_project_test_runtime(tmp_path)
+    assert refused.value.exit_code == 75
+    assert sorted(str(path.relative_to(environment)) for path in environment.rglob("*")) == before
+
+
+@pytest.mark.timeout(90)
+def test_actual_probe_expiry_remains_timeout(tmp_path: Path) -> None:
+    with pytest.raises(ProjectTestRuntimeError) as refused:
+        admit_project_test_runtime(tmp_path, deadline=project_test_deadline(0.000001))
+    assert refused.value.exit_code == 124
+
+
+@pytest.mark.parametrize("value", [False, 0, -1, float("nan"), float("inf")])
+def test_invalid_budget_is_configuration_error(value: float) -> None:
+    with pytest.raises(ProjectTestRuntimeError) as refused:
+        project_test_deadline(value)
+    assert refused.value.exit_code == 2
+
+
+@pytest.mark.timeout(90)
+def test_actual_probe_interruption_precedence(tmp_path: Path) -> None:
+    import os
+
+    if os.name == "nt":
+        pytest.skip("POSIX executable-wrapper control")
+    environment = tmp_path / ".venv"
+    venv.EnvBuilder(with_pip=False, symlinks=False).create(environment)
+    selected = environment / "bin/python"
+    selected.unlink()
+    selected.write_text("#!/bin/sh\nexit 130\n")
+    selected.chmod(0o700)
+    with pytest.raises(ProjectTestRuntimeError) as refused:
+        admit_project_test_runtime(tmp_path)
+    assert refused.value.exit_code == 130
+    assert refused.value.original_exit_code == 130
+
+
+@pytest.mark.parametrize("entry", ["script", "pytest"])
+@pytest.mark.timeout(120)
+def test_actual_nested_child_ignores_timestamp_valid_poisoned_project_cache(tmp_path: Path, entry: str) -> None:
+    import os
+    import py_compile
+
+    from infrastructure.core.execution_boundary import run_bounded_subprocess
+    from infrastructure.core.testing.project_test_runtime import build_audited_project_test_command
+
+    source = tmp_path / "src"
+    source.mkdir()
+    module = source / "demo.py"
+    module.write_text("ANSWER = 7\n")
+    original = module.stat()
+    module.write_text("ANSWER = 9\n")
+    os.utime(module, ns=(original.st_atime_ns, original.st_mtime_ns))
+    py_compile.compile(str(module), doraise=True, invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP)
+    module.write_text("ANSWER = 7\n")
+    os.utime(module, ns=(original.st_atime_ns, original.st_mtime_ns))
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    if entry == "script":
+        script = scripts / "verify.py"
+        script.write_text("import demo\nassert demo.ANSWER == 7\nprint('ACTUAL_PROJECT_VALUE',demo.ANSWER)\n")
+        command = build_audited_project_test_command(tmp_path, Path(sys.executable).absolute(), (), script=script)
+    else:
+        tests = tmp_path / "tests"
+        tests.mkdir()
+        (tests / "test_value.py").write_text("def test_value():\n import demo\n assert demo.ANSWER == 7\n")
+        command = build_audited_project_test_command(
+            tmp_path, Path(sys.executable).absolute(), ("tests", "-q", "--no-cov"), module="pytest"
+        )
+    outcome = run_bounded_subprocess(command, cwd=tmp_path, env=os.environ.copy(), timeout=60)
+    assert outcome.returncode == 0, outcome.stderr
+    assert "ACTUAL_PROJECT_VALUE 7" in outcome.stdout if entry == "script" else "1 passed" in outcome.stdout
+
+
+@pytest.mark.timeout(120)
+def test_actual_removed_project_module_mutation_is_refused_after_child(tmp_path: Path) -> None:
+    import os
+
+    from infrastructure.core.execution_boundary import run_bounded_subprocess
+    from infrastructure.core.testing.project_test_runtime import build_audited_project_test_command
+
+    (tmp_path / "src").mkdir()
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "src/demo.py").write_text("ANSWER = 7\n")
+    script = tmp_path / "scripts/verify.py"
+    script.write_text(
+        "import demo,sys\nfrom pathlib import Path\nsys.modules.pop('demo')\n"
+        "Path('src/demo.py').write_text('ANSWER = 8\\n')\nprint('ACTUAL_CHILD_COMPLETED')\n"
+    )
+    command = build_audited_project_test_command(tmp_path, Path(sys.executable).absolute(), (), script=script)
+    outcome = run_bounded_subprocess(command, cwd=tmp_path, env=os.environ.copy(), timeout=60)
+    assert outcome.returncode == 75
+    assert "ACTUAL_CHILD_COMPLETED" in outcome.stdout
+    assert "executed-code custody refused" in outcome.stderr
+
+
+@pytest.mark.parametrize("actual_exit", [2, 7])
+@pytest.mark.timeout(120)
+def test_source_mutating_real_failure_keeps_original_child_exit(tmp_path: Path, actual_exit: int) -> None:
+    import os
+
+    from infrastructure.core.execution_boundary import run_bounded_subprocess
+    from infrastructure.core.testing.project_test_runtime import build_audited_project_test_command
+
+    (tmp_path / "src").mkdir()
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "src/demo.py").write_text("ANSWER = 7\n")
+    script = tmp_path / "scripts/verify.py"
+    script.write_text(
+        "import demo\nfrom pathlib import Path\nPath('src/demo.py').write_text('ANSWER = 8\\n')\n"
+        f"raise SystemExit({actual_exit})\n"
+    )
+    command = build_audited_project_test_command(tmp_path, Path(sys.executable).absolute(), (), script=script)
+    outcome = run_bounded_subprocess(command, cwd=tmp_path, env=os.environ.copy(), timeout=60)
+    assert outcome.returncode == actual_exit
+    assert "executed-code custody refused" in outcome.stderr

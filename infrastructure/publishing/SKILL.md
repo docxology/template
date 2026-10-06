@@ -25,7 +25,7 @@ handoff.
 | `infrastructure.publishing.archival` | IPFS Pinata, Web3.Storage, Software Heritage, Zenodo mirror |
 | `infrastructure.publishing.registry` | Enumerate or look up all platform adapters |
 
-Root exports (`infrastructure.publishing`) and `platforms.py` / `api.py` remain for backwards compatibility.
+Root exports (`infrastructure.publishing`) resolve directly to the canonical subpackages; import clients and adapters from their implementation homes.
 
 ## Publication metadata
 
@@ -103,13 +103,11 @@ adapter = PyPIAdapter(PyPIConfig(test=True))       # reads TESTPYPI_TOKEN from e
 result  = adapter.publish(Path("."), dry_run=False)
 print(result.status, result.url)
 
-# One-liner with post-upload verification
+# Canonical sandbox transfer with exact retrieval and installed smoke
 result = run_pypi_release(
     Path("."),
-    test=False,          # production PyPI
+    test=True,           # fixed TestPyPI sandbox
     dry_run=False,
-    verify=True,
-    package_name="mylib",
 )
 ```
 
@@ -257,11 +255,10 @@ bundle_path = bundle_project(project_root, "templates/<project-name>")
 
 `release/` (receipts, pairing, workflow, Zenodo helpers, CLI) and `metadata/`
 (stage, export, CLI, config-driven metadata) are proper subpackages added by
-RENDERING-LAYERING-1 phase 2b. The flat `release_*.py` / `metadata_*.py`
-module paths remain as silent backwards-compat shims; new code imports the
-nested paths. `metadata/` also re-exports the historical
-`infrastructure.publishing.metadata` aggregate symbols from
-`metadata_aggregate.py`.
+RENDERING-LAYERING-1 phase 2b. Import the nested `release.*` / `metadata.*` module paths directly; the flat
+module paths have been removed. `infrastructure.publishing.metadata` exports
+the public extraction and reporting functions directly from their implementation
+modules.
 
 ## Multi-target archival (Stage 15)
 

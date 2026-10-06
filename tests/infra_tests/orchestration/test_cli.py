@@ -4,21 +4,21 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
 
-from infrastructure.orchestration.cli import (
+from infrastructure.orchestration.commands import (
     cmd_list_projects,
     cmd_menu,
     cmd_promotion_check,
     default_project_name,
     resolve_repo_root,
-    build_parser,
-    main,
 )
+from infrastructure.orchestration.cli import build_parser, main
 from infrastructure.orchestration.pipeline_runner import PipelineRunner
 
 
@@ -52,10 +52,10 @@ def test_build_parser_help_works() -> None:
 
 def test_build_parser_recognizes_pipeline_subcommand() -> None:
     parser = build_parser()
-    ns = parser.parse_args(["pipeline", "--project", "template_code_project", "--core-only"])
+    ns = parser.parse_args(["pipeline", "--project", "template_code_project", "--mode", "core"])
     assert ns.command == "pipeline"
     assert ns.project == "template_code_project"
-    assert ns.core_only is True
+    assert ns.mode == "core"
 
 
 def test_build_parser_recognizes_secure_subcommand() -> None:
@@ -221,9 +221,56 @@ def test_main_pipeline_rejects_invalid_project(fake_repo: Path, capsys: pytest.C
         ]
     )
     captured = capsys.readouterr()
-    assert rc == 1
+    assert rc == 2
     assert "project slug must not contain '..'" in captured.err
     assert "Traceback" not in captured.err
+
+
+@pytest.mark.parametrize("project", ["../outside", "templates/unknown", "/tmp/outside"])
+def test_actual_invalid_project_preflight_exits_two_without_execution(tmp_path: Path, project: str) -> None:
+    repository = tmp_path / "repository"
+    source = repository / "projects/templates/demo"
+    (source / "src").mkdir(parents=True)
+    (source / "tests").mkdir()
+    implementation = Path(__file__).resolve().parents[3]
+    prefix = tmp_path / "fresh-bytecode"
+    prefix.mkdir(mode=0o700)
+    environment = dict(os.environ)
+    environment.update(
+        {
+            name: "1"
+            for name in (
+                "TEMPLATE_SKIP_LINK_SYNC",
+                "TEMPLATE_SKIP_FOND_LINK_SYNC",
+                "TEMPLATE_SKIP_RULE_LINK_SYNC",
+                "TEMPLATE_SKIP_TOOL_LINK_SYNC",
+            )
+        }
+    )
+    command = "import sys;sys.path.insert(0,sys.argv.pop(1));from infrastructure.orchestration.cli import main;raise SystemExit(main(sys.argv[1:]))"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-X",
+            f"pycache_prefix={prefix.resolve()}",
+            "-c",
+            command,
+            str(implementation),
+            "--repo-root",
+            str(repository),
+            "pipeline",
+            "--project",
+            project,
+        ],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    assert result.returncode == 2 and "Invalid pipeline invocation:" in result.stderr
+    assert not (source / "output").exists() and not (repository / "output").exists()
 
 
 def test_module_help_via_subprocess() -> None:
@@ -313,7 +360,7 @@ def test_cmd_pipeline_with_explicit_project(fake_repo: Path, patch_runner) -> No
     spy = patch_runner["last"]
     assert len(spy.runs) == 1
     assert spy.runs[0].project == "template_code_project"
-    assert spy.runs[0].core_only is False
+    assert spy.runs[0].mode == "core"
 
 
 def test_cmd_pipeline_default_project(fake_repo: Path, patch_runner) -> None:
@@ -353,16 +400,16 @@ def test_cmd_pipeline_no_projects(tmp_path: Path, patch_runner) -> None:
 
 def test_cmd_pipeline_all_projects_routes_to_multi(fake_repo: Path, patch_runner) -> None:
     rc = main(
-        ["--repo-root", str(fake_repo), "pipeline", "--all-projects", "--core-only"],
+        ["--repo-root", str(fake_repo), "pipeline", "--all-projects", "--mode", "core"],
         runner_factory=patch_runner["factory"],
     )
     assert rc == 0
     spy = patch_runner["last"]
     assert len(spy.multi_runs) == 1
-    assert spy.multi_runs[0].skip_llm is True
+    assert spy.multi_runs[0].mode == "core"
 
 
-def test_cmd_pipeline_core_only(fake_repo: Path, patch_runner) -> None:
+def test_cmd_pipeline_core_mode(fake_repo: Path, patch_runner) -> None:
     rc = main(
         [
             "--repo-root",
@@ -370,7 +417,8 @@ def test_cmd_pipeline_core_only(fake_repo: Path, patch_runner) -> None:
             "pipeline",
             "--project",
             "template_code_project",
-            "--core-only",
+            "--mode",
+            "core",
             "--skip-infra",
             "--resume",
         ],
@@ -378,29 +426,26 @@ def test_cmd_pipeline_core_only(fake_repo: Path, patch_runner) -> None:
     )
     assert rc == 0
     inv = patch_runner["last"].runs[0]
-    assert inv.core_only is True
+    assert inv.mode == "core"
     assert inv.skip_infra is True
     assert inv.resume is True
 
 
 def test_cmd_multi(fake_repo: Path, patch_runner) -> None:
     rc = main(
-        ["--repo-root", str(fake_repo), "multi", "--core-only", "--skip-infra"],
+        ["--repo-root", str(fake_repo), "multi", "--mode", "core", "--skip-infra"],
         runner_factory=patch_runner["factory"],
     )
     assert rc == 0
     inv = patch_runner["last"].multi_runs[0]
     assert inv.skip_infra is True
-    assert inv.skip_llm is True
+    assert inv.mode == "core"
 
 
-def test_cmd_multi_no_executive_report(fake_repo: Path, patch_runner) -> None:
-    rc = main(
-        ["--repo-root", str(fake_repo), "multi", "--no-executive-report"],
-        runner_factory=patch_runner["factory"],
-    )
-    assert rc == 0
-    assert patch_runner["last"].multi_runs[0].run_executive_report is False
+def test_cmd_multi_rejects_removed_noop_report_flag(fake_repo: Path, patch_runner) -> None:
+    with pytest.raises(SystemExit) as caught:
+        main(["--repo-root", str(fake_repo), "multi", "--no-executive-report"], runner_factory=patch_runner["factory"])
+    assert caught.value.code == 2
 
 
 def test_cmd_secure_steg_only(fake_repo: Path) -> None:
@@ -631,11 +676,11 @@ def test_interactive_dispatch_multi_keys(fake_repo: Path) -> None:
     assert len(spy.multi_runs) == 4
     # a: full ; b: skip infra; c: skip llm; d: skip both
     assert spy.multi_runs[0].skip_infra is False
-    assert spy.multi_runs[0].skip_llm is False
+    assert spy.multi_runs[0].mode == "live"
     assert spy.multi_runs[1].skip_infra is True
-    assert spy.multi_runs[2].skip_llm is True
+    assert spy.multi_runs[2].mode == "core"
     assert spy.multi_runs[3].skip_infra is True
-    assert spy.multi_runs[3].skip_llm is True
+    assert spy.multi_runs[3].mode == "core"
 
 
 @pytest.mark.slow
@@ -648,7 +693,7 @@ def test_interactive_multi_d_alone_exits_without_second_prompt(fake_repo: Path, 
     assert rc == 0
     assert len(spy.multi_runs) == 1
     assert spy.multi_runs[0].skip_infra is True
-    assert spy.multi_runs[0].skip_llm is True
+    assert spy.multi_runs[0].mode == "core"
     out = capsys.readouterr().out
     # One menu banner only — second iteration would print a second "=" * 64 block opener.
     assert out.count("MANUSCRIPT PIPELINE") == 1

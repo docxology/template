@@ -2,25 +2,48 @@
 
 import os
 import sys
+import venv
+from pathlib import Path
 
 import pytest
 
 from infrastructure.core.runtime._python_env import (
     build_analysis_script_cmd_and_env,
+    _python_version_supported,
     check_python_version,
     check_uv_available,
     get_python_command,
     get_subprocess_env,
-    resolve_test_python,
     validate_analysis_script_path,
     validate_interpreter,
 )
+from infrastructure.core.runtime.python_binding import AnalysisRuntimeUnavailable, select_analysis_python
+
+
+@pytest.fixture(autouse=True)
+def _candidate_epoch(monkeypatch):
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
 
 
 class TestCheckPythonVersion:
     def test_returns_true(self):
-        # We are running Python 3.10+, so this should pass
+        # The supported project runtime is Python 3.12+.
         assert check_python_version() is True
+
+    @pytest.mark.parametrize(
+        "version,expected",
+        [
+            ((3, 9), False),
+            ((3, 10), False),
+            ((3, 11), False),
+            ((3, 12), True),
+            ((3, 13), True),
+            ((3, 14), True),
+            ((4, 0), True),
+        ],
+    )
+    def test_runtime_floor_rejects_older_versions(self, version, expected):
+        assert _python_version_supported(version) is expected
 
 
 class TestCheckUvAvailable:
@@ -82,15 +105,21 @@ class TestBuildAnalysisScriptCmdAndEnv:
         script = project_root / "scripts" / "analysis.py"
         script.parent.mkdir(parents=True)
         script.write_text("print('hello')")
-        # Create a .venv directory in the project
-        (project_root / ".venv").mkdir()
+        venv.EnvBuilder(with_pip=False, symlinks=True).create(project_root / ".venv")
         repo_root = tmp_path
 
         cmd, env = build_analysis_script_cmd_and_env(script, project_root, repo_root)
-        # If uv is available, should use uv run
-        if check_uv_available():
-            assert "uv" in cmd[0] or "run" in cmd
+        assert cmd == [str(project_root / ".venv/bin/python"), str(script)]
         assert "PYTHONPATH" in env
+
+    def test_missing_nominated_project_runtime_refuses_without_resolver(self, tmp_path):
+        project_root = tmp_path / "project"
+        script = project_root / "scripts/analysis.py"
+        script.parent.mkdir(parents=True)
+        script.write_text("raise SystemExit(99)")
+        (project_root / ".venv").mkdir()
+        with pytest.raises(AnalysisRuntimeUnavailable):
+            build_analysis_script_cmd_and_env(script, project_root, tmp_path)
 
     def test_pythonpath_includes_project_src(self, tmp_path):
         project_root = tmp_path / "project"
@@ -145,55 +174,49 @@ class TestBuildAnalysisScriptCmdAndEnv:
         _, opted_in = build_analysis_script_cmd_and_env(script, project_root, tmp_path, allow_secret_env=True)
         assert opted_in["PAPERCLIP_API_KEY"] == "secret"
 
+    def test_admitted_base_policy_is_copied_and_ambient_state_does_not_replace_it(self, tmp_path, monkeypatch):
+        project_root = tmp_path / "project"
+        script = project_root / "scripts/script.py"
+        script.parent.mkdir(parents=True)
+        script.write_text("pass\n")
+        baseline = {
+            "SOURCE_DATE_EPOCH": "1700000001",
+            "TEMPLATE_EXECUTION_MODE": "live",
+            "FEP_LEAN_CONTROL": "original",
+            "PAPERCLIP_API_KEY": "private-test-value",
+        }
+        original = dict(baseline)
+        monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000002")
+        monkeypatch.setenv("TEMPLATE_EXECUTION_MODE", "core")
+        monkeypatch.setenv("FEP_LEAN_CONTROL", "changed")
+        _, env = build_analysis_script_cmd_and_env(script, project_root, tmp_path, base_env=baseline)
+        assert env["SOURCE_DATE_EPOCH"] == "1700000001" and env["TEMPLATE_EXECUTION_MODE"] == "live"
+        assert env["FEP_LEAN_CONTROL"] == "original" and "PAPERCLIP_API_KEY" not in env
+        assert baseline == original
+
 
 @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
-class TestResolveTestPython:
-    """Regression coverage for the broken-venv-symlink crash.
+class TestSelectAnalysisPython:
+    """Existing lexical runtimes are explicit; missing nominations never fall back."""
 
-    A ``.venv/`` directory can survive with a dangling ``bin/python`` symlink
-    (base interpreter moved/removed). The previous logic keyed off
-    ``.venv``-is-a-directory and handed subprocess a dead path, crashing the
-    test stage with ``FileNotFoundError: .../.venv/bin/python``. These tests
-    use real directories and real symlinks (no mocks) to lock the fallback.
-    """
+    def test_absent_venv_selects_current_interpreter(self, tmp_path):
+        assert select_analysis_python(tmp_path) == Path(sys.executable).absolute()
 
-    def test_missing_venv_dir_falls_back(self, tmp_path):
-        cmd = resolve_test_python(tmp_path / ".venv")
-        assert cmd == get_python_command()
-
-    def test_venv_without_interpreter_falls_back(self, tmp_path):
+    def test_nominated_venv_without_interpreter_is_refused(self, tmp_path):
         (tmp_path / ".venv" / "bin").mkdir(parents=True)
-        cmd = resolve_test_python(tmp_path / ".venv")
-        assert cmd == get_python_command()
+        with pytest.raises(AnalysisRuntimeUnavailable, match="no usable Python interpreter"):
+            select_analysis_python(tmp_path)
 
-    def test_broken_symlink_falls_back(self, tmp_path):
-        """The exact production failure: bin/python -> removed interpreter."""
-        venv = tmp_path / ".venv"
-        (venv / "bin").mkdir(parents=True)
-        (venv / "bin" / "python").symlink_to(tmp_path / "does_not_exist" / "python3")
-        assert venv.is_dir()  # the old guard would pass here…
-        cmd = resolve_test_python(venv)
-        assert cmd == get_python_command()  # …but we now fall back cleanly
+    def test_broken_nominated_symlink_is_refused(self, tmp_path):
+        environment = tmp_path / ".venv"
+        (environment / "bin").mkdir(parents=True)
+        (environment / "bin" / "python").symlink_to(tmp_path / "gone" / "python3")
+        with pytest.raises(AnalysisRuntimeUnavailable, match="no usable Python interpreter"):
+            select_analysis_python(tmp_path)
 
-    def test_valid_interpreter_is_used(self, tmp_path):
-        venv = tmp_path / ".venv"
-        (venv / "bin").mkdir(parents=True)
-        link = venv / "bin" / "python"
-        link.symlink_to(sys.executable)
-        cmd = resolve_test_python(venv)
-        assert cmd == [str(link)]
-
-    def test_broken_venv_fallback_is_loud(self, tmp_path, caplog):
-        """A broken (present-but-dead) venv must warn, not fall back silently."""
-        venv = tmp_path / ".venv"
-        (venv / "bin").mkdir(parents=True)
-        (venv / "bin" / "python").symlink_to(tmp_path / "gone" / "python3")
-        with caplog.at_level("WARNING"):
-            resolve_test_python(venv)
-        assert any("no usable interpreter" in r.message for r in caplog.records)
-
-    def test_absent_venv_fallback_is_quiet(self, tmp_path, caplog):
-        """A genuinely absent venv is the normal venv-less path — no warning."""
-        with caplog.at_level("WARNING"):
-            resolve_test_python(tmp_path / ".venv")
-        assert not any("no usable interpreter" in r.message for r in caplog.records)
+    def test_valid_lexical_nomination_is_used(self, tmp_path):
+        environment = tmp_path / ".venv"
+        (environment / "bin").mkdir(parents=True)
+        binary = environment / "bin" / "python"
+        binary.symlink_to(sys.executable)
+        assert select_analysis_python(tmp_path) == binary

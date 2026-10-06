@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from visualization.descriptive_plots import (
+from template_literature_meta_analysis.visualization.descriptive_plots import (
     plot_author_productivity,
     plot_citation_distribution,
     plot_entity_bar_chart,

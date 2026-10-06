@@ -28,7 +28,7 @@ def test_src_never_imports_script_implementation() -> None:
         assert "sia_loop_impl" not in path.read_text(encoding="utf-8"), path
 
 
-def test_cli_imports_project_adapter_and_legacy_module_is_absent() -> None:
+def test_cli_imports_project_adapter_and_script_implementation_is_absent() -> None:
     """The CLI must point inward to ``src`` and carry no second implementation."""
     script = PROJECT_ROOT / "scripts" / "run_sia_loop.py"
     assert "template_sia.loop.loop" in _imported_modules(script)

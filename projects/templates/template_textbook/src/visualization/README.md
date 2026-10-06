@@ -8,7 +8,7 @@ lives here; `scripts/generate_figures.py` is a thin orchestrator that calls
 
 | Module | Responsibility |
 | --- | --- |
-| `plots.py` | The figure generators — `generate_all_figures()` plus the individual plot functions. Produces **4 worked figures**, **1 source-bound case-study figure**, and **11 per-chapter placeholders**, all with unique filenames. |
+| `plots.py` | The figure generators — `generate_all_figures()` plus the individual plot functions. Produces **4 worked figures**, **12 canonical chapter figures**, including a source-bound instructional case study, all with unique filenames. |
 | `_scaffold.py` | Shared placeholder helper — draws the labelled stub figure for a chapter that has no bespoke plot yet. |
 
 ## Determinism
@@ -20,18 +20,12 @@ Figures are reproducible by construction:
   environment-dependent fonts or colors.
 - `MPLBACKEND=Agg` (headless) is set by the pipeline.
 
-The same inputs always produce the same PNG bytes, so figures can be validated
+The same inputs and rendering environment produce the same PNG bytes, so figures can be validated
 and diffed in CI.
 
-## Worked vs. placeholder figures
+## Canonical figures and new drafts
 
-The 4 worked figures plot real outputs from `textbook.models` (e.g. logistic
-growth, saturating response, decay) and are the model an author imitates. The
-filled case-study chapter has its own error-bar plot, generated from the same
-CSV consumed by the analysis. The remaining 11 placeholders
-(``<part_id>_<stem>.png``) are intentional stubs: replace one with a bespoke
-generator function as you fill the matching chapter, keep the unique filename,
-and the manuscript reference resolves unchanged.
+Canonical chapter figures dispatch to tested logistic, decay, linear, and saturating-response generators. The case study uses the same bundled instructional CSV as the analysis. Each chapter has a unique `<part_id>_<stem>.png` file and explicit alt text. The neutral `placeholder_overview` helper is reserved for a newly declared draft chapter without a registered renderer; no canonical chapter uses it.
 
 ## Generate
 

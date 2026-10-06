@@ -183,9 +183,7 @@ def test_validate_missing_tool_returns_empty_valid():
 _CODE_EXECUTOR_RUN_SH = get_tools_root() / "template_code_executor" / "scripts" / "run.sh"
 _VALIDATOR_VALIDATE_SH = get_tools_root() / "template_validator" / "scripts" / "validate.sh"
 
-_HAS_TIMEOUT_AND_JQ = (
-    shutil.which("timeout") is not None or shutil.which("gtimeout") is not None
-) and shutil.which("jq") is not None
+_HAS_PYTHON = shutil.which("python3") is not None
 
 try:
     import jsonschema  # noqa: F401
@@ -198,9 +196,7 @@ except ImportError:
 @pytest.mark.skipif(
     not _CODE_EXECUTOR_RUN_SH.is_file(), reason="template_code_executor/scripts/run.sh not present"
 )
-@pytest.mark.skipif(
-    not _HAS_TIMEOUT_AND_JQ, reason="run.sh requires `timeout` (or `gtimeout`) and `jq` on PATH"
-)
+@pytest.mark.skipif(not _HAS_PYTHON, reason="run.sh requires the declared Python runtime")
 class TestInvokeCodeExecutor:
     def test_run_sh_executes_real_python(self):
         payload = json.dumps({"code": "print(2 + 2)", "language": "python", "timeout_s": 5})

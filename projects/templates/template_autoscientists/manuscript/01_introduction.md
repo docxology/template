@@ -23,6 +23,6 @@ A configuration that accepts noise-inflated champions will show a large reported
 2. **An honest matched-budget comparison** of coordinated teams against a single-thread baseline that reports the actual numbers and makes no speedup claim.
 3. **A reported-vs-clean noise-robustness measurement** that quantifies the value of noise-band confirmation as a roughly order-of-magnitude reduction in accepted noise.
 4. **A search-hygiene measurement** that quantifies the dead-end registry as a reduction of redundant re-probes from $36$ to $0$ and an early halt at $36$ of $60$ experiments, with the clean optimum unchanged.
-5. **A language-model plug-in seam** (`Proposer` protocol) that lets a live Hermes agent replace the deterministic proposer without modifying the coordination loop, exercised by an opt-in `requires_ollama` test.
+5. **A language-model plug-in seam** (`Proposer` protocol) that lets a bounded local model proposer replace the deterministic proposer without modifying the coordination loop, exercised by an opt-in `requires_ollama` test.
 
 The remainder of the paper specifies the mechanisms (@sec:methodology), reports the matched-budget comparison and the per-mechanism ablation with the numbers our scripts actually produce (@sec:results), states the scope and limits of those claims (@sec:scope), and documents reproduction (@sec:reproducibility).

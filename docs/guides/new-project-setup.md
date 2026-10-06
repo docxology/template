@@ -441,8 +441,8 @@ uv run python -m infrastructure.validation.cli publication-audit \
 
 # 4. Full core pipeline, then optional deterministic PDF watermarking
 uv run python scripts/runner/execute_pipeline.py \
-  --project <qualified-name> --core-only
-./secure_run.sh --project <qualified-name> --core-only --deterministic
+  --project <qualified-name> --mode core
+./secure_run.sh --project <qualified-name> --mode core --deterministic
 ```
 
 > **Lesson**: Validate producers before consumers. A failed or stale analysis

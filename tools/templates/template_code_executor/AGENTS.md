@@ -15,9 +15,11 @@
 
 ```
 stdin:  JSON object { "code": string, "language": string, "timeout_s": int? }
-stdout: JSON object { "exit_code": int, "stdout": string, "stderr": string }
+stdout: JSON object { "exit_code": int, "child_exit_code": int|null,
+                     "timed_out": bool, "output_truncated": bool,
+                     "stdout": string, "stderr": string }
 exit:   0 = execution completed (check inner exit_code for code result)
-        1 = executor error (malformed input, environment failure)
+        2 = executor error (malformed input, environment failure)
 ```
 
 ```bash
@@ -42,12 +44,22 @@ bash scripts/validate.sh
 - Use this tool when a task requires **executing code** and capturing output.
 - Prefer `validate.sh` before `run.sh` in new environments to confirm dependencies are present.
 - Always check the inner `exit_code` in the JSON result — outer exit 0 means the executor ran, not that the code succeeded.
-- Do not pass secrets or credentials in the `code` field; use environment variables in the execution context.
+- Execute only trusted code under the current user. This tool supplies process
+  supervision; operating-system isolation is a separate responsibility.
+- Do not include credentials in code or inputs. Credential-shaped environment
+  names are stripped before starting code.
+- Descendant cleanup relies on trusted subprocesses retaining their exact
+  inherited run marker. Test detached sessions and calling-parent termination.
+- Keep computation in the bundled `src/` supervisor and scripts thin.
 
 ## Dependencies
 
 | Dependency | Purpose | Required |
 |---|---|---|
 | `bash` ≥ 3.2 | Script runtime | Yes |
-| `python3` | Default execution language | Recommended |
-| `jq` | JSON parsing in scripts | Recommended |
+| POSIX Python >=3.12 | JSON, deadlines, independent process guardian | Yes |
+
+Set `TEMPLATE_PYTHON` to an explicitly selected installed interpreter. The tool
+does not acquire runtimes. The finite execution budget is at most 300 seconds;
+stdin and output have separate byte/deadline limits. Real controls live in
+`projects/templates/template_pools_rules_tools/tests/test_code_executor_boundary.py`.

@@ -161,23 +161,17 @@ class ReportConfig:
 
 @dataclass
 class LLMReviewConfig:
-    """Opt-in, transcript-backed language-model review configuration.
-
-    The base exemplar never invokes a network client. An enabled review is
-    accepted only when a fork supplies a local, schema-checked transcript
-    receipt; this keeps the default pipeline deterministic and offline while
-    making an explicitly configured review auditable.
-    """
+    """Offline validation of a source-bound transcript; local generation is explicit."""
 
     enabled: bool = False
     provider: str = ""
     model: str = ""
-    transcript_path: str = "output/llm_review.json"
+    transcript_path: str = "output/.pipeline/prose_review/latest.json"
 
     def __post_init__(self) -> None:
         if not self.enabled:
             return
-        providers = {"local_transcript", "ollama", "openai_compatible"}
+        providers = {"local_transcript", "ollama"}
         if self.provider not in providers:
             raise ValueError(f"Unsupported LLM review provider {self.provider!r}. Allowed: {sorted(providers)}")
         if not self.model.strip():
@@ -237,7 +231,7 @@ class ProjectConfig:
                 enabled=bool(review_raw.get("enabled", False)),
                 provider=str(review_raw.get("provider", "")),
                 model=str(review_raw.get("model", "")),
-                transcript_path=str(review_raw.get("transcript_path", "output/llm_review.json")),
+                transcript_path=str(review_raw.get("transcript_path", "output/.pipeline/prose_review/latest.json")),
             ),
         )
 

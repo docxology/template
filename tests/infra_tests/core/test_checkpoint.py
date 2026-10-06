@@ -104,6 +104,7 @@ class TestPipelineCheckpoint:
     def test_checkpoint_from_dict(self):
         """Test creating checkpoint from dictionary."""
         data = {
+            "schema_version": 3,
             "pipeline_start_time": 1000.0,
             "last_stage_completed": 1,
             "stage_results": [
@@ -468,10 +469,15 @@ def test_validate_checkpoint_rejects_swapped_outputs(tmp_path):
     output.mkdir()
     (output / "result.txt").write_text("original", encoding="utf-8")
     manager = CheckpointManager(checkpoint_dir=output / ".checkpoints")
+    manager.expected_plan_digest = "a" * 64
+    manager.expected_source_digest = "b" * 64
+    manager.run_id = "test-run"
     assert manager.save_checkpoint(
         pipeline_start_time=1.0,
         last_stage_completed=1,
-        stage_results=[StageResult(name="Analysis", exit_code=0, duration=0.1, completed=True)],
+        stage_results=[
+            StageResult(name="Analysis", exit_code=0, duration=0.1, completed=True, context={"stage_key": "analysis"})
+        ],
         total_stages=3,
     )
     ok, _err = manager.validate_checkpoint()
@@ -531,7 +537,10 @@ def test_default_checkpoint_uses_repository_root():
 def test_failed_checkpoint_serialization_preserves_prior_checkpoint(tmp_path):
     """A failed replacement keeps the last recoverable successful checkpoint."""
     manager = CheckpointManager(checkpoint_dir=tmp_path / ".checkpoints")
-    assert manager.save_checkpoint(1.0, 1, [StageResult("Analysis", 0, 0.1)], 3)
+    manager.expected_plan_digest = "a" * 64
+    manager.expected_source_digest = "b" * 64
+    manager.run_id = "test-run"
+    assert manager.save_checkpoint(1.0, 1, [StageResult("Analysis", 0, 0.1, context={"stage_key": "analysis"})], 3)
     previous = manager.checkpoint_file.read_bytes()
     invalid = StageResult("Analysis", 0, 0.1, context={"unsupported": object()})
     assert manager.save_checkpoint(1.0, 1, [invalid], 3) is False
@@ -574,8 +583,8 @@ def test_checkpoint_cannot_skip_incomplete_stage(tmp_path, exit_code):
     assert manager.validate_checkpoint()[0] is False
 
 
-def test_output_tree_digest_ignores_planted_file_symlinks(tmp_path):
-    """A planted file symlink must not fold external bytes into the digest."""
+def test_output_tree_digest_refuses_planted_file_symlinks(tmp_path):
+    """A planted file symlink cannot authorize a resume."""
     with tempfile.TemporaryDirectory() as outside_dir:
         manager = CheckpointManager(checkpoint_dir=tmp_path / ".checkpoints")
         (tmp_path / "anchor.txt").write_bytes(b"anchor bytes")
@@ -587,4 +596,5 @@ def test_output_tree_digest_ignores_planted_file_symlinks(tmp_path):
         outside_file.write_bytes(b"external payload")
         target.unlink()
         target.symlink_to(outside_file)
-        assert manager._output_tree_digest() == anchored
+        with pytest.raises(ValueError, match="symlink"):
+            manager._output_tree_digest()

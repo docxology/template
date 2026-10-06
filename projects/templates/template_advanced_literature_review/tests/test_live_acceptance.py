@@ -1,0 +1,126 @@
+"""Real controlled-provider phase/calibration execution, not actual-model evidence."""
+
+from __future__ import annotations
+
+import json
+import shutil
+from pathlib import Path
+
+import pytest
+from infrastructure.search.literature.live_contract import LiveSettings
+from werkzeug.wrappers import Response
+
+from multi_phase.live_acceptance import main, run_live
+
+ROOT = Path(__file__).resolve().parents[1]
+DOI = "10.1000/controlled-phases"
+SOURCE = "We measured the exoplanet atmosphere with JWST and reported every calibrated spectral uncertainty. " * 4
+
+# Required producers retain their <=600s run and <=60s worker deadlines.
+# Real multi-worker cases also need finite final custody/cleanup allowance.
+pytestmark = pytest.mark.timeout(720)
+
+
+def copied_project(tmp_path):
+    root = tmp_path / ROOT.name
+    shutil.copytree(ROOT / "src", root / "src", ignore=shutil.ignore_patterns("__pycache__"))
+    shutil.copytree(ROOT / "data", root / "data")
+    shutil.copytree(ROOT / "manuscript", root / "manuscript")
+    shutil.copy2(ROOT / "pyproject.toml", root / "pyproject.toml")
+    return root
+
+
+def configure(httpserver, *, wrong_calibration=False, status=200):
+    httpserver.expect_request("/works").respond_with_json(
+        {
+            "message": {
+                "items": [
+                    {
+                        "DOI": DOI,
+                        "title": ["Controlled atmosphere source"],
+                        "author": [{"given": "Ada", "family": "Researcher"}],
+                        "issued": {"date-parts": [[2024, 1, 1]]},
+                        "abstract": SOURCE,
+                        "license": [],
+                        "link": [],
+                    }
+                ]
+            }
+        },
+        status=status,
+    )
+    httpserver.expect_request("/search").respond_with_json(
+        {"resultList": {"result": [{"doi": DOI, "isOpenAccess": "Y", "pmcid": "PMC123"}]}}
+    )
+    xml = f'<article><front><article-id pub-id-type="doi">{DOI}</article-id><license href="https://creativecommons.org/licenses/by/4.0/"/></front><body><p>{SOURCE}</p></body></article>'
+    httpserver.expect_request("/PMC123/fullTextXML").respond_with_data(xml, content_type="application/xml")
+    httpserver.expect_request("/api/tags").respond_with_json({"models": [{"name": "controlled", "digest": "a" * 64}]})
+
+    def generation(request):
+        invocation = request.json
+        source = json.loads(invocation["prompt"].split("SOURCE (bounded excerpt):\n", 1)[1])
+        labels = invocation["format"]["properties"]["label"]["enum"]
+        if labels == ["yes", "no"]:
+            label = "no" if "perspective" in source or "no information" in source else "yes"
+            if wrong_calibration:
+                label = "no" if label == "yes" else "yes"
+        else:
+            label = "observational"
+        value = {"label": label, "source_quote": source[:60]}
+        return Response(
+            json.dumps({"model": "controlled", "done": True, "eval_count": 10, "response": json.dumps(value)}),
+            content_type="application/json",
+        )
+
+    httpserver.expect_request("/api/generate", method="POST").respond_with_handler(generation)
+
+
+def test_all_selected_phases_calibration_classification_and_licensed_text_run(tmp_path, httpserver):
+    configure(httpserver)
+    root = copied_project(tmp_path)
+    settings = LiveSettings("controlled", httpserver.url_for("").replace("localhost", "127.0.0.1"))
+    path = run_live(
+        root,
+        Path("output/.pipeline/literature_acceptance/controlled"),
+        settings,
+        crossref_endpoint=httpserver.url_for("/works"),
+        europepmc_endpoint=httpserver.url_for(""),
+    )
+    receipt = json.loads(path.read_text())
+    assert receipt["status"] == "passed", receipt["issues"]
+    assert set(receipt["producer_results"]) == {"retrieval", "screening", "local-classification", "licensed-fulltext"}
+    assert receipt["producer_results"]["screening"]["accuracy"] == 1.0
+    assert len(receipt["local_generation_calls"]) == 7
+    analysis = json.loads((path.parent / "cross_phase_analysis.json").read_text())
+    assert all(row["paper_count"] == 1 for row in analysis["phase_membership"].values())
+    assert "do not establish scientific support" in analysis["claim_boundary"]
+    assert "phase_1_foundation_corpus.jsonl" in receipt["consumed_artifacts"]
+    assert not (root / "output/data").exists()
+
+
+@pytest.mark.parametrize("wrong_calibration,status,expected", [(True, 200, "failed"), (False, 503, "blocked")])
+def test_failed_screening_or_phase_retrieval_cannot_pass(tmp_path, httpserver, wrong_calibration, status, expected):
+    configure(httpserver, wrong_calibration=wrong_calibration, status=status)
+    root = copied_project(tmp_path)
+    settings = LiveSettings("controlled", httpserver.url_for("").replace("localhost", "127.0.0.1"))
+    path = run_live(
+        root,
+        Path("output/.pipeline/literature_acceptance/negative"),
+        settings,
+        crossref_endpoint=httpserver.url_for("/works"),
+        europepmc_endpoint=httpserver.url_for(""),
+    )
+    assert json.loads(path.read_text())["status"] == expected
+    if wrong_calibration:
+        assert len(json.loads(path.read_text())["local_generation_calls"]) == 4
+
+
+def test_core_default_is_offline_and_live_arguments_are_explicit(tmp_path, capsys):
+    root = copied_project(tmp_path)
+    corpus = root / "output/data/corpus.jsonl"
+    corpus.parent.mkdir(parents=True)
+    corpus.write_text('{"title":"Offline reference"}\n')
+    assert main(root, []) == 0
+    assert json.loads(capsys.readouterr().out)["live_capabilities_tested"] == []
+    with pytest.raises(SystemExit):
+        main(root, ["--mode", "live"])

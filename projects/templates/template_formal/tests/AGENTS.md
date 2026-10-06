@@ -19,7 +19,8 @@ mypy-oracle harness mechanics, and measured xdist timing.
   emits (captured by actually running mypy against the fixture, not
   predicted). A `bad_*.py` fixture with no map entry raises `KeyError` by
   design — this is intentional, not a bug to silence.
-- **Coverage floor is 90%, currently ~95.5%.** Run
+- **Coverage floor is 90%.** Current measurements belong in the generated
+  counts and source-bound acceptance receipts. Run
   `uv run pytest tests -q --cov=src/template_formal --cov-report=term-missing`
   before treating a change as complete; a merge that drops coverage below
   90% fails CI.

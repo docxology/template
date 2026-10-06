@@ -11,10 +11,9 @@ larger growth rates. -->
 <!-- chapter-metadata-badge -->
 > Level 1/3 · 25 min read · 40 min lecture · Prerequisites: none
 
-> **This chapter is a worked reference.** It is filled to completion to show what
-> a finished chapter looks like. The other chapters in this template ship as
-> structurally-complete stubs (marked with stub comments and TODO notes); fill
-> them the same way.
+> **This chapter develops a worked growth model.** Its assumptions, derivation,
+> numerical example, lab, and question bank provide complementary ways to inspect
+> the same relationship. Later chapters examine alternative models and limits.
 
 ## Learning Objectives
 
@@ -75,8 +74,8 @@ you have mislabelled a parameter as a variable.
 
 ## A first quantitative law
 
-Unbounded (exponential) growth assumes nothing ever pushes back. Real systems
-saturate. The simplest law that grows fast when small and levels off when large
+Unbounded (exponential) growth assumes nothing ever pushes back. Some bounded systems
+can be approximated by a saturating model. One simple law that grows fast when small and levels off when large
 is the **logistic** equation, written as a rate of change in
 [@eq:part_I_first_principles_rate] and in closed form in
 [@eq:part_I_first_principles_model]:
@@ -137,8 +136,10 @@ graph TD
 ```
 
 This loop — choose, write, solve, predict, compare — is the first principle the
-rest of the book elaborates. Foundational treatments of model-building include
-[@brown2017principles] and [@patel2018models].
+rest of the book elaborates. Box discusses scientific model adequacy and revision [@box1976science]. May
+examines the complicated dynamics of simple discrete models [@may1976simple];
+that work also cautions against conflating a continuous rate law with a discrete
+recurrence that happens to share a name.
 
 ## Summary
 
@@ -147,7 +148,7 @@ and one rule. The logistic law adds a single idea — finite room — to exponen
 growth, and that idea changes the long-run behaviour from unbounded increase to a
 stable [**equilibrium**](#gl:equilibrium) at the carrying capacity $K$. Compute
 with the tested `logistic_growth` function so your worked numbers are reproducible
-and correct by construction.
+and open to independent arithmetic checks.
 
 ## Key Terms
 
@@ -156,10 +157,10 @@ and correct by construction.
 
 ## Further Reading
 
-- @brown2017principles — a readable introduction to reasoning from first
-  principles; start with its opening chapter on what a model is for.
-- @patel2018models — a broader survey of model families; use it to see where the
-  logistic law sits among alternatives.
+- @box1976science — scientific reasoning about the adequacy and revision of
+  models; compare the usefulness of an approximation with its assumptions.
+- @may1976simple — a primary analysis of complex behavior in simple discrete
+  models; distinguish its recurrence dynamics from this continuous solution.
 
 ## Practice
 

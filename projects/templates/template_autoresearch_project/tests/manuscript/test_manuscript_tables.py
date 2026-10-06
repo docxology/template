@@ -435,7 +435,9 @@ def test_artifact_manifest_table_is_stable_across_render_and_binder_generations(
     assert artifact_manifest_table(reviewed_path_added) != second_table
 
 
-def test_current_artifact_manifest_has_exact_reviewed_upstream_rows(project_root: Path) -> None:
+def test_current_artifact_manifest_has_exact_reviewed_upstream_rows(
+    project_root: Path, autoresearch_loop_result
+) -> None:
     manifest = json.loads((project_root / "output/reports/artifact_manifest.json").read_text(encoding="utf-8"))
 
     table = artifact_manifest_table(manifest)

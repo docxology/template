@@ -36,7 +36,7 @@ Run infrastructure.validation.cli markdown on manuscript/.
 """
 
 PIPELINE_DEBUG_EXCERPT = """
-Use --core-only to skip LLM stages.
+Use --mode core to skip LLM stages.
 Resume with --resume after fixing validate failures.
 Find the first real error, not the last line exit code.
 Run infrastructure.validation.cli on manuscript.

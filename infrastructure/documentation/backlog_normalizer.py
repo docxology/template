@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from infrastructure.documentation.backlog import is_completed_backlog_evidence, is_historical_backlog_heading
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 ARCHIVE_DATE = "2026-08-09"
@@ -171,6 +172,22 @@ def _clean_body(lines: list[str]) -> list[str]:
     return cleaned
 
 
+def _partition_completed_items(lines: list[str]) -> tuple[list[str], list[str]]:
+    """Preserve wrapped receipt text when moving a completed Markdown item."""
+    retained: list[str] = []
+    completed: list[str] = []
+    archiving = False
+    for line in lines:
+        starts_item = bool(re.match(r"\s*[-*+]\s+", line))
+        boundary = not line.strip() or starts_item or line.startswith(("|", "#"))
+        if boundary:
+            archiving = False
+        if is_completed_backlog_evidence(line):
+            archiving = True
+        (completed if archiving else retained).append(line)
+    return retained, _clean_body(completed)
+
+
 def normalize_backlog(
     path: Path,
     *,
@@ -183,17 +200,28 @@ def normalize_backlog(
     title = lines[0] if lines and lines[0].startswith("#") else f"# {path.parent.name} TODO"
     sections = _sections(lines)
     rows = [_normalize_row(row, project_slug=path.parent.name) for row in _table_rows(lines)]
+    terminal_statuses = {"complete", "completed", "done", "closed", "shipped", "verified", "merged", "implemented"}
+    completed_rows = [row for row in rows if row[1].casefold() in terminal_statuses]
+    rows = [row for row in rows if row not in completed_rows]
     closed_rows = [row for row in rows if row[0].strip("`") in close_ids]
     rows = [row for row in rows if row[0].strip("`") not in close_ids]
     removed: list[str] = []
     retained: list[tuple[str, list[str]]] = []
     for heading, body in sections:
-        if heading in _REMOVED_HEADINGS:
+        if heading in _REMOVED_HEADINGS or is_historical_backlog_heading(f"## {heading}"):
             removed.extend([f"## {heading}", *body, ""])
-        elif heading in _GENERATED_HEADINGS:
-            continue
         else:
-            retained.append((heading, _clean_body([line for line in body if not _is_backlog_table_line(line)])))
+            current_lines, completed_lines = _partition_completed_items(body)
+            if completed_lines:
+                removed.extend([f"## Completion evidence from {heading}", *completed_lines, ""])
+            if heading in _GENERATED_HEADINGS:
+                continue
+            retained.append(
+                (
+                    heading,
+                    _clean_body([line for line in current_lines if not _is_backlog_table_line(line)]),
+                )
+            )
 
     out: list[str] = [
         title,
@@ -243,6 +271,17 @@ def normalize_backlog(
     archived_parts: list[str] = []
     if removed:
         archived_parts.extend(removed)
+    if completed_rows:
+        archived_parts.extend(
+            [
+                "## Previously completed rows",
+                "",
+                "These rows already carried completed statuses; archival does not establish new acceptance evidence.",
+                "",
+                *_table(completed_rows),
+                "",
+            ]
+        )
     if closed_rows:
         archived_parts.extend(
             [

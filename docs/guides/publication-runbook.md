@@ -69,7 +69,7 @@ Run the local gates before touching public APIs:
 PROJECT=templates/template_code_project
 
 uv sync
-uv run python scripts/runner/execute_pipeline.py --project "$PROJECT" --core-only
+uv run python scripts/runner/execute_pipeline.py --project "$PROJECT" --mode core
 uv run python -m infrastructure.validation.cli prerender \
   "projects/$PROJECT/manuscript" --repo-root .
 uv run python -m infrastructure.reference.citation.cli validate \
@@ -100,13 +100,22 @@ sample/population, estimator, uncertainty/error-bar meaning, exclusions,
 missing-data treatment, transformations, multiplicity, and model/software
 identity. The pipeline and audits do not replace this scholarly review.
 
-Optional but useful for release notes and release dashboards:
+For the Platform 4 program, root promotion requires the complete source-owned
+candidate profile. Supply its exact bound receipt; a dashboard generated
+without one reports missing evidence and cannot authorize release:
 
 ```bash
-uv run python -m infrastructure.reporting.release_readiness \
+uv run --no-sync --offline python -m infrastructure.reporting.release_readiness \
+  --strict --profile candidate \
+  --readiness-receipt output/readiness/release-candidate/receipt.json \
   --out output/release_readiness.md
 uv run python scripts/docgen/publication_records.py --refresh-external
 ```
+
+The root release workflow separately admits the successful hosted run, exact
+artifact ID, receipt hash, and tagged revision. See the
+[root release boundary](../maintenance/release-boundary.md). Standalone
+exemplars retain their own versions and publication receipts.
 
 ## First real release
 
@@ -171,6 +180,10 @@ The workflow keeps `publication.doi` stable and updates only
 `publication.version_doi` plus `publication.version_record`.
 
 ## Standalone GitHub mirror
+
+Source removals use the destination-bound review and retained rollback contract
+in [Reviewed publication removals](publication-removals.md). Existing publication
+evidence and unrelated mirror-only records remain protected.
 
 The monorepo remains the render source of truth. The standalone repository is a
 publication mirror for source, DOI metadata, GitHub releases, and tracked public

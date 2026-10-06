@@ -30,7 +30,7 @@ Machine-readable contract for the `questions/` directory. See
 - Hand-number banks or chapters.
 - Create a bank file outside the `config.yaml` listing.
 - Edit `config.yaml`, `references.bib`, `glossary.md`, or any `.py` engine file
-  to satisfy a bank — those are frozen for this template.
+  to satisfy a bank — maintain these tested contracts alongside any authorized engine changes.
 
 ## Gates
 

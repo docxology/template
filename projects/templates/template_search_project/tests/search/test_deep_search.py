@@ -95,12 +95,12 @@ def _config(tmp_path: Path, **overrides) -> DeepSearchConfig:
         fetch_abstracts=False,
         fetch_fulltext=False,
         llm_per_paper=True,
-        output_dir=str(tmp_path / "deep_out"),
+        output_dir=str(tmp_path / "output" / "deep_out"),
         abstract_cache_dir=str(tmp_path / "cache_abs"),
         fulltext_cache_dir=str(tmp_path / "cache_pdf"),
         search_cache_dir=str(tmp_path / "cache_search"),
         write_unified_bibtex=True,
-        unified_bibtex_path=str(tmp_path / "references_deep.bib"),
+        unified_bibtex_path=str(tmp_path / "output" / "references_deep.bib"),
     )
     base.update(overrides)
     return DeepSearchConfig(**base)

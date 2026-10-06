@@ -2,6 +2,6 @@
 
 Moved from the flat ``infrastructure/core/`` top level by
 ``CORE-TESTING-REHOME-1`` (see ``infrastructure/core/testing/README.md``).
-The old module paths remain as backwards-compat shims that re-export this
-package's public surface; new code imports from here directly.
+The old module paths were removed; import testing machinery from this
+package directly.
 """

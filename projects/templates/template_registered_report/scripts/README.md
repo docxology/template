@@ -20,3 +20,7 @@ packet, deviation ledger, sensitivity findings, and adherence report.
 ```bash
 uv run python projects/templates/template_registered_report/scripts/generate_review_artifacts.py
 ```
+
+`generate_review_artifacts.py` exits 2 when the required domain report is invalid. It retains every
+diagnostic JSON artifact and the structured summary so failed runs remain inspectable;
+only valid inputs return 0.

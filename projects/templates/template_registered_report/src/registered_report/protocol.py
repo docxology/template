@@ -5,7 +5,10 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import os
+import stat
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 _REQUIRED_SECTIONS = ("title", "version", "hypotheses", "outcomes", "exclusion_rules", "analysis_plan")
@@ -20,6 +23,10 @@ _ETHICS_STATUSES = {"not_required", "approved", "exempt", "pending"}
 _SENSITIVITY_DECISIONS = {"robust", "fragile", "exploratory", "not_applicable"}
 REGISTRATION_SCHEMA_VERSION = "template-registered-report/2"
 _LEGACY_REGISTRATION_SCHEMA_VERSION = "template-registered-report/1"
+_MAX_FROZEN_RECORD_BYTES = 1024 * 1024
+_FROZEN_RECORD_REMEDIATION = (
+    "Existing frozen registration cannot be replaced; preserve it and choose a new versioned output directory."
+)
 
 
 @dataclass(frozen=True)
@@ -60,14 +67,24 @@ def registration_hash(registration: dict[str, Any]) -> str:
 
 
 def migrate_registration(registration: dict[str, Any]) -> dict[str, Any]:
-    """Upgrade a legacy registration without inventing missing evidence.
+    """Upgrade a mutable draft without inventing missing evidence.
 
     Version 1 fixtures predate an explicit schema marker. Migration only adds
     that marker and preserves every registered field; structural validation
     remains responsible for rejecting dropped hypotheses, outcomes, or plans.
+    Frozen records are validated and copied unchanged, including their original
+    schema and hash; draft migration cannot authorize replacing frozen intent.
     """
     migrated = copy.deepcopy(registration)
     schema = migrated.get("schema_version")
+    if "registration_hash" in migrated:
+        unhashed = dict(migrated)
+        supplied = unhashed.pop("registration_hash")
+        if not isinstance(supplied, str) or supplied != registration_hash(unhashed):
+            raise ValueError("Frozen registration hash does not match its unchanged content")
+        if schema not in (None, _LEGACY_REGISTRATION_SCHEMA_VERSION, REGISTRATION_SCHEMA_VERSION):
+            raise ValueError(f"Unsupported frozen registration schema: {schema!r}")
+        return migrated
     if schema in (None, _LEGACY_REGISTRATION_SCHEMA_VERSION):
         migrated["schema_version"] = REGISTRATION_SCHEMA_VERSION
         return migrated
@@ -77,11 +94,113 @@ def migrate_registration(registration: dict[str, Any]) -> dict[str, Any]:
 
 
 def freeze_registration(registration: dict[str, Any]) -> dict[str, Any]:
-    """Return an immutable-by-convention copy with a self hash."""
+    """Freeze a new draft, or preserve a valid already-frozen record exactly."""
     frozen = migrate_registration(registration)
-    frozen.pop("registration_hash", None)
-    frozen["registration_hash"] = registration_hash(frozen)
+    if "registration_hash" not in frozen:
+        frozen["registration_hash"] = registration_hash(frozen)
     return frozen
+
+
+def persist_frozen_registration(path: Path, registration: dict[str, Any]) -> dict[str, Any]:
+    """Create a frozen record exclusively, or preserve an identical valid record.
+
+    The caller supplies an existing output directory. Held directory descriptors
+    and no-follow file operations prevent links from redirecting the frozen
+    record. Existing bytes are never rewritten, including historical formatting.
+    A changed draft must use a new versioned output directory.
+    """
+    frozen = freeze_registration(registration)
+    encoded = (json.dumps(frozen, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    if len(encoded) > _MAX_FROZEN_RECORD_BYTES:
+        raise ValueError("Frozen registration exceeds the bounded record size")
+    absolute = path.absolute()
+    if ".." in absolute.parts:
+        raise ValueError("Frozen registration path cannot contain parent traversal")
+    directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    descriptors = [os.open(absolute.anchor, directory_flags)]
+    bindings: list[tuple[int, str, int]] = []
+    parent_fd = descriptors[0]
+    try:
+        try:
+            for part in absolute.parent.parts[1:]:
+                next_fd = os.open(part, directory_flags, dir_fd=parent_fd)
+                bindings.append((parent_fd, part, next_fd))
+                descriptors.append(next_fd)
+                parent_fd = next_fd
+        except OSError as exc:
+            raise ValueError(_FROZEN_RECORD_REMEDIATION) from exc
+        try:
+            record_fd = os.open(
+                absolute.name,
+                os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+                0o600,
+                dir_fd=parent_fd,
+            )
+        except FileExistsError:
+            return _preserve_frozen_record(parent_fd, absolute.name, frozen, bindings)
+        with os.fdopen(record_fd, "w+b") as record:
+            record.write(encoded)
+            record.flush()
+            os.fsync(record.fileno())
+            before = os.fstat(record.fileno())
+            record.seek(0)
+            if record.read(_MAX_FROZEN_RECORD_BYTES + 1) != encoded:
+                raise ValueError(_FROZEN_RECORD_REMEDIATION)
+            _verify_frozen_record_binding(parent_fd, absolute.name, record.fileno(), bindings, before)
+        return frozen
+    finally:
+        for descriptor in reversed(descriptors):
+            os.close(descriptor)
+
+
+def _verify_frozen_record_binding(
+    parent_fd: int,
+    name: str,
+    record_fd: int,
+    bindings: list[tuple[int, str, int]],
+    expected: os.stat_result,
+) -> None:
+    fields = ("st_dev", "st_ino", "st_size", "st_mtime_ns", "st_ctime_ns", "st_mode")
+    held = os.fstat(record_fd)
+    named = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+    if not stat.S_ISREG(named.st_mode) or any(
+        getattr(expected, field) != getattr(held, field) or getattr(held, field) != getattr(named, field)
+        for field in fields
+    ):
+        raise ValueError(_FROZEN_RECORD_REMEDIATION)
+    for ancestor_fd, ancestor_name, child_fd in reversed(bindings):
+        child = os.fstat(child_fd)
+        current = os.stat(ancestor_name, dir_fd=ancestor_fd, follow_symlinks=False)
+        if not stat.S_ISDIR(current.st_mode) or (child.st_dev, child.st_ino) != (current.st_dev, current.st_ino):
+            raise ValueError(_FROZEN_RECORD_REMEDIATION)
+
+
+def _preserve_frozen_record(
+    parent_fd: int, name: str, frozen: dict[str, Any], bindings: list[tuple[int, str, int]]
+) -> dict[str, Any]:
+    try:
+        record_fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent_fd)
+        with os.fdopen(record_fd, "rb") as record:
+            before = os.fstat(record.fileno())
+            if not stat.S_ISREG(before.st_mode) or before.st_size > _MAX_FROZEN_RECORD_BYTES:
+                raise ValueError("Frozen record must be a bounded regular file")
+            encoded = record.read(_MAX_FROZEN_RECORD_BYTES + 1)
+            archived = json.loads(encoded)
+            if not isinstance(archived, dict) or "registration_hash" not in archived:
+                raise ValueError("Existing record is not a frozen registration")
+            preserved = freeze_registration(archived)
+            if preserved != frozen:
+                raise ValueError("New intent differs from the existing frozen registration")
+            after = os.fstat(record.fileno())
+            fields = ("st_dev", "st_ino", "st_size", "st_mtime_ns", "st_ctime_ns")
+            if len(encoded) > _MAX_FROZEN_RECORD_BYTES or any(
+                getattr(before, field) != getattr(after, field) for field in fields
+            ):
+                raise ValueError("Frozen record changed during validation")
+            _verify_frozen_record_binding(parent_fd, name, record.fileno(), bindings, before)
+            return preserved
+    except (OSError, ValueError, UnicodeError) as exc:
+        raise ValueError(_FROZEN_RECORD_REMEDIATION) from exc
 
 
 def validate_registration(registration: dict[str, Any]) -> tuple[RegistrationFinding, ...]:

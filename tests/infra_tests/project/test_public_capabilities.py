@@ -42,7 +42,7 @@ def _complete_project(
     *,
     name: str = "template_test",
     package_name: str | None = None,
-    requires_python: str = ">=3.10",
+    requires_python: str = ">=3.12",
     config: str = "paper:\n  title: Synthetic Test Project\n",
     manuscript: str = "# Result\nNo generated values are required.\n",
     hydration_script: str | None = None,
@@ -61,6 +61,8 @@ def _complete_project(
         (
             f'[project]\nname = "{package_name or name.replace("_", "-")}"\n'
             f'version = "0.1.0"\nrequires-python = "{requires_python}"\n'
+            '[tool.template]\nplatform_version = "4.0.0"\n'
+            'tested_python_versions = ["3.12", "3.13", "3.14"]\n'
         ),
     )
     if hydration_script is not None:
@@ -317,7 +319,7 @@ def test_ci_python_floor_must_include_every_canonical_version(tmp_path: Path) ->
     capability = audit_public_capability(tmp_path, "template_test")
 
     assert capability.passed is False
-    assert any("CI Python 3.10.x series" in issue for issue in capability.issues)
+    assert any("CI Python 3.12.x series" in issue for issue in capability.issues)
     assert any(
         f"CI Python {version}.x series" in issue
         for version in CANONICAL_CI_PYTHON_VERSIONS
@@ -328,10 +330,10 @@ def test_ci_python_floor_must_include_every_canonical_version(tmp_path: Path) ->
 @pytest.mark.parametrize(
     ("requires_python", "expected_fragment"),
     [
-        (f">=3.10,<=3.{_CI_MINOR}.0", f"CI Python {_CI_CEILING}.x series"),
-        (f">=3.10,!={_CI_CEILING}.42", f"CI Python {_CI_CEILING}.x series"),
-        (">=3.10,!=3.10.*", "CI Python 3.10.x series"),
-        (f">=3.10,<{_CI_CEILING}.99", f"CI Python {_CI_CEILING}.x series"),
+        (f">=3.12,<=3.{_CI_MINOR}.0", f"CI Python {_CI_CEILING}.x series"),
+        (f">=3.12,!={_CI_CEILING}.42", f"CI Python {_CI_CEILING}.x series"),
+        (">=3.12,!=3.12.*", "CI Python 3.12.x series"),
+        (f">=3.12,<{_CI_CEILING}.99", f"CI Python {_CI_CEILING}.x series"),
     ],
 )
 def test_ci_python_contract_rejects_partial_minor_series(
@@ -348,7 +350,7 @@ def test_ci_python_contract_rejects_partial_minor_series(
 
 
 def test_ci_python_contract_accepts_complete_minor_series(tmp_path: Path) -> None:
-    _complete_project(tmp_path, requires_python=f">=3.10,<3.{int(_CI_MINOR) + 1}")
+    _complete_project(tmp_path, requires_python=f">=3.12,<3.{int(_CI_MINOR) + 1}")
 
     capability = audit_public_capability(tmp_path, "template_test")
 
@@ -368,6 +370,21 @@ def test_analysis_allowlist_fails_closed_on_escaping_entrypoint(tmp_path: Path) 
     assert capability.analysis.configured is True
     assert capability.analysis.entrypoints == ()
     assert any("does not match confined runnable entrypoints" in issue for issue in capability.issues)
+
+
+def test_analysis_allowlist_retains_missing_producer_diagnostic(tmp_path: Path) -> None:
+    _complete_project(
+        tmp_path,
+        config=("paper:\n  title: Missing analysis\nanalysis:\n  scripts:\n    - missing_producer.py\n"),
+    )
+
+    capability = audit_public_capability(tmp_path, "template_test")
+
+    assert capability.passed is False
+    assert capability.analysis.configured is True
+    assert capability.analysis.entrypoints == ()
+    assert any("could not admit confined runnable analysis entrypoints" in issue for issue in capability.issues)
+    assert any("missing_producer.py" in issue for issue in capability.issues)
 
 
 def test_render_format_declarations_reject_string_truthiness(tmp_path: Path) -> None:
@@ -392,7 +409,7 @@ def test_roster_and_ci_matrix_negative_controls() -> None:
     assert "unexpected projects" in validate_manifest_roster((*PUBLIC_PROJECT_NAMES, "active/private_project"))[0]
     assert "missing lanes" in validate_ci_matrix(canonical[:-1])[0]
     assert "duplicate lanes" in validate_ci_matrix((*canonical, canonical[0]))[0]
-    assert "unexpected lanes" in validate_ci_matrix((*canonical, CIMatrixEntry("active/private_project", "3.10")))[0]
+    assert "unexpected lanes" in validate_ci_matrix((*canonical, CIMatrixEntry("active/private_project", "3.12")))[0]
 
 
 @pytest.mark.parametrize(
@@ -494,6 +511,7 @@ def test_ci_workflow_consumes_only_the_capability_matrix() -> None:
     assert detect["outputs"] == {
         "matrix": "${{ steps.matrix.outputs.matrix }}",
         "infra_matrix": "${{ steps.matrix.outputs.infra_matrix }}",
+        "required_jobs": "${{ steps.matrix.outputs.required_jobs }}",
     }
     assert "scripts/gates/public_capabilities.py --ci-matrix-json" in matrix_step["run"]
     assert strategy["matrix"] == "${{ fromJSON(needs.detect-projects.outputs.matrix) }}"
@@ -521,3 +539,18 @@ def test_project_matrix_provisions_the_pinned_pandoc_toolchain() -> None:
     assert project_step == infra_step
     assert project_step["uses"] == "pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e"
     assert "if" not in project_step
+
+
+def test_platform_binding_and_runtime_range_must_match(tmp_path: Path) -> None:
+    project = _complete_project(tmp_path)
+    path = project / "pyproject.toml"
+    path.write_text(
+        path.read_text()
+        .replace('platform_version = "4.0.0"', 'platform_version = "3.8.0"')
+        .replace('["3.12", "3.13", "3.14"]', '["3.14"]'),
+        encoding="utf-8",
+    )
+    capability = audit_public_capability(tmp_path, "template_test")
+    assert not capability.passed
+    assert any("platform_version" in issue for issue in capability.issues)
+    assert any("tested_python_versions" in issue for issue in capability.issues)

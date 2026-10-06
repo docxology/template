@@ -16,22 +16,15 @@
 - Clean breaks force updates and prevent fragmented codebases
 - All code should use the current, best structure
 
-### The one blessed exception: public-package re-export shims
+### Declared public exports
 
-`infrastructure/publishing/` deliberately keeps three flat re-export shims
-(`platforms.py`, `api.py`, `pypi_release.py`) after promoting their logic
-into proper subpackages (`zenodo/`, etc.) — see
-[`infrastructure/publishing/AGENTS.md`](../../infrastructure/publishing/AGENTS.md#backwards-compatible-shims):
-"Shims are retained intentionally so existing imports and tests keep
-working; do not add logic to shim modules." This is a narrow, explicit
-exception for a *public, externally-imported* package surface, not
-license to leave shims generally. If you find yourself reaching for this
-exception outside `infrastructure/publishing/`, default back to the clean
-break above and confirm with a maintainer first. (A fourth shim,
-`archival.py`, followed the same pattern and was later removed once the
-`archival/` subpackage became the sole source of truth — see
-`CHANGELOG.md` — which is the clean-break default reasserting itself once
-external consumers migrated.)
+Package `__init__.py` exports are legitimate APIs when their declared
+`__all__` exposes the current implementation. Migrate callers to implementation
+modules before deleting redundant facades. Publishing implementations and
+their supported exports are documented in
+[`infrastructure/publishing/AGENTS.md`](../../infrastructure/publishing/AGENTS.md).
+Retired interfaces remain documented in release history, rather than current
+usage guidance.
 
 ### Refactoring Process
 
@@ -84,8 +77,8 @@ flowchart LR
 **Before refactoring**, search for all imports:
 
 ```bash
-grep -r "from old_module import" .
-grep -r "import old_module" .
+rg "from old_module import" .
+rg "import old_module" .
 ```
 
 **After refactoring**, update all imports:

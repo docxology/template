@@ -42,7 +42,7 @@ Examples of optional infrastructure areas projects sometimes drop:
 |------|--------|
 | `infrastructure/steganography/` | Used when invoking secure PDF hardening (`secure_run.sh`). |
 | `infrastructure/publishing/` | Zenodo/arXiv helpers—omit if you do not wire publishing scripts. |
-| `infrastructure/llm/` | Omit LLM stages when running `--core-only` or without Ollama. |
+| `infrastructure/llm/` | Default `--mode core` excludes LLM stages; `--mode live` requires the configured Ollama model. |
 
 Do not delete arbitrary folders without reconciling imports and tests.
 

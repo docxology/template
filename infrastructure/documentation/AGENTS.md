@@ -43,9 +43,15 @@ tree instead of copying volatile literals into prose.
   project contract. It gets private Git metadata and exact canonical `HEAD`; its
   object lookup may read the canonical object store through Git's alternate-object
   contract, while refs, index state, and new objects remain temporary. Both Active
-  `uv` commands carry explicit `--locked`; their isolated child environment removes
-  inherited Git routing variables plus `UV_FROZEN` and `UV_NO_SYNC` so ambient
-  process state cannot redirect Git writes or override the lock-validation contract.
+  measurement and report commands nominate the canonical project's prepared
+  `.venv/bin/python`, with explicit `--locked --no-sync --offline
+  --no-python-downloads`. Prepare each project's locked development environment
+  before measurement; missing environments fail before UV can create one.
+  The isolated child environment removes inherited Git routing and UV interpreter,
+  environment and active-environment overrides so ambient state cannot redirect
+  writes or select a different environment. These diagnostic measurements retain
+  each project's own runner versions; the required source-bound runtime matrix is
+  a separate acceptance lane.
 - Coverage provenance uses a versioned inventory of every tracked or
   nonignored project input, including source, tests, scripts, configuration,
   data, manuscripts, and dependency locks. Generated output plus runtime,

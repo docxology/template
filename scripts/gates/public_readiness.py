@@ -7,31 +7,19 @@ import argparse
 import json
 from pathlib import Path
 
-from infrastructure.core.testing.pytest_orchestration import TEST_PROFILE_NAMES, parse_project_workers
+from infrastructure.core.testing.pytest_orchestration import TEST_PROFILE_NAMES
+from infrastructure.project.public_acceptance_cli import (
+    interpreter as _interpreter,
+    positive_int as _positive_int,
+    project_workers as _project_workers,
+    provider_wheel as _provider_wheel,
+)
 from infrastructure.project.public_readiness import (
     DEFAULT_TIMEOUT_SECONDS,
     format_public_readiness,
     run_public_readiness,
 )
-
-
-def _positive_int(raw: str) -> int:
-    """Parse a strictly positive integer for a subprocess timeout."""
-    try:
-        value = int(raw)
-    except ValueError as exc:
-        raise argparse.ArgumentTypeError("must be an integer") from exc
-    if value <= 0:
-        raise argparse.ArgumentTypeError("must be greater than zero")
-    return value
-
-
-def _project_workers(raw: str) -> int:
-    """Parse the outer project-matrix worker count."""
-    try:
-        return parse_project_workers(raw)
-    except ValueError as exc:
-        raise argparse.ArgumentTypeError(str(exc)) from exc
+from infrastructure.project.public_acceptance import run_public_acceptance
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -62,7 +50,52 @@ def main(argv: list[str] | None = None) -> int:
         help="Allow explicitly skipped projects; individual test skips remain in Stage01 summaries.",
     )
     parser.add_argument("--json", action="store_true", help="Emit the machine-readable report.")
+    parser.add_argument(
+        "--acceptance-matrix",
+        action="store_true",
+        help="Run source-bound whole-collection tests and branch coverage across all supported runtimes.",
+    )
+    parser.add_argument("--python", action="append", type=_interpreter, default=[], metavar="MINOR=/PATH/bin/python")
+    parser.add_argument(
+        "--provider-wheel", action="append", type=_provider_wheel, default=[], metavar="SCOPE=/PATH/provider.whl"
+    )
+    parser.add_argument(
+        "--project",
+        action="append",
+        help="Diagnostic canonical project subset; a subset never grants complete-matrix acceptance.",
+    )
+    parser.add_argument(
+        "--evidence-dir", type=Path, help="Fresh receipt directory below this repository's output/readiness."
+    )
+    parser.add_argument(
+        "--test-timeout",
+        type=_positive_int,
+        default=120,
+        help="Finite default pytest item deadline; source-owned per-test limits still apply.",
+    )
     args = parser.parse_args(argv)
+
+    if args.acceptance_matrix:
+        if args.allow_skips or args.profile != "release" or args.include_ollama_tests:
+            parser.error("acceptance matrix uses whole selection and cannot allow skips or marker-profile exclusions")
+        if len(dict(args.python)) != len(args.python):
+            parser.error("each runtime may select only one interpreter")
+        if len(dict(args.provider_wheel)) != len(args.provider_wheel):
+            parser.error("each declared provider may bind only one current wheel")
+        report_payload = run_public_acceptance(
+            args.repo_root,
+            dict(args.python),
+            timeout_seconds=args.timeout,
+            test_timeout_seconds=args.test_timeout,
+            project_workers=args.project_workers,
+            projects=args.project,
+            evidence_dir=args.evidence_dir,
+            provider_wheels=dict(args.provider_wheel),
+        )
+        print(json.dumps(report_payload, indent=2, sort_keys=True))
+        return int(report_payload["exit_code"])
+    if args.python or args.project or args.evidence_dir or args.provider_wheel:
+        parser.error("--python, --project, --provider-wheel and --evidence-dir require --acceptance-matrix")
 
     report = run_public_readiness(
         args.repo_root,

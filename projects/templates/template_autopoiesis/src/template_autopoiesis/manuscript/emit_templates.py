@@ -42,16 +42,44 @@ _TEMPLATE_ANALYSIS_PY = textwrap.dedent("""\
     \"\"\"Auto-generated analysis entry point for @@DOMAIN@@.\"\"\"
     # spec_hash: @@SPEC_HASH@@  grammar_hash: @@GRAMMAR_HASH@@
     # seed: @@SEED@@  track: @@TRACK@@  section_set: @@SECTION_SET@@
+    import json
+    from pathlib import Path
+    import numpy as np
     from primitives import collect_primitives
+
+
+    def encode(value):
+        \"\"\"Preserve real, complex, array, and nested kernel results in JSON.\"\"\"
+        if isinstance(value, np.ndarray):
+            return encode(value.tolist())
+        if isinstance(value, np.generic):
+            return encode(value.item())
+        if isinstance(value, complex):
+            return {"complex_real": value.real, "complex_imag": value.imag}
+        if isinstance(value, dict):
+            return {str(key): encode(item) for key, item in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [encode(item) for item in value]
+        return value
 
 
     def run() -> None:
         \"\"\"Execute the @@DOMAIN@@ primitive suite.\"\"\"
         prims = collect_primitives()
         domain_specs = prims.get("@@DOMAIN@@", ())
+        if not domain_specs:
+            raise ValueError("selected domain has no real primitives")
+        results = {}
         for ps in domain_specs:
             result = ps.fn(ps.example_input)
+            if not isinstance(result, dict) or not result:
+                raise ValueError("primitive returned empty or invalid computation")
+            results[ps.name] = encode(result)
             print(f"{ps.name}: {result}")
+        destination = Path("output/data/analysis_results.json")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(json.dumps({"schema_version": "autopoiesis/child-analysis/1",
+            "domain": "@@DOMAIN@@", "results": results}, sort_keys=True, allow_nan=False) + "\\n")
 
 
     if __name__ == "__main__":
@@ -74,15 +102,23 @@ _TEMPLATE_PYPROJECT_TOML = textwrap.dedent("""\
     [project]
     name = "child_@@DOMAIN@@"
     version = "0.1.0"
-    requires-python = ">=3.10"
+    requires-python = ">=3.12"
     dependencies = ["numpy", "matplotlib", "pyyaml"]
     # spec_hash: @@SPEC_HASH@@  grammar_hash: @@GRAMMAR_HASH@@
     # seed: @@SEED@@  track: @@TRACK@@  section_set: @@SECTION_SET@@
+
+    [project.optional-dependencies]
+    dev = ["pytest", "pytest-cov"]
 
     [tool.pytest.ini_options]
     pythonpath = ["."]
     testpaths = ["tests"]
     addopts = "-v --tb=short"
+
+    [tool.template]
+    platform_version = "4.0.0"
+    tested_python_versions = ["3.12", "3.13", "3.14"]
+    required_unpaid_capabilities = []
     """)
 
 _TEMPLATE_ABSTRACT_MD = textwrap.dedent("""\

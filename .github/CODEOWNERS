@@ -1,6 +1,6 @@
 # Code owners — auto-requested for review on matching paths.
-# Activates the 1-approver branch-protection rule documented in
-# .github/AGENTS.md. Keep this in sync with the maintainer set.
+# GitHub branch protection is configured separately; this file routes reviews.
+# Current protection and sensitive-area review policy: .github/AGENTS.md.
 
 # Default owner for everything in the repo.
 *                       @docxology

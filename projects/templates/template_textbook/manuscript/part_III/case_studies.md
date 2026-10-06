@@ -1,10 +1,10 @@
 # Case Studies {#sec:part_III_case_studies}
 
-![Pilot measurements with standard-error bars across the control, low-treatment,
+![Instructional fixture values with supplied error bars across the control, low-treatment,
 and high-treatment conditions, generated directly from
 `manuscript/assets/data/sample_dataset.csv`.](../../output/figures/part_III_case_studies.png){#fig:part_III_case_studies width=75%}
 
-<!-- alt: Six pilot measurements increase across control, low-treatment, and
+<!-- alt: Six instructional fixture values increase across control, low-treatment, and
 high-treatment conditions; each point has a vertical standard-error interval. -->
 
 <!-- chapter-metadata-badge -->
@@ -12,7 +12,7 @@ high-treatment conditions; each point has a vertical standard-error interval. --
 
 > **This chapter is a worked reference** in a different style from
 > [@sec:part_I_first_principles]: where that chapter *derives* a model, this one
-> *applies* one to a small dataset. The remaining chapters ship as stubs.
+> *applies* one to a small dataset. The book uses both styles to connect model assumptions with computations.
 
 ## Learning Objectives
 
@@ -47,8 +47,8 @@ By the end of this chapter you should be able to:
 
 > **Opening Vignette: From a spreadsheet to a decision.**
 >
-> A team runs a small pilot: a control condition and two treatment levels, two
-> replicates each. The numbers land in a spreadsheet. The question is not "are
+> Consider an instructional scenario with a control condition and two treatment levels, two
+> replicates each. These illustrative numbers are supplied in a spreadsheet; no new empirical pilot is reported. The question is not "are
 > they different?" — they obviously are — but "by how much, how confidently, and
 > what should we predict next?" A case study is the discipline of answering those
 > three questions without overreaching.
@@ -57,11 +57,11 @@ By the end of this chapter you should be able to:
 
 ## The data
 
-The pilot produced six measurements across three conditions, recorded in
+The bundled instructional fixture contains six values across three conditions, recorded in
 `assets/data/sample_dataset.csv` and reproduced in
 [@tbl:part_III_case_studies_data].
 
-: The pilot dataset: two replicates per condition. {#tbl:part_III_case_studies_data}
+: The instructional dataset: two replicates per condition. {#tbl:part_III_case_studies_data}
 
 | Condition        | Replicate | Measurement | Standard error |
 | ---------------- | --------: | ----------: | -------------: |
@@ -76,7 +76,9 @@ Grouping and averaging — the first move in almost every case study — gives m
 of $2.20$ (control), $3.50$ (low), and $4.95$ (high). Across all six points the
 mean is $3.55$ with a standard deviation of $1.13$
 (`textbook.models.descriptive_statistics`). The error-bar view is
-[@fig:part_III_case_studies].
+[@fig:part_III_case_studies]. The supplied row errors are fixture annotations;
+they are not calculated from these two replicates. The reported overall spread
+uses the population denominator and is not an estimated standard error.
 
 ## Fitting a trend
 
@@ -106,11 +108,11 @@ $2.20$, a reassuring internal check.
 Using [@eq:part_III_case_studies_fit] to estimate the response at an
 *intermediate* dose is reasonable: the model interpolates within the range it was
 fit on. Using it to predict a *much higher* dose — say $d = 3$, giving
-$\widehat{y} = 6.3$ — is an **extrapolation** the data cannot support. Real
-dose–response curves usually saturate (recall the
+$\widehat{y} = 6.3$ — is an **extrapolation** the data cannot support. An alternative
+dose–response model could saturate (recall the
 [**threshold**](#gl:threshold) behaviour of the saturating response in
-[@sec:appendix_math_review]); a straight line will overpredict once the system
-approaches its ceiling.
+[@sec:appendix_math_review]); a straight line would overpredict if the system
+approached a ceiling. The fixture does not establish which mechanism applies.
 
 ```mermaid
 graph LR
@@ -124,8 +126,9 @@ graph LR
 > **Warning.** A linear fit through three averaged points reports $R^2 = 0.999$,
 > but that number describes how well the line passes through three dots — not how
 > well it predicts the next experiment. Treat it as a reason to collect more data,
-> not as a conclusion. Foundational guidance on this trap appears in
-> [@kim2020data] and [@wilson2021analysis].
+> not as a conclusion. Box discusses the adequacy of scientific models
+> [@box1976science]; reproducible handling of the calculation is a distinct concern
+> addressed by Sandve and colleagues [@sandve2013ten].
 
 ## Summary
 
@@ -143,9 +146,10 @@ summarise, fit, then state the limits.
 
 ## Further Reading
 
-- @kim2020data — practical guidance on summarising and visualising small datasets
-  before fitting anything.
-- @wilson2021analysis — on the difference between a good fit and a good prediction.
+- @box1976science — reasoning about models as useful approximations, which
+  motivates explicitly stating the limits of this fitted trend.
+- @sandve2013ten — reproducible computational research practices; use them to
+  preserve the fixture, code, parameters, and resulting calculation.
 
 ## Practice
 

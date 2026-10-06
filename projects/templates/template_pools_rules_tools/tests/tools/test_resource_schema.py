@@ -1,9 +1,8 @@
 """Typed resource-manifest and evaluator negative controls."""
 
-from pathlib import Path
-
 import pytest
 
+from template_pools_rules_tools.resource_paths import public_resource_root
 from template_pools_rules_tools.tools.resource_schema import (
     REQUIRED_MANIFEST_KEYS,
     build_resource_schema_receipt,
@@ -11,22 +10,19 @@ from template_pools_rules_tools.tools.resource_schema import (
     validate_resource_manifest,
 )
 
-PROJECT = Path(__file__).resolve().parents[2]
-REPO_ROOT = PROJECT.parents[2]
-
 
 def test_public_resource_manifests_have_a_passing_receipt():
     resources = [
-        ("bibliography", REPO_ROOT / "fonds" / "templates" / "template_bibliography", "fond"),
-        ("contacts", REPO_ROOT / "fonds" / "templates" / "template_contacts", "fond"),
-        ("datasets", REPO_ROOT / "fonds" / "templates" / "template_datasets", "fond"),
-        ("project-rules", REPO_ROOT / "rules" / "templates" / "template_project_rules", "rules"),
+        ("bibliography", public_resource_root("fonds") / "template_bibliography", "fond"),
+        ("contacts", public_resource_root("fonds") / "template_contacts", "fond"),
+        ("datasets", public_resource_root("fonds") / "template_datasets", "fond"),
+        ("project-rules", public_resource_root("rules") / "template_project_rules", "rules"),
         (
             "manuscript-rules",
-            REPO_ROOT / "rules" / "templates" / "template_manuscript_rules",
+            public_resource_root("rules") / "template_manuscript_rules",
             "rules",
         ),
-        ("code-executor", REPO_ROOT / "tools" / "templates" / "template_code_executor", "tools"),
+        ("code-executor", public_resource_root("tools") / "template_code_executor", "tools"),
     ]
     receipt = build_resource_schema_receipt(resources)
     assert receipt["status"] == "pass"

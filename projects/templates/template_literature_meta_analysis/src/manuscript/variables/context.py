@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from manuscript.variables.io import count_jsonl_lines, load_config, load_json
+from template_literature_meta_analysis.manuscript.variables.io import count_jsonl_lines, load_config, load_json
 
 
 @dataclass
@@ -47,6 +47,6 @@ class ExtractContext:
 
     def load_json_raw(self, name: str) -> Any:
         """Load json raw from a file."""
-        from manuscript.variables.io import load_pipeline_json_raw
+        from template_literature_meta_analysis.manuscript.variables.io import load_pipeline_json_raw
 
         return load_pipeline_json_raw(self.data_dir, self.output_dir, name)

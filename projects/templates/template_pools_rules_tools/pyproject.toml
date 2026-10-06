@@ -7,13 +7,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_pools_rules_tools"
-version = "1.0.0"
+version = "2.0.0"
 license = {text = "CC-BY-4.0"}
 description = "Meta-project demonstrating fonds, tools, and rules integration"
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "pyyaml>=6.0",
     "matplotlib>=3.7.0",
@@ -60,7 +60,7 @@ exclude_lines = [
 # Inherits workspace settings from root pyproject.toml
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.12"
 strict = true
 ignore_missing_imports = true
 allow_untyped_defs = false
@@ -79,7 +79,7 @@ module = ["yaml", "csv", "matplotlib.*"]
 ignore_missing_imports = true
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 line-length = 100
 
 [tool.ruff.lint]
@@ -87,3 +87,9 @@ select = ["E", "F", "I", "N", "W", "UP", "B", "SIM", "ARG", "PTH"]
 
 [tool.ruff.lint.per-file-ignores]
 "scripts/*.py" = ["E402", "E501", "N999"]  # Executable stage names and path bootstrap imports
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.0"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["bundled-resource-execution"]

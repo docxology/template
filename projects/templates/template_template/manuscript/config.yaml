@@ -3,7 +3,7 @@
 
 paper:
   title: "A template/ approach to Reproducible Generative Research"
-  version: "1.0.9"
+  version: "2.0.0"
   subtitle: "Architecture and Ergonomics from Configuration through Publication"
   date: "2026-06-27"
 
@@ -15,6 +15,10 @@ authors:
     corresponding: true
 
 publication:
+  release_status: "unreleased"
+  intended_version: "2.0.0"
+  platform_version: "4.0.0"
+  last_published_version: "1.0.9"
   doi: "10.5281/zenodo.20419007" # Concept DOI — stable citation
   version_doi: "10.5281/zenodo.20976048" # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/20976048"

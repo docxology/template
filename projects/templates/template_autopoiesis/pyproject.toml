@@ -4,14 +4,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_autopoiesis"
-version = "1.0.1"
+version = "2.0.0"
 license = {text = "MIT"}
 description = "Autopoietic project generator: combinatoric specification, infrastructure realization, and recompute-verified provenance"
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    "research-project-template==4.0.0",
+    # Default realization executes and checks each generated child's real tests.
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
     "numpy",
     "matplotlib",
     "pyyaml",
@@ -23,11 +27,11 @@ dependencies = [
 dev = [
     "pytest",
     "pytest-cov",
+    "pytest-timeout>=2.4.0",
     "hypothesis",
 ]
 
 [tool.pytest.ini_options]
-pythonpath = [".", "src"]
 testpaths = ["tests"]
 addopts = "-v --tb=short --strict-markers"
 
@@ -38,3 +42,13 @@ omit = ["tests/*", "scripts/*"]
 [tool.coverage.report]
 fail_under = 90
 show_missing = true
+
+[tool.uv.sources]
+# Local preparation uses this checkout; standalone execution uses its admitted wheel.
+research-project-template = { path = "../../..", editable = true }
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.0"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["child-execution"]

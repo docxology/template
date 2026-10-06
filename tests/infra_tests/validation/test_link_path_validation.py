@@ -1,6 +1,6 @@
 """Tests for link path validation in check_links / link_extract."""
 
-from infrastructure.validation.integrity.check_links import (
+from infrastructure.validation.integrity.link_extract import (
     _get_actual_project_names,
     _is_real_path_item,
     _resolve_template_path,

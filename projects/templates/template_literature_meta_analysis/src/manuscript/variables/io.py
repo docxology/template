@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from manuscript.variables._logging import logger
+from template_literature_meta_analysis.manuscript.variables._logging import logger
 
 
 def load_config(project_root: Path) -> dict[str, Any]:

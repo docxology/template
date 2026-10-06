@@ -21,7 +21,7 @@ from typing import Optional
 
 import numpy as np
 
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 DEFAULT_SEED = 42
 _VALID_FIELDS = ("title", "abstract", "title_abstract", "full_text")

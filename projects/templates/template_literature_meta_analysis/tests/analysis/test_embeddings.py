@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from analysis.embeddings import (
+from template_literature_meta_analysis.analysis.embeddings import (
     cluster_embeddings,
     cosine_similarity_matrix,
     embed_corpus,
@@ -13,7 +13,7 @@ from analysis.embeddings import (
     most_similar,
     project_2d,
 )
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 # A small corpus where texts 0 and 1 are near-duplicates and 2 is unrelated.
 _TEXTS = [

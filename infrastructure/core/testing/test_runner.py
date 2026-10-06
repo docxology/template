@@ -69,6 +69,7 @@ from infrastructure.core.testing.pytest_orchestration import (
     validate_coverage_parallel,
     validate_project_matrix_concurrency,
 )
+from infrastructure.core.testing.project_test_runtime import ProjectTestRuntimeError, admit_project_test_runtime
 from infrastructure.core.runtime._python_env import get_python_command
 from infrastructure.core.project_paths import resolve_project_root
 from infrastructure.project.discovery import discover_projects
@@ -201,7 +202,7 @@ def _execute_project_pytest_matrix(
             index=spec.index,
             project_name=spec.project_name,
             command=tuple(spec.cmd),
-            cwd=repo_root,
+            cwd=spec.project_root,
             env=spec.env,
             timeout_seconds=subprocess_timeout_seconds,
             capture_output=capture_output,
@@ -460,6 +461,11 @@ def run_per_project_pytest(
         project_env = make_coverage_subprocess_env(str(project_coverage_file), repo_root)
         project_env["PYTHONPATH"] = base_env.get("PYTHONPATH", "")
         project_floor = project_declared_coverage_floor(project_root) or DEFAULT_PROJECT_FAIL_UNDER
+        try:
+            admit_project_test_runtime(project_root)
+        except ProjectTestRuntimeError as exc:
+            logger.error("Project '%s' prepared test runtime refused: %s", project_name, exc)
+            return exc.exit_code
         cmd = build_union_pytest_command(
             repo_root,
             project_root,

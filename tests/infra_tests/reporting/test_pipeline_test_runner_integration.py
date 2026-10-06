@@ -12,9 +12,13 @@ from infrastructure.core.testing.pytest_orchestration import (
     project_declared_coverage_floor,
 )
 from infrastructure.reporting.pipeline_test_runner import (
+    execute_test_pipeline,
     run_infrastructure_tests,
     run_project_tests,
+    _test_suite_outcome,
+    _test_child_exit_code,
 )
+from infrastructure.core.pipeline.outcomes import RunResult
 
 
 def _write_minimal_project(repo_root: Path, name: str = "demo") -> Path:
@@ -135,3 +139,99 @@ def test_run_project_tests_real_subprocess(repo_root: Path) -> None:
     assert (resolved_project / ".coverage.project").is_file()
     assert not (repo_root / "coverage_project.json").exists()
     assert not (repo_root / ".coverage.project").exists()
+
+
+@pytest.mark.timeout(90)
+def test_infrastructure_direct_api_blocks_broken_nominated_runtime(tmp_path: Path) -> None:
+    (tmp_path / ".venv").mkdir()
+    _seed_pipeline_smoke_paths(tmp_path)
+    evidence = tmp_path / ".coverage.infra"
+    evidence.write_bytes(b"prior coverage must survive admission refusal")
+    code, results = run_infrastructure_tests(tmp_path, scope="pipeline-smoke")
+    assert code == 75
+    assert results["exit_code"] == 75
+    assert evidence.read_bytes() == b"prior coverage must survive admission refusal"
+
+
+@pytest.mark.timeout(90)
+def test_generic_project_runtime_refusal_preserves_prior_coverage(repo_root: Path) -> None:
+    project = repo_root / "projects" / "active" / "demo"
+    (project / ".venv").mkdir()
+    evidence = project / ".coverage.project"
+    evidence.write_bytes(b"prior project coverage")
+    code, results = run_project_tests(repo_root, "active/demo")
+    assert code == 75
+    assert results["original_exit_code"] is None
+    assert evidence.read_bytes() == b"prior project coverage"
+
+
+@pytest.mark.parametrize("child_exit", [2, 7, 75, 124, 130])
+@pytest.mark.timeout(180)
+def test_shared_infrastructure_failure_blocks_real_project_child(tmp_path: Path, child_exit: int) -> None:
+    import json
+
+    project = _write_minimal_project(tmp_path)
+    _seed_pipeline_smoke_paths(tmp_path)
+    marker = tmp_path / "actual_infrastructure_child"
+    (tmp_path / "tests" / "infra_tests" / "conftest.py").write_text(
+        "import pytest\nfrom pathlib import Path\n"
+        "def pytest_sessionstart(session):\n"
+        f" Path({str(marker)!r}).write_text('actual infrastructure child executed')\n"
+        f" pytest.exit('deliberate infrastructure control', returncode={child_exit})\n"
+    )
+    project_marker = project / "project_child_started"
+    (project / "tests" / "test_demo.py").write_text(
+        f"from pathlib import Path\nPath({str(project_marker)!r}).write_text('project collected')\n"
+        "def test_should_be_blocked():\n assert True\n"
+    )
+    prior_coverage = project / ".coverage.project"
+    prior_coverage.write_bytes(b"project evidence was never touched")
+    code = execute_test_pipeline(
+        "active/demo",
+        tmp_path,
+        run_infra=True,
+        run_project=True,
+        quiet=True,
+        include_slow=False,
+        include_long_running=False,
+        include_ollama_tests=False,
+        strict=True,
+        infra_scope="pipeline-smoke",
+    )
+    assert marker.read_text() == "actual infrastructure child executed"
+    assert code == (child_exit if child_exit in (75, 124, 130) else 1)
+    assert not project_marker.exists()
+    assert prior_coverage.read_bytes() == b"project evidence was never touched"
+    report = json.loads((project / "output" / "reports" / "test_results.json").read_text())
+    assert report["infrastructure"]["original_exit_code"] == child_exit
+    assert report["project"]["original_exit_code"] is None
+    assert report["project"]["exit_code"] == 75
+    assert report["summary"]["all_passed"] is False
+    assert "coverage_details" not in report
+
+
+@pytest.mark.parametrize("actual_exit", [2, 7, 75, 124, 130])
+def test_tolerated_nonzero_child_cannot_complete_a_stage(actual_exit: int) -> None:
+    results = {"exit_code": 0, "original_exit_code": actual_exit}
+    code = _test_child_exit_code(0, results)
+    outcome = _test_suite_outcome("project_tests", code, results)
+    assert outcome.child_exit_code == actual_exit
+    assert RunResult(("project_tests",), (outcome,)).exit_code == (actual_exit if actual_exit in (75, 124, 130) else 1)
+
+
+@pytest.mark.parametrize("actual_exit", [2, 7])
+@pytest.mark.timeout(180)
+def test_generic_source_custody_postcheck_preserves_actual_nonzero(repo_root: Path, actual_exit: int) -> None:
+    project = repo_root / "projects" / "active" / "demo"
+    (project / "tests" / "test_demo.py").write_text(
+        "import pytest\nfrom pathlib import Path\nimport demo_mod\n"
+        "def test_actual_nonzero_with_changed_consumed_source():\n"
+        " assert demo_mod.answer() == 7\n"
+        f" Path({str(project / 'src' / 'demo_mod.py')!r}).write_text('def answer():\\n return 9\\n')\n"
+        f" pytest.exit('deliberate source custody control', returncode={actual_exit})\n"
+    )
+    code, results = run_project_tests(repo_root, "active/demo")
+    assert code == 1
+    assert results["original_exit_code"] == actual_exit
+    assert results["exit_code"] == 1
+    assert "return 9" in (project / "src" / "demo_mod.py").read_text()

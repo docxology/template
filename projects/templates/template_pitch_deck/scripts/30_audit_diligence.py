@@ -24,10 +24,10 @@ DECK_LENGTHS = ("short", "medium", "long")
 def main(argv: list[str] | None = None) -> int:
     from template_pitch_deck.content_loader import load_deck_yaml
     from template_pitch_deck.diligence_audit import diligence_rows, uncited_fact_slides
-    from template_pitch_deck.paths import locate_repo_root
+    from template_pitch_deck.paths import data_repo_root, verify_reference_inputs
 
     root = project_root()
-    repo_root = locate_repo_root(root)
+    repo_root = data_repo_root(root)
     manuscript_dir = root / "manuscript"
 
     had_gap = False
@@ -45,6 +45,7 @@ def main(argv: list[str] | None = None) -> int:
                 logger.error("[%s] slide %d (%r) cites a fact but has no `source`", length, gap["index"], gap["title"])
         logger.info("[%s] diligence coverage: %d/%d fact-bearing slides cited", length, n_cited, n_needs)
 
+    verify_reference_inputs()
     if had_gap:
         logger.error("Diligence audit FAILED — see above.")
         return 1

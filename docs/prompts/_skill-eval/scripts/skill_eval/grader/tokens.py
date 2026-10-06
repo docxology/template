@@ -16,6 +16,6 @@ def tokens(phrase: str) -> list[str]:
         out.append("active_projects")
     if "--resume" in phrase:
         out.append("--resume")
-    if "--core-only" in phrase:
-        out.append("--core-only")
+    if "--mode core" in phrase:
+        out.append("--mode core")
     return out

@@ -82,9 +82,14 @@ def _readme_text() -> str:
         ("deep_search", "llm_model", "deep_search.llm_model", "`gemma3:4b`"),
         ("deep_search", "output_dir", "deep_search.output_dir", "`output/deep_search`"),
         ("deep_search", "write_unified_bibtex", "deep_search.write_unified_bibtex", "`true`"),
-        ("deep_search", "unified_bibtex_path", "deep_search.unified_bibtex_path", "`manuscript/references_deep.bib`"),
+        (
+            "deep_search",
+            "unified_bibtex_path",
+            "deep_search.unified_bibtex_path",
+            "`output/bibliography/references_deep.bib`",
+        ),
         # top-level
-        ("top", "references_path", "references_path", "`manuscript/references.bib`"),
+        ("top", "references_path", "references_path", "`output/bibliography/references.bib`"),
     ],
 )
 def test_readme_documented_default_matches_loader(section: str, key: str, attr_path: str, expected_repr: str) -> None:

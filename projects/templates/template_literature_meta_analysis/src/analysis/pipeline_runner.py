@@ -10,25 +10,25 @@ from pathlib import Path
 
 import networkx as nx
 
-from analysis.citation_network import (
+from template_literature_meta_analysis.analysis.citation_network import (
     build_citation_graph,
     build_reference_index,
     compute_network_metrics,
     detect_communities,
     resolve_citations,
 )
-from analysis.descriptive_stats import build_meta_report, save_meta_report
-from analysis.entities import corpus_entities, extract_keyphrases
-from analysis.subfield_classifier import classify_corpus
-from analysis.temporal_analysis import (
+from template_literature_meta_analysis.analysis.descriptive_stats import build_meta_report, save_meta_report
+from template_literature_meta_analysis.analysis.entities import corpus_entities, extract_keyphrases
+from template_literature_meta_analysis.analysis.subfield_classifier import classify_corpus
+from template_literature_meta_analysis.analysis.temporal_analysis import (
     compute_subfield_timeline,
     compute_temporal_metrics,
     estimate_growth_rate,
 )
-from analysis.text_processing import build_tfidf_matrix, tokenize_documents
-from analysis.topic_modeling import fit_nmf_topics
-from literature.corpus import Corpus
-from literature.models import Paper
+from template_literature_meta_analysis.analysis.text_processing import build_tfidf_matrix, tokenize_documents
+from template_literature_meta_analysis.analysis.topic_modeling import fit_nmf_topics
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.models import Paper
 
 
 def _count_paper_references(paper: Paper) -> int:
@@ -38,7 +38,9 @@ def _count_paper_references(paper: Paper) -> int:
     return len(getattr(paper, "referenced_works", []) or [])
 
 
-def run_meta_analysis_pipeline(args: argparse.Namespace, *, project_root: Path) -> None:
+def run_meta_analysis_pipeline(
+    args: argparse.Namespace, *, project_root: Path, config_source_bytes: bytes | None = None
+) -> None:
     """Run bibliometric analysis and write JSON artifacts under output/data/."""
     logger = logging.getLogger("meta_analysis")
     output_dir = Path(args.output_dir)
@@ -52,7 +54,7 @@ def run_meta_analysis_pipeline(args: argparse.Namespace, *, project_root: Path) 
     logger.info("Loaded %d papers (filtered >= %d)", len(papers), args.min_year)
 
     config_path = project_root / "manuscript" / "config.yaml"
-    classified = classify_corpus(papers, config_path=config_path)
+    classified = classify_corpus(papers, config_path=config_path, config_source_bytes=config_source_bytes)
     subfield_counts = {sf: len(plist) for sf, plist in classified.items()}
     subfield_path = data_dir / "subfield_classification.json"
     with open(subfield_path, "w", encoding="utf-8") as handle:
@@ -188,7 +190,7 @@ def run_meta_analysis_pipeline(args: argparse.Namespace, *, project_root: Path) 
     # Embedding similarity: compute and serialize top similar pairs + cluster labels
     if tfidf_matrix is not None and tfidf_matrix.shape[0] >= 2:
         try:
-            from analysis.embeddings import (
+            from template_literature_meta_analysis.analysis.embeddings import (
                 cluster_embeddings,
                 embed_corpus,
                 most_similar,

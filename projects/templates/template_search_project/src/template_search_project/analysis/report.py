@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 from typing import Iterable, Mapping
 
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.search.literature import Paper, SearchResult
 
 from template_search_project.pipeline.synthesis import SynthesisResult
@@ -55,10 +56,10 @@ def write_reading_report(
     corpus_synthesis: SynthesisResult | None = None,
     title: str | None = None,
     fixture_only: bool = False,
+    project_root: Path | None = None,
 ) -> Path:
     """Write a markdown reading report and return its path."""
     out = Path(output_path)
-    out.parent.mkdir(parents=True, exist_ok=True)
     per_paper_list = list(per_paper)
     synthesis_texts = [entry.text for entry in per_paper_list]
     if corpus_synthesis is not None:
@@ -126,5 +127,10 @@ def write_reading_report(
             lines.append(entry.text.strip())
             lines.append("")
 
-    out.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    content = "\n".join(lines).rstrip() + "\n"
+    if project_root is not None:
+        atomic_write_text_confined(project_root, out.absolute(), content)
+    else:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(content, encoding="utf-8")
     return out

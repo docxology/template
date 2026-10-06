@@ -91,7 +91,7 @@ class DeepSearchConfig:
     fulltext_cache_dir: str = "output/cache/pdf"
     search_cache_dir: str = "output/search/cache"
     write_unified_bibtex: bool = True
-    unified_bibtex_path: str = "manuscript/references_deep.bib"
+    unified_bibtex_path: str = "output/bibliography/references_deep.bib"
     # When set, override ``ProjectConfig.llm`` for the deep-search LLM only.
     llm_context_window: int | None = None
     llm_long_max_tokens: int | None = None
@@ -129,7 +129,7 @@ class ProjectConfig:
     llm: LLMConfig = field(default_factory=LLMConfig)
     report: ReportConfig = field(default_factory=ReportConfig)
     deep_search: DeepSearchConfig = field(default_factory=DeepSearchConfig)
-    references_path: str = "manuscript/references.bib"
+    references_path: str = "output/bibliography/references.bib"
 
     def __post_init__(self) -> None:
         if not self.search.query.strip():
@@ -197,7 +197,7 @@ class ProjectConfig:
                 include_corpus_synthesis=bool(report_raw.get("include_corpus_synthesis", True)),
             ),
             deep_search=_parse_deep_search(deep_search_raw),
-            references_path=str(references_path or "manuscript/references.bib"),
+            references_path=str(references_path or "output/bibliography/references.bib"),
         )
 
 
@@ -222,7 +222,7 @@ def _parse_deep_search(raw: dict[str, Any]) -> DeepSearchConfig:
         fulltext_cache_dir=str(raw.get("fulltext_cache_dir") or "output/cache/pdf"),
         search_cache_dir=str(raw.get("search_cache_dir") or "output/search/cache"),
         write_unified_bibtex=_parse_bool(raw.get("write_unified_bibtex", True), "deep_search.write_unified_bibtex"),
-        unified_bibtex_path=str(raw.get("unified_bibtex_path") or "manuscript/references_deep.bib"),
+        unified_bibtex_path=str(raw.get("unified_bibtex_path") or "output/bibliography/references_deep.bib"),
         llm_context_window=_optional_int(raw.get("llm_context_window")),
         llm_long_max_tokens=_optional_int(raw.get("llm_long_max_tokens")),
         llm_max_input_length=_optional_int(raw.get("llm_max_input_length")),
@@ -249,9 +249,13 @@ def _parse_bool(value: Any, field_name: str) -> bool:
     raise ValueError(f"{field_name} must be a boolean")
 
 
-def load_project_config(path: Path | str) -> ProjectConfig:
+def load_project_config(path: Path | str, *, source_bytes: bytes | None = None) -> ProjectConfig:
     """Load a :class:`ProjectConfig` from *path* (YAML)."""
-    text = Path(path).read_text(encoding="utf-8")
+    from infrastructure.search.literature.configuration_sources import ConfigTextStream
+
+    text = (
+        Path(path).read_text(encoding="utf-8") if source_bytes is None else ConfigTextStream(path, source_bytes).read()
+    )
     data = yaml.safe_load(text) or {}
     if not isinstance(data, dict):
         raise ValueError(f"Config {path} must be a YAML mapping at the top level")

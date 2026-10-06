@@ -62,7 +62,7 @@ uv run python -m infrastructure.validation.cli prerender projects/<project>/manu
 uv run python -m infrastructure.validation.cli markdown projects/<project>/manuscript --repo-root . --strict
 uv run python -m infrastructure.reference.citation validate projects/<project>/manuscript/references.bib
 uv run python -m infrastructure.validation.cli links --repo-root .
-uv run python -m infrastructure.validation.cli pdf output/<project>/pdf/
+uv run python -m infrastructure.validation.cli pdf --project <project> --repo-root .
 uv run python -m infrastructure.validation.cli integrity output/<project>/
 uv run python -m infrastructure.prose.cli report projects/<project>/manuscript
 ```

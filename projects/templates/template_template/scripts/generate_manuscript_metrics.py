@@ -3,37 +3,29 @@
 
 from __future__ import annotations
 
+import importlib.util
 import os
 import sys
 from pathlib import Path
 
 
 PROJECT_DIR = Path(os.environ.get("PROJECT_DIR", Path(__file__).resolve().parent.parent))
-SRC_DIR = PROJECT_DIR / "src"
-if str(SRC_DIR) not in sys.path:
-    sys.path.insert(0, str(SRC_DIR))
-
-# The package initializer imports shared infrastructure, so the repository root
-# must be available before importing even the package's path helper.
-_explicit_repo_root = os.environ.get("TEMPLATE_REPO_ROOT", "").strip()
-BOOTSTRAP_REPO_ROOT = (
-    Path(_explicit_repo_root).resolve()
-    if _explicit_repo_root
-    else next(
-        (candidate for candidate in (PROJECT_DIR, *PROJECT_DIR.parents) if (candidate / "infrastructure").is_dir()),
-        None,
-    )
+_BOOTSTRAP_SPEC = importlib.util.spec_from_file_location(
+    "template_script_bootstrap", Path(__file__).resolve().parent / "_bootstrap.py"
 )
-if BOOTSTRAP_REPO_ROOT is None:
-    raise RuntimeError(f"Could not locate repository root above {PROJECT_DIR}")
-if str(BOOTSTRAP_REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(BOOTSTRAP_REPO_ROOT))
+if _BOOTSTRAP_SPEC is None or _BOOTSTRAP_SPEC.loader is None:
+    raise ImportError("actual own project bootstrap is unavailable")
+_bootstrap = importlib.util.module_from_spec(_BOOTSTRAP_SPEC)
+_BOOTSTRAP_SPEC.loader.exec_module(_bootstrap)
+_bootstrap.bootstrap_project(PROJECT_DIR)
 
-from template_template.core.paths import locate_repo_root  # noqa: E402
+from template_template.core.paths import data_repo_root, verify_reference_inputs  # noqa: E402 - selected SDK and own namespace precede imports
 
-REPO_ROOT = locate_repo_root(BOOTSTRAP_REPO_ROOT)
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+# Complete public SOURCE DATA is a separate input, never an SDK import path.
+_explicit_repo_root = os.environ.get("TEMPLATE_REPO_ROOT", "").strip()
+REPO_ROOT = data_repo_root(
+    PROJECT_DIR, explicit_root=Path(_explicit_repo_root).absolute() if _explicit_repo_root else None
+)
 
 from template_template import (  # noqa: E402  (path setup must precede import)
     build_manuscript_metrics_dict,
@@ -70,6 +62,7 @@ def main() -> int:
     written = render_all_chapters(MANUSCRIPT_DIR, loaded, OUTPUT_MANUSCRIPT_DIR)
     logger.info(f"Rendered {len(written)} files into {OUTPUT_MANUSCRIPT_DIR.relative_to(PROJECT_DIR)}")
 
+    verify_reference_inputs()
     logger.info("=== generate_manuscript_metrics: complete ===")
     return 0
 

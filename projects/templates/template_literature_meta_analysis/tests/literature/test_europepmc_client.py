@@ -14,7 +14,7 @@ from __future__ import annotations
 import requests
 from pytest_httpserver import HTTPServer
 
-from literature.europepmc_client import (
+from template_literature_meta_analysis.literature.europepmc_client import (
     EUROPEPMC_API_URL,
     _extract_authors,
     _extract_open_access,
@@ -24,7 +24,7 @@ from literature.europepmc_client import (
     _parse_europepmc_result,
     search_europepmc,
 )
-from literature.models import Author, Paper
+from template_literature_meta_analysis.literature.models import Author, Paper
 
 # ---------------------------------------------------------------------------
 # Sample Europe PMC ``search`` results

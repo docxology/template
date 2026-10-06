@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_gold_refinement](https://github.com/docxology/template_gold_refinement)
-- Config version: `0.1.0`
+- Intended / published version: `0.2.0 pending; last published 0.1.0`
 - Stable concept DOI: [10.5281/zenodo.20931955](https://doi.org/10.5281/zenodo.20931955)
 - Latest deposited version DOI: [10.5281/zenodo.20938523](https://zenodo.org/records/20938523)
 - Additional declared locations: [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_gold_refinement), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmQBXK5qoGv5NSWC8mzcx22AgkHeqBJL8z8HrCgEy7nzio), [osf](https://osf.io/u485p/), [pypi](https://test.pypi.org/project/template-gold-refinement/0.1.0/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_gold_refinement)

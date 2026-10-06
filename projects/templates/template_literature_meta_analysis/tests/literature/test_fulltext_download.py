@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from literature.corpus import Corpus
-from literature.fulltext_download import (
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.fulltext_download import (
     assess_fulltext_availability,
     assess_fulltext_extraction,
     download_and_extract_fulltext,
@@ -17,7 +17,7 @@ from literature.fulltext_download import (
     extract_fulltext_text,
     resolve_fulltext_url,
 )
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 pytest_httpserver = pytest.importorskip("pytest_httpserver")
 reportlab = pytest.importorskip("reportlab")
@@ -386,6 +386,6 @@ def test_assess_fulltext_extraction_empty_dir(tmp_path: Path) -> None:
 
 
 def _safe_filename_for(paper: Paper) -> str:
-    from literature.fulltext_download import _safe_filename
+    from template_literature_meta_analysis.literature.fulltext_download import _safe_filename
 
     return _safe_filename(paper.canonical_id)

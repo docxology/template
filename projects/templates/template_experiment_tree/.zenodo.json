@@ -1,0 +1,20 @@
+{
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "Source code for A Living Research Record: Version-Controlled Experiment Trees with Frozen Nodes.",
+  "keywords": [
+    "reproducible research",
+    "experiment tracking",
+    "preregistration",
+    "living documents"
+  ],
+  "license": "MIT",
+  "title": "A Living Research Record: Version-Controlled Experiment Trees with Frozen Nodes",
+  "upload_type": "software",
+  "version": "0.2.0"
+}

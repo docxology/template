@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -23,13 +24,26 @@ def test_checked_in_notebook_binding_receipt_is_current():
     assert validate_binding(receipt, PROJECT) == ()
 
 
-def test_refresh_notebook_binding_script_runs_from_project_root():
-    receipt_path = PROJECT / "data" / "notebook_binding.json"
+@pytest.mark.parametrize("changed_source", [False, True], ids=["current", "stale-source"])
+def test_refresh_notebook_binding_script_runs_from_project_root(tmp_path, changed_source):
+    canonical_receipt = PROJECT / "data" / "notebook_binding.json"
+    canonical_before = canonical_receipt.read_bytes()
+    root = tmp_path / "project"
+    for name in ("src", "data", "notebooks", "scripts"):
+        shutil.copytree(PROJECT / name, root / name, ignore=shutil.ignore_patterns("__pycache__"))
+    receipt_path = root / "data" / "notebook_binding.json"
     before = receipt_path.read_bytes()
+    admitted = json.loads(before)
+    assert validate_binding(admitted, root) == ()
+    canonical_sources = {row["path"]: (PROJECT / row["path"]).read_bytes() for row in admitted["sources"]}
+    if changed_source:
+        source = root / "src/template_eda_notebook/eda/statistics.py"
+        source.write_bytes(source.read_bytes() + b"\n# Controlled source edit in the disposable producer workspace.\n")
+        assert validate_binding(admitted, root) == ("source digest drift",)
 
     result = subprocess.run(
         [sys.executable, "scripts/refresh_notebook_binding.py"],
-        cwd=PROJECT,
+        cwd=root,
         check=False,
         capture_output=True,
         text=True,
@@ -40,7 +54,11 @@ def test_refresh_notebook_binding_script_runs_from_project_root():
 
     assert result.returncode == 0, result.stderr
     assert str(receipt_path) in result.stdout
-    assert receipt_path.read_bytes() == before
+    refreshed = receipt_path.read_bytes()
+    assert (refreshed != before) is changed_source
+    assert validate_binding(json.loads(refreshed), root) == ()
+    assert canonical_receipt.read_bytes() == canonical_before
+    assert all((PROJECT / relative).read_bytes() == raw for relative, raw in canonical_sources.items())
 
 
 def test_notebook_binding_rejects_changed_cell(tmp_path):

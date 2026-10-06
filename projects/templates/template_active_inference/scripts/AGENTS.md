@@ -16,8 +16,8 @@ graphs, canonical promoted artifacts, and hydrated variables bind the promoted
 artifacts. The canonical generators also emit diffoscope, proof-extraction,
 finite state-space, causal-ablation, license-audit, and release-note evidence
 artifacts; do not reintroduce parallel versioned producer scripts for the same
-track families. The legacy `inject_variables.py` forwarder shells out to
-`z_generate_manuscript_variables.py`.
+track families. `z_generate_manuscript_variables.py` is the canonical hydration
+entrypoint.
 
 `generate_figures.py` owns registered image bytes only. The final
 `z_generate_manuscript_variables.py` step is the sole owner of the persisted

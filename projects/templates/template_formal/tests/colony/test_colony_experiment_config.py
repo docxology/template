@@ -116,3 +116,26 @@ def test_multiple_valid_boundary_and_interior_values_all_construct() -> None:
                 assert config.decay == decay
                 assert config.sensing_noise_std == sensing_noise_std
                 assert config.preference_variance == preference_variance
+
+
+@pytest.mark.parametrize(
+    "field,value,diagnostic",
+    [
+        ("num_agents", True, "num_agents must be an int"),
+        ("num_ticks", "5", "num_ticks must be an int"),
+        ("decay", True, "decay must be numeric"),
+        ("locations", ("north", 2), "locations must be a sequence of strings"),
+        ("preference_mean_range", (8.0,), "preference_mean_range must contain two numeric bounds"),
+        ("preference_mean_range", (True, 12.0), "preference_mean_range must contain two numeric bounds"),
+        ("sensed_concentration_cap", True, "sensed_concentration_cap must be numeric or None"),
+    ],
+)
+def test_dynamic_trial_inputs_reject_ambiguous_types(field: str, value: object, diagnostic: str) -> None:
+    values = {**_BASE_KWARGS, field: value}
+    with pytest.raises(TypeError, match=diagnostic):
+        ColonyTrialConfig.from_mapping(seed=0, values=values)
+
+
+def test_dynamic_trial_inputs_normalize_to_the_same_typed_configuration() -> None:
+    values = {**_BASE_KWARGS, "locations": ["north", "south"], "preference_mean_range": [8, 12]}
+    assert ColonyTrialConfig.from_mapping(seed=17, values=values) == _make(seed=17)

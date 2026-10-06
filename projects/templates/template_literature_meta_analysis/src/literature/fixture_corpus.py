@@ -24,8 +24,8 @@ from __future__ import annotations
 import random
 from datetime import date
 
-from literature.corpus import Corpus
-from literature.models import Author, Paper
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.models import Author, Paper
 
 DEFAULT_SEED = 42
 DEFAULT_TERM = "modafinil"

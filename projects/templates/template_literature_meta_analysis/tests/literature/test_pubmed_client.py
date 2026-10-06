@@ -2,8 +2,8 @@ import requests
 from defusedxml.ElementTree import fromstring as safe_fromstring
 from pytest_httpserver import HTTPServer
 
-from literature.models import Paper
-from literature.pubmed_client import _parse_pubmed_article, search_pubmed
+from template_literature_meta_analysis.literature.models import Paper
+from template_literature_meta_analysis.literature.pubmed_client import _parse_pubmed_article, search_pubmed
 
 SINGLE_ARTICLE_XML = """\
 <PubmedArticle>

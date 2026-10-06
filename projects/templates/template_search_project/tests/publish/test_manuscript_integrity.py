@@ -129,7 +129,7 @@ def test_no_placeholder_strings_in_deep_search_outputs(tmp_path: Path) -> None:
         "  llm_per_paper: false\n"
         "  output_dir: 'output/deep_search'\n"
         "  search_cache_dir: 'output/cache/search'\n"
-        "  unified_bibtex_path: 'manuscript/references_deep.bib'\n",
+        "  unified_bibtex_path: 'output/bibliography/references_deep.bib'\n",
         encoding="utf-8",
     )
 
@@ -158,6 +158,8 @@ def test_no_placeholder_strings_in_deep_search_outputs(tmp_path: Path) -> None:
         [
             sys.executable,
             str(PROJECT_ROOT / "scripts" / "s_compose_literature_review.py"),
+            "--enable",
+            "--no-llm",
             "--config",
             str(iso / "manuscript" / "config.yaml"),
             "--project-root",
@@ -171,7 +173,7 @@ def test_no_placeholder_strings_in_deep_search_outputs(tmp_path: Path) -> None:
 
     # Step 3: scan every produced artefact for forbidden strings.
     scan_targets: list[Path] = []
-    scan_targets.append(iso / "manuscript" / "S01_literature_review.md")
+    scan_targets.append(iso / "output" / "manuscript" / "S02_generated_literature_review.md")
     for p in (iso / "output" / "deep_search").rglob("*.md"):
         scan_targets.append(p)
     for p in (iso / "output" / "deep_search").rglob("*.json"):
@@ -189,7 +191,7 @@ def test_no_placeholder_strings_in_deep_search_outputs(tmp_path: Path) -> None:
 
     # Sanity check: the composer's "no LLM contributions" message is
     # acceptable explanatory prose, NOT a fake LLM output.
-    s01_text = (iso / "manuscript" / "S01_literature_review.md").read_text(encoding="utf-8")
+    s01_text = (iso / "output" / "manuscript" / "S02_generated_literature_review.md").read_text(encoding="utf-8")
     assert "Per-paper synthesis omitted" in s01_text
     assert "alice2020convexity" not in s01_text  # sanity: real keys, not test fixture
 

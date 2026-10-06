@@ -30,11 +30,11 @@ from pathlib import Path
 
 import requests
 
-from knowledge_graph.llm_client import call_ollama, parse_llm_response
-from knowledge_graph.llm_config import LLMConfig
-from literature.fulltext_download import safe_filename
-from literature.models import Paper
-from reproducibility.models import (
+from template_literature_meta_analysis.knowledge_graph.llm_client import call_ollama, parse_llm_response
+from template_literature_meta_analysis.knowledge_graph.llm_config import LLMConfig
+from template_literature_meta_analysis.literature.fulltext_download import safe_filename
+from template_literature_meta_analysis.literature.models import Paper
+from template_literature_meta_analysis.reproducibility.models import (
     NodeType,
     WorkflowGraph,
     WorkflowNode,
@@ -44,8 +44,8 @@ from reproducibility.models import (
     get_processed_paper_ids,
     merge_workflow_graphs,
 )
-from reproducibility.prompts import _SYSTEM_PROMPT as _REPRO_SYSTEM_PROMPT
-from reproducibility.prompts import build_prompt
+from template_literature_meta_analysis.reproducibility.prompts import _SYSTEM_PROMPT as _REPRO_SYSTEM_PROMPT
+from template_literature_meta_analysis.reproducibility.prompts import build_prompt
 
 logger = logging.getLogger(__name__)
 

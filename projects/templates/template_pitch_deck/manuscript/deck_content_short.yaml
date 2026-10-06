@@ -51,7 +51,7 @@ slides:
   - kind: content
     title: "Already public"
     bullets:
-      - "Concept DOI {{PITCH_SUBJECT_DOI}}, {{PITCH_SUBJECT_PUBLISHED_PLATFORM_COUNT}} durable publication records already on file: {{PITCH_SUBJECT_PUBLISHED_PLATFORM_NAMES}}."
+      - "Concept DOI {{PITCH_SUBJECT_DOI}}. Intended v{{PITCH_SUBJECT_VERSION}} is {{PITCH_SUBJECT_RELEASE_STATUS}}; prior v{{PITCH_SUBJECT_LAST_PUBLISHED_VERSION}} has {{PITCH_SUBJECT_LAST_PUBLISHED_PLATFORM_COUNT}} historical publication references."
       - "Licensed {{PITCH_SUBJECT_LICENSE}} — the introspection code, not only the prose, is available for a science-integrity team to audit directly."
     source: "projects/templates/template_template/manuscript/config.yaml"
 

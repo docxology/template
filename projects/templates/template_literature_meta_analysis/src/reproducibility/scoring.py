@@ -69,7 +69,7 @@ from collections import deque
 from dataclasses import dataclass
 from typing import Any, Optional
 
-from reproducibility.models import NodeType, WorkflowGraph, WorkflowNode
+from template_literature_meta_analysis.reproducibility.models import NodeType, WorkflowGraph, WorkflowNode
 
 
 @dataclass

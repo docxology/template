@@ -180,10 +180,6 @@
         {
           "name": "describe-pipeline",
           "help": "Print the stage catalog derived from pipeline.yaml"
-        },
-        {
-          "name": "list-stages",
-          "help": "Alias for describe-pipeline"
         }
       ],
       "exports": [
@@ -458,6 +454,24 @@
         "scan_security_todos",
         "validate_promotion_attestation"
       ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.project.public_acceptance_pytest",
+      "invocation": "python -m infrastructure.project.public_acceptance_pytest",
+      "source_path": "infrastructure/project/public_acceptance_pytest.py",
+      "purpose": "Real pytest execution with nonce-bound complete collection and case evidence.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.project.public_acceptance_worker",
+      "invocation": "python -m infrastructure.project.public_acceptance_worker",
+      "source_path": "infrastructure/project/public_acceptance_worker.py",
+      "purpose": "One locked, bounded full-selection public project/runtime acceptance cell.",
+      "subcommands": [],
+      "exports": [],
       "effect": "read_only"
     },
     {
@@ -857,7 +871,7 @@
       "module": "infrastructure.reporting.release_readiness",
       "invocation": "python -m infrastructure.reporting.release_readiness",
       "source_path": "infrastructure/reporting/release_readiness.py",
-      "purpose": "Local, no-network release-readiness dashboard.",
+      "purpose": "No-network candidate and published acceptance for the full public roster.",
       "subcommands": [],
       "exports": [
         "CoverageFacts",
@@ -1335,24 +1349,8 @@
       "purpose": "CLI entry point for documentation link and reference audits.",
       "subcommands": [],
       "exports": [
-        "LinkCheckResult",
-        "_get_actual_project_names",
-        "_is_real_path_item",
-        "_resolve_template_path",
-        "_should_validate_path",
-        "_validate_import_path",
-        "check_file_reference",
-        "extract_code_blocks",
-        "extract_headings",
-        "extract_links",
-        "discover_markdown_files",
-        "generate_comprehensive_report",
         "main",
-        "run_link_audit",
-        "validate_directory_structures",
-        "validate_file_paths_in_code",
-        "validate_placeholder_consistency",
-        "validate_python_imports"
+        "run_link_audit"
       ],
       "effect": "read_only"
     },

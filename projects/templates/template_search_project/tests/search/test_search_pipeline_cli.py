@@ -46,7 +46,7 @@ def test_offline_smoke_writes_expected_artifacts(tmp_path: Path, capsys):
     exit_code = run_search_pipeline_cli(args, tmp_path, config)
     assert exit_code == 0
 
-    assert (tmp_path / "manuscript" / "references.bib").exists()
+    assert (tmp_path / "output" / "bibliography" / "references.bib").exists()
     assert (tmp_path / "output" / "corpus.json").exists()
     assert (tmp_path / "output" / "search" / "results.json").exists()
     assert (tmp_path / "output" / "reading_report.md").exists()
@@ -61,7 +61,7 @@ def test_offline_smoke_writes_expected_artifacts(tmp_path: Path, capsys):
     )
 
     captured = capsys.readouterr()
-    assert str(tmp_path / "manuscript" / "references.bib") in captured.out
+    assert str(tmp_path / "output" / "bibliography" / "references.bib") in captured.out
 
 
 def test_no_llm_flag_skips_llm_stage_even_when_config_enables_it(tmp_path: Path):

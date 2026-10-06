@@ -5,17 +5,16 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.validation.content.discovery import discover_markdown_files as canonical_discover
+from infrastructure.validation.content.discovery import discover_markdown_files
+from infrastructure.validation.docs.accuracy import extract_headings
+from infrastructure.validation.integrity.link_audit_core import generate_comprehensive_report
+from infrastructure.validation.integrity.check_links import run_link_audit
 from infrastructure.validation.integrity import check_links
 from infrastructure.validation.integrity import link_extract
-from infrastructure.validation.integrity.check_links import (
+from infrastructure.validation.integrity.link_extract import (
     check_file_reference,
-    discover_markdown_files,
     extract_code_blocks,
-    extract_headings,
     extract_links,
-    generate_comprehensive_report,
-    run_link_audit,
     validate_directory_structures,
     validate_placeholder_consistency,
     validate_python_imports,
@@ -23,9 +22,11 @@ from infrastructure.validation.integrity.check_links import (
 
 
 def test_link_extract_module_import_smoke() -> None:
-    """Library surface lives in link_extract; check_links re-exports discovery for CLI callers."""
-    assert link_extract.extract_links is check_links.extract_links
-    assert check_links.discover_markdown_files is canonical_discover
+    """Library helpers remain exported from the integrity package."""
+    from infrastructure.validation import integrity
+
+    assert integrity.extract_links is link_extract.extract_links
+    assert integrity.discover_markdown_files is discover_markdown_files
 
 
 class TestExtractCodeBlocks:
@@ -252,7 +253,7 @@ class TestLinkAuditPerformance:
         from infrastructure.validation.integrity.link_audit_core import discover_link_audit_files
 
         root = self._scaffold_large_tree(tmp_path, n_docs=120)
-        canonical = canonical_discover(root, scope="link_audit")
+        canonical = discover_markdown_files(root, scope="link_audit")
         pruned = discover_link_audit_files(root)
         assert pruned == canonical
         # No file from an excluded tree leaked through.
@@ -315,7 +316,7 @@ class TestBrokenAnchorLinks:
         md_file = tmp_path / "test.md"
         md_file.write_text("# Heading One\n\nSee [nonexistent](#nonexistent-heading) for details.")
         content = md_file.read_text()
-        headings = check_links.extract_headings(content)
+        headings = extract_headings(content)
         internal, _, _ = extract_links(content, md_file)
         assert "heading-one" in headings
         target = internal[0]["target"].lstrip("#")
@@ -325,7 +326,7 @@ class TestBrokenAnchorLinks:
         md_file = tmp_path / "test.md"
         md_file.write_text("# Main Section\n\n## Sub Section\n\nSee [sub section](#sub-section) for details.")
         content = md_file.read_text()
-        headings = check_links.extract_headings(content)
+        headings = extract_headings(content)
         internal, _, _ = extract_links(content, md_file)
         target = internal[0]["target"].lstrip("#")
         assert target in headings
@@ -351,9 +352,8 @@ class TestCheckLinksIntegrationComprehensive:
         assert len(all_file_refs) >= 2
 
     def test_module_exports(self):
-        assert hasattr(check_links, "discover_markdown_files")
-        assert hasattr(check_links, "extract_links")
-        assert hasattr(check_links, "check_file_reference")
+        assert set(check_links.__all__) == {"main", "run_link_audit"}
+        assert all(callable(getattr(check_links, name)) for name in check_links.__all__)
 
 
 class TestDiscoverMarkdownFilesLinkAudit:

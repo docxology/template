@@ -10,13 +10,10 @@ gate; the public import path is unchanged.
 
 ## Contracts
 
-- Public API stays at the package root (`__init__.py`); companion modules are
-  private (`_scan`, `_records`). Do not import companions from outside.
-- Every historical name must keep importing from
-  `infrastructure.validation.rendered_snapshot`; the doc-pair lint and the
-  provenance tests pin this.
-- Constants shared across builders (`_IMPLEMENTATION_ROOTS`, `_CACHE_PARTS`)
-  live beside their consumers in `_records.py`.
+- Public snapshot models and builders are exposed from the package root.
+- Scan and record implementation helpers live in `_scan` and `_records`;
+  focused controls import these helpers directly.
+- Scan cache policy is declared once as `CACHE_PARTS` in `_scan.py`.
 
 ## Verification
 

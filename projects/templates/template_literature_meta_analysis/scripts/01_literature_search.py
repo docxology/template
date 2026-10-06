@@ -16,8 +16,8 @@ from _bootstrap import bootstrap_project
 
 PROJECT_ROOT = bootstrap_project()
 
-from config import OUTPUT_DIR as DEFAULT_OUTPUT_DIR
-from literature.search_runner import run_literature_search
+from template_literature_meta_analysis.config import OUTPUT_DIR as DEFAULT_OUTPUT_DIR
+from template_literature_meta_analysis.literature.search_runner import run_literature_search
 
 
 def parse_args() -> argparse.Namespace:

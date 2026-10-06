@@ -69,7 +69,7 @@ The core pipeline runs validation after PDF render via `scripts/pipeline/stage_0
 
 ```bash
 # Full core pipeline (includes validation after render)
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 
 # Or use the interactive menu
 ./run.sh
@@ -209,17 +209,17 @@ uv run python -m infrastructure.validation.cli pdf output/templates/template_cod
 Generate PDFs first:
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 ```
 
 Or run the pipeline:
 
 ```bash
 # Standard build with validation
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 
 # With verbose debug logging (LOG_LEVEL: 0=DEBUG, 1=INFO, 2=WARN, 3=ERROR)
-LOG_LEVEL=0 uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+LOG_LEVEL=0 uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 ```
 
 ### High number of ?? issues

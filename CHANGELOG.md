@@ -9,6 +9,22 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+## [4.0.0] - Unreleased
+
+- Raise the platform and public exemplar runtime floor to Python 3.12; retain
+  Python 3.14 as the local default and prepare CI for Python 3.12–3.14.
+- Resolve execution into immutable contracts with stable stage identities;
+  preserve child outcomes and refuse incomplete, paused, stale, or incompatible
+  results as successful completion.
+- Version source-bound checkpoint and cache records, hash recursive directory
+  content, and bind human decisions to the reviewed run, plan, and artifacts.
+- Retire unused publishing/resource interfaces, enforce strict Methods
+  declarations, and distinguish intended exemplar versions from historical
+  publication metadata. Platform 4.0 release acceptance remains in progress;
+  no new tag, release, DOI, or production promotion is implied by this entry.
+
+### Earlier verified work
+
 - Closed `TEST-ISOLATION-SYSPATH-1`, `SLOW-PROFILE-1`, `CI-WIRING-1`,
   `CI-SLOWMARK-SHARD-1`, and `REHEARSAL-PARALLEL-1` as verified on main:
   merge `ea32f318c` completed the isolation and CI contracts; CI run

@@ -14,7 +14,7 @@ from _bootstrap import bootstrap_project
 
 PROJECT_ROOT = bootstrap_project()
 
-from literature.fulltext_download_cli import main as _main
+from template_literature_meta_analysis.literature.fulltext_download_cli import main as _main
 
 
 def main() -> None:

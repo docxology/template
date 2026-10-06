@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from manuscript.variables.context import ExtractContext
-from manuscript.variables.formatters import humanize_key, humanize_list
+from template_literature_meta_analysis.manuscript.variables.context import ExtractContext
+from template_literature_meta_analysis.manuscript.variables.formatters import humanize_key, humanize_list
 
 
 def extract_subfields(ctx: ExtractContext) -> dict[str, str]:

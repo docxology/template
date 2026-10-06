@@ -32,6 +32,10 @@ class PublicationRecord:
     citation_path: Path
     zenodo_json_path: Path
     codemeta_path: Path
+    release_status: str = "published"
+    intended_version: str = ""
+    last_published_version: str = ""
+    publication_status: str = "published"
     citation_version: str = ""
     citation_doi: str = ""
     zenodo_json_version: str = ""
@@ -48,6 +52,25 @@ class PublicationRecord:
     zenodo_record_concept_doi: str = ""
     zenodo_record_doi: str = ""
     external_findings: tuple[str, ...] = ()
+
+    @property
+    def metadata_version(self) -> str:
+        """Version to which historical publication sidecars are bound."""
+        if self.release_status == "unreleased" and self.last_published_version:
+            return self.last_published_version
+        return self.paper_version
+
+    @property
+    def version_display(self) -> str:
+        """Keep intended local release and published evidence distinct."""
+        if self.release_status == "unreleased":
+            historical = (
+                f"; last published {self.last_published_version}"
+                if self.last_published_version
+                else "; unpublished draft"
+            )
+            return f"{self.intended_version or self.paper_version} pending{historical}"
+        return self.paper_version or "n/a"
 
     @property
     def github_repo_slug(self) -> str:
@@ -134,6 +157,8 @@ class PublicationRecord:
         ]
         if self.external_findings:
             statuses.extend(self.external_findings)
+        if self.release_status == "unreleased":
+            verification = "intended release pending; historical evidence " + verification
         return f"{verification}; " + "; ".join(statuses)
 
     @property

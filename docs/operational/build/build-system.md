@@ -79,7 +79,7 @@ count:
 ```bash
 uv run python scripts/runner/execute_pipeline.py --help
 uv run python scripts/runner/execute_pipeline.py \
-  --project templates/template_code_project --core-only
+  --project templates/template_code_project --mode core
 ```
 
 Measure performance on the intended revision and environment (for example with
@@ -114,7 +114,7 @@ unless CI explicitly documents a rotating-project exception.
    ```bash
    # Run all stages
    uv run python scripts/runner/execute_pipeline.py \
-     --project templates/template_code_project --core-only
+     --project templates/template_code_project --mode core
 
    # Or use unified interactive menu
    ./run.sh
@@ -167,7 +167,7 @@ unless CI explicitly documents a rotating-project exception.
    ```bash
    # Run pipeline (includes multiple LaTeX passes)
    uv run python scripts/runner/execute_pipeline.py \
-     --project templates/template_code_project --core-only
+     --project templates/template_code_project --mode core
    ```
 
 ### Coverage Below the Configured Floor
@@ -195,7 +195,7 @@ To verify everything works on your system:
 ```bash
 # 1. Run the source-owned core plan for one qualified project
 uv run python scripts/runner/execute_pipeline.py \
-  --project templates/template_code_project --core-only
+  --project templates/template_code_project --mode core
 
 # Or use unified interactive menu
 ./run.sh

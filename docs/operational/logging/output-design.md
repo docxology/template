@@ -76,11 +76,11 @@ This block is the canonical end-of-run summary. It is rendered by
 Both multi-project entry points print it to the console/log:
 [`infrastructure/orchestration/pipeline_runner.py`](../../../infrastructure/orchestration/pipeline_runner.py)
 (`run.sh --all-projects` / `python -m infrastructure.orchestration multi`) and
-`scripts/runner/execute_multi_project.py`. **Only the latter** additionally persists
-it verbatim to `docs/_generated/last-run-summary.md`, via
-`write_last_run_summary` in `multi_project_report.py` (called from
-[`infrastructure/core/pipeline/multi_project_cli.py`](../../../infrastructure/core/pipeline/multi_project_cli.py));
-the `pipeline_runner.py` path does not write this file.
+`scripts/runner/execute_multi_project.py`. Current runtime summaries belong in
+ignored `output/multi_project_summary/last-run-summary.md`, with JSON/text companions.
+Summary generation consumes the resolved expected stages and typed outcomes under
+the remaining whole-run deadline. Public documentation must not receive local
+private project names from runtime discovery.
 
 ## Reference: per-project stages
 
@@ -122,7 +122,7 @@ A failed run keeps the same overall shape; only the deltas matter:
 - The closing banner swaps the `🎉 ALL N PASSED` line for
   `⚠️  S/N succeeded · F failed · <wall-time>`.
 - `NEXT STEPS` swaps the inspect-outputs hint for two pointers:
-  - `Re-run a failed project: ./run.sh --project <name> --pipeline --core-only --skip-infra`
+  - `Re-run a failed project: ./run.sh --project <name> --pipeline --mode core --skip-infra`
   - `Inspect a failure log : cat projects/<name>/output/logs/pipeline.log`
 
 The presence of the literal strings `FAILURE DETAILS`,

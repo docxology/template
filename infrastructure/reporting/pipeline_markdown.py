@@ -6,6 +6,7 @@ Generates Markdown-formatted reports from PipelineReport data.
 from typing import TYPE_CHECKING
 
 from infrastructure.core.logging.helpers import format_duration
+from .pipeline_report_model import stage_is_complete
 
 if TYPE_CHECKING:
     from .pipeline_report_model import PipelineReport
@@ -24,8 +25,8 @@ def _generate_pipeline_markdown(report: "PipelineReport") -> str:
     ]
 
     # Calculate summary statistics
-    passed = sum(1 for s in report.stages if s.status == "passed")
-    failed = sum(1 for s in report.stages if s.status == "failed")
+    passed = sum(stage_is_complete(stage) for stage in report.stages)
+    failed = len(report.stages) - passed
     total = len(report.stages)
 
     lines.append(f"- **Stages Executed:** {total}")
@@ -41,7 +42,7 @@ def _generate_pipeline_markdown(report: "PipelineReport") -> str:
     lines.append("|-------|--------|----------|-----------|")
 
     for stage in report.stages:
-        status_emoji = "✅" if stage.status == "passed" else "❌"
+        status_emoji = "✅" if stage_is_complete(stage) else "❌"
         duration_str = format_duration(stage.duration)
         lines.append(f"| {stage.name} | {status_emoji} {stage.status} | {duration_str} | {stage.exit_code} |")
 

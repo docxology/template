@@ -2,15 +2,16 @@
 
 > **Public exemplar** — [DOI: 10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869)
 
-A combinatoric **grammar** that deterministically generates whole runnable projects — `src/`, `tests/`, `scripts/`, and `manuscript/` — one level past a manuscript generator.
+A combinatoric **grammar** that generates standalone child analysis, primitives,
+domain tests, manuscript sources, and provenance from an explicit selected spec.
 
 ## When to use this template
 
 Use this template when you need to **generate runnable project trees
-deterministically** — not a manuscript, but a whole child project (its own
-`src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a
-combinatoric grammar, with recompute-based provenance verification and a
-falsifiable honesty manifest against green-by-construction test theater. It
+deterministically**: a child project with `analysis.py`, `primitives/`,
+`tests/`, and `manuscript/`, selected by a seed and explicit grammar filters.
+Actual child tests and analysis accompany recomputed provenance and a
+structural honesty manifest. It
 extends `template_madlib` one level up: from generating *a manuscript* to
 generating *a project that generates a manuscript*. If you only need
 token-driven manuscript generation without the project-generation layer, use
@@ -19,15 +20,15 @@ generative grammar at all, see `template_code_project` or
 `template_prose_project`.
 
 Concretely, this template provides:
-- A combinatoric grammar that emits whole projects (src/, tests/, scripts/, manuscript/)
+- A combinatoric grammar that emits standalone numerical child projects
 - Children that pass their own `pytest --cov 90` gate with real audited kernels
 - Recompute verification (never trust recorded hashes)
-- A falsifiable honesty manifest against green-by-construction theater
+- A source-bound structural manifest, plus independently verified child results
 
 ## Configuring from this template
 
 Edit `manuscript/config.yaml`:
-- The `autopoiesis:` block controls the grammar (slots, options, seed, deps)
+- The `project_config.autopoiesis:` block controls slots, options, seed, dependencies, and archetype filters
 - The `paper:` block controls publication metadata
 - The `analysis:` block controls which scripts run on render
 
@@ -66,11 +67,20 @@ The spine:
 4. **Verify** — recomputes tree hash from disk and checks against `provenance.json`.
 5. **Seal** — embeds spec hash + tree hash as a QR code in `seal.json`.
 
-The dominant failure mode of project generators — **green-by-construction test theater** — is defeated by:
+The generator's acceptance controls use:
 
 - Analytic ground-truth primitive kernels (5 domains, 8 kernels)
 - Mutation meta-gate (`test_meta_teeth.py`): stub `run_analysis` must *fail*
 - Recompute verifier: hash derived from disk, never cached
+- Real selected-child domain tests, numerical analysis, and parent-side reference comparisons
+
+`realize_archetypes.py` executes one selected cell per permitted domain;
+`realize_child_full.py` executes one manifest-selected child. The current
+unfiltered grammar declares 360 nominal cells and 45 effective cells. A five-child
+default run provides evidence for its five selected specs. Child PDF rendering
+is unsupported. New execution receipts and exports live only under ignored
+`output/.pipeline/child_realization/`, preserving historical `output/children/`.
+See [the child execution contract](docs/child-execution.md) for custody and limits.
 
 ---
 
@@ -89,10 +99,10 @@ uv run python scripts/autopoiesis.py verify output/children/child_optimization_X
 # Check the falsifiable honesty manifest (this template's headline feature)
 uv run python scripts/autopoiesis.py honesty
 
-# Realize one child per domain (smoke test)
+# Execute and independently verify one selected child per permitted domain
 uv run python scripts/realize_archetypes.py
 
-# Full realize + verify pipeline
+# Execute and independently verify one manifest-selected child
 uv run python scripts/realize_child_full.py
 ```
 
@@ -114,13 +124,14 @@ uv run python scripts/z_generate_manuscript_variables.py
 uv run python scripts/runner/execute_pipeline.py --project templates/template_autopoiesis --core-only
 ```
 
-> **Chrome / Puppeteer note:** PDF rendering uses the shared `infrastructure/rendering` pipeline and requires Chrome/Chromium. Child projects render their own tests only — PDF rendering of child manuscripts is not supported.
+> **Chrome / Puppeteer note:** The parent manuscript uses the shared rendering pipeline. Child acceptance executes domain tests and numerical analysis. Child manuscript PDF rendering is unsupported.
 
 ---
 
 ## Determinism
 
-Given the same `grammar_hash` and `seed`, every output is bit-for-bit identical on the same platform:
+Given the same grammar, seed, and generator source bytes, generated child source
+is deterministic. Runtime timing and coverage receipts reflect actual execution:
 
 - All slot selections use `_digest_index` (SHA-256, no `random.random()`)
 - Tree hash computed over sorted `(path, content_hash)` pairs
@@ -133,26 +144,29 @@ Verified by `test_materialize.py::test_materialize_tree_hash_stable` and `test_p
 ## Publication and rendering
 
 <!-- PUBLISHING-STATUS:START (generated by infrastructure.publishing.status_report) -->
-**Autopoietic Project Generation** · v1.0.1 · MIT · Daniel Ari Friedman
+**Autopoietic Project Generation** · intended v2.0.0 (unreleased) · MIT · Daniel Ari Friedman
 
-Concept DOI: [10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869) | Version DOI: [10.5281/zenodo.21229620](https://zenodo.org/records/21229620) | Repository: [docxology/template_autopoiesis](https://github.com/docxology/template_autopoiesis)
+Intended release: v2.0.0 — unreleased.
+Last published release: v1.0.1. Recorded publication links refer to that release.
 
-Publishing surface — 20 platforms, 4 published:
+Concept DOI: [10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869) | Last published version DOI: [10.5281/zenodo.21229620](https://zenodo.org/records/21229620) | Repository: [docxology/template_autopoiesis](https://github.com/docxology/template_autopoiesis)
+
+Publishing surface — 20 platforms, 0 published for the intended release:
 
 | Platform | Tier | Status | Reference | Credentials |
 | --- | --- | --- | --- | --- |
-| zenodo | first-class | ✅ published | [10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869) | `ZENODO_API_TOKEN` |
-| github | first-class | ✅ published | [docxology/template_autopoiesis](https://github.com/docxology/template_autopoiesis) | `GITHUB_TOKEN` |
+| zenodo | first-class | 📚 historical reference | [10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869) | `ZENODO_API_TOKEN` |
+| github | first-class | 📚 historical reference | [docxology/template_autopoiesis](https://github.com/docxology/template_autopoiesis) | `GITHUB_TOKEN` |
 | arxiv | first-class | ⚪ available | — | — |
 | pypi | first-class | ⚪ available | — | `PYPI_TOKEN`, `TESTPYPI_TOKEN` |
-| ipfs_pinata | first-class | ✅ published | [https://gateway.pinata.cloud/ipfs/QmanoQUGKKFeYFtd5HRpB4ysE9jVxbzvaWpqgpWu5rRi8V](https://gateway.pinata.cloud/ipfs/QmanoQUGKKFeYFtd5HRpB4ysE9jVxbzvaWpqgpWu5rRi8V) | `PINATA_JWT` |
+| ipfs_pinata | first-class | 📚 historical reference | [https://gateway.pinata.cloud/ipfs/QmanoQUGKKFeYFtd5HRpB4ysE9jVxbzvaWpqgpWu5rRi8V](https://gateway.pinata.cloud/ipfs/QmanoQUGKKFeYFtd5HRpB4ysE9jVxbzvaWpqgpWu5rRi8V) | `PINATA_JWT` |
 | ipfs_web3storage | first-class | ⚪ available | — | `WEB3_STORAGE_TOKEN` |
 | software_heritage | first-class | ⚪ available | — | — |
 | github_pages | first-class | ⚪ available | [docxology/template_autopoiesis](https://github.com/docxology/template_autopoiesis) | `GITHUB_TOKEN` |
 | cloudflare_pages | first-class | ⚪ available | — | `CLOUDFLARE_API_TOKEN` |
 | netlify | first-class | ⚪ available | — | `NETLIFY_AUTH_TOKEN` |
 | huggingface_hub | first-class | ⚪ available | — | `HUGGINGFACE_TOKEN`, `HF_TOKEN` |
-| osf | first-class | ✅ published | [https://osf.io/ksmzp/](https://osf.io/ksmzp/) | `OSF_TOKEN` |
+| osf | first-class | 📚 historical reference | [https://osf.io/ksmzp/](https://osf.io/ksmzp/) | `OSF_TOKEN` |
 | amazon_kdp | documented | 🟡 planned | — | `AMAZON_KDP_EMAIL`, `AMAZON_KDP_PASSWORD` |
 | google_play_books | documented | 🟡 planned | — | `GOOGLE_PLAY_BOOKS_SERVICE_ACCOUNT_JSON` |
 | gumroad | documented | 🟡 planned | — | `GUMROAD_ACCESS_TOKEN` |
@@ -164,7 +178,7 @@ Publishing surface — 20 platforms, 4 published:
 
 _Keywords: autopoiesis, combinatoric grammar, deterministic generation, project synthesis, reproducible research, infrastructure automation._
 
-_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
+_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · 📚 historical reference (last published release; not intended-version publication evidence) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
 
 ## Build

@@ -51,7 +51,7 @@ scripts/publish/                             │
 
 ```
 [1] RENDER (template/)
-    ./run.sh --project templates/<name> --pipeline --core-only
+    ./run.sh --project templates/<name> --pipeline --mode core
          │
          ▼ produces
     projects/<name>/output/
@@ -288,7 +288,7 @@ See `credentials/credentials.yaml.template` for the full schema.
 
 The pipeline has not been run, or outputs were cleaned. Run:
 ```bash
-./run.sh --project templates/<name> --pipeline --core-only
+./run.sh --project templates/<name> --pipeline --mode core
 ```
 
 For EPUB/MOBI (YAML stage 12; script prefix `stage_11`):

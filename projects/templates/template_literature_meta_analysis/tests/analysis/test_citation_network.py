@@ -10,7 +10,7 @@ import logging
 import networkx as nx
 import pytest
 
-from analysis.citation_network import (
+from template_literature_meta_analysis.analysis.citation_network import (
     _top_scores,
     build_citation_graph,
     build_reference_index,
@@ -18,7 +18,7 @@ from analysis.citation_network import (
     detect_communities,
     resolve_citations,
 )
-from literature.models import Citation, Paper
+from template_literature_meta_analysis.literature.models import Citation, Paper
 
 
 class TestTopScores:

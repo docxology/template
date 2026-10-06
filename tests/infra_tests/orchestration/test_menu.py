@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import pytest
 
-from infrastructure.core.pipeline.stage_vocabulary import default_run_stage_count
 from infrastructure.orchestration.menu import (
     MENU_OPTIONS,
     STAGE_NAMES,
@@ -36,8 +35,8 @@ def test_render_menu_lists_all_keys() -> None:
 def test_render_menu_includes_subtitle_and_legend() -> None:
     rendered = render_menu("x")
     assert "Single stages 0-7" in rendered
-    assert "Infra tests: Layer-1 pytest" in rendered
-    assert "Executive report:" in rendered
+    assert "Infrastructure verification runs once" in rendered
+    assert "Executive reports follow" in rendered
 
 
 def test_render_menu_no_ansi_codes() -> None:
@@ -55,11 +54,8 @@ def test_stage_names_align_with_pipeline() -> None:
 
 def test_pipeline_menu_counts_follow_yaml() -> None:
     rendered = render_menu("x")
-    core_only = default_run_stage_count(include_llm=False)
-    default_full = default_run_stage_count(include_llm=True)
-    assert f"{core_only} stages" in rendered
-    assert f"{default_full} stages" in rendered
-    assert core_only != default_full
+    assert "current project · infra on · local stages" in rendered
+    assert "current project · infra on · live stages" in rendered
 
 
 def test_menu_keys_unique() -> None:

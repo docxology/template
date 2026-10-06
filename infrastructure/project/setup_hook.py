@@ -6,9 +6,9 @@ analysis scripts:
 * ``projects/<name>/scripts/setup_hook.py`` — preferred (cross-platform).
 * ``projects/<name>/scripts/setup_hook.sh`` — POSIX-only fallback.
 
-The hook is discovered by :func:`find_setup_hook` and invoked by
-:func:`run_project_setup_hook` from the Stage 0 / Stage 1 setup script
-(``scripts/pipeline/stage_00_setup.py``). On Windows, only the ``.py`` form is
+The hook is discovered by :func:`find_setup_hook` and invoked only through
+the explicit provisioning API :func:`run_project_setup_hook`. Ordinary Stage00
+checks prerequisites without running the hook. On Windows, only the ``.py`` form is
 honoured; ``.sh`` hooks are skipped with a warning because POSIX shells are
 not guaranteed to be available.
 
@@ -118,30 +118,57 @@ def _manifest_path(hook: Path) -> Path:
     return hook.parent / "setup_hook.yaml"
 
 
-def _load_manifest(hook: Path) -> dict[str, Any]:
+def _load_manifest(hook: Path, *, strict: bool = False) -> dict[str, Any]:
     """Load and lightly validate ``setup_hook.yaml`` (if present).
 
-    Unknown keys are preserved but ignored. Type errors are reported and a
-    safe empty manifest is returned, so a malformed YAML file degrades to
-    "no manifest" rather than aborting setup.
+    Default explicit preparation preserves ignored unknown fields and reports
+    malformed metadata. Ordinary Stage00 selects strict=True: bounded confined
+    metadata reads and exact supported field shapes refuse malformed input.
     """
     manifest_file = _manifest_path(hook)
-    if not manifest_file.is_file():
+    if not os.path.lexists(manifest_file) or (not strict and not manifest_file.is_file()):
         return {}
     if _yaml is None:  # pragma: no cover — pyyaml is a hard dep
+        if strict:
+            raise ValueError("PyYAML is required to validate setup-hook metadata")
         logger.warning("PyYAML unavailable; ignoring %s", manifest_file)
         return {}
     try:
-        with manifest_file.open("r", encoding="utf-8") as fh:
-            data = _yaml.safe_load(fh)
+        if strict:
+            from infrastructure.core.files.secure_write import read_text_confined
+
+            data = _yaml.safe_load(read_text_confined(hook.parent.parent, manifest_file, max_bytes=1024 * 1024))
+        else:
+            with manifest_file.open("r", encoding="utf-8") as fh:
+                data = _yaml.safe_load(fh)
     except (OSError, _yaml.YAMLError) as exc:
+        if strict:
+            raise ValueError("Setup-hook metadata must be readable, confined, valid YAML") from exc
         logger.warning("Failed to parse %s: %s", manifest_file, exc)
         return {}
     if data is None:
         return {}
     if not isinstance(data, dict):
+        if strict:
+            raise ValueError("Setup-hook metadata must be a mapping")
         logger.warning("%s must be a mapping at top level; ignoring", manifest_file)
         return {}
+    if strict:
+        supported = {"description", "required_tools", "required_env", "secret_env", "timeout_sec", "skip_if_env"}
+        if set(data) - supported:
+            raise ValueError("Setup-hook metadata contains unsupported fields")
+        for field in ("required_tools", "required_env", "secret_env", "skip_if_env"):
+            value = data.get(field, [])
+            if (
+                not isinstance(value, list)
+                or any(not isinstance(item, str) or not item.strip() or "\0" in item for item in value)
+                or len(value) != len(set(value))
+            ):
+                raise ValueError(f"Setup-hook {field} requires unique nonempty strings")
+        if "timeout_sec" in data and (type(data["timeout_sec"]) is not int or data["timeout_sec"] <= 0):
+            raise ValueError("Setup-hook timeout_sec must be a positive integer")
+        if "description" in data and not isinstance(data["description"], str):
+            raise ValueError("Setup-hook description must be a string")
     return data
 
 
@@ -155,7 +182,7 @@ def _coerce_str_list(value: Any, field: str, manifest: Path) -> list[str]:
     return []
 
 
-def preflight_setup_hook(project_dir: Path) -> tuple[bool, list[str]]:
+def preflight_setup_hook(project_dir: Path, *, strict: bool = False) -> tuple[bool, list[str]]:
     """Validate the project's setup-hook prerequisites.
 
     Reads ``setup_hook.yaml`` if present and verifies declared
@@ -166,6 +193,7 @@ def preflight_setup_hook(project_dir: Path) -> tuple[bool, list[str]]:
 
     Args:
         project_dir: Path to the project directory (``projects/<name>``).
+        strict: Refuse malformed/confined metadata for check-only Stage00.
 
     Returns:
         ``(ok, messages)`` — ``ok=True`` means the hook may run (or was
@@ -174,12 +202,27 @@ def preflight_setup_hook(project_dir: Path) -> tuple[bool, list[str]]:
         entries when ``ok=True`` due to ``skip_if_env``. When there is no
         hook and no manifest, returns ``(True, [])``.
     """
+    if strict:
+        from infrastructure.core.files.secure_write import read_bytes_confined
+
+        # A declared FIFO, directory, symlink or broken link is malformed input,
+        # not evidence that a project has no hook. Check both names so a valid
+        # preferred hook cannot hide a malformed fallback declaration.
+        for name in ("setup_hook.py", "setup_hook.sh"):
+            candidate = project_dir / "scripts" / name
+            if os.path.lexists(candidate):
+                read_bytes_confined(project_dir, candidate, max_bytes=8 * 1024 * 1024)
     hook = find_setup_hook(project_dir)
     if hook is None:
+        if strict and any(
+            os.path.lexists(project_dir / "scripts" / name)
+            for name in ("setup_hook.py", "setup_hook.sh", "setup_hook.yaml")
+        ):
+            raise ValueError("Declared setup-hook input has no runnable provisioning hook")
         # No hook → trivially OK, even if a manifest is somehow present.
         return True, []
 
-    manifest = _load_manifest(hook)
+    manifest = _load_manifest(hook, strict=strict)
     manifest_path = _manifest_path(hook)
 
     # skip_if_env short-circuits everything else.

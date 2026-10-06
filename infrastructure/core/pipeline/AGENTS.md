@@ -15,13 +15,26 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 - `multi_project.py` - multi-project orchestration (serial)
 - `multi_project_parallel.py` - bounded-parallel multi-project orchestration
 - `multi_project_cli.py` - CLI for `scripts/runner/execute_multi_project.py` (serial + `--parallel`)
-  via `concurrent.futures.ProcessPoolExecutor`. Public entry point:
+  through fresh subprocess workers. Public entry point:
   `run_projects_in_parallel(...) -> ParallelRunResult`. Worker count defaults
   to `min(N_projects, os.cpu_count() or 1)` and is overridable by the
   `MULTI_PROJECT_MAX_WORKERS` environment variable or by passing
-  `max_workers=N` explicitly. Each worker redirects FD 1/2 to its
-  per-project `projects/<name>/output/logs/pipeline.log` so the parent
-  never sees interleaved output.
+  `max_workers=N` explicitly. The parent freezes every effective project plan
+  before shared verification, executes the shared gate once, and transports
+  each exact plan to a new worker with a private bytecode prefix and a pre-import
+  audit of actual executed public code. Queueing,
+  locks, stages, and reporting share `--run-timeout` (default 14,400 seconds).
+  Timeout and interruption clean descendant processes and retain their typed
+  outcomes. Finite cleanup may outlast an expired work deadline; it cannot
+  grant success. Worker stdout/stderr is drained into an 8 MiB capped spool
+  and overflow fails the worker. Each project's captured log stays under its
+  own `output/logs/`. `multi_project_summary.py` supervises aggregate rendering
+  within the remaining deadline and publishes runtime reports only beneath
+  ignored `output/multi_project_summary/`. Original expected stage selections
+  and matching typed stage rows determine aggregate completion.
+  A positively identified guardian custody refusal is blocked (75); cleanup
+  still reaps the child, drains its capped output, and retains actual child and
+  stage evidence. Ordinary child/setup failures remain failed.
 - `resume.py` - checkpoint resume helpers
 - `stages.py` - subprocess execution and public multi-project test helpers; script stages use a 7,200-second descendant-tree-killing boundary, and stage definitions live only in `pipeline.yaml`
 - `stage_monitor.py` - stage resource monitoring
@@ -30,14 +43,14 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 - `_monitor_types.py` - shared monitoring types
 - `post_run_reporting.py` - post-run JSON/HTML/Markdown report generation
 - `hitl_cli.py` - non-interactive HITL CLI (`PipelineArgs`, `handle_hitl_command`)
-- `stage_registry.py` - canonical stage-key → script map (`STAGE_DISPATCH`, `MENU_KEY_TO_STAGE`)
-- `single_stage.py` - subprocess single-stage runner; consumes `stage_registry.script_argv_for_stage()` and shares the full pipeline's 7,200-second descendant-tree-killing boundary
-- `stage_vocabulary.py` - canonical stage names/aliases from `pipeline.yaml` (shared with menu banners and eval grader). `core_stage_names()` excludes `opt_in_tags`; `core_only_stage_names()` also excludes `llm`; `default_run_stage_count(include_llm=...)` is the menu/CLI count helper.
+- `stage_registry.py` - menu keys and canonical declared stage keys (`MENU_KEY_TO_STAGE`, `known_stage_keys`)
+- `single_stage.py` - compiles a targeted immutable plan and delegates to the same executor and deadline as complete pipeline execution
+- `stage_vocabulary.py` - canonical stage names/aliases from `pipeline.yaml` (shared with menu banners and eval grader). `core_stage_names()` excludes opt-in and live stages; `live_stage_names()` includes explicitly enabled live stages; `default_run_stage_count(mode=...)` is the menu/CLI count helper.
 - `summary_formatters.py` - summary formatting
 - `summary_helpers.py` - summary helpers
 - `summary_models.py` - summary dataclasses
 - `types.py` - shared pipeline types
-- `artifacts/` — advisory per-stage artifact manifests package ([`artifacts/AGENTS.md`](artifacts/AGENTS.md)); public import path unchanged. Exports include `declared_output_paths` (with `_declared_output_paths` alias for incremental hashing), `compute_sha256`, `write_stage_artifact_manifest`, `aggregate_artifact_manifests`, `snapshot_current_artifact_manifest`, `validate_artifact_manifest`; dataclasses `ArtifactManifestEntry`, `ArtifactManifest`, `ArtifactValidationReport`. `collect_stable_output_inventory()` and `StableOutputInventory` are the one read-only inventory contract shared by manifests and statistics; supported lazy exports also include `OutputInventoryMode`, both mode constants, and `output_inventory_mode_for_project`. Public exemplars default to fail-closed `stable-shippable-output-v1`; only explicitly resolved non-template lifecycle projects may receive `stable-local-output-v1`, so ignore-policy drift cannot silently weaken a public gate. Each manifest persists the selected mode; legacy payloads default to strict shippable mode, and current validation rejects a mode/lifecycle mismatch. Manifest JSON uses one strict parser across aggregation, validation, Methods, and AutoResearch: entries require canonical POSIX `output/...` paths, exact booleans/non-negative integers, complete stage fields, and lowercase SHA-256 values; duplicates, omissions, and entries outside the selected stable inventory are invalid. Local mode bypasses only a whole-output packaging rule when Git can identify it and still honors selective ignores. Both modes reject hidden path components, runtime/control/build residue, and symlinks while retaining the explicit `output/fulltext/fulltext_inventory.json` evidence exception. Git path exchange is NUL-safe for Unicode/newline names; Git-query failures block inventory inside detected worktrees while genuine non-repository trees retain the documented static fallback. Copied root mirrors map relative paths to the canonical project output for ignore evaluation. The explicit snapshot labels entries `current-output-snapshot`, omits wall-clock timestamps unless `SOURCE_DATE_EPOCH` is set, and must not be described as stage provenance.
+- `artifacts/` — advisory per-stage artifact manifests package ([`artifacts/AGENTS.md`](artifacts/AGENTS.md)); public import path unchanged. Exports include `declared_output_paths`, `compute_sha256`, `write_stage_artifact_manifest`, `aggregate_artifact_manifests`, `snapshot_current_artifact_manifest`, `validate_artifact_manifest`; dataclasses `ArtifactManifestEntry`, `ArtifactManifest`, `ArtifactValidationReport`. `collect_stable_output_inventory()` and `StableOutputInventory` are the one read-only inventory contract shared by manifests and statistics; supported lazy exports also include `OutputInventoryMode`, both mode constants, and `output_inventory_mode_for_project`. Public exemplars default to fail-closed `stable-shippable-output-v1`; only explicitly resolved non-template lifecycle projects may receive `stable-local-output-v1`, so ignore-policy drift cannot silently weaken a public gate. Each manifest persists the selected mode; legacy payloads default to strict shippable mode, and current validation rejects a mode/lifecycle mismatch. Manifest JSON uses one strict parser across aggregation, validation, Methods, and AutoResearch: entries require canonical POSIX `output/...` paths, exact booleans/non-negative integers, complete stage fields, and lowercase SHA-256 values; duplicates, omissions, and entries outside the selected stable inventory are invalid. Local mode bypasses only a whole-output packaging rule when Git can identify it and still honors selective ignores. Both modes reject hidden path components, runtime/control/build residue, and symlinks while retaining the explicit `output/fulltext/fulltext_inventory.json` evidence exception. Git path exchange is NUL-safe for Unicode/newline names; Git-query failures block inventory inside detected worktrees while genuine non-repository trees retain the documented static fallback. Copied root mirrors map relative paths to the canonical project output for ignore evaluation. The explicit snapshot labels entries `current-output-snapshot`, omits wall-clock timestamps unless `SOURCE_DATE_EPOCH` is set, and must not be described as stage provenance.
 - `control.py` - advisory pipeline control config parsing/merging with precedence default YAML → project YAML → CLI HITL mode (`load_pipeline_control_config`, `merge_control_configs`, `control_config_from_dict`)
 - `run_matrix.py` - reproducible project × stage run matrix from a `run.config` YAML file; canonically orders steps so a given config reproduces byte-for-byte (`parse_run_config`, `resolve_run_plan`, `execute_run_plan`, `find_run_config`, `format_report`)
 - `smart_pause.py` - advisory SmartPause recommendation scoring from run reports (report-first; the default pipeline does not pause) (`compute_pause_recommendations`, `write_pause_recommendations`, `PauseRecommendation`)

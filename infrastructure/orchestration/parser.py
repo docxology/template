@@ -23,9 +23,8 @@ def build_parser() -> argparse.ArgumentParser:
     pipe = sub.add_parser("pipeline", help="Run a single-project pipeline.")
     pipe.add_argument("--project", required=False, help="Project name.")
     pipe.add_argument("--all-projects", action="store_true")
-    pipe.add_argument("--core-only", action="store_true")
+    pipe.add_argument("--mode", choices=("core", "live"), default="core")
     pipe.add_argument("--skip-infra", action="store_true")
-    pipe.add_argument("--skip-llm", action="store_true")
     pipe.add_argument("--resume", action="store_true")
     pipe.add_argument(
         "--incremental",
@@ -34,14 +33,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     multi = sub.add_parser("multi", help="Run all-projects orchestration.")
-    multi.add_argument("--core-only", action="store_true")
+    multi.add_argument("--mode", choices=("core", "live"), default="core")
     multi.add_argument("--skip-infra", action="store_true")
-    multi.add_argument("--skip-llm", action="store_true")
-    multi.add_argument(
-        "--no-executive-report",
-        action="store_true",
-        help="Disable the cross-project executive report.",
-    )
 
     secure = sub.add_parser(
         "secure",
@@ -56,9 +49,9 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  ./secure_run.sh --project my_project\n"
-            "      Full pipeline + steganography for one project.\n"
+            "      Core pipeline + steganography for one project.\n"
             "\n"
-            "  ./secure_run.sh --project my_project --core-only\n"
+            "  ./secure_run.sh --project my_project --mode core\n"
             "      Pipeline without LLM stages, then steganography.\n"
             "\n"
             "  ./secure_run.sh --steganography-only --project my_project\n"
@@ -94,7 +87,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     secure.add_argument("--skip-infra", action="store_true", help="Skip Layer-1 infrastructure tests.")
-    secure.add_argument("--core-only", action="store_true", help="Run the 8-stage core pipeline (no LLM stages).")
+    secure.add_argument("--mode", choices=("core", "live"), default="core", help="Core or explicit live pipeline.")
     secure.add_argument("--resume", action="store_true", help="Resume the pipeline from the last checkpoint.")
     secure.add_argument(
         "--deterministic",

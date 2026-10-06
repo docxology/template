@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from template_literature_meta_analysis.knowledge_graph.hypothesis import config_key_to_hypothesis_id
+
 from manuscript.variables._logging import logger
 from manuscript.variables.context import ExtractContext
 from manuscript.variables.formatters import latex_number
@@ -64,13 +66,6 @@ def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
                 score_lookup[hid] = float(sv)
             elif isinstance(sv, dict) and isinstance(sv.get("score"), (int, float)):
                 score_lookup[hid] = float(sv["score"])
-    try:
-        from knowledge_graph.hypothesis import config_key_to_hypothesis_id
-    except ImportError:  # pragma: no cover
-
-        def config_key_to_hypothesis_id(key: str, name: str = "") -> str:
-            """Process config key to hypothesis id."""
-            return key
 
     def score_for(hid: str, hname: str, explicit_id: str = "") -> str:
         """Process score for."""

@@ -16,14 +16,14 @@ from _bootstrap import bootstrap_project
 
 PROJECT_ROOT = bootstrap_project()
 
-from config import (
+from template_literature_meta_analysis.config import (
     CORPUS_PATH as DEFAULT_CORPUS_PATH,
     DEFAULT_LLM_MODEL,
     DEFAULT_LLM_URL,
     DEFAULT_REPRO_CHECKPOINT_INTERVAL,
     OUTPUT_DIR as DEFAULT_OUTPUT_DIR,
 )
-from reproducibility.runner import run_reproducibility_pipeline
+from template_literature_meta_analysis.reproducibility.runner import run_reproducibility_pipeline
 
 
 def parse_args() -> argparse.Namespace:

@@ -8,7 +8,7 @@ This directory documents how to work on the `template_advanced_literature_review
 | --- | --- |
 | `README.md` | Quick navigation and canonical commands |
 | `agent_instructions.md` | Rules agents must read before source, test, config, or manuscript edits |
-| `architecture.md` | Pipeline layers, symlinked vs project-specific modules, and dependency direction |
+| `architecture.md` | Pipeline layers, declared provider vs project-owned modules, and dependency direction |
 | `testing_philosophy.md` | No-mocks testing policy and representative multi-phase test surfaces |
 | `style_guide.md` | Source, script, doc, and error-message conventions |
 | `syntax_guide.md` | Markdown, citations, figure refs, and phase-aware token syntax |
@@ -22,7 +22,7 @@ This directory documents how to work on the `template_advanced_literature_review
 
 ## Why This Project Has Its Own docs/ Hub
 
-`template_advanced_literature_review` is not a copy of `template_literature_meta_analysis` — it shares four modules by symlink (`src/analysis/`, `src/knowledge_graph/`, `src/reproducibility/`, `src/visualization/`, `src/config_loader.py`; see `architecture.md`) but owns a distinct multi-phase search layer (`src/multi_phase/`, phase-aware `src/manuscript/variables/`). Documentation that only describes the single-term flow would misrepresent this project's actual control surface (`manuscript/config.yaml` → `project_config.search_phases`). This hub documents the advanced surface on its own terms, per `TODO.md`'s "Documentation and signposting gaps" entry: *"Document multi-phase architecture distinctly from single-term template capabilities."*
+Advanced imports common analysis, knowledge-graph, reproducibility and figure methods from the declared `template_literature_meta_analysis` distribution. It owns the distinct phase policy, retrieval adapters, configuration and phase-aware manuscript variables. Document the actual `manuscript/config.yaml` → `project_config.search_phases` control surface and the separately admitted provider boundary described in `architecture.md`.
 
 ## Verification
 

@@ -37,7 +37,7 @@ The pipeline has three steps. Each must complete before the next begins.
 uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py
 ```
 
-**Inputs**: `data/measurements.csv` + the tested functions in `src/eda/`.
+**Inputs**: `data/measurements.csv` + the tested functions in `src/template_eda_notebook/eda/`.
 
 **Outputs**:
 

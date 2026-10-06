@@ -81,14 +81,14 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 ### Using the Pipeline
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --mode core
 ```
 
 ### Validating Outputs
 
 ```bash
 uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
-uv run python -m infrastructure.validation.cli pdf output/templates/template_code_project/pdf/
+uv run python -m infrastructure.validation.cli pdf --project templates/template_code_project --repo-root .
 ```
 
 ## Submodule Skills

@@ -9,10 +9,10 @@ from __future__ import annotations
 
 import pytest
 
-from literature.models import Paper
-from knowledge_graph.nanopublication import Assertion
-from knowledge_graph.graph_builder import KnowledgeGraph, RDFLIB_AVAILABLE
-from knowledge_graph.query import (
+from template_literature_meta_analysis.literature.models import Paper
+from template_literature_meta_analysis.knowledge_graph.nanopublication import Assertion
+from template_literature_meta_analysis.knowledge_graph.graph_builder import KnowledgeGraph, RDFLIB_AVAILABLE
+from template_literature_meta_analysis.knowledge_graph.query import (
     query_papers_by_hypothesis,
     query_assertions_for_paper,
     query_supporting_papers,

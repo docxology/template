@@ -1,5 +1,11 @@
 # Stage 08 deliberately demonstrates the shared provider-neutral deep-research
-# models through deterministic fixture replay. All other project source remains
-# standalone from template infrastructure.
+# models through deterministic fixture replay. The declared platform dependency
+# also supplies generic config validation, immutable config text, and live custody.
 allow_infrastructure_imports:
+  - src/config_loader.py
+  - src/config_validation.py
+  - src/multi_phase/live_acceptance.py
   - src/deep_research/dispatch.py
+reason: >-
+  The project-owned config loader uses the platform's named UTF-8 stream over
+  exact admitted bytes. Phase policies and domain configuration stay in Layer 2.

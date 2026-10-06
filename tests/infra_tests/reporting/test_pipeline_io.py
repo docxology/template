@@ -304,7 +304,7 @@ class TestGeneratePipelineReport:
         report = generate_pipeline_report(stage_results, 6.0, tmp_path)
         assert report.total_duration == 6.0
         assert len(report.stages) == 2
-        assert report.stages[0].status == "passed"
+        assert report.stages[0].status == "succeeded"
         assert report.stages[1].status == "failed"
 
     def test_with_project_name_and_log(self, tmp_path):

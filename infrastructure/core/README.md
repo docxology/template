@@ -7,6 +7,9 @@ serial/parallel benchmark evidence is validated by
 `infrastructure.core.health_benchmark` and the thin
 `scripts/maintenance/benchmark_health.py` entrypoint.
 
+`infrastructure.core.ci_policy` derives the required CI jobs from the workflow.
+The final Gate requires that complete set and validates each conditional skip.
+
 ## Quick Start
 
 ```python

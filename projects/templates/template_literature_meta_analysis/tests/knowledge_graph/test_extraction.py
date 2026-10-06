@@ -6,9 +6,9 @@ import json
 
 from pytest_httpserver import HTTPServer
 
-from knowledge_graph.extraction import extract_assertions
-from knowledge_graph.llm_extraction import LLMConfig
-from literature.models import Paper
+from template_literature_meta_analysis.knowledge_graph.extraction import extract_assertions
+from template_literature_meta_analysis.knowledge_graph.llm_extraction import LLMConfig
+from template_literature_meta_analysis.literature.models import Paper
 
 
 def _paper() -> Paper:

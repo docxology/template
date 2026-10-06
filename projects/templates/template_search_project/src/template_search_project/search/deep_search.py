@@ -11,7 +11,7 @@ enriches every paper, and produces:
     - ``per_paper/<safe_id>.md`` — LLM deep summary (when LLM enabled)
 * ``output/deep_search/aggregate.json`` — every paper across all keywords.
 * ``output/deep_search/aggregate_report.md`` — cross-keyword overview.
-* ``manuscript/references_deep.bib`` — unified BibTeX (deduplicated).
+* ``output/bibliography/references_deep.bib`` — unified BibTeX (deduplicated).
 
 The LLM is duck-typed as ``Callable[[str], str]`` so tests can pass a
 deterministic local callable that returns real, well-formed reading-note
@@ -29,10 +29,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable
 
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.reference.citation import (
     BibDatabase,
     paper_to_bibentry,
-    write_bibfile,
 )
 from infrastructure.search.literature import (
     AbstractFetcher,
@@ -52,6 +52,8 @@ from infrastructure.search.literature import (
 )
 
 from template_search_project.publish.config import DeepSearchConfig
+from template_search_project.publish.bibliography import write_generated_bibliography
+from template_search_project.publish.deep_custody import begin_deep_producer, finish_deep_producer
 
 # Per-paper LLM prompt — richer than synthesis.PROMPT_PER_PAPER because
 # the deep search has access to the fulltext (when fetched) and emits a
@@ -270,10 +272,11 @@ def write_per_paper_note(
     summary: str | None,
     *,
     keyword: str,
+    project_root: Path | None = None,
 ) -> Path:
     """Write a single per-paper markdown reading note."""
-    out_dir = Path(output_dir) / "per_paper"
-    out_dir.mkdir(parents=True, exist_ok=True)
+    directory = Path(output_dir).absolute()
+    out_dir = directory / "per_paper"
     name = safe_id(paper.id) + ".md"
     path = out_dir / name
 
@@ -312,17 +315,19 @@ def write_per_paper_note(
         lines.append("```")
         lines.append("")
 
-    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    root = project_root if project_root is not None else directory
+    atomic_write_text_confined(root, path, "\n".join(lines).rstrip() + "\n")
     return path
 
 
 def write_keyword_report(
     output_dir: Path,
     keyword_result: KeywordResult,
+    *,
+    project_root: Path | None = None,
 ) -> Path:
     """Write the per-keyword reading report markdown."""
-    out_dir = Path(output_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = Path(output_dir).absolute()
     path = out_dir / "reading_report.md"
 
     result = keyword_result.search_result
@@ -376,17 +381,19 @@ def write_keyword_report(
             lines.append(summary.strip())
             lines.append("")
 
-    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    root = project_root if project_root is not None else out_dir
+    atomic_write_text_confined(root, path, "\n".join(lines).rstrip() + "\n")
     return path
 
 
 def write_aggregate_report(
     output_dir: Path,
     artifacts: DeepSearchArtifacts,
+    *,
+    project_root: Path | None = None,
 ) -> Path:
     """Write the cross-keyword aggregate markdown report."""
-    out_dir = Path(output_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = Path(output_dir).absolute()
     path = out_dir / "aggregate_report.md"
 
     lines: list[str] = []
@@ -416,12 +423,13 @@ def write_aggregate_report(
 
     if artifacts.bibtex_path is not None:
         # `<repo-root>`-relative so the tracked report stays clone-independent.
-        project_root = out_dir.parent.parent
-        portable = str(artifacts.bibtex_path).replace(str(project_root.resolve()), "<repo-root>")
+        publication_root = project_root if project_root is not None else out_dir.parent.parent
+        portable = str(artifacts.bibtex_path).replace(str(publication_root.absolute()), "<repo-root>")
         lines.append(f"_BibTeX written to:_ `{portable}`")
         lines.append("")
 
-    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    root = project_root if project_root is not None else out_dir
+    atomic_write_text_confined(root, path, "\n".join(lines).rstrip() + "\n")
     return path
 
 
@@ -456,26 +464,29 @@ def run_deep_search(
     if not config.keywords:
         raise ValueError("DeepSearchConfig.keywords is empty")
 
-    root = Path(project_root)
-    output_dir = (root / config.output_dir).resolve()
+    root = Path(project_root).absolute()
+    producer_snapshot = begin_deep_producer(config) if write_outputs else None
+    output_dir = (root / config.output_dir).absolute()
     if write_outputs:
-        output_dir.mkdir(parents=True, exist_ok=True)
+        if not output_dir.is_relative_to(root.absolute() / "output") or ".." in output_dir.parts:
+            raise ValueError("Deep-search output directory must remain under project output/")
 
     backends = _build_backends(config, corpus_path=corpus_path, extra_backends=extra_backends)
     cache: SearchCache | None = None
     if config.search_cache_dir:
-        cache_dir = (root / config.search_cache_dir).resolve()
-        cache = SearchCache(cache_dir)
+        cache_dir = (root / config.search_cache_dir).absolute()
+        cache = SearchCache(cache_dir, confinement_root=root)
     client = LiteratureClient(backends, cache=cache)
 
     abs_fetcher: AbstractFetcher | None = None
     ft_fetcher: FulltextFetcher | None = None
     if config.fetch_abstracts:
-        abs_fetcher = AbstractFetcher(cache_dir=(root / config.abstract_cache_dir).resolve())
+        abs_fetcher = AbstractFetcher(cache_dir=(root / config.abstract_cache_dir).absolute(), confinement_root=root)
     if config.fetch_fulltext:
         ft_fetcher = FulltextFetcher(
-            cache_dir=(root / config.fulltext_cache_dir).resolve(),
+            cache_dir=(root / config.fulltext_cache_dir).absolute(),
             max_chars=config.max_fulltext_chars,
+            confinement_root=root,
         )
 
     keyword_results: list[KeywordResult] = []
@@ -511,7 +522,6 @@ def run_deep_search(
         # pass ``llm=None`` (which the script-level ``_build_llm_callable``
         # does when the LLM stack is unreachable).
         per_paper_summaries: dict[str, str] = {}
-        per_paper_failures: list[str] = []
         if config.llm_per_paper and llm is not None:
             for paper in result.papers:
                 key = citation_keys.get(paper.id, paper.id)
@@ -528,12 +538,13 @@ def run_deep_search(
                 try:
                     per_paper_summaries[paper.id] = llm(prompt)
                 except Exception as exc:  # noqa: BLE001 — safety net: isolate one paper's LLM failure
-                    per_paper_failures.append(f"{paper.id}: {exc}")
+                    enrichment_log.append(FetchResult(paper=paper, status="error", message=f"LLM: {exc}"))
 
         kw_dir = output_dir / slug if write_outputs else None
         if write_outputs and kw_dir is not None:
-            kw_dir.mkdir(parents=True, exist_ok=True)
-            (kw_dir / "papers.json").write_text(
+            atomic_write_text_confined(
+                root,
+                kw_dir / "papers.json",
                 json.dumps(
                     {
                         "keyword": keyword,
@@ -544,12 +555,11 @@ def run_deep_search(
                     indent=2,
                     ensure_ascii=False,
                 ),
-                encoding="utf-8",
             )
             for paper in result.papers:
                 key = citation_keys.get(paper.id, paper.id)
                 summary = per_paper_summaries.get(paper.id)
-                write_per_paper_note(kw_dir, paper, key, summary, keyword=keyword)
+                write_per_paper_note(kw_dir, paper, key, summary, keyword=keyword, project_root=root)
 
         kr = KeywordResult(
             keyword=keyword,
@@ -561,7 +571,7 @@ def run_deep_search(
             output_dir=kw_dir,
         )
         if write_outputs and kw_dir is not None:
-            write_keyword_report(kw_dir, kr)
+            write_keyword_report(kw_dir, kr, project_root=root)
         keyword_results.append(kr)
 
     # Aggregate across keywords (dedup by DOI/arXiv id).
@@ -590,7 +600,9 @@ def run_deep_search(
     if write_outputs:
         # Aggregate JSON.
         aggregate_json_path = output_dir / "aggregate.json"
-        aggregate_json_path.write_text(
+        atomic_write_text_confined(
+            root,
+            aggregate_json_path,
             json.dumps(
                 {
                     "keywords": [kr.keyword for kr in keyword_results],
@@ -600,7 +612,6 @@ def run_deep_search(
                 indent=2,
                 ensure_ascii=False,
             ),
-            encoding="utf-8",
         )
 
         # Unified BibTeX (deduplicated, with collision-free keys).
@@ -609,8 +620,7 @@ def run_deep_search(
             for paper in aggregate_papers:
                 cite_key = aggregate_citation_keys[paper.id]
                 db.add(paper_to_bibentry(paper, citation_key=cite_key))
-            bibtex_path = (root / config.unified_bibtex_path).resolve()
-            write_bibfile(bibtex_path, db)
+            bibtex_path = write_generated_bibliography(root, config.unified_bibtex_path, db)
 
     artifacts = DeepSearchArtifacts(
         keyword_results=keyword_results,
@@ -622,5 +632,11 @@ def run_deep_search(
         output_dir=output_dir if write_outputs else None,
     )
     if write_outputs:
-        artifacts.aggregate_report_path = write_aggregate_report(output_dir, artifacts)
+        artifacts.aggregate_report_path = write_aggregate_report(output_dir, artifacts, project_root=root)
+        assert producer_snapshot is not None
+        successful = not any(
+            result.search_result.errors or any(entry.status == "error" for entry in result.enrichment_log)
+            for result in keyword_results
+        )
+        finish_deep_producer(root.absolute(), config, producer_snapshot, output_dir, successful=successful)
     return artifacts

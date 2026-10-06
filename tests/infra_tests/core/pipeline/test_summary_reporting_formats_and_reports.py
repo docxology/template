@@ -194,7 +194,7 @@ class TestFormatHtmlSummary:
         html = format_html_summary(summary, manager)
         assert "<div class='pipeline-summary'>" in html
         assert "</div>" in html
-        assert "All stages completed successfully!" in html
+        assert "Recorded stages completed successfully" in html
 
     def test_html_summary_with_failures(self, tmp_path: Path) -> None:
         output_dir = _make_output_dir(tmp_path)
@@ -210,7 +210,7 @@ class TestFormatHtmlSummary:
         )
         manager = FileInventoryManager()
         html = format_html_summary(summary, manager)
-        assert "Pipeline completed with failures: render" in html
+        assert "Execution has incomplete stages: render" in html
         assert "class='error'" in html
 
     def test_html_summary_with_log_file(self, tmp_path: Path) -> None:

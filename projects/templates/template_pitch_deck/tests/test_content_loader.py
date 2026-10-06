@@ -11,7 +11,7 @@ from template_pitch_deck.content_loader import build_deck_content, load_deck_yam
 from template_pitch_deck.deck_tokens import build_deck_tokens
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rendering.slide_deck import SlideBudget
-from template_pitch_deck.paths import locate_repo_root, project_root
+from template_pitch_deck.paths import data_repo_root, project_root
 
 _ROSTER_TITLE = "The full roster, not one cherry-picked example"
 _CONTRACT_TITLE = "One contract across all public exemplars"
@@ -188,7 +188,7 @@ def test_flagship_roster_split_preserves_all_claims_names_sources_and_budget(
     assert roster_slide["source"] == contract_slide["source"] == "docs/_generated/active_projects.md"
     assert by_title["Not a black box"]["bullets"][3] == _SHORTENED_INFRA_SCOPE_CLAIM
 
-    repo_root = locate_repo_root(pitch_root)
+    repo_root = data_repo_root(pitch_root)
     deck = build_deck_content(raw, build_deck_tokens(repo_root))
     resolved_roster_slide = next(slide for slide in deck.slides if slide.title == _ROSTER_TITLE)
     expected_names = sorted(name.rsplit("/", 1)[-1] for name in PUBLIC_PROJECT_NAMES)

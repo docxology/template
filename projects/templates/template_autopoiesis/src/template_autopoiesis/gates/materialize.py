@@ -1,9 +1,9 @@
 """Materialize a Spec into a complete runnable child project.
 
-This module takes a fully-resolved Spec and writes a self-contained project
-directory under *out_root*.  The generated project can run its own tests,
-produce figures, and render a manuscript — all without requiring the parent
-template infrastructure at runtime.
+This module takes a resolved Spec and writes standalone analysis, primitives,
+oracle tests, manuscript sources, and provenance under *out_root*. Its declared
+core acceptance executes tests and numerical analysis. Child PDF rendering is
+unsupported; dependency seams do not inherit acceptance from parent modules.
 """
 
 from __future__ import annotations
@@ -17,6 +17,7 @@ from pathlib import Path
 from ..core.expand import Spec
 from ..manuscript.emit_templates import emit_all
 from .integrity import tree_hash_from_content_hashes
+from .custody_paths import confined_path
 
 PROVENANCE_SCHEMA_VERSION = "autopoiesis/provenance/1"
 
@@ -82,15 +83,13 @@ _MULTI_FILE_VENDOR_DEPS: dict[str, list[str]] = {
 def _vendor_kernel_sources(spec: Spec, template_root: Path) -> dict[str, str]:
     """Collect the primitive kernel sources for the selected domain."""
     domain = spec.primitive_domain
-    prim_dir = template_root / "src" / "template_autopoiesis" / "primitives"
     files: dict[str, str] = {}
 
     # Copy base.py
     for fname in ["base.py", f"{domain}.py"]:
-        src_path = prim_dir / fname
-        if src_path.exists():
-            content = src_path.read_text()
-            files[f"primitives/{fname}"] = _rewrite_kernel_imports(content)
+        src_path = confined_path(template_root, f"src/template_autopoiesis/primitives/{fname}", regular=True)
+        content = src_path.read_text()
+        files[f"primitives/{fname}"] = _rewrite_kernel_imports(content)
 
     # Write a minimal __init__.py that only imports the selected domain
     init_content = f'''"""Primitives package — generated for domain: {domain}."""
@@ -110,14 +109,6 @@ __all__ = ["PrimitiveSpec", "collect_primitives"]
     files["primitives/__init__.py"] = init_content
 
     return files
-
-
-def _vendor_figures_source(template_root: Path) -> dict[str, str]:
-    """Vendor the figures.py source into the child."""
-    figures_path = template_root / "src" / "figures.py"
-    if figures_path.exists():
-        return {"figures.py": figures_path.read_text()}
-    return {}
 
 
 def _vendor_infra_module(module: str, template_root: Path) -> tuple[str, str]:
@@ -237,9 +228,6 @@ def _build_tree(spec: Spec, template_root: Path) -> dict[str, str]:
     # Kernel / primitives
     tree.update(_vendor_kernel_sources(spec, template_root))
 
-    # Figures source
-    tree.update(_vendor_figures_source(template_root))
-
     # Deps
     dep_additions, _ = _resolve_deps(spec, template_root)
     tree.update(dep_additions)
@@ -248,6 +236,14 @@ def _build_tree(spec: Spec, template_root: Path) -> dict[str, str]:
     # registry shared with ``emit_file`` prevents materialization from drifting
     # from the standalone template-emission API.
     tree.update(emit_all(spec))
+    # Export the existing audited oracle tests, preserving every substantive
+    # assertion while changing only the standalone package import prefix.
+    oracle_tests = confined_path(
+        template_root, f"tests/primitives/test_primitives_{spec.primitive_domain}.py", regular=True
+    )
+    tree["tests/test_primitives.py"] = oracle_tests.read_text(encoding="utf-8").replace(
+        "from template_autopoiesis.primitives", "from primitives"
+    )
     tree["tests/__init__.py"] = ""
 
     return tree
@@ -282,6 +278,9 @@ def materialize(
     name = child_name(spec)
     child_root = out_root / name
 
+    if out_root.is_symlink() or child_root.is_symlink():
+        raise ValueError("child materialization directories must not be symlinks")
+
     if clean and child_root.exists():
         shutil.rmtree(child_root)
 
@@ -291,7 +290,7 @@ def materialize(
 
     written: dict[str, str] = {}
     for rel_path, content in tree.items():
-        abs_path = child_root / rel_path
+        abs_path = confined_path(child_root, rel_path)
         abs_path.parent.mkdir(parents=True, exist_ok=True)
         abs_path.write_text(content)
         written[rel_path] = content

@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pytest
 
-from deep_research.deep_research_adapter import (
+from template_literature_meta_analysis.deep_research.deep_research_adapter import (
     ReplayedReport,
     build_offline_request,
     default_fixture_path,
@@ -29,7 +29,7 @@ from deep_research.deep_research_adapter import (
 
 def test_adapter_imports_real_infrastructure_symbols() -> None:
     """The adapter must wire to the genuine infrastructure package, not a stub."""
-    import deep_research.deep_research_adapter as adapter
+    import template_literature_meta_analysis.deep_research.deep_research_adapter as adapter
     from infrastructure.search.deep_research import (
         DeepResearchConfig,
         DeepResearchRequest,

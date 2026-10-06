@@ -73,7 +73,7 @@ src/textbook/
 
 - [`src/visualization/plots.py`](../src/visualization/plots.py) produces every
   matplotlib figure deterministically: four **worked** figures (driven by
-  `models.py`) plus one **placeholder** per chapter, named `<part_id>_<stem>.png`
+  `models.py`) plus one canonical **model figure** per chapter, named `<part_id>_<stem>.png`
   to match the `![...](../../output/figures/<part_id>_<stem>.png)` path the scaffolded
   chapters already reference.
 - [`src/mermaid/`](../src/mermaid) reads

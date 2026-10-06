@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from manuscript.variables._logging import logger
-from manuscript.variables.context import ExtractContext
-from manuscript.variables.formatters import latex_number
-from manuscript.variables.io import count_total_references
+from template_literature_meta_analysis.manuscript.variables._logging import logger
+from template_literature_meta_analysis.manuscript.variables.context import ExtractContext
+from template_literature_meta_analysis.manuscript.variables.formatters import latex_number
+from template_literature_meta_analysis.manuscript.variables.io import count_total_references
 
 
 def _empty_advanced() -> dict[str, str]:

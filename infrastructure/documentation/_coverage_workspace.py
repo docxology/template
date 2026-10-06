@@ -49,6 +49,8 @@ _COVERAGE_GIT_ENVIRONMENT_VARIABLES = frozenset(
         "GIT_OBJECT_DIRECTORY",
         "GIT_TEMPLATE_DIR",
         "GIT_WORK_TREE",
+        "GIT_NO_REPLACE_OBJECTS",
+        "GIT_REPLACE_REF_BASE",
     }
 )
 _COVERAGE_GIT_ENVIRONMENT_PREFIXES = ("GIT_CONFIG_",)
@@ -239,6 +241,7 @@ def _coverage_git_environment() -> dict[str, str]:
     environment["GIT_CONFIG_GLOBAL"] = os.devnull
     environment["GIT_CONFIG_NOSYSTEM"] = "1"
     environment["GIT_CONFIG_SYSTEM"] = os.devnull
+    environment["GIT_NO_REPLACE_OBJECTS"] = "1"
     return environment
 
 

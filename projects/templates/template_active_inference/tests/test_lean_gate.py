@@ -18,8 +18,8 @@ def test_build_lean_when_present_must_succeed() -> None:
     assert code == 0, msg
 
 
-def test_build_lean_skips_without_lakefile(tmp_path: Path) -> None:
+def test_build_lean_blocks_without_lakefile(tmp_path: Path) -> None:
     assert not lean_project_present(tmp_path)
     code, msg = build_lean(tmp_path)
-    assert code == 0
-    assert "skipped" in msg.lower()
+    assert code == 75
+    assert "blocked" in msg.lower()

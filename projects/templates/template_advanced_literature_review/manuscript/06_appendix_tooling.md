@@ -95,6 +95,8 @@ The suite covers:
 - Deep-research offline replay (provider-neutral, fails closed)
 - Publication-extension and fixture-honesty contracts
 
-Symlinked shared modules (`src/analysis/`, `src/knowledge_graph/`,
-`src/reproducibility/`, `src/visualization/`) are covered by
-`template_literature_meta_analysis`'s own suite, not duplicated here.
+Shared analysis, knowledge-graph, reproducibility and visualization methods are
+imported from the declared `template_literature_meta_analysis` distribution.
+The Meta project's suite verifies their complete source, while Advanced's
+consumer contracts verify phase-aware integration. Installed acceptance binds
+the genuine provider wheel separately from Advanced's project wheel.

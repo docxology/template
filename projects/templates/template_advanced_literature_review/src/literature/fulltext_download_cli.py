@@ -14,23 +14,15 @@ in ``manuscript/config.yaml``.
 from __future__ import annotations
 
 import argparse
-import json
 import logging
 from pathlib import Path
 
-from template_literature_meta_analysis.config_loader import load_fulltext_config, resolve_fulltext_directory
-
 from config import CORPUS_PATH as DEFAULT_CORPUS_PATH
-from literature.corpus import Corpus
-from literature.fulltext_download import (
-    assess_fulltext_extraction,
-    download_and_extract_fulltext,
-)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse args."""
     parser = argparse.ArgumentParser(description="Download and extract open-access full text for the corpus.")
     parser.add_argument("--corpus", type=str, default=str(DEFAULT_CORPUS_PATH))
@@ -60,12 +52,12 @@ def parse_args() -> argparse.Namespace:
         default="INFO",
         choices=["DEBUG", "INFO", "WARNING", "ERROR"],
     )
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
-def main() -> None:
+def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) -> None:
     """CLI entry point."""
-    args = parse_args()
+    args = parse_args(argv)
     logging.basicConfig(
         level=getattr(logging, args.log_level),
         format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
@@ -73,78 +65,18 @@ def main() -> None:
     )
     logger = logging.getLogger("fulltext_download")
 
-    config_path = Path(args.config) if args.config else PROJECT_ROOT / "manuscript" / "config.yaml"
-    fulltext_cfg = load_fulltext_config(config_path) if config_path.exists() else {}
+    config_path = Path(args.config) if args.config else project_root / "manuscript" / "config.yaml"
+    from template_literature_meta_analysis.literature.fulltext_download_cli import run_fulltext_download
 
-    fulltext_enabled = bool(fulltext_cfg.get("enabled"))
-    unpaywall_email = fulltext_cfg.get("unpaywall_email") or ""
-    download_dir, _ = resolve_fulltext_directory(
-        project_root=PROJECT_ROOT,
-        fulltext_config=fulltext_cfg,
-        override=args.output_dir,
+    result = run_fulltext_download(
+        project_root=project_root,
+        corpus_path=Path(args.corpus),
+        config_path=config_path,
+        output_override=args.output_dir,
+        max_papers=args.max_papers,
+        logger=logger,
     )
-    download_dir.mkdir(parents=True, exist_ok=True)
-
-    if not fulltext_enabled:
-        logger.warning(
-            "project_config.fulltext.enabled is false in %s — skipping fulltext download. "
-            "Enable it and set unpaywall_email to populate %s.",
-            config_path,
-            download_dir,
-        )
-        print(str(download_dir))
-        return
-
-    if not unpaywall_email:
-        logger.warning(
-            "fulltext.enabled is true but unpaywall_email is empty — only papers with "
-            "an existing pdf_url will be downloaded (Unpaywall resolution is skipped)."
-        )
-
-    corpus = Corpus.load(Path(args.corpus))
-    papers = corpus.papers
-    if args.max_papers is not None:
-        papers = papers[: args.max_papers]
-    logger.info("Loaded %d papers for fulltext download", len(papers))
-
-    success_count = 0
-    text_count = 0
-    skip_count = 0
-
-    for paper in papers:
-        result = download_and_extract_fulltext(
-            paper,
-            download_dir,
-            unpaywall_email=unpaywall_email,
-        )
-        if result["pdf_path"] is not None:
-            success_count += 1
-            if result["text_path"] is not None:
-                text_count += 1
-            else:
-                logger.warning(
-                    "PDF downloaded for %s but text extraction failed",
-                    paper.canonical_id[:40],
-                )
-        else:
-            skip_count += 1
-
-    logger.info(
-        "Fulltext download complete: %d PDFs downloaded, %d text files extracted, "
-        "%d skipped (no OA URL or download failed)",
-        success_count,
-        text_count,
-        skip_count,
-    )
-
-    # Write an extraction-assessment JSON so downstream stages can check coverage
-    corpus2 = Corpus.load(Path(args.corpus))
-    extraction_report = assess_fulltext_extraction(corpus2, download_dir)
-    report_path = download_dir.parent / "data" / "fulltext_extraction.json"
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(report_path, "w", encoding="utf-8") as handle:
-        json.dump(extraction_report, handle, indent=2)
-    print(str(report_path))
+    print(str(result.artifact_path))
 
 
 if __name__ == "__main__":

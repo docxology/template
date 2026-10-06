@@ -61,7 +61,7 @@ Every fix flows through `infrastructure.doctor.safety.mutate(plan, state)`. That
 | Code   | Detector                            | Default fix (therapy)                              |
 | ------ | ----------------------------------- | -------------------------------------------------- |
 | DOC101 | uv on PATH                          | — (install manually)                               |
-| DOC102 | Python version >= 3.10              | — (install manually)                               |
+| DOC102 | Python version >= 3.12              | — (install manually)                               |
 | DOC103 | run.sh executable                   | `fix_make_run_sh_executable` (conservative)        |
 | DOC201 | project layout                      | —                                                  |
 | DOC202 | per-project pyproject.toml          | —                                                  |

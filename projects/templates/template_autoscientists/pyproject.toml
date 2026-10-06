@@ -7,14 +7,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_autoscientists"
-version = "1.0.2"
+version = "2.0.0"
 license = {text = "MIT"}
 description = "Deterministic reference implementation of the AutoScientists self-organizing agent coordination model"
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    "requests>=2.32.0",
+    "research-project-template==4.0.0",
     "numpy>=1.24.0",
     "matplotlib>=3.7.0",
     "pillow>=12.3.0",
@@ -23,6 +25,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "pytest-timeout>=2.4.0",
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
 ]
@@ -33,9 +36,9 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 # `--strict-markers` prevents typos; the live-agent path is opt-in only.
-addopts = "-v --tb=short --strict-markers"
+addopts = "-v --tb=short --strict-markers -m 'not requires_ollama'"
 markers = [
-    "requires_ollama: mark test as requiring a running Ollama server with the Hermes model pulled",
+    "requires_ollama: actual selected installed local model acceptance; missing capability fails",
 ]
 
 [tool.coverage.run]
@@ -49,9 +52,8 @@ omit = [
 ]
 
 [tool.coverage.report]
-# ≥90% on src/ is the enforced gate. The live Hermes path (HermesProposer.propose
-# and its lazy client wiring) is exercised only under `requires_ollama` and is
-# excluded from the gate via `pragma: no cover` on the network boundary.
+# ≥90% on src/ includes the live adapter's strict domain and real HTTP controls.
+# Actual installed-model acceptance remains explicitly opt-in.
 fail_under = 90
 show_missing = true
 precision = 2
@@ -65,3 +67,12 @@ exclude_lines = [
 
 [tool.uv]
 # Inherits workspace settings from root pyproject.toml
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.0"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["local-coordination"]
+
+[tool.uv.sources]
+research-project-template = { path = "../../..", editable = true }

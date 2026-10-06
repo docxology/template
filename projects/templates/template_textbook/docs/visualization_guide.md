@@ -17,7 +17,7 @@ of matplotlib figure:
    - `plot_linear_fit`
 2. **Chapter figures** — `generate_chapter_figures()` emits one uniquely named
    figure per chapter. Filled chapters can own source-bound plots; unfinished
-   chapters receive a neutral `<part_id>_<stem>.png` placeholder.
+   canonical chapters receive tested model figures; only new drafts receive neutral `<part_id>_<stem>.png` placeholders.
 
 `generate_all_figures(output_dir, config=None)` produces all of them. The shared
 helpers [`src/visualization/_scaffold.py`](../src/visualization/_scaffold.py)
@@ -127,3 +127,11 @@ never hard-fails. With it, the combined PDF embeds the rendered diagrams (verifi
 18 inline diagrams render into the book — one per chapter across the 12
 chapters in `manuscript/part_0/` through `manuscript/part_III/`, one in
 `appendix_authoring_guide.md`, and five in `appendix_format_gallery.md`).
+
+For the verified local macOS rendering environment, the installed Mermaid CLI can use the existing Chrome without a browser download:
+
+```bash
+PUPPETEER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" uv run python scripts/generate_diagrams.py
+```
+
+If the selected browser is missing or fails, the diagram script records source fallbacks. Inspect its PNG count before claiming graphical acceptance. Record the browser and CLI versions with rendering evidence because identical source alone does not pin the rendering environment.

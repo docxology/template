@@ -36,4 +36,4 @@ def test_stage_label_fallback_when_stage_missing(tmp_path: Path) -> None:
 
 def test_stage_label_fallback_when_repo_root_none() -> None:
     """With no repo_root, the lookup is skipped and the fallback is returned."""
-    assert stage_label("LLM Scientific Review", repo_root=None) == "LLM Scientific Review stage"
+    assert stage_label("LLM Manuscript Review", repo_root=None) == "LLM Manuscript Review stage"

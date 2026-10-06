@@ -15,7 +15,10 @@ uv run pytest tests/ --cov=src --cov-fail-under=90
 
 - **Real data testing** (no mocks) — the shipped CSV or tiny real frames.
 - **Exact numeric assertions** — inputs chosen so expected values are exact.
-- **Notebook binding** — the notebook stays in lock-step with `src.__all__`.
+- **Notebook binding** — structural imports and source hashes stay current.
+- **Notebook execution** — real fresh kernels, selected interpreter, finite
+  startup/cell/run deadlines and independent numerical comparisons; error,
+  skipped-cell, custody and stale-receipt controls must fail acceptance.
 
 ## Test Files
 
@@ -37,15 +40,15 @@ Live test count and coverage: [`docs/_generated/COUNTS.md`](../../../../docs/_ge
 
 ```mermaid
 graph TD
-    DS[test_dataset.py] --> M1[src/eda/dataset.py]
-    CL[test_cleaning.py] --> M2[src/eda/cleaning.py]
-    ST[test_statistics.py] --> M3[src/eda/statistics.py]
-    CO[test_correlation.py] --> M4[src/eda/correlation.py]
-    FG[test_figures.py] --> M5[src/eda/figures.py]
-    PP[test_project_paths.py] --> M6[src/project_paths.py]
+    DS[test_dataset.py] --> M1[src/template_eda_notebook/eda/dataset.py]
+    CL[test_cleaning.py] --> M2[src/template_eda_notebook/eda/cleaning.py]
+    ST[test_statistics.py] --> M3[src/template_eda_notebook/eda/statistics.py]
+    CO[test_correlation.py] --> M4[src/template_eda_notebook/eda/correlation.py]
+    FG[test_figures.py] --> M5[src/template_eda_notebook/eda/figures.py]
+    PP[test_project_paths.py] --> M6[src/template_eda_notebook/project_paths.py]
     SC[test_eda_analysis_script.py] --> S1[scripts/eda_analysis.py]
     GN[test_generate_measurements_data.py] --> S2[scripts/generate_measurements_data.py]
-    GN[test_generate_measurements_data.py] --> M7[src/eda/generate.py]
+    GN[test_generate_measurements_data.py] --> M7[src/template_eda_notebook/eda/generate.py]
     NB[test_notebook.py] --> N1[notebooks/eda_walkthrough.ipynb]
 ```
 

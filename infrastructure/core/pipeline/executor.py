@@ -10,22 +10,18 @@ from __future__ import annotations
 
 import logging
 import time
+import uuid
+from dataclasses import replace
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
-from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.runtime.checkpoint import CheckpointManager
-from infrastructure.core.logging.utils import (
-    get_logger,
-    setup_logger,
-    setup_root_log_file_handler,
-)
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.errors import (
     PIPELINE_STAGE_FAILED,
 )
 from infrastructure.core.pipeline.resume import PipelineResumeMixin
 from infrastructure.core.pipeline.stages import PipelineStageMixin
-from infrastructure.core.pipeline.control import load_pipeline_control_config, merge_control_configs
 from infrastructure.core.pipeline.types import (
     PipelineConfig,
     PipelineControlConfig,
@@ -34,7 +30,25 @@ from infrastructure.core.pipeline.types import (
 )
 from infrastructure.core.pipeline._stage_execution import execute_stage
 from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
-from infrastructure.core.telemetry import TelemetryCollector, TelemetryConfig
+from infrastructure.core.telemetry import TelemetryCollector
+from infrastructure.core.pipeline.observability import (
+    setup_log_file_handler,
+    close_log_file_handler,
+    initialize_telemetry,
+    write_pause_recommendations_report,
+    write_run_lessons_report,
+)
+from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
+from infrastructure.core.pipeline.plan import ExecutionPlan, resolve_execution_plan, resolve_plan_control_config
+from infrastructure.core.pipeline.plan_custody import configuration_control_identity
+from infrastructure.core.pipeline.execution_custody import execution_guard_result
+from infrastructure.core.pipeline.artifact_contracts import (
+    InputSnapshot,
+    capture_inputs,
+    contract_failure,
+    validate_completion,
+    InputContractError,
+)
 
 logger = get_logger(__name__)
 
@@ -44,7 +58,12 @@ if TYPE_CHECKING:
 
 
 class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
-    """Execute research project pipeline stages."""
+    """Execute research project pipeline stages with owned log handlers.
+
+    Construction acquires handlers. Execution releases them in a finally block.
+    Preview-only and direct-stage callers must call ``close()`` when finished;
+    closing repeatedly is safe and leaves unrelated logger handlers untouched.
+    """
 
     def __init__(self, config: PipelineConfig) -> None:
         """Initialize pipeline executor.
@@ -66,19 +85,33 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         """
         self.config = config
         self.control_config = self._resolve_control_config()
+        from copy import deepcopy
+
+        self._initial_control_config = self.control_config
+        self._initial_control_snapshot = deepcopy(self.control_config)
         self.checkpoint_manager = CheckpointManager(
-            project_name=config.project_name, repo_root=config.repo_root, project_dir=config.project_dir
+            project_name=config.project_name,
+            repo_root=config.repo_root,
+            project_dir=config.project_dir,
+            checkpoint_dir=config.runtime_output_dir / ".checkpoints",
+            output_dir=config.project_dir / "output",
         )
 
         # Log file: projects/{project_name}/output/logs/pipeline.log
         # Recreated by _setup_log_file_handler after clean stage deletes it.
-        self.log_file = config.project_dir / "output" / "logs" / "pipeline.log"
+        self.log_file = config.runtime_output_dir / "logs" / "pipeline.log"
         self._log_handler: logging.FileHandler | None = None
-        self._setup_log_file_handler()
+        self._module_log_handler: logging.FileHandler | None = None
+        self._module_log_level: int | None = None
 
-        # Telemetry collector (lazy: reads pipeline.yaml for enabled reporters)
+        # Dispose owned logging if telemetry initialization refuses configuration.
         self._telemetry: TelemetryCollector | None = None
-        self._init_telemetry()
+        try:
+            self._setup_log_file_handler()
+            initialize_telemetry(self)
+        except BaseException:
+            self.close()
+            raise
 
         # Incremental (content-hash) skip manifest. Stays ``None`` unless the
         # opt-in feature is enabled and a run loads it. DEFAULT-OFF.
@@ -86,25 +119,41 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
         self._incremental_manifest: HashManifest | None = None
         self._artifact_manifest_sealed = False
+        self._artifact_manifest_boundary_keys: frozenset[str] = frozenset()
         self._artifact_manifest_boundary_names: frozenset[str] = frozenset()
+        self.run_id = uuid.uuid4().hex
+        self.execution_plan: ExecutionPlan | None = None
+        self._plan_digest = ""
+        self._active_stage_key = ""
+        self._last_child_outcome: StageOutcome | None = None
+        self._run_deadline = 0.0
+        self._remaining_run_seconds = config.run_timeout_seconds
+        self._stage_deadline = 0.0
+        self._preview_plan: ExecutionPlan | None = None
+        self._preview_selection: tuple[object, ...] | None = None
+        self._active_stage_admission: dict[str, object] | None = None
+
+    def _explicit_plan_control(self) -> PipelineControlConfig | None:
+        """Retain deliberate caller overrides; cached YAML is never authority."""
+        if (
+            self.control_config is not self._initial_control_config
+            or self.control_config != self._initial_control_snapshot
+        ):
+            return self.control_config
+        return None
+
+    def run_result(self, results: list[PipelineStageResult]) -> RunResult:
+        """Judge completion against the compiled expected stage set."""
+        expected = self.execution_plan.expected_stage_keys if self.execution_plan else ()
+        return RunResult.from_results(results, expected)
 
     def _setup_log_file_handler(self) -> None:
-        """Set up or recreate the log file handler.
+        """Restore logging after output cleanup."""
+        setup_log_file_handler(self)
 
-        Called during init and after the clean stage (which may delete the log file).
-        Delegates root-logger file handler management to logging_utils.
-        """
-        self.log_file.parent.mkdir(parents=True, exist_ok=True)
-        setup_logger(__name__, log_file=self.log_file)
-
-        if self._log_handler is not None:
-            try:
-                self._log_handler.close()
-            except OSError as e:
-                logger.warning(f"Failed to close log handler: {e}")
-
-        self._log_handler = setup_root_log_file_handler(self.log_file)
-        logger.debug(f"Set up log file handler: {self.log_file}")
+    def close(self) -> None:
+        """Release owned log handlers; repeated calls preserve unrelated handlers."""
+        close_log_file_handler(self)
 
     def _resolve_pipeline_yaml(self) -> Path:
         """Return the pipeline YAML path to use: project-specific if it exists, else default."""
@@ -127,45 +176,11 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
     def _resolve_control_config(self) -> PipelineControlConfig:
         """Resolve advisory control config from YAML plus explicit config."""
-        if self.config.pipeline_path is not None:
-            default_yaml = self._resolve_pipeline_yaml()
-            project_yaml: Path | None = None
-        else:
-            default_yaml = self._default_pipeline_yaml()
-            candidate_project_yaml = self._project_pipeline_yaml()
-            project_yaml = candidate_project_yaml if candidate_project_yaml.exists() else None
-        loaded = load_pipeline_control_config(
-            default_yaml if default_yaml.exists() else None,
-            project_yaml=project_yaml,
-            cli_hitl_mode=self.config.hitl_mode,
-        )
-        if self.config.control != type(self.config.control)():
-            loaded = merge_control_configs(loaded, self.config.control)
-        return loaded
-
-    def _init_telemetry(self) -> None:
-        """Initialize the telemetry collector from pipeline YAML config."""
-        from infrastructure.core.pipeline.dag import load_telemetry_config
-
-        yaml_path = self._resolve_pipeline_yaml()
-
-        telem_config = TelemetryConfig()  # defaults
-        if yaml_path.exists():
-            loaded = load_telemetry_config(yaml_path)
-            if loaded is not None:
-                telem_config = loaded
-
-        output_dir = self.config.project_dir / "output"
-        self._telemetry = TelemetryCollector(
-            config=telem_config,
-            project_name=self.config.project_name,
-            output_dir=output_dir,
-        )
-        self._telemetry.capture_system_info()
+        return resolve_plan_control_config(self.config)
 
     # -- Stage list construction ---------------------------------------------
 
-    def _build_stage_list(self, include_llm: bool, skip_clean: bool) -> list[StageSpec]:
+    def _build_stage_list(self, skip_clean: bool) -> list[StageSpec]:
         """Build canonical stage list by loading the declarative pipeline DAG.
 
         Resolution order:
@@ -173,44 +188,33 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         2. repository ``infrastructure/core/pipeline/pipeline.yaml``
         3. the same ``pipeline.yaml`` installed as package data
 
-        Tag-based filtering applies ``skip_clean``, ``skip_infra``, and ``skip_llm``
-        flags without modifying the YAML source.
+        Mode and explicit clean/verification selection leave the YAML source unchanged.
         """
-        from infrastructure.core.pipeline.dag import PipelineDAG
-
-        # Resolve YAML path: project-specific → repository/package default.
-        resolved = self._resolve_pipeline_yaml()
-        if resolved == self.config.project_dir / "pipeline.yaml":
-            logger.info("Using project-specific pipeline: %s", resolved)
-        else:
-            logger.debug("Using default pipeline: %s", resolved)
-
-        dag = PipelineDAG.from_yaml(resolved)
-        exclude_tags = set(dag.opt_in_tags)
-        if not include_llm or self.config.skip_llm:
-            exclude_tags.add("llm")
-        if skip_clean:
-            dag.remove_stage("Clean Output Directories")
-        if self.config.skip_infra:
-            dag.remove_stage("Infrastructure Tests")
-        dag.filter_tags(exclude=exclude_tags)
-
-        self._merge_plugin_stages_into_dag(dag)
-        specs = dag.to_stage_specs(self)
+        self.execution_plan = resolve_execution_plan(self, skip_clean=skip_clean)
+        self._plan_digest = self.execution_plan.digest
+        self.checkpoint_manager.expected_plan_digest = self._plan_digest
+        self.checkpoint_manager.expected_source_digest = self.execution_plan.source_identity
+        self.checkpoint_manager.run_id = self.run_id
+        specs = self.execution_plan.bind(self)
         self.config.total_stages = len(specs)
-        self._artifact_manifest_boundary_names = frozenset(spec.name for spec in specs if spec.key == "validate")
+        self._artifact_manifest_boundary_keys = frozenset(
+            stage.key for stage in self.execution_plan.stages if stage.validation_boundary
+        )
+        self._artifact_manifest_boundary_names = frozenset(
+            stage.name for stage in self.execution_plan.stages if stage.validation_boundary
+        )
         return specs
 
-    def preview_stage_names(self, *, include_llm: bool, skip_clean: bool | None = None) -> tuple[str, ...]:
+    def preview_stage_names(self, *, skip_clean: bool | None = None) -> tuple[str, ...]:
         """Return the exact filtered project/plugin execution order without running it."""
         effective_skip_clean = not self.config.clean if skip_clean is None else skip_clean
-        return tuple(
-            stage.name
-            for stage in self._build_stage_list(
-                include_llm=include_llm,
-                skip_clean=effective_skip_clean,
-            )
-        )
+        specs = self._build_stage_list(skip_clean=effective_skip_clean)
+        self._preview_plan = self.execution_plan
+        self._preview_selection = self._preview_identity(effective_skip_clean)
+        return tuple(stage.name for stage in specs)
+
+    def _preview_identity(self, skip_clean: bool) -> tuple[object, ...]:
+        return (skip_clean, configuration_control_identity(self.config, self._explicit_plan_control()))
 
     # -- Plugin-stage integration (DEFAULT-OFF) ------------------------------
 
@@ -228,31 +232,30 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
     # -- Pipeline execution --------------------------------------------------
 
-    def execute_full_pipeline(self) -> list[PipelineStageResult]:
-        """Execute complete pipeline (tests -> analysis -> PDF -> validate -> copy -> LLM)."""
-        logger.info(f"Executing full pipeline for project '{self.config.project_name}'")
-        return self._run_pipeline(include_llm=True)
+    def execute_pipeline(self) -> list[PipelineStageResult]:
+        """Execute the core or live contract selected by config.mode."""
+        try:
+            selection = self._preview_identity(not self.config.clean)
+            if self._preview_plan is not None and self._preview_selection == selection:
+                return self.execute_plan(self._preview_plan)
+            self._build_stage_list(skip_clean=not self.config.clean)
+            assert self.execution_plan is not None
+            return self.execute_plan(self.execution_plan)
+        finally:
+            self.close()
 
-    def execute_core_pipeline(self) -> list[PipelineStageResult]:
-        """Execute core pipeline (tests -> analysis -> PDF -> validate -> copy)."""
-        logger.info(f"Executing core pipeline for project '{self.config.project_name}'")
-        return self._run_pipeline(include_llm=False)
+    def execute_plan(
+        self, plan: ExecutionPlan, *, deadline_monotonic: float | None = None
+    ) -> list[PipelineStageResult]:
+        """Execute a resolved plan within its budget and any supervising deadline."""
+        from infrastructure.core.pipeline.execution_session import execute_resolved_plan
 
-    def _run_pipeline(self, include_llm: bool) -> list[PipelineStageResult]:
-        """Shared implementation for execute_full_pipeline and execute_core_pipeline.
-
-        The whole run is held under a per-project output lock so a concurrent
-        pipeline/test run on the same project cannot clean or rewrite ``output/``
-        mid-flight (the cause of random-location "artifact missing" gate
-        failures). The lock is cross-process re-entrant: the test stage spawned
-        as a subprocess inherits the holder's environment marker and treats its
-        own acquisition as a no-op, so it never deadlocks against this run.
-        """
-        with project_output_lock(self.config.project_dir):
-            if self.config.resume:
-                return self._resume_pipeline()
-            skip_clean = not self.config.clean
-            return self._execute_pipeline(self._build_stage_list(include_llm=include_llm, skip_clean=skip_clean))
+        try:
+            if self._log_handler is None:
+                self._setup_log_file_handler()
+            return execute_resolved_plan(self, plan, deadline_monotonic=deadline_monotonic)
+        finally:
+            self.close()
 
     def _run_stage_and_checkpoint(
         self,
@@ -261,16 +264,34 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         results: list[PipelineStageResult],
         pipeline_start: float,
     ) -> PipelineStageResult:
-        """Execute a stage, append to results, and checkpoint on success.
-
-        When incremental mode is opt-in enabled, a stage whose declared inputs
-        are unchanged and whose declared outputs are present is SKIPPED. With the
-        feature disabled (the default) this path is never entered and behavior is
-        byte-identical to before.
-        """
+        """Execute or validate reuse, then record the source-bound result."""
+        self._remaining_run_seconds = (
+            self._run_deadline - time.monotonic() if self._run_deadline else self.config.run_timeout_seconds
+        )
+        guard = execution_guard_result(
+            config=self.config,
+            plan=self.execution_plan,
+            deadline=self._run_deadline,
+            stage_num=stage_num,
+            stage_name=stage_spec.name,
+            stage_key=stage_spec.key or stage_spec.name,
+        )
+        if guard is not None:
+            results.append(guard)
+            return guard
+        try:
+            snapshot = capture_inputs(self.config, stage_spec.contract)
+        except (OSError, ValueError) as exc:
+            result = contract_failure(stage_num, stage_spec, InputContractError(str(exc)))
+            results.append(result)
+            return result
         self._prepare_artifact_manifest_for_stage(stage_spec, results)
         skipped = self._maybe_skip_stage_incremental(stage_num, stage_spec)
         if skipped is not None:
+            guard = validate_completion(self.config, stage_spec, skipped, snapshot)
+            if guard is not None:
+                results.append(guard)
+                return guard
             results.append(skipped)
             return skipped
 
@@ -280,11 +301,37 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             stage_spec.func,
             pipeline_start,
             stage_spec=stage_spec,
+            input_snapshot=snapshot,
         )
+        guard = (
+            execution_guard_result(
+                config=self.config,
+                plan=self.execution_plan,
+                deadline=self._run_deadline,
+                stage_num=stage_num,
+                stage_name=stage_spec.name,
+                stage_key=stage_spec.key or stage_spec.name,
+                completion=True,
+            )
+            if result.stage_completed and (result.success or result.hitl_pause)
+            else None
+        )
+        guard = guard or validate_completion(self.config, stage_spec, result, snapshot)
+        if guard is not None:
+            result.success = False
+            result.exit_code = guard.exit_code
+            result.error_message = guard.error_message
+            result.hitl_pause = False
+            result.stage_completed = False
+            result.outcome = (
+                replace(result.outcome, status=guard.outcome.status, diagnostic=guard.error_message)
+                if result.outcome is not None and guard.outcome is not None
+                else guard.outcome
+            )
         results.append(result)
         if not result.success:
             logger.error(PIPELINE_STAGE_FAILED.format(stage_num=stage_num, stage_name=stage_spec.name))
-        elif result.stage_completed:
+        if result.stage_completed and (result.success or result.hitl_pause):
             self._record_incremental_hash(stage_spec)
             if not self._artifact_manifest_sealed:
                 self._write_artifact_manifest(stage_num, stage_spec)
@@ -304,6 +351,14 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         """
         if not self._incremental_enabled() or self._incremental_manifest is None:
             return None
+        if self.execution_plan and (
+            self.execution_plan.hitl_mode != "full-auto" or self.execution_plan.smart_pause_action == "pause"
+        ):
+            return None
+        if self.execution_plan and any(
+            stage.key == stage_spec.key and not stage.cacheable for stage in self.execution_plan.stages
+        ):
+            return None
         from infrastructure.core.pipeline.incremental import should_skip_stage
 
         decision = should_skip_stage(
@@ -311,8 +366,15 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             manifest=self._incremental_manifest,
             repo_root=self.config.repo_root,
             project_dir=self.config.project_dir,
-            stage_name=stage_spec.name,
+            stage_name=stage_spec.key or stage_spec.name,
             contract=stage_spec.contract,
+            execution_identity=self._plan_digest,
+            mode=self.config.mode,
+            stage_script=next(
+                (stage.script for stage in self.execution_plan.stages if stage.key == stage_spec.key), None
+            )
+            if self.execution_plan is not None
+            else None,
         )
         if not decision.skip:
             return None
@@ -323,11 +385,25 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             success=True,
             duration=0.0,
             lessons=(f"incremental skip: {stage_spec.name} inputs unchanged",),
+            stage_key=stage_spec.key or stage_spec.name,
+            outcome=StageOutcome(
+                stage_spec.key or stage_spec.name,
+                StageStatus.CACHED,
+                child_exit_code=None,
+                reason="current_content_and_outputs",
+                receipt_validated=True,
+            ),
         )
 
     def _record_incremental_hash(self, stage_spec: StageSpec) -> None:
         """Record the stage's input/output hashes (no-op when feature disabled)."""
         if not self._incremental_enabled() or self._incremental_manifest is None:
+            return
+        if stage_spec.contract.mutable_artifacts:
+            return
+        if self.execution_plan and any(
+            stage.key == stage_spec.key and not stage.cacheable for stage in self.execution_plan.stages
+        ):
             return
         from infrastructure.core.pipeline.incremental import record_stage_hash, save_hash_manifest
 
@@ -339,11 +415,13 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
                 manifest=self._incremental_manifest,
                 repo_root=self.config.repo_root,
                 project_dir=self.config.project_dir,
-                stage_name=stage_spec.name,
+                stage_name=stage_spec.key or stage_spec.name,
                 contract=stage_spec.contract,
                 upstream_output_hashes={},
+                execution_identity=self._plan_digest,
+                mode=self.config.mode,
             )
-            save_hash_manifest(self.config.project_dir / "output", self._incremental_manifest)
+            save_hash_manifest(self.config.runtime_output_dir, self._incremental_manifest)
         except OSError as exc:
             logger.warning(f"Failed to record incremental hash: {exc}")
 
@@ -354,7 +432,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             return
         from infrastructure.core.pipeline.incremental import load_hash_manifest
 
-        self._incremental_manifest = load_hash_manifest(self.config.project_dir / "output")
+        self._incremental_manifest = load_hash_manifest(self.config.runtime_output_dir)
 
     def _execute_pipeline(self, stages: list[StageSpec]) -> list[PipelineStageResult]:
         """Execute pipeline stages."""
@@ -377,32 +455,25 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         if self._telemetry is not None:
             total_duration = time.time() - pipeline_start
             self._telemetry.finalize(total_duration=total_duration)
-        self._write_pause_recommendations_report()
-        self._write_run_lessons_report(results)
-
-    def _write_pause_recommendations_report(self) -> None:
-        """Persist advisory SmartPause recommendations."""
-        try:
-            from infrastructure.core.pipeline.smart_pause import (
-                compute_pause_recommendations,
-                write_pause_recommendations,
-            )
-
-            output_dir = self.config.project_dir / "output"
-            write_pause_recommendations(output_dir, compute_pause_recommendations(output_dir))
-        except OSError as exc:
-            logger.warning(f"Failed to write pause recommendations: {exc}")
-
-    def _write_run_lessons_report(self, results: list[PipelineStageResult]) -> None:
-        """Persist explicit run lessons when possible."""
-        try:
-            from infrastructure.reporting.run_lessons import collect_run_lessons, write_run_lessons
-
-            output_dir = self.config.project_dir / "output"
-            lessons = collect_run_lessons(results, project_output_dir=output_dir)
-            write_run_lessons(output_dir, lessons)
-        except OSError as exc:
-            logger.warning(f"Failed to write run lessons report: {exc}")
+        write_pause_recommendations_report(self)
+        write_run_lessons_report(self, results)
+        if (
+            results
+            and not (results[-1].stage_completed and (results[-1].success or results[-1].hitl_pause))
+            and (self.config.resume or not results[-1].hitl_pause)
+        ):
+            # Successful new stages already save their checkpoints. A refused
+            # continuation must preserve prior evidence, including its output
+            # identity, rather than bless changes from an unsuccessful attempt.
+            # A fresh pause before any execution still needs a bound checkpoint.
+            return
+        completed: list[PipelineStageResult] = []
+        for result in results:
+            if not result.stage_completed or not (result.success or result.hitl_pause):
+                break
+            completed.append(result)
+        if completed or any(result.hitl_pause for result in results):
+            self._save_checkpoint(pipeline_start, len(completed), completed)
 
     def _write_artifact_manifest(self, stage_num: int, stage_spec: StageSpec) -> None:
         """Persist stage and aggregate artifact manifests."""
@@ -419,9 +490,11 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
                 stage_num=stage_num,
                 stage_name=stage_spec.name,
                 contract=stage_spec.contract,
+                record_output_dir=self.config.runtime_output_dir if self.config.shared_infrastructure else None,
             )
             aggregate_artifact_manifests(
-                self.config.project_dir / "output",
+                self.config.runtime_output_dir,
+                inventory_output_dir=self.config.project_dir / "output" if self.config.shared_infrastructure else None,
                 inventory_mode=output_inventory_mode_for_project(
                     self.config.repo_root,
                     self.config.project_dir,
@@ -449,13 +522,24 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         if self._artifact_manifest_sealed:
             return
         crossed_boundary = any(
-            result.success and result.stage_completed and result.stage_name in self._artifact_manifest_boundary_names
+            result.success
+            and result.stage_completed
+            and (
+                result.stage_key in self._artifact_manifest_boundary_keys
+                if result.stage_key
+                else result.stage_name in self._artifact_manifest_boundary_names
+            )
             for result in results
         )
         if crossed_boundary:
             self._artifact_manifest_sealed = True
             return
-        if stage_spec.key != "validate":
+        at_boundary = (
+            stage_spec.key == "validate" or stage_spec.key in self._artifact_manifest_boundary_keys
+            if stage_spec.key
+            else stage_spec.name in self._artifact_manifest_boundary_names
+        )
+        if not at_boundary:
             return
 
         # Seal first: a failed aggregate refresh must not fall through to a
@@ -468,7 +552,8 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             )
 
             aggregate_artifact_manifests(
-                self.config.project_dir / "output",
+                self.config.runtime_output_dir,
+                inventory_output_dir=self.config.project_dir / "output" if self.config.shared_infrastructure else None,
                 inventory_mode=output_inventory_mode_for_project(
                     self.config.repo_root,
                     self.config.project_dir,
@@ -482,7 +567,12 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         try:
             from infrastructure.core.pipeline.snapshot import create_snapshot
 
-            create_snapshot(self.config.project_dir / "output", stage_num=stage_num, stage_name=stage_spec.name)
+            create_snapshot(
+                self.config.project_dir / "output",
+                stage_num=stage_num,
+                stage_name=stage_spec.name,
+                record_output_dir=self.config.runtime_output_dir if self.config.shared_infrastructure else None,
+            )
         except OSError as exc:
             logger.warning(f"Failed to write pipeline snapshot: {exc}")
 
@@ -490,10 +580,11 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         self,
         stage_num: int,
         stage_name: str,
-        stage_func: Callable[[], bool],
+        stage_func: Callable[[], bool | StageOutcome],
         pipeline_start: float | None = None,
         *,
         stage_spec: StageSpec | None = None,
+        input_snapshot: InputSnapshot | None = None,
     ) -> PipelineStageResult:
         """Execute single pipeline stage with timing and error handling."""
         return execute_stage(
@@ -503,4 +594,5 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             stage_func,
             pipeline_start,
             stage_spec=stage_spec,
+            input_snapshot=input_snapshot,
         )

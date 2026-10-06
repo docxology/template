@@ -9,6 +9,7 @@ Focused tests under `tests/infra_tests/config/` for configuration loading and sc
 | File | Purpose |
 | --- | --- |
 | `test_secure_config_schema.py` | Secure config YAML schema validation |
+| `test_ci_gate.py` | Real workflow aggregate execution, conditional skip reasons and required-job failures |
 
 ## Verification
 

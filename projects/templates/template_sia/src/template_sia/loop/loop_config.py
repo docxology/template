@@ -50,12 +50,14 @@ def _load_yaml_mapping(path: Path) -> dict[str, Any]:
 
 
 def load_sia_settings(project_root: Path) -> SiaLoopSettings:
-    """Read the namespaced SIA block, with legacy-root compatibility."""
+    """Read the canonical namespaced SIA block."""
     config_path = project_root / "manuscript" / "config.yaml"
     raw = _load_yaml_mapping(config_path)
     project_raw = raw.get("project_config")
     project_block = project_raw if isinstance(project_raw, dict) else {}
-    sia_raw = project_block.get("sia", raw.get("sia"))
+    if "sia" in raw:
+        raise ValueError("SIA settings must be under project_config.sia")
+    sia_raw = project_block.get("sia")
     sia_block: dict[str, Any] = sia_raw if isinstance(sia_raw, dict) else {}
     return SiaLoopSettings(
         task_name=str(sia_block.get("task_name", "mini_classify")),

@@ -1,6 +1,6 @@
 ---
 name: infrastructure-reference-citation
-description: BibTeX read/write/convert that matches the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib -- see infrastructure/rendering/_pdf_combined_renderer.py). Provides BibEntry/BibDatabase models, parse_bibfile/render_database functions, paper_to_bibentry conversion from literature search results, generate_citation_key in the project's house style (firstauthorlastname+year+firsttitleword), LaTeX-special-character escape helpers, and a CLI (validate/format/convert). Use when reading or writing .bib files, exporting search results to BibTeX, or generating citation keys.
+description: BibTeX read/write/convert that matches the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib -- see infrastructure/rendering/_pdf_combined_bibliography.py). Provides BibEntry/BibDatabase models, parse_bibfile/render_database functions, paper_to_bibentry conversion from literature search results, generate_citation_key in the project's house style (firstauthorlastname+year+firsttitleword), LaTeX-special-character escape helpers, and a CLI (validate/format/convert). Use when reading or writing .bib files, exporting search results to BibTeX, or generating citation keys.
 ---
 
 # Citation Submodule

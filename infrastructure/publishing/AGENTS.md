@@ -10,16 +10,17 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 
 | Module | Role |
 | --- | --- |
-| `metadata/` (package; flat `_metadata_*.py` helpers remain) | Publication metadata extraction and reporting — the flat `metadata.py` aggregator became the `metadata/` package (`metadata_aggregate.py` + family submodules) |
+| `metadata/` (package; flat `_metadata_*.py` helpers remain) | Publication metadata pipeline and direct package exports from extraction/reporting implementations |
 | `models.py` | `PublicationMetadata`, `AuthorRecord`, `CitationStyle` |
 | `citations.py` | Citation helpers: BibTeX CLI target plus APA/MLA library helpers |
-| `package.py` | Publication package, checklist, readiness re-exports |
+| `package.py` | Publication package creation and included-file hashes; checklist, announcement, and readiness functions live in their named modules |
 | `metadata/metadata_from_config.py` | `publication_metadata_from_config`, `load_publication_release_context` — single-parse metadata + deposit context + prior DOI from `config.yaml` |
 | `abstract_plaintext.py` | Plaintext abstract + cross-link footer for Zenodo/GitHub (`build_deposit_description`, `build_github_release_body`) |
 | `config_doi.py` | `update_publication_doi`, `read_publication_doi`, `update_publication_after_zenodo_deposit` — comment-preserving DOI write-back (concept DOI preserved when `version_doi` is declared) |
 | `release/release_workflow.py` | Unified GitHub + Zenodo + DOI + re-render orchestration |
 | `release/release_workflow_zenodo.py` | Reserve-first DOI phase + `publish_zenodo_for_release` (leaf of release workflow) |
 | `root_release_contract.py` | Fail-closed root tag/package/changelog identity gate; exemplar releases stay on standalone repositories |
+| `release_acceptance.py` | Root 4+ hosted handoff admission: exact same-repository run/revision, bounded public evidence archive, aggregate receipt hash, and complete source-owned candidate profile |
 | `deposit_filename.py` | `build_deposit_filename`, `DepositPublishContext`, `deposit_context_from_config` — metadata-driven Zenodo/GitHub upload basename |
 | `publication_ledger.py` | Append-only release ledger for transmission bookends |
 | `release/release_pairing.py` | Structural GitHub ↔ Zenodo pairing validation |
@@ -40,9 +41,11 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `credential_check.py` | `PROBES`, `run_probe`, `check_all`, `format_results` — read-only, non-destructive verification that publishing credentials authenticate |
 | `upload_runner.py` | `UploadTargets`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs`, `run_uploads` — reusable multi-platform upload dispatch (dry-run by default; per-platform failure never aborts the batch) |
 | `metadata/metadata_export.py` | `build_citation_cff`, `build_codemeta` / `build_codemeta_json`, `build_zenodo` / `build_zenodo_json`, `write_metadata_files`, `write_metadata_for_config_path` — generate `CITATION.cff`, `codemeta.json`, and `.zenodo.json` from a parsed `manuscript/config.yaml`, with `paper` fields taking precedence and a complete `book`-schema fallback (optional `released_date` for byte-stable output) |
-| `standalone_mirror.py` | `sync_exemplar`, `populate_mirror_tree`, `tracked_relative_paths`, `declared_repository` — mirror a public exemplar into its standalone publication repository. Update-only (never deletes mirror-only published artifacts) and dereferences cross-project symlinks so a mirror is self-contained |
-| `metadata/metadata_export_cli.py` | `main` — `metadata-export` CLI writing the citation/archival metadata files for a project (`python -m infrastructure.publishing.metadata.metadata_export_cli metadata-export --project <name>`; the flat path remains as a shim) |
-| `metadata_package.py` | compat shim -> `infrastructure/metadata/metadata_package.py` (moved 2026-09-07 for RENDERING-LAYERING-1); publishing consumers import `infrastructure.metadata.metadata_package` directly |
+| `standalone_mirror.py` | `sync_exemplar`, `populate_mirror_tree`, `tracked_relative_paths`, `declared_repository` — mirror a roster-admitted public exemplar with retained publication evidence and explicit reviewed source removals; tracked public project/resource providers are materialized through confined reads |
+| `standalone_install_projection.py`, `standalone_install_lock.py` | Opt-in versioned standalone installation projection and independent reconstruction: exact schema-2 originals stay separate from Git-pinned installation fields; see [`standalone-install-projection.md`](../../docs/guides/standalone-install-projection.md) |
+| `publication_tree.py` | Destination-bound ownership, exact reviewed removal plans, retained quarantine and no-clobber rollback. Managed export parity is separate from preserved publication evidence and whole-tree parity; see [`publication-removals.md`](../../docs/guides/publication-removals.md) |
+| `metadata/metadata_export_cli.py` | `main` — `metadata-export` CLI writing the citation/archival metadata files for a project (`python -m infrastructure.publishing.metadata.metadata_export_cli metadata-export --project <name>`) |
+| `infrastructure/metadata/metadata_package.py` | Shared metadata package builder; publishing consumers import this canonical rendering-safe leaf directly |
 | `metadata/metadata_stage.py` | `run_metadata_package` — thin stage orchestrator: resolve project, load config, build ebook metadata, write the package into `output/metadata/` |
 | `export_bundle.py` | `export_for_publishing`, `main` — bundle a project's `output/` PDFs / ebooks / metadata into a timestamped import package with `manifest.json` and a `latest` symlink for the `docxology/publishing` repo |
 | `repro_bundle.py` | `build_repro_bundle`, `build_public_repro_bundles`, `verify_repro_bundle`, `collect_entries`, `build_manifest_dict`, `BundleEntry`, `VerifyReport` — hermetic reproduction-bundle builder/verifier emitting a deterministic `repro_manifest.json`; bundle construction first validates the source artifact manifest against its lifecycle-authorized stable inventory, and verification fails closed on any missing or changed file. `verify_repro_bundle` is implemented in `_repro_bundle_verify.py` (`collect_schema_findings`, `collect_expected_kinds`, `collect_entry_findings`, `collect_cardinality_findings`) and re-exported from `repro_bundle`. This is artifact-hash byte-reproducibility (a build/CI concept), distinct from `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s methodological/workflow completeness scoring (a paper-content concept) — cross-reference only. |
@@ -72,7 +75,7 @@ ancestors. No remote publication occurs through this export helper.
 | [`zenodo/`](zenodo/) | [Zenodo REST Deposit API](https://developers.zenodo.org/) — `ZenodoClient`, `publish_to_zenodo` |
 | [`github/`](github/) | GitHub Releases API — `create_github_release` |
 | [`arxiv/`](arxiv/) | Local arXiv tarball preparation — `prepare_arxiv_submission` |
-| [`pypi/`](pypi/) | PyPI / TestPyPI distribution — `PyPIAdapter`, `build_dist`, `upload_dist`, `check_dist`, `verify_install` |
+| [`pypi/`](pypi/) | PyPI / TestPyPI distribution — `PyPIAdapter` |
 | [`static_site/`](static_site/) | Static-site hosting adapters — `GitHubPagesAdapter`, `CloudflarePagesAdapter`, `NetlifyAdapter`, `get_adapter()` |
 | [`archival/`](archival/) | Multi-target long-horizon archival providers — `ZenodoProvider`, `IPFSPinataProvider`, `IPFSWeb3StorageProvider`, `SoftwareHeritageProvider` (proper subpackage; the flat `archival.py` shim was removed once it became the sole source of truth) |
 
@@ -82,19 +85,16 @@ ancestors. No remote publication occurs through this export helper.
 
 | Symbol | Module | Role |
 | --- | --- | --- |
-| `PyPIAdapter` | `pypi/adapter.py` | High-level orchestrator: `build_dist`, `check_dist`, `upload_dist` in one call |
-| `run_pypi_release` | `pypi/adapter.py` | Convenience one-liner with optional post-upload `verify_install` |
-| `build_dist` | `pypi/build.py` | `uv build` wrapper; cleans `dist/` before building; raises `RuntimeError` on non-zero exit |
-| `upload_dist` | `pypi/upload.py` | `twine upload` wrapper; `dry_run=True` default; never raises — returns `PyPIResult` |
-| `check_dist` | `pypi/upload.py` | `twine check` on `dist/`; returns list of FAILED / ERROR strings (empty = clean) |
-| `verify_install` | `pypi/verify.py` | Isolated venv install from the configured index URL; optional entry-point smoke test |
+| `PyPIAdapter` | `pypi/adapter.py` | Canonical prepared platform preview or exact TestPyPI transfer/retrieval/installed smoke |
+| `run_pypi_release` | `pypi/adapter.py` | Canonical platform admission preview or exact TestPyPI transfer/retrieval/installed smoke |
+| `verify_candidate_wheel` | `pypi_release.py` | Explicit original SHA-bound wheel with source-owned offline locks and real installed functional smoke |
 | `PyPIConfig` | `pypi/models.py` | `token`, `test`, `repository_url`, `timeout` |
 | `PyPIResult` | `pypi/models.py` | `status`, `package_name`, `version`, `url`, `wheel_files`, `sdist_files`, `error`, `timestamp_utc` |
 
 **Environment variables:**
 
 - `PYPI_TOKEN` — production PyPI API token (username `__token__`).
-- `TESTPYPI_TOKEN` — TestPyPI API token; used when `PyPIConfig(test=True)`.
+- `TEST_PYPI_API_TOKEN` — canonical TestPyPI token; `TESTPYPI_TOKEN` remains supported by the adapter.
 
 Both are resolved automatically from `os.environ` when `config.token` is `None`. Pass `env=` to `PyPIAdapter` for hermetic tests without real env vars.
 
@@ -107,12 +107,12 @@ adapter = PyPIAdapter(PyPIConfig(test=True))         # reads TESTPYPI_TOKEN
 result  = adapter.publish(Path("."), dry_run=False)  # real upload
 print(result.url)                                    # https://test.pypi.org/project/.../
 
-# Equivalent one-liner with post-upload verification
+# Equivalent canonical sandbox one-liner
 from infrastructure.publishing.pypi import run_pypi_release
-result = run_pypi_release(Path("."), test=True, verify=True, package_name="mylib")
+result = run_pypi_release(Path("."), test=True, dry_run=False)
 ```
 
-Flat shim `pypi_release.py` (package root) re-exports `run_test_pypi_release` for backwards compatibility; new code should import from `infrastructure.publishing.pypi`.
+`pypi_release.py` owns the canonical source-bound `run_test_pypi_release` sandbox workflow consumed by the operating adapter. `verify_candidate_wheel` verifies an explicit original wheel hash offline. A transfer or installed-smoke receipt does not establish full program readiness. Production adapter promotion stays blocked pending its separately reviewed release contract. The obsolete destructive build and unbound upload/index verification routes are retired.
 
 ### static_site/ — Static-site hosting adapters
 
@@ -120,7 +120,7 @@ Flat shim `pypi_release.py` (package root) re-exports `run_test_pypi_release` fo
 
 | Class | Module | Mechanism | Credentials |
 | --- | --- | --- | --- |
-| `GitHubPagesAdapter` | `static_site/github_pages.py` | `git push` to `gh-pages` branch | `GITHUB_TOKEN` (injected into remote URL) |
+| `GitHubPagesAdapter` | `static_site/github_pages.py` | Ordinary `git push` to a validated Pages branch; update-only content preserves prior published files | Explicit token supplied through a temporary scoped askpass helper; token-free HTTPS remote |
 | `CloudflarePagesAdapter` | `static_site/cloudflare_pages.py` | `wrangler pages deploy` CLI | `CLOUDFLARE_API_TOKEN` |
 | `NetlifyAdapter` | `static_site/netlify.py` | `netlify deploy` CLI | `NETLIFY_AUTH_TOKEN` |
 
@@ -299,15 +299,13 @@ run = run_uploads(targets, jobs=select_jobs(), commit=False)   # dry-run core up
 print(run.mode, run.ok, run.results)
 ```
 
-### Backwards-compatible shims
+### Canonical imports
 
-| Module | Role |
-| --- | --- |
-| `platforms.py` | Re-exports `publish_to_zenodo`, `create_github_release`, `prepare_arxiv_submission` |
-| `api.py` | Re-exports `ZenodoClient`, `ZenodoConfig`, `DepositionResult`, `REQUEST_TIMEOUT` |
-| `pypi_release.py` | Re-exports `run_test_pypi_release` from `pypi/` |
-
-Prefer `infrastructure.publishing.zenodo` (and sibling subpackages) for new code. Shims are retained intentionally so existing imports and tests keep working; do not add logic to shim modules.
+Import publishing clients and adapters from `zenodo/`, `github/`, `arxiv/`,
+`pypi/`, `static_site/`, `huggingface/`, `osf/`, and `archival/` directly.
+The package root exports its declared public API from these implementation homes.
+The removed `api.py` and `platforms.py` modules do not resolve; migrate their
+imports to the appropriate subpackage. Platform discovery belongs in `registry.py`.
 
 ## Public API index
 
@@ -316,7 +314,7 @@ Prefer `infrastructure.publishing.zenodo` (and sibling subpackages) for new code
 | `zenodo/` | `ZenodoClient`, `ZenodoConfig`, `DepositionResult`, `PublishResult`, `publish_to_zenodo`, `publish_new_version_to_zenodo` | caller-provided token; `sandbox=True` default |
 | `github/` | `create_github_release` | `GITHUB_TOKEN` |
 | `arxiv/` | `prepare_arxiv_submission` | — (local tarball only) |
-| `pypi/` | `PyPIAdapter`, `PyPIConfig`, `PyPIResult`, `build_dist`, `upload_dist`, `check_dist`, `run_pypi_release` | `PYPI_TOKEN` (prod), `TESTPYPI_TOKEN` (test) |
+| `pypi/` | `PyPIAdapter`, `PyPIConfig`, `PyPIResult`, `run_pypi_release` | `PYPI_TOKEN` (prod), `TESTPYPI_TOKEN` (test) |
 | `static_site/` | `GitHubPagesAdapter`, `CloudflarePagesAdapter`, `NetlifyAdapter`, `get_adapter`, `SiteDeployConfig`, `SiteDeployResult`, `SiteHosting` | `GITHUB_TOKEN`, `CLOUDFLARE_API_TOKEN`, `NETLIFY_AUTH_TOKEN` |
 | `huggingface/` | `HuggingFaceHubAdapter`, `HuggingFaceConfig`, `HuggingFaceResult`, `HFRepoType` | `HUGGINGFACE_TOKEN` / `HF_TOKEN` |
 | `osf/` | `OSFAdapter`, `OSFConfig`, `OSFResult` | `OSF_TOKEN` |
@@ -334,22 +332,20 @@ Prefer `infrastructure.publishing.zenodo` (and sibling subpackages) for new code
 | `scripts/publish/publish_project_release.py` | `run_release_workflow` (via thin script) | `--project`, `--tag`, `--repo`, GitHub + Zenodo tokens |
 | `archival_cli.py` | `main`, `_build_providers` | `--commit` for real deposits |
 | `citations.py` | `generate_citation_*`, `format_authors_apa`, `format_authors_mla` | — |
-| `pypi_release.py` | `run_test_pypi_release` (manual TestPyPI gate; not pytest) — shim for `pypi/` | `TEST_PYPI_API_TOKEN` via `scripts/publish/test_pypi.py` |
+| `pypi_release.py` | `run_test_pypi_release` (manual TestPyPI build/upload/install implementation; not pytest) | `TEST_PYPI_API_TOKEN` via `scripts/publish/test_pypi.py` |
 
 Archival Zenodo deposits use empty deposition metadata (bundle mirror). Rich metadata paths: `publish_to_zenodo` and `cli.publish_zenodo_command`.
 
-## Deprecation and shim policy (DEPRECATION-SHIM-POLICY-1)
+## Import ownership
 
-**Retire-when-zero-consumers.** A back-compat re-export surface is retained in
-this package only while at least one live importer still resolves through it:
+Publishing clients and adapters have one implementation home. Do not restore
+removed flat import modules or add aliases for renamed APIs. Update callers,
+tests, and current documentation together when an API moves.
 
-- `platforms.py` — retained re-export surface (arxiv/github/zenodo/pypi/static_site/huggingface/osf adapters). New code imports the platform subpackages directly.
-- `api.py` — retained re-export surface for Zenodo API types. New code imports `infrastructure.publishing.zenodo`.
-- `pypi_release.py` — the implementation home for TestPyPI helpers (`run_test_pypi_release`, `_display_command`, `_twine_token_env`), not a shim; import it directly.
-
-When `grep -rn "from infrastructure.publishing.platforms import\|from infrastructure.publishing.api import" ` across `infrastructure/ tests/ scripts/` returns zero hits, delete the surface in the same change that proves the zero (no deprecation stubs, no re-exports kept "just in case").
-
-**Flat shims are gone.** The 16 flat `infrastructure/publishing/*.py` back-compat shims (11 metadata/release + 5 transmission) were deleted; every historical import path now fails fast with `ModuleNotFoundError` instead of silently resolving. Import the real homes (`infrastructure.publishing.metadata.*`, `infrastructure.publishing.release.*`, `infrastructure.transmission.*`) directly. A `Backwards-compat shim` docstring in this package is a gate failure (`grep -rn "Backwards-compat shim" infrastructure/publishing/ --include='*.py'` must stay at 0).
+The prefix-family modules live in `metadata/` and `release/`; transmission
+modules live in `infrastructure.transmission`. TestPyPI workflow helpers remain
+implemented in `pypi_release.py`. Release history records previous locations
+and removal dates without making those locations current APIs.
 
 ## Future (deferred)
 
@@ -403,9 +399,9 @@ adapter = PyPIAdapter(PyPIConfig(test=True))           # reads TESTPYPI_TOKEN
 result  = adapter.publish(Path("."), dry_run=False)    # real TestPyPI upload
 print(result.url)
 
-# One-liner with verify
+# Canonical sandbox one-liner
 from infrastructure.publishing.pypi import run_pypi_release
-result = run_pypi_release(Path("."), test=False, verify=True, package_name="mylib")
+result = run_pypi_release(Path("."), test=True, dry_run=False)
 ```
 
 ### Static-site deployment
@@ -460,7 +456,7 @@ paths = write_transmission_bookends(
 # None when publication.transmission_bookends.enabled is false
 ```
 
-When enabled, [`PDFRenderer.render_combined`](../rendering/pdf_renderer.py) passes `skip_title_page=True` and `before_end_transmission=True` into [`inject_latex_preamble` / `inject_bibliography`](../rendering/_pdf_combined_renderer.py) so BEGIN is page 1 and END is the last page. Bookends embed `output/figures/transmission_integrity_strip.png` from `write_transmission_barcode_strip` and write `output/data/transmission_manifest.json`. End bookend dedupes metadata; prior rows capped at `min(max_prior_releases, 3)`.
+When enabled, [`PDFRenderer.render_combined`](../rendering/pdf_renderer.py) passes `skip_title_page=True` and `before_end_transmission=True` into [`inject_latex_preamble`](../rendering/_pdf_combined_preamble.py) and [`inject_bibliography`](../rendering/_pdf_combined_bibliography.py) so BEGIN is page 1 and END is the last page. Bookends embed `output/figures/transmission_integrity_strip.png` from `write_transmission_barcode_strip` and write `output/data/transmission_manifest.json`. End bookend dedupes metadata; prior rows capped at `min(max_prior_releases, 3)`.
 
 ```python
 from pathlib import Path
@@ -615,7 +611,6 @@ Environment variables:
 ### PyPI upload fails
 
 - Check that `PYPI_TOKEN` / `TESTPYPI_TOKEN` is set and valid.
-- Run `check_dist(dist_dir)` before uploading — returns a list of twine issues.
 - `dry_run=True` is the default; pass `dry_run=False` explicitly for real uploads.
 - `PyPIResult.status == "error"` and `PyPIResult.error` contain the failure reason without raising.
 

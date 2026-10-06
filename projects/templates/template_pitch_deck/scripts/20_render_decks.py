@@ -26,13 +26,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pitch-subject", default=None, help="Opt-in configured subject to render")
     args = parser.parse_args(argv)
 
-    from template_pitch_deck.paths import locate_repo_root
+    from template_pitch_deck.paths import data_repo_root, verify_reference_inputs
     from template_pitch_deck.render_orchestration import DeckAuditFailure, DiligenceAuditFailure, render_all_decks
 
     from infrastructure.core.exceptions import RenderingError
 
     root = project_root()
-    repo_root = locate_repo_root(root)
+    repo_root = data_repo_root(root)
 
     try:
         written = render_all_decks(root, repo_root, logger, pitch_subject=args.pitch_subject)
@@ -43,6 +43,7 @@ def main(argv: list[str] | None = None) -> int:
     for path in written:
         print(path)
     logger.info("Rendered %d deck artifact(s).", len(written))
+    verify_reference_inputs()
     return 0
 
 

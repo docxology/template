@@ -9,17 +9,12 @@ import json
 import re
 import shutil
 import subprocess
-import sys
+import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-
-if sys.version_info >= (3, 11):
-    import tomllib
-else:  # pragma: no cover - Python 3.10
-    import tomli as tomllib
 
 
 _IGNORED_NAMES = frozenset(

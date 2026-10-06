@@ -841,11 +841,11 @@ Per ISC-35/36, this template ships both a Lean 4 model
 (`formal/lean/AntProtocol.lean`) and a TLA+ specification
 (`formal/tla/AntProtocol.tla` + `AntProtocol.cfg`) of the handshake
 protocol, each wired to exactly one real runnable check inside
-`scripts/check_formal_specs.sh` — `lake build` for the Lean model, and the
+`scripts/check_formal_specs.sh` — fresh pinned Lean elaboration and axiom audits, and the
 TLC model checker (`tla2tools.jar`) for the TLA+ spec. Both checks are
 optional (they require `lake`/`elan` and a Java runtime respectively, and
-are not part of `--core-only` pipeline runs or the coverage gate on
-`src/`), but neither is decorative: the script fails non-zero if either
+are excluded from the core pipeline; full unpaid acceptance executes them with
+explicit pinned acquisition and a shared deadline), but neither is decorative: the script fails non-zero if either
 check fails, and both have been executed at least once with captured
 output (recorded in `ISA.md`'s `## Decisions`). This is a deliberately
 different evidentiary register from the rest of this paper's claims —

@@ -1,7 +1,7 @@
 # `template_textbook` Documentation
 
-A domain-neutral, modular, **fillable** scaffold for book-length technical
-works. The book's structure is data-driven from a single
+An authored book on systems, models, and reproducible research, with a
+separate scaffolding API for future drafts. The book's structure is data-driven from a single
 [`manuscript/config.yaml`](../manuscript/config.yaml); a tested Python backbone
 under [`src/`](../src) scaffolds, validates, and illustrates the manuscript; and
 thin orchestrator [`scripts/`](../scripts) wire everything into the repository's

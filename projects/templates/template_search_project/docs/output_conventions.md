@@ -24,10 +24,10 @@ flowchart TB
     MAN --> M_S04[04_conclusion.md]
     MAN --> M_S05[05_pipeline_internals.md]
     MAN --> M_S06[06_reproducibility.md]
-    MAN --> M_S01S[S01_literature_review.md<br/>optional · deep-search supplement]
+    MAN --> M_S01S[S01_literature_review.md<br/>curated authored appendix]
     MAN --> M_S99[99_references.md]
-    MAN --> M_BIB[references.bib<br/>⚠ auto-generated · do not edit]
-    MAN --> M_BIBD[references_deep.bib<br/>⚠ deep search · auto-generated]
+    MAN --> M_BIB[references.bib<br/>curated authored input]
+    MAN --> M_BIBD[references_deep.bib<br/>curated authored input]
 
     OUT --> O_CORP[corpus.json<br/>enriched corpus]
     OUT --> O_ELOG[enrichment_log.json<br/>per-fetcher status]
@@ -74,11 +74,14 @@ flowchart TB
 | `output/cache/abs/*.txt` | `infrastructure.search.literature.AbstractFetcher` | re-runs of the same fetcher |
 | `output/cache/pdf/*.{pdf,txt}` | `infrastructure.search.literature.FulltextFetcher` | re-runs of the same fetcher; LLM prompts |
 | `output/corpus.json` | `run_search_pipeline.py` (`write_corpus`) | future `LocalBackend` runs; archival |
-| `manuscript/references.bib` | `run_search_pipeline.py` | Combined PDF (Pandoc `--natbib` + BibTeX; merged with other `manuscript/*.bib`) |
-| `manuscript/references_deep.bib` | `run_deep_search.py` | Same; supplemental [`S01_literature_review.md`](../manuscript/S01_literature_review.md) |
+| `output/bibliography/references.bib` | `run_search_pipeline.py` | Hydrator projects extra-only entries into `output/manuscript/generated_search.bib` |
+| `output/bibliography/references_deep.bib` | `run_deep_search.py` | Same projection; explicit generated supplement |
 | `output/enrichment_log.json` | `run_search_pipeline.py` (via `pipeline._serialise_enrichment_log`) | debugging only |
 | `output/figures/*.png` | `y_generate_search_figures.py` | manuscript via `infrastructure.documentation.FigureManager` |
 | `output/data/manuscript_variables.json` | `z_generate_manuscript_variables.py` | debugging / tooling; same run fills `output/manuscript/` |
+| `output/manuscript/generated_search.bib` | bibliography projection | Actual renderer union beside copied curated databases |
+| `output/bibliography_projection.json` | bibliography projection | Exact generated/curated/projected hashes and key origins |
+| `output/deep_search/producer_receipt.json` | explicit deep producer | Composition source/config and artifact dependency gate; not live acceptance |
 | `output/manuscript/*` | `z_generate_manuscript_variables.py` | PDF-rendering stage (preferred manuscript root when `*.md` present); resolved `{{…}}` text, copied `config.yaml` and `manuscript/*.bib` |
 | `output/llm/per_paper/*.md` | `run_search_pipeline.py` (LLM stage) | reading report assembly |
 | `output/llm/synthesis.md` | `run_search_pipeline.py` (LLM stage) | reading report assembly |
@@ -90,8 +93,8 @@ flowchart TB
 | `output/deep_search/<keyword_slug>/papers.json` | `run_deep_search.py` | `s_compose_literature_review.py` |
 | `output/deep_search/<keyword_slug>/reading_report.md` | `run_deep_search.py` | humans |
 | `output/deep_search/<keyword_slug>/per_paper/<safe_id>.md` | `run_deep_search.py` (LLM stage) | `s_compose_literature_review.py` (extracts Contribution / Significance) |
-| `output/deep_search/composition_summary.json` | `s_compose_literature_review.py` | downstream tooling |
-| `manuscript/S01_literature_review.md` | `s_compose_literature_review.py` | combined PDF stage |
+| `output/deep_search/composition_summary.json` | `s_compose_literature_review.py` | Hydration validates producer receipt/input hashes and generated supplement bytes |
+| `output/manuscript/S02_generated_literature_review.md` | `s_compose_literature_review.py` | combined PDF stage |
 | `output/review/stage_*.json` + `summary.json` | `scripts/review` | humans, CI dashboards |
 
 ## Conventions

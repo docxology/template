@@ -63,7 +63,7 @@ def test_toc_entry_fields():
 def test_build_toc_only_includes_enabled(tmp_path):
     """build_toc must skip disabled chapters (include_disabled=False by default)."""
     config = {
-        "parts": [
+        "units": [
             {
                 "id": "p",
                 "label": "I",

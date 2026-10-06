@@ -19,7 +19,7 @@ constraints (yaml/json), distinct from `projects/` (executable code) and
 | `rules_info.py` | `RuleInfo`, `build_rule_info` |
 | `validation.py` | `validate_rule_structure` |
 | `public_scope.py` | `PUBLIC_RULE_NAMES`, `public_rule_infos`, `public_rule_names` |
-| `linking.py` | `sync_private_rule_links`, `sync_active_rule_links`, `private_rules_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
+| `linking.py` | `sync_private_rule_links`, `private_rules_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
 
 ## Discovery and validation
 

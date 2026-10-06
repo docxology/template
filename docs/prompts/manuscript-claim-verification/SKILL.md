@@ -59,7 +59,7 @@ Build a **claim inventory** first (numbered, file:line, class: number, compariso
 
 ```bash
 uv sync
-uv run python scripts/runner/execute_pipeline.py --project <project> --core-only
+uv run python scripts/runner/execute_pipeline.py --project <project> --mode core
 uv run pytest projects/<project>/tests/ --cov=projects/<project>/src --cov-fail-under=90 -q
 uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .
 uv run python -m infrastructure.validation.cli evidence projects/<project> --manuscript-dir projects/<project>/manuscript --fail-on-issues
@@ -67,7 +67,7 @@ uv run python -m infrastructure.reference.citation validate projects/<project>/m
 uv run python -m infrastructure.reference.verification verify projects/<project>/manuscript/references.bib --live --as-of-year <year> --fail-on-issues
 uv run python -m infrastructure.validation.cli markdown projects/<project>/manuscript --repo-root . --strict
 uv run python -m infrastructure.validation.cli links --repo-root .
-uv run python -m infrastructure.validation.cli pdf output/<project>/pdf/
+uv run python -m infrastructure.validation.cli pdf --project <project> --repo-root .
 uv run python -m infrastructure.validation.cli integrity output/<project>/
 uv run python -m infrastructure.validation.cli prose-quality projects/<project>/manuscript
 uv run python -m infrastructure.prose.cli report projects/<project>/manuscript

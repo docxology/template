@@ -16,13 +16,13 @@ from __future__ import annotations
 import requests
 from pytest_httpserver import HTTPServer
 
-from literature.crossref_client import (
+from template_literature_meta_analysis.literature.crossref_client import (
     CROSSREF_API_URL,
     _parse_crossref_work,
     _strip_jats,
     search_crossref,
 )
-from literature.models import Author, Paper
+from template_literature_meta_analysis.literature.models import Author, Paper
 
 
 # ---------------------------------------------------------------------------

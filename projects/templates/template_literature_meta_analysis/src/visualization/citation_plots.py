@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 
-from visualization.style import VIZ_CONFIG
+from template_literature_meta_analysis.visualization.style import VIZ_CONFIG
 
 
 def plot_citation_network(

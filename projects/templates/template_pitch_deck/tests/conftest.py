@@ -1,5 +1,6 @@
 """Pytest configuration for template_pitch_deck project tests."""
 
+import importlib.util
 import os
 import shutil
 import sys
@@ -12,22 +13,17 @@ import pytest
 os.environ.setdefault("MPLBACKEND", "Agg")
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "src"
 TESTS = Path(__file__).resolve().parent
-for path in (SRC, TESTS):
-    if str(path) not in sys.path:
-        sys.path.insert(0, str(path))
 
-# Add repo root so `infrastructure` is importable (deck_tokens.py, content_loader.py
-# import infrastructure.project.public_scope / infrastructure.rendering.slide_deck)
-# regardless of which pyproject.toml pytest picks as its rootdir/configfile —
-# a standalone single-test-file invocation resolves rootdir to this project's
-# own pyproject.toml, which only puts "." and "src" on pythonpath.
-from template_pitch_deck.paths import locate_repo_root  # noqa: E402
-
-REPO_ROOT = locate_repo_root(ROOT)
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+# SDK selection precedes own namespace registration; no DATA root is import authority.
+_bootstrap_spec = importlib.util.spec_from_file_location("pitch_test_bootstrap", ROOT / "scripts/_bootstrap.py")
+if _bootstrap_spec is None or _bootstrap_spec.loader is None:
+    raise ImportError("actual own project bootstrap is unavailable")
+_bootstrap = importlib.util.module_from_spec(_bootstrap_spec)
+_bootstrap_spec.loader.exec_module(_bootstrap)
+_bootstrap.bootstrap_project(ROOT)
+if str(TESTS) not in sys.path:
+    sys.path.insert(0, str(TESTS))
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -47,3 +43,13 @@ def _preserve_project_output(
         shutil.rmtree(output)
     if existed:
         shutil.copytree(snapshot, output, symlinks=True)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _verify_bound_source_data() -> Iterator[None]:
+    """Keep the declared DATA reference separate from SDK and own source imports."""
+    from template_pitch_deck.paths import data_repo_root, verify_reference_inputs
+
+    data_repo_root(ROOT)
+    yield
+    verify_reference_inputs()

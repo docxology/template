@@ -5,7 +5,7 @@
 - **System**: Research Project Template
 - **Role**: Standardized Research Execution Environment
 - **Type**: Core Infrastructure / Skill
-- **Version**: Default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) is authoritative. Declared / default-full / `--core-only` counts live in the generated `STAGE_SUMMARY` in [`RUN_GUIDE.md`](RUN_GUIDE.md).
+- **Version**: Default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) is authoritative. Declared / default-full / `--mode core` counts live in the generated `STAGE_SUMMARY` in [`RUN_GUIDE.md`](RUN_GUIDE.md).
 - **Signposting**: This repository is a PAI “template” node; it is intended to be self-describing via `AGENTS.md` and `docs/`.
 
 ---
@@ -111,11 +111,11 @@ projects = discover_projects(repo_root)
 ### Execute
 
 ```bash
-# Full pipeline (auto-installs uv on headless servers)
+# Full pipeline (requires explicitly prepared Python and dependencies)
 ./run.sh --pipeline
 
 # Core pipeline (no LLM stages)
-uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/runner/execute_pipeline.py --project template_code_project --mode core
 
 # Specific project
 ./run.sh --project template_code_project --pipeline
@@ -179,7 +179,7 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 - **Thin Orchestrators** — Scripts must not contain business logic.
 - **Coverage** — Infrastructure ≥ 60%, Projects ≥ 90%.
 - **Shell bootstrap** — `run.sh` / `secure_run.sh` source `scripts/shell/shell_bootstrap.sh`
-  (`ensure_uv`, sandbox env vars); conditional `uv sync` is internal to `run.sh`, not an exported env var.
+  (prepared root-Python selection and sandbox env vars); ordinary execution performs no install or dependency sync.
 
 ---
 

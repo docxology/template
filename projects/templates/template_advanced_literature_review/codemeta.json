@@ -14,7 +14,7 @@
     }
   ],
   "codeRepository": "https://github.com/docxology/template_advanced_literature_review",
-  "dateModified": "2026-07-17",
+  "dateModified": "2026-09-30",
   "keywords": [
     "exoplanet atmospheres",
     "literature review pipeline",
@@ -29,5 +29,5 @@
   ],
   "license": "https://spdx.org/licenses/CC-BY-4.0",
   "name": "A Reproducible Multi-Phase Literature-Review Pipeline for Exoplanet Atmospheres",
-  "version": "0.1.0"
+  "version": "0.2.0"
 }

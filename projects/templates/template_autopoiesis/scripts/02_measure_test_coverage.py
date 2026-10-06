@@ -13,15 +13,22 @@ per-module coverage. Runs first in ``manuscript/config.yaml``'s
 from __future__ import annotations
 
 import json
-import sys
+import importlib.util
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from template_autopoiesis.manuscript.manuscript_variables import measure_test_summary
-from template_autopoiesis.core.project_paths import project_output_dirs
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_BOOTSTRAP = importlib.util.spec_from_file_location(
+    "autopoiesis_script_bootstrap", PROJECT_ROOT / "scripts/_bootstrap.py"
+)
+if _BOOTSTRAP is None or _BOOTSTRAP.loader is None:
+    raise ImportError("actual project bootstrap is unavailable")
+_bootstrap = importlib.util.module_from_spec(_BOOTSTRAP)
+_BOOTSTRAP.loader.exec_module(_bootstrap)
+_bootstrap.bootstrap_project(PROJECT_ROOT)
 
-PROJECT_ROOT = Path(__file__).parent.parent
+from template_autopoiesis.manuscript.manuscript_variables import measure_test_summary  # noqa: E402 - actual provider selection precedes own imports
+from template_autopoiesis.core.project_paths import project_output_dirs  # noqa: E402 - actual provider selection precedes own imports
 
 
 def main():

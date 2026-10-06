@@ -19,7 +19,14 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
+import subprocess
+import sys
+from dataclasses import asdict
 from pathlib import Path
+
+import infrastructure
+import pytest
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
@@ -209,3 +216,79 @@ class TestFlipTestSyntheticPrivateDirIsInvisible:
         self._write_project(tmp_path, "projects/working", "SECRET_WORKING_ONLY")
         discovered = {p.name for p in discover_projects(tmp_path)}
         assert discovered == set(), f"Private-only repo leaked names: {sorted(discovered)}"
+
+
+@pytest.mark.parametrize("topology", ["copy", "link"])
+def test_same_public_leaf_local_alias_is_live_only_in_explicit_local_discovery(tmp_path: Path, topology: str) -> None:
+    """Prove actual alias reads, then require canonical public metric parity."""
+    root = tmp_path / "owned-data"
+    name = "template_code_project"
+    TestFlipTestSyntheticPrivateDirIsInvisible._write_project(root, "projects/templates", name)
+    canonical = root / "projects/templates" / name
+    baseline = json.loads(json.dumps([asdict(row) for row in discover_projects(root)], default=str))
+    assert len(baseline) == 1 and baseline[0]["path"] == str(canonical)
+    aliases = (root / "projects/active" / name, root / "projects" / name)
+    for alias in aliases:
+        alias.parent.mkdir(parents=True, exist_ok=True)
+        if topology == "copy":
+            shutil.copytree(canonical, alias)
+            (alias / "manuscript/config.yaml").write_text("paper:\n  title: Owned alias data\n", encoding="utf-8")
+        else:
+            alias.symlink_to(canonical, target_is_directory=True)
+    marker = tmp_path / "actual-alias-content-opened"
+    watched = [str(alias / "manuscript/config.yaml") for alias in aliases]
+    project = Path(__file__).resolve().parents[2]
+    selected_sdk = Path(infrastructure.__file__).resolve(strict=True)
+    prefix = (
+        "import importlib.util,json,os,sys;from dataclasses import asdict;from pathlib import Path;"
+        f"project=Path({str(project)!r});"
+        "spec=importlib.util.spec_from_file_location('own_template_bootstrap',project/'scripts/_bootstrap.py');"
+        "assert spec is not None and spec.loader is not None;"
+        "bootstrap=importlib.util.module_from_spec(spec);spec.loader.exec_module(bootstrap);"
+        "sdk=bootstrap.bootstrap_project(project);"
+        f"assert Path(sdk.__file__).resolve()==Path({str(selected_sdk)!r});"
+        "assert sdk.__version__=='4.0.0';"
+        "from template_template.core.introspection import discover_projects;\n"
+        f"watched={watched!r}\nmarker=Path({str(marker)!r})\n"
+        "def audit(event,args):\n"
+        "    if event=='open' and isinstance(args[0],(str,bytes)) and str(Path(os.fsdecode(args[0])).absolute()) in watched:\n"
+        "        marker.write_text('actual alias config read')\n"
+        "sys.addaudithook(audit)\n"
+    )
+
+    def run(public_only: bool) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [
+                sys.executable,
+                "-I",
+                "-c",
+                prefix
+                + f"rows=discover_projects(Path({str(root)!r}),public_only={public_only!r})\n"
+                + "print(json.dumps({'projects':[asdict(row) for row in rows]},default=str))\n",
+            ],
+            cwd=tmp_path,
+            text=True,
+            capture_output=True,
+            timeout=90,
+            check=False,
+        )
+
+    positive = run(False)
+    assert positive.returncode == 0, positive.stderr or positive.stdout
+    assert marker.read_text() == "actual alias config read"
+    marker.unlink()
+    actual = run(True)
+    assert actual.returncode == 0, actual.stderr or actual.stdout
+    assert not marker.exists()
+    observed = [json.loads(line) for line in actual.stdout.splitlines() if line.startswith("{")]
+    assert len(observed) == 1 and observed[0]["projects"] == baseline
+    assert aliases[0].exists() and aliases[1].exists()
+
+
+def test_canonical_public_workspace_redirection_is_refused(tmp_path: Path) -> None:
+    TestFlipTestSyntheticPrivateDirIsInvisible._write_project(tmp_path, "owned-local", "template_code_project")
+    canonical = tmp_path / "projects/templates/template_code_project"
+    canonical.parent.mkdir(parents=True)
+    canonical.symlink_to(tmp_path / "owned-local/template_code_project", target_is_directory=True)
+    with pytest.raises(ValueError, match="cannot be redirected"):
+        discover_projects(tmp_path)

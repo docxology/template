@@ -7,13 +7,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_methods_paper"
-version = "1.0.0"
+version = "2.0.0"
 license = {text = "MIT"}
 description = "A small, tested domain language for specifying controlled methods, with a manuscript describing the methodology itself"
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "matplotlib>=3.7.0",
     "pillow>=12.3.0",
@@ -60,3 +60,9 @@ exclude_lines = [
 
 [tool.uv]
 # Inherits workspace settings from root pyproject.toml
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.0"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = []

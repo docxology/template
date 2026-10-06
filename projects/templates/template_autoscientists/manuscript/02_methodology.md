@@ -57,6 +57,6 @@ Every mechanism is gated by a boolean in `SearchConfig`. With all *structural* c
 The loop depends only on a `Proposer` protocol — `propose(state, axes, proposer_id, avoid=frozenset()) -> Proposal`, where `avoid` is the dead-end registry's retired `(axis, direction)` pairs so a faithful proposer steers clear of them. Two *real* implementations are provided (no mocks):
 
 - **`DeterministicProposer`** — a rule-based policy that probes the next assigned axis in the direction that most recently improved it, defaulting toward the origin. It drives every rendered figure and test.
-- **`HermesProposer`** — renders the shared state to a prompt, asks a Hermes model (served by Ollama) for the next `(axis, step, rationale)` as JSON, and parses the reply, rejecting any axis outside the assigned set. Its infrastructure-LLM import is lazy, so the deterministic core tests and renders with no Ollama dependency.
+- **`LiveProposer`** — sends the current public shared state and assigned axes to an explicitly selected installed local Ollama model. It accepts only finite bounded numeric proposals, checks installed model identity across generations and both arms, and retains provider request/response bytes, state, outcomes, and budgets.
 
-Swapping one for the other is the only change needed to turn the deterministic reference run into a live agentic one.
+The explicit live comparison runs both coordinated and single-agent arms under equal ceilings. Its scoped local numerical results are separate from the deterministic manuscript figures and do not establish general scientific-agent superiority.

@@ -10,34 +10,45 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 from __future__ import annotations
 
 import os
+import uuid
+import time
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from infrastructure.core.execution_boundary import run_bounded_subprocess
+from infrastructure.core.execution_boundary import validate_hook_root
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.errors import SCRIPT_EXECUTION_FAILED
 from infrastructure.core.files.cleanup import clean_output_directories
+from infrastructure.core.files.secure_write import atomic_write_text_confined, unlink_confined
 from infrastructure.core.runtime.environment import get_python_command, get_subprocess_env
+from infrastructure.core.execution_policy import apply_execution_policy
 
 if TYPE_CHECKING:
-    from infrastructure.core.pipeline.config import PipelineConfig
+    from infrastructure.core.pipeline.types import PipelineConfig
+
+from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
+from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint
+from infrastructure.core.pipeline.stage_launch import launch_python_stage
 
 logger = get_logger(__name__)
 PIPELINE_STAGE_TIMEOUT_SECONDS = 7200.0
 
 
 def resolve_pipeline_script_path(repo_root: Path, script_name: str) -> Path:
-    """Resolve canonical/project script paths and legacy bare filenames."""
+    """Resolve explicit repository-relative scripts inside the public operating surface."""
     relative = Path(script_name)
-    if relative.is_absolute():
-        return relative
-    if relative.parts and relative.parts[0] in {"projects", "scripts"}:
-        return repo_root / relative
-    return repo_root / "scripts" / relative
+    if (
+        relative.is_absolute()
+        or ".." in relative.parts
+        or len(relative.parts) < 2
+        or relative.parts[0] not in {"projects", "scripts"}
+        or relative.suffix != ".py"
+    ):
+        raise ValueError("Stage scripts require an explicit repository-relative scripts/ or projects/ path")
+    return validate_hook_root(repo_root / relative, hook_root=repo_root)
 
 
-def build_stage_subprocess_env(repo_root: Path, project_dir: Path) -> dict[str, str]:
+def build_stage_subprocess_env(repo_root: Path, project_dir: Path, *, mode: str | None = None) -> dict[str, str]:
     """Build the shared environment for full-pipeline and single-stage scripts."""
     env = get_subprocess_env()
     env.setdefault("MPLBACKEND", "Agg")
@@ -51,7 +62,7 @@ def build_stage_subprocess_env(repo_root: Path, project_dir: Path) -> dict[str, 
     if existing:
         pythonpath_parts.append(existing)
     env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
-    return env
+    return apply_execution_policy(env, repo_root, mode=mode)
 
 
 class PipelineStageMixin(ABC):
@@ -73,7 +84,7 @@ class PipelineStageMixin(ABC):
 
     # -- Public stage methods ------------------------------------------------
 
-    def run_infrastructure_tests(self) -> bool:
+    def run_infrastructure_tests(self) -> StageOutcome:
         """Public API used by multi-project orchestrator."""
         return self._run_script(
             "scripts/pipeline/stage_01_test.py",
@@ -85,7 +96,7 @@ class PipelineStageMixin(ABC):
             self.config.project_name,
         )
 
-    def run_project_tests(self) -> bool:
+    def run_project_tests(self) -> StageOutcome:
         """Run project test suite."""
         return self._run_script(
             "scripts/pipeline/stage_01_test.py",
@@ -126,19 +137,18 @@ class PipelineStageMixin(ABC):
         Extends the base uv-compatible env with project-specific PYTHONPATH entries
         so that stage scripts can import from infrastructure/ and project src/.
         """
-        return build_stage_subprocess_env(self.config.repo_root, self.config.project_dir)
+        return build_stage_subprocess_env(self.config.repo_root, self.config.project_dir, mode=self.config.mode)
 
-    def _run_script(self, script_name: str, *args: str, allow_skip_code: bool = False) -> bool:
+    def _run_script(self, script_name: str, *args: str, allow_skip_code: bool = False) -> StageOutcome:
         """Run a script with given arguments.
 
         Args:
-            script_name: Repository-relative script path. Bare filenames remain
-                supported for project-specific legacy pipeline overrides.
+            script_name: Explicit repository-relative scripts/ or projects/ path.
             *args: Arguments to pass to script
-            allow_skip_code: If True, treat exit code 2 as success (graceful skip)
+            allow_skip_code: Allow exit 2 only with a fresh, bound reason receipt.
 
         Returns:
-            True if script succeeded (or skipped gracefully if allow_skip_code=True), False otherwise
+            Typed outcome retaining the original child exit code and validated skip evidence.
         """
         script_path = resolve_pipeline_script_path(self.config.repo_root, script_name)
 
@@ -146,26 +156,52 @@ class PipelineStageMixin(ABC):
         logger.debug(f"Running: {' '.join(cmd)}")
 
         env = self._build_stage_env()
-
-        result = run_bounded_subprocess(
-            cmd,
-            cwd=self.config.repo_root,
-            env=env,
-            timeout=PIPELINE_STAGE_TIMEOUT_SECONDS,
-            capture_output=False,
+        stage_key = str(getattr(self, "_active_stage_key", "") or script_path.stem)
+        run_id = str(getattr(self, "run_id", uuid.uuid4().hex))
+        receipt_dir = self.config.runtime_output_dir / ".pipeline" / "skip_receipts" / run_id
+        receipt_path = receipt_dir / f"{canonical_digest(stage_key)}.json"
+        atomic_write_text_confined(self.config.repo_root, receipt_path, "", mode=0o600)
+        unlink_confined(self.config.repo_root, receipt_path)
+        env.update(
+            {
+                "PIPELINE_RUN_ID": run_id,
+                "PIPELINE_STAGE_KEY": stage_key,
+                "PIPELINE_COMMAND_DIGEST": canonical_digest(cmd),
+                "PIPELINE_PLAN_DIGEST": str(getattr(self, "_plan_digest", "standalone")),
+                "PIPELINE_SKIP_RECEIPT_PATH": str(receipt_path),
+            }
         )
+        deadline = float(getattr(self, "_stage_deadline", 0.0)) or time.monotonic() + PIPELINE_STAGE_TIMEOUT_SECONDS
+        timeout = min(PIPELINE_STAGE_TIMEOUT_SECONDS, deadline - time.monotonic())
+        if timeout <= 0:
+            return StageOutcome(stage_key, StageStatus.TIMED_OUT, None, "Deadline expired before child launch")
+        launch_deadline = time.monotonic() + timeout
 
-        if result.returncode == 0:
-            return True
-
-        # Exit code 2 = graceful skip (e.g., Ollama not available)
-        if allow_skip_code and result.returncode == 2:
-            logger.info(f"Stage skipped gracefully (exit code 2): {script_name}")
-            return True
-
-        if result.timed_out:
-            error = f"timed out after {PIPELINE_STAGE_TIMEOUT_SECONDS:g}s"
-        else:
-            error = result.command_error or f"exit code {result.returncode}"
-        logger.error(SCRIPT_EXECUTION_FAILED.format(script_name=script_name, error=error))
-        return False
+        plan = getattr(self, "execution_plan", None)
+        definition = self.config.repo_root / plan.provenance if plan is not None else None
+        try:
+            identity = (
+                plan.source_identity
+                if plan is not None
+                else source_fingerprint(
+                    self.config.repo_root,
+                    self.config.project_dir,
+                    definition_path=definition,
+                )
+            )
+        except (OSError, ValueError) as exc:
+            return StageOutcome(stage_key, StageStatus.BLOCKED, None, f"Stage source custody unavailable: {exc}")
+        return launch_python_stage(
+            repo=self.config.repo_root,
+            project=self.config.project_dir,
+            argv=cmd,
+            env=env,
+            deadline=launch_deadline,
+            stage_key=stage_key,
+            run_id=run_id,
+            source_digest=identity,
+            definition=definition,
+            skip_path=receipt_path,
+            allow_skip=allow_skip_code,
+            stage_admission=getattr(self, "_active_stage_admission", None),
+        )

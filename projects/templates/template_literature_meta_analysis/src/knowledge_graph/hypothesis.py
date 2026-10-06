@@ -23,9 +23,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
-from literature.models import Paper
-from knowledge_graph.nanopublication import Assertion
-from knowledge_graph.schema import configure_hypothesis_categories
+from template_literature_meta_analysis.literature.models import Paper
+from template_literature_meta_analysis.knowledge_graph.nanopublication import Assertion
+from template_literature_meta_analysis.knowledge_graph.schema import configure_hypothesis_categories
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +95,7 @@ STANDARD_HYPOTHESES: list[Hypothesis] = [
 HYPOTHESES: list[Hypothesis] = list(STANDARD_HYPOTHESES)
 
 
-def load_hypotheses_from_config(config_path: Path) -> list[Hypothesis]:
+def load_hypotheses_from_config(config_path: Path, *, source_bytes: bytes | None = None) -> list[Hypothesis]:
     """Load hypothesis definitions from a YAML config file.
 
     Reads the ``hypothesis_definitions`` section of the config and
@@ -115,7 +115,13 @@ def load_hypotheses_from_config(config_path: Path) -> list[Hypothesis]:
         return list(STANDARD_HYPOTHESES)
 
     try:
-        with open(config_path, "r", encoding="utf-8") as f:
+        from infrastructure.search.literature.configuration_sources import ConfigTextStream
+
+        with (
+            open(config_path, "r", encoding="utf-8")
+            if source_bytes is None
+            else ConfigTextStream(config_path, source_bytes)
+        ) as f:
             data = yaml.safe_load(f) or {}
     except (OSError, IOError) as exc:
         logger.warning("Cannot read config %s: %s", config_path, exc)
@@ -172,8 +178,8 @@ def config_key_to_hypothesis_id(key: str, name: str = "") -> str:
     return _config_key_to_id(key, name)
 
 
-def configure_hypotheses(config_path: Optional[Path] = None) -> list[Hypothesis]:
-    """Set the module-level HYPOTHESES from config or defaults.
+def configure_hypotheses(config_path: Optional[Path] = None, *, source_bytes: bytes | None = None) -> list[Hypothesis]:
+    """Set the module-level HYPOTHESES from template_literature_meta_analysis.config or defaults.
 
     Call this before scoring to ensure the correct hypothesis set is
     active. If *config_path* is provided, hypotheses are loaded from
@@ -189,8 +195,10 @@ def configure_hypotheses(config_path: Optional[Path] = None) -> list[Hypothesis]
         The active HYPOTHESES list.
     """
     global HYPOTHESES
-    if config_path and Path(config_path).exists():
-        HYPOTHESES = load_hypotheses_from_config(Path(config_path))
+    if source_bytes is not None and config_path is None:
+        raise ValueError("admitted hypothesis bytes require their config source path")
+    if config_path and (source_bytes is not None or Path(config_path).exists()):
+        HYPOTHESES = load_hypotheses_from_config(Path(config_path), source_bytes=source_bytes)
     else:
         HYPOTHESES = list(STANDARD_HYPOTHESES)
 

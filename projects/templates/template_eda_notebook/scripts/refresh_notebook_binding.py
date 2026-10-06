@@ -14,13 +14,18 @@ from template_eda_notebook.eda.notebook_binding import build_binding_receipt  # 
 
 
 SOURCE_PATHS = [
+    "src/template_eda_notebook/__init__.py",
     "src/template_eda_notebook/eda/__init__.py",
     "src/template_eda_notebook/eda/cleaning.py",
     "src/template_eda_notebook/eda/correlation.py",
     "src/template_eda_notebook/eda/dataset.py",
     "src/template_eda_notebook/eda/figures.py",
     "src/template_eda_notebook/eda/notebook_binding.py",
+    "src/template_eda_notebook/eda/notebook_oracle.py",
     "src/template_eda_notebook/eda/statistics.py",
+    "src/template_eda_notebook/notebook_execution.py",
+    "src/template_eda_notebook/notebook_publication.py",
+    "scripts/execute_notebook.py",
 ]
 
 

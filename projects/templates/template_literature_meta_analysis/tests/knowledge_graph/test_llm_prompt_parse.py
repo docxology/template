@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from knowledge_graph.llm_extraction import (
+from template_literature_meta_analysis.knowledge_graph.llm_extraction import (
     _parse_llm_response,
     build_prompt,
     _hypothesis_dicts,

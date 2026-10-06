@@ -97,6 +97,9 @@ A Hermes/agentskills.io-compatible skill for this exemplar lives at
 
 ### Facts (`src/deck_tokens.py`)
 
+The loader requires only `project_config.deck`; root `deck`, mixed shapes,
+and missing or malformed namespaces fail before rendering.
+
 `build_deck_tokens(repo_root, pitch_subject="template_template")` reads:
 test count + coverage % from `docs/_generated/COUNTS.md`, DOI/version/license/
 github from the pitch subject's own `manuscript/config.yaml`, and the live
@@ -145,3 +148,14 @@ uv run python projects/templates/template_pitch_deck/scripts/30_audit_diligence.
 - [`manuscript/README.md`](manuscript/README.md)
 - [`src/README.md`](src/README.md)
 - Memory and decision records: [`../../../docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md)
+
+
+## Standalone complete-source DATA
+
+The selected `research-project-template==4.0.0` SDK supplies executable infrastructure. Complete Root tests, manuscripts, all public exemplars and native Git facts are separate DATA inputs. A standalone preparation harness must supply all three `TEMPLATE_PUBLIC_REFERENCE_ROOT`, `TEMPLATE_PUBLIC_REFERENCE_COMMIT` and `TEMPLATE_PUBLIC_REFERENCE_FINGERPRINT` fields from the admitted clean candidate. The reference must contain the initialized pinned Kmyth checkout; no tool initializes or retrieves it during admission. Never add this DATA root to `sys.path` or manufacture it inside wheel site-packages.
+
+Whole-source producers and the full own test suite admit this reference once, retain the original finite session clock, and recheck source/inventory/SDK custody before accepting results. Keep own-project outputs outside the DATA root. Existing source-checkout discovery remains available for ordinary development and genuine path-discovery controls; it grants no standalone DATA or installed-wheel acceptance. Invalid, missing or changed required DATA remains blocked by the acceptance harness, with no coverage reduction or dropped cases.
+
+After explicit SDK/dev preparation, run `python -I -m pytest tests/ --cov=src --cov-fail-under=90` from the standalone own project. This command requires the admitted DATA environment and every declared renderer/provider needed by the selected cases. A fresh complete own-suite receipt and actual installed-wheel execution remain distinct acceptance requirements.
+
+Bound infrastructure file counts use the retained native Root Git inventory from this same admitted reference; pinned submodules contribute their Root gitlink once. Ambient PATH Git output cannot supply bound counts. Ordinary unbound checkout counting retains its original Git behavior.

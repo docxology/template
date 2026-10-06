@@ -7,22 +7,22 @@ import json
 import logging
 from pathlib import Path
 
-import knowledge_graph.schema as _schema
-from config_loader import load_kg_config
-from config_validation import require_valid_config
-from knowledge_graph.extraction import extract_assertions
-from knowledge_graph.hypothesis import (
+import template_literature_meta_analysis.knowledge_graph.schema as _schema
+from template_literature_meta_analysis.config_loader import load_kg_config
+from template_literature_meta_analysis.config_validation import require_valid_config
+from template_literature_meta_analysis.knowledge_graph.extraction import extract_assertions
+from template_literature_meta_analysis.knowledge_graph.hypothesis import (
     configure_hypotheses,
     score_all_hypotheses,
     temporal_trend,
 )
-from knowledge_graph.llm_extraction import LLMConfig
-from knowledge_graph.nanopublication import (
+from template_literature_meta_analysis.knowledge_graph.llm_extraction import LLMConfig
+from template_literature_meta_analysis.knowledge_graph.nanopublication import (
     deserialize_nanopubs,
     get_processed_paper_ids,
     serialize_nanopubs_to_trig,
 )
-from literature.corpus import Corpus
+from template_literature_meta_analysis.literature.corpus import Corpus
 
 
 def _attach_hypothesis_scores_to_cross_phase_analysis(data_dir: Path, scores: dict, assertion_summary: dict) -> None:
@@ -108,15 +108,15 @@ def run_knowledge_graph_pipeline(args: argparse.Namespace, *, project_root: Path
     data_dir = output_dir / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
 
-    from config import KG_MIN_YEAR
+    from template_literature_meta_analysis.config import KG_MIN_YEAR
 
     corpus = Corpus.load(Path(args.corpus))
     papers = [p for p in corpus.papers if p.year is None or p.year >= KG_MIN_YEAR]
     logger.info("Loaded %d papers (filtered >= %d)", len(papers), KG_MIN_YEAR)
 
     # Deterministic subsampling for the LLM stage.
-    from config_loader import _load_yaml
-    from literature.sampling import load_sampling_config, sample_papers
+    from template_literature_meta_analysis.config_loader import _load_yaml
+    from template_literature_meta_analysis.literature.sampling import load_sampling_config, sample_papers
 
     raw_cfg = _load_yaml(config_path) if config_path.exists() else {}
     project_cfg = raw_cfg.get("project_config", {})

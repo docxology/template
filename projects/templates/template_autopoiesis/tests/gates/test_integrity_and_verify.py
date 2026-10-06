@@ -232,6 +232,26 @@ def test_verify_child_full_passes_clean(clean_child):
     assert names.get("schema_version_correct") is True
 
 
+@pytest.mark.parametrize("files", [[], ["analysis.py", "analysis.py"], ["../outside.py"], ["/absolute.py"], [None]])
+def test_provenance_cannot_claim_empty_duplicated_or_unconfined_source(clean_child, files):
+    path = clean_child / "provenance.json"
+    payload = json.loads(path.read_text())
+    payload["files"] = files
+    payload["tree_hash"] = tree_hash_from_content_hashes({})
+    path.write_text(json.dumps(payload))
+    assert not verify_child(clean_child).all_passed
+
+
+def test_source_symlink_ancestor_cannot_supply_child_custody(clean_child, tmp_path):
+    original = clean_child / "primitives"
+    outside = tmp_path / "outside_primitives"
+    original.rename(outside)
+    original.symlink_to(outside, target_is_directory=True)
+    report = verify_child(clean_child)
+    assert not report.all_passed
+    assert any(check.name == "all_files_present" and not check.passed for check in report.checks)
+
+
 # ---------------------------------------------------------------------------
 # verify_seal
 # ---------------------------------------------------------------------------

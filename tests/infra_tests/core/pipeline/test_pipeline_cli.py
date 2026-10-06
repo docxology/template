@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import pytest
 
 from infrastructure.core.pipeline.cli import (
     DEFAULT_PIPELINE_YAML,
@@ -49,7 +50,7 @@ class TestStageRows:
         assert rows[0]["key"] == "clean"
         names = [r["name"] for r in rows]
         assert names[0] == "Clean Output Directories"
-        assert "LLM Scientific Review" in names
+        assert "LLM Manuscript Review" in names
         assert "Ebook Generation" in names
         assert "Metadata Package" in names
         assert "Connector Search" in names
@@ -78,10 +79,12 @@ class TestStageRows:
         yaml_path.write_text(
             "stages:\n"
             "  - name: A\n"
+            "    key: a\n"
             "    method: _a\n"
             "    tags: [core]\n"
             "  - name: B\n"
-            "    script: b.py\n"
+            "    key: b\n"
+            "    script: scripts/b.py\n"
             "    depends_on: [A]\n"
             "    allow_skip: true\n"
             "    tags: [llm]\n",
@@ -90,7 +93,7 @@ class TestStageRows:
         rows = stage_rows(yaml_path)
         assert [r["name"] for r in rows] == ["A", "B"]
         assert rows[1]["optional"] is True
-        assert rows[1]["runner"] == "b.py"
+        assert rows[1]["runner"] == "scripts/b.py"
 
 
 class TestCli:
@@ -98,28 +101,28 @@ class TestCli:
         rc = pipeline_cli_main(["describe-pipeline", "--format", "json"])
         assert rc == 0
         payload = json.loads(capsys.readouterr().out)  # must parse: no log pollution on stdout
-        assert payload["version"] == 1
-        assert len(payload["stages"]) == _declared_stage_count()
+        assert payload["version"] == 2
+        assert len(payload["stages"]) == 8
+        assert payload["plan_digest"]
 
-    def test_list_stages_alias(self, capsys) -> None:
-        rc = pipeline_cli_main(["list-stages", "--format", "json"])
-        assert rc == 0
-        payload = json.loads(capsys.readouterr().out)
-        assert len(payload["stages"]) == _declared_stage_count()
+    def test_retired_alias_is_rejected(self) -> None:
+        with pytest.raises(SystemExit) as exc:
+            pipeline_cli_main(["list-stages"])
+        assert exc.value.code == 2
 
     def test_table_output(self, capsys) -> None:
-        rc = pipeline_cli_main(["describe-pipeline", "--format", "table"])
+        rc = pipeline_cli_main(["describe-pipeline", "--format", "table", "--view", "declared"])
         assert rc == 0
         out = capsys.readouterr().out
         assert "Clean Output Directories" in out
         assert f"{_declared_stage_count()} stage(s)" in out
 
     def test_core_only_flag(self, capsys) -> None:
-        rc = pipeline_cli_main(["describe-pipeline", "--format", "json", "--core-only"])
+        rc = pipeline_cli_main(["describe-pipeline", "--format", "json", "--mode", "core"])
         assert rc == 0
         payload = json.loads(capsys.readouterr().out)
         assert len(payload["stages"]) == 8
 
     def test_missing_yaml_returns_error(self, tmp_path: Path) -> None:
         rc = pipeline_cli_main(["describe-pipeline", "--yaml", str(tmp_path / "absent.yaml")])
-        assert rc == 1
+        assert rc == 2

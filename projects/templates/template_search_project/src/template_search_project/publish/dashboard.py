@@ -35,7 +35,7 @@ def load_papers(args: argparse.Namespace) -> tuple[list[dict], dict | None]:
     raw = json.loads(args.corpus.read_text())
     papers = raw["papers"] if isinstance(raw, dict) and "papers" in raw else raw
     aggregate = None
-    if args.aggregate.exists():
+    if args.aggregate is not None and args.aggregate.exists():
         agg = json.loads(args.aggregate.read_text())
         if "unique_papers" in agg:
             aggregate = agg

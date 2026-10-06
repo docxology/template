@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_search_project](https://github.com/docxology/template_search_project)
-- Config version: `0.1`
+- Intended / published version: `0.2.0 pending; last published 0.1`
 - Stable concept DOI: [10.5281/zenodo.21298894](https://doi.org/10.5281/zenodo.21298894)
 - Latest deposited version DOI: [10.5281/zenodo.21298895](https://zenodo.org/records/21298895)
 - Additional declared locations: none declared

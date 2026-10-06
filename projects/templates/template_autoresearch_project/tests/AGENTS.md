@@ -21,6 +21,8 @@ the matching source subpackage (SUBMODULAR-2).
   scaffold run against the real template repo root, pre-extrinsic phase table
 - `test_models.py` — dataclass JSON serialization
 - `test_scripts.py` — thin script smoke tests (all four scripts)
+- `test_source_provider.py` — actual commit-bound checkout admission and source
+  substitution controls for source-only standalone exports
 
 ### `manuscript/` — manuscript hydration cluster
 
@@ -65,10 +67,16 @@ uv run pytest projects/templates/template_autoresearch_project/tests/ -q
 - Keep tests deterministic and local-only.
 - Keep test files co-located with their subject module's subpackage; move a
   test only when its subject module moves.
-- The session-scoped `project_root` fixture is a repo-shaped sandbox copy,
-  including baseline outputs; tests must never write the tracked public tree.
+- The session-scoped `project_root` fixture is a repo-shaped sandbox copy;
+  tests must never write the tracked public tree. Tests consuming generated
+  output request `autoresearch_loop_result` explicitly.
 - Do not add network, LLM, generated-code execution, or autonomous approval
   dependencies.
 - Prefer exercising real project files over mocked objects.
 - Use the `repo_root` fixture when a test needs the real infrastructure
   `pipeline.yaml`; use `tmp_path` for smaller isolated negative controls.
+- Outside the canonical monorepo layout, nominate an actual clean platform
+  source checkout with `TEMPLATE_AUTORESEARCH_SOURCE_ROOT` and its exact commit
+  in `TEMPLATE_AUTORESEARCH_SOURCE_COMMIT`. Preserve source bytes throughout
+  the suite. This supplies source inputs without altering installed-wheel
+  origin assertions or the project's dependency lock.

@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from reproducibility.models import (
+from template_literature_meta_analysis.reproducibility.models import (
     NodeType,
     WorkflowNode,
     WorkflowEdge,

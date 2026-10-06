@@ -36,6 +36,8 @@ imports keep working.
 | [`analysis.py`](analysis/analysis.py) | Custom `scripts/review` stage hooks; `validate_bibliography_completeness` unions all `manuscript/*.bib`; `validate_variables_resolved` prefers `output/manuscript/` when present |
 | [`report.py`](analysis/report.py) | `write_reading_report` |
 | [`review_report.py`](analysis/review_report.py) | `generate_review_report` — inventory/documentation/bibliography audits, body for `scripts/zz_generate_review_report.py` |
+| [`provider_paths.py`](analysis/provider_paths.py) | Actual selected platform origin and shared absolute-import inventory helpers |
+| [`review_execution.py`](analysis/review_execution.py) | Shared guardian boundaries, resolved review stages, whole-review deadline, and truthful final outcomes |
 
 ### `publish/` — figures, dashboard, config, manuscript variables
 

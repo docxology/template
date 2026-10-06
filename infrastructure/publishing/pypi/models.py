@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -12,7 +13,7 @@ class PyPIConfig:
     ``test=True`` routes all operations to test.pypi.org.
     ``token`` may be left None at construction time; the adapter resolves it
     from the environment (``PYPI_TOKEN`` / ``TESTPYPI_TOKEN``) before upload.
-    ``timeout`` is passed to twine-equivalent network operations.
+    ``timeout`` bounds the whole canonical operation, including build and installed smoke.
     """
 
     token: str | None = None
@@ -44,7 +45,13 @@ class PyPIResult:
     - ``"ok"``      — upload completed successfully.
     - ``"error"``   — something failed; see ``error``.
     - ``"dry-run"`` — skipped intentionally; would have uploaded.
-    - ``"skipped"`` — prerequisite missing (e.g. no dist files to upload).
+    - ``"skipped"`` — a low-level transfer was not performed.
+    - ``"blocked"`` — a required prepared tool, credential, or authority is missing.
+    - ``"timed_out"`` — the whole canonical operation exceeded its deadline.
+    - ``"fail"`` — executed canonical acceptance failed.
+
+    Successful operation status does not authorize platform release. The optional
+    ``receipt`` states its transfer, preview, or installed-smoke scope.
     """
 
     status: str  # "ok" | "error" | "dry-run" | "skipped"
@@ -55,6 +62,7 @@ class PyPIResult:
     sdist_files: tuple[str, ...] = field(default_factory=tuple)
     error: str | None = None
     timestamp_utc: str | None = None
+    receipt: dict[str, Any] | None = None
 
     @property
     def ok(self) -> bool:

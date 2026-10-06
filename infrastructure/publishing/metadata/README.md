@@ -10,7 +10,7 @@ metadata_stage.run_metadata_package(...)
 metadata_export.write_metadata_files(config, out_dir)
 ```
 
-The flat `metadata_*.py` module paths remain as silent backwards-compat shims,
-and the historical aggregate symbols (`extract_publication_metadata`,
-`calculate_metadata_complexity_score`, ...) still resolve from
-`infrastructure.publishing.metadata` itself. See [`AGENTS.md`](AGENTS.md).
+Import the nested `metadata.*` modules directly. The package exports
+`extract_publication_metadata`, `calculate_metadata_complexity_score`, and the
+other public metadata functions directly from their implementation modules.
+See [`AGENTS.md`](AGENTS.md).

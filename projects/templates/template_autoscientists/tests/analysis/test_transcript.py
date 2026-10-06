@@ -45,3 +45,14 @@ def test_transcript_digest_changes_on_revision_drift() -> None:
     changed = dict(payload)
     changed["revision"] = "fixture-2026-08-09-v2"
     assert transcript_digest(payload) != transcript_digest(changed)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [("revision", None), ("revision", []), ("mode", None), ("mode", "other"), ("role", None), ("content", ["x"])],
+)
+def test_null_or_container_fields_are_not_coerced_into_evidence(field, value) -> None:
+    payload = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    target = payload["entries"][0] if field in {"role", "content"} else payload
+    target[field] = value
+    assert validate_transcript(payload)

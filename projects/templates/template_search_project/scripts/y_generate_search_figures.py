@@ -3,15 +3,15 @@
 
 Reads ``output/search/results.json`` (produced by
 ``run_search_pipeline.py``), generates three PNG figures via the
-``src.figures`` module, and prints each output path on stdout for the
-infrastructure manifest collector.
+``template_search_project.publish.figures`` module, and prints each output
+path on stdout for the infrastructure manifest collector.
 
 This script is a **thin orchestrator**: every plotting decision lives in
-``src/figures.py``.
+``src/template_search_project/publish/figures.py``.
 
 Exit codes:
     0   figures written successfully
-    2   no search results available — graceful skip (allow_skip stage trick)
+    2   no search results available — producer skip; required analysis rejects it
 """
 
 from __future__ import annotations
@@ -25,7 +25,6 @@ _project_root = Path(__file__).resolve().parent.parent
 _repo_root = _project_root.parents[2]
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
-sys.path.insert(0, str(_project_root / "src" / "template_search_project"))
 sys.path.insert(0, str(_repo_root))
 
 from infrastructure.core.logging.utils import get_logger
@@ -57,7 +56,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    project_root = Path(args.project_root).resolve()
+    project_root = Path(args.project_root).absolute()
     results_path = Path(args.results).resolve() if args.results else project_root / "output" / "search" / "results.json"
     figures_dir = Path(args.figures_dir).resolve() if args.figures_dir else project_root / "output" / "figures"
 

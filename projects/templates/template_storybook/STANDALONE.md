@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_storybook](https://github.com/docxology/template_storybook)
-- Config version: `0.1.0`
+- Intended / published version: `0.2.0 pending; last published 0.1.0`
 - Stable concept DOI: [10.5281/zenodo.21176000](https://doi.org/10.5281/zenodo.21176000)
 - Latest deposited version DOI: [10.5281/zenodo.21176001](https://zenodo.org/records/21176001)
 - Additional declared locations: [github](https://github.com/docxology/template_storybook/releases/tag/v0.1.0), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_storybook), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmPcB1mTMZQb541ZsmwDwc6rQgSTLR4BGYefdTLsj1s5Qy), [netlify](https://6a47fd2233010f4eb138cdcd--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/xbajh/), [pypi](https://test.pypi.org/project/template-storybook/0.1.0/), [software_heritage](https://archive.softwareheritage.org/api/1/origin/save/git/url/https://github.com/docxology/template_storybook/)

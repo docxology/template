@@ -43,5 +43,4 @@ paths = generate_metadata_package(meta, output_dir=Path("output/metadata"))
 - Rendering may import this package directly; the layering guard
   (`tests/infra_tests/rendering/test_layering.py`) enforces zero
   rendering->publishing edges with an empty allowlist.
-- Historical paths `infrastructure.publishing.repository_metadata` and
-  `infrastructure.publishing.metadata_package` remain as re-export shims.
+- Consumers import repository and ebook metadata from `infrastructure.metadata`.

@@ -90,23 +90,23 @@ def dispatch_menu_key(
 ) -> int:
     """Dispatch one interactive menu key."""
     if key == "8":
-        return runner.run(PipelineInvocation(project=project, core_only=True))
+        return runner.run(PipelineInvocation(project=project, mode="core"))
     if key == "9":
-        return runner.run(PipelineInvocation(project=project))
+        return runner.run(PipelineInvocation(project=project, mode="live"))
     if key == "f":
-        return runner.run(PipelineInvocation(project=project, skip_infra=True))
+        return runner.run(PipelineInvocation(project=project, skip_infra=True, mode="live"))
     if key in {"a", "b", "c", "d"}:
         return runner.run_multi(
             MultiProjectInvocation(
                 skip_infra=key in {"b", "d"},
-                skip_llm=key in {"c", "d"},
+                mode="core" if key in {"c", "d"} else "live",
             )
         )
     if key in MENU_KEY_TO_STAGE:
         stage = MENU_KEY_TO_STAGE[key]
         if stage_runner is not None:
             return int(stage_runner(stage, project, repo_root))
-        return int(execute_single_stage(stage, project, repo_root))
+        return int(execute_single_stage(stage, project, repo_root, mode="live" if key in {"6", "7"} else "core"))
     return 1
 
 

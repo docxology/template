@@ -10,7 +10,7 @@ used by the repository's root wrappers and maintenance workflows.
 | Script | Purpose |
 |--------|---------|
 | `bash_utils.sh` | Shared shell helpers for backup/health scripts and integration tests |
-| `shell_bootstrap.sh` | Shared `uv` bootstrap and sandbox env vars; sourced by `run.sh` / `secure_run.sh` |
+| `shell_bootstrap.sh` | Finite nonce-bound prepared CPython/venv admission and sandbox env vars; sourced by `run.sh` / `secure_run.sh` |
 | `setup-system-deps.sh` | One-shot installer for the external toolchain: pandoc, XeLaTeX + missing LaTeX packages, uv (macOS/Debian; idempotent, `--check` verifies without installing) |
 | `ci_local.sh` | Local CI reproduction (`act` when available, else a documented fail-closed direct-command subset) |
 | `health-check.sh` | Pre-flight system health check (Python, uv, pandoc, xelatex, disk, Docker, repo) |

@@ -32,19 +32,32 @@ uv run python scripts/pipeline/stage_04_validate.py --project templates/template
 uv run python scripts/pipeline/stage_05_copy.py --project templates/template_literature_meta_analysis
 ```
 
+For an independent source checkout, first prepare its own environment with the
+actual platform 4.0.0 wheel and this project's `dev` extra as described in
+[`STANDALONE.md`](../../../STANDALONE.md). These candidates are unreleased;
+do not assume they are available from a package index. Run from the standalone
+checkout's root:
+
+```bash
+python -I -m pytest tests/ --cov=src --cov-fail-under=90
+```
+
+The standalone command uses its own `pyproject.toml`; it requires no Root-stage
+script. The Stage-01 command above provisions dependencies for monorepo work.
+
 ## Pitfalls
 
 - **Keep scripts thin.** Business logic belongs in `src/` or shared
   `infrastructure/`, not in `scripts/`.
 - **No mocks.** All tests must use real data, real files, and real
   computation.
-- **Use the Stage-01 test command from the monorepo root.** A direct root
-  `pytest` invocation does not provision this exemplar's scientific
-  dependencies.
+- **Select the documented command for the checkout.** Use Stage 01 from the
+  monorepo root, or the configured pytest command from the prepared standalone
+  environment. Both require this exemplar's declared scientific dependencies.
 - **Outputs are disposable.** Never hand-edit `output/` — regenerate from
   source and config.
-- **Run from the repo root.** Commands assume the template monorepo root
-  as working directory unless the child `AGENTS.md` states otherwise.
+- **Use the correct working directory.** Stage commands run from the monorepo
+  root; standalone pytest runs from the exemplar root.
 
 ## Optional gap-filler search (Monid)
 

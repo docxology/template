@@ -28,13 +28,13 @@ review:
   - name: bibliography_completeness
     enabled: true
     stage_type: custom
-    module: src.analysis
+    module: template_search_project.analysis.analysis
     function: validate_bibliography_completeness
     description: Ensure every [@key] in manuscript has a BibTeX entry
   - name: variables_resolved
     enabled: false
     stage_type: custom
-    module: src.analysis
+    module: template_search_project.analysis.analysis
     function: validate_variables_resolved
     description: Check {{UPPER_CASE}} markers fully substituted
   - name: output_integrity
@@ -47,23 +47,19 @@ review:
   - name: test_suite_health
     enabled: false
     stage_type: custom
-    module: infrastructure.testing.cli
+    module: template_search_project.analysis.analysis
     function: run_project_tests
-    args:
-    - --project
-    - .
-    - --cov
     description: Run pytest and enforce 90% coverage minimum
   - name: infrastructure_usage
     enabled: true
     stage_type: custom
-    module: src.analysis
+    module: template_search_project.analysis.analysis
     function: audit_infrastructure_imports
     description: Audit that src/ modules properly leverage infra
   - name: determinism_check
     enabled: true
     stage_type: custom
-    module: src.analysis
+    module: template_search_project.analysis.analysis
     function: check_determinism_artifacts
     description: Verify cache present, seed pinned, temperature=0
   thresholds:
@@ -72,7 +68,7 @@ review:
     allow_unresolved_variables: false
     max_missing_refs: 0
   output:
-    dir: output/review
+    dir: output/.pipeline/review
     stages_json: stages.json
     summary_json: summary.json
     report_md: report.md

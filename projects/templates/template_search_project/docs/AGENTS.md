@@ -13,9 +13,9 @@ Project-local agent-facing documentation. This is the operational rulebook for A
 | [`agent_instructions.md`](agent_instructions.md) | Behavioural constraints for AI agents (read-first priority) — 7 rules + verification checklist |
 | [`architecture.md`](architecture.md) | Two-layer compliance, module-responsibilities table, idempotency contract |
 | [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock + LLM-as-callable; live counts in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md) |
-| [`rendering_pipeline.md`](rendering_pipeline.md) | Five-phase flow (search → compose → figures+vars → PDF → review); `config.yaml` controls; troubleshooting |
+| [`rendering_pipeline.md`](rendering_pipeline.md) | Explicit core allowlist, opt-in deep composition, hydrated bibliography/S02 dependencies, rendering |
 | [`style_guide.md`](style_guide.md) | 7 rules: zero-mock, infrastructure delegation, thin orchestrator, show-not-tell, explicit paths, dataclass standards, error messages |
-| [`syntax_guide.md`](syntax_guide.md) | Pandoc-crossref labels, `{{TOKEN}}` registry from `src/publish/manuscript_variables.py`, two-bibliography citation rule |
+| [`syntax_guide.md`](syntax_guide.md) | Pandoc-crossref labels, `{{TOKEN}}` registry from `src/template_search_project/publish/manuscript_variables.py`, curated/generated citation rule |
 | [`faq.md`](faq.md) | Architecture, testing, search, LLM, manuscript, common-pitfall answers |
 | [`quickstart.md`](quickstart.md) | Six-step first-run walkthrough |
 | [`output_conventions.md`](output_conventions.md) | Producer / consumer mapping for every artifact |
@@ -37,37 +37,23 @@ This sequence is intentional. Each document provides context the next assumes:
 
 **Read-first protocol.** Skipping `agent_instructions.md` is the most common source of errors: agents who skip it tend to introduce mocks (violating Rule 1 of `style_guide.md`), import `infrastructure.rendering` or `infrastructure.scientific` from `src/` (violating Rule 3 of `agent_instructions.md`), or hardcode numbers in manuscript prose (violating Rule 4 of `style_guide.md`).
 
-**Architecture isolation.** `src/pipeline/pipeline.py` and `src/search/deep_search.py` are the only modules that touch `infrastructure.search.*`. `src/pipeline/synthesis.py` takes a duck-typed `llm: Callable[[str], str]` argument so tests pass deterministic local functions and runtime callers pass the adapter from `src/pipeline/llm_runtime.py`. Every other `src/` module is pure.
+**Declared layer boundary.** `manuscript/layer_contract.yaml` admits exact generic platform adapters, including mature confined I/O and source custody. Domain algorithms remain project-owned; synthesis accepts a real callable. Controlled functions exercise behavior without establishing actual model acceptance.
 
 **Zero-mock enforcement.** No `unittest.mock`, `MagicMock`, `@patch`, or `create_autospec` anywhere in `tests/`. The LLM is tested by passing a Python function — never a mock — to `synthesise_per_paper` / `synthesise_corpus`.
 
-**Show-not-tell.** Manuscript prose must reference concrete file paths and APIs. A reader of `02_methodology.md` should be able to open `src/pipeline/pipeline.py` and find the named function within seconds.
+**Show-not-tell.** Manuscript prose must reference concrete file paths and APIs. A reader of `02_methodology.md` should be able to open `src/template_search_project/pipeline/pipeline.py` and find the named function within seconds.
 
-**Two bibliographies.** `manuscript/references.bib` (single-query) and `manuscript/references_deep.bib` (deep-search) coexist; Pandoc `--natbib` merges every `manuscript/*.bib` at render time.
+**Curated and generated bibliographies.** Authored `manuscript/*.bib` remains unchanged. Producers write `output/bibliography/*.bib`; hydration retains curated definitions, rejects meaningful conflicts, and projects additional keys into `output/manuscript/generated_search.bib`. Renderers consume the hydrated union.
 
-**Alphabetical script order.** `run_*` < `s_*` < `y_*` < `z_*` < `zz_*` is enforced by `tests/pipeline/test_script_order.py`. The composer must run before the resolver.
+**Explicit execution order.** Core analysis runs search, figures, hydration, review report, and dashboard through the five-script allowlist. Deep search and composition require direct opt-in execution. Composition binds the actual producer receipt/input bytes/S02 SHA; hydration refuses stale or manual substitutions.
 
 ## Verification Commands
 
-Run all four before submitting any change:
-
-```bash
-# 1. Tests pass and coverage gate is met
-uv run pytest projects/templates/template_search_project/tests/ \
-    --cov=projects/templates/template_search_project/src \
-    --cov-fail-under=90 -q
-
-# 2. No mocks anywhere in tests/
-grep -rE "unittest\.mock|MagicMock|@patch|create_autospec" \
-    projects/templates/template_search_project/tests/ || echo "Clean"
-
-# 3. src/ stays in its lane (no rendering/reporting/scientific imports)
-grep -rE "from infrastructure\.(rendering|reporting|scientific)" \
-    projects/templates/template_search_project/src/ || echo "Clean"
-
-# 4. The configurable review CLI lists the nine stages
-cd projects/templates/template_search_project && uv run python scripts/review --list
-```
+Run the complete project suite separately with its declared 90 percent branch
+coverage floor, followed by public Ruff/type, no-mocks, layer-contract, and
+relevant domain controls. The optional project review CLI is `scripts/review
+--list`. See [`testing_philosophy.md`](testing_philosophy.md) for actual commands
+and evidence boundaries. Earlier count or coverage snapshots are historical.
 
 ## Contracts
 

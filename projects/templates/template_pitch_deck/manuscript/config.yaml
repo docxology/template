@@ -10,10 +10,10 @@
 paper:
   title: "template_pitch_deck: Reproducible, Validated Pitch-Deck Generation"
   subtitle: "Short/Medium/Long PDF+PPTX decks from one token-resolved content source"
-  version: "1.0.0"
+  version: "2.0.0"
   date: "2026-07-08"
 
-# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
+# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/_metadata_extraction.py`)
 authors:
   - name: "Daniel Ari Friedman"
     orcid: "0000-0001-6232-9096"
@@ -21,7 +21,7 @@ authors:
     affiliation: "Active Inference Institute"
     corresponding: true
 
-# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
+# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/zenodo/publish.py`)
 # Real Zenodo deposit + standalone GitHub repo, both published 2026-07-09 —
 # see the bottom of this file for the actual `publication:` block (a prior
 # release-tooling run appended a second `publication:` key here rather than
@@ -88,6 +88,10 @@ project_config:
       highlight_2: "#B3131A"
       highlight_3: "#B3131A"
 publication:
+  release_status: "unreleased"
+  intended_version: "2.0.0"
+  platform_version: "4.0.0"
+  last_published_version: "1.0.0"
   doi: "10.5281/zenodo.21281509"
   version_doi: "10.5281/zenodo.21281510"
   version_record: "https://zenodo.org/records/21281510"

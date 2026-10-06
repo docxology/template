@@ -178,7 +178,7 @@ jobs:
         AUTHOR_ORCID: ${{ secrets.AUTHOR_ORCID }}
         PROJECT_TITLE: ${{ secrets.PROJECT_TITLE }}
       run: |
-        uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+        uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 
     - name: Upload PDFs
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -236,7 +236,7 @@ jobs:
         uv sync
 
     - name: Generate PDFs
-      run: uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+      run: uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 
     - name: Create release package
       run: |

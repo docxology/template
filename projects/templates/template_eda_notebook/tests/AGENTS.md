@@ -3,7 +3,7 @@
 ## Overview
 
 The `tests/` directory contains the zero-mock test suite for the EDA library in
-`src/eda/`, the thin analysis script, and the walkthrough notebook. Every test
+`src/template_eda_notebook/eda/`, the thin analysis script, and the walkthrough notebook. Every test
 uses the shipped CSV fixture (`data/measurements.csv`) or a tiny real DataFrame —
 no mocks, no patched I/O.
 
@@ -72,6 +72,17 @@ These classes exist in `tests/` (keep in sync with `docs/testing_philosophy.md`
 - `test_eda_analysis_script.py`: `TestEdaAnalysisScript`
 - `test_generate_measurements_data.py`: `TestGenerateMeasurements`, `TestGenerateMeasurementsScript`
 - `test_notebook.py`: `TestNotebookStructure`, `TestNotebookSrcBinding`
+- `test_notebook_execution.py`: `TestNotebookExecution`, `TestNotebookOracle`
+
+The execution controls run real NBClient kernels and independently compare
+observed computations with NumPy/Pandas. Errors, stale saved outputs, skipped
+cells, numerical disagreement, input mutation and startup/cell/run deadlines
+must fail acceptance. The canonical script also kills worker descendants at
+its outer deadline and removes stale success receipts. Test and script startup
+select the actual declared SDK before exposing own source. Cache controls copy
+that provider's genuine source and metadata, restore exact original source bytes,
+and preserve old caches; the fixture is source/cache evidence, while the installed
+matrix separately verifies real wheel installation and complete RECORD custody.
 
 ## Zero-mock policy
 

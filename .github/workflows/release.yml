@@ -7,11 +7,21 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Tag name to create release for (e.g. v3.1.0)"
+        description: "Existing root tag to release (e.g. v4.0.0)"
         required: true
+      acceptance_run_id:
+        description: "Successful exact-tag-SHA run that uploaded required acceptance (root 4+)"
+        required: false
+      acceptance_artifact_id:
+        description: "Exact platform-required-acceptance artifact ID from that run (root 4+)"
+        required: false
+      acceptance_receipt_sha256:
+        description: "SHA256 of output/readiness/release-candidate/receipt.json (root 4+)"
+        required: false
 
 permissions:
   contents: write  # Required to create the GitHub Release
+  actions: read  # Read only the explicitly selected acceptance run/artifact
 
 # Serialize releases per ref; never cancel an in-flight release (a half-cancelled
 # release is worse than a queued one).
@@ -60,6 +70,94 @@ jobs:
           fi
 
       - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14"
+
+      - name: Install supported Python 3.12
+        id: python312
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Install supported Python 3.13
+        id: python313
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.13"
+
+      - name: Select supported Python 3.14
+        id: python314
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.14"
+
+      - name: Bind tagged candidate build policy
+        run: |
+          set -euo pipefail
+          candidate=$(git -C "$GITHUB_WORKSPACE" rev-parse HEAD)
+          epoch=$(git -C "$GITHUB_WORKSPACE" show -s --format=%ct "$candidate")
+          {
+            echo "SOURCE_DATE_EPOCH=$epoch"
+            echo "TEMPLATE_BUILD_EPOCH_SOURCE=git:$candidate"
+            echo "TEMPLATE_EXECUTION_MODE=core"
+            echo "TEMPLATE_DETERMINISTIC=1"
+          } >> "$GITHUB_ENV"
+
+      - name: Prepare locked release environment
+        run: uv sync --locked --group public-exemplars --group installed-build
+
+      - name: Require explicit root 4+ acceptance handoff
+        id: acceptance
+        if: ${{ !startsWith(steps.tag.outputs.name, 'v0.') && !startsWith(steps.tag.outputs.name, 'v1.') && !startsWith(steps.tag.outputs.name, 'v2.') && !startsWith(steps.tag.outputs.name, 'v3.') }}
+        env:
+          ACCEPTANCE_RUN_ID: ${{ inputs.acceptance_run_id }}
+          ACCEPTANCE_ARTIFACT_ID: ${{ inputs.acceptance_artifact_id }}
+          ACCEPTANCE_RECEIPT_SHA256: ${{ inputs.acceptance_receipt_sha256 }}
+        run: |
+          set -euo pipefail
+          uv run --no-sync --offline python -m infrastructure.publishing.release_acceptance inputs \
+            --run-id "$ACCEPTANCE_RUN_ID" --artifact-id "$ACCEPTANCE_ARTIFACT_ID" \
+            --receipt-sha256 "$ACCEPTANCE_RECEIPT_SHA256" >> "$GITHUB_OUTPUT"
+
+      - name: Verify hosted required-acceptance provenance
+        if: steps.acceptance.outputs.required == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ACCEPTANCE_RUN_ID: ${{ inputs.acceptance_run_id }}
+          ACCEPTANCE_ARTIFACT_ID: ${{ inputs.acceptance_artifact_id }}
+        run: |
+          set -euo pipefail
+          # IDs were admitted before constructing these fixed, same-repository endpoints.
+          gh api --hostname github.com "repos/$GITHUB_REPOSITORY/actions/runs/$ACCEPTANCE_RUN_ID" \
+            > "$RUNNER_TEMP/root-release-acceptance-run.json"
+          gh api --hostname github.com "repos/$GITHUB_REPOSITORY/actions/artifacts/$ACCEPTANCE_ARTIFACT_ID" \
+            > "$RUNNER_TEMP/root-release-acceptance-artifact.json"
+          uv run --no-sync --offline python -m infrastructure.publishing.release_acceptance hosted \
+            --run-metadata "$RUNNER_TEMP/root-release-acceptance-run.json" \
+            --artifact-metadata "$RUNNER_TEMP/root-release-acceptance-artifact.json" \
+            --repository "$GITHUB_REPOSITORY" --revision "$(git rev-parse HEAD)" \
+            --run-id "$ACCEPTANCE_RUN_ID" --artifact-id "$ACCEPTANCE_ARTIFACT_ID"
+
+      - name: Admit bounded required-acceptance bundle
+        if: steps.acceptance.outputs.required == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ACCEPTANCE_ARTIFACT_ID: ${{ inputs.acceptance_artifact_id }}
+        run: |
+          set -euo pipefail
+          gh api --hostname github.com "repos/$GITHUB_REPOSITORY/actions/artifacts/$ACCEPTANCE_ARTIFACT_ID/zip" \
+            > "$RUNNER_TEMP/root-release-acceptance.zip"
+          uv run --no-sync --offline python -m infrastructure.publishing.release_acceptance archive \
+            --archive "$RUNNER_TEMP/root-release-acceptance.zip"
+
+      - name: Verify every required candidate acceptance gate
+        if: steps.acceptance.outputs.required == 'true'
+        env:
+          ACCEPTANCE_RECEIPT_SHA256: ${{ inputs.acceptance_receipt_sha256 }}
+        run: |
+          set -euo pipefail
+          uv run --no-sync --offline python -m infrastructure.publishing.release_acceptance candidate \
+            --revision "$(git rev-parse HEAD)" --receipt-sha256 "$ACCEPTANCE_RECEIPT_SHA256"
 
       - name: Verify core test contract on tagged SHA
         run: |
@@ -69,23 +167,62 @@ jobs:
           # infra lane (the same contract project pipelines run) plus the
           # no-mocks gate provide executable evidence without the 30-minute
           # full matrix (which CI already runs per commit).
-          uv sync --group public-exemplars
-          uv run python scripts/audit/verify_no_mocks.py
-          uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke
+          uv run --no-sync --offline python scripts/audit/verify_no_mocks.py
+          uv run --no-sync --offline python scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke
 
       - name: Verify root package release contract
         env:
           TAG: ${{ steps.tag.outputs.name }}
-        run: uv run python -m infrastructure.publishing.root_release_contract --tag "$TAG"
+        run: uv run --no-sync --offline python -m infrastructure.publishing.root_release_contract --tag "$TAG"
 
       - name: Verify public capability manifest
-        run: uv run python scripts/gates/public_capabilities.py
+        run: uv run --no-sync --offline python scripts/gates/public_capabilities.py
 
-      - name: Clean-export and import public exemplars
-        run: uv run python scripts/gates/exemplar_export_smoke.py
+      - name: Prepare locked installed-matrix dependency cache
+        env:
+          PYTHON312: ${{ steps.python312.outputs.python-path }}
+          PYTHON313: ${{ steps.python313.outputs.python-path }}
+          PYTHON314: ${{ steps.python314.outputs.python-path }}
+        run: |
+          set -euo pipefail
+          read -r -a projects <<< "$(uv run --no-sync --offline python -m infrastructure.project.public_scope project-names)"
+          for selection in "3.12=$PYTHON312" "3.13=$PYTHON313" "3.14=$PYTHON314"; do
+            minor=${selection%%=*}
+            interpreter=${selection#*=}
+            build_environment="$RUNNER_TEMP/release-build-cache-$minor"
+            UV_PROJECT_ENVIRONMENT="$build_environment" uv sync --locked --no-python-downloads \
+              --python "$interpreter" --only-group installed-build --no-install-project
+            for scope in root "${projects[@]}"; do
+              metadata="$GITHUB_WORKSPACE"
+              if [ "$scope" != root ]; then
+                metadata="$GITHUB_WORKSPACE/projects/$scope"
+              fi
+              slug=${scope//\//_}
+              requirements="$RUNNER_TEMP/release-dependencies-$minor-$slug.txt"
+              environment="$RUNNER_TEMP/release-dependency-cache-$minor-$slug"
+              uv export --directory "$metadata" --locked --no-default-groups \
+                --no-emit-project --no-emit-local --no-header --no-annotate \
+                --output-file "$requirements"
+              uv venv --no-project --no-python-downloads --python "$interpreter" "$environment"
+              uv pip sync --no-config --no-build --require-hashes --allow-empty-requirements \
+                --python "$environment/bin/python" "$requirements"
+            done
+          done
+
+      - name: Verify complete installed-wheel matrix
+        env:
+          PYTHON312: ${{ steps.python312.outputs.python-path }}
+          PYTHON313: ${{ steps.python313.outputs.python-path }}
+          PYTHON314: ${{ steps.python314.outputs.python-path }}
+        run: |
+          set -euo pipefail
+          uv run --no-sync --offline python scripts/gates/installed_public.py \
+            --project-workers 1 --timeout 600 \
+            --python "3.12=$PYTHON312" --python "3.13=$PYTHON313" --python "3.14=$PYTHON314" \
+            --evidence-dir "$GITHUB_WORKSPACE/output/readiness/installed-release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
 
       - name: Verify rendered public exemplars
-        run: uv run python -m infrastructure.validation.cli publication-audit --all-public --strict --rendered --format json
+        run: uv run --no-sync --offline python -m infrastructure.validation.cli publication-audit --all-public --strict --rendered --format json
 
       - name: Build and validate Python distributions
         run: |

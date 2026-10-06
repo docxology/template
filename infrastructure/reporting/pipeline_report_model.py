@@ -7,15 +7,11 @@ that constructs reports from stage results.
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, TypedDict
-
-try:
-    from typing import NotRequired
-except ImportError:  # Python <3.11
-    from typing_extensions import NotRequired
+from typing import Any, NotRequired, TypedDict
 
 from infrastructure.core.runtime.checkpoint import StageResult
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 
 logger = get_logger(__name__)
 
@@ -28,6 +24,10 @@ class _StageResultDict(TypedDict):
     duration: float
     error_message: NotRequired[str]
     timestamp: NotRequired[str]
+    stage_key: NotRequired[str]
+    outcome: NotRequired[dict[str, Any]]
+    input_digest: NotRequired[str]
+    output_digest: NotRequired[str]
 
 
 @dataclass
@@ -42,6 +42,48 @@ class PipelineReport:
     performance_metrics: dict[str, Any] | None = None
     error_summary: dict[str, Any] | None = None
     output_statistics: dict[str, Any] | None = None
+
+
+def stage_is_complete(stage: StageResult) -> bool:
+    """Classify rendered stage evidence without treating a child code as approval."""
+    if not stage.completed:
+        return False
+    evidence = stage.context.get("outcome")
+    if evidence is None:
+        # Historical saved reports used the display label ``passed``.
+        return stage.status in {"succeeded", "passed"} and stage.exit_code == 0
+    try:
+        fields = dict(evidence)
+        fields["status"] = StageStatus(fields["status"])
+        fields["attempt_exit_codes"] = tuple(fields.get("attempt_exit_codes", ()))
+        outcome = StageOutcome(**fields)
+    except (TypeError, ValueError, KeyError):
+        return False
+    return (
+        stage.status == outcome.status.value
+        and outcome.complete
+        and report_stage_binding_valid(stage.context.get("stage_key"), stage.exit_code, outcome)
+    )
+
+
+def report_stage_binding_valid(stage_key: object, code: object, outcome: StageOutcome) -> bool:
+    """Bind a displayed execution result to its identity and typed state."""
+    if stage_key != outcome.stage_key or type(code) is not int:
+        return False
+    expected = {
+        StageStatus.SUCCEEDED: 0,
+        StageStatus.CACHED: 0,
+        StageStatus.SKIPPED: 2,
+        StageStatus.PAUSED: 75,
+        StageStatus.BLOCKED: 75,
+        StageStatus.REJECTED: 1,
+        StageStatus.ABORTED: 1,
+        StageStatus.TIMED_OUT: 124,
+        StageStatus.INTERRUPTED: 130,
+    }
+    if outcome.status is StageStatus.FAILED:
+        return code == 1 or (outcome.child_exit_code not in {None, 0} and code == outcome.child_exit_code)
+    return code == expected[outcome.status]
 
 
 def generate_pipeline_report(
@@ -79,13 +121,38 @@ def generate_pipeline_report(
     """
     stages = []
     for result in stage_results:
-        status = "passed" if result.get("exit_code", 1) == 0 else "failed"
+        evidence = result.get("outcome")
+        if evidence is not None:
+            outcome_fields = dict(evidence)
+            outcome_fields["status"] = StageStatus(outcome_fields["status"])
+            outcome_fields["attempt_exit_codes"] = tuple(outcome_fields.get("attempt_exit_codes", ()))
+            outcome = StageOutcome(**outcome_fields)
+            if not report_stage_binding_valid(
+                result.get("stage_key", outcome.stage_key), result.get("exit_code", 1), outcome
+            ):
+                raise ValueError("Report stage identity or execution exit code contradicts its typed outcome")
+        else:
+            code = result.get("exit_code", 1)
+            outcome = StageOutcome(
+                result.get("stage_key", result.get("name", "unknown")),
+                StageStatus.SUCCEEDED if code == 0 else StageStatus.FAILED,
+                code,
+                result.get("error_message", ""),
+            )
+        context = {
+            "outcome": outcome.to_dict(),
+            "stage_key": outcome.stage_key,
+            "input_digest": result.get("input_digest", ""),
+            "output_digest": result.get("output_digest", ""),
+        }
         stages.append(
             StageResult(
                 name=result.get("name", "unknown"),
                 exit_code=result.get("exit_code", 1),
                 duration=result.get("duration", 0.0),
-                status=status,
+                status=outcome.status.value,
+                completed=outcome.complete,
+                context=context,
             )
         )
 

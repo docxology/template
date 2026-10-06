@@ -209,6 +209,32 @@ def test_coverage_provenance_fails_closed_when_git_cannot_start(
         build_coverage_provenance(tmp_path)
 
 
+@pytest.mark.timeout(90)
+def test_batched_coverage_hashes_match_individual_git_inventories(tmp_path: Path) -> None:
+    """A shared query preserves identities for tracked, new and excluded inputs."""
+    for row in EXEMPLAR_SNAPSHOT:
+        source = tmp_path / "projects" / "templates" / row.name / "src" / "sentinel.py"
+        source.parent.mkdir(parents=True)
+        source.write_text(f'PROJECT = "{row.name}"\n', encoding="utf-8")
+    _write_test_coverage_support_closure(tmp_path)
+    _initialize_test_git_repository(tmp_path)
+    selected = ("template_active_inference", "template_code_project", "template_eda_notebook")
+    for name in selected:
+        project = tmp_path / "projects" / "templates" / name
+        (project / "src" / "new\nsource.py").write_text("VALUE = 23\n", encoding="utf-8")
+        (project / "output").mkdir(exist_ok=True)
+        (project / "output" / "ignored.py").write_text("raise RuntimeError('output is excluded')\n")
+    individual = {name: exemplar_source_hash(tmp_path, name) for name in selected}
+    batched = build_coverage_provenance(tmp_path)["projects"]
+    assert isinstance(batched, dict)
+    assert {name: batched[name]["source_hash"] for name in selected} == individual
+    source = tmp_path / "projects" / "templates" / selected[1] / "src" / "new\nsource.py"
+    source.rename(source.with_name("renamed.py"))
+    revised = build_coverage_provenance(tmp_path)["projects"]
+    assert isinstance(revised, dict)
+    assert revised[selected[1]]["source_hash"] != individual[selected[1]]
+
+
 def test_exemplar_source_hash_tracks_newline_named_direct_inputs(tmp_path: Path) -> None:
     project = tmp_path / "projects" / "templates" / "demo"
     direct_tracked = project / "src" / "tracked\nsource.py"

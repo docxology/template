@@ -169,10 +169,10 @@ def apply_reachability(
     report: PublishingStatusReport,
     checks: tuple[ReachabilityCheck, ...],
 ) -> PublishingStatusReport:
-    """Downgrade definitively-unreachable PUBLISHED rows to UNREACHABLE.
+    """Downgrade definitively-unreachable published or historical references.
 
     Only rows whose platform has a check with status
-    :data:`STATUS_UNREACHABLE` *and* whose offline state is PUBLISHED are
+    :data:`STATUS_UNREACHABLE` *and* whose offline state is PUBLISHED or HISTORICAL are
     downgraded. RESERVED rows are exempt: a Zenodo-reserved DOI is minted but
     deliberately not registered with DataCite until the record is published,
     so a 404 from the resolver is its normal, expected state — not an alarm.
@@ -189,7 +189,7 @@ def apply_reachability(
     unreachable = {c.platform for c in checks if c.status == STATUS_UNREACHABLE}
     rows = tuple(
         replace(row, state=PublicationState.UNREACHABLE)
-        if row.name in unreachable and row.state is PublicationState.PUBLISHED
+        if row.name in unreachable and row.state in {PublicationState.PUBLISHED, PublicationState.HISTORICAL}
         else row
         for row in report.platforms
     )

@@ -51,23 +51,42 @@ fault modes. Lean has no counterpart to that fault-injected model; TLA+ has
 no counterpart to Lean's affine-token reuse proof. Each formalism checks what
 it is actually good at.
 
-## Running both checks
+## Running all checks
+
+From the project root, select a real Java runtime and run the canonical wrapper:
 
 ```bash
-scripts/check_formal_specs.sh
+FORMAL_JAVA_BIN=/opt/homebrew/opt/openjdk/bin/java scripts/check_formal_specs.sh --timeout 300
+# Explicit first acquisition of the exact pins:
+FORMAL_JAVA_BIN=/opt/homebrew/opt/openjdk/bin/java scripts/check_formal_specs.sh --acquire --timeout 300
+# Optional ignored execution receipt:
+scripts/check_formal_specs.sh --receipt output/.pipeline/formal_tools/receipt.json
 ```
 
-is the one real, runnable command that wires all three checks (Lean build +
-both TLA+ specs) into a single pass/fail exit code — see its own header
-comment for the exact requirements and
-[`AGENTS.md`](AGENTS.md) below for what each of the three sub-checks does and
-why the script is structured the way it is. Both toolchains are **optional
-and non-default**: neither `lake`/`elan` nor a Java runtime is a dependency of
-the core pipeline, `pytest`, or CI's default job matrix. Install them only if
-you want to re-run the formal side yourself:
+The wrapper requires Python3.12+, elan, a selected Java runtime, and the optional
+`formal-tools` platform4.0.0 extra (already supplied by the canonical checkout).
+Its filesystem main uses a private fresh cache before platform imports. The
+supervised tool worker additionally uses the platform's pre-import executed-code
+audit; the controller is not claimed to have that audit. Timestamp-valid
+ordinary caches cannot authorize that worker. The
+domain package remains standalone; absence of the optional platform blocks75.
+Set
+`FORMAL_PYTHON_BIN` when the project interpreter is not `python3` on PATH and
+`FORMAL_JAVA_BIN` when Java is elsewhere. It never silently upgrades the declared
+Lean4.28.0 toolchain or dependency-free manifest. Acquisition admits only the
+exact TLC release bytes declared in `template_formal.tool_acceptance`.
 
-- **Lean 4 / `lake`**: via [elan](https://github.com/leanprover/elan) — `export PATH="$HOME/.elan/bin:$PATH"`. Pins to `leanprover/lean4:v4.28.0` (`formal/lean/lean-toolchain`); `lake build` will fetch that toolchain on first run if elan is installed.
-- **Java runtime for TLC**: any recent JDK (e.g. `/opt/homebrew/opt/openjdk@17/bin/java` on macOS via Homebrew); override the binary path with `FORMAL_JAVA_BIN` if it isn't on `PATH`.
+Fresh Lean elaboration must produce all seven clean axiom audits. Both positive
+TLC models must complete, and the negative control must produce its specific
+invariant violation with exit12. Held no-follow descriptors admit bounded
+regular source files, refusing links and FIFOs before reading them. Lean and
+TLC consume private read-only copies of those exact admitted declarations and
+model/configuration bytes; each executed check records its consumed source
+hashes. Lake builds use a fresh private cache. One total wall-clock deadline
+bounds source admission, every child, acquisition, cleanup and final custody.
+Missing tools are blocked75; invalid declarations exit2,
+failures1, and timeouts124. Actual sources/pins must remain unchanged. These
+finite-model results do not prove universal Python implementation equivalence.
 
 ## See also
 

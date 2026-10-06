@@ -7,9 +7,8 @@ only — never decorative").
 ## The one invariant this directory exists to protect
 
 **Every file under `formal/` must be reachable from
-`scripts/check_formal_specs.sh`.** That script is the *only* thing that runs
-these specs — no pipeline stage, pytest fixture, or CI job invokes `lake` or
-`java -jar tla2tools.jar` on its own. If you add a `.lean` or `.tla` file that
+`scripts/check_formal_specs.sh`.** That wrapper and its source-owned runner are the canonical route for
+these specs. Tests exercise the same runner against disposable actual copies. If you add a `.lean` or `.tla` file that
 isn't exercised by that script (directly, or via a `lakefile.lean`
 dependency/`.cfg` the script already runs), it is exactly the
 vestigial-decoration failure mode `ISC-35`/`ISC-36` were written to catch
@@ -29,33 +28,40 @@ not a stylistic choice, because `src/` is asserted elsewhere
 (`../AGENTS.md`'s layer table) to contain only pure typed domain code with no
 side-spec content.
 
-## `scripts/check_formal_specs.sh` — what it actually does, in order
+## `scripts/check_formal_specs.sh` execution contract
 
-1. `cd formal/lean && lake build` — Lean 4 kernel-checks
-   `AntProtocol.lean`. Exit non-zero fails the whole script (`status=1`, but
-   the script keeps going to report the TLA+ side too before its final exit).
-2. Checks `java` is on `PATH` (or `$FORMAL_JAVA_BIN`) — fails loudly rather
-   than silently skipping if the binary is missing.
-3. Fetches `formal/tla/tla2tools.jar` **only if it isn't already present** —
-   from a specific dated GitHub release tag (`v1.8.0`), never `latest`.
-4. **Always** verifies the fetched-or-cached jar's SHA-256 against a
-   hardcoded checksum before ever invoking `java -jar` against it — on
-   mismatch it deletes the file and fails; a stale, corrupted, or tampered
-   cached jar is never silently trusted just because it already existed on
-   disk from a prior run.
-5. Runs TLC against `AntProtocol.tla` (`AntProtocol.cfg`) — the ideal
-   single-peer model.
-6. Runs TLC against `AntProtocolFaulty.tla` (`AntProtocolFaulty.cfg`) — the
-   fault-injected two-peer model.
-7. Exits non-zero if **any** of the three checks failed; each PASS/FAIL is
-   echoed individually so a partial failure is diagnosable without re-running
-   the whole script.
+The shell wrapper starts the optional platform-backed `_tool_launcher.py`
+filesystem main. Its controller uses a private fresh cache; its supervised
+worker additionally receives the platform pre-import executed-code audit before
+calling `template_formal.tool_acceptance`. The domain package stays standalone;
+the direct tool command requires the `formal-tools` platform4.0.0 extra and
+blocks75 if it is unavailable. It uses the
+exact source-owned Lean4.28.0 and dependency-free Lake manifest, then freshly
+elaborates `AntProtocol.lean` and checks all seven printed axiom audits. TLC
+checks the ideal model, fault-injected model, and deliberately broken negative
+control independently. The negative control requires both exit12 and the exact
+`NoFalseEstablishment` violation; an unrelated Java error cannot pass it.
 
-Do not add a fourth sub-check to this script without also adding its own
-independent PASS/FAIL echo and letting it participate in the shared
-`status` accumulator — the script's whole value is that one exit code
-covers every spec in this directory, and that only holds if every new spec
-is actually wired into it the same way.
+Every child shares one finite total deadline (default300 seconds, maximum600),
+with process-group and detached-descendant cleanup on timeout or interruption.
+TLC state is disposable and trace-spec generation is disabled, so actual source
+and pin identities must remain unchanged. Missing tools return75 (blocked),
+invalid declarations2, failed checks1, and deadline exhaustion124. No missing
+tool or formal source can become a successful skip.
+
+Acquisition is explicit through `--acquire`; ordinary checks never implicitly
+install a Lean toolchain. The same `v1.8.0` TLC release asset is bound to exact
+SHA256 `e9c2d914fc1b7ba3e4a982ba251dc5c0da65010afcc6a5f9651576a1c380deae`.
+This replaced a rejected stale checksum after independently matching downloaded
+bytes to the official release API's asset601828751 on2026-09-30. The release
+page's stale SHA1 is insufficient to admit the current asset. Cached bytes are
+verified on every run; mismatches fail without executing them. Public receipts
+contain actual commands, outcomes, source hashes and model output.
+
+The formal-tool regression suite runs the same public runner against disposable
+copies of these actual specs. The Python network tests exercise real seeded
+in-process drop, corruption and duplication. These evidence lanes remain
+independent of the kernel-checked model.
 
 ## If you add a new theorem or a new TLA+ action
 

@@ -16,14 +16,14 @@ from _bootstrap import bootstrap_project
 
 PROJECT_ROOT = bootstrap_project()
 
-from config import (
+from template_literature_meta_analysis.config import (
     CORPUS_PATH as DEFAULT_CORPUS_PATH,
     DEFAULT_CHECKPOINT_INTERVAL,
     DEFAULT_LLM_MODEL,
     DEFAULT_LLM_URL,
     OUTPUT_DIR as DEFAULT_OUTPUT_DIR,
 )
-from knowledge_graph.kg_runner import run_knowledge_graph_pipeline
+from template_literature_meta_analysis.knowledge_graph.kg_runner import run_knowledge_graph_pipeline
 
 
 def parse_args() -> argparse.Namespace:

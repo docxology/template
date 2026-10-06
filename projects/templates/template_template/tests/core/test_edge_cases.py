@@ -36,7 +36,7 @@ from pathlib import Path
 
 import pytest
 
-from helpers import PROJECT_DIR, REPO_ROOT
+from helpers import REPO_ROOT
 
 # ---------------------------------------------------------------------------
 # metrics.py edge cases
@@ -576,7 +576,7 @@ class TestLocateRepoRootEdgeCases:
     def test_finds_repo_from_project_dir(self) -> None:
         from template_template.core.paths import locate_repo_root
 
-        result = locate_repo_root(PROJECT_DIR)
+        result = locate_repo_root(REPO_ROOT / "projects/templates/template_template")
         assert result == REPO_ROOT
         assert (result / "infrastructure").is_dir()
 

@@ -9,7 +9,7 @@
 paper:
   title: "A Living Meta-Analysis of the Modafinil Literature"
   subtitle: "Multi-Engine Retrieval, De-duplication, Embeddings, and Bibliometrics for a Single Search Term"
-  version: "0.1.0"
+  version: "0.2.0"
   date: "" # Auto-generated
 
 authors:
@@ -20,6 +20,10 @@ authors:
     corresponding: true
 
 publication:
+  release_status: "unreleased"
+  intended_version: "0.2.0"
+  platform_version: "4.0.0"
+  last_published_version: "0.1.0"
   doi: "10.5281/zenodo.20931964"
   version_doi: "10.5281/zenodo.20931965"
   version_record: "https://zenodo.org/records/20931965"

@@ -9,12 +9,20 @@ numbers before PDF rendering. This module mirrors the pattern used by
 from __future__ import annotations
 
 import json
-import shutil
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Mapping
 
-from template_search_project.publish.config import DeepSearchConfig
+from infrastructure.core.files.secure_write import (
+    atomic_write_bytes_confined,
+    atomic_write_text_confined,
+    read_bytes_confined,
+    unlink_confined,
+)
+
+from template_search_project.publish.bibliography import GENERATED_SUPPLEMENT_NAME, project_bibliographies
+from template_search_project.publish.config import DeepSearchConfig, ProjectConfig
+from template_search_project.publish.deep_custody import admit_composed_supplement, admit_deep_producer
 
 
 @dataclass(frozen=True)
@@ -125,13 +133,19 @@ def load_aggregate_payload(path: Path | str) -> dict[str, object] | None:
     return raw if isinstance(raw, dict) else None
 
 
-def write_variables(variables: ManuscriptVariables, output_path: Path | str) -> Path:
+def write_variables(
+    variables: ManuscriptVariables,
+    output_path: Path | str,
+    *,
+    project_root: Path | str | None = None,
+) -> Path:
     """Persist variables as JSON for downstream rendering / debugging."""
-    out = Path(output_path)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(
+    out = Path(output_path).absolute()
+    root = Path(project_root).absolute() if project_root is not None else out.parent
+    atomic_write_text_confined(
+        root,
+        out,
         json.dumps(variables.as_dict(), indent=2, ensure_ascii=False),
-        encoding="utf-8",
     )
     return out
 
@@ -147,30 +161,61 @@ def substitute_in_text(text: str, variables: ManuscriptVariables) -> str:
 def write_resolved_manuscript_tree(
     project_root: Path | str,
     variables: ManuscriptVariables,
+    *,
+    config: ProjectConfig | None = None,
 ) -> Path:
     """Write ``manuscript/*.md`` with substitutions plus aux files into ``output/manuscript``.
 
     PDF rendering prefers ``output/manuscript`` when it contains markdown
     (see :func:`infrastructure.rendering.pipeline._resolve_manuscript_dir`).
     """
-    root = Path(project_root)
+    root = Path(project_root).absolute()
+    admitted = (
+        admit_deep_producer(root, config.deep_search, (root / config.deep_search.output_dir).absolute())
+        if config is not None and config.deep_search.enabled
+        else None
+    )
     manuscript_dir = root / "manuscript"
     out_dir = root / "output" / "manuscript"
-    out_dir.mkdir(parents=True, exist_ok=True)
+    supplement = (
+        admit_composed_supplement(root, config.deep_search, admitted)
+        if config is not None and admitted is not None
+        else None
+    )
+    if (manuscript_dir / GENERATED_SUPPLEMENT_NAME).exists() or (
+        manuscript_dir / GENERATED_SUPPLEMENT_NAME
+    ).is_symlink():
+        raise ValueError("Authored manuscript uses the reserved generated supplement name")
 
     for md_file in sorted(manuscript_dir.glob("*.md")):
-        text = md_file.read_text(encoding="utf-8")
-        out_dir.joinpath(md_file.name).write_text(
+        text = read_bytes_confined(root, md_file).decode("utf-8")
+        atomic_write_text_confined(
+            root,
+            out_dir / md_file.name,
             substitute_in_text(text, variables),
-            encoding="utf-8",
         )
 
     for aux in ["config.yaml"]:
         src = manuscript_dir / aux
         if src.is_file():
-            shutil.copy2(src, out_dir / aux)
+            atomic_write_bytes_confined(root, out_dir / aux, read_bytes_confined(root, src))
 
     for bib in sorted(manuscript_dir.glob("*.bib")):
-        shutil.copy2(bib, out_dir / bib.name)
+        atomic_write_bytes_confined(root, out_dir / bib.name, read_bytes_confined(root, bib))
+
+    generated_paths: tuple[str, ...]
+    if config is None:
+        generated_paths = ("output/bibliography/references.bib", "output/bibliography/references_deep.bib")
+    elif config.deep_search.enabled:
+        generated_paths = (config.references_path, config.deep_search.unified_bibtex_path)
+    else:
+        generated_paths = (config.references_path,)
+        # This reserved file is generated active output, not an authored section
+        # or historical published artifact. Disabled deep search cannot replay it.
+    project_bibliographies(root, generated_paths, admitted_sources=admitted)
+    if supplement is not None:
+        atomic_write_bytes_confined(root, out_dir / GENERATED_SUPPLEMENT_NAME, supplement)
+    if config is not None and not config.deep_search.enabled:
+        unlink_confined(root, out_dir / GENERATED_SUPPLEMENT_NAME)
 
     return out_dir

@@ -50,7 +50,7 @@ Checkpoints are automatically saved after each successful stage:
 uv run python scripts/runner/execute_pipeline.py --project {name} --resume
 
 # Start fresh (clears checkpoint on success)
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 ```
 
 ### Shell Script (`run.sh`)
@@ -188,7 +188,7 @@ exists = manager.checkpoint_exists()
 rm -f projects/{name}/output/.checkpoints/pipeline_checkpoint.json
 
 # Restart pipeline
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 ```
 
 ### Checkpoint Out of Date

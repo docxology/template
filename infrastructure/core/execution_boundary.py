@@ -1,9 +1,8 @@
 """Bounded subprocess execution for project hooks and analysis scripts.
 
-Implements the secure execution boundary required by the ``SECURE-RUN-1``
-and ``PROJECT-EXECUTION-BOUNDARY-1`` backlog items. A "hostile hook" must
-not be able to read credentials, escape the project root, or outlive a
-failed/timed-out run.
+Implements finite process supervision and credential-environment filtering for
+the ``SECURE-RUN-1`` and ``PROJECT-EXECUTION-BOUNDARY-1`` contracts. Arbitrary
+Python hooks need a separate sandbox to restrict filesystem and network access.
 
 The module provides four composable layers:
 
@@ -15,8 +14,8 @@ The module provides four composable layers:
   unless explicitly allow-listed (secret policy).
 * :func:`run_bounded_subprocess` — execute ``argv`` in a fresh process
   group so a timeout can kill the whole process tree (no orphaned
-  descendants), with root confinement, secret stripping, and an optional
-  egress hook that is consulted before launch.
+  descendants). Callers admit their immutable plan and apply environment
+  filtering before launch; sandboxed operations enforce network isolation.
 
 All functions are testable with real files/subprocesses (No-Mocks policy).
 """
@@ -24,14 +23,20 @@ All functions are testable with real files/subprocesses (No-Mocks policy).
 from __future__ import annotations
 
 import signal
+import math
 import subprocess  # nosec B404
+import time
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Sequence
+from typing import Sequence
 
 from infrastructure.core._bounded_run_guardian import (
     start_bounded_run_guardian as _start_bounded_run_guardian,
+    BoundedRunGuardian,
+    GuardianCustodyError,
+    DEFAULT_GUARDIAN_STARTUP_TIMEOUT_SECONDS,
+    validate_guardian_startup_timeout,
 )
 from infrastructure.core.secrets import strip_secret_env
 
@@ -167,11 +172,8 @@ class BoundedSubprocessResult:
     stdout: str = ""
     stderr: str = ""
     command_error: str = ""
-
-
-# An optional ``(argv, cwd, env) -> None`` callable consulted before launch.
-# Raise to refuse execution (policy violation / network egress).
-EgressCheck = Callable[[Sequence[str], Path, dict[str, str]], None]
+    custody_refused: bool = False
+    original_returncode: int | None = None
 
 
 def build_bounded_run_env(env: dict[str, str]) -> tuple[dict[str, str], str]:
@@ -190,8 +192,8 @@ def run_bounded_subprocess(
     env: dict[str, str],
     timeout: float,
     group_id: int | None = None,
-    egress_check: EgressCheck | None = None,
     capture_output: bool = True,
+    guardian_startup_timeout_seconds: float = DEFAULT_GUARDIAN_STARTUP_TIMEOUT_SECONDS,
 ) -> BoundedSubprocessResult:
     """Run *argv* in an isolated process group with cleanup on timeout.
 
@@ -205,8 +207,8 @@ def run_bounded_subprocess(
     * If the caller is interrupted while waiting, the same tree and inherited
       run identity are terminated and the root is reaped before the original
       exception is re-raised.
-    * ``egress_check`` is called just before launch; raising aborts the run
-      with ``command_error`` set (network/egress policy).
+    * Startup, arming and command execution consume the original deadline.
+      Cleanup is mandatory, and exceeding that deadline prevents success.
 
     Args:
         argv: Executable + arguments.
@@ -215,34 +217,62 @@ def run_bounded_subprocess(
         timeout: Seconds to wait before killing the group.
         group_id: Optional fixed process-group id (used by tests that want to
             assert cleanup on a known value; default creates a new group).
-        egress_check: Optional policy callback consulted before launch.
         capture_output: When True, capture stdout/stderr.
+        guardian_startup_timeout_seconds: Finite READY/ARM phase allowance,
+            always confined to the original whole-operation deadline.
 
     Returns:
         A :class:`BoundedSubprocessResult`.
     """
     cmd = list(argv)
     workdir = Path(cwd)
+    if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or not math.isfinite(timeout) or timeout <= 0:
+        raise ValueError("bounded execution requires a positive finite whole-operation timeout")
+    validate_guardian_startup_timeout(guardian_startup_timeout_seconds)
+    deadline = time.monotonic() + timeout
     proc: subprocess.Popen[str] | None = None
     process_env, run_token = build_bounded_run_env(env)
-    try:
-        if egress_check is not None:
-            egress_check(cmd, workdir, process_env)
-    except Exception as exc:  # noqa: BLE001 - policy violation aborts the run
+    if time.monotonic() >= deadline:
         return BoundedSubprocessResult(
             argv=tuple(cmd),
-            returncode=1,
-            timed_out=False,
-            command_error=f"refused by egress policy: {exc}",
+            returncode=124,
+            timed_out=True,
+            command_error="bounded-run deadline expired before guardian startup",
         )
     try:
-        guardian = _start_bounded_run_guardian(env)
-    except (OSError, RuntimeError, TimeoutError) as exc:
+        guardian = _start_bounded_run_guardian(
+            env, deadline_monotonic=deadline, startup_timeout_seconds=guardian_startup_timeout_seconds
+        )
+    except GuardianCustodyError as exc:
+        return BoundedSubprocessResult(
+            argv=tuple(cmd),
+            returncode=75,
+            timed_out=False,
+            custody_refused=True,
+            command_error=f"bounded-run guardian refused source custody: {exc}",
+        )
+    except TimeoutError as exc:
+        return BoundedSubprocessResult(
+            argv=tuple(cmd),
+            returncode=124,
+            timed_out=True,
+            command_error=f"bounded-run guardian startup timed out before command launch: {exc}",
+        )
+    except (OSError, RuntimeError) as exc:
         return BoundedSubprocessResult(
             argv=tuple(cmd),
             returncode=1,
             timed_out=False,
             command_error=f"failed to start bounded-run guardian: {exc}",
+        )
+    if time.monotonic() >= deadline:
+        if guardian is not None:
+            guardian.close()
+        return BoundedSubprocessResult(
+            argv=tuple(cmd),
+            returncode=124,
+            timed_out=True,
+            command_error="bounded-run deadline expired before command launch",
         )
     try:
         proc = subprocess.Popen(
@@ -254,6 +284,8 @@ def run_bounded_subprocess(
             stdout=subprocess.PIPE if capture_output else None,
             stderr=subprocess.PIPE if capture_output else None,
             text=True if capture_output else None,
+            encoding="utf-8" if capture_output else None,
+            errors="replace" if capture_output else None,
         )
     except BaseException as exc:
         if guardian is not None:
@@ -271,50 +303,80 @@ def run_bounded_subprocess(
     effective_group = proc.pid if group_id is None else group_id
     if guardian is not None:
         try:
-            guardian.arm(root_pid=proc.pid, run_token=run_token)
+            guardian.arm(root_pid=proc.pid, run_token=run_token, deadline_monotonic=deadline)
         except BaseException as exc:
             terminate_process_tree(proc.pid, group_id=effective_group)
             terminate_bounded_run_processes(run_token)
             guardian.close()
             with _suppress():
                 proc.wait(timeout=5)
+            if isinstance(exc, GuardianCustodyError):
+                return BoundedSubprocessResult(
+                    argv=tuple(cmd),
+                    returncode=130 if proc.returncode in {130, -signal.SIGINT} else 75,
+                    timed_out=False,
+                    custody_refused=True,
+                    original_returncode=proc.returncode,
+                    command_error=f"bounded-run guardian refused source custody: {exc}",
+                )
+            if isinstance(exc, TimeoutError):
+                return BoundedSubprocessResult(
+                    argv=tuple(cmd),
+                    returncode=130 if proc.returncode in {130, -signal.SIGINT} else 124,
+                    timed_out=proc.returncode not in {130, -signal.SIGINT},
+                    original_returncode=proc.returncode,
+                    command_error=f"bounded-run guardian arming timed out: {exc}",
+                )
             if isinstance(exc, (OSError, RuntimeError)):
                 return BoundedSubprocessResult(
                     argv=tuple(cmd),
-                    returncode=1,
+                    returncode=130 if proc.returncode in {130, -signal.SIGINT} else 1,
                     timed_out=False,
+                    original_returncode=proc.returncode,
                     command_error=f"failed to arm bounded-run guardian: {exc}",
                 )
             raise
 
     try:
-        stdout, stderr = proc.communicate(timeout=timeout)
-        cleanup_error = _complete_bounded_run_cleanup(guardian, run_token)
+        stdout, stderr = proc.communicate(timeout=max(0.0, deadline - time.monotonic()))
+        cleanup_error, custody_refused = _cleanup_result(guardian, run_token)
+        code = proc.returncode if proc.returncode is not None else 0
+        expired = time.monotonic() >= deadline
         return BoundedSubprocessResult(
             argv=tuple(cmd),
-            returncode=1 if cleanup_error else (proc.returncode if proc.returncode is not None else 0),
-            timed_out=False,
+            returncode=130
+            if code in {130, -2}
+            else 124
+            if expired
+            else 75
+            if custody_refused
+            else 1
+            if cleanup_error
+            else code,
+            timed_out=expired and code not in {130, -2},
             stdout=stdout or "",
             stderr=stderr or "",
             command_error=cleanup_error,
+            custody_refused=custody_refused,
+            original_returncode=proc.returncode,
         )
     except subprocess.TimeoutExpired as exc:
         terminate_process_tree(proc.pid, group_id=effective_group)
-        cleanup_error = _complete_bounded_run_cleanup(guardian, run_token)
-        # Always reap the root process. With inherited stdout/stderr,
-        # skipping ``communicate``/``wait`` would leave a defunct child
-        # owned by a long-running pipeline orchestrator.
         try:
-            timed_out_stdout, timed_out_stderr = proc.communicate(timeout=5)
-        except subprocess.TimeoutExpired:
-            if proc.stdout is not None:
-                proc.stdout.close()
-            if proc.stderr is not None:
-                proc.stderr.close()
-            with _suppress():
-                proc.wait(timeout=5)
-            timed_out_stdout = _timeout_output_text(exc.stdout)
-            timed_out_stderr = _timeout_output_text(exc.stderr)
+            cleanup_error, custody_refused = _cleanup_result(guardian, run_token)
+        finally:
+            # Reap even if an operator interrupts guardian cleanup after root kill.
+            try:
+                timed_out_stdout, timed_out_stderr = proc.communicate(timeout=5)
+            except subprocess.TimeoutExpired:
+                if proc.stdout is not None:
+                    proc.stdout.close()
+                if proc.stderr is not None:
+                    proc.stderr.close()
+                with _suppress():
+                    proc.wait(timeout=5)
+                timed_out_stdout = _timeout_output_text(exc.stdout)
+                timed_out_stderr = _timeout_output_text(exc.stderr)
         return BoundedSubprocessResult(
             argv=tuple(cmd),
             returncode=-signal.SIGKILL,
@@ -322,6 +384,8 @@ def run_bounded_subprocess(
             stdout=timed_out_stdout or "",
             stderr=timed_out_stderr or "",
             command_error=cleanup_error,
+            custody_refused=custody_refused,
+            original_returncode=proc.returncode,
         )
     except Exception as exc:  # noqa: BLE001 - any post-launch failure must clean up the group
         _terminate_and_reap_interrupted_process(
@@ -334,6 +398,7 @@ def run_bounded_subprocess(
             argv=tuple(cmd),
             returncode=1,
             timed_out=False,
+            original_returncode=proc.returncode,
             command_error=f"bounded subprocess failed after launch: {exc}",
         )
     except BaseException:
@@ -361,6 +426,14 @@ def _timeout_output_text(value: str | bytes | None) -> str:
     if isinstance(value, bytes):
         return value.decode("utf-8", errors="replace")
     return value or ""
+
+
+def _cleanup_result(guardian: BoundedRunGuardian | None, run_token: str) -> tuple[str, bool]:
+    """Only a positively typed custody refusal may receive that classification."""
+    try:
+        return _complete_bounded_run_cleanup(guardian, run_token), False
+    except GuardianCustodyError as exc:
+        return f"bounded-run guardian refused source custody after cleanup: {exc}", True
 
 
 __all__ = [

@@ -11,7 +11,7 @@ hand-build structure, numbering, or figure paths.
 
 ## 1. Scaffold (or grow) the structure
 
-A fresh scaffold is already in place. To add a chapter or a whole part, edit
+The canonical book is authored. For a new draft, To add a chapter or a whole part, edit
 [`manuscript/config.yaml`](../manuscript/config.yaml):
 
 ```yaml
@@ -113,9 +113,9 @@ The scaffold is built to grow without drifting. To go big:
 - **Lean on the audit table.** `audit_textbook_quality.py` reports stub and word
   counts per chapter, so you always know which chapters are still skeletons and
   which are full — your burn-down for a large book.
-- **Run the audit CLI in strict mode (default) in CI** once the book is meant to
+- **Run the audit CLI with `--require-complete` in CI** once the book is meant to
   be complete. Pass `--lenient` only for partial-tree progress checks.
 
 Because structure, numbering, references, glossary, and figure paths are all
 contract-checked from one config, a 1,000-page book obeys exactly the same rules
-as the 12-chapter scaffold — you only ever add content, never re-plumb the book.
+as the canonical 12-chapter book — you only ever add content, never re-plumb the book.

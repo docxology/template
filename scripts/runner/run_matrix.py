@@ -8,6 +8,7 @@ deterministic, version-controllable alternative to the interactive menu:
     uv run python scripts/runner/run_matrix.py --config my.yaml
     uv run python scripts/runner/run_matrix.py --dry-run        # print the plan, run nothing
     uv run python scripts/runner/run_matrix.py --fail-fast      # stop at first failure
+    uv run python scripts/runner/run_matrix.py --resume         # validate exact project checkpoints
 
 Exit code is 0 only if every (project, stage) step succeeded.
 """
@@ -15,6 +16,7 @@ Exit code is 0 only if every (project, stage) step succeeded.
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import sys
 from pathlib import Path
 
@@ -31,6 +33,7 @@ from infrastructure.core.pipeline.run_matrix import (  # noqa: E402
     format_report,
     parse_run_config,
     resolve_run_plan,
+    run_plan_exit_code,
 )
 
 logger = get_logger(__name__)
@@ -42,6 +45,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dry-run", action="store_true", help="Print the resolved plan and exit without running")
     parser.add_argument("--fail-fast", action="store_true", help="Stop at the first failing stage")
     parser.add_argument("--repo-root", type=Path, default=None, help="Repository root (default: auto-detected)")
+    parser.add_argument("--mode", choices=("core", "live"), default=None, help="Override the config execution mode")
+    parser.add_argument("--resume", action="store_true", default=None, help="Resume exact selected project checkpoints")
+    parser.add_argument(
+        "--run-timeout", type=float, default=None, help="Whole matrix seconds, including shared verification"
+    )
     ns = parser.parse_args(argv)
 
     repo_root = (ns.repo_root or Path(__file__).resolve().parents[2]).resolve()
@@ -56,6 +64,12 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         config = parse_run_config(config_path.read_text(encoding="utf-8"))
+        if ns.mode is not None:
+            config = replace(config, mode=ns.mode)
+        if ns.resume is not None:
+            config = replace(config, resume=ns.resume)
+        if ns.run_timeout is not None:
+            config = replace(config, run_timeout_seconds=ns.run_timeout)
         plan = resolve_run_plan(config, repo_root)
     except RunConfigError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
@@ -63,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if not plan.steps:
         print("run.config resolved to zero steps — nothing to run.")
-        return 0
+        return 1
 
     print(f"Resolved {len(plan.steps)} step(s) from {config_path.name}:")
     for step in plan.steps:
@@ -75,9 +89,18 @@ def main(argv: list[str] | None = None) -> int:
         print("--dry-run: not executing.")
         return 0
 
-    results = execute_run_plan(plan, repo_root, fail_fast=ns.fail_fast)
+    try:
+        results = execute_run_plan(plan, repo_root, fail_fast=ns.fail_fast)
+    except KeyboardInterrupt:
+        return 130
+    except TimeoutError as exc:
+        logger.error("Run matrix deadline expired: %s", exc)
+        return 124
+    except Exception as exc:
+        logger.error("Run matrix execution failed: %s", exc)
+        return 1
     print(format_report(results))
-    return 0 if all(r.ok for r in results) else 1
+    return run_plan_exit_code(plan, results)
 
 
 if __name__ == "__main__":

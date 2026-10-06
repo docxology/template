@@ -1,58 +1,43 @@
 #!/usr/bin/env python3
-"""Seal a child project: write seal.json with spec hash and payload."""
+"""Write a recompute-verified child seal; required failures exit nonzero."""
 
 from __future__ import annotations
 
-import json
+import argparse
+import importlib.util
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from template_autopoiesis.gates.sealing import build_payload
-from template_autopoiesis.gates.verify import verify_child
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_BOOTSTRAP = importlib.util.spec_from_file_location(
+    "autopoiesis_script_bootstrap", PROJECT_ROOT / "scripts/_bootstrap.py"
+)
+if _BOOTSTRAP is None or _BOOTSTRAP.loader is None:
+    raise ImportError("actual project bootstrap is unavailable")
+_bootstrap = importlib.util.module_from_spec(_BOOTSTRAP)
+_BOOTSTRAP.loader.exec_module(_bootstrap)
+_bootstrap.bootstrap_project(PROJECT_ROOT)
+
+from template_autopoiesis.gates.sealing import seal_verified_child  # noqa: E402 - actual provider selection precedes own imports
 
 
 def seal_child(child_root: Path) -> None:
-    """Write seal.json to *child_root*."""
-    import json as _json
-
-    prov_path = child_root / "provenance.json"
-    if not prov_path.exists():
-        print(f"ERROR: provenance.json not found in {child_root}", file=sys.stderr)
-        sys.exit(1)
-
-    prov = _json.loads(prov_path.read_text())
-    spec = prov.get("spec", {})
-    spec_hash = spec.get("seed", "unknown")
-    tree_hash = prov.get("tree_hash", "")
-    seed = spec.get("seed", 0)
-
-    # Re-verify before sealing
-    report = verify_child(child_root)
-    if not report.all_passed:
-        failed = [c.name for c in report.checks if not c.passed]
-        print(f"WARNING: verification failed: {failed}", file=sys.stderr)
-
-    payload = build_payload(str(spec_hash), tree_hash, int(seed))
-    seal = {
-        "spec_hash": str(spec_hash),
-        "tree_hash": tree_hash,
-        "seed": seed,
-        "payload": payload,
-    }
-    seal_path = child_root / "seal.json"
-    seal_path.write_text(json.dumps(seal, indent=2))
-    print(f"Sealed: {seal_path}")
+    """Seal a verified child using its actual spec and current source bytes."""
+    print(f"Sealed: {seal_verified_child(child_root)}")
 
 
-def main():
-    """CLI entry point."""
-    if len(sys.argv) < 2:
-        print("Usage: seal_child.py <child_root>", file=sys.stderr)
-        sys.exit(1)
-    seal_child(Path(sys.argv[1]))
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("child_root", type=Path)
+    args = parser.parse_args(argv)
+    try:
+        seal_child(args.child_root)
+    except (OSError, ValueError, TypeError) as exc:
+        print(f"Required child seal failed: {exc}", file=sys.stderr)
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

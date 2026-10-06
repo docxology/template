@@ -22,15 +22,14 @@ Edit `manuscript/config.yaml` → `project_config.search_phases` (per-phase
 queries, engines, temporal filters), `llm_filters`, `phase_integration`, and
 `hypothesis_definitions`. See `forking_guide.md` for the full walkthrough.
 
-## Why does this project have symlinked source directories?
+## How does this project share the Meta engine?
 
-`src/analysis/`, `src/knowledge_graph/`, `src/reproducibility/`,
-`src/visualization/`, and `src/config_loader.py` are real filesystem symlinks
-into `template_literature_meta_analysis/src/` (ISA.md decision ARL-7): the
-advanced template reuses the single-term template's bibliometrics, LLM
-extraction, reproducibility scoring, and figure generation rather than
-reimplementing them. `STANDALONE.md` describes how a fork materializes them
-as regular files.
+`pyproject.toml` declares the `template-literature-meta-analysis` distribution.
+Scripts import its namespaced analysis, knowledge-graph, reproducibility and
+visualization methods. Advanced retains its own phase policy, retrieval adapters,
+configuration and manuscript variables. Shared fixes belong in Meta's canonical
+`src/` and need both provider and consumer verification. Installed acceptance
+requires the genuine Meta wheel; see `STANDALONE.md` for the export boundary.
 
 ## Why are mocks forbidden?
 

@@ -4,12 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_sia"
-version = "0.1.2"
+version = "0.2.0"
 license = {text = "MIT"}
 description = "Deterministic SIA self-improvement harness exemplar"
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    "research-project-template==4.0.0",
     "pyyaml>=6.0",
     "matplotlib>=3.7",
     "pillow>=12.3.0",
@@ -51,3 +52,13 @@ exclude_lines = [
 ]
 
 [tool.uv]
+
+[tool.uv.sources]
+# Local preparation uses this checkout; standalone execution uses its admitted wheel.
+research-project-template = { path = "../../..", editable = true }
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.0"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["local-proposals", "docker-sandbox"]

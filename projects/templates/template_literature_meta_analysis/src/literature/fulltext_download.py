@@ -36,8 +36,8 @@ import time
 from pathlib import Path
 from typing import Any, Optional
 
-from literature.corpus import Corpus
-from literature.models import Paper
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.models import Paper
 
 logger = logging.getLogger(__name__)
 

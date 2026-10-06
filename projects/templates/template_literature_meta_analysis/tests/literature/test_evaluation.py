@@ -11,9 +11,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from literature.corpus import Corpus
-from literature.evaluation import evaluate_corpus
-from literature.models import Author, Paper
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.evaluation import evaluate_corpus
+from template_literature_meta_analysis.literature.models import Author, Paper
 
 
 def _published(title: str, *, doi: str | None, source: str | None = None) -> Paper:

@@ -18,19 +18,19 @@ tests lives here so there is exactly one place to change it:
 from __future__ import annotations
 
 # --- Bibliography -----------------------------------------------------------
-# Placeholder keys. Replace with real references as the book is written; keep
-# references.bib and this tuple in sync (test_manuscript_integrity checks it).
+# Verified primary publication keys. Keep bibliography and namespace in sync;
+# scaffold generation uses the same real reference namespace in draft fixtures.
 CITATION_KEYS: tuple[str, ...] = (
-    "smith2020foundations",
-    "doe2019methods",
-    "lee2021systems",
-    "garcia2022dynamics",
-    "patel2018models",
-    "nguyen2023synthesis",
-    "kim2020data",
-    "brown2017principles",
-    "wilson2021analysis",
-    "taylor2019theory",
+    "box1976science",
+    "sandve2013ten",
+    "nyquist1932regeneration",
+    "lorenz1963deterministic",
+    "may1976simple",
+    "wilkinson2016fair",
+    "shannon1948mathematical",
+    "turing1937computable",
+    "wilson2014best",
+    "taschuk2017ten",
 )
 
 # --- Glossary ---------------------------------------------------------------

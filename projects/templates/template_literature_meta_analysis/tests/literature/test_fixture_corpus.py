@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from literature.fixture_corpus import DEFAULT_TERM, TOPICS, build_synthetic_corpus
+from template_literature_meta_analysis.literature.fixture_corpus import DEFAULT_TERM, TOPICS, build_synthetic_corpus
 
 
 def _serialize(corpus) -> list[dict]:

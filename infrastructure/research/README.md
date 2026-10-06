@@ -1,117 +1,87 @@
 # Research Workflow Module
 
-Programmatic definition of the seven-stage research workflow and agent-facing
-prompt text for the template/ research infrastructure. Ported and adapted from
-[OpenScience](https://github.com/synthetic-sciences/openscience).
-
-## Overview
-
-```python
-from infrastructure.research import ResearchWorkflow
-
-workflow = ResearchWorkflow()
-
-# Print a markdown rendering of all seven stages
-print(workflow.describe())
-
-# Access a specific stage (implemented names: scope, survey, hypothesise,
-# experiment, validate, review, write — see the drift note under "Public API")
-stage = workflow.stage("survey")
-print(stage.description)
-```
-
-## Seven-Stage Workflow
-
-| # | Stage | Required | Sub-agent | Outputs |
-|---|-------|----------|-----------|---------|
-| 1 | SCOPE | ✓ | — | `scope.md` |
-| 2 | LITERATURE | ✓ | `literature-review` (×5) | `literature-review.md` |
-| 3 | REASON | ✓ | — | `reasoning.md` |
-| 4 | DESIGN | ✓ | — | `design.md` |
-| 5 | COMPUTE | ✓ | — | `results.md`, `output/data/*` |
-| 6 | SYNTHESIZE | ✓ | — | `synthesis.md` |
-| 7 | WRITE | optional | `write` | `manuscript/*` |
-
-## Agent Prompts
-
-| File | Use |
-|------|-----|
-| [`prompts/research_workflow.md`](prompts/research_workflow.md) | Load as system context for the primary research agent. |
-| [`prompts/literature_review.md`](prompts/literature_review.md) | Load as context when spawning `literature-review` sub-agents. |
-
-## Key Commands
-
-```bash
-# Literature search (multi-backend: arXiv + Crossref)
-uv run python -m infrastructure.search.literature search \
-    --query 'your query' --max-results 50
-
-# Export as BibTeX into a project's manuscript
-uv run python -m infrastructure.search.literature.cli to-bibtex \
-    'your query' --source arxiv,crossref \
-    --output projects/{name}/manuscript/references.bib
-
-# Exa semantic / grounded-answer search
-uv run python -m infrastructure.search.exa answer 'your query'
-
-# Run the full project pipeline
-uv run python scripts/runner/execute_pipeline.py --project {name}
-
-# Run only the analysis stage
-uv run python scripts/pipeline/stage_02_analysis.py --project {name}
-
-# Record a provenance node
-uv run python -m infrastructure.provenance record run \
-    --tool synthesize --label 'synthesis complete' --project {name}
-```
+`ResearchWorkflow` describes a research plan. Its stage descriptors record
+expected inputs, outputs, gates, order and status. Creating or displaying a
+plan performs no research computation and does not establish that any gate passed.
 
 ## Public API
 
 ```python
-from infrastructure.research import (
-    ResearchStage,          # dataclass: one workflow stage (name/label/description/inputs/outputs/gate/status/order)
-    ResearchWorkflow,       # instance API: workflow.stage(name), workflow.all_stages(), workflow.describe()
-    StageStatus,            # enum: pending/in_progress/complete status per stage
-    ResearchWorkflowConfig, # parsed config.yaml `research_workflow:` block
-)
+from infrastructure.research import ResearchWorkflow, load_research_workflow_config
+
+workflow = ResearchWorkflow()
+print(workflow.describe())
+print(workflow.stage("survey").gate)
+for stage in workflow.all_stages():
+    print(stage.name, stage.inputs, stage.outputs)
+serialized = workflow.to_dict()
+config = load_research_workflow_config("projects/templates/template_code_project")
 ```
 
-> **Doc/code drift (tracked for follow-up):** there is no module-level
-> `WORKFLOW_STAGES` export — use `ResearchWorkflow().all_stages()` instead.
-> The "Seven-Stage Workflow" table above (SCOPE/LITERATURE/REASON/DESIGN/
-> COMPUTE/SYNTHESIZE/WRITE, with per-stage sub-agent fan-out) describes an
-> OpenScience-ported design richer than what `ResearchStage` actually
-> implements (`scope, survey, hypothesise, experiment, validate, review,
-> write` — no `parallel_subagents`/`template_commands` fields). Treat the
-> table and the "Provenance Integration" `record run`/`evidence add` CLI
-> examples below as design intent, not a verified API surface.
+The package exports `ResearchWorkflow`, `ResearchStage`, `StageStatus`,
+`ResearchWorkflowConfig` and `load_research_workflow_config`.
+`ResearchStage.to_dict()` and `ResearchWorkflow.to_dict()` serialize descriptors;
+callers supply actual execution and evidence separately.
 
-## Provenance Integration
+## Built-in stages
 
-The SYNTHESIZE stage uses `infrastructure.provenance` to record durable
-research state. If the module is unavailable, skip silently — it is additive.
+| Order | Name | Described work |
+|---|---|---|
+| 0 | `scope` | Research question, success criteria, domain profile and experiment plan |
+| 1 | `survey` | Literature collection and normalization |
+| 2 | `hypothesise` | Testable hypotheses and idea ledger |
+| 3 | `experiment` | Experiments, run ledger and provenance |
+| 4 | `validate` | Evidence registry and validation report |
+| 5 | `review` | Review decisions and required approvals |
+| 6 | `write` | Manuscript and research artifacts |
+
+Exact descriptor fields and gate text come from [`workflow.py`](workflow.py).
+
+## Configuration and inspection
+
+The library loader reads optional `research_workflow.yaml` at the **project root**.
+Its supported keys are `enabled`, `active_stage`, `skip_stages` and `strict`;
+[`config.py`](config.py) validates booleans, known keys and stage names.
+Absent files return the dataclass defaults. These settings describe tracking
+preferences; loading them executes no stages.
+
+```yaml
+# projects/<qualified-project>/research_workflow.yaml
+enabled: true
+active_stage: survey
+skip_stages: []
+strict: true
+```
+
+The repository inspection script has a separate enable switch in
+`manuscript/config.yaml`: `research_workflow.enabled`. It reports descriptors:
 
 ```bash
-uv run python -m infrastructure.provenance record run \
-    --tool synthesize --label '{description}' --project {name}
-
-uv run python -m infrastructure.provenance evidence add \
-    --target {node_id} --artifact output/data/{artifact} --project {name}
+uv run python scripts/pipeline/stage_10_research_workflow.py \
+  --project templates/template_code_project --describe
+# With the inspection switch enabled in manuscript/config.yaml:
+uv run python scripts/pipeline/stage_10_research_workflow.py \
+  --project templates/template_code_project --stage survey
 ```
 
-## Source Attribution
+`--describe` prints the plan even without that switch. `--stage` prints one
+stage's details; it launches no model, search or experiment.
+Actual project execution uses the canonical pipeline and its source-owned
+contracts in [`pipeline.yaml`](../core/pipeline/pipeline.yaml).
 
-The research workflow and literature-review prompt structures are adapted from
-OpenScience (`synthetic-sciences/openscience`) by Synthetic Sciences AI.
-Adapted for the template/ research infrastructure: OpenScience CLI commands
-replaced with `uv run python -m infrastructure.*` invocations; Atlas
-persistence replaced with `infrastructure.provenance`; cloud-GPU directives
-replaced with the template/ pipeline scripts.
+## Agent guidance
 
-## See Also
+[`prompts/research_workflow.md`](prompts/research_workflow.md) and
+[`prompts/literature_review.md`](prompts/literature_review.md) are optional
+agent-context documents adapted from OpenScience. They are prose guidance,
+independent of the Python descriptor API.
 
-- [`AGENTS.md`](AGENTS.md) — agent operating contract
-- [`infrastructure/search/README.md`](../search/README.md) — literature search module
-- [`infrastructure/autoresearch/README.md`](../autoresearch/README.md) — deterministic readiness checks
-- [`scripts/AGENTS.md`](../../scripts/AGENTS.md) — pipeline entry points
-- [`infrastructure/core/pipeline/pipeline.yaml`](../core/pipeline/pipeline.yaml) — the pipeline stage definitions (authoritative; stage count derived live)
+## Verification and navigation
+
+```bash
+uv run pytest tests/infra_tests/research/ --no-cov -q
+```
+
+See [`AGENTS.md`](AGENTS.md), [`SKILL.md`](SKILL.md),
+[`search/README.md`](../search/README.md) and
+[`autoresearch/README.md`](../autoresearch/README.md).

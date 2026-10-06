@@ -1,99 +1,152 @@
 # Orientation to the Field {#sec:part_0_orientation}
 
-![Overview schematic for "Orientation to the Field". Replace this generated placeholder with a real figure produced by `src/visualization/plots.py`.](../../output/figures/part_0_orientation.png){#fig:part_0_orientation width=90%}
+![Deterministic logistic trajectories at three positive growth rates with common initial state and capacity.](../../output/figures/part_0_orientation.png){#fig:part_0_orientation width=90%}
 
-<!-- alt: Placeholder overview schematic for the chapter "Orientation to the Field". TODO: write descriptive alt text once the real figure exists. -->
+<!-- alt: Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner. -->
 
 <!-- chapter-metadata-badge -->
-> Level 1/3 · 30 min read · 45 min lecture · Prerequisites: none
-
-## Learning Objectives
-
-By the end of this chapter you should be able to:
-
-1. <!-- STUB: objective --> TODO: state the first measurable learning objective.
-2. <!-- STUB: objective --> TODO: state the second learning objective.
-3. <!-- STUB: objective --> TODO: state the third learning objective.
+> Guided study · Prerequisites: basic arithmetic and the preceding unit's vocabulary
 
 <!-- curriculum-scaffold-start -->
 ### Study Blueprint
 
-- **Big idea:** <!-- STUB: one-sentence thesis for this chapter. -->
-- **Core concepts:** [**regulation**](#gl:regulation), [**boundary**](#gl:boundary), [**state**](#gl:state).
-- **Quantitative lens:** the worked formalism in [@eq:part_0_orientation_model].
-- **Data skill:** <!-- STUB: which data move the reader practises here. -->
-- **Common misconception to repair:** <!-- STUB. -->
+- **Big idea:** Begin a model by naming a question, a boundary and an observation that could change your mind.
+- **Core concepts:** [**system**](#gl:system), [**boundary**](#gl:boundary), [**state**](#gl:state), [**observable**](#gl:observable).
+- **Quantitative lens:** [@eq:part_0_orientation_model].
+- **Data skill:** Keep observation definitions and model assumptions next to the prediction.
+- **Common misconception to repair:** A plausible curve is not a complete explanation of the system.
 - **Primary lab:** [@sec:lab_part_0_orientation].
 - **Question bank:** [@sec:q_part_0_orientation].
-- **Bridge to computation:** `textbook.models`.
+- **Bridge to computation:** `textbook.models.logistic_growth`.
 <!-- curriculum-scaffold-end -->
 
----
+## Learning Objectives
 
-> **Opening Vignette: TKTK — a motivating story**
->
-> <!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [@lee2021systems]. -->
+1. Draw a system boundary and classify the inputs that cross it.
+2. Distinguish a state, a measurement and a parameter in a concrete example.
+3. State what an illustrative model predicts and what evidence would challenge it.
 
----
+> **Opening example.** Imagine a library planning a new borrowing service. Daily sign-ups rise quickly, then slow. The manager asks whether the service will reach everyone in the town. A smooth curve can organize that question, but the curve alone cannot tell us who was excluded, whether the town changed, or how sign-ups were recorded. Those omissions are where modeling begins.
 
-## Orientation
+## A question before an equation
 
-<!-- STUB: 2-4 paragraphs introducing the chapter. --> This section introduces
-the central ideas of *Orientation to the Field*. Foundational treatments include
-[@kim2020data; @brown2017principles]. Key terms such as [**regulation**](#gl:regulation), [**boundary**](#gl:boundary), [**state**](#gl:state) are defined in the glossary.
+The useful starting question is precise enough to make an observation relevant.
+“How does the service work?” is a broad invitation. “How many registered users
+will the service have after five time units if current conditions persist?”
+defines a quantity, horizon and conditional claim. The conditional phrase is
+essential: a prediction is about specified circumstances, not a promise that
+those circumstances will continue. Write the question before choosing a familiar
+equation, so that convenience does not decide what the study is about.
+
+## Choosing the boundary
+
+A boundary decides which processes the model represents explicitly and which
+arrive as inputs or disturbances. For sign-ups, the modeled state might be the
+number of registered accounts; publicity, population changes and service outages
+may remain outside. Drawing a boundary does not deny those processes. It makes
+their omission inspectable. Two investigators can draw different boundaries
+around the same service and produce different useful models because they are
+answering different questions. Record the choice and the reason rather than
+arguing that one diagram is the service itself.
+
+## State is not the measurement
+
+The account count is an observable produced by a counting procedure. A person
+may hold two accounts, and a registered account may never borrow anything. A
+state representing active participants is therefore not identical to a table
+of registrations. Before evaluating a prediction, specify the observation rule,
+the time at which counting occurs, and how duplicates are treated. This book's
+worked quantities are instructional examples; they do not report actual users
+or biological populations. Keeping that distinction prevents synthetic examples
+from acquiring false authority merely because they are drawn as precise curves.
+
+## The prediction and its challenge
+
+The logistic illustration combines an initial value, a positive growth rate
+and a capacity. Several rate choices produce the family in the chapter figure.
+The same initial count can therefore lead to different intermediate forecasts.
+If later observations consistently exceed the declared capacity, the model has
+failed a useful challenge: revise the capacity assumption or select another
+model. Adjusting every parameter after every new observation without preserving
+the previous forecast removes this challenge. Keep the original forecast and
+compare it with the later outcome before revising the next one.
+
+## An evidence record
+
+For this exercise, keep four items: the question, the observation definition,
+the model configuration and the resulting prediction. Attach the input data
+and execution command when computation enters the record. A hash identifies
+bytes, a test checks selected behavior, and a comparison checks a prediction;
+none substitutes for the others. Box discusses iterative contact between theory
+and practice [@box1976science]. The lab translates that idea into a small record
+that another learner can inspect without knowing what its author intended.
 
 ## A Worked Formalism
 
-The recurring quantitative model for this chapter is shown in [@eq:part_0_orientation_model]:
+$$ N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}} $$ {#eq:part_0_orientation_model}
 
-$$ N(t) = \frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right) e^{-rt}} $$ {#eq:part_0_orientation_model}
-
-It is implemented and tested in `textbook.models.logistic_growth`; never retype
-the maths in prose or scripts — call the tested function. The parameters appear
-in [@tbl:part_0_orientation_parameters].
-
-: Parameters of the worked model for this chapter. {#tbl:part_0_orientation_parameters}
+: Quantities and conventions for this chapter's worked example. {#tbl:part_0_orientation_parameters}
 
 | Symbol | Meaning | Units |
-| ------ | ------- | ----- |
-| $r$ | intrinsic rate | 1/time |
-| $K$ | carrying capacity | quantity |
-| $N_0$ | initial value | quantity |
+| --- | --- | --- |
+| $N(t)$ | State at time $t$ | quantity |
+| $N_0$ | Initial state, between zero and $K$ | quantity |
+| $K$ | Capacity held fixed in this model | quantity |
+| $r$ | Positive growth rate | inverse time |
 
-A concept map of how the pieces fit together:
+At time zero the denominator is $1+19=20$, so the state is exactly five units. At time two it is $1+19e^{-1.4}$, giving about $17.59$ units. The state approaches $100$ as the exponential term approaches zero. These are predictions of a chosen model, not measured evidence that a real population or service has a fixed capacity.
 
-```mermaid
-graph TD
-  A[Inputs / assumptions] --> B[Model]
-  B --> C[Predictions]
-  C --> D[Comparison with data]
-  D -->|revise| A
+```python
+import numpy as np
+from textbook.models import logistic_growth
+
+time = np.array([0.0, 2.0, 5.0])
+values = logistic_growth(time, r=0.7, carrying_capacity=100.0, initial=5.0)
+assert np.isclose(values[0], 5.0)
+assert np.all(np.diff(values) > 0)
+assert np.all(values < 100.0)
+print(values)
 ```
 
-> **Note**
->
-> <!-- STUB: an aside, caveat, or historical note. -->
+The equation is evaluated by the tested `textbook.models.logistic_growth`.
+The assertions above are independent expectations for this designed example;
+the displayed figure in [@fig:part_0_orientation] is a deterministic illustration with its
+own explicitly stated inputs, not evidence collected from the opening scenario.
 
-## Going Deeper
+## Assumptions and Limits
 
-<!-- STUB: the substantive body of the chapter. Expand freely — figures,
-tables, equations, and subsections may repeat as needed. --> See the overview in
-[@fig:part_0_orientation] and revisit the objectives above as you read. Further evidence:
-[@kim2020data; @brown2017principles].
+The closed form assumes a constant positive rate and a fixed capacity with an initial state strictly above zero and no larger than capacity. It omits migration, changing resources and random shocks. A discrepancy can therefore reflect a failed assumption rather than a programming error. First inspect the units and initial value, then ask which omitted process could generate the observed discrepancy.
+
+```mermaid
+flowchart LR
+  Q[Question and observation rule] --> I[Declared inputs and units]
+  I --> M[Tested model]
+  M --> P[Predicted quantities]
+  P --> C[Independent comparison]
+  C -->|record a revision| Q
+```
+
+This diagram records the direction of a modeling workflow. An arrow names a
+relationship to specify; it does not add an unimplemented physical mechanism.
+Keep the original prediction when making the recorded revision.
 
 ## Summary
 
-<!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
+Begin a model by naming a question, a boundary and an observation that could change your mind. The worked example makes a narrow quantitative claim that can
+be checked with exact inputs and a tested function. A plausible curve is not a complete explanation of the system.
+State the assumptions, preserve the observation record and choose a comparison
+that can distinguish an arithmetic error from an inadequate model. Those habits
+make a result inspectable without expanding what its evidence establishes.
 
 ## Key Terms
 
-[**feedback**](#gl:feedback), [**gradient**](#gl:gradient), [**threshold**](#gl:threshold), [**network**](#gl:network).
+[**system**](#gl:system), [**boundary**](#gl:boundary), [**state**](#gl:state), [**observable**](#gl:observable).
 
 ## Further Reading
 
-- <!-- STUB: annotated pointer --> TODO: one-line annotation [@wilson2021analysis].
+Box [@box1976science] discusses model-building as an iterative scientific activity; compare the role of a model check with changing a parameter.
 
 ## Practice
 
-- **Lab:** [@sec:lab_part_0_orientation]
-- **Question bank:** [@sec:q_part_0_orientation]
+- **Lab:** [@sec:lab_part_0_orientation] — execute the worked computation and its boundary control.
+- **Question bank:** [@sec:q_part_0_orientation] — compare your reasoning with the supplied solutions.

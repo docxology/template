@@ -1,289 +1,87 @@
-"""Tests for infrastructure.orchestration.pipeline_runner.
-
-The runner is a thin facade over the existing
-:class:`infrastructure.core.pipeline.PipelineExecutor`. We exercise the
-banner emission and option-translation logic without invoking the real
-heavy pipeline (which would need pandoc / LaTeX). The "no mocks" rule
-is honoured by injecting a real subclass that overrides only the
-heavy-IO methods, not by using ``unittest.mock``.
-"""
+"""Runner contracts through real declared stages and child processes."""
 
 from __future__ import annotations
 
 import io
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
-import pytest
-
-from infrastructure.orchestration.pipeline_runner import (
-    MultiProjectInvocation,
-    PipelineInvocation,
-    PipelineRunner,
-)
+from infrastructure.orchestration.pipeline_runner import MultiProjectInvocation, PipelineInvocation, PipelineRunner
+from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 
 
-@dataclass
-class _FakeStageResult:
-    success: bool = True
-
-
-class _StubExecutor:
-    """Stand-in for PipelineExecutor that records calls and returns canned results."""
-
-    last_instance: "_StubExecutor | None" = None
-
-    def __init__(self, config: Any) -> None:
-        self.config = config
-        self.full_calls = 0
-        self.core_calls = 0
-        type(self).last_instance = self
-
-    def execute_full_pipeline(self):
-        self.full_calls += 1
-        return [_FakeStageResult(True), _FakeStageResult(True)]
-
-    def execute_core_pipeline(self):
-        self.core_calls += 1
-        return [_FakeStageResult(True)]
-
-
-@pytest.fixture
-def patched_runner(fake_repo: Path) -> PipelineRunner:
-    """A PipelineRunner with a stubbed executor (heavy IO not needed for these tests)."""
-    return PipelineRunner(repo_root=fake_repo, stream=io.StringIO(), executor_factory=_StubExecutor)
-
-
-def test_run_full_pipeline_emits_banners(patched_runner: PipelineRunner) -> None:
-    rc = patched_runner.run(PipelineInvocation(project="template_code_project"))
-    assert rc == 0
-    text = patched_runner.stream.getvalue()
-    assert "FULL PIPELINE" in text
-    assert "Environment Setup" in text
-    assert "Copy Outputs" in text
-    assert _StubExecutor.last_instance is not None
-    assert _StubExecutor.last_instance.full_calls == 1
-
-
-def test_run_core_only_excludes_llm_banners(patched_runner: PipelineRunner) -> None:
-    rc = patched_runner.run(PipelineInvocation(project="template_code_project", core_only=True))
-    assert rc == 0
-    text = patched_runner.stream.getvalue()
-    assert "CORE PIPELINE" in text
-    # LLM stages must not be banner-rendered in core-only mode
-    assert "LLM Scientific Review" not in text
-    assert "LLM Translations" not in text
-    assert _StubExecutor.last_instance.core_calls == 1
-
-
-def test_run_skip_infra_omits_infra_banner(patched_runner: PipelineRunner) -> None:
-    patched_runner.run(PipelineInvocation(project="template_code_project", skip_infra=True))
-    text = patched_runner.stream.getvalue()
-    assert "Infrastructure Tests" not in text
-    # Project Tests still present
-    assert "Project Tests" in text
-
-
-def test_run_writes_log_file(patched_runner: PipelineRunner, fake_repo: Path) -> None:
-    patched_runner.run(PipelineInvocation(project="template_code_project"))
-    log = fake_repo / "projects" / "template_code_project" / "output" / "logs" / "pipeline.log"
-    assert log.exists()
-
-
-def test_run_returns_failure_on_exception(fake_repo: Path) -> None:
-    class _BoomExecutor:
-        def __init__(self, config):
-            pass
-
-        def execute_full_pipeline(self):
-            raise RuntimeError("boom")
-
-    runner = PipelineRunner(repo_root=fake_repo, stream=io.StringIO(), executor_factory=_BoomExecutor)
-    rc = runner.run(PipelineInvocation(project="template_code_project"))
-    assert rc == 1
-    assert "FAILED" in runner.stream.getvalue()
-
-
-def test_run_returns_failure_when_stage_unsuccessful(fake_repo: Path) -> None:
-    class _FailingExecutor:
-        def __init__(self, config):
-            pass
-
-        def execute_full_pipeline(self):
-            return [_FakeStageResult(False)]
-
-        def execute_core_pipeline(self):
-            return [_FakeStageResult(False)]
-
-    runner = PipelineRunner(repo_root=fake_repo, stream=io.StringIO(), executor_factory=_FailingExecutor)
-    rc = runner.run(PipelineInvocation(project="template_code_project"))
-    assert rc == 1
-
-
-def test_run_returns_failure_when_executor_plan_is_empty(fake_repo: Path) -> None:
-    class _EmptyPlanExecutor(_StubExecutor):
-        def preview_stage_names(self, *, include_llm: bool) -> tuple[str, ...]:
-            return ()
-
-    runner = PipelineRunner(
-        repo_root=fake_repo,
-        stream=io.StringIO(),
-        executor_factory=_EmptyPlanExecutor,
-    )
-
-    assert runner.run(PipelineInvocation(project="template_code_project")) == 1
-    assert "no executable stages" in runner.stream.getvalue()
-
-
-def test_run_banners_use_executor_project_and_plugin_plan(fake_repo: Path) -> None:
-    class _ProjectPlanExecutor(_StubExecutor):
-        def preview_stage_names(self, *, include_llm: bool) -> tuple[str, ...]:
-            assert include_llm
-            return ("Project Override", "Plugin Verification")
-
-    runner = PipelineRunner(
-        repo_root=fake_repo,
-        stream=io.StringIO(),
-        executor_factory=_ProjectPlanExecutor,
-    )
-
-    assert runner.run(PipelineInvocation(project="template_code_project")) == 0
+def test_default_core_banners_match_executed_plan(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path)
+    runner = PipelineRunner(tmp_path, stream=io.StringIO())
+    assert runner.run(PipelineInvocation("demo")) == 0
     transcript = runner.stream.getvalue()
-    assert "[1/2] Project Override" in transcript
-    assert "[2/2] Plugin Verification" in transcript
-    assert "Environment Setup" not in transcript
+    assert "CORE PIPELINE" in transcript and "Project Analysis" in transcript
+    assert "Live Review" not in transcript
+    assert (tmp_path / "process_order.log").read_text().splitlines() == ["demo:infra", "demo:analysis"]
 
 
-# --- Multi-project ---------------------------------------------------------
+def test_explicit_live_mode_executes_live_stage(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path)
+    runner = PipelineRunner(tmp_path, stream=io.StringIO())
+    assert runner.run(PipelineInvocation("demo", mode="live")) == 0
+    assert "Live Review" in runner.stream.getvalue()
+    assert (tmp_path / "projects/demo/output/data/live.json").is_file()
 
 
-class _StubMulti:
-    last_instance: "_StubMulti | None" = None
-
-    def __init__(self, config: Any) -> None:
-        self.config = config
-        self.calls: list[str] = []
-        type(self).last_instance = self
-
-    def _ok(self):
-        from infrastructure.core.pipeline.multi_project import MultiProjectResult
-        from infrastructure.core.pipeline.types import PipelineStageResult
-
-        names = [p.qualified_name for p in self.config.projects]
-        stage = PipelineStageResult(1, "Copy Outputs", True, 0.0)
-        project_results = {n: [stage] for n in names}
-        return MultiProjectResult(
-            project_results=project_results,
-            successful_projects=len(names),
-            failed_projects=0,
-            total_duration=0.5,
-            infra_test_duration=0.0,
-        )
-
-    def _one_failure(self):
-        from infrastructure.core.pipeline.multi_project import MultiProjectResult
-        from infrastructure.core.pipeline.types import PipelineStageResult
-
-        names = [p.qualified_name for p in self.config.projects]
-        ok = PipelineStageResult(1, "Environment Setup", True, 0.0)
-        bad = PipelineStageResult(
-            2,
-            "Run Tests",
-            False,
-            0.1,
-            exit_code=1,
-            error_message="tests failed",
-        )
-        project_results: dict[str, list[Any]] = {}
-        for i, n in enumerate(names):
-            project_results[n] = [ok, bad] if i == 0 else [ok]
-        successes = sum(1 for n in names if project_results[n] and all(s.success for s in project_results[n]))
-        return MultiProjectResult(
-            project_results=project_results,
-            successful_projects=successes,
-            failed_projects=len(names) - successes,
-            total_duration=1.0,
-        )
-
-    def execute_all_projects_full(self):
-        self.calls.append("full")
-        return self._ok()
-
-    def execute_all_projects_core(self):
-        self.calls.append("core")
-        return self._ok()
-
-    def execute_all_projects_full_no_infra(self):
-        self.calls.append("full_no_infra")
-        return self._ok()
-
-    def execute_all_projects_core_no_infra(self):
-        self.calls.append("core_no_infra")
-        return self._ok()
+def test_skip_infra_uses_selected_expected_set(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path)
+    runner = PipelineRunner(tmp_path, stream=io.StringIO())
+    assert runner.run(PipelineInvocation("demo", skip_infra=True)) == 0
+    assert "Infrastructure Tests" not in runner.stream.getvalue()
+    assert (tmp_path / "process_order.log").read_text().splitlines() == ["demo:analysis"]
 
 
-@pytest.fixture
-def patched_multi_runner(fake_repo: Path) -> PipelineRunner:
-    return PipelineRunner(
-        repo_root=fake_repo,
-        stream=io.StringIO(),
-        orchestrator_factory=_StubMulti,
-    )
+def test_child_exit_two_cannot_report_complete(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path, ("fail",))
+    runner = PipelineRunner(tmp_path, stream=io.StringIO())
+    assert runner.run(PipelineInvocation("fail", skip_infra=True)) == 1
+    assert "PIPELINE FAILED" in runner.stream.getvalue()
 
 
-def test_run_multi_full(patched_multi_runner: PipelineRunner) -> None:
-    rc = patched_multi_runner.run_multi(MultiProjectInvocation())
-    assert rc == 0
-    assert _StubMulti.last_instance.calls == ["full"]
+def test_invalid_mode_is_invocation_error(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path)
+    runner = PipelineRunner(tmp_path, stream=io.StringIO())
+    assert runner.run(PipelineInvocation("demo", mode="unknown")) == 2
+    assert not (tmp_path / "process_order.log").exists()
 
 
-def test_run_multi_core(patched_multi_runner: PipelineRunner) -> None:
-    patched_multi_runner.run_multi(MultiProjectInvocation(skip_llm=True))
-    assert _StubMulti.last_instance.calls == ["core"]
+def test_multi_runs_shared_infrastructure_once(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path, ("alpha", "beta"))
+    runner = PipelineRunner(tmp_path, stream=io.StringIO())
+    assert runner.run_multi(MultiProjectInvocation()) == 0
+    rows = (tmp_path / "process_order.log").read_text().splitlines()
+    assert sum(row.endswith(":infra") for row in rows) == 1
+    assert sorted(row for row in rows if row.endswith(":analysis")) == ["alpha:analysis", "beta:analysis"]
 
 
-def test_run_multi_no_infra(patched_multi_runner: PipelineRunner) -> None:
-    patched_multi_runner.run_multi(MultiProjectInvocation(skip_infra=True))
-    assert _StubMulti.last_instance.calls == ["full_no_infra"]
+def test_failed_shared_infrastructure_prevents_all_projects(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path, ("alpha", "beta"), infra_exit=2)
+    runner = PipelineRunner(tmp_path, stream=io.StringIO())
+    assert runner.run_multi(MultiProjectInvocation()) == 1
+    assert (tmp_path / "process_order.log").read_text().splitlines() == ["alpha:infra"]
 
 
-def test_run_multi_core_no_infra(patched_multi_runner: PipelineRunner) -> None:
-    patched_multi_runner.run_multi(MultiProjectInvocation(skip_infra=True, skip_llm=True))
-    assert _StubMulti.last_instance.calls == ["core_no_infra"]
+def test_runner_canonicalizes_bare_public_project_before_execution(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path, ("templates/demo",))
+    runner = PipelineRunner(tmp_path, stream=io.StringIO())
+    assert runner.run(PipelineInvocation("demo", skip_infra=True)) == 0
+    assert (tmp_path / "process_order.log").read_text().splitlines() == ["templates/demo:analysis"]
 
 
-def test_run_multi_emits_succeeded_project_names(patched_multi_runner: PipelineRunner) -> None:
-    patched_multi_runner.run_multi(MultiProjectInvocation(skip_infra=True, skip_llm=True))
-    text = patched_multi_runner.stream.getvalue()
-    assert "Succeeded:" in text
-    assert "template_code_project" in text
-    assert "some_rotating_project" in text
+def test_runner_rejects_traversal_before_creating_logs(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path)
+    runner = PipelineRunner(tmp_path, stream=io.StringIO())
+    assert runner.run(PipelineInvocation("../outside")) == 2
+    assert not (tmp_path / "outside").exists()
+    assert not (tmp_path / "process_order.log").exists()
 
 
-class _StubMultiOneFail(_StubMulti):
-    def execute_all_projects_core_no_infra(self):
-        self.calls.append("core_no_infra")
-        return self._one_failure()
-
-
-def test_run_multi_emits_failure_detail(fake_repo: Path) -> None:
-    runner = PipelineRunner(
-        repo_root=fake_repo,
-        stream=io.StringIO(),
-        orchestrator_factory=_StubMultiOneFail,
-    )
-    rc = runner.run_multi(MultiProjectInvocation(skip_infra=True, skip_llm=True))
-    assert rc == 1
-    txt = runner.stream.getvalue()
-    assert "Failed:" in txt
-    assert "Run Tests" in txt
-    assert "tests failed" in txt
-
-
-def test_run_multi_no_projects(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    """When no projects are discovered, run_multi must return non-zero."""
-    (tmp_path / "projects").mkdir()
-    runner = PipelineRunner(repo_root=tmp_path, stream=io.StringIO())
-    rc = runner.run_multi(MultiProjectInvocation())
-    assert rc == 1
+def test_multi_invalid_mode_is_invocation_error(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path)
+    runner = PipelineRunner(tmp_path, stream=io.StringIO())
+    assert runner.run_multi(MultiProjectInvocation(mode="unknown")) == 2
+    assert not (tmp_path / "process_order.log").exists()

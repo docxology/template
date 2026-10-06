@@ -8,8 +8,8 @@ The `infrastructure/validation/integrity/` package contains link validation and 
 
 - `checks.py` - integrity checks (`verify_output_integrity`, manifests, build artifacts)
 - `link_extract.py` - link extraction, path/import validators, `LinkCheckResult` (no CLI)
-- `check_links.py` - link audit CLI; re-exports `discover_markdown_files` from `content.discovery` and helpers from `link_extract`
-- `link_audit_core.py` - `run_link_audit(repo_root)` loop (uses `discover_markdown_files(..., scope="link_audit")`)
+- `check_links.py` - executable link audit CLI (`main`, `run_link_audit`)
+- `link_audit_core.py` - `run_link_audit(repo_root)` loop, pruning discovery and `generate_comprehensive_report`; library extraction helpers live in `link_extract`
 - `link_policies.py` - skip policies for anchors and generated paths
 - `link_validator.py` - `LinkValidator` path resolution helpers
 - `link_skip_policy.py` - `should_validate_path` plus `PATH_SKIP_SUBSTRINGS` / `PATH_SKIP_KEYWORDS` tables that exclude template/placeholder/example paths from filesystem checks

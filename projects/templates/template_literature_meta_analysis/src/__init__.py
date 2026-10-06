@@ -1,7 +1,9 @@
 """Literature Meta-Analysis source code.
 
-Top-level subpackages are imported directly (the project's conftest/scripts put
-``src/`` on ``sys.path``), e.g. ``from literature.models import Paper``.
+Every installed subpackage uses this canonical namespace, for example
+``from template_literature_meta_analysis.literature.models import Paper``.
+Source launchers register the same package explicitly; bare sibling aliases
+are not part of the distribution contract.
 """
 
 from __future__ import annotations

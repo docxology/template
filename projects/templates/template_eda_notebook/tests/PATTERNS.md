@@ -12,7 +12,7 @@ The following are **strictly forbidden** anywhere in this exemplar:
   running the real computation.
 - Replacing function bodies with stubs so tests never touch real pandas math.
 
-Every test exercises the real `src.eda` functions against either the shipped
+Every test exercises the real `template_eda_notebook.eda` functions against either the shipped
 CSV fixture (`data/measurements.csv`) or a tiny real DataFrame / temp CSV built
 in the test. No infrastructure is faked.
 
@@ -84,7 +84,7 @@ def test_negative_top_n_raises():
 ## Notebook Binding
 
 `test_notebook.py` reads the real `.ipynb` and asserts (1) it is valid
-`nbformat`, (2) every name imported `from src` exists in `src.__all__`, and
+`nbformat`, (2) every name imported `from src` exists in `template_eda_notebook.__all__`, and
 (3) no code cell defines its own `def`/`class`. This enforces the
 notebook -> tested src extraction contract structurally.
 

@@ -13,19 +13,11 @@ from collections.abc import Sequence
 from infrastructure.core.files.inventory import FileInventoryManager
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.errors import (
-    CLI_UNKNOWN_EXECUTION_TYPE,
     DISCOVER_FAILED,
     INVENTORY_FAILED,
-    INVALID_PROJECTS,
     MULTI_PROJECT_FAILED,
     NO_PROJECTS_FOUND,
-    NO_PROJECTS_TO_EXECUTE,
-    PIPELINE_EXECUTION_FAILED,
-    PIPELINE_STAGES_INCOMPLETE,
-    PROJECTS_INCOMPLETE,
 )
-from infrastructure.core.pipeline.executor import PipelineExecutor
-from infrastructure.core.pipeline.types import PipelineConfig
 from infrastructure.core.pipeline.multi_project import (
     MultiProjectConfig,
     MultiProjectOrchestrator,
@@ -34,6 +26,8 @@ from infrastructure.core.pipeline.multi_project import (
 )
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.project_info import ProjectInfo
+from infrastructure.orchestration.discovery import validate_project_slug
+from infrastructure.orchestration.pipeline_runner import PipelineInvocation, PipelineRunner
 
 logger = get_logger(__name__)
 
@@ -63,126 +57,50 @@ def _emit_multi_project_outcome(
 
 
 def handle_pipeline_command(args: argparse.Namespace) -> int:
-    """Handle pipeline execution command."""
-    logger.info(f"Executing {args.pipeline_type} pipeline for project '{args.project}'")
-
-    # Create pipeline configuration
-    config = PipelineConfig(
-        project_name=args.project,
-        repo_root=args.repo_root,
-        skip_infra=args.skip_infra,
-        skip_llm=(args.pipeline_type == "core"),
-        resume=args.resume,
+    """Delegate to the canonical orchestration consumer and expected-stage result."""
+    return PipelineRunner(args.repo_root).run(
+        PipelineInvocation(
+            args.project,
+            mode=args.mode,
+            skip_infra=args.skip_infra,
+            resume=args.resume,
+        )
     )
-
-    # Execute pipeline
-    executor = PipelineExecutor(config)
-
-    try:
-        if args.pipeline_type == "full":
-            results = executor.execute_full_pipeline()
-        else:  # core
-            results = executor.execute_core_pipeline()
-
-        # Report results
-        successful_stages = sum(1 for r in results if r.success)
-        total_stages = len(results)
-
-        logger.info(f"Pipeline completed: {successful_stages}/{total_stages} stages successful")
-
-        if all(r.success for r in results):
-            logger.info("✅ All pipeline stages completed successfully")
-            return 0
-        else:
-            logger.error(PIPELINE_STAGES_INCOMPLETE.format())
-            for result in results:
-                if not result.success:
-                    logger.error(
-                        f"  - Stage {result.stage_num}: {result.stage_name} - {result.error_message}"  # noqa: E501
-                    )
-            return 1
-
-    except Exception as e:  # noqa: BLE001 - pipeline execution can raise varied exceptions
-        logger.error(PIPELINE_EXECUTION_FAILED.format(error=f"{type(e).__name__}: {e}"))
-        return 1
 
 
 def handle_multi_project_command(args: argparse.Namespace) -> int:
-    """Handle multi-project execution command."""
-    logger.info(f"Executing {args.execution_type} pipeline across multiple projects")
-
+    """Run an explicit canonical project selection with shared verification once."""
     projects = discover_projects(args.repo_root)
     if not projects:
         logger.error(NO_PROJECTS_FOUND.format())
         return 1
-
-    # Filter projects if specified
     if args.projects:
-        project_names = {p.name for p in projects}
-        requested_names = set(args.projects)
-        invalid_projects = requested_names - project_names
-
-        if invalid_projects:
-            logger.error(INVALID_PROJECTS.format(projects=", ".join(invalid_projects)))
-            logger.info(f"Available projects: {', '.join(project_names)}")
-            return 1
-
-        projects = [p for p in projects if p.name in requested_names]
-
-    if not projects:
-        logger.error(NO_PROJECTS_TO_EXECUTE.format())
-        return 1
-
-    logger.info(f"Found {len(projects)} projects: {', '.join(p.name for p in projects)}")
-
-    # Create multi-project configuration
-    run_infra_tests = "no-infra" not in args.execution_type
-    run_llm = "core" not in args.execution_type
-
+        selected = tuple(validate_project_slug(name, args.repo_root, projects=projects) for name in args.projects)
+        if len(selected) != len(set(selected)):
+            raise ValueError("Duplicate selected project identities")
+        indexed = {project.qualified_name: project for project in projects}
+        if any(name not in indexed for name in selected):
+            raise ValueError("Selected projects must belong to the discovered render set")
+        projects = [indexed[name] for name in selected]
     config = MultiProjectConfig(
-        repo_root=args.repo_root,
-        projects=projects,
-        run_infra_tests=run_infra_tests,
-        run_llm=run_llm,
-        run_executive_report=True,
+        args.repo_root, projects, run_infra_tests=not args.skip_infra, mode=args.mode, resume=args.resume
     )
-
-    # Execute multi-project pipeline
-    orchestrator = MultiProjectOrchestrator(config)
-
     try:
-        if args.execution_type == "full":
-            result = orchestrator.execute_all_projects_full()
-        elif args.execution_type == "core":
-            result = orchestrator.execute_all_projects_core()
-        elif args.execution_type == "full-no-infra":
-            result = orchestrator.execute_all_projects_full_no_infra()
-        elif args.execution_type == "core-no-infra":
-            result = orchestrator.execute_all_projects_core_no_infra()
-        else:
-            logger.error(CLI_UNKNOWN_EXECUTION_TYPE.format(execution_type=args.execution_type))
-            return 1
-
-        # Report results
-        logger.info("Multi-project execution completed:")
-        logger.info(f"  - Successful projects: {result.successful_projects}")
-        logger.info(f"  - Failed projects: {result.failed_projects}")
-        logger.info(f"  - Total duration: {result.total_duration:.1f}s")
-
-        if result.infra_test_duration > 0:
-            logger.info(f"  - Infrastructure tests: {result.infra_test_duration:.1f}s")
-
+        result = MultiProjectOrchestrator(config).execute_all_projects()
         _emit_multi_project_outcome(logger, projects, result)
-
-        if result.successful_projects == len(projects):
-            logger.info("✅ All projects completed successfully")
-            return 0
-        else:
-            logger.error(PROJECTS_INCOMPLETE.format())
-            return 1
-
-    except Exception as e:  # noqa: BLE001 - multi-project execution can raise varied exceptions
-        logger.error(MULTI_PROJECT_FAILED.format(error=f"{type(e).__name__}: {e}"))
+        logger.info(
+            "Multi-project execution: %s succeeded, %s failed", result.successful_projects, result.failed_projects
+        )
+        return result.exit_code
+    except TimeoutError as exc:
+        logger.error("Multi-project deadline expired: %s", exc)
+        return 124
+    except KeyboardInterrupt:
+        return 130
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.error(MULTI_PROJECT_FAILED.format(error=f"{type(exc).__name__}: {exc}"))
         return 1
 
 

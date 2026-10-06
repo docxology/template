@@ -2,9 +2,10 @@
 
 A worked example of every **formal** element a technical book uses: definitions,
 theorems with proofs, lemmas, algorithms in pseudocode, step-by-step
-derivations, systems of numbered equations, and dimensioned quantities. Each maps
-to a tested function in `src/textbook/models.py`, so the prose and the code stay
-in agreement. <!-- STUB: replace these generic statements with your field's. -->
+derivations, systems of numbered equations, and dimensioned quantities. The growth, decay, and line-fit results connect to tested functions in
+`src/textbook/models.py`. The illustrative predator–prey equations demonstrate
+notation and are not implemented or empirically validated here. Each result applies under its stated mathematical assumptions;
+none is a claim that an observed system necessarily follows the model.
 
 > **Convention.** Theorem-like environments below use a portable bold-label
 > block-quote form that renders in every target. If your render profile loads
@@ -34,19 +35,20 @@ $$ N(t) = \frac{K}{1 + A e^{-rt}}, \qquad A = \frac{K - N_0}{N_0} . $$ {#eq:form
 
 *Proof.* Because $r > 0$, the term $e^{-rt} \to 0$ as $t \to \infty$. Hence the
 denominator $1 + A e^{-rt} \to 1$, and therefore $N(t) \to K/1 = K$. The
-constant $A \ge 0$ follows from $0 < N_0 \le K$, so $N(t)$ is increasing and the
-limit is approached from below. $\qquad\blacksquare$
+constant $A \ge 0$ follows from $0 < N_0 \le K$, so $N(t)$ is nondecreasing. When $N_0<K$, it approaches the
+limit from below; when $N_0=K$, it is constant. $\qquad\blacksquare$
 
 This is exactly the asymptotic behaviour the test
 `tests/test_models.py::test_logistic_growth_starts_at_initial_and_approaches_capacity`
-verifies numerically — the proof and the test assert the same fact.
+checks at finite sample values. That numerical check supports the implementation
+case; it does not prove the infinite-time limit.
 
 ---
 
 ## 3. A lemma
 
 > **Lemma 1 (Half-life).** For exponential decay $y(t) = y_0 e^{-\lambda t}$ with
-> $\lambda > 0$, the time at which $y$ falls to half its initial value is
+> $\lambda > 0$ and $y_0>0$, the time at which $y$ falls to half its initial value is
 > $t_{1/2} = \ln 2 / \lambda$, independent of $y_0$.
 
 *Proof.* Set $y(t_{1/2}) = y_0/2$. Then $e^{-\lambda t_{1/2}} = 1/2$, so
@@ -64,7 +66,7 @@ form renders everywhere.
 
 ```text
 Algorithm 1: Ordinary least-squares line fit
-Input : points (x_i, y_i), i = 1..n,  n >= 2
+Input : points (x_i, y_i), i = 1..n,  n >= 2, with at least two distinct x values
 Output: slope m, intercept b, coefficient of determination R^2
 1  x_bar <- mean(x);  y_bar <- mean(y)
 2  m <- sum((x_i - x_bar)(y_i - y_bar)) / sum((x_i - x_bar)^2)
@@ -82,7 +84,7 @@ This is `textbook.models.linear_fit`; Step 6's degenerate case is covered by
 
 ## 5. A step-by-step derivation
 
-Starting from the logistic differential equation and separating variables:
+For $0<N_0<K$, separating variables in the logistic differential equation gives:
 
 $$
 \begin{aligned}
@@ -93,7 +95,9 @@ N(t) &= \frac{K}{1 + A e^{-rt}}, \qquad A = e^{-C},
 \end{aligned}
 $$
 
-which recovers [@eq:formalisms_logistic]. Each line is one algebraic move; show
+which recovers [@eq:formalisms_logistic]. The boundary case $N_0=K$ has
+the constant solution and is handled separately because the logarithm above
+is undefined there. Each line is one algebraic move; show
 your work at this granularity so readers can follow without gaps.
 
 ---
@@ -131,7 +135,9 @@ target:
 
 ## 8. Notation summary
 
-<!-- STUB: maintain a running notation table; cross-reference Appendix B. -->
+The notation and unit conventions are collected in [@sec:appendix_notation].
+Keep the mathematical domain distinct from a computational input restriction:
+a numerical helper may intentionally support a narrower class of inputs.
 Symbols used throughout are collected in the notation appendix
 ([@sec:appendix_notation]); glossary definitions for narrative terms such as
 [**gradient**](#gl:gradient) and [**threshold**](#gl:threshold) are in the master

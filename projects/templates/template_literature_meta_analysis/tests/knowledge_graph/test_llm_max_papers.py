@@ -7,7 +7,7 @@ import logging
 
 from pytest_httpserver import HTTPServer
 
-from knowledge_graph.llm_extraction import (
+from template_literature_meta_analysis.knowledge_graph.llm_extraction import (
     LLMConfig,
     extract_assertions_llm,
 )
@@ -66,7 +66,7 @@ class TestMaxPapers:
 
     def test_max_papers_with_resume(self, httpserver: HTTPServer, tmp_path):
         """max_papers counts only newly processed papers, not resumed ones."""
-        from knowledge_graph.nanopublication import (
+        from template_literature_meta_analysis.knowledge_graph.nanopublication import (
             Assertion,
             create_nanopub,
             serialize_nanopubs,

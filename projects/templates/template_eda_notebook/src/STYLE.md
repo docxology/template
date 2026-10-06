@@ -5,7 +5,7 @@ Code style and design conventions for `src/` modules in the
 
 ## Pure, Side-Effect-Free Functions
 
-All functions in `src/eda/` must be **side-effect-free**: they take a
+All functions in `src/template_eda_notebook/eda/` must be **side-effect-free**: they take a
 DataFrame (or array) in and return data out. They never plot, never print,
 and never write files.
 
@@ -87,9 +87,9 @@ frame[column] = pd.to_numeric(frame[column], errors="coerce")
 
 ## Module Exports
 
-`src/__init__.py` re-exports the public API from the `src.eda` subpackage,
-so callers can write `from src import load_dataset`. The export set is kept
-in sync with `src/__init__.py` — drift is caught by
+`src/template_eda_notebook/__init__.py` re-exports the public API from the `template_eda_notebook.eda` subpackage,
+so callers can write `from template_eda_notebook import load_dataset`. The export set is kept
+in sync with `src/template_eda_notebook/__init__.py` — drift is caught by
 `scripts/audit/check_template_drift.py`'s `__all___doc_drift` rule:
 
 ```python
@@ -126,7 +126,7 @@ __all__ = [
 ]
 ```
 
-`src/project_paths.py` exposes path helpers (`project_output_dirs`,
+`src/template_eda_notebook/project_paths.py` exposes path helpers (`project_output_dirs`,
 `resolve_project_root`) used by the thin analysis script; they are
 orchestration plumbing, not part of the EDA data API, so they are
 intentionally NOT in `__init__.py.__all__`.

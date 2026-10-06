@@ -15,7 +15,7 @@ Agent skill `template-startup` — full installation and validation for a fresh 
 
 ```bash
 # Confirm the skill produces a passing pipeline run:
-./run.sh --pipeline --project templates/template_code_project --core-only
+./run.sh --pipeline --project templates/template_code_project --mode core
 uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
 ```
 

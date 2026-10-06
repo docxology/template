@@ -17,7 +17,7 @@ Just cloned the repo? Do this:
 
 1. `git clone <this-repo> && cd template`
 2. `uv sync` (installs the root environment, including deterministic dependencies for all public template exemplars)
-3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
+3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --mode core` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
 5. Run `./run.sh --help` for all flags. The always-present roster is generated from `PUBLIC_PROJECT_NAMES` in [`infrastructure/project/public_scope.py`](infrastructure/project/public_scope.py) and published in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
@@ -144,7 +144,7 @@ inside that exemplar.
 | `template-active-inference` | `template_active_inference` | Use this template when **several independent research tracks must compose into one manuscript whose claims stay consistent where the tracks overlap** — here: a closed-form analytical oracle, a pymdp simulation harness, a Lean formalization boundary, and shared GNN/ontology notation. |
 | `template-advanced-literature-review` | `template_advanced_literature_review` | Use this template when one review question needs distinct retrieval phases, phase-specific filters, and explicit cross-phase provenance. |
 | `template-autoresearch-project` | `template_autoresearch_project` | Use this template when you need a **bounded, offline AutoResearch loop**: deterministic ML candidate evaluation over a fixed local dataset, with evidence-linked claims, machine-readable ledgers, artifact-integrity manifests, and deferred human-review gates. |
-| `template-autopoiesis` | `template_autopoiesis` | Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater. |
+| `template-autopoiesis` | `template_autopoiesis` | Use this template when you need to **generate runnable project trees deterministically**: a child project with `analysis.py`, `primitives/`, `tests/`, and `manuscript/`, selected by a seed and explicit grammar filters. |
 | `template-code-project` | `template_code_project` | Use this template for **code-driven computational research**: algorithms in `src/`, numerical experiments with deterministic seeds, automated publication-quality figures, and a manuscript that reports the computed results. |
 | `template-data-descriptor` | `template_data_descriptor` | Use this template when the contribution is a **published dataset or data paper**: a schema contract, file inventory, data dictionary, provenance chain, license boundary, quality checks, and machine-readable descriptor must all stay consistent before publication. |
 | `template-eda-notebook` | `template_eda_notebook` | Use this template for **exploratory data analysis on tabular data**: load a dataset, surface missingness, compute descriptive statistics and per-group means, rank features by correlation, and produce a few diagnostic figures. |
@@ -216,7 +216,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 | [`template_active_inference`](projects/templates/template_active_inference/) | Use this template when **several independent research tracks must compose into one manuscript whose claims stay consistent where the tracks overlap** — here: a closed-form analytical oracle, a pymdp simulation harness, a Lean formalization boundary, and shared GNN/ontology notation. |
 | [`template_advanced_literature_review`](projects/templates/template_advanced_literature_review/) | Use this template when one review question needs distinct retrieval phases, phase-specific filters, and explicit cross-phase provenance. |
 | [`template_autoresearch_project`](projects/templates/template_autoresearch_project/) | Use this template when you need a **bounded, offline AutoResearch loop**: deterministic ML candidate evaluation over a fixed local dataset, with evidence-linked claims, machine-readable ledgers, artifact-integrity manifests, and deferred human-review gates. |
-| [`template_autopoiesis`](projects/templates/template_autopoiesis/) | Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater. |
+| [`template_autopoiesis`](projects/templates/template_autopoiesis/) | Use this template when you need to **generate runnable project trees deterministically**: a child project with `analysis.py`, `primitives/`, `tests/`, and `manuscript/`, selected by a seed and explicit grammar filters. |
 | [`template_code_project`](projects/templates/template_code_project/) | Use this template for **code-driven computational research**: algorithms in `src/`, numerical experiments with deterministic seeds, automated publication-quality figures, and a manuscript that reports the computed results. |
 | [`template_data_descriptor`](projects/templates/template_data_descriptor/) | Use this template when the contribution is a **published dataset or data paper**: a schema contract, file inventory, data dictionary, provenance chain, license boundary, quality checks, and machine-readable descriptor must all stay consistent before publication. |
 | [`template_eda_notebook`](projects/templates/template_eda_notebook/) | Use this template for **exploratory data analysis on tabular data**: load a dataset, surface missingness, compute descriptive statistics and per-group means, rank features by correlation, and produce a few diagnostic figures. |
@@ -273,7 +273,7 @@ To regenerate any exemplar from the monorepo:
 git clone https://github.com/docxology/template
 cd template
 uv sync
-./run.sh --project templates/template_code_project --pipeline --core-only
+./run.sh --project templates/template_code_project --pipeline --mode core
 uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
 uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project
 ```
@@ -403,7 +403,7 @@ maintained in [`AGENTS.md`](AGENTS.md#core-architecture) and
 [`docs/core/architecture.md`](docs/core/architecture.md). In short:
 
 - **Entry points:** `./run.sh` (interactive or `--pipeline`) and
-  `uv run python scripts/runner/execute_pipeline.py --project <name> [--core-only]`;
+  `uv run python scripts/runner/execute_pipeline.py --project <name> [--mode core]`;
   numbered orchestrators under `scripts/pipeline/` run `stage_00_setup.py` through `stage_13_docxplus.py` (setup → copy, LLM, executive report, metadata, ebook, docxplus — see [`scripts/AGENTS.md`](scripts/AGENTS.md)).
 - **Orchestration:** the pipeline runs Setup → Tests → Analysis → Render →
   Validate → Copy, with optional LLM Review and LLM Translations stages.
@@ -459,7 +459,7 @@ narrative + benefits:
   default while optionally producing one semantic Beamer/Reveal pair per
   section ([`docs/usage/output-formats.md`](docs/usage/output-formats.md#accessible-presentation-profile)).
 - **Validated build system** with 17 declared stages, a default 10-stage
-  core+LLM path, an 8-stage `--core-only` path, and CI gates
+  explicit core+LLM path and a default 8-stage `--mode core` path, and CI gates
   ([`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md)).
 - **Generic + reusable** — drop the same `infrastructure/` into any project that
   follows the layout ([`docs/usage/template-description.md`](docs/usage/template-description.md)).
@@ -495,8 +495,8 @@ headers. Full surface and worked usage examples:
 
 Prerequisites: `pandoc` and a TeX distribution (`texlive-xetex` on Debian/Ubuntu,
 MacTeX on macOS). Python deps install with `uv sync` (project interpreter is
-`.venv/bin/python`; the template targets Python 3.10+ (`requires-python` in
-[`pyproject.toml`](pyproject.toml)) and CI tests infrastructure on 3.10–3.14, with
+`.venv/bin/python`; the template targets Python 3.12+ (`requires-python` in
+[`pyproject.toml`](pyproject.toml)) and CI tests infrastructure and public exemplars on 3.12–3.14, with
 [`.python-version`](.python-version) pinning 3.14 as the local default). Add per-project deps with
 `uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>`. To
 generate a manuscript, follow the [Quickstart](#quickstart) at the top.
@@ -582,10 +582,10 @@ mode adds `output/executive_summary/` as a disposable copied-output surface.
 ## 🔍 How It Works
 
 Two entry points — `./run.sh` (interactive or `--pipeline`) and
-`uv run python scripts/runner/execute_pipeline.py --project <name> [--core-only]`.
+`uv run python scripts/runner/execute_pipeline.py --project <name> [--mode core]`.
 
 <!-- BEGIN:STAGE_SUMMARY -->
-The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default full runs execute **10** core+LLM stages; `--core-only` executes **8**. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of those default runs unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
+The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default `--mode core` runs execute **8** stages; explicit `--mode live` executes **10** selected core and live stages. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of these selections unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
 <!-- END:STAGE_SUMMARY -->
 
 <!-- BEGIN:STAGE_TABLE -->
@@ -593,27 +593,27 @@ The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declar
 
 | Stage | Script | Tags | Failure mode |
 | ----- | ------ | ---- | ------------ |
-| **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
+| **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | failure prevents completion |
 | **1** Environment Setup | `scripts/pipeline/stage_00_setup.py` | `core` | hard fail |
-| **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable test-failure tolerance; zero-test, project-local coverage, verifier-receipt/evidence, and internal runner failures hard fail |
+| **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | required tests and coverage must pass |
+| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | required nonempty tests, project-local coverage, verifier evidence, and runner success must pass |
 | **4** Project Analysis | `scripts/pipeline/stage_02_analysis.py` | `core` | hard fail |
-| **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
-| **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
+| **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science`, `live` | absent configuration requires a fresh policy-bound skip receipt |
+| **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | absent configuration requires a fresh policy-bound skip receipt |
 | **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
 | **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | enabled-format, enabled-PDF bookend, and artifact/provenance failures block; markdown, general output structure, and prose-quality checks remain advisory |
-| **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
-| **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
-| **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
-| **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | soft fail |
-| **13** docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | `core`, `docxplus` | soft fail |
-| **14** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
-| **15** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
-| **16** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
+| **9** LLM Manuscript Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm`, `live` | fresh policy-bound skip; unavailable required live acceptance is blocked |
+| **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm`, `live` | fresh policy-bound skip; unavailable required live acceptance is blocked |
+| **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | failure prevents completion |
+| **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | failure prevents completion |
+| **13** docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | `core`, `docxplus` | failure prevents completion |
+| **14** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | failure prevents completion |
+| **15** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | failure prevents completion |
+| **16** Archival Publication | `scripts/runner/archive_publication.py` | `archival`, `live` | failure prevents completion |
 <!-- END:STAGE_TABLE -->
 
 Full per-stage flowchart, failure/skip transitions, and the script-to-stage
-mapping for `--core-only` live in [`AGENTS.md`](AGENTS.md#pipeline-stages) and
+mapping for `--mode core` live in [`AGENTS.md`](AGENTS.md#pipeline-stages) and
 [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md). Workflow narrative:
 [`docs/core/workflow.md`](docs/core/workflow.md). Architecture narrative:
 [`docs/core/architecture.md`](docs/core/architecture.md).

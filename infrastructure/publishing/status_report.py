@@ -56,6 +56,7 @@ _STATE_BADGE = {
     "available": "⚪ available",
     "planned": "🟡 planned",
     "unreachable": "❌ unreachable",
+    "historical": "📚 historical reference",
 }
 
 
@@ -67,6 +68,7 @@ class PublicationState(str, Enum):
     AVAILABLE = "available"  # adapter implemented + locally verifiable, not yet published here
     PLANNED = "planned"  # documented intent only, no live adapter
     UNREACHABLE = "unreachable"  # identifier recorded but failed the opt-in live check (reachability.py)
+    HISTORICAL = "historical"  # reference belongs to the last published release, not the intended release
 
 
 @dataclass(frozen=True)
@@ -97,6 +99,9 @@ class PublishingStatusReport:
     github_repo: str | None
     repository_url: str | None
     platforms: tuple[PlatformStatus, ...] = field(default_factory=tuple)
+    release_status: str | None = None
+    intended_version: str | None = None
+    last_published_version: str | None = None
 
     @property
     def published_count(self) -> int:
@@ -192,9 +197,12 @@ def compile_publishing_status(
     cfg_path = _config_path_for(project_root, config_path)
     config = _load_config(cfg_path)
 
-    paper = config.get("paper") or {}
+    paper = config.get("paper") or config.get("book") or {}
     publication = config.get("publication") or {}
     metadata = config.get("metadata") or {}
+    release_status = str(publication.get("release_status") or "").strip() or None
+    intended_version = str(publication.get("intended_version") or "").strip() or None
+    last_published_version = str(publication.get("last_published_version") or "").strip() or None
 
     # Durable published references from config, overridable by the caller param.
     config_published = publication.get("published_artifacts") or {}
@@ -227,6 +235,10 @@ def compile_publishing_status(
             repository_url=repository_url,
             published=published,
         )
+        if release_status == "unreleased" and state is PublicationState.PUBLISHED:
+            # Existing identifiers and receipt URLs cannot establish publication
+            # of a new version whose lifecycle still explicitly says unreleased.
+            state = PublicationState.HISTORICAL if last_published_version else PublicationState.AVAILABLE
         rows.append(
             PlatformStatus(
                 name=platform.name,
@@ -253,6 +265,9 @@ def compile_publishing_status(
         github_repo=github_repo,
         repository_url=repository_url,
         platforms=tuple(rows),
+        release_status=release_status,
+        intended_version=intended_version,
+        last_published_version=last_published_version,
     )
 
 
@@ -271,21 +286,36 @@ def render_status_markdown(report: PublishingStatusReport) -> str:
     # Metadata header line.
     meta_bits: list[str] = [f"**{report.title}**"]
     if report.version:
-        meta_bits.append(f"v{report.version}")
+        meta_bits.append(
+            f"intended v{report.intended_version or report.version} (unreleased)"
+            if report.release_status == "unreleased"
+            else f"v{report.version}"
+        )
     if report.license:
         meta_bits.append(report.license)
     if report.authors:
         meta_bits.append(", ".join(report.authors))
     lines.append(" · ".join(meta_bits))
     lines.append("")
+    if report.release_status == "unreleased":
+        lines.append(f"Intended release: v{report.intended_version or report.version or 'unspecified'} — unreleased.")
+        if report.last_published_version:
+            lines.append(
+                f"Last published release: v{report.last_published_version}. "
+                "Recorded publication links refer to that release."
+            )
+        else:
+            lines.append("No prior published release is recorded; repository links identify source only.")
+        lines.append("")
 
     # Identifier line.
     id_bits: list[str] = []
     if report.concept_doi:
         id_bits.append(f"Concept DOI: {_md_link(report.concept_doi, f'https://doi.org/{report.concept_doi}')}")
     if report.version_doi:
+        doi_label = "Last published version DOI" if report.release_status == "unreleased" else "Version DOI"
         id_bits.append(
-            f"Version DOI: {_md_link(report.version_doi, report.version_record or f'https://doi.org/{report.version_doi}')}"
+            f"{doi_label}: {_md_link(report.version_doi, report.version_record or f'https://doi.org/{report.version_doi}')}"
         )
     if report.github_repo:
         id_bits.append(f"Repository: {_md_link(report.github_repo, report.repository_url)}")
@@ -295,7 +325,8 @@ def render_status_markdown(report: PublishingStatusReport) -> str:
 
     # Platform status table.
     published = report.published_count
-    lines.append(f"Publishing surface — {len(report.platforms)} platforms, {published} published:")
+    scope = " for the intended release" if report.release_status == "unreleased" else ""
+    lines.append(f"Publishing surface — {len(report.platforms)} platforms, {published} published{scope}:")
     lines.append("")
     lines.append("| Platform | Tier | Status | Reference | Credentials |")
     lines.append("| --- | --- | --- | --- | --- |")
@@ -318,10 +349,16 @@ def render_status_markdown(report: PublishingStatusReport) -> str:
         if any(p.state is PublicationState.UNREACHABLE for p in report.platforms)
         else ""
     )
+    historical_legend = (
+        "📚 historical reference (last published release; not intended-version publication evidence) · "
+        if any(p.state is PublicationState.HISTORICAL for p in report.platforms)
+        else ""
+    )
     lines.append(
         "_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · "
         "🔵 reserved (identifier reserved but not yet registered by final publication) · "
         f"{unreachable_legend}"
+        f"{historical_legend}"
         "⚪ available (adapter implemented and locally verifiable) · 🟡 planned. "
         "This block is generated — edit `manuscript/config.yaml`, then regenerate with "
         "`uv run python -m infrastructure.publishing.status_report --project <path> --write`._"

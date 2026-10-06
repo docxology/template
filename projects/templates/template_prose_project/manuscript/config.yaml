@@ -3,7 +3,7 @@
 paper:
   title: "Editorial Quality at Scale: A Reproducible Prose-Review Pipeline"
   subtitle: "Readability, structural, and citation-density gating for research manuscripts"
-  version: "0.4.2"
+  version: "0.5.0"
 
 authors:
   - name: "Daniel Ari Friedman"
@@ -13,6 +13,10 @@ authors:
     corresponding: true
 
 publication:
+  release_status: "unreleased"
+  intended_version: "0.5.0"
+  platform_version: "4.0.0"
+  last_published_version: "0.4.2"
   doi: "10.5281/zenodo.20417104" # Concept DOI — stable citation
   version_doi: "10.5281/zenodo.20932047" # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/20932047"
@@ -130,4 +134,4 @@ llm:
     enabled: false
     provider: local_transcript
     model: ""
-    transcript_path: output/llm_review.json
+    transcript_path: output/.pipeline/prose_review/latest.json

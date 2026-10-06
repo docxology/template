@@ -3,17 +3,17 @@
 # small, tested domain language for specifying controlled methods, not
 # results produced by running one. This file is the configuration source of
 # truth for manuscript and publication metadata, loaded by `yaml.safe_load`
-# inside `infrastructure/rendering/_pdf_combined_renderer.py`.
+# inside `infrastructure/rendering/_pdf_title_page_config.py`.
 
 # Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_report_model.py`
 paper:
   # RASP Standard: Title must be descriptive and objective
   title: "A Domain Language for Specifying Controlled Methods"
   subtitle: "Staged Validation and Deterministic Compilation for Method Specification, Informed by BPL"
-  version: "1.0.0"
+  version: "2.0.0"
   date: ""  # Auto-generated via `infrastructure/validation/output/validator.py` if empty
 
-# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
+# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/_metadata_extraction.py`)
 authors:
   - name: "Daniel Ari Friedman"
     orcid: "0000-0001-6232-9096"
@@ -21,8 +21,12 @@ authors:
     affiliation: "Active Inference Institute"
     corresponding: true
 
-# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
+# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/zenodo/publish.py`)
 publication:
+  release_status: "unreleased"
+  intended_version: "2.0.0"
+  platform_version: "4.0.0"
+  last_published_version: "1.0.0"
   doi: "10.5281/zenodo.21086548" # Concept DOI — stable citation
   version_doi: "10.5281/zenodo.21086549" # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/21086549"

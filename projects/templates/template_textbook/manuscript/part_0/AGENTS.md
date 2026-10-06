@@ -8,7 +8,7 @@ identical book-wide; only the labels and filenames differ per part. The
 structural requirements are enforced by `src/textbook/constants.py`
 (`REQUIRED_SECTION_HEADINGS`, `REQUIRED_TOKENS`, `STUB_MARKERS`) and checked by
 `validate_chapter` plus `tests/test_manuscript_integrity.py`. Do not edit the
-frozen engine; author the markdown to satisfy it.
+tested engine; update its tests and callers when changing the contract.
 
 ## Every chapter in this part must contain
 
@@ -50,10 +50,10 @@ generated filename's stem so the reference resolves.
   `[@eq:...]`, `[@sec:...]`. Never hand-number a figure, table, equation, or
   section.
 - **Citations** use `[@key]` and must resolve in
-  [`../references.bib`](../references.bib). Available keys: `smith2020foundations`,
-  `doe2019methods`, `lee2021systems`, `garcia2022dynamics`, `patel2018models`,
-  `nguyen2023synthesis`, `kim2020data`, `brown2017principles`,
-  `wilson2021analysis`, `taylor2019theory`.
+  [`../references.bib`](../references.bib). Available keys: `box1976science`,
+  `sandve2013ten`, `nyquist1932regeneration`, `lorenz1963deterministic`, `may1976simple`,
+  `wilkinson2016fair`, `shannon1948mathematical`, `turing1937computable`,
+  `wilson2014best`, `taschuk2017ten`.
 - **Glossary links** use `[**term**](#gl:<anchor>)`. Valid anchors: `system`,
   `model`, `parameter`, `variable`, `equilibrium`, `feedback`, `gradient`,
   `threshold`, `network`, `dynamics`, `emergence`, `regulation`, `boundary`,

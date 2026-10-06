@@ -126,7 +126,7 @@ def test_public_benchmark_rejects_local_inventory_manifest(tmp_path: Path) -> No
 
 
 def test_scores_to_markdown_accepts_integer_runtime_scores() -> None:
-    """Python 3.10 integers lack ``is_integer``; score rendering remains portable."""
+    """Integer runtime scores render without a float coercion assumption."""
     markdown = scores_to_markdown((BenchmarkScore(project="demo", passed=True, score=1, max_score=2),))
 
     assert "| demo | yes | 1/2 |" in markdown

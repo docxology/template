@@ -148,3 +148,26 @@ def test_readiness_default_and_explicit_caps_use_real_subprocesses(tmp_path: Pat
     else:
         assert result.returncode == 124
         assert result.reason_code == "SUBPROCESS_EXIT_124"
+
+
+@pytest.mark.timeout(30)
+def test_health_diagnostic_reports_actual_controller_and_nested_interpreter(tmp_path: Path) -> None:
+    import json
+    import sys
+
+    project = sorted(PUBLIC_PROJECT_NAMES)[0]
+    (tmp_path / "projects" / project).mkdir(parents=True)
+    script = tmp_path / "scripts/pipeline/stage_01_test.py"
+    script.parent.mkdir(parents=True)
+    script.write_text(
+        "import json,os,sys\nprint(json.dumps({'interpreter':sys.executable,"
+        "'nested':os.environ['UV_PYTHON'],'minor':f'{sys.version_info.major}.{sys.version_info.minor}'}))\n"
+    )
+    report = run_public_readiness(tmp_path)
+    row = next(result for result in report.results if result.project == project)
+    assert row.returncode == 0
+    observed = json.loads(row.output_tail)
+    payload = report.to_dict()
+    assert payload["diagnostic_only"] is True
+    assert payload["interpreter"] == observed["interpreter"] == observed["nested"] == sys.executable
+    assert payload["python_version"] == observed["minor"]

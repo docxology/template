@@ -4,7 +4,7 @@ Automated manuscript review generation using local Ollama LLM models.
 
 ## Overview
 
-The review module generates scientific reviews of research manuscripts. It orchestrates PDF text extraction, LLM generation via streaming, retry with quality validation, and file saving. The public entry points are standalone functions — there is no `ReviewGenerator` class.
+The review module generates model-assisted draft feedback on research manuscripts. It orchestrates PDF text extraction, LLM generation via streaming, retry with quality validation, and file saving. The public entry points are standalone functions — there is no `ReviewGenerator` class.
 
 ## Quick Start
 

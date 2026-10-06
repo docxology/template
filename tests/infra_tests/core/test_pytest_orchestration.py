@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import os
 import sys
-from importlib.metadata import version
 from pathlib import Path
 from textwrap import dedent
 
@@ -369,67 +368,26 @@ def test_project_has_test_files_detects_modules(tmp_path: Path) -> None:
     assert project_has_test_files(project)
 
 
-def test_build_project_pytest_command_uses_uv_for_pyproject_projects(tmp_path: Path) -> None:
-    project = tmp_path / "projects" / "demo"
-    project.mkdir(parents=True)
-    (project / "pyproject.toml").write_text(
-        '[project]\nname = "demo"\n\n[project.optional-dependencies]\ndev = ["pytest"]\n',
-        encoding="utf-8",
-    )
+def test_build_project_pytest_command_uses_existing_python_without_acquisition(tmp_path: Path) -> None:
+    import sys
 
-    cmd = build_project_pytest_command(project, ["tests/", "--cov=src"])
-    assert cmd[0].endswith("uv") or cmd[0] == "uv"
-    assert "run" in cmd
-    assert "--directory" in cmd
-    assert str(project.resolve()) in cmd
-    assert "--extra" in cmd and "dev" in cmd
-    assert "tests/" in cmd
-    assert "-m" in cmd and "pytest" in cmd
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "pyproject.toml").write_text('[project]\nname="demo"\n')
+    args = [str(project / "tests"), "--cov=src", "--timeout=120"]
+    cmd = build_project_pytest_command(project, args)
+    assert cmd[:3] == [str(Path(sys.executable).absolute()), "-I", "-c"]
+    assert "runpy.run_module('pytest'" in cmd[3]
+    assert cmd[-3:] == ["tests", "--cov=src", "--timeout=120"]
 
 
-def test_build_project_pytest_command_injects_test_runner_deps(tmp_path: Path) -> None:
-    """Test-runner packages are injected via --with so projects without pytest in their
-    deps still work — specifically so --timeout=120 doesn't fail with exit=4 on CI where
-    ``uv run --directory`` creates a project venv from the project's own pyproject.toml
-    (which typically only declares scientific runtime deps, not test infrastructure).
-    """
-    project = tmp_path / "projects" / "thin"
-    project.mkdir(parents=True)
-    (project / "pyproject.toml").write_text(
-        '[project]\nname = "thin"\ndependencies = ["numpy>=1.26"]\n',
-        encoding="utf-8",
-    )
+def test_build_project_pytest_command_does_not_fall_back_from_missing_venv(tmp_path: Path) -> None:
+    from infrastructure.core.testing.project_test_runtime import ProjectTestRuntimeError
 
-    cmd = build_project_pytest_command(project, ["tests/", "--timeout=120"])
-    # The base test-runner packages plus the workspace-pinned coverage package
-    # must appear as --with arguments.
-    assert "--with" in cmd
-    with_values = [cmd[i + 1] for i, c in enumerate(cmd) if c == "--with"]
-    assert any(value == "pytest" or value.startswith("pytest==") for value in with_values)
-    assert any(value == "pytest-cov" or value.startswith("pytest-cov==") for value in with_values)
-    assert any(value == "pytest-timeout" or value.startswith("pytest-timeout==") for value in with_values)
-    assert any(value == "pytest-xdist" or value.startswith("pytest-xdist==") for value in with_values)
-    assert any(value == "pytest-benchmark" or value.startswith("pytest-benchmark==") for value in with_values)
-    assert f"coverage=={version('coverage')}" in with_values
-
-
-def test_build_project_pytest_command_can_reuse_declared_runner_environment(tmp_path: Path) -> None:
-    project = tmp_path / "projects" / "declared-runner"
-    project.mkdir(parents=True)
-    (project / "pyproject.toml").write_text(
-        '[project]\nname = "declared-runner"\n\n[project.optional-dependencies]\ndev = ["pytest"]\n',
-        encoding="utf-8",
-    )
-
-    cmd = build_project_pytest_command(
-        project,
-        ["tests/", "--collect-only"],
-        inject_runner_dependencies=False,
-    )
-
-    assert "--with" not in cmd
-    assert cmd[-5:] == ["python", "-m", "pytest", "tests/", "--collect-only"]
-    assert "--extra" in cmd and "dev" in cmd
+    (tmp_path / ".venv").mkdir()
+    with pytest.raises(ProjectTestRuntimeError) as error:
+        build_project_pytest_command(tmp_path, ["tests"])
+    assert error.value.exit_code == 75
 
 
 def test_build_union_pytest_command_uses_qualified_cov_path(tmp_path: Path) -> None:

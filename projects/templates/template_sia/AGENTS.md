@@ -18,7 +18,8 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 |  `src/template_sia/manuscript/reports.py` | Loop markdown report + `{{SIA_*}}` manuscript variables |
 |  `src/template_sia/fixtures/recorded_generations/` | Fixture replay for gens 1–3 (default CI) |
 | `tasks/mini_classify/` | Public/private task split (`data/public/` + `data/private/`) with the scorer at `tasks/mini_classify/data/public/evaluate.py` |
-| `scripts/run_sia_loop.py` | Thin orchestrator (`--project-root`, `--live-sia`) |
+| `src/template_sia/loop/live_proposals.py` | Bounded local Ollama numeric proposals, Docker evaluation, frozen holdout, diff/rollback/approval receipts |
+| `scripts/run_sia_loop.py` | Thin orchestrator (`--project-root`, `--live-sia`, `--live-proposals`) |
 | `scripts/z_generate_manuscript_variables.py` | Post-analysis token hydration |
 
 ## Run modes
@@ -26,19 +27,24 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | Command | Behaviour |
 | --- | --- |
 | `uv run python scripts/run_sia_loop.py` | Fixture replay (deterministic) |
-| `… --live-sia` | Bounded subprocess target + evaluation; target code unchanged each generation (deterministic stub, no code mutation, no sandbox) |
-| `… --live-sia` (model set in `manuscript/config.yaml`) | Live mode with Ollama feedback note written but **not applied to code**; the LLM model is read from `project_config.sia.llm_model` (see `src/template_sia/loop/loop_config.py`), not a CLI flag. Shipped empty (`llm_model: ""`) = no LLM feedback |
+| `… --live-sia` | Fixed reference subprocess diagnostics; unchanged target code, no live proposal acceptance |
+| `… --live-proposals --model <name> --container-image sha256:<id>` | Actual local Ollama threshold proposals; Docker-only evaluation, at most three generations, exact rollback, frozen held-out scoring |
 
-Live mode demonstrates the loop's execution/evaluation plumbing, not autonomous
-code modification. Fixture replay records real threshold variants but all score
+The reference diagnostic mode demonstrates execution/evaluation plumbing.
+The numeric proposal mode accepts only a finite threshold and rationale;
+arbitrary generated code, paths, host execution, and source application are
+outside its scope. Missing required tools or model block with exit 75 and a
+retained receipt. Fixture replay records real threshold variants but all score
 1.0 on the toy dataset, so it demonstrates deterministic replay and threshold
 robustness—not measured self-improvement. See
 [`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md).
 `project_config.sia.approval_mode` is typed and defaults to `fixture_replay`;
 forks must select `live_proposal` or `live_apply` only alongside the sandbox,
 diff, rollback, and owner-receipt contract in `src/template_sia/loop/approval.py`.
-The project adapter lives in `src/template_sia/loop/loop.py`; scripts only parse arguments, call
-that API, and present output paths.
+The reference adapter lives in `src/template_sia/loop/loop.py`, and the numeric
+proposal controller in `live_proposals.py`. Scripts parse arguments, call these
+APIs, and present output paths. See [`docs/live-numeric-proposals.md`](docs/live-numeric-proposals.md)
+for the sandbox and evidence contract.
 
 ## Validation profile
 

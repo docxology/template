@@ -53,7 +53,7 @@ def test_run_search_pipeline_offline_smoke(tmp_path: Path):
     result = _run_offline_pipeline(project_root)
     assert result.returncode == 0, result.stderr
     # Required outputs exist.
-    assert (project_root / "manuscript" / "references.bib").exists()
+    assert (project_root / "output" / "bibliography" / "references.bib").exists()
     assert (project_root / "output" / "corpus.json").exists()
     assert (project_root / "output" / "search" / "results.json").exists()
     assert (project_root / "output" / "reading_report.md").exists()
@@ -166,7 +166,7 @@ def test_run_deep_search_enabled_with_corpus(tmp_path: Path):
         "  fetch_fulltext: false\n"
         "  output_dir: 'output/deep_search'\n"
         "  search_cache_dir: 'output/cache/search'\n"
-        "  unified_bibtex_path: 'manuscript/refs.bib'\n",
+        "  unified_bibtex_path: 'output/bibliography/refs.bib'\n",
         encoding="utf-8",
     )
     result = _run(
@@ -186,4 +186,4 @@ def test_run_deep_search_enabled_with_corpus(tmp_path: Path):
     )
     assert result.returncode == 0, result.stderr
     assert (iso / "output" / "deep_search" / "convex" / "papers.json").exists()
-    assert (iso / "manuscript" / "refs.bib").exists()
+    assert (iso / "output" / "bibliography" / "refs.bib").exists()

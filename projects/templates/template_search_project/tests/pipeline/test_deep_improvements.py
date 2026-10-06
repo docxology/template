@@ -180,10 +180,10 @@ class TestPromptManuscriptParity:
 
 
 class TestLLMRuntimeCallable:
-    """Cover the inner ``_call`` body (lines 96-100) by injecting a
-    fake :class:`infrastructure.llm.LLMClient` shape that supports both
-    ``query_long`` (preferred) and ``query`` (fallback) so the
-    AttributeError fallback path is exercised."""
+    """Exercise the declared current query_long adapter protocol.
+
+    This controlled component test does not establish actual model execution.
+    """
 
     def test_callable_uses_query_long_when_available(self) -> None:
         from template_search_project.pipeline import llm_runtime
@@ -218,40 +218,6 @@ class TestLLMRuntimeCallable:
         assert call is not None
         out = call("hello")
         assert out == "long-response: hello"
-
-    def test_callable_falls_back_to_query_when_query_long_missing(self) -> None:
-        from template_search_project.pipeline import llm_runtime
-
-        class _OldClient:
-            """Older LLMClient surface — only ``query`` is defined."""
-
-            def __init__(self, _config) -> None:
-                pass
-
-            def query(self, prompt: str) -> str:
-                return f"old-response: {prompt}"
-
-        class _FakeConfig:
-            def __init__(self, **kwargs) -> None:
-                self.kwargs = kwargs
-                self.base_url = "http://stub"
-
-            @classmethod
-            def from_env(cls) -> "_FakeConfig":
-                return cls()
-
-        call = llm_runtime.build_llm_callable(
-            model="m",
-            seed=1,
-            temperature=0.0,
-            context_window=2048,
-            long_max_tokens=512,
-            max_input_length=1024,
-            review_timeout=10.0,
-            component_loader=lambda: (_OldClient, _FakeConfig),
-        )
-        assert call is not None
-        assert call("ping") == "old-response: ping"
 
 
 class TestDeepSearchEdgeCases:
@@ -295,12 +261,12 @@ class TestDeepSearchEdgeCases:
             fetch_abstracts=False,
             fetch_fulltext=False,
             llm_per_paper=False,
-            output_dir=str(tmp_path / "deep_out"),
+            output_dir=str(tmp_path / "output" / "deep_out"),
             abstract_cache_dir=str(tmp_path / "cache_abs"),
             fulltext_cache_dir=str(tmp_path / "cache_pdf"),
             search_cache_dir=str(tmp_path / "cache_search"),
             write_unified_bibtex=False,  # ← exercises 605->613
-            unified_bibtex_path=str(tmp_path / "ref.bib"),
+            unified_bibtex_path=str(tmp_path / "output" / "ref.bib"),
         )
         artifacts = run_deep_search(cfg, project_root=tmp_path, corpus_path=corpus, llm=None)
         assert artifacts.bibtex_path is None
@@ -331,12 +297,12 @@ class TestDeepSearchEdgeCases:
             fetch_abstracts=False,
             fetch_fulltext=False,
             llm_per_paper=False,
-            output_dir=str(tmp_path / "deep_out"),
+            output_dir=str(tmp_path / "output" / "deep_out"),
             abstract_cache_dir=str(tmp_path / "cache_abs"),
             fulltext_cache_dir=str(tmp_path / "cache_pdf"),
             search_cache_dir="",  # ← exercises 471->474
             write_unified_bibtex=False,
-            unified_bibtex_path=str(tmp_path / "ref.bib"),
+            unified_bibtex_path=str(tmp_path / "output" / "ref.bib"),
         )
         artifacts = run_deep_search(cfg, project_root=tmp_path, corpus_path=corpus, llm=None)
         assert artifacts.unique_papers == 1

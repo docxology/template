@@ -11,7 +11,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from visualization.style import VIZ_CONFIG
+from template_literature_meta_analysis.visualization.style import VIZ_CONFIG
 
 logger = logging.getLogger(__name__)
 

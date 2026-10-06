@@ -29,12 +29,14 @@ def validate_transcript(
     issues: list[str] = []
     if payload.get("schema_version") != TRANSCRIPT_SCHEMA:
         issues.append(f"schema_version must be {TRANSCRIPT_SCHEMA}")
-    revision = str(payload.get("revision", "")).strip()
-    if not revision:
-        issues.append("revision must be non-empty")
+    revision = payload.get("revision")
+    if not isinstance(revision, str) or not revision.strip():
+        issues.append("revision must be a non-empty string")
     elif expected_revision is not None and revision != expected_revision:
         issues.append(f"stale transcript revision: expected {expected_revision}, got {revision}")
-    mode = str(payload.get("mode", "")).strip().lower()
+    mode = payload.get("mode")
+    if not isinstance(mode, str) or mode not in {"offline", "live"}:
+        issues.append("mode must be offline or live")
     if require_offline and mode != "offline":
         issues.append("offline replay requires mode=offline")
     entries = payload.get("entries")
@@ -45,7 +47,7 @@ def validate_transcript(
             if not isinstance(entry, dict):
                 issues.append(f"entries[{index}] must be a mapping")
                 continue
-            if not str(entry.get("role", "")).strip() or not str(entry.get("content", "")).strip():
+            if any(not isinstance(entry.get(key), str) or not entry[key].strip() for key in ("role", "content")):
                 issues.append(f"entries[{index}] requires role and content")
     return issues
 
@@ -56,7 +58,7 @@ def replay_transcript(path: Path | str, *, expected_revision: str) -> list[dict[
     issues = validate_transcript(payload, expected_revision=expected_revision)
     if issues:
         raise ValueError(f"Invalid transcript: {issues}")
-    return [{"role": str(entry["role"]), "content": str(entry["content"])} for entry in payload["entries"]]
+    return [{"role": entry["role"], "content": entry["content"]} for entry in payload["entries"]]
 
 
 __all__ = ["TRANSCRIPT_SCHEMA", "replay_transcript", "transcript_digest", "validate_transcript"]

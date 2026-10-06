@@ -26,11 +26,20 @@ def _run(args: list[str]) -> subprocess.CompletedProcess[str]:
     )
 
 
+def _seal(root: Path) -> None:
+    from template_search_project.publish.config import load_project_config
+    from template_search_project.publish.deep_custody import begin_deep_producer, finish_deep_producer
+
+    config = load_project_config(root / "manuscript" / "config.yaml").deep_search
+    finish_deep_producer(root, config, begin_deep_producer(config), root / "output" / "deep_search")
+
+
 def _setup_iso_with_deep_search(tmp_path: Path) -> Path:
     """Build an isolated project root with a fake deep-search output set."""
     iso = tmp_path / "iso"
     iso.mkdir()
     (iso / "manuscript").mkdir()
+    (iso / "output" / "bibliography").mkdir(parents=True)
     (iso / "manuscript" / "config.yaml").write_text(
         "paper:\n  title: 'X'\n"
         "search:\n  query: 'x'\n"
@@ -39,7 +48,7 @@ def _setup_iso_with_deep_search(tmp_path: Path) -> Path:
         "  keywords: ['convex']\n"
         "  max_results_per_keyword: 2\n"
         "  output_dir: 'output/deep_search'\n"
-        "  unified_bibtex_path: 'manuscript/references_deep.bib'\n",
+        "  unified_bibtex_path: 'output/bibliography/references_deep.bib'\n",
         encoding="utf-8",
     )
 
@@ -81,7 +90,7 @@ def _setup_iso_with_deep_search(tmp_path: Path) -> Path:
         encoding="utf-8",
     )
     # Minimal bib with the cited key.
-    (iso / "manuscript" / "references_deep.bib").write_text(
+    (iso / "output" / "bibliography" / "references_deep.bib").write_text(
         "@article{alice2020convexity,\n"
         "  title={On Convexity},\n"
         "  author={Alice and Bob},\n"
@@ -90,6 +99,7 @@ def _setup_iso_with_deep_search(tmp_path: Path) -> Path:
         "}\n",
         encoding="utf-8",
     )
+    _seal(iso)
     return iso
 
 
@@ -97,6 +107,7 @@ def test_composition_skips_when_no_deep_search(tmp_path: Path):
     iso = tmp_path / "empty"
     iso.mkdir()
     (iso / "manuscript").mkdir()
+    (iso / "output" / "bibliography").mkdir(parents=True)
     (iso / "manuscript" / "config.yaml").write_text("paper:\n  title: 'X'\nsearch:\n  query: 'x'\n", encoding="utf-8")
     result = _run(
         [
@@ -121,7 +132,7 @@ def test_composition_writes_section_with_all_keys(tmp_path: Path):
         ]
     )
     assert result.returncode == 0, result.stderr
-    out_md = iso / "manuscript" / "S01_literature_review.md"
+    out_md = iso / "output" / "manuscript" / "S02_generated_literature_review.md"
     assert out_md.exists()
     text = out_md.read_text(encoding="utf-8")
     assert "[@alice2020convexity]" in text
@@ -129,7 +140,7 @@ def test_composition_writes_section_with_all_keys(tmp_path: Path):
     assert "novel contribution paragraph" in text
     assert "Why this matters paragraph" in text
     # Pandoc supplemental marker so the section renders as an appendix.
-    assert "Supplemental S1" in text
+    assert "Supplemental S2" in text
     assert "\\newpage" in text
     assert "keyword from local)" in text
 
@@ -142,21 +153,15 @@ def test_composition_writes_section_with_all_keys(tmp_path: Path):
     assert summary["retrieval_sources"] == ["local"]
 
 
-def test_composition_flags_missing_keys(tmp_path: Path):
+def test_composition_changed_artifact_fails(tmp_path: Path):
     iso = _setup_iso_with_deep_search(tmp_path)
-    # Empty the bib so every cited key is missing.
-    (iso / "manuscript" / "references_deep.bib").write_text("% empty bib\n", encoding="utf-8")
-    result = _run(
-        [
-            "--config",
-            str(iso / "manuscript" / "config.yaml"),
-            "--project-root",
-            str(iso),
-        ]
-    )
-    assert result.returncode == 0, result.stderr
-    summary = json.loads((iso / "output" / "deep_search" / "composition_summary.json").read_text(encoding="utf-8"))
-    assert "alice2020convexity" in summary["missing_citation_keys"]
+    (iso / "output" / "bibliography" / "references_deep.bib").write_text("% changed bib\n", encoding="utf-8")
+    result = _run(["--config", str(iso / "manuscript" / "config.yaml"), "--project-root", str(iso)])
+    assert result.returncode == 1
+    assert "artifact bytes changed" in result.stderr
+    assert "artifact bytes changed" not in result.stdout
+    assert not (iso / "output" / "manuscript" / "S02_generated_literature_review.md").exists()
+    assert not (iso / "output" / "deep_search" / "composition_summary.json").exists()
 
 
 def test_composition_custom_output_path(tmp_path: Path):

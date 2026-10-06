@@ -2,7 +2,7 @@
 
 Shell helpers used by root entry points and maintenance workflows:
 - `bash_utils.sh` — shared helpers for backup and integration tests
-- `shell_bootstrap.sh` — uv bootstrap sourced by `run.sh`
+- `shell_bootstrap.sh` — prepared root-Python selection sourced by `run.sh` and `secure_run.sh`
 - `setup-system-deps.sh` — one-shot installer for pandoc, XeLaTeX + LaTeX packages, and uv (`--check` = verify only)
 - `ci_local.sh` — `act` workflow reproduction, with a fail-closed direct-command fallback
 - `health-check.sh` — pre-flight system health check (Python, uv, pandoc, xelatex, Docker)

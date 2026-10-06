@@ -1,138 +1,42 @@
-# Appendix A — Authoring Guide: Filling the Stubs {#sec:appendix_authoring_guide}
+# Appendix A — Authoring and Verification {#sec:appendix_authoring_guide}
 
 <!-- chapter-metadata-badge -->
-> Reference appendix · For authors and contributors · Read this first.
+> Reference appendix · For authors and contributors.
 
-This is the most important file in the template. It explains how to turn the
-empty scaffold into a finished book by **filling stubs** and **growing**
-structure from a single source of truth. Read it once end-to-end, then keep it
-open while you work.
+A technical book needs a traceable path from an idea to an explanation, a computation, and a checked artifact. This appendix describes that path for this book. The canonical chapters are authored examples. The separate scaffolding API creates draft outlines for new work; generating an outline does not establish that a chapter is ready to teach.
 
-## The Big Idea: One Source of Truth
+## Declare the structure
 
-The book is **data-driven from [`config.yaml`](../config.yaml)**. The list of
-parts, chapters, labs, question banks, and reference appendices lives there and
-nowhere else. The Python engine in `src/textbook/` reads that file and the
-scaffolding scripts in `scripts/` materialise the matching markdown files. You
-never hand-number a chapter, figure, equation, or section — pandoc-crossref does
-that at render time from the labels you write.
+The live structure uses `units:` in `config.yaml`. Each unit declares a directory, an introduction, and a list of chapter files. The chapter stem connects its source to its lab, question bank, and figure. For example, `part_II/dynamics_and_change.md` connects to `labs/part_II/lab_dynamics_and_change.md` and `questions/part_II/q_dynamics_and_change.md`. A renamed file requires all three entries and their section references to move together. Keep software release metadata separate from publication evidence; an intended version does not turn an old DOI into a new deposit.
 
-The flow is always the same:
+The engine derives the table of contents from this configuration. Authors supply stable labels such as `{#sec:part_II_dynamics_and_change}`; rendering supplies display numbers. Do not write a second chapter roster in a script or assume that changing a display title changes the source filename.
 
-```text
-edit config.yaml  ->  scaffold_chapter.py  ->  fill <!-- STUB --> blocks
-      ->  add figures / glossary terms / references  ->  audit + tests
-```
+## Create a draft without replacing authored work
 
-## Step 1 — Decide the Structure in `config.yaml`
+From the project directory, `uv run python scripts/scaffold_chapter.py` creates only missing files. Its structural contract supplies headings, a learning blueprint, a labelled formalism, and companion locations. Fill each instructional element with a purpose, assumptions, an example, and an answer that a learner can inspect. Retain useful structure while replacing draft markers with authored material. Keep generation tests in temporary directories so tests never rewrite the canonical manuscript.
 
-Open [`config.yaml`](../config.yaml). To add or rename a chapter, edit the
-`units:` tree (each chapter has a `stem` and a `title`); to add a lab or
-question bank, add an entry under `appendices.labs` / `appendices.questions`
-for the matching part. The stem drives every downstream name:
+A chapter should answer a concrete question. Name its state, observations, units, model, and limits before choosing a computation. A lab should make a prediction before running code, show the resulting arithmetic, and discuss a failure case. A question bank should include answers with reasoning, rather than simply repeating definitions. A correct calculation under explicit assumptions is a useful result even when it does not establish a real-world claim.
 
-- chapter file → `manuscript/<part>/<NN>_<stem>.md`, label `{#sec:<part>_<stem>}`
-- lab file → `manuscript/labs/<part>/lab_<stem>.md`, label `{#sec:lab_<part>_<stem>}`
-- question bank → `manuscript/questions/<part>/q_<stem>.md`, label `{#sec:q_<part>_<stem>}`
+## Bind prose to computation
 
-Keep stems short, lowercase, and `snake_case`. Do not invent a numbering scheme;
-the table of contents and labels are derived in `src/textbook/toc.py`.
+Put reusable mathematics in `src/textbook/models.py`; scripts coordinate calls and file output. For a worked numerical example, independently derive a small exact case and assert it in runnable Python. For growth, the initial condition and carrying-capacity limit are separate checks. For decay, compare a half-life ratio with a direct exponential evaluation. For a fit, inspect residuals as well as the displayed slope.
 
-## Step 2 — Materialise the Stubs
+Figures come from `src/visualization/plots.py`. Run `uv run python scripts/generate_figures.py` to generate deterministic plots from declared model parameters and the bundled instructional fixture. Explain the axes, units, and uncertainty convention in the caption and supply meaningful alt text. A fixed random seed can make an illustration reproducible; it cannot make simulated observations into empirical measurements.
 
-Run the scaffolder. It only **creates files that are missing**, so it is safe to
-re-run after every config change:
+Mermaid specifications live in `src/mermaid/diagram_specs.yaml`. Run `uv run python scripts/generate_diagrams.py` to produce diagram assets. Where a rendering backend is unavailable, a saved source specification preserves the diagram's content but is not evidence that a graphical artifact rendered successfully.
 
-```bash
-uv run python scripts/scaffold_chapter.py
-```
+## Cite and cross-reference responsibly
 
-This writes a chapter (or lab, or question bank) pre-populated with every
-required structural element as `<!-- STUB -->` markers. Your job is to replace
-the stubs with real prose, never to delete the structure.
+Citations resolve to `references.bib`. Record publisher-verified authors, title, year, and DOI or URL; explain precisely why the source is useful. This book uses primary publications for model adequacy, scientific computing, communication, computation, dynamics, and reproducibility. A citation does not transfer every claim in a chapter to its source. Mathematical examples derived here should identify their assumptions and derivation.
 
-## Step 3 — Fill the Content Contract
+Glossary links use the anchors declared in `GLOSSARY_ANCHORS` and authored in `glossary.md`. Figures, tables, equations, and sections use `[@fig:...]`, `[@tbl:...]`, `[@eq:...]`, and `[@sec:...]`. Keep labels unique. A section reference is preferable to a hand-written page number because pagination varies across PDF, HTML, and EPUB.
 
-Every chapter must carry these elements (enforced by `validate_chapter` in
-`src/textbook/content.py` and by the integrity tests). Fill each, keep the
-markers' surrounding structure:
+## Require content completion
 
-- a labelled H1: `# Title {#sec:<part>_<stem>}`
-- a metadata badge line: `<!-- chapter-metadata-badge -->`
-- a Study Blueprint: `<!-- curriculum-scaffold-start -->`
-- **Learning Objectives**
-- one figure with alt text and a crossref label `{#fig:...}`
-- a worked formalism: an equation `{#eq:...}` plus a parameter table `{#tbl:...}`
-- an inline ` ```mermaid ` diagram
-- **Summary**, **Key Terms**, **Further Reading**, **Practice** sections
+Run `uv run python scripts/audit_textbook_quality.py --require-complete`. The completion mode requires every configured chapter, introduction, front-matter file, lab, question bank, and reference section to exist and contain no draft markers. Structural mode remains available for deliberate new outlines. Neither mode can infer scientific truth from the absence of markers.
 
-Cross-reference syntax is pandoc-crossref: `[@fig:..]`, `[@tbl:..]`, `[@eq:..]`,
-`[@sec:..]`. Stub markers the audit counts are `<!-- STUB -->`, `TODO:`, and
-`TKTK` — drive these to zero as the chapter matures.
+Run the isolated project test suite after source changes. Its model cases, configuration controls, manuscript integrity checks, and runnable examples provide distinct evidence. Inspect the changed source and final artifacts as well. A passing test suite does not certify that every explanation is sufficient for every audience, and a render that finishes does not establish that its numeric claims match the source.
 
-## Step 4 — Add a Figure
+## Contributor checklist
 
-Figures are deterministic matplotlib output. Each chapter expects a placeholder
-named `<part_id>_<stem>.png`. To make it real, add or edit a function in
-[`src/visualization/plots.py`](../../src/visualization/plots.py) (the four worked
-figures show the pattern), then regenerate:
-
-```bash
-uv run python scripts/generate_figures.py
-```
-
-For diagrams, edit `src/mermaid/diagram_specs.yaml` and run
-`scripts/generate_diagrams.py` (PNG, or `.mmd` fallback). Reference the figure in
-prose with `[@fig:<part>_<stem>]` and give it alt text.
-
-## Step 5 — Add a Glossary Term
-
-Glossary anchors are a **closed contract**. To add a term you must update **both**:
-
-1. `GLOSSARY_ANCHORS` in [`src/textbook/constants.py`](../../src/textbook/constants.py)
-2. the matching entry in [`glossary.md`](../glossary.md)
-
-Link a term in prose as `[**term**](#gl:<anchor>)`. The current anchors are
-`system, model, parameter, variable, equilibrium, feedback, gradient, threshold,
-network, dynamics, emergence, regulation, boundary, state, observable`.
-
-## Step 6 — Add a Reference
-
-Citations are `[@key]` and must resolve in [`references.bib`](../references.bib).
-Add a BibTeX entry, then cite it. Keep `CITATION_KEYS` in `constants.py` in sync
-if you add a key that the structural contract should track.
-
-## Step 7 — Audit and Test
-
-Two gates decide whether the book is healthy:
-
-```bash
-# Quality gate: counts stubs, checks the content contract per file
-uv run python scripts/audit_textbook_quality.py
-
-# Full test suite (engine + manuscript integrity)
-uv run --extra dev python -m pytest
-```
-
-`tests/test_manuscript_integrity.py` verifies that every chapter satisfies the
-content contract, that labels are unique, that citations resolve, and that
-glossary links point at real anchors. Green tests with remaining stubs mean the
-**structure** is correct but the **content** is unfinished — that is the normal
-state of a freshly scaffolded chapter.
-
-## Growing the Book
-
-To add a whole new chapter end-to-end:
-
-1. add its `stem`/`title` under the right part in `config.yaml`;
-2. add matching lab and question-bank entries under `appendices`;
-3. run `scripts/scaffold_chapter.py`;
-4. fill the stubs (Steps 3–6);
-5. run the audit and tests until the contract passes.
-
-<!-- STUB: project-specific authoring notes — house style, citation policy,
-figure conventions — go here once you adopt the template. -->
-
-See also: [Appendix B — Notation](appendix_notation.md),
-[Appendix C — Mathematical Review](appendix_math_review.md), and the
-[appendices README](README.md).
+Before accepting a chapter, verify its question, assumptions, numerical example, figure, citations, lab solution, and question answers. Preserve the source data and release history. Record the interpreter and commands used for local verification, identify missing rendering backends, and keep publication pending until the intended artifacts actually exist. This practice follows the reproducible computational workflow discussed by Sandve and colleagues [@sandve2013ten] and the tested software practices discussed by Wilson and colleagues [@wilson2014best].

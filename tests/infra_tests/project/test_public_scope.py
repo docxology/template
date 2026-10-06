@@ -18,6 +18,7 @@ from infrastructure.project.public_scope import (
     public_ci_lint_paths,
     public_ci_source_paths,
     public_project_names,
+    public_project_source_roots,
 )
 
 
@@ -148,3 +149,36 @@ def test_public_scope_cli_is_quiet_on_stderr() -> None:
 
     assert completed.stderr == ""
     assert completed.stdout.startswith("infrastructure ")
+
+
+def test_public_source_roots_are_complete_stable_and_ignore_other_layouts(tmp_path: Path) -> None:
+    _scaffold_exemplars(tmp_path)
+    expected = tuple(tmp_path / "projects" / name / "src" for name in PUBLIC_PROJECT_NAMES)
+    assert public_project_source_roots(tmp_path) == expected
+    # A real cyclic link would fail any attempt to resolve this unrelated tree.
+    unrelated = tmp_path / "projects" / "working"
+    unrelated.symlink_to(unrelated, target_is_directory=True)
+    _scaffold_project(tmp_path, "active/owned_private_fixture")
+    _scaffold_project(tmp_path, "flat_unlisted_fixture")
+    assert public_project_source_roots(tmp_path) == expected
+
+
+@pytest.mark.parametrize("target", ["missing", "source-file", "source-link", "project-link", "templates-link"])
+def test_public_source_roots_refuse_wrong_canonical_origins(tmp_path: Path, target: str) -> None:
+    _scaffold_exemplars(tmp_path)
+    project = tmp_path / "projects" / PUBLIC_PROJECT_NAMES[0]
+    source = project / "src"
+    if target == "missing":
+        (source / "__init__.py").unlink()
+        source.rmdir()
+    elif target == "source-file":
+        (source / "__init__.py").unlink()
+        source.rmdir()
+        source.write_text("not a directory")
+    else:
+        location = {"source-link": source, "project-link": project, "templates-link": project.parent}[target]
+        outside = tmp_path / "external-owned-fixture"
+        location.rename(outside)
+        location.symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError, match="canonical public source root"):
+        public_project_source_roots(tmp_path)

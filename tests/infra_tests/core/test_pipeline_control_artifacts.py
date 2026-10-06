@@ -190,7 +190,7 @@ def test_stage_artifact_manifest_accepts_symlinked_private_project_contracts(tmp
         project_dir=project_dir,
         stage_num=4,
         stage_name="Project Analysis",
-        contract=StageContract(output_artifacts=("projects/{project}/output/data/",)),
+        contract=StageContract(output_artifacts=("output/data/",)),
     )
     validation = validate_artifact_manifest(manifest, project_dir=project_dir)
 
@@ -218,7 +218,7 @@ def test_stage_artifact_manifest_preserves_lifecycle_slug_for_symlinked_working_
         stage_name="Copy Outputs",
         contract=StageContract(
             output_artifacts=(
-                "projects/{project}/output/reports/",
+                "output/reports/",
                 "output/{project}/",
             )
         ),

@@ -11,8 +11,8 @@ from pathlib import Path
 
 import pytest
 
-from literature.corpus import Corpus
-from literature.models import Author, Paper
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.models import Author, Paper
 
 
 # ---------------------------------------------------------------------------

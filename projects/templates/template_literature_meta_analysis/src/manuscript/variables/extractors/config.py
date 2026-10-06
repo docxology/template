@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from manuscript.variables.context import ExtractContext
-from manuscript.variables.formatters import humanize_list, latex_number
+from template_literature_meta_analysis.manuscript.variables.context import ExtractContext
+from template_literature_meta_analysis.manuscript.variables.formatters import humanize_list, latex_number
 
 
 def extract_config_tokens(ctx: ExtractContext) -> dict[str, str]:

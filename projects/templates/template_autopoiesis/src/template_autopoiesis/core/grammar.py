@@ -158,7 +158,7 @@ def parse_grammar(block: dict, source_path: Optional[str] = None) -> Grammar:
         raise GrammarError("Grammar block must be a mapping")
 
     seed = block.get("seed", 42)
-    if not isinstance(seed, int):
+    if type(seed) is not int:
         raise GrammarError(f"Grammar seed must be int, got {type(seed).__name__}")
 
     raw_slots = block.get("slots", [])
@@ -259,10 +259,10 @@ def load_grammar(project_root: str | Path) -> Grammar:
     with config_path.open() as fh:
         cfg = yaml.safe_load(fh)
 
-    # Project-owned settings live under the infrastructure schema's
-    # ``project_config`` passthrough.  Retain the former top-level lookup only
-    # for standalone forks created before that schema contract was introduced.
-    project_config = cfg.get("project_config", {})
+    if not isinstance(cfg, dict) or "autopoiesis" in cfg:
+        raise GrammarError("autopoiesis settings must be under project_config.autopoiesis")
+    project_config = cfg.get("project_config")
     nested = project_config.get("autopoiesis") if isinstance(project_config, dict) else None
-    block = nested if isinstance(nested, dict) else cfg.get("autopoiesis", {})
-    return parse_grammar(block, source_path=str(config_path))
+    if not isinstance(nested, dict):
+        raise GrammarError("project_config.autopoiesis must be a grammar mapping")
+    return parse_grammar(nested, source_path=str(config_path))

@@ -1,27 +1,17 @@
-"""Pytest configuration for template_eda_notebook tests."""
+"""Select the declared SDK before exposing this exemplar's own source."""
+
+from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
 
-# Force headless backend for matplotlib in tests
 os.environ.setdefault("MPLBACKEND", "Agg")
 
-# Add src/ AND the repo root to path so the documented per-project pytest command
-# works from a clean environment. The project pyproject's `pythonpath` is
-# project-relative and omits the repo root, so without this the suite cannot import
-# `infrastructure` (tests collect-error). The project lives at
-# projects/templates/<name>/, so the repo root is three levels above ROOT.
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-SRC = os.path.join(ROOT, "src")
-REPO_ROOT = os.path.abspath(os.path.join(ROOT, "..", "..", ".."))
-for _path in (REPO_ROOT, SRC):
-    if _path not in sys.path:
-        sys.path.insert(0, _path)
+# The declared environment supplies a checkout or installed SDK; parent folder
+# guesses must not replace that provider in an exported project.
+import infrastructure  # noqa: E402,F401
 
-# TEST-ISOLATION-SYSPATH-1: expose the unique nested source package.
-import os as _os
-import sys as _sys
-
-_SRC = _os.path.join(_os.path.dirname(__file__), "..", "src")
-if _SRC not in _sys.path:
-    _sys.path.insert(0, _SRC)
+_SRC = str(Path(__file__).resolve().parents[1] / "src")
+if _SRC not in sys.path:
+    sys.path.insert(0, _SRC)

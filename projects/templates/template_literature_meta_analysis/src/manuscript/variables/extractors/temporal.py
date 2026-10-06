@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from manuscript.variables._logging import logger
-from manuscript.variables.context import ExtractContext
+from template_literature_meta_analysis.manuscript.variables._logging import logger
+from template_literature_meta_analysis.manuscript.variables.context import ExtractContext
 
 
 def extract_temporal(ctx: ExtractContext) -> dict[str, str]:

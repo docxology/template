@@ -1,269 +1,260 @@
-"""Real-data tests for ``infrastructure.core.pipeline.multi_project_parallel``.
-
-These tests verify the contract of :func:`run_projects_in_parallel`:
-
-* parallel speedup vs an equivalent serial run on the same workload,
-* per-project log-file isolation (each project's stdout lands only in its
-  own ``projects/<name>/output/logs/pipeline.log``),
-* failure isolation (one failing project does not block the others).
-
-No mocks are used. The tests build three synthetic projects on
-``tmp_path`` and exercise the parallel module's pool-execution helper
-``_execute_specs`` with a small, deterministic worker function. The
-worker function is module-level (so it pickles for ``ProcessPoolExecutor``
-on every supported start method) and reproduces the behaviour the real
-pipeline worker relies on:
-
-1. Redirect ``stdout``/``stderr`` to a per-project log file (the same
-   isolation strategy used by ``_run_single_project_worker``).
-2. Do a small amount of CPU work and a real ``time.sleep`` so the
-   wall-clock comparison between parallel and serial is meaningful.
-3. Optionally fail to exercise the failure-isolation contract.
-"""
+"""Real frozen-plan workers, exact completion and whole-run process boundaries."""
 
 from __future__ import annotations
 
+import json
 import os
+import signal
+import subprocess
+import sys
 import time
 from pathlib import Path
-from typing import Sequence
 
 import pytest
+import yaml
 
 from infrastructure.core.pipeline.multi_project_parallel import (
-    ENV_MAX_WORKERS,
-    ParallelRunResult,
-    _execute_specs,
-    _redirect_worker_streams,
+    ENV_MULTI_PROJECT_WORKERS,
     _resolve_max_workers,
-    _WorkerSpec,
     run_projects_in_parallel,
 )
+from infrastructure.core.pipeline.multi_project_runtime import execute_frozen_specs, freeze_project_plans
+from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
+
+pytestmark = pytest.mark.timeout(120)
 
 
-# ---------------------------------------------------------------------------
-# Synthetic project tree
-# ---------------------------------------------------------------------------
-
-
-def _scaffold_project(repo_root: Path, name: str) -> Path:
-    """Create the directory layout required by ``ProjectInfo`` discovery.
-
-    Each synthetic project ships ``src/__init__.py``, a smoke test in
-    ``tests/test_smoke.py``, and a minimal ``manuscript/config.yaml`` so the
-    discovery and worker code paths see a believable project tree.
-    """
-    project_dir = repo_root / "projects" / name
-    (project_dir / "src").mkdir(parents=True)
-    (project_dir / "tests").mkdir()
-    (project_dir / "manuscript").mkdir()
-    (project_dir / "output" / "logs").mkdir(parents=True)
-
-    (project_dir / "src" / "__init__.py").write_text("")
-    (project_dir / "tests" / "__init__.py").write_text("")
-    (project_dir / "tests" / "test_smoke.py").write_text("def test_smoke() -> None:\n    assert True\n")
-    (project_dir / "manuscript" / "config.yaml").write_text(
-        f'paper:\n  title: "Synthetic project {name}"\n  version: "0.0.1"\n'
+def _install_sleeping_stage(root: Path) -> None:
+    script = root / "scripts/stage.py"
+    script.write_text(
+        "import json,os,subprocess,sys,time\nfrom pathlib import Path\n"
+        "project=sys.argv[sys.argv.index('--project')+1]\n"
+        "output=Path('projects')/project/'output/data';output.mkdir(parents=True,exist_ok=True)\n"
+        "child=subprocess.Popen([sys.executable,'-I','-c','import time;time.sleep(30)'],start_new_session=True)\n"
+        "(output/'running.json').write_text(json.dumps({'pid':os.getpid(),'detached':child.pid}))\n"
+        "time.sleep(30)\n"
     )
-    return project_dir
 
 
-# ---------------------------------------------------------------------------
-# Module-level test workers (must be picklable for ProcessPoolExecutor)
-# ---------------------------------------------------------------------------
+def _assert_dead(pid: int) -> None:
+    result = subprocess.run(["ps", "-o", "stat=", "-p", str(pid)], capture_output=True, text=True, timeout=5)
+    assert not result.stdout.strip() or result.stdout.strip().startswith("Z"), (pid, result.stdout)
 
 
-SLEEP_SECONDS = 2.0  # tuned to dominate process-spawn overhead on macOS spawn
+@pytest.mark.parametrize("workers", [0, -1, True, 1.5])
+def test_invalid_worker_override_refused(workers: int) -> None:
+    with pytest.raises(ValueError, match="positive integer"):
+        _resolve_max_workers(2, workers)
 
 
-def _sleepy_worker(spec: _WorkerSpec) -> tuple[str, bool, str]:
-    """Pretend pipeline worker: redirect output, log, sleep, succeed."""
-    log_path = Path(spec.log_file)
-    with _redirect_worker_streams(log_path):
-        print(f"[{spec.project_name}] start pid={os.getpid()}")
-        time.sleep(SLEEP_SECONDS)
-        print(f"[{spec.project_name}] done pid={os.getpid()}")
-    return (spec.project_name, True, "")
+def test_worker_count_policy(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(ENV_MULTI_PROJECT_WORKERS, "2")
+    assert _resolve_max_workers(3, None) == 2
+    assert _resolve_max_workers(3, 5) == 3
+    monkeypatch.setenv(ENV_MULTI_PROJECT_WORKERS, "invalid")
+    assert 1 <= _resolve_max_workers(3, None) <= 3
 
 
-_FAILING_PROJECT_TOKEN = "synthetic_proj_b"
+def test_all_plans_validated_before_shared_gate(tmp_path: Path) -> None:
+    names = ("templates/alpha", "templates/beta")
+    scaffold_pipeline(tmp_path, names)
+    declaration = tmp_path / "projects/templates/beta/pipeline.yaml"
+    declaration.write_text("stages: [{name: Bad, key: bad, script: scripts/stage.py, method: missing}]\n")
+    with pytest.raises(ValueError):
+        run_projects_in_parallel(names, repo_root=tmp_path)
+    assert not (tmp_path / "process_order.log").exists()
 
 
-def _maybe_failing_worker(spec: _WorkerSpec) -> tuple[str, bool, str]:
-    """Same as ``_sleepy_worker`` but project ``synthetic_proj_b`` fails."""
-    log_path = Path(spec.log_file)
-    with _redirect_worker_streams(log_path):
-        print(f"[{spec.project_name}] start pid={os.getpid()}")
-        time.sleep(SLEEP_SECONDS / 3)
-        if spec.project_name == _FAILING_PROJECT_TOKEN:
-            print(f"[{spec.project_name}] simulated failure")
-            return (spec.project_name, False, "synthetic stage failure")
-        print(f"[{spec.project_name}] done pid={os.getpid()}")
-    return (spec.project_name, True, "")
+def test_frozen_plan_refuses_later_definition_change(tmp_path: Path) -> None:
+    names = ("templates/alpha",)
+    scaffold_pipeline(tmp_path, names)
+    specs = freeze_project_plans(names, tmp_path, mode="core", resume=False, timeout=15)
+    path = tmp_path / "infrastructure/core/pipeline/pipeline.yaml"
+    document = yaml.safe_load(path.read_text())
+    document["stages"][1]["key"] = "replacement"
+    path.write_text(yaml.safe_dump(document))
+    rows, runs = execute_frozen_specs(specs, workers=1, deadline=time.monotonic() + 15)
+    assert runs[names[0]].exit_code == 75 and not runs[names[0]].complete
+    assert runs[names[0]].expected_stage_keys == ("analysis",)
+    assert not (tmp_path / "process_order.log").exists()
+    assert any("source changed" in row.error_message.lower() for row in rows[names[0]])
 
 
-def _run_serial(specs: Sequence[_WorkerSpec]) -> tuple[float, list[str]]:
-    """Sequential reference run for the speedup comparison."""
-    start = time.time()
-    succeeded: list[str] = []
-    for spec in specs:
-        name, ok, _ = _sleepy_worker(spec)
-        if ok:
-            succeeded.append(name)
-    return time.time() - start, sorted(succeeded)
-
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
-
-@pytest.fixture
-def synthetic_repo(tmp_path: Path) -> tuple[Path, list[_WorkerSpec]]:
-    """Build three synthetic projects under ``tmp_path``.
-
-    Returns ``(repo_root, specs)``. Specs target the parallel module's
-    ``_execute_specs`` helper so tests do not depend on the heavy
-    ``PipelineExecutor`` real-pipeline path.
-    """
-    names = ["synthetic_proj_a", "synthetic_proj_b", "synthetic_proj_c"]
-    specs: list[_WorkerSpec] = []
+def test_child_two_is_failed_without_losing_other_project(tmp_path: Path) -> None:
+    names = ("templates/pass", "templates/fail")
+    scaffold_pipeline(tmp_path, names)
+    script = tmp_path / "scripts/stage.py"
+    text = script.read_text().replace(
+        "step = sys.argv[1]", "step = sys.argv[1]; print(sys.argv[sys.argv.index('--project')+1], flush=True)"
+    )
+    script.write_text(text)
+    result = run_projects_in_parallel(names, repo_root=tmp_path, max_workers=2, run_infra_tests=False)
+    assert result.exit_code == 1 and result.succeeded == ["templates/pass"]
+    assert result.failed == ["templates/fail"]
+    assert result.run_results["templates/fail"].outcomes[0].child_exit_code == 2
     for name in names:
-        project_dir = _scaffold_project(tmp_path, name)
-        log_file = project_dir / "output" / "logs" / "pipeline.log"
-        specs.append(
-            _WorkerSpec(
-                project_name=name,
-                projects_dir="projects",
-                repo_root=str(tmp_path),
-                core_only=True,
-                skip_llm=True,
-                resume=False,
-                log_file=str(log_file),
-            )
-        )
-    return tmp_path, specs
+        log = (tmp_path / "projects" / name / "output/logs/multi_project_worker.log").read_text()
+        assert name in log and names[1 if name == names[0] else 0] not in log
 
 
-# ---------------------------------------------------------------------------
-# Tests
-# ---------------------------------------------------------------------------
-
-
-def test_resolve_max_workers_explicit_argument_wins(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Explicit ``max_workers`` argument overrides env var and CPU count."""
-    monkeypatch.setenv(ENV_MAX_WORKERS, "16")
-    assert _resolve_max_workers(num_projects=5, override=2) == 2
-
-
-def test_resolve_max_workers_env_var_used_when_no_override(monkeypatch: pytest.MonkeyPatch) -> None:
-    """``MULTI_PROJECT_MAX_WORKERS`` is honoured when no explicit override."""
-    monkeypatch.setenv(ENV_MAX_WORKERS, "3")
-    assert _resolve_max_workers(num_projects=10, override=None) == 3
-
-
-def test_resolve_max_workers_invalid_env_var_falls_back(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Garbage env values are ignored and the CPU-count default is used."""
-    monkeypatch.setenv(ENV_MAX_WORKERS, "not-a-number")
-    capped = _resolve_max_workers(num_projects=2, override=None)
-    assert 1 <= capped <= 2  # never exceeds num_projects
-
-
-def test_run_projects_in_parallel_empty_returns_zero_elapsed() -> None:
-    """No projects → no work, no error, zero elapsed."""
-    result = run_projects_in_parallel([], repo_root=Path("/tmp"))
-    assert result == ParallelRunResult(succeeded=[], failed=[], elapsed_seconds=0.0)
-
-
-@pytest.mark.slow
-def test_parallel_run_succeeds_and_beats_serial(
-    synthetic_repo: tuple[Path, list[_WorkerSpec]],
-) -> None:
-    """Parallel run finishes faster than the sum of per-project sleeps."""
-    _, specs = synthetic_repo
-
-    serial_elapsed, serial_succeeded = _run_serial(specs)
-    assert serial_succeeded == sorted(s.project_name for s in specs)
-
-    # Re-create logs so the parallel run starts from clean files.
-    for spec in specs:
-        Path(spec.log_file).unlink(missing_ok=True)
-
-    parallel = _execute_specs(specs, workers=3, worker_fn=_sleepy_worker)
-
-    assert parallel.failed == []
-    assert parallel.succeeded == sorted(s.project_name for s in specs)
-    # Parallel must be meaningfully faster; allow generous slack for CI.
-    assert parallel.elapsed_seconds < serial_elapsed * 0.9, (
-        f"parallel={parallel.elapsed_seconds:.2f}s not < 0.9 * serial={serial_elapsed:.2f}s"
+def test_small_total_budget_cannot_launch_late_stage_or_unlaunched_queue(tmp_path: Path) -> None:
+    names = ("templates/alpha", "templates/beta")
+    scaffold_pipeline(tmp_path, names)
+    _install_sleeping_stage(tmp_path)
+    started = time.monotonic()
+    result = run_projects_in_parallel(
+        names, repo_root=tmp_path, max_workers=1, run_infra_tests=False, run_timeout_seconds=4
     )
+    assert result.exit_code == 124 and time.monotonic() - started < 15
+    assert set(result.run_results) == set(names)
+    assert all(run.expected_stage_keys == ("analysis",) and run.exit_code == 124 for run in result.run_results.values())
+    marker = tmp_path / "projects/templates/alpha/output/data/running.json"
+    if marker.exists():
+        observed = json.loads(marker.read_text())
+        _assert_dead(observed["pid"])
+        _assert_dead(observed["detached"])
+    assert not (tmp_path / "projects/templates/beta/output/data/running.json").exists()
 
 
-def test_parallel_run_isolates_per_project_logs(
-    synthetic_repo: tuple[Path, list[_WorkerSpec]],
-) -> None:
-    """Each project's log file contains only that project's output."""
-    _, specs = synthetic_repo
-    for spec in specs:
-        Path(spec.log_file).unlink(missing_ok=True)
-
-    result = _execute_specs(specs, workers=3, worker_fn=_sleepy_worker)
-    assert result.failed == []
-
-    log_contents: dict[str, str] = {}
-    for spec in specs:
-        log_contents[spec.project_name] = Path(spec.log_file).read_text()
-
-    # Each log mentions its own project name and no other project's name.
-    other_names = {spec.project_name for spec in specs}
-    for spec in specs:
-        own = spec.project_name
-        text = log_contents[own]
-        assert f"[{own}] start" in text, f"missing own start marker in {own} log"
-        assert f"[{own}] done" in text, f"missing own done marker in {own} log"
-        for other in other_names - {own}:
-            assert f"[{other}]" not in text, f"log for '{own}' contained foreign project marker '[{other}]'"
+def test_total_deadline_kills_actual_started_stage_detached_children_and_queue(tmp_path: Path) -> None:
+    names = ("templates/alpha", "templates/beta")
+    scaffold_pipeline(tmp_path, names)
+    _install_sleeping_stage(tmp_path)
+    started = time.monotonic()
+    result = run_projects_in_parallel(
+        names, repo_root=tmp_path, max_workers=1, run_infra_tests=False, run_timeout_seconds=12
+    )
+    assert result.exit_code == 124 and time.monotonic() - started < 22
+    assert set(result.run_results) == set(names)
+    assert all(run.expected_stage_keys == ("analysis",) and run.exit_code == 124 for run in result.run_results.values())
+    observed = json.loads((tmp_path / "projects/templates/alpha/output/data/running.json").read_text())
+    _assert_dead(observed["pid"])
+    _assert_dead(observed["detached"])
+    assert not (tmp_path / "projects/templates/beta/output/data/running.json").exists()
 
 
-def test_parallel_run_isolates_failures(
-    synthetic_repo: tuple[Path, list[_WorkerSpec]],
-) -> None:
-    """One failing project still allows the other two to complete."""
-    _, specs = synthetic_repo
-    for spec in specs:
-        Path(spec.log_file).unlink(missing_ok=True)
+def test_interrupt_cleans_actual_worker_and_detached_child(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path, ("templates/alpha",))
+    _install_sleeping_stage(tmp_path)
+    implementation = Path(__file__).resolve().parents[5]
+    code = (
+        "import sys;sys.pycache_prefix=sys.argv.pop(1);sys.dont_write_bytecode=True;"
+        "sys.path.insert(0,sys.argv.pop(1));from pathlib import Path;"
+        "from infrastructure.core.pipeline.multi_project_parallel import run_projects_in_parallel;"
+        "raise SystemExit(run_projects_in_parallel(('templates/alpha',),repo_root=Path(sys.argv[1]),"
+        "run_infra_tests=False,run_timeout_seconds=30).exit_code)"
+    )
+    process = subprocess.Popen(
+        [sys.executable, "-I", "-c", code, str(tmp_path / "outer-bytecode"), str(implementation), str(tmp_path)],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        start_new_session=True,
+    )
+    marker = tmp_path / "projects/templates/alpha/output/data/running.json"
+    try:
+        deadline = time.monotonic() + 12
+        while not marker.exists() and process.poll() is None and time.monotonic() < deadline:
+            time.sleep(0.025)
+        assert marker.exists(), process.communicate(timeout=5)
+        observed = json.loads(marker.read_text())
+        os.kill(process.pid, signal.SIGINT)
+        stdout, stderr = process.communicate(timeout=12)
+        assert process.returncode == 130, (stdout, stderr)
+        _assert_dead(observed["pid"])
+        _assert_dead(observed["detached"])
+    finally:
+        if process.poll() is None:
+            os.killpg(process.pid, signal.SIGKILL)
+            process.wait(timeout=5)
 
-    result = _execute_specs(specs, workers=3, worker_fn=_maybe_failing_worker)
 
-    assert result.failed == [_FAILING_PROJECT_TOKEN]
-    assert result.succeeded == sorted(s.project_name for s in specs if s.project_name != _FAILING_PROJECT_TOKEN)
-    # Failing project's log captured the failure marker.
-    failing_log = next(s.log_file for s in specs if s.project_name == _FAILING_PROJECT_TOKEN)
-    assert "simulated failure" in Path(failing_log).read_text()
+def test_actual_workers_run_shared_infrastructure_once(tmp_path: Path) -> None:
+    import json
+    from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
+
+    names = ("templates/alpha", "templates/beta")
+    scaffold_pipeline(tmp_path, names)
+    result = run_projects_in_parallel(names, repo_root=tmp_path, max_workers=2)
+    assert result.exit_code == 0 and result.expected_projects == names
+    assert result.shared_infrastructure_result is not None
+    assert result.shared_infrastructure_result.run_result.expected_stage_keys == ("infra_tests",)
+    assert result.shared_infrastructure_result.run_result.outcomes[0].child_exit_code == 0
+    rows = (tmp_path / "process_order.log").read_text().splitlines()
+    assert rows[0] == "templates/alpha:infra"
+    assert sum(row.endswith(":infra") for row in rows) == 1
+    assert sorted(rows[1:]) == ["templates/alpha:analysis", "templates/beta:analysis"]
+    pids = set()
+    for name in names:
+        output = tmp_path / "projects" / name / "output"
+        pids.add(json.loads((output / "data/analysis.json").read_text())["pid"])
+        assert (output / "logs/pipeline.log").is_file()
+        assert result.run_results[name].expected_stage_keys == ("analysis",)
+    assert len(pids) == 2 and os.getpid() not in pids
 
 
-def test_redirected_streams_restores_original_fds(tmp_path: Path) -> None:
-    """The context manager restores the original FD 1/2 on exit.
+def test_actual_parallel_shared_failure_prevents_worker_submission(tmp_path: Path) -> None:
+    from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 
-    Without restoration, a single worker process could not be re-used for a
-    second project — its second-task output would still go to the first
-    project's log file.
-    """
-    log_a = tmp_path / "a.log"
-    log_b = tmp_path / "b.log"
+    names = ("templates/alpha", "templates/beta")
+    scaffold_pipeline(tmp_path, names, infra_exit=2)
+    result = run_projects_in_parallel(names, repo_root=tmp_path, max_workers=2)
+    assert result.exit_code == 1 and result.shared_infrastructure_exit_code == 1
+    assert result.shared_infrastructure_result is not None
+    assert result.shared_infrastructure_result.run_result.outcomes[0].child_exit_code == 2
+    assert result.run_results == {} and result.failed == list(names)
+    assert (tmp_path / "process_order.log").read_text().splitlines() == ["templates/alpha:infra"]
+    for name in names:
+        assert not (tmp_path / "projects" / name / "output/data/analysis.json").exists()
+    # The shared check legitimately logs under its selected project's output.
+    # The other project gets no executor or worker log.
+    assert not (tmp_path / "projects/templates/beta/output/logs/pipeline.log").exists()
 
-    with _redirect_worker_streams(log_a):
-        print("python-a")
-        os.write(1, b"hello-a\n")
-    with _redirect_worker_streams(log_b):
-        print("python-b")
-        os.write(1, b"hello-b\n")
 
-    assert "hello-a" in log_a.read_text()
-    assert "python-a" in log_a.read_text()
-    assert "hello-b" in log_b.read_text()
-    assert "python-b" in log_b.read_text()
-    assert "hello-b" not in log_a.read_text()
-    assert "python-b" not in log_a.read_text()
-    assert "hello-a" not in log_b.read_text()
-    assert "python-a" not in log_b.read_text()
+def test_actual_parallel_stage_intervals_overlap(tmp_path: Path) -> None:
+    names = ("templates/alpha", "templates/beta")
+    scaffold_pipeline(tmp_path, names)
+    (tmp_path / "scripts/stage.py").write_text(
+        "import json,os,sys,time\nfrom pathlib import Path\n"
+        "project=sys.argv[sys.argv.index('--project')+1]\nstart=time.monotonic();time.sleep(1.2)\n"
+        "output=Path('projects')/project/'output/data';output.mkdir(parents=True,exist_ok=True)\n"
+        "(output/'interval.json').write_text(json.dumps({'start':start,'end':time.monotonic(),'pid':os.getpid()}))\n"
+    )
+    result = run_projects_in_parallel(names, repo_root=tmp_path, max_workers=2, run_infra_tests=False)
+    assert result.exit_code == 0
+    intervals = [json.loads((tmp_path / "projects" / name / "output/data/interval.json").read_text()) for name in names]
+    assert max(row["start"] for row in intervals) < min(row["end"] for row in intervals)
+    assert intervals[0]["pid"] != intervals[1]["pid"]
+
+
+def test_worker_lock_wait_uses_remaining_outer_budget(tmp_path: Path) -> None:
+    scaffold_pipeline(tmp_path, ("templates/alpha",))
+    project = tmp_path / "projects/templates/alpha"
+    implementation = Path(__file__).resolve().parents[5]
+    marker = project / "output/holder-ready"
+    code = (
+        "import sys,time;sys.path.insert(0,sys.argv.pop(1));from pathlib import Path;"
+        "from infrastructure.core.files.project_lock import project_output_lock;"
+        "\nwith project_output_lock(Path(sys.argv[1])):\n"
+        " Path(sys.argv[2]).write_text('holder');time.sleep(30)\n"
+    )
+    holder = subprocess.Popen(
+        [sys.executable, "-I", "-c", code, str(implementation), str(project), str(marker)],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        start_new_session=True,
+    )
+    try:
+        deadline = time.monotonic() + 5
+        while not marker.exists() and holder.poll() is None and time.monotonic() < deadline:
+            time.sleep(0.025)
+        assert marker.exists()
+        result = run_projects_in_parallel(
+            ("templates/alpha",), repo_root=tmp_path, run_infra_tests=False, run_timeout_seconds=4
+        )
+        assert result.exit_code == 124 and holder.poll() is None
+        assert not (tmp_path / "process_order.log").exists()
+        assert marker.read_text() == "holder"
+    finally:
+        if holder.poll() is None:
+            os.killpg(holder.pid, signal.SIGKILL)
+        holder.communicate(timeout=5)

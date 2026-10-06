@@ -11,7 +11,7 @@ from typing import Optional
 
 import numpy as np
 
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 logger = logging.getLogger(__name__)
 

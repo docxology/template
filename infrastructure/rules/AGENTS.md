@@ -26,7 +26,7 @@ The design mirrors `infrastructure/fonds/` adapted for specifications:
 | `rules_info.py` | `RuleInfo`, `build_rule_info` |
 | `validation.py` | `validate_rule_structure` |
 | `public_scope.py` | `PUBLIC_RULE_NAMES`, `public_rule_infos`, `public_rule_names` |
-| `linking.py` | `sync_private_rule_links`, `sync_active_rule_links`, `private_rules_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
+| `linking.py` | `sync_private_rule_links`, `private_rules_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
 | `__init__.py` | Re-exports: `RuleInfo`, `build_rule_info`, `discover_rules`, `resolve_rule_root`, `validate_rule_structure` |
 
 ## Public API
@@ -106,7 +106,6 @@ is_valid, message = validate_rule_structure(Path("rules/my_rule"))
 - `sync_private_rule_links(repo_root, private_root=None, *, prune=True, dry_run=False) -> LinkSyncResult` —
   mirror private lifecycle folders into `rules/working/` and `rules/archive/`
   via symlinks. No-op when no private root is found.
-- `sync_active_rule_links(...)` — compatibility alias.
 - `private_rules_root(repo_root) -> Path | None` — resolve private sidecar
   root: `$TEMPLATE_RULES_ROOT` → `<repo_root>/.rules_root` → sibling `../rules`
   (requires `working/` + `archive/`).

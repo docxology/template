@@ -17,6 +17,7 @@ from pathlib import Path
 
 from infrastructure.core._bounded_run_guardian import (
     BoundedRunGuardian as _BoundedRunGuardian,
+    GuardianCustodyError,
 )
 
 _RUN_IDS_ENV = "TEMPLATE_BOUNDED_RUN_IDS"
@@ -65,14 +66,22 @@ def _complete_bounded_run_cleanup(
 ) -> str:
     """Wait for independent cleanup, run a caller-side sweep, and report errors."""
     cleanup_error = ""
-    if guardian is not None:
-        try:
-            guardian.wait_for_cleanup()
-        except (OSError, RuntimeError, TimeoutError, subprocess.SubprocessError) as exc:
-            cleanup_error = f"bounded-run guardian cleanup failed: {exc}"
-        finally:
-            guardian.close()
-    terminate_bounded_run_processes(run_token)
+    custody_error: GuardianCustodyError | None = None
+    try:
+        if guardian is not None:
+            try:
+                guardian.wait_for_cleanup()
+            except GuardianCustodyError as exc:
+                custody_error = exc
+            except (OSError, RuntimeError, TimeoutError, subprocess.SubprocessError) as exc:
+                cleanup_error = f"bounded-run guardian cleanup failed: {exc}"
+            finally:
+                guardian.close()
+    finally:
+        # Preserve interruption after closing the guardian and sweeping descendants.
+        terminate_bounded_run_processes(run_token)
+    if custody_error is not None:
+        raise custody_error
     return cleanup_error
 
 

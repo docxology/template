@@ -20,7 +20,12 @@ from pathlib import Path
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT / "src"))
 
-from literature.fixture_corpus import DEFAULT_N, DEFAULT_SEED, DEFAULT_TERM, build_synthetic_corpus  # noqa: E402
+from template_literature_meta_analysis.literature.fixture_corpus import (
+    DEFAULT_N,
+    DEFAULT_SEED,
+    DEFAULT_TERM,
+    build_synthetic_corpus,
+)  # noqa: E402
 
 
 def main() -> int:

@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_eda_notebook](https://github.com/docxology/template_eda_notebook)
-- Config version: `1.0.0`
+- Intended / published version: `2.0.0 pending; last published 1.0.0`
 - Stable concept DOI: [10.5281/zenodo.21086292](https://doi.org/10.5281/zenodo.21086292)
 - Latest deposited version DOI: [10.5281/zenodo.21086293](https://zenodo.org/records/21086293)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_eda_notebook/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_eda_notebook), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmSsHhWo2JC76gQSy6rQuN6uKTP1gH9vtj3kGKLgY5oU4E), [netlify](https://6a444920f59418acc0357e9f--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/ycwsk/), [pypi](https://test.pypi.org/project/template-eda-notebook/1.0.0/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_eda_notebook)

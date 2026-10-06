@@ -18,7 +18,7 @@ workspace — executable entry points (scripts, skills, agents), distinct from
 | `tools_info.py` | `ToolInfo`, `build_tool_info` |
 | `validation.py` | `validate_tool_structure` |
 | `public_scope.py` | `PUBLIC_TOOL_NAMES`, `public_tool_infos`, `public_tool_names` |
-| `linking.py` | `sync_private_tool_links`, `sync_active_tool_links`, `private_tools_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
+| `linking.py` | `sync_private_tool_links`, `private_tools_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
 
 ## Discovery and validation
 

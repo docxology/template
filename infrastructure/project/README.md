@@ -165,9 +165,11 @@ uv run python scripts/gates/public_capabilities.py --ci-matrix-json
 
 - `exemplar_roster.py` — `collect_entries(repo_root)` builds `ExemplarEntry`
   records from each public exemplar README; backs `docs/_generated/exemplar_roster.md`.
-- `export_smoke.py` — clean-exports an exemplar, installs its own locked
-  environment, and imports its top-level `src` package; `smoke_public_exemplars`
-  applies the contract to the canonical public roster.
+- `package_discovery.py` — describes static source import targets without executing code.
+- `installed_acceptance.py` — builds and admits genuine root/public wheels with
+  declared provider topology and locked transitives, then probes actual isolated
+  installed environments across supported Python minors. See the
+  [installed-wheel matrix](../../docs/development/installed-wheel-matrix.md).
 - `domain_profile.py` — `load_domain_profile(project_root)` returns a `DomainProfile`
   describing a project's validators, render tracks, and defaults.
 - `experiment_plan.py` — `load_experiment_plan(project_root)` /

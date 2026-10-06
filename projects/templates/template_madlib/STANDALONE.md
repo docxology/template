@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_madlib](https://github.com/docxology/template_madlib)
-- Config version: `0.1.1`
+- Intended / published version: `0.2.0 pending; last published 0.1.1`
 - Stable concept DOI: [10.5281/zenodo.20786638](https://doi.org/10.5281/zenodo.20786638)
 - Latest deposited version DOI: [10.5281/zenodo.20932025](https://zenodo.org/records/20932025)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_madlib/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_madlib), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmcrHEuVYorBXHuLXZRjHQQ7kgKnAJx1MvxNpbyZSrvxNQ), [netlify](https://6a44418df7f6f9fa20037643--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/ndpue/), [pypi](https://test.pypi.org/project/template-madlib/0.1.1/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_madlib)

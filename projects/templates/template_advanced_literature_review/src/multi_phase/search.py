@@ -20,8 +20,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from template_literature_meta_analysis.config_loader import _load_yaml
 
+from config_loader import _load_yaml
 from literature.corpus import Corpus
 from literature.models import Paper
 from literature.search_runner import run_literature_search
@@ -49,6 +49,7 @@ class MultiPhaseSearchRunner:
         *,
         project_root: Path = PROJECT_ROOT,
         output_dir: Path | None = None,
+        config_source_bytes: bytes | None = None,
     ):
         """Initialize the multi-phase search runner from a config file.
 
@@ -61,7 +62,7 @@ class MultiPhaseSearchRunner:
         self.config_path = config_path
         self.project_root = project_root.resolve()
         self.output_dir = output_dir.resolve() if output_dir is not None else self.project_root / "output" / "data"
-        self.config = _load_yaml(config_path)
+        self.config = _load_yaml(config_path, source_bytes=config_source_bytes)
         self.project_config = self.config.get("project_config", {})
         self.search_phases: dict[str, Any] = self.project_config.get("search_phases", {})
         self.llm_filters: dict[str, Any] = self.project_config.get("llm_filters", {})

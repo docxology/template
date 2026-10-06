@@ -1,0 +1,8 @@
+# Domain/core remains standalone. Optional tool execution delegates generic
+# process and executed-code custody to its declared formal-tools platform extra.
+allow_infrastructure_imports:
+  - src/template_formal/_tool_launcher.py
+reason: >-
+  The optional formal-tool launcher uses the mature platform pre-import audit,
+  actual-bytecode verifier, and bounded process supervisor. Pure domain/core
+  modules do not depend on the platform distribution.

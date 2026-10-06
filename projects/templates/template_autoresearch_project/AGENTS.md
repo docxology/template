@@ -78,7 +78,7 @@ SBOM claim, and no runtime security monitoring are part of the default exemplar.
 ## Run Commands
 
 ```bash
-./run.sh --pipeline --project template_autoresearch_project --core-only --skip-infra
+./run.sh --pipeline --project template_autoresearch_project --mode core --skip-infra
 uv run python scripts/pipeline/stage_01_test.py --project template_autoresearch_project --project-only
 uv run python -m infrastructure.autoresearch.cli validate --project template_autoresearch_project --fail-on-issues
 ```

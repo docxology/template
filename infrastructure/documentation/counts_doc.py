@@ -102,8 +102,15 @@ DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 GENERATED_DATE = "2026-09-06"
 
 
-def tracked_infra_python_count(repo_root: Path) -> int:
-    """Count git-tracked ``infrastructure/`` Python files (matches the gate)."""
+def tracked_infra_python_count(repo_root: Path, *, tracked_paths: tuple[str, ...] | None = None) -> int:
+    """Count Root git-tracked infrastructure Python files (matches the gate).
+
+    An explicit tuple can come from an already admitted immutable Root index;
+    its caller owns that admission and final custody verification. Without that
+    input, ordinary checkout discovery retains its original Git behavior.
+    """
+    if tracked_paths is not None:
+        return sum(path.startswith("infrastructure/") and path.endswith(".py") for path in tracked_paths)
     tracked = subprocess.run(  # noqa: S603 - fixed argv, repo-local git
         ["git", "ls-files", "infrastructure"],
         cwd=repo_root,
@@ -398,7 +405,7 @@ uv run python scripts/pipeline/stage_01_test.py --project template_code_project
 Use `uv run` for reproducibility:
 
 - Tests: `uv run python scripts/pipeline/stage_01_test.py --project <name>`
-- Pipeline: `uv run python scripts/runner/execute_pipeline.py --project <name> --core-only`
+- Pipeline: `uv run python scripts/runner/execute_pipeline.py --project <name> --mode core`
 - Interactive: `./run.sh`
 - Specific test: `uv run pytest path/to/test.py::test_name -q`
 
@@ -441,7 +448,7 @@ Key signatures:
 
 ```bash
 uv run python -m infrastructure.validation.cli markdown projects/{{name}}/manuscript/
-uv run python -m infrastructure.validation.cli pdf output/{{name}}/pdf/
+uv run python -m infrastructure.validation.cli pdf --project {{name}} --repo-root .
 ```
 
 ## Structure

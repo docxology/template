@@ -1,4 +1,4 @@
-"""Figure generation from analysis JSON artifacts."""
+"""Figure generation from template_literature_meta_analysis.analysis JSON artifacts."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ import numpy as np
 
 os.environ.setdefault("MPLBACKEND", "Agg")
 
-from visualization.advanced_plots import (
+from template_literature_meta_analysis.visualization.advanced_plots import (
     plot_cooccurrence_matrix,
     plot_dendrogram,
     plot_pca_embeddings,
@@ -22,23 +22,33 @@ from visualization.advanced_plots import (
     plot_topic_term_bars,
     plot_word_cloud,
 )
-from visualization.citation_plots import plot_citation_network, plot_degree_distribution
-from visualization.descriptive_plots import (
+from template_literature_meta_analysis.visualization.citation_plots import (
+    plot_citation_network,
+    plot_degree_distribution,
+)
+from template_literature_meta_analysis.visualization.descriptive_plots import (
     plot_author_productivity,
     plot_citation_distribution,
     plot_entity_bar_chart,
     plot_similarity_heatmap,
     plot_top_venues,
 )
-from visualization.field_overview import plot_field_summary, plot_subfield_distribution
-from visualization.hypothesis_charts import (
+from template_literature_meta_analysis.visualization.field_overview import (
+    plot_field_summary,
+    plot_subfield_distribution,
+)
+from template_literature_meta_analysis.visualization.hypothesis_charts import (
     plot_assertion_summary,
     plot_assertion_type_breakdown,
     plot_evidence_timeline,
     plot_hypothesis_dashboard,
 )
-from visualization.style import VIZ_CONFIG, apply_visual_style, load_viz_labels_from_config
-from visualization.temporal_plots import plot_growth_curve, plot_subfield_timeline
+from template_literature_meta_analysis.visualization.style import (
+    VIZ_CONFIG,
+    apply_visual_style,
+    load_viz_labels_from_config,
+)
+from template_literature_meta_analysis.visualization.temporal_plots import plot_growth_curve, plot_subfield_timeline
 
 
 FIGURE_SPECS: tuple[str, ...] = (

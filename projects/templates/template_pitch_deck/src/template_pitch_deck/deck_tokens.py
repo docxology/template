@@ -115,7 +115,9 @@ def _display_platform_name(platform_name: str, reference: str | None) -> str:
     return label
 
 
-def _published_platform_names_and_count(repo_root: Path, pitch_subject: str) -> tuple[str, int]:
+def _published_platform_names_and_count(
+    repo_root: Path, pitch_subject: str, *, state: PublicationState = PublicationState.PUBLISHED
+) -> tuple[str, int]:
     """Return (comma-joined published platform display names, count) for ``pitch_subject``.
 
     Delegates to `infrastructure.publishing.status_report.compile_publishing_status`
@@ -132,7 +134,7 @@ def _published_platform_names_and_count(repo_root: Path, pitch_subject: str) -> 
     """
     subject_root = repo_root / "projects" / "templates" / _validate_project_name(pitch_subject)
     report = compile_publishing_status(subject_root)
-    published = [p for p in report.platforms if p.state is PublicationState.PUBLISHED]
+    published = [p for p in report.platforms if p.state is state]
     names = [_display_platform_name(p.name, p.reference) for p in published]
     return ", ".join(names), len(names)
 
@@ -154,6 +156,11 @@ def build_deck_tokens(repo_root: Path, pitch_subject: str = "template_template")
     metadata = subject_config.get("metadata") or {}
 
     published_platform_names, published_count = _published_platform_names_and_count(repo_root, pitch_subject)
+    historical_names, historical_count = _published_platform_names_and_count(
+        repo_root,
+        pitch_subject,
+        state=PublicationState.HISTORICAL,
+    )
 
     test_count, coverage_pct = _read_counts_row(repo_root, pitch_subject)
 
@@ -161,6 +168,8 @@ def build_deck_tokens(repo_root: Path, pitch_subject: str = "template_template")
         "PITCH_SUBJECT_NAME": pitch_subject,
         "PITCH_SUBJECT_TITLE": str(paper.get("title", pitch_subject)),
         "PITCH_SUBJECT_VERSION": str(paper.get("version", "")),
+        "PITCH_SUBJECT_RELEASE_STATUS": str(publication.get("release_status", "unknown")),
+        "PITCH_SUBJECT_LAST_PUBLISHED_VERSION": str(publication.get("last_published_version", "")),
         "PITCH_SUBJECT_LICENSE": str(metadata.get("license", "")),
         "PITCH_SUBJECT_DOI": str(publication.get("doi", "")),
         "PITCH_SUBJECT_GITHUB": str(publication.get("github_repository", "")),
@@ -168,6 +177,8 @@ def build_deck_tokens(repo_root: Path, pitch_subject: str = "template_template")
         "PITCH_SUBJECT_COVERAGE_PCT": coverage_pct,
         "PITCH_SUBJECT_PUBLISHED_PLATFORM_COUNT": str(published_count),
         "PITCH_SUBJECT_PUBLISHED_PLATFORM_NAMES": published_platform_names,
+        "PITCH_SUBJECT_LAST_PUBLISHED_PLATFORM_COUNT": str(historical_count),
+        "PITCH_SUBJECT_LAST_PUBLISHED_PLATFORM_NAMES": historical_names,
         "EXEMPLAR_COUNT": str(exemplar_count),
         "EXEMPLAR_COUNT_PLUS_ONE": str(exemplar_count + 1),
         "SECOND_EXEMPLAR_NAME": _second_example_name(exemplar_names, pitch_subject),

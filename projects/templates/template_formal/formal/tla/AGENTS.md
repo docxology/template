@@ -2,24 +2,22 @@
 
 Parent layer contract: [`../AGENTS.md`](../AGENTS.md).
 
-## The jar is never trusted on the basis of "it's already there"
+## Exact jar custody
 
-`scripts/check_formal_specs.sh` fetches `tla2tools.jar` **only if it's
-missing**, but it verifies the SHA-256 checksum **every single run**,
-fetched-this-time or already-cached — on mismatch it deletes the file and
-fails loudly rather than running an unverified jar. This closed a real
-HIGH-severity finding from a round-2 adversarial pass (`ISA.md` decision log,
-2026-07-09): the jar was originally fetched from a `latest`-style moving
-target with zero integrity verification. If you ever change the fetch URL
-(e.g. to bump the pinned TLA+ release), you **must** also update the
-hardcoded `TLA_JAR_SHA256` in `../scripts/check_formal_specs.sh` to the real
-checksum of that exact new release asset (`shasum -a 256` against a fresh
-download) — never leave the old checksum in place "temporarily," since that
-turns the check into a permanent, silent no-op that always fails (or, if you
-also skip re-verifying, could accept a same-name-different-bytes asset later).
-Pin to a specific dated release tag, never `latest` — a moving download
-target is the whole class of supply-chain risk this discipline exists to
-close.
+The canonical wrapper delegates acquisition and execution to
+[`template_formal.tool_acceptance`](../../src/template_formal/tool_acceptance.py).
+Only explicit `--acquire` downloads the fixed release URL. The current official
+v1.8.0 asset601828751 has source-owned SHA256
+`e9c2d914fc1b7ba3e4a982ba251dc5c0da65010afcc6a5f9651576a1c380deae`, verified
+against both official API metadata and exact downloaded bytes on2026-09-30.
+The previous source checksum and stale release-page SHA1 were rejected. Preserve
+this distinction when refreshing a pin: matching a moving release URL is
+insufficient, and a mismatch must never execute an unverified cached jar.
+
+Every check revalidates the cache and final byte custody. TLC scratch state is
+outside source and `-noGenerateSpecTE` prevents counterexample trace files from
+changing the public specification. The negative control must produce exit12
+and its exact `NoFalseEstablishment` violation within the same total deadline.
 
 ## Deadlock disabling is a documented decision, not a workaround
 
@@ -75,7 +73,7 @@ actions the *new* property actually depends on resolving.
    stale number from a previous run.
 5. If you add a third `.tla` spec, add a corresponding section to
    [`README.md`](README.md) and wire it into
-   `../../scripts/check_formal_specs.sh`'s `status` accumulator (see
+   `../../scripts/check_formal_specs.sh`'s bound check list (see
    `../AGENTS.md`'s note on extending that script).
 
 ## Run
@@ -87,7 +85,7 @@ java -jar tla2tools.jar -config AntProtocolFaulty.cfg AntProtocolFaulty.tla
 ```
 
 Or via the combined, checksum-verified wrapper:
-`scripts/check_formal_specs.sh` (runs both as the second and third of three checks).
+`scripts/check_formal_specs.sh` (runs both positive models and the required negative control).
 
 ## See also
 

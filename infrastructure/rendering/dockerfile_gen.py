@@ -90,7 +90,7 @@ def build_dockerfile(config: DockerfileConfig) -> str:
     4. Copies the source tree into ``/workspace``
     5. Runs ``uv sync`` to install Python deps from the lockfile
     6. Sets ``MPLBACKEND=Agg`` for headless plotting
-    7. Defaults to running the project's ``run.sh --pipeline --project <name> --core-only``
+    7. Defaults to running the project's ``run.sh --pipeline --project <name> --mode core``
     """
 
     py_version_tag = config.python_version
@@ -184,7 +184,7 @@ def build_dockerfile(config: DockerfileConfig) -> str:
         "RUN uv sync --frozen",
         "",
         f"# Default entry: run the core pipeline for project {config.project_name!r}",
-        f'CMD ["bash", "-lc", "./run.sh --pipeline --project {config.project_name} --core-only"]',
+        f'CMD ["bash", "-lc", "./run.sh --pipeline --project {config.project_name} --mode core"]',
         "",
     ]
     return "\n".join(lines)

@@ -20,7 +20,7 @@ import hashlib
 import math
 from typing import Any
 
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 
 def load_sampling_config(config: dict[str, Any]) -> tuple[float, int]:

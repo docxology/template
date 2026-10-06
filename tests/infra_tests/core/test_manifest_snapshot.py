@@ -231,12 +231,16 @@ def test_manifest_snapshot_still_works_outside_a_git_repository(tmp_path: Path) 
     output = project / "output" / "data"
     output.mkdir(parents=True)
     (output / "results.json").write_text("{}\n", encoding="utf-8")
-    (output / "render.log").write_text("noise\n", encoding="utf-8")
+    (output / "observations.log").write_text("measurement\n", encoding="utf-8")
+    renderer_output = project / "output" / "pdf"
+    renderer_output.mkdir()
+    (renderer_output / "render.log").write_text("renderer intermediate\n", encoding="utf-8")
 
     manifest = snapshot_current_artifact_manifest(project / "output")
     recorded = {entry.path for entry in manifest.entries}
     assert "output/data/results.json" in recorded
-    assert "output/data/render.log" not in recorded, "static suffix exclusions must still apply"
+    assert "output/data/observations.log" in recorded
+    assert "output/pdf/render.log" not in recorded, "renderer intermediates remain excluded"
 
 
 def test_copied_inventory_maps_git_ignores_to_canonical_source(tmp_path: Path) -> None:

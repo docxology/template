@@ -25,6 +25,7 @@ from infrastructure.core.pipeline.types import (
     StagePolicy,
 )
 from infrastructure.reporting.run_lessons import collect_run_lessons, write_run_lessons
+from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 
 
 def test_hitl_controller_records_gate_pause_and_commands(tmp_path: Path) -> None:
@@ -43,12 +44,13 @@ def test_hitl_controller_records_gate_pause_and_commands(tmp_path: Path) -> None
 
     controller.guide(stage_num=6, message="Review citations before resuming.")
     controller.approve(message="Looks grounded.")
-    controller.resume(message="Resume from checkpoint.")
+    with pytest.raises(ValueError, match="No current waiting"):
+        controller.resume(message="Resume from checkpoint.")
 
     assert controller.status()["waiting"] is None
     decisions = (tmp_path / "hitl" / "decisions.jsonl").read_text(encoding="utf-8")
     assert '"action": "approve"' in decisions
-    assert '"action": "resume"' in decisions
+    assert '"action": "resume"' not in decisions
     assert (tmp_path / "hitl" / "guidance" / "stage-06.md").read_text(encoding="utf-8") == (
         "Review citations before resuming.\n"
     )
@@ -60,6 +62,9 @@ def test_hitl_cli_commands_status_guide_and_validate_response(
 ) -> None:
     repo_root = tmp_path / "repo"
     (repo_root / "projects" / "demo" / "output").mkdir(parents=True)
+    (repo_root / "projects" / "demo" / "src").mkdir()
+    (repo_root / "projects" / "demo" / "tests").mkdir()
+    (repo_root / "projects" / "demo" / "src" / "__init__.py").write_text("")
     response_path = tmp_path / "response.json"
     response_path.write_text('{"action": "guide", "message": "Add a benchmark.", "stage_num": 6}', encoding="utf-8")
 
@@ -105,11 +110,12 @@ def test_hitl_cli_commands_status_guide_and_validate_response(
 def test_hitl_history_returns_structured_decisions(tmp_path: Path) -> None:
     controller = HitlController(project_output_dir=tmp_path, mode=HitlMode.GATE_ONLY)
     controller.guide(stage_num=4, message="Inspect source tiers.")
+    controller.pause(stage_num=4, stage_name="Analysis", reason="review")
     controller.reject(message="Not grounded enough.")
 
     history = controller.history()
 
-    assert [row["action"] for row in history] == ["guide", "reject"]
+    assert [row["action"] for row in history] == ["guide", "pause", "reject"]
     assert history[0]["stage_num"] == 4
 
 
@@ -130,9 +136,12 @@ def test_stage_policy_pause_before_does_not_checkpoint_stage(tmp_path: Path) -> 
 
     result = executor._execute_stage(1, "Policy Stage", stage)
 
-    assert result.success is True
+    assert result.success is False
+    assert result.exit_code == 75
     assert result.hitl_pause is True
     assert result.stage_completed is False
+    assert result.outcome is not None and result.outcome.child_exit_code is None
+    assert not result.outcome.in_process_completed
     assert ran["value"] is False
     assert json.loads((output_dir / "hitl" / "waiting.json").read_text(encoding="utf-8"))["reason"] == (
         "approval_required"
@@ -335,14 +344,20 @@ def test_executor_honors_stage_retry_policy(tmp_path: Path) -> None:
     executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
     attempts = {"count": 0}
 
-    def flaky_stage() -> bool:
+    def flaky_stage() -> StageOutcome:
         attempts["count"] += 1
-        return attempts["count"] == 2
+        return StageOutcome(
+            "retry",
+            StageStatus.SUCCEEDED if attempts["count"] == 2 else StageStatus.FAILED,
+            0 if attempts["count"] == 2 else 7,
+            retryable=True,
+        )
 
     spec = StageSpec(
         "Retry Stage",
         flaky_stage,
         contract=StageContract(retry_policy=1),
+        key="retry",
     )
 
     result = executor._execute_stage(1, spec.name, spec.func, stage_spec=spec)
@@ -351,7 +366,7 @@ def test_executor_honors_stage_retry_policy(tmp_path: Path) -> None:
     assert attempts["count"] == 2
 
 
-def test_executor_retries_stage_exceptions_when_policy_allows(tmp_path: Path) -> None:
+def test_executor_does_not_retry_unclassified_exceptions(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
     (repo_root / "projects" / "p" / "output").mkdir(parents=True)
     executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
@@ -371,8 +386,8 @@ def test_executor_retries_stage_exceptions_when_policy_allows(tmp_path: Path) ->
 
     result = executor._execute_stage(1, spec.name, spec.func, stage_spec=spec)
 
-    assert result.success is True
-    assert attempts["count"] == 2
+    assert result.success is False
+    assert attempts["count"] == 1
 
 
 def test_executor_gate_only_mode_pauses_after_gated_stage(tmp_path: Path) -> None:
@@ -391,7 +406,8 @@ def test_executor_gate_only_mode_pauses_after_gated_stage(tmp_path: Path) -> Non
 
     result = executor._execute_stage(6, spec.name, spec.func, stage_spec=spec)
 
-    assert result.success is True
+    assert result.success is False
+    assert result.exit_code == 75
     assert result.hitl_pause is True
     waiting = json.loads((output_dir / "hitl" / "waiting.json").read_text(encoding="utf-8"))
     assert waiting["reason"] == "publication_readiness"

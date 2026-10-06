@@ -32,7 +32,7 @@ Render a machine-readable plan and fail on missing publication-critical
 surfaces:
 
 ```bash
-uv run python -m infrastructure.methods plan --project templates/template_code_project --format json --check
+uv run python -m infrastructure.methods plan --project templates/template_code_project --format json
 ```
 
 Audit all public exemplars in the generated roster

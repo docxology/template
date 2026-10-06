@@ -16,7 +16,7 @@ from defusedxml.ElementTree import fromstring as _safe_fromstring
 
 import requests
 
-from literature.http import request_with_retry
+from template_literature_meta_analysis.literature.http import request_with_retry
 
 from .models import Author, Paper
 

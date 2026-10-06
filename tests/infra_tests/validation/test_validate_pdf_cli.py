@@ -1,4 +1,4 @@
-"""Comprehensive tests for infrastructure/validation/cli/pdf.py.
+"""Behavioral tests for the canonical PDF validation CLI.
 
 Tests the PDF validation CLI script using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
@@ -10,10 +10,25 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-from infrastructure.validation.cli import pdf as validate_pdf_cli
+from infrastructure.validation.content import pdf_reporting as validate_pdf_cli
+from infrastructure.validation.content.pdf_discovery import discover_combined_pdf
+from infrastructure.validation.cli.main import main as validation_main
+
+
+def _validate(pdf_path: Path | None = None, n_words: int = 200, verbose: bool = False) -> int:
+    arguments = ["pdf", "--preview-words", str(n_words)]
+    if pdf_path is not None:
+        arguments.append(str(pdf_path))
+    if verbose:
+        arguments.append("--verbose")
+    try:
+        return validation_main(arguments)
+    except SystemExit as exc:
+        return int(exc.code)
 
 
 class TestValidatePdfCliModule:
@@ -39,28 +54,86 @@ class TestDiscoverCombinedPdf:
         combined = pdf_dir / "proj_combined.pdf"
         combined.write_bytes(b"%PDF-1.4")
 
-        result = validate_pdf_cli.discover_combined_pdf(tmp_path, "proj")
+        result = discover_combined_pdf(tmp_path, "proj")
         assert result == combined
 
     def test_named_project_missing(self, tmp_path):
         """Named project without a combined PDF returns None."""
         (tmp_path / "output" / "proj" / "pdf").mkdir(parents=True)
-        assert validate_pdf_cli.discover_combined_pdf(tmp_path, "proj") is None
+        assert discover_combined_pdf(tmp_path, "proj") is None
 
-    def test_unnamed_picks_first_sorted(self, tmp_path):
-        """Without a project name, the first sorted glob match wins."""
-        for name in ("beta", "alpha"):
-            pdf_dir = tmp_path / "output" / name / "pdf"
+    def test_unnamed_selects_only_available_public_pdf(self, tmp_path):
+        """Automatic discovery refuses ambiguous public PDFs."""
+        for name in ("template_code_project",):
+            pdf_dir = tmp_path / "output" / "templates" / name / "pdf"
             pdf_dir.mkdir(parents=True)
             (pdf_dir / f"{name}_combined.pdf").write_bytes(b"%PDF-1.4")
 
-        result = validate_pdf_cli.discover_combined_pdf(tmp_path)
+        result = discover_combined_pdf(tmp_path)
         assert result is not None
-        assert result.name == "alpha_combined.pdf"
+        assert result.name == "template_code_project_combined.pdf"
+
+    def test_ambiguous_public_pdfs_require_selection(self, tmp_path):
+        for name in ("template_code_project", "template_prose_project"):
+            target = tmp_path / "output" / "templates" / name / "pdf" / f"{name}_combined.pdf"
+            target.parent.mkdir(parents=True)
+            target.write_bytes(b"%PDF-1.4")
+        with pytest.raises(ValueError, match="Multiple public"):
+            discover_combined_pdf(tmp_path)
+
+    @pytest.mark.parametrize("name", ["../private", "/absolute", "templates/../../private", "templates\\private"])
+    def test_unsafe_names_refused(self, tmp_path, name):
+        with pytest.raises(ValueError, match="confined"):
+            discover_combined_pdf(tmp_path, name)
+
+    def test_symlink_delivery_refused(self, tmp_path):
+        delivery = tmp_path / "output" / "templates"
+        delivery.parent.mkdir()
+        external = tmp_path / "external"
+        external.mkdir()
+        delivery.symlink_to(external, target_is_directory=True)
+        with pytest.raises(ValueError, match="symlink"):
+            discover_combined_pdf(tmp_path, "templates/template_code_project")
+
+    def test_qualified_project_cli_and_preview(self, tmp_path):
+        pdf = tmp_path / "output" / "templates" / "template_code_project" / "pdf" / "template_code_project_combined.pdf"
+        pdf.parent.mkdir(parents=True)
+        document = canvas.Canvas(str(pdf), pagesize=letter)
+        document.drawString(100, 750, "A real project PDF")
+        document.showPage()
+        document.save()
+        with pytest.raises(SystemExit) as result:
+            validation_main(
+                [
+                    "pdf",
+                    "--project",
+                    "templates/template_code_project",
+                    "--repo-root",
+                    str(tmp_path),
+                    "--preview-words",
+                    "10",
+                ]
+            )
+        assert result.value.code == 0
+
+    def test_nonpositive_preview_refused_before_validation(self, tmp_path):
+        with pytest.raises(SystemExit) as result:
+            validation_main(["pdf", str(tmp_path / "missing.pdf"), "--preview-words", "0"])
+        assert result.value.code == 2
+
+    def test_retired_module_is_unavailable(self):
+        result = subprocess.run(
+            [sys.executable, "-m", "infrastructure.validation.cli.pdf", "--help"],
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        assert result.returncode != 0
+        assert "No module named" in result.stderr
 
     def test_no_output_dir(self, tmp_path):
         """Empty repo root (no output/) returns None."""
-        assert validate_pdf_cli.discover_combined_pdf(tmp_path) is None
+        assert discover_combined_pdf(tmp_path) is None
 
 
 class TestMainFunctionWithRealPdf:
@@ -79,7 +152,8 @@ class TestMainFunctionWithRealPdf:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.cli.pdf",
+                "infrastructure.validation.cli",
+                "pdf",
                 str(pdf),
             ],
             capture_output=True,
@@ -109,7 +183,8 @@ class TestMainFunctionWithRealPdf:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.cli.pdf",
+                "infrastructure.validation.cli",
+                "pdf",
                 str(tmp_path),
             ],
             capture_output=True,
@@ -127,7 +202,7 @@ class TestMainFunctionWithRealPdf:
         env = os.environ.copy()
         env["PYTHONPATH"] = f"{repo_root}{os.pathsep}{env.get('PYTHONPATH', '')}"
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.validation.cli.pdf"],
+            [sys.executable, "-m", "infrastructure.validation.cli", "pdf"],
             capture_output=True,
             text=True,
             cwd=tmp_path,
@@ -144,10 +219,9 @@ class TestPdfCliIntegration:
 
     def test_module_structure(self):
         """Test module has expected structure."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Should have main function
-        assert hasattr(validate_pdf_cli, "main") or callable(validate_pdf_cli)
+        assert callable(validation_main)
 
 
 class TestPrintValidationReport:
@@ -155,7 +229,7 @@ class TestPrintValidationReport:
 
     def test_print_report_no_issues(self, caplog):
         """Test printing report with no issues."""
-        from infrastructure.validation.cli.pdf import print_validation_report
+        from infrastructure.validation.content.pdf_reporting import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -181,7 +255,7 @@ class TestPrintValidationReport:
 
     def test_print_report_with_issues(self, caplog):
         """Test printing report with issues."""
-        from infrastructure.validation.cli.pdf import print_validation_report
+        from infrastructure.validation.content.pdf_reporting import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -210,7 +284,7 @@ class TestPrintValidationReport:
 
     def test_print_report_verbose(self, caplog):
         """Test printing report with verbose flag."""
-        from infrastructure.validation.cli.pdf import print_validation_report
+        from infrastructure.validation.content.pdf_reporting import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -237,7 +311,6 @@ class TestMainFunction:
 
     def test_main_success(self, tmp_path, capsys):
         """Test main with successful validation using real PDF."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF file
         pdf = tmp_path / "test.pdf"
@@ -247,14 +320,13 @@ class TestMainFunction:
         c.save()
 
         # Use real validation
-        exit_code = validate_pdf_cli.main(pdf_path=pdf)
+        exit_code = _validate(pdf_path=pdf)
 
         # May return 0 (success) or 1 (issues found) depending on PDF content
         assert exit_code in [0, 1]
 
     def test_main_with_issues(self, tmp_path, capsys):
         """Test main with validation - uses real PDF validation."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF file
         pdf = tmp_path / "test.pdf"
@@ -264,40 +336,37 @@ class TestMainFunction:
         c.save()
 
         # Use real validation - may find issues or not
-        exit_code = validate_pdf_cli.main(pdf_path=pdf)
+        exit_code = _validate(pdf_path=pdf)
 
         # Real validation may return 0 or 1 depending on actual PDF content
         assert exit_code in [0, 1]
 
     def test_main_file_not_found(self, tmp_path, caplog):
         """Test main with missing PDF."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         missing_pdf = tmp_path / "missing.pdf"
 
         with caplog.at_level(logging.ERROR):
-            exit_code = validate_pdf_cli.main(pdf_path=missing_pdf)
+            exit_code = _validate(pdf_path=missing_pdf)
 
         assert exit_code == 2
         assert "not found" in caplog.text.lower() or "error" in caplog.text.lower()
 
     def test_main_validation_error(self, tmp_path, capsys):
         """Test main with validation error - uses real validation."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a minimal PDF that might cause validation issues
         pdf = tmp_path / "test.pdf"
         pdf.write_bytes(b"%PDF-1.4\n%%EOF")
 
         # Use real validation - may succeed or fail
-        exit_code = validate_pdf_cli.main(pdf_path=pdf)
+        exit_code = _validate(pdf_path=pdf)
 
         # Real validation may return various codes depending on PDF validity
         assert exit_code in [0, 1, 2]
 
     def test_main_unexpected_error(self, tmp_path, capsys):
         """Test main error handling - uses real validation."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF
         pdf = tmp_path / "test.pdf"
@@ -306,14 +375,13 @@ class TestMainFunction:
         c.save()
 
         # Use real validation - should handle errors gracefully
-        exit_code = validate_pdf_cli.main(pdf_path=pdf)
+        exit_code = _validate(pdf_path=pdf)
 
         # Should return valid exit code
         assert exit_code in [0, 1, 2]
 
     def test_main_verbose_with_error(self, tmp_path, caplog):
         """Test main verbose mode - uses real validation."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF
         pdf = tmp_path / "test.pdf"
@@ -323,7 +391,7 @@ class TestMainFunction:
 
         # Use real validation with verbose flag
         with caplog.at_level(logging.INFO):
-            exit_code = validate_pdf_cli.main(pdf_path=pdf, verbose=True)
+            exit_code = _validate(pdf_path=pdf, verbose=True)
 
         # Should return valid exit code
         assert exit_code in [0, 1, 2]
@@ -336,10 +404,9 @@ class TestDefaultPdfPath:
 
     def test_main_default_path(self, tmp_path, monkeypatch, capsys):
         """Test main returns 2 when no combined PDF is discoverable."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         monkeypatch.chdir(tmp_path)
-        exit_code = validate_pdf_cli.main()
+        exit_code = _validate()
 
         assert exit_code == 2
 
@@ -349,7 +416,6 @@ class TestValidatePdfCliIntegrationRealValidation:
 
     def test_full_validation_workflow(self, tmp_path):
         """Test complete validation workflow with real PDF."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF with content
         pdf = tmp_path / "test.pdf"
@@ -360,7 +426,7 @@ class TestValidatePdfCliIntegrationRealValidation:
         c.save()
 
         # Use real validation
-        exit_code = validate_pdf_cli.main(pdf_path=pdf, n_words=100, verbose=True)
+        exit_code = _validate(pdf_path=pdf, n_words=100, verbose=True)
 
         # Real validation may return 0 or 1 depending on actual PDF content
         assert exit_code in [0, 1]
@@ -382,7 +448,8 @@ class TestValidatePdfCliSubprocess:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.cli.pdf",
+                "infrastructure.validation.cli",
+                "pdf",
                 str(pdf),
             ],
             capture_output=True,
@@ -407,7 +474,8 @@ class TestValidatePdfCliSubprocess:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.cli.pdf",
+                "infrastructure.validation.cli",
+                "pdf",
                 str(pdf),
                 "--verbose",
             ],
@@ -428,15 +496,13 @@ class TestValidatePdfCliCore:
 
     def test_module_imports(self):
         """Test that module imports correctly."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         assert validate_pdf_cli is not None
 
     def test_has_main_function(self):
         """Test that module has main function."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
-        assert hasattr(validate_pdf_cli, "main")
+        assert callable(validation_main)
 
 
 class TestPdfValidationCommand:
@@ -444,7 +510,6 @@ class TestPdfValidationCommand:
 
     def test_validate_single_pdf(self, tmp_path):
         """Test validating a single PDF file using real PDF."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF
         pdf = tmp_path / "test.pdf"
@@ -453,12 +518,11 @@ class TestPdfValidationCommand:
         c.save()
 
         # Use real validation
-        exit_code = validate_pdf_cli.main(pdf_path=pdf)
+        exit_code = _validate(pdf_path=pdf)
         assert exit_code in [0, 1, 2]
 
     def test_validate_pdf_directory(self, tmp_path):
         """Test validating a directory of PDFs using real PDFs."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create real PDF files
         pdf1 = tmp_path / "a.pdf"
@@ -472,15 +536,14 @@ class TestPdfValidationCommand:
         c2.save()
 
         # Validate first PDF (directory validation not directly supported, test individual)
-        exit_code = validate_pdf_cli.main(pdf_path=pdf1)
+        exit_code = _validate(pdf_path=pdf1)
         assert exit_code in [0, 1, 2]
 
     def test_validate_nonexistent_pdf(self, tmp_path):
         """Test validating a nonexistent PDF."""
-        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         missing_pdf = tmp_path / "nonexistent.pdf"
-        exit_code = validate_pdf_cli.main(pdf_path=missing_pdf)
+        exit_code = _validate(pdf_path=missing_pdf)
         assert exit_code == 2
 
 
@@ -503,7 +566,8 @@ class TestPdfCliParsing:
                 [
                     sys.executable,
                     "-m",
-                    "infrastructure.validation.cli.pdf",
+                    "infrastructure.validation.cli",
+                    "pdf",
                     str(pdf),
                 ],
                 capture_output=True,
@@ -531,7 +595,8 @@ class TestPdfCliParsing:
                 [
                     sys.executable,
                     "-m",
-                    "infrastructure.validation.cli.pdf",
+                    "infrastructure.validation.cli",
+                    "pdf",
                     str(pdf),
                     "--verbose",
                 ],
@@ -550,7 +615,7 @@ class TestPdfValidationOutput:
 
     def test_format_results(self):
         """Test result formatting via print_validation_report."""
-        from infrastructure.validation.cli.pdf import print_validation_report
+        from infrastructure.validation.content.pdf_reporting import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -574,7 +639,7 @@ class TestPdfValidationOutput:
 
     def test_print_summary(self, caplog):
         """Test summary printing."""
-        from infrastructure.validation.cli.pdf import print_validation_report
+        from infrastructure.validation.content.pdf_reporting import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -615,7 +680,8 @@ class TestPdfCliMain:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.cli.pdf",
+                "infrastructure.validation.cli",
+                "pdf",
                 str(pdf),
             ],
             capture_output=True,
@@ -636,7 +702,8 @@ class TestPdfCliMain:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.cli.pdf",
+                "infrastructure.validation.cli",
+                "pdf",
                 str(missing_pdf),
             ],
             capture_output=True,

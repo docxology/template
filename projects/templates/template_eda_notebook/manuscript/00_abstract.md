@@ -13,7 +13,7 @@ cells.
 We ship a deterministic dataset (`data/measurements.csv`) with a designed
 correlation structure and a handful of missing values, then load, clean,
 summarize, correlate, and visualize it entirely through tested functions in
-`src/eda/`. The library is side-effect-free — no plotting and no file I/O — and
+`src/template_eda_notebook/eda/`. The library is side-effect-free — no plotting and no file I/O — and
 standalone (numpy and pandas only), so it is covered above the 90% project gate
 and reused identically from the notebook, the thin analysis script
 (`scripts/eda_analysis.py`), and this manuscript.

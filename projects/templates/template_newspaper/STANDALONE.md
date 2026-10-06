@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_newspaper](https://github.com/docxology/template_newspaper)
-- Config version: `1.0.2`
+- Intended / published version: `2.0.0 pending; last published 1.0.2`
 - Stable concept DOI: [10.5281/zenodo.20533675](https://doi.org/10.5281/zenodo.20533675)
 - Latest deposited version DOI: [10.5281/zenodo.20932039](https://zenodo.org/records/20932039)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_newspaper/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_newspaper), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmUsept2d9X3sz42whTgEGM9TjdxjzSqxnuyPCbu3pPwku), [netlify](https://6a4441f8d6dc10153d77788d--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/tzwf8/), [pypi](https://test.pypi.org/project/template-newspaper/1.0.2/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_newspaper)

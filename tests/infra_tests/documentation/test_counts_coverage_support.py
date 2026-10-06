@@ -16,6 +16,7 @@ from infrastructure.documentation.counts_coverage import (
     _COVERAGE_COPY_SUPPORT_SPECS,
     _coverage_measurement_environment,
     _coverage_measurement_workspace,
+    _coverage_run_prefix,
     _coverage_support_identity,
 )
 
@@ -156,16 +157,8 @@ def test_active_coverage_workspace_preserves_canonical_semantic_readiness(tmp_pa
     with _coverage_measurement_workspace(repo_root, "template_active_inference") as (_, disposable):
         result = run_with_policy(
             (
-                "uv",
-                "run",
-                "--locked",
-                "--project",
-                str(canonical),
-                "--directory",
-                str(disposable),
-                "--extra",
-                "dev",
-                "python",
+                *_coverage_run_prefix(disposable, canonical),
+                str(canonical / ".venv/bin/python"),
                 "-c",
                 probe,
             ),
@@ -202,15 +195,9 @@ def test_active_coverage_workspace_passes_documentation_and_inventory_nodes(tmp_
     with _coverage_measurement_workspace(repo_root, "template_active_inference") as (_, disposable):
         result = run_with_policy(
             (
-                "uv",
-                "run",
-                "--locked",
-                "--project",
-                str(canonical),
-                "--directory",
-                str(disposable),
-                "--extra",
-                "dev",
+                *_coverage_run_prefix(disposable, canonical),
+                str(canonical / ".venv/bin/python"),
+                "-m",
                 "pytest",
                 "-q",
                 "--no-cov",

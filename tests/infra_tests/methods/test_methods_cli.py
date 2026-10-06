@@ -5,12 +5,20 @@ from __future__ import annotations
 import contextlib
 import io
 import json
+
+import pytest
 from pathlib import Path
 
 from infrastructure.methods.cli import build_parser, main
 from tests._support.projects import make_project, write_doc
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+def test_removed_check_flag_is_invalid_invocation() -> None:
+    with pytest.raises(SystemExit) as error:
+        build_parser().parse_args(["plan", "--project", "demo", "--check"])
+    assert error.value.code == 2
 
 
 def test_build_parser_has_plan_subcommand() -> None:
@@ -58,6 +66,7 @@ def _write_minimal_repo(repo_root: Path) -> Path:
         """
 stages:
   - name: Project Analysis
+    key: project_analysis
     script: scripts/pipeline/stage_02_analysis.py
     tags: [core]
     contract:
@@ -120,7 +129,7 @@ def test_main_plan_markdown_returns_validation_error_and_prints_markdown(tmp_pat
 
 
 def test_main_plan_with_check_flag_on_scaffold_returns_zero(tmp_path: Path) -> None:
-    """main(['plan', ..., '--check']) returns 0 when no error-severity issues exist."""
+    """Every plan invocation reports validation failures without another flag."""
     _write_minimal_repo(tmp_path)
     buffer = io.StringIO()
     with contextlib.redirect_stdout(buffer):
@@ -133,10 +142,9 @@ def test_main_plan_with_check_flag_on_scaffold_returns_zero(tmp_path: Path) -> N
                 str(tmp_path),
                 "--format",
                 "json",
-                "--check",
             ]
         )
-    # The scaffold has no method section and no artifact manifest, so --check
+    # The scaffold has no method section and no artifact manifest, so validation
     # should return 1 (there ARE error-severity issues).
     assert code == 1
 
@@ -211,7 +219,6 @@ def test_main_all_public_source_audit_returns_aggregate_json() -> None:
                 str(REPO_ROOT),
                 "--format",
                 "json",
-                "--check",
             ]
         )
 

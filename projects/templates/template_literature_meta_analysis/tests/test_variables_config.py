@@ -20,7 +20,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-from manuscript.variables import (
+from template_literature_meta_analysis.manuscript.variables import (
     compute_variables,
 )
 
@@ -31,7 +31,7 @@ from manuscript.variables import (
 
 
 class TestConfigDrivenTokens:
-    """Domain tokens (term, keywords, engines, subfields, hypotheses) come from config."""
+    """Domain tokens (term, keywords, engines, subfields, hypotheses) come from template_literature_meta_analysis.config."""
 
     @staticmethod
     def _project(tmp_path, config_yaml: str):

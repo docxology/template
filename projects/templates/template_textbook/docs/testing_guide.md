@@ -100,7 +100,7 @@ progress table.
 
 Config validation is intentionally defensive: explicit `units:` takes precedence
 over `parts:`, and unsafe or duplicate manuscript paths fail before the audit
-walks the tree. The default audit is structural and allows the fillable
+walks the tree. The default audit is structural and allows deliberately generated draft
 exemplar's stubs; `--require-complete` is the separate zero-stub gate.
 
 ```bash
@@ -112,3 +112,5 @@ Strict by default; pass `--lenient` only for partial-tree progress checks. Toget
 the integrity tests this is how you grow the book to hundreds of pages and stay
 confident the contract is still green — see the
 [authoring guide](authoring_guide.md).
+
+Canonical acceptance additionally runs `scripts/audit_textbook_quality.py --require-complete` across chapters, unit introductions, labs, question banks, reference appendices, and front matter. Manuscript integrity tests execute every authored Python block in a fresh subprocess with the project working directory, and verify source files remain unchanged. Real figure regressions distinguish all canonical figures from neutral draft illustrations and check deterministic repeated output.

@@ -24,11 +24,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.reference.citation import (
     BibDatabase,
     BibEntry,
     paper_to_bibentry,
-    write_bibfile,
 )
 from infrastructure.search.literature import (
     AbstractFetcher,
@@ -48,6 +48,7 @@ from infrastructure.search.literature import (
 )
 
 from template_search_project.publish.config import ProjectConfig
+from template_search_project.publish.bibliography import write_generated_bibliography
 
 
 @dataclass
@@ -212,7 +213,7 @@ def run_literature_pipeline(
     Returns:
         :class:`LiteratureRunArtifacts` with paths and the search result.
     """
-    root = Path(project_root)
+    root = Path(project_root).absolute()
 
     # Resolve a configured local corpus path against the project root if the
     # caller did not supply one explicitly.
@@ -228,8 +229,8 @@ def run_literature_pipeline(
     cache_dir: Path | None = None
     cache: SearchCache | None = None
     if config.search.cache_dir:
-        cache_dir = (root / config.search.cache_dir).resolve()
-        cache = SearchCache(cache_dir, ttl_seconds=config.search.cache_ttl_seconds)
+        cache_dir = (root / config.search.cache_dir).absolute()
+        cache = SearchCache(cache_dir, ttl_seconds=config.search.cache_ttl_seconds, confinement_root=root)
 
     client = LiteratureClient(backends, cache=cache)
     query = SearchQuery(
@@ -242,15 +243,16 @@ def run_literature_pipeline(
 
     enrichment_log: list[FetchResult] = []
     if config.enrichment.fetch_abstracts:
-        abs_dir = (root / config.enrichment.abstract_cache_dir).resolve()
-        fetcher = AbstractFetcher(cache_dir=abs_dir)
+        abs_dir = (root / config.enrichment.abstract_cache_dir).absolute()
+        fetcher = AbstractFetcher(cache_dir=abs_dir, confinement_root=root)
         for paper in result.papers:
             enrichment_log.append(fetcher.fetch(paper))
     if config.enrichment.fetch_fulltext:
-        ft_dir = (root / config.enrichment.fulltext_cache_dir).resolve()
+        ft_dir = (root / config.enrichment.fulltext_cache_dir).absolute()
         fetcher_ft = FulltextFetcher(
             cache_dir=ft_dir,
             max_chars=config.enrichment.max_fulltext_chars,
+            confinement_root=root,
         )
         for paper in result.papers:
             enrichment_log.append(fetcher_ft.fetch(paper))
@@ -261,24 +263,23 @@ def run_literature_pipeline(
     corpus_out: Path | None = None
     bibtex_out: Path | None = None
     if write_outputs:
-        corpus_out = (root / "output" / "corpus.json").resolve()
-        write_corpus(result.papers, corpus_out)
+        corpus_out = (root / "output" / "corpus.json").absolute()
+        write_corpus(result.papers, corpus_out, confinement_root=root)
 
         db = BibDatabase()
         for entry in bib_entries:
             db.add(entry)
-        bibtex_out = (root / config.references_path).resolve()
-        write_bibfile(bibtex_out, db)
+        bibtex_out = write_generated_bibliography(root, config.references_path, db)
 
         # Persist a structured enrichment log so downstream stages (and CI
         # debugging) can see exactly which papers were fetched, cached, or
         # skipped without parsing free-text logs.
         if enrichment_log:
-            log_path = (root / "output" / "enrichment_log.json").resolve()
-            log_path.parent.mkdir(parents=True, exist_ok=True)
-            log_path.write_text(
+            log_path = (root / "output" / "enrichment_log.json").absolute()
+            atomic_write_text_confined(
+                root,
+                log_path,
                 json.dumps(_serialise_enrichment_log(enrichment_log), indent=2),
-                encoding="utf-8",
             )
 
     return LiteratureRunArtifacts(

@@ -25,8 +25,9 @@ standard (which xelatex/LuaTeX honor natively for ``/CreationDate``):
    the author-date epoch of ``HEAD`` (``git log -1 --format=%ct``).
 3. Otherwise wall-clock (non-deterministic) — the historical behavior.
 
-If deterministic mode is requested but git is unavailable, the functions fall
-back to wall-clock and emit a single warning, so the degradation is auditable.
+Requested deterministic execution refuses invalid epochs or unavailable Git
+evidence. Canonical execution pins this policy before producer launch; operation
+receipts use :func:`now_utc_iso` to describe actual elapsed work.
 """
 
 from __future__ import annotations
@@ -35,10 +36,6 @@ import os
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
-
-from infrastructure.core.logging.utils import get_logger
-
-logger = get_logger(__name__)
 
 __all__ = [
     "TEMPLATE_DETERMINISTIC_ENV",
@@ -81,32 +78,8 @@ def is_deterministic_requested(deterministic: bool | None = None) -> bool:
     return os.environ.get(TEMPLATE_DETERMINISTIC_ENV, "").strip().lower() in _TRUTHY
 
 
-def _git_head_epoch(repo_root: Path) -> int | None:
-    try:
-        result = subprocess.run(  # noqa: S603 — fixed argv, no shell
-            ["git", "log", "-1", "--format=%ct"],
-            cwd=str(repo_root),
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=5,
-        )
-    except (FileNotFoundError, OSError, subprocess.SubprocessError) as exc:
-        logger.warning("Deterministic build requested but git invocation failed (%s); using wall-clock.", exc)
-        return None
-    if result.returncode != 0:
-        logger.warning("Deterministic build requested but 'git log' returned %s; using wall-clock.", result.returncode)
-        return None
-    raw = result.stdout.strip()
-    try:
-        return int(raw)
-    except ValueError:
-        logger.warning("Deterministic build: unparseable git epoch %r; using wall-clock.", raw)
-        return None
-
-
 def _git_head_epoch_strict(repo_root: Path) -> int:
-    """Like :func:`_git_head_epoch` but raises on any failure.
+    """Read a finite Git candidate epoch and raise on any failure.
 
     Raises:
         RuntimeError: with a descriptive message when git is unavailable, the
@@ -145,18 +118,26 @@ def resolve_source_date_epoch(
     """Return the deterministic epoch (UTC seconds), or ``None`` for wall-clock.
 
     A pre-set ``SOURCE_DATE_EPOCH`` wins outright. Otherwise, in deterministic
-    mode, the ``HEAD`` commit epoch is used. Returns ``None`` when not in
-    deterministic mode (or when git lookup fails).
+    mode, the ``HEAD`` commit epoch is used. Returns ``None`` only when the
+    caller explicitly operates outside deterministic mode. Invalid or missing
+    required evidence raises instead of silently substituting the wall clock.
     """
     preset = os.environ.get(_SOURCE_DATE_EPOCH_ENV, "").strip()
     if preset:
         try:
-            return int(preset)
-        except ValueError:
-            logger.warning("Ignoring non-integer SOURCE_DATE_EPOCH=%r.", preset)
+            epoch = int(preset)
+            if epoch < 0:
+                raise ValueError("negative epoch")
+            datetime.fromtimestamp(epoch, tz=timezone.utc)
+            return epoch
+        except (ValueError, OverflowError, OSError) as exc:
+            raise ValueError("SOURCE_DATE_EPOCH must be a nonnegative representable integer epoch") from exc
     if not is_deterministic_requested(deterministic):
         return None
-    return _git_head_epoch(Path(repo_root) if repo_root is not None else Path.cwd())
+    epoch = _git_head_epoch_strict(Path(repo_root) if repo_root is not None else Path.cwd())
+    if epoch < 0:
+        raise ValueError("Git HEAD has a negative build epoch; set SOURCE_DATE_EPOCH explicitly")
+    return epoch
 
 
 def resolve_build_timestamp(

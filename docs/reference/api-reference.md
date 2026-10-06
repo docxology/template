@@ -1002,7 +1002,7 @@ Parse, dispatch, and return a stable process exit code.
 *constant — defined in `infrastructure.orchestration.menu`*
 
 ```python
-MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (('0', 'Environment Setup', 'stage_00_setup.py'), ('1', 'Run Tests', 'stage_0...
+MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (('0', 'Environment Setup', 'stage_00_setup.py'), ('1', 'Run Project Tests', ...
 ```
 
 ### `PipelineRunner`
@@ -1113,10 +1113,6 @@ Discover all valid projects in the active projects directory.
 
 *symbol — defined in `infrastructure.project`*
 
-### `ExportSmokeResult`
-
-*symbol — defined in `infrastructure.project`*
-
 ### `find_setup_hook`
 
 *function — defined in `infrastructure.project.setup_hook`*
@@ -1150,7 +1146,7 @@ Extract metadata from project configuration files.
 *function — defined in `infrastructure.project.setup_hook`*
 
 ```python
-preflight_setup_hook(project_dir: Path) -> tuple[bool, list[str]]
+preflight_setup_hook(project_dir: Path, *, strict: bool=False) -> tuple[bool, list[str]]
 ```
 
 Validate the project's setup-hook prerequisites.
@@ -1208,14 +1204,6 @@ run_project_setup_hook(project_dir: Path) -> bool
 ```
 
 Run the project's setup hook, if present.
-
-### `smoke_exported_exemplar`
-
-*symbol — defined in `infrastructure.project`*
-
-### `smoke_public_exemplars`
-
-*symbol — defined in `infrastructure.project`*
 
 ### `validate_project_structure`
 
@@ -2161,13 +2149,7 @@ Return PlatformInfo by name. Raises KeyError if not found.
 
 ### `get_static_site_adapter`
 
-*function — defined in `infrastructure.publishing.static_site.registry`*
-
-```python
-get_adapter(config: SiteDeployConfig) -> GitHubPagesAdapter | CloudflarePagesAdapter | NetlifyAdapter
-```
-
-Return the right adapter instance for config.hosting.
+*symbol — defined in `infrastructure.publishing.static_site`*
 
 ### `GitHubPagesAdapter`
 

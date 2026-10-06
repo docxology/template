@@ -3,9 +3,7 @@
 All functions use graceful fallbacks: missing paths return ``None`` or empty
 collections with a logged warning rather than raising.
 
-Repo root is resolved relative to this file's location:
-  src/tools/fonds_reader.py is at projects/templates/template_pools_rules_tools/src/
-  → up 4 levels → repo root
+Resources resolve from the installed package, standalone export, or canonical public checkout.
 """
 
 from __future__ import annotations
@@ -16,6 +14,7 @@ import pathlib
 
 import yaml
 
+from ..resource_paths import public_resource_root
 from .type_defs import (
     AllFondsResult,
     BibliographyFondResult,
@@ -41,18 +40,8 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 
-def _repo_root() -> pathlib.Path:
-    """Return the repository root (4 levels above this file)."""
-    return pathlib.Path(__file__).resolve().parents[6]
-
-
 def _fonds_root() -> pathlib.Path:
-    bundled = (
-        pathlib.Path(__file__).resolve().parents[2] / "_template_resources" / "fonds" / "templates"
-    )
-    if bundled.is_dir():
-        return bundled
-    return _repo_root() / "fonds" / "templates"
+    return public_resource_root("fonds")
 
 
 # Expose for test use (not part of the main public API)

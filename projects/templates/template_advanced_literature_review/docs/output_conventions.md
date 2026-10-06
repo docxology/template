@@ -59,7 +59,7 @@ dependency order.
 | `output/data/phase_1_foundation_corpus.jsonl`, `phase_2_jwst_corpus.jsonl`, `phase_3_molecules_corpus.jsonl` | Per-phase `Paper` records, before cross-phase merge |
 | `output/data/combined_corpus.jsonl` | Cross-phase deduplicated corpus (also mirrored at `output/data/corpus.jsonl` for sibling-contract compatibility) |
 | `output/data/phase_metadata.json` | Per-phase provenance: which papers came from which phase, cross-phase overlap |
-| `output/data/*analysis*.json`, `topics.json`, `tfidf_data.json`, `citation_network.json`, `citation_graph.gml` | Computed analysis inputs for manuscript and figures (symlinked-module outputs) |
+| `output/data/*analysis*.json`, `topics.json`, `tfidf_data.json`, `citation_network.json`, `citation_graph.gml` | Computed analysis inputs for manuscript and figures from the declared Meta provider |
 | `output/data/nanopublications.*`, `hypothesis_scores.json`, `hypothesis_trends.json`, `assertion_summary.json` | Optional knowledge-graph outputs, phase-scoped via `hypothesis_definitions.*.relevant_phases` |
 | `output/data/reproducibility_scores.json`, `reproducibility_summary.json`, `workflow_graphs.jsonl` | Optional reproducibility-assessment outputs |
 | `output/data/deep_research_replay.json` | Deterministic offline deep-research replay fixture output |

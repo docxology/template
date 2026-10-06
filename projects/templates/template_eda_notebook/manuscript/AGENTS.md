@@ -43,9 +43,9 @@ metadata.
 
 Figures are referenced via Pandoc-crossref `[@fig:label]`, never with hardcoded
 numbers. Each figure is produced by the thin analysis script from a tested
-figure-data preparer in `src/eda/figures.py`:
+figure-data preparer in `src/template_eda_notebook/eda/figures.py`:
 
-| Label | PNG Filename | Figure-data preparer (`src/eda/figures.py`) |
+| Label | PNG Filename | Figure-data preparer (`src/template_eda_notebook/eda/figures.py`) |
 |---|---|---|
 | `{#fig:height_histogram}` | `output/figures/height_histogram.png` | `histogram_data()` |
 | `{#fig:correlation_heatmap}` | `output/figures/correlation_heatmap.png` | `correlation_heatmap_data()` |
@@ -53,7 +53,7 @@ figure-data preparer in `src/eda/figures.py`:
 
 **To add a new figure**:
 
-1. Add a figure-data preparer to `src/eda/figures.py` (returns a dataclass of
+1. Add a figure-data preparer to `src/template_eda_notebook/eda/figures.py` (returns a dataclass of
    numbers; no matplotlib) and a test in `tests/test_figures.py`.
 2. Plot it in [`../scripts/eda_analysis.py`](../scripts/eda_analysis.py) and
    write the PNG under `output/figures/`.
@@ -81,12 +81,12 @@ figure-data preparer in `src/eda/figures.py`:
 2. Figures and numbers in `03_results.md` must match what
    `scripts/eda_analysis.py` writes under `output/`.
 3. When referencing template code, prefer concrete paths
-   (e.g. `src/eda/correlation.py::strongest_pairs()`).
+   (e.g. `src/template_eda_notebook/eda/correlation.py::strongest_pairs()`).
 
 ## See also
 
 - [`README.md`](README.md) — Quick orientation.
 - [`SYNTAX.md`](SYNTAX.md) — Pandoc syntax reference for this manuscript.
 - [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md) — Manuscript → PDF flow.
-- [`../src/eda/figures.py`](../src/template_eda_notebook/eda/figures.py) — Figure-data preparers.
+- [`../src/template_eda_notebook/eda/figures.py`](../src/template_eda_notebook/eda/figures.py) — Figure-data preparers.
 - [`../scripts/eda_analysis.py`](../scripts/eda_analysis.py) — Thin orchestrator that writes the figures.

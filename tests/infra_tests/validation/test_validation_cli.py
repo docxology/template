@@ -66,7 +66,7 @@ class TestValidatePdfCommand:
         with caplog.at_level(logging.ERROR):
             with pytest.raises(SystemExit) as exc_info:
                 cli.validate_pdf_command(args)
-        assert exc_info.value.code == 1
+        assert exc_info.value.code == 2
 
         assert "not found" in caplog.text.lower() or "error" in caplog.text.lower()
 
@@ -404,13 +404,13 @@ class TestCliArgumentParsing:
 
         pdf_file = tmp_path / "test.pdf"
         c = canvas.Canvas(str(pdf_file), pagesize=letter)
-        c.drawString(100, 750, "Legacy entry smoke test")
+        c.drawString(100, 750, "Canonical PDF validation smoke test")
         c.showPage()
         c.save()
 
         repo_root = Path(__file__).resolve().parents[3]
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.validation.cli.pdf", str(pdf_file)],
+            [sys.executable, "-m", "infrastructure.validation.cli", "pdf", str(pdf_file)],
             capture_output=True,
             text=True,
             cwd=repo_root,

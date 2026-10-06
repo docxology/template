@@ -10,7 +10,7 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 flowchart LR
     W[.github/workflows/]
     W --> META[AGENTS.md · README.md]
-    W --> CI[ci.yml<br/>16 jobs — 2 conditional via detect-job outputs — fep-lean, setup-hook-windows-smoke — plus 1 scheduled-only — public-matrix-receipt]
+    W --> CI[ci.yml<br/>20 jobs · 2 conditional via detect outputs<br/>2 schedule/manual-only lanes: test-infra-slow, public-matrix-receipt]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
     W --> DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
@@ -40,23 +40,23 @@ flowchart LR
 
 ### Job Graph
 
-`health` depends on **`lint`** only and is blocking. A broken health job therefore blocks merge on its own; deleting the `health` gate from the graph fails this workflow definition check rather than silently skipping static health. `validate`, `security`, and `docs-lint` depend on **`lint` only** (parallel with the `verify-no-mocks` subtree). `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is **skipped** unless `needs.detect.outputs.setup_hook == 'true'`. `test-infra`, `test-regression`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**. Known-wrong condition: a red `lint` job must block every downstream job — a skip-with-success path that masks it is the defect this graph forbids. This graph is descriptive prose about [`ci.yml`](ci.yml); nothing here verifies that the documentation stays synchronized with the workflow file. Known-wrong input under this graph: a lint failure propagates downstream — every dependent job (`health`, `validate`, `security`, `docs-lint`) is skipped or fails, so a broken lint can never reach `test-infra` masked as green.
-This contract is documentation only — it does not certify that `ci.yml` matches it; drift checking and review are what catch divergence.
-No path lets a failed job merge silently: if `lint` fails, every dependent job never starts — a merged commit with red `lint` is treated as a known-wrong outcome for this graph.
+`health`, `validate`, `security`, and `docs-lint` run independently alongside **`lint`**; each uses its own checkout and setup. `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is skipped unless `needs.detect.outputs.setup_hook == 'true'`. The test jobs run through the independent `verify-no-mocks` subtree; `test-infra` also consumes `detect-projects`. An individual job can pass when lint fails. The aggregate `ci-gate` must still fail when a required job fails or is unexpectedly skipped. This graph describes [`ci.yml`](ci.yml); workflow checks and review verify its current dependencies and aggregate policy.
 
 ```mermaid
 flowchart TB
     DET[detect<br/>optional-project outputs]
     DETP[detect-projects<br/>validated capability matrix output]
     ACTLINT[actionlint<br/>lints workflow YAML · standalone]
-    LINT[lint] --> HEALTH[health<br/>unified JSON artefact]
+    LINT[lint]
+    HEALTH[health<br/>unified JSON artefact]
     VNM[verify-no-mocks<br/>parallel with lint · no needs:]
-    LINT --> VAL[validate]
-    LINT --> SEC[security]
-    LINT --> DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
+    VAL[validate]
+    SEC[security]
+    DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
     DETP -.->|infra_matrix output| TI
-    VNM --> TI[test-infra<br/>dynamic matrix from detect-projects<br/>push/schedule: ubuntu × 3.10-3.14 + macOS × 3.14<br/>PR: ubuntu-3.14 + macOS-3.14 only<br/>codecov on 3.14/ubuntu only]
+    VNM --> TI[test-infra<br/>dynamic matrix from detect-projects<br/>push/schedule: ubuntu × 3.12-3.14 + macOS × 3.14<br/>PR: full supported matrix · four complete shards per environment]
+    TI --> IC[coverage-infra<br/>complete 3.14 Linux union ≥60%]
     VNM --> TR[test-regression<br/>claim-binding pins · tests/regression/]
     VNM --> TP[test-project<br/>capability manifest roster × canonical Python versions<br/>stage_01_test.py --project per cell]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
@@ -140,13 +140,16 @@ A negative control backs this contract: deliberately breaking any represented st
 
 #### 4. Infrastructure Tests (`test-infra`)
 
-- **Matrix:** `ubuntu-latest` × `3.10`, `3.11`, `3.12`, `3.13`, `3.14`, plus an `include:` of `macos-latest` × `3.14` (6 cells). macOS legs are ~10x cost and rarely surface OS-specific breakage beyond the 3.14 cell, so only the 3.14 smoke runs there.
-- **Event gating (CI-FAST-INFRA-COMPAT-1):** on `pull_request` only the ubuntu/py3.14 (coverage-bearing) and macOS/py3.14 cells run; the py3.10-3.13 compatibility legs run on `push` to `main`, the weekly `schedule`, and `workflow_dispatch`. Implementation: the `detect-projects` job emits the event-shaped matrix (`infra_matrix` output) because the `matrix` context is NOT valid in a job-level `if` (actionlint rejects it); `test-infra` now `needs: [verify-no-mocks, detect-projects]` and consumes the dynamic matrix. Measured: those legs are 6-8 min each, never the PR critical path, and occupy 4 runner slots that deepen wave-2 queue spill for the 48-cell project matrix. Known cost, stated honestly: infra-layer 3.10-3.13 compatibility is proven on the same-day main push / weekly lane rather than pre-merge. Project-floor py3.10 coverage is unaffected (project matrix cells keep py3.10 + py3.14 on PRs); the full matrix still gates every main push, so a merged 3.10-incompatible change fails the exact-commit run.
-- **Coverage threshold:** 60% (`--cov-fail-under=60`)
-- **Coverage file:** `.coverage.infra` (isolated from project coverage)
-- **Browser reflow:** the Ubuntu/Python 3.14 cell runs the real Chromium MathJax regression after infrastructure tests. It provisions `@playwright/test@1.62.1` and Chromium, waits for completed typesetting, and verifies visible equation numbers across live viewport changes. CDN access is required; a browser or MathJax failure fails the cell.
-- **Exclusions:** Tests marked `requires_ollama` are skipped (`-m "not requires_ollama"`)
-- **Codecov upload:** On Python 3.14 / `ubuntu-latest` only to avoid duplicate reports; upload failures do not fail CI
+- **Sync:** `uv sync --locked --group public-exemplars --group installed-build`. Genuine wheel/sdist controls use the prepared, locked build backend.
+- **PDF observers:** Linux installs `poppler-utils`; macOS installs `poppler`. Both lanes directly check `pdftoppm` and `pdffonts` before the actual PDF controls.
+- **Matrix:** Every existing environment is retained: Linux Python 3.12–3.14 and macOS Python 3.14. The source-declared `ci_infra_partition.py` emits four complete module shards per environment (16 cells). The four measured C4 families are assigned distinct shards; every other current or future collected module receives a stable SHA-256 assignment. No test is marked slow or removed by partitioning.
+- **Selection:** `ci_infra_shard_plugin` partitions actual pytest collection after the unchanged ordinary marker expression. Each selected case belongs to exactly one shard; empty/duplicate/noncanonical inventory, worker disagreement and incomplete actual completion fail. The plugin is explicitly loaded for this invocation, so nested pytest jobs retain their own selection.
+- **Budgets:** The job remains 30 minutes, pytest remains `--timeout=120`, and every existing per-case timeout override remains effective. Linux retains `-n auto`, macOS retains `-n 2`, and both use `--dist loadscope`. Faster completion is a hypothesis until fresh hosted timings establish it; additional jobs repeat preparation and may increase total runner minutes.
+- **Coverage:** Only the four Python 3.14/Linux shards instrument execution. Per-shard thresholds are replaced by the required `coverage-infra` complete-union gate at the same ≥60% floor. The gate refuses missing/extra/duplicate/stale/failed selection records, incomplete case unions and changed coverage bytes, then merges genuine branch measurements in memory and writes confined JSON/XML. Codecov upload remains nonblocking after this required local threshold passes.
+- **Receipt scope:** Ordinary selection records bind infrastructure/scripts/infra tests/CI configuration source bytes. They do not replace full public source custody, installed-wheel, live, platform or release acceptance; missing Root release policy remains blocked.
+- **MathJax live viewport:** The scheduled/manual browser spec runs once on shard 0 of Python 3.14/Linux. Its existing tool provisioning, completed-typesetting checks and failure policy remain unchanged.
+
+For an unpartitioned local check, the existing full `pytest tests/infra_tests/` command remains supported without this explicit plugin. An exact shard invocation requires a fresh owned checkout and uses `-p infrastructure.core.testing.ci_infra_shard_plugin --infra-ci-shard N` with the workflow's marker expression. The selection receipt is local execution state, not a cache or resume authorization.
 
 #### 4b. Regression Tier — claim-binding pins (`test-regression`)
 
@@ -157,8 +160,9 @@ A negative control backs this contract: deliberately breaking any represented st
 
 #### 5. Project Tests (`test-project`)
 
-- **Sync:** `uv sync --group public-exemplars` — the same deterministic dependency union as a fresh local `uv sync`, including the DisCoPy, monitoring, scientific, LLM-client, and PPTX groups used by the public roster. **Hypothesis** comes from the **dev** group (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
-- **Matrix:** **Per-project split** — the `detect-projects` job runs `scripts/gates/public_capabilities.py --ci-matrix-json`, which validates unique normalized package identities, full-minor Python compatibility, source/test syntax, format declarations, compiled/confined direct hydration, analysis declarations, reason-bearing skips, exact roster membership, and exact matrix parity before emitting the canonical `project × Python` include list. The current source of truth yields 24 exemplars × Python 3.10/3.14 = **48 matrix cells** on `ubuntu-latest`; no project or Python literal is duplicated in workflow YAML. Both matrix jobs set `UV_PYTHON` and assert the selected runtime minor so the repository `.python-version` cannot override a matrix cell. Job `timeout-minutes: 135`; its direct Stage-01 invocation owns one 115-minute generic-or-declared project budget, leaving 20 minutes for setup, descendant cleanup, and uploads. The full pipeline's separate 120-minute stage wrapper is not present on this hosted direct path. These limits provide execution capacity; they do not show that a project suite passed or emitted valid evidence.
+- **Sync:** `uv sync --locked --group public-exemplars --group installed-build` — the deterministic dependency union includes DisCoPy, monitoring, scientific, LLM-client, and PPTX dependencies plus the prepared backend for offline genuine-wheel controls. **Hypothesis** comes from the **dev** group (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
+- **Standalone preparation:** the Autoresearch cell separately exports its exact nonlocal runtime lock with hashes and installs it into a disposable environment before tests. This explicit setup fills the cache for its offline genuine-wheel acceptance; the root and exemplar locks retain their independent versions.
+- **Matrix:** **Per-project split** — the `detect-projects` job runs `scripts/gates/public_capabilities.py --ci-matrix-json`, which validates unique normalized package identities, full-minor Python compatibility, source/test syntax, format declarations, compiled/confined direct hydration, analysis declarations, reason-bearing skips, exact roster membership, and exact matrix parity before emitting the canonical `project × Python` include list. The current source of truth yields 25 exemplars × Python 3.12/3.13/3.14 = **75 matrix cells** on `ubuntu-latest`; no project or Python literal is duplicated in workflow YAML. Both matrix jobs set `UV_PYTHON` and assert the selected runtime minor so the repository `.python-version` cannot override a matrix cell. Job `timeout-minutes: 135`; its direct Stage-01 invocation owns one 115-minute generic-or-declared project budget, leaving 20 minutes for setup, descendant cleanup, and uploads. The full pipeline's separate 120-minute stage wrapper is not present on this hosted direct path. These limits provide execution capacity; they do not show that a project suite passed or emitted valid evidence.
 - **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
 - **Coverage files:** project-local `.coverage.project` for the generic pytest path or `.coverage` for a declared structured verifier; both are isolated, cleaned before the run, and independently produce the same project-local `coverage_project.json`.
 - **Scope:** [`scripts/pipeline/stage_01_test.py`](../../scripts/pipeline/stage_01_test.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell). The workflow uploads the resulting project-local JSON directly; it does not synthesize a separate XML report. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
@@ -226,7 +230,7 @@ This skip list bounds what the linter checks: it scans tracked documentation onl
 | mypy strict gate | zero errors across the generated public source scope | `lint` job |
 | Mock-framework lexical gate | zero prohibited imports/calls | `verify-no-mocks` job |
 | Public capability parity | exact roster/matrix; compatible Python floors; valid package/render/hydration/analysis declarations | `detect-projects` + unified `health` |
-| Infrastructure coverage | ≥ 60% | `test-infra` job |
+| Infrastructure coverage | ≥ 60% | `coverage-infra` complete-union job |
 | Per-project coverage (standalone) | ≥ 90% | each project's own pytest gate |
 | Combined-union public-project coverage | ≥ 75% | `test-project` job (`DEFAULT_FAIL_UNDER`) |
 | fep_lean coverage | ≥ 89% | `fep-lean` job (skipped if `projects/fep_lean/lean/lean-toolchain` absent) |
@@ -393,3 +397,5 @@ print(s.getvalue())
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [uv Documentation](https://docs.astral.sh/uv/)
 - [Codecov Documentation](https://docs.codecov.com/)
+
+The infrastructure partition changes execution placement only. The required `coverage-infra` job consumes every 3.14/Linux shard, validates their complete disjoint case union and source/data identities, and enforces the unchanged 60% floor. The existing `ci-gate` complete-job policy includes this job; an unsuccessful or skipped merge prevents normal main integration. Root 4 release evidence remains separately required.

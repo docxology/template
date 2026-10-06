@@ -1,6 +1,6 @@
 # Generated documentation snippets
 
-This directory mixes **script-generated files** with two **maintainer-written** hub files (`README.md`, `AGENTS.md`) and one retained historical snapshot (`hermes_knowledge_audit.json`, no longer produced by any generator). Every other file listed below is generator output — do not edit it by hand; regenerate it with the command in its row.
+This directory mixes **script-generated files** with two **maintainer-written** hub files (`README.md`, `AGENTS.md`) and retained historical snapshots (`hermes_knowledge_audit.json`, no longer produced by any generator). Every other file listed below is generator output — do not edit it by hand; regenerate it with the command in its row.
 
 | File | Source |
 |------|--------|
@@ -14,7 +14,6 @@ This directory mixes **script-generated files** with two **maintainer-written** 
 | [hermes_knowledge_audit.json](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; superseded by current generated facts |
 | [publication_records.md](publication_records.md) | **Generated publication matrix** — public exemplar GitHub/Zenodo/config records; refresh with `scripts/docgen/publication_records.py --refresh-external` |
 | [skills_index.md](skills_index.md) | **Generated** — `uv run python -m infrastructure.skills write-index` |
-| [last-run-summary.md](last-run-summary.md) | **Generated** — auto-written by `infrastructure.core.pipeline.multi_project` on every `./run.sh --pipeline` invocation (best-effort). Schema: [`../operational/logging/output-design.md`](../operational/logging/output-design.md) |
 | `README.md`, `AGENTS.md` | **Maintainer** — policy and conventions for linking to generated content |
 
 ## Policy
@@ -56,3 +55,5 @@ uv run python scripts/docgen/coverage_history.py --from-gh --days=30
 ```bash
 uv run python -m infrastructure.skills write-index
 ```
+
+Runtime multi-project summaries live under ignored `output/multi_project_summary/`. The dated `last-run-summary.md` snapshot is retained only as historical evidence and is never a runtime write destination.

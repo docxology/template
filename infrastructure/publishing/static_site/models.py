@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Any
 
 
 class SiteHosting(str, Enum):
@@ -25,6 +26,9 @@ class SiteDeployConfig:
     branch: str = "gh-pages"  # for GitHub Pages
     repo: str | None = None  # owner/repo for GitHub Pages
     production: bool = False  # False = preview/staging deploy
+    removal_plan: dict[str, Any] | None = None
+    reviewed_plan_sha256: str | None = None
+    removal_quarantine_dir: str | None = None
 
 
 @dataclass(frozen=True)

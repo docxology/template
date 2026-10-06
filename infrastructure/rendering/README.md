@@ -761,7 +761,8 @@ graph TD
 | **_slides_framebreaks.py** | Dense slide splitting | Isolates unbreakable listing, figure, table, and list environments while splitting long top-level frame content safely; explicit `\begingroup`/`\endgroup` regions remain in one continuation frame | slides_renderer |
 | **web_renderer.py** | Web HTML output | `WebRenderer` - MathJax integration; markdown preprocess in `_web_markdown_preprocess.py`, HTML postprocess in `_web_postprocess.py` | pandoc |
 | **latex_utils.py** | LaTeX compilation utilities | `compile_latex()` - Multi-pass compilation | LaTeX distribution |
-| **latex_package_validator.py** | Package dependency checking | `validate_packages()` - Pre-flight validation | kpsewhich |
+| **latex_package_validator.py** | Executable package validation command | `main()` - CLI validation | latex_discovery, latex_validation |
+| **latex_discovery.py**, **latex_validation.py** | Package discovery and validation APIs | `check_latex_package()`, `validate_packages()`, `validate_preamble_packages()` | kpsewhich |
 | **manuscript_discovery.py** | Content discovery | `discover_manuscript_files()` - File enumeration | pathlib |
 | **manuscript_injection.py** | Variable substitution | `substitute_manuscript_text()`, `write_resolved_manuscript_tree()` - `{{TOKEN}}` hydration shared by all projects | pathlib, re |
 | **config.py** | Configuration management | `RenderingConfig` - Settings management | environment variables |
@@ -850,7 +851,7 @@ else:
 ### Package Validation
 
 ```python
-from infrastructure.rendering.latex_package_validator import validate_preamble_packages
+from infrastructure.rendering.latex_validation import validate_preamble_packages
 
 # Validate all packages required by manuscript
 report = validate_preamble_packages(strict=True)
@@ -870,7 +871,7 @@ if report.missing_packages:
 ### Individual Package Checking
 
 ```python
-from infrastructure.rendering.latex_package_validator import check_latex_package
+from infrastructure.rendering.latex_discovery import check_latex_package
 
 # Check specific package availability
 status = check_latex_package("multirow")
@@ -1285,7 +1286,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
    }
    ```
 
-4. Run full build: `uv run python scripts/runner/execute_pipeline.py --core-only`
+4. Run full build: `uv run python scripts/runner/execute_pipeline.py --mode core`
 
 ### Figures not appearing in PDF
 

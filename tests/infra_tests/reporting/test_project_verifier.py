@@ -15,16 +15,7 @@ from infrastructure.reporting.project_verifier import (
     run_declared_project_verifier,
     validate_project_test_command,
 )
-from infrastructure.core.testing.pytest_profiles import test_runner_dependency_specs
 from infrastructure.reporting.pipeline_test_runner import execute_test_pipeline
-
-
-@pytest.fixture
-def unlocked_project_uv_environment(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Keep the synthetic no-lock project isolated from repository frozen policy."""
-    # Canonical projects carry uv.lock and continue to honor UV_FROZEN. These
-    # disposable verifier projects intentionally exercise uv's clean bootstrap.
-    monkeypatch.delenv("UV_FROZEN", raising=False)
 
 
 def _write_verifier_project(repo_root: Path, *, write_receipt: bool = True) -> Path:
@@ -45,7 +36,7 @@ def _write_verifier_project(repo_root: Path, *, write_receipt: bool = True) -> P
             [project]
             name = "demo-verifier-project"
             version = "0.0.0"
-            requires-python = ">=3.10"
+            requires-python = ">=3.12"
             dependencies = []
 
             [project.optional-dependencies]
@@ -59,7 +50,7 @@ def _write_verifier_project(repo_root: Path, *, write_receipt: bool = True) -> P
             fail_under = 90
 
             [tool.template]
-            project_test_command = ["uv", "run", "--extra", "dev", "python", "scripts/verify.py"]
+            project_test_command = ["python", "scripts/verify.py"]
             """
         ).lstrip(),
         encoding="utf-8",
@@ -101,7 +92,6 @@ if WRITE_RECEIPT:
             assert "PYTEST_ADDOPTS" not in os.environ
             assert "PYTEST_PLUGINS" not in os.environ
             assert "PYTEST_DISABLE_PLUGIN_AUTOLOAD" not in os.environ
-            assert "UV_FROZEN" not in os.environ
             sys.path.insert(0, str(ROOT / "src"))
             coverage = Coverage(
                 data_file=str(ROOT / ".coverage"),
@@ -126,7 +116,6 @@ if WRITE_RECEIPT:
 
 
 @pytest.mark.timeout(180)
-@pytest.mark.usefixtures("unlocked_project_uv_environment")
 def test_declared_verifier_requires_real_receipt_and_independent_coverage(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -140,7 +129,7 @@ def test_declared_verifier_requires_real_receipt_and_independent_coverage(
         tmp_path,
         project,
         "templates/demo",
-        ("uv", "run", "--extra", "dev", "python", "scripts/verify.py"),
+        ("python", "scripts/verify.py"),
         coverage_floor=90,
         timeout_seconds=120,
     )
@@ -153,7 +142,6 @@ def test_declared_verifier_requires_real_receipt_and_independent_coverage(
 
 
 @pytest.mark.timeout(180)
-@pytest.mark.usefixtures("unlocked_project_uv_environment")
 def test_single_project_stage_dispatches_declared_verifier_and_writes_report(tmp_path: Path) -> None:
     project = _write_verifier_project(tmp_path)
 
@@ -177,7 +165,6 @@ def test_single_project_stage_dispatches_declared_verifier_and_writes_report(tmp
 
 
 @pytest.mark.timeout(180)
-@pytest.mark.usefixtures("unlocked_project_uv_environment")
 def test_declared_verifier_rejects_success_without_fresh_receipt(tmp_path: Path) -> None:
     project = _write_verifier_project(tmp_path, write_receipt=False)
 
@@ -186,7 +173,7 @@ def test_declared_verifier_rejects_success_without_fresh_receipt(tmp_path: Path)
             tmp_path,
             project,
             "templates/demo",
-            ("uv", "run", "--extra", "dev", "python", "scripts/verify.py"),
+            ("python", "scripts/verify.py"),
             coverage_floor=90,
             timeout_seconds=120,
         )
@@ -199,12 +186,12 @@ def test_declared_verifier_rejects_shell_and_script_escape(tmp_path: Path) -> No
     escape = project / "scripts" / "escape.py"
     escape.symlink_to(outside)
 
-    with pytest.raises(ProjectVerifierError, match="explicit uv-run"):
+    with pytest.raises(ProjectVerifierError, match="must use"):
         validate_project_test_command(project, ("bash", "-c", "true"))
     with pytest.raises(ProjectVerifierError, match="resolve inside"):
         validate_project_test_command(
             project,
-            ("uv", "run", "--extra", "dev", "python", "scripts/escape.py"),
+            ("python", "scripts/escape.py"),
         )
 
 
@@ -218,7 +205,7 @@ def test_declared_verifier_rejects_broken_coverage_symlink_before_launch(tmp_pat
             tmp_path,
             project,
             "templates/demo",
-            ("uv", "run", "--extra", "dev", "python", "scripts/verify.py"),
+            ("python", "scripts/verify.py"),
             coverage_floor=90,
             timeout_seconds=120,
         )
@@ -226,14 +213,15 @@ def test_declared_verifier_rejects_broken_coverage_symlink_before_launch(tmp_pat
     assert not external_target.exists()
 
 
-def test_declared_verifier_overlays_exact_workspace_runner_versions() -> None:
-    declared = ("uv", "run", "--extra", "dev", "python", "scripts/verify.py", "--release")
+def test_declared_verifier_binds_existing_interpreter_without_acquisition(tmp_path: Path) -> None:
+    import sys
 
-    effective = build_project_verifier_execution_command(declared)
-
-    with_values = tuple(effective[index + 1] for index, part in enumerate(effective) if part == "--with")
-    assert with_values == test_runner_dependency_specs()
-    assert effective[-5:] == ("--extra", "dev", "python", "scripts/verify.py", "--release")
+    declared = ("python", "scripts/verify.py", "--release")
+    effective = build_project_verifier_execution_command(declared, tmp_path)
+    assert effective[0:3] == (str(Path(sys.executable).absolute()), "-I", "-c")
+    assert "runpy.run_path" in effective[3]
+    assert effective[-1] == "--release"
+    assert "uv" not in effective and "--with" not in effective and "--extra" not in effective
 
 
 @pytest.mark.parametrize(
@@ -326,16 +314,132 @@ def test_receipt_rejects_failed_or_vacuous_outcomes(tmp_path: Path) -> None:
 
 
 @pytest.mark.timeout(180)
-@pytest.mark.usefixtures("unlocked_project_uv_environment")
 def test_declared_verifier_independently_rejects_coverage_below_floor(tmp_path: Path) -> None:
     project = _write_verifier_project(tmp_path)
 
-    with pytest.raises(ProjectVerifierError, match="below the declared 101.00% floor"):
+    (project / "src/demo_mod.py").write_text("def answer():\n    return 7\ndef uncovered():\n    return 9\n")
+    with pytest.raises(ProjectVerifierError, match="below the declared 90.00% floor"):
         run_declared_project_verifier(
             tmp_path,
             project,
             "templates/demo",
-            ("uv", "run", "--extra", "dev", "python", "scripts/verify.py"),
-            coverage_floor=101,
+            ("python", "scripts/verify.py"),
+            coverage_floor=90,
             timeout_seconds=120,
         )
+
+
+@pytest.mark.parametrize(
+    "retired",
+    [
+        ("uv", "run", "python", "scripts/verify.py"),
+        ("uv", "run", "--extra", "dev", "python", "scripts/verify.py"),
+        ("python", "--extra", "dev", "scripts/verify.py"),
+    ],
+)
+def test_retired_acquisition_declarations_fail_before_execution(tmp_path: Path, retired: tuple[str, ...]) -> None:
+    project = _write_verifier_project(tmp_path)
+    prior_coverage = project / ".coverage"
+    prior_coverage.write_bytes(b"retained prior verifier evidence")
+    with pytest.raises(ProjectVerifierError) as error:
+        run_declared_project_verifier(tmp_path, project, "active/demo", retired, coverage_floor=90)
+    assert error.value.exit_code == 2
+    assert prior_coverage.read_bytes() == b"retained prior verifier evidence"
+
+
+def test_invalid_declared_stage_preserves_prior_coverage(tmp_path: Path) -> None:
+    from infrastructure.reporting.pipeline_test_runner import run_project_tests
+
+    project = _write_verifier_project(tmp_path)
+    metadata = project / "pyproject.toml"
+    metadata.write_text(metadata.read_text().replace('["python", "scripts/verify.py"]', '["bash", "true"]'))
+    prior_coverage = project / ".coverage"
+    prior_coverage.write_bytes(b"retained prior coverage")
+    code, results = run_project_tests(tmp_path, "active/demo")
+    assert code == 2
+    assert results["original_exit_code"] is None
+    assert prior_coverage.read_bytes() == b"retained prior coverage"
+
+
+@pytest.mark.parametrize("child_exit", [2, 7, 75, 124, 130])
+@pytest.mark.timeout(90)
+def test_custom_child_original_exit_survives_adapter(tmp_path: Path, child_exit: int) -> None:
+    from infrastructure.reporting.pipeline_test_runner import run_project_tests
+
+    project = _write_verifier_project(tmp_path)
+    (project / "scripts/verify.py").write_text(f"raise SystemExit({child_exit})\n")
+    code, results = run_project_tests(tmp_path, "active/demo")
+    assert code == (child_exit if child_exit in (75, 124, 130) else 1)
+    assert results["original_exit_code"] == child_exit
+
+
+@pytest.mark.parametrize("timeout", [False, 0, -1, float("nan"), float("inf")])
+def test_invalid_verifier_deadline_is_configuration_error(tmp_path: Path, timeout: float) -> None:
+    project = _write_verifier_project(tmp_path)
+    with pytest.raises(ProjectVerifierError) as error:
+        run_declared_project_verifier(
+            tmp_path,
+            project,
+            "active/demo",
+            ("python", "scripts/verify.py"),
+            coverage_floor=90,
+            timeout_seconds=timeout,
+        )
+    assert error.value.exit_code == 2
+    assert not (project / ".coverage").exists()
+
+
+@pytest.mark.timeout(90)
+def test_nominated_missing_runtime_blocks_without_fallback(tmp_path: Path) -> None:
+    from infrastructure.reporting.pipeline_test_runner import run_project_tests
+
+    project = _write_verifier_project(tmp_path)
+    (project / ".venv").mkdir()
+    prior_coverage = project / ".coverage"
+    prior_coverage.write_bytes(b"retained prior verifier evidence")
+    code, _results = run_project_tests(tmp_path, "active/demo")
+    assert code == 75
+    assert prior_coverage.read_bytes() == b"retained prior verifier evidence"
+
+
+@pytest.mark.timeout(90)
+def test_coverage_validation_consumes_remaining_whole_budget(tmp_path: Path) -> None:
+    project = _write_verifier_project(tmp_path)
+    config = project / "pyproject.toml"
+    config.write_text(config.read_text().replace('source = ["src"]', 'source = ["src"]\nplugins = ["slow_plugin"]'))
+    (project / "slow_plugin.py").write_text("import time\ndef coverage_init(reg, options):\n    time.sleep(30)\n")
+    script = project / "scripts/verify.py"
+    source = script.read_text().replace(
+        'config_file=str(ROOT / "pyproject.toml"),', 'config_file=False, source=[str(ROOT / "src")], branch=True,'
+    )
+    source += '\n(ROOT / "child_finished").write_text("actual child completed")\n'
+    script.write_text(source)
+    with pytest.raises(ProjectVerifierError) as error:
+        run_declared_project_verifier(
+            tmp_path, project, "active/demo", ("python", "scripts/verify.py"), coverage_floor=90, timeout_seconds=20
+        )
+    assert error.value.exit_code == 124
+    assert error.value.original_exit_code == 0
+    assert (project / "child_finished").read_text() == "actual child completed"
+
+
+@pytest.mark.parametrize("script", ["", ".", "scripts", "scripts/."])
+def test_empty_or_directory_script_is_invocation_error(tmp_path: Path, script: str) -> None:
+    project = _write_verifier_project(tmp_path)
+    with pytest.raises(ProjectVerifierError) as refused:
+        run_declared_project_verifier(tmp_path, project, "active/demo", ("python", script), coverage_floor=90)
+    assert refused.value.exit_code == 2
+    assert refused.value.original_exit_code is None
+    assert not (project / ".coverage").exists()
+
+
+@pytest.mark.parametrize("floor", [False, -1, 101, float("nan"), float("inf")])
+def test_invalid_coverage_floor_refuses_before_execution(tmp_path: Path, floor: float) -> None:
+    project = _write_verifier_project(tmp_path)
+    with pytest.raises(ProjectVerifierError) as refused:
+        run_declared_project_verifier(
+            tmp_path, project, "active/demo", ("python", "scripts/verify.py"), coverage_floor=floor
+        )
+    assert refused.value.exit_code == 2
+    assert refused.value.original_exit_code is None
+    assert not (project / ".coverage").exists()

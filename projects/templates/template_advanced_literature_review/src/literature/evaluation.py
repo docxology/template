@@ -19,10 +19,9 @@ serialization. The function never raises on missing/malformed fields — a
 paper with no abstract, no authors, or no DOI contributes zeros, not
 exceptions.
 
-The ``_SOURCE_KEYS`` list reflects all 9 engines in the search roster
-(arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv,
-Europe PMC, bioRxiv/medRxiv), kept in sync with
-:mod:`literature.engine_dispatch`'s ``ENGINE_SPECS``.
+The ``_SOURCE_KEYS`` list preserves this project's nine-source evaluation
+policy. It routes bioRxiv explicitly; medRxiv remains a separate harvest
+capability and is not added to this evaluation policy by engine consolidation.
 """
 
 from __future__ import annotations

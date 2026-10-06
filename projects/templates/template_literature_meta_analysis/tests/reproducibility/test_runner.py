@@ -14,9 +14,9 @@ from pathlib import Path
 
 from pytest_httpserver import HTTPServer
 
-from literature.corpus import Corpus
-from literature.fulltext_download import safe_filename
-from reproducibility.runner import run_reproducibility_pipeline
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.fulltext_download import safe_filename
+from template_literature_meta_analysis.reproducibility.runner import run_reproducibility_pipeline
 from llm_extraction_fixtures import httpserver_base_url, make_paper
 
 
@@ -326,7 +326,7 @@ project_config:
 
     run_reproducibility_pipeline(args, project_root=tmp_path)
 
-    # max_papers: 1 from config -> only paper_a is a candidate, exactly one LLM call.
+    # max_papers: 1 from template_literature_meta_analysis.config -> only paper_a is a candidate, exactly one LLM call.
     assert len(httpserver.log) == 1
 
     summary_path = output_dir / "data" / "reproducibility_summary.json"
@@ -347,7 +347,12 @@ def test_run_reproducibility_pipeline_skips_when_corpus_already_covered(tmp_path
     data_dir = output_dir / "data"
     data_dir.mkdir(parents=True)
 
-    from reproducibility.models import NodeType, WorkflowNode, build_workflow_graph, serialize_workflow_graphs
+    from template_literature_meta_analysis.reproducibility.models import (
+        NodeType,
+        WorkflowNode,
+        build_workflow_graph,
+        serialize_workflow_graphs,
+    )
 
     existing_node = WorkflowNode(
         node_id="n1",
@@ -389,7 +394,7 @@ def test_run_reproducibility_pipeline_scopes_cached_graphs_to_current_cap(tmp_pa
     paper_b = make_paper(doi="10.1/cached-cap-b", title="Cached Cap B")
     corpus_path = _write_corpus(tmp_path, [paper_a, paper_b])
 
-    from reproducibility.models import (
+    from template_literature_meta_analysis.reproducibility.models import (
         NodeType,
         WorkflowNode,
         build_workflow_graph,

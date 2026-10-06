@@ -1,7 +1,7 @@
 paper:
   title: "The Shape Between: A Full-Page Illustrated Storybook Template"
   subtitle: "A geometric fable of belonging, bracing, and reciprocal form"
-  version: "0.1.0"
+  version: "0.2.0"
 
 authors:
   - name: "Daniel Ari Friedman"
@@ -11,6 +11,10 @@ authors:
     corresponding: true
 
 publication:
+  release_status: "unreleased"
+  intended_version: "0.2.0"
+  platform_version: "4.0.0"
+  last_published_version: "0.1.0"
   github_repository: "docxology/template_storybook"
   repository_url: "https://github.com/docxology/template_storybook"
   doi: "10.5281/zenodo.21176000"

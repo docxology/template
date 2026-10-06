@@ -32,7 +32,7 @@ All citation keys must exist in [`references.bib`](references.bib). Pandoc with
 
 ### Figure label registry
 
-| Label | PNG filename | Figure-data preparer (`src/eda/figures.py`) |
+| Label | PNG filename | Figure-data preparer (`src/template_eda_notebook/eda/figures.py`) |
 |---|---|---|
 | `{#fig:height_histogram}` | `output/figures/height_histogram.png` | `histogram_data()` |
 | `{#fig:correlation_heatmap}` | `output/figures/correlation_heatmap.png` | `correlation_heatmap_data()` |
@@ -97,7 +97,7 @@ first; `99_` renders references last.
 
 - No "In summary" or "In conclusion" at section ends (RASP standard).
 - Use active voice.
-- Reference code with explicit paths: `src/eda/correlation.py`, not "the
+- Reference code with explicit paths: `src/template_eda_notebook/eda/correlation.py`, not "the
   correlation module".
 
 ## See Also

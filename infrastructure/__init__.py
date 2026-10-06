@@ -31,7 +31,9 @@ Each subpackage includes SKILL.md (YAML frontmatter) for agent-oriented discover
 Runtime note: Python may create __pycache__/ directories under each subpackage; they are bytecode caches, gitignored, and not part of the public API.
 """
 
-__version__ = "3.6.0"
+from infrastructure._version import __version__
+from infrastructure.core.pipeline.fingerprints import verify_loaded_implementation as _verify_loaded_implementation
+
 __layer__ = "infrastructure"
 
 from importlib import import_module
@@ -62,7 +64,7 @@ __all__ = [
 
 
 def __getattr__(name: str) -> Any:
-    """Resolve legacy root exports without eagerly loading unrelated packages."""
+    """Resolve public root exports without eagerly loading unrelated packages."""
     try:
         module_name, attribute = _EXPORTS[name]
     except KeyError as exc:

@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_methods_paper](https://github.com/docxology/template_methods_paper)
-- Config version: `1.0.0`
+- Intended / published version: `2.0.0 pending; last published 1.0.0`
 - Stable concept DOI: [10.5281/zenodo.21086548](https://doi.org/10.5281/zenodo.21086548)
 - Latest deposited version DOI: [10.5281/zenodo.21086549](https://zenodo.org/records/21086549)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_methods_paper/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_methods_paper), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/Qmc9puHs6KiEnCraVgWUXVxcyAZyT7nt9EMXXLBhy2bAou), [netlify](https://6a444b88aa6e4e3c5d216e16--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/6d7nh/), [pypi](https://test.pypi.org/project/template-methods-paper/1.0.0/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_methods_paper)

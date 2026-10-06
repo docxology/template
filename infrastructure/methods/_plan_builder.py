@@ -7,6 +7,7 @@ import shlex
 from pathlib import Path
 
 from infrastructure.core.pipeline.dag import StageDefinition
+from infrastructure.core.project_paths import resolve_source_manuscript_dir, _MANUSCRIPT_AUXILIARY_NAMES
 from infrastructure.methods._project_boundary import (
     _portable_project_path,
 )
@@ -30,6 +31,7 @@ def _build_stage(
     order: int,
     project_key: str,
     project_name: str = "",
+    pipeline_source: Path | None = None,
 ) -> MethodStage:
     contract = stage.contract
     method = stage.method or (f"Execute the declared script for {stage.name}." if stage.script else "")
@@ -48,35 +50,73 @@ def _build_stage(
         output_artifacts=tuple(_expand_artifact(item, project_key) for item in contract.output_artifacts),
         definition_of_done=contract.definition_of_done,
         failure_code=contract.failure_code,
-        verification_commands=_stage_verification_commands(stage, project_key, project_name),
+        verification_commands=_stage_verification_commands(stage, project_key, project_name, pipeline_source),
     )
 
 
-def _stage_verification_commands(stage: StageDefinition, project_key: str, project_name: str = "") -> tuple[str, ...]:
+def _stage_verification_commands(
+    stage: StageDefinition, project_key: str, project_name: str = "", pipeline_source: Path | None = None
+) -> tuple[str, ...]:
     stage_key = stage.key
+    resolved_name = project_key or project_name
+    mode = "live" if {"live", "llm"}.intersection(stage.tags) else "core"
+    runner = ["uv", "run", "python", "scripts/runner/execute_pipeline.py", "--project", resolved_name]
+    if pipeline_source is not None:
+        runner.extend(["--pipeline-yaml", pipeline_source.as_posix()])
+    runner.extend(["--mode", mode])
     if stage.script:
         script_path = stage.script.replace("{project}", project_key)
-        resolved_name = project_name or project_key
         argv = ["uv", "run", "python", script_path, *stage.args]
         if "--project" not in stage.args:
             argv.extend(["--project", resolved_name])
         commands = [shlex.join(argv)]
         if stage_key:
-            commands.append(
-                f"uv run python scripts/runner/execute_pipeline.py --project {resolved_name} --stage {stage_key}"
-            )
+            commands.append(shlex.join([*runner, "--stage", stage_key]))
         return tuple(commands)
     if stage_key:
-        resolved_name = project_name or project_key
-        return (f"uv run python scripts/runner/execute_pipeline.py --project {resolved_name} --stage {stage_key}",)
+        return (shlex.join([*runner, "--stage", stage_key]),)
     return ()
 
 
-def _validation_commands(project_name: str, project_root_key: str) -> tuple[str, ...]:
-    return (
-        f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --core-only",
-        f"uv run python -m infrastructure.validation.cli prerender {project_root_key}/manuscript --repo-root .",
-        f"uv run python -m infrastructure.validation.cli integrity {project_root_key}/output",
+def _validation_commands(
+    project_name: str, project_root: Path, manuscript_dir: Path, pipeline_source: Path
+) -> tuple[str, ...]:
+    return tuple(
+        shlex.join(argv)
+        for argv in (
+            [
+                "uv",
+                "run",
+                "python",
+                "scripts/runner/execute_pipeline.py",
+                "--project",
+                project_name,
+                "--mode",
+                "core",
+                "--pipeline-yaml",
+                pipeline_source.as_posix(),
+            ],
+            [
+                "uv",
+                "run",
+                "python",
+                "-m",
+                "infrastructure.validation.cli",
+                "prerender",
+                manuscript_dir.as_posix(),
+                "--repo-root",
+                ".",
+            ],
+            [
+                "uv",
+                "run",
+                "python",
+                "-m",
+                "infrastructure.validation.cli",
+                "integrity",
+                (project_root / "output").as_posix(),
+            ],
+        )
     )
 
 
@@ -93,11 +133,13 @@ def _discover_method_sections(
     *,
     project_display_root: Path | None = None,
 ) -> tuple[str, ...]:
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = resolve_source_manuscript_dir(project_root)
     if not manuscript_dir.is_dir():
         return ()
     sections = []
-    for path in sorted(manuscript_dir.glob("*.md")):
+    for path in sorted(manuscript_dir.rglob("*.md")):
+        if path.name in _MANUSCRIPT_AUXILIARY_NAMES:
+            continue
         normalized = path.stem.lower().replace("-", "_")
         if any(token in normalized for token in _METHOD_SECTION_TOKENS):
             sections.append(_display_project_child(path, project_root, repo_root, project_display_root).as_posix())

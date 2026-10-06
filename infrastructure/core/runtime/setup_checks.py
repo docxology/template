@@ -2,122 +2,102 @@
 
 from __future__ import annotations
 
-import subprocess
 from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging.utils import get_logger, log_success
-from infrastructure.core.files.coverage_cleanup import clean_coverage_files
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.project_paths import resolve_project_root
 from infrastructure.core.runtime.env_deps import (
     check_build_tools,
     check_dependencies,
-    install_missing_packages,
 )
 from infrastructure.core.runtime.environment import (
     check_python_version,
-    set_environment_variables,
-    setup_directories,
     verify_source_structure,
+)
+
+from infrastructure.core.pipeline.outcomes import StageStatus
+from infrastructure.core.runtime.prepared_runtime import (
+    PreparedRuntimeUnavailable,
+    check_prepared_packages,
+    check_prepared_root_runtime,
 )
 
 logger = get_logger(__name__)
 
 
-def run_environment_setup_checks(repo_root: Path, project_name: str) -> list[tuple[str, bool]]:
-    """Run the canonical Stage 00 check registry and capture every outcome."""
-    clean_coverage_files(repo_root, scope_dir=resolve_project_root(repo_root, project_name))
-    checks: tuple[tuple[str, Callable[[], bool]], ...] = (
-        ("Python version", check_python_version),
-        ("Dependencies", lambda: sync_workspace_dependencies(repo_root)),
-        ("Build tools", check_build_tools),
-        ("Directory structure", lambda: setup_directories(repo_root, project_name)),
-        ("Source structure", lambda: verify_source_structure(repo_root, project_name)),
-        ("Project discovery", lambda: validate_project_discovery(repo_root, project_name)),
-        ("Environment variables", lambda: set_environment_variables(repo_root)),
-        ("Project setup_hook (optional)", lambda: run_optional_setup_hook(repo_root, project_name)),
+@dataclass(frozen=True)
+class SetupCheckResult:
+    """Check availability separately from malformed or failed local structure."""
+
+    name: str
+    status: StageStatus
+    diagnostic: str = ""
+
+    def __post_init__(self) -> None:
+        if (
+            not isinstance(self.name, str)
+            or not self.name.strip()
+            or not isinstance(self.status, StageStatus)
+            or self.status not in {StageStatus.SUCCEEDED, StageStatus.BLOCKED, StageStatus.FAILED}
+        ):
+            raise ValueError("Setup checks require a named succeeded, blocked, or failed observation")
+
+
+def check_setup_hook_prerequisites(repo_root: Path, project_name: str) -> bool:
+    """Check declared prerequisites without executing a provisioning hook."""
+    from infrastructure.project.setup_hook import preflight_setup_hook
+
+    ok, messages = preflight_setup_hook(resolve_project_root(repo_root, project_name), strict=True)
+    for message in messages:
+        logger.info("Setup-hook prerequisite: %s", message)
+    return ok
+
+
+def run_environment_setup_checks(repo_root: Path, project_name: str) -> list[SetupCheckResult]:
+    """Check already prepared requirements; never sync, install, or invoke hooks."""
+    checks: tuple[tuple[str, Callable[[], bool], StageStatus], ...] = (
+        ("Python version", check_python_version, StageStatus.BLOCKED),
+        ("Dependencies", lambda: _check_prepared_dependencies(repo_root), StageStatus.BLOCKED),
+        ("Build tools", check_build_tools, StageStatus.BLOCKED),
+        ("Source structure", lambda: verify_source_structure(repo_root, project_name), StageStatus.FAILED),
+        ("Project discovery", lambda: validate_project_discovery(repo_root, project_name), StageStatus.FAILED),
+        (
+            "Setup-hook prerequisites (no execution)",
+            lambda: check_setup_hook_prerequisites(repo_root, project_name),
+            StageStatus.BLOCKED,
+        ),
     )
-    results: list[tuple[str, bool]] = []
-    for check_name, check_fn in checks:
+    results: list[SetupCheckResult] = []
+    for name, check, unavailable in checks:
         try:
-            results.append((check_name, bool(check_fn())))
-        except Exception as exc:  # noqa: BLE001 - one failed check must not hide the remaining evidence
-            logger.error("Error during %s: %s", check_name, exc)
-            results.append((check_name, False))
+            passed = check()
+            results.append(SetupCheckResult(name, StageStatus.SUCCEEDED if passed else unavailable))
+        except PreparedRuntimeUnavailable as exc:
+            results.append(SetupCheckResult(name, StageStatus.BLOCKED, str(exc)))
+        except (OSError, ValueError, RuntimeError) as exc:
+            logger.error("Error during %s: %s", name, exc)
+            results.append(SetupCheckResult(name, StageStatus.FAILED, str(exc)))
     return results
 
 
-def aggregate_check_results(
-    results: list[tuple[str, bool]],
-) -> tuple[bool, list[str]]:
-    """Summarise named check results into an ``(all_passed, lines)`` pair.
-
-    Args:
-        results: list of ``(check_name, passed_bool)`` pairs.
-
-    Returns:
-        Tuple of ``(all_passed, lines)`` where ``all_passed`` is True only if
-        every result passed, and ``lines`` is a list of status strings of the
-        form ``"OK: <check_name>"`` or ``"FAIL: <check_name>"``.
-    """
-    all_passed = True
-    lines: list[str] = []
-    for check_name, passed in results:
-        lines.append(("OK" if passed else "FAIL") + ": " + check_name)
-        if not passed:
-            all_passed = False
-    return all_passed, lines
+def _check_prepared_dependencies(repo_root: Path) -> bool:
+    check_prepared_root_runtime(repo_root)
+    check_prepared_packages(["pytest>=7.0"])
+    return check_dependencies()[0]
 
 
-def _fallback_workspace_dependencies(
-    *,
-    dependency_checker: Callable[[], tuple[bool, list[str]]],
-    package_installer: Callable[[list[str]], bool],
-) -> bool:
-    """Check installed packages, installing only the ones that are actually missing."""
-    all_present, missing = dependency_checker()
-    if not all_present and missing:
-        return package_installer(missing)
-    return all_present
-
-
-def sync_workspace_dependencies(
-    repo_root: Path,
-    *,
-    process_runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
-    dependency_checker: Callable[[], tuple[bool, list[str]]] | None = None,
-    package_installer: Callable[[list[str]], bool] | None = None,
-) -> bool:
-    """Run ``uv sync`` with fallback to per-package install."""
-    check = dependency_checker or check_dependencies
-    install = package_installer or install_missing_packages
-    logger.info("Checking for uv package manager...")
-    try:
-        result = process_runner(
-            ["uv", "sync"],
-            cwd=str(repo_root),
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=30,
-        )
-        if result.returncode == 0:
-            log_success("Workspace dependencies synced successfully with uv", logger)
-            logger.debug("uv output: %s", result.stdout)
-            return True
-        logger.warning("uv sync failed (exit code %s): %s", result.returncode, result.stderr)
-        logger.info("Falling back to individual dependency checking...")
-        return _fallback_workspace_dependencies(dependency_checker=check, package_installer=install)
-    except FileNotFoundError:
-        logger.info("uv not found in PATH, using fallback dependency checking")
-        return _fallback_workspace_dependencies(dependency_checker=check, package_installer=install)
-    except subprocess.TimeoutExpired:
-        logger.warning("uv sync timed out after 30s — falling back to individual dependency checking")
-        return _fallback_workspace_dependencies(dependency_checker=check, package_installer=install)
-    except subprocess.SubprocessError as exc:
-        logger.error("Subprocess error during uv sync: %s", exc, exc_info=True)
-        return _fallback_workspace_dependencies(dependency_checker=check, package_installer=install)
+def aggregate_check_results(results: list[SetupCheckResult]) -> tuple[int, list[str]]:
+    """Keep failed structure and unavailable preparation distinct in the exit code."""
+    states = {result.status for result in results}
+    code = 1 if not results or StageStatus.FAILED in states else (75 if StageStatus.BLOCKED in states else 0)
+    lines = [
+        f"{result.status.value.upper()}: {result.name}" + (f" — {result.diagnostic}" if result.diagnostic else "")
+        for result in results
+    ]
+    return code, lines
 
 
 def validate_project_discovery(
@@ -165,14 +145,3 @@ def validate_project_discovery(
     except OSError as exc:
         logger.error("Project discovery failed: %s", exc)
         return False
-
-
-def run_optional_setup_hook(repo_root: Path, project_name: str) -> bool:
-    """Run optional setup hook."""
-    from infrastructure.core.project_paths import resolve_project_root
-    from infrastructure.project.setup_hook import run_project_setup_hook
-
-    project_dir = resolve_project_root(repo_root, project_name)
-    if not project_dir.is_dir():
-        return True
-    return bool(run_project_setup_hook(project_dir))

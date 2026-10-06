@@ -1,131 +1,72 @@
 ---
 name: research-workflow
 description: >
-  Seven-stage research workflow (SCOPE→LITERATURE→REASON→DESIGN→COMPUTE→SYNTHESIZE→WRITE).
-  Use for: structuring an AI agent's research process, generating literature
-  review prompts, scoping methodology.
-  Usage: from infrastructure.research import ResearchWorkflow; ResearchWorkflow.describe()
-  Config: set stage overrides in projects/{name}/manuscript/config.yaml `research_workflow:` block.
+  Descriptive research planning API: scope, survey, hypothesise, experiment,
+  validate, review and write. Use for inspecting ordered stage descriptors,
+  expected artifacts, gates and tracking configuration. Instantiate
+  ResearchWorkflow; query stage(name), all_stages(), describe() or to_dict().
+  The library reads optional project-root research_workflow.yaml.
 ---
 
 # Research Workflow
 
-Seven-stage research workflow scaffolding for AI-assisted research processes.
-Each stage produces structured prompts and acceptance criteria for agent loops.
+Use this module when a caller needs an inspectable research plan or tracking
+configuration. Execution and evidence are supplied by the caller's actual
+project pipeline.
 
-## Stages
-
-| # | Stage | Purpose |
-| --- | --- | --- |
-| 1 | **SCOPE** | Define research question, scope, and success criteria |
-| 2 | **LITERATURE** | Survey prior work; produce annotated bibliography |
-| 3 | **REASON** | Identify gaps, contradictions, and open questions |
-| 4 | **DESIGN** | Formulate methodology and experimental plan |
-| 5 | **COMPUTE** | Execute analysis; collect and validate results |
-| 6 | **SYNTHESIZE** | Interpret results relative to prior work |
-| 7 | **WRITE** | Draft manuscript sections and iterative revision |
-
-## Quick Start
+## Quick reference
 
 ```python
-from infrastructure.research import ResearchWorkflow
+from infrastructure.research import ResearchWorkflow, load_research_workflow_config
 
-# Print all stage descriptions
-ResearchWorkflow.describe()
-
-# Get a structured prompt for a specific stage
-prompt = ResearchWorkflow.prompt("SCOPE", question="What drives protein misfolding?")
-print(prompt)
-
-# Iterate stages in order
-for stage in ResearchWorkflow.stages():
-    print(f"{stage.index}. {stage.name}: {stage.description}")
+workflow = ResearchWorkflow()
+print(workflow.describe())
+for stage in workflow.all_stages():
+    print(stage.order, stage.name, stage.gate)
+record = workflow.stage("survey").to_dict()
+plan = workflow.to_dict()
+settings = load_research_workflow_config("projects/templates/template_code_project")
 ```
 
-## Pipeline Orchestrator
+Stage names are `scope`, `survey`, `hypothesise`, `experiment`, `validate`,
+`review` and `write`. Descriptors contain name, label, description, inputs,
+outputs, gate, status and order; no computation happens when they are displayed.
 
-```bash
-# Run research workflow scaffolding for a named project
-uv run python scripts/pipeline/stage_10_research_workflow.py --project my_project
+## Configuration
 
-# Run only specific stages
-uv run python scripts/pipeline/stage_10_research_workflow.py --project my_project --stages SCOPE,LITERATURE
-
-# Generate stage prompts without executing
-uv run python scripts/pipeline/stage_10_research_workflow.py --project my_project --dry-run
-```
-
-## Config Integration
-
-Set stage overrides in `projects/{name}/manuscript/config.yaml`:
+The library reads optional `projects/<qualified-project>/research_workflow.yaml`:
 
 ```yaml
-research_workflow:
-  question: "How do transformer attention patterns relate to syntactic structure?"
-  stages:
-    SCOPE:
-      depth: detailed
-    LITERATURE:
-      max_papers: 50
-      sources:
-        - arxiv
-        - semantic_scholar
-    WRITE:
-      target_venue: NeurIPS
+enabled: true
+active_stage: survey
+skip_stages: []
+strict: true
 ```
 
-## Key Types
-
-```python
-from infrastructure.research import (
-    ResearchWorkflow,        # instance API — workflow.stage(name) / all_stages() / describe()
-    ResearchStage,           # Stage descriptor: name, label, description, inputs, outputs, gate, status, order
-    ResearchWorkflowConfig,  # Parsed config.yaml `research_workflow:` block
-)
-```
-
-> **Doc/code drift (tracked for follow-up):** the "Stages" table, `.prompt()`,
-> `.stages()`, `.render()`, and `.record_output()` calls elsewhere in this
-> file describe an OpenScience-ported design (uppercase SCOPE/LITERATURE/...
-> stage names, per-stage sub-agent fan-out and prompt templates) that
-> `ResearchWorkflow`/`ResearchStage` do not implement — the real stage names
-> are lowercase (`scope, survey, hypothesise, experiment, validate, review,
-> write`) and there is no `.prompt()`/`.stages()`/`.render()` API. Treat
-> those sections as design intent, not a verified API surface.
-
-## Stage Prompt Generation
-
-```python
-from infrastructure.research import ResearchWorkflow
-
-# Generate LITERATURE stage prompt for a specific project
-prompt = ResearchWorkflow.prompt(
-    "LITERATURE",
-    question="Neural scaling laws",
-    context={"prior_papers": 12, "target_venue": "ICML"},
-)
-```
-
-## Agent Loop Integration
-
-```python
-from infrastructure.research import ResearchWorkflow
-
-# Use in an agent loop
-for stage in ResearchWorkflow.stages():
-    prompt = stage.render(project_context)
-    response = llm_call(prompt)
-    stage.record_output(response, output_dir="output/research/")
-```
-
-## Testing
+Unknown keys and invalid stage names fail. Missing files return tracking defaults.
+The separate repository inspection CLI reads `research_workflow.enabled` from
+`manuscript/config.yaml` and supports these actual arguments:
 
 ```bash
-uv run pytest tests/infra_tests/research/ -v
+uv run python scripts/pipeline/stage_10_research_workflow.py \
+  --project templates/template_code_project --describe
+uv run python scripts/pipeline/stage_10_research_workflow.py \
+  --project templates/template_code_project --stage survey
 ```
 
-## See Also
+`--describe` works without enabling the inspection switch. `--stage` reports
+a descriptor with the switch enabled. These are inspection commands;
+actual computations use the canonical execution DAG and domain producers.
 
-- [`AGENTS.md`](AGENTS.md) — operating contract and architecture
-- [`../search/SKILL.md`](../search/SKILL.md) — literature search integration
-- [`../llm/SKILL.md`](../llm/SKILL.md) — LLM review integration
+## Boundaries and verification
+
+The optional documents under [`prompts/`](prompts/) provide agent-context prose.
+They are separate from the Python planning API. Every execution or acceptance
+claim needs actual source-bound producer evidence.
+
+```bash
+uv run pytest tests/infra_tests/research/ --no-cov -q
+```
+
+See [`README.md`](README.md), [`AGENTS.md`](AGENTS.md),
+[`search/SKILL.md`](../search/SKILL.md) and [`llm/SKILL.md`](../llm/SKILL.md).

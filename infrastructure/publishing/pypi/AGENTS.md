@@ -1,79 +1,39 @@
 # `infrastructure/publishing/pypi/`
 
-Build, upload, and verify Python packages to PyPI or TestPyPI.
-
-## Public API
-
-```python
-from infrastructure.publishing.pypi import (
-    PyPIAdapter,
-    PyPIConfig,
-    PyPIResult,
-    build_dist,
-    upload_dist,
-    verify_install,
-)
-```
-
-### `PyPIAdapter`
-
-High-level façade: build → upload → verify in one call.
-
-```python
-adapter = PyPIAdapter(config=PyPIConfig(dry_run=True))
-result: PyPIResult = adapter.publish(project_dir=Path("projects/my_project"))
-```
-
-`dry_run=True` is the default at every layer — accidental imports cannot trigger
-real uploads.
-
-### `PyPIConfig`
-
-| Field | Default | Env override |
-| --- | --- | --- |
-| `dry_run` | `True` | — |
-| `test` | `False` | — (set `True` for TestPyPI) |
-| `token` | — | `PYPI_TOKEN` / `TESTPYPI_TOKEN` |
-| `repository_url` | auto | derived from `test` flag |
-
-### `PyPIResult`
-
-Dataclass returned by every operation: `success`, `package_name`, `version`,
-`dist_files`, `url`, `error`.
-
-### Lower-level helpers
-
-| Symbol | Module | Role |
-| --- | --- | --- |
-| `build_dist` | `build.py` | `uv build` — produces `dist/` wheel + sdist |
-| `upload_dist` | `upload.py` | `twine upload` with token auth |
-| `verify_install` | `verify.py` | `pip install --dry-run` from index or dist file |
-
-## Files
+The public operating adapter uses `pypi_release.py` for canonical root package
+admission and exact sandbox transfer. `publish(project_root, dry_run=True)`
+performs a fresh prepared build and source-byte admission without transfer.
+`dry_run=False, test=True` additionally retrieves original hashes and executes
+an isolated installed functional probe. Failed verification cannot return an
+upload-success result. Production promotion is blocked pending its separately
+reviewed exact-source contract.
 
 | File | Purpose |
 | --- | --- |
-| `__init__.py` | Re-exports public symbols |
-| `models.py` | `PyPIConfig`, `PyPIResult` dataclasses |
-| `build.py` | `build_dist()` — invokes `uv build` in subprocess |
-| `upload.py` | `upload_dist()` — invokes `twine upload` with token |
-| `verify.py` | `verify_install()` — smoke-tests installability |
-| `adapter.py` | `PyPIAdapter` — orchestrates build → upload → verify |
+| `adapter.py` | Canonical local preview and fixed TestPyPI transfer |
+| `models.py` | `PyPIConfig`, `PyPIResult`; optional limited receipt |
+| `../pypi_release.py` | Original-byte source/artifact custody, deadlines, exact remote retrieval and offline installed smoke |
 
-## Credentials
+`PyPIConfig` has `token`, `repository_url`, `test` and finite `timeout` fields.
+`PyPIResult` exposes `status`, `package_name`, `version`, artifact names, `url`,
+`error`, and an optional receipt. `ok` describes a successful operation or local
+preview; it does not authorize a release. `blocked`, `timed_out` and failure
+states are unsuccessful.
 
-Tokens are read from environment variables only — never logged:
+The destructive build, unbound upload, filename-inference, unpinned index
+verifier and ineffective verification flags are retired. Public adapter/model
+imports defer executable acceptance to explicit invocation, preventing cycles
+with installed artifact, rendering and publication contracts.
+The explicit wheel verifier takes original SHA-256 custody and canonical root
+metadata, uses offline hash-enforced locked dependencies, and never installs
+tooling dynamically. The thin CLI lives at `scripts/publish/verify_install.py`.
 
-- **PyPI**: `PYPI_TOKEN`
-- **TestPyPI**: `TESTPYPI_TOKEN`
-
-## Tests
+No mocks: use actual children and owned fixtures. Offline source controls:
 
 ```bash
-uv run pytest tests/infra_tests/publishing/test_pypi.py -v
+uv run pytest tests/infra_tests/publishing/test_testpypi_custody.py
+uv run pytest tests/infra_tests/publishing/test_pypi.py
 ```
 
-## See also
-
-- [`README.md`](README.md)
-- [`../AGENTS.md`](../AGENTS.md) — publishing module overview
+No live registry operation belongs in those default modules. Hosted, live and
+production program acceptance remain separate from local tests.

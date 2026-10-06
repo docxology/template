@@ -1269,64 +1269,14 @@ def verify_documentation_accuracy(
 
 ### integrity/check_links.py
 
-#### discover_markdown_files (function)
 ```python
-def discover_markdown_files(
-    root: Path,
-    *,
-    scope: Literal["tree", "repo", "link_audit"] = "tree",
-    repo_root: Path | None = None,
-) -> List[Path]:
-    """Re-export from ``content.discovery`` — use ``scope=\"link_audit\"`` for link audits.
+def run_link_audit(repo_root: Path) -> int:
+    """Run the comprehensive link and reference audit for repo_root."""
 
-    Canonical implementation: ``infrastructure.validation.content.discovery``.
-    """
+def main() -> int:
+    """Check all documentation links and references comprehensively."""
 ```
 
-#### extract_links (function)
-```python
-def extract_links(content: str, file_path: Path) -> Tuple[List[Dict], List[Dict], List[Dict]]:
-    """Extract links from markdown content.
-
-    Args:
-        content: Markdown content
-        file_path: Source file path
-
-    Returns:
-        Tuple of (file_links, heading_links, external_links)
-    """
-```
-
-#### check_file_reference (function)
-```python
-def check_file_reference(target: str, source_file: Path, repo_root: Path) -> Tuple[bool, str]:
-    """Check if file reference exists.
-
-    Args:
-        target: Target file path
-        source_file: Source file path
-        repo_root: Repository root
-
-    Returns:
-        Tuple of (exists, resolved_path)
-    """
-```
-
-#### extract_headings (function)
-```python
-def extract_headings(content: str) -> Set[str]:
-    """Extract headings from markdown content.
-
-    Args:
-        content: Markdown content
-
-    Returns:
-        Set of headings
-    """
-```
-
-#### main (function)
-```python
-def main():
-    """Main function for link checking CLI."""
-```
+Library helpers are implemented in `integrity/link_extract.py`; markdown
+selection and headings are implemented in `content/discovery.py` and
+`docs/accuracy.py`. Audit reporting is implemented in `integrity/link_audit_core.py`.

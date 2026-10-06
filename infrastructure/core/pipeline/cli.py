@@ -14,7 +14,8 @@ This thin CLI derives a machine-readable stage catalog straight from the live
 and receive, per stage: name, the script or built-in method that runs it, its
 tags, whether it is optional (``allow_skip``)/skippable, its ``depends_on``
 edges, topological order, declared failure mode, and the contract's
-definition-of-done. ``--core-only`` mirrors the pipeline executor's core path.
+definition-of-done. The default execution view is the same resolved core plan
+used by workers; ``--view declared`` shows the entire source declaration.
 """
 
 from __future__ import annotations
@@ -65,16 +66,15 @@ def _quiet_dag_logging() -> Iterator[None]:
 
 DEFAULT_PIPELINE_YAML = Path(__file__).resolve().parent / "pipeline.yaml"
 OPT_IN_STAGE_TAGS = _OPT_IN_TAGS
-CORE_ONLY_EXCLUDED_TAGS = frozenset({"llm", *OPT_IN_STAGE_TAGS})
 
 __all__ = [
-    "CORE_ONLY_EXCLUDED_TAGS",
     "DEFAULT_PIPELINE_YAML",
     "OPT_IN_STAGE_TAGS",
     "build_parser",
     "describe_pipeline",
     "main",
     "stage_rows",
+    "pipeline_description",
 ]
 
 
@@ -143,32 +143,79 @@ def stage_rows(
 
 
 def describe_pipeline(args: argparse.Namespace) -> int:
-    """Emit the derived stage catalog as JSON or a human-readable table."""
+    """Emit the selected execution contract or explicit declaration catalog."""
     try:
-        yaml_path = _resolve_yaml(args)
-    except PipelineSourceResolutionError as exc:
+        payload = pipeline_description(
+            repo_root=Path(args.repo_root), project=args.project, yaml_path=args.yaml, mode=args.mode, view=args.view
+        )
+    except (PipelineSourceResolutionError, ValueError, OSError) as exc:
         logger.error("%s", exc)
-        return 1
-    if not yaml_path.is_file():
-        logger.error("pipeline.yaml not found: %s", yaml_path)
-        return 1
-
-    exclude = set(CORE_ONLY_EXCLUDED_TAGS) if getattr(args, "core_only", False) else None
-    rows = stage_rows(yaml_path, exclude_tags=exclude)  # stage_rows quiets dag logging internally
+        return 2
+    rows = payload["stages"]
 
     if args.format == "json":
-        payload = {"version": 1, "source": yaml_path.as_posix(), "stages": rows}
         sys.stdout.write(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
         return 0
 
     # table
-    sys.stdout.write(f"Pipeline stages (source: {yaml_path}):\n")
+    sys.stdout.write(f"Pipeline stages ({args.view}, source: {payload['source']}):\n")
     for row in rows:
         opt = " [optional]" if row["optional"] else ""
         tags = ",".join(row["tags"])
         sys.stdout.write(f"  {row['order']:>2}  {row['name']}{opt}  ({tags or 'untagged'}) -> {row['runner']}\n")
     sys.stdout.write(f"{len(rows)} stage(s)\n")
     return 0
+
+
+def pipeline_description(
+    *,
+    repo_root: Path,
+    project: str | None = None,
+    yaml_path: str | Path | None = None,
+    mode: str = "core",
+    view: str = "execution",
+) -> dict[str, Any]:
+    """Read-only shared CLI/MCP view; execution resolution creates no output state."""
+    from dataclasses import asdict
+    from infrastructure.core.pipeline.plan import compile_execution_plan
+    from infrastructure.core.pipeline.types import PipelineConfig
+
+    if mode not in {"core", "live"} or view not in {"execution", "declared"}:
+        raise ValueError("Use mode core|live and view execution|declared")
+    config = PipelineConfig(
+        project or "templates/template_code_project",
+        repo_root.resolve(),
+        mode=mode,
+        pipeline_path=Path(yaml_path) if yaml_path else None,
+    )
+    if view == "declared":
+        path = _resolve_yaml(
+            argparse.Namespace(repo_root=config.repo_root, project=config.project_name, yaml=yaml_path)
+        )
+        return {"version": 2, "view": view, "source": str(path), "stages": stage_rows(path)}
+    with _quiet_dag_logging():
+        plan = compile_execution_plan(config)
+    rows = [
+        {
+            "order": i,
+            "key": stage.key,
+            "name": stage.name,
+            "runner": stage.script or f"method:{stage.method}",
+            "tags": list(stage.tags),
+            "optional": stage.allow_skip,
+            "depends_on": list(stage.dependencies),
+            "contract": asdict(stage.contract),
+        }
+        for i, stage in enumerate(plan.stages)
+    ]
+    return {
+        "version": 2,
+        "view": view,
+        "source": plan.provenance,
+        "stages": rows,
+        "plan": plan.to_dict(),
+        "plan_digest": plan.digest,
+    }
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -181,25 +228,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("describe-pipeline", help="Print the stage catalog derived from pipeline.yaml")
     p.add_argument("--format", choices=["json", "table"], default="json", help="Output format (default: json)")
-    p.add_argument(
-        "--core-only",
-        action="store_true",
-        help="Exclude LLM-tagged and opt-in publishing/archive stages (mirrors --core-only runs)",
-    )
+    p.add_argument("--mode", choices=["core", "live"], default="core")
+    p.add_argument("--view", choices=["execution", "declared"], default="execution")
     p.add_argument("--yaml", default=None, help="Explicit pipeline.yaml path (overrides --project and default)")
     p.add_argument("--project", default=None, help="Prefer projects/<name>/pipeline.yaml if it exists")
     p.add_argument("--repo-root", default=".", help="Repository root for --project resolution (default: cwd)")
     add_schema_flag(p)
     p.set_defaults(func=describe_pipeline)
-
-    # Alias: list-stages == describe-pipeline (common agent phrasing)
-    p_alias = sub.add_parser("list-stages", help="Alias for describe-pipeline")
-    p_alias.add_argument("--format", choices=["json", "table"], default="json")
-    p_alias.add_argument("--core-only", action="store_true")
-    p_alias.add_argument("--yaml", default=None)
-    p_alias.add_argument("--project", default=None)
-    p_alias.add_argument("--repo-root", default=".")
-    p_alias.set_defaults(func=describe_pipeline)
 
     return parser
 

@@ -75,9 +75,20 @@ uv run python scripts/docgen/exemplar_roster.py --check
 uv run python scripts/audit/check_tracked_all.py
 ```
 
-Stage 01 creates/uses the project's isolated environment and installs the
-dependencies declared in its `pyproject.toml`; do not substitute the root
-environment's direct `pytest` command on a fresh clone.
+These commands run from the monorepo root. Stage 01 creates/uses the project's
+isolated environment and installs dependencies declared in its `pyproject.toml`.
+
+For an independent source checkout, prepare its own Python 3.12–3.14 environment
+with the actual platform 4.0.0 wheel and this project's `dev` extra, following
+[`STANDALONE.md`](STANDALONE.md). From that checkout's root, run:
+
+```bash
+python -I -m pytest tests/ --cov=src --cov-fail-under=90
+```
+
+This command uses the project's `pyproject.toml` and tests; it does not require
+the monorepo's `scripts/pipeline/` tree. The platform and exemplar candidates are
+unreleased, so provisioning must use an explicitly supplied platform wheel.
 
 Run the focused stage tests for the part you changed. For broad source/doc changes, run the project coverage gate plus the repo public-scope drift and guard checks.
 

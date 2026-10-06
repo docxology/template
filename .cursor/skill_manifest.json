@@ -754,7 +754,7 @@
     },
     {
       "name": "infrastructure-reference-citation",
-      "description": "BibTeX read/write/convert that matches the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib -- see infrastructure/rendering/_pdf_combined_renderer.py). Provides BibEntry/BibDatabase models, parse_bibfile/render_database functions, paper_to_bibentry conversion from literature search results, generate_citation_key in the project's house style (firstauthorlastname+year+firsttitleword), LaTeX-special-character escape helpers, and a CLI (validate/format/convert). Use when reading or writing .bib files, exporting search results to BibTeX, or generating citation keys.",
+      "description": "BibTeX read/write/convert that matches the syntax/semantics of projects/templates/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib -- see infrastructure/rendering/_pdf_combined_bibliography.py). Provides BibEntry/BibDatabase models, parse_bibfile/render_database functions, paper_to_bibentry conversion from literature search results, generate_citation_key in the project's house style (firstauthorlastname+year+firsttitleword), LaTeX-special-character escape helpers, and a CLI (validate/format/convert). Use when reading or writing .bib files, exporting search results to BibTeX, or generating citation keys.",
       "path": "infrastructure/reference/citation/SKILL.md",
       "cursor_at": "infrastructure/reference/citation/SKILL.md"
     },
@@ -778,7 +778,7 @@
     },
     {
       "name": "research-workflow",
-      "description": "Seven-stage research workflow (SCOPE→LITERATURE→REASON→DESIGN→COMPUTE→SYNTHESIZE→WRITE). Use for: structuring an AI agent's research process, generating literature review prompts, scoping methodology. Usage: from infrastructure.research import ResearchWorkflow; ResearchWorkflow.describe() Config: set stage overrides in projects/{name}/manuscript/config.yaml `research_workflow:` block.",
+      "description": "Descriptive research planning API: scope, survey, hypothesise, experiment, validate, review and write. Use for inspecting ordered stage descriptors, expected artifacts, gates and tracking configuration. Instantiate ResearchWorkflow; query stage(name), all_stages(), describe() or to_dict(). The library reads optional project-root research_workflow.yaml.",
       "path": "infrastructure/research/SKILL.md",
       "cursor_at": "infrastructure/research/SKILL.md"
     },
@@ -1060,7 +1060,7 @@
     },
     {
       "name": "template-textbook",
-      "description": "Modular fillable textbook scaffold — parts/chapters/labs/question banks from config.yaml, auto-numbering, deterministic figures, structural contract enforcement.",
+      "description": "Authored textbook and separate draft scaffolding — units, chapters, labs, question banks, deterministic figures, and completion checks.",
       "path": "projects/templates/template_textbook/.agents/skills/template-textbook/SKILL.md",
       "cursor_at": "projects/templates/template_textbook/.agents/skills/template-textbook/SKILL.md"
     },

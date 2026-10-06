@@ -31,6 +31,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
+from infrastructure.core.files.secure_write import (
+    atomic_write_bytes_confined,
+    atomic_write_text_confined,
+    confined_file_lock,
+    read_bytes_confined,
+)
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.search.literature.backends import (
     BackendError,
@@ -78,6 +84,9 @@ class AbstractFetcher:
         cache_dir: Optional cache directory; abstracts are written as
             ``<safe_id>.txt`` and re-used on subsequent calls.
         timeout: HTTP timeout in seconds.
+        confinement_root: Optional nominated project directory. With a cache,
+            held-directory locking and confined reads/writes refuse lexical
+            path aliases before producing files outside that boundary.
     """
 
     def __init__(
@@ -87,9 +96,15 @@ class AbstractFetcher:
         cache_dir: Path | str | None = None,
         timeout: float = 15.0,
         arxiv_base_url: str | None = None,
+        confinement_root: Path | str | None = None,
     ) -> None:
         self.http = http_client or UrllibHttpClient()
         self.cache_dir = Path(cache_dir) if cache_dir else None
+        self.confinement_root = Path(confinement_root).absolute() if confinement_root is not None else None
+        if self.cache_dir is not None and self.confinement_root is not None:
+            self.cache_dir = self.cache_dir if self.cache_dir.is_absolute() else self.confinement_root / self.cache_dir
+            if not self.cache_dir.is_relative_to(self.confinement_root) or ".." in self.cache_dir.parts:
+                raise ValueError("Abstract cache directory escapes nominated confinement root")
         self.timeout = timeout
         self.arxiv_base_url = arxiv_base_url or _ARXIV_ABS_BASE
 
@@ -100,13 +115,28 @@ class AbstractFetcher:
 
     def fetch(self, paper: Paper, *, force: bool = False) -> FetchResult:
         """Fetch a resource by identifier."""
+        if self.cache_dir is not None and self.confinement_root is not None:
+            with confined_file_lock(self.confinement_root, self.cache_dir / ".abstract-fetch.lock"):
+                return self._fetch(paper, force=force)
+        return self._fetch(paper, force=force)
+
+    def _fetch(self, paper: Paper, *, force: bool = False) -> FetchResult:
+        """Perform retrieval inside the caller's optional held cache boundary."""
         if paper.abstract and not force:
             return FetchResult(paper=paper, status="skipped", message="already present")
 
         cache_path = self._cache_path(paper)
-        if cache_path is not None and cache_path.exists() and not force:
-            paper.abstract = cache_path.read_text(encoding="utf-8")
-            return FetchResult(paper=paper, status="cached", path=cache_path)
+        if cache_path is not None and not force:
+            if self.confinement_root is not None:
+                try:
+                    paper.abstract = read_bytes_confined(self.confinement_root, cache_path).decode("utf-8")
+                except FileNotFoundError:
+                    pass
+                else:
+                    return FetchResult(paper=paper, status="cached", path=cache_path)
+            elif cache_path.exists():
+                paper.abstract = cache_path.read_text(encoding="utf-8")
+                return FetchResult(paper=paper, status="cached", path=cache_path)
 
         # arXiv: query the export API by id_list.
         if paper.id.lower().startswith("arxiv:"):
@@ -134,8 +164,11 @@ class AbstractFetcher:
                 return FetchResult(paper=paper, status="error", message="no summary")
             paper.abstract = re.sub(r"\s+", " ", summary_el.text).strip()
             if cache_path is not None:
-                cache_path.parent.mkdir(parents=True, exist_ok=True)
-                cache_path.write_text(paper.abstract, encoding="utf-8")
+                if self.confinement_root is not None:
+                    atomic_write_text_confined(self.confinement_root, cache_path, paper.abstract)
+                else:
+                    cache_path.parent.mkdir(parents=True, exist_ok=True)
+                    cache_path.write_text(paper.abstract, encoding="utf-8")
             return FetchResult(paper=paper, status="hit", path=cache_path)
 
         return FetchResult(
@@ -186,6 +219,10 @@ class FulltextFetcher:
     ``<cache_dir>/<safe_id>.txt``. Without ``pypdf``, the PDF is downloaded
     and its path is returned in :attr:`FetchResult.path` but ``fulltext``
     stays ``None``.
+
+    ``confinement_root`` optionally nominates a project directory. Opted-in
+    cache reads/writes use held no-follow directory descriptors and a finite
+    cache lock; ordinary callers without a root retain their prior semantics.
     """
 
     name = "fulltext"
@@ -197,9 +234,15 @@ class FulltextFetcher:
         cache_dir: Path | str | None = None,
         timeout: float = 60.0,
         max_chars: int | None = 200_000,
+        confinement_root: Path | str | None = None,
     ) -> None:
         self.http = http_client or UrllibHttpClient()
         self.cache_dir = Path(cache_dir) if cache_dir else None
+        self.confinement_root = Path(confinement_root).absolute() if confinement_root is not None else None
+        if self.cache_dir is not None and self.confinement_root is not None:
+            self.cache_dir = self.cache_dir if self.cache_dir.is_absolute() else self.confinement_root / self.cache_dir
+            if not self.cache_dir.is_relative_to(self.confinement_root) or ".." in self.cache_dir.parts:
+                raise ValueError("Fulltext cache directory escapes nominated confinement root")
         self.timeout = timeout
         self.max_chars = max_chars
 
@@ -230,13 +273,27 @@ class FulltextFetcher:
         force: bool = False,
     ) -> FetchResult:
         """Fetch a resource by identifier."""
+        if self.cache_dir is not None and self.confinement_root is not None:
+            with confined_file_lock(self.confinement_root, self.cache_dir / ".fulltext-fetch.lock"):
+                return self._fetch(paper, pdf_url=pdf_url, force=force)
+        return self._fetch(paper, pdf_url=pdf_url, force=force)
+
+    def _fetch(self, paper: Paper, *, pdf_url: str | None = None, force: bool = False) -> FetchResult:
+        """Retrieve exact PDF/text bytes inside the optional held cache boundary."""
         if paper.fulltext and not force:
             return FetchResult(paper=paper, status="skipped", message="already present")
 
         cache = self._cache_paths(paper)
         if cache is not None and not force:
             pdf_path, text_path = cache
-            if text_path.exists():
+            if self.confinement_root is not None:
+                try:
+                    paper.fulltext = read_bytes_confined(self.confinement_root, text_path).decode("utf-8")
+                except FileNotFoundError:
+                    pass
+                else:
+                    return FetchResult(paper=paper, status="cached", path=text_path)
+            elif text_path.exists():
                 paper.fulltext = text_path.read_text(encoding="utf-8")
                 return FetchResult(paper=paper, status="cached", path=text_path)
 
@@ -256,8 +313,11 @@ class FulltextFetcher:
         path: Path | None = None
         if cache is not None:
             pdf_path, text_path = cache
-            pdf_path.parent.mkdir(parents=True, exist_ok=True)
-            pdf_path.write_bytes(pdf_bytes)
+            if self.confinement_root is not None:
+                atomic_write_bytes_confined(self.confinement_root, pdf_path, pdf_bytes)
+            else:
+                pdf_path.parent.mkdir(parents=True, exist_ok=True)
+                pdf_path.write_bytes(pdf_bytes)
             path = pdf_path
 
         text = _extract_pdf_text(pdf_bytes)
@@ -274,7 +334,10 @@ class FulltextFetcher:
 
         paper.fulltext = text
         if cache is not None:
-            text_path.write_text(text, encoding="utf-8")
+            if self.confinement_root is not None:
+                atomic_write_text_confined(self.confinement_root, text_path, text)
+            else:
+                text_path.write_text(text, encoding="utf-8")
             path = text_path
         return FetchResult(paper=paper, status="hit", path=path)
 
@@ -302,19 +365,22 @@ def enrich_papers(
     return results
 
 
-def write_corpus(papers: Iterable[Paper], path: Path | str) -> Path:
+def write_corpus(papers: Iterable[Paper], path: Path | str, *, confinement_root: Path | str | None = None) -> Path:
     """Persist a list of (possibly enriched) papers as a JSON corpus file.
 
     The output is compatible with :class:`infrastructure.search.literature.LocalBackend`.
+    A nominated ``confinement_root`` uses the platform's atomic no-follow
+    writer; callers without a root choose an ordinary explicit destination.
     """
     out = Path(path)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(
-        json.dumps(
-            {"papers": [p.to_dict() for p in papers]},
-            indent=2,
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
+    content = json.dumps(
+        {"papers": [p.to_dict() for p in papers]},
+        indent=2,
+        ensure_ascii=False,
     )
+    if confinement_root is not None:
+        atomic_write_text_confined(Path(confinement_root).absolute(), out, content)
+    else:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(content, encoding="utf-8")
     return out

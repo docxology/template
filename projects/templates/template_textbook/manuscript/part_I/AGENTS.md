@@ -50,10 +50,10 @@ Every chapter in this part must contain, in this order:
 - **Cross-refs** use pandoc-crossref only: `[@sec:…]`, `[@fig:…]`, `[@eq:…]`,
   `[@tbl:…]`. Never hand-number.
 - **Citations** are `[@key]` and every key must resolve in
-  [`../references.bib`](../references.bib) (e.g. `smith2020foundations`,
-  `doe2019methods`, `lee2021systems`, `garcia2022dynamics`, `patel2018models`,
-  `nguyen2023synthesis`, `kim2020data`, `brown2017principles`,
-  `wilson2021analysis`, `taylor2019theory`).
+  [`../references.bib`](../references.bib) (e.g. `box1976science`,
+  `sandve2013ten`, `nyquist1932regeneration`, `lorenz1963deterministic`, `may1976simple`,
+  `wilkinson2016fair`, `shannon1948mathematical`, `turing1937computable`,
+  `wilson2014best`, `taschuk2017ten`).
 - **Glossary links** are `[**term**](#gl:<anchor>)`; valid anchors include
   `system`, `model`, `parameter`, `variable`, `equilibrium`, `feedback`,
   `gradient`, `threshold`, `network`, `dynamics`, `emergence`, `regulation`,

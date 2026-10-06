@@ -21,6 +21,13 @@ uv run pytest tests/infra_tests/publishing/test_cli.py -v
 
 ## Test Modules
 
+Standalone installation contracts are covered by
+`test_standalone_install_lock.py` and `test_standalone_install_projection.py`.
+They use actual committed fixtures, all current public lock inputs, no-follow
+source/destination controls, and a real local Git/UV installation. Public remote
+retrieval and exemplar acceptance remain separate requirements; see
+[the projection guide](../../../docs/guides/standalone-install-projection.md).
+
 ### API Tests (`test_api.py`)
 
 Platform API client functionality:

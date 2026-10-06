@@ -39,7 +39,7 @@ def _make_config(*, enabled: bool, keywords: list[str] | None = None) -> Project
             fetch_fulltext=False,
             output_dir="output/deep_search",
             search_cache_dir="output/cache/search",
-            unified_bibtex_path="manuscript/refs.bib",
+            unified_bibtex_path="output/bibliography/refs.bib",
         ),
     )
 
@@ -72,7 +72,7 @@ def test_enabled_with_corpus_writes_artifacts(tmp_path: Path, capsys):
     assert exit_code == 0
 
     assert (tmp_path / "output" / "deep_search" / "convex" / "papers.json").exists()
-    assert (tmp_path / "manuscript" / "refs.bib").exists()
+    assert (tmp_path / "output" / "bibliography" / "refs.bib").exists()
     summary_path = tmp_path / "output" / "deep_search" / "run_summary.json"
     assert summary_path.exists()
     summary = json.loads(summary_path.read_text(encoding="utf-8"))

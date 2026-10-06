@@ -47,8 +47,8 @@
 3. **Generate the PDF**
 
    ```bash
-   # Run core pipeline (eight stages with --core-only; see RUN_GUIDE.md)
-   ./run.sh pipeline --project templates/template_code_project --core-only
+   # Run core pipeline (eight stages with --mode core; see RUN_GUIDE.md)
+   ./run.sh pipeline --project templates/template_code_project --mode core
    ```
 
 4. **View the result**
@@ -95,7 +95,7 @@
 4. **Rebuild manuscript**
 
    ```bash
-   ./run.sh pipeline --project templates/template_code_project --core-only
+   ./run.sh pipeline --project templates/template_code_project --mode core
    ```
 
 5. **Reference from other sections**
@@ -253,7 +253,7 @@
 4. **Rebuild**
 
    ```bash
-   ./run.sh pipeline --project templates/template_code_project --core-only
+   ./run.sh pipeline --project templates/template_code_project --mode core
    ```
 
 **Expected Result**: Numbered equations with clickable references
@@ -583,7 +583,7 @@ def test_process_negative():
 
    ```bash
    # Standard core build (declared core selection; excludes LLM-tagged stages)
-   ./run.sh pipeline --project templates/template_code_project --core-only
+   ./run.sh pipeline --project templates/template_code_project --mode core
 
    # Or use unified interactive menu
    ./run.sh
@@ -614,7 +614,7 @@ def test_process_negative():
    open projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf
    ```
 
-**Core pipeline** (`--core-only`) follows the core-tagged path declared in
+**Core pipeline** (`--mode core`) follows the core-tagged path declared in
 `pipeline.yaml`. See the
 [generated stage table](../core/workflow.md#canonical-stage-table-generated)
 for the current order. LLM stages and cross-project executive reporting are
@@ -675,7 +675,7 @@ outside the core selection.
 4. **Generate with custom metadata**
 
    ```bash
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
    ```
 
 **Applied To**:
@@ -720,7 +720,7 @@ outside the core selection.
 4. **Rebuild**
 
    ```bash
-   ./run.sh pipeline --project templates/template_code_project --core-only
+   ./run.sh pipeline --project templates/template_code_project --mode core
    ```
 
 **Naming Convention**:
@@ -775,8 +775,8 @@ outside the core selection.
 5. **Run build**
 
    ```bash
-   # Core pipeline (eight stages with --core-only)
-   ./run.sh pipeline --project templates/template_code_project --core-only
+   # Core pipeline (eight stages with --mode core)
+   ./run.sh pipeline --project templates/template_code_project --mode core
 
    # Or use unified interactive menu
    ./run.sh

@@ -627,10 +627,8 @@ class TestModuleLevel:
         # Verify extracted module functions are importable
         from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
         from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
-        from infrastructure.rendering._pdf_tex_transforms import (
-            fix_figure_paths,
-            fix_math_delimiters,
-        )
+        from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
+        from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
         from infrastructure.rendering._pdf_latex_helpers import (
             extract_preamble,
             check_latex_log_for_graphics_errors,

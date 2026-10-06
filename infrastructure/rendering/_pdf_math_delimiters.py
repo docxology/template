@@ -3,7 +3,7 @@
 Fixes broken math delimiters ({[} / {]}) and related artifacts that Pandoc
 introduces when converting Markdown to LaTeX.
 
-Extracted from _pdf_tex_transforms.py for file-size health.
+The PDF renderer consumes this implementation directly.
 """
 
 import re

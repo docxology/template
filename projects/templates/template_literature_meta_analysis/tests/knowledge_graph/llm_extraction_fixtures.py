@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 
 def make_paper(**overrides) -> Paper:

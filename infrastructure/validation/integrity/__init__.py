@@ -1,12 +1,12 @@
 """Integrity validation subpackage."""
 
 from infrastructure.validation.content.discovery import discover_markdown_files
-from infrastructure.validation.integrity.check_links import (
+from infrastructure.validation.integrity.link_audit_core import generate_comprehensive_report
+from infrastructure.validation.integrity.link_extract import (
     LinkCheckResult,
     check_file_reference,
     extract_code_blocks,
     extract_links,
-    generate_comprehensive_report,
     validate_directory_structures,
     validate_file_paths_in_code,
     validate_placeholder_consistency,

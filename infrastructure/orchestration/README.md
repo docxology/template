@@ -9,6 +9,12 @@ Non-interactive (example):
 ```bash
 uv run python -m infrastructure.orchestration --help
 
+# Run a canonical exemplar with local capabilities (the default)
+uv run python -m infrastructure.orchestration pipeline --project templates/template_code_project --mode core
+
+# Explicitly select live capabilities
+uv run python -m infrastructure.orchestration pipeline --project templates/template_code_project --mode live
+
 # Read-only private-project promotion gate
 uv run python -m infrastructure.orchestration promotion-check \
   --attestation /path/to/private-project/promotion.yaml

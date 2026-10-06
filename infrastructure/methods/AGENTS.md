@@ -29,6 +29,8 @@ algorithms or project analysis logic here.
 | `orchestration.py` | Public plan builders, validator entry point, audits, and Markdown renderer. |
 | `_plan_builder.py` | Private stage/section discovery and `{project}` expansion helpers. |
 | `_plan_validation.py` | Private artifact/script/command validation helpers. |
+| `_command_validation.py` | Canonical project, manuscript, runner, and stage command bindings. |
+| `_evidence_validation.py` | Shared evidence registry freshness and experiment-plan validation. |
 | `cli.py` | `python -m infrastructure.methods plan` command. |
 | `__main__.py` | Module entry point. |
 
@@ -43,6 +45,11 @@ algorithms or project analysis logic here.
   publication-blocking errors. Source mode validates authoring contracts only.
 - Stage `key` is execution identity; human-readable names and name-based
   dependency declarations remain display/telemetry values.
+- Every stage declares exactly one executable `script` or executor `method`.
+  Prose descriptions belong in the contract's `definition_of_done`.
+- Stage keys are unique lowercase identifiers. Sequence fields are lists;
+  flags are booleans, retries are non-negative integers, and hook deadlines
+  are positive integers. Unknown fields and unknown original dependencies fail.
 - CLI exits `0` for clean/warnings, `1` for validation errors, and `2` for
   invalid invocation/configuration.
 - Expose optional figure, claim-ledger, and experiment-plan paths only when the
@@ -55,9 +62,22 @@ algorithms or project analysis logic here.
   `require_generated_artifacts=False`.
 - Stage `script` values must already be repo-relative paths (`scripts/...` or
   `projects/...`); verification commands expand `{project}` only.
+- Commands use the canonical lexical project root and populated manuscript
+  resolver, including `docs/manuscript/` when it supplies the source.
+- Rendered evidence requires the supported compact registry schema, consistent
+  counts, sampled facts supported by current sources, and resolvable evidence
+  source paths. A compact sample is a summary rather than a proof of every claim.
+- Optional experiment plans are checked with the shared project validator.
 
 ## Tests
 
 ```bash
 uv run pytest tests/infra_tests/methods -q
 ```
+
+Emitted runtime commands bind the exact declared YAML with `--pipeline-yaml`,
+use canonical qualified project paths, and select `--mode live` for live/LLM
+stages. The source catalog includes every declaration; execution delegates
+selection, prerequisites, locking, source custody, and completion to the shared
+immutable execution plan. Nested manuscript chapters are discovered recursively
+while auxiliary agent/documentation Markdown is excluded.

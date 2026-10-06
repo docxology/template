@@ -1,15 +1,11 @@
 """Repository-boundary scan and Git-cache machinery for rendered snapshots.
 
-Split from :mod:`infrastructure.validation.rendered_snapshot` to keep module
-sizes inside the line-count gate; the parent module re-imports every moved
-name under its original spelling, so all existing import paths remain valid.
-This is a private companion module — the public API surface stays in
-``rendered_snapshot``.
+The public rendered-snapshot API stays in ``rendered_snapshot``; focused scan
+controls exercise these implementation helpers directly.
 """
 
 from __future__ import annotations
 
-import hashlib  # noqa: F401  (re-exported companion namespace)
 import subprocess
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
@@ -27,7 +23,7 @@ class RenderedSnapshotError(ValueError):
         self.code = code
 
 
-_CACHE_PARTS = frozenset(
+CACHE_PARTS = frozenset(
     {
         ".git",
         ".mypy_cache",
@@ -41,21 +37,7 @@ _CACHE_PARTS = frozenset(
 )
 
 #: Path components skipped when walking project trees for snapshots.
-CACHE_PARTS = _CACHE_PARTS
-PROJECT_EXCLUDED_PARTS = _CACHE_PARTS | {"output", "tests"}
-
-_PROJECT_CACHE_PARTS = frozenset(
-    {
-        ".git",
-        ".mypy_cache",
-        ".pytest_cache",
-        ".ruff_cache",
-        ".tox",
-        ".venv",
-        "__pycache__",
-        "htmlcov",
-    }
-)
+PROJECT_EXCLUDED_PARTS = CACHE_PARTS | {"output", "tests"}
 
 
 @dataclass(frozen=True)

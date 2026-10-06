@@ -4,7 +4,10 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 
 ## Overview
 
-`template_autopoiesis` is a combinatoric project generator. It uses a grammar to deterministically emit complete child projects from a seeded expansion. The architecture is: grammar → spec → materialize → verify → seal.
+`template_autopoiesis` generates standalone numerical children from a grammar
+and an explicit selected spec. Current acceptance runs child tests and analysis,
+compares their results independently, verifies source/export custody, and seals
+the current runtime export. Child PDF rendering is unsupported.
 
 ---
 
@@ -21,6 +24,10 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | `src/template_autopoiesis/gates/integrity.py` | Integrity hashing: `sha256_text()`, `sha256_bytes()`, `tree_hash_from_content_hashes()`, `merkle_root()` |
 | `src/template_autopoiesis/gates/materialize.py` | Child project writer: `materialize()`, `child_name()`, `_build_tree()` |
 | `src/template_autopoiesis/gates/realize.py` | Child pipeline orchestration: `run_child_stage()`, `run_analysis_stage()`, `validate_child()` |
+| `src/template_autopoiesis/gates/realization_contract.py` | Explicit filtered selection, real required child producers, independently verified runtime exports |
+| `src/template_autopoiesis/gates/child_execution.py` | Shared bounded process supervision, minimal credential-free environment, and resource caps |
+| `src/template_autopoiesis/gates/child_results.py` | Independent reference-kernel comparison of actual child numerical artifacts |
+| `src/template_autopoiesis/gates/custody_paths.py` | Reject unconfined paths and symlink components |
 | `src/template_autopoiesis/gates/sealing.py` | QR seal: `qr_matrix()`, `build_payload()`, `embed_semi_transparent()` |
 | `src/template_autopoiesis/gates/verify.py` | Integrity verification: `verify_child()`, `verify_child_full()`, `verify_seal()` |
 | `src/template_autopoiesis/manuscript/emit_templates.py` | `@@KEY@@`-templated child file bodies: template strings + substitution from a `Spec` |
@@ -37,7 +44,8 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | `src/template_autopoiesis/primitives/signal.py` | DFT + convolve_known kernels |
 | `src/template_autopoiesis/primitives/statistics.py` | OLS regression kernel |
 
-Source layout: four domain subpackages (`core/`, `gates/`, `manuscript/`, `figures/`) plus the `primitives/` registry package; the package root `__init__.py` re-exports every public symbol for backwards compatibility.
+Source layout: `core/`, `gates/`, `manuscript/`, `figures/`, and the `primitives/`
+registry. Import symbols from their defining modules.
 
 ---
 
@@ -51,17 +59,25 @@ Source layout: four domain subpackages (`core/`, `gates/`, `manuscript/`, `figur
 | Stub `run_analysis` must fail | `tests/core/test_meta_teeth.py` parametrized over KNOWN_DOMAINS |
 | Verify never trusts cached hash | `gates/verify.py::verify_child` re-reads files from disk |
 | Honesty manifest checks live AST | `core/honesty.py::build_manifest` inspects source at test time |
+| Every selected child must run | `gates/realization_contract.py` requires real child tests and analysis to return zero |
+| Child results match independent references | `gates/child_results.py` recomputes each selected primitive in the parent |
+| Published child evidence is preserved | Current exports go only to ignored `output/.pipeline/child_realization/exports/` |
 
 ---
 
 ## Grammar Description
 
-Defined in `manuscript/config.yaml` under `autopoiesis:`:
+Defined in `manuscript/config.yaml` under `project_config.autopoiesis:`:
 - `seed`: 42
 - `slots`: primitive_domain (5), track (3), section_set (3), figure_profile (2, reserved), qr_profile (2, reserved), integrity_profile (2, reserved)
 - Nominal product: 5×3×3×2×2×2 = 360
 - Effective product: 5×3×3 = 45 (reserved slots excluded)
 - Grammar hash: 16-char SHA-256 prefix of canonical JSON (re-derive from `load_grammar()` — do not hard-code)
+
+Execution selects one exact filtered cell per selected domain, with five children
+in the current default. It does not execute every nominal or effective cell.
+Receipts include the exact selected specs, filters, and separately measured count.
+See [`docs/child-execution.md`](docs/child-execution.md) for acceptance and limits.
 
 ---
 

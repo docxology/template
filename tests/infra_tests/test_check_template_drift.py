@@ -126,29 +126,21 @@ Keep tests, publication boundaries, and fork TODO evidence aligned.
         root / "TODO.md",
         """# Fake TODO
 
-## Current validation evidence
+Future work only.
 
-- Drift gate and tests are the current evidence.
+## Minor upcoming
 
-## Integrity and template-status gaps
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `FAKE-CONFIG-1` | open | Minor | Current config schema | Add placeholder-safe config cases | config-case receipt | `uv run pytest tests -q` | invalid config must fail |
 
-- Keep template integrity explicit.
+## Medium upcoming
 
-## Configurable-surface gaps
+No active rows are currently scoped at this size.
 
-- Keep config examples placeholder-safe.
+## Major upcoming
 
-## Documentation and signposting gaps
-
-- Keep README and AGENTS aligned.
-
-## Test and validator gaps
-
-- Add negative controls for new validators.
-
-## Ordered improvement ladder
-
-1. Keep the gate green.
+No active rows are currently scoped at this size.
 """,
     )
     write_doc(root / "pyproject.toml", "[tool.coverage.report]\nfail_under = 90\n")

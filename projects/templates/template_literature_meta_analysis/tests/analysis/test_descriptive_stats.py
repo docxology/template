@@ -10,14 +10,14 @@ import json
 
 import pytest
 
-from analysis.descriptive_stats import (
+from template_literature_meta_analysis.analysis.descriptive_stats import (
     author_productivity,
     build_meta_report,
     citation_distribution,
     descriptive_stats,
     save_meta_report,
 )
-from literature.models import Author, Paper
+from template_literature_meta_analysis.literature.models import Author, Paper
 
 
 # ── Hand-constructed corpus with fully known values ──────────────────────

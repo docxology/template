@@ -29,9 +29,6 @@ from infrastructure.core.pipeline.artifacts._manifest import (
     write_stage_artifact_manifest,
 )
 
-# Backward-compatible alias for incremental.py and tests.
-_declared_output_paths = declared_output_paths
-
 __all__ = [
     "STABLE_LOCAL_OUTPUT_INVENTORY_MODE",
     "STABLE_OUTPUT_INVENTORY_MODE",
@@ -40,7 +37,6 @@ __all__ = [
     "ArtifactValidationReport",
     "OutputInventoryMode",
     "StableOutputInventory",
-    "_declared_output_paths",
     "_git_ignore_matches",
     "aggregate_artifact_manifests",
     "artifact_manifest_entry_from_payload",

@@ -1,31 +1,28 @@
-"""Shared mock dataclasses and stage fixtures for the split pipeline-reporter test modules (formerly test_pipeline_reporter.py)."""
+"""Canonical result and stage fixtures for the split pipeline-reporter test modules (formerly test_pipeline_reporter.py)."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any
+
+def _Project(name: str):
+    from pathlib import Path
+    from infrastructure.project.project_info import ProjectInfo
+
+    return ProjectInfo(name, Path("/tmp") / name, True, True, False, False)
 
 
-@dataclass
-class _MockProject:
-    name: str
+def _Stage(success: bool, duration: float, error_message: str = "", errors=None):
+    from infrastructure.core.pipeline.types import PipelineStageResult
+
+    return PipelineStageResult(
+        1, "Fixture", success, duration, 0 if success else 1, error_message, stage_completed=success
+    )
 
 
-@dataclass
-class _MockStageResult:
-    success: bool
-    duration: float
-    error_message: str = ""
-    errors: list = field(default_factory=list)
+from tests._support.multi_project import bound_result
 
 
-@dataclass
-class _MockResult:
-    successful_projects: int = 0
-    failed_projects: int = 0
-    total_duration: float = 0.0
-    infra_test_duration: float = 0.0
-    project_results: Any = field(default_factory=dict)
+def _Result(**values):
+    return bound_result(**values)
 
 
 def _stage_results() -> list[dict[str, object]]:

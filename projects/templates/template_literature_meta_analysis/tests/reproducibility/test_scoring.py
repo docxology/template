@@ -11,13 +11,13 @@ from __future__ import annotations
 
 import math
 
-from reproducibility.models import (
+from template_literature_meta_analysis.reproducibility.models import (
     NodeType,
     WorkflowNode,
     WorkflowEdge,
     WorkflowGraph,
 )
-from reproducibility.scoring import (
+from template_literature_meta_analysis.reproducibility.scoring import (
     ContentWeights,
     StructuralWeights,
     ReproducibilityScore,
@@ -734,7 +734,7 @@ class TestCycleHandling:
             depends_on=["n1"],
             paper_id="p",
         )
-        from reproducibility.models import build_workflow_graph
+        from template_literature_meta_analysis.reproducibility.models import build_workflow_graph
 
         graph = build_workflow_graph("p", [n1])
         assert len(graph.edges) == 1

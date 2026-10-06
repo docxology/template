@@ -65,7 +65,7 @@ sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended \
 
 **`git`:** macOS — `xcode-select --install` (Xcode Command Line Tools); Ubuntu — `sudo apt-get install -y git`.
 
-You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.14 via `.python-version`, and the supported range is Python 3.10+ (`requires-python = ">=3.10"` in `pyproject.toml`; infrastructure CI is 3.10–3.14, public-project matrix is 3.10 and 3.14).
+You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.14 via `.python-version`, and the supported range is Python 3.12+ (`requires-python = ">=3.12"` in `pyproject.toml`; infrastructure and public-project CI matrices cover 3.12–3.14).
 
 ---
 
@@ -113,7 +113,7 @@ These run Ruff, mypy, Bandit, and smoke tests automatically on every commit and 
 ## Step 4: Run the core pipeline on the canonical exemplar
 
 ```bash
-./run.sh --pipeline --project templates/template_code_project --core-only
+./run.sh --pipeline --project templates/template_code_project --mode core
 ```
 
 This runs 8 stages (clean → setup → infra tests → project tests → analysis → render PDF → validate → copy). No LLM or network required. Wall-clock: 2–5 minutes on a quiet machine.
@@ -194,7 +194,7 @@ docs/               Documentation corpus (hierarchy and index in docs/AGENTS.md
 | `pandoc: command not found` | `brew install pandoc` or `sudo apt-get install pandoc` |
 | Missing LaTeX package `*.sty` | `sudo tlmgr install <package>` |
 | `ModuleNotFoundError` | `uv sync` then retry |
-| `uv sync` fails on Python version | uv auto-downloads Python — check internet; or set `UV_PYTHON=3.11 uv sync` |
+| `uv sync` fails on Python version | uv auto-downloads Python — check internet; or set `UV_PYTHON=3.12 uv sync` |
 | PDF shows `??` for references | Normal on first pass; pipeline runs multi-pass automatically |
 | Tests fail coverage gate | `uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=term-missing --cov-fail-under=90` |
 | Pipeline stage fails | See [`docs/guides/startup-and-setup.md` §Troubleshooting](docs/guides/startup-and-setup.md#troubleshooting) |

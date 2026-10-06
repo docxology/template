@@ -2,7 +2,7 @@
 
 These models mirror the syntax and semantics of the exemplar
 ``projects/templates/template_code_project/manuscript/references.bib`` file consumed by
-``infrastructure/rendering/_pdf_combined_renderer.py`` via Pandoc's ``--natbib``
+``infrastructure/rendering/_pdf_combined_bibliography.py`` via Pandoc's ``--natbib``
 flag (with the ``pandoc-crossref`` filter handling ``[@fig:..]``/``[@tbl:..]``/
 ``[@eq:..]``/``[@sec:..]`` cross-references).
 

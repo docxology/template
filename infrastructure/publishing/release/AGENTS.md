@@ -16,9 +16,8 @@ Release receipt/pairing/workflow family, subpackaged out of the flat
 ## Public API
 
 Package-level re-exports live in `infrastructure/publishing/__init__.py`
-(receipt classes and builders). The historical flat paths
-(`infrastructure.publishing.release_receipts`, `.release_workflow`, ...) remain
-as silent re-export shims; new code imports the nested paths.
+(receipt classes and builders). Import workflow and receipt modules from this
+`release/` package directly; the historical flat modules have been removed.
 
 ## Invariants
 

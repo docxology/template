@@ -1,152 +1,84 @@
 # Troubleshooting
 
-## Diagnostic flow
+## Core analysis fails
 
-```mermaid
-flowchart TB
-    FAIL([Pipeline / test failure]) --> WHERE{Which stage?}
-    WHERE -- search --> NET{Network<br/>available?}
-    WHERE -- enrich --> DEP{pypdf<br/>installed?}
-    WHERE -- bibtex --> COLL{Citation-key<br/>collision?}
-    WHERE -- llm --> OL{Ollama<br/>running?}
-    WHERE -- figures --> RES{results.json<br/>exists?}
-    WHERE -- coverage --> COV{Coverage<br/>under 90%?}
+The shipped core configuration searches `data/corpus.json` through `LocalBackend`
+without enrichment, LLM synthesis, or deep search. Check the configured local
+corpus and actual `output/search/results.json` diagnostics. Canonical analysis
+uses the five-script allowlist in `manuscript/config.yaml`; it does not execute
+every script alphabetically.
 
-    NET -- no --> SWITCH[Switch to sources: local<br/>or commit cache files]
-    NET -- yes --> CHECK[Check project_config.search.local_corpus path]
-    DEP -- no --> INSTALL[uv sync --group rendering]
-    COLL -- yes --> INSPECT[Inspect run_summary.json<br/>citation_keys field]
-    OL -- no --> START[ollama serve · ollama pull MODEL]
-    RES -- no --> RUNFIRST[Run run_search_pipeline.py first]
-    COV -- yes --> ADD[Add tests for missing branches]
+For explicitly selected remote sources, inspect actual response/error receipts.
+A cached response is separate from a fresh retrieval. Runtime caches and raw
+transcripts stay in ignored evidence; do not silently replace a failed provider
+with local results or commit caches as publication proof.
 
-    classDef question fill:#1e3a8a,stroke:#0f172a,color:#fff
-    classDef fix fill:#0f766e,stroke:#0f172a,color:#fff
-    class WHERE,NET,DEP,COLL,OL,RES,COV question
-    class SWITCH,CHECK,INSTALL,INSPECT,START,RUNFIRST,ADD fix
-```
+## A citation is missing or conflicts
 
-## "Pipeline failed in Project Analysis stage"
+Standard search produces `output/bibliography/references.bib`, and explicit deep
+search produces `output/bibliography/references_deep.bib`. Authored
+`manuscript/*.bib` remains source input. Compare actual citation keys with those
+databases and inspect `output/bibliography_projection.json` for origins/hashes.
 
-**Symptom:** `./run.sh --project templates/template_search_project --pipeline` exits
-on stage 4.
+Hydration copies curated databases and adds only new definitions to
+`output/manuscript/generated_search.bib`. A collision with different title,
+authors, year, or shared identifiers fails. Fix the source metadata rather than
+relying on file order. Curated abstracts/keywords can remain different
+annotations of the same work.
 
-**Causes / fixes:**
+## Rendering reports undefined citations
 
-1. *Network unavailable, but `config.yaml` lists `arxiv` / `crossref`.*
-   Switch to `sources: [local]` or commit a populated
-   `output/search/cache/`.
-2. *Wrong `--corpus` path when `sources: [local]`.* The pipeline
-   resolves `project_config.search.local_corpus` against the project root if
-   `--corpus` is not provided; check the path exists.
-3. *Default config disabled the LLM but a downstream test expects
-   synthesis output.* Re-enable `llm.enabled: true`, ensure `ollama
-   serve` is running, or update the test to use `synthesise_*` with a
-   stub callable.
+Run hydration after its required producers. The renderer must select populated
+`output/manuscript/` and its full bibliography union. Inspect actual bibliography
+selection and citation-validation diagnostics. Authored references stay intact.
 
-## "BibTeX missing entries / wrong citation keys"
+Explicit deep composition requires deep search, composition, then hydration
+with matching configuration/overrides. Its generated section is
+`output/manuscript/S02_generated_literature_review.md`; authored S01 remains
+source content. Missing or stale producer/composition summaries refuse reuse.
 
-**Symptom:** `manuscript/references.bib` does not contain a paper that
-`output/search/results.json` does.
+## Deep composition or hydration rejects a dependency
 
-**Causes / fixes:**
+`output/deep_search/producer_receipt.json` binds current disk source,
+configuration, aggregate, bibliography, and consumed report/note bytes.
+`composition_summary.json` additionally binds that receipt and S02's actual SHA.
+Old output or a manually edited supplement cannot satisfy the checks. Rerun
+explicit producers with matching configuration before hydration.
 
-1. *Citation-key collision.* Check `LiteratureRunArtifacts.citation_keys`
-   in `output/run_summary.json`; collisions are auto-suffixed but the
-   suffix is reflected in the BibTeX file.
-2. *`project_config.search.year_min` / `year_max` filtered the paper.* Year
-   filters apply to the search stage and re-apply defensively in the
-   aggregator.
-3. *Hand-edited `references.bib`.* The file is regenerated every run;
-   do not hand-edit.
+These records establish artifact dependencies. They do not establish successful
+live-provider or installed-runtime acceptance.
 
-## "Pre-render validation failed (undefined citations)"
+## Output or cache paths are refused
 
-**Symptom:** `scripts/pipeline/stage_03_render.py` or
-`python -m infrastructure.validation.cli prerender …` stops with many
-`BIBTEX.UNDEFINED_KEY` errors for keys that exist in `references_deep.bib`.
+Project consumers nominate the lexical project root for mature confined I/O.
+Linked root, intermediate, and final output/cache components refuse before
+external writes. Inspect actual path components and use a real confined tree.
+Resolving a link away or using a one-time preflight does not repair the boundary.
 
-**Cause / fix:** Ensure `references_deep.bib` lives next to the other
-manuscript sections and that `s_compose_literature_review.py` ran
-after `run_deep_search.py` when using Supplemental S1. The composer
-sorts after `run_*` but before `y_*` / `z_*` so the freshly composed
-`S01_literature_review.md` is in place before
-`z_generate_manuscript_variables.py` resolves the manuscript into
-`output/manuscript/`. The gate unions all `manuscript/*.bib`; a missing
-second file means keys only in the deep bibliography will fail.
+## Figures are missing
 
-## "Figures missing"
+`y_generate_search_figures.py` requires `output/search/results.json`; run standard
+search first. Use `MPLBACKEND=Agg` for headless rendering and inspect the producer
+exit/diagnostics. File existence alone does not establish current acceptance.
 
-**Symptom:** `output/figures/` is empty after a run.
+## Optional LLM synthesis has no output
 
-**Causes / fixes:**
+Check `project_config.llm.enabled`, selected model/endpoint, and runtime warnings.
+The optional adapter can return `None` when initialization is unavailable and
+writes no placeholder synthesis. Per-paper failures remain diagnostic, and a
+failed deep producer cannot qualify artifacts for composition.
 
-1. `output/search/results.json` does not exist — `y_generate_search_figures.py`
-   exits 2 when there's no input. Run `run_search_pipeline.py` first.
-2. Matplotlib backend issue — verify `MPLBACKEND=Agg` is set (the
-   pipeline runner sets this automatically).
+Required `local-synthesis` acceptance is a separate explicit lane: unavailable
+selected tooling is blocked and invalid/partial responses fail. Starting a
+service or acquiring a model is an operator action, not an automatic core
+prerequisite. A configured seed does not guarantee identical responses.
 
-## "LLM stage produced no output"
+## Coverage or pytest imports fail
 
-**Symptom:** `output/llm/` is empty (or missing entirely) and the
-reading report has no per-paper-notes / cross-corpus sections, even
-though `config.llm.enabled: true` was set. The composer's Supplemental S1
-also lacks a per-paper synthesis subsection.
+Run this project separately with the declared 90 percent branch-coverage floor.
+Inspect missing branches and add real controls; do not omit source/delete tests.
+Multiple exemplar `tests/` roots in one process can cause
+`ImportPathMismatchError`. Use separate invocations or the strict public matrix.
 
-**This is the no-stub design:** when the LLM stack is genuinely
-unreachable, both `run_search_pipeline.py` and `run_deep_search.py` log
-a warning ("infrastructure.llm not importable" or "Could not initialise
-LLMClient") and skip the synthesis stage entirely — they do **not**
-write a fake "(LLM unavailable …)" placeholder string. A missing LLM is
-observable from the absence of those output files, never from a sentinel
-in their contents.
-
-**Causes / fixes:**
-
-1. `infrastructure.llm` could not be imported — install with
-   `uv sync --group llm`.
-2. Ollama is not running — `ollama serve` and confirm `ollama list`
-   shows the configured model.
-3. Model not pulled — `ollama pull gemma3:4b` (or the model named in
-   `config.llm.model`).
-4. Check the pipeline log for the warning line — it identifies whether
-   the import or the client construction failed.
-
-## "References.bib differs across runs even with the local corpus"
-
-**Symptom:** `git status` shows `manuscript/references.bib` modified
-after a `--no-cache` run.
-
-**Causes / fixes:**
-
-* `data/corpus.json` itself changed. The BibTeX is a deterministic
-  function of the corpus and the citation-key generator; if both are
-  unchanged, the output is identical.
-* Field order in a manually-edited corpus entry shifted. The BibTeX
-  writer preserves order, so reorder the corpus JSON to match.
-
-## "Coverage gate failure"
-
-**Symptom:** `pytest projects/templates/template_search_project/tests/` exits with
-"coverage below 90".
-
-**Causes / fixes:**
-
-* Add tests for the missing branches reported in the coverage output.
-* Untested code in `src/` is the most common cause; `scripts/` is *not*
-  in the coverage source tree.
-
-## "ImportPathMismatchError when running tests"
-
-**Symptom:**
-```
-_pytest.pathlib.ImportPathMismatchError: ('tests.conftest', ...)
-```
-when running `pytest tests/ projects/templates/template_search_project/tests/`
-together.
-
-**Cause:** Both directories are named `tests/` and pytest's import path
-discovery confuses them.
-
-**Fix:** Run them separately. The infrastructure pipeline always invokes
-them in separate subprocess calls so this only affects ad-hoc usage.
+See [`rendering_pipeline.md`](rendering_pipeline.md) for actual producer commands
+and [`testing_philosophy.md`](testing_philosophy.md) for evidence boundaries.

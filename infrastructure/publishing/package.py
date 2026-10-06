@@ -1,10 +1,4 @@
-"""Publication package creation, submission checklists, and readiness validation.
-
-This module serves as the entry point, re-exporting from focused submodules:
-- checklist: Submission checklist generation
-- announcement: DOI badges and publication announcements
-- readiness: Publication readiness validation
-"""
+"""Publication package creation and included-file hash collection."""
 
 import hashlib
 from dataclasses import asdict
@@ -15,18 +9,6 @@ from typing import Any
 from infrastructure.core.files.operations import calculate_file_hash
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.publishing.models import PublicationMetadata
-
-# Re-exports for backwards compatibility
-from infrastructure.publishing.announcement import (  # noqa: F401
-    create_publication_announcement,
-    generate_doi_badge,
-)
-from infrastructure.publishing.checklist import (  # noqa: F401
-    create_submission_checklist,
-)
-from infrastructure.publishing.readiness import (  # noqa: F401
-    validate_publication_readiness,
-)
 
 logger = get_logger(__name__)
 
@@ -83,13 +65,5 @@ def create_publication_package(output_dir: Path, metadata: PublicationMetadata) 
 
 
 __all__ = [
-    # Re-exports from announcement
-    "create_publication_announcement",
-    "generate_doi_badge",
-    # Re-exports from checklist
-    "create_submission_checklist",
-    # Re-exports from readiness
-    "validate_publication_readiness",
-    # Local
     "create_publication_package",
 ]

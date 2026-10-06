@@ -21,8 +21,6 @@ The `infrastructure/project/` module provides project discovery, validation, and
   without authenticating or accessing a private project.
 - `load_promotion_attestation(path)` - Load the same contract from an offline
   YAML fixture or private-project change record.
-- `python -m infrastructure.project.promotion <attestation.yaml>` - Retained
-  positional form for a secret-free offline attestation decision.
 - `python -m infrastructure.project.promotion attestation <path> --as-of YYYY-MM-DD`
   - Explicit, deterministic attestation validation.
 - `python -m infrastructure.project.promotion candidate --project-root <path>`
@@ -64,13 +62,32 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `collect_entries(repo_root)` - build `ExemplarEntry` records from each public exemplar's README (H1 title + "When to use this template" section)
 - `ExemplarEntry` - structured roster entry; backs `docs/_generated/exemplar_roster.md`
 
-### Clean Export Smoke (`export_smoke.py`)
+### Package Discovery and Installed Acceptance
 
-- `smoke_exported_exemplar(...)` - export one exemplar into a clean tree, install it with its own `pyproject.toml`/lock, and import every top-level `src` target.
-- `smoke_public_exemplars(...)` - apply the same isolated contract to the canonical public roster.
-- Thin gate: `uv run python scripts/gates/exemplar_export_smoke.py` (use repeated `--project` for a focused run).
+- `package_discovery.discover_import_targets(src_root)` describes static source
+  import targets without executing or installing project code.
+- `installed_acceptance.run_installed_acceptance(...)` executes genuine admitted
+  root/public wheels across Python3.12–3.14 with locked transitives and declared
+  provider topology. The complete selection is78 cells; a diagnostic subset
+  cannot establish complete-matrix acceptance.
+- Thin gate: `scripts/gates/installed_public.py`; select each installed minor with
+  repeated `--python MINOR=/absolute/env/bin/python`, nominate the candidate build
+  epoch/provenance, and retain a fresh ignored evidence directory. See
+  [`docs/development/installed-wheel-matrix.md`](../../docs/development/installed-wheel-matrix.md).
+- `copy_exemplar`/`export_exemplar` remain the canonical source/resource copying
+  APIs. A source export or source-path import is distinct from installed evidence.
 
 ### Public Readiness (`public_readiness.py`)
+
+- `scripts/gates/public_readiness.py --acceptance-matrix` extends the same
+  bounded isolated matrix with source-bound runtime and own-source branch
+  coverage gates for every supported minor. Select dedicated installed
+  environments with repeated `--python MINOR=/absolute/env/bin/python`.
+  Whole collection, exact chunk union, actual child exits, finite deadlines,
+  project output locks, and source/deliverable custody are required; skips and
+  deselection cannot pass. Missing selected interpreters/test tools are blocked.
+  See [`public-runtime-matrix.md`](../../docs/development/public-runtime-matrix.md)
+  for setup, raw receipts, diagnostic scope, and proof boundaries.
 
 - `run_public_readiness(repo_root)` runs one isolated `stage_01_test.py`
   subprocess for every `PUBLIC_PROJECT_NAMES` entry and records stable
@@ -102,7 +119,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
   `template_template` distribution-name exception, Python-series proof,
   fail-closed source/test parsing, direct hydration compile/main-guard smoke,
   and `@pytest.mark.skip` parsing.
-- `build_ci_matrix()` / `validate_ci_matrix()` own the Python 3.10/3.14 matrix
+- `build_ci_matrix()` / `validate_ci_matrix()` own the supported Python runtime matrix
   contract consumed by `.github/workflows/ci.yml`.
 - Thin gate: `uv run python scripts/gates/public_capabilities.py`; it is also
   part of the unified health registry. `--json` emits the full stable manifest;
@@ -176,7 +193,7 @@ committed. The generated-artifact guard treats `.codegraph/*` as an offender.
 skip_combined_pytest = true  # omit from combined multi-project pytest union
 # Optional single-project Stage-01 verifier. The generic runner requires a
 # fresh structured receipt and independently rechecks the declared coverage floor.
-project_test_command = ["uv", "run", "--extra", "dev", "python", "scripts/run_full_verification.py"]
+project_test_command = ["python", "scripts/run_full_verification.py"]
 ```
 
 `project_test_command` is not filename auto-discovery and is not used by the
@@ -185,7 +202,7 @@ matrix does use the single-project Stage-01 lane and therefore honors the
 declaration. Its Python entry point must resolve within the project's `scripts/`
 tree; shell strings, traversal, symlink escape, missing or stale receipts,
 zero-test receipts, and missing/below-floor coverage all fail.
-The adapter overlays the workspace's pinned pytest/Coverage stack, writes and
+The adapter validates the existing interpreter against the workspace's exact pytest/Coverage stack without installation, writes and
 reads only the selected project's `coverage_project.json`, and requires real
 JUnit outcomes plus pytest-produced warning and discovery counts. Its
 6,900-second verifier deadline remains below the shared 7,200-second stage

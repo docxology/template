@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from literature.fixture_honesty import validate_fixture_honesty, validate_negative_control
+from template_literature_meta_analysis.literature.fixture_honesty import (
+    validate_fixture_honesty,
+    validate_negative_control,
+)
 
 
 def test_negative_control_fails() -> None:

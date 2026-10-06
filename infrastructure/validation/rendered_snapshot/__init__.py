@@ -1,8 +1,7 @@
 """Current rendered-input snapshot and validation-report commitments.
 
 The repository-boundary scan lives in ``._scan`` and the record-set builders
-in ``._records`` (split for the line-count gate). Every historical name is
-re-imported here so this package remains the single public import path.
+in ``._records``. The package root exposes the rendered-snapshot API.
 """
 
 from __future__ import annotations
@@ -34,23 +33,14 @@ from infrastructure.rendering.manuscript_discovery import discover_manuscript_fi
 from infrastructure.validation.output.artifacts import read_artifact_manifest
 from infrastructure.validation.rendered_snapshot._records import (
     _fingerprint,
-    _is_config_path,
     _project_records,
     _stage_records,
 )
 from infrastructure.validation.rendered_snapshot._scan import (
-    FileRecord as _FileRecord,
+    FileRecord,
     Fingerprint,
     RenderedSnapshotError,
-    cached_records as _cached_records,  # legacy test alias
-    cached_paths as _cached_paths,  # legacy alias (companion namespace)
-    is_relative_to as _is_relative_to,
-    iter_tree_files as _iter_tree_files,  # legacy test alias
-    lexical_project_root_for_selection as _lexical_project_root_for_selection,
-    relative_record as _relative_record,
-    relative_to_permitted as _relative_to_permitted,
-    repository_root_for as _repository_root_for,
-    source_repository_boundary as _source_repository_boundary,
+    lexical_project_root_for_selection,
 )
 
 _GENERATED_MANUSCRIPT_NAMES = frozenset(
@@ -127,7 +117,7 @@ def _output_records(
     project_root: Path,
     *,
     inventory_mode: OutputInventoryMode,
-) -> tuple[list[_FileRecord], EvidenceFile]:
+) -> tuple[list[FileRecord], EvidenceFile]:
     output_dir = project_root / "output"
     manifest_path = output_dir / "reports" / "artifact_manifest.json"
     try:
@@ -181,7 +171,7 @@ def _output_records(
         )
     if not current_by_path:
         raise RenderedSnapshotError("ARTIFACT_MANIFEST_EMPTY", "stable output tree is empty")
-    records = [_FileRecord(path, project_root / path) for path in sorted(current_by_path)]
+    records = [FileRecord(path, project_root / path) for path in sorted(current_by_path)]
     return records, _evidence_file(project_root, manifest_path)
 
 
@@ -280,7 +270,7 @@ def build_current_rendered_snapshot(repo_root: Path | str, project: str) -> Curr
             "PROJECT_LINK_INVALID",
             f"cannot resolve project source alias: {exc}",
         ) from exc
-    lexical_project_root = _lexical_project_root_for_selection(root, project, project_root)
+    lexical_project_root = lexical_project_root_for_selection(root, project, project_root)
     inventory_mode = output_inventory_mode_for_project(root, project_root)
     source_records, config_records = _project_records(
         root,

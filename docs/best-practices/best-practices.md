@@ -316,7 +316,7 @@ states.
 ```bash
 # Automated validation
 uv run python scripts/runner/execute_pipeline.py \
-  --project <qualified-name> --core-only
+  --project <qualified-name> --mode core
 
 # Or validate outputs directly
 uv run python scripts/pipeline/stage_04_validate.py \

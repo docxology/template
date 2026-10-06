@@ -8,6 +8,7 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.artifacts import output_inventory_mode_for_project
 from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.core.pipeline.summary import generate_pipeline_summary
+from infrastructure.core.pipeline.outcomes import outcome_for_result
 from infrastructure.core.project_paths import resolve_project_root
 
 logger = get_logger(__name__)
@@ -19,12 +20,13 @@ def write_pipeline_post_run_reports(
     repo_root: Path,
     project_name: str,
     skip_infra: bool,
+    runtime_output_dir: Path | None = None,
+    project_dir: Path | None = None,
 ) -> None:
     """Generate text summary, JSON/HTML reports, and verify pipeline log."""
-    project_dir = resolve_project_root(repo_root, project_name)
-    output_dir = project_dir / "output"
+    project_dir = resolve_project_root(repo_root, project_name) if project_dir is None else project_dir
+    output_dir = runtime_output_dir if runtime_output_dir is not None else project_dir / "output"
     reports_dir = output_dir / "reports"
-    reports_dir.mkdir(parents=True, exist_ok=True)
 
     total_duration = sum(r.duration for r in results)
     text_summary = generate_pipeline_summary(
@@ -48,7 +50,7 @@ def write_pipeline_post_run_reports(
             repo_root,
             project_name,
             project_dir=project_dir,
-            output_dir=output_dir,
+            output_dir=project_dir / "output",
             inventory_mode=output_inventory_mode_for_project(repo_root, project_dir),
         )
         log_file = output_dir / "logs" / "pipeline.log"
@@ -67,6 +69,10 @@ def write_pipeline_post_run_reports(
                     "exit_code": r.exit_code,
                     "duration": r.duration,
                     "error_message": r.error_message,
+                    "stage_key": r.stage_key or r.stage_name,
+                    "outcome": outcome_for_result(r).to_dict(),
+                    "input_digest": r.input_digest,
+                    "output_digest": r.output_digest,
                 }
                 for r in results
             ],
@@ -84,7 +90,8 @@ def write_pipeline_post_run_reports(
         for fmt, path in saved_files.items():
             logger.info("  • %s: %s", fmt.upper(), path.name)
     except (ImportError, OSError, KeyError, AttributeError) as exc:
-        logger.warning("Failed to generate comprehensive pipeline report: %s", exc, exc_info=True)
+        logger.error("Failed to generate comprehensive pipeline report: %s", exc, exc_info=True)
+        raise
 
     log_file = output_dir / "logs" / "pipeline.log"
     if log_file.exists():

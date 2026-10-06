@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
 import io
 import json
 import os
@@ -19,7 +18,16 @@ from typing import Literal
 import defusedxml.ElementTree as ET
 from coverage import Coverage
 
+from .verification_refresh import RefreshCache
 from .portable_execution import build_bounded_env, run_bounded_subprocess
+from .verification_execution import (
+    VerificationCommandFailed,
+    VerificationRuntimeUnavailable,
+    remaining_verification_budget,
+    selected_verification_python,
+    verification_deadline,
+)
+from ._verification_launcher import VerificationRuntime, prepare_verification_runtime
 from .semantic_coverage import (
     SEMANTIC_SHEAF_CERTIFICATE_COVERAGE_LABEL as _SEMANTIC_SHEAF_CERTIFICATE_COVERAGE_LABEL,
     SEMANTIC_SHEAF_CERTIFICATE_COVERAGE_SELECTORS as _SEMANTIC_SHEAF_CERTIFICATE_COVERAGE_SELECTORS,
@@ -45,59 +53,11 @@ def _relative_test_path(project_root: Path, path: Path) -> str:
     return str(path.relative_to(project_root))
 
 
-_REFRESHABLE_GENERATORS = frozenset(
-    {
-        "compose_manuscript.py",
-        "z_generate_manuscript_variables.py",
-        "generate_figures.py",
-        "generate_method_inventory.py",
-    }
-)
-_GENERATOR_OBSERVER_FLAGS = frozenset({"--check", "--list-tracks", "--validate-only"})
-_FINGERPRINT_EXCLUDED_PARTS = frozenset({".git", ".pytest_cache", ".venv", "htmlcov", "__pycache__"})
 _MAX_FAILURE_STREAM_CHARS = 4_000
 _FIXED_POINT_COVERAGE_MODULE = "tests/test_fixed_point_direct.py"
 _FIXED_POINT_COVERAGE_LABEL = "Fixed-point settlement checks"
 _DEFAULT_COMMAND_TIMEOUT_SECONDS = 1800
 _FIXED_POINT_COVERAGE_TIMEOUT_SECONDS = 2400
-
-
-def _project_state_fingerprint(project_root: Path) -> str:
-    """Return a deterministic source/output fingerprint for refresh caching.
-
-    The fingerprint intentionally includes both inputs and generated contract
-    outputs. A refresh is skipped only when the exact same generator already
-    observed this byte state after a successful run, so a downstream producer
-    changing any contract artifact naturally invalidates the cache.
-    """
-    digest = hashlib.sha256()
-    for path in sorted(project_root.rglob("*")):
-        if not path.is_file() or _FINGERPRINT_EXCLUDED_PARTS.intersection(path.parts):
-            continue
-        if path.name.startswith(".coverage"):
-            continue
-        relative = path.relative_to(project_root).as_posix()
-        digest.update(relative.encode("utf-8"))
-        digest.update(b"\0")
-        try:
-            digest.update(path.read_bytes())
-        except OSError:
-            # A concurrently written disposable output will be reflected by
-            # the next fingerprint; never turn cache bookkeeping into a gate.
-            continue
-        digest.update(b"\0")
-    return digest.hexdigest()
-
-
-def _generator_name(command: list[str]) -> str | None:
-    """Return the refreshable script name in a command, if any."""
-    if _GENERATOR_OBSERVER_FLAGS.intersection(command):
-        return None
-    for part in command:
-        name = Path(part).name
-        if name in _REFRESHABLE_GENERATORS:
-            return name
-    return None
 
 
 def _bounded_failure_detail(*, command_error: str, stdout: str, stderr: str) -> str:
@@ -121,84 +81,6 @@ def _command_timeout_seconds(label: str) -> int:
     if label == f"Coverage pass: {_FIXED_POINT_COVERAGE_LABEL}":
         return _FIXED_POINT_COVERAGE_TIMEOUT_SECONDS
     return _DEFAULT_COMMAND_TIMEOUT_SECONDS
-
-
-class _RefreshCache:
-    """In-run fixed-point cache for idempotent generator commands."""
-
-    def __init__(self, *, clock: Callable[[], float] = time.perf_counter) -> None:
-        """Initialize an empty in-run refresh cache."""
-        self._last_outputs: dict[str, str] = {}
-        self._clock = clock
-        self._events: list[dict[str, object]] = []
-
-    def run(
-        self,
-        project_root: Path,
-        command: list[str],
-        label: str,
-        command_runner: Callable[..., None],
-    ) -> None:
-        """Run a generator command, skipping it when the project state is unchanged.
-
-        If the command's generator is refreshable and the project fingerprint
-        matches the last observed state for that generator, the command is
-        skipped.  Otherwise the command is executed and the new fingerprint
-        is cached.
-        """
-        generator = _generator_name(command)
-        if generator is None:
-            started = self._clock()
-            command_runner(project_root, command, label)
-            self._events.append(
-                {
-                    "label": label,
-                    "generator": None,
-                    "action": "ran",
-                    "elapsed_seconds": round(self._clock() - started, 6),
-                }
-            )
-            return
-        before = _project_state_fingerprint(project_root)
-        if self._last_outputs.get(generator) == before:
-            print(f"\n==> {label}\n    fixed point unchanged; skipped {generator}")
-            self._events.append({"label": label, "generator": generator, "action": "skipped", "elapsed_seconds": 0.0})
-            return
-        started = self._clock()
-        command_runner(project_root, command, label)
-        self._last_outputs[generator] = _project_state_fingerprint(project_root)
-        self._events.append(
-            {
-                "label": label,
-                "generator": generator,
-                "action": "ran",
-                "elapsed_seconds": round(self._clock() - started, 6),
-            }
-        )
-
-    def receipt(self, *, baseline_seconds: float | None = None) -> dict[str, object]:
-        """Return timing/cache evidence without making a performance claim."""
-        elapsed_values: list[float] = []
-        for event in self._events:
-            elapsed = event.get("elapsed_seconds")
-            if not isinstance(elapsed, (int, float)) or isinstance(elapsed, bool):
-                raise ValueError("refresh receipt elapsed_seconds must be numeric")
-            elapsed_values.append(float(elapsed))
-        observed = round(sum(elapsed_values), 6)
-        reduction = None
-        target_met = None
-        if baseline_seconds is not None and baseline_seconds > 0:
-            reduction = round(1.0 - observed / baseline_seconds, 6)
-            target_met = reduction >= 0.30
-        return {
-            "schema_version": "template-active-inference/refresh-receipt/1",
-            "events": tuple(self._events),
-            "observed_seconds": observed,
-            "baseline_seconds": baseline_seconds,
-            "reduction_fraction": reduction,
-            "target_reduction_fraction": 0.30,
-            "target_met": target_met,
-        }
 
 
 def _all_test_modules(project_root: Path) -> list[str]:
@@ -458,10 +340,8 @@ def _coverage_command(
     junit_path: Path | None = None,
     evidence_path: Path | None = None,
 ) -> list[str]:
-    # Use the verifier's current interpreter so Stage 01's exact, injected
+    # Use the verifier's existing prepared interpreter so the validated exact
     # pytest/Coverage versions also produce the database and JUnit evidence.
-    # A nested ``uv run`` would ignore the outer overlay and silently fall
-    # back to the project's independently resolved environment.
     cmd = [sys.executable, "-m", "pytest", *selectors, "--cov=src", "-q"]
     cmd.extend(_profile_marker_args(profile))
     if append:
@@ -604,10 +484,16 @@ def _run(
     env: dict[str, str] | None = None,
     process_runner: Callable[..., subprocess.CompletedProcess[str]] | None = None,
     clock: Callable[[], float] = time.perf_counter,
+    deadline_monotonic: float | None = None,
+    runtime: VerificationRuntime | None = None,
 ) -> None:
     print(f"\n==> {label}")
     print(f"    $ {' '.join(shlex.quote(part) for part in cmd)}")
     start = clock()
+    timeout = float(_command_timeout_seconds(label))
+    if deadline_monotonic is not None:
+        timeout = min(timeout, remaining_verification_budget(deadline_monotonic))
+    command_deadline = deadline_monotonic if deadline_monotonic is not None else time.monotonic() + timeout
     process_env = os.environ.copy()
     process_env.setdefault("MPLBACKEND", "Agg")
     process_env.setdefault("PYTHONUNBUFFERED", "1")
@@ -625,6 +511,7 @@ def _run(
         _PROJECT_TEST_COMMAND_SHA_ENV,
     ):
         process_env.pop(receipt_key, None)
+    original: int | None
     if process_runner is not None:
         result = process_runner(
             cmd,
@@ -634,26 +521,75 @@ def _run(
             check=False,
         )
         returncode = result.returncode
+        original = returncode
+        timed_out = custody_refused = False
         detail = ""
     else:
+        if not cmd:
+            raise ValueError("Verifier command requires an explicit Python argv")
+        admitted = runtime or prepare_verification_runtime(project_root, cmd[0], command_deadline)
+        admitted.verify()
+        execution_command = admitted.command(cmd)
+        timeout = min(timeout, remaining_verification_budget(command_deadline))
         bounded = run_bounded_subprocess(
-            cmd,
+            execution_command,
             cwd=project_root,
             env=build_bounded_env(process_env),
-            timeout=_command_timeout_seconds(label),
+            timeout=timeout,
             capture_output=True,
         )
         returncode = bounded.returncode
+        original = bounded.original_returncode
+        timed_out = bounded.timed_out
+        custody_refused = bool(getattr(bounded, "custody_refused", False))
         detail = _bounded_failure_detail(
             command_error=bounded.command_error,
             stdout=bounded.stdout,
             stderr=bounded.stderr,
         )
+        try:
+            admitted.verify()
+        except (OSError, ValueError, VerificationRuntimeUnavailable) as exc:
+            custody_refused = True
+            detail += f"\nSelected runtime custody refused: {exc}"
     elapsed = clock() - start
     print(f"    status: {returncode}  elapsed: {elapsed:.1f}s")
-    if returncode != 0:
+    expired = time.monotonic() >= command_deadline
+    if returncode != 0 or expired or custody_refused:
         suffix = f":\n{detail}" if detail else ""
-        raise RuntimeError(f"{label} failed with return code {returncode}{suffix}")
+        diagnostic = f"{label} failed with return code {returncode}; original child exit {original}{suffix}"
+        if timed_out or expired:
+            diagnostic += "; whole-verifier/command deadline exhausted"
+        raise VerificationCommandFailed(
+            diagnostic, original_exit_code=original, timed_out=timed_out or expired, custody_refused=custody_refused
+        )
+
+
+def _bounded_session_runner(
+    project_root: Path, python: str, deadline: float, runner: Callable[..., None]
+) -> Callable[..., None]:
+    """Keep one selected interpreter and budget across producers and coverage."""
+    runtime: VerificationRuntime | None = None
+
+    def execute(root: Path, command: list[str], label: str, *, env: dict[str, str] | None = None) -> None:
+        nonlocal runtime
+        if root.absolute() != project_root.absolute():
+            raise ValueError("Verification command belongs to a different project")
+        remaining_verification_budget(deadline)
+        selected = list(command)
+        if selected and selected[0] == sys.executable:
+            selected[0] = python
+        if runner is _run:
+            if runtime is None:
+                runtime = prepare_verification_runtime(root, python, deadline)
+            _run(root, selected, label, env=env, deadline_monotonic=deadline, runtime=runtime)
+        elif env is None:
+            runner(root, selected, label)
+        else:
+            runner(root, selected, label, env=env)
+        remaining_verification_budget(deadline)
+
+    return execute
 
 
 def _is_empty_profile_selection_failure(exc: RuntimeError) -> bool:
@@ -766,9 +702,18 @@ def run_coverage_only(
     *,
     profile: VerificationProfile,
     command_runner: Callable[..., None] = _run,
+    deadline_monotonic: float | None = None,
 ) -> None:
     """Run canonical coverage groups without verifier-owned producer phases."""
+    started = time.monotonic()
     coverage_groups = _validated_coverage_test_groups(project_root)
+    python = selected_verification_python(project_root)
+    deadline = verification_deadline(
+        started,
+        [_command_timeout_seconds(f"Coverage pass: {label}") for label, _ in coverage_groups],
+        requested=deadline_monotonic,
+    )
+    command_runner = _bounded_session_runner(project_root, python, deadline, command_runner)
     _run_chunked_coverage(
         project_root,
         coverage_groups,
@@ -776,6 +721,7 @@ def run_coverage_only(
         receipt_context=None,
         command_runner=command_runner,
     )
+    remaining_verification_budget(deadline)
 
 
 def run_verification(
@@ -785,71 +731,111 @@ def run_verification(
     monolithic_coverage: bool = False,
     profile: VerificationProfile | None = None,
     command_runner: Callable[..., None] = _run,
+    deadline_monotonic: float | None = None,
 ) -> None:
     """Run verification, optionally applying a typed pytest profile."""
-    refresh_cache = _RefreshCache()
+    started = time.monotonic()
+    refresh_cache = RefreshCache()
     receipt_context = _project_test_receipt_context()
+    python = selected_verification_python(project_root, receipt_bound=receipt_context is not None)
     junit_paths: list[Path] = []
     evidence_paths: list[Path] = []
     profile_args = _profile_marker_args(profile)
     preflight = [
-        ("Compose manuscript sections", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
+        ("Compose manuscript sections", [python, "scripts/compose_manuscript.py"]),
         (
             "Validate compose contracts",
-            ["uv", "run", "python", "scripts/compose_manuscript.py", "--validate-only", "--strict"],
+            [python, "scripts/compose_manuscript.py", "--validate-only", "--strict"],
         ),
-        ("Run analytical sweep", ["uv", "run", "python", "scripts/run_analytical_sweep.py"]),
-        ("Simulate SI T-maze", ["uv", "run", "python", "scripts/simulate_si_tmaze.py"]),
-        ("Simulate SI graph-world", ["uv", "run", "python", "scripts/simulate_si_graph_world.py"]),
-        ("Compute analysis statistics", ["uv", "run", "python", "scripts/compute_statistics.py"]),
-        ("Render registered figures", ["uv", "run", "python", "scripts/generate_figures.py"]),
-        ("Render belief animation", ["uv", "run", "python", "scripts/render_animation.py"]),
-        ("Generate validation spine", ["uv", "run", "python", "scripts/generate_validation_spine.py"]),
-        ("Generate toy sweep tracks", ["uv", "run", "python", "scripts/generate_toy_sweep_tracks.py"]),
-        ("Generate formal interop tracks", ["uv", "run", "python", "scripts/generate_formal_interop_tracks.py"]),
-        ("Generate integration audit", ["uv", "run", "python", "scripts/generate_integration_audit.py"]),
-        ("Generate canonical sheaf tracks", ["uv", "run", "python", "scripts/generate_sheaf_tracks.py"]),
-        ("Generate manuscript variables", ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"]),
-        ("Settle post-figure fixed point", ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"]),
-        ("Final compose before output gate", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
-        ("Settle post-compose fixed point", ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"]),
-        ("Settled final compose before output gate", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
-        ("Validate generated outputs", ["uv", "run", "python", "scripts/validate_outputs.py"]),
-        ("Check documentation contract", ["uv", "run", "python", "scripts/check_documentation_contract.py", "--check"]),
-        ("Generate method inventory", ["uv", "run", "python", "scripts/generate_method_inventory.py"]),
-        ("Check method inventory", ["uv", "run", "python", "scripts/generate_method_inventory.py", "--check"]),
+        ("Run analytical sweep", [python, "scripts/run_analytical_sweep.py"]),
+        ("Simulate SI T-maze", [python, "scripts/simulate_si_tmaze.py"]),
+        ("Simulate SI graph-world", [python, "scripts/simulate_si_graph_world.py"]),
+        ("Compute analysis statistics", [python, "scripts/compute_statistics.py"]),
+        ("Render registered figures", [python, "scripts/generate_figures.py"]),
+        ("Render belief animation", [python, "scripts/render_animation.py"]),
+        ("Generate validation spine", [python, "scripts/generate_validation_spine.py"]),
+        ("Generate toy sweep tracks", [python, "scripts/generate_toy_sweep_tracks.py"]),
+        ("Generate formal interop tracks", [python, "scripts/generate_formal_interop_tracks.py"]),
+        ("Generate integration audit", [python, "scripts/generate_integration_audit.py"]),
+        ("Generate canonical sheaf tracks", [python, "scripts/generate_sheaf_tracks.py"]),
+        ("Generate manuscript variables", [python, "scripts/z_generate_manuscript_variables.py"]),
+        ("Settle post-figure fixed point", [python, "scripts/z_generate_manuscript_variables.py"]),
+        ("Final compose before output gate", [python, "scripts/compose_manuscript.py"]),
+        ("Settle post-compose fixed point", [python, "scripts/z_generate_manuscript_variables.py"]),
+        ("Settled final compose before output gate", [python, "scripts/compose_manuscript.py"]),
+        ("Validate generated outputs", [python, "scripts/validate_outputs.py"]),
+        ("Check documentation contract", [python, "scripts/check_documentation_contract.py", "--check"]),
+        ("Generate method inventory", [python, "scripts/generate_method_inventory.py"]),
+        ("Check method inventory", [python, "scripts/generate_method_inventory.py", "--check"]),
     ]
+    postflight = [
+        ("Pre-coverage compose refresh", [python, "scripts/compose_manuscript.py"]),
+        ("Pre-coverage fixed-point refresh", [python, "scripts/z_generate_manuscript_variables.py"]),
+        ("Pre-coverage figure refresh", [python, "scripts/generate_figures.py"]),
+        (
+            "Pre-coverage post-figure fixed-point refresh",
+            [python, "scripts/z_generate_manuscript_variables.py"],
+        ),
+        ("Pre-coverage final compose refresh", [python, "scripts/compose_manuscript.py"]),
+        (
+            "Pre-coverage post-compose fixed-point refresh",
+            [python, "scripts/z_generate_manuscript_variables.py"],
+        ),
+        ("Pre-coverage settled final compose refresh", [python, "scripts/compose_manuscript.py"]),
+        ("Pre-coverage output gate", [python, "scripts/validate_outputs.py"]),
+        (
+            "Pre-coverage documentation gate",
+            [python, "scripts/check_documentation_contract.py", "--check"],
+        ),
+        (
+            "Pre-coverage method inventory gate",
+            [python, "scripts/generate_method_inventory.py", "--check"],
+        ),
+    ]
+    final_refresh = [
+        ("Post-coverage compose refresh", [python, "scripts/compose_manuscript.py"]),
+        ("Post-coverage fixed-point refresh", [python, "scripts/z_generate_manuscript_variables.py"]),
+        ("Post-coverage figure refresh", [python, "scripts/generate_figures.py"]),
+        (
+            "Post-coverage post-figure fixed-point refresh",
+            [python, "scripts/z_generate_manuscript_variables.py"],
+        ),
+        ("Post-coverage final compose refresh", [python, "scripts/compose_manuscript.py"]),
+        (
+            "Post-coverage post-compose fixed-point refresh",
+            [python, "scripts/z_generate_manuscript_variables.py"],
+        ),
+        ("Post-coverage settled final compose refresh", [python, "scripts/compose_manuscript.py"]),
+        ("Post-coverage output gate", [python, "scripts/validate_outputs.py"]),
+        (
+            "Post-coverage documentation gate",
+            [python, "scripts/check_documentation_contract.py", "--check"],
+        ),
+        (
+            "Post-coverage method inventory gate",
+            [python, "scripts/generate_method_inventory.py", "--check"],
+        ),
+    ]
+    chunk_groups = [] if skip_chunks else _chunked_test_groups(project_root)
+    coverage_groups = [] if monolithic_coverage else _validated_coverage_test_groups(project_root)
+    labels = [label for label, _ in (*preflight, *postflight, *final_refresh, *chunk_groups)]
+    labels.extend(
+        ["Full suite coverage pass"]
+        if monolithic_coverage
+        else [f"Coverage pass: {label}" for label, _ in coverage_groups]
+    )
+    deadline = verification_deadline(
+        started, [_command_timeout_seconds(label) for label in labels], requested=deadline_monotonic
+    )
+    command_runner = _bounded_session_runner(project_root, python, deadline, command_runner)
+
     for label, cmd in preflight:
         refresh_cache.run(project_root, cmd, label, command_runner)
 
     if not skip_chunks:
-        for label, modules in _chunked_test_groups(project_root):
-            command_runner(project_root, ["uv", "run", "pytest", *modules, *profile_args, "-q"], label)
+        for label, modules in chunk_groups:
+            command_runner(project_root, [python, "-m", "pytest", *modules, *profile_args, "-q"], label)
 
-    postflight = [
-        ("Pre-coverage compose refresh", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
-        ("Pre-coverage fixed-point refresh", ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"]),
-        ("Pre-coverage figure refresh", ["uv", "run", "python", "scripts/generate_figures.py"]),
-        (
-            "Pre-coverage post-figure fixed-point refresh",
-            ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"],
-        ),
-        ("Pre-coverage final compose refresh", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
-        (
-            "Pre-coverage post-compose fixed-point refresh",
-            ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"],
-        ),
-        ("Pre-coverage settled final compose refresh", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
-        ("Pre-coverage output gate", ["uv", "run", "python", "scripts/validate_outputs.py"]),
-        (
-            "Pre-coverage documentation gate",
-            ["uv", "run", "python", "scripts/check_documentation_contract.py", "--check"],
-        ),
-        (
-            "Pre-coverage method inventory gate",
-            ["uv", "run", "python", "scripts/generate_method_inventory.py", "--check"],
-        ),
-    ]
     for label, cmd in postflight:
         refresh_cache.run(project_root, cmd, label, command_runner)
 
@@ -883,7 +869,6 @@ def run_verification(
             command_runner,
         )
     else:
-        coverage_groups = _validated_coverage_test_groups(project_root)
         coverage_junit_paths, coverage_evidence_paths = _run_chunked_coverage(
             project_root,
             coverage_groups,
@@ -899,31 +884,13 @@ def run_verification(
         junit_paths.extend(coverage_junit_paths)
         evidence_paths.extend(coverage_evidence_paths)
 
-    final_refresh = [
-        ("Post-coverage compose refresh", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
-        ("Post-coverage fixed-point refresh", ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"]),
-        ("Post-coverage figure refresh", ["uv", "run", "python", "scripts/generate_figures.py"]),
-        (
-            "Post-coverage post-figure fixed-point refresh",
-            ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"],
-        ),
-        ("Post-coverage final compose refresh", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
-        (
-            "Post-coverage post-compose fixed-point refresh",
-            ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"],
-        ),
-        ("Post-coverage settled final compose refresh", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
-        ("Post-coverage output gate", ["uv", "run", "python", "scripts/validate_outputs.py"]),
-        (
-            "Post-coverage documentation gate",
-            ["uv", "run", "python", "scripts/check_documentation_contract.py", "--check"],
-        ),
-        (
-            "Post-coverage method inventory gate",
-            ["uv", "run", "python", "scripts/generate_method_inventory.py", "--check"],
-        ),
-    ]
     for label, cmd in final_refresh:
         refresh_cache.run(project_root, cmd, label, command_runner)
+    remaining_verification_budget(deadline)
     if receipt_context is not None:
-        _write_project_test_receipt(project_root, receipt_context, junit_paths, evidence_paths)
+        try:
+            _write_project_test_receipt(project_root, receipt_context, junit_paths, evidence_paths)
+            remaining_verification_budget(deadline)
+        except BaseException:
+            receipt_context[0].unlink(missing_ok=True)
+            raise

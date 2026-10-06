@@ -1,55 +1,57 @@
-# Preface
+# Preface {#sec:preface}
 
-<!-- This is a STUB preface. It is structurally complete but deliberately
-generic: replace the placeholder prose with your own voice, motivation, and
-specifics. Keep the section shape (purpose, audience, how to use the book) — the
-manuscript-integrity tests and the quality audit expect a preface to exist. -->
+## Purpose
 
-## Why This Book Exists
+This book introduces systems, quantitative models and reproducible computational
+reasoning through a small tested backbone. Its aim is to help a learner say what
+an equation represents, what a computation checks and what observation would
+challenge a prediction. A precise number is useful only when its meaning and
+custody remain visible. The chapters therefore pair equations with input domains,
+worked arithmetic, deterministic figures, labs and answer discussions.
 
-<!-- STUB: purpose --> *TKTK — state, in two or three paragraphs, the problem
-this book solves and why it is worth a reader's time. What gap in the existing
-literature does it fill? What will a reader be able to do after finishing it that
-they could not do before?*
+The examples are instructional. A smooth growth curve does not document a real
+population; a six-row fixture does not report a new experiment. Synthetic inputs
+make selected mathematical properties transparent, while the bundled case-study
+CSV binds one worked example to exact source values. The distinction between
+these demonstrations and empirical research is part of the lesson, not an
+incidental disclaimer.
 
-This template is domain-neutral by design. Wherever the sample chapters speak of
-"systems", "dynamics", or "regulation", substitute the concepts of your own
-field. The structure — orientation, fundamentals, core systems, applications —
-generalises across most technical subjects; the content is yours to supply.
+## Audience and prerequisites
 
-## Who This Book Is For
+Readers need basic arithmetic, familiarity with graphs and a willingness to work
+through a short Python call. Derivatives and logarithms are explained where they
+enter a formalism, and the mathematical review supplies additional examples.
+The book is suitable for a guided introductory course or self-directed study.
+It is not a domain-specific engineering design manual, an experimental protocol
+or a claim that a single family of models explains every system.
 
-<!-- STUB: audience --> *TKTK — describe the intended reader. Assumed background?
-A prerequisite course or a specific level of mathematical maturity? Whether the
-book suits self-study, a one-semester course, or a reference shelf.*
+## How to use the book
 
-The book assumes the quantitative foundations laid out in **Part 0** and nothing
-more. A reader comfortable with that material can follow every chapter.
+Begin with a question and a written prediction before running a computation.
+Read the quantities and assumptions in the parameter table. Run the example in
+a fresh interpreter, preserve its output and compare it with the stated boundary
+case. In the lab, change one input while holding the rest fixed. In the question
+bank, explain your reasoning before reading the solution. A failed expectation
+is useful evidence if its inputs and cause remain inspectable.
 
-## How to Use the Labs and Question Banks
+The units progress from observation and methods to model components, dynamic
+systems and applications. Cross-references connect each chapter to its lab and
+questions, while the glossary defines recurring terms. The reference appendices
+cover notation, derivations, authoring conventions, rendering primitives and a
+section-based index. Their purpose is to support the authored examples rather
+than hide unfinished sections behind an attractive table of contents.
 
-Each chapter is paired with two companion documents:
+## Computational record
 
-- **A lab** (under [`labs/`](labs/)) — a guided, hands-on exercise that puts the
-  chapter's worked formalism to work. Labs are meant to be *done*, not just read:
-  run the tested functions in `textbook.models`, vary the parameters, and observe
-  how the predictions change. Work the lab immediately after reading the chapter,
-  while the ideas are fresh.
-- **A question bank** (under [`questions/`](questions/)) — self-check questions
-  that confirm you can recall and apply the chapter's load-bearing claims. Use it
-  as a diagnostic: a question you cannot answer points you back to a specific
-  section.
+The mathematical functions live in `textbook.models`; figures and analysis
+scripts call the tested source rather than maintaining separate formulas.
+Tests exercise real arrays and files, with explicit negative controls for the
+content gate. The canonical complete-manuscript audit checks every configured
+rendered section. The separate scaffold API still creates drafts for new books,
+and tests those drafts independently of this finished canonical content.
 
-Instructors can assign the lab as homework and draw exam or quiz items from the
-question bank. Because both are generated from the same `config.yaml` as the
-chapters, they stay in lockstep with the manuscript as it grows.
-
-## A Note on Reproducibility
-
-<!-- STUB --> Every equation in this book is implemented as a tested function and
-every figure is generated deterministically from code. Nothing in the prose is
-computed by hand. If you build the book yourself you will get byte-identical
-figures and numbers — see [`README.md`](README.md) for the build commands.
-
-<!-- STUB: sign off with your name, place, and date once the book is written. -->
-*— The Author, TKTK (place), TKTK (date)*
+A passing content gate establishes structure and absence of declared draft
+markers. It does not establish scientific validity, hosted execution or a new
+publication deposit. Historical publication identifiers continue to identify
+the releases to which they were assigned. This source is an authored teaching
+record whose computations and interpretation can be inspected and improved.

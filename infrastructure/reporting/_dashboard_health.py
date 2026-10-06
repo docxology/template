@@ -461,7 +461,6 @@ def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> 
                     "render": "Render",
                     "output validation": "Validate",
                     "validate": "Validate",
-                    "llm scientific review": "LLM Review",
                     "llm review": "LLM Review",
                     "llm translations": "LLM Translations",
                     "translations": "LLM Translations",

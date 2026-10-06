@@ -24,19 +24,23 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from config_loader import load_fulltext_config, load_reproducibility_config, resolve_fulltext_directory
-from config_validation import require_valid_config
-from knowledge_graph.llm_config import LLMConfig
-from literature.corpus import Corpus
-from literature.fulltext_download import safe_filename
-from reproducibility.extraction import extract_workflow_graphs_llm
-from reproducibility.models import (
+from template_literature_meta_analysis.config_loader import (
+    load_fulltext_config,
+    load_reproducibility_config,
+    resolve_fulltext_directory,
+)
+from template_literature_meta_analysis.config_validation import require_valid_config
+from template_literature_meta_analysis.knowledge_graph.llm_config import LLMConfig
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.fulltext_download import safe_filename
+from template_literature_meta_analysis.reproducibility.extraction import extract_workflow_graphs_llm
+from template_literature_meta_analysis.reproducibility.models import (
     WorkflowGraph,
     append_workflow_graphs,
     deserialize_workflow_graphs,
     get_processed_paper_ids,
 )
-from reproducibility.scoring import (
+from template_literature_meta_analysis.reproducibility.scoring import (
     ContentWeights,
     ReproducibilityScore,
     StructuralWeights,
@@ -149,8 +153,8 @@ def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path
     run_logger.info("Loaded %d papers", len(papers))
 
     # Deterministic subsampling for the LLM stage.
-    from config_loader import _load_yaml
-    from literature.sampling import load_sampling_config, sample_papers
+    from template_literature_meta_analysis.config_loader import _load_yaml
+    from template_literature_meta_analysis.literature.sampling import load_sampling_config, sample_papers
 
     raw_cfg = _load_yaml(config_path) if config_path.exists() else {}
     project_cfg = raw_cfg.get("project_config", {})

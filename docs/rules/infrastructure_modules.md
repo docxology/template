@@ -259,7 +259,7 @@ Infrastructure modules are integrated into the build pipeline through:
 **Pipeline Entry Points**: Two orchestrators available:
 
 - `./run.sh --pipeline`: default full run (`STAGE_NAMES` numbered `[1/N]`–`[N/N]`, clean as `[0/N]`); optional LLM stages are included when configured/enabled
-- `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`: core pipeline without LLM stages
+- `uv run python scripts/runner/execute_pipeline.py --project {name} --mode core`: core pipeline without LLM stages
 
 Update these scripts to discover and use new infrastructure modules as needed.
 

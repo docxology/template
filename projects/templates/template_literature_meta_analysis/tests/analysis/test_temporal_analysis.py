@@ -8,8 +8,8 @@ import math
 
 import pytest
 
-from analysis.temporal_analysis import compute_temporal_metrics, estimate_growth_rate
-from literature.models import Paper
+from template_literature_meta_analysis.analysis.temporal_analysis import compute_temporal_metrics, estimate_growth_rate
+from template_literature_meta_analysis.literature.models import Paper
 
 
 # ── Helpers ───────────────────────────────────────────────────────────

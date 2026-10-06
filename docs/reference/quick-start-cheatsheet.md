@@ -16,7 +16,7 @@ uv sync
 
 # List projects, then build the public control-positive exemplar
 ./run.sh list-projects
-./run.sh pipeline --project templates/template_code_project --core-only
+./run.sh pipeline --project templates/template_code_project --mode core
 ```
 
 ### Daily Workflow Commands
@@ -37,7 +37,7 @@ open output/templates/template_code_project/pdf/template_code_project_combined.p
 ### Build Pipeline Commands
 ```bash
 # pipeline execution
-./run.sh pipeline --project templates/template_code_project --core-only
+./run.sh pipeline --project templates/template_code_project --mode core
 
 # With specific stage
 uv run python scripts/pipeline/stage_00_setup.py --project templates/template_code_project
@@ -87,7 +87,7 @@ vim projects/templates/template_code_project/manuscript/08_new_section.md
 echo "# New Section {#sec:new_section}" > projects/templates/template_code_project/manuscript/08_new_section.md
 
 # 3. Rebuild
-./run.sh pipeline --project templates/template_code_project --core-only
+./run.sh pipeline --project templates/template_code_project --mode core
 ```
 
 ### Add a New Figure
@@ -209,7 +209,7 @@ Reference it: [@fig:my_figure]
 1. **Always run tests first**: `uv run pytest projects/templates/template_code_project/tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `projects/{name}/src/`
 3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
-4. **Run pipeline**: `./run.sh pipeline --project <qualified-name> --core-only`
+4. **Run pipeline**: `./run.sh pipeline --project <qualified-name> --mode core`
    executes the core DAG path
 5. **Pipeline stages**: use the [generated stage table](../core/workflow.md#canonical-stage-table-generated)
    for the current selection and order

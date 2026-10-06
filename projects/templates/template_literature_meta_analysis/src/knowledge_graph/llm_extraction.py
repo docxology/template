@@ -8,10 +8,10 @@ from pathlib import Path
 
 import requests
 
-from knowledge_graph.llm_client import call_ollama, parse_llm_response
-from knowledge_graph.llm_config import LLMConfig
-from knowledge_graph.llm_prompts import build_prompt, hypothesis_dicts
-from knowledge_graph.nanopublication import (
+from template_literature_meta_analysis.knowledge_graph.llm_client import call_ollama, parse_llm_response
+from template_literature_meta_analysis.knowledge_graph.llm_config import LLMConfig
+from template_literature_meta_analysis.knowledge_graph.llm_prompts import build_prompt, hypothesis_dicts
+from template_literature_meta_analysis.knowledge_graph.nanopublication import (
     Assertion,
     Nanopublication,
     append_nanopubs,
@@ -19,7 +19,7 @@ from knowledge_graph.nanopublication import (
     deserialize_nanopubs,
     get_processed_paper_ids,
 )
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 logger = logging.getLogger(__name__)
 

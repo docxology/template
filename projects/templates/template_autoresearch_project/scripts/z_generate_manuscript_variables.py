@@ -8,11 +8,15 @@ from pathlib import Path
 from _bootstrap import ensure_project_paths
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-ensure_project_paths(PROJECT_ROOT)
-
 REPO_ROOT = next(
-    candidate for candidate in (PROJECT_ROOT, *PROJECT_ROOT.parents) if (candidate / "infrastructure").is_dir()
+    (
+        candidate
+        for candidate in (PROJECT_ROOT, *PROJECT_ROOT.parents)
+        if (candidate / "infrastructure").is_dir() and (candidate / "pyproject.toml").is_file()
+    ),
+    PROJECT_ROOT,
 )
+ensure_project_paths(PROJECT_ROOT, repo_root=REPO_ROOT)
 
 from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree  # noqa: E402
 from template_autoresearch_project.manuscript.manuscript_variables import (

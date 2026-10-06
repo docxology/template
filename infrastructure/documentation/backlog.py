@@ -34,7 +34,9 @@ _HEADING_ID = re.compile(r"^#{3,4}\s+`?([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)`?(?:\s|$)
 _TABLE_ID = re.compile(r"^\s*\|\s*`?([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)`?\s*\|")
 _HISTORICAL_HEADING = re.compile(
     r"^#{2,3}\s+(?:Shipped|Log|Pass(?: log)?|Fixes completed|Review fixes|Accuracy pass|"
-    r"Historical evidence|Still open|Round(?:-|\s)|Measured|20\d{2})\b",
+    r"Historical evidence|(?:Current )?Validation evidence|"
+    r"Current (?:test and validator|configurable-surface) contract|"
+    r"Still open|Round(?:-|\s)|Measured|20\d{2})\b",
     re.IGNORECASE,
 )
 _ROTATING_PROJECT = re.compile(r"projects/(?:active|working|ongoing|archive|published|other)/")
@@ -49,18 +51,10 @@ _BACKLOG_TABLE_HEADER = (
     "negative control",
 )
 _REQUIRED_EXEMPLAR_SECTIONS = (
-    "Integrity and template-status gaps",
-    "Configurable-surface gaps",
-    "Documentation and signposting gaps",
-    "Test and validator gaps",
     "Minor upcoming",
     "Medium upcoming",
     "Major upcoming",
 )
-_EXEMPLAR_SECTION_ALIASES = {
-    "Configurable-surface gaps": frozenset({"Configurable-surface gaps", "Current configurable-surface contract"}),
-    "Test and validator gaps": frozenset({"Test and validator gaps", "Current test and validator contract"}),
-}
 _REMOVED_HISTORY_SECTION = re.compile(
     r"^##\s+(?:Current validation evidence|Ordered improvement ladder|Promotion Rule|"
     r"Promotion rule|Active backlog index)$",
@@ -76,6 +70,21 @@ _BLOCKER_LANGUAGE = re.compile(
     r"license|licen[cs]e|credential|available|availability|authority)",
     re.IGNORECASE,
 )
+_COMPLETED_EVIDENCE = re.compile(
+    r"^\s*(?:[-*+]\s+)?\[[xX]\]\s+|^\s*[-*+]\s+(?:Completed|Shipped|Done)(?::|\s)|"
+    r"\b\d[\d,]*\s+tests?\s+(?:green|passed)\b|\b\d[\d,]*(?:\.\d+)?%\s+coverage\s+(?:on|achieved)\b",
+    re.IGNORECASE,
+)
+
+
+def is_completed_backlog_evidence(line: str) -> bool:
+    """Identify completion items and measured pass receipts in active planning."""
+    return bool(_COMPLETED_EVIDENCE.search(line))
+
+
+def is_historical_backlog_heading(line: str) -> bool:
+    """Identify headings whose contents belong in a dated evidence record."""
+    return bool(_HISTORICAL_HEADING.match(line) or _REMOVED_HISTORY_SECTION.match(line))
 
 
 @dataclass(frozen=True)
@@ -152,8 +161,7 @@ def _validate_file(
     required = ("Live baseline and constraints", "Backlog operating rules") if is_root else _REQUIRED_EXEMPLAR_SECTIONS
     headings = {line.lstrip("# ").strip() for line in lines if line.startswith("## ")}
     for section in required:
-        accepted = _EXEMPLAR_SECTION_ALIASES.get(section, frozenset({section}))
-        if not headings.intersection(accepted):
+        if section not in headings:
             findings.append(_finding(path, 1, "error", "required_section", f"missing required section: {section}"))
 
     has_backlog_table = False
@@ -166,6 +174,18 @@ def _validate_file(
             cells = tuple(cell.strip().casefold() for cell in line.strip().strip("|").split("|"))
             if cells == _BACKLOG_TABLE_HEADER:
                 has_backlog_table = True
+            elif has_backlog_table and len(cells) == len(_BACKLOG_TABLE_HEADER):
+                separator = all(value and set(value) <= {"-", ":"} for value in cells)
+                if not separator and not _TABLE_ID.match(line):
+                    findings.append(
+                        _finding(
+                            path,
+                            line_number,
+                            "error",
+                            "stable_id",
+                            "active backlog rows require a stable uppercase work ID",
+                        )
+                    )
         # Count declarations, not prose references. This keeps acceptance
         # criteria and dependency graphs from looking like duplicate rows.
         heading_match = _HEADING_ID.match(line)
@@ -288,6 +308,16 @@ def _validate_file(
                     "public backlog must not hard-code private or rotating project paths",
                 )
             )
+        if is_completed_backlog_evidence(line):
+            findings.append(
+                _finding(
+                    path,
+                    line_number,
+                    "error",
+                    "completed_evidence",
+                    "completed items and measured pass receipts belong in a dated evidence record, not TODO.md",
+                )
+            )
 
     heading_seen: set[str] = set()
     for identifier in heading_identifiers:
@@ -348,6 +378,16 @@ def _validate_file(
                 )
             )
     return findings, tuple(identifiers)
+
+
+def validate_exemplar_backlog(
+    path: Path,
+    *,
+    public_names: Iterable[str] = PUBLIC_PROJECT_NAMES,
+) -> tuple[BacklogFinding, ...]:
+    """Validate one exemplar's future-only stable work contract."""
+    findings, _identifiers = _validate_file(path, is_root=False, public_names=public_names)
+    return tuple(findings)
 
 
 def validate_public_backlogs(
@@ -419,6 +459,9 @@ __all__ = [
     "ALLOWED_BACKLOG_STATUSES",
     "BacklogStatus",
     "format_backlog_report",
+    "is_completed_backlog_evidence",
+    "is_historical_backlog_heading",
     "public_backlog_paths",
+    "validate_exemplar_backlog",
     "validate_public_backlogs",
 ]

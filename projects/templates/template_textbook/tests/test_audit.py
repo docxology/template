@@ -20,8 +20,8 @@ def test_run_manuscript_audit_real_project_passes():
     report = run_manuscript_audit(PROJECT, config)
     assert report.problems == ()
     assert report.total_words > 0
-    assert report.total_stubs > 0
-    assert len(report.rows) == len(config["units"]) + sum(len(unit.get("chapters", [])) for unit in config["units"])
+    assert report.total_stubs == 0
+    assert len(report.rows) == 49  # 12 chapters, 4 intros, 24 companions, 7 references, 2 front matter
 
 
 def test_format_audit_table_includes_totals():
@@ -172,7 +172,7 @@ def test_run_manuscript_audit_require_complete_accepts_filled_section(tmp_path):
     assert report.rows[0].endswith("OK")
 
 
-def test_audit_cli_require_complete_reports_counts_and_fails():
+def test_audit_cli_require_complete_reports_counts_and_passes():
     result = subprocess.run(
         [sys.executable, str(PROJECT / "scripts" / "audit_textbook_quality.py"), "--require-complete"],
         cwd=PROJECT,
@@ -182,13 +182,13 @@ def test_audit_cli_require_complete_reports_counts_and_fails():
         check=False,
     )
 
-    assert result.returncode == 1
-    assert "stub markers remaining" in result.stdout
-    assert "INCOMPLETE" in result.stdout
+    assert result.returncode == 0
+    assert "zero stub markers" in result.stdout
+    assert "INCOMPLETE" not in result.stdout
     assert "Totals:" in result.stdout
 
 
-def test_audit_cli_default_allows_scaffold_and_explains_mode():
+def test_audit_cli_default_accepts_authored_book():
     result = subprocess.run(
         [sys.executable, str(PROJECT / "scripts" / "audit_textbook_quality.py")],
         cwd=PROJECT,
@@ -199,9 +199,8 @@ def test_audit_cli_default_allows_scaffold_and_explains_mode():
     )
 
     assert result.returncode == 0
-    assert "stub markers remain" in result.stdout
-    assert "allowed in default mode" in result.stdout
-    assert "--require-complete" in result.stdout
+    assert "all declared manuscript files present" in result.stdout
+    assert "allowed in default mode" not in result.stdout
 
 
 def test_run_manuscript_audit_flags_invalid_unit_intro(tmp_path):

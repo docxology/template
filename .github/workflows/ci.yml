@@ -75,6 +75,7 @@ jobs:
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
       infra_matrix: ${{ steps.matrix.outputs.infra_matrix }}
+      required_jobs: ${{ steps.matrix.outputs.required_jobs }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -89,21 +90,10 @@ jobs:
           set -euo pipefail
           matrix="$(uv run python scripts/gates/public_capabilities.py --ci-matrix-json)"
           echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
-          # CI-FAST-INFRA-COMPAT-1: the infra test matrix is event-shaped here —
-          # full py3.10-3.13 compatibility legs on push/schedule/dispatch, only
-          # the coverage-bearing py3.14 leg on PRs. `matrix` context is NOT
-          # valid in a job-level `if` (actionlint rejects it), so the shape is
-          # decided in this step and passed as a dynamic matrix. Known cost,
-          # stated honestly: infra-layer 3.10-3.13 compatibility is proven on
-          # the same-day main push / weekly lane instead of pre-merge.
-          # Project-floor py3.10 coverage is NOT weakened - project matrix
-          # cells keep py3.10 + py3.14 on PRs.
-          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
-            versions='["3.14"]'
-          else
-            versions='["3.10", "3.11", "3.12", "3.13", "3.14"]'
-          fi
-          echo "infra_matrix={\"os\":[\"ubuntu-latest\"],\"python-version\":${versions},\"include\":[{\"os\":\"macos-latest\",\"python-version\":\"3.14\"}]}" >> "$GITHUB_OUTPUT"
+          required_jobs="$(uv run python scripts/gates/ci_policy.py)"
+          echo "required_jobs=${required_jobs}" >> "$GITHUB_OUTPUT"
+          infra_matrix="$(uv run python scripts/gates/infra_ci_partition.py --matrix)"
+          echo "infra_matrix=${infra_matrix}" >> "$GITHUB_OUTPUT"
 
   # ───────────────────────────────────────────────────────────────────────────
   # Job 0b — Actionlint (workflow syntax gate; independent of project setup)
@@ -254,7 +244,6 @@ jobs:
     name: Static Health Report
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: [lint]
     permissions:
       contents: read
     steps:
@@ -344,10 +333,10 @@ jobs:
           --timeout=120
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Job 3 — Infrastructure Tests (matrix: ubuntu + macos × Python 3.10–3.14)
+# Job 3 — Infrastructure Tests (matrix: ubuntu + macos × Python 3.12–3.14)
 # ─────────────────────────────────────────────────────────────────────────────
   test-infra:
-    name: "Infra Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
+    name: "Infra Tests (${{ matrix.os }}, Python ${{ matrix.python-version }}, shard ${{ matrix.shard }})"
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     needs: [verify-no-mocks, detect-projects]
@@ -357,19 +346,11 @@ jobs:
       # Override the repository's .python-version so uv uses the interpreter
       # selected by this matrix cell, including its moving patch release.
       UV_PYTHON: ${{ matrix.python-version }}
-    # CI-FAST-INFRA-COMPAT-1: the matrix comes from detect-projects —
-    # PR lanes run only the py3.14 ubuntu cell (coverage evidence) and the
-    # macOS 3.14 smoke; the py3.10-3.13 compatibility legs run on push-to-main,
-    # weekly schedule, and manual dispatch. Those legs measured 6-8 min each
-    # and are never the PR critical path, but they occupy 4 runner slots that
-    # measurably deepen wave-2 queue spill for the ~48-cell project matrix.
-    # A job-level `if` with `matrix` context is invalid (actionlint rejects
-    # it), so the event shape is decided in the detect-projects step above.
+    # The validated matrix covers every supported runtime on every CI event.
     strategy:
       fail-fast: false
-      # macOS runs only the 3.14 smoke (macOS legs are ~10x cost and rarely
-      # surface OS-specific project breakage beyond what the 3.12 cell
-      # catches).
+      # Keep the existing OS/runtime coverage and partition every selected
+      # module completely. Independent runner cells bound shared CPU pressure.
       matrix: ${{ fromJSON(needs.detect-projects.outputs.infra_matrix) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -379,7 +360,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Sync dependencies (dev + optional test groups)
-        run: uv sync --group public-exemplars
+        run: uv sync --locked --group public-exemplars --group installed-build
 
       - name: Verify selected Python minor
         run: |
@@ -392,6 +373,17 @@ jobs:
 
       - name: Install pandoc
         uses: pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e # v1.1.1
+
+      - name: Prepare actual PDF observer tools
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends poppler-utils
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            brew install poppler
+          fi
+          pdftoppm -v
+          pdffonts -v
 
       # TeX Live so the xelatex/bibtex-gated rendering tests run instead of
       # skipping (they assert a real PDF lands on disk). Linux lanes only:
@@ -421,15 +413,17 @@ jobs:
           # Coverage instrumentation is memory-intensive on macOS; keep that
           # runner deterministic while retaining wider auto-parallelism on Linux.
           TEMPLATE_CI_XDIST_WORKERS: ${{ matrix.os == 'macos-latest' && '2' || 'auto' }}
-          # CI-COV-SCOPE-1: only the py3.14-ubuntu cell uploads to Codecov, so
-          # only that cell pays for instrumentation and enforces the 60% floor.
-          INFRA_COV_FLAGS: ${{ (matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest') && '--cov=infrastructure --cov-report=term-missing --cov-report=xml:coverage-infra.xml --cov-fail-under=60' || '' }}
+          # All four py3.14/Linux shards instrument real execution. The required
+          # coverage-infra job merges their complete union and enforces 60%.
+          INFRA_COV_FLAGS: ${{ (matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest') && '--cov=infrastructure --cov-report= --cov-fail-under=0' || '' }}
         # -n auto parallelizes across runner cores (pytest-xdist). Scope-based
         # distribution keeps subprocess-heavy test modules together, avoiding
         # intermittent worker replacement under work-stealing contention.
         run: |
           # shellcheck disable=SC2086  # INFRA_COV_FLAGS is intentionally word-split
           uv run pytest tests/infra_tests/ \
+            -p infrastructure.core.testing.ci_infra_shard_plugin \
+            --infra-ci-shard "${{ matrix.shard }}" \
             -n "$TEMPLATE_CI_XDIST_WORKERS" \
             --dist loadscope \
             --benchmark-disable \
@@ -442,7 +436,7 @@ jobs:
       # so PR and push runs skip it; the MathJax live-viewport spec still runs
       # on the weekly scheduled (and manually dispatched) lanes.
       - name: Verify completed MathJax equations across live viewport changes
-        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        if: matrix.shard == 0 && matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         run: |
           export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
           npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
@@ -452,8 +446,47 @@ jobs:
             tests/infra_tests/rendering/mathjax_reflow.spec.cjs \
             --workers=1 --output=.tmp/mathjax-browser
 
-      - name: Upload infrastructure coverage to Codecov
+      - name: Export actual infrastructure coverage shard
         if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest'
+        run: uv run python scripts/gates/infra_ci_partition.py --export-shard "${{ matrix.shard }}"
+
+      - name: Upload complete selection record
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: infra-selection-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.shard }}
+          path: output/readiness/ordinary-infra-ci/shard-${{ matrix.shard }}.json
+          if-no-files-found: error
+
+      - name: Upload actual infrastructure coverage shard
+        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: infra-coverage-shard-${{ matrix.shard }}
+          path: output/readiness/ordinary-infra-ci/coverage-data/infra-coverage-shard-${{ matrix.shard }}/
+          if-no-files-found: error
+
+  coverage-infra:
+    name: Infrastructure Union Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [test-infra]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14"
+      - name: Prepare locked union observer
+        run: uv sync --locked
+      - name: Retrieve every actual infrastructure coverage shard
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: infra-coverage-shard-*
+          path: output/readiness/ordinary-infra-ci/coverage-data
+      - name: Verify complete selection and enforce union coverage
+        run: uv run python scripts/gates/infra_ci_partition.py --merge-coverage
+      - name: Upload infrastructure coverage to Codecov
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           files: coverage-infra.xml
@@ -619,7 +652,7 @@ jobs:
     # sum of all public exemplars. Each job enforces that project's own 90% floor via
     # ``scripts/pipeline/stage_01_test.py --project`` (authoritative per CLAUDE.md), which
     # also removes the old code_project/fep_lean conftest plugin-name collision
-    # (every project is already isolated in its own job). py3.10 (floor) + py3.14
+    # (every project is already isolated in its own job). py3.12 (floor), py3.13 + py3.14
     # (ceiling) give cross-version coverage; macOS breadth is handled by test-infra.
     # 135 min backstop — the directly invoked Stage-01 application owns one
     # 115-minute generic-or-declared project budget. The hosted path does not
@@ -657,8 +690,23 @@ jobs:
       - name: Sync dependencies (dev + optional test groups)
         # `public-exemplars` is the single deterministic dependency contract
         # for every canonical public project, including scientific, literature,
-        # PPTX, and monitoring dependencies.
-        run: uv sync --group public-exemplars
+        # PPTX, and monitoring dependencies. Prepare the locked backend before
+        # genuine standalone-wheel controls run with networking disabled.
+        run: uv sync --locked --group public-exemplars --group installed-build
+
+      - name: Prepare exact standalone runtime dependencies
+        if: matrix.project == 'templates/template_autoresearch_project'
+        timeout-minutes: 5
+        run: |
+          uv export --project projects/templates/template_autoresearch_project \
+            --locked --no-default-groups --no-emit-project --no-emit-local \
+            --no-header --no-annotate \
+            --output-file "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
+          uv venv --no-project --no-python-downloads --python .venv/bin/python \
+            "$RUNNER_TEMP/autoresearch-runtime-preparation"
+          uv pip sync --no-build --require-hashes \
+            --python "$RUNNER_TEMP/autoresearch-runtime-preparation/bin/python" \
+            "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
 
       - name: Verify selected Python minor
         run: |
@@ -671,6 +719,18 @@ jobs:
       # missing-tool failures or skips.
       - name: Install pandoc
         uses: pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e # v1.1.1
+
+      # Controlled API fixtures verify transport; these Docker checks are not
+      # actual Ollama/model acceptance. Image provisioning is explicit and
+      # immutable; the test runner and live CLI never pull a missing image.
+      - name: Provision pinned SIA sandbox image
+        if: matrix.project == 'templates/template_sia'
+        env:
+          SIA_SANDBOX_IMAGE: python@sha256:51dafde81dbdb6ebde285137a295cf18a47ca95234fe388a343719cb97305b3d
+        run: |
+          docker pull "$SIA_SANDBOX_IMAGE"
+          docker image inspect "$SIA_SANDBOX_IMAGE" --format '{{.Id}}'
+          echo "TEMPLATE_SIA_TEST_IMAGE=$SIA_SANDBOX_IMAGE" >> "$GITHUB_ENV"
 
       # scripts/pipeline/stage_01_test.py --project runs pytest with cwd=<project> and enforces that
       # project's own --cov-fail-under=90 internally, writing coverage into the
@@ -840,7 +900,6 @@ jobs:
     name: Validate Manuscripts
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [lint]
     permissions:
       contents: read
     steps:
@@ -940,7 +999,6 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [lint]
     permissions:
       contents: read
     steps:
@@ -1047,7 +1105,6 @@ jobs:
     name: Documentation Lint
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [lint]
     permissions:
       contents: read
     steps:
@@ -1190,7 +1247,7 @@ jobs:
 # lane runs the full receipt-bearing matrix in one process and uploads the
 # deterministic receipt (roster revision, per-project floor/exit/coverage/
 # output-isolation) for operator verification. Deliberately NOT run on push/PR
-# — a full 24-exemplar matrix takes ~45 min and would triple every PR's cost.
+# — a full public matrix adds substantial runtime to every PR.
 # ─────────────────────────────────────────────────────────────────────────────
   public-matrix-receipt:
     name: Public Matrix Receipt
@@ -1207,7 +1264,20 @@ jobs:
           python-version: "3.14"
 
       - name: Sync dependencies (dev + optional test groups)
-        run: uv sync --group public-exemplars
+        run: uv sync --locked --group public-exemplars --group installed-build
+
+      - name: Prepare exact standalone runtime dependencies
+        timeout-minutes: 5
+        run: |
+          uv export --project projects/templates/template_autoresearch_project \
+            --locked --no-default-groups --no-emit-project --no-emit-local \
+            --no-header --no-annotate \
+            --output-file "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
+          uv venv --no-project --no-python-downloads --python .venv/bin/python \
+            "$RUNNER_TEMP/autoresearch-runtime-preparation"
+          uv pip sync --no-build --require-hashes \
+            --python "$RUNNER_TEMP/autoresearch-runtime-preparation/bin/python" \
+            "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
 
       - name: Run receipt-bearing public matrix
         run: >-
@@ -1242,6 +1312,7 @@ jobs:
       - verify-no-mocks
       - setup-hook-windows-smoke
       - test-infra
+      - coverage-infra
       - test-infra-slow
       - test-regression
       - test-integration
@@ -1260,10 +1331,32 @@ jobs:
       - name: Evaluate upstream job results
         env:
           NEEDS_JSON: ${{ toJson(needs) }}
+          EVENT_NAME: ${{ github.event_name }}
+          REQUIRED_JOBS_JSON: ${{ needs.detect-projects.outputs.required_jobs }}
         run: |
+          set -euo pipefail
           echo "$NEEDS_JSON"
-          if ! echo "$NEEDS_JSON" | jq -e 'to_entries | all(.value.result == "success" or .value.result == "skipped")' > /dev/null; then
-            echo "::error::One or more required CI jobs failed or were cancelled"
+          if ! echo "$NEEDS_JSON" | jq -e --arg event "$EVENT_NAME" --argjson required "$REQUIRED_JOBS_JSON" '
+            . as $needs |
+            type == "object" and length > 0 and
+            ($required | type == "array" and length > 0 and all(type == "string")) and
+            (($required | length) == ($required | unique | length)) and
+            ((keys | sort) == ($required | sort)) and
+            (to_entries | all(
+              .value.result == "success" or
+              (.value.result == "skipped" and (
+                (.key == "setup-hook-windows-smoke" and
+                  $needs.detect.result == "success" and
+                  $needs.detect.outputs.setup_hook == "false") or
+                (.key == "fep-lean" and
+                  $needs.detect.result == "success" and
+                  $needs.detect.outputs.fep_lean == "false") or
+                ((.key == "test-infra-slow" or .key == "public-matrix-receipt") and
+                  ($event == "push" or $event == "pull_request"))
+              ))
+            ))
+          ' > /dev/null; then
+            echo "::error::A required CI job did not succeed or a conditional skip lacks its declared reason"
             exit 1
           fi
           echo "All required CI jobs succeeded (or were intentionally skipped)."

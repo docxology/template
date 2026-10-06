@@ -4,15 +4,15 @@ Two families:
 
 * **Worked-model figures** visualise the tested functions in
   :mod:`textbook.models` (the formalisms readers should trust and reuse).
-* **Chapter overview placeholders** — one per chapter, named
-  ``<part_id>_<stem>.png`` to match the ``\\includegraphics`` path emitted by
-  ``textbook.content.scaffold_chapter``. Replace each with a real subject figure
-  as the chapter is written; the filename contract keeps cross-references valid.
+* **Authored chapter figures** reuse the tested model plots under the canonical
+  chapter filename contract. Unknown chapters in a newly scaffolded book receive
+  a clearly labeled authoring placeholder, separate from the finished book.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Callable
 from typing import Any
 
 import numpy as np
@@ -91,7 +91,7 @@ def plot_linear_fit(output_dir: Path) -> Path:
 
 
 def plot_case_study_errorbars(output_dir: Path, *, dataset_path: Path | None = None) -> Path:
-    """Plot the six source-bound pilot observations and their standard errors."""
+    """Plot instructional fixture values with their supplied error magnitudes."""
     source_path = dataset_path or MANUSCRIPT / "assets" / "data" / "sample_dataset.csv"
     observations = load_case_study_observations(source_path)
     condition_order = tuple(dict.fromkeys(observation.condition for observation in observations))
@@ -120,7 +120,7 @@ def plot_case_study_errorbars(output_dir: Path, *, dataset_path: Path | None = N
     )
     ax.set_xlabel("condition and replicate")
     ax.set_ylabel("measurement ± standard error")
-    ax.set_title("Pilot measurements with standard errors")
+    ax.set_title("Instructional values with supplied error bars")
     ax.legend(title="condition")
     return save_figure(fig, output_dir, "part_III_case_studies")
 
@@ -189,7 +189,16 @@ def cover_art(output_dir: Path, *, title: str = "The Template Textbook", subtitl
     ax.text(5, 11.4, title, ha="center", va="center", fontsize=21, weight="bold")
     if subtitle:
         ax.text(5, 10.5, subtitle, ha="center", va="center", fontsize=10, color=GRAY, wrap=True)
-    ax.text(5, 1.1, "A modular, fillable scaffold", ha="center", va="center", fontsize=11, style="italic", color=GRAY)
+    ax.text(
+        5,
+        1.1,
+        "Systems, models, and reproducible research",
+        ha="center",
+        va="center",
+        fontsize=11,
+        style="italic",
+        color=GRAY,
+    )
     return save_figure(fig, output_dir, "template_textbook_cover")
 
 
@@ -204,21 +213,36 @@ def generate_worked_figures(output_dir: Path) -> list[Path]:
 
 
 def generate_chapter_figures(output_dir: Path, config: dict[str, Any] | None = None) -> list[Path]:
-    """Generate one uniquely named bespoke figure or placeholder per chapter."""
+    """Generate real canonical figures; reserve placeholders for new scaffolds."""
     cfg = config if config is not None else load_config()
     paths: list[Path] = []
     for chapter in iter_chapters(cfg):
         filename = f"{chapter.part_id}_{chapter.stem}.png"
         if (chapter.part_id, chapter.stem) == ("part_III", "case_studies"):
             paths.append(plot_case_study_errorbars(output_dir))
+        elif (generator := _CHAPTER_PLOTS.get((chapter.part_id, chapter.stem))) is not None:
+            generated = generator(output_dir)
+            destination = output_dir / filename
+            destination.write_bytes(generated.read_bytes())
+            paths.append(destination)
         else:
             paths.append(placeholder_overview(chapter.title, output_dir, filename))
     return paths
 
 
-def generate_chapter_placeholders(output_dir: Path, config: dict[str, Any] | None = None) -> list[Path]:
-    """Backward-compatible alias for the chapter-figure generation contract."""
-    return generate_chapter_figures(output_dir, config)
+_CHAPTER_PLOTS: dict[tuple[str, str], Callable[[Path], Path]] = {
+    ("part_0", "orientation"): plot_logistic_growth,
+    ("part_0", "core_methods"): plot_linear_fit,
+    ("part_0", "quantitative_foundations"): plot_linear_fit,
+    ("part_I", "first_principles"): plot_logistic_growth,
+    ("part_I", "building_blocks"): plot_saturating_response,
+    ("part_I", "structure_and_form"): plot_saturating_response,
+    ("part_II", "systems_overview"): plot_logistic_growth,
+    ("part_II", "dynamics_and_change"): plot_exponential_decay,
+    ("part_II", "regulation_and_control"): plot_exponential_decay,
+    ("part_III", "applied_models"): plot_saturating_response,
+    ("part_III", "frontiers"): plot_saturating_response,
+}
 
 
 def generate_all_figures(output_dir: Path, config: dict[str, Any] | None = None) -> list[Path]:
@@ -233,7 +257,6 @@ __all__ = [
     "cover_art",
     "generate_all_figures",
     "generate_chapter_figures",
-    "generate_chapter_placeholders",
     "generate_worked_figures",
     "placeholder_overview",
     "plot_case_study_errorbars",

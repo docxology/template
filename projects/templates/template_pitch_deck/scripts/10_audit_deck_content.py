@@ -25,10 +25,10 @@ def main(argv: list[str] | None = None) -> int:
     from template_pitch_deck.content_loader import load_deck_yaml
     from template_pitch_deck.deck_audit import audit_deck
     from template_pitch_deck.deck_tokens import build_deck_tokens
-    from template_pitch_deck.paths import locate_repo_root
+    from template_pitch_deck.paths import data_repo_root, verify_reference_inputs
 
     root = project_root()
-    repo_root = locate_repo_root(root)
+    repo_root = data_repo_root(root)
     manuscript_dir = root / "manuscript"
 
     tokens = build_deck_tokens(repo_root)
@@ -56,6 +56,7 @@ def main(argv: list[str] | None = None) -> int:
 
         logger.info("[%s] audit OK (%d text fields, 0 cliche hits)", length, len(result.resolved_texts or {}))
 
+    verify_reference_inputs()
     if had_failure:
         logger.error("Deck content audit FAILED — see above.")
         return 1

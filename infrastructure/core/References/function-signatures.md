@@ -1017,7 +1017,7 @@ def check_build_tools(tools: List[str]) -> Dict[str, bool]:
 
 ### analysis_timeout.py
 
-- ``parse_analysis_script_timeout_sec(environ=None) -> float | None`` — resolves ``ANALYSIS_SCRIPT_TIMEOUT_SEC`` for Stage 02 ``subprocess.run`` (default ``7200.0`` seconds = 2 hours; ``0`` / ``none`` / ``unlimited`` / ``inf`` → ``None``, no per-script timeout).
+- ``parse_analysis_script_timeout_sec(environ=None) -> float`` — resolves a positive finite ``ANALYSIS_SCRIPT_TIMEOUT_SEC`` for Stage 02 (default ``7200.0`` seconds). Nonpositive, nonfinite, invalid, and retired unlimited values raise ``ValueError`` before execution.
 
 ### script_discovery.py
 

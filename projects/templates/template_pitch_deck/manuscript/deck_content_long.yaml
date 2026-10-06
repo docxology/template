@@ -133,8 +133,8 @@ slides:
 
   - kind: stat
     title: "Already public"
-    stat_value: "{{PITCH_SUBJECT_PUBLISHED_PLATFORM_COUNT}} platforms"
-    stat_label: "Durable publication records already on file (concept DOI {{PITCH_SUBJECT_DOI}}): {{PITCH_SUBJECT_PUBLISHED_PLATFORM_NAMES}}. Licensed {{PITCH_SUBJECT_LICENSE}}."
+    stat_value: "{{PITCH_SUBJECT_LAST_PUBLISHED_PLATFORM_COUNT}} historical references"
+    stat_label: "Prior v{{PITCH_SUBJECT_LAST_PUBLISHED_VERSION}} references: {{PITCH_SUBJECT_LAST_PUBLISHED_PLATFORM_NAMES}}. Intended v{{PITCH_SUBJECT_VERSION}} is {{PITCH_SUBJECT_RELEASE_STATUS}}. Licensed {{PITCH_SUBJECT_LICENSE}}."
     source: "projects/templates/template_template/manuscript/config.yaml"
 
   - kind: content

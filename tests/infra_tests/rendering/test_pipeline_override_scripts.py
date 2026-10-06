@@ -6,6 +6,7 @@ Real subprocesses against temporary scripts — no mocking.
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import venv
 from pathlib import Path
@@ -87,7 +88,29 @@ def test_run_override_script_missing_file(tmp_path: Path) -> None:
     assert result != 0
 
 
+@pytest.mark.parametrize("code", [75, 124, 130])
+@pytest.mark.timeout(90)
+def test_custom_renderer_preserves_actual_typed_exit(tmp_path: Path, code: int) -> None:
+    override = tmp_path / "scripts" / "_render_pdf_override.py"
+    override.parent.mkdir()
+    override.write_text(f"raise SystemExit({code})\n")
+    assert run_override_script(tmp_path, override) == code
+
+
+@pytest.mark.parametrize("timeout", ["0", "-1", "nan", "inf", "invalid"])
+def test_custom_renderer_rejects_invalid_timeout_before_execution(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, timeout: str
+) -> None:
+    override = tmp_path / "scripts" / "_render_pdf_override.py"
+    override.parent.mkdir()
+    override.write_text("from pathlib import Path\nPath('renderer_started').touch()\n")
+    monkeypatch.setenv("MANUSCRIPT_HYDRATION_TIMEOUT", timeout)
+    assert run_override_script(tmp_path, override) == 2
+    assert not (tmp_path / "renderer_started").exists()
+
+
 @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+@pytest.mark.timeout(120)
 def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path) -> None:
     project = tmp_path / "project"
     script = project / "scripts" / "z_generate_manuscript_variables.py"
@@ -124,6 +147,54 @@ def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path)
     executable, injected_template_root = (project / "hydration_result.txt").read_text(encoding="utf-8").splitlines()
     assert executable == str(venv_python)
     assert injected_template_root == str(template_root)
+    receipt = json.loads(next((project / "output" / ".pipeline" / "analysis").glob("*/*.json")).read_text())
+    assert receipt["worker"]["request"]["cwd"] == str(project)
+    assert receipt["worker"]["completion"]["actual_runtime"]["prefix"] == str(project / ".venv")
+    assert receipt["outcome"]["child_exit_code"] == 0
+
+
+@pytest.mark.parametrize("actual_exit", [7, 75, 124, 130])
+@pytest.mark.timeout(120)
+def test_hydration_retains_typed_actual_child_outcomes(tmp_path: Path, actual_exit: int) -> None:
+    project = tmp_path / "project"
+    script = project / "scripts" / "z_generate_manuscript_variables.py"
+    script.parent.mkdir(parents=True)
+    script.write_text(f"raise SystemExit({actual_exit})\n")
+    venv.EnvBuilder(with_pip=False, symlinks=True).create(project / ".venv")
+    root = tmp_path / "template"
+    root.mkdir()
+    code = run_manuscript_variable_script(project, template_repo_root=root)
+    assert code == (actual_exit if actual_exit in (75, 124, 130) else 1)
+    receipt = json.loads(next((project / "output" / ".pipeline" / "analysis").glob("*/*.json")).read_text())
+    assert receipt["outcome"]["child_exit_code"] == actual_exit
+    assert receipt["complete"] is False
+
+
+@pytest.mark.parametrize("nomination", ["missing", "broken-link"])
+def test_hydration_refuses_broken_nominated_runtime_without_fallback(tmp_path: Path, nomination: str) -> None:
+    project = tmp_path / "project"
+    script = project / "scripts" / "z_generate_manuscript_variables.py"
+    script.parent.mkdir(parents=True)
+    script.write_text("from pathlib import Path\nPath('hydration_started').touch()\n")
+    (project / ".venv" / "bin").mkdir(parents=True)
+    if nomination == "broken-link":
+        (project / ".venv" / "bin" / "python").symlink_to(tmp_path / "gone")
+    assert run_manuscript_variable_script(project) == 75
+    assert not (project / "hydration_started").exists()
+    assert not (project / "output").exists()
+
+
+@pytest.mark.parametrize("timeout", ["0", "-1", "nan", "inf", "invalid"])
+def test_invalid_hydration_timeout_refuses_before_child(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, timeout: str
+) -> None:
+    script = tmp_path / "scripts" / "z_generate_manuscript_variables.py"
+    script.parent.mkdir()
+    script.write_text("from pathlib import Path\nPath('hydration_started').touch()\n")
+    monkeypatch.setenv("MANUSCRIPT_HYDRATION_TIMEOUT", timeout)
+    assert run_manuscript_variable_script(tmp_path) == 2
+    assert not (tmp_path / "hydration_started").exists()
+    assert not (tmp_path / "output").exists()
 
 
 # ---------------------------------------------------------------------------

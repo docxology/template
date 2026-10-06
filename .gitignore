@@ -375,6 +375,9 @@ projects/*/*.egg-info/
 projects/*/src/*.egg-info/
 projects/templates/*/*.egg-info/
 projects/templates/*/src/*.egg-info/
+# Public-tree negations above must not re-admit packaging intermediates.
+projects/templates/*/build/
+projects/templates/*/dist/
 
 # Download/generated fixture payloads. Keep the fixture docs and committed
 # private_project stubs visible, but never surface cloned repos or benchmark

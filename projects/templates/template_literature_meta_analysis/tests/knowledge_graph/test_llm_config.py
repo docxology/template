@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 
-from knowledge_graph.llm_extraction import (
+from template_literature_meta_analysis.knowledge_graph.llm_extraction import (
     LLMConfig,
 )
 from llm_extraction_fixtures import (

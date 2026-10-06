@@ -14,7 +14,6 @@ Interactive prompts and the menu redraw loop live in
 from collections.abc import Iterable
 
 from infrastructure.core.pipeline.stage_vocabulary import (
-    default_run_stage_count,
     menu_stage_names,
 )
 
@@ -33,7 +32,7 @@ _SECTION_BAR_WIDTH = 76
 # Canonical menu options. Each tuple is (key, label, description).
 MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (
     ("0", "Environment Setup", "stage_00_setup.py"),
-    ("1", "Run Tests", "stage_01_test.py (infra + project)"),
+    ("1", "Run Project Tests", "stage_01_test.py (project only)"),
     ("2", "Run Analysis", "stage_02_analysis.py"),
     ("3", "Render PDF", "stage_03_render.py"),
     ("4", "Validate Output", "stage_04_validate.py"),
@@ -43,16 +42,16 @@ MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (
     (
         "8",
         "Core Pipeline",
-        f"current project · infra on · LLM off · {default_run_stage_count(include_llm=False)} stages",
+        "current project · infra on · local stages",
     ),
     (
         "9",
-        "Full Pipeline",
-        f"current project · infra on · LLM on · {default_run_stage_count(include_llm=True)} stages",
+        "Live Pipeline",
+        "current project · infra on · live stages",
     ),
-    ("f", "Full Pipeline (fast)", "current project · skip infra · LLM on"),
-    ("a", "All projects full", "all projects · infra on · LLM on · report"),
-    ("b", "All projects full (fast)", "all projects · skip infra · LLM on · report"),
+    ("f", "Live Pipeline (fast)", "current project · skip infra · LLM on"),
+    ("a", "All projects live", "all projects · infra on · LLM on · report"),
+    ("b", "All projects live (fast)", "all projects · skip infra · LLM on · report"),
     ("c", "All projects core", "all projects · infra on · LLM off · report"),
     ("d", "All projects core (fast)", "all projects · skip infra · LLM off · report"),
     ("p", "Change Project", ""),
@@ -168,9 +167,9 @@ def render_menu(current_project: str) -> str:
     # Legend — kept on stable wording so tests assert on literal substrings.
     footer_bar = _ascii_rule("-", fw)
     lines.append(footer_bar)
-    lines.append("  Infra tests: Layer-1 pytest (tests/infra_tests/), then project tests.")
-    lines.append("  LLM: optional Ollama stages; pipeline skips them when Ollama is unavailable.")
-    lines.append("  Executive report: written after all projects finish (keys a-d only).")
+    lines.append("  Infrastructure verification runs once before multi-project execution; key 1 runs project tests.")
+    lines.append("  Live: optional Ollama stages; unavailable capabilities require a validated skip receipt.")
+    lines.append("  Executive reports follow each project’s declared pipeline; multi-project runs add a summary.")
     lines.append(footer_bar)
     lines.append("")
     lines.append("  Tip: chain stage digits (e.g. 234 = analyze -> render -> validate); comma or space also work.")

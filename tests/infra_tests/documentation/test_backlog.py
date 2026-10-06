@@ -4,8 +4,75 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from infrastructure.documentation.backlog import validate_public_backlogs
 from infrastructure.documentation.backlog_normalizer import normalize_backlog
+
+
+@pytest.mark.parametrize(
+    "evidence",
+    [
+        "## Validation evidence\n- acceptance receipt",
+        "## Current test and validator contract\n- Controls are covered locally.",
+        "## Current configurable-surface contract\n- Dimensions support current variants.",
+        "- [x] Completed the parser migration",
+        "- Completed: parser migration",
+        "- 29 tests green; 92.23% coverage on src/",
+    ],
+)
+def test_backlog_rejects_completed_prose_without_a_completed_status(tmp_path: Path, evidence: str) -> None:
+    """A completion receipt cannot evade the gate by omitting a table status."""
+    path = tmp_path / "TO-DO.md"
+    path.write_text(
+        "# Root backlog\n\nFuture work only.\n\n## Live baseline and constraints\n"
+        "\n## Backlog operating rules\n\n" + evidence + "\n",
+        encoding="utf-8",
+    )
+    report = validate_public_backlogs(tmp_path, public_names=())
+    assert any(f.rule in {"historical_section", "completed_evidence"} for f in report.errors)
+
+
+def test_normalizer_archives_completed_prose_and_rows_without_closing_blockers(tmp_path: Path) -> None:
+    """Archival preserves old receipts without declaring blocked work verified."""
+    path = tmp_path / "TODO.md"
+    path.write_text(
+        """# Example TODO
+
+## Validation evidence
+
+- 29 tests green; 92.23% coverage on src/
+
+## Integrity and template-status gaps
+
+- Keep coverage above the 90% floor.
+- [x] Parser migration
+  Receipt: parser-acceptance.json
+- Keep the next future requirement.
+
+## Minor upcoming
+
+- Completed: import cleanup
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `EXAMPLE-DONE-1` | completed | Minor | fixture | old result | old receipt | `uv run pytest tests -q` | mutation fails |
+| `EXAMPLE-BLOCKED-1` | blocked-external | Minor | owner | Obtain the owner receipt | external receipt | `uv run pytest tests -q` | missing owner fails |
+""",
+        encoding="utf-8",
+    )
+    normalized, archived = normalize_backlog(path)
+    assert "29 tests green" in archived
+    assert "[x] Parser migration" in archived
+    assert "Receipt: parser-acceptance.json" in archived
+    assert "Receipt: parser-acceptance.json" not in normalized
+    assert "Keep the next future requirement." in normalized
+    assert "Completed: import cleanup" in archived
+    assert "`EXAMPLE-DONE-1`" in archived and "`EXAMPLE-DONE-1`" not in normalized
+    assert "| `EXAMPLE-BLOCKED-1` | blocked-external |" in normalized
+    assert "Keep coverage above the 90% floor." in normalized
+    path.write_text(normalized, encoding="utf-8")
+    assert normalize_backlog(path) == (normalized, "")
 
 
 def _write_backlog(path: Path, body: str) -> None:
@@ -42,14 +109,6 @@ Future work only.
         """# Example TODO
 
 Forward-only backlog.
-
-## Integrity and template-status gaps
-
-## Configurable-surface gaps
-
-## Documentation and signposting gaps
-
-## Test and validator gaps
 
 ## Minor upcoming
 
@@ -243,3 +302,28 @@ Future work only.
     )
     report = validate_public_backlogs(tmp_path, public_names=())
     assert any(finding.rule == "invalid_status" for finding in report.errors)
+
+
+@pytest.mark.parametrize("heading", ["Current test and validator contract", "Current configurable-surface contract"])
+def test_normalizer_moves_current_contract_prose_and_preserves_future_blocker(tmp_path: Path, heading: str) -> None:
+    path = tmp_path / "TODO.md"
+    evidence = "Existing controls are covered locally.\n  Their original scope remains bounded."
+    blocker = "| `EXAMPLE-UNPAID-1` | blocked-tool | Medium | real provider | Install the required tool and obtain a receipt | provider receipt | `uv run pytest tests -q` | absent tool refuses completion |"
+    path.write_text(
+        "# Example backlog\n\nFuture-only backlog.\n\n## "
+        + heading
+        + "\n\n"
+        + evidence
+        + "\n\n## Medium upcoming\n\n"
+        + "| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |\n"
+        + "| --- | --- | --- | --- | --- | --- | --- | --- |\n"
+        + blocker
+        + "\n",
+        encoding="utf-8",
+    )
+    normalized, archived = normalize_backlog(path)
+    assert heading not in normalized and evidence not in normalized
+    assert heading in archived and evidence in archived
+    assert blocker in normalized and blocker not in archived
+    path.write_text(normalized, encoding="utf-8")
+    assert normalize_backlog(path) == (normalized, "")

@@ -1,6 +1,9 @@
 from __future__ import annotations
 from pathlib import Path
-from visualization.field_overview import plot_field_summary, plot_subfield_distribution
+from template_literature_meta_analysis.visualization.field_overview import (
+    plot_field_summary,
+    plot_subfield_distribution,
+)
 
 
 class TestFieldOverview:

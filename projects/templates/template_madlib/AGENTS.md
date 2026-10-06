@@ -14,6 +14,8 @@
 
 ## Edit Rules
 
+- Declare the exact integer `madlib.schema_version: 2`. Missing, retired, string,
+  boolean and fractional versions fail; the root `madlib` namespace is current.
 - Add vocabulary in `manuscript/config.yaml` under `madlib.lexicon`.
 - Add new manuscript shape controls under `section_titles`, `narrative_moves`, `method_protocol`, `design_principles`, `pipeline_phases`, `evaluation_criteria`, `quality_probes`, `failure_modes`, `authoring_obligations`, `visualizations`, `audit_rules`, or `contribution_claims`.
 - Keep method changes config-owned. A generated Methods claim needs a `method_protocol` row, a `pipeline_phases` row when it is operational, a QA probe or failure mode when it can fail, and claim-ledger evidence when it supports a claim.

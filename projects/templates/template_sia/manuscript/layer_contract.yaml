@@ -2,3 +2,6 @@
 # Paths updated to the post-split subpackage layout (SUBMODULAR-SIA-1).
 allow_infrastructure_imports:
   - src/template_sia/loop/loop.py
+  # The task-specific Docker adapter shares the platform's supervised,
+  # credential-free process-group boundary instead of duplicating it.
+  - src/template_sia/loop/proposal_sandbox.py

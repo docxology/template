@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import math
 
-from literature.models import Paper
-from knowledge_graph.nanopublication import Assertion
-from knowledge_graph.hypothesis import (
+from template_literature_meta_analysis.literature.models import Paper
+from template_literature_meta_analysis.knowledge_graph.nanopublication import Assertion
+from template_literature_meta_analysis.knowledge_graph.hypothesis import (
     Hypothesis,
     STANDARD_HYPOTHESES,
     score_hypothesis,
@@ -20,7 +20,7 @@ from knowledge_graph.hypothesis import (
     temporal_trend,
     _weight,
 )
-import knowledge_graph.schema as schema
+import template_literature_meta_analysis.knowledge_graph.schema as schema
 
 
 def _make_assertion(
@@ -361,7 +361,7 @@ class TestLoadHypothesesFromConfig:
             "    name: AIF Optimality\n"
             "    description: Active Inference is optimal\n"
         )
-        from knowledge_graph.hypothesis import load_hypotheses_from_config
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import load_hypotheses_from_config
 
         result = load_hypotheses_from_config(config)
         assert len(result) == 2
@@ -374,7 +374,7 @@ class TestLoadHypothesesFromConfig:
         """YAML without hypothesis_definitions should return STANDARD_HYPOTHESES."""
         config = tmp_path / "config.yaml"
         config.write_text("paper:\n  title: Test\n")
-        from knowledge_graph.hypothesis import load_hypotheses_from_config
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import load_hypotheses_from_config
 
         result = load_hypotheses_from_config(config)
         assert len(result) == 8
@@ -382,7 +382,7 @@ class TestLoadHypothesesFromConfig:
 
     def test_unreadable_file_falls_back(self, tmp_path) -> None:
         """Non-existent path should return STANDARD_HYPOTHESES."""
-        from knowledge_graph.hypothesis import load_hypotheses_from_config
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import load_hypotheses_from_config
 
         result = load_hypotheses_from_config(tmp_path / "nonexistent.yaml")
         assert len(result) == 8
@@ -396,7 +396,7 @@ class TestLoadHypothesesFromConfig:
             lines.append(f'    description: "{h.description}"\n')
         config = tmp_path / "config.yaml"
         config.write_text("".join(lines))
-        from knowledge_graph.hypothesis import load_hypotheses_from_config
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import load_hypotheses_from_config
 
         result = load_hypotheses_from_config(config)
         assert len(result) == 8
@@ -413,7 +413,7 @@ class TestLoadHypothesesFromConfig:
             "    name: Primary Efficacy\n"
             "    description: FEP applies universally\n"
         )
-        from knowledge_graph.hypothesis import load_hypotheses_from_config
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import load_hypotheses_from_config
 
         # Nested under project_config — should be found and loaded
         result = load_hypotheses_from_config(config)
@@ -432,7 +432,7 @@ class TestLoadHypothesesFromConfig:
             "      name: JWST Atmospheric Characterization\n"
             "      description: Reported evidence\n"
         )
-        from knowledge_graph.hypothesis import load_hypotheses_from_config
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import load_hypotheses_from_config
 
         result = load_hypotheses_from_config(config)
 
@@ -444,21 +444,21 @@ class TestConfigKeyToId:
 
     def test_known_keys(self) -> None:
         """H1-H8 should map to standard hypothesis IDs."""
-        from knowledge_graph.hypothesis import _config_key_to_id
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import _config_key_to_id
 
         assert _config_key_to_id("H1", "Primary Efficacy") == "PRIMARY_EFFICACY"
         assert _config_key_to_id("H8", "Language AIF") == "DOMAIN_GENERALIZATION"
 
     def test_unknown_key_falls_back_to_name(self) -> None:
         """Unknown ordinal keys should derive ID from name."""
-        from knowledge_graph.hypothesis import _config_key_to_id
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import _config_key_to_id
 
         result = _config_key_to_id("HX", "My Custom Hypothesis")
         assert result == "MY_CUSTOM_HYPOTHESIS"
 
     def test_name_with_hyphens(self) -> None:
         """Hyphens in names should be replaced with underscores."""
-        from knowledge_graph.hypothesis import _config_key_to_id
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import _config_key_to_id
 
         result = _config_key_to_id("H99", "Self-Organization")
         assert result == "SELF_ORGANIZATION"
@@ -479,7 +479,7 @@ class TestConfigureHypotheses:
             "    name: AIF Optimality\n"
             "    description: Test\n"
         )
-        from knowledge_graph.hypothesis import configure_hypotheses
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import configure_hypotheses
 
         result = configure_hypotheses(config)
         assert len(result) == 2
@@ -488,7 +488,7 @@ class TestConfigureHypotheses:
 
     def test_without_config(self) -> None:
         """None path should use STANDARD_HYPOTHESES."""
-        from knowledge_graph.hypothesis import configure_hypotheses
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import configure_hypotheses
 
         result = configure_hypotheses(None)
         assert len(result) == 8
@@ -496,7 +496,7 @@ class TestConfigureHypotheses:
 
     def test_nonexistent_config_path(self, tmp_path) -> None:
         """Non-existent config file should fall back to defaults."""
-        from knowledge_graph.hypothesis import configure_hypotheses
+        from template_literature_meta_analysis.knowledge_graph.hypothesis import configure_hypotheses
 
         result = configure_hypotheses(tmp_path / "missing.yaml")
         assert len(result) == 8

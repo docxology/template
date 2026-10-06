@@ -9,6 +9,7 @@ orchestrate one or many projects through the numbered pipeline stages.
 
 | Script | Purpose |
 |--------|---------|
+| `prepared_dispatch.py` | Stdlib-only pre-import audit bootstrap for existing prepared root Python; ordinary shell dispatch, no installation |
 | `execute_pipeline.py` | Single-project pipeline runner; delegates to `infrastructure.core.pipeline.PipelineExecutor` |
 | `execute_multi_project.py` | Multi-project pipeline runner (serial; `--parallel` for process pool) |
 | `run_matrix.py` | Reproducible project × stage matrix runner; reads `run.config`, resolves projects + orders stages canonically |

@@ -85,7 +85,7 @@ lake build
 ```
 
 Or via the combined wrapper from the project root:
-`scripts/check_formal_specs.sh` (runs this build as its first of three checks).
+`scripts/check_formal_specs.sh` (freshly elaborates the model and audits all seven declarations before TLC).
 
 ## See also
 

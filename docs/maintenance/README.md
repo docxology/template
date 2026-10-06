@@ -6,8 +6,13 @@
 
 ## Contents
 
+- [Subsystem verification history](subsystem-status-history.md) — unchanged
+  pre-Platform-4 receipts; current interfaces and pending acceptance stay in
+  [`STATUS.md`](../../STATUS.md).
+
 | Guide | Addresses | Created |
 | --- | --- | --- |
+| [`platform-4-upgrade.md`](platform-4-upgrade.md) | Platform 4.0 implementation packages, hypotheses, exact acceptance boundaries, and pending release evidence | 2026-09-30 |
 | [`toolchain-migration.md`](toolchain-migration.md) | Pin the *interface* not the *tool* — how to swap uv, ruff, mypy, etc. without rewriting the repo | 2026-05-20 |
 | [`regression-testing.md`](regression-testing.md) | Convert "90% coverage" hygiene into actual scientific-claim binding via pinned numerical outputs for figures/tables | 2026-05-20 |
 | [`archival-targets.md`](archival-targets.md) | Insurance against Zenodo / arXiv / DOI vendor concentration via IPFS + Software Heritage parallel pins | 2026-05-20 |
@@ -22,7 +27,7 @@
 | [`review-remediation-2026-07.md`](review-remediation-2026-07.md) | Historical adversarial-review remediation record (43 findings confirmed, 3 refuted); repository code items shipped, with external branch-protection administration tracked separately | 2026-07-02 |
 | [`review-remediation-2026-08.md`](review-remediation-2026-08.md) | Parallel-agent comprehensive review + improvement record (infrastructure/scripts/docs + all 24 exemplars, released v3.7.0); documents the changes, verification evidence, and the reusable incidents/lessons from running a large herdr-agent campaign | 2026-08-12 |
 | [`release-boundary.md`](release-boundary.md) | Why the root package/tag release surface and the standalone publication lane's releases must not be treated as interchangeable | 2026-07-17 |
-| [`python-runtime-support.md`](python-runtime-support.md) | Supported-Python contract: `requires-python = ">=3.10"` floor, repository default from `.python-version` (currently 3.14), infrastructure CI 3.10–3.14, and why dropping the floor needs a breaking release boundary | 2026-07-20 |
+| [`python-runtime-support.md`](python-runtime-support.md) | Supported-Python contract: `requires-python = ">=3.12"` floor, repository default from `.python-version` (currently 3.14), infrastructure CI 3.12–3.14, and why dropping the floor needs a breaking release boundary | 2026-07-20 |
 | [`test-performance-evidence.json`](test-performance-evidence.json) | Committed, redacted serial/parallel quick-feedback benchmark receipt; generated with `scripts/maintenance/benchmark_tests.py` and bound to its measured revision | 2026-08-11 |
 | [`exemplar-backlog-history.md`](exemplar-backlog-history.md) | Archived completed-work evidence that was removed from the future-only `projects/templates/*/TODO.md` files; preserved so completed work does not return to the active backlog | 2026-08-02 |
 | [`clean-checkout-evidence.json`](clean-checkout-evidence.json) | Redacted, source-bound two-run fresh-checkout rehearsal receipt; required local phases pass and tracked canonical-output cleanliness remains explicitly blocked | 2026-08-09 |

@@ -8,12 +8,12 @@ import pytest
 import requests
 from pytest_httpserver import HTTPServer
 
-from literature.openalex_client import (
+from template_literature_meta_analysis.literature.openalex_client import (
     _reconstruct_abstract,
     get_work_by_doi,
     search_openalex,
 )
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 
 # ---------------------------------------------------------------------------

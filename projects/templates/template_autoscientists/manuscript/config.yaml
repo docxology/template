@@ -4,7 +4,7 @@
 # noise-robustness testbed rather than a performance claim.
 #
 # This file supplies manuscript metadata (title, authors, DOIs) consumed by the
-# renderer (`infrastructure/rendering/_pdf_combined_renderer.py`). The
+# renderer (`infrastructure/rendering/_pdf_title_page_config.py`). The
 # `experiment:` block below is a human-readable mirror of the code defaults; it is
 # NOT loaded by the analysis scripts (they construct SearchConfig/SyntheticObjective
 # directly) — the test `test_config_yaml_experiment_block_mirrors_code_defaults`
@@ -14,10 +14,10 @@
 paper:
   title: "A Deterministic Testbed for Self-Organizing Agent-Team Coordination"
   subtitle: "Ablatable Mechanisms and Measurable Noise-Robustness under a Matched Experiment Budget"
-  version: "1.0.2"
+  version: "2.0.0"
   date: "2026-06-26"
 
-# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
+# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/_metadata_extraction.py`)
 authors:
   - name: "Daniel Ari Friedman"
     orcid: "0000-0001-6232-9096"
@@ -25,8 +25,12 @@ authors:
     affiliation: "Active Inference Institute"
     corresponding: true
 
-# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
+# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/zenodo/publish.py`)
 publication:
+  release_status: "unreleased"
+  intended_version: "2.0.0"
+  platform_version: "4.0.0"
+  last_published_version: "1.0.2"
   doi: "10.5281/zenodo.20533669"  # Concept DOI — stable citation
   version_doi: "10.5281/zenodo.20931927" # Latest Zenodo deposit
   version_record: "https://zenodo.org/records/20931927"

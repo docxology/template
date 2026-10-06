@@ -102,7 +102,7 @@ The manifest is **the contract** between this template and any future agentic ve
 | Stage 6: Provenance record | content-addressed provenance entries | opt-in (`provenance` tag) |
 | Stage 7: PDF rendering | static PDF (archival artifact) | existing |
 | Stage 8: Validation | quality report | existing |
-| LLM Scientific Review | LLM-aided review | default-full (tag `llm`) |
+| LLM Manuscript Review | LLM-aided review | default-full (tag `llm`) |
 | LLM Translations | zh/hi/ru abstracts | default-full (tag `llm`) |
 | Copy Outputs | final deliverables to output/ | default |
 | Ebook Generation | EPUB/MOBI/DOCX | opt-in (`ebook` tag) |
@@ -167,7 +167,7 @@ These need decisions before treating the bundle as a release gate.
 
 ## Status
 
-**Opt-in implementation.** The stage contract is declared in `pipeline.yaml`, and the direct script writes a bundle. It is not part of default, `--core-only`, or LLM-inclusive full runs.
+**Opt-in implementation.** The stage contract is declared in `pipeline.yaml`, and the direct script writes a bundle. It is not part of default, `--mode core`, or LLM-inclusive full runs.
 
 ## Related
 

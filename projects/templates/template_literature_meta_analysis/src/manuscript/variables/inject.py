@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from manuscript.variables._logging import logger
+from template_literature_meta_analysis.manuscript.variables._logging import logger
 
 
 def inject_variables(

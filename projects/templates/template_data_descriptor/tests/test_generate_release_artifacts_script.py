@@ -87,7 +87,7 @@ class TestGenerateReleaseArtifacts:
 
         completed = _run_script(descriptor_path, output_dir)
 
-        assert completed.returncode == 0, completed.stderr
+        assert completed.returncode == 2, completed.stderr
         report = json.loads((output_dir / "descriptor_report.json").read_text(encoding="utf-8"))
         summary = json.loads(completed.stdout)
         assert report["valid"] is False

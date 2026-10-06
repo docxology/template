@@ -9,14 +9,14 @@ import time
 from pathlib import Path
 from typing import Callable, TypedDict
 
-from config_loader import load_search_config
-from config_validation import require_valid_search_config
-from literature.corpus import Corpus
-from literature.http import build_politeness_receipt
-from literature.models import Paper
-from literature.engine_dispatch import dispatch_ordered
-from literature.query_router import QueryRouter
-from literature.search_engines import (
+from template_literature_meta_analysis.config_loader import load_search_config
+from template_literature_meta_analysis.config_validation import require_valid_search_config
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.http import build_politeness_receipt
+from template_literature_meta_analysis.literature.models import Paper
+from template_literature_meta_analysis.literature.engine_dispatch import dispatch_ordered
+from template_literature_meta_analysis.literature.query_router import QueryRouter
+from template_literature_meta_analysis.literature.search_engines import (
     arxiv_search_fn as _arxiv_search_fn,
     biorxiv_search_fn as _biorxiv_search_fn,
     crossref_search_fn as _crossref_search_fn,
@@ -258,7 +258,7 @@ def run_literature_search(
         relevance_keywords = cfg["relevance_keywords"]
         engines = cfg.get("engines", {})
     else:
-        from config import DEFAULT_ARXIV_QUERIES, DEFAULT_RELEVANCE_KEYWORDS
+        from template_literature_meta_analysis.config import DEFAULT_ARXIV_QUERIES, DEFAULT_RELEVANCE_KEYWORDS
 
         arxiv_queries = list(DEFAULT_ARXIV_QUERIES)
         relevance_keywords = list(DEFAULT_RELEVANCE_KEYWORDS)

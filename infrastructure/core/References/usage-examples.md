@@ -1501,8 +1501,8 @@ class MultiProjectConfig:
     repo_root: Path
     projects: List[Project]
     run_infra_tests: bool = True
-    run_llm: bool = False
-    run_executive_report: bool = True
+    mode: str = "core"
+    resume: bool = False
 ```
 
 #### MultiProjectResult (class)
@@ -1529,18 +1529,11 @@ class MultiProjectOrchestrator:
             config: Multi-project configuration
         """
 
-    def execute_all_projects_full(self) -> MultiProjectResult:
-        """Execute full pipeline for all projects.
+    def execute_all_projects(self) -> MultiProjectResult:
+        """Execute shared verification once and each project's selected mode.
 
         Returns:
-            Multi-project execution result
-        """
-
-    def execute_all_projects_core(self) -> MultiProjectResult:
-        """Execute core pipeline for all projects.
-
-        Returns:
-            Multi-project execution result
+            Aggregate expected-project and expected-stage contract results.
         """
 ```
 

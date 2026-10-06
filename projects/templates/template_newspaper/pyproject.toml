@@ -7,11 +7,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_newspaper"
-version = "1.0.2"
+version = "2.0.0"
 license = {text = "MIT"}
 description = "Data-driven large-format newspaper layout engine (ReportLab) that renders a 12-page US-tabloid edition (broadsheet optional) — 'The Triplicate' of Crescent City, CA — from structured YAML content."
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "pyyaml>=6.0",
     "reportlab>=4.0",
@@ -52,3 +52,9 @@ exclude_lines = [
 
 [tool.uv]
 # Inherits workspace settings from root pyproject.toml
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.0"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["print-raster"]

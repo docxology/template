@@ -21,7 +21,7 @@ def create_parser() -> argparse.ArgumentParser:
 
     # Pipeline execution command
     pipeline_parser = subparsers.add_parser("pipeline", help="Execute pipeline for a project")
-    pipeline_parser.add_argument("pipeline_type", choices=["full", "core"], help="Type of pipeline to execute")
+    pipeline_parser.add_argument("--mode", choices=("core", "live"), default="core")
     pipeline_parser.add_argument("--project", required=True, help="Project name to execute pipeline for")
     pipeline_parser.add_argument("--repo-root", type=Path, default=Path.cwd(), help="Repository root directory")
     pipeline_parser.add_argument(
@@ -33,11 +33,9 @@ def create_parser() -> argparse.ArgumentParser:
 
     # Multi-project execution command
     multi_parser = subparsers.add_parser("multi-project", help="Execute pipeline across multiple projects")
-    multi_parser.add_argument(
-        "execution_type",
-        choices=["full", "core", "full-no-infra", "core-no-infra"],
-        help="Type of multi-project execution",
-    )
+    multi_parser.add_argument("--mode", choices=("core", "live"), default="core")
+    multi_parser.add_argument("--skip-infra", action="store_true")
+    multi_parser.add_argument("--resume", action="store_true")
     multi_parser.add_argument("--repo-root", type=Path, default=Path.cwd(), help="Repository root directory")
     multi_parser.add_argument("--projects", nargs="+", help="Specific projects to execute (default: all)")
 

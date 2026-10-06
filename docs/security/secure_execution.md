@@ -2,7 +2,7 @@
 
 The Secure Execution entry point ([`secure_run.sh`](../../secure_run.sh)) runs the **same pipeline DAG** as `./run.sh` via Python [`PipelineRunner`](../../infrastructure/orchestration/pipeline_runner.py) / [`PipelineExecutor`](../../infrastructure/core/pipeline/executor.py), then applies steganographic post-processing. It does **not** shell out to `./run.sh`.
 
-The root `uv sync` installs the steganography dependency group by default, and `secure_run.sh` also runs `uv sync --group steganography` before invoking Python so minimal environments get ReportLab / QR / cryptography dependencies before hardening PDFs.
+Prepare secure dependencies explicitly with `uv sync --locked --group steganography`. `secure_run.sh` checks the existing selected interpreter and declared steganography requirements, then dispatches through the audited finite launcher. Missing preparation blocks with 75; execution never syncs or installs packages.
 
 ## Multi-project behaviour
 
@@ -44,7 +44,7 @@ Forwarded by `./secure_run.sh` to the Python `secure` subcommand (including `--d
 ./secure_run.sh --project templates/template_code_project
 
 # Core DAG (no LLM stages) + steganography
-./secure_run.sh --project templates/template_code_project --core-only
+./secure_run.sh --project templates/template_code_project --mode core
 
 # Resume checkpoint after pipeline phase
 ./secure_run.sh --project templates/template_code_project --resume
@@ -72,7 +72,7 @@ There is **no** `--pipeline` flag on the `secure` subcommand — omitting `--ste
 | `--project <name>` | Required when running the pipeline phase. Optional when `--steganography-only`; if omitted in steg-only mode, all discovered projects are processed. |
 | `--steganography-only` | Skip pipeline; only run `SteganographyProcessor` on existing PDFs. |
 | `--skip-infra` | Skip infrastructure tests stage during pipeline phase. |
-| `--core-only` | Omit LLM-tagged stages during pipeline phase. |
+| `--mode core` | Omit LLM-tagged stages during pipeline phase. |
 | `--resume` | Resume pipeline from checkpoint (pipeline phase only). |
 | `--deterministic` | Parsed by the Python `secure` subcommand ([`infrastructure/orchestration/cli.py`](../../infrastructure/orchestration/cli.py)): sets `STEGANOGRAPHY_DETERMINISTIC=1` so timestamps align with `git log -1 --format=%cI` (byte-identical `*_steganography.pdf` across runs at same `HEAD`). |
 | `--validate-kmyth` | Validates optional Kmyth/TPM tooling from the effective secure-run configuration and exits without rendering or sealing PDFs; skips both the pipeline and steganography phases. |

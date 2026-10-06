@@ -7,8 +7,8 @@ using synthetic documents with known topical structure.
 import numpy as np
 import pytest
 
-from analysis.text_processing import build_tfidf_matrix
-from analysis.topic_modeling import (
+from template_literature_meta_analysis.analysis.text_processing import build_tfidf_matrix
+from template_literature_meta_analysis.analysis.topic_modeling import (
     fit_nmf_topics,
     get_document_topics,
     _nmf_multiplicative_updates,

@@ -53,7 +53,7 @@
         "Mentions regenerate from clean or core-only pipeline",
         "Mentions double-run or two identical runs",
         "Mentions seeds or determinism",
-        "References execute_pipeline.py --core-only",
+        "References execute_pipeline.py --mode core",
         "Mentions git status or diff for output drift"
       ]
     },
@@ -261,7 +261,7 @@
       "expected_output": "Pipeline debug with core-only and resume",
       "files": [],
       "expectations": [
-        "Mentions --core-only",
+        "Mentions --mode core",
         "Mentions --resume",
         "Names validate stage or validation CLI",
         "Quotes need for first real error not last line"

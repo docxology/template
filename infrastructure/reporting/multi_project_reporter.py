@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.pipeline.multi_project import MultiProjectResult
+from infrastructure.core.pipeline.multi_project import MultiProjectResult, validated_project_run
 from infrastructure.reporting.executive_reporter import (
     generate_executive_summary,
     save_executive_summary,
@@ -57,15 +57,31 @@ def generate_multi_project_report(repo_root: Path, project_names: list[str], out
 
 def _build_summary_dict(result: MultiProjectResult, projects: list[Any]) -> dict[str, Any]:
     """Build the analytics summary dict without performing any I/O."""
-    project_names = [p.name for p in projects]
+    project_names = [getattr(p, "qualified_name", p.name) for p in projects]
     raw_results = result.project_results
     project_results = raw_results if isinstance(raw_results, dict) else {}
+    shared = result.shared_infrastructure_result
+    shared_run = shared.validated_run() if shared is not None else None
 
     summary: dict[str, Any] = {
         "timestamp": datetime.now().isoformat(),
         "total_projects": len(projects),
-        "successful_projects": result.successful_projects,
-        "failed_projects": result.failed_projects,
+        "successful_projects": 0,
+        "failed_projects": len(projects),
+        "expected_projects": list(result.expected_projects),
+        "shared_infrastructure_exit_code": result.shared_infrastructure_exit_code,
+        "shared_infrastructure": (
+            {
+                "expected_stage_keys": list(shared_run.expected_stage_keys),
+                "outcomes": [outcome.to_dict() for outcome in shared_run.outcomes],
+                "exit_code": shared_run.exit_code,
+                "complete": shared_run.complete,
+            }
+            if shared_run is not None and shared_run.exit_code == result.shared_infrastructure_exit_code
+            else None
+        ),
+        "complete": False,
+        "exit_code": result.exit_code,
         "total_duration": result.total_duration,
         "infra_test_duration": result.infra_test_duration,
         "projects": {},
@@ -77,12 +93,28 @@ def _build_summary_dict(result: MultiProjectResult, projects: list[Any]) -> dict
     for proj_name in project_names:
         raw = project_results.get(proj_name, [])
         proj_result = raw if isinstance(raw, list) else []
+        run = validated_project_run(result, proj_name)
+        passed = run is not None and run.complete and proj_name in result.expected_projects
         summary["projects"][proj_name] = {
-            "success": len(proj_result) > 0 and all(stage.success for stage in proj_result),
+            "success": passed,
+            "exit_code": run.exit_code if run is not None else 1,
+            "expected_stage_keys": list(run.expected_stage_keys) if run is not None else [],
+            "outcomes": [outcome.to_dict() for outcome in run.outcomes] if run is not None else [],
             "duration": sum(stage.duration for stage in proj_result),
-            "stages_completed": len(proj_result),
+            "stages_completed": sum(outcome.complete for outcome in run.outcomes) if run is not None else 0,
             "errors": [stage.error_message for stage in proj_result if stage.error_message],
         }
+
+    summary["successful_projects"] = sum(row["success"] for row in summary["projects"].values())
+    summary["failed_projects"] = len(projects) - summary["successful_projects"]
+    summary["complete"] = (
+        tuple(project_names) == result.expected_projects
+        and result.exit_code == 0
+        and summary["successful_projects"] == len(projects)
+        and bool(projects)
+    )
+    if not summary["complete"] and summary["exit_code"] == 0:
+        summary["exit_code"] = 1
 
     if project_results:
         try:
@@ -112,12 +144,12 @@ def _build_summary_dict(result: MultiProjectResult, projects: list[Any]) -> dict
         "errors_by_project": {proj: len(summary["projects"].get(proj, {}).get("errors", [])) for proj in project_names},
     }
 
-    if result.failed_projects > 0:
+    if summary["failed_projects"] > 0:
         summary["recommendations"].append(
             {
                 "priority": "high",
                 "action": "Review failed projects",
-                "details": f"{result.failed_projects} project(s) failed execution",
+                "details": f"{summary['failed_projects']} project(s) failed execution",
             }
         )
     if summary["performance_analysis"].get("average_duration", 0) > 300:
@@ -202,6 +234,13 @@ def _format_multi_project_summary_markdown(summary: dict[str, Any]) -> str:
 
     if summary.get("infra_test_duration", 0) > 0:
         lines.extend([f"- **Infrastructure Tests:** {summary['infra_test_duration']:.1f}s", ""])
+    if shared := summary.get("shared_infrastructure"):
+        lines.append(f"- **Shared Infrastructure Exit:** {shared['exit_code']}")
+        for outcome in shared["outcomes"]:
+            lines.append(
+                f"- **{outcome['stage_key']}:** {outcome['status']}; original child exit {outcome['child_exit_code']}"
+            )
+        lines.append("")
 
     lines.extend(["## Project Results", ""])
 

@@ -96,8 +96,8 @@ slides:
   - kind: content
     title: "Already public"
     bullets:
-      - "Concept DOI {{PITCH_SUBJECT_DOI}}, with a version-specific Zenodo deposit for the current release."
-      - "{{PITCH_SUBJECT_PUBLISHED_PLATFORM_COUNT}} durable publication records on file: {{PITCH_SUBJECT_PUBLISHED_PLATFORM_NAMES}}."
+      - "Concept DOI {{PITCH_SUBJECT_DOI}}. Intended v{{PITCH_SUBJECT_VERSION}} is {{PITCH_SUBJECT_RELEASE_STATUS}}."
+      - "Prior v{{PITCH_SUBJECT_LAST_PUBLISHED_VERSION}} has {{PITCH_SUBJECT_LAST_PUBLISHED_PLATFORM_COUNT}} historical references: {{PITCH_SUBJECT_LAST_PUBLISHED_PLATFORM_NAMES}}."
       - "Licensed {{PITCH_SUBJECT_LICENSE}} — the introspection code, not only the prose, is available for a science-integrity team to audit directly at {{PITCH_SUBJECT_GITHUB}}."
     source: "projects/templates/template_template/manuscript/config.yaml"
 

@@ -1,7 +1,7 @@
 # tests/ — template_sia
 
 - Real filesystem fixtures under `../src/template_sia/fixtures/recorded_generations/`
-- No mocks — subprocess and temp dirs only
+- No mocks — real subprocesses, temp dirs, controlled loopback HTTP, and restricted Docker containers
 - Opt-in Ollama tests: `@pytest.mark.requires_ollama` (excluded from the
   default gate; the marker also keeps the coverage run offline)
 - `conftest.py` exposes the `copy_project_sandbox` fixture (guarded project

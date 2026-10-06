@@ -1,6 +1,6 @@
 # Formal Configuration - Strongly-Typed Multiagent Ant-Robot Colony Exemplar
 # This file serves as a meta-artifact linking the prose of the manuscript to the execution
-# layer. It is loaded by `yaml.safe_load` inside `infrastructure/rendering/_pdf_combined_renderer.py`
+# layer. It is loaded by `yaml.safe_load` inside `infrastructure/rendering/_pdf_title_page_config.py`
 # (manuscript metadata).
 
 # Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_report_model.py`
@@ -8,12 +8,12 @@ paper:
   # RASP Standard: Title must be descriptive and objective
   title: "Illegal States, Mostly Unrepresentable"
   subtitle: "Session Types, Affine Handles, and Machine-Checked Invariants in a Simulated Ant-Robot Colony -- and an Honest Account of Where the Guarantees Stop"
-  version: "0.1.0"
+  version: "0.2.0"
   date: ""  # Auto-generated via `infrastructure/validation/output/validator.py` if empty
   cover:
     image: "figures/cover_colony.png"
 
-# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
+# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/_metadata_extraction.py`)
 authors:
   - name: "Daniel Ari Friedman"
     orcid: "0000-0001-6232-9096"
@@ -21,8 +21,12 @@ authors:
     affiliation: "Active Inference Institute"
     corresponding: true
 
-# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
+# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/zenodo/publish.py`)
 publication:
+  release_status: "unreleased"
+  intended_version: "0.2.0"
+  platform_version: "4.0.0"
+  last_published_version: "0.1.0"
   doi: "10.5281/zenodo.21298885"
   doi_status: "DOI published" # Concept DOI — reserved on first real publish, not fabricated here
   version_doi: "10.5281/zenodo.21298886"

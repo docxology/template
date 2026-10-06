@@ -9,6 +9,7 @@ from __future__ import annotations
 import os
 import tempfile
 import time
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, cast
 
@@ -39,9 +40,17 @@ from infrastructure.core.testing.pytest_orchestration import (
     validate_coverage_parallel,
     resolve_xdist_args,
 )
-from infrastructure.core.runtime.environment import resolve_test_python
+from infrastructure.core.testing.project_test_runtime import (
+    ProjectTestRuntimeError,
+    admit_project_test_runtime,
+    build_audited_project_test_command,
+    project_test_deadline,
+    remaining_test_budget,
+)
+from infrastructure.core.runtime.python_binding import analysis_runtime_binding
+from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
 from infrastructure.project.discovery import resolve_project_root
-from infrastructure.reporting.coverage_reporter import generate_test_report, save_test_report_to_files
+from infrastructure.reporting.report_generator import generate_test_report, save_test_report_to_files
 from infrastructure.reporting.pipeline_test_reporting import (
     report_infra_only_results,
     report_results,
@@ -49,6 +58,7 @@ from infrastructure.reporting.pipeline_test_reporting import (
 from infrastructure.reporting.project_verifier import ProjectVerifierError, run_declared_project_verifier
 from infrastructure.reporting.suite_runner import (
     DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+    DEFAULT_TEST_SUITE_TIMEOUT_SECONDS,
     TestSuiteConfig,
     run_test_suite,
 )
@@ -105,7 +115,7 @@ def _build_generic_project_suite_config(
         label="Project",
         cmd=cmd,
         env=env,
-        repo_root=repo_root,
+        repo_root=project_root,
         coverage_json_paths=[
             project_root / "coverage_project.json",
             project_root / "coverage.json",
@@ -150,11 +160,6 @@ def run_infrastructure_tests(
     start_time = time.time()
     project_root = resolve_project_root(repo_root, project_name)
 
-    # Infrastructure coverage belongs to the repository root. Do not recurse
-    # into lifecycle sidecars or active private projects that may be running
-    # their own isolated test producer in the same checkout.
-    clean_coverage_files(repo_root, recursive=False)
-
     testing_config = get_testing_config(repo_root)
     full_scope = scope == "full"
     infra_threshold = testing_config.infra_coverage_threshold if full_scope else 0
@@ -179,8 +184,15 @@ def run_infrastructure_tests(
         include_ollama_tests=include_ollama_tests,
         include_bench=include_bench,
     )
-    cmd = resolve_test_python(repo_root / ".venv")
-    cmd += ["-m", "pytest"]
+    try:
+        deadline = project_test_deadline(DEFAULT_TEST_SUITE_TIMEOUT_SECONDS)
+        selected, runtime = admit_project_test_runtime(repo_root, deadline=deadline)
+    except ProjectTestRuntimeError as exc:
+        logger.error("Infrastructure test prepared runtime refused: %s", exc)
+        return exc.exit_code, cast(
+            TestSuiteResults, {"exit_code": exc.exit_code, "original_exit_code": exc.original_exit_code}
+        )
+    cmd: list[str] = []
     cmd.extend(resolve_infrastructure_test_paths(repo_root, scope))
     if full_scope:
         cmd.append("--cov=infrastructure")
@@ -214,6 +226,12 @@ def run_infrastructure_tests(
     env["PYTHONPATH"] = build_pythonpath(repo_root, project_root)
     prepend_uv_to_path(env)
 
+    cmd = list(build_audited_project_test_command(repo_root, selected, tuple(cmd), module="pytest"))
+
+    # Admission and command construction precede mutation of existing evidence.
+    # Root-only cleanup preserves concurrently running lifecycle projects.
+    clean_coverage_files(repo_root, recursive=False)
+
     if discovery_preflight_enabled(env=env):
         log_discovered_tests(
             cmd,
@@ -223,6 +241,7 @@ def run_infrastructure_tests(
             timeout_seconds=parse_test_discovery_timeout(scope),
         )
 
+    test_results: dict[str, Any] = {}
     try:
         config = _build_infrastructure_suite_config(
             cmd=cmd,
@@ -233,9 +252,25 @@ def run_infrastructure_tests(
             quiet=quiet,
             scope=scope,
         )
+        capacity = remaining_test_budget(deadline)
+        config.timeout_seconds = capacity
+        config.total_timeout_seconds = capacity
         exit_code, test_results = run_test_suite(config)
-        if strict and test_results.get("failed", 0) > 0:
+        test_results.setdefault("original_exit_code", exit_code)
+        exit_code = _test_child_exit_code(exit_code, test_results)
+        if strict and test_results.get("failed", 0) > 0 and exit_code not in (2, 75, 124, 130):
             exit_code = 1
+        try:
+            unchanged_runtime = analysis_runtime_binding(repo_root, interpreter=selected) == runtime["binding"]
+        except (OSError, ValueError) as exc:
+            logger.error("Infrastructure prepared runtime custody refused after child: %s", exc)
+            unchanged_runtime = False
+        if not unchanged_runtime and exit_code == 0:
+            exit_code = 75
+        test_results["selected_runtime"] = runtime
+        if exit_code == 0:
+            remaining_test_budget(deadline)
+        test_results["exit_code"] = exit_code
         duration = time.time() - start_time
         logger.info("Infrastructure test suite completed in %.1fs", duration)
         if exit_code == 0:
@@ -244,7 +279,11 @@ def run_infrastructure_tests(
     except (OSError, RuntimeError, ValueError) as exc:
         duration = time.time() - start_time
         logger.error("Failed to run infrastructure tests after %.1fs: %s", duration, exc, exc_info=True)
-        return 1, cast(TestSuiteResults, {})
+        code = getattr(exc, "exit_code", 1)
+        test_results.setdefault("original_exit_code", getattr(exc, "original_exit_code", None))
+        test_results.setdefault("diagnostic", str(exc))
+        test_results["exit_code"] = code
+        return code, cast(TestSuiteResults, test_results)
 
 
 def run_project_tests(
@@ -298,9 +337,8 @@ def _run_project_tests_impl(
 ) -> tuple[int, TestSuiteResults]:
     """Execute project test suite with coverage (assumes the output lock is held)."""
     start_time = time.time()
+    deadline = project_test_deadline(DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS)
     project_root = resolve_project_root(repo_root, project_name)
-
-    clean_coverage_files(repo_root, scope_dir=project_root)
 
     testing_config = get_testing_config(repo_root)
     declared_floor = project_declared_coverage_floor(project_root)
@@ -314,7 +352,7 @@ def _run_project_tests_impl(
         declared_command = project_declared_test_command(project_root)
     except ValueError as exc:
         logger.error("Invalid declared project verifier for '%s': %s", project_name, exc)
-        return 1, cast(TestSuiteResults, {})
+        return 2, cast(TestSuiteResults, {"exit_code": 2, "original_exit_code": None})
     if declared_command is not None:
         log_substep(
             "Using the project's explicit structured Stage-01 verifier "
@@ -328,6 +366,7 @@ def _run_project_tests_impl(
                 project_name,
                 declared_command,
                 coverage_floor=project_threshold,
+                timeout_seconds=remaining_test_budget(deadline),
             )
             exit_code, guarded_results = enforce_project_suite_guards(
                 exit_code,
@@ -342,7 +381,7 @@ def _run_project_tests_impl(
             if exit_code == 0:
                 log_success("Project verifier passed", logger)
             return exit_code, cast(TestSuiteResults, guarded_results)
-        except (OSError, ProjectVerifierError, ValueError) as exc:
+        except (OSError, ProjectVerifierError, ProjectTestRuntimeError, ValueError) as exc:
             duration = time.time() - start_time
             logger.error(
                 "Declared project verifier failed after %.1fs: %s",
@@ -350,7 +389,26 @@ def _run_project_tests_impl(
                 exc,
                 exc_info=True,
             )
-            return 1, cast(TestSuiteResults, {})
+            code = getattr(exc, "exit_code", 1)
+            return code, cast(
+                TestSuiteResults,
+                {
+                    "exit_code": code,
+                    "original_exit_code": getattr(exc, "original_exit_code", None),
+                },
+            )
+
+    try:
+        _selected, runtime = admit_project_test_runtime(project_root, deadline=deadline)
+    except ProjectTestRuntimeError as exc:
+        logger.error("Project test runtime unavailable: %s", exc)
+        return exc.exit_code, cast(
+            TestSuiteResults,
+            {
+                "exit_code": exc.exit_code,
+                "original_exit_code": exc.original_exit_code,
+            },
+        )
 
     cmd = build_project_pytest_command(
         project_root,
@@ -358,6 +416,7 @@ def _run_project_tests_impl(
             str(project_root / "tests"),
             f"--cov={project_root / 'src'}",
         ],
+        interpreter=_selected,
     )
     project_cov_config = resolve_project_cov_config(project_root)
     if project_cov_config is not None:
@@ -403,6 +462,10 @@ def _run_project_tests_impl(
         cmd.extend(["-q"])
     prepend_uv_to_path(env)
 
+    # Both the runtime and all invocation options have been admitted. A missing
+    # interpreter or invalid verifier declaration must retain prior evidence.
+    clean_coverage_files(repo_root, scope_dir=project_root)
+
     # Large private projects can legitimately expose tens of thousands of
     # parametrized tests. Use the full-suite discovery budget here; the former
     # 30-second default produced a misleading warning even when collection
@@ -416,6 +479,7 @@ def _run_project_tests_impl(
             timeout_seconds=parse_test_discovery_timeout("full"),
         )
 
+    test_results: dict[str, Any] = {}
     try:
         config = _build_generic_project_suite_config(
             project_name=project_name,
@@ -426,8 +490,13 @@ def _run_project_tests_impl(
             coverage_threshold=project_threshold,
             quiet=quiet,
         )
+        capacity = remaining_test_budget(deadline)
+        config.timeout_seconds = capacity
+        config.total_timeout_seconds = capacity
         exit_code, test_results = run_test_suite(config)
-        if strict and test_results.get("failed", 0) > 0:
+        test_results.setdefault("original_exit_code", exit_code)
+        exit_code = _test_child_exit_code(exit_code, test_results)
+        if strict and test_results.get("failed", 0) > 0 and exit_code not in (2, 75, 124, 130):
             exit_code = 1
         exit_code, test_results = enforce_project_suite_guards(
             exit_code,
@@ -437,6 +506,17 @@ def _run_project_tests_impl(
             project_threshold=project_threshold,
             strict=strict,
         )
+        try:
+            unchanged_runtime = analysis_runtime_binding(project_root, interpreter=_selected) == runtime["binding"]
+        except (OSError, ValueError) as exc:
+            logger.error("Selected prepared test runtime custody refused after child: %s", exc)
+            unchanged_runtime = False
+        if not unchanged_runtime and exit_code == 0:
+            exit_code = 75
+        if exit_code == 0:
+            remaining_test_budget(deadline)
+        test_results["selected_runtime"] = runtime
+        test_results["exit_code"] = exit_code
         duration = time.time() - start_time
         logger.info("Project test suite completed in %.1fs", duration)
         if exit_code == 0:
@@ -445,7 +525,11 @@ def _run_project_tests_impl(
     except (OSError, RuntimeError, ValueError) as exc:
         duration = time.time() - start_time
         logger.error("Failed to run project tests after %.1fs: %s", duration, exc, exc_info=True)
-        return 1, cast(TestSuiteResults, {})
+        code = getattr(exc, "exit_code", 1)
+        test_results.setdefault("original_exit_code", getattr(exc, "original_exit_code", None))
+        test_results.setdefault("diagnostic", str(exc))
+        test_results["exit_code"] = code
+        return code, cast(TestSuiteResults, test_results)
 
 
 def execute_test_pipeline(
@@ -493,7 +577,16 @@ def execute_test_pipeline(
             parallel=parallel,
         )
 
-    if run_project:
+    project_blocked = run_project and run_infra and infra_exit != 0
+    if project_blocked:
+        logger.error("Project tests blocked by unsuccessful shared infrastructure verification")
+        project_exit = 75
+        project_results = cast(
+            TestSuiteResults,
+            {"exit_code": 75, "original_exit_code": None, "diagnostic": "Shared infrastructure verification failed"},
+        )
+
+    if run_project and not project_blocked:
         phase_num = 2 if run_infra else 1
         phase_title = f"Project Tests ({project_name})" if run_infra else f"Project Tests ({project_name}) (Only)"
         log_header(f"Phase {phase_num}/{total_phases}: {phase_title}", logger)
@@ -510,12 +603,27 @@ def execute_test_pipeline(
             parallel=parallel,
         )
 
+    selected_suites = tuple(
+        (key, code, results)
+        for selected, key, code, results in (
+            (run_infra, "infra_tests", infra_exit, infra_results),
+            (run_project, "project_tests", project_exit, project_results),
+        )
+        if selected
+    )
+    # Exit 2 belongs to admission before any suite execution. Once a child has
+    # run, the common executed-run precedence describes aggregate completion.
+    if any(code == 2 and results.get("original_exit_code") is None for _, code, results in selected_suites) and not any(
+        results.get("original_exit_code") is not None for _, _, results in selected_suites
+    ):
+        return 2
+
     if run_project:
         report = generate_test_report(
             infra_results,
             project_results,
             repo_root,
-            include_coverage_details=True,
+            include_coverage_details=not project_blocked,
             include_infrastructure_coverage=run_infra,
             project_root=resolve_project_root(repo_root, project_name),
         )
@@ -525,10 +633,29 @@ def execute_test_pipeline(
     elif run_infra:
         report_infra_only_results(infra_exit, infra_results)
 
-    if run_project and run_infra:
-        return 1 if (infra_exit != 0 or project_exit != 0) else 0
-    if run_project:
-        return project_exit
-    if run_infra:
-        return infra_exit
-    return 0
+    if not selected_suites:
+        return 0
+    outcomes = tuple(_test_suite_outcome(key, code, results) for key, code, results in selected_suites)
+    return RunResult(tuple(key for key, _, _ in selected_suites), outcomes).exit_code
+
+
+def _test_suite_outcome(key: str, code: int, results: TestSuiteResults) -> StageOutcome:
+    """Retain actual child evidence under the shared executed-run exit policy."""
+    states = {
+        0: StageStatus.SUCCEEDED,
+        75: StageStatus.BLOCKED,
+        124: StageStatus.TIMED_OUT,
+        130: StageStatus.INTERRUPTED,
+    }
+    original = results.get("original_exit_code")
+    return StageOutcome(
+        key, states.get(code, StageStatus.FAILED), child_exit_code=original, diagnostic=results.get("diagnostic", "")
+    )
+
+
+def _test_child_exit_code(code: int, results: Mapping[str, Any]) -> int:
+    """Configured failure tolerance cannot authorize a successful test stage."""
+    original = cast(int | None, results.get("original_exit_code"))
+    if original is not None and original != 0:
+        return original if original in (75, 124, 130) else 1
+    return code if code in (0, 75, 124, 130) else 1

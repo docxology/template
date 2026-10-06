@@ -3,11 +3,7 @@
 from __future__ import annotations
 
 import subprocess
-
-try:
-    import tomllib
-except ImportError:  # Python <3.11 — use backport
-    import tomli as tomllib  # type: ignore[no-redef]
+import tomllib
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success

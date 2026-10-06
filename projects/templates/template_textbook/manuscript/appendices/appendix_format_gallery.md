@@ -4,7 +4,7 @@ This appendix is a **kitchen-sink demonstration**: a working example of every
 content primitive this template supports. Copy any block into a chapter and
 adapt it. Each example is real and renders through the standard pipeline; figures
 are produced deterministically by `src/visualization/` and embedded from
-`../figures/`. <!-- STUB: trim to the subset your book actually uses. -->
+`../figures/`. Each example demonstrates a rendering convention, not a new measurement.
 
 > **How to read this appendix.** Headings group primitives by kind: text, lists,
 > callouts, tables, math, figures, diagrams, code, cross-references, media, and
@@ -181,7 +181,7 @@ panels.](../../output/figures/gallery/gallery_multipanel.png){#fig:gallery_multi
 The full plot-type gallery lives in `output/figures/gallery/` and includes:
 line, scatter-with-fit, bar, grouped bar, horizontal bar, histogram, box,
 violin, heatmap, contour, quiver field, step, stacked area, error bars, log-log,
-pie, annotated, and multi-panel. <!-- STUB: embed the ones your chapters use. -->
+pie, annotated, and multi-panel. The chapters use the model curves and instructional error bars; the remaining plots demonstrate alternative presentations.
 
 ---
 
@@ -276,10 +276,10 @@ Cross-references resolve by label: figure [@fig:gallery_line], table
 [@tbl:gallery_alignment], equation [@eq:gallery_logistic], and section
 [@sec:appendix_formalisms]. Never hand-number — Pandoc fills these in.
 
-Citations resolve against `references.bib`: a single source [@smith2020foundations],
-multiple sources [@doe2019methods; @lee2021systems], and an in-text form —
-@garcia2022dynamics showed the effect first. A locator narrows the reference
-[@patel2018models, pp. 12–14].
+Citations resolve against `references.bib`: a single source [@box1976science],
+multiple sources [@sandve2013ten; @nyquist1932regeneration], and an in-text form —
+@lorenz1963deterministic showed the effect first. A locator narrows the reference
+[@may1976simple, pp. 12–14].
 
 ---
 
@@ -321,21 +321,21 @@ The error-bar figure [@fig:gallery_errorbar] visualises this kind of data:
 These are the reusable teaching elements chapters draw on.
 
 > **Learning objective.** After this section a reader can identify which Markdown
-> primitive to use for a given purpose. <!-- STUB: make objectives measurable. -->
+> primitive to use for a given purpose. Explain a selected primitive, identify its label, and justify its use in a worked example.
 
 > **Worked example.** Given $r = 0.8$, $K = 100$, $N_0 = 5$, evaluate $N(10)$ via
 > [@eq:gallery_logistic] using `textbook.models.logistic_growth`. The result
-> approaches $K$. <!-- STUB: show the full numeric work. -->
+> approaches $K$. At $t=10$, the denominator is $1+19e^{-8}=1.0063738$, so $N(10)=99.3667$.
 
 > **Try it.** Change $r$ to $1.5$ and predict, then check, how the curve shifts.
-> <!-- STUB: provide the expected answer in the question bank. -->
+> Expected answer: a larger positive rate advances the rise at positive time while preserving the initial value and the limiting capacity.
 
 > **Key terms.** [**model**](#gl:model), [**parameter**](#gl:parameter),
 > [**state**](#gl:state).
 
 > **Summary.** This appendix demonstrated text, lists, callouts, tables, math and
 > units, figures, diagrams, code, cross-references, media, and pedagogy blocks —
-> the complete primitive set. <!-- STUB: keep this in sync as you add primitives. -->
+> the complete primitive set. Check these examples in each selected output format when changing the rendering toolchain.
 
 ---
 

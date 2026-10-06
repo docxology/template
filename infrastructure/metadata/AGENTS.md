@@ -20,9 +20,8 @@ inverted dependency on the publishing package (RENDERING-LAYERING-1).
 2. Rendering may import this package directly; the rendering->publishing
    inversion guard (`tests/infra_tests/rendering/test_layering.py`) enforces
    that rendering never imports `infrastructure.publishing`.
-3. The historical paths `infrastructure.publishing.repository_metadata` and
-   `infrastructure.publishing.metadata_package` remain as re-export shims;
-   new code imports `infrastructure.metadata.*` directly.
+3. Consumers import repository and ebook metadata from their implementation
+   homes under `infrastructure.metadata`.
 
 ## Verification
 
@@ -33,7 +32,7 @@ uv run pytest tests/infra_tests/rendering/test_layering.py -q --no-cov
 
 ## Cross-refs
 
-- `infrastructure/publishing/AGENTS.md` — the shim paths and the publishing
+- `infrastructure/publishing/AGENTS.md` — the publishing
   metadata pipeline (`metadata_stage.py`, `metadata_export.py`).
 - `infrastructure/rendering/AGENTS.md` — the two retargeted consumers
   (`ebook_bundle.py`, `_pdf_title_page_publishing.py`).

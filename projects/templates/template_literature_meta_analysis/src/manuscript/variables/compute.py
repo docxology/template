@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from manuscript.variables._logging import logger
-from manuscript.variables.context import ExtractContext
-from manuscript.variables.io import load_config
-from manuscript.variables.registry import EXTRACTORS
+from template_literature_meta_analysis.manuscript.variables._logging import logger
+from template_literature_meta_analysis.manuscript.variables.context import ExtractContext
+from template_literature_meta_analysis.manuscript.variables.io import load_config
+from template_literature_meta_analysis.manuscript.variables.registry import EXTRACTORS
 
 
 def compute_variables(output_dir: Path) -> dict[str, str]:

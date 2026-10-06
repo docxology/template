@@ -3,28 +3,41 @@
 from __future__ import annotations
 
 import subprocess
+import shutil
+import os
 import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
-def test_generate_api_docs_writes_reference() -> None:
-    """generate_api_docs.py is aesthetic-only but should run without error."""
-    script = PROJECT_ROOT / "scripts" / "generate_api_docs.py"
+def test_generate_api_docs_writes_reference(tmp_path: Path) -> None:
+    """The actual script writes only its disposable project copy."""
+    project = tmp_path / "project"
+    project.mkdir()
+    for directory in ("scripts", "src", "manuscript"):
+        shutil.copytree(PROJECT_ROOT / directory, project / directory, ignore=shutil.ignore_patterns("__pycache__"))
+    shutil.copy2(PROJECT_ROOT / "pyproject.toml", project / "pyproject.toml")
+    canonical = PROJECT_ROOT / "output" / "docs" / "api_reference.md"
+    before = canonical.read_bytes() if canonical.exists() else None
+    script = project / "scripts" / "generate_api_docs.py"
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(PROJECT_ROOT.parents[2])
     result = subprocess.run(
         [sys.executable, str(script)],
-        cwd=PROJECT_ROOT,
+        cwd=project,
+        env=env,
         capture_output=True,
         text=True,
         timeout=120,
         check=False,
     )
     assert result.returncode == 0, result.stderr or result.stdout
-    api_ref = PROJECT_ROOT / "output" / "docs" / "api_reference.md"
+    api_ref = project / "output" / "docs" / "api_reference.md"
     assert api_ref.is_file()
     body = api_ref.read_text(encoding="utf-8")
     assert "gradient_descent" in body.lower()
+    assert (canonical.read_bytes() if canonical.exists() else None) == before
 
 
 def test_preflight_script_emits_diagnostics() -> None:

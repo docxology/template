@@ -9,9 +9,9 @@ from __future__ import annotations
 import pytest
 import networkx as nx
 
-from literature.models import Paper
-from knowledge_graph.nanopublication import Assertion
-from knowledge_graph.graph_builder import KnowledgeGraph, RDFLIB_AVAILABLE
+from template_literature_meta_analysis.literature.models import Paper
+from template_literature_meta_analysis.knowledge_graph.nanopublication import Assertion
+from template_literature_meta_analysis.knowledge_graph.graph_builder import KnowledgeGraph, RDFLIB_AVAILABLE
 
 
 def _make_paper(doi_suffix: str, title: str = "Test Paper") -> Paper:

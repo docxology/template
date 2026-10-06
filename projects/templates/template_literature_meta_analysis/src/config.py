@@ -95,7 +95,7 @@ DEFAULT_RELEVANCE_KEYWORDS: list[str] = []
 DEFAULT_DPI = 300
 
 # ---------------------------------------------------------------------------
-# Visualization styling (imported from visualization.style)
+# Visualization styling (imported from template_literature_meta_analysis.visualization.style)
 # ---------------------------------------------------------------------------
 # Figure size in inches
 FIGURE_SIZE = (12, 7)

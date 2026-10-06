@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import asdict, dataclass
-from typing import Literal, Mapping
+from typing import Literal, Mapping, cast
 
 APPROVAL_SCHEMA = "template-sia/approval-contract/1"
 ApprovalMode = Literal["fixture_replay", "live_proposal", "live_apply"]
@@ -27,6 +27,19 @@ class ApprovalContract:
     def validate(self) -> tuple[str, ...]:
         """Return actionable failures without granting approval implicitly."""
         issues: list[str] = []
+        for field in (
+            "mode",
+            "sandbox_root",
+            "diff_sha256",
+            "rollback_sha256",
+            "approval_status",
+            "approval_receipt_id",
+            "schema_version",
+        ):
+            if not isinstance(getattr(self, field), str):
+                issues.append(f"{field} must be a string")
+        if issues:
+            return tuple(issues)
         if self.schema_version != APPROVAL_SCHEMA:
             issues.append(f"schema_version must be {APPROVAL_SCHEMA}")
         if self.mode not in {"fixture_replay", "live_proposal", "live_apply"}:
@@ -61,14 +74,27 @@ class ApprovalContract:
 def validate_approval_contract(payload: Mapping[str, object]) -> tuple[str, ...]:
     """Validate a JSON-shaped approval payload without executing mutations."""
     try:
+        defaults = {
+            "mode": "",
+            "sandbox_root": "",
+            "diff_sha256": "",
+            "rollback_sha256": "",
+            "approval_status": "not_required",
+            "approval_receipt_id": "",
+            "schema_version": "",
+        }
+        fields = {key: payload.get(key, default) for key, default in defaults.items()}
+        invalid = tuple(f"{key} must be a string" for key, value in fields.items() if not isinstance(value, str))
+        if invalid:
+            return invalid
         contract = ApprovalContract(
-            mode=str(payload.get("mode", "")),  # type: ignore[arg-type]
-            sandbox_root=str(payload.get("sandbox_root", "")),
-            diff_sha256=str(payload.get("diff_sha256", "")),
-            rollback_sha256=str(payload.get("rollback_sha256", "")),
-            approval_status=str(payload.get("approval_status", "not_required")),  # type: ignore[arg-type]
-            approval_receipt_id=str(payload.get("approval_receipt_id", "")),
-            schema_version=str(payload.get("schema_version", "")),
+            mode=cast(ApprovalMode, fields["mode"]),
+            sandbox_root=cast(str, fields["sandbox_root"]),
+            diff_sha256=cast(str, fields["diff_sha256"]),
+            rollback_sha256=cast(str, fields["rollback_sha256"]),
+            approval_status=cast(ApprovalStatus, fields["approval_status"]),
+            approval_receipt_id=cast(str, fields["approval_receipt_id"]),
+            schema_version=cast(str, fields["schema_version"]),
         )
     except (TypeError, ValueError) as exc:
         return (f"invalid approval payload: {exc}",)

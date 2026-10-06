@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_redacted_report"
-version = "0.1.0"
+version = "0.2.0"
 license = {text = "CC-BY-4.0"}
 description = "Redacted release report and disclosure-control exemplar"
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 # visuals.py renders proof PDFs with reportlab and re-parses them with pypdf;
 # the isolated per-project interpreter needs both (mirrors template_pitch_deck).
 dependencies = [
@@ -51,3 +51,9 @@ exclude_lines = [
 ]
 
 [tool.uv]
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.0"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = ["raster-redaction"]

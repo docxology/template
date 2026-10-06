@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 
-from infrastructure.rendering._pdf_combined_renderer import (
+from infrastructure.rendering._pdf_combined_markdown import (
     flatten_manuscript_vars,
     preprocess_combined_markdown,
     substitute_manuscript_var_placeholders,

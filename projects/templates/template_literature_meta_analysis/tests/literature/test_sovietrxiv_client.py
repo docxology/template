@@ -15,7 +15,7 @@ from __future__ import annotations
 import requests
 from pytest_httpserver import HTTPServer
 
-from literature.sovietrxiv_client import (
+from template_literature_meta_analysis.literature.sovietrxiv_client import (
     CHINARXIV_API_URL,
     SOVIETRXIV_API_URL,
     _extract_authors,
@@ -23,7 +23,7 @@ from literature.sovietrxiv_client import (
     _parse_sovietrxiv_paper,
     search_sovietrxiv,
 )
-from literature.models import Author, Paper
+from template_literature_meta_analysis.literature.models import Author, Paper
 
 
 # ---------------------------------------------------------------------------

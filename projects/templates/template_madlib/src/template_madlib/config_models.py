@@ -35,7 +35,6 @@ DEFAULT_SECTION_TITLES: dict[str, str] = {
 REQUIRED_LEXICON_CATEGORIES: tuple[str, ...] = ("adjectives", "nouns", "verbs")
 COMPOSITION_DEPTHS: frozenset[str] = frozenset({"compact", "standard", "deep"})
 MADLIB_CONFIG_SCHEMA_VERSION = 2
-LEGACY_MADLIB_CONFIG_SCHEMA_VERSION = 1
 VISUALIZATION_FIELDS: tuple[str, ...] = (
     "enabled",
     "configured_field_matrix",
@@ -233,7 +232,6 @@ class MadlibConfig:
 
     title: str
     schema_version: int
-    source_schema_version: int
     seed: int
     composition_depth: str
     hypothesis: str

@@ -90,7 +90,7 @@ def main() -> int:
     if not targets.pdf.exists():
         print(
             f"ERROR: missing rendered PDF: {targets.pdf}\n"
-            f"Run: ./run.sh --project templates/{args.project} --pipeline --core-only"
+            f"Run: ./run.sh --project templates/{args.project} --pipeline --mode core"
         )
         return 1
 

@@ -4,12 +4,12 @@
 
 - **Real artifacts:** Tests read and write JSON, CSV, and markdown under `tmp_path` or the exemplar tree — no mocked filesystem or LLM responses.
 - **Fixture replay default:** `run_sia_loop_project(..., live=False)` is the primary integration path; it must stay deterministic and fast.
-- **Live mode is opt-in:** `@pytest.mark.requires_ollama` tests exercise `--live-sia` when Ollama and `requests` are available; CI skips them via marker expression.
+- **Actual model execution is opt-in:** `@pytest.mark.requires_ollama` reference feedback tests require the local provider. Numeric proposal acceptance uses the explicitly selected model and Docker image. Controlled loopback HTTP fixtures exercise actual transport without claiming an Ollama model ran.
 - **Coverage:** `src/` ≥ 90%. Measured counts live in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 
 ## Fixture / live-mode separation (the public-exemplar boundary)
 
-The single switch between modes is the `live` flag resolved by
+Fixture and unchanged reference diagnostics use the `live` flag resolved by
 `template_sia.loop.loop.build_run_config(project_root, *, live)`:
 
 - `live=False` (and the committed default `sia.live: false`) sets
@@ -25,6 +25,14 @@ generation's fixtures) are missing. This is what lets the public exemplar
 demonstrate self-improvement mechanics without implying autonomous live-code
 execution in CI.
 
+The separate `--live-proposals` controller has no fixture fallback. Its tests
+exercise real Docker targets using an existing local image, including timeout
+cleanup, numerical mutation, public selection, held-out isolation, and exact
+rollback. Tests may use a controlled loopback API provider; its responses are
+explicit transport fixtures. Tests skip when a Docker/image precondition is
+missing, and that skip does not meet runtime acceptance. CI provisions the
+pinned image explicitly before its SIA test cells.
+
 ## Test modules
 
 | File | Focus |
@@ -32,6 +40,7 @@ execution in CI.
 | `loop/test_loop.py` | Settings, fixture replay, script smoke |
 | `test_fixture_live_separation.py` | Fixture-vs-live boundary + fail-closed guardrails |
 | `loop/test_loop_live.py` | Single live generation (optional) |
+| `loop/test_live_proposals.py` | Numeric domain controls, real loopback transport, real Docker targets, failure diagnostics and rollback |
 | `manuscript/test_reports.py` | Manuscript variables and resolved tree |
 | `ledger/test_generation_records.py` | Run summary parsing |
 | `loop/test_reference_agent.py` | Task reference agent |

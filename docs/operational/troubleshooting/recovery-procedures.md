@@ -91,7 +91,7 @@ revision, inputs, and configuration:
 
 ```bash
 uv run python scripts/runner/execute_pipeline.py \
-  --project templates/template_code_project --core-only --resume
+  --project templates/template_code_project --mode core --resume
 ```
 
 If a checkpoint is malformed or mismatched, do not delete it. Preserve its path

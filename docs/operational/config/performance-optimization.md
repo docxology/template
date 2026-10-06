@@ -186,7 +186,7 @@ Monitor memory consumption:
 
 ```bash
 # Check memory usage during pipeline
-/usr/bin/time -v uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+/usr/bin/time -v uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 
 # Monitor continuously
 watch -n 1 'ps aux | grep python'
@@ -246,7 +246,7 @@ Typical pipeline execution times:
 
 ```bash
 # Profile entire pipeline
-uv run python -m cProfile -o pipeline.prof scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python -m cProfile -o pipeline.prof scripts/runner/execute_pipeline.py --project {name} --mode core
 
 # Analyze profile
 uv run python -m pstats pipeline.prof
@@ -263,7 +263,7 @@ uv run python -m cProfile -o stage.prof scripts/pipeline/stage_03_render.py --pr
 
 ```bash
 # Memory profiler
-uv run python -m memory_profiler scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python -m memory_profiler scripts/runner/execute_pipeline.py --project {name} --mode core
 ```
 
 ## Caching Strategies

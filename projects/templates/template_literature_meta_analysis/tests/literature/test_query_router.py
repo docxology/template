@@ -1,4 +1,4 @@
-from literature.query_router import QueryRouter
+from template_literature_meta_analysis.literature.query_router import QueryRouter
 
 
 def test_academic_query_prefers_crossref_first() -> None:

@@ -6,6 +6,8 @@ from pathlib import Path
 
 import numpy as np
 
+from helpers import PROJECT_DIR, REPO_ROOT
+
 from template_template.figures.architecture_viz import (
     comparative_feature_matrix_data,
     generate_all_architecture_figures,
@@ -15,9 +17,6 @@ from template_template.figures.architecture_viz import (
     generate_pipeline_stages,
 )
 from template_template.core.introspection import ModuleInfo, PipelineStage, ProjectAnalysis
-
-REPO_ROOT = Path(__file__).resolve().parents[3]
-PROJECT_DIR = Path(__file__).resolve().parents[1]
 
 
 def _sample_modules() -> list[ModuleInfo]:

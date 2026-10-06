@@ -10,7 +10,7 @@ import logging
 import math
 from collections import Counter
 
-from literature.models import Paper
+from template_literature_meta_analysis.literature.models import Paper
 
 logger = logging.getLogger(__name__)
 

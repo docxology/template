@@ -55,17 +55,21 @@ class SnapshotComparison:
         }
 
 
-def create_snapshot(output_dir: Path, *, stage_num: int, stage_name: str) -> PipelineSnapshot:
+def create_snapshot(
+    output_dir: Path, *, stage_num: int, stage_name: str, record_output_dir: Path | None = None
+) -> PipelineSnapshot:
     """Create and persist a snapshot for an output directory."""
+    storage = output_dir if record_output_dir is None else record_output_dir
     reports_dir = output_dir / "reports"
-    reports_dir.mkdir(parents=True, exist_ok=True)
-    manifest_path = reports_dir / "artifact_manifest.json"
+    if record_output_dir is None:
+        reports_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = storage / "reports" / "artifact_manifest.json"
     registry_path = reports_dir / "evidence_registry.json"
     validation_path = reports_dir / "validation_report.json"
     cleanup_report_path = reports_dir / "cleanup_report.json"
     artifacts = _artifact_hashes(manifest_path)
     snapshot = PipelineSnapshot(
-        path=_snapshot_path(output_dir, stage_num, stage_name),
+        path=_snapshot_path(storage, stage_num, stage_name),
         stage_num=stage_num,
         stage_name=stage_name,
         artifact_manifest_hash=compute_sha256(manifest_path) if manifest_path.exists() else "",

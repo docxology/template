@@ -11,7 +11,8 @@ logic trapped in a script, and mocks appearing in tests.
 | Layer | Primary Files | Public API | Invariants | Testability |
 |---|---|---|---|---|
 | **`src/` — EDA Library** | `src/template_eda_notebook/eda/dataset.py`, `src/template_eda_notebook/eda/cleaning.py`, `src/template_eda_notebook/eda/statistics.py`, `src/template_eda_notebook/eda/correlation.py`, `src/template_eda_notebook/eda/figures.py` | Re-exported from `src/template_eda_notebook/__init__.py` (`load_dataset`, `summary_statistics`, …) | Pure data transforms; no plotting, no file I/O, no `infrastructure.*` imports | Direct unit tests against the shipped CSV / real frames |
-| **`notebooks/` — Walkthrough** | `notebooks/eda_walkthrough.ipynb` | none (entry point) | Cells only call `src` functions; no `def`/`class` in cells | Structurally checked by `test_notebook.py` |
+| **`notebooks/` — Walkthrough** | `notebooks/eda_walkthrough.ipynb` | none (entry point) | Cells only call source functions; no `def`/`class` in cells | Structural tests and fresh-kernel numerical acceptance |
+| **Source runtime** | `src/template_eda_notebook/notebook_execution.py` | `ExecutionLimits`, `execute_notebook`, `run_notebook` | Declared Layer1 custody/process adapter outside pure transforms; frozen inputs, private kernel cache, executed-source audit and finite deadlines | Real kernels, cell errors, startup/timeout controls and custody failures |
 | **`scripts/` — Orchestrators** | `scripts/eda_analysis.py` | `run_eda()` + `main()` | All matplotlib + file writes live here; no analysis math | `test_eda_analysis_script.py` runs it against a temp root |
 | **`infrastructure/` — Cross-Cutting** | `infrastructure/rendering/`, `infrastructure/core/`, `infrastructure/validation/` | PDF rendering, logging, output validation | Generic reusable behavior only | Covered by the separate `tests/infra_tests/` suite |
 
@@ -26,6 +27,23 @@ tests/     ──→ src/, scripts/, notebooks/  (direct testing of real behavio
 
 No arrows go upward. The EDA library never imports `infrastructure.*` or any
 sibling project, so it stays forkable.
+
+The runtime reads an execution copy and appends an in-memory observation cell
+that serializes already-produced values. `eda/notebook_oracle.py` independently
+derives complete-case statistics, group means, Pearson correlations, histogram
+bins, group counts and sample-standardized values from the input CSV using
+NumPy/Pandas; it imports none of the EDA implementation functions. Exact input,
+notebook and source hashes must agree before and after execution. The loader
+and `eda/notebook_binding.py` are the existing read-only I/O exceptions to the
+domain transform rule; notebook execution stays outside `eda/`.
+
+`scripts/execute_notebook.py` delegates to the source runtime's process guardian
+and package-local worker. Installed API callers supply the exported project root
+explicitly; the actual installed worker needs no checkout script. The outer run deadline covers worker startup,
+execution and cleanup; the inner NBClient deadlines classify startup and cell
+failures. Error tags and skipped cells cannot count as acceptance. Runtime
+receipts are local-only, and the checked-in notebook is never rewritten by
+execution.
 
 ```mermaid
 graph TD

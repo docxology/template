@@ -25,8 +25,9 @@ what keeps that exploration reproducible, covered, and reusable.
 | Surface | Rule |
 | --- | --- |
 | `src/template_eda_notebook/eda/` (domain) | Pure pandas/numpy data transforms — **no** plotting, no file I/O, **no** `infrastructure` imports |
+| `src/template_eda_notebook/notebook_execution.py` (runtime) | NBClient execution with frozen admitted inputs, private selected-interpreter cache and pre-import executed-code audit; finite deadlines; the exact declared Layer1 runtime adapter exception |
 | `notebooks/` | Thin walkthrough; cells only call `src` functions (no `def`/`class` in cells) |
-| `scripts/` | Thin orchestrators; may import `infrastructure/` and `src/`; the only place matplotlib + file writes live |
+| `scripts/` | Thin orchestrators; may import `infrastructure/` and the unique source package; the notebook guardian and package worker live in `notebook_execution.py` |
 | Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); **do not** hardcode measured test totals or coverage % |
 
 The boundary is enforced by `check_project_src_infrastructure_boundary` via
@@ -75,7 +76,10 @@ uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py
 ```bash
 # Run project tests with the 90% coverage gate (configuration source of truth: pyproject.toml)
 uv run pytest projects/templates/template_eda_notebook/tests \
-    --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90
+    -c projects/templates/template_eda_notebook/pyproject.toml \
+    --cov=projects/templates/template_eda_notebook/src --cov-branch \
+    --cov-config=projects/templates/template_eda_notebook/pyproject.toml \
+    --cov-fail-under=90
 
 # Single class
 uv run pytest projects/templates/template_eda_notebook/tests -k "TestCorrelationMatrix"

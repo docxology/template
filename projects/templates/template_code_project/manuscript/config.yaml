@@ -1,7 +1,7 @@
 # Code Project Configuration - Optimization Research Exemplar
 # Comprehensive research project demonstrating advanced optimization algorithms
 # This file serves as a meta-artifact linking the prose of the manuscript to the execution
-# layer. It is loaded by `yaml.safe_load` inside `infrastructure/rendering/_pdf_combined_renderer.py`
+# layer. It is loaded by `yaml.safe_load` inside `infrastructure/rendering/_pdf_title_page_config.py`
 # (manuscript metadata) and `projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py`
 # (experiment parameters).
 
@@ -10,10 +10,10 @@ paper:
   # RASP Standard: Title must be descriptive and objective
   title: "Convergence Analysis of Gradient Descent Optimization"
   subtitle: "Theoretical Bounds and Empirical Performance in Quadratic Minimization"
-  version: "2.5.2"
+  version: "3.0.0"
   date: "2026-06-26" # Auto-generated via `infrastructure/validation/output/validator.py` if empty
 
-# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/metadata.py`)
+# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/_metadata_extraction.py`)
 authors:
   - name: "Daniel Ari Friedman"
     orcid: "0000-0001-6232-9096"
@@ -21,8 +21,12 @@ authors:
     affiliation: "Active Inference Institute"
     corresponding: true
 
-# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
+# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/zenodo/publish.py`)
 publication:
+  release_status: "unreleased"
+  intended_version: "3.0.0"
+  platform_version: "4.0.0"
+  last_published_version: "2.5.2"
   doi: "10.5281/zenodo.20417136" # Concept DOI — stable citation; cover page and CITATION.cff
   version_doi: "10.5281/zenodo.20931934" # Latest Zenodo deposit (updated by publish_project_release.py)
   version_record: "https://zenodo.org/records/20931934"
@@ -103,6 +107,14 @@ llm:
 
 # Consumed by: `infrastructure/reporting/pipeline_report_model.py` and CI/CD gates
 # ZERO-MOCK TOLERANCE: Any failure blocks manuscript rendering
+analysis:
+  scripts:
+    - optimization_analysis.py
+    - 04_benchmark_stage.py
+    - build_dashboard.py
+    - generate_api_docs.py
+    - z_generate_manuscript_variables.py
+
 testing:
   max_test_failures: 0
   max_infra_test_failures: 0

@@ -1461,3 +1461,159 @@ exemplar blockers `ARL-CROSS-PHASE-1`, `ARL-PHASE-PROVENANCE-1`,
 Their current size is Medium because each is a bounded unblock condition
 rather than an unbounded major feature. No local command can close the
 external or unavailable-tool rows.
+
+## Archived 2026-09-30 experiment-tree completion notes
+
+The experiment-tree TODO previously recorded "29 tests green; 92.23% coverage
+on `src/` (floor 90%)" and a passing public-capabilities registration gate.
+Those are historical receipts copied from the prior TODO, not a new verification
+run. Its PDF-admission proposal was removed because the canonical PDF and
+hydrated manuscript already exist in the tracked output tree. Future tree-diff
+and frozen-node pruning proposals remain active, scoped planning rows.
+
+## Archived 2026-10-02 experiment-tree backlog observations
+
+The experiment-tree TODO retained repeated descriptions of its existing validator
+contract and a completed signposting note. These are historical observations from
+the prior backlog, rather than fresh whole-suite or render acceptance. Its
+statements were:
+
+- The current validator contract covered tree discipline and token backing, with
+  controls for frozen-node mutation, run-command drift, and unbacked tokens.
+- README, AGENTS, and STANDALONE already carried configuration, validation, fork,
+  run-path, publication, and test signposts.
+- Publication/render settings were configuration-owned while tree status and
+  run-command policy remained engine-owned.
+
+The unresolved cross-tree node-ID reuse, render admission, and policy configuration
+gaps now have stable future-only rows in the project TODO. No historical
+publication evidence, frozen node, or registration was rewritten.
+
+## Current-contract prose relocated: 2026-10-05
+
+The passages below are preserved verbatim from active exemplar backlogs. They describe existing contracts, limitations, and conditional maintenance guidance; they are documentation records, not fresh runtime or release acceptance receipts. All stable work rows and external/tool blockers remain active in their original TODO files.
+
+### template_advanced_literature_review: Current test and validator contract
+
+
+The deterministic conflict and phase-boundary validators are local prerequisites;
+the two blocked Medium rows below cover the remaining source-bound calibration
+and live-retrieval provenance work before any new claim surface is promoted.
+
+### template_code_project: Current test and validator contract
+
+
+- Optimizer claims remain bounded by the bundled deterministic objectives and their negative controls.
+- Dashboard fields and chart payloads are covered by schema assertions; extend those assertions with any future field change.
+- The remaining infrastructure-path branches in `analysis/scientific_reports.py` and `analysis/workflow.py` are coverage guidance only; add subprocess-isolation tests only if a future coverage gate exposes a reproducible branch requirement.
+
+### template_data_descriptor: Current test and validator contract
+
+
+- The deterministic fixture descriptor is covered locally; live checks for larger
+  tables or non-CSV media remain external-data work and are represented by the
+  two blocked Medium rows below.
+
+### template_eda_notebook: Current test and validator contract
+
+
+- EDA claims remain bounded by the bundled deterministic dataset and its negative
+  controls; any future claim expansion requires a scoped row and new evidence.
+- Exact-value assertions cover the current figure-data preparers and statistics;
+  extend them with any future surface change.
+- Keep both source-to-notebook binding and fresh-kernel acceptance synchronized
+  as the public source surface grows; extend the independent numerical oracle
+  and its failing controls whenever walkthrough computations expand.
+- Byte-exact regeneration of `data/measurements.csv` remains intentionally out
+  of scope: the original fixture's random draw order is not recoverable, and
+  the generator (`src/template_eda_notebook/eda/generate.py`) deliberately reproduces the fixture's
+  documented contract (schema, size, missingness, correlation signs) rather
+  than claiming a false byte-exact clone. If the dataset is ever regenerated
+  from scratch, check in the new CSV and keep `DatasetSchema` in sync.
+- A future byte-exact fixture replacement would require a fixed-seed generator,
+  a committed replacement CSV, and a binding test; no historical fixture
+  reconstruction is claimed by this exemplar.
+
+### template_methods_paper: Current test and validator contract
+
+
+- Claims remain bounded by the two bundled worked examples
+  (`PBSPreparation`, `SensorCalibrationSweep`) and their negative controls.
+- Exact-value assertions cover the current step kinds, units, and gates; extend
+  them with any future DSL surface change.
+- `tests/conftest.py`'s invalid-method fixtures (dangling dependency, duplicate
+  step id, unknown unit, cycle, target mismatch) define the staged-gate contract
+  and must evolve with that contract.
+
+### template_newspaper: Current test and validator contract
+
+
+- Documentation-only README numbers are excluded from empirical claims, and
+  `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest`
+  is the stable single-stage refresh path.
+- Keep the platform-only `typography.py` fallback branch documented rather than mock-covered; revisit only if the no-mocks policy or the CI font matrix changes.
+
+### template_redacted_report: Current test and validator contract
+
+
+- Bind manuscript tables to the canonical audit JSON only if rendering can preserve the text-free projection and fails closed when the audit schema changes.
+- Pixel-level visual regression remains the explicit blocked-tool row below until the repo adopts stable screenshot/PDF raster tooling for exemplar outputs.
+- Keep year-stable ISO-date residual detection and complete collection-platform
+  span coverage under negative controls; contextual labels in explicitly public
+  explanatory prose must remain distinct from source-segment residuals.
+
+### template_storybook: Current configurable-surface contract
+
+
+- `trim_size` supports the current configured and custom page dimensions; a
+  future trim variant must add a schema value and a rendering/negative-control
+  test in one scoped row.
+- Per-page caption placement supports the current top and bottom zones; future
+  zones require a schema, accessibility, and raster-contrast contract.
+
+### template_textbook: Current test and validator contract
+
+
+- Negative controls for orphan chapter files, missing labs or questions, and
+  stale Mermaid diagrams are covered by the library and real CLI paths through
+  `--require-complete`.
+- Generated cover art and diagrams have deterministic checks; extend those
+  checks with any future visual-style change.
+- Textbook worked-example numbers, percentages, and appendix-gallery constants
+  are either configured facts or explicitly documentation-only examples before
+  Stage 04 is treated as warning-free.
+- Use `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest`
+  for single-stage analysis, render, and copy checks. It writes a
+  `current-output-snapshot` manifest without requiring a full
+  `PipelineExecutor` run.
+- Keep the optional external Mermaid `mmdc` boundary bounded by timeout,
+  isolated process group, descendant cleanup, and deterministic `.mmd` fallback;
+  synchronize its policy with infrastructure Mermaid renderers.
+
+## Planning handoff prose archive: 2026-10-05
+
+The following prior statements were removed from active future-only TODO prose
+while retaining their unresolved actions and blocker IDs. They are historical
+statements, not fresh acceptance of the current source.
+
+### template_advanced_literature_review
+
+> - Multi-phase architecture is documented distinctly from single-term template capabilities.
+
+### template_madlib
+
+> - The SHA-256 digest invariant is currently covered by parametric seed/lexicon tests; property-based tests are an optional future strengthening only if the lexicon format changes and must then be scoped as a row.
+
+### template_newspaper
+
+> - The platform-dependent `typography.py` `register_fonts()` fallback arc is documented in the README, architecture, and testing guide; its base-14 branch remains uncovered under the no-mocks policy.
+
+### template_template
+
+> The structurally unreachable introspection branches (the `dir()` fallback,
+>   redundant `is_dir()` re-check, and `ImportError` version fallback) are
+>   documented in the exemplar `tests/AGENTS.md`, rather than covered with mocks.
+
+### template_sia
+
+> The typed approval contract and fork guidance are ready; obtain the required owner receipt and a real disposable fork before enabling `live_apply`, then attach the approval receipt.

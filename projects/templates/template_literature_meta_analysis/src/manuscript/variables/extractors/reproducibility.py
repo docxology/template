@@ -17,8 +17,8 @@ extractor emits placeholder values rather than raising.
 
 from __future__ import annotations
 
-from manuscript.variables._logging import logger
-from manuscript.variables.context import ExtractContext
+from template_literature_meta_analysis.manuscript.variables._logging import logger
+from template_literature_meta_analysis.manuscript.variables.context import ExtractContext
 
 _DEFAULT_LOW_SCORE_THRESHOLD = 0.5
 _MAX_TABLE_ROWS = 15

@@ -1,12 +1,13 @@
 [project]
 name = "template-template-meta-project"
-version = "1.0.9"
+version = "2.0.0"
 license = {text = "Apache-2.0"}
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 description = "Self-referential study of the Docxology Template infrastructure, architecture, and provenance pipeline."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    "research-project-template==4.0.0",
     "matplotlib>=3.10.0",
     "pillow>=12.3.0",
     "numpy>=2.0.0",
@@ -24,7 +25,6 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
@@ -46,3 +46,13 @@ exclude_lines = [
 
 [tool.uv]
 # Inherits workspace settings from root pyproject.toml
+
+[tool.uv.sources]
+# Local preparation uses this checkout; standalone execution uses its admitted wheel.
+research-project-template = { path = "../../..", editable = true }
+
+# Compatibility contract for this independent exemplar release.
+[tool.template]
+platform_version = "4.0.0"
+tested_python_versions = ["3.12", "3.13", "3.14"]
+required_unpaid_capabilities = []

@@ -18,7 +18,9 @@ _IGNORED_OUTPUT_PARTS = frozenset(
         "logs",
         "hitl",
         "snapshots",
+        "telemetry",
         "__pycache__",
+        "node_modules",
         "fulltext",
         "llm",
         "translations",
@@ -39,6 +41,24 @@ _IGNORED_OUTPUT_FILENAMES = frozenset(
         "snapshot_compare.md",
         "validation_report.json",
         "validation_report.md",
+        "artifact_manifest_index.json",
+        "pipeline_report.json",
+        "pipeline_report.html",
+        "log_summary.txt",
+        "pipeline_report.txt",
+        "pipeline_report.md",
+        "pipeline_telemetry.json",
+        "pipeline_telemetry.txt",
+        "pause_recommendations.json",
+        "pause_recommendations.md",
+        "run_lessons.json",
+        "run_lessons.md",
+        "telemetry.json",
+        "telemetry.txt",
+        "telemetry.md",
+        "lessons.jsonl",
+        "lessons.md",
+        "next_run_context.md",
     }
 )
 OutputInventoryMode = Literal["stable-shippable-output-v1", "stable-local-output-v1"]
@@ -339,10 +359,16 @@ def _is_ignored_output_relative(relative: Path) -> bool:
         ".vrb",
     }:
         return True
-    if relative == Path("fulltext/fulltext_inventory.json"):
+    # Traversal must reach this single explicitly admitted fulltext receipt.
+    if relative in {Path("fulltext"), Path("fulltext/fulltext_inventory.json")}:
         return False
     return (
-        any(part in _IGNORED_OUTPUT_PARTS for part in rel_parts)
-        or relative.name in _IGNORED_OUTPUT_FILENAMES
-        or relative.suffix in _IGNORED_OUTPUT_SUFFIXES
+        bool(rel_parts)
+        and rel_parts[0] in _IGNORED_OUTPUT_PARTS
+        or (len(rel_parts) >= 2 and rel_parts[0] == "reports" and rel_parts[1] in _IGNORED_OUTPUT_PARTS)
+        or (
+            relative.name in _IGNORED_OUTPUT_FILENAMES
+            and (len(rel_parts) == 1 or (len(rel_parts) == 2 and rel_parts[0] == "reports"))
+        )
+        or (category in {"root", "pdf", "slides"} and relative.suffix in _IGNORED_OUTPUT_SUFFIXES)
     )

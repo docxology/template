@@ -45,6 +45,14 @@ def test_load_papers_plain_list(tmp_path: Path):
     assert aggregate is None
 
 
+def test_default_dashboard_does_not_replay_historical_deep_aggregate(tmp_path: Path):
+    corpus = _write_corpus(tmp_path)
+    (tmp_path / "aggregate.json").write_text(json.dumps({"unique_papers": [{"id": "old"}]}))
+    papers, aggregate = load_papers(_args(corpus=corpus))
+    assert len(papers) == 3
+    assert aggregate is None
+
+
 def test_load_papers_dict_wrapped_and_aggregate(tmp_path: Path):
     corpus_path = tmp_path / "corpus.json"
     corpus_path.write_text(json.dumps({"papers": [{"id": "a", "title": "A"}]}), encoding="utf-8")

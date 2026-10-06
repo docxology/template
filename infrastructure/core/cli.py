@@ -1,6 +1,6 @@
 """CLI interface for core infrastructure modules.
 
-This module is a compatibility/test surface: the production pipeline entry
+This module provides core command adapters: the production pipeline entry
 point is ``infrastructure.orchestration`` (invoked by ``run.sh``), while this
 surface is exercised by ``tests/infra_tests/core/test_cli.py`` and pinned in
 ``.cursor/operations_manifest.json``. Keep its handlers aligned with the
@@ -77,6 +77,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             logger.error(CLI_UNKNOWN_COMMAND.format(command=args.command))
             return 1
 
+    except KeyboardInterrupt:
+        return 130
+    except TimeoutError as e:
+        logger.error("Core CLI deadline expired: %s", e)
+        return 124
+    except ValueError as e:
+        logger.error("Invalid invocation: %s", e)
+        return 2
     except Exception as e:  # noqa: BLE001 - top-level CLI handler must catch all
         logger.error(CLI_COMMAND_FAILED.format(error=f"{type(e).__name__}: {e}"))
         return 1

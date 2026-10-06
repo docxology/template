@@ -39,10 +39,10 @@ graph TB
     class WORKING,OUTPUTS output
 ```
 
-## Core pipeline (`--core-only`)
+## Core pipeline (`--mode core`)
 
 The default [`pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml)
-defines the DAG. `--core-only` selects the core-tagged path and omits LLM and
+defines the DAG. `--mode core` selects the core-tagged path and omits LLM and
 other opt-in publication lanes. Because the declaration can evolve, use the
 [generated canonical stage table](workflow.md#canonical-stage-table-generated)
 for the current order, tags, and failure modes instead of relying on a copied
@@ -53,7 +53,7 @@ Coverage gates: 90% for a project `src/` tree and 60% for `infrastructure/`
 reference: [`RUN_GUIDE.md`](../RUN_GUIDE.md).
 
 Run the public control-positive exemplar:
-`./run.sh pipeline --project templates/template_code_project --core-only`.
+`./run.sh pipeline --project templates/template_code_project --mode core`.
 
 ## Key Principles
 

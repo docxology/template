@@ -230,7 +230,7 @@ class Corpus:
     def filter_by_subfield(self, subfield: str) -> Corpus:
         """Filter papers by subfield domain classification.
 
-        Uses lazy import of classify_paper from analysis.subfield_classifier
+        Uses lazy import of classify_paper from template_literature_meta_analysis.analysis.subfield_classifier
         to avoid circular dependencies at module load time.
 
         Args:
@@ -240,7 +240,7 @@ class Corpus:
         Returns:
             New Corpus containing only papers classified under the domain.
         """
-        from analysis.subfield_classifier import classify_paper
+        from template_literature_meta_analysis.analysis.subfield_classifier import classify_paper
 
         filtered: list[Paper] = []
         for paper in self._papers.values():

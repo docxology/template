@@ -14,7 +14,7 @@ local Ollama LLM for manuscript analysis and review generation.
 
 CLI Usage:
 - python3 scripts/pipeline/stage_06_llm_review.py                # Run both reviews and translations
-- python3 scripts/pipeline/stage_06_llm_review.py --reviews-only # Run only English scientific reviews
+- python3 scripts/pipeline/stage_06_llm_review.py --reviews-only # Run only English draft feedback
 - python3 scripts/pipeline/stage_06_llm_review.py --translations-only # Run only translations
 
 Exit codes:
@@ -61,14 +61,14 @@ def main(mode: str = ReviewMode.ALL, project_name: str = "project") -> int:
         Exit code (0=success, 1=failure, 2=skipped)
     """
     if mode == ReviewMode.REVIEWS_ONLY:
-        label = stage_label("LLM Scientific Review", project_name, repo_root=_REPO_ROOT)
+        label = stage_label("LLM Manuscript Review", project_name, repo_root=_REPO_ROOT)
         log_header(f"{label} (English)", logger)
     elif mode == ReviewMode.TRANSLATIONS_ONLY:
         log_header(stage_label("LLM Translations", project_name, repo_root=_REPO_ROOT), logger)
     else:
         # ALL mode runs both reviews and translations; use the review stage as
         # the lead banner since it executes first.
-        label = stage_label("LLM Scientific Review", project_name, repo_root=_REPO_ROOT)
+        label = stage_label("LLM Manuscript Review", project_name, repo_root=_REPO_ROOT)
         log_header(f"{label.split(':')[0]}: LLM Manuscript Review", logger)
 
     repo_root = _REPO_ROOT
@@ -93,12 +93,12 @@ def cli_main() -> int:
     mode_group.add_argument(
         "--reviews-only",
         action="store_true",
-        help="Run only English scientific reviews (no translations)",
+        help="Run only English draft feedback (no translations)",
     )
     mode_group.add_argument(
         "--translations-only",
         action="store_true",
-        help="Run only translations (no scientific reviews)",
+        help="Run only translations (no draft feedback)",
     )
 
     args = parser.parse_args()

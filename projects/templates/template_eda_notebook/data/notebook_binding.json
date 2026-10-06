@@ -1,12 +1,18 @@
 {
   "notebook": {
-    "code_digest": "74f9d8f5d70879488d2f5e1033bd72cf2783303242a53acd92fa1ad1a2008e2c",
+    "code_digest": "913fc07e4fed3a799049791fc68c31d3c066598b7a4f5b6a60955d8ccb5bd30d",
     "path": "notebooks/eda_walkthrough.ipynb"
   },
   "refresh_command": "uv run python scripts/refresh_notebook_binding.py",
   "schema_version": "template-eda-notebook-binding-v1",
-  "source_digest": "0a7f8c44ef67bbf52bdca208c6c775954ffc4b80992cd38f8428940d0da3b62d",
+  "source_digest": "611cfb56144d6fd87dab1ff27740717bad106c3c4e5edf09e7d80eefd79fcd7f",
   "sources": [
+    {
+      "path": "scripts/execute_notebook.py"
+    },
+    {
+      "path": "src/template_eda_notebook/__init__.py"
+    },
     {
       "path": "src/template_eda_notebook/eda/__init__.py"
     },
@@ -26,7 +32,16 @@
       "path": "src/template_eda_notebook/eda/notebook_binding.py"
     },
     {
+      "path": "src/template_eda_notebook/eda/notebook_oracle.py"
+    },
+    {
       "path": "src/template_eda_notebook/eda/statistics.py"
+    },
+    {
+      "path": "src/template_eda_notebook/notebook_execution.py"
+    },
+    {
+      "path": "src/template_eda_notebook/notebook_publication.py"
     }
   ]
 }

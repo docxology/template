@@ -2,140 +2,126 @@
 
 ## Architecture
 
-### Why does `src/` import from `infrastructure/` here, when `template_code_project/src/` doesn't?
+### Why does this project import the platform?
 
-The two exemplars sit at different points on the abstraction spectrum.
+The project owns literature workflow policy, citation projection, composition,
+and variables. It calls mature platform retrieval, citation, logging, reporting,
+configuration-byte, and confined I/O APIs through the exact paths declared in
+`manuscript/layer_contract.yaml`. Pure transformations stay independently testable.
 
-- `template_code_project` owns its **own algorithm** (`src/template_code_project/core/optimizer.py`); the algorithm has no upstream dependency, so `src/` can be infrastructure-free.
-- `template_search_project` has **no algorithm of its own**. Its value is in being a thin orchestration layer over `infrastructure.search.literature`, `infrastructure.reference.citation`, and `infrastructure.llm`. Forbidding those imports in `src/` would force the orchestration into `scripts/` — which would push every contributor towards mocking the infrastructure, defeating the zero-mock policy.
+### Why are standard and deep search separate?
 
-The boundary is preserved differently here: `src/pipeline/pipeline.py` and `src/search/deep_search.py` are the **only** modules that touch `infrastructure.search.*`; the rest of `src/` (figures, report, manuscript_variables, analysis, search_invariants) is pure.
+`pipeline/pipeline.py::run_literature_pipeline` runs one query. The explicit
+`search/deep_search.py::run_deep_search` fans out across keywords and retains
+per-keyword diagnostics before deduplication. Both reuse the citation-key utility;
+results remain generated outputs rather than edits to curated authoring files.
 
-### Why are `src/pipeline/pipeline.py` and `src/search/deep_search.py` separate modules instead of one big file?
+### Why does synthesis accept a callable?
 
-They have different fan-out semantics:
-
-- `pipeline.py::run_literature_pipeline` runs **one** `SearchQuery` against the configured sources, deduplicates on `paper.id`, enriches every result, and produces `manuscript/references.bib`.
-- `deep_search.py::run_deep_search` runs **N** queries (one per keyword), each capped at `max_results_per_keyword`, fully enriches every paper, and produces a per-keyword tree under `output/deep_search/` plus the unified `manuscript/references_deep.bib`.
-
-Splitting them keeps each function's input and output shape coherent and lets `tests/pipeline/test_pipeline.py` and `tests/search/test_deep_search.py` exercise the two contracts independently. They both delegate citation-key generation to the same `infrastructure.reference.citation.paper_to_bibentry` utility, and `_disambiguate_citation_key` (in `src/pipeline/pipeline.py`) is reused.
-
-### Why does `src/pipeline/synthesis.py` take a callable instead of an `LLMClient`?
-
-The duck-typed `llm: Callable[[str], str]` parameter is what makes the LLM testable without Ollama. Tests pass a deterministic local function:
-
-```python
-def deterministic_llm(prompt: str) -> str:
-    return f"CONTRIBUTION: stub for {prompt[:40]}"
-
-result = synthesise_per_paper(paper, "key2024", llm=deterministic_llm)
-```
-
-Runtime callers pass the adapter built by `src/pipeline/llm_runtime.py::build_llm_callable`, which wraps `infrastructure.llm.LLMClient`. The same function shape works in both worlds — there is no test-only branch in `src/pipeline/synthesis.py`.
+The callable parameter lets controlled tests exercise actual prompt assembly and
+response handling. Runtime callers use the platform LLM adapter. A controlled
+Python response proves that contract only; it is separate from a real model call
+and the audited unpaid acceptance receipt.
 
 ## Testing
 
-### How many tests, and what coverage?
+### Where are the test and coverage requirements?
 
-Live counts are tracked in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md); the suite runs well above the 90% gate. See [`testing_philosophy.md`](testing_philosophy.md) for the file-by-file breakdown.
+The project declares a 90% own-source coverage gate in `pyproject.toml`. Measured
+repository snapshots live in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
+Run the isolated project suite for current evidence; a stored count is not a new run.
 
-### How is the LLM tested without Ollama?
+### How are scripts tested?
 
-`src/pipeline/synthesis.py` accepts a callable, so `tests/pipeline/test_synthesis.py` passes a Python function as the `llm=` kwarg. `tests/pipeline/test_llm_runtime.py` exercises the adapter shape and asserts that `build_llm_callable` returns a deterministic stub when `infrastructure.llm` is unimportable. No Ollama dependency at any point.
+Project integration tests execute the real scripts against disposable project
+roots. The scripts load configuration and call the project modules. Real
+controlled HTTP responses, local corpora, generated citations, and renderer
+inputs exercise the underlying behavior without replacing dependencies.
 
-### Why 90% coverage? Can I lower it?
+## Search and models
 
-The gate ensures `src/` orchestration is exercised. Lowering it weakens the exemplar's authority. If coverage drops, add tests — do not lower the gate.
+### What does the core default do?
 
-### Do I need to test `scripts/`?
+It reads `data/corpus.json` with the local backend, disables abstract/fulltext
+network enrichment and synthesis, and runs five declared producers. Deep search,
+composition, and unpaid live acceptance require explicit commands. Paid
+Paperclip/deep-research capabilities are optional and are outside this program's
+acceptance.
 
-`scripts/` is exercised by integration tests (`tests/pipeline/test_scripts.py`, `tests/pipeline/test_pipeline_integration.py`, `tests/pipeline/test_composition_script.py`) that invoke the real CLI surface via `subprocess.run` with `--project-root` pointing at temp directories. The scripts themselves are intentionally thin so the integration coverage is sufficient.
+### Does a cache hit prove current live retrieval?
 
-## Search
+No. It replays stored query results. The cache identity includes normalized query,
+result cap, year filters, and source selection. Actual unpaid acceptance separately
+binds current source, admitted configuration, provider responses, licensed content,
+and selected model identity. Runtime cache timestamps remain operational metadata.
 
-### Live versus offline mode — how do they differ?
+### When does synthesis run?
 
-| Concern | Offline default | Live |
-|---|---|---|
-| `project_config.search.sources` | `[local]` | `[arxiv, crossref]` (or `[paperclip]`, etc.) |
-| Inputs | `data/corpus.json` | HTTP responses from the configured backends |
-| Caches written | `output/search/cache/`, `output/cache/abs/`, `output/cache/pdf/` (mostly inert offline) | All three are populated by the first run |
-| Reproducibility | Byte-stable | Byte-stable after the first run, because subsequent runs hit the cache |
+The standard config must enable it and the optional adapter must construct. An
+unavailable constructor returns no callable and the optional branch is skipped;
+an actual request can still fail. Deep per-paper request errors retain diagnostics
+and fail producer admission. The separate required live lane fails closed when its
+provider or model cannot perform the declared capability.
 
-Switching between modes is a config change only. The `infrastructure.search.literature.LocalBackend` is the offline backend used in tests and the default config.
+### Do seed and temperature guarantee identical model output?
 
-### Why are `year_min` / `year_max` applied twice?
+They record generation settings. Their presence does not prove byte-identical
+output, general improvement, or successful model execution. The review's
+determinism check inspects configured inputs; live receipts record actual model
+identity, requests, responses, and bounded execution.
 
-Once at the search backend (when supported) and again defensively in the aggregator. Some backends ignore year filters in certain query shapes; the second pass guarantees the user's filter is honoured regardless.
+## Manuscript and bibliography
 
-### `SearchCache` collisions — when do they happen?
+### Which reference files are authored?
 
-`SearchCache` keys on canonical query identity (sources + query string + year filters). Two distinct `SearchQuery` instances that canonicalise to the same key share a cache entry. If you change `project_config.search.max_results` without invalidating the cache, the cached result count is what you'll see — pass `--no-cache` or delete the cache directory to force a fresh fetch.
+`manuscript/references.bib` and `manuscript/references_deep.bib` are curated inputs.
+The standard and deep producers write full databases under `output/bibliography/`.
+Hydration copies curated databases and projects only additional keys into
+`output/manuscript/generated_search.bib`. Meaningful key collisions fail, and
+curated annotations remain intact.
 
-## LLM
+### Where is the generated deep review?
 
-### When does synthesis actually run?
+`output/manuscript/S02_generated_literature_review.md`. The authored S01 remains
+unchanged. Composition requires a current producer dependency; hydration verifies
+the composition's producer receipt, input hashes, and exact supplement bytes.
+An older S02 cannot accompany a different current producer unnoticed.
 
-Only when `config.llm.enabled: true` **and** the runtime can import `infrastructure.llm` **and** `infrastructure.llm.LLMClient` constructs successfully. All three conditions must hold. Otherwise `scripts/run_search_pipeline.py` and `scripts/run_deep_search.py` log a warning and skip the stage.
+### How do I add a deep keyword?
 
-### What happens if Ollama is down?
+1. Select the desired sources and keywords under `project_config.deep_search`.
+2. Run the deep producer explicitly with matching configuration/CLI overrides.
+3. Compose with the same overrides, then hydrate before rendering.
 
-The synthesis stage is skipped entirely. No `output/llm/synthesis.md` is written, no `output/llm/per_paper/*.md` files are written, and the reading report has no per-paper-notes / cross-corpus sections. There is **no fake placeholder**. The absence of those files is the only signal — by design — so that downstream readers cannot mistake stub output for real synthesis. See [`troubleshooting.md`](troubleshooting.md#llm-stage-produced-no-output).
+The shipped deep branch is disabled. Core discovery does not automatically execute
+these optional scripts or replay historical deep output.
 
-### Why pin `seed=42` and `temperature=0.0`?
+### What determines script order?
 
-Ollama threads the seed through the sampler, so a pinned model + seed + zero-temperature configuration produces byte-stable text on a given hardware/model combination. The pinning lets the `determinism_check` review stage diff two consecutive runs and flag drift.
+The explicit `analysis.scripts` list selects standard search, figures, variables,
+review, and dashboard in order. `tests/pipeline/test_script_order.py` verifies this
+selection. `scripts/review` is an out-of-band CLI used by the review producer.
+The default dashboard reads the current generated corpus and omits old deep
+aggregates; `--aggregate` is an explicit direct input.
 
-## Manuscript
+### Where does the PDF live?
 
-### Why two `.bib` files?
+The working combined PDF is under the project's `output/pdf/`. Successful copy
+promotion places artifacts under repository `output/templates/template_search_project/`.
+A stored PDF or source-only test is not a fresh render or release acceptance.
 
-`manuscript/references.bib` is produced by the single-query pipeline; `manuscript/references_deep.bib` is produced by the deep-search fan-out. They coexist because Pandoc's `--natbib` mode merges every `manuscript/*.bib` (sorted) into one bibliography at render time. Splitting the files keeps each pipeline's output isolated and reviewable independently. See [`syntax_guide.md`](syntax_guide.md#8-two-bibliography-citation-rule).
+### What if a generated path aliases an authored file?
 
-### How do I add a tracked keyword to the deep-search?
-
-1. Edit `manuscript/config.yaml` → `project_config.deep_search.keywords:` and add the new entry.
-2. Re-run `scripts/run_deep_search.py`.
-3. The composer (`scripts/s_compose_literature_review.py`) will pick up the new keyword's `output/deep_search/<keyword_slug>/` tree and include it in `manuscript/S01_literature_review.md` on the next pipeline run.
-
-No code changes required. `tests/publish/test_readme_config_consistency.py` ensures the README's documented keyword list stays aligned with `config.yaml`.
-
-### What is the alphabetical script-order convention?
-
-`scripts/*.py` are discovered in lexical order. The names encode the dependency graph: `run_*` (search) < `s_*` (composer) < `y_*` (figures) < `z_*` (resolver) < `zz_*` (review). Adding a new stage means picking a name that sorts at the right point. See [`style_guide.md`](style_guide.md#alphabetical-script-order-convention).
-
-### Where does the rendered PDF live?
-
-Working copy:
-```
-projects/templates/template_search_project/output/pdf/template_search_project_combined.pdf
-```
-
-Promoted copy (used by CI artifact upload and the multi-project executive report):
-```
-output/templates/template_search_project/template_search_project_combined.pdf
-```
-
-## Common Pitfalls
-
-### The composer ran after the resolver — why are deep citations failing?
-
-Because `output/manuscript/references_deep.bib` is the copy the renderer reads, and it was copied **before** the composer regenerated `S01_literature_review.md`. Run them in alphabetical order (`./run.sh --pipeline` does this automatically) or manually re-run `z_generate_manuscript_variables.py` after the composer.
-
-### My LLM call timed out
-
-`config.llm.review_timeout` (default `600.0` seconds) bounds individual LLM requests. Long fulltext + large context can exceed this. Either raise the timeout, lower `project_config.enrichment.max_fulltext_chars`, or use `project_config.deep_search.llm_review_timeout` to override per stage.
-
-### A run mutated `manuscript/references.bib` even though I didn't touch the corpus
-
-The BibTeX writer is a deterministic function of `(corpus, citation-key generator)`. If the file mutated, one of those changed: check `git diff data/corpus.json` and the per-citation-key disambiguation suffixes in `output/run_summary.json::citation_keys`.
+Nominated project cache and artifact I/O refuses symlink ancestors and leaves.
+The unsafe operation fails; authored bytes are preserved. Inspect the alias and
+repair that local generated path deliberately. The producer does not delete or
+replace the authored target.
 
 ## See Also
 
-- [`quickstart.md`](quickstart.md) — basic commands.
-- [`architecture.md`](architecture.md) — module boundaries and data flow.
-- [`output_conventions.md`](output_conventions.md) — producer / consumer mapping.
-- [`troubleshooting.md`](troubleshooting.md) — symptom-driven recipes.
-- [`syntax_guide.md`](syntax_guide.md) — Pandoc-crossref labels and the `{{TOKEN}}` registry.
-- [`testing_philosophy.md`](testing_philosophy.md) — zero-mock and LLM-as-callable patterns.
-- [`../manuscript/SYNTAX.md`](../manuscript/SYNTAX.md) — manuscript-side syntax conventions.
+- [`quickstart.md`](quickstart.md) — commands.
+- [`architecture.md`](architecture.md) — module boundaries.
+- [`output_conventions.md`](output_conventions.md) — artifact mapping.
+- [`rendering_pipeline.md`](rendering_pipeline.md) — current core and explicit deep flow.
+- [`syntax_guide.md`](syntax_guide.md) — citation and variable rules.
+- [`testing_philosophy.md`](testing_philosophy.md) — independent test evidence.

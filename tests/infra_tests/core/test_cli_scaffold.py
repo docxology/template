@@ -77,7 +77,7 @@ class TestPipelineSchemaAdopter:
         rc = pipeline_cli_main(["describe-pipeline", "--schema"])
         assert rc == 0
         schema = json.loads(capsys.readouterr().out)
-        # describe-pipeline exposes --format/--core-only/--yaml/--project/--repo-root
+        # describe-pipeline exposes --format/--mode core/--yaml/--project/--repo-root
         sub = schema["subcommands"]["describe-pipeline"]
         names = {o["name"] for o in sub["options"]}
-        assert {"format", "core_only", "yaml", "project", "repo_root"} <= names
+        assert {"format", "mode", "view", "yaml", "project", "repo_root"} <= names

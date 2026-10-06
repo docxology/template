@@ -139,7 +139,7 @@ def test_appendices_only_cite_and_link_defined_targets():
 
 # Finished reference chapters: (part_id, stem). Each must be fully filled —
 # real prose, no stub markers — while still satisfying the structural contract.
-WORKED_EXEMPLARS = [("part_I", "first_principles"), ("part_III", "case_studies")]
+WORKED_EXEMPLARS = [(chapter.part_id, chapter.stem) for chapter in CHAPTERS]
 
 
 @pytest.mark.parametrize("part_id,stem", WORKED_EXEMPLARS, ids=[s for _, s in WORKED_EXEMPLARS])
@@ -239,3 +239,65 @@ def test_documentation_placeholders_do_not_trigger_image_missing_diagnostics() -
     )
     missing = [problem for problem in problems if problem.code == MarkdownCode.IMG_MISSING]
     assert not missing, f"unexpected Markdown image diagnostics: {missing}"
+
+
+def test_canonical_book_is_complete_across_every_configured_section():
+    from textbook.audit import run_manuscript_audit
+
+    report = run_manuscript_audit(MANUSCRIPT.parent, CONFIG, require_complete=True)
+    assert report.problems == ()
+    assert report.total_stubs == 0
+    assert report.total_words > 20000
+    for chapter in CHAPTERS:
+        lab = (MANUSCRIPT / "labs" / chapter.part_id / f"lab_{chapter.stem}.md").read_text()
+        questions = (MANUSCRIPT / "questions" / chapter.part_id / f"q_{chapter.stem}.md").read_text()
+        assert "Solution" in lab or "Answer" in lab
+        assert "Answer" in questions
+
+
+def test_primary_bibliography_has_resolvable_publisher_identifiers():
+    from infrastructure.reference.citation.bibtex_parser import parse_bibtex
+
+    bib_path = MANUSCRIPT / "references.bib"
+    text = bib_path.read_text(encoding="utf-8")
+    assert "Placeholder" not in text
+    entries = parse_bibtex(text)
+    assert len(entries) == len(CITATION_KEYS)
+    # Exact primary publisher metadata is source-controlled; this gate requires
+    # identifiers without pretending to establish remote reachability.
+    for entry in entries:
+        assert entry.get("doi", "").startswith("10.")
+        assert entry.get("url", "").startswith("https://")
+
+
+def _runnable_examples():
+    examples = []
+    for path in sorted(MANUSCRIPT.rglob("*.md")):
+        if path.name in {"README.md", "AGENTS.md", "SYNTAX.md"}:
+            continue
+        for index, code in enumerate(
+            re.findall(r"^```python\n(.*?)^```", path.read_text(), re.MULTILINE | re.DOTALL), 1
+        ):
+            examples.append((f"{path.relative_to(MANUSCRIPT)}:{index}", code))
+    return examples
+
+
+@pytest.mark.parametrize("label,code", _runnable_examples(), ids=[name for name, _ in _runnable_examples()])
+def test_authored_python_example_executes_in_real_interpreter(label, code):
+    import hashlib
+    import subprocess
+    import sys
+
+    paths = sorted(p for p in MANUSCRIPT.rglob("*") if p.is_file())
+    before = {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+    bootstrap = f"import sys\nsys.path.insert(0, {str(MANUSCRIPT.parent / 'src')!r})\n"
+    result = subprocess.run(
+        [sys.executable, "-c", bootstrap + code],
+        cwd=MANUSCRIPT.parent,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, f"{label}: {result.stderr}"
+    assert {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in paths} == before

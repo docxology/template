@@ -1,8 +1,7 @@
-"""Core pipeline APIs with lazy compatibility re-exports.
+"""Core pipeline package APIs with lazy imports.
 
 Import leaf modules for new code (for example
-``infrastructure.core.pipeline.types``).  Package-level names remain available
-during the compatibility window, but loading this package no longer imports
+``infrastructure.core.pipeline.types``).  Package-level names are supported exports. Loading this package avoids importing
 reporting or scientific/visualization dependencies eagerly.
 """
 
@@ -147,7 +146,7 @@ __all__ = [
 
 
 def __getattr__(name: str) -> Any:
-    """Load a compatibility export only when it is requested."""
+    """Load a package export only when it is requested."""
     try:
         module_name, attribute = _EXPORTS[name]
     except KeyError as exc:

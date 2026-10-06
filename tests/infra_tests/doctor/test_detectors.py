@@ -7,6 +7,7 @@ from infrastructure.doctor.detectors import (
     detect_codex_startup_config,
     detect_doctor_state_writable,
     detect_pycache_clutter,
+    detect_python_version,
     detect_run_sh_executable,
     detect_stale_coverage_files,
     run_detectors,
@@ -28,6 +29,15 @@ def _make_min_repo(root: Path) -> None:
 # ---------------------------------------------------------------------------
 # Individual detectors
 # ---------------------------------------------------------------------------
+
+
+def test_python_detector_uses_current_runtime_floor(tmp_path: Path) -> None:
+    import sys
+
+    (finding,) = detect_python_version(tmp_path)
+    assert finding.code == "DOC102"
+    assert finding.healthy is (sys.version_info[:2] >= (3, 12))
+    assert "Python >= 3.12" in finding.description
 
 
 def test_run_sh_executable_detected(tmp_path: Path):

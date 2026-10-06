@@ -5,13 +5,11 @@ from __future__ import annotations
 import importlib.util
 import json
 import shutil
-import sys
 from pathlib import Path
 
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(PROJECT_ROOT.parents[2]))
 
 from infrastructure.validation.content.figure_validator import validate_figure_registry  # noqa: E402
 

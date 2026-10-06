@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import random
+import shutil
 from pathlib import Path
 
 import pytest
@@ -13,7 +14,7 @@ from pypdf import PdfReader
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.slide_deck import Slide
 
-from template_pitch_deck.paths import locate_repo_root, project_root
+from template_pitch_deck.paths import data_repo_root, project_root
 from template_pitch_deck.render_orchestration import (
     DeckAuditFailure,
     DiligenceAuditFailure,
@@ -29,7 +30,7 @@ from template_pitch_deck.render_orchestration import (
 
 @pytest.fixture(scope="module")
 def repo_root():
-    return locate_repo_root(project_root())
+    return data_repo_root(project_root())
 
 
 def test_load_deck_config_reads_real_config():
@@ -55,23 +56,26 @@ def test_configured_formats_reject_invalid_or_incomplete_contract(formats):
         _configured_formats({"formats": formats})
 
 
-def test_load_deck_config_prefers_nested_schema_and_supports_legacy(tmp_path: Path):
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {"deck": {"pitch_subject": "retired"}},
+        {"deck": {"pitch_subject": "retired"}, "project_config": {"deck": {"pitch_subject": "current"}}},
+        {},
+        [],
+        None,
+        {"project_config": []},
+        {"project_config": {"deck": None}},
+        {"project_config": {"deck": []}},
+    ],
+)
+def test_load_deck_config_rejects_retired_mixed_missing_and_malformed_shapes(tmp_path: Path, payload):
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir()
     config_path = manuscript / "config.yaml"
-    config_path.write_text(
-        yaml.safe_dump(
-            {
-                "deck": {"pitch_subject": "legacy"},
-                "project_config": {"deck": {"pitch_subject": "canonical"}},
-            }
-        ),
-        encoding="utf-8",
-    )
-    assert load_deck_config(tmp_path)["pitch_subject"] == "canonical"
-
-    config_path.write_text(yaml.safe_dump({"deck": {"pitch_subject": "legacy"}}), encoding="utf-8")
-    assert load_deck_config(tmp_path)["pitch_subject"] == "legacy"
+    config_path.write_text(yaml.safe_dump(payload), encoding="utf-8")
+    with pytest.raises(RenderingError):
+        load_deck_config(tmp_path)
 
 
 def test_subject_content_prefix_returns_configured_prefix_for_known_subject():
@@ -344,12 +348,15 @@ def test_render_one_length_layout_failure_preserves_standalone_and_targets(
 
 
 @pytest.mark.slow
-def test_render_all_decks_writes_real_artifacts(repo_root):
+def test_render_all_decks_writes_real_artifacts(repo_root, tmp_path: Path):
     """The isolated project runtime must produce all declared PDF+PPTX decks."""
     from pptx import Presentation
 
     logger = logging.getLogger("test")
-    written = render_all_decks(project_root(), repo_root, logger)
+    disposable = tmp_path / "pitch_deck"
+    shutil.copytree(project_root() / "manuscript", disposable / "manuscript")
+    shutil.copytree(project_root() / "output/figures", disposable / "output/figures")
+    written = render_all_decks(disposable, repo_root, logger)
     assert len(written) == 6
     assert {path.suffix for path in written} == {".pdf", ".pptx"}
     for path in written:

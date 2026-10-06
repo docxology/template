@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import analysis.subfield_registry as registry
-from analysis.subfield_defaults import DEFAULT_SUBFIELDS
-from analysis.subfield_registry import (
+import template_literature_meta_analysis.analysis.subfield_registry as registry
+from template_literature_meta_analysis.analysis.subfield_defaults import DEFAULT_SUBFIELDS
+from template_literature_meta_analysis.analysis.subfield_registry import (
     configure_subfields,
     get_pattern_cache,
     load_subfields_from_config,

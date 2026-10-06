@@ -6,7 +6,7 @@ paper:
   title: "Pools, Rules, and Tools: A Template-Integrated Resource Architecture"
   subtitle: "A Meta-Project Demonstrating Fonds, Rules, and Tools Integration in Research Software"
   short_title: "Pools, Rules, and Tools"
-  version: "1.0.0"
+  version: "2.0.0"
   date: "2026-07-10"
   keywords:
     - research software engineering
@@ -27,6 +27,10 @@ authors:
     corresponding: true
 
 publication:
+  release_status: "unreleased"
+  intended_version: "2.0.0"
+  platform_version: "4.0.0"
+  last_published_version: "1.0.0"
   doi: "10.5281/zenodo.21298888"
   doi_status: "DOI published"
   version_doi: "10.5281/zenodo.21298889"

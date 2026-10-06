@@ -3,7 +3,7 @@
 Fixes figure paths in generated LaTeX so that \\includegraphics commands
 resolve correctly when the LaTeX compiler runs from output/pdf/.
 
-Extracted from _pdf_tex_transforms.py for file-size health.
+The PDF renderer consumes this implementation directly.
 """
 
 import re

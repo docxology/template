@@ -6,7 +6,7 @@
 ## Publication identity
 
 - Standalone repository: [docxology/template_autoscientists](https://github.com/docxology/template_autoscientists)
-- Config version: `1.0.2`
+- Intended / published version: `2.0.0 pending; last published 1.0.2`
 - Stable concept DOI: [10.5281/zenodo.20533669](https://doi.org/10.5281/zenodo.20533669)
 - Latest deposited version DOI: [10.5281/zenodo.20931927](https://zenodo.org/records/20931927)
 - Additional declared locations: [github_pages](https://docxology.github.io/template_autoscientists/), [huggingface_hub](https://huggingface.co/datasets/ActiveInference/template_autoscientists), [ipfs_pinata](https://gateway.pinata.cloud/ipfs/QmX6F3ExeC87DxxH95YgJuHcJmjhXuf1x54BKF6V5bn5z4), [netlify](https://6a44401a17ba160047501e98--tranquil-kleicha-0c9203.netlify.app), [osf](https://osf.io/6xcf5/), [pypi](https://test.pypi.org/project/template-autoscientists/1.0.2/), [software_heritage](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_autoscientists)
@@ -74,11 +74,14 @@ uv run pytest projects/templates/template_autoscientists/tests/ \
   --cov=projects/templates/template_autoscientists/src --cov-fail-under=90
 ```
 
-## Intentional Non-Standalone Dependencies
+## Platform dependency
 
-The deterministic core is project-local. The optional `HermesProposer` path uses
-the template repo's `infrastructure.llm` client when run as an opt-in live demo;
-standalone forks can replace that adapter or keep the template infrastructure.
+The deterministic research core is project-local. The exemplar declares the
+research-project-template 4.0.0 runtime dependency for the shared bounded live
+coordination and custody support. The checkout-only uv resolver points to the
+platform root. Standalone acceptance builds the current platform and exemplar
+wheels, installs them into a selected fresh environment, and executes outside
+both source trees; it preserves their lock and source identities separately.
 
 ## What Not To Claim
 

@@ -10,9 +10,9 @@ format.
 
 from __future__ import annotations
 
-from literature.bibliography import corpus_to_bibtex, paper_to_bibentry
-from literature.corpus import Corpus
-from literature.models import Author, Paper
+from template_literature_meta_analysis.literature.bibliography import corpus_to_bibtex, paper_to_bibentry
+from template_literature_meta_analysis.literature.corpus import Corpus
+from template_literature_meta_analysis.literature.models import Author, Paper
 
 
 def _brace_balanced(text: str) -> bool:

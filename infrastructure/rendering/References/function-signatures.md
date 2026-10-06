@@ -522,7 +522,7 @@ def compile_latex(
     """
 ```
 
-### latex_package_validator.py
+### latex_discovery.py and latex_validation.py
 
 #### PackageStatus (class)
 ```python
@@ -616,6 +616,8 @@ def validate_preamble_packages(strict: bool = False) -> ValidationReport:
         ValidationReport for preamble packages
     """
 ```
+
+### latex_package_validator.py
 
 #### main (function)
 ```python

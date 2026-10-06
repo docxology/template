@@ -37,6 +37,18 @@ Scripts are verbose by design, printing each non-secret command executed and str
 
 ## Scripts
 
+### sync_standalone_mirrors.py
+
+Dry-run standalone synchronization uses exact canonical source exports by
+default. `--install-projection` explicitly enables versioned Git provider pins;
+Advanced additionally requires a prepared canonical `--meta-provider` checkout
+and its existing full `--meta-commit`. Both options must be supplied together.
+`--commit` authorizes the actual commit/push path; existing destination,
+source-removal review, retained evidence, and source custody gates still apply.
+Local projection admission is separate from public provider retrieval and
+isolated installation acceptance. See
+[`standalone-install-projection.md`](../../docs/guides/standalone-install-projection.md).
+
 ### test_pypi.py
 
 **Workflow:** Build → Upload → Fresh venv install → `template doctor`

@@ -12,13 +12,12 @@ as verified success.
 | Area | Files | Role |
 | --- | --- | --- |
 | Pipeline reports | `pipeline_report_model.py`, `pipeline_io.py`, `pipeline_markdown.py`, `pipeline_html.py` | Structured per-run stage reports; validation JSON and Markdown share one `SOURCE_DATE_EPOCH`-aware timestamp. |
-| Multi-project summaries | `multi_project_reporter.py`, `multi_project_report.py` | Terminal and last-run multi-project summaries. |
+| Multi-project summaries | `multi_project_reporter.py`, `multi_project_report.py` | Original expected selections and matching typed outcomes drive terminal and runtime summaries; aggregate artifacts stay in ignored `output/multi_project_summary/`. |
 | Executive reports | `executive_reporter.py`, `_executive_*`, `_dashboard_*`, `_csv_*` | Dashboard, CSV, HTML, image, and markdown report generation. |
 | Evidence/release | `evidence_graph.py`, `release_readiness.py` | Local evidence graph and no-network release-readiness dashboard. `evidence_graph.py` graphs this repo's own `pipeline.yaml` stage DAG (producer/consumer/validator/artifact/claim) — a structurally-similar-but-different-domain analog to `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s paper-content workflow graphs; cross-reference only, the two are not merged. |
 | Error/test helpers | `error_aggregator.py`, `suite_runner.py`, `pipeline_test_runner.py`, `project_verifier.py`, `pytest_output_parser.py` | Test orchestration and failure aggregation. `project_verifier.py` owns the nonce-bound receipt, confined argv, timeout, real-count, and independent coverage contract for explicitly declared single-project verifiers. |
 | Coverage parsing | `coverage_json_parser.py` | `parse_coverage_json` reads pytest-cov `coverage.json` into per-file and overall coverage stats. |
 | Coverage analysis | `coverage_analysis.py` | `format_coverage_status`, `analyze_coverage_gaps`, and `format_failure_suggestions` render coverage against thresholds and derive gap and failure hints. |
-| Coverage facade | `coverage_reporter.py` | Backwards-compatible re-export of `parse_coverage_json`, `parse_pytest_output`, `generate_test_report`, `save_test_report_to_files`, and the coverage-analysis helpers. |
 | Test summary builder | `report_builder.py` | `discover_active_projects` returns `ProjectInfo.qualified_name` (so `templates/<name>` does not collide with a flat sibling) and `generate_summary_report` aggregates infrastructure and project suite results into one weighted summary structure. |
 | Test result loaders | `result_loaders.py` | `load_test_results` and `load_infrastructure_results` read runner JSON into the `InfraResults` shape. |
 | Stage 01 reporting | `pipeline_test_reporting.py` | `report_results` and `report_infra_only_results` log the Stage 01 test-execution summary in human-readable form. |
@@ -70,14 +69,20 @@ HTML stays self-contained and the run is traceable.
 ```bash
 uv run python -m infrastructure.reporting.evidence_graph build templates/template_code_project --json /tmp/evidence_graph.json
 uv run python -m infrastructure.reporting.release_readiness --repo-root . --out output/release_readiness.md
-uv run python scripts/runner/execute_multi_project.py --public-projects
+uv run python scripts/runner/execute_multi_project.py --mode core --run-timeout 14400
 ```
+
+The multi-project CLI uses local discovery, including deliberately configured
+private active projects. Its reports are local runtime artifacts. Use the public
+acceptance matrix commands in `RELEASE_READINESS.md` for the canonical public roster.
 
 ## Tests
 
 ```bash
 uv run pytest tests/infra_tests/reporting -q
 ```
+
+The streaming test runner includes source admission, guardian READY/ARM, child execution and mandatory cleanup in one original finite deadline. The shared startup phase allowance defaults to 60 seconds and cannot extend that deadline. Source-admission/READY timeouts return 124 before launch; ARM failures clean already launched children and preserve observed interruption. Successful child exit cannot authorize success after cleanup exhausts the deadline.
 
 For changes that touch project test execution, also run the relevant
 `scripts/pipeline/stage_01_test.py` mode because `pipeline_test_runner.py` controls the
@@ -88,8 +93,8 @@ opt into a stateful/chunked command with
 `[tool.template].project_test_command`; the single-project lane accepts it only
 when `project_verifier.py` validates a fresh run-bound receipt and independently
 regenerates the project's CI-uploadable `coverage_project.json` from a new
-coverage database at or above the unchanged project floor. The verifier runs
-with the workspace's exact runner dependency versions, and the receipt carries
+coverage database at or above the unchanged project floor. The verifier uses the existing selected interpreter after an actual bounded
+probe validates the workspace's exact runner dependency versions, and the receipt carries
 real JUnit outcomes plus pytest-produced discovery and warning counts; absent
 project-local coverage never falls back to a repository-level file from another
 run. The all-project union runner deliberately does not use
@@ -110,3 +115,15 @@ and does.
 - [`README.md`](README.md)
 - [`../core/pipeline/AGENTS.md`](../core/pipeline/AGENTS.md)
 - [`../validation/AGENTS.md`](../validation/AGENTS.md)
+
+Candidate and published acceptance use the full source-owned public roster; see
+[`RELEASE_READINESS.md`](RELEASE_READINESS.md) for required evidence and custody.
+
+### Optional plotting imports
+
+Package imports for pipeline reports, statistics, errors and the interactive
+dashboard do not initialize Matplotlib. Requesting `DASHBOARD_AVAILABLE`, an
+optional plotting export, or explicit package enumeration loads the original
+plotting providers once. Their function identities and import-failure behavior
+remain unchanged; the package retains its declared public exports. Import
+observations alone do not establish complete execution or a universal speedup.

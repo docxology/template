@@ -32,7 +32,7 @@ metadata:
 ## Inputs to confirm
 
 - **Project** — from [`docs/_generated/active_projects.md`](../../_generated/active_projects.md); infer from context if obvious.
-- **Invocation** — full vs `--core-only`, `--resume`, `--skip-infra`, multi-project.
+- **Invocation** — full vs `--mode core`, `--resume`, `--skip-infra`, multi-project.
 - **Failing stage** — if unknown, reproduce first.
 
 ## Workflow
@@ -57,11 +57,11 @@ metadata:
 uv sync
 uv run python scripts/runner/execute_pipeline.py --project <project>
 uv run python scripts/runner/execute_pipeline.py --project <project> --resume
-uv run python scripts/runner/execute_pipeline.py --project <project> --core-only
+uv run python scripts/runner/execute_pipeline.py --project <project> --mode core
 uv run python scripts/pipeline/stage_01_test.py --project <project>
 uv run pytest projects/<project>/tests/ --cov=projects/<project>/src --cov-fail-under=90 -q
 uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .
-uv run python -m infrastructure.validation.cli pdf output/<project>/pdf/
+uv run python -m infrastructure.validation.cli pdf --project <project> --repo-root .
 uv run python -m infrastructure.rendering.latex_package_validator
 LOG_LEVEL=0 uv run python scripts/runner/execute_pipeline.py --project <project> --resume
 ```

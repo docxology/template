@@ -236,16 +236,17 @@ def test_hooks_disabled_in_ci_unless_declared_run_in_ci(tmp_path: Path, monkeypa
     assert not (tmp_path / "ran.txt").exists()
 
 
+@pytest.mark.timeout(45)
 def test_timed_out_hook_normalizes_partial_output_to_text(tmp_path: Path) -> None:
     """TimeoutExpired may expose bytes even when subprocess text mode is enabled."""
     hook_script = tmp_path / "slow_hook.py"
     hook_script.write_text(
-        "import time\nprint('partial output', flush=True)\ntime.sleep(2)\n",
+        "import time\nprint('partial output', flush=True)\ntime.sleep(60)\n",
         encoding="utf-8",
     )
     hooks = StageHooks(
         pre_stage=((sys.executable, str(hook_script)),),
-        timeout_seconds=1,
+        timeout_seconds=20,
         run_in_ci=True,
     )
     context = StageHookContext(
@@ -262,3 +263,95 @@ def test_timed_out_hook_normalizes_partial_output_to_text(tmp_path: Path) -> Non
     assert results[0].exit_code == 124
     assert results[0].stdout == "partial output\n"
     assert isinstance(results[0].stderr, str)
+
+
+def test_hook_deadline_before_launch_retains_timeout_and_refuses_execution(tmp_path: Path) -> None:
+    """A typed startup timeout stays a timeout even with a diagnostic error."""
+    import time
+
+    marker = tmp_path / "must-not-execute.txt"
+    hooks = StageHooks(
+        pre_stage=((sys.executable, "-c", f"from pathlib import Path;Path({str(marker)!r}).write_text('ran')"),),
+        timeout_seconds=1,
+        run_in_ci=True,
+    )
+    context = StageHookContext(
+        project_name="template_code_project",
+        stage_name="Expired hook",
+        stage_num=1,
+        run_dir=tmp_path,
+        status="running",
+        deadline_monotonic=time.monotonic() + 0.01,
+    )
+    results = run_stage_hooks(hooks, HookEvent.PRE_STAGE, context)
+    assert len(results) == 1
+    assert not results[0].success
+    assert results[0].exit_code == 124
+    assert "deadline" in results[0].error_message.lower()
+    assert not marker.exists()
+
+
+@pytest.mark.parametrize("child_code", [0, 7, 124, 130])
+@pytest.mark.timeout(45)
+def test_actual_hook_exit_retains_original_child_evidence(tmp_path: Path, child_code: int) -> None:
+    hooks = StageHooks(
+        pre_stage=((sys.executable, "-I", "-c", f"raise SystemExit({child_code})"),),
+        timeout_seconds=30,
+        run_in_ci=True,
+    )
+    context = StageHookContext("demo", "Observed hook", 1, tmp_path, "running")
+    results = run_stage_hooks(hooks, HookEvent.PRE_STAGE, context)
+    assert len(results) == 1
+    assert results[0].exit_code == child_code
+    assert results[0].original_exit_code == child_code
+    assert results[0].success is (child_code == 0)
+
+
+@pytest.mark.timeout(60)
+def test_actual_interrupted_hook_precedes_cleanup_custody_refusal(tmp_path: Path) -> None:
+    from tests.infra_tests.core.test_bounded_run_guardian import _run_copy
+
+    result = _run_copy(
+        tmp_path,
+        r"""
+import json
+from pathlib import Path
+from infrastructure.core.pipeline.hooks import HookEvent,StageHookContext,run_stage_hooks
+from infrastructure.core.pipeline.types import StageHooks
+source=Path(sys.path[0])/'infrastructure/core/_bounded_kill.py'
+program="from pathlib import Path;import sys;p=Path(sys.argv[1]);p.write_bytes(p.read_bytes()+b'\\n# concurrent source edit\\n');raise SystemExit(130)"
+hooks=StageHooks(pre_stage=((sys.executable,'-I','-c',program,str(source)),),timeout_seconds=30,run_in_ci=True)
+results=run_stage_hooks(hooks,HookEvent.PRE_STAGE,StageHookContext('demo','Actual interruption',1,Path.cwd(),'running'))
+assert len(results)==1 and not results[0].success
+print(json.dumps({'exit':results[0].exit_code,'original':results[0].original_exit_code}))
+""",
+        observer_timeout=55,
+    )
+    assert result == {"exit": 130, "original": 130}
+
+
+@pytest.mark.parametrize("component", [".pipeline", ".pipeline/hooks", ".pipeline/hooks/stage-01-private.json"])
+def test_hook_context_refuses_symlink_egress(tmp_path: Path, component: str) -> None:
+    output = tmp_path / "output"
+    output.mkdir()
+    external = tmp_path / "external"
+    external.mkdir()
+    link = output / component
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(external if not component.endswith(".json") else external / "private.json")
+    hooks = StageHooks(pre_stage=((sys.executable, "-c", "raise RuntimeError('must not launch')"),))
+    context = StageHookContext("private-fixture-name", "Private", 1, output, "running")
+    with pytest.raises(ValueError, match="symlink"):
+        run_stage_hooks(hooks, HookEvent.PRE_STAGE, context, allow_in_ci=True)
+    assert tuple(external.iterdir()) == ()
+
+
+def test_hook_context_has_private_permissions(tmp_path: Path) -> None:
+    import stat
+
+    from infrastructure.core.pipeline.hooks import _write_context_file
+
+    context = StageHookContext("private-fixture-name", "Private", 1, tmp_path, "running")
+    target = _write_context_file(context)
+    assert stat.S_IMODE(target.stat().st_mode) == 0o600
+    assert json.loads(target.read_text())["project_name"] == "private-fixture-name"

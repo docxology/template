@@ -23,14 +23,14 @@ Two scripts share the `11_` prefix (`11_fulltext_download.py`,
 Order" documents that `11_fulltext_download.py` must run before
 `10_reproducibility_assessment.py`, ahead of `11_validate_outputs.py`.
 
-## Rule 3: Symlinked Modules Are Edited At The Source
+## Rule 3: Shared Methods Belong To The Declared Provider
 
-`src/analysis/`, `src/knowledge_graph/`, `src/reproducibility/`,
-`src/visualization/`, and `src/config_loader.py` are filesystem symlinks into
-`template_literature_meta_analysis/src/`. An edit made through this
-project's path lands in the sibling project's repository location — verify
-with `readlink` first, and make the change (with its tests) in the sibling
-project unless you specifically intend to affect both templates.
+Scripts import analysis, knowledge-graph, reproducibility and visualization
+methods through `template_literature_meta_analysis`. Change those methods in
+the Meta project's canonical `src/` and verify the Meta suite plus Advanced's
+consumer contracts. Advanced owns `src/config_loader.py`, retrieval adapters,
+phase logic and manuscript variables. Prepare the exact declared provider
+before execution; source exports do not copy its implementation into Advanced.
 
 ## Rule 4: No Mocks
 

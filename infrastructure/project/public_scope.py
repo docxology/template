@@ -46,11 +46,36 @@ PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
 
 # Template exemplars that exist on disk under projects/templates/ but are NOT
 # part of the public CI/publication scope. Empty: all on-disk exemplars are now
-# fully public (tracked, CI-gated, double-published). Re-populate only if a new
+# public (tracked and CI-gated; publication requires its own receipts). Re-populate only if a new
 # exemplar is staged locally before it is promoted to PUBLIC_PROJECT_NAMES.
 LOCAL_ONLY_TEMPLATE_NAMES: tuple[str, ...] = ()
 
 # Local-only template exemplars: see docs/maintenance/local-only-template-exemplars.md
+
+
+def public_project_source_roots(repo_root: Path | str) -> tuple[Path, ...]:
+    """Admit the complete canonical public source roster without discovery.
+
+    This path admission does not inspect local lifecycle trees or establish
+    executed-code custody. Acceptance workers independently audit consumed code.
+    Missing, linked or wrong-origin canonical roots fail before path insertion.
+    """
+    root = Path(repo_root).resolve(strict=True)
+    if not root.is_dir():
+        raise ValueError("public source admission requires a repository directory")
+    sources = []
+    for name in PUBLIC_PROJECT_NAMES:
+        source = root / "projects" / name / "src"
+        try:
+            resolved = source.resolve(strict=True)
+        except (OSError, RuntimeError) as exc:
+            raise ValueError(f"canonical public source root is unavailable: {name}") from exc
+        if source.is_symlink() or resolved != source or not source.is_dir():
+            raise ValueError(f"canonical public source root must be an unlinked directory: {name}")
+        if source in sources:
+            raise ValueError("canonical public source roster contains a duplicate")
+        sources.append(source)
+    return tuple(sources)
 
 
 def public_project_infos(repo_root: Path | str) -> list[ProjectInfo]:
@@ -147,4 +172,5 @@ __all__ = [
     "public_ci_source_paths",
     "public_project_infos",
     "public_project_names",
+    "public_project_source_roots",
 ]

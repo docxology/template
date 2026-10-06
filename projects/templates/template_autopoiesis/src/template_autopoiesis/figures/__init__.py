@@ -1,8 +1,7 @@
 """Figure modules for the autopoiesis exemplar: primitive figure rendering
 and the ouroboros ring cover art.
 
-These modules are re-exported from ``template_autopoiesis`` for backwards
-compatibility; import them from the package root.
+Import public symbols from their defining modules for explicit source custody.
 """
 
 from .cover_art import (

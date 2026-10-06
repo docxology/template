@@ -22,23 +22,29 @@ uv run pytest projects/templates/template_autoscientists/tests/ \
     --cov=projects/templates/template_autoscientists/src --cov-fail-under=90
 ```
 
-The deterministic core is tested to full coverage. The live language-model path is excluded from the coverage gate (`# pragma: no cover`) because it requires an external service.
+Source coverage includes domain checks and real controlled HTTP transport. The opt-in installed-model run is separate evidence and fails when its selected capability is missing.
 
-## The live Hermes agent (opt-in)
+## Bounded local coordination (opt-in)
 
-`HermesProposer` calls a Hermes model served by Ollama. It is not part of the rendered pipeline and is exercised only by an opt-in test marked `requires_ollama`:
+The default `--mode core` preserves the deterministic figures. `--mode live`
+requires platform 4.0.0 and an explicitly selected already-installed Ollama model
+at a literal loopback endpoint. Both arms execute 3–6 proposals with equal
+experiment, token and request-time ceilings, and three-seed confirmation.
+Actual token consumption is recorded separately. The JSON proposal may alter
+one assigned axis by a finite nonzero step in `[-1,1]`; code and paths are forbidden.
 
 ```bash
-# One-time: start Ollama and pull a Hermes model
-ollama serve
-ollama pull hermes3
-
-# Run the live round-trip test
-uv run pytest projects/templates/template_autoscientists/tests/agents/test_hermes_live.py \
-    -m requires_ollama -v
+uv run python projects/templates/template_autoscientists/scripts/run_search_comparison.py \
+  --mode live --model llama3.2:1b --endpoint http://127.0.0.1:11434 \
+  --output-dir output/.pipeline/local_coordination/selected-run
 ```
 
-Because the loop depends only on the `Proposer` protocol, swapping `DeterministicProposer` for `HermesProposer` is the single change needed to turn the reproducible reference run into a live agentic one — the coordination mechanisms, ablation toggles, and confirmation logic are unchanged.
+The fresh ignored run retains source and active producer hashes, installed model
+digest, every prompt context, exact provider request/response text, proposals,
+observed outcomes and budgets. Null and negative differences remain successful
+contract outcomes. Missing capabilities return 75; malformed generations or
+source drift return 1. No acquisition, paid API, source application, or external
+publication occurs. Full instructions: `docs/live-coordination.md`.
 
 ## Shared estimator
 

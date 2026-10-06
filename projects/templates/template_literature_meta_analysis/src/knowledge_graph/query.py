@@ -6,8 +6,8 @@ instance, abstracting away the backend (rdflib vs. networkx).
 
 from __future__ import annotations
 
-from knowledge_graph.graph_builder import KnowledgeGraph
-from knowledge_graph.schema import ASSERTION_TYPES
+from template_literature_meta_analysis.knowledge_graph.graph_builder import KnowledgeGraph
+from template_literature_meta_analysis.knowledge_graph.schema import ASSERTION_TYPES
 
 try:
     from rdflib import URIRef

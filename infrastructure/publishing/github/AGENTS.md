@@ -40,4 +40,4 @@ uv run pytest tests/infra_tests/publishing/test_platforms.py::TestCreateGithubRe
 ## See also
 
 - [`README.md`](README.md)
-- [`../platforms.py`](../platforms.py) — backwards-compatible re-export
+- [`../registry.py`](../registry.py) — canonical platform discovery

@@ -3,18 +3,20 @@
 ## Overview
 
 The `src/` directory contains the importable, tested EDA logic for this
-exemplar. All analytical functions live in the `src.eda` subpackage and are
-re-exported from `src/__init__.py`, so callers (notebook cells, the thin
-analysis script, tests) can write `from src import load_dataset`. The library
-is **standalone**: it imports only `numpy` and `pandas` and never imports
-`infrastructure.*` or any sibling project.
+exemplar. All analytical functions live in the `template_eda_notebook.eda` subpackage and are
+re-exported from `src/template_eda_notebook/__init__.py`, so callers (notebook cells, the thin
+analysis script, tests) can write `from template_eda_notebook import load_dataset`. The domain library is **standalone**: its computations use NumPy/Pandas and
+never import `infrastructure.*` or sibling projects. `notebook_execution.py` is
+an explicit runtime module using NBClient/nbformat/Jupyter client outside the
+pure data transforms.
 
 ## Key Concepts
 
-- **Pure data transforms**: every function in `src/eda/` takes a DataFrame (or
-  array) in and returns data out. No plotting, no file I/O, no global state.
+- **Pure data transforms**: every function in `src/template_eda_notebook/eda/` takes a DataFrame (or
+  array) in and returns data out. No plotting or output writes. The dataset
+  loader and notebook binding reader are the existing read-only I/O exceptions.
 - **Notebook -> tested src extraction**: the moment a computation matters, it
-  moves out of a notebook cell into `src/eda/` with a test first (TDD).
+  moves out of a notebook cell into `src/template_eda_notebook/eda/` with a test first (TDD).
 - **Zero-mock testability**: functions are exercised against the shipped CSV
   fixture (`data/measurements.csv`) and tiny real frames — never mocks.
 - **Missingness is surfaced, not hidden**: the loader coerces with
@@ -46,14 +48,14 @@ flowchart LR
 
 Manuscript and publication metadata are read from `manuscript/config.yaml`
 (the configuration single source of truth). The EDA library itself is
-parameter-light: the dataset schema is declared in `src/eda/dataset.py`
+parameter-light: the dataset schema is declared in `src/template_eda_notebook/eda/dataset.py`
 (`DatasetSchema`) and the shipped CSV path resolves relative to the project
 root — never a hardcoded absolute path.
 
 ## Infrastructure Integration (boundary / contract)
 
 The EDA library is **infrastructure-independent** by contract: nothing under
-`src/eda/` may import `infrastructure.*`. Any coupling to rendering, logging, or
+`src/template_eda_notebook/eda/` may import `infrastructure.*`. Any coupling to rendering, logging, or
 validation belongs in `scripts/` (which the pipeline runs via `uv run`), not in
 the library. This boundary is enforced by the
 `src_infrastructure_import` drift check.
@@ -61,7 +63,7 @@ the library. This boundary is enforced by the
 ## Usage Examples
 
 ```python
-from src import (
+from template_eda_notebook import (
     load_dataset, clean_dataset, summary_statistics,
     correlation_matrix, strongest_pairs, histogram_data,
 )
@@ -107,3 +109,12 @@ uv run pytest projects/templates/template_eda_notebook/tests -k "TestCorrelation
 - [../scripts/eda_analysis.py](../../scripts/eda_analysis.py) — Example usage (thin orchestrator).
 - [../tests/test_dataset.py](../../tests/test_dataset.py) — Tests.
 - [../notebooks/eda_walkthrough.ipynb](../../notebooks/eda_walkthrough.ipynb) — Interactive walkthrough.
+
+## Notebook runtime acceptance
+
+`notebook_execution.py` executes a copy in a fresh temporary selected-interpreter
+kernel. `eda/notebook_oracle.py` independently checks every reported computation
+with NumPy/Pandas without importing EDA implementation functions. Source/input
+SHA-256 values must remain unchanged; errors, skipped cells and finite deadline
+failures reject acceptance. The canonical thin script supplies the outer process
+guardian; local runtime receipts never rewrite the source notebook.

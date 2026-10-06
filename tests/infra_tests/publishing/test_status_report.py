@@ -155,6 +155,45 @@ def test_missing_config_falls_back_to_project_name(tmp_path: Path) -> None:
     assert report.published_count == 0
 
 
+def test_unreleased_version_keeps_historical_links_without_claiming_new_publication(tmp_path: Path) -> None:
+    cfg = CONFIG_YAML.replace('  version: "0.1.0"', '  version: "1.0.0"').replace(
+        "publication:\n",
+        "publication:\n  release_status: unreleased\n  intended_version: 1.0.0\n  last_published_version: 0.1.0\n",
+    )
+    report = compile_publishing_status(_project(tmp_path, cfg), published={"osf": "https://osf.io/OLD/"})
+    assert report.published_count == 0
+    assert report.last_published_version == "0.1.0"
+    states = {p.name: p.state for p in report.platforms}
+    assert states["zenodo"] is PublicationState.HISTORICAL
+    assert states["github"] is PublicationState.HISTORICAL
+    assert states["osf"] is PublicationState.HISTORICAL
+    md = render_status_markdown(report)
+    assert "intended v1.0.0 (unreleased)" in md
+    assert "Last published release: v0.1.0" in md
+    assert "Last published version DOI:" in md
+    assert "https://zenodo.org/records/20938523" in md
+    assert "0 published for the intended release" in md
+    assert "✅ published" not in "\n".join(line for line in md.splitlines() if line.startswith("|"))
+
+
+def test_unreleased_draft_repository_does_not_establish_a_published_release(tmp_path: Path) -> None:
+    cfg = """paper:
+  title: Draft
+  version: 0.2.0
+publication:
+  release_status: unreleased
+  intended_version: 0.2.0
+  github_repository: owner/draft
+  repository_url: https://github.com/owner/draft
+"""
+    report = compile_publishing_status(_project(tmp_path, cfg))
+    assert report.published_count == 0
+    github = next(p for p in report.platforms if p.name == "github")
+    assert github.state is PublicationState.AVAILABLE
+    assert github.reference == "https://github.com/owner/draft"
+    assert "No prior published release is recorded" in render_status_markdown(report)
+
+
 def test_render_markdown_contains_metadata_and_table(tmp_path: Path) -> None:
     md = render_status_markdown(compile_publishing_status(_project(tmp_path)))
     assert "Refinement of Gold" in md

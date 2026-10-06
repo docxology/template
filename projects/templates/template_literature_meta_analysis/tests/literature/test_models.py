@@ -7,7 +7,7 @@ paper examples throughout.
 
 from datetime import date
 
-from literature.models import Author, Citation, Paper
+from template_literature_meta_analysis.literature.models import Author, Citation, Paper
 
 
 # ---------------------------------------------------------------------------
@@ -181,7 +181,7 @@ class TestPaperCanonicalId:
         src = str(Path(__file__).resolve().parents[2] / "src")
         snippet = (
             "import sys; sys.path.insert(0, %r);"
-            "from literature.models import Paper;"
+            "from template_literature_meta_analysis.literature.models import Paper;"
             "print(Paper(title='No Identifiers Here At All').canonical_id)" % src
         )
 

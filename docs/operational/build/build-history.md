@@ -2,6 +2,10 @@
 
 > **Historical record** of build system fixes and resolved issues
 
+Current commands and measured stage counts live in
+[`RUN_GUIDE.md`](../../RUN_GUIDE.md) and the generated stage tables. The v2
+commands below are retained as historical evidence and are retired in 4.0.
+
 **Parent Document:** [Build System](build-system.md) | **Related:** [Troubleshooting](../troubleshooting/)
 
 ---
@@ -39,9 +43,12 @@ build_combined() {
 
 ---
 
-## Pipeline Architecture Evolution
+## Recorded v2 pipeline architecture
 
-The build pipeline evolved from a 6-stage core path, to an 8-stage `--core-only` path, to the current declarative DAG in [`pipeline.yaml`](../../../infrastructure/core/pipeline/pipeline.yaml):
+The v2 description recorded the transition from a 6-stage core path to an
+8-stage `--core-only` path and a declarative DAG. The counts below describe
+that historical account; the linked [`pipeline.yaml`](../../../infrastructure/core/pipeline/pipeline.yaml)
+contains the current declaration.
 
 - **16 declared stages** in YAML: 8 default core, 2 science/provenance, 2 LLM-tagged, 2 opt-in publishing, 2 opt-in bundle/archival
 - **Default full run:** Clean Output Directories + 9 numbered stages (10 core+LLM path)
@@ -63,7 +70,7 @@ The build pipeline evolved from a 6-stage core path, to an 8-stage `--core-only`
 | 9 | `scripts/pipeline/stage_05_copy.py` | Copy deliverables |
 | — | `scripts/pipeline/stage_07_executive_report.py` | Multi-project only; the script's 07 prefix is not part of the DAG's numbered stage list |
 
-**Usage:**
+**Recorded v2 usage:**
 
 ```bash
 # Core pipeline (8 stages — no LLM)

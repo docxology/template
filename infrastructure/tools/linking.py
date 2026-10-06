@@ -71,17 +71,6 @@ def sync_private_tool_links(
     )
 
 
-def sync_active_tool_links(
-    repo_root: Path,
-    private_root: Path | None = None,
-    *,
-    prune: bool = True,
-    dry_run: bool = False,
-) -> LinkSyncResult:
-    """Synchronize active tool links."""
-    return sync_private_tool_links(repo_root, private_root, prune=prune, dry_run=dry_run)
-
-
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m infrastructure.tools.linking",

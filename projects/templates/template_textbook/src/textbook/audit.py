@@ -85,8 +85,6 @@ def _audit_chapter(
     problems: list[str],
 ) -> tuple[str, int, int]:
     chapter_path = chapter.path(manuscript_dir)
-    lab_path = manuscript_dir / "labs" / chapter.part_id / f"lab_{chapter.stem}.md"
-    question_path = manuscript_dir / "questions" / chapter.part_id / f"q_{chapter.stem}.md"
 
     if not chapter_path.exists():
         _record_problem(
@@ -103,18 +101,6 @@ def _audit_chapter(
 
     stubs = content.count_stub_markers(text)
     words = content.count_words(text)
-
-    for label, path in (("lab", lab_path), ("question", question_path)):
-        if not path.exists():
-            _record_problem(
-                problems,
-                f"missing {label} file: {path.relative_to(project_dir)}",
-                require_present=require_present,
-            )
-        elif require_complete:
-            companion_stubs = content.count_stub_markers(path.read_text(encoding="utf-8"))
-            if companion_stubs:
-                problems.append(f"{path.relative_to(project_dir)}: {companion_stubs} stub markers remaining")
 
     status = _section_status(
         section=f"{chapter.part_id}/{chapter.file}",
@@ -172,10 +158,10 @@ def run_manuscript_audit(
 ) -> AuditReport:
     """Validate declared manuscript files and return a structured audit report.
 
-    The default structural mode allows stub markers because this exemplar is a
-    fillable scaffold. ``require_complete=True`` makes every nonzero
-    per-section stub count a problem and also requires every declared section
-    to exist.
+    Structural mode permits draft markers in newly scaffolded work.
+    ``require_complete=True`` requires all configured manuscript sections and
+    chapter companions, including front matter and references, to exist with
+    no draft markers. Totals include each distinct audited file once.
     """
     manuscript_dir = project_dir / "manuscript"
     problems: list[str] = list(validate_config(config))
@@ -214,14 +200,33 @@ def run_manuscript_audit(
     for orphan in orphan_part_markdown_paths(manuscript_dir, config):
         problems.append(f"orphan markdown under part directory: {orphan.relative_to(project_dir)}")
 
-    for category in ("reference", "labs", "questions"):
-        for appendix_path in declared_appendix_paths(manuscript_dir, config, category):
-            if not appendix_path.exists():
-                _record_problem(
-                    problems,
-                    f"missing configured {category} file: {appendix_path.relative_to(project_dir)}",
-                    require_present=effective_require_present,
-                )
+    audited = {path.resolve() for path in declared_chapter_paths(manuscript_dir, config)}
+    audited |= {path.resolve() for path in declared_unit_intro_paths(manuscript_dir, config)}
+    for category, path in _additional_sections(manuscript_dir, config):
+        if path.resolve() in audited:
+            continue
+        audited.add(path.resolve())
+        relative = path.relative_to(project_dir)
+        if not path.exists():
+            _record_problem(
+                problems,
+                f"missing {category} file: {relative}",
+                require_present=effective_require_present,
+            )
+            rows.append(f"  {relative} MISSING")
+            continue
+        text = path.read_text(encoding="utf-8")
+        words, stubs = content.count_words(text), content.count_stub_markers(text)
+        status = _section_status(
+            section=str(relative),
+            structural_issues=False,
+            stubs=stubs,
+            require_complete=require_complete,
+            problems=problems,
+        )
+        rows.append(f"  {relative} words={words:>5} stubs={stubs:>3} {status}")
+        total_words += words
+        total_stubs += stubs
 
     return AuditReport(
         problems=tuple(problems),
@@ -229,6 +234,30 @@ def run_manuscript_audit(
         total_words=total_words,
         total_stubs=total_stubs,
     )
+
+
+def _additional_sections(manuscript_dir: Path, config: dict[str, Any]) -> list[tuple[str, Path]]:
+    """Collect companions and explicitly configured non-chapter sources."""
+    sections: list[tuple[str, Path]] = []
+    for chapter in iter_chapters(config):
+        sections.extend(
+            (
+                ("lab", manuscript_dir / "labs" / chapter.part_id / f"lab_{chapter.stem}.md"),
+                ("question", manuscript_dir / "questions" / chapter.part_id / f"q_{chapter.stem}.md"),
+            )
+        )
+    for category in ("reference", "labs", "questions"):
+        sections.extend(
+            (f"configured {category}", path) for path in declared_appendix_paths(manuscript_dir, config, category)
+        )
+    front_matter = config.get("front_matter", {})
+    if isinstance(front_matter, dict):
+        files = front_matter.get("files", [])
+        if isinstance(files, list):
+            for entry in files:
+                if isinstance(entry, dict) and isinstance(entry.get("file"), str):
+                    sections.append(("configured front matter", manuscript_dir / entry["file"]))
+    return sections
 
 
 __all__ = [

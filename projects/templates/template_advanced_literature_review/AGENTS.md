@@ -9,10 +9,10 @@ Advanced multi-phase literature-review pipeline exemplar with iterative search r
 | Search phases, terms, keywords, hypotheses, subfields | `manuscript/config.yaml` under `project_config` |
 | Multi-phase corpus data | `output/data/combined_corpus.jsonl` (tracked evidence snapshot) |
 | Phase-aware retrieval/filtering | `src/literature/` and `src/multi_phase/` |
-| Bibliometrics, text analytics, embeddings, topics | `src/analysis/` (standalone-safe mirror of the single-term implementation) |
-| Knowledge graph extraction and scoring | `src/knowledge_graph/` (standalone-safe mirror of the single-term implementation) |
-| Reproducibility assessment | `src/reproducibility/` (standalone-safe mirror of the single-term implementation) |
-| Figure styling and generation | `src/visualization/` (standalone-safe mirror of the single-term implementation) |
+| Bibliometrics, text analytics, embeddings, topics | Declared provider `template_literature_meta_analysis.analysis` |
+| Knowledge graph extraction and scoring | Declared provider `template_literature_meta_analysis.knowledge_graph` |
+| Reproducibility assessment | Declared provider `template_literature_meta_analysis.reproducibility` |
+| Figure styling and generation | Declared provider `template_literature_meta_analysis.visualization` |
 | Multi-phase manuscript tokens and variables | `src/manuscript/variables/` and `scripts/05_inject_variables.py` |
 | Offline deep-research replay | `src/deep_research/dispatch.py` and its tracked fixture |
 | Full 11-stage pipeline orchestration | `scripts/01_multi_phase_search.py` through `scripts/11_fulltext_download.py` |
@@ -30,17 +30,25 @@ or config and regenerate.
 | --- | --- | --- |
 | Retarget the review topic | `manuscript/config.yaml` | Change phase definitions, queries, keywords, hypotheses, and subfields together. |
 | Multi-phase search configuration | `src/multi_phase/AGENTS.md` | Phase-aware search with iterative refinement and filtering. |
-| Literature engines | `src/literature/AGENTS.md` | Clients degrade gracefully; drift checks keep the mirror aligned with the single-term template. |
-| Bibliometric or NLP metrics | `src/analysis/AGENTS.md` | Pure functions plus runners; copied into standalone exports. |
-| Knowledge graph / LLM extraction | `src/knowledge_graph/AGENTS.md` | Optional, resumable, network/LLM gated; copied into standalone exports. |
-| Reproducibility scoring | `src/reproducibility/AGENTS.md` | Workflow-graph assessment; copied into standalone exports. |
-| Figures and visualization | `src/visualization/AGENTS.md` | Headless matplotlib, colorblind palette; copied into standalone exports. |
+| Literature engines | `src/literature/AGENTS.md` | Project-owned routing and sampling preserve phase policy. |
+| Bibliometric or NLP metrics | [`Meta analysis`](../template_literature_meta_analysis/src/analysis/AGENTS.md) | Shared implementation supplied by the declared Meta distribution. |
+| Knowledge graph / LLM extraction | [`Meta knowledge graph`](../template_literature_meta_analysis/src/knowledge_graph/AGENTS.md) | Optional, resumable, network/local-model gated provider. |
+| Reproducibility scoring | [`Meta reproducibility`](../template_literature_meta_analysis/src/reproducibility/AGENTS.md) | Shared workflow-graph assessment. |
+| Figures and visualization | [`Meta visualization`](../template_literature_meta_analysis/src/visualization/AGENTS.md) | Shared headless figure generation. |
 | Multi-phase manuscript tokens | `src/manuscript/AGENTS.md` and `manuscript/AGENTS.md` | Phase-aware variables from generated JSON outputs and config. |
 | Project scripts (11-stage pipeline) | `scripts/AGENTS.md` | Orchestrators for stages 01-11; dependency order is explicit. |
 | Tests | `tests/AGENTS.md` | Real data, temp files, multi-phase fixtures, no mocks. |
 | Human docs | `README.md` | Project-local architecture, multi-phase specifics, testing. |
 
 ## Regeneration Order
+
+The scripts import the namespaced `template_literature_meta_analysis` engine
+declared in `pyproject.toml`. Its canonical implementation is in the sibling
+Meta project's `src/`; Advanced owns its phase policy, retrieval adapters,
+configuration and manuscript variables. Prepare the exact declared provider
+before execution. Installed acceptance requires its admitted wheel; copying
+Advanced's source tree alone does not supply that dependency. See
+[`STANDALONE.md`](STANDALONE.md) for the installation boundary.
 
 The default offline lane is `scripts/01b_fixture_phase_replay.py` followed by the
 deterministic stages below (that is what `analysis.scripts` in

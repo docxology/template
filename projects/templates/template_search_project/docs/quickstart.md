@@ -1,121 +1,63 @@
 # Quickstart
 
-This project ships a fully-runnable, **CI-safe**, **offline** literature
-pipeline. You can render the manuscript with no network access on a fresh
-clone.
+The shipped core analysis uses the local corpus and disables remote enrichment,
+LLM synthesis, and deep search. Install declared dependencies and required
+rendering tools before these commands, executed from the repository root.
 
-```mermaid
-flowchart TB
-    S1[Step 1<br/>uv run pytest] --> S2[Step 2<br/>run_search_pipeline.py]
-    S2 --> S3[Step 3<br/>y_generate_search_figures.py<br/>z_generate_manuscript_variables.py]
-    S3 --> S4[Step 4<br/>./run.sh --pipeline<br/>full pipeline runner]
-    S4 --> S5[Step 5<br/>switch to live arxiv/crossref<br/>edit config.yaml]
-    S5 --> S6[Step 6<br/>enable LLM synthesis<br/>start ollama serve]
-
-    classDef step fill:#1e3a8a,stroke:#0f172a,color:#fff
-    class S1,S2,S3,S4,S5,S6 step
-```
-
-## 1. Smoke-test in 5 seconds
+## Verify current project behavior
 
 ```bash
-uv run pytest projects/templates/template_search_project/tests/ -q
+uv run --no-sync --offline pytest projects/templates/template_search_project/tests/ \
+  --cov=projects/templates/template_search_project/src --cov-branch \
+  --cov-fail-under=90
 ```
 
-All tests should pass without an internet connection. Live test count and
-coverage are tracked in
-[`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md) (see
-[`docs/testing_philosophy.md`](testing_philosophy.md)); locally, confirm the
-current count with
-`uv run pytest projects/templates/template_search_project/tests --collect-only -q`.
+Report actual current outcomes and measured coverage. Earlier snapshots do not
+guarantee a fresh pass.
 
-## 2. Run the orchestrator end-to-end (offline)
+## Run canonical core analysis
 
 ```bash
-uv run python projects/templates/template_search_project/scripts/run_search_pipeline.py
+uv run --no-sync --offline python scripts/runner/execute_pipeline.py \
+  --project templates/template_search_project --mode core --stage analysis
 ```
 
-This reads `manuscript/config.yaml` (default: `sources: [local]` ←
-`data/corpus.json`), produces:
+The explicit allowlist runs search, figures, hydration, review report, and
+dashboard. Search writes `output/search/results.json`, `output/corpus.json`,
+`output/bibliography/references.bib`, and a reading report. Hydration copies
+source markdown/config/curated references to `output/manuscript/`, substitutes
+variables, and projects additional citations into `generated_search.bib`.
+Authored markdown/BibTeX remains unchanged.
 
-* `manuscript/references.bib` (Pandoc-ready BibTeX)
-* `output/corpus.json`
-* `output/search/results.json`
-* `output/search/cache/search_<hash>.json`
-* `output/reading_report.md`
-* `output/run_summary.json`
-
-…with no network calls and no Ollama dependency.
-
-## 3. Generate figures + manuscript variables
+## Render and validate
 
 ```bash
-uv run python projects/templates/template_search_project/scripts/y_generate_search_figures.py
-uv run python projects/templates/template_search_project/scripts/z_generate_manuscript_variables.py
+uv run --no-sync --offline python scripts/runner/execute_pipeline.py \
+  --project templates/template_search_project --mode core --stage render_pdf
+uv run --no-sync --offline python scripts/runner/execute_pipeline.py \
+  --project templates/template_search_project --mode core --stage validate
 ```
 
-Outputs:
+Canonical execution uses the nominated candidate's measured epoch and selected
+renderer with actual artifact receipts. Installed tools are required; dependency
+installation is separate from offline analysis. See
+[`rendering_pipeline.md`](rendering_pipeline.md) for the artifact flow.
 
-* `output/figures/{papers_per_source,year_histogram,score_distribution}.png`
-* `output/data/manuscript_variables.json`
-* `output/manuscript/` — resolved `*.md`, copied `config.yaml` and `*.bib` (PDF stage prefers this directory when it contains markdown)
+## Explicit unpaid discovery and synthesis
 
-## 4. Run under the full pipeline
+Select remote backends, licensed fulltext scope, and a local model deliberately.
+Convenience search/deep CLIs consume project configuration. The separate
+`scripts/_run_unpaid_acceptance.py --mode live` lane records bounded actual
+provider/model/source/input evidence. Paid providers remain optional and are
+excluded from required unpaid acceptance.
 
-```bash
-./run.sh --project templates/template_search_project --pipeline
-```
+For generated deep composition, configure/enable the explicit producer, then run
+`run_deep_search.py`, `s_compose_literature_review.py`, and
+`z_generate_manuscript_variables.py` with consistent configuration. Composition
+requires a current producer record and writes generated S02 under
+`output/manuscript/`; hydration checks exact receipt/input/SHA dependencies.
+The default core allowlist does not launch those opt-in producers.
 
-The infrastructure pipeline runner:
-
-1. Cleans `output/`
-2. Runs infrastructure + project tests
-3. Executes every `scripts/*.py` in alphabetical order: `run_deep_search.py`,
-   `run_search_pipeline.py`, `s_compose_literature_review.py`,
-   `y_generate_search_figures.py`, `z_generate_manuscript_variables.py`,
-   `zz_generate_review_report.py`, `zzz_build_dashboard.py`. The composer
-   runs *before* the manuscript resolver so
-   `output/manuscript/S01_literature_review.md` always reflects the latest
-   `references_deep.bib` keys. The dashboard builder runs last since it
-   consumes the corpus + aggregate JSON produced by the earlier scripts.
-4. Renders the combined PDF (Pandoc `--natbib` + BibTeX; all `manuscript/*.bib` merged).
-5. Validates the PDF
-6. Optionally runs LLM review/translations
-
-## 5. Switch to live search
-
-Edit `manuscript/config.yaml`:
-
-```yaml
-search:
-  query: "your topic"
-  sources: [arxiv, crossref]
-  crossref_mailto: "you@example.org"
-```
-
-Re-run step 2. The first run populates `output/search/cache/`; commit it
-for reproducible re-runs across machines.
-
-## 6. Enable LLM synthesis
-
-```bash
-ollama serve &
-ollama pull gemma3:4b
-```
-
-Edit `manuscript/config.yaml`:
-
-```yaml
-llm:
-  enabled: true
-  model: "gemma3:4b"
-  seed: 42
-  temperature: 0.0
-```
-
-Re-run step 2. The orchestrator now writes:
-
-* `output/llm/synthesis.md`
-* `output/llm/per_paper/<safe_id>.md`
-
-…and the reading report includes both sections.
+A model seed does not guarantee repeatability. Controlled tests, artifact
+snapshots, actual unpaid-provider acceptance, rendered output, and installed
+wheel acceptance are distinct evidence.

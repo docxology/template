@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import json
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
 from infrastructure.core.pipeline.hitl import HitlController
 from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
+from infrastructure.orchestration.discovery import validate_project_slug
 
 
 @dataclass(frozen=True)
@@ -16,9 +18,8 @@ class PipelineArgs:
 
     project: str
     skip_infra: bool = False
-    skip_llm: bool = False
     resume: bool = False
-    core_only: bool = False
+    mode: str = "core"
     incremental: bool = False
     pipeline_path: str | None = None
     stage: str | None = None
@@ -31,7 +32,16 @@ class PipelineArgs:
 
 def handle_hitl_command(args: PipelineArgs, repo_root: Path) -> int:
     """Handle non-interactive HITL commands for a project output directory."""
-    output_dir = repo_root / "projects" / args.project / "output"
+    try:
+        project = validate_project_slug(args.project, repo_root)
+        return _handle_hitl_command(args, repo_root, project)
+    except (ValueError, OSError) as exc:
+        print(f"Invalid HITL invocation: {exc}", file=sys.stderr)
+        return 2
+
+
+def _handle_hitl_command(args: PipelineArgs, repo_root: Path, project: str) -> int:
+    output_dir = repo_root / "projects" / project / "output"
     from infrastructure.core.pipeline.control import load_pipeline_control_config
 
     default_yaml = resolve_pipeline_source(
@@ -39,7 +49,7 @@ def handle_hitl_command(args: PipelineArgs, repo_root: Path) -> int:
         explicit_path=args.pipeline_path,
         purpose=PipelinePurpose.EXECUTION,
     ).path
-    project_yaml = repo_root / "projects" / args.project / "pipeline.yaml"
+    project_yaml = repo_root / "projects" / project / "pipeline.yaml"
     control = load_pipeline_control_config(
         default_yaml if default_yaml.exists() else None,
         project_yaml=project_yaml if project_yaml.exists() else None,
@@ -58,7 +68,7 @@ def handle_hitl_command(args: PipelineArgs, repo_root: Path) -> int:
         return 0
     if args.hitl_command == "validate-response":
         if args.response_file is None:
-            raise SystemExit("--response-file is required for --hitl-command validate-response")
+            raise ValueError("--response-file is required for --hitl-command validate-response")
         from infrastructure.core.pipeline.hitl import validate_agent_response_file
 
         validation = validate_agent_response_file(Path(args.response_file))
@@ -69,10 +79,10 @@ def handle_hitl_command(args: PipelineArgs, repo_root: Path) -> int:
                 sort_keys=True,
             )
         )
-        return 0 if validation.valid else 1
+        return 0 if validation.valid else 2
     if args.hitl_command == "respond":
         if args.response_file is None:
-            raise SystemExit("--response-file is required for --hitl-command respond")
+            raise ValueError("--response-file is required for --hitl-command respond")
         print(json.dumps(controller.respond_from_file(Path(args.response_file)), indent=2, sort_keys=True))
         return 0
     if args.hitl_command == "approve":
@@ -85,10 +95,10 @@ def handle_hitl_command(args: PipelineArgs, repo_root: Path) -> int:
         controller.resume(message=args.message)
         return 0
     if args.hitl_command == "guide":
-        if args.hitl_stage is None:
-            raise SystemExit("--hitl-stage is required for --hitl-command guide")
+        if args.hitl_stage is None or args.hitl_stage < 1:
+            raise ValueError("--hitl-stage is required for --hitl-command guide")
         if not args.message:
-            raise SystemExit("--message is required for --hitl-command guide")
+            raise ValueError("--message is required for --hitl-command guide")
         controller.guide(stage_num=args.hitl_stage, message=args.message)
         return 0
-    raise SystemExit(f"Unknown HITL command: {args.hitl_command}")
+    raise ValueError(f"Unknown HITL command: {args.hitl_command}")

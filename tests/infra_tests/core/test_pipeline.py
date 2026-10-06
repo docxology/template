@@ -23,7 +23,7 @@ class TestPipelineConfig:
         assert config.project_name == "test_project"
         assert config.repo_root == Path("/tmp")
         assert config.skip_infra is False
-        assert config.skip_llm is False
+        assert config.mode == "core"
         assert config.resume is False
         assert config.total_stages == 10
 
@@ -33,7 +33,6 @@ class TestPipelineConfig:
             project_name="myproject",
             repo_root=Path("/repo"),
             skip_infra=True,
-            skip_llm=True,
             resume=True,
             total_stages=7,
         )
@@ -41,7 +40,7 @@ class TestPipelineConfig:
         assert config.project_name == "myproject"
         assert config.repo_root == Path("/repo")
         assert config.skip_infra is True
-        assert config.skip_llm is True
+        assert config.mode == "core"
         assert config.resume is True
         assert config.total_stages == 7
 
@@ -134,8 +133,8 @@ sys.exit(0)
         *,
         clean: bool,
         skip_infra: bool,
-        skip_llm: bool,
         resume: bool,
+        mode: str = "core",
     ) -> PipelineExecutor:
         """Create executor wired to a test-local checkpoint directory (no repo side effects)."""
         config = PipelineConfig(
@@ -143,8 +142,8 @@ sys.exit(0)
             repo_root=repo_root,
             clean=clean,
             skip_infra=skip_infra,
-            skip_llm=skip_llm,
             resume=resume,
+            mode=mode,
         )
         executor = PipelineExecutor(config)
 
@@ -187,7 +186,7 @@ sys.exit(0)
 
             result = executor._run_script(str(script_path), "--arg", "value")
 
-            assert result is True
+            assert result.complete is True
 
     @pytest.mark.timeout(60)
     def test_run_script_failure(self):
@@ -208,7 +207,8 @@ sys.exit(1)
 
             result = executor._run_script(str(script_path))
 
-            assert result is False
+            assert result.complete is False
+            assert result.child_exit_code == 1
 
     def test_execute_stage_success(self):
         """Test successful stage execution."""
@@ -274,11 +274,11 @@ sys.exit(1)
             "test",
             clean=False,
             skip_infra=False,
-            skip_llm=False,
             resume=False,
+            mode="live",
         )
 
-        results = executor.execute_full_pipeline()
+        results = executor.execute_pipeline()
 
         assert all(r.success for r in results)
 
@@ -320,11 +320,10 @@ sys.exit(1)
             "test",
             clean=False,
             skip_infra=False,
-            skip_llm=True,
             resume=False,
         )
 
-        results = executor.execute_core_pipeline()
+        results = executor.execute_pipeline()
 
         assert all(r.success for r in results)
 
@@ -340,16 +339,16 @@ sys.exit(1)
             "Copy Outputs",
         }
         assert required_core_stages.issubset(stage_names)
-        assert "LLM Scientific Review" not in stage_names
+        assert "LLM Manuscript Review" not in stage_names
         assert "LLM Translations" not in stage_names
 
     @pytest.mark.timeout(60)
     def test_skip_infra_execution(self, tmp_path: Path):
         """Test that infrastructure tests are skipped when configured."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
-        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=False)
+        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, resume=False)
 
-        results = executor.execute_core_pipeline()
+        results = executor.execute_pipeline()
         assert all(r.success for r in results)
 
         invocations = self._read_invocations(repo_root)
@@ -365,11 +364,10 @@ sys.exit(1)
             "test",
             clean=False,
             skip_infra=False,
-            skip_llm=True,
             resume=False,
         )
 
-        results = executor.execute_full_pipeline()
+        results = executor.execute_pipeline()
         assert all(r.success for r in results)
 
         invocations = self._read_invocations(repo_root)
@@ -379,7 +377,7 @@ sys.exit(1)
     def test_resume_pipeline_missing_checkpoint_runs_fresh(self, tmp_path: Path):
         """If no valid checkpoint exists, resume falls back to a fresh run."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
-        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=True)
+        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, resume=True)
 
         results = executor._resume_pipeline()
         assert len(results) > 0
@@ -420,9 +418,9 @@ sys.exit(0)
         (scripts_dir / "stage_04_validate.py").write_text(success_script, encoding="utf-8")
         (scripts_dir / "stage_05_copy.py").write_text(success_script, encoding="utf-8")
 
-        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=False)
+        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, resume=False)
 
-        results = executor.execute_core_pipeline()
+        results = executor.execute_pipeline()
 
         # Only the failing stage result should be present.
         assert len(results) == 1
@@ -435,8 +433,8 @@ sys.exit(0)
         assert "stage_02_analysis.py" not in invoked
 
     @pytest.mark.timeout(60)
-    def test_llm_stage_exit_code_2_treated_as_success(self, tmp_path: Path):
-        """LLM stages that exit with code 2 (Ollama unavailable) are treated as success."""
+    def test_llm_stage_exit_code_2_without_receipt_fails(self, tmp_path: Path):
+        """An arbitrary child exit 2 cannot authorize a skip."""
         repo_root = tmp_path / "repo"
         scripts_dir = repo_root / "scripts" / "pipeline"
         scripts_dir.mkdir(parents=True, exist_ok=True)
@@ -457,11 +455,12 @@ sys.exit(0)
             (scripts_dir / name).write_text(success_script, encoding="utf-8")
         (scripts_dir / "stage_06_llm_review.py").write_text(skip_script, encoding="utf-8")
 
-        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=False, resume=False)
-        results = executor.execute_full_pipeline()
+        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, resume=False)
+        executor.config.mode = "live"
+        results = executor.execute_pipeline()
 
-        # All stages should succeed: LLM stage exit-2 is treated as graceful skip
-        assert all(r.success for r in results), [r for r in results if not r.success]
+        assert results[-1].exit_code == 2
+        assert executor.run_result(results).exit_code == 1
 
     @pytest.mark.timeout(60)
     def test_resume_pipeline_valid_checkpoint_skips_completed_stages(self, tmp_path: Path):
@@ -469,7 +468,7 @@ sys.exit(0)
         from infrastructure.core.runtime.checkpoint import StageResult
 
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
-        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=True)
+        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, resume=True)
 
         # Pre-populate checkpoint as if the first stage already completed
         executor.checkpoint_manager.save_checkpoint(
@@ -479,7 +478,7 @@ sys.exit(0)
             total_stages=executor.config.total_stages,
         )
 
-        results = executor.execute_full_pipeline()
+        results = executor.execute_pipeline()
 
         # Results should include at least the resumed stages (checkpoint stage + new stages)
         assert len(results) > 0

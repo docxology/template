@@ -422,7 +422,7 @@ def export_for_publishing(
         if total_count == 0:
             print(
                 f"ERROR: no artifacts found under {output_root}\n"
-                f"  Run the pipeline first: ./run.sh --project {project} --pipeline --core-only",
+                f"  Run the pipeline first: ./run.sh --project {project} --pipeline --mode core",
                 file=sys.stderr,
             )
             raise SystemExit(1)

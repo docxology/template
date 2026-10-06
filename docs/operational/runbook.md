@@ -160,7 +160,7 @@ For a focused canonical exemplar:
 
 ```bash
 uv run python scripts/runner/execute_pipeline.py \
-  --project templates/template_code_project --core-only
+  --project templates/template_code_project --mode core
 ```
 
 This can clean and regenerate the selected project's output. Inspect dirty and
@@ -173,7 +173,7 @@ inputs, configuration, and revision:
 
 ```bash
 uv run python scripts/runner/execute_pipeline.py \
-  --project templates/template_code_project --core-only --resume
+  --project templates/template_code_project --mode core --resume
 ```
 
 If checkpoint identity is uncertain, preserve it for diagnosis and create a
@@ -239,7 +239,7 @@ If LLM stages are not required, select the supported core path:
 
 ```bash
 uv run python scripts/runner/execute_pipeline.py \
-  --project templates/template_code_project --core-only
+  --project templates/template_code_project --mode core
 ```
 
 Do not report the omitted LLM review/translation lanes as passed.

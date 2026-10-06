@@ -8,12 +8,12 @@ import pytest
 import requests
 from pytest_httpserver import HTTPServer
 
-from literature.semantic_scholar import (
+from template_literature_meta_analysis.literature.semantic_scholar import (
     get_citations,
     get_paper_details,
     search_semantic_scholar,
 )
-from literature.models import Paper, Citation
+from template_literature_meta_analysis.literature.models import Paper, Citation
 
 
 # ---------------------------------------------------------------------------

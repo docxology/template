@@ -5,8 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 
 
-from config import DEFAULT_ARXIV_QUERIES, DEFAULT_RELEVANCE_KEYWORDS, MANUSCRIPT_DIR
-from config_loader import (
+from template_literature_meta_analysis.config import DEFAULT_ARXIV_QUERIES, DEFAULT_RELEVANCE_KEYWORDS, MANUSCRIPT_DIR
+from template_literature_meta_analysis.config_loader import (
     default_config_path,
     load_fulltext_config,
     load_kg_config,
@@ -136,7 +136,7 @@ project_config:
 
 
 def test_load_yaml_import_error_returns_empty_dict(tmp_path: Path) -> None:
-    from config_loader import _load_yaml
+    from template_literature_meta_analysis.config_loader import _load_yaml
 
     def blocked_import(name: str):
         raise ImportError(f"{name} unavailable in test")

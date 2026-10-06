@@ -20,6 +20,7 @@ Technical guide for `docs/guides/` — skill-level progression guides from begin
 | `leann-local.md` | Advanced | Optional local LEANN semantic retrieval with generated-index guards |
 | `llm-integration-guide.md` | Levels 11-12 | AI-assisted research: Ollama setup, LLM review, templates, programmatic usage |
 | `publishing-guide.md` | Levels 11-12 | Academic publishing: DOI, Zenodo, arXiv, citations (BibTeX CLI; APA/MLA helpers) |
+| `standalone-install-projection.md` | Levels 11-12 | Versioned Git-pinned standalone installation with exact original export provenance and separate remote acceptance |
 | `secure-research-guide.md` | Level 11 | PDF steganography: watermarks, QR codes, SHA-256 hashing, provenance |
 | `zenodo-doi-strategy.md` | Levels 11-12 | Concept vs version DOI strategy for repeat Zenodo releases |
 | `fork-an-exemplar.md` | All levels | Fork-readiness walkthrough for canonical exemplars |

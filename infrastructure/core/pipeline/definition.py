@@ -61,7 +61,7 @@ def _package_pipeline_path() -> Path | None:
     # Wheels are installed unpacked by supported Python installers, so the
     # package Traversable's stable string form is a real filesystem path. Do
     # not use ``os.fspath``: the Traversable protocol intentionally does not
-    # promise ``PathLike`` and strict typing must remain valid on Python 3.10.
+    # promise ``PathLike`` on the supported Python 3.12–3.14 runtime range.
     path = Path(str(resource)).resolve(strict=False)
     return path if path.is_file() else None
 

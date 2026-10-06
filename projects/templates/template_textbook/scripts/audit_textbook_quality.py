@@ -30,7 +30,7 @@ def main() -> int:
     mode.add_argument(
         "--require-complete",
         action="store_true",
-        help="Fail when any audited unit intro or chapter still contains stub markers.",
+        help="Fail when any configured manuscript section or companion contains draft markers.",
     )
     parser.add_argument(
         "--check-generated",

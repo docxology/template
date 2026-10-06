@@ -90,3 +90,14 @@ uv run python projects/templates/template_template/scripts/generate_architecture
 - [`docs/AGENTS.md`](docs/AGENTS.md)
 - [`manuscript/AGENTS.md`](manuscript/AGENTS.md)
 - [`src/template_template/AGENTS.md`](src/template_template/AGENTS.md)
+
+
+## Standalone complete-source DATA
+
+The selected `research-project-template==4.0.0` SDK supplies executable infrastructure. Complete Root tests, manuscripts, all public exemplars and native Git facts are separate DATA inputs. A standalone preparation harness must supply all three `TEMPLATE_PUBLIC_REFERENCE_ROOT`, `TEMPLATE_PUBLIC_REFERENCE_COMMIT` and `TEMPLATE_PUBLIC_REFERENCE_FINGERPRINT` fields from the admitted clean candidate. The reference must contain the initialized pinned Kmyth checkout; no tool initializes or retrieves it during admission. Never add this DATA root to `sys.path` or manufacture it inside wheel site-packages.
+
+Whole-source producers and the full own test suite admit this reference once, retain the original finite session clock, and recheck source/inventory/SDK custody before accepting results. Keep own-project outputs outside the DATA root. Existing source-checkout discovery remains available for ordinary development and genuine path-discovery controls; it grants no standalone DATA or installed-wheel acceptance. Invalid, missing or changed required DATA remains blocked by the acceptance harness, with no coverage reduction or dropped cases.
+
+After explicit SDK/dev preparation, run `python -I -m pytest tests/ --cov=src --cov-fail-under=90` from the standalone own project. This command requires the admitted DATA environment and every declared renderer/provider needed by the selected cases. A fresh complete own-suite receipt and actual installed-wheel execution remain distinct acceptance requirements.
+
+Public metrics enumerate only the exact canonical qualified public roster paths under projects/templates. Local lifecycle or flat aliases with a public leaf name remain available only to explicit public_only=False diagnostics; they cannot enter published counts. Canonical public directory redirects are refused.

@@ -18,7 +18,7 @@ distinct from `projects/` (executable code).
 | `fonds_info.py` | `FondInfo`, `build_fond_info` |
 | `validation.py` | `validate_fond_structure` |
 | `public_scope.py` | `PUBLIC_FOND_NAMES`, `public_fond_infos`, `public_fond_names`, `public_fond_data_paths` |
-| `linking.py` | `sync_private_fond_links`, `sync_active_fond_links`, `private_fonds_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
+| `linking.py` | `sync_private_fond_links`, `private_fonds_root`, `is_managed_symlink`, `LIFECYCLE_LINK_DIRS`, `LinkSyncResult` |
 
 ## Discovery and validation
 

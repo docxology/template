@@ -1,12 +1,23 @@
-"""Tests for infrastructure.publishing.api module using real implementations.
+"""Tests for the canonical publishing Zenodo API using real implementations.
 
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
+import importlib
+
 import pytest
 
-from infrastructure.publishing import api
-from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
+from infrastructure.publishing import zenodo
+from infrastructure.publishing.zenodo import ZenodoClient, ZenodoConfig
+
+
+@pytest.mark.parametrize("module", ["api", "platforms"])
+def test_retired_publishing_imports_fail_with_the_requested_module(module: str) -> None:
+    """Removed import paths fail directly, rather than through an unrelated dependency."""
+    qualified_name = f"infrastructure.publishing.{module}"
+    with pytest.raises(ModuleNotFoundError) as error:
+        importlib.import_module(qualified_name)
+    assert error.value.name == qualified_name
 
 
 class TestPublishingAPI:
@@ -14,27 +25,27 @@ class TestPublishingAPI:
 
     def test_api_module_exists(self):
         """Test API module is importable."""
-        assert api.__name__ == "infrastructure.publishing.api"
-        assert api.__all__ == ["DepositionResult", "REQUEST_TIMEOUT", "ZenodoClient", "ZenodoConfig"]
+        assert zenodo.__name__ == "infrastructure.publishing.zenodo"
+        assert {"DepositionResult", "REQUEST_TIMEOUT", "ZenodoClient", "ZenodoConfig"}.issubset(zenodo.__all__)
 
     def test_zenodo_client_available(self):
         """Test Zenodo API client is available."""
-        assert api.ZenodoClient is ZenodoClient
-        assert api.ZenodoConfig is ZenodoConfig
+        assert zenodo.ZenodoClient is ZenodoClient
+        assert zenodo.ZenodoConfig is ZenodoConfig
 
     def test_arxiv_client_available(self):
-        """Test arXiv helpers stay on the package boundary, not ``api.py``."""
+        """Test arXiv helpers stay on the package boundary, not ``zenodo.py``."""
         import infrastructure.publishing as publishing
 
         assert callable(publishing.prepare_arxiv_submission)
-        assert not hasattr(api, "arxiv")
+        assert not hasattr(zenodo, "arxiv")
 
     def test_github_client_available(self):
-        """Test GitHub helpers stay on the package boundary, not ``api.py``."""
+        """Test GitHub helpers stay on the package boundary, not ``zenodo.py``."""
         import infrastructure.publishing as publishing
 
         assert callable(publishing.create_github_release)
-        assert not hasattr(api, "github")
+        assert not hasattr(zenodo, "github")
 
     def test_api_authentication(self):
         """Test API authentication handling."""
@@ -47,9 +58,9 @@ class TestPublishingAPI:
             ZenodoClient(ZenodoConfig(access_token="test-token"), requests_available=False)
 
     def test_api_timeout_constant_is_positive(self):
-        """The compatibility API exposes a bounded request timeout."""
-        assert isinstance(api.REQUEST_TIMEOUT, (int, float))
-        assert api.REQUEST_TIMEOUT > 0
+        """The canonical API exposes a bounded request timeout."""
+        assert isinstance(zenodo.REQUEST_TIMEOUT, (int, float))
+        assert zenodo.REQUEST_TIMEOUT > 0
 
 
 class TestPublishingApiCore:
@@ -57,20 +68,20 @@ class TestPublishingApiCore:
 
     def test_module_imports(self):
         """Test that module imports correctly."""
-        from infrastructure.publishing import api
+        from infrastructure.publishing import zenodo
 
-        assert api is not None
+        assert zenodo is not None
 
     def test_has_api_functions(self):
         """Test that module has API functions."""
-        from infrastructure.publishing import api
+        from infrastructure.publishing import zenodo
 
-        module_funcs = [a for a in dir(api) if not a.startswith("_")]
+        module_funcs = [a for a in dir(zenodo) if not a.startswith("_")]
         assert len(module_funcs) > 0
 
     def test_zenodo_client_exists(self):
-        """ZenodoClient class is exported from publishing.api."""
-        from infrastructure.publishing.api import ZenodoClient
+        """ZenodoClient class is exported from publishing.zenodo."""
+        from infrastructure.publishing.zenodo import ZenodoClient
 
         assert ZenodoClient is not None
 
@@ -80,7 +91,7 @@ class TestZenodoApi:
 
     def test_zenodo_upload(self, tmp_path, zenodo_test_server):
         """ZenodoClient.upload_file() calls the correct PUT endpoint."""
-        from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
+        from infrastructure.publishing.zenodo import ZenodoClient, ZenodoConfig
 
         pdf = tmp_path / "test.pdf"
         pdf.write_bytes(b"%PDF")
@@ -92,7 +103,7 @@ class TestZenodoApi:
 
     def test_create_zenodo_deposition(self, zenodo_test_server):
         """ZenodoClient.create_deposition() returns a DepositionResult."""
-        from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
+        from infrastructure.publishing.zenodo import ZenodoClient, ZenodoConfig
 
         config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
@@ -102,7 +113,7 @@ class TestZenodoApi:
 
     def test_zenodo_publish(self, zenodo_test_server):
         """ZenodoClient.publish() returns the DOI string."""
-        from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
+        from infrastructure.publishing.zenodo import ZenodoClient, ZenodoConfig
 
         config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
@@ -145,22 +156,22 @@ class TestArxivApi:
         assert "main.bbl" in names
 
     def test_api_module_keeps_zenodo_client_boundary(self):
-        """api.py remains the Zenodo client module; platform helpers live in package exports."""
+        """zenodo.py remains the Zenodo client module; platform helpers live in package exports."""
         import infrastructure.publishing as publishing
-        from infrastructure.publishing import api
+        from infrastructure.publishing import zenodo
 
         assert hasattr(publishing, "prepare_arxiv_submission")
         assert hasattr(publishing, "publish_to_zenodo")
-        assert not hasattr(api, "prepare_arxiv_submission")
+        assert not hasattr(zenodo, "prepare_arxiv_submission")
 
 
 class TestGitHubApi:
-    """Test GitHub release API (create_github_release hardcodes api.github.com)."""
+    """Test GitHub release API (create_github_release defaults to api.github.com)."""
 
     def test_create_github_release_signature(self):
         """create_github_release is importable and has the expected signature."""
         import inspect
-        from infrastructure.publishing.platforms import create_github_release
+        from infrastructure.publishing.github import create_github_release
 
         sig = inspect.signature(create_github_release)
         assert "tag_name" in sig.parameters
@@ -208,7 +219,7 @@ class TestPublishingApiIntegration:
 
     def test_full_publishing_workflow(self, tmp_path):
         """Publishing module is importable and has expected classes."""
-        from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
+        from infrastructure.publishing.zenodo import ZenodoClient, ZenodoConfig
 
         (tmp_path / "paper.pdf").write_bytes(b"%PDF")
         assert ZenodoClient is not None
@@ -220,11 +231,11 @@ class TestPublishingApiImport:
 
     def test_module_imports(self):
         """Test that module imports correctly."""
-        assert api is not None
+        assert zenodo is not None
 
     def test_module_attributes(self):
         """Test module has expected attributes."""
-        module_attrs = [a for a in dir(api) if not a.startswith("_")]
+        module_attrs = [a for a in dir(zenodo) if not a.startswith("_")]
         assert len(module_attrs) > 0
 
 
@@ -328,8 +339,8 @@ class TestPublishingApiIntegrationFromPublishingApi:
     def test_module_structure(self):
         """Test module has expected structure."""
         # Should have ZenodoClient
-        assert hasattr(api, "ZenodoClient")
-        assert hasattr(api, "ZenodoConfig")
+        assert hasattr(zenodo, "ZenodoClient")
+        assert hasattr(zenodo, "ZenodoConfig")
 
     def test_full_workflow(self, tmp_path, zenodo_test_server):
         """Test complete publishing workflow."""

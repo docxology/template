@@ -6,7 +6,7 @@ from pathlib import Path
 
 import yaml
 
-from analysis.subfield_registry import GENERIC_DEFAULT_SUBFIELDS
+from template_literature_meta_analysis.analysis.subfield_registry import GENERIC_DEFAULT_SUBFIELDS
 
 DEFAULT_SUBFIELDS: dict[str, dict] = GENERIC_DEFAULT_SUBFIELDS
 

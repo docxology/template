@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -53,10 +52,10 @@ class TestCreateParser:
         parser = create_parser()
 
         # Parse pipeline command
-        args = parser.parse_args(["pipeline", "full", "--project", "test"])
+        args = parser.parse_args(["pipeline", "--mode", "live", "--project", "test"])
 
         assert args.command == "pipeline"
-        assert args.pipeline_type == "full"
+        assert args.mode == "live"
         assert args.project == "test"
         assert args.skip_infra is False
         assert args.resume is False
@@ -65,10 +64,10 @@ class TestCreateParser:
         """Test multi-project subcommand arguments."""
         parser = create_parser()
 
-        args = parser.parse_args(["multi-project", "full"])
+        args = parser.parse_args(["multi-project", "--mode", "live"])
 
         assert args.command == "multi-project"
-        assert args.execution_type == "full"
+        assert args.mode == "live"
         assert args.projects is None
 
     def test_inventory_subcommand(self):
@@ -90,171 +89,62 @@ class TestCreateParser:
 class TestCLISubprocess:
     """Test CLI through real subprocess execution."""
 
-    def test_cli_pipeline_command_success(self):
-        """Test successful pipeline command execution via CLI."""
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            repo_root = Path(tmp_dir) / "repo"
-            repo_root.mkdir()
+    @pytest.mark.parametrize(
+        "mode, expected_steps", [("core", ["infra", "analysis"]), ("live", ["infra", "analysis", "live"])]
+    )
+    def test_cli_pipeline_real_mode_selection(self, tmp_path: Path, mode: str, expected_steps: list[str]):
+        from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 
-            # Create minimal scripts directory with stub scripts
-            scripts_dir = repo_root / "scripts"
-            scripts_dir.mkdir()
+        scaffold_pipeline(tmp_path, ("templates/demo",))
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "infrastructure.core.cli",
+                "pipeline",
+                "--mode",
+                mode,
+                "--project",
+                "demo",
+                "--repo-root",
+                str(tmp_path),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert result.returncode == 0, result.stderr
+        assert (tmp_path / "process_order.log").read_text().splitlines() == [
+            f"templates/demo:{step}" for step in expected_steps
+        ]
 
-            script_files = [
-                "pipeline/stage_00_setup.py",
-                "pipeline/stage_01_test.py",
-                "pipeline/stage_02_analysis.py",
-                "pipeline/stage_03_render.py",
-                "pipeline/stage_04_validate.py",
-                "pipeline/stage_05_copy.py",
-            ]
+    @pytest.mark.parametrize("infra_exit, expected_code", [(0, 0), (2, 1)])
+    def test_cli_multi_shared_verification_and_project_selection(
+        self, tmp_path: Path, infra_exit: int, expected_code: int
+    ):
+        from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 
-            for script_file in script_files:
-                script_path = scripts_dir / script_file
-                script_path.parent.mkdir(parents=True, exist_ok=True)
-                script_path.write_text(
-                    """
-import sys
-import time
-time.sleep(0.01)
-print("Script executed successfully")
-sys.exit(0)
-"""
-                )
-
-            # Create project structure
-            project_dir = repo_root / "projects" / "test_project"
-            project_dir.mkdir(parents=True)
-
-            # Create required subdirectories and files
-            (project_dir / "src").mkdir()
-            (project_dir / "tests").mkdir()
-            (project_dir / "scripts").mkdir()
-            (project_dir / "manuscript").mkdir()
-            (project_dir / "output").mkdir()
-
-            (project_dir / "src" / "__init__.py").write_text("")
-            (project_dir / "tests" / "__init__.py").write_text("")
-            (project_dir / "manuscript" / "config.yaml").write_text(
-                """
-paper:
-  title: "Test Project"
-authors:
-  - name: "Test Author"
-"""
-            )
-
-            # Test CLI execution via subprocess
-            # Need to run from repository directory where infrastructure module is available
-            env = os.environ.copy()
-            env["PYTHONPATH"] = str(Path(__file__).parent.parent.parent)  # Add repository root to PYTHONPATH
-
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "-m",
-                    "infrastructure.core.cli",
-                    "pipeline",
-                    "core",
-                    "--project",
-                    "test_project",
-                    "--repo-root",
-                    str(repo_root),
-                ],
-                capture_output=True,
-                text=True,
-                env=env,
-                timeout=300,
-            )
-
-            assert result.returncode == 0
-            # CLI successfully executed scripts - check that scripts were called
-            # The stub scripts print "Script executed successfully"
-            assert "Script executed successfully" in result.stdout
-
-    def test_cli_multi_project_command(self):
-        """Test multi-project command execution via CLI."""
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            repo_root = Path(tmp_dir) / "repo"
-            repo_root.mkdir()
-
-            # Create scripts directory
-            scripts_dir = repo_root / "scripts"
-            scripts_dir.mkdir()
-
-            script_files = [
-                "pipeline/stage_00_setup.py",
-                "pipeline/stage_01_test.py",
-                "pipeline/stage_02_analysis.py",
-                "pipeline/stage_03_render.py",
-                "pipeline/stage_04_validate.py",
-                "pipeline/stage_05_copy.py",
-            ]
-
-            for script_file in script_files:
-                script_path = scripts_dir / script_file
-                script_path.parent.mkdir(parents=True, exist_ok=True)
-                script_path.write_text(
-                    """
-import sys
-import time
-time.sleep(0.01)
-print("Script executed successfully")
-sys.exit(0)
-"""
-                )
-
-            # Create projects
-            projects_dir = repo_root / "projects"
-            projects_dir.mkdir()
-
-            for project_name in ["project1", "project2"]:
-                project_dir = projects_dir / project_name
-                project_dir.mkdir()
-
-                # Create required subdirectories and files
-                (project_dir / "src").mkdir()
-                (project_dir / "tests").mkdir()
-                (project_dir / "scripts").mkdir()
-                (project_dir / "manuscript").mkdir()
-                (project_dir / "output").mkdir()
-
-                (project_dir / "src" / "__init__.py").write_text("")
-                (project_dir / "tests" / "__init__.py").write_text("")
-                (project_dir / "manuscript" / "config.yaml").write_text(
-                    f"""
-paper:
-  title: "{project_name} Project"
-authors:
-  - name: "Test Author"
-"""
-                )
-
-            # Test CLI execution via subprocess
-            # Need to run from repository directory where infrastructure module is available
-            env = os.environ.copy()
-            env["PYTHONPATH"] = str(Path(__file__).parent.parent.parent)  # Add repository root to PYTHONPATH
-
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "-m",
-                    "infrastructure.core.cli",
-                    "multi-project",
-                    "core",
-                    "--repo-root",
-                    str(repo_root),
-                ],
-                capture_output=True,
-                text=True,
-                env=env,
-                timeout=300,
-            )
-
-            assert result.returncode == 0
-            # CLI successfully executed scripts for multiple projects
-            # Should have more script executions (2 projects × multiple scripts each)
-            assert result.stdout.count("Script executed successfully") > 10
+        scaffold_pipeline(tmp_path, ("templates/alpha", "templates/beta"), infra_exit=infra_exit)
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "infrastructure.core.cli",
+                "multi-project",
+                "--projects",
+                "templates/beta",
+                "--repo-root",
+                str(tmp_path),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert result.returncode == expected_code, result.stderr
+        rows = (tmp_path / "process_order.log").read_text().splitlines()
+        assert rows == (
+            ["templates/beta:infra", "templates/beta:analysis"] if infra_exit == 0 else ["templates/beta:infra"]
+        )
 
     def test_cli_inventory_command(self):
         """Test inventory command execution via CLI."""

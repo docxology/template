@@ -7,7 +7,35 @@ spec hashes and provenance pointers into image payloads.
 from __future__ import annotations
 
 import json
+import hashlib
+from pathlib import Path
 from typing import Any, Optional
+
+from .custody_paths import confined_path
+from .verify import verify_child
+
+
+def seal_verified_child(child_root: Path) -> Path:
+    """Write an exact spec/tree seal only after recomputing source custody."""
+    report = verify_child(child_root)
+    if not report.all_passed:
+        raise ValueError("child verification failed; refusing to seal")
+    provenance = json.loads(confined_path(child_root, "provenance.json", regular=True).read_text())
+    spec = provenance.get("spec")
+    if not isinstance(spec, dict) or type(spec.get("seed")) is not int:
+        raise ValueError("child seal requires a typed spec and integer seed")
+    canonical = json.dumps(spec, sort_keys=True, separators=(",", ":"))
+    spec_hash = hashlib.sha256(canonical.encode()).hexdigest()[:16]
+    tree_hash = provenance["tree_hash"]
+    seal = {
+        "spec_hash": spec_hash,
+        "tree_hash": tree_hash,
+        "seed": spec["seed"],
+        "payload": build_payload(spec_hash, tree_hash, spec["seed"]),
+    }
+    destination = confined_path(child_root, "seal.json")
+    destination.write_text(json.dumps(seal, indent=2, sort_keys=True) + "\n")
+    return destination
 
 
 # ---------------------------------------------------------------------------

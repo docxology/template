@@ -9,7 +9,7 @@ does path wiring, I/O, and printing only.
 | [`00_setup_environment.py`](00_setup_environment.py) | Pre-flight check for manuscript rendering prerequisites. Calls `infrastructure.rendering.preflight.run_manuscript_preflight` — the same helper `template_code_project/scripts/00_preflight.py` reuses — and reports the result. |
 | [`02_run_analysis.py`](02_run_analysis.py) | Two real runs: `template_formal.colony.demo.run_demo_colony` (deterministic 3-agent/5-tick demo) and `template_formal.colony.demo.run_statistics_sweep` (N=40 seeded heterogeneous trials, the same real harness `tests/colony/test_colony_convergence_statistics.py` uses at N=150). Writes JSON summaries, calls `colony.visualization` for figures, writes the figure registry, and prints every output path for manifest collection. |
 | [`zz_generate_cover_art.py`](zz_generate_cover_art.py) | Regenerates the committed title-page cover art (`manuscript/figures/cover_colony.png`) via `template_formal.colony.cover_art.require_cover_art` — a fail-closed wrapper (unwritable destination raises rather than silently exiting) over the deterministic, seeded `generate_cover_art`. Prints the written path for manifest collection. |
-| [`check_formal_specs.sh`](check_formal_specs.sh) | Runs the optional Lean 4 build (`lake build` under `formal/lean/`) and the TLA+ TLC model check (`formal/tla/`) and exits non-zero if any check fails. Fetches `tla2tools.jar` on first run from a pinned, dated GitHub release tag and verifies it against a hardcoded SHA-256 before ever invoking it. |
+| [`check_formal_specs.sh`](check_formal_specs.sh) | Calls the standalone pinned tool runner for fresh Lean elaboration, both positive TLC models and the specific negative control. A shared deadline, clean source custody and exact jar hashes are required; acquisition is explicit through `--acquire` and missing tools return blocked75. |
 
 ## Thin-orchestrator contract
 
@@ -26,8 +26,7 @@ thin-orchestrator rule"). `00_setup_environment.py`,
 `check_formal_specs.sh` are the same pattern in miniature: `00_setup_environment.py`
 calls one shared `infrastructure.rendering.preflight` function and reports
 its result; `zz_generate_cover_art.py` calls `colony.cover_art.require_cover_art`
-and prints the written path; `check_formal_specs.sh` shells out to `lake` and `java -jar
-tla2tools.jar` and reports their exit codes — nothing here decides *how* a
+and prints the written path; `check_formal_specs.sh` delegates to `template_formal.tool_acceptance` and reports their exit codes — nothing here decides *how* a
 Lean proof or a TLA+ spec is checked, only whether the process wiring
 succeeded.
 

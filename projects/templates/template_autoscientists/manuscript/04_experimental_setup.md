@@ -16,7 +16,7 @@ Confirmation averages each candidate over seeds $(101, 202, 303)$ and tests agai
 
 ## Proposer
 
-The rendered figures and the JSON summaries are produced with `DeterministicProposer`, a rule-based agent that reads the shared state and emits a concrete proposal. No mock objects are used anywhere. The live `HermesProposer` path is not part of the rendered pipeline; it is exercised separately (see @sec:reproducibility).
+The rendered figures and the JSON summaries are produced with `DeterministicProposer`, a rule-based agent that reads the shared state and emits a concrete proposal. No mock objects are used anywhere. The bounded local `LiveProposer` path is not part of the rendered pipeline; it is exercised separately (see @sec:reproducibility).
 
 ## Outputs
 

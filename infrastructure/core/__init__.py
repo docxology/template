@@ -1,4 +1,4 @@
-"""Lightweight compatibility exports for core infrastructure utilities.
+"""Lightweight package exports for core infrastructure utilities.
 
 New code should import leaf modules directly.  Package-level conveniences are
 resolved lazily so importing an unrelated leaf such as ``pipeline.types`` does
@@ -27,7 +27,7 @@ __all__ = sorted(_EXPORTS)
 
 
 def __getattr__(name: str) -> Any:
-    """Resolve a legacy package-level export on first access."""
+    """Resolve a declared package-level export on first access."""
     try:
         module_name, attribute = _EXPORTS[name]
     except KeyError as exc:
@@ -38,5 +38,5 @@ def __getattr__(name: str) -> Any:
 
 
 def __dir__() -> list[str]:
-    """Expose lazy compatibility names during introspection."""
+    """Expose lazy package exports during introspection."""
     return sorted((*globals(), *__all__))

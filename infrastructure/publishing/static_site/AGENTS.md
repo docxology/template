@@ -36,9 +36,17 @@ class SiteHosting(str, Enum):
 | `dry_run` | `True` | No network calls when `True` |
 | `branch` | `"gh-pages"` | GitHub Pages only |
 | `production` | `False` | Netlify: promote to production deploy |
+| `removal_plan` | `None` | GitHub Pages: exact destination-bound obsolete-source diff |
+| `reviewed_plan_sha256` | `None` | Explicit approval of that exact current removal plan |
+| `removal_quarantine_dir` | `None` | Retained directory outside the source/destination for recoverable removals |
 
 `dry_run=True` is the default at every layer — accidental imports cannot trigger
 real deployments.
+
+GitHub Pages preserves destination-only and immutable publication evidence.
+Obsolete previously managed source requires an exact reviewed removal plan;
+unreviewed stale source prevents a push. Quarantine, rollback and parity limits
+are documented in [`publication-removals.md`](../../../docs/guides/publication-removals.md).
 
 ### `SiteDeployResult`
 

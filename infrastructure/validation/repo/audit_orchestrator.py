@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import TypedDict
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.validation.integrity.check_links import (
+from infrastructure.validation.integrity.link_extract import (
     validate_directory_structures,
     validate_file_paths_in_code,
     validate_placeholder_consistency,

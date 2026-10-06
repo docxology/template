@@ -5,9 +5,9 @@ the former single `rendered_snapshot.py` module for the line-count gate.
 
 ## Files
 
-- `__init__.py` - public API; every historical `infrastructure.validation.rendered_snapshot` name re-imported here
+- `__init__.py` - public snapshot models and builders
 - `_scan.py` - repository-boundary scan (`FileRecord`, `Fingerprint`, `cached_records`, `iter_tree_files`, symlink confinement)
-- `_records.py` - record-set builders (`_stage_records`, `_project_records`, `_output_records`, `_fingerprint`, `_is_config_path`) and the implementation-root/cache-part constants
+- `_records.py` - record-set builders (`_stage_records`, `_project_records`, `_fingerprint`, `_is_config_path`) and implementation-root selection
 
 ## Public API
 
@@ -17,9 +17,7 @@ Import from the package root only:
 from infrastructure.validation.rendered_snapshot import build_current_rendered_snapshot
 ```
 
-All historical names remain importable from
-`infrastructure.validation.rendered_snapshot` (see `__init__.py` re-exports,
-including legacy test aliases such as `_cached_records`).
+Focused implementation controls import scanning helpers from `_scan.py`.
 
 ## See Also
 

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import subprocess
 import sys
@@ -24,6 +26,7 @@ from infrastructure.documentation.counts_coverage import (
     _coverage_report_command,
     _coverage_support_identity,
     _fresh_coverage_measurement_data_file,
+    measure_exemplar_coverage,
 )
 from infrastructure.reporting.project_verifier import DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS
 
@@ -45,7 +48,7 @@ pytestmark = pytest.mark.timeout(30)
 def test_coverage_measurement_uses_bounded_release_profile() -> None:
     """Coverage receipts must use the shared release selection and timeout policy."""
     command = _coverage_measurement_command(Path("/tmp/project"))
-    marker = command[command.index("-m") + 1]
+    marker = command[-1]
 
     assert "not requires_ollama" in marker
     assert "not long_running" in marker
@@ -53,6 +56,17 @@ def test_coverage_measurement_uses_bounded_release_profile() -> None:
     assert "not private_project" in marker
     assert "not external_fixture" in marker
     assert COVERAGE_MEASUREMENT_TIMEOUT_SECONDS == 1800
+    assert command[:8] == [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "--offline",
+        "--no-python-downloads",
+        "--python",
+        "/tmp/project/.venv/bin/python",
+    ]
+    assert command[12:15] == ["/tmp/project/.venv/bin/python", "-m", "pytest"]
 
 
 def test_active_coverage_measurement_selects_only_the_chunked_verifier() -> None:
@@ -65,34 +79,38 @@ def test_active_coverage_measurement_selects_only_the_chunked_verifier() -> None
     expected_tail = [
         "--extra",
         "dev",
-        "python",
+        str(canonical / ".venv/bin/python"),
         "scripts/run_full_verification.py",
         "--coverage-only",
         "--profile",
         "release",
     ]
-    assert direct == ["uv", "run", "--locked", "--directory", str(canonical), *expected_tail]
-    assert isolated == [
+    expected_prefix = [
         "uv",
         "run",
         "--locked",
+        "--no-sync",
+        "--offline",
+        "--no-python-downloads",
+        "--python",
+        str(canonical / ".venv/bin/python"),
         "--project",
         str(canonical),
+    ]
+    assert direct == [*expected_prefix, "--directory", str(canonical), *expected_tail]
+    assert isolated == [
+        *expected_prefix,
         "--directory",
         str(disposable),
         *expected_tail,
     ]
 
     assert _coverage_report_command(disposable, environment_project_dir=canonical) == [
-        "uv",
-        "run",
-        "--locked",
-        "--project",
-        str(canonical),
+        *expected_prefix,
         "--directory",
         str(disposable),
-        "--extra",
-        "dev",
+        str(canonical / ".venv/bin/python"),
+        "-m",
         "coverage",
         "report",
         "--precision=2",
@@ -180,6 +198,8 @@ def test_coverage_measurement_environment_strips_conflicting_child_opt_ins(
     monkeypatch.setenv("GIT_CONFIG_VALUE_0", str(tmp_path / "external-hooks"))
     monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(tmp_path / "external-global-config"))
     monkeypatch.setenv("GIT_TEMPLATE_DIR", str(tmp_path / "external-template"))
+    monkeypatch.setenv("GIT_NO_REPLACE_OBJECTS", "0")
+    monkeypatch.setenv("GIT_REPLACE_REF_BASE", "refs/owned-substitution/")
     data_file = tmp_path / ".coverage.measure_demo"
 
     environment = _coverage_measurement_environment(data_file)
@@ -202,6 +222,8 @@ def test_coverage_measurement_environment_strips_conflicting_child_opt_ins(
     assert environment["GIT_CONFIG_NOSYSTEM"] == "1"
     assert environment["GIT_CONFIG_SYSTEM"] == os.devnull
     assert "GIT_TEMPLATE_DIR" not in environment
+    assert environment["GIT_NO_REPLACE_OBJECTS"] == "1"
+    assert "GIT_REPLACE_REF_BASE" not in environment
     assert environment["UV_LOCKED"] == "true"
     assert environment["COVERAGE_FILE"] == str(data_file)
 
@@ -214,22 +236,34 @@ def test_active_locked_uv_measurement_and_report_probes_ignore_inherited_frozen_
 
     monkeypatch.setenv("UV_FROZEN", "true")
     monkeypatch.setenv("UV_NO_SYNC", "true")
+    decoy = tmp_path / "unexpected-environment"
+    monkeypatch.setenv("UV_PROJECT_ENVIRONMENT", str(decoy))
+    monkeypatch.setenv("UV_PYTHON", "/invented/unavailable-python")
+    monkeypatch.setenv("UV_ACTIVE", "true")
+    monkeypatch.setenv("VIRTUAL_ENV", str(decoy))
     project = _repo_root() / "projects" / "templates" / "template_active_inference"
+    originals = {
+        name: hashlib.sha256((project / name).read_bytes()).hexdigest() for name in ("pyproject.toml", "uv.lock")
+    }
     environment = _coverage_measurement_environment(tmp_path / ".coverage.measure_probe")
     prefix = (
         "uv",
         "run",
         "--locked",
+        "--no-sync",
+        "--offline",
+        "--no-python-downloads",
+        "--python",
+        str(project / ".venv/bin/python"),
         "--project",
         str(project),
         "--directory",
         str(tmp_path),
-        "--extra",
-        "dev",
+        str(project / ".venv/bin/python"),
     )
     commands = (
-        (*prefix, "python", "-c", "print('locked-measurement-ok')"),
-        (*prefix, "coverage", "--version"),
+        (*prefix, "-c", "import json,sys;print(json.dumps({'prefix':sys.prefix,'executable':sys.executable}))"),
+        (*prefix, "-m", "coverage", "--version"),
     )
 
     results = [
@@ -249,8 +283,22 @@ def test_active_locked_uv_measurement_and_report_probes_ignore_inherited_frozen_
     assert all(result.returncode == 0 for result in results)
     assert all(result.timed_out is False for result in results)
     assert all(not result.command_error for result in results)
-    assert results[0].stdout.strip() == "locked-measurement-ok"
+    observed = json.loads(results[0].stdout)
+    assert Path(observed["prefix"]).resolve() == (project / ".venv").resolve()
+    assert Path(observed["executable"]).absolute() == (project / ".venv/bin/python").absolute()
     assert "Coverage.py" in results[1].stdout
+    assert not decoy.exists()
+    assert originals == {name: hashlib.sha256((project / name).read_bytes()).hexdigest() for name in originals}
+
+
+def test_coverage_measurement_refuses_missing_prepared_environment_before_uv(tmp_path: Path) -> None:
+    project = tmp_path / "projects/templates/template_code_project"
+    project.mkdir(parents=True)
+    (project / "pyproject.toml").write_text('[project]\nname="invented-owned-project"\nversion="1.0.0"\n')
+    with pytest.raises(RuntimeError, match="prepared own Python environment is required"):
+        measure_exemplar_coverage(tmp_path, project.name)
+    assert not (project / ".venv").exists()
+    assert not (project / "uv.lock").exists()
 
 
 @pytest.mark.parametrize(

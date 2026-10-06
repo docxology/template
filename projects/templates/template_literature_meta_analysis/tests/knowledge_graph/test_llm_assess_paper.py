@@ -7,7 +7,7 @@ import json
 import pytest
 from pytest_httpserver import HTTPServer
 
-from knowledge_graph.llm_extraction import (
+from template_literature_meta_analysis.knowledge_graph.llm_extraction import (
     LLMConfig,
     assess_paper_hypotheses,
 )

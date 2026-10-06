@@ -124,7 +124,7 @@ class TestGeneratePipelineSummary:
             output_format="text",
         )
         assert "PIPELINE SUMMARY" in text
-        assert "All stages completed successfully!" in text
+        assert "Recorded stages completed successfully" in text
         assert "Stage 1: setup" in text
 
     def test_json_output(self, tmp_path: Path) -> None:
@@ -158,7 +158,7 @@ class TestGeneratePipelineSummary:
         )
         assert "<div class='pipeline-summary'>" in html
         assert "<h2>Pipeline Summary</h2>" in html
-        assert "All stages completed successfully!" in html
+        assert "Recorded stages completed successfully" in html
 
     def test_text_output_with_failures(self, tmp_path: Path) -> None:
         output_dir = _make_output_dir(tmp_path)
@@ -172,7 +172,7 @@ class TestGeneratePipelineSummary:
             output_dir=output_dir,
             output_format="text",
         )
-        assert "Pipeline completed with failures: render" in text
+        assert "Execution has incomplete stages: render" in text
         assert "FAILED" in text
 
     def test_json_output_with_log_file(self, tmp_path: Path) -> None:
@@ -204,5 +204,5 @@ class TestGeneratePipelineSummary:
             output_dir=output_dir,
             output_format="html",
         )
-        assert "Pipeline completed with failures: render" in html
+        assert "Execution has incomplete stages: render" in html
         assert "Error: boom" in html

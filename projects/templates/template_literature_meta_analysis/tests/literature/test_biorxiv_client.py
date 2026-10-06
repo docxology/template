@@ -17,7 +17,7 @@ from __future__ import annotations
 import requests
 from pytest_httpserver import HTTPServer
 
-from literature.biorxiv_client import (
+from template_literature_meta_analysis.literature.biorxiv_client import (
     BIORXIV_API_URL,
     BIORXIV_PAGE_SIZE,
     _build_pdf_url,
@@ -27,7 +27,7 @@ from literature.biorxiv_client import (
     _parse_biorxiv_paper,
     search_biorxiv,
 )
-from literature.models import Author, Paper
+from template_literature_meta_analysis.literature.models import Author, Paper
 
 # ---------------------------------------------------------------------------
 # Sample bioRxiv ``collection`` entries

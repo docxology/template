@@ -20,26 +20,16 @@ No mocks, no network: real deterministic objects loaded from a committed
 artifact only, in line with the repo no-mock / no-network-in-CI policy (mirrors
 ``template_search_project``'s offline ``corpus.json`` convention).
 
-Import isolation: every public exemplar ships a top-level ``src`` package, so a
-bare ``sys.path.insert`` + ``from src...`` collides on ``sys.modules['src']``
-once a second project's regression test joins the same pytest session. This
-file loads the exemplar's ``src`` package under a project-unique alias
-(``_literature_meta_analysis_src``). Because this exemplar's own modules use
-*absolute* imports (``from literature.models import Paper``, ``from
-analysis.subfield_defaults import ...``), the loader also installs a
-project-scoped ``sys.meta_path`` finder that resolves this exemplar's top-level
-``src`` names from its own ``src/`` directory only -- so those absolute imports
-resolve without a global ``sys.path`` entry, and it never shadows another
-exemplar that also ships a top-level ``analysis`` package (e.g.
-``template_code_project``).
+Import isolation: register the real source package under its installed canonical
+namespace, ``template_literature_meta_analysis``. Cached canonical modules must
+originate in this exact owned source tree. Generic sibling packages remain
+untouched; scientific imports never depend on a process-wide alias or finder.
 """
 
 from __future__ import annotations
 
 import importlib
 import importlib.util
-from importlib.abc import MetaPathFinder
-from importlib.machinery import ModuleSpec, PathFinder
 from pathlib import Path
 import sys
 from types import ModuleType
@@ -53,106 +43,71 @@ PROJECT_ROOT = REPO_ROOT / "projects" / "templates" / "template_literature_meta_
 _SRC = PROJECT_ROOT / "src"
 _FIXTURE_CORPUS = PROJECT_ROOT / "data" / "fixtures" / "modafinil_corpus.jsonl"
 
-_PKG_ALIAS = "_literature_meta_analysis_src"
-
-# Top-level module names this exemplar's own code imports *absolutely*
-# (``from analysis.subfield_defaults import ...``, ``from literature.models
-# import Paper``). The scoped finder below resolves exactly these -- and only
-# these -- from this project's own ``src/`` directory.
-_TOP_LEVEL = frozenset(
-    {
-        "literature",
-        "analysis",
-        "manuscript",
-        "knowledge_graph",
-        "visualization",
-        "config",
-        "config_loader",
-        "deep_research",
-    }
-)
+_PACKAGE = "template_literature_meta_analysis"
 
 
-class _SrcScopedFinder(MetaPathFinder):
-    """Resolve this exemplar's top-level ``src`` names from its own ``src/`` only.
-
-    Installed on ``sys.meta_path`` so the exemplar's absolute intra-package
-    imports resolve to the project's own tree without a global ``sys.path``
-    entry. Scoping to ``_TOP_LEVEL`` means another exemplar that also ships a
-    top-level package of the same name (e.g. ``template_code_project``'s
-    ``analysis``) is unaffected once *it* is imported first, because the
-    already-cached ``sys.modules`` entry wins before ``sys.meta_path`` is
-    consulted; conversely this finder only ever points at *this* project's
-    ``src/``.
-    """
-
-    def find_spec(
-        self,
-        fullname: str,
-        path: Any = None,
-        target: ModuleType | None = None,
-    ) -> ModuleSpec | None:
-        if fullname.split(".")[0] not in _TOP_LEVEL:
-            return None
-        return PathFinder.find_spec(fullname, [str(_SRC)], target)
-
-
-def _load_src_package() -> ModuleType:
-    """Load this exemplar's ``src`` package under a project-unique alias.
-
-    Registers the package under the ``_literature_meta_analysis_src`` alias so
-    the loaded object is collision-free across projects.
-    """
-
-    if _PKG_ALIAS in sys.modules:
-        return sys.modules[_PKG_ALIAS]
-    src_init = _SRC / "__init__.py"
-    spec = importlib.util.spec_from_file_location(
-        _PKG_ALIAS,
-        src_init,
-        submodule_search_locations=[str(_SRC)],
-    )
-    assert spec is not None and spec.loader is not None, f"cannot load {src_init}"
+def _load_source_package() -> ModuleType:
+    """Admit only this tree's canonical source package and cached descendants."""
+    expected_root = _SRC.resolve(strict=True)
+    expected_init = expected_root / "__init__.py"
+    for name, loaded in tuple(sys.modules.items()):
+        if name != _PACKAGE and not name.startswith(_PACKAGE + "."):
+            continue
+        suffix = name.removeprefix(_PACKAGE).lstrip(".")
+        parts = suffix.split(".") if suffix else []
+        if any(not part.isidentifier() for part in parts):
+            raise ValueError(f"canonical Literature module identity differs: {name}")
+        location = expected_root.joinpath(*parts)
+        package_init = location / "__init__.py"
+        is_package = package_init.is_file()
+        expected_origin = package_init if is_package else location.with_suffix(".py")
+        origin = getattr(loaded, "__file__", None)
+        spec = getattr(loaded, "__spec__", None)
+        if (
+            not isinstance(origin, str)
+            or not expected_origin.is_file()
+            or Path(origin).resolve(strict=True) != expected_origin
+            or getattr(spec, "origin", None) != origin
+        ):
+            raise ValueError(f"canonical Literature source origin differs: {name}")
+        if (
+            getattr(loaded, "__name__", None) != name
+            or getattr(spec, "name", None) != name
+            or getattr(loaded, "__package__", None) != (name if is_package else name.rsplit(".", 1)[0])
+        ):
+            raise ValueError(f"canonical Literature module identity differs: {name}")
+        paths = getattr(loaded, "__path__", None)
+        spec_paths = getattr(spec, "submodule_search_locations", None)
+        if is_package:
+            if (
+                paths is None
+                or spec_paths is None
+                or any(
+                    [Path(path).resolve(strict=True) for path in actual] != [location] for actual in (paths, spec_paths)
+                )
+            ):
+                raise ValueError(f"canonical Literature source search path differs: {name}")
+        elif paths is not None or spec_paths is not None:
+            raise ValueError(f"canonical Literature module search path differs: {name}")
+    existing = sys.modules.get(_PACKAGE)
+    if existing is not None:
+        return existing
+    spec = importlib.util.spec_from_file_location(_PACKAGE, expected_init, submodule_search_locations=[str(_SRC)])
+    assert spec is not None and spec.loader is not None, f"cannot load {expected_init}"
     package = importlib.util.module_from_spec(spec)
-    sys.modules[_PKG_ALIAS] = package
-    spec.loader.exec_module(package)
+    sys.modules[_PACKAGE] = package
+    try:
+        spec.loader.exec_module(package)
+    except BaseException:
+        sys.modules.pop(_PACKAGE, None)
+        raise
     return package
 
 
-def _load_absolute_submodules(*dotted_names: str) -> tuple[ModuleType, ...]:
-    """Import top-level ``src`` submodules (e.g. ``analysis.descriptive_stats``).
-
-    ``_SrcScopedFinder`` is installed on ``sys.meta_path`` only for the
-    duration of this call, and every ``sys.modules`` entry it causes to be
-    added under one of ``_TOP_LEVEL`` is popped again afterward (restoring
-    whatever was cached there before, if anything). An earlier version left
-    the finder and the cached modules in place permanently, which silently
-    hijacked *any* later ``import config`` (etc.) system-wide for the rest of
-    the pytest session -- it broke ``template_madlib``'s unrelated top-level
-    ``config`` module once both exemplars' regression tests were collected
-    together, because a bare ``import config`` always checks ``sys.modules``
-    (and now ``sys.meta_path``) before consulting the caller's own
-    ``sys.path`` manipulation.
-    """
-
-    _load_src_package()
-    pre_existing = {name: sys.modules.get(name) for name in _TOP_LEVEL}
-    finder = _SrcScopedFinder()
-    sys.meta_path.insert(0, finder)
-    try:
-        return tuple(importlib.import_module(dotted) for dotted in dotted_names)
-    finally:
-        sys.meta_path.remove(finder)
-        for name, existing in pre_existing.items():
-            found_new = {key: mod for key, mod in sys.modules.items() if key == name or key.startswith(f"{name}.")}
-            for key in found_new:
-                del sys.modules[key]
-            if existing is not None:
-                sys.modules[name] = existing
-
-
-_literature_corpus, _literature_models, _analysis_descriptive, _analysis_temporal = _load_absolute_submodules(
-    "literature.corpus", "literature.models", "analysis.descriptive_stats", "analysis.temporal_analysis"
+_load_source_package()
+_literature_corpus, _literature_models, _analysis_descriptive, _analysis_temporal = (
+    importlib.import_module(f"{_PACKAGE}.{name}")
+    for name in ("literature.corpus", "literature.models", "analysis.descriptive_stats", "analysis.temporal_analysis")
 )
 Corpus = _literature_corpus.Corpus
 Paper = _literature_models.Paper

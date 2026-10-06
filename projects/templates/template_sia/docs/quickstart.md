@@ -21,20 +21,26 @@ uv run python scripts/run_sia_loop.py
 uv run python scripts/z_generate_manuscript_variables.py
 ```
 
-## Live mode (optional)
+## Bounded live numeric proposals (optional)
 
-Requires local Ollama:
+With Docker, an immutable local Python image ID, and the selected model already
+available from a loopback Ollama service:
 
 ```bash
-ollama serve
-ollama pull gemma3:4b
-uv run python scripts/run_sia_loop.py --live-sia
+uv run python scripts/run_sia_loop.py --live-proposals \
+  --model <local-model-name> --container-image sha256:<existing-local-image-id> \
+  --proposal-output-dir output/live_proposals_example
 ```
 
-The LLM model is read from `manuscript/config.yaml` (`project_config.sia.llm_model`), not a CLI flag.
-Set `project_config.sia.llm_model: "gemma3:4b"` in `manuscript/config.yaml` first — it ships empty
-(`llm_model: ""`), and an empty value produces **no LLM feedback note** even with Ollama
-running and a model pulled.
+The CLI model overrides `project_config.sia.llm_model`; the shipped empty value
+requires an explicit selection. No tool, image, or model is downloaded by the
+command. Missing capabilities block with exit 75. The target runs only in the
+restricted Docker container. Its numeric mutation scope, exact rollback,
+held-out boundary, and receipt files are described in
+[`live-numeric-proposals.md`](live-numeric-proposals.md).
+
+`--live-sia` executes unchanged reference subprocess diagnostics. Its optional
+feedback note supplies no mutation or sandbox acceptance.
 
 Default pipeline and CI use fixture replay (`live: false` in `manuscript/config.yaml`).
 

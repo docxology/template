@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 from pathlib import Path
+import ast
+import hashlib
+import shutil
 
 
 from template_autopoiesis.core.honesty import (
@@ -133,3 +136,24 @@ def test_verify_honesty_with_nonexistent_project(tmp_path):
     """Verify honesty on empty project should have missing_calls."""
     m = build_manifest(tmp_path)
     assert len(m.missing_calls) > 0
+
+
+def test_empty_honesty_manifest_is_not_passing():
+    assert not HonestyManifest().all_passed
+
+
+def test_named_stub_cannot_replace_required_structural_calls(tmp_path):
+    project = tmp_path / "project"
+    shutil.copytree(PROJECT_ROOT / "src", project / "src", ignore=shutil.ignore_patterns("__pycache__"))
+    source = project / "src/template_autopoiesis/core/expand.py"
+    tree = ast.parse(source.read_text())
+    selected = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "expand")
+    selected.body = [ast.Return(value=ast.Constant(value=None))]
+    source.write_text(ast.unparse(tree))
+    manifest = build_manifest(project)
+    assert not manifest.all_passed and not manifest.evidence["expand_deterministic"]
+    assert any("expand lacks required structural operations" in issue for issue in manifest.missing_calls)
+    assert (
+        manifest.source_sha256["src/template_autopoiesis/core/expand.py"]
+        == hashlib.sha256(source.read_bytes()).hexdigest()
+    )

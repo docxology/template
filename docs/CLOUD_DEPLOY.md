@@ -160,7 +160,7 @@ instead of inferring execution order from script-number prefixes.
 ### Core pipeline (no LLM stages — suitable for CI/CD)
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
 ```
 
 ### Specific project
@@ -198,7 +198,7 @@ Set these before running to ensure correct headless behaviour:
 export MPLBACKEND=Agg          # non-interactive matplotlib backend (critical on servers)
 export UV_FROZEN=true          # use locked dependencies only (reproducible builds)
 export LOG_LEVEL=1             # 0=debug, 1=info, 2=warning (default)
-# run.sh / secure_run.sh call ensure_uv() and run uv sync when needed — no exported PIPELINE_MODE
+# Prepare dependencies explicitly before run.sh / secure_run.sh; dispatch never installs or syncs
 
 # Logging — cloud / non-TTY environments
 # LOG_TERMINAL_VERBOSE=1 restores the verbose [ts] [LEVEL] prefix on stdout for
@@ -234,8 +234,10 @@ Add to `.env` or export in your CI environment. The `Dockerfile` already sets `M
 
 ## 8. Optional: Ollama for LLM Stages
 
-LLM stages (scientific review + translations) require a running Ollama server. They skip gracefully
-(exit code 2) if Ollama is unavailable.
+Model-assisted draft feedback and translation require explicit `--mode live`
+and a running Ollama server with the configured model. Required live acceptance
+remains blocked when the provider or model is unavailable. A child exit `2`
+only authorizes a stage skip when the current policy-bound receipt validates.
 
 ```bash
 # Install (Linux)
@@ -367,7 +369,7 @@ uv sync --directory projects/templates/template_code_project --all-extras
 ## See Also
 
 - [`RUN_GUIDE.md`](RUN_GUIDE.md) — Pipeline stages and entry points
-- [`../infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) — Default DAG (16 declared stages; default run executes 10 core+LLM stages; `--core-only` excludes LLM-tagged and opt-in publication stages → 8)
+- [`../infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) — Default DAG (16 declared stages; default run executes 10 core+LLM stages; `--mode core` excludes LLM-tagged and opt-in publication stages → 8)
 - [`../infrastructure/docker/Dockerfile`](../infrastructure/docker/Dockerfile) — Container specification
 - [`../infrastructure/docker/docker-compose.yml`](../infrastructure/docker/docker-compose.yml) — Multi-service orchestration
 - [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — CI reference

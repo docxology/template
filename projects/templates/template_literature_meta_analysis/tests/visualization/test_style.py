@@ -1,7 +1,7 @@
 from __future__ import annotations
 from pathlib import Path
-from visualization import style
-from visualization.style import VIZ_CONFIG
+from template_literature_meta_analysis.visualization import style
+from template_literature_meta_analysis.visualization.style import VIZ_CONFIG
 
 
 class TestVizConfig:
