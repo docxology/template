@@ -149,13 +149,15 @@ def test_stage_policy_pause_before_does_not_checkpoint_stage(tmp_path: Path) -> 
 
 
 def test_hitl_pause_writes_agent_context_and_response_schema(tmp_path: Path) -> None:
-    (tmp_path / "reports").mkdir()
-    (tmp_path / "reports" / "validation_report.json").write_text(
+    # Declared artifacts resolve against the actual <project>/output layout.
+    output = tmp_path / "demo" / "output"
+    (output / "reports").mkdir(parents=True)
+    (output / "reports" / "validation_report.json").write_text(
         '{"checks": {"Evidence registry": false}, "summary": {"all_passed": false}}',
         encoding="utf-8",
     )
-    declared = tmp_path / "reports" / "validation_report.json"
-    controller = HitlController(project_output_dir=tmp_path, mode=HitlMode.GATE_ONLY)
+    declared = output / "reports" / "validation_report.json"
+    controller = HitlController(project_output_dir=output, mode=HitlMode.GATE_ONLY)
     spec = StageSpec(
         "Output Validation",
         lambda: True,
@@ -174,11 +176,12 @@ def test_hitl_pause_writes_agent_context_and_response_schema(tmp_path: Path) -> 
         stage_spec=spec,
     )
 
-    context = json.loads((tmp_path / "hitl" / "agent_context.json").read_text(encoding="utf-8"))
-    schema = json.loads((tmp_path / "hitl" / "agent_response.schema.json").read_text(encoding="utf-8"))
+    context = json.loads((output / "hitl" / "agent_context.json").read_text(encoding="utf-8"))
+    schema = json.loads((output / "hitl" / "agent_response.schema.json").read_text(encoding="utf-8"))
     assert context["stage"]["num"] == 6
     assert context["stage"]["contract"]["gate"] == "publication_readiness"
-    assert context["declared_artifacts"][0]["path"] == str(declared.relative_to(tmp_path))
+    assert context["declared_artifacts"][0]["path"] == str(declared.relative_to(output))
+    assert context["declared_artifacts"][0]["exists"] is True
     assert context["validation_status"]["checks"]["Evidence registry"] is False
     assert "approve" in context["permitted_actions"]
     assert schema["properties"]["action"]["enum"] == ["approve", "reject", "guide", "resume", "abort"]

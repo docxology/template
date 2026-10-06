@@ -28,6 +28,25 @@ from template_formal.tool_acceptance import (
 PROJECT = Path(__file__).resolve().parents[1]
 
 
+def _process_running(pid: int) -> bool:
+    """True while ``pid`` exists and is not a terminated, unreaped zombie.
+
+    Containers whose PID 1 does not reap orphans keep killed descendants as
+    zombies; a zombie executes nothing, so it is not a surviving descendant.
+    """
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    stat = Path(f"/proc/{pid}/stat")
+    if stat.exists():
+        try:
+            return stat.read_text().rsplit(")", 1)[1].split()[0] != "Z"
+        except (OSError, IndexError):
+            return True
+    return True
+
+
 def _copy(root: Path) -> Path:
     """Copy the exact declared specs and admitted jar into a disposable project."""
     shutil.copytree(PROJECT / "formal", root / "formal", ignore=shutil.ignore_patterns(".lake", "states", "*TTrace*"))
@@ -143,9 +162,7 @@ def test_real_timeout_kills_detached_descendant(tmp_path: Path) -> None:
     assert result.returncode == 124 and result.timed_out
     pid = json.loads(pid_file.read_text())
     for _ in range(20):
-        try:
-            os.kill(pid, 0)
-        except ProcessLookupError:
+        if not _process_running(pid):
             break
         time.sleep(0.05)
     else:
@@ -334,7 +351,8 @@ def test_nested_authored_coverage_and_lake_names_remain_bound(tmp_path: Path) ->
 def test_cache_symlink_never_grants_reuse_or_acquisition(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = _copy(tmp_path)
     jar = root / "formal/tla/tla2tools.jar"
-    jar.unlink()
+    # A fresh checkout may hold no admitted jar; the control starts from none.
+    jar.unlink(missing_ok=True)
     outside = tmp_path / "outside.jar"
     outside.write_bytes(b"outside source")
     jar.symlink_to(outside)
@@ -347,7 +365,7 @@ def test_cache_symlink_never_grants_reuse_or_acquisition(tmp_path: Path, monkeyp
 
 def test_explicit_acquisition_without_transfer_tool_is_blocked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = _copy(tmp_path)
-    (root / "formal/tla/tla2tools.jar").unlink()
+    (root / "formal/tla/tla2tools.jar").unlink(missing_ok=True)
     monkeypatch.setenv("PATH", str(tmp_path / "no-tools"))
     monkeypatch.delenv("FORMAL_JAVA_BIN", raising=False)
     receipt = run_formal_tools(root, timeout=2, acquire=True)
@@ -371,10 +389,16 @@ def test_expired_deadline_launches_no_child(tmp_path: Path) -> None:
 
 
 def test_real_completed_child_cannot_pass_after_total_cleanup_budget(tmp_path: Path) -> None:
-    deadline = time.monotonic() + 0.05
-    check = _run("budget-control", [sys.executable, "-I", "-c", "pass"], tmp_path, deadline)
-    assert time.monotonic() >= deadline
-    assert check.status == "timed_out" and check.exit_code in {0, 124}
+    deadline = time.monotonic() + 2.0
+    # The child really completes (exit 0) a few milliseconds before the shared
+    # deadline (CLOCK_MONOTONIC is system-wide), so reaping and cleanup cross it.
+    child = "import sys,time; time.sleep(max(0.0, float(sys.argv[1]) - time.monotonic() - 0.001))"
+    check = _run("budget-control", [sys.executable, "-I", "-c", child, repr(deadline)], tmp_path, deadline)
+    finished = time.monotonic()
+    # Success can never be reported once the budget is spent: either cleanup
+    # finished late (exit 0) or the runner killed the child at the deadline.
+    assert check.status == "timed_out" and check.exit_code in {0, 124, -9}
+    assert finished >= deadline - 0.05
 
 
 def test_cli_blocker_receipt_and_invalid_invocation_have_distinct_exits(

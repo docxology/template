@@ -1,4 +1,9 @@
-"""Project pytest configuration — ensure local src and pymdp env."""
+"""Project pytest configuration — ensure local src and pymdp env.
+
+PYTEST_DONT_REWRITE: this top-level plugin file is an audited implementation
+root under the platform's executed-bytecode custody, so pytest must execute it
+exactly as compiled from its source bytes rather than assertion-rewritten.
+"""
 
 from __future__ import annotations
 

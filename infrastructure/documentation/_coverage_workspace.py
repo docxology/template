@@ -76,6 +76,10 @@ _COVERAGE_COPY_SUPPORT_SPECS = (
     _CoverageSupportSpec(Path("docs/guides/manuscript-semantics.md"), "file", True),
     _CoverageSupportSpec(Path("docs/maintenance/archival-targets.md"), "file", True),
     _CoverageSupportSpec(Path("docs/maintenance/exemplar-backlog-history.md"), "file", True),
+    _CoverageSupportSpec(Path("docs/development/public-runtime-matrix.md"), "file", True),
+    # The dated program ledger is a link target only; its prose changes with every
+    # receipt, so its bytes do not bind exemplar coverage provenance.
+    _CoverageSupportSpec(Path("docs/maintenance/platform-4-upgrade.md"), "file", False),
     _CoverageSupportSpec(Path("infrastructure/publishing/README.md"), "file", True),
     _CoverageSupportSpec(Path("projects/templates/template_code_project"), "directory", False),
 )

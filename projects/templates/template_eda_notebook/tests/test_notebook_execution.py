@@ -102,6 +102,25 @@ def append_cell(root: Path, source: str, *, tags: list[str] | None = None) -> No
     nbformat.write(notebook, root / NOTEBOOK)
 
 
+def _process_running(pid: int) -> bool:
+    """True while ``pid`` exists and is not a terminated, unreaped zombie.
+
+    Containers whose PID 1 does not reap orphans keep killed descendants as
+    zombies; a zombie executes nothing, so it is not a surviving process.
+    """
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    stat = Path(f"/proc/{pid}/stat")
+    if stat.exists():
+        try:
+            return stat.read_text().rsplit(")", 1)[1].split()[0] != "Z"
+        except (OSError, IndexError):
+            return True
+    return True
+
+
 class TestNotebookExecution:
     def test_package_worker_writes_accepted_private_receipt(self, copied_project):
         result = copied_project / "worker.json"
@@ -333,8 +352,7 @@ class TestNotebookExecution:
             run_notebook(copied_project, limits=ExecutionLimits(total=20))
         for filename in ("outer-kernel.pid", "outer-child.pid"):
             pid = int((copied_project / filename).read_text())
-            with pytest.raises(ProcessLookupError):
-                os.kill(pid, 0)
+            assert not _process_running(pid), f"{filename} survived the hard run deadline"
         assert not (copied_project / "output" / "reports" / "notebook_execution.json").exists()
 
     def test_valid_stale_timestamp_cache_cannot_execute_marker(self, copied_project):

@@ -5,7 +5,7 @@
   },
   "refresh_command": "uv run python scripts/refresh_notebook_binding.py",
   "schema_version": "template-eda-notebook-binding-v1",
-  "source_digest": "611cfb56144d6fd87dab1ff27740717bad106c3c4e5edf09e7d80eefd79fcd7f",
+  "source_digest": "eebc6e26811440d659b38552cba2415ecac079df094ef29869ffc3488f0b1643",
   "sources": [
     {
       "path": "scripts/execute_notebook.py"

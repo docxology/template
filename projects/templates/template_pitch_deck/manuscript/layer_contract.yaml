@@ -23,6 +23,8 @@
 #   the DeckTheme type its chart functions take, so every chart's colors
 #   match the rendered slides — moved here from scripts/16_generate_charts.py
 #   once that script grew past the thin-orchestrator line/function threshold.
+# - src/template_pitch_deck/paths.py resolves the Root through the platform
+#   public-reference session so deck facts come from an admitted public Root.
 allow_infrastructure_imports:
   - src/content_loader.py
   - src/deck_tokens.py
@@ -30,3 +32,4 @@ allow_infrastructure_imports:
   - src/standalone_slides.py
   - src/infra_facts.py
   - src/chart_rendering.py
+  - src/template_pitch_deck/paths.py

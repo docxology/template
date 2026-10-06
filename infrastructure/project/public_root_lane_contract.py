@@ -13,7 +13,11 @@ from infrastructure.core.execution_boundary import build_bounded_env
 from infrastructure.core.execution_policy import apply_execution_policy
 from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.project.public_acceptance_evidence import bootstrap_command, cell_environment, evidence_directory
-from infrastructure.project.public_root_case_admission import RootCaseAdmission, admit_plan
+from infrastructure.project.public_root_case_admission import (
+    PINNED_MODEL_ENVIRONMENT_KEY,
+    RootCaseAdmission,
+    admit_plan,
+)
 from infrastructure.project.public_root_case_units import RootCaseUnit, admitted_units
 from infrastructure.project.public_root_case_contract import _artifact, _json, _root_identity
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
@@ -83,6 +87,16 @@ def arguments(root: Path, directory: Path, nodes: tuple[str, ...], timeout: int)
     ]
 
 
+def prepared_model_environment(env: dict[str, str]) -> dict[str, str]:
+    """Keep Root acceptance on prepared models after every prerequisite overlay.
+
+    Root lanes never acquire local models: the pin is applied last, so neither a
+    caller value (unset or ``0``) nor a declared prerequisite overlay can enable a
+    model download. Missing declared preparation still blocks before execution.
+    """
+    return dict(env, **{PINNED_MODEL_ENVIRONMENT_KEY: "1"})
+
+
 def environment(admission: RootCaseAdmission, lane_id: str, root: Path, directory: Path, mode: str) -> dict[str, str]:
     env = build_bounded_env(cell_environment(Path(sys.executable), directory, repo_root=root))
     env = apply_execution_policy(env, root, mode=mode)
@@ -95,7 +109,7 @@ def environment(admission: RootCaseAdmission, lane_id: str, root: Path, director
                         env[key] = os.environ[key]
     # Propagate only the actual coordinator's acquired lock identity.
     env.update({key: value for key, value in os.environ.items() if key.startswith("TEMPLATE_PROJECT_LOCK_")})
-    return env
+    return prepared_model_environment(env)
 
 
 def admission(reader: SnapshotReader, snapshot: ArtifactSnapshot) -> tuple[dict[str, Any], RootCaseAdmission]:

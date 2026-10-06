@@ -1,8 +1,9 @@
 """Tests for src.deep_search — multi-keyword deep search workflow.
 
-No mocks. Uses LocalBackend against committed corpus + a deterministic
-in-process LLM callable that returns real, well-formed reading-note text
-so tests run offline and are reproducible.
+No mocks. Uses LocalBackend against owned corpus data and a deterministic
+in-process LLM callable that returns well-formed reading-note text. Enrichment
+uses supplied content or a real owned loopback HTTP/PDF server; no external
+service is required.
 """
 
 from __future__ import annotations
@@ -11,6 +12,7 @@ import json
 from pathlib import Path
 
 import pytest
+from pytest_httpserver import HTTPServer
 
 from infrastructure.reference.citation import parse_bibfile
 from infrastructure.search.literature import Paper, SearchBackend, SearchQuery
@@ -535,11 +537,16 @@ class TestWriteKeywordReport:
 
 class TestEnrichmentBranches:
     def test_run_deep_search_with_abstracts_and_fulltext(self, tmp_path: Path):
-        """Cover the AbstractFetcher and FulltextFetcher initialisation paths."""
+        """Both real fetchers skip content actually supplied by the owned corpus."""
         corpus = _make_corpus(tmp_path)
+        records = json.loads(corpus.read_text(encoding="utf-8"))
+        for record in records:
+            record["fulltext"] = f"Owned fixture content for {record['id']}."
+        corpus.write_text(json.dumps(records), encoding="utf-8")
+        supplied = {record["id"]: record for record in records}
         config = _config(
             tmp_path,
-            keywords=["reproducible"],
+            keywords=["reproducible", "stochastic"],
             fetch_abstracts=True,
             fetch_fulltext=True,
             max_fulltext_chars=200,
@@ -551,13 +558,101 @@ class TestEnrichmentBranches:
             corpus_path=corpus,
             llm=None,
         )
-        # Both fetchers ran for at least one paper.
-        kr = artifacts.keyword_results[0]
-        # Each paper produced at least one FetchResult per fetcher.
-        statuses = [fr.status for fr in kr.enrichment_log]
-        assert len(kr.enrichment_log) >= 2 * len(kr.search_result.papers)
-        # No fetcher raised — every status is a known string.
-        assert all(s in {"hit", "skipped", "cached", "error"} for s in statuses)
+        selected_ids = set()
+        for kr in artifacts.keyword_results:
+            papers = kr.search_result.papers
+            assert papers
+            selected_ids.update(paper.id for paper in papers)
+            assert len(kr.enrichment_log) == 2 * len(papers)
+            # The actual order is one abstract result per paper, then fulltext.
+            for results in (kr.enrichment_log[: len(papers)], kr.enrichment_log[len(papers) :]):
+                assert [result.paper.id for result in results] == [paper.id for paper in papers]
+                assert [result.status for result in results] == ["skipped"] * len(papers)
+                assert [result.message for result in results] == ["already present"] * len(papers)
+                assert all(result.path is None for result in results)
+            for paper in papers:
+                assert paper.abstract == supplied[paper.id]["abstract"]
+                assert paper.fulltext == supplied[paper.id]["fulltext"]
+        # Exercise the implicit remote-PDF identifier with supplied real text.
+        assert "arxiv:1412.6980" in selected_ids
+
+    @pytest.mark.timeout(120)
+    def test_run_deep_search_extracts_owned_pdf_and_replays_cache(self, httpserver: HTTPServer, tmp_path: Path):
+        """Actual loopback PDF bytes extract once; a fresh local search reuses text."""
+        from io import BytesIO
+
+        from pypdf import PdfWriter
+        from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject
+
+        text = "Owned enrichment PDF content."
+        writer = PdfWriter()
+        page = writer.add_blank_page(width=200, height=200)
+        font = DictionaryObject(
+            {
+                NameObject("/Type"): NameObject("/Font"),
+                NameObject("/Subtype"): NameObject("/Type1"),
+                NameObject("/BaseFont"): NameObject("/Helvetica"),
+            }
+        )
+        page[NameObject("/Resources")] = DictionaryObject(
+            {NameObject("/Font"): DictionaryObject({NameObject("/F1"): writer._add_object(font)})}
+        )
+        stream = DecodedStreamObject()
+        stream.set_data(f"BT /F1 12 Tf 15 150 Td ({text}) Tj ET".encode("ascii"))
+        page[NameObject("/Contents")] = writer._add_object(stream)
+        buffer = BytesIO()
+        writer.write(buffer)
+        pdf_bytes = buffer.getvalue()
+        httpserver.expect_oneshot_request("/owned-paper.pdf", method="GET").respond_with_data(
+            pdf_bytes, content_type="application/pdf"
+        )
+        paper_id = "owned:deep-pdf"
+        original = {
+            "id": paper_id,
+            "title": "Owned enrichment paper",
+            "abstract": "Owned supplied abstract.",
+            "pdf_url": httpserver.url_for("/owned-paper.pdf"),
+        }
+        corpus = tmp_path / "owned-corpus.json"
+        corpus.write_text(json.dumps([original]), encoding="utf-8")
+        config = _config(
+            tmp_path,
+            keywords=["owned"],
+            fetch_abstracts=True,
+            fetch_fulltext=True,
+            llm_per_paper=False,
+        )
+        first = run_deep_search(config, project_root=tmp_path, corpus_path=corpus, use_cache=False)
+        kr = first.keyword_results[0]
+        assert [result.paper.id for result in kr.enrichment_log] == [paper_id, paper_id]
+        assert [result.status for result in kr.enrichment_log] == ["skipped", "hit"]
+        assert kr.enrichment_log[0].message == "already present"
+        assert kr.search_result.papers[0].abstract == original["abstract"]
+        assert kr.search_result.papers[0].fulltext == text
+        cache = tmp_path / config.fulltext_cache_dir
+        pdf_path = cache / "owned_deep-pdf.pdf"
+        text_path = cache / "owned_deep-pdf.txt"
+        assert pdf_path.read_bytes() == pdf_bytes
+        assert text_path.read_text(encoding="utf-8") == text
+        assert kr.enrichment_log[1].path == text_path
+        httpserver.check_assertions()
+        assert [(request.path, response.status_code) for request, response in httpserver.log] == [
+            ("/owned-paper.pdf", 200)
+        ]
+        # No response handler remains. Any second request fails and is observed.
+        httpserver.clear()
+        assert "fulltext" not in json.loads(corpus.read_text(encoding="utf-8"))[0]
+        second = run_deep_search(config, project_root=tmp_path, corpus_path=corpus, use_cache=False)
+        replay = second.keyword_results[0]
+        assert replay.search_result.papers[0] is not kr.search_result.papers[0]
+        assert [result.paper.id for result in replay.enrichment_log] == [paper_id, paper_id]
+        assert [result.status for result in replay.enrichment_log] == ["skipped", "cached"]
+        assert replay.search_result.papers[0].fulltext == text
+        assert replay.enrichment_log[1].path == text_path
+        assert pdf_path.read_bytes() == pdf_bytes
+        assert text_path.read_text(encoding="utf-8") == text
+        assert httpserver.log == []
+        httpserver.check_assertions()
 
 
 class TestDeepSearchDeterminism:

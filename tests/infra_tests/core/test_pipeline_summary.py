@@ -9,6 +9,7 @@ from pathlib import Path
 
 from infrastructure.core.files.inventory import FileInventoryEntry, FileInventoryManager
 from infrastructure.core.pipeline import PipelineStageResult
+from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.summary_models import PipelineSummary as PipelineSummaryDirect  # noqa: F401
 from infrastructure.core.pipeline.summary_formatters import (
     format_html_summary,
@@ -183,13 +184,22 @@ class TestPipelineSummaryGenerator:
         assert "✗ Stage 2: Failed Stage (3.1s) FAILED" in formatted
 
     def test_format_stage_result_skipped(self):
-        """Test formatting skipped stage result."""
+        """Only a stage carrying a validated skip receipt is rendered as skipped."""
         result = PipelineStageResult(3, "Skipped", False, 0.0, exit_code=0)
+        result.outcome = StageOutcome("skipped", StageStatus.SKIPPED, None, receipt_validated=True)
         total_duration = 20.0
 
         formatted = format_stage_result(result, total_duration, True)
 
         assert "⊘ Stage 3: Skipped (skipped)" in formatted
+
+    def test_format_unreceipted_exit_zero_failure_is_not_skipped(self):
+        """A non-successful exit 0 without a skip receipt remains incomplete."""
+        result = PipelineStageResult(3, "Skipped", False, 0.0, exit_code=0)
+
+        formatted = format_stage_result(result, 20.0, True)
+
+        assert "(skipped)" not in formatted and "FAILED" in formatted
 
     def test_format_text_summary(self):
         """Test formatting summary as text."""
@@ -212,7 +222,7 @@ class TestPipelineSummaryGenerator:
         text = generator.format_summary(summary, "text")
 
         assert "PIPELINE SUMMARY" in text
-        assert "All stages completed successfully!" in text
+        assert "Recorded stages completed successfully" in text
         assert "Total Execution Time: 17.0s" in text
         assert "Average Stage Time: 8.5s" in text
         assert "Slowest Stage: Stage 2 - Tests" in text
@@ -263,7 +273,7 @@ class TestPipelineSummaryGenerator:
 
         assert "<div class='pipeline-summary'>" in html
         assert "<h2>Pipeline Summary</h2>" in html
-        assert "All stages completed successfully!" in html
+        assert "Recorded stages completed successfully" in html
         assert "</div>" in html
 
     def test_get_final_log_path(self):
@@ -376,7 +386,7 @@ class TestFormatTextSummary:
         summary = _make_summary()
         mgr = FileInventoryManager()
         result = format_text_summary(summary, mgr)
-        assert "All stages completed successfully" in result
+        assert "Recorded stages completed successfully" in result
         assert "Setup" in result
         assert "Build" in result
         assert "Test" in result
@@ -389,7 +399,7 @@ class TestFormatTextSummary:
         summary = _make_summary(stage_results=results)
         mgr = FileInventoryManager()
         result = format_text_summary(summary, mgr)
-        assert "failures" in result.lower()
+        assert "execution has incomplete stages: build" in result.lower()
         assert "Build" in result
 
     def test_with_log_file(self):

@@ -138,7 +138,9 @@ class TestCLISubprocess:
             ],
             capture_output=True,
             text=True,
-            timeout=30,
+            # Guardian startup, the shared gate and one project child run in turn;
+            # this bounds only the test's wait (CI lanes pass --timeout=120).
+            timeout=110,
         )
         assert result.returncode == expected_code, result.stderr
         rows = (tmp_path / "process_order.log").read_text().splitlines()

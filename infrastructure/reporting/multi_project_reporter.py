@@ -15,14 +15,24 @@ from infrastructure.reporting.executive_reporter import (
     save_executive_summary,
 )
 
-try:
-    from infrastructure.reporting._dashboard_matplotlib import generate_all_dashboards
-
-    _DASHBOARD_AVAILABLE = True
-except ImportError:
-    _DASHBOARD_AVAILABLE = False
-
 logger = get_logger(__name__)
+
+
+def _optional_dashboard_generator() -> Any | None:
+    """Return the optional plotting provider, importing it only when reporting needs it.
+
+    Ordinary pipeline imports must not initialize Matplotlib. The dashboard
+    modules guard their own Matplotlib imports, so the actual provider is
+    observed first: when it is genuinely absent, dashboards are skipped instead
+    of failing midway through rendering.
+    """
+    try:
+        import matplotlib  # noqa: F401
+
+        from infrastructure.reporting._dashboard_matplotlib import generate_all_dashboards
+    except ImportError:
+        return None
+    return generate_all_dashboards
 
 
 def generate_multi_project_report(repo_root: Path, project_names: list[str], output_dir: Path) -> dict[str, Path]:
@@ -40,7 +50,8 @@ def generate_multi_project_report(repo_root: Path, project_names: list[str], out
         summary_files = save_executive_summary(summary, output_dir)
         all_files.update(summary_files)
 
-        if _DASHBOARD_AVAILABLE:
+        generate_all_dashboards = _optional_dashboard_generator()
+        if generate_all_dashboards is not None:
             dashboard_files = generate_all_dashboards(summary, output_dir)
             all_files.update(dashboard_files)
 

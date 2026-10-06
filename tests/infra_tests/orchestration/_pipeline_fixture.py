@@ -5,7 +5,17 @@ from pathlib import Path
 import yaml
 
 
-def scaffold_pipeline(root: Path, names: tuple[str, ...] = ("demo",), *, infra_exit: int = 0) -> Path:
+def scaffold_pipeline(
+    root: Path, names: tuple[str, ...] = ("demo",), *, infra_exit: int = 0, canonical_gate: bool = True
+) -> Path:
+    """Scaffold an owned repository with recording stage children.
+
+    By default the shared ``infra_tests`` stage uses the canonical lexical
+    target ``scripts/pipeline/stage_01_test.py --infra-only`` as a thin adapter
+    to the same recording child, so the once-only shared gate can actually run.
+    With ``canonical_gate=False`` it is an ordinary project script, which
+    multi-project execution must refuse as a shared gate.
+    """
     for name in names:
         project = root / "projects" / name
         for directory in ("src", "tests", "manuscript", "output/data"):
@@ -47,6 +57,19 @@ def scaffold_pipeline(root: Path, names: tuple[str, ...] = ("demo",), *, infra_e
                 },
             }
         )
+    if canonical_gate:
+        gate = root / "scripts" / "pipeline" / "stage_01_test.py"
+        gate.parent.mkdir(parents=True, exist_ok=True)
+        gate.write_text(
+            "import sys\nfrom pathlib import Path\n"
+            "assert '--infra-only' in sys.argv, sys.argv\n"
+            "project = sys.argv[sys.argv.index('--project') + 1] if '--project' in sys.argv else 'root'\n"
+            "with Path('process_order.log').open('a') as stream: stream.write(project + ':infra\\n')\n"
+            f"sys.exit({infra_exit})\n",
+            encoding="utf-8",
+        )
+        shared = next(stage for stage in stages if stage["key"] == "infra_tests")
+        shared.update(script="scripts/pipeline/stage_01_test.py", args=["--infra-only"])
     path = root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(yaml.safe_dump({"stages": stages, "telemetry": {"enabled": False}}), encoding="utf-8")

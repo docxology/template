@@ -82,7 +82,15 @@ def _run_cli() -> int:
 
 
 def main() -> int:
-    """Import the controller from a fresh private cache before audited children."""
+    """Import the controller from a fresh private cache before audited children.
+
+    Under the platform's audited launcher the interpreter already runs with a
+    fresh private prefix to which every public import is bound; replacing it
+    here would place caches outside the audited prefix. Only a standalone
+    invocation creates its own temporary prefix.
+    """
+    if getattr(sys, "_template_executed_bytecode_audit", None) is not None:
+        return _run_cli()
     prior = sys.pycache_prefix
     try:
         with tempfile.TemporaryDirectory(prefix="template-active-verifier-controller-") as temporary:

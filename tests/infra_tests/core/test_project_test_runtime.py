@@ -145,3 +145,33 @@ def test_source_mutating_real_failure_keeps_original_child_exit(tmp_path: Path, 
     outcome = run_bounded_subprocess(command, cwd=tmp_path, env=os.environ.copy(), timeout=60)
     assert outcome.returncode == actual_exit
     assert "executed-code custody refused" in outcome.stderr
+
+
+def test_audit_roots_include_only_exactly_pinned_resolvable_exemplar_providers(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from infrastructure.core.testing.project_test_runtime import project_test_audit_roots
+
+    site = tmp_path / "site"
+    provider = site / "template_owned_provider"
+    provider.mkdir(parents=True)
+    (provider / "__init__.py").write_text("VALUE = 1\n", encoding="utf-8")
+    other = site / "template_ranged_provider"
+    other.mkdir()
+    (other / "__init__.py").write_text("VALUE = 2\n", encoding="utf-8")
+    monkeypatch.syspath_prepend(str(site))
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "pyproject.toml").write_text(
+        "[project]\nname = 'consumer'\nversion = '1.0'\ndependencies = [\n"
+        "  'template-owned-provider==1.0',\n"
+        "  'template-ranged-provider>=1.0',\n"
+        "  'template-absent-provider==1.0',\n"
+        "  'research-project-template==4.0.0',\n]\n",
+        encoding="utf-8",
+    )
+    roots = project_test_audit_roots(project)
+    assert provider.absolute() in roots
+    assert other.absolute() not in roots
+    assert not any("absent" in root.name for root in roots)
+    assert "template_owned_provider" not in sys.modules  # resolved without executing it

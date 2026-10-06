@@ -117,8 +117,12 @@ def _launch(arguments: argparse.Namespace, deadline: float) -> int:
         scratch = Path(directory).resolve()
         controller_prefix = scratch / "controller-bytecode"
         controller_prefix.mkdir(mode=0o700)
-        sys.pycache_prefix = str(controller_prefix)
-        sys.dont_write_bytecode = False
+        # Under the platform's executed-bytecode audit the interpreter already
+        # runs with a fresh audited private prefix; replacing it would place
+        # later public caches outside the audited prefix.
+        if getattr(sys, "_template_executed_bytecode_audit", None) is None:
+            sys.pycache_prefix = str(controller_prefix)
+            sys.dont_write_bytecode = False
         checkout = _platform_checkout()
         if checkout is not None:
             sys.path.insert(0, str(checkout))

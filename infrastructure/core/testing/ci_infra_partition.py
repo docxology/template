@@ -58,9 +58,13 @@ def _shard(value: object) -> int:
 
 def case_module(node_id: str) -> str:
     """Require the actual collected identity to belong to the declared suite."""
-    if type(node_id) is not str or "::" not in node_id or "\0" in node_id or "\\" in node_id:
+    if type(node_id) is not str or "::" not in node_id or "\0" in node_id:
         raise ValueError("infrastructure partition requires canonical collected node IDs")
     module = node_id.split("::", 1)[0]
+    # Parametrization IDs legitimately escape bytes and newlines with
+    # backslashes (``[co_code-\x97...]``); only the module path must be POSIX.
+    if "\\" in module:
+        raise ValueError("infrastructure partition requires canonical collected node IDs")
     path = PurePosixPath(module)
     if (
         path.is_absolute()

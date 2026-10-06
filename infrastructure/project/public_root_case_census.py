@@ -335,7 +335,9 @@ def main(argv: list[str] | None = None) -> int:
         return 130
     except TimeoutError:
         return 124
-    except (OSError, ValueError):
+    except (OSError, ValueError) as error:
+        # Preserve the original refusal exit while keeping the reason observable.
+        print(f"Root census refused: {error}", file=sys.stderr)
         return 1
     print(json.dumps(result, sort_keys=True))
     return int(result["exit_code"])

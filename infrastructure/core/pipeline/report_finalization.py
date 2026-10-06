@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sys
 import tempfile
 import time
@@ -132,7 +133,12 @@ def finalize_execution_reports(
                     *(["--shared-infrastructure"] if executor.config.shared_infrastructure else []),
                 ],
                 cwd=executor.config.repo_root,
-                env=build_bounded_env(),
+                # A shared-infrastructure report worker re-admits the shared
+                # plan, whose environment identity was computed from the
+                # parent's environment; it must observe that same environment.
+                env=dict(os.environ) if executor.config.shared_infrastructure else build_bounded_env(),
+                # The cleanup guardian never needs the parent's credentials.
+                guardian_env=build_bounded_env(),
                 timeout=remaining,
             )
         code = child.original_returncode

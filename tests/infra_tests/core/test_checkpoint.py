@@ -11,7 +11,12 @@ import pytest
 from pathlib import Path
 
 
-from infrastructure.core.runtime.checkpoint import CheckpointManager, PipelineCheckpoint, StageResult
+from infrastructure.core.runtime.checkpoint import (
+    CHECKPOINT_SCHEMA_VERSION,
+    CheckpointManager,
+    PipelineCheckpoint,
+    StageResult,
+)
 
 
 class TestStageResult:
@@ -104,7 +109,7 @@ class TestPipelineCheckpoint:
     def test_checkpoint_from_dict(self):
         """Test creating checkpoint from dictionary."""
         data = {
-            "schema_version": 3,
+            "schema_version": CHECKPOINT_SCHEMA_VERSION,
             "pipeline_start_time": 1000.0,
             "last_stage_completed": 1,
             "stage_results": [
@@ -128,6 +133,20 @@ class TestPipelineCheckpoint:
         assert checkpoint.stage_results[0].name == "stage_1"
         assert checkpoint.total_stages == 5
         assert checkpoint.checkpoint_time == 1001.0
+
+    def test_checkpoint_from_dict_refuses_previous_schema(self):
+        """A checkpoint written by an earlier schema is never resumed."""
+        with pytest.raises(ValueError, match="Unsupported checkpoint schema"):
+            PipelineCheckpoint.from_dict(
+                {
+                    "schema_version": CHECKPOINT_SCHEMA_VERSION - 1,
+                    "pipeline_start_time": 1000.0,
+                    "last_stage_completed": 1,
+                    "stage_results": [],
+                    "total_stages": 5,
+                    "checkpoint_time": 1001.0,
+                }
+            )
 
     def test_checkpoint_round_trip(self):
         """Test checkpoint serialization round trip."""

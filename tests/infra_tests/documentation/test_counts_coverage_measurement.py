@@ -228,6 +228,8 @@ def test_coverage_measurement_environment_strips_conflicting_child_opt_ins(
     assert environment["COVERAGE_FILE"] == str(data_file)
 
 
+# Consumes the canonical exemplar's prepared .venv; measurement never syncs or acquires.
+@pytest.mark.slow
 def test_active_locked_uv_measurement_and_report_probes_ignore_inherited_frozen_mode(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -303,7 +305,9 @@ def test_coverage_measurement_refuses_missing_prepared_environment_before_uv(tmp
 
 @pytest.mark.parametrize(
     "mode, exit_code, delay, timeout_seconds",
-    (("success", 0, 0.0, 2.0), ("failure", 7, 0.0, 2.0), ("timeout", 0, 2.0, 0.5)),
+    # The timeout case must still reach its mutations before the deadline, so its
+    # budget covers interpreter startup under load and its sleep far exceeds it.
+    (("success", 0, 0.0, 2.0), ("failure", 7, 0.0, 2.0), ("timeout", 0, 30.0, 3.0)),
 )
 def test_active_coverage_workspace_confines_mutation_and_cleans_after_subprocess(
     tmp_path: Path,

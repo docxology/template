@@ -6,6 +6,7 @@ import contextlib
 import hashlib
 import json
 import math
+import os
 import subprocess
 import sys
 import tempfile
@@ -286,8 +287,12 @@ def _launch(spec: ProjectExecutionSpec, directory: Path, deadline: float) -> _Ru
     request.write_bytes(content)
     request.chmod(0o400)
     receipt = directory / "result.json"
+    # The guardian stays credential-free. The worker receives the same base
+    # environment the parent used to compile and admit this plan (as in
+    # single-project execution); a stripped worker environment would make the
+    # worker's own source/environment admission refuse its parent's plan.
     environment = build_bounded_env()
-    process_env, token = build_bounded_run_env(environment)
+    process_env, token = build_bounded_run_env(dict(os.environ))
     output = None
     guardian = None
     process = None

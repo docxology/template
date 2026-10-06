@@ -213,7 +213,7 @@ class PipelineStageResult:
 
     @property
     def is_skipped(self) -> bool:
-        """Stage was skipped: not successful and exited with code 0."""
+        """Stage was skipped with a classified SKIPPED outcome (never inferred from exit 0)."""
         return self.outcome is not None and self.outcome.status.value == "skipped"
 
 

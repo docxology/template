@@ -350,9 +350,13 @@ def run_declared_project_verifier(
             )
             if checked.returncode != 0:
                 detail = checked.command_error or checked.stderr or checked.stdout
+                # A kill at the shared whole-budget deadline is a timeout, whatever
+                # signal status the reaped validation child reports; a cleanup
+                # custody refusal (a surviving descendant) still takes precedence.
+                validation_exit = 75 if checked.custody_refused else 124 if checked.timed_out else checked.returncode
                 raise ProjectVerifierError(
                     f"Independent verifier evidence validation exited {checked.returncode}: {detail[-1000:]}",
-                    exit_code=checked.returncode if checked.returncode in (75, 124, 130) else 1,
+                    exit_code=validation_exit if validation_exit in (75, 124, 130) else 1,
                     original_exit_code=0,
                 )
             results = cast(

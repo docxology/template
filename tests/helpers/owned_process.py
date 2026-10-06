@@ -114,6 +114,31 @@ class OwnedProcessFixture:
                 os.kill(child["pid"], signal.SIGKILL)
 
 
+def assert_process_exited(pid: int) -> None:
+    """Native proof that ``pid`` is absent or a terminated zombie.
+
+    Hosts whose PID 1 does not reap orphans (common in containers) keep a
+    killed detached descendant as a zombie; it can execute nothing further.
+    """
+    result = subprocess.run(
+        ["ps", "-o", "pid=,stat=", "-p", str(pid)],
+        capture_output=True,
+        text=True,
+        timeout=5,
+        check=False,
+    )
+    fields = result.stdout.split()
+    absent = result.returncode == 1 and not fields and not result.stderr
+    zombie = (
+        result.returncode == 0
+        and len(fields) == 2
+        and not result.stderr
+        and int(fields[0]) == pid
+        and fields[1].startswith("Z")
+    )
+    assert absent or zombie, (pid, result.returncode, result.stdout, result.stderr)
+
+
 def owned_process_fixture(
     root: Path, *, early_root_exit: bool = False, detached: bool = True, write_delay_seconds: float = 30.0
 ) -> OwnedProcessFixture:

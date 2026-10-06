@@ -1867,16 +1867,6 @@ build_coverage_gap_snapshot(*, revision: str, infrastructure_percent: float | No
 
 Build a coverage receipt without coercing unavailable values to zero.
 
-### `build_dist`
-
-*function — defined in `infrastructure.publishing.pypi.build`*
-
-```python
-build_dist(project_root: Path, *, dist_dir: Path | None=None, clean: bool=True) -> Path
-```
-
-Build wheel + sdist using ``uv build``.
-
 ### `build_release_metadata_receipt`
 
 *function — defined in `infrastructure.publishing.release.release_receipts`*
@@ -1892,7 +1882,7 @@ Build a metadata receipt with all reproducibility fields explicit.
 *function — defined in `infrastructure.publishing.release.release_receipts`*
 
 ```python
-build_subprocess_policy_receipt(repo_root: Path | str | None=None) -> SubprocessPolicyReceipt
+build_subprocess_policy_receipt(repo_root: Path | str | None=None, *, policies: Sequence[SubprocessPolicy]=INTENTIONAL_SUBPROCESS_POLICIES) -> SubprocessPolicyReceipt
 ```
 
 Build a receipt from the source-owned intentional-wrapper inventory.
@@ -1906,16 +1896,6 @@ calculate_metadata_complexity_score(metadata: PublicationMetadata) -> int
 ```
 
 Calculate a complexity score for the publication.
-
-### `check_dist`
-
-*function — defined in `infrastructure.publishing.pypi.upload`*
-
-```python
-check_dist(dist_dir: Path) -> list[str]
-```
-
-Run ``twine check`` on all distribution files in *dist_dir*.
 
 ### `CitationStyle`
 
@@ -2159,7 +2139,7 @@ Return PlatformInfo by name. Raises KeyError if not found.
 class GitHubPagesAdapter(config: SiteDeployConfig)
 ```
 
-Data container for GitHubPagesAdapter.
+Deploy a site using explicit credentials and a validated destination.
 
 ### `list_platforms`
 
@@ -2257,7 +2237,7 @@ Data container for PublishingTier.
 class PyPIAdapter(config: PyPIConfig | None=None, *, env: dict[str, str] | None=None)
 ```
 
-Build → check → upload orchestrator for PyPI / TestPyPI.
+Public operating adapter with bounded, source-bound platform admission.
 
 ### `ReleaseMetadataReceipt`
 
@@ -2308,16 +2288,6 @@ class SubprocessPolicyReceipt
 ```
 
 Versioned inventory of intentional subprocess wrappers.
-
-### `upload_dist`
-
-*function — defined in `infrastructure.publishing.pypi.upload`*
-
-```python
-upload_dist(dist_dir: Path, config: PyPIConfig, *, dry_run: bool=True) -> PyPIResult
-```
-
-Upload wheel + sdist artefacts to PyPI or TestPyPI via twine.
 
 ### `validate_doi`
 
@@ -2669,11 +2639,7 @@ One interactive control (slider / dropdown / toggle).
 
 ### `DASHBOARD_AVAILABLE`
 
-*constant — defined in `infrastructure.reporting`*
-
-```python
-DASHBOARD_AVAILABLE = True
-```
+*symbol — defined in `infrastructure.reporting`*
 
 ### `ErrorAggregator`
 

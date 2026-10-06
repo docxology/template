@@ -118,8 +118,14 @@ def merge_shards(root: Path) -> float:
         if not data or hashlib.sha256(data).hexdigest() != record.get("coverage_sha256"):
             raise ValueError("infrastructure coverage transfer has a missing or changed data hash")
         blobs.append(data)
-    union = Coverage(data_file=None, config_file=str(root / "pyproject.toml"), source=[str(root / "infrastructure")])
     with tempfile.TemporaryDirectory(prefix="ordinary-infra-coverage-") as directory:
+        # A private file-backed union: coverage's shared-cache in-memory
+        # database cannot ATTACH more than one shard ("other_db is already in use").
+        union = Coverage(
+            data_file=str(Path(directory) / "union.coverage"),
+            config_file=str(root / "pyproject.toml"),
+            source=[str(root / "infrastructure")],
+        )
         for shard, data in enumerate(blobs):
             copy = Path(directory) / f"shard-{shard}.coverage"
             copy.write_bytes(data)

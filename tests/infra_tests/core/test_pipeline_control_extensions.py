@@ -28,6 +28,7 @@ def test_dag_parses_contract_and_hooks_from_yaml(tmp_path: Path) -> None:
         """
 stages:
   - name: Source Audit
+    key: source_audit
     method: run_source_audit
     tags: [core, validation]
     contract:
@@ -148,6 +149,7 @@ def test_stage_spec_carries_contract_and_hooks() -> None:
             "stages": [
                 {
                     "name": "A",
+                    "key": "a",
                     "method": "run_a",
                     "contract": {
                         "output_artifacts": ["a.json"],

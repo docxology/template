@@ -355,7 +355,9 @@ def test_pages_ordinary_push_rejects_real_remote_divergence(tmp_path: Path) -> N
     # than replace a concurrently published commit. No remote denial setting.
     with _credential_environment("invented-pages-test-value", tmp_path) as env:
         with pytest.raises(RuntimeError, match="git push failed"):
-            _push_branch(stale, "gh-pages", env, remote=str(bare), revision=_local_git(["rev-parse", "HEAD"], stale))
+            _push_branch(
+                stale, "gh-pages", env, remote=str(bare), revision=_local_git(["rev-parse", "HEAD"], stale).strip()
+            )
     assert _local_git(["rev-parse", "refs/heads/gh-pages"], bare) == remote_head
     assert _local_git(["show", "gh-pages:index.html"], bare) == "advanced\n"
 

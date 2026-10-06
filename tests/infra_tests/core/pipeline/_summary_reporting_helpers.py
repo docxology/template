@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.types import PipelineStageResult
 
 
@@ -24,6 +25,13 @@ def _result(
         exit_code=exit_code,
         error_message=error_message,
     )
+
+
+def _skipped(name: str, *, stage_num: int = 1) -> PipelineStageResult:
+    """A stage skipped with a validated skip receipt (the only real skip)."""
+    result = _result(name, stage_num=stage_num, success=False, duration=0.0, exit_code=0)
+    result.outcome = StageOutcome(name, StageStatus.SKIPPED, None, receipt_validated=True)
+    return result
 
 
 def _make_output_dir(tmp_path: Path, files: dict[str, str] | None = None) -> Path:

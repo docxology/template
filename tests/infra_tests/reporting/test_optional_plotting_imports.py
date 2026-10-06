@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.metadata
 import importlib.util
 import json
 import shutil
@@ -81,12 +82,26 @@ def test_actual_optional_exports_and_enumeration_retain_original_function_identi
 
 @pytest.mark.timeout(120)
 def test_genuine_no_site_environment_retains_optional_import_failure(tmp_path: Path) -> None:
-    # Use actual PyYAML source in a restricted, otherwise empty import directory;
-    # no import finder, synthetic module or replacement plotting producer exists.
-    spec = importlib.util.find_spec("yaml")
-    assert spec is not None and spec.origin is not None
+    # Copy the actual installed files of the required non-plotting
+    # distributions that the reporting import closure uses (PyYAML for
+    # configuration, Pillow for output validation) into a restricted,
+    # otherwise empty import directory. Matplotlib, the optional plotting
+    # provider under test, is genuinely absent; no import finder, synthetic
+    # module or replacement plotting producer exists.
+    assert importlib.util.find_spec("matplotlib") is not None
     minimal = tmp_path / "actual-minimal-site"
-    shutil.copytree(Path(spec.origin).parent, minimal / "yaml", ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    for distribution_name in ("pyyaml", "pillow"):
+        distribution = importlib.metadata.distribution(distribution_name)
+        assert distribution.files, f"{distribution_name} has no installed RECORD to copy"
+        for entry in distribution.files:
+            relative = str(entry)
+            if relative.startswith("..") or ".dist-info/" in relative or "__pycache__" in relative:
+                continue
+            target = minimal / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(Path(distribution.locate_file(entry)), target)
+    assert (minimal / "yaml").is_dir() and (minimal / "PIL").is_dir()
+    assert not any(path.name.startswith("matplotlib") for path in minimal.iterdir())
     result = _native(
         f"sys.path.insert(0, {str(minimal)!r})\n"
         "import json\nimport infrastructure.reporting as reporting\n"
@@ -97,6 +112,8 @@ def test_genuine_no_site_environment_retains_optional_import_failure(tmp_path: P
         "    except AttributeError: pass\n"
         "    else: raise AssertionError('absent plotting provider accepted')\n"
         "assert 'DASHBOARD_AVAILABLE' in dir(reporting)\n"
+        "from infrastructure.reporting.multi_project_reporter import _optional_dashboard_generator\n"
+        "assert _optional_dashboard_generator() is None and 'matplotlib' not in sys.modules\n"
         "print(json.dumps({'available':reporting.DASHBOARD_AVAILABLE,'actual_missing_optional':True}))\n",
         tmp_path,
         without_site=True,

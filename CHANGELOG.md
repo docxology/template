@@ -22,6 +22,45 @@ not to the contents of any specific workspace.
   declarations, and distinguish intended exemplar versions from historical
   publication metadata. Platform 4.0 release acceptance remains in progress;
   no new tag, release, DOI, or production promotion is implied by this entry.
+- Keep reporting importable without plotting providers: the multi-project
+  dashboard generator and `DASHBOARD_AVAILABLE` now observe Matplotlib itself,
+  and a genuine no-site fixture proves the optional path.
+- Harden ordinary CI: test-infra and coverage-infra checkouts pin submodules
+  without persisted credentials; partition admission accepts escaped
+  parametrization IDs; shard refusals exit with invocation status two, including
+  from xdist workers; the coverage union uses an isolated data file; Advanced's
+  genuine Meta provider wheel is built from a source copy and installed before
+  its Stage 01 cell.
+- Canonicalize Root lane coverage keys to SDK-relative paths and pin
+  `OLLAMA_SKIP_TEST_MODEL_PULL=1` in Root lane producer and reader environments.
+- Bytecode audit re-enables bytecode writing inside its fresh prefix even when
+  `PYTHONDONTWRITEBYTECODE` is set; exemplar launchers keep an audited prefix.
+- Multi-project workers and shared report finalization receive the environment
+  their frozen plan identity was admitted with, while cleanup guardians keep a
+  sanitized environment (`run_bounded_subprocess(guardian_env=...)`); whether
+  credentials belong in that identity is tracked as `P4-CREDENTIAL-ENV-IDENTITY-1`.
+  The declared verifier reports a whole-budget validation kill as timeout (124)
+  unless cleanup custody refused (75).
+- Audited project test launches also audit the package roots of exactly pinned
+  public exemplar providers (`template-*==version`), so dependency custody can
+  verify Advanced's installed Meta engine; Active Inference's top-level
+  `conftest.py` opts out of assertion rewriting because it is an audited root,
+  and AutoResearch hydration no longer requires the sidecars it writes itself.
+- Root prerequisite inventories may no longer declare the platform-pinned
+  `OLLAMA_SKIP_TEST_MODEL_PULL` key, so the pin can never satisfy a declared
+  preparation requirement.
+- Declare four more exemplar infrastructure imports in `layer_contract.yaml`
+  allowlists (Autopoiesis, Search, Template, Pitch Deck) with stated reasons.
+- Provision the pinned elan bootstrap and each project's declared Lean
+  toolchain for the Active Inference and Formal test-project cells, whose
+  ordinary Stage 01 executes real Lean (and, for Formal, TLC) controls.
+- Three coverage-measurement controls that need a prepared Active Inference
+  `.venv` are marked `slow` and belong to the prepared measurement lane
+  (`P4-COUNTS-PREPARED-VENV-LANE-1`); they do not run in ordinary CI.
+- Align orchestration, summary, checkpoint, stage-key and fixture tests with the
+  receipt-validated outcome contracts. Process-exit assertions now accept an
+  unreapable zombie (hosts whose PID 1 never reaps orphans), and several timing
+  parameters were widened so startup under load cannot fail them.
 
 ### Earlier verified work
 

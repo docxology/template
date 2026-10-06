@@ -65,7 +65,9 @@ def test_active_coverage_support_closure_exactly_matches_outward_documentation_l
         "docs/guides/publishing-guide.md",
         "docs/guides/zenodo-doi-strategy.md",
         "docs/maintenance/archival-targets.md",
+        "docs/development/public-runtime-matrix.md",
         "docs/maintenance/exemplar-backlog-history.md",
+        "docs/maintenance/platform-4-upgrade.md",
         "docs/rules/memory_and_decision_records.md",
         "infrastructure/publishing/README.md",
         "projects/AGENTS.md",
@@ -137,6 +139,8 @@ def test_active_coverage_workspace_rejects_symlinked_support_without_touching_ta
     assert external.read_text(encoding="utf-8") == "EXTERNAL\n"
 
 
+# Consumes the canonical exemplar's prepared .venv; measurement never syncs or acquires.
+@pytest.mark.slow
 def test_active_coverage_workspace_preserves_canonical_semantic_readiness(tmp_path: Path) -> None:
     from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 
@@ -181,6 +185,8 @@ def test_active_coverage_workspace_preserves_canonical_semantic_readiness(tmp_pa
     }
 
 
+# Consumes the canonical exemplar's prepared .venv; measurement never syncs or acquires.
+@pytest.mark.slow
 def test_active_coverage_workspace_passes_documentation_and_inventory_nodes(tmp_path: Path) -> None:
     from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 

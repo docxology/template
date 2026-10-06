@@ -51,7 +51,17 @@ def test_incremental_entrypoints_control_real_child_reuse(tmp_path: Path, entryp
     from infrastructure.orchestration.pipeline_runner import PipelineRunner
     from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 
+    import yaml
+
     scaffold_pipeline(tmp_path)
+    # Analysis is never content-cached (its producer runtime is always re-admitted),
+    # so prove reuse through an ordinary cacheable project stage instead.
+    definition = tmp_path / "infrastructure/core/pipeline/pipeline.yaml"
+    declaration = yaml.safe_load(definition.read_text())
+    for stage in declaration["stages"]:
+        if stage["key"] == "analysis":
+            stage.update(key="summary", name="Project Summary")
+    definition.write_text(yaml.safe_dump(declaration))
     for _ in range(2):
         if entrypoint == "runner":
             code = execute_pipeline("demo", tmp_path, skip_infra=True, incremental=incremental)

@@ -466,12 +466,28 @@ def _default_provenance_for_key(key: str) -> tuple[str, str]:
     return "output/data/ml_task_results.json", ml_pointers.get(key, "/")
 
 
+# Hydration writes the three manuscript sidecars itself, and the platform seals
+# the artifact manifest after rendering, so a fresh hydration cannot require them.
+_POST_HYDRATION_ARTIFACTS = frozenset(
+    {
+        "output/data/manuscript_variables.json",
+        "output/data/manuscript_variable_provenance.json",
+        "output/data/manuscript_figure_blocks.json",
+        "output/reports/artifact_manifest.json",
+    }
+)
+
+
 def _validate_required_artifacts(project_root: Path, loop_payload: dict[str, Any]) -> None:
     config = mapping(loop_payload.get("config"))
     required = config.get("required_artifacts", [])
     if not isinstance(required, list):
         raise ValueError("loop payload required_artifacts must be a list")
-    missing = [path for path in required if isinstance(path, str) and not (project_root / path).exists()]
+    missing = [
+        path
+        for path in required
+        if isinstance(path, str) and path not in _POST_HYDRATION_ARTIFACTS and not (project_root / path).exists()
+    ]
     if missing:
         raise ValueError("missing required AutoResearch artifacts: " + ", ".join(sorted(missing)))
 

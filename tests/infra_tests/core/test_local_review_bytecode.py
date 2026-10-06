@@ -32,7 +32,9 @@ def test_real_prose_launcher_ignores_timestamp_valid_poisoned_project_bytecode(t
     prefix = b"raise SystemExit(77)\n#"
     assert len(original) > len(prefix)
     source.write_bytes(prefix + b"x" * (len(original) - len(prefix)))
-    py_compile.compile(str(source), doraise=True)
+    # The infra conftest supplies SOURCE_DATE_EPOCH, which makes py_compile default
+    # to checked-hash pycs; this control needs an explicit timestamp-valid pyc.
+    py_compile.compile(str(source), doraise=True, invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP)
     poisoned_stat = source.stat()
     source.write_bytes(original)
     os.utime(source, ns=(poisoned_stat.st_atime_ns, poisoned_stat.st_mtime_ns))

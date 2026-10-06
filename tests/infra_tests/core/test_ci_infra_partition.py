@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import configparser
 import hashlib
 import json
 import os
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -28,6 +30,7 @@ from infrastructure.core.testing.ci_infra_partition import (
     validate_receipts,
 )
 from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSIONS
+from infrastructure.project.public_reference_git import _PINNED_SUBMODULE, _PINNED_SUBMODULE_URL, native_git
 
 SDK_ROOT = Path(__file__).resolve().parents[3]
 
@@ -142,6 +145,16 @@ def test_partition_covers_future_modules_and_every_parameter_without_overlap() -
         assert module_shard(module) == shard
 
 
+def test_partition_admits_escaped_parametrization_ids_from_actual_collection() -> None:
+    """Real pytest IDs escape bytes/newlines; only the module path must be canonical."""
+    ids = [
+        "tests/infra_tests/core/test_bytecode_audit.py::test_fields[co_code-\\x97\\x00d\\x00S\\x00]",
+        "tests/infra_tests/core/test_health.py::TestSubset::test_table[print('')\\n-False]",
+    ]
+    assignments = partition(ids)
+    assert sorted(node for assigned in assignments for node in assigned) == sorted(ids)
+
+
 @pytest.mark.parametrize(
     "ids",
     [
@@ -150,6 +163,8 @@ def test_partition_covers_future_modules_and_every_parameter_without_overlap() -
         ["../private/test_x.py::test_a"],
         ["tests/infra_tests/test_x.py"],
         ["tests/infra_tests/../test_x.py::test_a"],
+        ["tests\\infra_tests\\core\\test_x.py::test_a"],
+        ["tests/infra_tests/core/test_x.py::test_a[\0]"],
     ],
 )
 def test_partition_refuses_empty_duplicate_or_noncanonical_collection(ids: list[str]) -> None:
@@ -372,6 +387,40 @@ def test_ci_workflow_consumes_partition_and_keeps_the_union_gate_required() -> N
     assert set(jobs["ci-gate"]["needs"]) == set(jobs) - {"ci-gate"}
 
 
+def test_ci_infra_checkouts_prepare_the_declared_public_pin_before_source_observation() -> None:
+    """Both real workflow jobs nominate the same initialized, credential-free source."""
+    declarations = configparser.ConfigParser(interpolation=None, strict=True)
+    declarations.read_string((SDK_ROOT / ".gitmodules").read_text())
+    section = 'submodule "' + _PINNED_SUBMODULE + '"'
+    assert not declarations.defaults() and declarations.sections() == [section]
+    assert declarations.get(section, "path") == _PINNED_SUBMODULE
+    assert declarations.get(section, "url") == _PINNED_SUBMODULE_URL
+    # Actual index metadata, rather than a fabricated directory or guessed pin.
+    index = native_git(SDK_ROOT, time.monotonic() + 30.0, "ls-files", "--stage", "-z")
+    links = []
+    for row in index.split(b"\0"):
+        if row:
+            metadata, path = row.rsplit(b"\t", 1)
+            if metadata.startswith(b"160000 "):
+                assert metadata.split()[2] == b"0"
+                links.append(path.decode("utf-8"))
+    assert links == [_PINNED_SUBMODULE]
+    jobs = yaml.safe_load((SDK_ROOT / ".github/workflows/ci.yml").read_text())["jobs"]
+    checkouts = []
+    for job_name in ("test-infra", "coverage-infra"):
+        steps = jobs[job_name]["steps"]
+        checkout = steps[0]
+        assert checkout["uses"].startswith("actions/checkout@")
+        assert len(checkout["uses"].split("@", 1)[1]) == 40
+        # Exactly the declared pinned, credential-free setup: no token, key,
+        # ref or depth override can substitute a different source.
+        assert checkout["with"] == {"submodules": True, "persist-credentials": False}
+        assert steps[1]["uses"] == "./.github/actions/setup-python-env"
+        assert sum(step.get("uses", "").startswith("actions/checkout@") for step in steps) == 1
+        checkouts.append(checkout["uses"])
+    assert checkouts[0] == checkouts[1]
+
+
 @pytest.mark.timeout(120)
 def test_actual_zero_collection_refuses_vacuous_success(tmp_path: Path) -> None:
     root = _fixture(tmp_path)
@@ -382,6 +431,22 @@ def test_actual_zero_collection_refuses_vacuous_success(tmp_path: Path) -> None:
     record = read_receipt(root, receipt_path(root, 0))
     assert record["original_pytest_exit_code"] == record["exit_code"] == 2
     assert record["complete"] is False and "nonempty" in result.stderr + result.stdout
+    assert any("nonempty" in diagnostic for diagnostic in record["diagnostics"])
+
+
+@pytest.mark.timeout(120)
+def test_actual_xdist_zero_collection_refuses_without_worker_restarts(tmp_path: Path) -> None:
+    """Under xdist the refusal travels through workeroutput; workers never crash."""
+    root = _fixture(tmp_path)
+    for module in RESERVED_MODULES:
+        (root / module).write_text("VALUE = 1\n")
+    result = _native(root, "raise SystemExit(pytest.main(command(0) + ['-n', '2', '--dist', 'loadscope']))\n")
+    assert result.returncode == 2, result.stdout + result.stderr
+    record = read_receipt(root, receipt_path(root, 0))
+    assert record["exit_code"] == 2 and record["complete"] is False
+    assert any("nonempty" in diagnostic for diagnostic in record["diagnostics"])
+    assert not any("worker failed" in diagnostic for diagnostic in record["diagnostics"])
+    assert not (root / "executed.txt").exists()
 
 
 @pytest.mark.timeout(120)

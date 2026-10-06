@@ -41,6 +41,12 @@ class RootCaseAdmission:
     prerequisites: tuple[Prerequisite, ...]
 
 
+# The platform pins this value last in every Root lane environment, so a
+# declared prerequisite could never observe its absence. Policies may not
+# declare it; missing preparation must remain a genuine blocker.
+PINNED_MODEL_ENVIRONMENT_KEY = "OLLAMA_SKIP_TEST_MODEL_PULL"
+
+
 def _path(value: object) -> str:
     if (
         not isinstance(value, str)
@@ -178,6 +184,8 @@ def load_policy(
         ):
             raise ValueError("Root prerequisite inventory omitted, repeated or invented an obligation")
         keys = _list(row["environment_keys"], "[A-Z][A-Z0-9_]*")
+        if PINNED_MODEL_ENVIRONMENT_KEY in keys:
+            raise ValueError("Root prerequisites cannot declare the platform-pinned no-model-acquisition key")
         executables = _list(row["executables"], "[A-Za-z][A-Za-z0-9_.+-]*")
         platforms = _list(row["platforms"], "darwin|linux")
         if (

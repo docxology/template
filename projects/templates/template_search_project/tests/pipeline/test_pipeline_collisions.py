@@ -131,7 +131,12 @@ def test_enrichment_log_persisted(tmp_path: Path):
         encoding="utf-8",
     )
 
-    run_literature_pipeline(config, project_root=tmp_path)
+    artifacts = run_literature_pipeline(config, project_root=tmp_path)
+    assert len(artifacts.papers) == 1
+    assert len(artifacts.enrichment_log) == 1
+    assert artifacts.enrichment_log[0].status == "skipped"
+    assert artifacts.enrichment_log[0].message == "already present"
+    assert artifacts.papers[0].abstract == "An abstract."
     log_path = tmp_path / "output" / "enrichment_log.json"
     assert log_path.exists()
     import json
@@ -139,9 +144,10 @@ def test_enrichment_log_persisted(tmp_path: Path):
     payload = json.loads(log_path.read_text(encoding="utf-8"))
     assert isinstance(payload, list)
     assert payload[0]["paper_id"] == "arxiv:1"
-    # Status is either "skipped" (no source) or "error" (no http) — both are
-    # valid; the key is that the log was written and is structured.
-    assert payload[0]["status"] in {"skipped", "error", "hit", "cached"}
+    assert len(payload) == 1
+    assert payload[0]["status"] == "skipped"
+    assert payload[0]["message"] == "already present"
+    assert payload[0]["path"] is None
 
 
 def test_local_corpus_resolved_from_config(tmp_path: Path):
@@ -257,5 +263,10 @@ def test_pipeline_with_fulltext_enrichment_log(tmp_path: Path):
     # Fulltext was already present so the fetcher returns "skipped";
     # what we're verifying is that the fulltext branch executed without error
     # and the FulltextFetcher contributed a FetchResult to the log.
-    assert artifacts.enrichment_log, "fulltext branch should append a FetchResult"
+    assert len(artifacts.papers) == 1
+    assert len(artifacts.enrichment_log) == 1
     assert artifacts.enrichment_log[0].paper.id == "x:1"
+    assert artifacts.enrichment_log[0].status == "skipped"
+    assert artifacts.enrichment_log[0].message == "already present"
+    assert artifacts.enrichment_log[0].path is None
+    assert artifacts.papers[0].fulltext == "abc"

@@ -90,7 +90,7 @@ def test_actual_shared_child_two_is_retained_in_supervised_summary(tmp_path: Pat
     from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 
     name = "templates/alpha"
-    scaffold_pipeline(tmp_path, (name,), infra_exit=2)
+    scaffold_pipeline(tmp_path, (name,), infra_exit=2, canonical_gate=False)
     # The canonical test target is a real thin adapter to the original exit-2
     # producer. A stable stage label alone cannot admit an arbitrary shared gate.
     gate = tmp_path / "scripts/pipeline/stage_01_test.py"
@@ -134,7 +134,7 @@ def test_noncanonical_shared_gate_is_refused_before_any_real_child(tmp_path: Pat
     from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 
     name = "templates/alpha"
-    scaffold_pipeline(tmp_path, (name,), infra_exit=2)
+    scaffold_pipeline(tmp_path, (name,), infra_exit=2, canonical_gate=False)
     project = ProjectInfo("alpha", tmp_path / "projects" / name, True, True, True, True, program="templates")
     with pytest.raises(ValueError, match="Prepared shared infrastructure policy differs from the canonical gate"):
         MultiProjectOrchestrator(MultiProjectConfig(tmp_path, [project])).execute_all_projects()

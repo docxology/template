@@ -30,6 +30,7 @@ from infrastructure.publishing.pypi_release import (
     run_test_pypi_release,
     verify_candidate_wheel,
 )
+from tests.helpers.owned_process import assert_process_exited
 
 pytestmark = pytest.mark.timeout(60)
 
@@ -103,9 +104,7 @@ def test_actual_timeout_kills_detached_descendant(tmp_path: Path) -> None:
         run_command((sys.executable, "-I", "-c", parent), tmp_path, deadline=Deadline.start(4))
     assert caught.value.state == "timed_out" and caught.value.exit_code == 124
     assert pid.is_file(), "the real detached child must have launched"
-    descendant = int(pid.read_text())
-    with pytest.raises(ProcessLookupError):
-        os.kill(descendant, 0)
+    assert_process_exited(int(pid.read_text()))
 
 
 @pytest.mark.parametrize("seconds", [0, -1, float("inf"), float("nan"), True])

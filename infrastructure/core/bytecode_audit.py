@@ -134,6 +134,12 @@ def install_bytecode_audit(
             if startup_path is not None and module is main_module and Path(filename).absolute() == startup_path:
                 continue
             raise ValueError("executed-bytecode audit must precede public imports")
+    # Every later public import must be bound to a cache written in this fresh
+    # private prefix. An inherited PYTHONDONTWRITEBYTECODE would leave imports
+    # cacheless and indistinguishable from unaudited cache use, so writing is
+    # enabled only after every admission check; it can only target the
+    # verified private prefix above.
+    sys.dont_write_bytecode = False
     records: dict[str, tuple[tuple[types.CodeType, str | None, str | None], ...]] = {}
     if startup_path is not None and startup_code is not None:
         records[str(startup_path)] = ((startup_code, None, None),)

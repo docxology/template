@@ -183,6 +183,10 @@ HTTP coverage (Ollama-compatible API, not the real daemon). Tests marked with
 `@pytest.mark.requires_ollama` use `ensure_ollama_for_tests` from `tests/conftest.py`,
 which can **auto-pull** `smollm2` (or `OLLAMA_TEST_PULL_MODEL`) when no small/fast
 preference model is present—unless `OLLAMA_SKIP_TEST_MODEL_PULL=1`. See `tests/README.md`.
+Root acceptance lanes (`infrastructure/project/public_root_lane_contract.py`) always
+pin `OLLAMA_SKIP_TEST_MODEL_PULL=1` after every caller and declared prerequisite
+overlay: acceptance never acquires a model and uses only explicitly prepared,
+already-installed models; missing declared preparation blocks before execution.
 
 ## See Also
 

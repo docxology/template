@@ -27,6 +27,7 @@ from infrastructure.project.public_root_lane_contract import (
     admission,
     environment,
     lane_command,
+    prepared_model_environment,
     write,
 )
 from infrastructure.project.public_root_lane_readback import _read_lane_result
@@ -215,6 +216,7 @@ def produce_root_lane(
                 for key in prerequisite.environment_keys:
                     if key in os.environ:
                         env[key] = os.environ[key]
+    env = prepared_model_environment(env)
     admission_duration = time.monotonic() - started
     remaining = math.floor(timeout_seconds - admission_duration)
     if remaining < 1:

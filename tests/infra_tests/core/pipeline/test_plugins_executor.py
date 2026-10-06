@@ -11,6 +11,7 @@ Proves three things with real temp project trees (No Mocks):
 
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
 import pytest
@@ -22,6 +23,12 @@ from infrastructure.core.pipeline.plugins import PluginStageError
 def _make_project_repo(tmp_path: Path) -> Path:
     repo_root = tmp_path / "repo"
     (repo_root / "projects" / "p" / "output").mkdir(parents=True)
+    # Resolved plans admit only existing canonical stage targets.
+    shutil.copytree(
+        Path(__file__).parents[4] / "scripts" / "pipeline",
+        repo_root / "scripts" / "pipeline",
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
     return repo_root
 
 

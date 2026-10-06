@@ -88,6 +88,12 @@ def _load_dashboards() -> None:
     if "DASHBOARD_AVAILABLE" in globals():
         return
     try:
+        # The dashboard modules guard their own Matplotlib imports, so their
+        # importability alone does not prove a plotting provider exists.
+        # Observe the actual provider first; a genuinely absent Matplotlib
+        # leaves the dashboards unavailable rather than silently degraded.
+        import matplotlib  # noqa: F401
+
         from ._dashboard_matplotlib import generate_all_dashboards, generate_plotly_dashboard
 
         globals().update(

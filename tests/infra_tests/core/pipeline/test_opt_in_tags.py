@@ -5,6 +5,7 @@ No mocks: real pipeline.yaml plus synthetic project-local YAML trees.
 
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
 from infrastructure.core.pipeline.dag import PipelineDAG, opt_in_tags_from_mapping
@@ -25,6 +26,12 @@ _DEFAULT_YAML = _REPO_ROOT / "infrastructure" / "core" / "pipeline" / "pipeline.
 def _project_repo(tmp_path: Path) -> Path:
     repo_root = tmp_path / "repo"
     (repo_root / "projects" / "p" / "output").mkdir(parents=True)
+    # Resolved plans admit only existing canonical stage targets.
+    shutil.copytree(
+        Path(__file__).parents[4] / "scripts" / "pipeline",
+        repo_root / "scripts" / "pipeline",
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
     return repo_root
 
 

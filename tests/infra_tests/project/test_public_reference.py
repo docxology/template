@@ -80,7 +80,10 @@ def complete_reference(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
         if kind == "directory":
             (root / relative).mkdir(parents=True, exist_ok=True)
     _git(root, "init", "--quiet")
-    _git(root, "add", "--all")
+    # Reproduce the tracked tree exactly: a historically tracked file can match
+    # a later ignore rule (for example a committed replay cache), and a fresh
+    # clone still contains and tracks it.
+    _git(root, "add", "--all", "--force")
     _git(root, "commit", "--quiet", "-m", "Owned complete public source DATA fixture")
     commit = _git(root, "rev-parse", "HEAD").decode().strip()
     assert RuntimeScope(root, "root").source_identity() == source

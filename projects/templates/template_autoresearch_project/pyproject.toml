@@ -24,10 +24,11 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-# Project lives at projects/templates/<name>/; the repo root (which holds
-# `infrastructure/`) is three levels up, so the documented per-project pytest
-# command resolves `infrastructure` without an externally supplied PYTHONPATH.
-pythonpath = ["../../..", ".", "src"]
+# `infrastructure` resolves through the declared research-project-template
+# dependency installed in the prepared environment. A lexical "../../.." entry
+# would import platform modules through a non-normalized alias path that the
+# executed-bytecode audit cannot bind to its admitted platform root.
+pythonpath = [".", "src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]

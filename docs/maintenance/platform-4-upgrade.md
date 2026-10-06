@@ -1009,3 +1009,78 @@ Intended versions and source-reviewed changes are not published or fully
 accepted versions. Root case policy, full runtime/installed/native/live
 acceptance and publication receipts remain future work. The local handoff
 preserves proposal identities and original failure logs outside public tracking.
+
+## Continuation receipts: 2026-10-05 to 2026-10-06
+
+This continuation worked on a Linux x86_64 replica of the handoff tree with
+CPython 3.14.6 (and 3.12.13 where stated). Every count below is a local,
+scoped receipt for the stated source; none is hosted CI, an installed-wheel
+cell, a three-runtime matrix or publication evidence. Original failure logs
+from earlier sessions remain retained outside public tracking.
+<!-- noqa: drift-counts -- dated scoped receipts: 2026-10-05 -->
+
+Closed locally (rows removed from `TO-DO.md`):
+
+- `P4-BASELINE-CUSTODY-1`: the handoff branch, index, untracked public files,
+  remote main and pending proposals were inventoried before any change; the
+  handoff state is preserved as its own baseline commit, separate from this
+  continuation's changes.
+- `P4-REPORTING-OPTIONAL-IMPORT-1`: both optional-plotting controls pass with a
+  genuine no-site fixture built from the installed PyYAML and Pillow files;
+  the cache cohort passed 52 cases and the methods/outcomes/guardian cohorts
+  passed 71, 66 and 76 cases.
+- `P4-SEARCH-OFFLINE-TESTS-1`: the reviewed offline-enrichment proposal applied
+  at its recorded hashes; the whole Search suite passed 447 cases with 91.95%
+  own branch coverage on 3.12, and its Stage 01 cell passed on 3.14.
+- `P4-AUTO-IMPORT-CPU-1`: the whole Autopoiesis suite passed 574 cases with
+  92% own branch coverage, and its Stage 01 cell passed on 3.14.
+- `P4-ROOT-NO-ACQUISITION-1`: the pin is applied last in producer and reader
+  environments, Root prerequisite inventories may no longer declare the pinned
+  key, and the Root no-acquisition, lane, guardian-environment, report
+  finalization and verifier cohort passed 114 cases. An independent review
+  found the pin could satisfy a declared prerequisite; admission now refuses it.
+<!-- noqa: drift-counts -- dated scoped receipts: 2026-10-05 -->
+
+Ordinary CI partition: escaped parametrization IDs had made every shard report
+"no tests ran"; admission now accepts them while still refusing backslash and
+NUL module paths. A serial shard-0 replay on an intermediate source recorded
+3,255 passes, 29 failures and 6 errors; each failure was triaged to a stale
+test contract, a container-only process/permission artifact or a timing
+parameter, and the orchestration cohort then passed 561 of 563 cases before its
+two remaining timing/zombie controls were repaired and passed alone. A complete
+four-shard replay and coverage union on the final candidate was not executed in
+this continuation and remains `P4-CI-PARTITION-ACCEPTANCE-1` work.
+<!-- noqa: drift-counts -- dated scoped and failed receipts: 2026-10-05 -->
+
+Exemplar Stage 01 cells passed on Python 3.14 for Code, Data Descriptor, Experiment
+Tree, Gold Refinement, Madlib, Methods Paper, Newspaper, Pitch Deck, Pools/Rules/
+Tools, Prose, Redacted Report, Registered Report, Search, Storybook, Textbook,
+Autopoiesis, EDA Notebook, Meta, Template and AutoScientists. AutoResearch
+passed 392 cases with 96.33% after its hydration requirement and alias-free
+`pythonpath` repairs; before them, its run ended in an executed-code custody
+refusal because pytest imported the platform through a `../../..` alias. Advanced passed
+158 cases with 94.30% under the audited launcher only after its genuine Meta
+wheel was installed and pinned providers became audit roots. SIA needs Docker
+(79.15% without it). Formal and Active Inference execute real Lean controls
+(Formal also TLC) that this host could not provision because its proxy refused
+the toolchain download; Formal measured 87.80% with them deselected, and Active
+Inference's verifier, after its top-level `conftest.py` stopped being
+assertion-rewritten under the audit, passed every chunk before stopping at its
+two Lean controls. The test-project job now
+provisions the pinned toolchains (`P4-FORMAL-EXTERNAL-LANE-1`). Active Inference's tracked policy
+comparison was produced by an expected-utility fallback that the current locked
+pymdp no longer takes, so its replay control fails until the outputs are
+regenerated in the locked environment (`P4-ACTIVE-OUTPUT-REFRESH-1`).
+<!-- noqa: drift-counts -- dated scoped and failed receipts: 2026-10-05 -->
+
+Own-environment coverage measurement (`counts.py --verify-coverage`) measured
+22 of 25 exemplars in their prepared locked `.venv`s; 17 values drifted from the
+recorded snapshot. Active Inference, Formal and SIA did not complete, so the
+snapshot, `COUNTS.md` and coverage provenance were deliberately not rewritten;
+the stale counts still fail `counts.py --check` and two documentation
+consistency tests. The handoff state already carried these stale counts.
+<!-- noqa: drift-counts -- dated scoped and failed receipts: 2026-10-06 -->
+
+No commit, push, pull request, tag, release, sandbox transfer or publication
+occurred in this continuation; the candidate is delivered for review as a
+baseline commit plus a continuation commit on `codex/platform-4`.

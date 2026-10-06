@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from coverage import Coverage
+from coverage import files as coverage_files
 
 import infrastructure.core.implementation_custody as custody
 
@@ -92,4 +93,20 @@ def report(measured: Coverage) -> dict[str, Any]:
     value = json.loads(stream.getvalue())
     if not isinstance(value, dict) or not isinstance(value.get("files"), dict) or not value["files"]:
         raise ValueError("Root lane coverage reporter returned no actual public source")
+    # Coverage names files relative to the process working directory when they
+    # lie below it and absolute otherwise. Producer workers run inside the
+    # measured Root while independent readers may run elsewhere, so key every
+    # file canonically by its SDK path ("infrastructure/...") instead.
+    package_root = Path(custody.__file__).resolve().parent.parent
+    relative_directory = Path(coverage_files.relative_directory())
+    canonical: dict[str, Any] = {}
+    for name, row in value["files"].items():
+        path = Path(name) if Path(name).is_absolute() else relative_directory / name
+        if ".." in path.parts or not path.is_relative_to(package_root):
+            raise ValueError("Root lane coverage report names a source outside the selected SDK")
+        key = "infrastructure/" + path.relative_to(package_root).as_posix()
+        if key in canonical:
+            raise ValueError("Root lane coverage report repeats a selected SDK source")
+        canonical[key] = row
+    value["files"] = dict(sorted(canonical.items()))
     return value

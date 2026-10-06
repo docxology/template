@@ -194,6 +194,7 @@ def run_bounded_subprocess(
     group_id: int | None = None,
     capture_output: bool = True,
     guardian_startup_timeout_seconds: float = DEFAULT_GUARDIAN_STARTUP_TIMEOUT_SECONDS,
+    guardian_env: dict[str, str] | None = None,
 ) -> BoundedSubprocessResult:
     """Run *argv* in an isolated process group with cleanup on timeout.
 
@@ -220,6 +221,9 @@ def run_bounded_subprocess(
         capture_output: When True, capture stdout/stderr.
         guardian_startup_timeout_seconds: Finite READY/ARM phase allowance,
             always confined to the original whole-operation deadline.
+        guardian_env: Optional separate environment for the cleanup guardian.
+            Callers whose child must inherit a broader environment pass a
+            sanitized one here so the guardian never holds credentials.
 
     Returns:
         A :class:`BoundedSubprocessResult`.
@@ -241,7 +245,9 @@ def run_bounded_subprocess(
         )
     try:
         guardian = _start_bounded_run_guardian(
-            env, deadline_monotonic=deadline, startup_timeout_seconds=guardian_startup_timeout_seconds
+            env if guardian_env is None else guardian_env,
+            deadline_monotonic=deadline,
+            startup_timeout_seconds=guardian_startup_timeout_seconds,
         )
     except GuardianCustodyError as exc:
         return BoundedSubprocessResult(

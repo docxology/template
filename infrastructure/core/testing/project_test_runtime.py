@@ -6,10 +6,12 @@ probe. It does not claim custody of every installed dependency's member bytes.
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import math
 import os
 import re
+import tomllib
 from collections.abc import Mapping
 import time
 from pathlib import Path
@@ -163,19 +165,54 @@ def admit_project_test_runtime(
     return selected, {"binding": binding, "probe": actual, "scope": "executable-prefix-metadata-versions"}
 
 
+_PROVIDER_DISTRIBUTION = re.compile(r"template-[a-z0-9]+(?:-[a-z0-9]+)*")
+
+
+def _declared_provider_roots(project_root: Path) -> tuple[Path, ...]:
+    """Return import roots of exactly pinned public exemplar providers.
+
+    A consumer such as Advanced Literature Review declares the namespaced Meta
+    engine as ``template-literature-meta-analysis==<version>``. Dependency
+    custody verifies that provider's executed code against this same pre-import
+    audit, so its actual package directory (installed or checkout) is audited
+    too. Resolution uses the current interpreter without executing the package.
+    """
+    try:
+        project = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8")).get("project", {})
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
+        return ()
+    roots: set[Path] = set()
+    for value in project.get("dependencies", []) if isinstance(project, dict) else ():
+        if not isinstance(value, str):
+            continue
+        name, separator, _version = value.partition("==")
+        name = name.strip()
+        if not separator or not _PROVIDER_DISTRIBUTION.fullmatch(name):
+            continue
+        spec = importlib.util.find_spec(name.replace("-", "_"))
+        if spec is None or not spec.submodule_search_locations:
+            continue
+        roots.update(Path(location).absolute() for location in spec.submodule_search_locations)
+    return tuple(sorted(roots))
+
+
 def project_test_audit_roots(project_root: Path) -> tuple[Path, ...]:
     """Nominate implementation roots and exact top-level project plugin files.
 
     Tests are deliberately excluded: pytest rewrites their assertions. The
     mature audit independently refuses linked roots/files before their code
     executes; this inventory does not replace that held-file admission.
+    Exactly pinned public exemplar providers are audited where they resolve.
     """
-    platform_root = Path(__file__).absolute().parents[2]
+    # Lexically normalized: a non-normalized import path must not change the
+    # admitted root set between launch and the final custody check.
+    platform_root = Path(os.path.normpath(Path(__file__).absolute())).parents[2]
     return (
         platform_root,
         project_root.absolute() / "src",
         project_root.absolute() / "scripts",
         *sorted(project_root.absolute().glob("*.py")),
+        *_declared_provider_roots(project_root),
     )
 
 

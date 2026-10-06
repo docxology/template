@@ -455,6 +455,7 @@ def test_matrix_original_deadline_kills_started_child_and_detached_descendant(tm
 
     from infrastructure.core.pipeline.outcomes import StageStatus
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
+    from tests.helpers.owned_process import assert_process_exited
 
     budget, shared_delay, cleanup_allowance = 90, 20, 15
     cfg = _shared_matrix(tmp_path)
@@ -524,8 +525,10 @@ def test_matrix_original_deadline_kills_started_child_and_detached_descendant(tm
             (tmp_path / "projects" / name / "output/data/child.json").exists() for name in ("first", "second")
         )
         assert entry["stage_pid"] != entry["descendant_pid"]
-        assert not psutil.pid_exists(entry["stage_pid"])
-        assert not psutil.pid_exists(entry["descendant_pid"])
+        # Absent or an unreapable zombie: hosts whose PID 1 never reaps orphans
+        # keep a killed detached descendant's process-table entry.
+        assert_process_exited(entry["stage_pid"])
+        assert_process_exited(entry["descendant_pid"])
     finally:
         # A failing negative control must not leave its owned sleeping processes.
         # This cleanup runs only after the assertions and cannot grant a pass.

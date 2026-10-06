@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Offline, no-mocks coverage of `src/`: config, pipeline (local backend + temp dirs), synthesis, report, figures, manuscript variables, and script smoke paths. Infrastructure HTTP behaviour is covered in `tests/infra_tests/`; this suite focuses on project orchestration.
+Offline, no-mocks coverage of `src/`: config, pipeline (local backend + temp dirs), synthesis, report, figures, manuscript variables, and script smoke paths. Infrastructure HTTP behaviour is covered in `tests/infra_tests/`; this suite focuses on project orchestration. The deep-search enrichment control serves an invented PDF from an owned loopback `pytest-httpserver`, verifies exact cached bytes and extracted text, and replays without another request; it does not contact public providers.
 
 ## Running
 

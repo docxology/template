@@ -25,7 +25,7 @@ from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 def _prepare(
     root: Path, *, shared: bool = True
 ) -> tuple[MultiProjectOrchestrator, tuple[ProjectExecutionSpec, ...], ProjectExecutionSpec | None]:
-    scaffold_pipeline(root, ("templates/alpha", "templates/beta"))
+    scaffold_pipeline(root, ("templates/alpha", "templates/beta"), canonical_gate=False)
     # Exercise the actual shared-gate role rather than merely borrowing its key.
     gate = root / "scripts/pipeline/stage_01_test.py"
     gate.parent.mkdir(parents=True, exist_ok=True)
@@ -66,6 +66,7 @@ def _outputs(root: Path) -> dict[str, bytes | None]:
         "resume",
         "timeout",
         "boolean",
+        "boolean_mutated",
         "plan_project",
         "plan_mode",
         "plan_timeout",
@@ -80,18 +81,30 @@ def _outputs(root: Path) -> dict[str, bytes | None]:
 def test_prepared_identity_refusal_precedes_all_runtime_writes(tmp_path: Path, fault: str) -> None:
     orchestrator, specs, shared = _prepare(tmp_path)
     assert shared is not None
-    if fault == "selection":
+    before = _outputs(tmp_path)
+    if fault == "boolean":
+        # Typed configuration refuses a non-boolean flag at construction, so the
+        # forged spec can never reach admission or a worker.
+        with pytest.raises(ValueError, match="exact boolean"):
+            replace(specs[0].config, skip_infra=1)
+        assert _outputs(tmp_path) == before
+        assert not (tmp_path / "process_order.log").exists()
+        return
+    if fault == "boolean_mutated":
+        # A caller can still mutate an admitted-looking config after construction;
+        # prepared admission must refuse the non-boolean flag itself.
+        specs[0].config.skip_infra = 1  # type: ignore[assignment]
+    elif fault == "selection":
         specs = specs[:1]
     elif fault == "order":
         specs = tuple(reversed(specs))
-    elif fault in {"repo", "projects_dir", "mode", "resume", "timeout", "boolean"}:
+    elif fault in {"repo", "projects_dir", "mode", "resume", "timeout"}:
         changes = {
             "repo": {"repo_root": tmp_path / "other"},
             "projects_dir": {"projects_dir": "other"},
             "mode": {"mode": "live"},
             "resume": {"resume": True},
             "timeout": {"run_timeout_seconds": 181},
-            "boolean": {"skip_infra": 1},
         }[fault]
         specs = (replace(specs[0], config=replace(specs[0].config, **changes)), specs[1])
     elif fault.startswith("plan_"):
@@ -114,7 +127,6 @@ def test_prepared_identity_refusal_precedes_all_runtime_writes(tmp_path: Path, f
         shared = replace(shared, plan=replace(shared.plan, stages=(wrong,)))
     else:
         shared = replace(shared, config=replace(shared.config, resume=True))
-    before = _outputs(tmp_path)
     with pytest.raises(ValueError):
         orchestrator.execute_prepared_projects(specs, shared)
     assert _outputs(tmp_path) == before
@@ -168,6 +180,14 @@ def test_actual_prepared_workers_refuse_changed_definition_without_recompiling(
     frozen_digests = tuple(spec.plan.digest for spec in specs)
     definition = tmp_path / "infrastructure/core/pipeline/pipeline.yaml"
     definition.write_text(definition.read_text() + "\n# Definition changed after pure preflight.\n")
+    if with_shared:
+        # The parent re-admits the shared plan against held declarations before
+        # its once-only gate starts, so drift refuses before any worker exists.
+        with pytest.raises(ValueError, match="differs from its admitted declaration"):
+            orchestrator.execute_prepared_projects(specs, shared)
+        assert tuple(spec.plan.digest for spec in specs) == frozen_digests
+        assert not (tmp_path / "process_order.log").exists()
+        return
     result = orchestrator.execute_prepared_projects(specs, shared)
     assert result.exit_code == 75
     assert tuple(spec.plan.digest for spec in specs) == frozen_digests

@@ -179,7 +179,11 @@ class TestMergePluginStages:
         script = tmp_path / "scripts" / "report.py"
         script.parent.mkdir()
         script.write_text(
-            "from pathlib import Path\nPath('projects/demo/report.txt').write_text('real child')\n", encoding="utf-8"
+            # Stage outputs belong under output/; writing into project source
+            # is refused by consumed-source custody after the child exits.
+            "from pathlib import Path\nPath('projects/demo/output').mkdir(exist_ok=True)\n"
+            "Path('projects/demo/output/report.txt').write_text('real child')\n",
+            encoding="utf-8",
         )
         dag = PipelineDAG([StageDefinition(name="Clean", key="clean", method="_run_clean_outputs")])
         declarations = parse_plugin_stages([_entry("Extra Report", script="scripts/report.py", depends_on=["Clean"])])
@@ -187,7 +191,7 @@ class TestMergePluginStages:
         executor = PipelineExecutor(PipelineConfig(project_name="demo", repo_root=tmp_path))
         spec = next(stage for stage in dag.to_stage_specs(executor) if stage.key == "extra_report")
         assert bool(spec.func())
-        assert (project / "report.txt").read_text(encoding="utf-8") == "real child"
+        assert (project / "output" / "report.txt").read_text(encoding="utf-8") == "real child"
         assert spec.contract == declarations[0].contract
 
 
