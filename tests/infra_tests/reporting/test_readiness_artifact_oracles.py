@@ -15,7 +15,12 @@ from pathlib import Path
 import pytest
 
 from infrastructure.reporting.release_readiness_profile import Requirement
-from infrastructure.reporting.release_readiness_artifacts import validate_source_archive, validate_wheel_source
+from infrastructure.project.installed_acceptance_artifacts import inspect_wheel_bytes
+from infrastructure.reporting.release_readiness_artifacts import (
+    validate_source_archive,
+    validate_wheel_members,
+    validate_wheel_source,
+)
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.reporting.release_readiness_validators import validate_acceptance, validate_installed_wheel
 from infrastructure.reporting.native_format_acceptance_checks import parse_native_bytes
@@ -143,14 +148,10 @@ def test_export_and_remote_pairs_require_current_complete_source_archive(tmp_pat
         "export_artifact": exported,
         "retrieved_artifact": retrieved,
     }
-    validate_acceptance(_requirement("transfer"), {"details": transfer}, reader)
+    # Local byte parity cannot replace the required actual GitHub transfer custody.
+    with pytest.raises(ValueError, match="sandbox transfer needs exact artifact bindings"):
+        validate_acceptance(_requirement("transfer"), {"details": transfer}, reader)
     unrelated = _file(tmp_path, "output/readiness/unrelated.txt", b"unrelated identical bytes")
-    with pytest.raises(ValueError, match="validated source/version export"):
-        validate_acceptance(
-            _requirement("transfer"),
-            {"details": dict(transfer, export_artifact=unrelated, retrieved_artifact=unrelated)},
-            reader,
-        )
     publication = {
         "execution_exit_code": 0,
         "actual_tag": "v2.0.0",
@@ -507,3 +508,76 @@ def test_declared_namespaced_package_directory_binds_exact_wheel_members(tmp_pat
         else:
             with pytest.raises(ValueError):
                 validate_wheel_source(scope, archive, SnapshotReader(tmp_path))
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "complete",
+        "missing-native-source",
+        "missing-typing-marker",
+        "changed-native-source",
+        "bin",
+        "lib",
+        "obj",
+        "logger/obj",
+        "utils/obj",
+    ],
+)
+def test_root_wheel_requires_authored_sdk_bytes_and_excludes_local_native_products(tmp_path: Path, change: str) -> None:
+    """Real owned ZIP/RECORD controls exercise the production admission boundary."""
+    authored = {
+        "infrastructure/__init__.py": b"def measured_value():\n    return 17\n",
+        "infrastructure/py.typed": b"",
+        "infrastructure/steganography/kmyth/src/main/seal.c": b"int seal(void) { return 17; }\n",
+        "infrastructure/steganography/kmyth/include/seal.h": b"int seal(void);\n",
+        "infrastructure/config/public-data.json": b'{"measured_value":17}\n',
+        "infrastructure/README.md": b"Owned authored SDK documentation.\n",
+    }
+    for name, content in authored.items():
+        _file(tmp_path, name, content)
+    native = {
+        "infrastructure/steganography/kmyth/" + relative + "/owned-product": b"owned local native product"
+        for relative in ("bin", "lib", "obj", "logger/obj", "utils/obj")
+    }
+    for name, content in native.items():
+        _file(tmp_path, name, content)
+    requirement = Requirement("root:installed", "installed", "root", "2.0.0", "4.0.0", "a" * 64, package="exemplar")
+
+    def recorded_wheel(source_members: dict[str, bytes]) -> bytes:
+        members = dict(source_members)
+        members.update(
+            {
+                "exemplar-2.0.0.dist-info/METADATA": b"Metadata-Version: 2.1\nName: exemplar\nVersion: 2.0.0\n",
+                "exemplar-2.0.0.dist-info/WHEEL": b"Wheel-Version: 1.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
+            }
+        )
+        rows = StringIO()
+        writer = csv.writer(rows, lineterminator="\n")
+        for name, content in sorted(members.items()):
+            digest = base64.urlsafe_b64encode(hashlib.sha256(content).digest()).decode().rstrip("=")
+            writer.writerow([name, "sha256=" + digest, len(content)])
+        writer.writerow(["exemplar-2.0.0.dist-info/RECORD", "", ""])
+        members["exemplar-2.0.0.dist-info/RECORD"] = rows.getvalue().encode()
+        return _zip(members)
+
+    targets, admitted = inspect_wheel_bytes(tmp_path, requirement, recorded_wheel(authored))
+    assert targets == ("infrastructure",)
+    assert admitted == {name: hashlib.sha256(content).hexdigest() for name, content in authored.items()}
+    if change != "complete":
+        altered = dict(authored)
+        if change == "missing-native-source":
+            altered.pop("infrastructure/steganography/kmyth/src/main/seal.c")
+        elif change == "missing-typing-marker":
+            altered.pop("infrastructure/py.typed")
+        elif change == "changed-native-source":
+            altered["infrastructure/steganography/kmyth/src/main/seal.c"] = b"int seal(void) { return 99; }\n"
+        else:
+            altered["infrastructure/steganography/kmyth/" + change + "/owned-product"] = b"owned local native product"
+        content = recorded_wheel(altered)
+        with zipfile.ZipFile(BytesIO(content)) as archive:
+            validate_wheel_members(archive, ["infrastructure"])
+        expected = "omitted current exact SDK" if change.startswith("missing-") else "unbound or private"
+        with pytest.raises(ValueError, match=expected):
+            inspect_wheel_bytes(tmp_path, requirement, content)
+    assert all((tmp_path / name).read_bytes() == content for name, content in (authored | native).items())

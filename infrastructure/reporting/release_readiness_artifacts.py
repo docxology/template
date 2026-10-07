@@ -110,7 +110,7 @@ def validate_wheel_members(archive: zipfile.ZipFile, imported_modules: list[str]
 
 
 def validate_wheel_source(scope: str, archive: zipfile.ZipFile, reader: SnapshotReader) -> None:
-    """Admit only current implementation/data and declared public resource bytes."""
+    """Bind the complete Root SDK or exact project implementation/resources."""
     base = reader.root if scope == "root" else reader.root / "projects" / scope
     source_root = base / "infrastructure" if scope == "root" else base / "src"
     sources = public_source_paths(reader.root, None if scope == "root" else scope)
@@ -191,6 +191,8 @@ def validate_wheel_source(scope: str, archive: zipfile.ZipFile, reader: Snapshot
             raise ValueError("wheel implementation differs from current exact source bytes")
     if not required_resources <= names:
         raise ValueError("installed wheel omitted declared public resource members")
+    if scope == "root" and not set(expected).issubset(names):
+        raise ValueError("root wheel omitted current exact SDK source members")
     metadata_roots = {Path(name).parts[0] for name in names if Path(name).parts[0].endswith(".dist-info")}
     if len(metadata_roots) != 1:
         raise ValueError("wheel must contain one distribution metadata root")
