@@ -87,3 +87,34 @@ def test_case_study_observations_fail_closed(tmp_path: Path, contents: str, mess
 
     with pytest.raises(ValueError, match=message):
         load_case_study_observations(dataset)
+
+
+@pytest.mark.parametrize("remove_instructional_evidence", [False, True])
+def test_computed_evidence_supports_authored_strict_analysis(
+    tmp_path: Path, remove_instructional_evidence: bool
+) -> None:
+    import json
+
+    from infrastructure.validation.evidence_registry import (
+        build_project_evidence_registry,
+        validate_text_against_registry,
+    )
+
+    summary = build_worked_model_summary(DATASET)
+    if remove_instructional_evidence:
+        del summary["instructional_examples"]
+    data = tmp_path / "output/data/worked_model_summary.json"
+    data.parent.mkdir(parents=True)
+    data.write_text(json.dumps(summary), encoding="utf-8")
+    registry = build_project_evidence_registry(tmp_path)
+    target_values = {"-1.4", "17.59", "2.236"}
+    unsupported = set()
+    for relative in (
+        "labs/part_0/lab_orientation.md",
+        "labs/part_II/lab_systems_overview.md",
+        "labs/part_0/lab_quantitative_foundations.md",
+    ):
+        passage = PROJECT_ROOT / "manuscript" / relative
+        report = validate_text_against_registry(passage.read_text(encoding="utf-8"), registry)
+        unsupported.update(issue.value for issue in report.errors if issue.kind == "number")
+    assert unsupported & target_values == (target_values if remove_instructional_evidence else set())

@@ -15,6 +15,9 @@ from textbook import models
 LOGISTIC_PARAMETERS = {"r": 0.8, "carrying_capacity": 100.0, "initial": 5.0}
 DECAY_PARAMETERS = {"initial": 100.0, "rate": 0.5}
 LOGISTIC_SENSITIVITY_RATES = (0.4, 0.8, 1.2)
+# The authored Analysis passages use these additional instructional inputs.
+INSTRUCTIONAL_GROWTH_PARAMETERS = {"r": 0.7, "carrying_capacity": 100.0, "initial": 5.0}
+INSTRUCTIONAL_STATISTICS_VALUES = (2.0, 4.0, 6.0, 8.0)
 
 
 @dataclass(frozen=True)
@@ -105,6 +108,8 @@ def build_worked_model_summary(dataset_path: Path, *, source_label: str | None =
     time = np.linspace(0, 10, 11)
     growth = models.logistic_growth(time, **LOGISTIC_PARAMETERS)
     decay = models.exponential_decay(time, **DECAY_PARAMETERS)
+    instructional_time = 2.0
+    instructional_growth = models.logistic_growth(np.array([instructional_time]), **INSTRUCTIONAL_GROWTH_PARAMETERS)
     return {
         "logistic_growth": {
             "parameters": dict(LOGISTIC_PARAMETERS),
@@ -125,4 +130,16 @@ def build_worked_model_summary(dataset_path: Path, *, source_label: str | None =
             "half_life": models.half_life(DECAY_PARAMETERS["rate"]),
         },
         "case_study": _build_case_study_summary(dataset_path, source_label=source_label),
+        "instructional_examples": {
+            "logistic_growth": {
+                "parameters": dict(INSTRUCTIONAL_GROWTH_PARAMETERS),
+                "time": instructional_time,
+                "exponent": -INSTRUCTIONAL_GROWTH_PARAMETERS["r"] * instructional_time,
+                "N": float(instructional_growth[0]),
+            },
+            "population_statistics": {
+                "inputs": list(INSTRUCTIONAL_STATISTICS_VALUES),
+                "statistics": models.descriptive_statistics(INSTRUCTIONAL_STATISTICS_VALUES),
+            },
+        },
     }
