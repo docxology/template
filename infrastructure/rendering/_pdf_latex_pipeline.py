@@ -30,8 +30,8 @@ LATEX_CMD_OPTIONS = ["-interaction=nonstopmode", "-no-shell-escape"]
 STALE_AUX_EXTENSIONS = [".aux", ".bbl", ".blg", ".toc", ".out", ".lof", ".lot"]
 # ``subprocess`` exposes SIGPIPE as ``-13`` on POSIX, while some wrappers and
 # shell environments normalize the same condition to ``141`` (128 + 13).
-# Both are benign for this pipeline when XeLaTeX has already produced its
-# output and should be treated identically across hosts.
+# Intermediate passes may recover from either status. Final admission requires
+# an original zero exit, even when XeLaTeX has already produced a PDF.
 SIGPIPE_EXITS = frozenset({-13, 141})
 MAX_LATEX_PASSES = 4
 MAX_CONSECUTIVE_FAILURES = 2
@@ -134,9 +134,9 @@ def _check_fatal_error(
         "TeX capacity exceeded",
     )
     has_fatal_marker = any(marker in log_content for marker in fatal_markers)
-    is_fatal_exit = result.returncode not in (0, *SIGPIPE_EXITS)
+    is_fatal_exit = result.returncode != 0
 
-    if has_fatal_marker or (is_fatal_exit and (final_pass and "Output written on" not in log_content)):
+    if has_fatal_marker or (final_pass and is_fatal_exit):
         if log_file.exists():
             missing_pkg = parse_missing_latex_package_from_log(log_file)
             if missing_pkg:
@@ -183,13 +183,15 @@ def _handle_graphics_warnings(log_file: Path, pass_num: int) -> None:
         logger.warning(f"  Graphics warning: {warning[:100]}...")
 
 
-def _recover_invalid_pdf(output_dir: Path, cmd: list[str], temp_pdf: Path, combined_tex: Path) -> None:
+def _recover_invalid_pdf(
+    output_dir: Path, cmd: list[str], temp_pdf: Path, combined_tex: Path, pass_num: int = MAX_LATEX_PASSES + 1
+) -> None:
     """Attempt a recovery pass if the PDF is structurally invalid."""
     logger.warning("PDF structurally invalid (truncated xref/%%EOF). Re-running recovery pass...")
     latex_stdout_log = output_dir / "_latex_stdout.log"
 
     with open(latex_stdout_log, "w", encoding="utf-8") as stdout_sink:
-        subprocess.run(
+        result = subprocess.run(
             cmd,
             check=False,
             stdout=stdout_sink,
@@ -199,10 +201,16 @@ def _recover_invalid_pdf(output_dir: Path, cmd: list[str], temp_pdf: Path, combi
         )
     _normalize_latex_log(latex_stdout_log)
     _normalize_latex_log(output_dir / f"{combined_tex.stem}.log")
+    _check_fatal_error(
+        result, output_dir / f"{combined_tex.stem}.log", combined_tex, temp_pdf, pass_num, final_pass=True
+    )
     normalize_latex_sidecars(output_dir, combined_tex.stem)
 
     if not validate_pdf_structure(temp_pdf):
-        logger.warning("PDF still invalid after recovery pass. Best-effort output.")
+        raise RenderingError(
+            "PDF still structurally invalid after recovery pass",
+            context={"source": str(combined_tex), "output": str(temp_pdf)},
+        )
 
 
 def compile_latex_manuscript(
@@ -323,7 +331,7 @@ def compile_latex_manuscript(
         # Phase 5: PDF validation and recovery
         if temp_pdf.exists():
             if not validate_pdf_structure(temp_pdf):
-                _recover_invalid_pdf(output_dir, cmd, temp_pdf, combined_tex)
+                _recover_invalid_pdf(output_dir, cmd, temp_pdf, combined_tex, final_pass_num + 1)
             temp_pdf.rename(output_file)
             if output_file.exists():
                 canonicalize_pdf_for_determinism(output_file, repo_root=output_dir)

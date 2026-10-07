@@ -31,10 +31,22 @@ def test_actual_wheel_and_sdist_ship_types_for_independent_strict_consumers(tmp_
     wheels, sources = list(artifacts.glob("*.whl")), list(artifacts.glob("*.tar.gz"))
     assert len(wheels) == len(sources) == 1
     marker = (ROOT / "infrastructure/py.typed").read_bytes()
+    native_roots = tuple(
+        "infrastructure/steganography/kmyth/" + relative + "/"
+        for relative in ("bin", "lib", "obj", "logger/obj", "utils/obj")
+    )
+    authored_native = "infrastructure/steganography/kmyth/src/main/seal.c"
     with zipfile.ZipFile(wheels[0]) as archive:
         assert archive.read("infrastructure/py.typed") == marker
+        assert not any(name.startswith(native_roots) for name in archive.namelist())
+        assert archive.read(authored_native) == (ROOT / authored_native).read_bytes()
     with tarfile.open(sources[0], "r:gz") as archive:
-        members = [member for member in archive.getmembers() if member.name.endswith("/infrastructure/py.typed")]
+        all_members = archive.getmembers()
+        assert not any(member.name.split("/", 1)[-1].startswith(native_roots) for member in all_members)
+        (source_member,) = [member for member in all_members if member.name.endswith("/" + authored_native)]
+        source_stream = archive.extractfile(source_member)
+        assert source_stream is not None and source_stream.read() == (ROOT / authored_native).read_bytes()
+        members = [member for member in all_members if member.name.endswith("/infrastructure/py.typed")]
         assert len(members) == 1 and members[0].isfile()
         stream = archive.extractfile(members[0])
         assert stream is not None and stream.read() == marker

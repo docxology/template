@@ -105,6 +105,10 @@ def _public_roots(repo_root: Path) -> tuple[tuple[Path, ...], frozenset[Path]]:
     )
     roots.extend(repo_root / name for name in sorted(PUBLIC_ROOT_FILES) if (repo_root / name).is_file())
     excluded = {path for project in projects for path in _project_runtime_roots(project)}
+    excluded.update(
+        repo_root / "infrastructure/steganography/kmyth" / relative
+        for relative in ("bin", "lib", "obj", "logger/obj", "utils/obj")
+    )
     return tuple(roots), frozenset(excluded)
 
 

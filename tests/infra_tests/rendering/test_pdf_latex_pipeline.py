@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import os
+import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -13,6 +16,7 @@ from infrastructure.rendering._pdf_latex_pipeline import (
     _check_fatal_error,
     _normalize_latex_log,
     _remove_luamml_mathml_cache,
+    _recover_invalid_pdf,
 )
 
 
@@ -112,24 +116,92 @@ def test_latex_pass_nonzero_exit_with_output_continues(tmp_path: Path) -> None:
     assert _check_fatal_error(result, log, tex, pdf, 1) is False
 
 
-def test_latex_final_pass_nonzero_exit_with_output_fails(tmp_path: Path) -> None:
+def _actual_latex_pass(tmp_path: Path, body: str) -> tuple[subprocess.CompletedProcess[bytes], Path, Path, Path]:
+    compiler = shutil.which("xelatex")
+    assert compiler is not None, "the declared LaTeX provider must be prepared"
     tex = tmp_path / "book.tex"
-    pdf = tmp_path / "book.pdf"
-    log = tmp_path / "book.log"
-    tex.write_text(r"\documentclass{article}\begin{document}OK\end{document}", encoding="utf-8")
-    pdf.write_bytes(b"%PDF-2.0\nok\nstartxref\n1\n%%EOF\n")
-    log.write_text(
-        "\n".join(["! Undefined control sequence.", "Output written on book.pdf (1 page)."]),
-        encoding="utf-8",
+    tex.write_text(r"\documentclass{article}\begin{document}" + body + r"\end{document}")
+    result = subprocess.run(
+        [compiler, *LATEX_CMD_OPTIONS, "-output-directory", str(tmp_path), str(tex)],
+        cwd=tmp_path,
+        capture_output=True,
+        timeout=30,
+        check=False,
     )
-    result: subprocess.CompletedProcess[bytes] = subprocess.CompletedProcess(args=["lualatex"], returncode=1)
+    return result, tmp_path / "book.log", tex, tmp_path / "book.pdf"
 
-    # A final pass with exit=1 and "Output written on" does NOT raise - the PDF was produced.
-    # Verify that an error IS raised when there is no output:
-    log_no_output = tmp_path / "book_noout.log"
-    log_no_output.write_text(
-        "\n".join(["! Undefined control sequence.", "Fatal: no output written."]), encoding="utf-8"
-    )
 
+@pytest.mark.requires_latex
+@pytest.mark.timeout(45)
+def test_latex_final_pass_nonzero_exit_with_output_fails(tmp_path: Path) -> None:
+    """A real compiler may emit a PDF after a recoverable error and still fail."""
+    result, log, tex, pdf = _actual_latex_pass(tmp_path, r"OK\undefinedReleaseCommand")
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert pdf.read_bytes().startswith(b"%PDF-")
+    diagnostic = log.read_text()
+    assert "Undefined control sequence" in diagnostic and "Output written on" in diagnostic
+    assert "That makes 100 errors" not in diagnostic
+    assert _check_fatal_error(result, log, tex, pdf, 1) is False
     with pytest.raises(RenderingError, match="LaTeX compilation failed after pass 4"):
-        _check_fatal_error(result, log_no_output, tex, pdf, 4, final_pass=True)
+        _check_fatal_error(result, log, tex, pdf, 4, final_pass=True)
+
+
+@pytest.mark.requires_latex
+@pytest.mark.timeout(45)
+def test_latex_final_pass_actual_zero_exit_allows_output(tmp_path: Path) -> None:
+    result, log, tex, pdf = _actual_latex_pass(tmp_path, "Clean compiler control")
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert pdf.read_bytes().startswith(b"%PDF-")
+    assert "Output written on" in log.read_text()
+    assert _check_fatal_error(result, log, tex, pdf, 4, final_pass=True) is False
+
+
+@pytest.mark.timeout(15)
+@pytest.mark.parametrize("wrapped", [False, True])
+def test_latex_final_pass_rejects_real_sigpipe_process_status(tmp_path: Path, wrapped: bool) -> None:
+    """Original POSIX and shell-mapped termination statuses both fail final admission."""
+    assert os.name == "posix", "this mandatory process control requires POSIX"
+    program = "import os,signal;signal.signal(signal.SIGPIPE,signal.SIG_DFL);os.kill(os.getpid(),signal.SIGPIPE)"
+    command = [sys.executable, "-I", "-c", program]
+    if wrapped:
+        shell = shutil.which("sh")
+        assert shell is not None
+        command = [shell, "-c", '"$@"; status=$?; exit "$status"', "owned-wrapper", *command]
+    result = subprocess.run(command, cwd=tmp_path, capture_output=True, timeout=5, check=False)
+    assert result.returncode == (141 if wrapped else -13)
+    log = tmp_path / "terminated.log"
+    log.write_text("No final compiler success was observed.\n")
+    with pytest.raises(RenderingError, match="LaTeX compilation failed after pass 4"):
+        _check_fatal_error(result, log, tmp_path / "book.tex", tmp_path / "book.pdf", 4, final_pass=True)
+
+
+@pytest.mark.requires_latex
+@pytest.mark.timeout(45)
+@pytest.mark.parametrize("failed", [False, True])
+def test_latex_recovery_requires_actual_zero_exit_with_valid_pdf(tmp_path: Path, failed: bool) -> None:
+    compiler = shutil.which("xelatex")
+    assert compiler is not None
+    tex = tmp_path / "book.tex"
+    body = r"OK\undefinedReleaseCommand" if failed else "Clean recovery control"
+    tex.write_text(r"\documentclass{article}\begin{document}" + body + r"\end{document}")
+    pdf = tmp_path / "book.pdf"
+    pdf.write_bytes(b"owned truncated PDF before recovery")
+    command = [compiler, *LATEX_CMD_OPTIONS, "-output-directory", str(tmp_path), str(tex)]
+    if failed:
+        with pytest.raises(RenderingError, match="LaTeX compilation failed after pass 5"):
+            _recover_invalid_pdf(tmp_path, command, pdf, tex)
+    else:
+        _recover_invalid_pdf(tmp_path, command, pdf, tex)
+    assert pdf.read_bytes().startswith(b"%PDF-")
+    assert "Output written on" in (tmp_path / "book.log").read_text()
+
+
+@pytest.mark.timeout(15)
+def test_latex_recovery_rejects_real_zero_exit_with_invalid_output(tmp_path: Path) -> None:
+    pdf = tmp_path / "book.pdf"
+    tex = tmp_path / "book.tex"
+    program = "from pathlib import Path;import sys;Path(sys.argv[1]).write_bytes(b'owned truncated provider output')"
+    command = [sys.executable, "-I", "-c", program, str(pdf)]
+    with pytest.raises(RenderingError, match="PDF still structurally invalid after recovery pass"):
+        _recover_invalid_pdf(tmp_path, command, pdf, tex)
+    assert pdf.read_bytes() == b"owned truncated provider output"

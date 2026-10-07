@@ -277,3 +277,63 @@ def test_unexcluded_symlinks_are_still_rejected(tmp_path: Path, ancestor: bool) 
     with pytest.raises(ValueError, match="symlink"):
         tree_records(nominated, source=True, excluded_names=_NAMES)
     assert sentinel.read_bytes() == b"unconsumed outside source"
+
+
+@pytest.mark.timeout(90)
+@pytest.mark.parametrize("relative", ["bin", "lib", "obj", "logger/obj", "utils/obj"])
+def test_local_kmyth_build_products_are_pruned_without_hiding_authored_sources(tmp_path: Path, relative: str) -> None:
+    _public(tmp_path)
+    kmyth = tmp_path / "infrastructure/steganography/kmyth"
+    boundary = kmyth / relative
+    (boundary / "deep").mkdir(parents=True)
+    sentinel = boundary / "deep/local-native-product"
+    sentinel.write_bytes(b"owned runtime sentinel")
+    authored = [
+        kmyth / "src/main/seal.c",
+        kmyth / "include/seal.h",
+        kmyth / "test/fixture.json",
+        kmyth / "src/lib/authored.c",
+        tmp_path / "infrastructure/another/bin/authored.py",
+    ]
+    for path in authored:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"authored input\n")
+    before = source_fingerprint(tmp_path)
+    sentinel.write_bytes(b"changed owned runtime sentinel")
+    assert source_fingerprint(tmp_path) == before
+    paths = public_source_paths(tmp_path)
+    assert all(path in paths for path in authored)
+    for path in authored:
+        original = path.read_bytes()
+        path.write_bytes(original + b"actual source mutation\n")
+        assert source_fingerprint(tmp_path) != before
+        path.write_bytes(original)
+        assert source_fingerprint(tmp_path) == before
+    body = f"""
+from infrastructure.reporting.readiness_receipts import public_source_paths,source_fingerprint
+boundary=root/'infrastructure/steganography/kmyth/{relative}'
+observed=boundary.stat();blocked=(observed.st_dev,observed.st_ino)
+events=[]
+def audit(event,args):
+    if event not in ('os.scandir','os.listdir','open') or not args: return
+    value=args[0]
+    if type(value) is int:
+        metadata=os.fstat(value);forbidden=(metadata.st_dev,metadata.st_ino)==blocked
+    elif isinstance(value,(str,bytes,os.PathLike)):
+        forbidden=Path(os.fsdecode(value)).absolute().is_relative_to(boundary)
+    else: forbidden=False
+    if forbidden:
+        events.append(event)
+        raise AssertionError('actual traversal or read entered a local build directory')
+sys.addaudithook(audit)
+paths=public_source_paths(root)
+assert root/'infrastructure/steganography/kmyth/src/main/seal.c' in paths
+assert not any(path.is_relative_to(boundary) for path in paths)
+source_fingerprint(root)
+assert not events
+print(json.dumps({{'forbidden_operations':len(events)}}))
+"""
+    child = _child(tmp_path, body)
+    assert child.returncode == 0, child.stdout + child.stderr
+    assert json.loads(child.stdout) == {"forbidden_operations": 0}
+    assert sentinel.read_bytes() == b"changed owned runtime sentinel"

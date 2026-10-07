@@ -246,6 +246,16 @@ exclude = [
 # PyPI, and one that has to be waived explicitly rather than worked around.
 allow-direct-references = true
 
+[tool.hatch.build]
+# Kmyth native build products belong to local provider custody, not the SDK.
+exclude = [
+    "/infrastructure/steganography/kmyth/bin",
+    "/infrastructure/steganography/kmyth/lib",
+    "/infrastructure/steganography/kmyth/obj",
+    "/infrastructure/steganography/kmyth/logger/obj",
+    "/infrastructure/steganography/kmyth/utils/obj",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["infrastructure"]
 

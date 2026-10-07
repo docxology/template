@@ -322,6 +322,20 @@
         "output/readiness/native-dependencies/mathjax-mathjax-newcm-font-4.0.0.tgz"
       ],
       "packages": []
+    },
+    {
+      "id": "root-wheel-typing-python",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "python"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": [
+        "hatchling",
+        "mypy"
+      ]
     }
   ]
 }
