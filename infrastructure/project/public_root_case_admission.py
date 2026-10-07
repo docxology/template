@@ -7,18 +7,26 @@ import re
 import shutil
 import sys
 import tomllib
+from importlib.metadata import PackageNotFoundError, version
+from pathlib import Path
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Any
 from urllib.parse import urlsplit
 
-from infrastructure.project.public_acceptance_case_policy import RootCasePlan, RootCasePolicy, compile_case_plan
+from infrastructure.project.public_acceptance_case_policy import (
+    POLICY_SCHEMA,
+    OPTIONAL_POLICY_SCHEMA,
+    RootCasePlan,
+    RootCasePolicy,
+    compile_case_plan,
+)
 from infrastructure.project.public_acceptance_scope import MissingRootCasePolicy, RuntimeScope
 from infrastructure.project.public_root_case_contract import _json
 from infrastructure.project.public_root_case_readback import read_root_census
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
-DECLARATION_SCHEMA = 2
+DECLARATION_SCHEMA = 3
 PREREQUISITE_SCHEMA = "template-root-case-prerequisites-v2"
 ELIGIBILITY_SCHEMA = "template-unpaid-operation-eligibility-v1"
 
@@ -30,6 +38,8 @@ class Prerequisite:
     environment_keys: tuple[str, ...]
     executables: tuple[str, ...]
     platforms: tuple[str, ...]
+    paths: tuple[str, ...] = ()
+    packages: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -39,6 +49,7 @@ class RootCaseAdmission:
     policy_artifact: dict[str, str]
     prerequisites_artifact: dict[str, str]
     prerequisites: tuple[Prerequisite, ...]
+    root: Path
 
 
 # The platform pins this value last in every Root lane environment, so a
@@ -72,6 +83,9 @@ def _list(value: object, pattern: str) -> tuple[str, ...]:
 
 def _eligibility(policy: RootCasePolicy, reader: SnapshotReader) -> dict[str, tuple[str, ...]]:
     credential_names: dict[str, tuple[str, ...]] = {}
+    optional_ids = {
+        item for family in policy.families if family.lane == "optional-external" for item in family.obligations
+    }
     for obligation in policy.obligations:
         if obligation.eligibility is None:
             continue
@@ -94,7 +108,7 @@ def _eligibility(policy: RootCasePolicy, reader: SnapshotReader) -> dict[str, tu
             or record["schema_version"] != ELIGIBILITY_SCHEMA
             or record["provider"] != provider
             or record["operation"] != operation
-            or record["billing"] != "unpaid"
+            or record["billing"] != ("unpaid" if obligation.kind == "network-unpaid" else "unverified")
             or not isinstance(record["verified_utc"], str)
             or not isinstance(record["valid_until_utc"], str)
         ):
@@ -105,8 +119,9 @@ def _eligibility(policy: RootCasePolicy, reader: SnapshotReader) -> dict[str, tu
         if (
             verified.tzinfo is None
             or expires.tzinfo is None
-            or not verified <= now < expires
-            or expires - verified > timedelta(days=30)
+            or not timedelta(0) < expires - verified <= timedelta(days=30)
+            or obligation.id not in optional_ids
+            and not verified <= now < expires
         ):
             raise MissingRootCasePolicy("Root unpaid operation eligibility needs fresh primary-source verification")
         credential_names[obligation.id] = _list(record["environment_keys"], "[A-Z][A-Z0-9_]*")
@@ -144,13 +159,13 @@ def declaration(reader: SnapshotReader) -> dict[str, Any]:
         not isinstance(contract, dict)
         or set(contract) != {"schema_version", "policy", "prerequisites"}
         or type(contract["schema_version"]) is not int
-        or contract["schema_version"] != DECLARATION_SCHEMA
+        or contract["schema_version"] not in {2, DECLARATION_SCHEMA}
     ):
         raise MissingRootCasePolicy(
             "ROOT-ACCEPTANCE-CASE-POLICY-2: reviewed complete Root v2 source declaration is missing"
         )
     return {
-        "schema_version": DECLARATION_SCHEMA,
+        "schema_version": contract["schema_version"],
         "policy": _path(contract["policy"]),
         "prerequisites": _path(contract["prerequisites"]),
     }
@@ -162,7 +177,10 @@ def load_policy(
     """Load the complete baseline from source; callers cannot supply replacement families."""
     contract = declaration(reader)
     policy_snapshot = reader.read(contract["policy"])
-    policy = RootCasePolicy.parse(_json(policy_snapshot))
+    value = _json(policy_snapshot)
+    if value.get("schema_version") != (OPTIONAL_POLICY_SCHEMA if contract["schema_version"] == 3 else POLICY_SCHEMA):
+        raise ValueError("Root policy protocol differs from its source-owned declaration")
+    policy = RootCasePolicy.parse(value)
     credential_names = _eligibility(policy, reader)
     prerequisites_snapshot = reader.read(contract["prerequisites"])
     prerequisites = _json(prerequisites_snapshot)
@@ -177,7 +195,8 @@ def load_policy(
     for row in prerequisites["obligations"]:
         if (
             not isinstance(row, dict)
-            or set(row) != {"id", "kind", "environment_keys", "executables", "platforms"}
+            or set(row) - {"id", "kind", "environment_keys", "executables", "platforms", "paths", "packages"}
+            or not {"id", "kind", "environment_keys", "executables", "platforms"}.issubset(row)
             or not isinstance(row["id"], str)
             or row["id"] in admitted
             or expected.get(row["id"]) != row["kind"]
@@ -188,18 +207,23 @@ def load_policy(
             raise ValueError("Root prerequisites cannot declare the platform-pinned no-model-acquisition key")
         executables = _list(row["executables"], "[A-Za-z][A-Za-z0-9_.+-]*")
         platforms = _list(row["platforms"], "darwin|linux")
+        paths = _list(row.get("paths", []), "[A-Za-z0-9_./+-]+")
+        for path in paths:
+            if ".." in path.split("/") or path != str(reader.public_path(path).relative_to(reader.root)):
+                raise ValueError("Root prerequisite paths must be confined public source paths")
+        packages = _list(row.get("packages", []), "[A-Za-z0-9][A-Za-z0-9_.-]*")
         if (
             (row["kind"] in {"local-model", "tool"} and not executables)
-            or (row["kind"] in {"private-provider", "external-fixture"} and not keys)
+            or (row["kind"] in {"private-provider", "external-fixture"} and not (keys or paths))
             or row["kind"] == "platform"
             and not platforms
-            or row["kind"] != "network-unpaid"
+            or row["kind"] not in {"network-unpaid", "network-unverified"}
             and any(re.search("TOKEN|SECRET|PASSWORD|API_KEY", key) for key in keys)
         ):
             raise ValueError("required Root capability has no concrete prerequisite or admits unrelated credentials")
-        if row["kind"] == "network-unpaid" and keys != credential_names[row["id"]]:
+        if row["kind"] in {"network-unpaid", "network-unverified"} and keys != credential_names[row["id"]]:
             raise ValueError("unpaid lane credentials differ from reviewed provider/operation prerequisites")
-        admitted[row["id"]] = Prerequisite(row["id"], row["kind"], keys, executables, platforms)
+        admitted[row["id"]] = Prerequisite(row["id"], row["kind"], keys, executables, platforms, paths, packages)
     if set(admitted) != set(expected) or not reader.unchanged():
         raise ValueError("complete Root obligations/source changed during policy admission")
 
@@ -214,13 +238,13 @@ def load_policy(
     )
 
 
-def admit_plan(reader: SnapshotReader, bundle: object) -> RootCaseAdmission:
+def admit_plan(reader: SnapshotReader, bundle: object, *, origin: Any = None) -> RootCaseAdmission:
     policy, policy_binding, prerequisites_binding, prerequisites = load_policy(reader)
-    census = read_root_census(reader, bundle, policy)
+    census = read_root_census(reader, bundle, policy, origin=origin)
     plan = compile_case_plan(policy, census, source_identity=RuntimeScope(reader.root, "root").source_identity())
     if not reader.unchanged():
         raise ValueError("Root policy or current full census changed after plan admission")
-    return RootCaseAdmission(policy, plan, policy_binding, prerequisites_binding, prerequisites)
+    return RootCaseAdmission(policy, plan, policy_binding, prerequisites_binding, prerequisites, reader.root)
 
 
 def lane_blockers(admission: RootCaseAdmission, lane_id: str, mode: str) -> list[dict[str, str]]:
@@ -233,6 +257,8 @@ def lane_blockers(admission: RootCaseAdmission, lane_id: str, mode: str) -> list
         raise ValueError("Root execution requires a nonempty exact declared applicability unit")
     if sys.platform not in selected.platforms:
         return [{"id": lane_id, "reason": "required-applicable-platform-unavailable"}]
+    if selected.lane == "live-unverified":
+        return [{"id": lane_id, "reason": "unpaid-operation-eligibility-unverified"}]
     if mode == "core" and selected.lane not in {"core", "offline-benchmark"}:
         return [{"id": lane_id, "reason": "explicit-live-mode-required"}]
     blockers = []
@@ -245,4 +271,12 @@ def lane_blockers(admission: RootCaseAdmission, lane_id: str, mode: str) -> list
             blockers.append({"id": prerequisite.id, "reason": "required-configuration-or-credential-missing"})
         if any(shutil.which(name) is None for name in prerequisite.executables):
             blockers.append({"id": prerequisite.id, "reason": "required-executable-missing"})
+        path_reader = SnapshotReader(admission.root)
+        if any(not path_reader.public_path(path).exists() for path in prerequisite.paths):
+            blockers.append({"id": prerequisite.id, "reason": "required-public-fixture-path-missing"})
+        for package in prerequisite.packages:
+            try:
+                version(package)
+            except PackageNotFoundError:
+                blockers.append({"id": prerequisite.id, "reason": "required-python-distribution-missing"})
     return blockers

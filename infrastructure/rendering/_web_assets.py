@@ -280,3 +280,94 @@ def embed_css(html_file: Path, css_file: Path) -> None:
         logger.debug("Embedded CSS from %s into %s", css_file.name, html_file.name)
     except OSError as exc:
         logger.warning("Failed to embed CSS: %s", exc)
+
+
+def install_local_mathjax_assets(html_file: Path, *, repo_root: Path) -> None:
+    """Publish the source-declared exact npm runtime closure for offline reading.
+
+    The opt-in mode fails if declared versions, lock identities, installed package
+    identities, or the existing reviewed loader SRI differ. It never downloads.
+    """
+    import hashlib
+    import json
+
+    from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
+
+    declarations = json.loads(read_bytes_confined(repo_root, repo_root / "package.json", max_bytes=1024 * 1024))
+    lock = json.loads(read_bytes_confined(repo_root, repo_root / "package-lock.json", max_bytes=8 * 1024 * 1024))
+    expected = {"mathjax": "4.0.0", "@mathjax/mathjax-newcm-font": "4.0.0"}
+    for name, version in expected.items():
+        if (
+            declarations.get("dependencies", {}).get(name) or declarations.get("devDependencies", {}).get(name)
+        ) != version:
+            raise ValueError("offline MathJax requires source-declared exact npm dependencies")
+        item = lock.get("packages", {}).get(f"node_modules/{name}", {})
+        if item.get("version") != version or not str(item.get("integrity", "")).startswith("sha512-"):
+            raise ValueError("offline MathJax requires exact integrity-bound npm lock entries")
+    target = html_file.parent / "assets" / "mathjax-4.0.0"
+    packages = repo_root / "node_modules"
+    loader = read_bytes_confined(repo_root, packages / "mathjax" / "tex-chtml.js", max_bytes=4 * 1024 * 1024)
+    sri = "sha384-" + base64.b64encode(hashlib.sha384(loader).digest()).decode()
+    if sri != MATHJAX_INTEGRITY:
+        raise ValueError("offline MathJax loader differs from reviewed source-owned SRI")
+    manifest: dict[str, object] = {
+        "schema_version": "template-local-mathjax-assets-v1",
+        "package_lock_sha256": hashlib.sha256((repo_root / "package-lock.json").read_bytes()).hexdigest(),
+        "packages": expected,
+        "files": [],
+    }
+    rows: list[dict[str, str]] = []
+    for name, version in expected.items():
+        original = packages / name
+        metadata = json.loads(read_bytes_confined(repo_root, original / "package.json", max_bytes=1024 * 1024))
+        if metadata.get("name") != name or metadata.get("version") != version:
+            raise ValueError("installed offline MathJax package identity differs")
+        files = (
+            sorted(original.rglob("*"))
+            if name == "mathjax"
+            else sorted((original / "chtml").rglob("*")) + [original / "chtml.js", original / "package.json"]
+        )
+        for source in files:
+            if source.is_symlink():
+                raise ValueError("offline MathJax assets refuse symlinks")
+            if not source.is_file():
+                continue
+            relative = source.relative_to(original)
+            asset_bytes = read_bytes_confined(repo_root, source, max_bytes=8 * 1024 * 1024)
+            destination = target / ("mathjax" if name == "mathjax" else "newcm") / relative
+            destination.relative_to(repo_root)
+            for ancestor in (destination.parent, *destination.parent.parents):
+                if ancestor == repo_root.parent:
+                    break
+                if ancestor.is_symlink():
+                    raise ValueError("offline asset publication refuses symlink ancestors")
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            atomic_write_bytes_confined(repo_root, destination, asset_bytes)
+            rows.append(
+                {
+                    "path": destination.relative_to(html_file.parent).as_posix(),
+                    "sha256": hashlib.sha256(asset_bytes).hexdigest(),
+                    "package": name,
+                }
+            )
+    manifest["files"] = rows
+    manifest_file = target / "asset-manifest.json"
+    atomic_write_bytes_confined(
+        repo_root, manifest_file, (json.dumps(manifest, indent=2, sort_keys=True) + "\n").encode()
+    )
+    content = html_file.read_text(encoding="utf-8")
+    replacements = {
+        MATHJAX_URL: "assets/mathjax-4.0.0/mathjax/tex-chtml.js",
+        MATHJAX_FONT_URL: "assets/mathjax-4.0.0/newcm/chtml/woff2",
+        MATHJAX_DYNAMIC_PREFIX: "assets/mathjax-4.0.0/newcm/chtml/dynamic",
+    }
+    for original_url, local_url in replacements.items():
+        content = content.replace(original_url, local_url)
+    # MathJax component and font resolution remains relative to this local page.
+    content = content.replace(
+        "window.MathJax = window.MathJax || {};",
+        "window.MathJax = window.MathJax || {};\n"
+        "window.MathJax.loader = Object.assign({}, window.MathJax.loader, "
+        '{paths: {mathjax: "assets/mathjax-4.0.0/mathjax"}});',
+    )
+    write_if_changed(html_file, content)

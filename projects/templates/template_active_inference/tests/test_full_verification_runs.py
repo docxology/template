@@ -555,3 +555,45 @@ def test_full_verifier_missing_selected_dev_stack_blocks_without_acquisition(tmp
     assert not (tmp_path / "forbidden-domain-child").exists()
     assert not (tmp_path / ".venv/bin/uv").exists()
     assert not (tmp_path / "uv.lock").exists()
+
+
+@pytest.mark.parametrize("profile", ["quick", "release", "exhaustive", None])
+def test_real_prepass_accounts_filtered_slice_and_runs_next_group(tmp_path: Path, capsys, profile) -> None:
+    (tmp_path / "pytest.ini").write_text(
+        "[pytest]\naddopts = -v --assert=plain\nmarkers = long_running: explicit slow selection\n"
+    )
+    (tmp_path / "test_long.py").write_text(
+        "import pytest\nfrom pathlib import Path\n@pytest.mark.long_running\n"
+        "def test_long(): Path('long-executed').touch()\n"
+    )
+    (tmp_path / "test_ordinary.py").write_text(
+        "from pathlib import Path\ndef test_ordinary(): Path('ordinary-executed').touch()\n"
+    )
+    full_verification._run_chunked_prepasses(
+        tmp_path,
+        [("all-long checks", ["test_long.py"]), ("ordinary checks", ["test_ordinary.py"])],
+        python=sys.executable,
+        profile=profile,
+        command_runner=full_verification._run,
+    )
+    bounded = profile in {"quick", "release"}
+    assert (tmp_path / "long-executed").exists() is not bounded
+    assert (tmp_path / "ordinary-executed").is_file()
+    assert ("selected no tests" in capsys.readouterr().out) is bounded
+
+
+@pytest.mark.parametrize("profile", ["quick", "release", "exhaustive", None])
+@pytest.mark.parametrize("source,exit_code", [("", 5), ("def test_fails(): assert False\n", 1)])
+def test_real_prepass_never_accepts_missing_collection_or_failure(tmp_path: Path, profile, source, exit_code) -> None:
+    (tmp_path / "pytest.ini").write_text("[pytest]\naddopts = -v --assert=plain\n")
+    (tmp_path / "test_case.py").write_text(source)
+    with pytest.raises(VerificationCommandFailed) as error:
+        full_verification._run_chunked_prepasses(
+            tmp_path,
+            [("actual negative control", ["test_case.py"])],
+            python=sys.executable,
+            profile=profile,
+            command_runner=full_verification._run,
+        )
+    assert error.value.original_exit_code == exit_code
+    assert not error.value.timed_out and not error.value.custody_refused

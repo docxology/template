@@ -13,7 +13,7 @@ from infrastructure.project.public_acceptance_scope import RuntimeScope
 from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSIONS
 from infrastructure.project.public_root_case_admission import load_policy
 from infrastructure.project.public_root_case_contract import _root_identity
-from infrastructure.project.public_root_case_units import declared_units
+from infrastructure.project.public_root_case_units import declared_units, optional_external_records
 from infrastructure.project.public_root_runtime_producer import produce_runtime_cohort, read_selected_runtime
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION
@@ -194,6 +194,7 @@ def run_root_case_acceptance(
                 child_codes.append(original_code)
         if observation is not None and bundle_artifact is not None:
             details = _details(probe, bundle_artifact, observation, policy.sha256)
+            details["portable_root_artifact"] = produced["portable_artifact"]
             policy_proof = policy_proof or (details, command)
             if minor == coverage_requirement.python_version:
                 coverage_proof = (
@@ -315,6 +316,7 @@ def run_root_case_acceptance(
         "source_current": current,
         "counts": counts,
         "results": summaries,
+        "optional_external": optional_external_records(policy),
     }
     try:
         receipt = write_json(

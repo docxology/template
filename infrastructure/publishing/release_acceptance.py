@@ -9,7 +9,7 @@ still decide whether every required candidate case is supported.
 from __future__ import annotations
 
 import argparse
-import json
+import hashlib
 import re
 import subprocess
 import zipfile
@@ -19,9 +19,10 @@ from typing import Any, Sequence
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.publishing.root_release_contract import root_package_version
+from infrastructure.project.public_hosted_origin import HostedReadbackContext, WORKFLOW
 from infrastructure.reporting.release_readiness_artifacts import bounded_members
 from infrastructure.reporting.release_readiness_profile import collect_profile
-from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
 
 ARTIFACT_NAME = "platform-required-acceptance"
 RECEIPT_PATH = "output/readiness/release-candidate/receipt.json"
@@ -88,6 +89,7 @@ def validate_hosted_handoff(
         or run.get("status") != "completed"
         or run.get("conclusion") != "success"
         or run.get("head_sha") != revision
+        or run.get("path") != WORKFLOW
         or identity.get("full_name") != repository
         or type(repository_id) is not int
         or repository_id <= 0
@@ -100,6 +102,8 @@ def validate_hosted_handoff(
         or artifact.get("expired") is not False
         or type(artifact.get("size_in_bytes")) is not int
         or not 0 < artifact["size_in_bytes"] <= 64 * 1024 * 1024
+        or not isinstance(artifact.get("digest"), str)
+        or re.fullmatch(r"sha256:[0-9a-f]{64}", artifact["digest"]) is None
         or any(type(origin.get(field)) is not int for field in ("id", "repository_id", "head_repository_id"))
         or origin.get("id") != selected_run
         or origin.get("head_sha") != revision
@@ -109,11 +113,17 @@ def validate_hosted_handoff(
         raise ValueError("acceptance artifact is not from the successful tagged-revision repository run")
 
 
-def admit_acceptance_archive(root: Path, archive_path: Path) -> None:
+def admit_acceptance_archive(root: Path, archive_path: Path, *, artifact_metadata: dict[str, Any]) -> None:
     """Reuse bounded native-archive checks and refuse source/control overwrites."""
     root = root.resolve()
     reader = SnapshotReader(root)
     content = read_bytes_confined(archive_path.absolute().parent, archive_path.absolute(), max_bytes=64 * 1024 * 1024)
+    if (
+        type(artifact_metadata.get("size_in_bytes")) is not int
+        or artifact_metadata["size_in_bytes"] != len(content)
+        or artifact_metadata.get("digest") != "sha256:" + hashlib.sha256(content).hexdigest()
+    ):
+        raise ValueError("acceptance archive digest/size differs from hosted API observation")
     with zipfile.ZipFile(BytesIO(content)) as archive:
         names = bounded_members(archive)
         if RECEIPT_PATH not in names:
@@ -150,17 +160,58 @@ def _checkout_revision(root: Path) -> str:
     return actual.stdout.strip()
 
 
-def validate_candidate_handoff(root: Path, *, revision: str, receipt_sha256: str) -> str:
+def validate_candidate_handoff(
+    root: Path,
+    *,
+    revision: str,
+    receipt_sha256: str,
+    repository: str = "",
+    run_id: str = "",
+    artifact_id: str = "",
+    run_metadata: Path | None = None,
+    artifact_metadata: Path | None = None,
+) -> str:
     """Admit exact aggregate bytes, revision, and the entire existing candidate profile."""
     if _REVISION.fullmatch(revision) is None or _SHA256.fullmatch(receipt_sha256) is None:
         raise ValueError("candidate revision/receipt digest is invalid")
     root = root.resolve()
     if _checkout_revision(root) != revision:
         raise ValueError("candidate checkout does not match the exact handoff revision")
+    hosted_inputs = (repository, run_id, artifact_id, run_metadata, artifact_metadata)
+    if any(hosted_inputs):
+        if not all(hosted_inputs) or run_metadata is None or artifact_metadata is None:
+            raise ValueError("hosted candidate admission requires every external handoff identity and API observation")
+        validate_hosted_handoff(
+            _metadata(run_metadata),
+            _metadata(artifact_metadata),
+            repository=repository,
+            revision=revision,
+            run_id=run_id,
+            artifact_id=artifact_id,
+        )
     reader = SnapshotReader(root)
     receipt = reader.read(RECEIPT_PATH)
-    if receipt.sha256 != receipt_sha256 or receipt.json_object().get("source_commit") != revision:
+    payload = receipt.json_object()
+    if receipt.sha256 != receipt_sha256 or payload.get("source_commit") != revision:
         raise ValueError("acceptance receipt hash or exact source revision differs from the handoff")
+    if any(hosted_inputs):
+        binding = payload.get("hosted_origin_artifact")
+        if (
+            not isinstance(binding, dict)
+            or set(binding) != {"path", "sha256"}
+            or not all(isinstance(binding[key], str) for key in ("path", "sha256"))
+        ):
+            raise ValueError("hosted candidate lacks the complete hash-bound origin manifest")
+        context = HostedReadbackContext(
+            manifest_binding=binding,
+            repository=repository,
+            run_id=positive_id(run_id),
+            head_sha=revision,
+        )
+        reader = SnapshotReader(root, hosted_origin=context)
+        # Hold the same aggregate bytes in the context-aware reader as well.
+        if reader.read(RECEIPT_PATH).sha256 != receipt_sha256:
+            raise ValueError("acceptance receipt changed during hosted-context admission")
     evidence = collect_profile(root, root / RECEIPT_PATH, reader)
     if not reader.unchanged() or _checkout_revision(root) != revision:
         raise ValueError("acceptance evidence changed during required-profile admission")
@@ -168,10 +219,7 @@ def validate_candidate_handoff(root: Path, *, revision: str, receipt_sha256: str
 
 
 def _metadata(path: Path) -> dict[str, Any]:
-    payload = json.loads(read_bytes_confined(path.absolute().parent, path.absolute(), max_bytes=1024 * 1024))
-    if not isinstance(payload, dict):
-        raise ValueError("hosted acceptance metadata must be a JSON object")
-    return payload
+    return json_object_from_bytes(read_bytes_confined(path.absolute().parent, path.absolute(), max_bytes=1024 * 1024))
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -193,10 +241,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     archive = commands.add_parser("archive")
     archive.add_argument("--repo-root", type=Path, default=Path.cwd())
     archive.add_argument("--archive", type=Path, required=True)
+    archive.add_argument("--artifact-metadata", type=Path, required=True)
     candidate = commands.add_parser("candidate")
     candidate.add_argument("--repo-root", type=Path, default=Path.cwd())
     candidate.add_argument("--revision", required=True)
     candidate.add_argument("--receipt-sha256", required=True)
+    candidate.add_argument("--repository", default="")
+    candidate.add_argument("--run-id", default="")
+    candidate.add_argument("--artifact-id", default="")
+    candidate.add_argument("--run-metadata", type=Path)
+    candidate.add_argument("--artifact-metadata", type=Path)
     args = parser.parse_args(argv)
     try:
         if args.command == "inputs":
@@ -212,10 +266,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                 artifact_id=args.artifact_id,
             )
         elif args.command == "archive":
-            admit_acceptance_archive(args.repo_root, args.archive)
+            admit_acceptance_archive(args.repo_root, args.archive, artifact_metadata=_metadata(args.artifact_metadata))
         else:
             state = validate_candidate_handoff(
-                args.repo_root, revision=args.revision, receipt_sha256=args.receipt_sha256
+                args.repo_root,
+                revision=args.revision,
+                receipt_sha256=args.receipt_sha256,
+                repository=args.repository,
+                run_id=args.run_id,
+                artifact_id=args.artifact_id,
+                run_metadata=args.run_metadata,
+                artifact_metadata=args.artifact_metadata,
             )
             print(f"required candidate acceptance: {state}")
             return {"pass": 0, "fail": 1, "blocked": 75, "unknown": 2}[state]

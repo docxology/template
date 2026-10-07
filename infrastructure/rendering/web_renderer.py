@@ -110,7 +110,7 @@ class WebRenderer:
                 finally:
                     render_target.unlink(missing_ok=True)
                 if output_file.exists():
-                    self._harden_mathjax_script(output_file)
+                    self._harden_mathjax_script(output_file, asset_mode=self.config.web_asset_mode)
                     self._embed_favicon(output_file)
                     self._write_favicon_file(output_file.parent)
                     # Per-section pages must receive the same reading-width and
@@ -302,7 +302,7 @@ class WebRenderer:
 
         # Embed CSS styling in the generated HTML
         if output_file.exists():
-            self._harden_mathjax_script(output_file)
+            self._harden_mathjax_script(output_file, asset_mode=self.config.web_asset_mode)
             self._embed_favicon(output_file)
             self._write_favicon_file(output_file.parent)
             self._embed_css(output_file)
@@ -554,8 +554,12 @@ class WebRenderer:
         web_postprocess.write_if_changed(path, content)
 
     @staticmethod
-    def _harden_mathjax_script(html_file: Path) -> None:
+    def _harden_mathjax_script(html_file: Path, *, asset_mode: str = "cdn") -> None:
         web_postprocess.harden_mathjax_script(html_file)
+        if asset_mode == "local":
+            from infrastructure.rendering._web_assets import install_local_mathjax_assets
+
+            install_local_mathjax_assets(html_file, repo_root=Path(__file__).resolve().parents[2])
 
     @staticmethod
     def _embed_favicon(html_file: Path) -> None:

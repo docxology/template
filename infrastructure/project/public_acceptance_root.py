@@ -46,7 +46,7 @@ def run_root_acceptance(
     declared_reader = SnapshotReader(root.resolve(strict=True))
     metadata = tomllib.loads(declared_reader.read("pyproject.toml").content.decode())
     contract = metadata.get("tool", {}).get("template", {}).get("root_acceptance")
-    if isinstance(contract, dict) and contract.get("schema_version") == 2:
+    if isinstance(contract, dict) and contract.get("schema_version") in {2, 3}:
         from infrastructure.project.public_root_case_acceptance import run_root_case_acceptance
 
         return run_root_case_acceptance(

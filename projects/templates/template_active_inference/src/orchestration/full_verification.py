@@ -647,6 +647,31 @@ def _write_empty_coverage_evidence(
         )
 
 
+def _run_chunked_prepasses(
+    project_root: Path,
+    chunk_groups: list[tuple[str, list[str]]],
+    *,
+    python: str,
+    profile: VerificationProfile | None,
+    command_runner: Callable[..., None],
+) -> None:
+    """Retain actual failures while accounting for bounded-profile empty slices."""
+    profile_args = _profile_marker_args(profile)
+    for label, modules in chunk_groups:
+        try:
+            command_runner(project_root, [python, "-m", "pytest", *modules, *profile_args, "-q"], label)
+        except VerificationCommandFailed as exc:
+            if (
+                profile not in {"quick", "release"}
+                or exc.original_exit_code != 5
+                or exc.timed_out
+                or exc.custody_refused
+                or not _is_empty_profile_selection_failure(exc)
+            ):
+                raise
+            print(f"    skipped: {label} selected no tests for the {profile} profile")
+
+
 def _run_chunked_coverage(
     project_root: Path,
     coverage_groups: list[tuple[str, list[str]]],
@@ -832,9 +857,13 @@ def run_verification(
     for label, cmd in preflight:
         refresh_cache.run(project_root, cmd, label, command_runner)
 
-    if not skip_chunks:
-        for label, modules in chunk_groups:
-            command_runner(project_root, [python, "-m", "pytest", *modules, *profile_args, "-q"], label)
+    _run_chunked_prepasses(
+        project_root,
+        chunk_groups,
+        python=python,
+        profile=profile,
+        command_runner=command_runner,
+    )
 
     for label, cmd in postflight:
         refresh_cache.run(project_root, cmd, label, command_runner)

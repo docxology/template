@@ -484,3 +484,8 @@ exclude_dirs = [
 # B101: assert_used — asserts are used as internal invariants in infrastructure code.
 # Suppressing B101 reduces noise without compromising security review of real issues.
 skips = ["B101"]
+
+[tool.template.root_acceptance]
+schema_version = 3
+policy = "infrastructure/config/root-case-policy.json"
+prerequisites = "infrastructure/config/root-case-prerequisites.json"

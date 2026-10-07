@@ -40,16 +40,16 @@ def _zero(process: dict[str, Any], command: tuple[str, ...]) -> None:
         raise ValueError("original Root lane process did not complete its exact admitted invocation")
 
 
-def _read_lane_result(reader: SnapshotReader, bundle: object) -> dict[str, Any]:
+def _read_lane_result(reader: SnapshotReader, bundle: object, *, origin: Any = None) -> dict[str, Any]:
     if not isinstance(bundle, dict) or set(bundle) != {"spec_artifact", "result_artifact", "process_artifact"}:
         raise ValueError("Root lane readback needs its exact original process/spec/result bundle")
     snapshot = _artifact(reader, bundle["spec_artifact"])
-    spec, admitted = admission(reader, snapshot)
+    spec, admitted = admission(reader, snapshot, origin=origin)
     process_snapshot = _artifact(reader, bundle["process_artifact"])
     result_snapshot = _artifact(reader, bundle["result_artifact"])
     process, result = _json(process_snapshot), _json(result_snapshot)
     directory = reader.root / spec["directory"]
-    _zero(process, lane_command(reader.root, snapshot))
+    _zero(process, lane_command(reader.root, snapshot, origin=origin))
     selected = selection(admitted, spec["lane"])
     if admitted.plan.platform not in selected.platforms or admitted.plan.runtime not in selected.runtimes:
         raise ValueError("Root lane original census runtime/platform is outside its source-owned applicability")
@@ -159,7 +159,7 @@ def _read_lane_result(reader: SnapshotReader, bundle: object) -> dict[str, Any]:
         if child_snapshot.relative in seen or native_snapshot.relative in seen:
             raise ValueError("Root lane repeats a retained native child artifact")
         seen.update((child_snapshot.relative, native_snapshot.relative))
-        _zero(native, lane_command(reader.root, snapshot, chunk=index))
+        _zero(native, lane_command(reader.root, snapshot, chunk=index, origin=origin))
         expected_metadata = {case["nodeid"]: case for case in census["cases"] if case["nodeid"] in nodes}
         if (
             native_snapshot.path != chunk_directory / "process.json"
@@ -272,7 +272,7 @@ def _read_lane_result(reader: SnapshotReader, bundle: object) -> dict[str, Any]:
     return result
 
 
-def read_lane(reader: SnapshotReader, bundle: object) -> dict[str, Any]:
+def read_lane(reader: SnapshotReader, bundle: object, *, origin: Any = None) -> dict[str, Any]:
     """Read original outer, coordinator and case processes against current source."""
     from infrastructure.project.public_root_lane_producer import coordinator_command
 
@@ -286,12 +286,12 @@ def read_lane(reader: SnapshotReader, bundle: object) -> dict[str, Any]:
     ):
         raise ValueError("Root lane requires its exact successful original outer bundle")
     snapshot = _artifact(reader, bundle["spec_artifact"])
-    spec, _ = admission(reader, snapshot)
+    spec, _ = admission(reader, snapshot, origin=origin)
     directory = reader.root / spec["directory"]
     outer_snapshot = _artifact(reader, bundle["coordinator_artifact"])
     outer = _json(outer_snapshot)
     original = _artifact(reader, outer.get("bundle_artifact"))
-    _zero(outer, coordinator_command(reader.root, snapshot))
+    _zero(outer, coordinator_command(reader.root, snapshot, origin=origin))
     if (
         set(outer)
         != {
@@ -330,5 +330,5 @@ def read_lane(reader: SnapshotReader, bundle: object) -> dict[str, Any]:
     ):
         raise ValueError("Root lane coordinator exceeded original outer boundary")
     return _read_lane_result(
-        reader, {key: bundle[key] for key in ("spec_artifact", "result_artifact", "process_artifact")}
+        reader, {key: bundle[key] for key in ("spec_artifact", "result_artifact", "process_artifact")}, origin=origin
     )

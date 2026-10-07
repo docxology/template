@@ -21,7 +21,7 @@ import pytest
 from infrastructure.project.public_acceptance import _probe_runtime
 from infrastructure.project.public_acceptance_scope import RuntimeScope
 from infrastructure.project.public_root_case_admission import load_policy
-from infrastructure.project.public_root_case_contract import _root_identity
+from infrastructure.project.public_root_case_contract import _root_identity, _json
 from infrastructure.project.public_root_lane_contract import write
 from infrastructure.project.public_root_runtime_producer import produce_runtime_cohort, read_selected_runtime
 from infrastructure.project.public_root_case_acceptance import run_root_case_acceptance
@@ -85,7 +85,7 @@ def test_original_selected_interpreter_collects_once_and_retains_every_required_
     }
     actual = json.loads((root / bundle["result_artifact"]["path"]).read_bytes())
     census_bundle = json.loads((root / actual["census_bundle_artifact"]["path"]).read_bytes())
-    census = json.loads((root / census_bundle["receipt_artifact"]["path"]).read_bytes())
+    census = _json(SnapshotReader(root).read(census_bundle["receipt_artifact"]["path"]))
     assert census["original_pytest_exit_code"] == census["exit_code"] == census["executed_reports"] == 0
     assert len(census["nodeids"]) == 3
     assert len(list((root / "output/readiness/runtime-cohort/census").rglob("census.json"))) == 1

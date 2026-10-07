@@ -305,6 +305,7 @@ def validate_acceptance(requirement: Requirement, payload: dict[str, Any], reade
     if not isinstance(details, dict) or _integer(details.get("execution_exit_code")) != 0:
         raise ValueError("successful acceptance requires a real zero-exit execution record")
     kind = requirement.kind
+    platform_major = int(requirement.platform_version.split(".", 1)[0])
     if kind in {"root-policy", "root-case"}:
         from infrastructure.reporting.release_readiness_root_cases import validate_root_cases
 
@@ -332,7 +333,14 @@ def validate_acceptance(requirement: Requirement, payload: dict[str, Any], reade
         if any(details.get(key) != [] for key in ("mermaid", "broken_links", "consistency", "doc_pairs")):
             raise ValueError("documentation lint did not execute every required category successfully")
     elif kind == "pipeline":
-        validate_pipeline(requirement.scope, details, reader.root)
+        if platform_major >= 4:
+            from infrastructure.project.public_acceptance_auxiliary_pipeline import SCHEMA, validate_portable_pipeline
+
+            if details.get("pipeline_schema") != SCHEMA:
+                raise ValueError("platform 4 pipeline requires complete portable source/process custody")
+            validate_portable_pipeline(requirement.scope, details, reader)
+        else:
+            validate_pipeline(requirement.scope, details, reader.root)
     elif kind == "formats":
         _formats(requirement, details, reader)
     elif kind in {"domain", "oracle"}:
@@ -346,6 +354,10 @@ def validate_acceptance(requirement: Requirement, payload: dict[str, Any], reade
     elif kind == "publication":
         _publication(requirement, details, reader)
     elif kind == "transfer":
+        if platform_major >= 4 or "transfer_artifact" in details:
+            from infrastructure.project.public_acceptance_auxiliary_validation import validate_sandbox_transfer
+
+            validate_sandbox_transfer(details, reader)
         if details.get("destination_kind") != "sandbox" or details.get("remote_verified") is not True:
             raise ValueError("candidate transfer must execute against the authorized sandbox")
         exported = _file(details.get("export_artifact"), reader)
@@ -359,3 +371,10 @@ def validate_acceptance(requirement: Requirement, payload: dict[str, Any], reade
         _oracles(details, reader)
     else:
         raise ValueError("unsupported required acceptance kind")
+    # Platform 4 requires retained actual supervision for every auxiliary
+    # producer. A supplied envelope from any version receives the same checks.
+    auxiliary_kinds = {"docs", "pipeline", "domain", "oracle", "live", "platform", "roster"}
+    if kind in auxiliary_kinds and (platform_major >= 4 or "process_artifact" in details or "raw_artifact" in details):
+        from infrastructure.project.public_acceptance_auxiliary_validation import validate_auxiliary_process
+
+        validate_auxiliary_process(requirement.id, _hash(payload.get("source_fingerprint")), details, reader)

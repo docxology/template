@@ -172,3 +172,17 @@ def test_release_installed_matrix_prepares_all_supported_runtimes() -> None:
     policy = next(step for step in steps if step.get("name") == "Bind tagged candidate build policy")
     assert 'git -C "$GITHUB_WORKSPACE" show -s --format=%ct "$candidate"' in policy["run"]
     assert "TEMPLATE_BUILD_EPOCH_SOURCE=git:$candidate" in policy["run"]
+
+
+def test_release_serializes_selected_tag_across_trigger_refs() -> None:
+    """Tag push and dispatch branches must share one publication lock."""
+    import yaml
+
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8"))
+    concurrency = workflow["concurrency"]
+    assert concurrency["group"] == "release-${{ inputs.tag || github.ref_name }}"
+    assert concurrency["cancel-in-progress"] is False
+    steps = workflow["jobs"]["release"]["steps"]
+    selection = next(step for step in steps if step.get("id") == "tag")
+    assert selection["env"]["INPUT_TAG"] == "${{ inputs.tag }}"
+    assert selection["env"]["REF_NAME"] == "${{ github.ref_name }}"

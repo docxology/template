@@ -54,10 +54,14 @@ def groups(nodeids: tuple[str, ...]) -> tuple[tuple[str, ...], ...]:
     return tuple(nodeids[index : index + 100] for index in range(0, len(nodeids), 100))
 
 
-def lane_command(root: Path, spec: ArtifactSnapshot, *, chunk: int | None = None) -> tuple[str, ...]:
+def lane_command(
+    root: Path, spec: ArtifactSnapshot, *, chunk: int | None = None, origin: Any = None
+) -> tuple[str, ...]:
     arguments = ["--root", str(root), "--spec", str(spec.path), "--spec-sha256", spec.sha256]
     if chunk is not None:
         arguments.extend(["--chunk", str(chunk)])
+    if origin:
+        return tuple(origin.bootstrap(root, "infrastructure.project.public_root_lane_worker", *arguments))
     return bootstrap_command(Path(sys.executable), root, "infrastructure.project.public_root_lane_worker", *arguments)
 
 
@@ -112,7 +116,9 @@ def environment(admission: RootCaseAdmission, lane_id: str, root: Path, director
     return prepared_model_environment(env)
 
 
-def admission(reader: SnapshotReader, snapshot: ArtifactSnapshot) -> tuple[dict[str, Any], RootCaseAdmission]:
+def admission(
+    reader: SnapshotReader, snapshot: ArtifactSnapshot, *, origin: Any = None
+) -> tuple[dict[str, Any], RootCaseAdmission]:
     spec = _json(snapshot)
     if (
         set(spec)
@@ -130,11 +136,11 @@ def admission(reader: SnapshotReader, snapshot: ArtifactSnapshot) -> tuple[dict[
             "root_identity",
         }
         or spec["schema_version"] != LAUNCH_SCHEMA
-        or spec["root"] != str(reader.root)
+        or spec["root"] != str(origin.root if origin else reader.root)
         or not isinstance(spec["root_identity"], list)
         or len(spec["root_identity"]) != 2
         or any(type(value) is not int for value in spec["root_identity"])
-        or spec["root_identity"] != _root_identity(reader.root)
+        or spec["root_identity"] != (origin.identity if origin else _root_identity(reader.root))
         or not isinstance(spec["mode"], str)
         or not isinstance(spec["lane"], str)
         or spec["mode"] not in {"core", "live"}
@@ -157,6 +163,6 @@ def admission(reader: SnapshotReader, snapshot: ArtifactSnapshot) -> tuple[dict[
     if snapshot.path != directory / "lane-spec.json":
         raise ValueError("Root lane specification is outside its original run directory")
     bundle = _json(_artifact(reader, spec["census_bundle_artifact"]))
-    admitted = admit_plan(reader, bundle)
+    admitted = admit_plan(reader, bundle, origin=origin)
     selection(admitted, spec["lane"])
     return spec, admitted

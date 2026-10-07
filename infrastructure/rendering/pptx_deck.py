@@ -33,6 +33,8 @@ from infrastructure.rendering.slide_deck import (
     CONTENT_BODY_LINE_HEIGHT_PT,
     CONTENT_HEADER_FONT_SIZE,
     DEFAULT_THEME,
+    MARGIN,
+    PAGE_SIZE,
     DIAGRAM_FIGURE_BOTTOM_PT,
     DIAGRAM_HEADER_FONT_SIZE,
     QUOTE_ATTRIBUTION_FONT_SIZE,
@@ -58,6 +60,8 @@ from infrastructure.rendering.slide_deck import (
     source_url,
     validate_deck_layout,
 )
+
+from infrastructure.rendering._slide_figure_layout import fit_slide_figure
 
 logger = get_logger(__name__)
 
@@ -343,8 +347,6 @@ def _add_content_slide(
 
     body_top = Pt(content_layout.body_top_pt)
     body_height = Pt(content_layout.body_height_pt)
-    if content_layout.figure_y_pt is not None and content_layout.figure_height_pt is not None:
-        figure_top = 5.625 - (content_layout.figure_y_pt + content_layout.figure_height_pt) / 72
     body_box = slide.shapes.add_textbox(Inches(0.55), body_top, prs.slide_width - Inches(1.1), body_height)
     tf = body_box.text_frame
     tf.word_wrap = False
@@ -375,12 +377,16 @@ def _add_content_slide(
         if slide_content.figure_path.is_file():
             if content_layout.figure_y_pt is None or content_layout.figure_height_pt is None:
                 raise RenderingError("Missing content-figure layout", context={"slide_title": slide_content.title})
+            figure_left, figure_bottom, figure_width, figure_height = fit_slide_figure(
+                slide_content.figure_path,
+                (MARGIN, content_layout.figure_y_pt, SLIDE_TEXT_WIDTH_PT, content_layout.figure_height_pt),
+            )
             slide.shapes.add_picture(
                 str(slide_content.figure_path),
-                Inches(1.5),
-                Inches(figure_top),
-                width=prs.slide_width - Inches(3.0),
-                height=Pt(content_layout.figure_height_pt),
+                Pt(figure_left),
+                Pt(PAGE_SIZE[1] - figure_bottom - figure_height),
+                width=Pt(figure_width),
+                height=Pt(figure_height),
             )
         else:
             logger.warning(

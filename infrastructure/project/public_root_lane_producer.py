@@ -34,10 +34,13 @@ from infrastructure.project.public_root_lane_readback import _read_lane_result
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
 
-def coordinator_command(root: Path, snapshot: ArtifactSnapshot) -> tuple[str, ...]:
-    return bootstrap_command(
-        Path(sys.executable),
-        root,
+def coordinator_command(root: Path, snapshot: ArtifactSnapshot, *, origin: Any = None) -> tuple[str, ...]:
+    launch = (
+        (lambda module, *args: origin.bootstrap(root, module, *args))
+        if origin
+        else (lambda module, *args: bootstrap_command(Path(sys.executable), root, module, *args))
+    )
+    return launch(
         __name__,
         "--root",
         str(root),

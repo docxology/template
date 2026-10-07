@@ -43,6 +43,7 @@ from infrastructure.project.public_root_case_contract import (
 )
 from infrastructure.project.public_root_case_readback import _read_collection
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.project.public_root_census_encoding import encode
 
 
 def _worker(root: Path, spec_path: Path, expected_hash: str) -> int:
@@ -96,29 +97,32 @@ def _worker(root: Path, spec_path: Path, expected_hash: str) -> int:
     write_json(
         root,
         receipt,
-        {
-            "schema_version": RECEIPT_SCHEMA,
-            "role": "canonical-collection-only",
-            "run_id": spec["run_id"],
-            "nonce": spec["nonce"],
-            "spec_artifact": {"path": snapshot.relative, "sha256": snapshot.sha256},
-            "original_pytest_exit_code": original,
-            "exit_code": code,
-            "arguments": arguments,
-            "source_identity": spec["source_identity"],
-            "runtime": spec["runtime"],
-            "runtime_locations": spec["runtime_locations"],
-            "census": census,
-            "cases": observer.cases,
-            "nodeids": observer.nodeids,
-            "collection_errors": observer.collection_errors,
-            "collection_skips": observer.collection_skips,
-            "deselected": observer.deselected,
-            "executed_reports": observer.executed_reports,
-            "interrupted": observer.interrupted,
-            "bytecode_verified": census is not None,
-            "diagnostic": diagnostic,
-        },
+        encode(
+            {
+                "schema_version": RECEIPT_SCHEMA,
+                "role": "canonical-collection-only",
+                "run_id": spec["run_id"],
+                "nonce": spec["nonce"],
+                "spec_artifact": {"path": snapshot.relative, "sha256": snapshot.sha256},
+                "original_pytest_exit_code": original,
+                "exit_code": code,
+                "arguments": arguments,
+                "source_identity": spec["source_identity"],
+                "runtime": spec["runtime"],
+                "runtime_locations": spec["runtime_locations"],
+                "census": census,
+                "cases": observer.cases,
+                "nodeids": observer.nodeids,
+                "collection_errors": observer.collection_errors,
+                "collection_skips": observer.collection_skips,
+                "deselected": observer.deselected,
+                "executed_reports": observer.executed_reports,
+                "interrupted": observer.interrupted,
+                "bytecode_verified": census is not None,
+                "diagnostic": diagnostic,
+            }
+        ),
+        compact=True,
     )
     return code
 

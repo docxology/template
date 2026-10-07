@@ -14,7 +14,7 @@ from infrastructure.project.public_acceptance_scope import MissingRootCasePolicy
 from infrastructure.project.public_root_case_admission import admit_plan, lane_blockers
 from infrastructure.project.public_root_case_census import produce_root_census
 from infrastructure.project.public_root_case_contract import _artifact, _json, _root_identity
-from infrastructure.project.public_root_case_units import admitted_units, required_cells
+from infrastructure.project.public_root_case_units import admitted_units, required_cells, optional_external_records
 from infrastructure.project.public_root_lane_coverage import measurement, merge, report
 from infrastructure.project.public_root_lane_contract import write
 from infrastructure.project.public_root_lane_producer import produce_root_lane
@@ -66,7 +66,10 @@ def coordinate(root: Path, spec_path: Path, expected_hash: str) -> int:
     census_sha256 = ""
     expected_cells: list[dict[str, Any]] = []
     selected_units: list[str] = []
+    optional_external: list[dict[str, object]] = []
     diagnostic = ""
+    portable_before = None
+    portable_after = None
     codes: list[int] = []
     measured = measurement(root)
     try:
@@ -78,10 +81,16 @@ def coordinate(root: Path, spec_path: Path, expected_hash: str) -> int:
             codes.append(original if original in {124, 130, 75} else 1)
             raise _CensusStopped("original whole census did not succeed")
         admitted = admit_plan(reader, census_bundle)
+        from infrastructure.project.public_root_portable import observe_origin
+
+        original_census_spec = _json(_artifact(reader, census_bundle["spec_artifact"]))
+        original_census_receipt = _json(_artifact(reader, census_bundle["receipt_artifact"]))
+        portable_before = observe_origin(reader, original_census_spec, original_census_receipt["cases"])
         if admitted.plan.runtime != spec["runtime"]["python_version"] or admitted.plan.platform != sys.platform:
             raise ValueError("original full census belongs to a different selected runtime/platform")
         census_sha256 = admitted.plan.census_sha256
         units = admitted_units(admitted)
+        optional_external = optional_external_records(admitted.policy)
         expected_cells = [asdict(cell) for cell in required_cells(admitted.policy, admitted.prerequisites)]
         selected_units = [
             unit.id
@@ -153,6 +162,9 @@ def coordinate(root: Path, spec_path: Path, expected_hash: str) -> int:
         elif precedence(codes) == 0:
             coverage_binding = write(root, directory / "coverage.json", report(measured), identity)
         verify_runtime_execution(root, root=root, scope="root")
+        portable_after = observe_origin(reader, original_census_spec, original_census_receipt["cases"])
+        if portable_before != portable_after:
+            raise ValueError("original portable custody changed during actual Root cases")
         current = RuntimeScope(root, "root")
         if (
             current.source_identity() != spec["source_identity"]
@@ -179,6 +191,20 @@ def coordinate(root: Path, spec_path: Path, expected_hash: str) -> int:
     code = precedence(codes)
     if time.monotonic() >= deadline and code != 130:
         code = 124
+    if code == 0:
+        from infrastructure.project.public_root_portable import SCHEMA as PORTABLE_SCHEMA
+
+        write(
+            root,
+            directory / "portable-observation.json",
+            {
+                "schema_version": PORTABLE_SCHEMA,
+                "spec_artifact": {"path": snapshot.relative, "sha256": snapshot.sha256},
+                "before": portable_before,
+                "after": portable_after,
+            },
+            identity,
+        )
     write(
         root,
         directory / "runtime-cell.json",
@@ -199,6 +225,7 @@ def coordinate(root: Path, spec_path: Path, expected_hash: str) -> int:
             "census_sha256": census_sha256,
             "required_cells": expected_cells,
             "selected_units": selected_units,
+            "optional_external": optional_external,
             "units": records,
             "coverage_artifact": coverage_binding,
             "exit_code": code,

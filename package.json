@@ -3,6 +3,8 @@
   "private": true,
   "description": "Pinned repository tooling for documentation validation",
   "devDependencies": {
-    "@mermaid-js/mermaid-cli": "11.16.0"
+    "@mathjax/mathjax-newcm-font": "4.0.0",
+    "@mermaid-js/mermaid-cli": "11.16.0",
+    "mathjax": "4.0.0"
   }
 }

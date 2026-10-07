@@ -346,8 +346,6 @@ def test_tiny_positive_budget_does_not_receive_fresh_time(tmp_path: Path, budget
 
 @pytest.mark.parametrize("wrapper", ["run.sh", "secure_run.sh"])
 def test_native_cfg_fifo_is_bounded_before_python_receipt(tmp_path: Path, wrapper: str) -> None:
-    if sys.version_info < (3, 14):
-        pytest.skip("Native no-site venv discovery reads pyvenv.cfg starting in CPython 3.14")
     root = tmp_path / "repo"
     _copy_dispatch(root, public_package=True)
     interpreter, _site = _disposable_prepared_venv(tmp_path)

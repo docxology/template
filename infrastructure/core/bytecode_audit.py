@@ -126,12 +126,11 @@ def install_bytecode_audit(
             raise ValueError("an already-running cached main needs a pre-import execution audit")
     for module in tuple(sys.modules.values()):
         filename = getattr(module, "__file__", None)
-        if (
-            isinstance(filename, str)
-            and filename.endswith(".py")
-            and any(Path(filename).absolute().is_relative_to(root) for root in roots)
-        ):
-            if startup_path is not None and module is main_module and Path(filename).absolute() == startup_path:
+        if not isinstance(filename, str) or not filename.endswith(".py"):
+            continue
+        path = Path(filename).absolute()
+        if any(path.is_relative_to(root) for root in roots):
+            if startup_path is not None and module is main_module and path == startup_path:
                 continue
             raise ValueError("executed-bytecode audit must precede public imports")
     # Every later public import must be bound to a cache written in this fresh
@@ -151,12 +150,14 @@ def install_bytecode_audit(
             return
         code = arguments[0]
         filename = code.co_filename
-        if not filename.endswith(".py") or not any(Path(filename).absolute().is_relative_to(root) for root in roots):
+        if not filename.endswith(".py"):
+            return
+        path = Path(filename).absolute()
+        if not any(path.is_relative_to(root) for root in roots):
             return
         execution_count += 1
         if execution_count > MAX_EXECUTIONS:
             raise ValueError("public module executions exceed the audit ceiling")
-        path = Path(filename).absolute()
         expected = compile(_read_cache(path), code.co_filename, "exec", dont_inherit=True, optimize=sys.flags.optimize)
         if canonical_code(code) != canonical_code(expected):
             relative = next(path.relative_to(root).as_posix() for root in roots if path.is_relative_to(root))

@@ -26,9 +26,9 @@ from infrastructure.rendering.manuscript_discovery import discover_manuscript_fi
 from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 from infrastructure.validation.output.render_formats import render_config_manuscript_dir
 
-NATIVE_SCHEMA = "template-native-format-execution-v2"
+NATIVE_SCHEMA = "template-native-format-execution-v4"
 CONTROL_SCHEMA = "template-native-format-control-v1"
-TOOL_SCHEMA = "template-native-tool-execution-v1"
+TOOL_SCHEMA = "template-native-tool-execution-v2"
 WORKER_MODULE = "infrastructure.reporting.native_format_acceptance_worker"
 PROCESS_SCHEMA = "template-native-format-process-v1"
 
@@ -152,8 +152,38 @@ def create_private_native_directory(root: Path, directory: Path) -> None:
 def validate_native_specification(specification: dict[str, Any]) -> None:
     """Refuse invalid scopes, paths and budgets before any native execution."""
     names = {"scope", "run_id", "directory", "formats", "source_digest", "timeout_seconds", "deadline_monotonic"}
-    if set(specification) != names or specification["scope"] not in PUBLIC_PROJECT_NAMES:
+    if (
+        set(specification) not in (names, names | {"observer_tools"})
+        or specification["scope"] not in PUBLIC_PROJECT_NAMES
+    ):
         raise ValueError("native worker requires an exact canonical public specification")
+    if "observer_tools" in specification:
+        tools = specification["observer_tools"]
+        if not isinstance(tools, dict) or set(tools) != {"epubcheck_jar", "java_executable", "frozen_epub_engine"}:
+            raise ValueError("native observer tools require the exact source-owned selection")
+        if (tools["epubcheck_jar"] is None) != (tools["java_executable"] is None):
+            raise ValueError("native EPUB observation needs both actual tools")
+        for key in ("epubcheck_jar", "java_executable"):
+            value = tools[key]
+            if value is not None and (
+                not isinstance(value, str)
+                or not Path(value).is_absolute()
+                or ".." in Path(value).parts
+                or "\\" in value
+                or "\0" in value
+            ):
+                raise ValueError("native EPUB tool paths must be explicit absolute paths")
+        shared = tools["frozen_epub_engine"]
+        if shared is not None and (
+            tools["epubcheck_jar"] is None
+            or not isinstance(shared, str)
+            or Path(shared).is_absolute()
+            or ".." in Path(shared).parts
+            or "\\" in shared
+            or "\0" in shared
+            or not Path(shared).is_relative_to(Path("output/readiness"))
+        ):
+            raise ValueError("shared native EPUB engine must remain in confined readiness evidence")
     nonce = specification["run_id"]
     if not isinstance(nonce, str) or re.fullmatch(r"[0-9a-f]{32}", nonce) is None:
         raise ValueError("native worker requires its fresh run nonce")

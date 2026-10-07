@@ -57,7 +57,7 @@ remainder is split into an explicit 29-module analytical/figure/formal group,
 an explicit seven-module manuscript/pipeline/precision/configuration group, an
 explicit seven-module rendering/scholarship/semantic-validation group, a
 source-derived semantic sheaf split with explicit eight-node certificate and
-seven-node dependency/evidence/manuscript cohorts, and a computed 13-module
+seven-node dependency/evidence/manuscript cohorts, and a computed
 simulation/support/visualization terminal group. Only that twelfth group reports
 and enforces the floor. The selector validator rejects missing, duplicate,
 invented, dynamically generated, class-based, parametrized, or bare-module
@@ -80,3 +80,14 @@ synthetic timeout or controller-interruption events. Interruption takes preceden
 over timeout, ordinary child failure, and runtime custody refusal. These runtime
 and budget checks do not establish universal
 installed dependency-byte custody.
+
+The noncoverage prepass accounts for an entirely marker-filtered slice only for
+quick/release profiles and only after an actual child exits 5 with pytest's
+explicit zero-selected diagnostic. Missing collection, test failures, timeouts,
+and custody refusals remain fatal; the complete coverage partition still runs.
+
+The verifier's `_verification_launcher.py` may import only its four named
+project-runtime/binding interfaces from the exact-version development SDK
+declared in `pyproject.toml`. Scientific modules still import without that SDK;
+other platform imports, wildcard imports, and sibling-project imports remain
+forbidden by the standalone guard.

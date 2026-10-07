@@ -46,6 +46,8 @@ def declared_units(policy: RootCasePolicy, prerequisites: tuple[Prerequisite, ..
         raise ValueError("Root applicability cannot substitute another obligation kind")
     grouped: dict[tuple[str, tuple[str, ...]], list[str]] = {}
     for family in policy.families:
+        if family.lane == "optional-external":
+            continue  # Exact v3 exception remains in the authenticated full census.
         targets = set(policy.platforms)
         for id_ in family.obligations:
             condition = conditions[id_]
@@ -76,7 +78,8 @@ def declared_units(policy: RootCasePolicy, prerequisites: tuple[Prerequisite, ..
                 platforms,
             )
         )
-    if seen != set(families) or len({unit.id for unit in units}) != len(units):
+    mandatory = {family.id for family in policy.families if family.lane != "optional-external"}
+    if seen != mandatory or len({unit.id for unit in units}) != len(units):
         raise ValueError("Root execution units omitted a declared family or repeated a stable identity")
     return tuple(units)
 
@@ -84,11 +87,37 @@ def declared_units(policy: RootCasePolicy, prerequisites: tuple[Prerequisite, ..
 def admitted_units(admission: RootCaseAdmission) -> tuple[RootCaseUnit, ...]:
     """Bind source-owned applicability to the separately verified complete census."""
     units = declared_units(admission.policy, admission.prerequisites)
-    expected = set(admission.plan.nodeids)
+    expected = {node for lane in admission.plan.lanes if lane.id != "optional-external" for node in lane.nodeids}
     observed = [node for unit in units for node in unit.nodeids]
     if set(observed) != expected or len(observed) != len(expected):
         raise ValueError("Root applicability differs from its separately authenticated full census")
     return units
+
+
+def optional_external_records(policy: RootCasePolicy) -> list[dict[str, object]]:
+    """Visibility for the exact source exception, never execution or pass proof."""
+    obligations = {item.id: item for item in policy.obligations}
+    records: list[dict[str, object]] = []
+    for family in policy.families:
+        if family.lane != "optional-external":
+            continue
+        eligibility = obligations[family.obligations[0]].eligibility
+        if eligibility is None:
+            raise ValueError("optional external operation has no exact source-owned review")
+        records.append(
+            {
+                "family": family.id,
+                "nodeids": [member.nodeid for member in family.members],
+                "status": "unexecuted",
+                "reason": "optional-authenticated-production-catalog-not-certified",
+                "provider": eligibility[0],
+                "operation": eligibility[1],
+                "eligibility_artifact": {"path": eligibility[2], "sha256": eligibility[3]},
+                "source_sha256": family.source_sha256,
+                "metadata_sha256": family.metadata_sha256,
+            }
+        )
+    return records
 
 
 def required_cells(policy: RootCasePolicy, prerequisites: tuple[Prerequisite, ...]) -> tuple[RootCaseCell, ...]:

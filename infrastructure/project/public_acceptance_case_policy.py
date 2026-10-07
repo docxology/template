@@ -9,12 +9,30 @@ from dataclasses import dataclass
 from typing import Any
 
 POLICY_SCHEMA = "template-root-case-policy-v2"
+OPTIONAL_POLICY_SCHEMA = "template-root-case-policy-v3"
+OPTIONAL_MONID_FAMILY = "tests/infra_tests/search/test_monid.py::test_live_discover_includes_price_when_key_present"
 CENSUS_SCHEMA = "template-root-case-census-v2"
 PLAN_SCHEMA = "template-root-case-plan-v2"
-LANES = ("core", "live-unpaid", "private-contract", "external-fixture", "offline-benchmark")
+LANES = (
+    "core",
+    "live-unpaid",
+    "live-unverified",
+    "private-contract",
+    "external-fixture",
+    "offline-benchmark",
+    "optional-external",
+)
 RUNTIMES = ("3.12", "3.13", "3.14")
 PLATFORMS = ("darwin", "linux")
-KINDS = ("local-model", "network-unpaid", "private-provider", "external-fixture", "tool", "platform")
+KINDS = (
+    "local-model",
+    "network-unpaid",
+    "network-unverified",
+    "private-provider",
+    "external-fixture",
+    "tool",
+    "platform",
+)
 _ORDINARY_MARKERS = frozenset(
     {
         "parametrize",
@@ -101,7 +119,7 @@ class CaseMember:
     def parse(cls, value: object, family: str) -> CaseMember:
         row = _object(value, {"nodeid", "parameter_id"}, "case member")
         parameter = row["parameter_id"]
-        if parameter is not None and (not isinstance(parameter, str) or not parameter):
+        if parameter is not None and not isinstance(parameter, str):
             raise ValueError("parameter identity must be explicit text or null")
         expected = family if parameter is None else family + "[" + parameter + "]"
         if row["nodeid"] != expected:
@@ -155,13 +173,14 @@ class Obligation:
         ):
             raise ValueError("required obligation needs a stable public identity and supported kind")
         eligibility = row["eligibility"]
-        if row["kind"] == "network-unpaid":
+        if row["kind"] in {"network-unpaid", "network-unverified"}:
             proof = _object(
                 eligibility,
                 {"provider", "operation", "billing", "public_reference", "reference_sha256"},
                 "unpaid operation eligibility",
             )
-            if proof["billing"] != "unpaid" or any(
+            billing = "unpaid" if row["kind"] == "network-unpaid" else "unverified"
+            if proof["billing"] != billing or any(
                 not isinstance(proof[key], str) or not proof[key].strip() for key in ("provider", "operation")
             ):
                 raise ValueError("network markers cannot grant unpaid provider/operation eligibility")
@@ -195,7 +214,7 @@ class RootCasePolicy:
     @classmethod
     def parse(cls, value: object) -> RootCasePolicy:
         row = _object(value, {"schema_version", "runtimes", "platforms", "families", "obligations"}, "Root case policy")
-        if row["schema_version"] != POLICY_SCHEMA:
+        if row["schema_version"] not in {POLICY_SCHEMA, OPTIONAL_POLICY_SCHEMA}:
             raise ValueError("unsupported Root case policy schema")
         runtimes = _strings(row["runtimes"], "required runtimes")
         platforms = _strings(row["platforms"], "required platforms")
@@ -210,6 +229,23 @@ class RootCasePolicy:
         ):
             raise ValueError("Root policy has duplicate families or obligations")
         declared = {item.id for item in obligations}
+        optional = [family for family in families if family.lane == "optional-external"]
+        for family in optional:
+            obligation = next((item for item in obligations if item.id == "monid-discover"), None)
+            if (
+                row["schema_version"] != OPTIONAL_POLICY_SCHEMA
+                or family.id != OPTIONAL_MONID_FAMILY
+                or family.obligations != ("monid-discover",)
+                or family.members != (CaseMember(OPTIONAL_MONID_FAMILY, None),)
+                or obligation is None
+                or obligation.kind != "network-unverified"
+                or obligation.eligibility is None
+                or obligation.eligibility[:2] != ("monid", "POST /v1/discover")
+                or [item.id for item in families if "monid-discover" in item.obligations] != [OPTIONAL_MONID_FAMILY]
+            ):
+                raise ValueError("optional external policy permits only the exact reviewed Monid catalog case")
+        if optional and len(optional) == len(families):
+            raise ValueError("optional external inventory cannot replace mandatory Root cases")
         used = {item for family in families for item in family.obligations}
         if used != declared:
             raise ValueError("every required obligation must bind a case; unknown obligations are refused")
@@ -280,9 +316,13 @@ def compile_case_plan(policy: RootCasePolicy, census: object, *, source_identity
         if set(markers) - (_ORDINARY_MARKERS | _MARKER_KINDS.keys()):
             raise ValueError("unknown Root marker needs explicit reviewed classification")
         required = {_MARKER_KINDS[marker] for marker in markers if marker in _MARKER_KINDS}
+        if "network-unpaid" in required and "network-unverified" in {kinds[item] for item in family.obligations}:
+            required = required - {"network-unpaid"} | {"network-unverified"}
         if not required.issubset({kinds[item] for item in family.obligations}):
             raise ValueError("Root policy cannot waive observed live/private/external/tool obligations")
         assigned = {kinds[item] for item in family.obligations}
+        if ("network-unverified" in assigned) != (family.lane in {"live-unverified", "optional-external"}):
+            raise ValueError("unverified network eligibility requires its permanently blocked lane")
         if family.lane in {"core", "offline-benchmark"} and (required | assigned) - {"tool", "platform"}:
             raise ValueError("an opt-in capability cannot be reclassified as ordinary core execution")
         if family.lane == "private-contract" and "private-provider" not in required:

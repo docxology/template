@@ -35,7 +35,7 @@ PDF_POLICY: dict[str, Any] = {
     "max_chars": 2_000_000,
     "max_page_pixels": 60_000_000,
     "max_raster_bytes": 256 * 1024 * 1024,
-    "assurance": "ordered supported text presence; mapped word glyph bounds and localized ink only",
+    "assurance": "ordered supported text presence; all extracted word glyph bounds and localized ink only",
 }
 CONTROL_SOURCE = b"# Invented public measurement\n\nMeasured offset -3.25 mV.\n"
 PDF_CONTROL_CODES: dict[str, str | None] = {
@@ -178,7 +178,7 @@ def inspect_pdf_content(
                 or abs(image.height - (media[3] - media[1]) * 150 / 72) > 2
             ):
                 raise ValueError("PDF localized pixels differ from admitted 150-dpi page geometry")
-            for index in sorted(required_words):
+            for index in range(len(words)):
                 word = words[index]
                 if word["page"] != page_number:
                     continue
@@ -190,7 +190,7 @@ def inspect_pdf_content(
                     "min_font_pt": word["min_font_pt"],
                     "fonts": word["fonts"],
                 }
-                if word["min_font_pt"] < PDF_POLICY["min_supported_font_pt"]:
+                if index in required_words and word["min_font_pt"] < PDF_POLICY["min_supported_font_pt"]:
                     findings.append({"code": "pdf.layout.font", "word_index": index})
                 if word["geometry_supported"]:
                     crop = page_row["crop_box_pt"]
@@ -241,6 +241,8 @@ def inspect_pdf_content(
         "token_count": len(tokens),
         "matches": matches,
         "supported_words": observed_words,
+        "observed_glyph_words": len(observed_words),
+        "source_required_words": len(required_words),
         "findings": findings,
         "blockers": blockers,
         "status": "fail" if findings else "blocked" if blockers else "pass",

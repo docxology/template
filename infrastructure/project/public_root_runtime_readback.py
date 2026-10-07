@@ -13,7 +13,7 @@ from typing import Any
 from infrastructure.project.public_root_case_admission import admit_plan
 from infrastructure.project.public_root_case_contract import _artifact, _json
 from infrastructure.project.public_root_case_readback import _within_deadline
-from infrastructure.project.public_root_case_units import admitted_units, required_cells
+from infrastructure.project.public_root_case_units import admitted_units, required_cells, optional_external_records
 from infrastructure.project.public_root_lane_coverage import measurement, merge, report
 from infrastructure.project.public_root_lane_readback import _zero, read_lane
 from infrastructure.project.public_root_runtime_contract import (
@@ -26,7 +26,7 @@ from infrastructure.project.public_root_runtime_contract import (
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
-def read_runtime_cohort(reader: SnapshotReader, bundle: object) -> dict[str, Any]:
+def read_runtime_cohort(reader: SnapshotReader, bundle: object, *, origin: Any = None) -> dict[str, Any]:
     """Validate the full operational cohort and every original passing applicability unit.
 
     This runs only in the actual selected interpreter. Its original full census
@@ -42,12 +42,12 @@ def read_runtime_cohort(reader: SnapshotReader, bundle: object) -> dict[str, Any
     ):
         raise ValueError("Root runtime requires its exact successful original guarded cohort bundle")
     snapshot = _artifact(reader, bundle["spec_artifact"])
-    spec = selection(reader, snapshot)
+    spec = selection(reader, snapshot, origin=origin)
     directory = reader.root / spec["directory"]
     native_snapshot = _artifact(reader, bundle["process_artifact"])
     result_snapshot = _artifact(reader, bundle["result_artifact"])
     native, result = _json(native_snapshot), _json(result_snapshot)
-    _zero(native, worker_command(Path(sys.executable), reader.root, snapshot))
+    _zero(native, worker_command(Path(sys.executable), reader.root, snapshot, origin=origin))
     if (
         set(native)
         != {
@@ -97,6 +97,7 @@ def read_runtime_cohort(reader: SnapshotReader, bundle: object) -> dict[str, Any
             "census_sha256",
             "required_cells",
             "selected_units",
+            "optional_external",
             "units",
             "coverage_artifact",
             "exit_code",
@@ -119,7 +120,7 @@ def read_runtime_cohort(reader: SnapshotReader, bundle: object) -> dict[str, Any
             )
         )
         or result["spec_artifact"] != bundle["spec_artifact"]
-        or result["platform"] != sys.platform
+        or result["platform"] != (origin.platform if origin else sys.platform)
         or type(result["exit_code"]) is not int
         or result["exit_code"] != 0
         or result["diagnostic"] != ""
@@ -131,7 +132,7 @@ def read_runtime_cohort(reader: SnapshotReader, bundle: object) -> dict[str, Any
     if census_snapshot.path != directory / "census-bundle.json":
         raise ValueError("Root runtime full census is outside its original cohort")
     census_bundle = _json(census_snapshot)
-    admitted = admit_plan(reader, census_bundle)
+    admitted = admit_plan(reader, census_bundle, origin=origin)
     units = admitted_units(admitted)
     selected = [
         unit.id
@@ -150,6 +151,7 @@ def read_runtime_cohort(reader: SnapshotReader, bundle: object) -> dict[str, Any
         or result["required_cells"] != cells
         or not selected
         or result["selected_units"] != selected
+        or result["optional_external"] != optional_external_records(admitted.policy)
         or not isinstance(result["units"], list)
         or len(result["units"]) != len(units)
     ):
@@ -178,7 +180,7 @@ def read_runtime_cohort(reader: SnapshotReader, bundle: object) -> dict[str, Any
         if not attempted:
             blockers = (
                 [{"id": unit.id, "reason": "required-applicable-platform-unavailable"}]
-                if sys.platform not in unit.platforms
+                if (origin.platform if origin else sys.platform) not in unit.platforms
                 else [{"id": unit.id, "reason": "explicit-live-mode-required"}]
             )
             if row["exit_code"] != 75 or row["bundle_artifact"] is not None or row["blockers"] != blockers:
@@ -190,7 +192,7 @@ def read_runtime_cohort(reader: SnapshotReader, bundle: object) -> dict[str, Any
         if lane_snapshot.path != directory / f"unit-{index:03d}" / "runtime-lane-bundle.json":
             raise ValueError("Root runtime lane bundle is outside its original applicability unit")
         lane_bundle = _json(lane_snapshot)
-        lane = read_lane(reader, lane_bundle)
+        lane = read_lane(reader, lane_bundle, origin=origin)
         if lane["lane"] != unit.id or lane["selected_nodes"] != list(unit.nodeids) or lane["mode"] != spec["mode"]:
             raise ValueError("Root runtime actual executed unit differs from source-owned selection")
         lane_spec = _json(_artifact(reader, lane_bundle["spec_artifact"]))
@@ -221,6 +223,7 @@ def read_runtime_cohort(reader: SnapshotReader, bundle: object) -> dict[str, Any
         "census_sha256": result["census_sha256"],
         "required_cells": cells,
         "selected_units": selected,
+        "optional_external": optional_external_records(admitted.policy),
         "passed_counts": counts,
         "coverage_artifact": result["coverage_artifact"],
         "coverage": coverage,

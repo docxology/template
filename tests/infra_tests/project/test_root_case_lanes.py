@@ -113,7 +113,9 @@ def genuine_lane(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict[s
     )
     first = _epoch_call(produce_root_census, root, root / "output/readiness/initial", timeout_seconds=180)
     assert first["exit_code"] == 0, first
-    rows = json.loads((root / first["receipt_artifact"]["path"]).read_bytes())["census"]["families"]
+    from infrastructure.project.public_root_case_contract import _json
+
+    rows = _json(SnapshotReader(root).read(first["receipt_artifact"]["path"]))["census"]["families"]
     assignments = {"tests/test_owned.py::test_core": "core", "tests/test_owned.py::TestLive::test_model": "live-unpaid"}
     assert {row["id"] for row in rows} == set(assignments)
     policy = {

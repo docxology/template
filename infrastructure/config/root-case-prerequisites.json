@@ -1,0 +1,230 @@
+{
+  "schema_version": "template-root-case-prerequisites-v2",
+  "obligations": [
+    {
+      "id": "local-ollama",
+      "kind": "local-model",
+      "environment_keys": [],
+      "executables": [
+        "ollama"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "latex",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "xelatex",
+        "kpsewhich"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "pandoc",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "pandoc"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "mermaid",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "mmdc"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "node",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "node"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "git",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "git"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "rsync",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "rsync"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "pdf-text",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "pdftotext"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "linux-proc",
+      "kind": "platform",
+      "environment_keys": [],
+      "executables": [],
+      "platforms": [
+        "linux"
+      ],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "private-contract-fixture",
+      "kind": "private-provider",
+      "environment_keys": [],
+      "executables": [],
+      "platforms": [],
+      "paths": [
+        "tests/fixtures/private_project/cogant/tools/audit_manuscript_crossrefs.py",
+        "tests/fixtures/private_project/cogant/tools/check_coverage_table.py",
+        "tests/fixtures/private_project/cogant/manuscript"
+      ],
+      "packages": []
+    },
+    {
+      "id": "external-codebases",
+      "kind": "external-fixture",
+      "environment_keys": [],
+      "executables": [],
+      "platforms": [],
+      "paths": [
+        "tests/fixtures/real_codebases/requests",
+        "tests/fixtures/real_codebases/fastapi"
+      ],
+      "packages": []
+    },
+    {
+      "id": "timeseries-data",
+      "kind": "external-fixture",
+      "environment_keys": [],
+      "executables": [],
+      "platforms": [],
+      "paths": [
+        "tests/fixtures/timeseries"
+      ],
+      "packages": [
+        "statsmodels",
+        "lightgbm"
+      ]
+    },
+    {
+      "id": "monid-discover",
+      "kind": "network-unverified",
+      "environment_keys": [
+        "MONID_API_KEY"
+      ],
+      "executables": [],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "chrome-renderer",
+      "kind": "tool",
+      "executables": [
+        "mmdc"
+      ],
+      "environment_keys": [
+        "CHROME_EXECUTABLE_PATH"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "python-format-distributions",
+      "kind": "tool",
+      "executables": [
+        "python"
+      ],
+      "environment_keys": [],
+      "platforms": [],
+      "paths": [],
+      "packages": [
+        "reportlab",
+        "pypdf",
+        "cryptography",
+        "qrcode",
+        "python-barcode",
+        "PyYAML"
+      ]
+    },
+    {
+      "id": "pandoc-crossref",
+      "kind": "tool",
+      "executables": [
+        "pandoc-crossref"
+      ],
+      "environment_keys": [],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "lua-latex",
+      "kind": "tool",
+      "executables": [
+        "lualatex"
+      ],
+      "environment_keys": [],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "gh-cli",
+      "kind": "tool",
+      "executables": [
+        "gh"
+      ],
+      "environment_keys": [],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "uv-cli",
+      "kind": "tool",
+      "executables": [
+        "uv"
+      ],
+      "environment_keys": [],
+      "platforms": [],
+      "paths": [],
+      "packages": []
+    }
+  ]
+}

@@ -256,7 +256,7 @@ Runs daily at 01:00 UTC using `actions/stale@v10.3.0`.
 
 ## Release Workflow (`release.yml`)
 
-Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input).
+Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input). Both triggers serialize by the selected tag and preserve in-flight publication; a manual dispatch from a different branch cannot race the same tag push.
 
 1. Resolves the requested tag before checkout and checks out that exact ref
 2. Proves `HEAD` equals the dereferenced tag commit and runs the root release contract

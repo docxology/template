@@ -33,11 +33,16 @@ def _within_deadline(value: object, timeout: int) -> bool:
 
 
 def _observe_collection(
-    reader: SnapshotReader, spec_binding: object, process_binding: object, receipt_binding: object
+    reader: SnapshotReader,
+    spec_binding: object,
+    process_binding: object,
+    receipt_binding: object,
+    *,
+    origin: Any = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """One current observation binds specification, native process and metadata."""
     spec_snapshot = _artifact(reader, spec_binding)
-    spec = _spec(reader, spec_snapshot, reader_context=True)
+    spec = _spec(reader, spec_snapshot, reader_context=True, origin=origin)
     process_snapshot, receipt_snapshot = _artifact(reader, process_binding), _artifact(reader, receipt_binding)
     process, receipt = _json(process_snapshot), _json(receipt_snapshot)
     root, directory = reader.root, reader.root / spec["directory"]
@@ -90,7 +95,7 @@ def _observe_collection(
         or process.get("nonce") != spec["nonce"]
         or process.get("spec_artifact") != spec_binding
         or process.get("receipt_artifact") != receipt_binding
-        or process.get("command") != list(census_command(root, directory, original_binding))
+        or process.get("command") != list(census_command(root, directory, original_binding, origin=origin))
         or type(process.get("returncode")) is not int
         or process["returncode"] != 0
         or type(process.get("original_returncode")) is not int
@@ -107,7 +112,12 @@ def _observe_collection(
         or receipt.get("source_identity") != spec["source_identity"]
         or receipt.get("runtime") != spec["runtime"]
         or receipt.get("runtime_locations") != spec["runtime_locations"]
-        or receipt.get("arguments") != _pytest_arguments(root, directory, spec["test_files"])
+        or receipt.get("arguments")
+        != _pytest_arguments(
+            origin.root if origin else root,
+            (origin.root / spec["directory"]) if origin else directory,
+            spec["test_files"],
+        )
         or type(receipt.get("original_pytest_exit_code")) is not int
         or receipt["original_pytest_exit_code"] != 0
         or type(receipt.get("exit_code")) is not int
@@ -137,25 +147,27 @@ def _observe_collection(
             raise ValueError("canonical collection requires exact case metadata fields")
         for key in ("function_origin", "module_origin", "class_origin"):
             if case[key] is not None or key != "class_origin":
-                _origin(case[key], spec["source_hashes"], spec["runtime_locations"])
+                _origin(case[key], spec["source_hashes"], spec["runtime_locations"], context=origin)
         if not isinstance(case["markers"], list) or not isinstance(case["fixtures"], dict):
             raise ValueError("case marker and fixture declarations are incomplete")
         for marker in case["markers"]:
             if not isinstance(marker, dict) or set(marker) != {"name", "args", "kwargs", "inherited_from", "origin"}:
                 raise ValueError("case marker inheritance is incomplete")
-            _origin(marker["origin"], spec["source_hashes"], spec["runtime_locations"])
+            _origin(marker["origin"], spec["source_hashes"], spec["runtime_locations"], context=origin)
         for definitions in case["fixtures"].values():
             if not isinstance(definitions, list):
                 raise ValueError("case fixture definition list is incomplete")
             for definition in definitions:
                 if not isinstance(definition, dict) or set(definition) != {"scope", "baseid", "dependencies", "origin"}:
                     raise ValueError("case fixture closure is incomplete")
-                _origin(definition["origin"], spec["source_hashes"], spec["runtime_locations"])
+                _origin(definition["origin"], spec["source_hashes"], spec["runtime_locations"], context=origin)
     # Reuse normalization only; these assignments do not purport to execute pytest.
     normalized = RootCaseObserver(reader, spec["source_hashes"])
     normalized.nodeids, normalized.cases = receipt["nodeids"], receipt["cases"]
     census = normalized.census(
-        source_identity=spec["source_identity"], runtime=spec["runtime"]["python_version"], platform=sys.platform
+        source_identity=spec["source_identity"],
+        runtime=spec["runtime"]["python_version"],
+        platform=origin.platform if origin else sys.platform,
     )
     if receipt.get("census") != census or not reader.unchanged():
         raise ValueError("canonical collection metadata or source changed after original observation")
@@ -163,13 +175,20 @@ def _observe_collection(
 
 
 def _read_collection(
-    reader: SnapshotReader, spec_binding: object, process_binding: object, receipt_binding: object
+    reader: SnapshotReader,
+    spec_binding: object,
+    process_binding: object,
+    receipt_binding: object,
+    *,
+    origin: Any = None,
 ) -> dict[str, Any]:
     """Return a candidate after a single full independent current observation."""
-    return _observe_collection(reader, spec_binding, process_binding, receipt_binding)[1]
+    return _observe_collection(reader, spec_binding, process_binding, receipt_binding, origin=origin)[1]
 
 
-def read_root_census(reader: SnapshotReader, bundle: object, policy: RootCasePolicy) -> dict[str, Any]:
+def read_root_census(
+    reader: SnapshotReader, bundle: object, policy: RootCasePolicy, *, origin: Any = None
+) -> dict[str, Any]:
     """Authenticate processes and compare all metadata to the reviewed full policy.
 
     The policy admission layer must load this baseline from confined source-owned
@@ -191,7 +210,7 @@ def read_root_census(reader: SnapshotReader, bundle: object, policy: RootCasePol
     original_snapshot = _artifact(reader, outer.get("bundle_artifact"))
     original_bundle = _json(original_snapshot)
     spec, census = _observe_collection(
-        reader, bundle["spec_artifact"], bundle["process_artifact"], bundle["receipt_artifact"]
+        reader, bundle["spec_artifact"], bundle["process_artifact"], bundle["receipt_artifact"], origin=origin
     )
     directory = reader.root / spec["directory"]
     duration = outer.get("duration_seconds")
@@ -233,7 +252,11 @@ def read_root_census(reader: SnapshotReader, bundle: object, policy: RootCasePol
         or outer["run_id"] != spec["run_id"]
         or outer["nonce"] != spec["nonce"]
         or outer["command"]
-        != list(coordinator_command(reader.root, directory, spec["timeout_seconds"], spec["run_id"], spec["nonce"]))
+        != list(
+            coordinator_command(
+                reader.root, directory, spec["timeout_seconds"], spec["run_id"], spec["nonce"], origin=origin
+            )
+        )
         or type(outer["returncode"]) is not int
         or outer["returncode"] != 0
         or type(outer["original_returncode"]) is not int

@@ -61,7 +61,14 @@ def validate_root_cases(requirement: Requirement, details: dict[str, Any], reade
     """Re-run the true source-audited original reader, never reinterpret another Python minor."""
     if requirement.scope != "root" or requirement.kind not in {"root-policy", "root-case", "coverage"}:
         raise ValueError("Root v2 acceptance requires an exact source-owned Root case or coverage requirement")
-    actual = read_selected_runtime(reader, details.get("root_case_bundle_artifact"))
+    if reader.hosted_origin is not None:
+        from infrastructure.project.public_root_portable import read_portable_runtime
+
+        actual = read_portable_runtime(
+            reader, details.get("portable_root_artifact"), details.get("root_case_bundle_artifact")
+        )
+    else:
+        actual = read_selected_runtime(reader, details.get("root_case_bundle_artifact"))
     policy, _, _, prerequisites = load_policy(reader)
     probe = _json(_artifact(reader, details.get("runtime_artifact")))
     if (

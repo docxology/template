@@ -23,10 +23,10 @@ permissions:
   contents: write  # Required to create the GitHub Release
   actions: read  # Read only the explicitly selected acceptance run/artifact
 
-# Serialize releases per ref; never cancel an in-flight release (a half-cancelled
-# release is worse than a queued one).
+# Serialize by the selected tag across tag pushes and manual dispatches.
+# Never cancel an in-flight release: publication may already have started.
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ inputs.tag || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -148,16 +148,23 @@ jobs:
           gh api --hostname github.com "repos/$GITHUB_REPOSITORY/actions/artifacts/$ACCEPTANCE_ARTIFACT_ID/zip" \
             > "$RUNNER_TEMP/root-release-acceptance.zip"
           uv run --no-sync --offline python -m infrastructure.publishing.release_acceptance archive \
-            --archive "$RUNNER_TEMP/root-release-acceptance.zip"
+            --archive "$RUNNER_TEMP/root-release-acceptance.zip" \
+            --artifact-metadata "$RUNNER_TEMP/root-release-acceptance-artifact.json"
 
       - name: Verify every required candidate acceptance gate
         if: steps.acceptance.outputs.required == 'true'
         env:
           ACCEPTANCE_RECEIPT_SHA256: ${{ inputs.acceptance_receipt_sha256 }}
+          ACCEPTANCE_RUN_ID: ${{ inputs.acceptance_run_id }}
+          ACCEPTANCE_ARTIFACT_ID: ${{ inputs.acceptance_artifact_id }}
         run: |
           set -euo pipefail
           uv run --no-sync --offline python -m infrastructure.publishing.release_acceptance candidate \
-            --revision "$(git rev-parse HEAD)" --receipt-sha256 "$ACCEPTANCE_RECEIPT_SHA256"
+            --revision "$(git rev-parse HEAD)" --receipt-sha256 "$ACCEPTANCE_RECEIPT_SHA256" \
+            --repository "$GITHUB_REPOSITORY" \
+            --run-id "$ACCEPTANCE_RUN_ID" --artifact-id "$ACCEPTANCE_ARTIFACT_ID" \
+            --run-metadata "$RUNNER_TEMP/root-release-acceptance-run.json" \
+            --artifact-metadata "$RUNNER_TEMP/root-release-acceptance-artifact.json"
 
       - name: Verify core test contract on tagged SHA
         run: |

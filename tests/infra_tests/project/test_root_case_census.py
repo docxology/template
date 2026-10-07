@@ -22,7 +22,7 @@ from infrastructure.project.public_acceptance_case_observer import RootCaseObser
 from infrastructure.project.public_acceptance_case_policy import POLICY_SCHEMA, RootCasePolicy
 from infrastructure.project.public_root_case_census import produce_root_census
 from infrastructure.project.public_root_case_readback import read_root_census
-from infrastructure.project.public_root_case_contract import census_command
+from infrastructure.project.public_root_case_contract import census_command, _json
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 pytestmark = pytest.mark.timeout(240)
@@ -55,7 +55,8 @@ def genuine_census(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict
     )
     (root / "tests/conftest.py").write_text(
         "from pathlib import Path\nimport pytest\n@pytest.fixture(autouse=True)\ndef owned_fixture():\n"
-        f"    Path({str(marker)!r}).write_text('fixture executed')\n",
+        f"    Path({str(marker)!r}).write_text('fixture executed')\n"
+        "@pytest.fixture(autouse=True)\ndef scope(owned_fixture):\n    return 'owned fixture named scope'\n",
         encoding="utf-8",
     )
     (root / "tests/test_owned.py").write_text(
@@ -68,7 +69,7 @@ def genuine_census(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, dict
     )
     bundle = _produce_control(root, root / "output/readiness/original", timeout_seconds=180)
     assert bundle["exit_code"] == 0, bundle
-    candidate = json.loads((root / bundle["receipt_artifact"]["path"]).read_bytes())["census"]
+    candidate = _json(SnapshotReader(root).read(bundle["receipt_artifact"]["path"]))["census"]
     assignments = {"tests/test_owned.py::test_core": "core", "tests/test_owned.py::TestLive::test_model": "live-unpaid"}
     assert {family["id"] for family in candidate["families"]} == set(assignments)
     policy = RootCasePolicy.parse(
@@ -98,12 +99,13 @@ def test_genuine_census_readback_preserves_original_process_and_source(
 ) -> None:
     root, bundle, policy = genuine_census
     process = json.loads((root / bundle["process_artifact"]["path"]).read_text())
-    receipt = json.loads((root / bundle["receipt_artifact"]["path"]).read_text())
+    receipt = _json(SnapshotReader(root).read(bundle["receipt_artifact"]["path"]))
     assert process["returncode"] == process["original_returncode"] == 0
     assert process["timed_out"] is process["custody_refused"] is False
     assert receipt["original_pytest_exit_code"] == receipt["exit_code"] == receipt["executed_reports"] == 0
     assert receipt["bytecode_verified"] is True and receipt["interrupted"] is False
     assert receipt["role"] == "canonical-collection-only"
+    assert all("scope" in case["fixtures"] for case in receipt["cases"])
 
 
 def test_readback_observes_actual_implementation_once_per_current_boundary(
@@ -230,7 +232,14 @@ def test_consistently_rehashed_evidence_still_cannot_waive_original_contract(
     outer = json.loads(paths["coordinator"].read_bytes())
     paths["bundle"] = root / outer["bundle_artifact"]["path"]
     original = {kind: path.read_bytes() for kind, path in paths.items()}
-    values = {kind: json.loads(raw) for kind, raw in original.items()}
+    values = {
+        kind: (
+            _json(SnapshotReader(root).read(paths[kind].relative_to(root).as_posix()))
+            if kind == "receipt"
+            else json.loads(raw)
+        )
+        for kind, raw in original.items()
+    }
     spec, process, receipt, outer = values["spec"], values["process"], values["receipt"], values["coordinator"]
     if fault == "missing-source-file":
         spec["test_files"] = []

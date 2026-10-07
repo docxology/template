@@ -11,6 +11,17 @@ not to the contents of any specific workspace.
 
 ## [4.0.0] - Unreleased
 
+- Preserve original bounded process outcomes and source/runtime custody in Root,
+  auxiliary and native acceptance readers, including portable replay after the
+  producer paths are unavailable. Authenticate hosted release handoffs against
+  current repository, run, artifact and exact source revision observations.
+- Add source-only scientific, Office and print reference components with genuine
+  native regression controls. Keep unsupported source/layout obligations blocked;
+  these components do not establish complete release acceptance.
+- Reject malformed QR outcome/custody records, retain installed scanner/app file
+  observations without redistributing their binaries, and bound native raster
+  and image decoding before allocation.
+
 - Raise the platform and public exemplar runtime floor to Python 3.12; retain
   Python 3.14 as the local default and prepare CI for Python 3.12–3.14.
 - Resolve execution into immutable contracts with stable stage identities;

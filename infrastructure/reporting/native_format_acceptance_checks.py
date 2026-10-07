@@ -6,6 +6,7 @@ import hashlib
 import math
 import shutil
 import re
+import stat
 import time
 import zipfile
 from html.parser import HTMLParser
@@ -162,8 +163,20 @@ def native_tool_record(
         != digest
     ):
         raise ValueError("native executable changed during tool observation")
+    from infrastructure.reporting.native_format_portable_custody import EXECUTABLE_SCHEMA
+
     payload = {
         "schema_version": TOOL_SCHEMA,
+        "executable_observation_before": {
+            "schema_version": EXECUTABLE_SCHEMA,
+            "path": str(executable),
+            "sha256": digest,
+        },
+        "executable_observation_after": {
+            "schema_version": EXECUTABLE_SCHEMA,
+            "path": str(executable),
+            "sha256": digest,
+        },
         "run_id": run_id,
         "tool": name,
         "purpose": purpose,
@@ -198,6 +211,21 @@ def audit_pdf_raster(
     ordinal: int,
 ) -> dict[str, Any]:
     """Rasterize every actual page at 150 dpi and bind native font observations."""
+    if type(observation.get("pages")) is not int or not 1 <= observation["pages"] <= 500:
+        raise ValueError("native raster requires a finite positive page count")
+    boxes = observation.get("page_boxes_pt")
+    if not isinstance(boxes, list) or len(boxes) != observation["pages"]:
+        raise ValueError("native raster requires complete original page geometry")
+    for box in boxes:
+        if (
+            not isinstance(box, list)
+            or len(box) != 4
+            or any(type(value) not in (int, float) or not math.isfinite(value) for value in box)
+            or box[2] <= box[0]
+            or box[3] <= box[1]
+            or math.ceil((box[2] - box[0]) * 150 / 72) * math.ceil((box[3] - box[1]) * 150 / 72) > 60_000_000
+        ):
+            raise ValueError("native raster page exceeds finite geometry/pixel budget")
     prefix = directory / f"raster-{ordinal:04d}"
     # External tools consume the exact already-admitted bytes, never a second
     # read of mutable renderer output. The private input remains bound evidence.
@@ -220,8 +248,6 @@ def audit_pdf_raster(
         tools.append(record["artifact"])
         if record["exit_code"] != 0 or record["original_exit_code"] != 0:
             raise ValueError(f"real native {name} failed; existing artifact bytes cannot grant acceptance")
-    from PIL import Image, ImageStat
-
     numbered = []
     for path in directory.glob(prefix.name + "-*.png"):
         match = re.fullmatch(re.escape(prefix.name) + r"-([0-9]+)\.png", path.name)
@@ -234,10 +260,44 @@ def audit_pdf_raster(
     paths = [path for _, path in numbered]
     if len(paths) != observation["pages"]:
         raise ValueError("native raster page collection is incomplete")
-    rasters = []
+    rasters = _read_pdf_rasters(reader, paths, deadline=deadline)
+    if not reader.unchanged():
+        raise ValueError("native raster bytes changed during inspection")
+    return {
+        "dpi": 150,
+        "input_artifact": {"path": consumed.relative, "sha256": consumed.sha256},
+        "rasters": rasters,
+        "tool_artifacts": tools,
+    }
+
+
+def _read_pdf_rasters(reader: SnapshotReader, paths: list[Path], *, deadline: float) -> list[dict[str, Any]]:
+    """Admit the encoded closure and each image header before decoding pixels."""
+    from PIL import Image, ImageStat
+
+    if not 1 <= len(paths) <= 500:
+        raise ValueError("native raster page collection exceeds finite budget")
+    metadata = []
+    total = 0
     for path in paths:
-        snapshot = reader.read(path.relative_to(root).as_posix())
+        confined = reader.public_path(path.relative_to(reader.root).as_posix())
+        observed = confined.lstat()
+        if not stat.S_ISREG(observed.st_mode) or not 0 < observed.st_size <= 64 * 1024 * 1024:
+            raise ValueError("native raster file exceeds finite encoded byte budget")
+        total += observed.st_size
+        if total > 250 * 1024 * 1024:
+            raise ValueError("native raster closure exceeds finite encoded byte budget")
+        metadata.append((confined, reader._identity(confined)))
+    rasters = []
+    for path, identity in metadata:
+        if time.monotonic() >= deadline:
+            raise TimeoutError("native raster inspection exhausted its original deadline")
+        snapshot = reader.read(path.relative_to(reader.root).as_posix())
+        if snapshot.identity != identity:
+            raise ValueError("native raster changed after budget admission")
         with Image.open(BytesIO(snapshot.content)) as image:
+            if image.format != "PNG" or image.width * image.height > 60_000_000:
+                raise ValueError("native raster page exceeds finite pixel budget")
             image.load()
             variance = sum(ImageStat.Stat(image.convert("RGB")).var)
             if not math.isfinite(variance) or variance <= 0:
@@ -251,11 +311,4 @@ def audit_pdf_raster(
                     "variance": variance,
                 }
             )
-    if not reader.unchanged():
-        raise ValueError("native raster bytes changed during inspection")
-    return {
-        "dpi": 150,
-        "input_artifact": {"path": consumed.relative, "sha256": consumed.sha256},
-        "rasters": rasters,
-        "tool_artifacts": tools,
-    }
+    return rasters

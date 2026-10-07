@@ -7,7 +7,7 @@ import re
 import sys
 import sysconfig
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from infrastructure.core.implementation_custody import (
     capture_implementation_custody,
@@ -73,13 +73,16 @@ def _runtime_locations() -> dict[str, str]:
     return {name: str(Path(sysconfig.get_path(name)).resolve()) for name in ("purelib", "platlib", "stdlib")}
 
 
-def census_command(root: Path, directory: Path, binding: dict[str, str]) -> tuple[str, ...]:
+def census_command(root: Path, directory: Path, binding: dict[str, str], *, origin: Any = None) -> tuple[str, ...]:
     """Reconstruct the exact isolated source-owned collection worker invocation."""
     if root / binding["path"] != directory / "census-spec.json":
         raise ValueError("canonical census command requires its exact admitted specification path")
-    return bootstrap_command(
-        Path(sys.executable),
-        root,
+    launch = (
+        (lambda module, *args: origin.bootstrap(root, module, *args))
+        if origin
+        else (lambda module, *args: bootstrap_command(Path(sys.executable), root, module, *args))
+    )
+    return launch(
         "infrastructure.project.public_root_case_census",
         "--root",
         str(root),
@@ -90,11 +93,16 @@ def census_command(root: Path, directory: Path, binding: dict[str, str]) -> tupl
     )
 
 
-def coordinator_command(root: Path, directory: Path, timeout: int, run_id: str, nonce: str) -> tuple[str, ...]:
+def coordinator_command(
+    root: Path, directory: Path, timeout: int, run_id: str, nonce: str, *, origin: Any = None
+) -> tuple[str, ...]:
     """Supervise admission, collection and readback inside one finite boundary."""
-    return bootstrap_command(
-        Path(sys.executable),
-        root,
+    launch = (
+        (lambda module, *args: origin.bootstrap(root, module, *args))
+        if origin
+        else (lambda module, *args: bootstrap_command(Path(sys.executable), root, module, *args))
+    )
+    return launch(
         "infrastructure.project.public_root_case_census",
         "--root",
         str(root),
@@ -124,10 +132,19 @@ def _json(snapshot: ArtifactSnapshot) -> dict[str, Any]:
     value = json.loads(snapshot.content, object_pairs_hook=pairs, parse_constant=nonfinite)
     if not isinstance(value, dict):
         raise ValueError("Root case evidence must be a finite JSON object")
-    return value
+    from infrastructure.project.public_root_census_encoding import ENCODING_SCHEMAS, decode
+
+    if value.get("schema_version") in ENCODING_SCHEMAS:
+        decoded: dict[str, Any] = decode(value)
+        value = decoded
+        if value.get("schema_version") != RECEIPT_SCHEMA or value.get("role") != "canonical-collection-only":
+            raise ValueError("compact encoding may contain only original canonical census observations")
+    return cast(dict[str, Any], value)
 
 
-def _spec(reader: SnapshotReader, snapshot: ArtifactSnapshot, *, reader_context: bool = False) -> dict[str, Any]:
+def _spec(
+    reader: SnapshotReader, snapshot: ArtifactSnapshot, *, reader_context: bool = False, origin: Any = None
+) -> dict[str, Any]:
     spec = _json(snapshot)
     root = reader.root
     resolved = RuntimeScope(root, "root")
@@ -135,10 +152,10 @@ def _spec(reader: SnapshotReader, snapshot: ArtifactSnapshot, *, reader_context:
     if (
         set(spec) != _SPEC_FIELDS
         or spec["schema_version"] != SPEC_SCHEMA
-        or spec["root"] != str(root)
+        or spec["root"] != str(origin.root if origin else root)
         or not isinstance(spec["root_identity"], list)
         or any(type(item) is not int for item in spec["root_identity"])
-        or spec["root_identity"] != _root_identity(root)
+        or spec["root_identity"] != (origin.identity if origin else _root_identity(root))
         or not isinstance(spec["implementation"], dict)
         or not isinstance(directory, str)
         or not isinstance(spec["run_id"], str)
@@ -151,16 +168,19 @@ def _spec(reader: SnapshotReader, snapshot: ArtifactSnapshot, *, reader_context:
         or not spec["test_files"]
         or spec["source_identity"] != resolved.source_identity()
         or spec["source_hashes"] != root_python_hashes(root, reader)
-        or spec["runtime"] != runtime_identity()
+        or spec["runtime"] != (origin.runtime if origin else runtime_identity())
         or spec["runtime"]["missing"]
-        or spec["runtime_locations"] != _runtime_locations()
+        or spec["runtime_locations"] != (origin.locations if origin else _runtime_locations())
     ):
         raise ValueError("canonical Root census specification differs from source/runtime/full selection")
     expected = spec["implementation"]
     if expected.get("bytecode_binding") != "fresh-owned-prefix":
         raise ValueError("original canonical census requires its audited worker bytecode binding")
     prefix = _fresh_prefix()
-    if reader_context:
+    if origin:
+        if expected != origin.implementation:
+            raise ValueError("portable original audited implementation changed")
+    elif reader_context:
         # A plain independent reader has its own loaded baseline. This label
         # cannot replace or waive the original audited worker launch contract.
         actual = capture_implementation_custody(fresh_pycache_prefix=prefix)
@@ -212,7 +232,7 @@ def _artifact(reader: SnapshotReader, binding: object) -> ArtifactSnapshot:
     return snapshot
 
 
-def _origin(origin: object, hashes: dict[str, str], locations: dict[str, str]) -> None:
+def _origin(origin: object, hashes: dict[str, str], locations: dict[str, str], *, context: Any = None) -> None:
     if not isinstance(origin, dict) or set(origin) != {"scope", "path", "sha256"}:
         raise ValueError("census source origin is unresolved, nonpublic or malformed")
     scope, relative, expected = origin["scope"], origin["path"], origin["sha256"]
@@ -228,6 +248,9 @@ def _origin(origin: object, hashes: dict[str, str], locations: dict[str, str]) -
         if hashes.get(relative) != expected:
             raise ValueError("census origin differs from current public source bytes")
     elif scope in {"runtime-site", "runtime-stdlib"}:
+        if context:
+            context.provider(scope, relative, expected)
+            return
         choices = ("purelib", "platlib") if scope == "runtime-site" else ("stdlib",)
         matches = False
         for key in choices:

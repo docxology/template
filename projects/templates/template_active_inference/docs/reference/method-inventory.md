@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 895
+Total documented definitions: 896
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -601,9 +601,10 @@ Total documented definitions: 895
 | 574 | `function` | `_bounded_session_runner.execute` | inventory fallback | Inventory fallback for function `_bounded_session_runner.execute` defined at `src/orchestration/full_verification.py:574`. |
 | 595 | `function` | `_is_empty_profile_selection_failure` | docstring | Return whether pytest selected no tests for a filtered coverage group. |
 | 614 | `function` | `_write_empty_coverage_evidence` | docstring | Write valid zero-test sidecars for a profile-empty coverage group. |
-| 650 | `function` | `_run_chunked_coverage` | docstring | Run one fresh then append-only coverage subprocess per test group. |
-| 700 | `function` | `run_coverage_only` | docstring | Run canonical coverage groups without verifier-owned producer phases. |
-| 727 | `function` | `run_verification` | docstring | Run verification, optionally applying a typed pytest profile. |
+| 650 | `function` | `_run_chunked_prepasses` | docstring | Retain actual failures while accounting for bounded-profile empty slices. |
+| 675 | `function` | `_run_chunked_coverage` | docstring | Run one fresh then append-only coverage subprocess per test group. |
+| 725 | `function` | `run_coverage_only` | docstring | Run canonical coverage groups without verifier-owned producer phases. |
+| 752 | `function` | `run_verification` | docstring | Run verification, optionally applying a typed pytest profile. |
 
 ## `src/orchestration/pipeline_manifest.py`
 

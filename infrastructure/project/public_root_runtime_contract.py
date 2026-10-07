@@ -13,9 +13,9 @@ from infrastructure.project.public_root_case_admission import load_policy
 from infrastructure.project.public_root_case_contract import _json, _root_identity
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
-SPEC_SCHEMA = "template-root-runtime-launch-v2"
-CELL_SCHEMA = "template-root-runtime-cohort-v2"
-PROCESS_SCHEMA = "template-root-runtime-native-v2"
+SPEC_SCHEMA = "template-root-runtime-launch-v3"
+CELL_SCHEMA = "template-root-runtime-cohort-v3"
+PROCESS_SCHEMA = "template-root-runtime-native-v3"
 BUNDLE_ROLE = "actual-root-runtime-cohort"
 _RUNTIME_KEYS = frozenset(
     {
@@ -31,10 +31,13 @@ _RUNTIME_KEYS = frozenset(
 )
 
 
-def worker_command(interpreter: Path, root: Path, spec: ArtifactSnapshot) -> tuple[str, ...]:
-    return bootstrap_command(
-        interpreter,
-        root,
+def worker_command(interpreter: Path, root: Path, spec: ArtifactSnapshot, *, origin: Any = None) -> tuple[str, ...]:
+    launch = (
+        (lambda module, *args: origin.bootstrap(root, module, *args))
+        if origin
+        else (lambda module, *args: bootstrap_command(interpreter, root, module, *args))
+    )
+    return launch(
         "infrastructure.project.public_root_runtime_worker",
         "--root",
         str(root),
@@ -82,7 +85,7 @@ def remaining(deadline: float, now: float) -> int:
     return value
 
 
-def selection(reader: SnapshotReader, snapshot: ArtifactSnapshot) -> dict[str, Any]:
+def selection(reader: SnapshotReader, snapshot: ArtifactSnapshot, *, origin: Any = None) -> dict[str, Any]:
     """Reconstruct the complete source-owned selection in the actual selected runtime."""
     spec = _json(snapshot)
     if (
@@ -105,8 +108,8 @@ def selection(reader: SnapshotReader, snapshot: ArtifactSnapshot) -> dict[str, A
             "prerequisites_artifact",
         }
         or spec["schema_version"] != SPEC_SCHEMA
-        or spec["root"] != str(reader.root)
-        or spec["root_identity"] != _root_identity(reader.root)
+        or spec["root"] != str(origin.root if origin else reader.root)
+        or spec["root_identity"] != (origin.identity if origin else _root_identity(reader.root))
         or not isinstance(spec["root_identity"], list)
         or any(type(value) is not int for value in spec["root_identity"])
         or spec["mode"] not in {"core", "live"}
@@ -120,7 +123,7 @@ def selection(reader: SnapshotReader, snapshot: ArtifactSnapshot) -> dict[str, A
             not isinstance(spec[key], str) or re.fullmatch(r"[0-9a-f]{32}", spec[key]) is None
             for key in ("run_id", "nonce")
         )
-        or spec["runtime"] != runtime_identity()
+        or spec["runtime"] != (origin.runtime if origin else runtime_identity())
         or runtime_projection(spec["runtime"]) != spec["runtime"]
         or not isinstance(spec["directory"], str)
     ):

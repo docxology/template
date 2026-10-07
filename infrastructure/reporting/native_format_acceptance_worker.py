@@ -49,6 +49,13 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
     create_private_native_directory,
 )
 from infrastructure.reporting.native_format_content_contracts import compile_pdf_content_contract
+from infrastructure.reporting.native_format_observer_dispatch import observe_native_artifact, observe_format_controls
+from infrastructure.reporting.native_format_observer_outcome import native_observer_outcome
+from infrastructure.project.native_format_library_custody import (
+    observe_native_library_custody,
+    validate_native_library_custody,
+)
+from infrastructure.reporting.native_format_portable_custody import executable_observation, producer_custody
 from infrastructure.reporting.native_format_pdf_oracles import (
     PDF_CONTROL_CODES,
     PDF_CONTROL_SCHEMA,
@@ -247,6 +254,7 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
     if before != specification["source_digest"]:
         raise ValueError("native admission source changed before execution")
     runtime = runtime_identity()
+    interpreter_before = executable_observation(Path(sys.executable))
     runtime_binding = write_json(root, directory / "runtime.json", {**runtime, "execution_exit_code": 0})
     raw: dict[str, Any] = {
         "schema_version": NATIVE_SCHEMA,
@@ -258,6 +266,9 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
         "source_digest_after": "",
         "deliverables_identity_after": "",
         "runtime": runtime,
+        "producer_custody": producer_custody(root, runtime, before),
+        "interpreter_observation_before": interpreter_before,
+        "interpreter_observation_after": {},
         "runtime_artifact": runtime_binding,
         "pipeline": {},
         "formats": {},
@@ -266,6 +277,9 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
         "tool_artifacts": [],
         "negative_controls": [],
         "pdf_negative_controls": [],
+        "observer_controls": {},
+        "library_custody_before": {},
+        "library_custody_after": {},
         "publication_audit_artifact": {},
         "blockers": [],
         "diagnostic": "",
@@ -274,6 +288,7 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
     try:
         if runtime["missing"] or runtime["python_version"] not in {"3.12", "3.13", "3.14"}:
             raise NativeToolUnavailable("selected supported interpreter/test stack is not prepared")
+        raw["library_custody_before"] = observe_native_library_custody(formats, repo_root=root)
         reader = SnapshotReader(root)
         config_raw = reader.read(f"projects/{scope}/manuscript/config.yaml").content
         import yaml
@@ -366,6 +381,36 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
                         {"tool": f"PDF source oracle {artifact.id}", "reason": reason}
                         for reason in row["pdf_content"]["blockers"]
                     )
+                selected_tools = specification.get("observer_tools", {})
+                observer = observe_native_artifact(
+                    root,
+                    directory,
+                    scope,
+                    artifact,
+                    snapshot,
+                    native_reader,
+                    env=env,
+                    deadline=deadline,
+                    run_id=run_id,
+                    ordinal=index,
+                    epubcheck_jar=Path(selected_tools["epubcheck_jar"])
+                    if selected_tools.get("epubcheck_jar")
+                    else None,
+                    java_executable=Path(selected_tools["java_executable"])
+                    if selected_tools.get("java_executable")
+                    else None,
+                    frozen_epub_engine=root / selected_tools["frozen_epub_engine"]
+                    if selected_tools.get("frozen_epub_engine")
+                    else None,
+                )
+                row["native_observer"] = observer
+                result = native_observer_outcome(observer)
+                if result.get("status") == "fail" or result.get("findings"):
+                    raise ValueError(f"actual native observer failed for {artifact.id}: {result.get('findings')}")
+                raw["blockers"].extend(
+                    {"tool": f"native source oracle {artifact.id}", "reason": reason}
+                    for reason in result.get("blockers", [])
+                )
                 raw["artifacts"].append(row)
             for kind in formats:
                 id_ = f"manuscript:{kind}"
@@ -383,6 +428,23 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
                     raw["pdf_negative_controls"].append(
                         _pdf_oracle_control(root, directory, run_id, name, env, deadline)
                     )
+            selected_tools = specification.get("observer_tools", {})
+            raw["observer_controls"] = observe_format_controls(
+                root,
+                directory,
+                formats,
+                env=env,
+                deadline=deadline,
+                run_id=run_id,
+                interpreter=Path(sys.executable),
+                epubcheck_jar=Path(selected_tools["epubcheck_jar"]) if selected_tools.get("epubcheck_jar") else None,
+                java_executable=Path(selected_tools["java_executable"])
+                if selected_tools.get("java_executable")
+                else None,
+                frozen_epub_engine=root / selected_tools["frozen_epub_engine"]
+                if selected_tools.get("frozen_epub_engine")
+                else None,
+            )
             invalid_pdf = directory / "invented-invalid.pdf"
             invalid_pdf.write_bytes(b"invented public malformed PDF negative control\n")
             tool = native_tool_record(
@@ -436,6 +498,24 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
             raw["execution_exit_code"] if raw["execution_exit_code"] in {130, 124} else 1,
             raw["diagnostic"] or "public source changed during native execution",
         )
+    if raw["library_custody_before"]:
+        try:
+            raw["library_custody_after"] = observe_native_library_custody(formats, repo_root=root)
+            validate_native_library_custody(
+                raw["library_custody_before"],
+                raw["library_custody_after"],
+                formats=formats,
+                reader=SnapshotReader(root),
+                runtime=runtime,
+            )
+        except (OSError, ValueError) as error:
+            raw["status"] = "fail"
+            raw["execution_exit_code"] = raw["execution_exit_code"] if raw["execution_exit_code"] in {124, 130} else 1
+            raw["diagnostic"] = f"native decoder custody unavailable or changed: {error}"
+    raw["interpreter_observation_after"] = executable_observation(Path(sys.executable))
+    if raw["interpreter_observation_after"] != interpreter_before:
+        raw["status"], raw["execution_exit_code"] = "fail", 1
+        raw["diagnostic"] = "native interpreter changed during execution"
     return raw
 
 

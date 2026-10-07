@@ -63,6 +63,8 @@ def _run_native_format_acceptance(
     projects: Sequence[str] | None = None,
     timeout_seconds: int = 14400,
     evidence_dir: Path | None = None,
+    epubcheck_jar: Path | None = None,
+    java_executable: Path | None = None,
     _state: dict[str, Any],
 ) -> dict[str, Any]:
     """Run fresh whole-core project plans serially under one admission deadline.
@@ -87,8 +89,24 @@ def _run_native_format_acceptance(
         or any(scope not in PUBLIC_PROJECT_NAMES for scope in selected)
     ):
         raise ValueError("native acceptance requires unique canonical public project names")
+    if (epubcheck_jar is None) != (java_executable is None):
+        raise ValueError("native EPUB tools require both the reviewed JAR and actual Java executable")
+    for tool in (epubcheck_jar, java_executable):
+        if tool is not None and (not isinstance(tool, Path) or not tool.is_absolute() or ".." in tool.parts):
+            raise ValueError("native EPUB tools require explicit absolute paths without traversal")
     run_id = uuid.uuid4().hex
     directory = evidence_directory(root, evidence_dir or root / "output/readiness" / f"native-{run_id}", fresh=True)
+    observer_tools: dict[str, str | None] = {
+        "epubcheck_jar": str(epubcheck_jar) if epubcheck_jar else None,
+        "java_executable": str(java_executable) if java_executable else None,
+        "frozen_epub_engine": None,
+    }
+    if epubcheck_jar is not None and java_executable is not None:
+        from infrastructure.reporting.native_epub_observer import bind_epubcheck_engine, freeze_epubcheck_bundle
+
+        engine = bind_epubcheck_engine(epubcheck_jar, java_executable, deadline=started + timeout_seconds)
+        frozen = freeze_epubcheck_bundle(root, directory, engine, deadline=started + timeout_seconds)
+        observer_tools["frozen_epub_engine"] = frozen.parent.relative_to(root).as_posix()
     before = public_source_digest(root)
     deadline = started + timeout_seconds
     initial_fingerprint = source_fingerprint(root)
@@ -122,6 +140,7 @@ def _run_native_format_acceptance(
             "source_digest": before,
             "timeout_seconds": timeout_seconds,
             "deadline_monotonic": deadline,
+            "observer_tools": observer_tools,
         }
         specification = write_json(root, cell / "spec.json", spec)
         command = list(
@@ -390,7 +409,13 @@ def _executed_failure_result(state: dict[str, Any], error: BaseException) -> dic
 
 
 def run_native_format_acceptance(
-    root: Path, *, projects: Sequence[str] | None = None, timeout_seconds: int = 14400, evidence_dir: Path | None = None
+    root: Path,
+    *,
+    projects: Sequence[str] | None = None,
+    timeout_seconds: int = 14400,
+    evidence_dir: Path | None = None,
+    epubcheck_jar: Path | None = None,
+    java_executable: Path | None = None,
 ) -> dict[str, Any]:
     """Keep invocation faults separate from the entire actual executed phase."""
     try:
@@ -409,7 +434,13 @@ def run_native_format_acceptance(
     try:
         with native_deadline_guard(state["deadline"]):
             result = _run_native_format_acceptance(
-                root, projects=projects, timeout_seconds=timeout_seconds, evidence_dir=evidence_dir, _state=state
+                root,
+                projects=projects,
+                timeout_seconds=timeout_seconds,
+                evidence_dir=evidence_dir,
+                epubcheck_jar=epubcheck_jar,
+                java_executable=java_executable,
+                _state=state,
             )
         if result["exit_code"] != 130 and time.monotonic() >= state["deadline"]:
             return _executed_failure_result(
@@ -452,10 +483,17 @@ def main(argv: list[str] | None = None) -> int:
         "--timeout", type=positive_int, default=14400, help="Whole admission/execution/observer budget in seconds"
     )
     parser.add_argument("--evidence-dir", type=Path)
+    parser.add_argument("--epubcheck-jar", type=Path)
+    parser.add_argument("--java-executable", type=Path)
     args = parser.parse_args(argv)
     try:
         result = run_native_format_acceptance(
-            args.repo_root, projects=args.project, timeout_seconds=args.timeout, evidence_dir=args.evidence_dir
+            args.repo_root,
+            projects=args.project,
+            timeout_seconds=args.timeout,
+            evidence_dir=args.evidence_dir,
+            epubcheck_jar=args.epubcheck_jar,
+            java_executable=args.java_executable,
         )
     except (OSError, ValueError, TypeError, KeyError) as error:
         parser.error(str(error))

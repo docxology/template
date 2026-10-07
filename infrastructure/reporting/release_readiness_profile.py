@@ -133,7 +133,7 @@ def required_profile(
         )
 
     root_case_contract = metadata.get("tool", {}).get("template", {}).get("root_acceptance")
-    root_v2 = isinstance(root_case_contract, dict) and root_case_contract.get("schema_version") == 2
+    root_v2 = isinstance(root_case_contract, dict) and root_case_contract.get("schema_version") in {2, 3}
     if root_v2:
         from infrastructure.project.public_acceptance_scope import MissingRootCasePolicy
         from infrastructure.reporting.release_readiness_root_cases import case_requirements

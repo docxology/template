@@ -338,3 +338,22 @@ def test_source_declared_draft_does_not_require_fabricated_publication(tmp_path:
         validate_acceptance(requirement, {"details": dict(details, actual_tag="v2.0.0")}, SnapshotReader(tmp_path))
     with pytest.raises(ValueError):
         validate_acceptance(replace(requirement, draft=False), {"details": details}, SnapshotReader(tmp_path))
+
+
+@pytest.mark.parametrize("kind", ["docs", "roster"])
+def test_platform_four_auxiliary_flags_require_original_process_and_raw_evidence(tmp_path: Path, kind: str) -> None:
+    details = {"execution_exit_code": 0}
+    if kind == "docs":
+        details.update(mermaid=[], broken_links=[], consistency=[], doc_pairs=[])
+    else:
+        details["projects"] = list(PUBLIC_PROJECT_NAMES)
+    requirement = Requirement("root:" + kind, kind, "root", "4.0.0", "4.0.0", "a" * 64)
+    payload = {"source_fingerprint": "b" * 64, "details": details}
+    with pytest.raises(ValueError, match="exact artifact binding"):
+        validate_acceptance(requirement, payload, SnapshotReader(tmp_path))
+    legacy = replace(requirement, platform_version="3.8.0")
+    validate_acceptance(legacy, payload, SnapshotReader(tmp_path))
+    with pytest.raises(ValueError, match="exact artifact binding"):
+        validate_acceptance(
+            legacy, {**payload, "details": {**details, "process_artifact": None}}, SnapshotReader(tmp_path)
+        )

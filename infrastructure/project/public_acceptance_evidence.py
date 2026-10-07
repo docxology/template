@@ -68,12 +68,26 @@ sys.exit(75 if missing else 0)
 
 
 def write_json(
-    root: Path, path: Path, payload: object, *, expected_root_identity: tuple[int, int] | None = None
+    root: Path,
+    path: Path,
+    payload: object,
+    *,
+    expected_root_identity: tuple[int, int] | None = None,
+    compact: bool = False,
 ) -> dict[str, str]:
     """Write exact local evidence without following a symlink or escaping its root."""
     path = evidence_directory(root, path.parent) / path.name
     root = root.resolve()
-    text = json.dumps(payload, indent=2, sort_keys=True, allow_nan=False) + "\n"
+    text = (
+        json.dumps(
+            payload,
+            indent=None if compact else 2,
+            separators=(",", ":") if compact else None,
+            sort_keys=True,
+            allow_nan=False,
+        )
+        + "\n"
+    )
     atomic_write_text_confined(root, path, text, expected_root_identity=expected_root_identity)
     return {"path": path.relative_to(root).as_posix(), "sha256": hashlib.sha256(text.encode()).hexdigest()}
 
@@ -163,9 +177,11 @@ def bootstrap_command(
     module: str,
     *args: str,
     audit_roots: tuple[Path, ...] = (),
+    command_root: Path | None = None,
+    implementation_root: Path | None = None,
 ) -> tuple[str, ...]:
     """Use the exact interpreter with isolated startup and explicit trusted source."""
-    from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
+    from infrastructure.core.implementation_custody import bytecode_audit_bootstrap, _format_bytecode_audit_bootstrap
     from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
     # Editable .pth launch helpers have already executed at interpreter startup.
@@ -180,7 +196,18 @@ def bootstrap_command(
         *(source for scope in PUBLIC_PROJECT_NAMES for source in project_python_roots(root / "projects" / scope)),
         *audit_roots,
     )
-    audit = bytecode_audit_bootstrap(roots, None)
+    if command_root is None:
+        audit = bytecode_audit_bootstrap(roots, None)
+    else:
+        # Enumerate current admitted source, but preserve original launch paths.
+        origin = implementation_root or command_root / "infrastructure"
+        projected = tuple(
+            origin if index == 0 else command_root / path.relative_to(root) for index, path in enumerate(roots)
+        )
+        hook = Path(__file__).absolute().parents[1] / "core/bytecode_audit.py"
+        raw = read_bytes_confined(hook.parent, hook, max_bytes=1024 * 1024)
+        audit = _format_bytecode_audit_bootstrap(raw, origin / "core/bytecode_audit.py", projected, None)
+        root = command_root
     bootstrap = (
         "import runpy,sys,tempfile\nfrom pathlib import Path\n"
         "with tempfile.TemporaryDirectory(prefix='template-acceptance-bytecode-') as cache:\n"

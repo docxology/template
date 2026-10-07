@@ -148,7 +148,7 @@ def test_coverage_only_uses_complete_release_partition(tmp_path: Path) -> None:
 
     expected_groups = full_verification._validated_coverage_test_groups(project_root)
     assert [label for label, _ in calls] == [f"Coverage pass: {label}" for label, _ in expected_groups]
-    assert [len(selectors) for _, selectors in expected_groups] == [4, 3, 11, 1, 2, 1, 29, 7, 7, 8, 7, 15]
+    assert [len(selectors) for _, selectors in expected_groups[:-1]] == [4, 3, 11, 1, 2, 1, 29, 7, 7, 8, 7]
     assert expected_groups[2] == (
         "Roadmap and sheaf consolidation checks",
         [
@@ -255,26 +255,13 @@ def test_coverage_only_uses_complete_release_partition(tmp_path: Path) -> None:
             "tests/test_semantic_sheaf.py::test_validate_manuscript_checks_semantic_certificate",
         ],
     )
-    assert expected_groups[11] == (
-        "Simulation, support, and visualization checks",
-        [
-            "tests/test_full_verification_coverage.py",
-            "tests/test_full_verification_runs.py",
-            "tests/test_si_policy_direct.py",
-            "tests/test_si_runner.py",
-            "tests/test_si_statistics.py",
-            "tests/test_simulation_invariants.py",
-            "tests/test_simulation_invariants_direct.py",
-            "tests/test_supplemental_direct.py",
-            "tests/test_support_modules.py",
-            "tests/test_support_primitives_direct.py",
-            "tests/test_sweep_io.py",
-            "tests/test_toy_sweep_builders_direct.py",
-            "tests/test_toy_sweep_direct.py",
-            "tests/test_typography_contract.py",
-            "tests/test_visualization_audit_direct.py",
-        ],
+    assigned_modules = {selector.split("::", 1)[0] for _, selectors in expected_groups[:11] for selector in selectors}
+    remaining_modules = sorted(
+        str(path.relative_to(project_root))
+        for path in (project_root / "tests").glob("test_*.py")
+        if str(path.relative_to(project_root)) not in assigned_modules
     )
+    assert expected_groups[11] == ("Simulation, support, and visualization checks", remaining_modules)
     assert "tests/test_fixed_point_direct.py" not in expected_groups[-1][1]
     semantic_selectors = full_verification._semantic_sheaf_test_selectors(project_root)
     assert [*expected_groups[9][1], *expected_groups[10][1]] == semantic_selectors

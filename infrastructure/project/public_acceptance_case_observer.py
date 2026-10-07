@@ -41,7 +41,8 @@ def _policy_metadata(value: object) -> object:
     remains exact. This avoids claiming that Python 3.12 and 3.14 have equal bytes.
     """
     if isinstance(value, dict):
-        runtime = value.get("scope") in {"runtime-site", "runtime-stdlib"}
+        scope = value.get("scope")
+        runtime = isinstance(scope, str) and scope in {"runtime-site", "runtime-stdlib"}
         return {key: _policy_metadata(item) for key, item in value.items() if key != "sha256" or not runtime}
     if isinstance(value, list):
         return [_policy_metadata(item) for item in value]
@@ -50,8 +51,11 @@ def _policy_metadata(value: object) -> object:
 
 def _nonpublic(value: object) -> bool:
     if isinstance(value, dict):
-        return value.get("scope") in {"inadmissible-nonpublic", "unresolved"} or any(
-            _nonpublic(item) for item in value.values()
+        scope = value.get("scope")
+        return (
+            isinstance(scope, str)
+            and scope in {"inadmissible-nonpublic", "unresolved"}
+            or any(_nonpublic(item) for item in value.values())
         )
     return isinstance(value, list) and any(_nonpublic(item) for item in value)
 

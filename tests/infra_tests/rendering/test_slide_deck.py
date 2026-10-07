@@ -410,3 +410,41 @@ def test_render_pdf_content_slide_with_long_title_does_not_crash(tmp_path: Path)
     assert output.is_file()
     reader = PdfReader(str(output))
     assert long_title in (reader.pages[1].extract_text() or "")
+
+
+def test_native_pdf_preserves_bullet_unicode_geometry_and_helvetica_metrics(tmp_path: Path) -> None:
+    import math
+    import pdfplumber
+    from reportlab.pdfbase import pdfmetrics
+    from infrastructure.rendering._slide_font_encoding import (
+        DECK_HELVETICA,
+        DECK_HELVETICA_BOLD,
+        DECK_HELVETICA_OBLIQUE,
+    )
+
+    deck = DeckContent(
+        title="Native bullets",
+        slides=(
+            Slide(title="Bullet • header", bullets=("Measured value 42",)),
+            Slide(title="Quote", kind="quote", quote_text="A • exact value", quote_attribution="Author"),
+        ),
+    )
+    first = render_pdf(deck, tmp_path / "first.pdf")
+    second = render_pdf(deck, tmp_path / "second.pdf")
+    assert first.read_bytes() == second.read_bytes()
+    with pdfplumber.open(first) as document:
+        bullets = [glyph for page in document.pages for glyph in page.chars if glyph["text"] == "•"]
+        assert len(bullets) == 3
+        assert all(math.isfinite(glyph["width"]) and glyph["width"] > 0 for glyph in bullets)
+        assert all(glyph["x1"] > glyph["x0"] and glyph["bottom"] > glyph["top"] for glyph in bullets)
+        assert all("(cid:" not in glyph["text"] for page in document.pages for glyph in page.chars)
+    text = "\n".join(page.extract_text() or "" for page in PdfReader(first).pages)
+    assert "Measured value 42" in text and "A • exact value" in text and text.count("•") == 3
+    for name, original in (
+        (DECK_HELVETICA, "Helvetica"),
+        (DECK_HELVETICA_BOLD, "Helvetica-Bold"),
+        (DECK_HELVETICA_OBLIQUE, "Helvetica-Oblique"),
+    ):
+        assert pdfmetrics.stringWidth("•  Café €42 — exact", name, 18) == pdfmetrics.stringWidth(
+            "•  Café €42 — exact", original, 18
+        )

@@ -178,7 +178,11 @@ def produce_runtime_cohort(
         "process_artifact": native_binding,
     }
     bundle_binding = write(root, directory / "runtime-bundle.json", bundle, identity)
-    return {"bundle": bundle, "bundle_artifact": bundle_binding}
+    portable_binding = None
+    if code == 0:
+        held = reader.read((directory / "portable-observation.json").relative_to(root).as_posix())
+        portable_binding = {"path": held.relative, "sha256": held.sha256}
+    return {"bundle": bundle, "bundle_artifact": bundle_binding, "portable_artifact": portable_binding}
 
 
 def read_selected_runtime(reader: SnapshotReader, binding: object, *, timeout_seconds: int = 660) -> dict[str, Any]:

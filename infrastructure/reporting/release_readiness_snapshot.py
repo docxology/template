@@ -48,6 +48,23 @@ PUBLIC_ROOT_FILES = frozenset(
 _ROOT_OBSERVATIONS = frozenset({"docs_lint.json", "lint.json", "readiness_receipt.json"})
 
 
+def json_object_from_bytes(content: bytes) -> dict[str, Any]:
+    """Decode retained JSON objects without ambiguous fields at any depth."""
+
+    def unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"acceptance artifact repeats JSON field: {key}")
+            result[key] = value
+        return result
+
+    value = json.loads(content, object_pairs_hook=unique_object)
+    if not isinstance(value, dict):
+        raise ValueError("acceptance artifact must be a JSON object")
+    return value
+
+
 @dataclass(frozen=True)
 class ArtifactSnapshot:
     """One exact file observation; a second discovery cannot replace its facts."""
@@ -59,18 +76,18 @@ class ArtifactSnapshot:
     identity: tuple[int, int, int, int]
 
     def json_object(self) -> dict[str, Any]:
-        """Reject non-object JSON evidence."""
-        value = json.loads(self.content)
-        if not isinstance(value, dict):
-            raise ValueError("acceptance artifact must be a JSON object")
-        return value
+        """Reject non-object evidence and ambiguous duplicate fields at any depth."""
+        return json_object_from_bytes(self.content)
 
 
 class SnapshotReader:
     """Read each public path once; detect mutation before the report completes."""
 
-    def __init__(self, repo_root: Path) -> None:
+    def __init__(self, repo_root: Path, *, hosted_origin: Any = None) -> None:
         self.root = repo_root.resolve()
+        self.hosted_origin = hosted_origin
+        # Cache origin authentication only; no gate or logical execution decisions.
+        self.hosted_origin_authorizations: dict[str, Any] = {}
         self.snapshots: dict[Path, ArtifactSnapshot] = {}
         self.validated_exports: dict[str, str] = {}
         self.validated_export_commits: dict[str, str] = {}
