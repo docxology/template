@@ -37,6 +37,7 @@ flowchart TB
     WF --> WF_CI[ci.yml<br/>20 jobs — 2 conditional via detect outputs — fep-lean, setup-hook-windows-smoke — 2 schedule/dispatch-only — public-matrix-receipt, test-infra-slow — 1 aggregation gate — ci-gate]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
+    WF --> WF_REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
     WF --> WF_DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
@@ -44,7 +45,7 @@ flowchart TB
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
     class GH d
     class ITPL,WF pkg
-    class META,DEP,PRT,ITPL_F,WF_DOCS,WF_CI,WF_STALE,WF_REL f
+    class META,DEP,PRT,ITPL_F,WF_DOCS,WF_CI,WF_STALE,WF_REL,WF_REQUIRED f
 ```
 
 ## Continuous Integration (CI/CD)
@@ -110,12 +111,19 @@ wheel matrix outside source checkouts, and strict rendered publication audit
 across the canonical public roster. Root 4+ additionally requires an explicit
 same-repository successful hosted run and artifact bound to that exact revision,
 the aggregate receipt hash, and every required candidate acceptance gate.
-The complete acceptance uploader remains pending; ordinary CI uploads cannot
-authorize this handoff. Tag pushes without the handoff stop. Root 4.0.0 stays
-Unreleased until all required evidence is available.
-The release uses `softprops/action-gh-release@v3.0.3`, writes a short git-log
-excerpt to `body_path`, and keeps **`generate_release_notes`** off so GitHub
-does not duplicate the body.
+The candidate includes
+[`platform-required-acceptance.yml`](workflows/platform-required-acceptance.yml):
+six original Root minor/platform units, common and native observations, and a
+strict collector that uploads only the passed complete exact-source bundle.
+Its presence does not establish successful hosted acceptance, integration into
+`main`, or publication; ordinary CI uploads cannot authorize this handoff.
+Tag pushes without the explicit handoff stop. The dated 4.0.0 candidate notes
+still require every acceptance and publication gate to pass.
+The release uses `softprops/action-gh-release@v3.0.3` with
+**`generate_release_notes`** off. For `v4.0.0`, `body_path` contains the
+[illustrated version notes](../docs/releases/v4.0.0.md) plus accepted-commit,
+hosted-run and receipt-hash bindings, with the distributions and overview PNG
+attached. Other tags retain the short git-log excerpt.
 
 ### Dependabot Automerge Workflow (`workflows/dependabot-automerge.yml`)
 

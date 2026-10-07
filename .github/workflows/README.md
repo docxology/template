@@ -8,9 +8,10 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 | File | Trigger | Purpose |
 |---|---|---|
-| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | **19 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; 2 schedule/manual-only lanes: **`test-infra-slow`** and **`public-matrix-receipt`**; see [`AGENTS.md`](AGENTS.md)) |
+| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | **20 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; 2 schedule/manual-only lanes: **`test-infra-slow`** and **`public-matrix-receipt`**; see [`AGENTS.md`](AGENTS.md)) |
 | [`stale.yml`](stale.yml) | Daily 01:00 UTC | Auto-label and close stale issues/PRs |
 | [`release.yml`](release.yml) | `v*.*.*` tag push or manual | Generate GitHub Release with changelog |
+| [`platform-required-acceptance.yml`](platform-required-acceptance.yml) | push to `main` or `codex/platform-4` · manual | Original required-profile observations and strict exact-source acceptance bundle |
 | [`dependabot-automerge.yml`](dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
 
 ## CI Pipeline (`ci.yml`)
@@ -132,16 +133,31 @@ every source-owned candidate requirement, including live, sandbox, macOS,
 runtime, domain, installed-package, and format evidence. Partial matrices or
 green static checks cannot substitute for missing requirements.
 
-The merged required-profile producer/upload lane is not present yet. Existing
-CI uploads do not create this complete handoff. Root 4.0.0 remains Unreleased;
-the workflow therefore cannot publish it merely because smoke or structural
-checks pass. The evidence handoff verifies custody and required acceptance;
-it does not perform sandbox or production transfers itself. The workflow
-writes a git-log excerpt to the release body (`generate_release_notes: false`)
-and uses `softprops/action-gh-release@v3.0.3`. Tags containing
-`-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
+The candidate implementation includes
+[`platform-required-acceptance.yml`](platform-required-acceptance.yml). Its four
+jobs cover six original Root units (Python 3.12/3.13/3.14 on macOS/Linux), common
+installed/export/runtime and auxiliary observations, the native-format
+inventory, and an independent collector. The collector uploads
+`platform-required-acceptance` only after every required exact-source gate passes.
+The workflow's presence does not establish a successful hosted run, integration
+into `main`, or publication. Ordinary CI uploads cannot substitute for this
+handoff, and a dated 4.0.0 candidate heading does not authorize release.
+The evidence handoff verifies custody and required acceptance; it does not
+perform sandbox or production transfers itself.
 
-Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
+For `v4.0.0`, the release body uses the
+[illustrated version notes](../../docs/releases/v4.0.0.md), appends the accepted
+commit, hosted run and receipt SHA256, and attaches the root distributions and
+overview PNG. Other tags retain the git-log excerpt. The workflow uses
+`softprops/action-gh-release@v3.0.3` with `generate_release_notes: false`.
+Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
+
+The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) and
+[release action](https://raw.githubusercontent.com/softprops/action-gh-release/efb35369e0ad2afab669f228072c1b0d510eae64/action.yml) use the Node 24 JavaScript action runtime.
+This is separate from the Node 20 document toolchain selected by
+[`setup-docs-lint`](../actions/setup-docs-lint/action.yml).
+GitHub-hosted runners satisfy the documented runtime requirement; self-hosted
+runners must be Actions runner `v2.327.1` or newer.
 
 ## Troubleshooting
 

@@ -80,9 +80,18 @@ def test_actual_tools_check_all_models_and_expected_invariant_violation(tmp_path
 
 
 @pytest.mark.timeout(360)
-def test_mutating_cached_jar_cannot_change_frozen_model_execution(tmp_path: Path) -> None:
-    root = _copy(tmp_path)
-    jar = root / "formal/tla/tla2tools.jar"
+@pytest.mark.parametrize("external_provider", [False, True])
+def test_mutating_cached_jar_cannot_change_frozen_model_execution(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, external_provider: bool
+) -> None:
+    root = _copy(tmp_path / "project")
+    local = root / "formal/tla/tla2tools.jar"
+    jar = local
+    if external_provider:
+        jar = tmp_path / "prepared-tlc.jar"
+        local.replace(jar)
+        monkeypatch.setenv("TEMPLATE_FORMAL_TLC_JAR", str(jar))
+        assert not local.exists() and _selected_jar(root) == jar
     project_id = hashlib.sha256(str(root.resolve()).encode()).hexdigest()[:12]
     changed = threading.Event()
     stopped = threading.Event()

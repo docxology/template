@@ -13,13 +13,14 @@ flowchart LR
     W --> CI[ci.yml<br/>20 jobs · 2 conditional via detect outputs<br/>2 schedule/manual-only lanes: test-infra-slow, public-matrix-receipt]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
+    W --> REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
     W --> DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class W d
-    class CI,STALE,REL code
+    class CI,STALE,REL,REQUIRED code
     class META doc
 ```
 
@@ -258,17 +259,29 @@ Runs daily at 01:00 UTC using `actions/stale@v10.3.0`.
 
 Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input). Both triggers serialize by the selected tag and preserve in-flight publication; a manual dispatch from a different branch cannot race the same tag push.
 
-1. Resolves the requested tag before checkout and checks out that exact ref
-2. Proves `HEAD` equals the dereferenced tag commit and runs the root release contract
-3. Runs the bounded pipeline-smoke infrastructure test lane + no-mocks gate on the tagged SHA (executable test evidence, without the per-commit full matrix)
-4. Runs the fail-closed public capability manifest
-5. Clean-exports, installs, and import-smokes every canonical public exemplar without credentials
-6. Runs the strict rendered publication audit across every canonical public exemplar before building
-7. Generates a commit-based changelog excerpt since the previous tag
-8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.2` with **`generate_release_notes: false`** so the body is the git-log excerpt only (no duplicate auto-generated section)
+1. Resolves the requested tag before checkout, initializes its pinned submodules, and proves `HEAD` equals the dereferenced tag commit
+2. Prepares supported interpreters, the locked release environment and identical acceptance fixture inputs before source admission
+3. For root 4+, requires the exact successful hosted run ID, `platform-required-acceptance` artifact ID and aggregate receipt SHA256; authenticates the same-repository exact-revision run, bounded artifact and every candidate requirement before continuing. Tag pushes without that explicit handoff stop
+4. Runs the tagged-SHA no-mocks and bounded pipeline-smoke gates, root release contract and fail-closed public capability manifest
+5. Clean-exports, installs and import-smokes the root and every canonical public exemplar on Python 3.12/3.13/3.14 without credentials
+6. Runs the strict rendered publication audit across every canonical public exemplar, then builds and validates the root distributions
+7. For `v4.0.0`, uses [illustrated version notes](../../docs/releases/v4.0.0.md) with accepted-commit, hosted-run and receipt-hash bindings; other tags use the commit-based git-log excerpt
+8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.3` with **`generate_release_notes: false`** and attaches the distributions and v4.0.0 overview PNG
 9. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
 
-Current pinned GitHub Actions use the Node 20 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
+The candidate [`platform-required-acceptance.yml`](platform-required-acceptance.yml)
+implements six original Root minor/platform units plus common and native
+observations and a strict independent collector. Only its passed complete
+exact-source bundle can supply the root 4+ handoff. Implementation presence or
+a dated version heading is not proof of successful acceptance, integration into
+`main`, or publication. Ordinary CI and partial/static results cannot replace it.
+
+The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) and
+[release action](https://raw.githubusercontent.com/softprops/action-gh-release/efb35369e0ad2afab669f228072c1b0d510eae64/action.yml) use the Node 24 JavaScript action runtime.
+This is separate from the Node 20 document toolchain selected by
+[`setup-docs-lint`](../actions/setup-docs-lint/action.yml).
+GitHub-hosted runners satisfy the documented runtime requirement; self-hosted
+runners must be Actions runner `v2.327.1` or newer.
 
 ## Dependabot Automerge Workflow (`dependabot-automerge.yml`)
 
