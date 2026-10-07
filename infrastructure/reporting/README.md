@@ -438,3 +438,16 @@ optional plotting export, or explicit package enumeration loads the original
 plotting providers once. Their function identities and import-failure behavior
 remain unchanged; the package retains its declared public exports. Import
 observations alone do not establish complete execution or a universal speedup.
+
+
+Native PDF preflight authenticates complete classic or compressed cross-reference
+indexes before PDFminer page parsing. Compressed XRef field widths, ranges and
+entry bytes, object-stream member headers and exact indexed identities remain
+finite and must agree with the native parser. Every original stream has bounded
+decoding, with aggregate expansion and repeated page-program costs charged before
+page traversal. CMap ranges include their implied mapping/output cost; incomplete
+sections, unmatched terminators and inherited maps refuse admission. Shared
+CMaps are charged for each declared font construction; uncached direct font
+resource dictionaries remain unsupported. Incremental,
+encrypted, hybrid, Form, Type3 and pattern programs remain unsupported and blocked.
+These controls retain original PDF bytes and do not grant publication acceptance.

@@ -55,7 +55,7 @@ def test_length1_cannot_hide_executable_content_from_preflight() -> None:
         attributes={NameObject("/Length1"): NumberObject(1)},
     )
     with pytest.raises(ValueError, match="CMap range expansion"):
-        preflight_pdf_streams(content, deadline=time.monotonic() + 5)
+        preflight_pdf_streams(content, deadline=time.monotonic() + 5, max_objects=10000)
 
 
 def test_repeated_original_content_programs_count_before_page_parsing() -> None:

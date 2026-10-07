@@ -113,3 +113,22 @@ descendant and 360-second import waits exceed that allowance. Original 124,
 actual import, owned live PID/token and subsequent native absence/zombie remain
 required; a prelaunch timeout fails the control. Production deadlines are unchanged.
 This measured fixture allowance does not establish a universal timing guarantee.
+
+
+The source policy may use the lossless `template-root-policy-encoding-v1`
+manifest and derived `root-case-policy.part-0000.json` files in
+`infrastructure/config/`. `public_root_policy_encoding.encode_policy` retains
+every explicit family, parameter member, lane, obligation and source/metadata
+hash in canonical JSON. It changes serialization only; classification and
+current full-census admission remain mandatory. The retained policy draft
+requires fresh collection and review after source changes.
+
+The loader authenticates ordered part sizes and SHA-256 values before bounded
+reads, then authenticates the complete decoded bytes and logical policy digest.
+It refuses missing, linked, reordered, changed or noncanonical parts, duplicate
+JSON fields, oversized expansion, trailing data and incomplete original policy.
+Parts have a 512 KiB file ceiling, the manifest has a 16 KiB ceiling and expanded
+policy retains the existing 64 MiB ceiling. Part filenames derive exclusively
+from the source configuration path; the manifest cannot select external files.
+Serialization grants neither an execution waiver nor freshness for a retained
+census. Reviewed authoring still covers every actual family and obligation.

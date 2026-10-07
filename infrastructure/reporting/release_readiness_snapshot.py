@@ -155,17 +155,21 @@ class SnapshotReader:
         stat = path.stat()
         return stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns
 
-    def read(self, relative: str) -> ArtifactSnapshot:
+    def read(self, relative: str, *, max_bytes: int = 64 * 1024 * 1024) -> ArtifactSnapshot:
         """Hash and parse the same bytes; refuse mid-read modification."""
+        if type(max_bytes) is not int or not 0 < max_bytes <= 64 * 1024 * 1024:
+            raise ValueError("snapshot requires a positive bounded byte ceiling")
         path = self.public_path(relative)
         if path not in self.snapshots:
             before = self._identity(path)
-            content = read_bytes_confined(self.root, path, max_bytes=64 * 1024 * 1024)
+            content = read_bytes_confined(self.root, path, max_bytes=max_bytes)
             if before != self._identity(path):
                 raise ValueError("acceptance artifact changed while being read")
             self.snapshots[path] = ArtifactSnapshot(
                 path, Path(relative).as_posix(), content, hashlib.sha256(content).hexdigest(), before
             )
+        if len(self.snapshots[path].content) > max_bytes:
+            raise ValueError("held snapshot exceeds the admitted byte ceiling")
         return self.snapshots[path]
 
     def unchanged(self) -> bool:

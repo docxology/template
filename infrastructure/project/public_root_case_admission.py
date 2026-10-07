@@ -24,6 +24,7 @@ from infrastructure.project.public_acceptance_case_policy import (
 from infrastructure.project.public_acceptance_scope import MissingRootCasePolicy, RuntimeScope
 from infrastructure.project.public_root_case_contract import _json
 from infrastructure.project.public_root_case_readback import read_root_census
+from infrastructure.project.public_root_policy_encoding import decode_policy
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
 DECLARATION_SCHEMA = 3
@@ -177,7 +178,8 @@ def load_policy(
     """Load the complete baseline from source; callers cannot supply replacement families."""
     contract = declaration(reader)
     policy_snapshot = reader.read(contract["policy"])
-    value = _json(policy_snapshot)
+    _json(policy_snapshot)  # Preserve the original duplicate/nonfinite JSON admission.
+    value = decode_policy(reader, policy_snapshot)
     if value.get("schema_version") != (OPTIONAL_POLICY_SCHEMA if contract["schema_version"] == 3 else POLICY_SCHEMA):
         raise ValueError("Root policy protocol differs from its source-owned declaration")
     policy = RootCasePolicy.parse(value)

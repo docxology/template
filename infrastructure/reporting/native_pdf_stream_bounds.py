@@ -1,13 +1,9 @@
-"""Conservative classic-PDF admission before unbounded native stream parsing."""
+"""Bounded indexed-PDF admission before unbounded native stream parsing."""
 
 from __future__ import annotations
 
-import re
 import time
 from io import BytesIO
-from typing import Any, cast
-
-from infrastructure.reporting.native_pdf_stream_decode import _bounded_stream_data
 
 
 def preflight_pdf_streams(
@@ -15,114 +11,24 @@ def preflight_pdf_streams(
 ) -> None:
     """Bound expansion and repeated page programs without changing input bytes.
 
-    Only a complete classic xref is supported. Compressed objects/xrefs,
-    incremental updates, encryption, Forms, Type3 fonts, patterns and CMap
-    ranges remain unsupported. Every rejection precedes PDFminer page parsing.
+    Complete classic and compressed indexes and bounded object/CMap streams
+    are admitted. Incremental updates, encryption, Forms, Type3 fonts, patterns
+    and inherited CMaps remain unsupported. Every rejection precedes PDFminer page parsing.
     """
     from pdfminer.pdfparser import PDFParser
-    from pdfminer.pdftypes import PDFObjRef, PDFStream, resolve1
+    from infrastructure.reporting.native_pdf_index_bounds import admit_pdf_index
+    from infrastructure.reporting.native_pdf_cmap_bounds import cmap_range_cost
+    from pdfminer.pdftypes import PDFObjRef, resolve1
     from pdfminer.psparser import PSBaseParser, PSKeyword, PSLiteral, PSEOF
 
     if not content or len(content) > max_bytes or not 0 < max_objects <= 4_000_000:
         raise ValueError("native PDF preparse exceeds its finite input budget")
-    final = re.search(rb"startxref\s+(\d+)\s+%%EOF\s*$", content)
-    if final is None:
-        raise ValueError("native PDF preparse requires a complete classic xref")
-    offset = int(final[1])
-    if content[offset : offset + 4] != b"xref":
-        raise ValueError("native PDF compressed xref/object streams require bounded support")
-    cursor = offset + 4
-    offsets: dict[int, tuple[int, int]] = {}
-    entries = 0
-    section_pattern = re.compile(rb"(\d+) (\d+)[ \t]*\r?\n")
-    entry_pattern = re.compile(rb"(\d{10}) (\d{5}) ([nf])[ \t]*\r?\n")
-    while True:
-        if time.monotonic() >= deadline:
-            raise TimeoutError("native PDF preparse deadline exhausted")
-        while cursor < len(content) and content[cursor] in b" \t\r\n":
-            cursor += 1
-        if content[cursor : cursor + 7] == b"trailer":
-            cursor += 7
-            break
-        section = section_pattern.match(content, cursor)
-        if section is None:
-            raise ValueError("native PDF classic xref subsection is malformed")
-        first, count = map(int, section.groups())
-        entries += count
-        if count < 1 or entries > min(max_objects, 100_000):
-            raise ValueError("native PDF preparse xref object budget exhausted")
-        cursor = section.end()
-        for object_id in range(first, first + count):
-            entry = entry_pattern.match(content, cursor)
-            if entry is None:
-                raise ValueError("native PDF classic xref entry is malformed")
-            cursor = entry.end()
-            if entry[3] == b"n":
-                if object_id in offsets:
-                    raise ValueError("native PDF repeated xref objects are unsupported")
-                offsets[object_id] = (int(entry[1]), int(entry[2]))
-    token_count = 0
-    values: dict[int, Any] = {}
-
-    class PrefixParser(PDFParser):
-        def flush(self) -> None:
-            if self.curstack:
-                self.add_results(*self.pop(len(self.curstack)))
-
-        def nexttoken(self) -> Any:
-            nonlocal token_count
-            token_count += 1
-            if token_count > max_objects or len(self.context) > 64:
-                raise ValueError("native PDF preparse token/depth budget exhausted")
-            if time.monotonic() >= deadline:
-                raise TimeoutError("native PDF preparse deadline exhausted")
-            return super().nexttoken()
-
-    class References:
-        def getobj(self, object_id: int) -> Any:
-            seen: set[int] = set()
-            while True:
-                if object_id in seen or len(seen) >= 64 or object_id not in values:
-                    raise ValueError("native PDF reference is cyclic, deep or unadmitted")
-                if time.monotonic() >= deadline:
-                    raise TimeoutError("native PDF reference deadline exhausted")
-                seen.add(object_id)
-                value = values[object_id]
-                if not isinstance(value, PDFObjRef):
-                    return value
-                object_id = value.objid
-
-    references = References()
-    trailer_parser = PrefixParser(BytesIO(content[cursor:]))
-    trailer_parser.doc = cast(Any, references)
-    trailer = trailer_parser.nextobject()[1]
-    if not isinstance(trailer, dict) or any(key in trailer for key in ("Prev", "XRefStm", "Encrypt")):
-        raise ValueError("native PDF incremental/encrypted/hybrid xrefs require bounded support")
-    ordered = sorted((position, object_id, generation) for object_id, (position, generation) in offsets.items())
-    streams = []
-    for index, (position, object_id, generation) in enumerate(ordered):
-        end = ordered[index + 1][0] if index + 1 < len(ordered) else offset
-        if not 0 <= position < end <= offset:
-            raise ValueError("native PDF classic object offsets overlap or escape source")
-        body = content[position:end]
-        header = re.match(rf"{object_id}\s+{generation}\s+obj\b".encode(), body)
-        if header is None:
-            raise ValueError("native PDF object identity differs from its classic xref")
-        body = body[header.end() :]
-        parser = PrefixParser(BytesIO(body))
-        parser.doc = cast(Any, references)
-        value = parser.nextobject()[1]
-        values[object_id] = value
-        next_position, next_token = parser.nexttoken()
-        if isinstance(next_token, PSKeyword) and next_token.name == b"stream":
-            if not isinstance(value, dict):
-                raise ValueError("native PDF stream has no admitted dictionary")
-            streams.append((object_id, value, body[next_position:]))
-        elif not isinstance(next_token, PSKeyword) or next_token.name != b"endobj":
-            raise ValueError("native PDF indirect object body is unsupported")
+    admission = admit_pdf_index(content, deadline=deadline, max_bytes=max_bytes, max_objects=max_objects)
+    values, trailer, streams = admission.values, admission.trailer, admission.streams
     pending = list(values.values())
     font_files = set()
     cmap_files = set()
+    cmap_uses: dict[int, int] = {}
     visits = 0
     while pending:
         value = pending.pop()
@@ -133,6 +39,10 @@ def preflight_pdf_streams(
             subtype = resolve1(value.get("Subtype"))
             if isinstance(subtype, PSLiteral) and subtype.name in {"Type3", "Form", "PS"} or "PatternType" in value:
                 raise ValueError("native PDF executable glyph/Form/pattern programs require bounded support")
+            if "Font" in value:
+                fonts = resolve1(value["Font"])
+                if not isinstance(fonts, dict) or any(not isinstance(spec, PDFObjRef) for spec in fonts.values()):
+                    raise ValueError("native PDF direct font resource programs require bounded support")
             if "UseCMap" in value:
                 raise ValueError("native PDF inherited CMaps require bounded support")
             if "ToUnicode" in value:
@@ -140,6 +50,7 @@ def preflight_pdf_streams(
                 if not isinstance(target, PDFObjRef):
                     raise ValueError("native PDF ToUnicode requires an exact indexed stream")
                 cmap_files.add(target.objid)
+                cmap_uses[target.objid] = cmap_uses.get(target.objid, 0) + 1
             for key in ("FirstChar", "LastChar"):
                 if key in value and (type(value[key]) is not int or not 0 <= value[key] <= 65535):
                     raise ValueError("native PDF font character range exceeds its finite budget")
@@ -182,25 +93,14 @@ def preflight_pdf_streams(
             pending.extend(value)
     if font_files & cmap_files:
         raise ValueError("native PDF font and CMap stream roles overlap")
-    total = 0
     estimates: dict[int, tuple[int, int]] = {}
     for object_id, attrs, tail in streams:
-        if any(
-            isinstance(resolve1(attrs.get(key)), PSLiteral) and resolve1(attrs[key]).name in {"ObjStm", "XRef", "Form"}
-            for key in ("Type", "Subtype")
-        ):
-            raise ValueError("native PDF compressed objects/recursive Forms require bounded support")
-        length = resolve1(attrs.get("Length"))
-        marker = re.match(rb"stream[ \t]*(?:\r\n|\r|\n)", tail)
-        if type(length) is not int or length < 0 or marker is None:
-            raise ValueError("native PDF stream has no exact bounded length")
-        end = marker.end() + length
-        if end > len(tail) or re.fullmatch(rb"\s*endstream\s+endobj\s*", tail[end:]) is None:
-            raise ValueError("native PDF stream length differs from its classic object boundary")
-        decoded = _bounded_stream_data(
-            PDFStream(attrs, tail[marker.end() : end]), min(32 * 1024 * 1024, max_bytes - total)
-        )
-        total += len(decoded)
+        kind = resolve1(attrs.get("Type"))
+        if isinstance(kind, PSLiteral) and kind.name in {"ObjStm", "XRef"}:
+            if object_id not in admission.decoded:
+                raise ValueError("native PDF index/object stream lacks exact bounded admission")
+            continue
+        decoded = admission.stream_data(attrs, tail)
         if object_id in font_files or any(
             isinstance(resolve1(attrs.get(key)), PSLiteral) and resolve1(attrs[key]).name in {"Image", "Metadata"}
             for key in ("Type", "Subtype")
@@ -209,23 +109,33 @@ def preflight_pdf_streams(
         tokens = PSBaseParser(BytesIO(decoded))
         count = text_bytes = 0
         is_cmap = object_id in cmap_files or b"begincmap" in decoded
+        cmap_tokens = []
         while True:
             try:
                 _, token = tokens.nexttoken()
             except PSEOF:
                 break
-            token_count += 1
+            admission.tick()
             count += 1
             text_bytes += len(token) if isinstance(token, bytes) else 0
-            if token_count > max_objects or text_bytes > max_objects:
+            if text_bytes > max_objects:
                 raise ValueError("native PDF content token/glyph budget exhausted before page parsing")
             if time.monotonic() >= deadline:
                 raise TimeoutError("native PDF preparse deadline exhausted")
-            if isinstance(token, PSKeyword) and token.name in {b"beginbfrange", b"begincidrange", b"usecmap"}:
-                raise ValueError("native PDF CMap range expansion requires bounded support")
+            if (
+                is_cmap
+                or isinstance(token, PSKeyword)
+                and token.name in {b"beginbfrange", b"begincidrange", b"usecmap"}
+            ):
+                cmap_tokens.append(token)
             if is_cmap and isinstance(token, bytes) and len(token) > 32:
                 raise ValueError("native PDF CMap string expansion requires bounded support")
-        estimates[object_id] = count, text_bytes
+        mappings, expanded_text = cmap_range_cost(cmap_tokens, max_objects)
+        copies = max(1, cmap_uses.get(object_id, 0))
+        admission.tokens += mappings * copies + count * (copies - 1)
+        if admission.tokens > max_objects or (text_bytes + expanded_text) * copies > max_objects:
+            raise ValueError("native PDF CMap range expansion exceeds the original program budget")
+        estimates[object_id] = count + mappings, text_bytes + expanded_text
     root = resolve1(trailer.get("Root"))
     if not isinstance(root, dict):
         raise ValueError("native PDF has no admitted catalog")
@@ -265,13 +175,13 @@ def preflight_pdf_streams(
         raise ValueError("native PDF has no bounded original pages")
     if not cmap_files.issubset(estimates):
         raise ValueError("native PDF CMap does not have an admitted text stream role")
-    from pdfminer.pdfdocument import PDFDocument, PDFXRef
+    from pdfminer.pdfdocument import PDFDocument, PDFXRef, PDFXRefStream
 
     document = PDFDocument(PDFParser(BytesIO(content)), fallback=False)
-    if (
-        len(document.xrefs) != 1
-        or not isinstance(document.xrefs[0], PDFXRef)
-        or document.xrefs[0].offsets
-        != {key: (None, position, generation) for key, (position, generation) in offsets.items()}
+    if len(document.xrefs) != 1 or type(document.xrefs[0]) is not (PDFXRefStream if admission.compressed else PDFXRef):
+        raise ValueError("native PDF native xref differs from bounded source admission")
+    xref = document.xrefs[0]
+    if set(xref.get_objids()) != set(admission.offsets) or any(
+        xref.get_pos(object_id) != position for object_id, position in admission.offsets.items()
     ):
         raise ValueError("native PDF native xref differs from bounded source admission")

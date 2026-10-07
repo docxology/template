@@ -144,3 +144,24 @@ def test_nested_authored_runtime_names_remain_bound_inputs(tmp_path: Path, name:
     path.write_text("authored input two")
     after = project_source_identity(tmp_path, scope), source_fingerprint(tmp_path)
     assert before[0] != after[0] and before[1] != after[1]
+
+
+def test_smaller_snapshot_cap_refuses_before_read_and_applies_to_cached_bytes(tmp_path: Path) -> None:
+    path = tmp_path / "output/readiness/bounded.json"
+    path.parent.mkdir(parents=True)
+    path.write_bytes(b"x" * 1025)
+    reader = SnapshotReader(tmp_path)
+    with pytest.raises(ValueError):
+        reader.read("output/readiness/bounded.json", max_bytes=1024)
+    assert not reader.snapshots
+    held = reader.read("output/readiness/bounded.json", max_bytes=1025)
+    assert len(held.content) == 1025
+    with pytest.raises(ValueError, match="held snapshot"):
+        reader.read("output/readiness/bounded.json", max_bytes=1024)
+    assert reader.read("output/readiness/bounded.json", max_bytes=1025) is held
+
+
+@pytest.mark.parametrize("limit", [True, 0, -1, 64 * 1024 * 1024 + 1, 1.0])
+def test_snapshot_cap_cannot_disable_the_original_global_ceiling(tmp_path: Path, limit: object) -> None:
+    with pytest.raises(ValueError, match="positive bounded"):
+        SnapshotReader(tmp_path).read("output/readiness/missing.json", max_bytes=limit)

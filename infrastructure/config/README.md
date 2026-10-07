@@ -9,6 +9,8 @@ If you are looking for `from infrastructure.config import ...`, you want `infras
 - **`.env.template`**: Example environment variables to copy into your own `.env` (do not commit secrets).
 - **`secure_config.yaml`**: Default secure pipeline configuration (steganography/hashing/encryption).
 
+- **`root-case-policy.json` and derived `.part-NNNN.json` files**: Bounded, lossless source representation of the complete reviewed Root policy draft. Current collection and policy admission remain required; see [Root case policy](../../docs/development/root-case-policy.md).
+
 ### See also
 
 - **Python config loaders**: [`infrastructure/core/config/`](../core/config/)
