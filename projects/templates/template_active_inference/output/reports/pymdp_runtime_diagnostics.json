@@ -89,13 +89,11 @@
     },
     {
       "context": "si_tmaze:policy_inference:h2:s0",
-      "evidence": "policy fallback was observed and explicitly recorded",
-      "fallback_count": 2,
-      "fallback_observed": true,
-      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
-      "fallback_reasons": [
-        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
-      ],
+      "evidence": "no policy fallback was observed",
+      "fallback_count": 0,
+      "fallback_observed": false,
+      "fallback_reason": "none",
+      "fallback_reasons": [],
       "ok": true,
       "phase": "fallback"
     },
@@ -179,13 +177,11 @@
     },
     {
       "context": "si_tmaze:policy_inference:h3:s0",
-      "evidence": "policy fallback was observed and explicitly recorded",
-      "fallback_count": 3,
-      "fallback_observed": true,
-      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
-      "fallback_reasons": [
-        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
-      ],
+      "evidence": "no policy fallback was observed",
+      "fallback_count": 0,
+      "fallback_observed": false,
+      "fallback_reason": "none",
+      "fallback_reasons": [],
       "ok": true,
       "phase": "fallback"
     },
@@ -205,10 +201,8 @@
     "inference",
     "warning"
   ],
-  "policy_fallback_count": 5,
-  "policy_fallback_reasons": [
-    "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
-  ],
+  "policy_fallback_count": 0,
+  "policy_fallback_reasons": [],
   "policy_posterior_available_count": 5,
   "records": [
     {
@@ -258,10 +252,8 @@
           "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
         }
       ],
-      "policy_fallback_count": 2,
-      "policy_fallback_reasons": [
-        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
-      ],
+      "policy_fallback_count": 0,
+      "policy_fallback_reasons": [],
       "policy_posterior_available_count": 2,
       "unexpected_warning_count": 0,
       "unexpected_warnings": [],
@@ -318,10 +310,8 @@
           "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
         }
       ],
-      "policy_fallback_count": 3,
-      "policy_fallback_reasons": [
-        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
-      ],
+      "policy_fallback_count": 0,
+      "policy_fallback_reasons": [],
       "policy_posterior_available_count": 3,
       "unexpected_warning_count": 0,
       "unexpected_warnings": [],

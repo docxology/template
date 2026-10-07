@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Notebook-to-Tested-Source Extraction for Computational Research" />
@@ -14,7 +14,10 @@ Template</title>
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -39,11 +42,16 @@ Template</title>
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -56,11 +64,8 @@ Template</title>
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -89,8 +94,11 @@ Template</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -114,7 +122,7 @@ Template</title>
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -131,11 +139,11 @@ Template</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -896,11 +904,11 @@ logic in its cells.</p>
 <p>We ship a deterministic dataset (<code>data/measurements.csv</code>)
 with a designed correlation structure and a handful of missing values,
 then load, clean, summarize, correlate, and visualize it entirely
-through tested functions in <code>src/eda/</code>. The library is
-side-effect-free — no plotting and no file I/O — and standalone (numpy
-and pandas only), so it is covered above the 90% project gate and reused
-identically from the notebook, the thin analysis script
-(<code>scripts/eda_analysis.py</code>), and this manuscript.</p>
+through tested functions in <code>src/template_eda_notebook/eda/</code>.
+The library is side-effect-free — no plotting and no file I/O — and
+standalone (numpy and pandas only), so it is covered above the 90%
+project gate and reused identically from the notebook, the thin analysis
+script (<code>scripts/eda_analysis.py</code>), and this manuscript.</p>
 <p>Contributions are <strong>methodological</strong> and
 <strong>architectural</strong>. On the methods side, we walk the
 canonical first EDA pass: surface missingness explicitly rather than
@@ -921,8 +929,8 @@ Template</a> ecosystem, demonstrating how a computational notebook can
 stay reproducible by delegating every computation to a fully-tested
 library. The prose, the labelled figures, and the summary table are all
 produced through an auditable custody chain: a deterministic dataset,
-tested functions in <code>src/eda/</code>, a thin analysis script, and
-multi-format rendering.</p>
+tested functions in <code>src/template_eda_notebook/eda/</code>, a thin
+analysis script, and multi-format rendering.</p>
 <h2 data-number="2.1" id="why-exploratory-data-analysis"><span
 class="header-section-number">2.1</span> Why exploratory data
 analysis</h2>
@@ -949,8 +957,8 @@ Concretely:</p>
 logic of its own.</li>
 <li>Each analytical step — loading, cleaning, summarizing, correlating,
 preparing figure data — is a typed, documented function in
-<code>src/eda/</code> with a test that asserts an exact numeric
-property.</li>
+<code>src/template_eda_notebook/eda/</code> with a test that asserts an
+exact numeric property.</li>
 <li>A thin script (<code>scripts/eda_analysis.py</code>) runs the same
 pipeline headless and writes the figures and a summary CSV to
 <code>output/</code>.</li>
@@ -960,10 +968,10 @@ class="header-section-number">2.3</span> Template architecture
 context</h2>
 <p>The project sits on the repository’s three pillars:</p>
 <ol type="1">
-<li><strong><code>src/eda/</code> library</strong>: pure pandas/numpy
-data transforms — no plotting, no file I/O, no
-<code>infrastructure</code> imports. This purity is what makes the
-library forkable and trivially testable.</li>
+<li><strong><code>src/template_eda_notebook/eda/</code>
+library</strong>: pure pandas/numpy data transforms — no plotting, no
+file I/O, no <code>infrastructure</code> imports. This purity is what
+makes the library forkable and trivially testable.</li>
 <li><strong><code>tests/</code> framework</strong>: a zero-mock suite
 that exercises the library against the shipped CSV and tiny real frames,
 plus a structural check that the notebook’s imports bind to the
@@ -987,7 +995,8 @@ class="header-section-number">2.5</span> Reader’s guide to the
 manuscript</h2>
 <ul>
 <li><strong>sec. <a href="#sec:methodology">3</a></strong> ties each EDA
-step to its function in <code>src/eda/</code>.</li>
+step to its function in
+<code>src/template_eda_notebook/eda/</code>.</li>
 <li><strong>sec. <a href="#sec:results">4</a></strong> is
 figure-centric: each panel names the figure-data preparer that produced
 it.</li>
@@ -1266,10 +1275,10 @@ class="header-section-number">5.1</span> Exemplar achievements</h2>
 <p>Operating as the EDA exemplar for the Research Project Template
 methodology, the project deployed the three foundational pillars:</p>
 <ol type="1">
-<li><strong><code>src/eda/</code> library</strong>: pure pandas/numpy
-data transforms — loading, cleaning, summary statistics, correlation,
-and figure-data preparation — with no plotting, no file I/O, and no
-<code>infrastructure</code> imports.</li>
+<li><strong><code>src/template_eda_notebook/eda/</code>
+library</strong>: pure pandas/numpy data transforms — loading, cleaning,
+summary statistics, correlation, and figure-data preparation — with no
+plotting, no file I/O, and no <code>infrastructure</code> imports.</li>
 <li><strong><code>tests/</code> integrity</strong>: a zero-mock suite
 over the shipped dataset and hand-built frames, plus a structural
 notebook-binding check, all under a ≥90% project coverage gate.</li>
@@ -1285,10 +1294,10 @@ class="header-section-number">5.2.1</span> The notebook -&gt; tested src
 extraction workflow</h3>
 <p>The hallmark of this exemplar is the discipline it teaches: explore
 fast in a cell, and the moment a computation matters, move it into
-<code>src/eda/</code> behind a failing test. The walkthrough notebook
-imports only the library’s public surface and defines no functions of
-its own, a property the test suite enforces structurally so it cannot
-regress.</p>
+<code>src/template_eda_notebook/eda/</code> behind a failing test. The
+walkthrough notebook imports only the library’s public surface and
+defines no functions of its own, a property the test suite enforces
+structurally so it cannot regress.</p>
 <h3 data-number="5.2.2" id="honest-handling-of-imperfect-data"><span
 class="header-section-number">5.2.2</span> Honest handling of imperfect
 data</h3>
@@ -1304,10 +1313,10 @@ class="header-section-number">5.3</span> Key insights</h2>
 every number in sec. <a href="#sec:results">4</a> is produced by a
 tested function and regenerated on demand, so prose and artifacts cannot
 drift.</li>
-<li><strong>Purity enables reuse</strong>: because <code>src/eda/</code>
-returns plot-ready data and never touches a display backend, the same
-functions serve the notebook, the headless script, and the
-manuscript.</li>
+<li><strong>Purity enables reuse</strong>: because
+<code>src/template_eda_notebook/eda/</code> returns plot-ready data and
+never touches a display backend, the same functions serve the notebook,
+the headless script, and the manuscript.</li>
 <li><strong>Missingness is information</strong>: reporting dropped rows
 beats imputing them away in an exploratory pass.</li>
 </ol>
@@ -1542,12 +1551,12 @@ counts.</li>
 <li><code>clean_dataset()</code> reports exactly how many rows it
 removed, so the complete-case row count is a checkable invariant.</li>
 <li><code>generate_measurements()</code>
-(<code>src/eda/generate.py</code>) regenerates a deterministic
-<em>sibling</em> of the dataset from a fixed NumPy seed: the same
-schema, 120 rows, the same missingness pattern, and the same correlation
-sign structure. The original fixture’s exact random draw order is not
-recoverable, so the generator deliberately reproduces the fixture’s
-documented contract rather than a byte-exact clone.</li>
+(<code>src/template_eda_notebook/eda/generate.py</code>) regenerates a
+deterministic <em>sibling</em> of the dataset from a fixed NumPy seed:
+the same schema, 120 rows, the same missingness pattern, and the same
+correlation sign structure. The original fixture’s exact random draw
+order is not recoverable, so the generator deliberately reproduces the
+fixture’s documented contract rather than a byte-exact clone.</li>
 </ul>
 <h2 data-number="7.4"
 id="verification-no-hand-transcribed-numbers"><span
@@ -1608,11 +1617,11 @@ class="header-section-number">8.3</span> What this project proves about
 the template</h2>
 <p>The analytical steps here are standard. The
 <strong>non-standard</strong> contribution is procedural: the same
-tested functions in <code>src/eda/</code> back the interactive notebook,
-the headless analysis script, and this manuscript, so the figures and
-the summary table always refer to the same code. That pattern is what
-downstream projects should copy — whether the domain is survey data,
-sensor logs, or experimental measurements.</p>
+tested functions in <code>src/template_eda_notebook/eda/</code> back the
+interactive notebook, the headless analysis script, and this manuscript,
+so the figures and the summary table always refer to the same code. That
+pattern is what downstream projects should copy — whether the domain is
+survey data, sensor logs, or experimental measurements.</p>
 <h2 data-number="8.4" id="explicit-limitations"><span
 class="header-section-number">8.4</span> Explicit limitations</h2>
 <ol type="1">

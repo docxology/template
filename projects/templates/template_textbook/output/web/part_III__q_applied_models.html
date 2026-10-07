@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>q_applied_models.md.web</title>
   <style>
@@ -11,7 +11,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -36,11 +39,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -53,11 +61,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -86,8 +91,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -111,7 +119,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -128,11 +136,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -568,26 +576,42 @@ mjx-container[display="true"] {
 <h1 id="sec:q_part_III_applied_models">Question Bank — Applied
 Models</h1>
 <p>Linked chapter: <span class="citation"
-data-cites="sec:part_III_applied_models">[@sec:part_III_applied_models]</span>.</p>
+data-cites="sec:part_III_applied_models">[@sec:part_III_applied_models]</span>.
+Write your reasoning before checking the answer; for numeric questions
+retain units and the model assumption that licenses the calculation.</p>
 <h2 id="recall">Recall</h2>
 <ol type="1">
-<li><!-- STUB: question -->
-TODO. <em>(Answer: <!-- STUB -->)</em></li>
-<li><!-- STUB: question -->
-TODO. <em>(Answer: <!-- STUB -->)</em></li>
+<li><p>Which family is appropriate for a static calibration?</p>
+<p><em>(Answer: A declared input-output family, rather than a
+time-evolution law without a justified connection.)</em></p></li>
+<li><p>How do a positive-slope line and a saturating response differ at
+large inputs?</p>
+<p><em>(Answer: The line grows without bound; the response approaches a
+finite maximum.)</em></p></li>
 </ol>
 <h2 id="application">Application</h2>
 <ol start="3" type="1">
-<li><!-- STUB: question -->
-TODO. <em>(Answer: <!-- STUB -->)</em></li>
-<li><!-- STUB: question -->
-TODO. <em>(Answer: <!-- STUB -->)</em></li>
+<li><p>What is the response at input six with maximum one, midpoint
+three and exponent two?</p>
+<p><em>(Answer: Four fifths.)</em></p></li>
+<li><p>Is the fitting dataset an independent evaluation dataset?</p>
+<p><em>(Answer: No; it has already influenced the parameters or model
+choice.)</em></p></li>
 </ol>
 <h2 id="synthesis">Synthesis</h2>
 <ol start="5" type="1">
-<li><!-- STUB: question -->
-TODO. <em>(Answer: <!-- STUB -->)</em></li>
+<li><p>What belongs in a bounded recommendation?</p>
+<p><em>(Answer: Range, observation rule, parameters, evaluation
+evidence, competing explanations and remaining
+uncertainty.)</em></p></li>
 </ol>
+<h2 id="solution-discussion">Solution Discussion</h2>
+<p>Choose a model family by the question and evidence it can represent,
+then compare alternatives where they differ. The best fit within the
+existing range need not provide the best prediction outside it. A
+complete response distinguishes a designed arithmetic control from an
+empirical claim, names the quantities being compared and preserves the
+limits of the model.</p>
 </main>
 </body>
 </html>

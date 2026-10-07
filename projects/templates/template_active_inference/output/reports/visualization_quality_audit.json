@@ -40,7 +40,7 @@
       "aspect_ratio": 2.6405228758169934,
       "classification": "auxiliary_transmission_check",
       "classified": true,
-      "content_sha256": "083a8c2e21fc95de9c3cedc0d3427a91693c181c114b0a473bd8cc726f349575",
+      "content_sha256": "67f2f83090772330f97dc72e38eb66b20cf73f9634fb4819e9db6e63a91399b2",
       "exists": true,
       "filename": "transmission_integrity_strip.png",
       "height_px": 306,
@@ -50,7 +50,7 @@
       "producer": "infrastructure.publishing.transmission_barcode_strip.write_transmission_barcode_strip",
       "reason": "infrastructure-generated integrity strip for transmission bookends",
       "rendered": true,
-      "size_bytes": 18356,
+      "size_bytes": 18293,
       "width_px": 808
     },
     {
@@ -948,7 +948,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 44361,
+      "size_bytes": 43571,
       "source_backed": true,
       "source_mapped": true,
       "sources": [

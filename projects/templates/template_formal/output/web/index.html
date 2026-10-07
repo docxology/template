@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Session Types, Affine Handles, and Machine-Checked Invariants in a Simulated Ant-Robot Colony -- and an Honest Account of Where the Guarantees Stop" />
@@ -13,7 +13,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -38,11 +41,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -55,11 +63,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -88,8 +93,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -113,7 +121,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -130,11 +138,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -1087,16 +1095,17 @@ across the codebase — each layer below owns exactly one of the concerns
 this paper argues for (ADTs, nominal identifiers, session types, affine
 handles), and each layer is exercised by the colony coordination loop at
 the bottom, never bypassed:</p>
-<pre class="mermaid"><code>graph TD
-    A[scripts/02_run_analysis.py] --&gt; B[src/template_formal/colony/]
-    B --&gt; C[src/template_formal/agent/agent.py]
-    C --&gt; D[src/template_formal/storage/]
-    C --&gt; E[src/template_formal/protocol/session.py]
-    C --&gt; F[src/template_formal/agent/agent.py::decide]
-    D --&gt; G[per-agent SQLite file]
-    E --&gt; H[src/template_formal/network/bus.py]
-    B --&gt; I[src/template_formal/colony/pheromone.py]
-    F --&gt; J[expected_free_energy — Friston 2005 framing]</code></pre>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">graph</span> <span class="cn">TD</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">A</span>[<span class="vs">scripts/02_run_analysis.py</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">src/template_formal/colony/</span>]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">src/template_formal/agent/agent.py</span>]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">C</span> <span class="pp">--&gt;</span> <span class="dt">D</span>[<span class="vs">src/template_formal/storage/</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">C</span> <span class="pp">--&gt;</span> <span class="dt">E</span>[<span class="vs">src/template_formal/protocol/session.py</span>]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">C</span> <span class="pp">--&gt;</span> <span class="dt">F</span>[<span class="vs">src/template_formal/agent/agent.py::decide</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">D</span> <span class="pp">--&gt;</span> <span class="dt">G</span>[<span class="vs">per-agent SQLite file</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">E</span> <span class="pp">--&gt;</span> <span class="dt">H</span>[<span class="vs">src/template_formal/network/bus.py</span>]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">src/template_formal/colony/pheromone.py</span>]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">F</span> <span class="pp">--&gt;</span> <span class="dt">J</span>[<span class="vs">expected_free_energy — Friston 2005 framing</span>]</span></code></pre></div>
 <h2 data-number="3.2" id="algebraic-data-types-resultt-e"><span
 class="header-section-number">3.2</span> Algebraic data types:
 <code>Result[T, E]</code></h2>
@@ -1175,22 +1184,23 @@ outcomes of the attempted transition, matching the code exactly
 <code>_consumed = True</code> and return <code>Err(...)</code> from the
 <em>same</em> phase object, they do not construct a next-phase
 class).</p>
-<pre class="mermaid"><code>stateDiagram-v2
-    [*] --&gt; Idle
-    Idle --&gt; Handshaking: open()
-    Idle --&gt; Established: accept_hello() Ok
-    Idle --&gt; IdleRejected: accept_hello() Err
-    Handshaking --&gt; Established: complete() Ok
-    Handshaking --&gt; HandshakingRejected: complete() Err
-    Established --&gt; Closed: close()
-    Closed --&gt; [*]
-
-    Idle --&gt; WireFault: bus.try_recv() corrupt
-    Handshaking --&gt; WireFault: bus.try_recv() corrupt
-
-    state IdleRejected: Result.Err(ProtocolViolation)&lt;br/&gt;consumed, no phase advance (ISC-23)
-    state HandshakingRejected: Result.Err(ProtocolViolation)&lt;br/&gt;consumed, no phase advance (ISC-23)
-    state WireFault: Result.Err(MalformedMessage)&lt;br/&gt;decode fails before any phase method runs (ISC-24)</code></pre>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">stateDiagram-v2</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">[*]</span> <span class="pp">--&gt;</span> <span class="dt">Idle</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Idle</span> <span class="pp">--&gt;</span> <span class="dt">Handshaking</span>:<span class="vs"> open()</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Idle</span> <span class="pp">--&gt;</span> <span class="dt">Established</span>:<span class="vs"> accept_hello() Ok</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Idle</span> <span class="pp">--&gt;</span> <span class="dt">IdleRejected</span>:<span class="vs"> accept_hello() Err</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Handshaking</span> <span class="pp">--&gt;</span> <span class="dt">Established</span>:<span class="vs"> complete() Ok</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Handshaking</span> <span class="pp">--&gt;</span> <span class="dt">HandshakingRejected</span>:<span class="vs"> complete() Err</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Established</span> <span class="pp">--&gt;</span> <span class="dt">Closed</span>:<span class="vs"> close()</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Closed</span> <span class="pp">--&gt;</span> <span class="dt">[*]</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Idle</span> <span class="pp">--&gt;</span> <span class="dt">WireFault</span>:<span class="vs"> bus.try_recv() corrupt</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Handshaking</span> <span class="pp">--&gt;</span> <span class="dt">WireFault</span>:<span class="vs"> bus.try_recv() corrupt</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">state</span> <span class="dt">IdleRejected:</span> <span class="er">Result</span><span class="dt">.Err(ProtocolViolation)&lt;br/&gt;consumed,</span> <span class="dt">no</span> <span class="dt">phase</span> <span class="dt">advance</span> <span class="dt">(ISC</span><span class="er">-</span><span class="dt">23)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">state</span> <span class="dt">HandshakingRejected:</span> <span class="er">Result</span><span class="dt">.Err(ProtocolViolation)&lt;br/&gt;consumed,</span> <span class="dt">no</span> <span class="dt">phase</span> <span class="dt">advance</span> <span class="dt">(ISC</span><span class="er">-</span><span class="dt">23)</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">state</span> <span class="dt">WireFault:</span> <span class="er">Result</span><span class="dt">.Err(MalformedMessage)&lt;br/&gt;decode</span> <span class="dt">fails</span> <span class="dt">before</span> <span class="dt">any</span> <span class="dt">phase</span> <span class="dt">method</span> <span class="dt">runs</span> <span class="dt">(ISC</span><span class="er">-</span><span class="dt">24)</span></span></code></pre></div>
 <p><em>The real
 <code>IdleSession → HandshakingSession → EstablishedSession → ClosedSession</code>
 phase machine plus its two fault-injected error edges — dropped frames
@@ -2590,7 +2600,7 @@ seed blocks.</p>
 <p><strong>Real result</strong> (<code>n=60</code> for
 <code>very-wide</code>, <code>N=150</code> for the null model, each seed
 base’s null-model run freshly computed at that seed base):</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 14%" />
 <col style="width: 14%" />
@@ -2791,20 +2801,21 @@ shipped, not cut</h2>
 (<code>formal/lean/AntProtocol.lean</code>) and a TLA+ specification
 (<code>formal/tla/AntProtocol.tla</code> + <code>AntProtocol.cfg</code>)
 of the handshake protocol, each wired to exactly one real runnable check
-inside <code>scripts/check_formal_specs.sh</code> —
-<code>lake build</code> for the Lean model, and the TLC model checker
+inside <code>scripts/check_formal_specs.sh</code> — fresh pinned Lean
+elaboration and axiom audits, and the TLC model checker
 (<code>tla2tools.jar</code>) for the TLA+ spec. Both checks are optional
 (they require <code>lake</code>/<code>elan</code> and a Java runtime
-respectively, and are not part of <code>--core-only</code> pipeline runs
-or the coverage gate on <code>src/</code>), but neither is decorative:
-the script fails non-zero if either check fails, and both have been
-executed at least once with captured output (recorded in
-<code>ISA.md</code>’s <code>## Decisions</code>). This is a deliberately
-different evidentiary register from the rest of this paper’s claims —
-Lean/TLA+ model the <em>protocol design</em>, independent of whether
-this template’s Python implementation actually conforms to that design;
-no claim in this paper conflates a passing Lean/TLA+ check with a proof
-about the Python code in <code>src/</code>.</p>
+respectively, and are excluded from the core pipeline; full unpaid
+acceptance executes them with explicit pinned acquisition and a shared
+deadline), but neither is decorative: the script fails non-zero if
+either check fails, and both have been executed at least once with
+captured output (recorded in <code>ISA.md</code>’s
+<code>## Decisions</code>). This is a deliberately different evidentiary
+register from the rest of this paper’s claims — Lean/TLA+ model the
+<em>protocol design</em>, independent of whether this template’s Python
+implementation actually conforms to that design; no claim in this paper
+conflates a passing Lean/TLA+ check with a proof about the Python code
+in <code>src/</code>.</p>
 <h2 data-number="6.7"
 id="formal-side-spec-expansion-what-grew-and-what-still-needs-wiring"><span
 class="header-section-number">6.7</span> Formal side-spec expansion:

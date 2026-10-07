@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>appendix_authoring_guide.md.web</title>
   <style>
@@ -11,7 +11,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -36,11 +39,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -53,11 +61,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -86,8 +91,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -111,7 +119,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -128,11 +136,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -171,71 +179,6 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      {   }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-    code span.at { color: #7d9029; } /* Attribute */
-    code span.bn { color: #40a070; } /* BaseN */
-    code span.bu { color: #008000; } /* BuiltIn */
-    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #4070a0; } /* Char */
-    code span.cn { color: #880000; } /* Constant */
-    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-    code span.dt { color: #902000; } /* DataType */
-    code span.dv { color: #40a070; } /* DecVal */
-    code span.er { color: #ff0000; font-weight: bold; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #40a070; } /* Float */
-    code span.fu { color: #06287e; } /* Function */
-    code span.im { color: #008000; font-weight: bold; } /* Import */
-    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-    code span.op { color: #666666; } /* Operator */
-    code span.ot { color: #007020; } /* Other */
-    code span.pp { color: #bc7a00; } /* Preprocessor */
-    code span.sc { color: #4070a0; } /* SpecialChar */
-    code span.ss { color: #bb6688; } /* SpecialString */
-    code span.st { color: #4070a0; } /* String */
-    code span.va { color: #19177c; } /* Variable */
-    code span.vs { color: #4070a0; } /* VerbatimString */
-    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
@@ -630,151 +573,114 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:appendix_authoring_guide">Appendix A — Authoring Guide:
-Filling the Stubs</h1>
+<h1 id="sec:appendix_authoring_guide">Appendix A — Authoring and
+Verification</h1>
 <!-- chapter-metadata-badge -->
 <blockquote>
-<p>Reference appendix · For authors and contributors · Read this
-first.</p>
+<p>Reference appendix · For authors and contributors.</p>
 </blockquote>
-<p>This is the most important file in the template. It explains how to
-turn the empty scaffold into a finished book by <strong>filling
-stubs</strong> and <strong>growing</strong> structure from a single
-source of truth. Read it once end-to-end, then keep it open while you
-work.</p>
-<h2 id="the-big-idea-one-source-of-truth">The Big Idea: One Source of
-Truth</h2>
-<p>The book is <strong>data-driven from <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/config.yaml"><code>config.yaml</code></a></strong>. The list of
-parts, chapters, labs, question banks, and reference appendices lives
-there and nowhere else. The Python engine in <code>src/textbook/</code>
-reads that file and the scaffolding scripts in <code>scripts/</code>
-materialise the matching markdown files. You never hand-number a
-chapter, figure, equation, or section — pandoc-crossref does that at
-render time from the labels you write.</p>
-<p>The flow is always the same:</p>
-<pre class="text"><code>edit config.yaml  -&gt;  scaffold_chapter.py  -&gt;  fill &lt;!-- STUB --&gt; blocks
-      -&gt;  add figures / glossary terms / references  -&gt;  audit + tests</code></pre>
-<h2 id="step-1-decide-the-structure-in-config.yaml">Step 1 — Decide the
-Structure in <code>config.yaml</code></h2>
-<p>Open <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/config.yaml"><code>config.yaml</code></a>. To add or
-rename a chapter, edit the <code>units:</code> tree (each chapter has a
-<code>stem</code> and a <code>title</code>); to add a lab or question
-bank, add an entry under <code>appendices.labs</code> /
-<code>appendices.questions</code> for the matching part. The stem drives
-every downstream name:</p>
-<ul>
-<li>chapter file →
-<code>manuscript/&lt;part&gt;/&lt;NN&gt;_&lt;stem&gt;.md</code>, label
-<code>{#sec:&lt;part&gt;_&lt;stem&gt;}</code></li>
-<li>lab file →
-<code>manuscript/labs/&lt;part&gt;/lab_&lt;stem&gt;.md</code>, label
-<code>{#sec:lab_&lt;part&gt;_&lt;stem&gt;}</code></li>
-<li>question bank →
-<code>manuscript/questions/&lt;part&gt;/q_&lt;stem&gt;.md</code>, label
-<code>{#sec:q_&lt;part&gt;_&lt;stem&gt;}</code></li>
-</ul>
-<p>Keep stems short, lowercase, and <code>snake_case</code>. Do not
-invent a numbering scheme; the table of contents and labels are derived
-in <code>src/textbook/toc.py</code>.</p>
-<h2 id="step-2-materialise-the-stubs">Step 2 — Materialise the
-Stubs</h2>
-<p>Run the scaffolder. It only <strong>creates files that are
-missing</strong>, so it is safe to re-run after every config change:</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/scaffold_chapter.py</span></code></pre></div>
-<p>This writes a chapter (or lab, or question bank) pre-populated with
-every required structural element as <code>&lt;!-- STUB --&gt;</code>
-markers. Your job is to replace the stubs with real prose, never to
-delete the structure.</p>
-<h2 id="step-3-fill-the-content-contract">Step 3 — Fill the Content
-Contract</h2>
-<p>Every chapter must carry these elements (enforced by
-<code>validate_chapter</code> in <code>src/textbook/content.py</code>
-and by the integrity tests). Fill each, keep the markers’ surrounding
-structure:</p>
-<ul>
-<li>a labelled H1:
-<code># Title {#sec:&lt;part&gt;_&lt;stem&gt;}</code></li>
-<li>a metadata badge line:
-<code>&lt;!-- chapter-metadata-badge --&gt;</code></li>
-<li>a Study Blueprint:
-<code>&lt;!-- curriculum-scaffold-start --&gt;</code></li>
-<li><strong>Learning Objectives</strong></li>
-<li>one figure with alt text and a crossref label
-<code>{#fig:...}</code></li>
-<li>a worked formalism: an equation <code>{#eq:...}</code> plus a
-parameter table <code>{#tbl:...}</code></li>
-<li>an inline <code>```mermaid</code> diagram</li>
-<li><strong>Summary</strong>, <strong>Key Terms</strong>,
-<strong>Further Reading</strong>, <strong>Practice</strong>
-sections</li>
-</ul>
-<p>Cross-reference syntax is pandoc-crossref: <code>[@fig:..]</code>,
-<code>[@tbl:..]</code>, <code>[@eq:..]</code>, <code>[@sec:..]</code>.
-Stub markers the audit counts are <code>&lt;!-- STUB --&gt;</code>,
-<code>TODO:</code>, and <code>TKTK</code> — drive these to zero as the
-chapter matures.</p>
-<h2 id="step-4-add-a-figure">Step 4 — Add a Figure</h2>
-<p>Figures are deterministic matplotlib output. Each chapter expects a
-placeholder named <code>&lt;part_id&gt;_&lt;stem&gt;.png</code>. To make
-it real, add or edit a function in <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/src/visualization/plots.py"><code>src/visualization/plots.py</code></a>
-(the four worked figures show the pattern), then regenerate:</p>
-<div class="sourceCode" id="cb3"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/generate_figures.py</span></code></pre></div>
-<p>For diagrams, edit <code>src/mermaid/diagram_specs.yaml</code> and
-run <code>scripts/generate_diagrams.py</code> (PNG, or <code>.mmd</code>
-fallback). Reference the figure in prose with
-<code>[@fig:&lt;part&gt;_&lt;stem&gt;]</code> and give it alt text.</p>
-<h2 id="step-5-add-a-glossary-term">Step 5 — Add a Glossary Term</h2>
-<p>Glossary anchors are a <strong>closed contract</strong>. To add a
-term you must update <strong>both</strong>:</p>
-<ol type="1">
-<li><code>GLOSSARY_ANCHORS</code> in <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/src/textbook/constants.py"><code>src/textbook/constants.py</code></a></li>
-<li>the matching entry in <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/glossary.md"><code>glossary.md</code></a></li>
-</ol>
-<p>Link a term in prose as <code>[**term**](#gl:&lt;anchor&gt;)</code>.
-The current anchors are
-<code>system, model, parameter, variable, equilibrium, feedback, gradient, threshold, network, dynamics, emergence, regulation, boundary, state, observable</code>.</p>
-<h2 id="step-6-add-a-reference">Step 6 — Add a Reference</h2>
-<p>Citations are <code>[key]</code> and must resolve in <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/references.bib"><code>references.bib</code></a>. Add a BibTeX
-entry, then cite it. Keep <code>CITATION_KEYS</code> in
-<code>constants.py</code> in sync if you add a key that the structural
-contract should track.</p>
-<h2 id="step-7-audit-and-test">Step 7 — Audit and Test</h2>
-<p>Two gates decide whether the book is healthy:</p>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Quality gate: counts stubs, checks the content contract per file</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/audit_textbook_quality.py</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Full test suite (engine + manuscript integrity)</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--extra</span> dev python <span class="at">-m</span> pytest</span></code></pre></div>
-<p><code>tests/test_manuscript_integrity.py</code> verifies that every
-chapter satisfies the content contract, that labels are unique, that
-citations resolve, and that glossary links point at real anchors. Green
-tests with remaining stubs mean the <strong>structure</strong> is
-correct but the <strong>content</strong> is unfinished — that is the
-normal state of a freshly scaffolded chapter.</p>
-<h2 id="growing-the-book">Growing the Book</h2>
-<p>To add a whole new chapter end-to-end:</p>
-<ol type="1">
-<li>add its <code>stem</code>/<code>title</code> under the right part in
-<code>config.yaml</code>;</li>
-<li>add matching lab and question-bank entries under
-<code>appendices</code>;</li>
-<li>run <code>scripts/scaffold_chapter.py</code>;</li>
-<li>fill the stubs (Steps 3–6);</li>
-<li>run the audit and tests until the contract passes.</li>
-</ol>
-<!-- STUB: project-specific authoring notes — house style, citation policy,
-figure conventions — go here once you adopt the template. -->
-<p>See also: <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/appendices/appendix_notation.md">Appendix B — Notation</a>,
-<a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/appendices/appendix_math_review.md">Appendix C — Mathematical Review</a>,
-and the <a href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/appendices/README.md">appendices README</a>.</p>
+<p>A technical book needs a traceable path from an idea to an
+explanation, a computation, and a checked artifact. This appendix
+describes that path for this book. The canonical chapters are authored
+examples. The separate scaffolding API creates draft outlines for new
+work; generating an outline does not establish that a chapter is ready
+to teach.</p>
+<h2 id="declare-the-structure">Declare the structure</h2>
+<p>The live structure uses <code>units:</code> in
+<code>config.yaml</code>. Each unit declares a directory, an
+introduction, and a list of chapter files. The chapter stem connects its
+source to its lab, question bank, and figure. For example,
+<code>part_II/dynamics_and_change.md</code> connects to
+<code>labs/part_II/lab_dynamics_and_change.md</code> and
+<code>questions/part_II/q_dynamics_and_change.md</code>. A renamed file
+requires all three entries and their section references to move
+together. Keep software release metadata separate from publication
+evidence; an intended version does not turn an old DOI into a new
+deposit.</p>
+<p>The engine derives the table of contents from this configuration.
+Authors supply stable labels such as
+<code>{#sec:part_II_dynamics_and_change}</code>; rendering supplies
+display numbers. Do not write a second chapter roster in a script or
+assume that changing a display title changes the source filename.</p>
+<h2 id="create-a-draft-without-replacing-authored-work">Create a draft
+without replacing authored work</h2>
+<p>From the project directory,
+<code>uv run python scripts/scaffold_chapter.py</code> creates only
+missing files. Its structural contract supplies headings, a learning
+blueprint, a labelled formalism, and companion locations. Fill each
+instructional element with a purpose, assumptions, an example, and an
+answer that a learner can inspect. Retain useful structure while
+replacing draft markers with authored material. Keep generation tests in
+temporary directories so tests never rewrite the canonical
+manuscript.</p>
+<p>A chapter should answer a concrete question. Name its state,
+observations, units, model, and limits before choosing a computation. A
+lab should make a prediction before running code, show the resulting
+arithmetic, and discuss a failure case. A question bank should include
+answers with reasoning, rather than simply repeating definitions. A
+correct calculation under explicit assumptions is a useful result even
+when it does not establish a real-world claim.</p>
+<h2 id="bind-prose-to-computation">Bind prose to computation</h2>
+<p>Put reusable mathematics in <code>src/textbook/models.py</code>;
+scripts coordinate calls and file output. For a worked numerical
+example, independently derive a small exact case and assert it in
+runnable Python. For growth, the initial condition and carrying-capacity
+limit are separate checks. For decay, compare a half-life ratio with a
+direct exponential evaluation. For a fit, inspect residuals as well as
+the displayed slope.</p>
+<p>Figures come from <code>src/visualization/plots.py</code>. Run
+<code>uv run python scripts/generate_figures.py</code> to generate
+deterministic plots from declared model parameters and the bundled
+instructional fixture. Explain the axes, units, and uncertainty
+convention in the caption and supply meaningful alt text. A fixed random
+seed can make an illustration reproducible; it cannot make simulated
+observations into empirical measurements.</p>
+<p>Mermaid specifications live in
+<code>src/mermaid/diagram_specs.yaml</code>. Run
+<code>uv run python scripts/generate_diagrams.py</code> to produce
+diagram assets. Where a rendering backend is unavailable, a saved source
+specification preserves the diagram’s content but is not evidence that a
+graphical artifact rendered successfully.</p>
+<h2 id="cite-and-cross-reference-responsibly">Cite and cross-reference
+responsibly</h2>
+<p>Citations resolve to <code>references.bib</code>. Record
+publisher-verified authors, title, year, and DOI or URL; explain
+precisely why the source is useful. This book uses primary publications
+for model adequacy, scientific computing, communication, computation,
+dynamics, and reproducibility. A citation does not transfer every claim
+in a chapter to its source. Mathematical examples derived here should
+identify their assumptions and derivation.</p>
+<p>Glossary links use the anchors declared in
+<code>GLOSSARY_ANCHORS</code> and authored in <code>glossary.md</code>.
+Figures, tables, equations, and sections use <code>[@fig:...]</code>,
+<code>[@tbl:...]</code>, <code>[@eq:...]</code>, and
+<code>[@sec:...]</code>. Keep labels unique. A section reference is
+preferable to a hand-written page number because pagination varies
+across PDF, HTML, and EPUB.</p>
+<h2 id="require-content-completion">Require content completion</h2>
+<p>Run
+<code>uv run python scripts/audit_textbook_quality.py --require-complete</code>.
+The completion mode requires every configured chapter, introduction,
+front-matter file, lab, question bank, and reference section to exist
+and contain no draft markers. Structural mode remains available for
+deliberate new outlines. Neither mode can infer scientific truth from
+the absence of markers.</p>
+<p>Run the isolated project test suite after source changes. Its model
+cases, configuration controls, manuscript integrity checks, and runnable
+examples provide distinct evidence. Inspect the changed source and final
+artifacts as well. A passing test suite does not certify that every
+explanation is sufficient for every audience, and a render that finishes
+does not establish that its numeric claims match the source.</p>
+<h2 id="contributor-checklist">Contributor checklist</h2>
+<p>Before accepting a chapter, verify its question, assumptions,
+numerical example, figure, citations, lab solution, and question
+answers. Preserve the source data and release history. Record the
+interpreter and commands used for local verification, identify missing
+rendering backends, and keep publication pending until the intended
+artifacts actually exist. This practice follows the reproducible
+computational workflow discussed by Sandve and colleagues
+[sandve2013ten] and the tested software practices discussed by Wilson
+and colleagues [wilson2014best].</p>
 </main>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>appendix_format_gallery.md.web</title>
   <style>
@@ -11,7 +11,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -36,11 +39,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -53,11 +61,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -86,8 +91,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -111,7 +119,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -128,11 +136,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -701,8 +709,8 @@ working example of every content primitive this template supports. Copy
 any block into a chapter and adapt it. Each example is real and renders
 through the standard pipeline; figures are produced deterministically by
 <code>src/visualization/</code> and embedded from
-<code>../figures/</code>.
-<!-- STUB: trim to the subset your book actually uses. --></p>
+<code>../figures/</code>. Each example demonstrates a rendering
+convention, not a new measurement.</p>
 <blockquote>
 <p><strong>How to read this appendix.</strong> Headings group primitives
 by kind: text, lists, callouts, tables, math, figures, diagrams, code,
@@ -936,8 +944,9 @@ histogram panels.</figcaption>
 <p>The full plot-type gallery lives in <code>../figures/gallery/</code>
 and includes: line, scatter-with-fit, bar, grouped bar, horizontal bar,
 histogram, box, violin, heatmap, contour, quiver field, step, stacked
-area, error bars, log-log, pie, annotated, and multi-panel.
-<!-- STUB: embed the ones your chapters use. --></p>
+area, error bars, log-log, pie, annotated, and multi-panel. The chapters
+use the model curves and instructional error bars; the remaining plots
+demonstrate alternative presentations.</p>
 <hr />
 <h2 id="diagrams-mermaid">7. Diagrams (Mermaid)</h2>
 <p>The pipeline renders fenced <code>mermaid</code> blocks to figures
@@ -945,34 +954,39 @@ area, error bars, log-log, pie, annotated, and multi-panel.
 absent). One worked example of each kind the builders in
 <code>src/mermaid/diagrams.py</code> support:</p>
 <p>Flowchart:</p>
-<pre class="mermaid"><code>graph TD
-  A[Inputs] --&gt; B[Model]
-  B --&gt; C[Predictions]
-  C --&gt;|revise| A</code></pre>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">graph</span> <span class="cn">TD</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">A</span>[<span class="vs">Inputs</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Model</span>]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Predictions</span>]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|revise|</span> <span class="dt">A</span></span></code></pre></div>
 <p>Sequence:</p>
-<pre class="mermaid"><code>sequenceDiagram
-  participant Author
-  participant Engine
-  Author -&gt;&gt; Engine: edit config.yaml
-  Engine --&gt;&gt; Author: rendered PDF</code></pre>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">sequenceDiagram</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">participant</span><span class="vs"> Author</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="vs">  participant Engine</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="vs">  Author </span><span class="dt">-&gt;&gt;</span><span class="vs"> Engine</span><span class="dt">:</span><span class="vs"> edit config</span><span class="dt">.</span><span class="vs">yaml</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="vs">  Engine </span><span class="dt">--&gt;&gt;</span><span class="vs"> Author</span><span class="dt">:</span><span class="vs"> rendered PDF</span></span></code></pre></div>
 <p>State:</p>
-<pre class="mermaid"><code>stateDiagram-v2
-  [*] --&gt; Stub
-  Stub --&gt; Drafted: fill
-  Drafted --&gt; Reviewed: review
-  Reviewed --&gt; [*]: publish</code></pre>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">stateDiagram-v2</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">[*]</span> <span class="pp">--&gt;</span> <span class="dt">Stub</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Stub</span> <span class="pp">--&gt;</span> <span class="dt">Drafted</span>:<span class="vs"> fill</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Drafted</span> <span class="pp">--&gt;</span> <span class="dt">Reviewed</span>:<span class="vs"> review</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Reviewed</span> <span class="pp">--&gt;</span> <span class="dt">[*]</span>:<span class="vs"> publish</span></span></code></pre></div>
 <p>Class:</p>
-<pre class="mermaid"><code>classDiagram
-  class ChapterRef {
-    +str part_id
-    +str file
-    +stem() str
-  }
-  ChapterRef --&gt; TocEntry : numbered as</code></pre>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">classDiagram</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">class</span><span class="dt"> ChapterRef {</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>str part_id</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>str file</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>stem() str</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">}</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ChapterRef</span> <span class="pp">--&gt;</span> <span class="dt">TocEntry</span> :<span class="vs"> numbered as</span></span></code></pre></div>
 <p>Entity-relationship:</p>
-<pre class="mermaid"><code>erDiagram
-  PART ||--o{ CHAPTER : contains
-  CHAPTER ||--|| LAB : has</code></pre>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">erDiagram</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">PART</span> <span class="pp">||--o{</span> <span class="dt">CHAPTER</span> :<span class="vs"> contains</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">CHAPTER</span> <span class="pp">||--||</span> <span class="dt">LAB</span> :<span class="vs"> has</span></span></code></pre></div>
 <p>Pie, Gantt, mindmap, timeline, quadrant, and user-journey diagrams
 are also supported — see <code>src/mermaid/diagram_specs.yaml</code> for
 a worked spec of each.</p>
@@ -1007,10 +1021,11 @@ section <span class="citation"
 data-cites="sec:appendix_formalisms">[@sec:appendix_formalisms]</span>.
 Never hand-number — Pandoc fills these in.</p>
 <p>Citations resolve against <code>references.bib</code>: a single
-source [smith2020foundations], multiple sources [doe2019methods;
-lee2021systems], and an in-text form — <span class="citation"
-data-cites="garcia2022dynamics">@garcia2022dynamics</span> showed the
-effect first. A locator narrows the reference [patel2018models].</p>
+source [box1976science], multiple sources [sandve2013ten;
+nyquist1932regeneration], and an in-text form — <span class="citation"
+data-cites="lorenz1963deterministic">@lorenz1963deterministic</span>
+showed the effect first. A locator narrows the reference
+[may1976simple].</p>
 <hr />
 <h2 id="media-and-data">10. Media and data</h2>
 <p>Embedded raster image (any PNG/JPG works the same way as a
@@ -1081,8 +1096,9 @@ bars.</figcaption>
 <p>These are the reusable teaching elements chapters draw on.</p>
 <blockquote>
 <p><strong>Learning objective.</strong> After this section a reader can
-identify which Markdown primitive to use for a given purpose.
-<!-- STUB: make objectives measurable. --></p>
+identify which Markdown primitive to use for a given purpose. Explain a
+selected primitive, identify its label, and justify its use in a worked
+example.</p>
 </blockquote>
 <blockquote>
 <p><strong>Worked example.</strong> Given <span class="math inline">\(r
@@ -1091,15 +1107,18 @@ class="math inline">\(N_0 = 5\)</span>, evaluate <span
 class="math inline">\(N(10)\)</span> via <span class="citation"
 data-cites="eq:gallery_logistic">[@eq:gallery_logistic]</span> using
 <code>textbook.models.logistic_growth</code>. The result approaches
-<span class="math inline">\(K\)</span>.
-<!-- STUB: show the full numeric work. --></p>
+<span class="math inline">\(K\)</span>. At <span
+class="math inline">\(t=10\)</span>, the denominator is <span
+class="math inline">\(1+19e^{-8}=1.0063738\)</span>, so <span
+class="math inline">\(N(10)=99.3667\)</span>.</p>
 </blockquote>
 <blockquote>
 <p><strong>Try it.</strong> Change <span
 class="math inline">\(r\)</span> to <span
 class="math inline">\(1.5\)</span> and predict, then check, how the
-curve shifts.
-<!-- STUB: provide the expected answer in the question bank. --></p>
+curve shifts. Expected answer: a larger positive rate advances the rise
+at positive time while preserving the initial value and the limiting
+capacity.</p>
 </blockquote>
 <blockquote>
 <p><strong>Key terms.</strong> <a
@@ -1111,7 +1130,8 @@ href="#gl:state"><strong>state</strong></a>.</p>
 <p><strong>Summary.</strong> This appendix demonstrated text, lists,
 callouts, tables, math and units, figures, diagrams, code,
 cross-references, media, and pedagogy blocks — the complete primitive
-set. <!-- STUB: keep this in sync as you add primitives. --></p>
+set. Check these examples in each selected output format when changing
+the rendering toolchain.</p>
 </blockquote>
 <hr />
 <h2 id="miscellany">12. Miscellany</h2>

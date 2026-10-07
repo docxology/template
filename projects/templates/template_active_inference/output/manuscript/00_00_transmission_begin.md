@@ -21,7 +21,7 @@
 | Field | Value |
 | --- | --- |
 | Title | Active Inference Multi-Track Exemplar |
-| Version | 0.3.2 |
+| Version | 0.4.0 |
 | Concept DOI | 10.5281/zenodo.20417021 |
 | Version DOI | 10.5281/zenodo.20931870 |
 | GitHub | [https://github.com/docxology/template_active_inference/releases/tag/v0.3.2](https://github.com/docxology/template_active_inference/releases/tag/v0.3.2) |

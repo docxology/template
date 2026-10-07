@@ -34,8 +34,8 @@
       "artifact": "output/data/si_policy_comparison.json",
       "id": "policy_comparison_replay",
       "passed": true,
-      "replay_sha256": "616188c134ccbbad4affdffb091377ff2d4940e681183ff617f8324d806d1f21",
-      "saved_sha256": "616188c134ccbbad4affdffb091377ff2d4940e681183ff617f8324d806d1f21"
+      "replay_sha256": "f76e7425e17d7cea607f9001e2c2be1c19ca960e8e98734be22e4337e7aff565",
+      "saved_sha256": "f76e7425e17d7cea607f9001e2c2be1c19ca960e8e98734be22e4337e7aff565"
     }
   ],
   "schema": "template_active_inference.reproducibility_replay.v1"

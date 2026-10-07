@@ -10,7 +10,7 @@
       "num_policies": 4,
       "goal_reached": true,
       "action_diversity": 2,
-      "mean_belief_entropy": 0.3250831436,
+      "mean_belief_entropy": 0.0,
       "actions": [
         0,
         1
@@ -66,7 +66,7 @@
       "num_policies": 4,
       "goal_reached": false,
       "action_diversity": 1,
-      "mean_belief_entropy": 0.3250831436,
+      "mean_belief_entropy": 0.0,
       "actions": [
         0,
         0
@@ -76,48 +76,59 @@
         0
       ],
       "policy_methods": {
-        "expected_utility_fallback": 2
+        "infer_policies": 2
       },
-      "policy_method": "expected_utility_fallback",
+      "policy_method": "infer_policies",
       "selected_policy": 0,
       "policy_posterior_steps": [
         {
           "step": 0,
           "posterior_available": true,
-          "posterior_source": "expected_utility_fallback",
+          "posterior_source": "infer_policies",
           "q_pi": [
-            0.7584284501,
-            0.2415715499
+            0.4458993159,
+            0.4458993159,
+            0.0900255249,
+            0.0181758432
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 0.5528846613,
+          "q_pi_entropy": 1.0098656296,
           "q_pi_normalized": true,
           "selected_policy": 0,
-          "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
+          "fallback_reason": null
         },
         {
           "step": 1,
           "posterior_available": true,
-          "posterior_source": "expected_utility_fallback",
+          "posterior_source": "infer_policies",
           "q_pi": [
-            0.5196750309,
-            0.4803249691
+            0.4458993159,
+            0.4458993159,
+            0.0900255249,
+            0.0181758432
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 0.692372767,
+          "q_pi_entropy": 1.0098656296,
           "q_pi_normalized": true,
           "selected_policy": 0,
-          "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
+          "fallback_reason": null
         }
       ],
       "policy_posterior_available_count": 2,
       "policy_posterior_all_normalized": true,
-      "mean_policy_posterior_entropy": 0.6226287141,
-      "expected_free_energy_values": [],
-      "expected_free_energy_available": false,
-      "expected_free_energy_fallback_reasons": [
-        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
-      ]
+      "mean_policy_posterior_entropy": 1.0098656296,
+      "expected_free_energy_values": [
+        3.5999999046,
+        3.5999999046,
+        2.0,
+        0.400000006,
+        3.5999999046,
+        3.5999999046,
+        2.0,
+        0.400000006
+      ],
+      "expected_free_energy_available": true,
+      "expected_free_energy_fallback_reasons": []
     },
     {
       "mode": "state_inference",
@@ -128,7 +139,7 @@
       "num_policies": 8,
       "goal_reached": true,
       "action_diversity": 2,
-      "mean_belief_entropy": 0.3250831436,
+      "mean_belief_entropy": 0.0,
       "actions": [
         0,
         1,
@@ -197,7 +208,7 @@
       "num_policies": 8,
       "goal_reached": true,
       "action_diversity": 1,
-      "mean_belief_entropy": 0.3250831436,
+      "mean_belief_entropy": 0.0,
       "actions": [
         0,
         0,
@@ -209,62 +220,103 @@
         1
       ],
       "policy_methods": {
-        "expected_utility_fallback": 3
+        "infer_policies": 3
       },
-      "policy_method": "expected_utility_fallback",
+      "policy_method": "infer_policies",
       "selected_policy": 0,
       "policy_posterior_steps": [
         {
           "step": 0,
           "posterior_available": true,
-          "posterior_source": "expected_utility_fallback",
+          "posterior_source": "infer_policies",
           "q_pi": [
-            0.7584284501,
-            0.2415715499
+            0.2245785437,
+            0.2245785437,
+            0.2245785437,
+            0.2245785437,
+            0.0453416398,
+            0.0453416398,
+            0.0091543203,
+            0.001848225
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 0.5528846613,
+          "q_pi_entropy": 1.6767882929,
           "q_pi_normalized": true,
           "selected_policy": 0,
-          "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
+          "fallback_reason": null
         },
         {
           "step": 1,
           "posterior_available": true,
-          "posterior_source": "expected_utility_fallback",
+          "posterior_source": "infer_policies",
           "q_pi": [
-            0.5196750309,
-            0.4803249691
+            0.2245785437,
+            0.2245785437,
+            0.2245785437,
+            0.2245785437,
+            0.0453416398,
+            0.0453416398,
+            0.0091543203,
+            0.001848225
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 0.692372767,
+          "q_pi_entropy": 1.6767882929,
           "q_pi_normalized": true,
           "selected_policy": 0,
-          "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
+          "fallback_reason": null
         },
         {
           "step": 2,
           "posterior_available": true,
-          "posterior_source": "expected_utility_fallback",
+          "posterior_source": "infer_policies",
           "q_pi": [
-            0.7584284501,
-            0.2415715499
+            0.2245785437,
+            0.2245785437,
+            0.2245785437,
+            0.2245785437,
+            0.0453416398,
+            0.0453416398,
+            0.0091543203,
+            0.001848225
           ],
           "q_pi_sum": 1.0,
-          "q_pi_entropy": 0.5528846613,
+          "q_pi_entropy": 1.6767882929,
           "q_pi_normalized": true,
           "selected_policy": 0,
-          "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
+          "fallback_reason": null
         }
       ],
       "policy_posterior_available_count": 3,
       "policy_posterior_all_normalized": true,
-      "mean_policy_posterior_entropy": 0.5993806965,
-      "expected_free_energy_values": [],
-      "expected_free_energy_available": false,
-      "expected_free_energy_fallback_reasons": [
-        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
-      ]
+      "mean_policy_posterior_entropy": 1.6767882929,
+      "expected_free_energy_values": [
+        5.3999996185,
+        5.3999996185,
+        5.3999996185,
+        5.3999996185,
+        3.7999999523,
+        3.7999999523,
+        2.2000000477,
+        0.6000000238,
+        5.3999996185,
+        5.3999996185,
+        5.3999996185,
+        5.3999996185,
+        3.7999999523,
+        3.7999999523,
+        2.2000000477,
+        0.6000000238,
+        5.3999996185,
+        5.3999996185,
+        5.3999996185,
+        5.3999996185,
+        3.7999999523,
+        3.7999999523,
+        2.2000000477,
+        0.6000000238
+      ],
+      "expected_free_energy_available": true,
+      "expected_free_energy_fallback_reasons": []
     }
   ],
   "summary": {

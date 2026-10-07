@@ -21,7 +21,7 @@
 | Field | Value |
 | --- | --- |
 | Title | Active Inference Multi-Track Exemplar |
-| Version | 0.3.2 |
+| Version | 0.4.0 |
 | Concept DOI | 10.5281/zenodo.20417021 |
 | Version DOI | 10.5281/zenodo.20931870 |
 | GitHub | [https://github.com/docxology/template_active_inference/releases/tag/v0.3.2](https://github.com/docxology/template_active_inference/releases/tag/v0.3.2) |
@@ -273,7 +273,7 @@ Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbo
 
 <!-- sheaf-track:prose -->
 
-**Sophisticated inference (planning horizon).** The pymdp method is a deterministic state-inference harness on a minimal T-maze ([@fig:tmaze_schematic]) with planning horizon `policy_len = 2`. The discrete-state framing follows finite POMDP active-inference treatments and sophisticated-inference analyses [@dacosta2020discrete; @smith2022tutorial; @friston2021sophisticated; @dacosta2023reward], and the implementation anchor is the pymdp software paper [@pymdp2024]. The default `state_inference` rollout writes the summary/trace artifacts used in [@sec:results_si_tmaze]; mean belief entropy is 0.3251.
+**Sophisticated inference (planning horizon).** The pymdp method is a deterministic state-inference harness on a minimal T-maze ([@fig:tmaze_schematic]) with planning horizon `policy_len = 2`. The discrete-state framing follows finite POMDP active-inference treatments and sophisticated-inference analyses [@dacosta2020discrete; @smith2022tutorial; @friston2021sophisticated; @dacosta2023reward], and the implementation anchor is the pymdp software paper [@pymdp2024]. The default `state_inference` rollout writes the summary/trace artifacts used in [@sec:results_si_tmaze]; mean belief entropy is 0.0000.
 
 The method keeps runtime, posterior, and extension evidence separate. `output/data/si_policy_comparison.json` compares `state_inference` and `policy_inference` over declared toy horizons and seeds without replacing the default rollout (4 rows; complete-grid flag 1). Agent construction and backend warnings live in `output/reports/pymdp_runtime_diagnostics.json` (4 constructions, 4 known third-party warnings, 0 unexpected warnings). Posterior rows live in `output/data/pymdp_policy_posterior_grid.json` and must remain normalized (`1`).
 
@@ -1034,7 +1034,7 @@ Saturation MI (grid maximum on the measured $\lambda$ sweep): 0.6031 nats.
 
 The pymdp harness rolls out a T-maze active-inference agent in `state_inference` mode with planning horizon 2. The default `state_inference` mode is belief filtering with a goal-seeking action rule; sophisticated policy inference (an expected-free-energy policy posterior) is selectable via `mode: policy_inference` ([@sec:methods_pymdp]). Summary metrics land in `output/data/si_tmaze_summary.json`.
 
-Steps recorded: 2. Mean belief entropy: 0.3251. Belief entropy over the rollout is traced in [@fig:si_belief_entropy_curve]; the paired observation and action indices are in [@fig:si_obs_action_trace]. `output/data/analysis_statistics.json` now records the trace as a small statistical object rather than a caption-only trace: action switches 1 times (rate 1.000 over adjacent steps), observation diversity is 1, entropy drop is 0.0000 nats from first to terminal step, and the saved trace/summary step counts agree: `true` with finite entropy values `true`. The default `state_inference` mode runs pymdp `infer_states` and **reports** the resulting posterior (belief entropy and the state-1 marginal), but the action is chosen by an open-loop scripted rule on the observation index — not by the posterior — so the inferred belief here is observed, not acted on. Under the toy transition model, expected-free-energy policy inference reaches the goal in 1 of its rows versus 2 for the scripted state-inference rule: no behavioral advantage on this two-state, horizon-2 maze, which is the measured content of the deliberately-too-small claim.
+Steps recorded: 2. Mean belief entropy: 0. Belief entropy over the rollout is traced in [@fig:si_belief_entropy_curve]; the paired observation and action indices are in [@fig:si_obs_action_trace]. `output/data/analysis_statistics.json` now records the trace as a small statistical object rather than a caption-only trace: action switches 1 times (rate 1.000 over adjacent steps), observation diversity is 1, entropy drop is 0.0000 nats from first to terminal step, and the saved trace/summary step counts agree: `true` with finite entropy values `true`. The default `state_inference` mode runs pymdp `infer_states` and **reports** the resulting posterior (belief entropy and the state-1 marginal), but the action is chosen by an open-loop scripted rule on the observation index — not by the posterior — so the inferred belief here is observed, not acted on. Under the toy transition model, expected-free-energy policy inference reaches the goal in 1 of its rows versus 2 for the scripted state-inference rule: no behavioral advantage on this two-state, horizon-2 maze, which is the measured content of the deliberately-too-small claim.
 
 Policy-comparison rows: 4 across state-inference and policy-inference modes; goal-reaching rows: 3. These rows are internal toy consistency checks under finite-horizon discrete active-inference assumptions [@friston2021sophisticated; @dacosta2023reward], not comparisons against external behavioral datasets. Graph-world extension rows: 4 over 4 nodes, with goal-reached flag 1.
 
@@ -1060,7 +1060,7 @@ Rollout trace: `output/data/si_tmaze_trace.json`. JSONL run log: `output/logs/py
 
 ![Dirichlet model learning: KL$(A_{\text{true}} \,\|\, A_{\text{learned}})$ versus concentration-update step. The expected likelihood $E[A] = pA / \sum_o pA$ converges monotonically to the true generative likelihood; the run reaches the convergence tolerance at step 3 with final KL 1.29e-03 nats. Deterministic (no sampling), so the curve is byte-reproducible.](../figures/dirichlet_convergence.png){#fig:dirichlet_convergence width=85% fig-alt="Single-panel semilog line chart of the Kullback-Leibler divergence from the true T-maze likelihood matrix A to the Dirichlet-learned expected likelihood, plotted against the update step. The divergence starts large at the uniform prior and falls monotonically toward zero as deterministic observation-state counts accumulate, crossing a dashed convergence-tolerance reference line; the first step below tolerance is marked. The curve is computed in closed form from a fixed expected-count stream (no sampling)."}
 
-![Belief entropy over time for the T-maze rollout (mean 0.3251 nats).](../figures/si_belief_entropy_curve.png){#fig:si_belief_entropy_curve width=90% fig-alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0.3251 to 0.3251 nats across 2 steps in state_inference mode."}
+![Belief entropy over time for the T-maze rollout (mean 0.0000 nats).](../figures/si_belief_entropy_curve.png){#fig:si_belief_entropy_curve width=90% fig-alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0 to 0 nats across 2 steps in state_inference mode."}
 
 ![Observation and action traces for the T-maze rollout (action diversity 2).](../figures/si_obs_action_trace.png){#fig:si_obs_action_trace width=90% fig-alt="Dual-panel plot of observation index and action index versus timestep for the pymdp T-maze rollout. The upper panel shows discrete observations; the lower panel shows actions. Goal reached flag is 1."}
 
@@ -1164,7 +1164,7 @@ The discussion ontology binds `coverage_semantics` to the audit matrix in [@sec:
 
 <!-- sheaf-track:simulation -->
 
-Measured pymdp rollout (`state_inference`, config hash `133a13df72cfd8d8`): mean belief entropy 0.3251 nats over 2 steps; goal reached flag 1; action diversity 2.
+Measured pymdp rollout (`state_inference`, config hash `133a13df72cfd8d8`): mean belief entropy 0.0000 nats over 2 steps; goal reached flag 1; action diversity 2.
 
 Analytical sweep residual RMSE 0 nats (max residual 0). Coverage audit: 95 present / 95 bound / 0 missing cells on the IMRAD matrix.
 
@@ -1622,7 +1622,7 @@ See `manuscript/references.bib` for bibliography entries cited in the composed s
 \section*{END OF TRANSMISSION}\label{end-of-transmission}
 ```
 
-**Release:** v0.3.2 · DOI `10.5281/zenodo.20417021` · SHA-256 `f191b48f9439…` · pairing complete
+**Release:** v0.4.0 · DOI `10.5281/zenodo.20417021` · SHA-256 `f191b48f9439…` · pairing complete
 
 ![Integrity QR strip](../figures/transmission_integrity_strip.png){width=88%}
 

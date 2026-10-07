@@ -1,15 +1,15 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "d5242290246599d61af93524aa9656f6de313f9b62710626b94d8fa8e64786a0",
+  "binding_sha256": "f9b08bc815709ae2337b0cd7a266562d09804db2e0d8c5af85457cbbd72dcb3a",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "dfad0f20fe9a3cc8278ecf9423949caeddebc2fc0127682e1709909c2e74cfdc",
-  "combined_size_bytes": 138192,
+  "combined_sha256": "b5dfa0d753cbdd07f150ebed8a5059afe4e98ab3a506438d203832746f5ab9e2",
+  "combined_size_bytes": 138177,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {
       "ordinal": 1,
       "path": "output/manuscript/00_00_transmission_begin.md",
-      "sha256": "6a3a1f1c580efc6c24f237f4e1b55a67f87d99a0d34d1ebab4a3c83d63dc38cf",
+      "sha256": "2c1b654c574114218f6006e43ef8179566148d1c65643930216307f363dc55cb",
       "size_bytes": 1517
     },
     {
@@ -45,7 +45,7 @@
     {
       "ordinal": 7,
       "path": "output/manuscript/06_methods_pymdp.md",
-      "sha256": "5e92ec4a15f6f02df4f813b4fea76c1ef683ae046769d59a36f04c61b09bf320",
+      "sha256": "a2f95f3e110062cf266fe971a257cc992cc90adc399f192ec49cb3c0d30b96bf",
       "size_bytes": 4176
     },
     {
@@ -75,8 +75,8 @@
     {
       "ordinal": 12,
       "path": "output/manuscript/12_results_si_tmaze.md",
-      "sha256": "d363b4977d9be5fa3d7f46ae129f23bd0183888ec80d06100bb62cc9c30019dd",
-      "size_bytes": 11128
+      "sha256": "eef29f1850f45a98af4a1a5d2766cb622d21cea5052e5a46f12c68ac2ebbda40",
+      "size_bytes": 11113
     },
     {
       "ordinal": 13,
@@ -87,7 +87,7 @@
     {
       "ordinal": 14,
       "path": "output/manuscript/15_discussion_outlook.md",
-      "sha256": "9f980bc7df891c6e6247247b5c25dbcd48c01348190cee348b0869c66233f939",
+      "sha256": "af0ceb6839ece5dd57313a2309dcae3ef24c78ee2a681e1347c100e5c0aa129c",
       "size_bytes": 3813
     },
     {
@@ -111,11 +111,11 @@
     {
       "ordinal": 18,
       "path": "output/manuscript/99_zz_transmission_end.md",
-      "sha256": "b3779d5e30783e0134569b8ed3c789b2c12af3ee27ebb13ba99b8146929c8bc5",
+      "sha256": "ef7848ed29c150c00b43009626c78530c3dda079ca5f05286df4d092d80b8ea2",
       "size_bytes": 509
     }
   ],
-  "ordered_inputs_sha256": "3b1698b29d784747bd8b963508d8c87d0bf9878e9e7be7ef0b2edaf48e5784fc",
+  "ordered_inputs_sha256": "a1892f3824c5a8fb0995dc55e37ae420e4459c4d2d2ad0bddb11aab84ef65e78",
   "project": "templates/template_active_inference",
   "schema_version": "template-manuscript-composition-v1"
 }

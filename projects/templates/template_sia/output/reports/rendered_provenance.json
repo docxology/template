@@ -40,7 +40,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "37afaa3a7001a34be3c084b72de2e7bbd976165571068df4af589ce4a3ebbbb7",
+      "sha256": "99d42a2ec2c83f2235a093599e8f61da199ab075294769879a5002069498b7bb",
       "size_bytes": 14600
     },
     "combined_manuscript": {
@@ -55,7 +55,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "f36cbcc0da720b16dfd469f669f253fa78e9ccd0ad64dd5a290384e544270576",
+      "sha256": "81c2abff3b12d8974cc87a384d8ec45f83e64a5a7c79b9df4b1dd0e2e822bbc5",
       "size_bytes": 10955
     }
   },
@@ -74,8 +74,8 @@
       "sha256": "038afcf4b62c828b76a16b59463942983c94159061ee91bd04a5dab085459775"
     },
     "stage": {
-      "file_count": 1539,
-      "sha256": "56e088069922ee61fa5c522b18c04df49947640cd4d1d3cc0de6adfa73fc394e"
+      "file_count": 1541,
+      "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
     }
   },
   "project": "templates/template_sia",

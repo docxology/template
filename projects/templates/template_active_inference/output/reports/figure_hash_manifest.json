@@ -123,11 +123,11 @@
       "size_bytes": 566982
     },
     {
-      "content_sha256": "ad9ef1f27db9482fa64815c90019a0224f593cacdeabf3c80869ff2d4bc4ead2",
+      "content_sha256": "8fc640b2fc6a86a326563118ce23c4828436cfb699ddcf8cec7e1da38afefda0",
       "fresh": true,
       "path": "output/figures/si_belief_entropy_curve.png",
-      "sha256": "39bcaf1764b47e519c27739dc3f5870e0d50e93112b4db3da5ecb30275828b6c",
-      "size_bytes": 44361
+      "sha256": "17cdf62c26e594ac569df28c895a3ac16f0e473e747db7defb7965d8ec35027d",
+      "size_bytes": 43571
     },
     {
       "content_sha256": "d80e985892f37dd1ab5708bfb10d6721fbed055ba8f8bd48525d62a9c99b45e2",
@@ -172,11 +172,11 @@
       "size_bytes": 194060
     },
     {
-      "content_sha256": "083a8c2e21fc95de9c3cedc0d3427a91693c181c114b0a473bd8cc726f349575",
+      "content_sha256": "67f2f83090772330f97dc72e38eb66b20cf73f9634fb4819e9db6e63a91399b2",
       "fresh": true,
       "path": "output/figures/transmission_integrity_strip.png",
-      "sha256": "029ec73fb47052c04df8ea92137b57ff3ea10a430311f18c0535405087374c1a",
-      "size_bytes": 18356
+      "sha256": "8f87fbc420defc8d02cf5aa3a98b50d786e1bbfacd5b3c33104753e8b506853e",
+      "size_bytes": 18293
     },
     {
       "content_sha256": "7471182fe2d49ad9fdbe596a543a15c908eefd133e49a5dcc10f890503135a9c",

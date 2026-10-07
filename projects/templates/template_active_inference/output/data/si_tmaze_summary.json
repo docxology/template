@@ -2,7 +2,7 @@
   "steps": 2,
   "policy_len": 2,
   "num_policies": 4,
-  "mean_belief_entropy": 0.32508314364563223,
+  "mean_belief_entropy": 2.8631110016483758e-11,
   "actions": [
     0,
     1

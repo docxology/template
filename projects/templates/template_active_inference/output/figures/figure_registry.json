@@ -204,8 +204,8 @@
     "width": 0.98
   },
   "fig:si_belief_entropy_curve": {
-    "alt": "Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0.3251 to 0.3251 nats across 2 steps in state_inference mode.",
-    "caption": "Belief entropy over time for the T-maze rollout (mean 0.3251 nats).",
+    "alt": "Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0 to 0 nats across 2 steps in state_inference mode.",
+    "caption": "Belief entropy over time for the T-maze rollout (mean 0.0000 nats).",
     "evidence_role": "statistical",
     "figure_id": "si_belief_entropy_curve",
     "filename": "si_belief_entropy_curve.png",

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>core_methods.md.web</title>
   <style>
@@ -11,7 +11,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -36,11 +39,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -53,11 +61,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -86,8 +91,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -111,7 +119,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -128,11 +136,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -171,6 +179,71 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
@@ -632,77 +705,116 @@ mjx-container[display="true"] {
 <main id="main-content" tabindex="-1">
 <h1 id="sec:part_0_core_methods">Core Methods and Tools</h1>
 <figure id="fig:part_0_core_methods">
-<a class="figure-full-size-link" href="../figures/part_0_core_methods.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Overview schematic for “Core Methods and Tools”."><img src="../figures/part_0_core_methods.png" style="width:90.0%"
-alt="A bordered placeholder overview panel labeled Core Methods and Tools, awaiting a subject-specific illustration." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Overview schematic for “Core Methods and
-Tools”. Replace this generated placeholder with a real figure produced
-by <code>src/visualization/plots.py</code>.</figcaption>
+<a class="figure-full-size-link" href="../figures/part_0_core_methods.png" target="_blank" rel="noopener" aria-label="Open full-size figure, A deterministic synthetic scatter and its least-squares line"><img src="../figures/part_0_core_methods.png" style="width:90.0%"
+alt="Twenty-five synthetic points follow an increasing trend with a smooth oscillating deviation; a fitted straight line summarizes the trend while leaving visible positive and negative residuals." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>A deterministic synthetic scatter and its
+least-squares line; visible residuals contrast with the exact arithmetic
+example.</figcaption>
 </figure>
-<!-- alt: Placeholder overview schematic for the chapter "Core Methods and Tools". TODO: write descriptive alt text once the real figure exists. -->
+<!-- alt: Twenty-five synthetic points follow an increasing trend with a smooth oscillating deviation; a fitted straight line summarizes the trend while leaving visible positive and negative residuals. -->
 <!-- chapter-metadata-badge -->
 <blockquote>
-<p>Level 1/3 · 30 min read · 45 min lecture · Prerequisites: none</p>
+<p>Guided study · Prerequisites: basic arithmetic and the preceding
+unit’s vocabulary</p>
 </blockquote>
-<h2 id="learning-objectives">Learning Objectives</h2>
-<p>By the end of this chapter you should be able to:</p>
-<ol type="1">
-<li><!-- STUB: objective -->
-TODO: state the first measurable learning objective.</li>
-<li><!-- STUB: objective -->
-TODO: state the second learning objective.</li>
-<li><!-- STUB: objective -->
-TODO: state the third learning objective.</li>
-</ol>
 <!-- curriculum-scaffold-start -->
 <h3 id="study-blueprint">Study Blueprint</h3>
 <ul>
-<li><strong>Big idea:</strong>
-<!-- STUB: one-sentence thesis for this chapter. --></li>
+<li><strong>Big idea:</strong> A reproducible method separates input
+custody, transformation, evaluation and communication.</li>
 <li><strong>Core concepts:</strong> <a
 href="#gl:model"><strong>model</strong></a>, <a
 href="#gl:parameter"><strong>parameter</strong></a>, <a
+href="#gl:observable"><strong>observable</strong></a>, <a
 href="#gl:variable"><strong>variable</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the worked formalism in <span
-class="citation"
+<li><strong>Quantitative lens:</strong> <span class="citation"
 data-cites="eq:part_0_core_methods_model">[@eq:part_0_core_methods_model]</span>.</li>
-<li><strong>Data skill:</strong>
-<!-- STUB: which data move the reader practises here. --></li>
-<li><strong>Common misconception to repair:</strong> <!-- STUB. --></li>
+<li><strong>Data skill:</strong> Record transformations and run an exact
+arithmetic control before analyzing unfamiliar data.</li>
+<li><strong>Common misconception to repair:</strong> Re-running a
+command successfully does not establish that its scientific input or
+interpretation is correct.</li>
 <li><strong>Primary lab:</strong> <span class="citation"
 data-cites="sec:lab_part_0_core_methods">[@sec:lab_part_0_core_methods]</span>.</li>
 <li><strong>Question bank:</strong> <span class="citation"
 data-cites="sec:q_part_0_core_methods">[@sec:q_part_0_core_methods]</span>.</li>
 <li><strong>Bridge to computation:</strong>
-<code>textbook.models</code>. <!-- curriculum-scaffold-end --></li>
+<code>textbook.models.linear_fit</code>.
+<!-- curriculum-scaffold-end --></li>
 </ul>
-<hr />
+<h2 id="learning-objectives">Learning Objectives</h2>
+<ol type="1">
+<li>Trace an output back to its data and transformation.</li>
+<li>Use an exact synthetic case to verify a fitted-line
+implementation.</li>
+<li>Design a negative control that can fail for a concrete reason.</li>
+</ol>
 <blockquote>
-<p><strong>Opening Vignette: TKTK — a motivating story</strong></p>
-<!-- STUB: open with a concrete, specific example that makes the reader care. > Two to four sentences. Cite a primary source [lee2021systems]. -->
+<p><strong>Opening example.</strong> Two classmates calculate a
+calibration line from the same spreadsheet and obtain different slopes.
+One silently removes a row; the other changes a unit. Their mathematics
+may be sound, but their methods are different. A useful workflow exposes
+both choices before either result appears in a figure.</p>
 </blockquote>
-<hr />
-<h2 id="orientation">Orientation</h2>
-<!-- STUB: 2-4 paragraphs introducing the chapter. -->
-<p>This section introduces the central ideas of <em>Core Methods and
-Tools</em>. Foundational treatments include [kim2020data;
-brown2017principles]. Key terms such as <a
-href="#gl:model"><strong>model</strong></a>, <a
-href="#gl:parameter"><strong>parameter</strong></a>, <a
-href="#gl:variable"><strong>variable</strong></a> are defined in the
-glossary.</p>
+<h2 id="make-the-transformation-explicit">Make the transformation
+explicit</h2>
+<p>Treat a method as a sequence of declared transformations, each with
+an input and an output. Reading a file, deciding which rows are
+eligible, converting units and fitting a model are different
+transformations. Their order matters: averaging before a nonlinear
+transformation need not give the same result as transforming before
+averaging. A workflow diagram is useful only when its arrows correspond
+to actual operations. Preserve the source file and express changes in
+code or an inspectable table instead of editing an unexplained copy.</p>
+<h2 id="design-a-control-with-a-known-answer">Design a control with a
+known answer</h2>
+<p>The exact four-point line in the worked example checks slope,
+intercept and predicted values. It is intentionally easier than a
+research dataset, because its role is to expose mistakes in computation.
+A second control should violate an assumption: input arrays with
+different lengths must be rejected by the tested fitting helper. A third
+control can use observations off the line and confirm that residuals are
+not all zero. These cases check different boundaries; many copies of the
+exact line would increase a test count without increasing the range of
+failures examined.</p>
+<h2 id="distinguish-verification-from-evaluation">Distinguish
+verification from evaluation</h2>
+<p>Verification asks whether the implementation behaves as its contract
+says. Evaluation asks whether the resulting model is useful for the
+stated question. The exact line provides verification evidence. A
+held-out calibration setting, an independently collected observation or
+a residual pattern can provide evaluation evidence. A perfect result on
+data used to construct the example is not an independent evaluation.
+Name each kind of evidence so that a green test report is not mistaken
+for proof that a model describes the world.</p>
+<h2 id="keep-one-method-in-one-place">Keep one method in one place</h2>
+<p>The computational backbone puts fitting in
+<code>textbook.models.linear_fit</code>. Chapters, labs and figure
+scripts call it rather than each maintaining another copy of the
+formula. This reduces opportunities for two implementations to drift.
+The independent numeric assertions in the example still have a separate
+role: a single implementation needs an external expectation. Modular
+scientific software and executable checks are discussed by Wilson and
+colleagues [wilson2014best]; this book demonstrates those practices with
+small real computations instead of simulated test doubles.</p>
+<h2 id="publish-an-inspectable-method-record">Publish an inspectable
+method record</h2>
+<p>Record the original data identity, the transformation choices,
+software environment, parameters and command. Also record what failed or
+remained unverified. Sandve and colleagues give a primary account of
+computational reproducibility practices [sandve2013ten]. A complete
+record enables another person to repeat the procedure, but repeatability
+still does not validate an unreliable sensor or an inappropriate study
+design. Include the observation protocol and the model’s scope so that a
+precise execution record supports, rather than obscures, scientific
+judgment.</p>
 <h2 id="a-worked-formalism">A Worked Formalism</h2>
-<p>The recurring quantitative model for this chapter is shown in <span
-class="citation"
-data-cites="eq:part_0_core_methods_model">[@eq:part_0_core_methods_model]</span>:</p>
-<p><span class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
-N_0}{N_0}\right) e^{-rt}} \]</span> {#eq:part_0_core_methods_model}</p>
-<p>It is implemented and tested in
-<code>textbook.models.logistic_growth</code>; never retype the maths in
-prose or scripts — call the tested function. The parameters appear in
-<span class="citation"
-data-cites="tbl:part_0_core_methods_parameters">[@tbl:part_0_core_methods_parameters]</span>.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Parameters of the worked model for this chapter."><table id="tbl:part_0_core_methods_parameters" data-responsive-table="true">
-<caption>Parameters of the worked model for this chapter.</caption>
+<p><span class="math display">\[ \widehat y(x)=mx+b,\qquad
+(m,b)=\arg\min_{a,c}\sum_i(y_i-ax_i-c)^2 \]</span>
+{#eq:part_0_core_methods_model}</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_core_methods_parameters" data-responsive-table="true">
+<caption>Quantities and conventions for this chapter’s worked
+example.</caption>
 <thead>
 <tr>
 <th>Symbol</th>
@@ -712,57 +824,96 @@ data-cites="tbl:part_0_core_methods_parameters">[@tbl:part_0_core_methods_parame
 </thead>
 <tbody>
 <tr>
-<td><span class="math inline">\(r\)</span></td>
-<td>intrinsic rate</td>
-<td>1/time</td>
+<td><span class="math inline">\(x_i,y_i\)</span></td>
+<td>Paired observed inputs and outputs</td>
+<td>declared data units</td>
 </tr>
 <tr>
-<td><span class="math inline">\(K\)</span></td>
-<td>carrying capacity</td>
-<td>quantity</td>
+<td><span class="math inline">\(m\)</span></td>
+<td>Least-squares slope</td>
+<td>output per input</td>
 </tr>
 <tr>
-<td><span class="math inline">\(N_0\)</span></td>
-<td>initial value</td>
-<td>quantity</td>
+<td><span class="math inline">\(b\)</span></td>
+<td>Intercept</td>
+<td>output</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\widehat y\)</span></td>
+<td>Fitted output</td>
+<td>output</td>
 </tr>
 </tbody>
 </table></div>
-<p>A concept map of how the pieces fit together:</p>
-<pre class="mermaid"><code>graph TD
-  A[Inputs / assumptions] --&gt; B[Model]
-  B --&gt; C[Predictions]
-  C --&gt; D[Comparison with data]
-  D --&gt;|revise| A</code></pre>
-<blockquote>
-<p><strong>Note</strong></p>
-<!-- STUB: an aside, caveat, or historical note. -->
-</blockquote>
-<h2 id="going-deeper">Going Deeper</h2>
-<!-- STUB: the substantive body of the chapter. Expand freely — figures,
-tables, equations, and subsections may repeat as needed. -->
-<p>See the overview in <span class="citation"
+<p>The four deliberately constructed pairs lie on <span
+class="math inline">\(y=2x+1\)</span>. The slope is two output units per
+input unit, the intercept is one output unit and every residual is zero,
+so the reported coefficient of determination is one. The exact fit is an
+arithmetic control for the implementation; it supplies no evidence about
+an unobserved real-world mechanism.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> linear_fit</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">3.0</span>])</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([<span class="fl">1.0</span>, <span class="fl">3.0</span>, <span class="fl">5.0</span>, <span class="fl">7.0</span>])</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> linear_fit(x, y)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(fit.slope, <span class="fl">2.0</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(fit.intercept, <span class="fl">1.0</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(fit.predict(x), y)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fit)</span></code></pre></div>
+<p>The equation is evaluated by the tested
+<code>textbook.models.linear_fit</code>. The assertions above are
+independent expectations for this designed example; the displayed figure
+in <span class="citation"
 data-cites="fig:part_0_core_methods">[@fig:part_0_core_methods]</span>
-and revisit the objectives above as you read. Further evidence:
-[kim2020data; brown2017principles].</p>
+is a deterministic illustration with its own explicitly stated inputs,
+not evidence collected from the opening scenario.</p>
+<h2 id="assumptions-and-limits">Assumptions and Limits</h2>
+<p>Least squares here treats the input values as known and fits one
+straight line with equal observation weights. It does not model error in
+the inputs, dependence between observations or a changing variance. A
+large coefficient of determination is a statement about these fitted
+observations. Generalization requires additional data and an evaluation
+design appropriate to the question.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<p>This diagram records the direction of a modeling workflow. An arrow
+names a relationship to specify; it does not add an unimplemented
+physical mechanism. Keep the original prediction when making the
+recorded revision.</p>
 <h2 id="summary">Summary</h2>
-<!-- STUB: 3-5 sentence recap of the chapter's load-bearing claims. -->
+<p>A reproducible method separates input custody, transformation,
+evaluation and communication. The worked example makes a narrow
+quantitative claim that can be checked with exact inputs and a tested
+function. Re-running a command successfully does not establish that its
+scientific input or interpretation is correct. State the assumptions,
+preserve the observation record and choose a comparison that can
+distinguish an arithmetic error from an inadequate model. Those habits
+make a result inspectable without expanding what its evidence
+establishes.</p>
 <h2 id="key-terms">Key Terms</h2>
-<p><a href="#gl:emergence"><strong>emergence</strong></a>, <a
-href="#gl:regulation"><strong>regulation</strong></a>, <a
-href="#gl:boundary"><strong>boundary</strong></a>, <a
-href="#gl:state"><strong>state</strong></a>.</p>
+<p><a href="#gl:model"><strong>model</strong></a>, <a
+href="#gl:parameter"><strong>parameter</strong></a>, <a
+href="#gl:observable"><strong>observable</strong></a>, <a
+href="#gl:variable"><strong>variable</strong></a>.</p>
 <h2 id="further-reading">Further Reading</h2>
-<ul>
-<li><!-- STUB: annotated pointer -->
-TODO: one-line annotation [wilson2021analysis].</li>
-</ul>
+<p>Wilson and colleagues [wilson2014best] address scientific software
+practices; Sandve and colleagues [sandve2013ten] focus on preserving how
+results were produced.</p>
 <h2 id="practice">Practice</h2>
 <ul>
 <li><strong>Lab:</strong> <span class="citation"
-data-cites="sec:lab_part_0_core_methods">[@sec:lab_part_0_core_methods]</span></li>
+data-cites="sec:lab_part_0_core_methods">[@sec:lab_part_0_core_methods]</span>
+— execute the worked computation and its boundary control.</li>
 <li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_0_core_methods">[@sec:q_part_0_core_methods]</span></li>
+data-cites="sec:q_part_0_core_methods">[@sec:q_part_0_core_methods]</span>
+— compare your reasoning with the supplied solutions.</li>
 </ul>
 </main>
 </body>

@@ -330,11 +330,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-07T12:08:32Z",
+  "timestamp": "2026-10-07T23:16:32Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "a30f3d0a094cb7feb550da7c3a3aa5c2956756216d9549b592f24a9e65ac464e",
+      "sha256": "b54cb6295922d7cff12c0bb5faf6e5b45bca905fb2b7e01e8205d773a449c9c0",
       "size_bytes": 19257
     },
     "combined_manuscript": {
@@ -417,8 +417,8 @@
         "sha256": "4c23898c66d10d9b1d7c89f85429236a8e467d8bf7e5c8c7eae94a877cc895ff"
       },
       "stage": {
-        "file_count": 1539,
-        "sha256": "56e088069922ee61fa5c522b18c04df49947640cd4d1d3cc0de6adfa73fc394e"
+        "file_count": 1541,
+        "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
       }
     },
     "project": "templates/template_methods_paper",

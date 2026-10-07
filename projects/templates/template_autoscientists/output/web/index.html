@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.12" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Ablatable Mechanisms and Measurable Noise-Robustness under a Matched Experiment Budget" />
@@ -14,7 +14,10 @@ Coordination</title>
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -39,11 +42,16 @@ Coordination</title>
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -56,11 +64,8 @@ Coordination</title>
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -89,8 +94,11 @@ Coordination</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -114,7 +122,7 @@ Coordination</title>
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -131,11 +139,11 @@ Coordination</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -784,9 +792,9 @@ class="toc-section-number">6</span> Reproducibility</a>
 class="toc-section-number">6.1</span> Deterministic core</a></li>
 <li><a href="#tests-and-coverage" id="toc-tests-and-coverage"><span
 class="toc-section-number">6.2</span> Tests and coverage</a></li>
-<li><a href="#the-live-hermes-agent-opt-in"
-id="toc-the-live-hermes-agent-opt-in"><span
-class="toc-section-number">6.3</span> The live Hermes agent
+<li><a href="#bounded-local-coordination-opt-in"
+id="toc-bounded-local-coordination-opt-in"><span
+class="toc-section-number">6.3</span> Bounded local coordination
 (opt-in)</a></li>
 <li><a href="#shared-estimator" id="toc-shared-estimator"><span
 class="toc-section-number">6.4</span> Shared estimator</a></li>
@@ -853,8 +861,8 @@ class="math inline">\(60\)</span> experiments — the same clean answer,
 reached with less waste. A per-mechanism ablation isolates each
 component’s contribution, and the language-model proposer is a clean
 plug-in seam: a deterministic rule-based agent drives the reproducible
-figures, and a live Hermes agent (served by Ollama) can be swapped in
-without touching the coordination loop.</p>
+figures, and a bounded local model proposer (served by Ollama) can be
+swapped in without touching the coordination loop.</p>
 <hr />
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
@@ -935,9 +943,10 @@ class="math inline">\(36\)</span> of <span
 class="math inline">\(60\)</span> experiments, with the clean optimum
 unchanged.</li>
 <li><strong>A language-model plug-in seam</strong>
-(<code>Proposer</code> protocol) that lets a live Hermes agent replace
-the deterministic proposer without modifying the coordination loop,
-exercised by an opt-in <code>requires_ollama</code> test.</li>
+(<code>Proposer</code> protocol) that lets a bounded local model
+proposer replace the deterministic proposer without modifying the
+coordination loop, exercised by an opt-in <code>requires_ollama</code>
+test.</li>
 </ol>
 <p>The remainder of the paper specifies the mechanisms (sec. <a
 href="#sec:methodology">3</a>), reports the matched-budget comparison
@@ -1075,15 +1084,17 @@ of them. Two <em>real</em> implementations are provided (no mocks):</p>
 policy that probes the next assigned axis in the direction that most
 recently improved it, defaulting toward the origin. It drives every
 rendered figure and test.</li>
-<li><strong><code>HermesProposer</code></strong> — renders the shared
-state to a prompt, asks a Hermes model (served by Ollama) for the next
-<code>(axis, step, rationale)</code> as JSON, and parses the reply,
-rejecting any axis outside the assigned set. Its infrastructure-LLM
-import is lazy, so the deterministic core tests and renders with no
-Ollama dependency.</li>
+<li><strong><code>LiveProposer</code></strong> — sends the current
+public shared state and assigned axes to an explicitly selected
+installed local Ollama model. It accepts only finite bounded numeric
+proposals, checks installed model identity across generations and both
+arms, and retains provider request/response bytes, state, outcomes, and
+budgets.</li>
 </ul>
-<p>Swapping one for the other is the only change needed to turn the
-deterministic reference run into a live agentic one.</p>
+<p>The explicit live comparison runs both coordinated and single-agent
+arms under equal ceilings. Its scoped local numerical results are
+separate from the deterministic manuscript figures and do not establish
+general scientific-agent superiority.</p>
 <hr />
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results</h1>
@@ -1113,7 +1124,7 @@ comparison, not a speedup. Produced by
 </figure>
 <p>The summary in <code>output/data/search_comparison.json</code>
 reports the decisive quantities:</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 16%" />
 <col style="width: 16%" />
@@ -1190,7 +1201,7 @@ noise. Removing noise-band confirmation inflates the gap roughly
 thirteenfold while the clean metric is unchanged. Produced by
 <code>run_ablation.py</code>.</figcaption>
 </figure>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 16%" />
 <col style="width: 16%" />
@@ -1368,8 +1379,8 @@ class="header-section-number">5.3</span> Proposer</h2>
 <p>The rendered figures and the JSON summaries are produced with
 <code>DeterministicProposer</code>, a rule-based agent that reads the
 shared state and emits a concrete proposal. No mock objects are used
-anywhere. The live <code>HermesProposer</code> path is not part of the
-rendered pipeline; it is exercised separately (see sec. <a
+anywhere. The bounded local <code>LiveProposer</code> path is not part
+of the rendered pipeline; it is exercised separately (see sec. <a
 href="#sec:reproducibility">6</a>).</p>
 <h2 data-number="5.4" id="outputs"><span
 class="header-section-number">5.4</span> Outputs</h2>
@@ -1413,29 +1424,32 @@ inputs.</p>
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Project test suite with the per-project coverage gate</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_autoscientists/tests/ <span class="dt">\</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--cov</span><span class="op">=</span>projects/templates/template_autoscientists/src <span class="at">--cov-fail-under</span><span class="op">=</span>90</span></code></pre></div>
-<p>The deterministic core is tested to full coverage. The live
-language-model path is excluded from the coverage gate
-(<code># pragma: no cover</code>) because it requires an external
-service.</p>
-<h2 data-number="6.3" id="the-live-hermes-agent-opt-in"><span
-class="header-section-number">6.3</span> The live Hermes agent
+<p>Source coverage includes domain checks and real controlled HTTP
+transport. The opt-in installed-model run is separate evidence and fails
+when its selected capability is missing.</p>
+<h2 data-number="6.3" id="bounded-local-coordination-opt-in"><span
+class="header-section-number">6.3</span> Bounded local coordination
 (opt-in)</h2>
-<p><code>HermesProposer</code> calls a Hermes model served by Ollama. It
-is not part of the rendered pipeline and is exercised only by an opt-in
-test marked <code>requires_ollama</code>:</p>
+<p>The default <code>--mode core</code> preserves the deterministic
+figures. <code>--mode live</code> requires platform 4.0.0 and an
+explicitly selected already-installed Ollama model at a literal loopback
+endpoint. Both arms execute 3–6 proposals with equal experiment, token
+and request-time ceilings, and three-seed confirmation. Actual token
+consumption is recorded separately. The JSON proposal may alter one
+assigned axis by a finite nonzero step in <code>[-1,1]</code>; code and
+paths are forbidden.</p>
 <div class="sourceCode" id="cb4"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># One-time: start Ollama and pull a Hermes model</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> serve</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> pull hermes3</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the live round-trip test</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_autoscientists/tests/agents/test_hermes_live.py <span class="dt">\</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">-m</span> requires_ollama <span class="at">-v</span></span></code></pre></div>
-<p>Because the loop depends only on the <code>Proposer</code> protocol,
-swapping <code>DeterministicProposer</code> for
-<code>HermesProposer</code> is the single change needed to turn the
-reproducible reference run into a live agentic one — the coordination
-mechanisms, ablation toggles, and confirmation logic are unchanged.</p>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_autoscientists/scripts/run_search_comparison.py <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--mode</span> live <span class="at">--model</span> llama3.2:1b <span class="at">--endpoint</span> http://127.0.0.1:11434 <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-dir</span> output/.pipeline/local_coordination/selected-run</span></code></pre></div>
+<p>The fresh ignored run retains source and active producer hashes,
+installed model digest, every prompt context, exact provider
+request/response text, proposals, observed outcomes and budgets. Null
+and negative differences remain successful contract outcomes. Missing
+capabilities return <code>75</code>; malformed generations or source
+drift return <code>1</code>. No acquisition, paid API, source
+application, or external publication occurs. Full instructions:
+<code>docs/live-coordination.md</code>.</p>
 <h2 data-number="6.4" id="shared-estimator"><span
 class="header-section-number">6.4</span> Shared estimator</h2>
 <p>The noise-band confirmation estimator is generic. A synchronized copy
@@ -1474,8 +1488,8 @@ class="math inline">\(36\)</span> of <span
 class="math inline">\(60\)</span> experiments, with the clean optimum
 unchanged.</li>
 <li>The <strong>language-model proposer is a clean plug-in
-seam</strong>: a live Hermes agent can replace the deterministic
-proposer without changing the coordination loop.</li>
+seam</strong>: a bounded local model proposer can replace the
+deterministic proposer without changing the coordination loop.</li>
 </ul>
 <h2 data-number="7.2" id="what-this-exemplar-does-not-claim"><span
 class="header-section-number">7.2</span> What this exemplar does
@@ -1493,9 +1507,9 @@ the null effect of effect-size ranking and reorganization on every
 measured quantity are properties of <em>this</em> synthetic objective,
 budget, and deterministic proposer. They illustrate the measurement, not
 a universal constant.</li>
-<li><strong>No agentic-quality claim.</strong> The live Hermes path
-demonstrates that the seam works, not that an LLM proposer outperforms
-the rule-based one.</li>
+<li><strong>No agentic-quality claim.</strong> The bounded local
+coordination path demonstrates that the seam works, not that an LLM
+proposer outperforms the rule-based one.</li>
 </ul>
 <h2 data-number="7.3" id="relationship-to-autoscientists"><span
 class="header-section-number">7.3</span> Relationship to
@@ -1565,11 +1579,11 @@ gated behind a single configuration object, so the ablation is a clean
 subtraction and the testbed extends naturally to harder objectives where
 the structural mechanisms have more to do. Second, the language-model
 proposer is a genuine plug-in seam: the deterministic proposer drives
-the reproducible figures, and a live Hermes agent can replace it without
-touching the coordination loop. The honest-testbed framing is the
-contribution — a small, fully reproducible instrument for attributing
-coordination effects to mechanisms and for distinguishing real gains
-from noise.</p>
+the reproducible figures, and a bounded local model proposer can replace
+it without touching the coordination loop. The honest-testbed framing is
+the contribution — a small, fully reproducible instrument for
+attributing coordination effects to mechanisms and for distinguishing
+real gains from noise.</p>
 <hr />
 <h1 data-number="9" id="sec:references"><span
 class="header-section-number">9</span> References</h1>
