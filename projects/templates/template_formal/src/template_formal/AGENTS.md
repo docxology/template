@@ -61,3 +61,8 @@ for the canonical statement of every current claim's scope.
   exercised (no-mocks policy, mypy-oracle harness, coverage gate).
 - [`../../ISA.md`](../../ISA.md) — the full 122-ISC build history this
   package's docstrings cite by number (ISC-1..123).
+
+Prepared TLC providers may use the absolute `TEMPLATE_FORMAL_TLC_JAR` path when
+the local cache is absent. Keep the pinned hash and final byte custody; acquisition
+is restricted to the legacy local cache. External tool bytes are not authored
+project source. ISC-124 covers positive execution and unsafe/missing inputs.

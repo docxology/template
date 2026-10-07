@@ -20,3 +20,11 @@ runner workspace after `actions/checkout` runs.
 - Keep each action single-purpose; callers compose them with their own
   job-specific steps (`uv sync --group …`, pandoc, TeX Live, …).
 - `actionlint` validates these as part of the CI `actionlint` job.
+
+The complete hosted acceptance workflow also uses
+[`setup-acceptance-documents`](setup-acceptance-documents/README.md) and
+[`setup-acceptance-model`](setup-acceptance-model/README.md) to prepare its
+source-declared tools and one owned pinned local model before observations.
+
+[`setup-acceptance-fixtures`](setup-acceptance-fixtures/README.md) materializes
+identical pinned source inputs for all complete acceptance and release readers.

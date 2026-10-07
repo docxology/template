@@ -20,6 +20,7 @@ from template_formal.tool_acceptance import (
     _acquire_jar,
     _jar_snapshot,
     _run,
+    _selected_jar,
     _sources,
     main,
     run_formal_tools,
@@ -50,6 +51,11 @@ def _process_running(pid: int) -> bool:
 def _copy(root: Path) -> Path:
     """Copy the exact declared specs and admitted jar into a disposable project."""
     shutil.copytree(PROJECT / "formal", root / "formal", ignore=shutil.ignore_patterns(".lake", "states", "*TTrace*"))
+    jar = root / "formal/tla/tla2tools.jar"
+    if not jar.exists() and (provider := os.environ.get("TEMPLATE_FORMAL_TLC_JAR")):
+        content = _jar_snapshot(Path(provider))
+        assert hashlib.sha256(content).hexdigest() == TLC_SHA256
+        jar.write_bytes(content)
     return root
 
 
@@ -368,6 +374,7 @@ def test_explicit_acquisition_without_transfer_tool_is_blocked(tmp_path: Path, m
     (root / "formal/tla/tla2tools.jar").unlink(missing_ok=True)
     monkeypatch.setenv("PATH", str(tmp_path / "no-tools"))
     monkeypatch.delenv("FORMAL_JAVA_BIN", raising=False)
+    monkeypatch.delenv("TEMPLATE_FORMAL_TLC_JAR", raising=False)
     receipt = run_formal_tools(root, timeout=2, acquire=True)
     assert receipt["status"] == "blocked"
     checks = {check["name"]: check for check in receipt["checks"]}
@@ -432,3 +439,47 @@ def test_real_child_environment_and_nonzero_exit_are_preserved(tmp_path: Path) -
         [sys.executable, "-c", "raise SystemExit(0)"], cwd=tmp_path, env=env, timeout=5, capture_output=False
     )
     assert result.returncode == 0 and result.stdout == result.stderr == ""
+
+
+@pytest.mark.timeout(360)
+def test_external_prepared_tlc_executes_without_source_jar(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """ISC-124: the actual pinned tool runs outside authored/export source."""
+    root = _copy(tmp_path / "project")
+    local = root / "formal/tla/tla2tools.jar"
+    external = tmp_path / "prepared-tlc.jar"
+    local.replace(external)
+    monkeypatch.setenv("TEMPLATE_FORMAL_TLC_JAR", str(external))
+    assert _selected_jar(root) == external
+    receipt = run_formal_tools(root, timeout=300)
+    assert receipt["status"] == "passed", receipt
+    assert receipt["source_unchanged"] is True
+    assert not local.exists()
+    assert hashlib.sha256(external.read_bytes()).hexdigest() == TLC_SHA256
+    checks = {check["name"]: check for check in receipt["checks"]}
+    assert checks["tlc-AntProtocol"]["consumed_tlc_sha256"] == TLC_SHA256
+    assert checks["tlc-AntProtocolFaultyNegControl"]["exit_code"] == 12
+
+
+def test_external_tlc_selection_refuses_unsafe_inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """ISC-124: external configuration cannot bypass the existing cache guard."""
+    root = _copy(tmp_path / "project")
+    local = root / "formal/tla/tla2tools.jar"
+    external = tmp_path / "prepared-tlc.jar"
+    local.replace(external)
+    monkeypatch.setenv("TEMPLATE_FORMAL_TLC_JAR", "relative.jar")
+    with pytest.raises(ValueError, match="absolute"):
+        _selected_jar(root)
+    monkeypatch.setenv("TEMPLATE_FORMAL_TLC_JAR", str(external))
+    local.write_bytes(b"corrupt local cache")
+    assert _selected_jar(root) == local
+    monkeypatch.setenv("PATH", str(tmp_path / "no-tools"))
+    assert run_formal_tools(root, timeout=2)["status"] == "failed"
+    local.unlink()
+    external.write_bytes(b"corrupt provider")
+    assert run_formal_tools(root, timeout=2, acquire=True)["status"] == "failed"
+    assert external.read_bytes() == b"corrupt provider" and not local.exists()
+    external.unlink()
+    assert run_formal_tools(root, timeout=2, acquire=True)["status"] == "blocked"
+    assert not external.exists() and not local.exists()
+    external.symlink_to(root / "formal/lean/AntProtocol.lean")
+    assert run_formal_tools(root, timeout=2)["status"] == "failed"

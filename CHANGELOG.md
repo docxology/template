@@ -7,12 +7,14 @@ gitignore, or treat those trees as confidential); where entries mention
 `projects/`, they refer to **generic layout and tooling** defined by the template,
 not to the contents of any specific workspace.
 
-## [4.0.0] - Unreleased
+## [4.0.0] - 2026-10-07
 
-This is the intended root version. These notes record reviewed source changes
-and scoped checks; full runtime, coverage, native, live, installed, export and
-hosted acceptance remains incomplete. No tag, release, DOI or production
-promotion is established by this heading.
+These versioned notes describe the intended root release candidate. Publication
+remains pending until all required exact-source acceptance and release workflow
+gates pass. The heading is not evidence of a published GitHub Release.
+
+See the [illustrated version notes](docs/releases/v4.0.0.md) for the repository
+architecture, update summary and release boundary.
 
 - Require every authored SDK member in root wheels, including native source and
   typing markers, with exact source bytes and complete RECORD validation. Reject
@@ -20,7 +22,7 @@ promotion is established by this heading.
 - Fail PDF rendering when the final compiler pass fails or the expected PDF is
   invalid. Accept a recorded recovery only after its actual compiler process
   succeeds and the required PDF passes validation.
-- Use installed font-family resolution for portable notebook manuscript
+- Use installed font-family resolution for portable notebook and formal manuscript
   composition while preserving Unicode and mathematical content.
 - Add genuine complete-SDK archive controls and independently reviewed case
   classification while retaining all mandatory runtime/platform obligations.

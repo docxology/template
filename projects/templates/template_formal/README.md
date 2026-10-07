@@ -286,3 +286,9 @@ quick reference commands, and pitfalls.
 - [`template_code_project`](../template_code_project/) — numerical-research sibling exemplar
 - [`template_active_inference`](../template_active_inference/) — Active Inference sibling exemplar
 - [`../../AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars) — public exemplar roster
+
+For prepared hosted/exported execution, `TEMPLATE_FORMAL_TLC_JAR` may name an
+absolute external TLC1.8.0 jar when no project cache exists. The same exact hash,
+regular-file, frozen-copy and final custody checks apply. Explicit acquisition
+never writes to that external provider. A present local cache remains checked
+and cannot silently fall through to an external tool.

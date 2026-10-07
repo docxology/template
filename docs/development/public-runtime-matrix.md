@@ -164,20 +164,20 @@ coverage measures infrastructure with a 60 percent floor. The existing
 `root:coverage` requirement is explicitly bound to `.python-version` (3.14);
 the three supported root runtime requirements remain separate.
 
-The current platform root has no reviewed case-classification policy, so this
-producer emits blocked gates before collecting or executing root tests. An
-initial complete-offline policy supports genuine owned offline test fixtures;
-it permits no exclusions and refuses recognized live/private/external markers.
-Unexpected pytest skips and deselection still fail. These fixture controls
-establish the source/process contract and do not establish platform acceptance.
+The production Root policy and prerequisites are now declared under
+`infrastructure/config/root-case-policy.json` and
+`infrastructure/config/root-case-prerequisites.json`. The coordinator compares
+its original complete collection against the reviewed literal family members
+before execution. Source-owned classifications retain core, unpaid live,
+platform and provider obligations; recognized optional cases require their exact
+reviewed reason. Unexpected skips, deselections, failed cases and incomplete
+unions still refuse acceptance.
 
-Future action **ROOT-ACCEPTANCE-CASE-POLICY-1**: implement and independently
-review source-owned classification of the complete root case census, including
-explicit obligations for unpaid live cases and excluded paid/private cases.
-Its proving artifact must contain full collection, classified expected cases,
-reason-bound exclusions, original supervised processes and coverage. Validate
-with the root producer across all three prepared minors and the independent
-required-readiness reader; a forged exclusion, omitted core case, unexplained
-skip, failed case, or incomplete union must refuse acceptance. Until this action
-has real evidence, root runtime acceptance remains blocked. Portable evidence
-and other required platform gates remain separate follow-up work.
+Use `--mode live` for the complete release observation after preparing every
+source-declared prerequisite. Core mode retains the unmet live requirements as
+blocked release cells. The policy and its fixture controls establish the
+execution contract; the actual production Root observations on Python
+3.12–3.14 and Darwin/Linux must pass independently. See
+[`root-runtime-v2.md`](root-runtime-v2.md) for case custody, branch coverage,
+provider admission and transported-host evidence. Installed, portable, native,
+hosted and release requirements remain separate gates.

@@ -1,0 +1,112 @@
+name: Prepare one owned pinned acceptance model
+description: Authenticate Ollama 0.35.1 and smollm2:135m, then start a temporary loopback-only daemon on this hosted runner.
+runs:
+  using: composite
+  steps:
+    - name: Prepare exact official Ollama runtime
+      shell: bash
+      run: |
+        set -euo pipefail
+        destination=$(mktemp -d "$RUNNER_TEMP/template-acceptance-model.XXXXXX")
+        if [ "$RUNNER_OS" = Linux ]; then
+          asset=ollama-linux-amd64.tar.zst
+          digest=9fcd79ac4575b2bd31b992eee18b1000c8ad126b451627c8f8cd091714cfbb10
+          size=1439658961
+        else
+          asset=ollama-darwin.tgz
+          digest=3137dbf28948ee844e0fb3e584d9b5de6879d73d9f0cb7eff3ad64930601d307
+          size=159625239
+        fi
+        curl --fail --location --retry 2 --max-time 900 --output "$destination/$asset" "https://github.com/ollama/ollama/releases/download/v0.35.1/$asset"
+        test "$(wc -c < "$destination/$asset" | tr -d ' ')" = "$size"
+        echo "$digest  $destination/$asset" | shasum -a 256 --check --status
+        if [ "$RUNNER_OS" = Linux ]; then
+          tar --zstd -xf "$destination/$asset" -C "$destination"
+          echo "$destination/bin" >> "$GITHUB_PATH"
+          echo "TEMPLATE_ACCEPTANCE_OLLAMA=$destination/bin/ollama" >> "$GITHUB_ENV"
+        else
+          tar -xzf "$destination/$asset" -C "$destination"
+          echo "$destination" >> "$GITHUB_PATH"
+          echo "TEMPLATE_ACCEPTANCE_OLLAMA=$destination/ollama" >> "$GITHUB_ENV"
+        fi
+        rm "$destination/$asset"
+        echo "TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY=$destination" >> "$GITHUB_ENV"
+    - name: Authenticate exact manifest and every fixed model blob
+      shell: bash
+      run: |
+        set -euo pipefail
+        destination="$TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY/models"
+        mkdir -p "$destination/blobs" "$destination/manifests/registry.ollama.ai/library/smollm2"
+        manifest="$destination/manifests/registry.ollama.ai/library/smollm2/135m"
+        curl --fail --location --retry 2 --max-time 60 --output "$manifest" https://registry.ollama.ai/v2/library/smollm2/manifests/135m
+        test "$(wc -c < "$manifest" | tr -d ' ')" = 1124
+        echo "9077fe9d2ae1a4a41a868836b56b8163731a8fe16621397028c2c76f838c6907  $manifest" | shasum -a 256 --check --status
+        python - "$manifest" > "$TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY/blob-inputs.txt" <<'PYTHON'
+        import json, sys
+        from pathlib import Path
+        manifest = json.loads(Path(sys.argv[1]).read_text())
+        for record in [manifest["config"], *manifest["layers"]]:
+            digest = record["digest"].removeprefix("sha256:")
+            assert len(digest) == 64 and all(c in "0123456789abcdef" for c in digest)
+            print(digest, record["size"])
+        PYTHON
+        while read -r digest size; do
+          blob="$destination/blobs/sha256-$digest"
+          curl --fail --location --retry 2 --max-time 300 --output "$blob" "https://registry.ollama.ai/v2/library/smollm2/blobs/sha256:$digest"
+          test "$(wc -c < "$blob" | tr -d ' ')" = "$size"
+          echo "$digest  $blob" | shasum -a 256 --check --status
+        done < "$TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY/blob-inputs.txt"
+        {
+          echo "OLLAMA_MODELS=$destination"
+          echo "OLLAMA_HOST=http://127.0.0.1:11434"
+          echo "OLLAMA_NO_CLOUD=1"
+          echo "OLLAMA_NOPRUNE=1"
+          echo "OLLAMA_NUM_PARALLEL=1"
+          echo "OLLAMA_MAX_LOADED_MODELS=1"
+          echo "OLLAMA_CONTEXT_LENGTH=2048"
+          echo "OLLAMA_KEEP_ALIVE=1m"
+          echo "OLLAMA_MODEL=smollm2:135m"
+          echo "OLLAMA_TEST_PULL_MODEL=smollm2:135m"
+          echo "OLLAMA_SKIP_TEST_MODEL_PULL=1"
+        } >> "$GITHUB_ENV"
+    - name: Start owned daemon and verify actual inference before observation
+      shell: bash
+      run: |
+        set -euo pipefail
+        python - <<'PYTHON'
+        import json, os, socket, subprocess, sys, time, urllib.request
+        from pathlib import Path
+        directory = Path(os.environ["TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY"])
+        with socket.socket() as probe:
+            probe.bind(("127.0.0.1", 11434))
+        environment = dict(os.environ, OLLAMA_HOST="127.0.0.1:11434")
+        with (directory / "daemon.stdout").open("xb") as out, (directory / "daemon.stderr").open("xb") as err:
+            anchor = "import signal,subprocess,sys,time\nsignal.signal(signal.SIGTERM,signal.SIG_IGN)\nserver=subprocess.Popen([sys.argv[1],'serve'])\nwhile True: time.sleep(0.5)\n"
+            child = subprocess.Popen([sys.executable, "-c", anchor, os.environ["TEMPLATE_ACCEPTANCE_OLLAMA"]], env=environment, stdout=out, stderr=err, start_new_session=True)
+        birth = subprocess.check_output(["ps", "-p", str(child.pid), "-o", "lstart="], text=True).strip()
+        def members():
+            rows = subprocess.check_output(["ps", "-axo", "pid=,pgid=,lstart=,stat="], text=True)
+            return {int(fields[0]): " ".join(fields[2:7]) for line in rows.splitlines() if len(fields := line.split()) >= 8 and int(fields[1]) == child.pid and not fields[7].startswith("Z")}
+        def remember():
+            (directory / "daemon-owner.json").write_text(json.dumps({"pid": child.pid, "members": members()}))
+        remember()
+        deadline = time.monotonic() + 60
+        while True:
+            assert child.poll() is None, "Owned Ollama daemon stopped before readiness"
+            try:
+                with urllib.request.urlopen("http://127.0.0.1:11434/api/tags", timeout=2) as response:
+                    tags = json.load(response)
+                break
+            except OSError:
+                if time.monotonic() > deadline:
+                    raise TimeoutError("Owned Ollama readiness deadline")
+                time.sleep(1)
+        assert len(tags["models"]) == 1 and tags["models"][0]["name"] == "smollm2:135m"
+        assert tags["models"][0]["digest"] == "9077fe9d2ae1a4a41a868836b56b8163731a8fe16621397028c2c76f838c6907"
+        request = urllib.request.Request("http://127.0.0.1:11434/api/generate", data=json.dumps({"model": "smollm2:135m", "prompt": "Say OK.", "stream": False, "options": {"num_predict": 16, "seed": 0, "temperature": 0}}).encode(), headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(request, timeout=120) as response:
+            result = json.load(response)
+        assert result["done"] and result["eval_count"] > 0 and result["response"].strip()
+        remember()
+        (directory / "inference-preparation.json").write_text(json.dumps(result))
+        PYTHON

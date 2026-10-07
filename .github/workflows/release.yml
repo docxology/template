@@ -51,6 +51,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0  # Full history for changelog generation
+          submodules: true  # Match exact authored SDK bytes observed by acceptance
+          persist-credentials: false
           ref: ${{ steps.tag.outputs.name }}
 
       - name: Verify checkout is the requested tag
@@ -105,6 +107,8 @@ jobs:
 
       - name: Prepare locked release environment
         run: uv sync --locked --group public-exemplars --group installed-build
+
+      - uses: ./.github/actions/setup-acceptance-fixtures
 
       - name: Require explicit root 4+ acceptance handoff
         id: acceptance
@@ -240,17 +244,28 @@ jobs:
         id: changelog
         env:
           TAG: ${{ steps.tag.outputs.name }}
+          ACCEPTANCE_RUN_ID: ${{ inputs.acceptance_run_id }}
+          ACCEPTANCE_RECEIPT_SHA256: ${{ inputs.acceptance_receipt_sha256 }}
         run: |
-          # Extract entries since the previous tag
-          PREV_TAG=$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || echo "")
-          if [ -n "$PREV_TAG" ]; then
-            LOG=$(git log "${PREV_TAG}..${TAG}" --oneline --no-merges | head -50)
+          set -euo pipefail
+          if [ "$TAG" = v4.0.0 ]; then
+            candidate=$(git rev-parse HEAD)
+            cp docs/releases/v4.0.0.md "$RUNNER_TEMP/template-release-notes.md"
+            {
+              echo
+              echo "Accepted source: [$candidate](https://github.com/$GITHUB_REPOSITORY/commit/$candidate)."
+              echo "Required acceptance: [run $ACCEPTANCE_RUN_ID](https://github.com/$GITHUB_REPOSITORY/actions/runs/$ACCEPTANCE_RUN_ID)."
+              echo "Acceptance receipt SHA-256: $ACCEPTANCE_RECEIPT_SHA256."
+            } >> "$RUNNER_TEMP/template-release-notes.md"
           else
-            LOG=$(git log "${TAG}" --oneline --no-merges | head -50)
+            previous=$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || true)
+            if [ -n "$previous" ]; then
+              git log "$previous..$TAG" --oneline --no-merges --max-count=50 > "$RUNNER_TEMP/template-release-notes.md"
+            else
+              git log "$TAG" --oneline --no-merges --max-count=50 > "$RUNNER_TEMP/template-release-notes.md"
+            fi
           fi
-          # Write to file to handle multiline safely
-          echo "$LOG" > /tmp/changelog.txt
-          echo "file=/tmp/changelog.txt" >> "$GITHUB_OUTPUT"
+          echo "file=$RUNNER_TEMP/template-release-notes.md" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
@@ -262,4 +277,6 @@ jobs:
           prerelease: ${{ contains(steps.tag.outputs.name, '-rc') || contains(steps.tag.outputs.name, '-beta') || contains(steps.tag.outputs.name, '-alpha') }}
           # Omit generate_release_notes — avoids duplicating narrative vs body_path excerpt.
           generate_release_notes: false
-          files: dist/*
+          files: |
+            dist/*
+            docs/releases/template-v4.0.0-overview.png

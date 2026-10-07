@@ -752,6 +752,18 @@ jobs:
           "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "${{ steps.lean-pin.outputs.file }}")"
           java -version
 
+      - name: Prepare the exact external TLC provider for Formal
+        if: matrix.project == 'templates/template_formal'
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          tool=$(mktemp -d "$RUNNER_TEMP/template-formal-tlc.XXXXXX")
+          jar="$tool/tla2tools.jar"
+          curl --fail --location --retry 2 --max-time 120 --output "$jar" https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
+          test "$(wc -c < "$jar" | tr -d ' ')" = 4499177
+          echo "e9c2d914fc1b7ba3e4a982ba251dc5c0da65010afcc6a5f9651576a1c380deae  $jar" | sha256sum --check --status
+          echo "TEMPLATE_FORMAL_TLC_JAR=$jar" >> "$GITHUB_ENV"
+
       - name: Install the genuine Meta provider wheel for Advanced
         # Advanced Literature Review imports the namespaced Meta engine, which
         # the root environment does not install, and runtime admission refuses

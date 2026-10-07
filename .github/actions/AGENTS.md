@@ -26,3 +26,11 @@ Repository-local composite actions for the CI pipeline. See
 - After any change, run `actionlint` (CI parity: the `actionlint` job).
 - Adding a new action directory requires its own `README.md` + `AGENTS.md`
   (the doc-pair invariant — `infrastructure/validation/docs/doc_pair_lint.py`).
+
+The complete hosted acceptance workflow also uses
+[`setup-acceptance-documents`](setup-acceptance-documents/README.md) and
+[`setup-acceptance-model`](setup-acceptance-model/README.md) to prepare its
+source-declared tools and one owned pinned local model before observations.
+
+[`setup-acceptance-fixtures`](setup-acceptance-fixtures/README.md) materializes
+identical pinned source inputs for all complete acceptance and release readers.

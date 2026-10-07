@@ -172,6 +172,20 @@ def _acquire_jar(root: Path, deadline: float) -> ToolCheck:
         return ToolCheck(check.name, "passed", check.argv, check.exit_code)
 
 
+def _selected_jar(root: Path) -> Path:
+    """Select a local cache or an explicit prepared external regular-file input."""
+    local = root / "formal" / "tla" / "tla2tools.jar"
+    if local.exists() or local.is_symlink():
+        return local
+    provider = os.environ.get("TEMPLATE_FORMAL_TLC_JAR")
+    if not provider:
+        return local
+    selected = Path(provider)
+    if not selected.is_absolute():
+        raise ValueError("prepared external TLC provider must be an absolute path")
+    return selected
+
+
 def run_formal_tools(root: Path, *, timeout: float = 300, acquire: bool = False) -> dict[str, object]:
     """Run all declared models with stable pins, total budget and final custody."""
     if not math.isfinite(timeout) or isinstance(timeout, bool) or not 0 < timeout <= 600:
@@ -245,7 +259,7 @@ def _execute_formal_tools(
                 )
             )
     tla = frozen / "formal" / "tla"
-    jar = root / "formal" / "tla" / "tla2tools.jar"
+    jar = _selected_jar(root)
     java = shutil.which(os.environ.get("FORMAL_JAVA_BIN", "java"))
     if java:
         java_probe = _run("java-version", [java, "-version"], tla, deadline)
@@ -264,7 +278,7 @@ def _execute_formal_tools(
         )
         if java_probe.status != "passed":
             java = None
-    if not jar.is_file() and not jar.is_symlink() and acquire:
+    if jar == root / "formal" / "tla" / "tla2tools.jar" and not jar.is_file() and not jar.is_symlink() and acquire:
         checks.append(_acquire_jar(root, deadline))
     jar_timed_out = False
     try:

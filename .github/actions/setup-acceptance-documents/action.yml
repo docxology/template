@@ -1,0 +1,80 @@
+name: Prepare genuine acceptance document tools
+description: Prepare official pinned Pandoc, cross-reference and JuliaMono assets plus native readers on the owned hosted runner.
+runs:
+  using: composite
+  steps:
+    - name: Prepare native document prerequisites
+      shell: bash
+      run: |
+        set -euo pipefail
+        bash scripts/shell/setup-system-deps.sh
+        if [ "$RUNNER_OS" = Linux ]; then
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils zbar-tools texlive-luatex texlive-science
+        else
+          brew install poppler zbar
+          echo /Library/TeX/texbin >> "$GITHUB_PATH"
+          sudo /Library/TeX/texbin/tlmgr install fontsize soul algorithm2e placeins ifoddpage relsize
+        fi
+    - name: Prepare exact compatible Pandoc and cross-reference binaries
+      shell: bash
+      run: |
+        set -euo pipefail
+        destination=$(mktemp -d "$RUNNER_TEMP/template-document-tools.XXXXXX")
+        if [ "$RUNNER_OS" = Linux ]; then
+          pandoc_asset=pandoc-3.11-linux-amd64.tar.gz
+          pandoc_directory=pandoc-3.11
+          pandoc_sha=37edb3bbcf722f921a009941bf5874e2e0c09263226c9b4a2d980788cb062ab6
+          pandoc_size=34940580
+          crossref_asset=pandoc-crossref-Linux-X64.tar.xz
+          crossref_sha=7f8b7c5c91233db2dcb1145fa580a9ee8343695589bdb0ece8661490bc12a644
+          crossref_size=7504388
+        elif [ "$RUNNER_ARCH" = ARM64 ]; then
+          pandoc_asset=pandoc-3.11-arm64-macOS.zip
+          pandoc_directory=pandoc-3.11-arm64
+          pandoc_sha=15806bedf9517bfead72e88fe6a6696635c3691efbb6e152173440e9c5bb50b4
+          pandoc_size=41832712
+          crossref_asset=pandoc-crossref-macOS-ARM64.tar.xz
+          crossref_sha=ce3571bd8bc335fa26bea46b390381a61bdf464bbf83fe4c7277160ba124a6fa
+          crossref_size=18539672
+        else
+          pandoc_asset=pandoc-3.11-x86_64-macOS.zip
+          pandoc_directory=pandoc-3.11-x86_64
+          pandoc_sha=3b1c1b57f160112c821d02f23d946ede8b7f57a6ccf4632a25a512d334a9291f
+          pandoc_size=26145603
+          crossref_asset=pandoc-crossref-macOS-X64.tar.xz
+          crossref_sha=03e84e3fd03beb2b36ac2ed5bc2608825d759f33e657bec05af8be8b16ca7690
+          crossref_size=4579604
+        fi
+        curl --fail --location --retry 2 --max-time 180 --output "$destination/$pandoc_asset" "https://github.com/jgm/pandoc/releases/download/3.11/$pandoc_asset"
+        test "$(wc -c < "$destination/$pandoc_asset" | tr -d ' ')" = "$pandoc_size"
+        echo "$pandoc_sha  $destination/$pandoc_asset" | shasum -a 256 --check --status
+        curl --fail --location --retry 2 --max-time 180 --output "$destination/$crossref_asset" "https://github.com/lierdakil/pandoc-crossref/releases/download/v0.3.25a/$crossref_asset"
+        test "$(wc -c < "$destination/$crossref_asset" | tr -d ' ')" = "$crossref_size"
+        echo "$crossref_sha  $destination/$crossref_asset" | shasum -a 256 --check --status
+        if [ "$RUNNER_OS" = Linux ]; then
+          tar -xzf "$destination/$pandoc_asset" -C "$destination"
+        else
+          unzip -q "$destination/$pandoc_asset" -d "$destination"
+        fi
+        tar -xJf "$destination/$crossref_asset" -C "$destination"
+        echo "$destination/$pandoc_directory/bin" >> "$GITHUB_PATH"
+        echo "$destination" >> "$GITHUB_PATH"
+        "$destination/$pandoc_directory/bin/pandoc" --version
+        "$destination/pandoc-crossref" --version
+    - name: Prepare exact JuliaMono family
+      shell: bash
+      run: |
+        set -euo pipefail
+        destination=$(mktemp -d "$RUNNER_TEMP/template-juliamono.XXXXXX")
+        curl --fail --location --retry 2 --max-time 180 --output "$destination/fonts.tar.gz" https://github.com/cormullion/juliamono/releases/download/v0.63.2/JuliaMono-ttf.tar.gz
+        test "$(wc -c < "$destination/fonts.tar.gz" | tr -d ' ')" = 21847069
+        echo "be6517295198ec5c92bdbaad42f4f6f8d83f921d80512b79f54fe036add95c0c  $destination/fonts.tar.gz" | shasum -a 256 --check --status
+        if [ "$RUNNER_OS" = Linux ]; then
+          fonts="$HOME/.local/share/fonts/template-acceptance-juliamono"
+        else
+          fonts="$HOME/Library/Fonts/template-acceptance-juliamono"
+        fi
+        mkdir "$fonts"
+        tar -xzf "$destination/fonts.tar.gz" -C "$fonts"
+        if [ "$RUNNER_OS" = Linux ]; then fc-cache -f "$fonts"; fi

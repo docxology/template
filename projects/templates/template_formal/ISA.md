@@ -716,3 +716,7 @@ Coverage (round 19, cumulative): 122/122 ISC groups passed, 122/122 artifact-bac
 **Round 20 (data-bound figure accessibility, 2026-08-15):** ISC-123 added before implementation. The figure registry now derives its two descriptions from the same demo concentration history and sweep outcomes passed to the renderers. Real alternate-data controls prevent committed-run values such as `37/40`, tick counts, and concentration endpoints from surviving when inputs change; the public registry remains the source for rendered accessibility metadata.
 
 Coverage (round 20, cumulative): 123/123 ISC groups passed, 123/123 artifact-backed (0 `[DEFERRED-VERIFY]`).
+
+**Release preparation criterion (2026-10-07, implementation pending):**
+
+- [ ] ISC-124: A prepared external TLC jar may be explicitly selected by `TEMPLATE_FORMAL_TLC_JAR` when the project has no local cache. It must retain exact regular-file, length/hash, frozen-copy and final byte-custody checks. A corrupt or linked local cache cannot fall through to a valid external provider. No implicit acquisition may target the external path. Genuine positive execution and missing/corrupt/relative/symlink/refreshed-custody negatives must remain executable; external runtime tools must not enter authored source exports.
