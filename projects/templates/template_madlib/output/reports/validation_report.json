@@ -290,12 +290,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-07T09:51:33Z",
+  "timestamp": "2026-10-07T12:08:32Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "315d8421be531658d6c928a2b6ca6a2546d01054dde49be7e7ddf9e136c1a60e",
-      "size_bytes": 20231
+      "sha256": "89b45cd37243d28aa478fccc7cb730257bfd0d340557353f1793c4416c3e09eb",
+      "size_bytes": 21906
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -384,7 +384,7 @@
     "fingerprints": {
       "config": {
         "file_count": 17,
-        "sha256": "8017d9427a22113b9c4b28b97c04aa3c3636ad352901a34fdb7eb6b696498ac1"
+        "sha256": "82b6fb283505c6dfc8bd5200bde233d2ba1369c6ef134c38582f0fadebc05272"
       },
       "output": {
         "file_count": 67,
@@ -396,7 +396,7 @@
       },
       "stage": {
         "file_count": 1539,
-        "sha256": "caef478f83ed819bd415e84b3a21fe729153e0a445624557e9980b2b58743c6d"
+        "sha256": "56e088069922ee61fa5c522b18c04df49947640cd4d1d3cc0de6adfa73fc394e"
       }
     },
     "project": "templates/template_madlib",
