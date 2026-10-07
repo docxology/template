@@ -225,6 +225,103 @@
       "platforms": [],
       "paths": [],
       "packages": []
+    },
+    {
+      "id": "darwin-host",
+      "kind": "platform",
+      "platforms": [
+        "darwin"
+      ],
+      "executables": [],
+      "environment_keys": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "pdf-raster",
+      "kind": "tool",
+      "platforms": [],
+      "executables": [
+        "pdftoppm",
+        "pdffonts"
+      ],
+      "environment_keys": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "tex-native",
+      "kind": "tool",
+      "platforms": [],
+      "executables": [
+        "xelatex",
+        "xdvipdfmx",
+        "kpsewhich"
+      ],
+      "environment_keys": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "bibtex",
+      "kind": "tool",
+      "platforms": [],
+      "executables": [
+        "bibtex"
+      ],
+      "environment_keys": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "zbar",
+      "kind": "tool",
+      "platforms": [],
+      "executables": [
+        "zbarimg"
+      ],
+      "environment_keys": [],
+      "paths": [],
+      "packages": []
+    },
+    {
+      "id": "native-format-python",
+      "kind": "tool",
+      "platforms": [],
+      "executables": [
+        "python"
+      ],
+      "environment_keys": [],
+      "paths": [],
+      "packages": [
+        "pypdfium2",
+        "Pillow",
+        "ReportLab",
+        "pdfplumber",
+        "pdfminer.six",
+        "pypdf",
+        "lxml",
+        "defusedxml",
+        "fonttools",
+        "NumPy",
+        "Matplotlib",
+        "PyYAML",
+        "python-pptx"
+      ]
+    },
+    {
+      "id": "native-browser-assets",
+      "kind": "tool",
+      "platforms": [],
+      "executables": [
+        "node"
+      ],
+      "environment_keys": [],
+      "paths": [
+        "output/readiness/native-dependencies/mathjax-4.0.0.tgz",
+        "output/readiness/native-dependencies/mathjax-mathjax-newcm-font-4.0.0.tgz"
+      ],
+      "packages": []
     }
   ]
 }

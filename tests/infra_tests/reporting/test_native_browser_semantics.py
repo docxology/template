@@ -10,6 +10,7 @@ import pytest
 from PIL import Image, ImageDraw
 
 from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
+from infrastructure.reporting.native_format_observer_dispatch import _chrome
 from infrastructure.reporting.native_format_browser_oracles import audit_browser_html
 from infrastructure.reporting.native_format_content_contracts import semantic_content_contract_from_ast
 from infrastructure.reporting.native_format_observer_validation import replay_browser_observation
@@ -34,9 +35,7 @@ def test_actual_native_semantics(mutation: str, expected: str | None) -> None:
     archives = root / "output/readiness/native-dependencies"
     if not shutil.which("pandoc") or not archives.is_dir():
         pytest.skip("actual Pandoc and source-lock authenticated npm archives required")
-    chrome = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
-    if not chrome.is_file():
-        pytest.skip("actual native browser required")
+    chrome = _chrome(build_bounded_env())
     import tempfile
 
     with tempfile.TemporaryDirectory(prefix="browser-semantic-control-", dir=root / "output/readiness") as private:

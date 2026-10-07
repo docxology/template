@@ -85,13 +85,16 @@ def genuine_reviewed_decisions(tmp_path_factory: pytest.TempPathFactory) -> tupl
     return root, original, decisions
 
 
+@pytest.mark.parametrize("policy_schema", ["template-root-case-policy-v2", "template-root-case-policy-v3"])
 def test_literal_draft_preserves_original_all_families_members_and_live_obligation(
     genuine_reviewed_decisions: tuple[Path, dict[str, Any], dict[str, Any]],
+    policy_schema: str,
 ) -> None:
     root, original, decisions = genuine_reviewed_decisions
     reference = write_json(root, root / "output/readiness/explicit-reviewed-decisions.json", decisions)
     reader = SnapshotReader(root)
-    actual = author_policy(reader, original, reference["path"])
+    actual = author_policy(reader, original, reference["path"], policy_schema=policy_schema)
+    assert actual["schema_version"] == policy_schema
     ledger = family_ledger(reader, original)
     observed = [family for module in ledger["modules"] for family in module["families"]]
     assert {row["id"] for row in actual["families"]} == {row["id"] for row in observed}

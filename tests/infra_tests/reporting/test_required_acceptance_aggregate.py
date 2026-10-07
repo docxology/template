@@ -104,3 +104,26 @@ def test_auxiliary_fixed_owners_retain_original_blocked_audits_and_separate_tran
     values["darwin"]["gates"]["root:roster"] = {"status": "pass"}
     with pytest.raises(ValueError, match="omitted or invented"):
         auxiliary_owned_projection(values, requirements)
+
+
+def test_complete_archive_closure_retains_native_raster_rows_and_refuses_changed_pixels(tmp_path):
+    from io import BytesIO
+    from PIL import Image, ImageDraw, ImageStat
+    from infrastructure.project.installed_acceptance_artifacts import write_binary
+    from infrastructure.project.public_acceptance_evidence import write_json
+    from infrastructure.reporting.required_acceptance_aggregate import _evidence_closure
+    from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+    image = Image.new("RGB", (32, 24), "white")
+    ImageDraw.Draw(image).rectangle((4, 4, 18, 14), fill="navy")
+    stream = BytesIO()
+    image.save(stream, format="PNG")
+    raster = write_binary(tmp_path, tmp_path / "output/readiness/page-1.png", stream.getvalue())
+    row = {**raster, "width_px": image.width, "height_px": image.height, "variance": sum(ImageStat.Stat(image).var)}
+    receipt = write_json(tmp_path, tmp_path / "output/readiness/receipt.json", {"rasters": [row]})
+    closure = _evidence_closure(SnapshotReader(tmp_path), receipt["path"])
+    assert set(closure) == {receipt["path"], raster["path"]}
+    assert closure[raster["path"]] == stream.getvalue()
+    (tmp_path / raster["path"]).write_bytes(b"changed actual native image bytes")
+    with pytest.raises(ValueError, match="original reference"):
+        _evidence_closure(SnapshotReader(tmp_path), receipt["path"])

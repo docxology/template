@@ -8,6 +8,7 @@ from typing import Any
 
 from infrastructure.project.public_acceptance_case_policy import (
     POLICY_SCHEMA,
+    OPTIONAL_POLICY_SCHEMA,
     RootCasePolicy,
     compile_case_plan,
     digest,
@@ -93,13 +94,17 @@ def family_ledger(reader: SnapshotReader, original_bundle: object) -> dict[str, 
     return ledger
 
 
-def author_policy(reader: SnapshotReader, original_bundle: object, decisions_reference: str) -> dict[str, Any]:
+def author_policy(
+    reader: SnapshotReader, original_bundle: object, decisions_reference: str, *, policy_schema: str = POLICY_SCHEMA
+) -> dict[str, Any]:
     """Refuse missing module/family review; emit every literal case/member row.
 
     Review decisions are local draft inputs, not execution authority. The result
     requires fresh independent source review and recollection after installation.
     The authoritative producer/reader later loads only source-owned policy files.
     """
+    if not isinstance(policy_schema, str) or policy_schema not in {POLICY_SCHEMA, OPTIONAL_POLICY_SCHEMA}:
+        raise ValueError("Root policy authoring requires an explicit supported source policy schema")
     census, tracked = _candidate(reader, original_bundle)
     decisions = _json(reader.read(decisions_reference))
     if (
@@ -168,7 +173,7 @@ def author_policy(reader: SnapshotReader, original_bundle: object, decisions_ref
     if seen_modules != set(observed):
         raise ValueError("Root policy authoring requires a reviewed decision for every actual public test module")
     policy = {
-        "schema_version": POLICY_SCHEMA,
+        "schema_version": policy_schema,
         "runtimes": ["3.12", "3.13", "3.14"],
         "platforms": ["darwin", "linux"],
         "families": sorted(families, key=lambda family: family["id"]),

@@ -103,7 +103,7 @@ def _evidence_closure(reader: SnapshotReader, relative: str) -> dict[str, bytes]
     def walk(value: object) -> None:
         if isinstance(value, dict):
             if (
-                set(value) == {"path", "sha256"}
+                set(value) in ({"path", "sha256"}, {"path", "sha256", "width_px", "height_px", "variance"})
                 and isinstance(value.get("path"), str)
                 and isinstance(value.get("sha256"), str)
             ):

@@ -193,6 +193,12 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
                 raise ValueError("actual roster package observations differ from source metadata bytes")
     if gate.startswith("root:macos:") and process.get("host", {}).get("system") != "Darwin":
         raise ValueError("macOS auxiliary checks did not execute on Darwin")
+    if gate == "root:macos:rendering":
+        from infrastructure.reporting.native_print_witness_validation import validate_print_witness
+
+        validate_print_witness(
+            observed.get("print_witness_artifact"), reader, expected_pid=raw["pid"], expected_runtime=raw["runtime"]
+        )
     if gate == "root:macos:process":
         descendant = observed.get("descendant_process", {})
         if (

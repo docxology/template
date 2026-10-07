@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-import shutil
 import time
 from pathlib import Path
 
 import pytest
 
 from infrastructure.core.execution_boundary import build_bounded_env
+from infrastructure.reporting.native_format_acceptance_checks import NativeToolUnavailable
+from infrastructure.reporting.native_format_observer_dispatch import _chrome as native_chrome
 from infrastructure.reporting.native_format_browser_oracles import (
     BROWSER_CONTROL_CODES,
     audit_browser_html,
@@ -19,13 +20,20 @@ from infrastructure.reporting.native_format_browser_oracles import (
 
 
 def _chrome() -> str:
-    installed = shutil.which("chromium") or shutil.which("google-chrome")
-    mac = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
-    if installed:
-        return installed
-    if mac.is_file():
-        return str(mac)
-    pytest.skip("actual native Chromium browser not installed")
+    try:
+        return native_chrome(build_bounded_env())
+    except NativeToolUnavailable as error:
+        pytest.fail(str(error))
+
+
+def test_configured_native_browser_preserves_actual_selection_and_refuses_missing_files(tmp_path: Path) -> None:
+    actual = Path(_chrome())
+    assert native_chrome({"CHROME_EXECUTABLE_PATH": str(actual), "PATH": str(tmp_path)}) == str(actual)
+    ordinary = tmp_path / "ordinary-file"
+    ordinary.write_text("not an executable browser")
+    for invalid in (tmp_path / "missing", tmp_path, ordinary, Path("relative-browser")):
+        with pytest.raises(NativeToolUnavailable, match="actual executable file"):
+            native_chrome({"CHROME_EXECUTABLE_PATH": str(invalid), "PATH": str(tmp_path)})
 
 
 @pytest.mark.timeout(240)

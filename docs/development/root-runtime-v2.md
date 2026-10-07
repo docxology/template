@@ -66,3 +66,17 @@ small source-owned Root fixture. They prove this bounded execution contract and
 its negative controls; they do not substitute for the consolidated production
 Root collection, literal reviewed classifications, all target environments or
 any exemplar's own acceptance.
+
+The existing designated Darwin `root:macos:rendering` auxiliary observation
+also retains complete Storybook and Newspaper print witnesses. Every source
+page is included at 150 dpi, alongside original before/after complete source
+SDK, interpreter, installed decoder RECORD and selected font observations.
+Readers validate the retained native PDF/source image or glyph projections
+without opening original producer font, library or executable paths. Exact
+raster bindings include every page in the unchanged 64 MiB hosted closure.
+These component observations require the enclosing genuine auxiliary child
+and existing same-run/source-SHA artifact origin. They do not replace full
+Root execution, project domain/source admission or required native format
+acceptance. Image print documents use the existing bounded 250 MiB expanded
+raster-document budget; encoded PDFs remain bounded to 64 MiB and retain the
+original page, geometry, pixel and deadline checks.

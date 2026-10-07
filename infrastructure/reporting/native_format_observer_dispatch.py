@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -41,6 +42,12 @@ def _manuscript_contracts(root: Path, scope: str, reader: SnapshotReader) -> tup
 
 
 def _chrome(env: dict[str, str]) -> str:
+    configured = env.get("CHROME_EXECUTABLE_PATH")
+    if configured:
+        path = Path(configured)
+        if not path.is_absolute() or not path.is_file() or not os.access(path, os.X_OK):
+            raise NativeToolUnavailable("configured native Chromium browser is not an actual executable file")
+        return str(path)
     selected = shutil.which("chromium", path=env.get("PATH")) or shutil.which("google-chrome", path=env.get("PATH"))
     mac = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
     if selected:

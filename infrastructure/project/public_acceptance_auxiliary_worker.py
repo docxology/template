@@ -17,6 +17,8 @@ from typing import Any
 from collections.abc import Callable
 
 from infrastructure.project.public_acceptance_evidence import read_json, write_json
+from infrastructure.reporting.native_format_acceptance_checks import NativeToolUnavailable
+from infrastructure.reporting.native_format_acceptance_contracts import NativeDeadlineExpired, NativeDeadlineUnavailable
 
 
 class MissingAuxiliaryProvider(RuntimeError):
@@ -126,8 +128,9 @@ def execute(
             raise MissingAuxiliaryProvider("macOS rendering acceptance requires an actual Darwin host")
         import shutil
 
-        if shutil.which("pandoc") is None:
-            raise MissingAuxiliaryProvider("pandoc is unavailable on the actual Darwin host")
+        for name in ("pandoc", "pdftoppm", "pdffonts"):
+            if shutil.which(name) is None:
+                raise MissingAuxiliaryProvider(f"{name} is unavailable on the actual Darwin host")
         with tempfile.TemporaryDirectory(prefix="template-macos-render-") as temporary:
             output = Path(temporary) / "render.html"
             rendered = subprocess.run(
@@ -145,7 +148,17 @@ def execute(
                 or '<h1 id="acceptance">' not in content
             ):
                 raise ValueError("actual Darwin pandoc rendering failed its content oracle")
-            return {"platform": "macos", "assertions": {"actual_pandoc_content": True}, "rendered_html": content}
+            from infrastructure.reporting.native_print_witness import run_print_witness
+
+            if directory is None:
+                raise ValueError("original Darwin print witness requires a confined evidence directory")
+            witness = run_print_witness(root, directory / "print-witness", budget)
+            return {
+                "platform": "macos",
+                "assertions": {"actual_pandoc_content": True},
+                "rendered_html": content,
+                "print_witness_artifact": witness,
+            }
     if gate.endswith(":pipeline"):
         from infrastructure.project.public_acceptance_auxiliary_pipeline import run_pipeline
 
@@ -354,7 +367,11 @@ def main() -> int:
     root = Path.cwd().resolve()
     if not Path(__file__).resolve().is_relative_to(root / "infrastructure/project"):
         raise ValueError("auxiliary worker implementation was not loaded from the nominated source root")
-    spec = read_json(root, args.spec)
+    return run_specification(root, read_json(root, args.spec))
+
+
+def run_specification(root: Path, spec: dict[str, Any]) -> int:
+    """Retain true terminal facts from the actual selected source-owned check."""
     result: dict[str, Any] = {"gate": spec["gate"], "pid": os.getpid(), "platform": platform.system()}
     result["runtime"] = {
         "executable": sys.executable,
@@ -381,8 +398,19 @@ def main() -> int:
     except MissingAuxiliaryProvider as error:
         result.update(status="blocked", diagnostic=str(error))
         code = 75
-    except (OSError, ValueError, TypeError, KeyError, subprocess.SubprocessError) as error:
-        result.update(status="fail", diagnostic=str(error))
+    except NativeDeadlineExpired as error:
+        result.update(status="timeout", diagnostic=str(error), failure_class=type(error).__name__)
+        code = 124
+    except (
+        OSError,
+        ValueError,
+        TypeError,
+        KeyError,
+        subprocess.SubprocessError,
+        NativeToolUnavailable,
+        NativeDeadlineUnavailable,
+    ) as error:
+        result.update(status="fail", diagnostic=str(error), failure_class=type(error).__name__)
         code = 1
     result["exit_code"] = code
     write_json(root, root / spec["raw_path"], result)
