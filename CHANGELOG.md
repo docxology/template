@@ -7,9 +7,26 @@ gitignore, or treat those trees as confidential); where entries mention
 `projects/`, they refer to **generic layout and tooling** defined by the template,
 not to the contents of any specific workspace.
 
-## [Unreleased]
-
 ## [4.0.0] - Unreleased
+
+This is the intended root version. These notes record reviewed source changes
+and scoped checks; full runtime, coverage, native, live, installed, export and
+hosted acceptance remains incomplete. No tag, release, DOI or production
+promotion is established by this heading.
+
+- Require every authored SDK member in root wheels, including native source and
+  typing markers, with exact source bytes and complete RECORD validation. Reject
+  local native build products while preserving the authored SDK package surface.
+- Fail PDF rendering when the final compiler pass fails or the expected PDF is
+  invalid. Accept a recorded recovery only after its actual compiler process
+  succeeds and the required PDF passes validation.
+- Use installed font-family resolution for portable notebook manuscript
+  composition while preserving Unicode and mathematical content.
+- Add genuine complete-SDK archive controls and independently reviewed case
+  classification while retaining all mandatory runtime/platform obligations.
+- Record scoped artifact validation and rendered-snapshot evidence at development
+  checkpoints. Further source changes require genuine evidence renewal; affected
+  project composition and the complete publication audit remain required.
 
 - Preserve original bounded process outcomes and source/runtime custody in Root,
   auxiliary and native acceptance readers, including portable replay after the

@@ -42,8 +42,8 @@ uv run python projects/templates/template_autoscientists/scripts/run_search_comp
 The fresh ignored run retains source and active producer hashes, installed model
 digest, every prompt context, exact provider request/response text, proposals,
 observed outcomes and budgets. Null and negative differences remain successful
-contract outcomes. Missing capabilities return 75; malformed generations or
-source drift return 1. No acquisition, paid API, source application, or external
+contract outcomes. Missing capabilities return `75`; malformed generations or
+source drift return `1`. No acquisition, paid API, source application, or external
 publication occurs. Full instructions: `docs/live-coordination.md`.
 
 ## Shared estimator
