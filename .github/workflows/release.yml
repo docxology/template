@@ -106,7 +106,7 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: Prepare locked release environment
-        run: uv sync --locked --group public-exemplars --group installed-build
+        run: uv sync --locked --group public-exemplars --group installed-build --group publishing
 
       - uses: ./.github/actions/setup-acceptance-fixtures
 
@@ -235,10 +235,18 @@ jobs:
       - name: Verify rendered public exemplars
         run: uv run --no-sync --offline python -m infrastructure.validation.cli publication-audit --all-public --strict --rendered --format json
 
-      - name: Build and validate Python distributions
+      - name: Admit the exact installed wheel and final source distribution
+        id: distributions
+        env:
+          TAG: ${{ steps.tag.outputs.name }}
         run: |
-          uv build
-          uvx twine check dist/*
+          set -euo pipefail
+          uv build --sdist --no-build-isolation --offline
+          uv run --no-sync --offline python -m infrastructure.publishing.root_release_artifacts \
+            --tag "$TAG" \
+            --installed-receipt "$GITHUB_WORKSPACE/output/readiness/installed-release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT/receipt.json" \
+            >> "$GITHUB_OUTPUT"
+          uv run --no-sync --offline python -m twine check dist/*.whl dist/*.tar.gz
 
       - name: Generate changelog excerpt
         id: changelog
@@ -267,6 +275,16 @@ jobs:
           fi
           echo "file=$RUNNER_TEMP/template-release-notes.md" >> "$GITHUB_OUTPUT"
 
+      - name: Recheck admitted publication bytes
+        env:
+          TAG: ${{ steps.tag.outputs.name }}
+          MANIFEST_SHA256: ${{ steps.distributions.outputs.manifest_sha256 }}
+        run: |
+          set -euo pipefail
+          uv run --no-sync --offline python -m infrastructure.publishing.root_release_artifacts \
+            --verify --tag "$TAG" --manifest-sha256 "$MANIFEST_SHA256" \
+            --installed-receipt "$GITHUB_WORKSPACE/output/readiness/installed-release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT/receipt.json"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
@@ -280,3 +298,16 @@ jobs:
           files: |
             dist/*
             docs/releases/template-v4.0.0-overview.png
+
+      - name: Verify retrieved release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.tag.outputs.name }}
+          MANIFEST_SHA256: ${{ steps.distributions.outputs.manifest_sha256 }}
+        run: |
+          set -euo pipefail
+          destination="$RUNNER_TEMP/template-release-retrieved-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir "$destination"
+          uv run --no-sync --offline python -m infrastructure.publishing.root_release_artifacts \
+            --verify --tag "$TAG" --manifest-sha256 "$MANIFEST_SHA256" --retrieved "$destination" \
+            --installed-receipt "$GITHUB_WORKSPACE/output/readiness/installed-release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT/receipt.json"

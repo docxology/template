@@ -226,7 +226,15 @@ def run_infrastructure_tests(
     env["PYTHONPATH"] = build_pythonpath(repo_root, project_root)
     prepend_uv_to_path(env)
 
-    cmd = list(build_audited_project_test_command(repo_root, selected, tuple(cmd), module="pytest"))
+    try:
+        cmd = list(
+            build_audited_project_test_command(repo_root, selected, tuple(cmd), module="pytest", deadline=deadline)
+        )
+    except ProjectTestRuntimeError as exc:
+        logger.error("Infrastructure provider-root discovery refused: %s", exc)
+        return exc.exit_code, cast(
+            TestSuiteResults, {"exit_code": exc.exit_code, "original_exit_code": exc.original_exit_code}
+        )
 
     # Admission and command construction precede mutation of existing evidence.
     # Root-only cleanup preserves concurrently running lifecycle projects.
@@ -410,14 +418,21 @@ def _run_project_tests_impl(
             },
         )
 
-    cmd = build_project_pytest_command(
-        project_root,
-        [
-            str(project_root / "tests"),
-            f"--cov={project_root / 'src'}",
-        ],
-        interpreter=_selected,
-    )
+    try:
+        cmd = build_project_pytest_command(
+            project_root,
+            [
+                str(project_root / "tests"),
+                f"--cov={project_root / 'src'}",
+            ],
+            interpreter=_selected,
+            deadline=deadline,
+        )
+    except ProjectTestRuntimeError as exc:
+        logger.error("Project provider-root discovery refused: %s", exc)
+        return exc.exit_code, cast(
+            TestSuiteResults, {"exit_code": exc.exit_code, "original_exit_code": exc.original_exit_code}
+        )
     project_cov_config = resolve_project_cov_config(project_root)
     if project_cov_config is not None:
         cmd.append(f"--cov-config={project_cov_config}")

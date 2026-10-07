@@ -1,8 +1,8 @@
 # Release boundary
 
-The root package metadata declares intended platform **4.0.0**, and its
-changelog heading remains **Unreleased**. No new tag, GitHub release, or deposit
-follows from that declaration. The earlier recorded root release is `3.8.0` /
+The root package metadata and dated changelog heading declare platform
+**4.0.0** as of **2026-10-07**. Tagging and publication require the verified
+acceptance and publication steps below. The earlier recorded root release is `3.8.0` /
 `v3.8.0`; its original publication evidence is retained in
 [subsystem history](subsystem-status-history.md). Historical standalone release
 entries do not version the root package.

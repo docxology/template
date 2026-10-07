@@ -37,6 +37,7 @@ from infrastructure.core.testing.project_test_runtime import (
     remaining_test_budget,
     build_audited_project_test_command,
     project_test_audit_roots,
+    project_test_import_paths,
 )
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.testing.pytest_orchestration import TestSuiteResults, build_pythonpath
@@ -105,12 +106,22 @@ def validate_project_test_command(project_root: Path, command: tuple[str, ...]) 
 
 
 def build_project_verifier_execution_command(
-    command: tuple[str, ...], project_root: Path, *, interpreter: Path | None = None
+    command: tuple[str, ...],
+    project_root: Path,
+    *,
+    interpreter: Path | None = None,
+    deadline: float | None = None,
+    audit_roots: tuple[Path, ...] | None = None,
 ) -> tuple[str, ...]:
     """Bind portable argv to one existing interpreter; never run a resolver."""
     selected = Path(sys.executable).absolute() if interpreter is None else interpreter
     return build_audited_project_test_command(
-        project_root, selected, command[2:], script=project_root.absolute() / command[1]
+        project_root,
+        selected,
+        command[2:],
+        script=project_root.absolute() / command[1],
+        deadline=deadline,
+        audit_roots=audit_roots,
     )
 
 
@@ -201,7 +212,7 @@ def _regenerate_coverage_json(project_root: Path) -> float:
     try:
         frozen_database = read_bytes_confined(project_root, coverage_db, max_bytes=64 * 1024 * 1024)
         with tempfile.TemporaryDirectory(prefix="template-coverage-validation-") as temporary:
-            admitted_database = Path(temporary) / ".coverage"
+            admitted_database = Path(temporary).resolve() / ".coverage"
             admitted_database.write_bytes(frozen_database)
             coverage = Coverage(
                 data_file=str(admitted_database),
@@ -240,11 +251,14 @@ def run_declared_project_verifier(
             raise ProjectVerifierError("Project coverage floor must be finite within 0–100", exit_code=2)
         validated = validate_project_test_command(project_root, command)
         selected, runtime = admit_project_test_runtime(project_root, deadline=deadline)
+        frozen_roots = project_test_audit_roots(project_root, interpreter=selected, deadline=deadline)
+        execution_command = build_project_verifier_execution_command(
+            validated, project_root, interpreter=selected, deadline=deadline, audit_roots=frozen_roots
+        )
     except ProjectTestRuntimeError as exc:
         raise ProjectVerifierError(
             str(exc), exit_code=exc.exit_code, original_exit_code=exc.original_exit_code
         ) from exc
-    execution_command = build_project_verifier_execution_command(validated, project_root, interpreter=selected)
     coverage_db = project_root / ".coverage"
     if coverage_db.is_symlink():
         raise ProjectVerifierError("project verifier refuses a symlinked .coverage database")
@@ -256,7 +270,8 @@ def run_declared_project_verifier(
     run_id = uuid.uuid4().hex
     command_sha = project_test_command_sha256(execution_command)
     with tempfile.TemporaryDirectory(prefix="template-project-verifier-") as temp_dir:
-        receipt_path = Path(temp_dir) / "receipt.json"
+        temporary_root = Path(temp_dir).resolve()
+        receipt_path = temporary_root / "receipt.json"
         env = os.environ.copy()
         env.pop("COVERAGE_FILE", None)
         for pytest_env in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "PYTEST_DISABLE_PLUGIN_AUTOLOAD"):
@@ -304,8 +319,8 @@ def run_declared_project_verifier(
             raise ProjectVerifierError(
                 "Selected prepared test runtime changed after actual verifier child", exit_code=75, original_exit_code=0
             )
-        request_path = Path(temp_dir) / "validation.json"
-        result_path = Path(temp_dir) / "validation_result.json"
+        request_path = temporary_root / "validation.json"
+        result_path = temporary_root / "validation_result.json"
         request_path.write_text(
             json.dumps(
                 {
@@ -316,18 +331,18 @@ def run_declared_project_verifier(
                     "command_sha256": command_sha,
                     "coverage_floor": coverage_floor,
                     "result_path": str(result_path),
-                    "audit_roots": [str(root) for root in project_test_audit_roots(project_root)],
+                    "audit_roots": [str(root) for root in frozen_roots],
                 }
             ),
             encoding="utf-8",
         )
-        prefix = Path(temp_dir) / "validation-pycache"
+        prefix = temporary_root / "validation-pycache"
         prefix.mkdir(mode=0o700)
-        platform_root = Path(__file__).absolute().parents[1]
-        bootstrap = bytecode_audit_bootstrap(project_test_audit_roots(project_root), prefix)
+        bootstrap = bytecode_audit_bootstrap(frozen_roots, prefix)
         launch = (
-            "import sys,runpy; sys.path.insert(0,sys.argv[1]); sys.path.insert(0,sys.argv[3]); "
-            "sys.argv=['project_verifier','--validate-receipt',sys.argv[2]]; "
+            "import sys,runpy; "
+            f"sys.path[:0]={[str(path) for path in project_test_import_paths(project_root)]!r}; "
+            "sys.argv=['project_verifier','--validate-receipt',sys.argv[1]]; "
             + bootstrap
             + "\nrunpy.run_module('infrastructure.reporting.project_verifier',run_name='__main__')"
         )
@@ -340,9 +355,7 @@ def run_declared_project_verifier(
                     f"pycache_prefix={prefix}",
                     "-c",
                     launch,
-                    str(platform_root.parent),
                     str(request_path),
-                    str(project_root.absolute()),
                 ],
                 cwd=project_root,
                 env=env,
@@ -361,7 +374,7 @@ def run_declared_project_verifier(
                 )
             results = cast(
                 TestSuiteResults,
-                json.loads(read_bytes_confined(Path(temp_dir), result_path, max_bytes=_MAX_RECEIPT_BYTES)),
+                json.loads(read_bytes_confined(temporary_root, result_path, max_bytes=_MAX_RECEIPT_BYTES)),
             )
             measured_coverage = float(results["coverage_percent"])
             try:
@@ -424,7 +437,7 @@ def _main() -> int:
     args = parser.parse_args()
     try:
         return _validate_receipt_worker(args.validate_receipt)
-    except (OSError, ValueError, ProjectVerifierError) as exc:
+    except (OSError, ValueError, ProjectVerifierError, ProjectTestRuntimeError) as exc:
         logger.error("Independent project evidence validation refused: %s", exc)
         return getattr(exc, "exit_code", 1)
 

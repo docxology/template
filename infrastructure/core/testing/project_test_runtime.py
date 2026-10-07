@@ -168,35 +168,124 @@ def admit_project_test_runtime(
 _PROVIDER_DISTRIBUTION = re.compile(r"template-[a-z0-9]+(?:-[a-z0-9]+)*")
 
 
-def _declared_provider_roots(project_root: Path) -> tuple[Path, ...]:
-    """Return import roots of exactly pinned public exemplar providers.
+def project_test_import_paths(project_root: Path) -> tuple[Path, ...]:
+    """Return the exact import order shared by discovery and audited children."""
+    platform_root = Path(os.path.normpath(Path(__file__).absolute())).parents[2]
+    project = Path(os.path.normpath(project_root.absolute()))
+    return (platform_root.parent, project, project / "src", project / "scripts")
 
-    A consumer such as Advanced Literature Review declares the namespaced Meta
-    engine as ``template-literature-meta-analysis==<version>``. Dependency
-    custody verifies that provider's executed code against this same pre-import
-    audit, so its actual package directory (installed or checkout) is audited
-    too. Resolution uses the current interpreter without executing the package.
+
+def _declared_provider_roots(
+    project_root: Path, *, interpreter: Path | None = None, deadline: float | None = None
+) -> tuple[Path, ...]:
+    """Resolve exactly pinned top-level providers without importing their code.
+
+    Parent launchers probe the selected interpreter with the actual child import
+    order. Child custody checks resolve locally and compare with that frozen
+    inventory. A lookup has a separate 30-second cap unless an existing whole
+    operation deadline is supplied; it never prepares an environment.
     """
     try:
         project = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8")).get("project", {})
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
         return ()
-    roots: set[Path] = set()
+    names: set[str] = set()
     for value in project.get("dependencies", []) if isinstance(project, dict) else ():
         if not isinstance(value, str):
             continue
         name, separator, _version = value.partition("==")
         name = name.strip()
-        if not separator or not _PROVIDER_DISTRIBUTION.fullmatch(name):
-            continue
-        spec = importlib.util.find_spec(name.replace("-", "_"))
-        if spec is None or not spec.submodule_search_locations:
-            continue
-        roots.update(Path(location).absolute() for location in spec.submodule_search_locations)
-    return tuple(sorted(roots))
+        if separator and _PROVIDER_DISTRIBUTION.fullmatch(name):
+            names.add(name.replace("-", "_"))
+    if not names:
+        return ()
+    if interpreter is None:
+        roots: set[Path] = set()
+        try:
+            for name in sorted(names):
+                spec = importlib.util.find_spec(name)
+                if spec is not None and spec.submodule_search_locations:
+                    roots.update(
+                        Path(os.path.normpath(Path(location).absolute()))
+                        for location in spec.submodule_search_locations
+                    )
+        except (ImportError, AttributeError, TypeError, ValueError, RuntimeError) as exc:
+            raise ProjectTestRuntimeError("Local provider-root discovery refused") from exc
+        return tuple(sorted(roots))
+    if not isinstance(interpreter, Path):
+        raise ProjectTestRuntimeError("Selected test interpreter must be a Path", exit_code=2)
+    if deadline is not None and (
+        isinstance(deadline, bool) or not isinstance(deadline, (int, float)) or not math.isfinite(deadline)
+    ):
+        raise ProjectTestRuntimeError("Project test deadline must be finite monotonic time", exit_code=2)
+    operation_deadline = project_test_deadline(30.0) if deadline is None else deadline
+    selected = interpreter.absolute()
+    probe = (
+        "import sys,json,importlib.util,os; "
+        "sys.path[:0]=json.loads(sys.argv[1]); roots=set()\n"
+        "for name in json.loads(sys.argv[2]):\n"
+        " spec=importlib.util.find_spec(name)\n"
+        " if spec is not None and spec.submodule_search_locations:\n"
+        "  roots.update(os.path.normpath(os.path.abspath(p)) for p in spec.submodule_search_locations)\n"
+        "print(json.dumps({'executable':sys.executable,'roots':sorted(roots)}))"
+    )
+    try:
+        result = run_bounded_subprocess(
+            [
+                str(selected),
+                "-I",
+                "-c",
+                probe,
+                json.dumps([str(path) for path in project_test_import_paths(project_root)]),
+                json.dumps(sorted(names)),
+            ],
+            cwd=project_root,
+            env=os.environ.copy(),
+            timeout=remaining_test_budget(operation_deadline),
+        )
+    except OSError as exc:
+        raise ProjectTestRuntimeError("Selected provider-root interpreter is unavailable") from exc
+    if result.custody_refused:
+        raise ProjectTestRuntimeError(
+            "Selected provider-root discovery custody refused", original_exit_code=result.original_returncode
+        )
+    if result.timed_out or result.returncode == 124:
+        raise ProjectTestRuntimeError(
+            "Selected provider-root discovery exhausted its deadline",
+            exit_code=124,
+            original_exit_code=result.original_returncode,
+        )
+    if result.returncode != 0:
+        detail = result.command_error or result.stderr
+        raise ProjectTestRuntimeError(
+            f"Selected provider-root discovery failed with exit {result.returncode}: {detail[-1000:]}",
+            exit_code=130 if result.returncode == 130 else 75,
+            original_exit_code=result.original_returncode,
+        )
+    try:
+        actual = json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        raise ProjectTestRuntimeError("Selected provider-root discovery returned invalid evidence") from exc
+    locations = actual.get("roots") if isinstance(actual, dict) else None
+    if (
+        not isinstance(actual, dict)
+        or set(actual) != {"executable", "roots"}
+        or actual.get("executable") != str(selected)
+        or not isinstance(locations, list)
+        or any(
+            not isinstance(p, str) or not p or "\0" in p or not Path(p).is_absolute() or os.path.normpath(p) != p
+            for p in locations
+        )
+        or locations != sorted(set(locations))
+    ):
+        raise ProjectTestRuntimeError("Selected provider-root discovery returned invalid evidence")
+    remaining_test_budget(operation_deadline)
+    return tuple(Path(location) for location in locations)
 
 
-def project_test_audit_roots(project_root: Path) -> tuple[Path, ...]:
+def project_test_audit_roots(
+    project_root: Path, *, interpreter: Path | None = None, deadline: float | None = None
+) -> tuple[Path, ...]:
     """Nominate implementation roots and exact top-level project plugin files.
 
     Tests are deliberately excluded: pytest rewrites their assertions. The
@@ -212,7 +301,7 @@ def project_test_audit_roots(project_root: Path) -> tuple[Path, ...]:
         project_root.absolute() / "src",
         project_root.absolute() / "scripts",
         *sorted(project_root.absolute().glob("*.py")),
-        *_declared_provider_roots(project_root),
+        *_declared_provider_roots(project_root, interpreter=interpreter, deadline=deadline),
     )
 
 
@@ -223,12 +312,18 @@ def build_audited_project_test_command(
     *,
     module: str | None = None,
     script: Path | None = None,
+    deadline: float | None = None,
+    audit_roots: tuple[Path, ...] | None = None,
 ) -> tuple[str, ...]:
     """Freeze the mature pre-import audit into an isolated real child launch."""
     if (module is None) == (script is None):
         raise ValueError("Select exactly one module or script test entry point")
-    roots = project_test_audit_roots(project_root)
-    platform_root = roots[0]
+    if deadline is not None:
+        remaining_test_budget(deadline)
+    current_roots = project_test_audit_roots(project_root, interpreter=selected, deadline=deadline)
+    if audit_roots is not None and audit_roots != current_roots:
+        raise ProjectTestRuntimeError("Supplied frozen audit roots differ from the selected complete inventory")
+    roots = current_roots if audit_roots is None else audit_roots
     bootstrap = bytecode_audit_bootstrap(roots, None)
     target = (
         f"runpy.run_module({module!r},run_name='__main__')"
@@ -236,12 +331,7 @@ def build_audited_project_test_command(
         else f"runpy.run_path({str(script)!r},run_name='__main__')"
     )
     argv0 = module if module is not None else str(script)
-    import_paths = [
-        str(platform_root.parent),
-        str(project_root.absolute()),
-        str(project_root / "src"),
-        str(project_root / "scripts"),
-    ]
+    import_paths = [str(path) for path in project_test_import_paths(project_root)]
     source = (
         "import sys,tempfile,pathlib,runpy,traceback\n"
         f"sys.path[:0]={import_paths!r}\n"
@@ -264,7 +354,7 @@ def build_audited_project_test_command(
         "    raise ValueError('Project plugin-root set changed during execution')\n"
         f"   for _root in {tuple(str(root) for root in roots)!r}:\n"
         "    verify_fresh_module_bytecode(pathlib.Path(_root),pathlib.Path(sys.pycache_prefix))\n"
-        "  except (ValueError,OSError) as _error:\n"
+        "  except (ValueError,OSError,RuntimeError) as _error:\n"
         "   print('Project test executed-code custody refused: '+str(_error),file=sys.stderr)\n"
         "   if _exit in (0,75): _exit=75\n"
         " raise SystemExit(_exit)\n"
@@ -278,6 +368,7 @@ __all__ = [
     "build_audited_project_test_command",
     "project_test_audit_roots",
     "project_test_deadline",
+    "project_test_import_paths",
     "remaining_test_budget",
     "select_project_test_python",
 ]

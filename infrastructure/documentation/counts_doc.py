@@ -99,7 +99,7 @@ __all__ = [
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-09-06"
+GENERATED_DATE = "2026-10-07"
 
 
 def tracked_infra_python_count(repo_root: Path, *, tracked_paths: tuple[str, ...] | None = None) -> int:

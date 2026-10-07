@@ -9,10 +9,6 @@ not to the contents of any specific workspace.
 
 ## [4.0.0] - 2026-10-07
 
-These versioned notes describe the intended root release candidate. Publication
-remains pending until all required exact-source acceptance and release workflow
-gates pass. The heading is not evidence of a published GitHub Release.
-
 See the [illustrated version notes](docs/releases/v4.0.0.md) for the repository
 architecture, update summary and release boundary.
 
@@ -50,8 +46,7 @@ architecture, update summary and release boundary.
   content, and bind human decisions to the reviewed run, plan, and artifacts.
 - Retire unused publishing/resource interfaces, enforce strict Methods
   declarations, and distinguish intended exemplar versions from historical
-  publication metadata. Platform 4.0 release acceptance remains in progress;
-  no new tag, release, DOI, or production promotion is implied by this entry.
+  publication metadata.
 - Keep reporting importable without plotting providers: the multi-project
   dashboard generator and `DASHBOARD_AVAILABLE` now observe Matplotlib itself,
   and a genuine no-site fixture proves the optional path.

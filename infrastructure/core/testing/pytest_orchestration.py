@@ -316,17 +316,22 @@ def normalize_pytest_args_for_project(project_root: Path, pytest_args: list[str]
 
 
 def build_project_pytest_command(
-    project_root: Path, pytest_args: list[str], *, interpreter: Path | None = None
+    project_root: Path, pytest_args: list[str], *, interpreter: Path | None = None, deadline: float | None = None
 ) -> list[str]:
     """Build Python-module argv for one existing prepared project interpreter.
 
     Execution adapters independently admit its exact runner versions. This
-    pure builder never installs dependencies or falls back from a broken venv.
+    builder bounds provider discovery in that selected interpreter and never
+    installs dependencies or falls back from a broken venv.
     """
     selected = select_project_test_python(project_root) if interpreter is None else interpreter
     return list(
         build_audited_project_test_command(
-            project_root, selected, tuple(normalize_pytest_args_for_project(project_root, pytest_args)), module="pytest"
+            project_root,
+            selected,
+            tuple(normalize_pytest_args_for_project(project_root, pytest_args)),
+            module="pytest",
+            deadline=deadline,
         )
     )
 

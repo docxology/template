@@ -443,3 +443,112 @@ def test_invalid_coverage_floor_refuses_before_execution(tmp_path: Path, floor: 
     assert refused.value.exit_code == 2
     assert refused.value.original_exit_code is None
     assert not (project / ".coverage").exists()
+
+
+@pytest.mark.timeout(120)
+def test_actual_selected_provider_inventory_binds_verifier_and_validator(tmp_path: Path) -> None:
+    import os
+    import sys
+    import sysconfig
+    import venv
+
+    project = _write_verifier_project(tmp_path)
+    metadata = project / "pyproject.toml"
+    metadata.write_text(
+        metadata.read_text().replace(
+            "dependencies = []", 'dependencies = ["template-selected-verifier-provider==1.0.0"]'
+        )
+    )
+    environment = project / ".venv"
+    venv.EnvBuilder(with_pip=False, symlinks=os.name != "nt").create(environment)
+    site = environment / (
+        "Lib/site-packages"
+        if os.name == "nt"
+        else f"lib/python{sys.version_info.major}.{sys.version_info.minor}/site-packages"
+    )
+    (site / "prepared_dependencies.pth").write_text(sysconfig.get_path("purelib") + "\n")
+    provider = site / "template_selected_verifier_provider"
+    provider.mkdir()
+    (provider / "__init__.py").write_text("VALUE = 7\n")
+    verifier = project / "scripts/verify.py"
+    verifier.write_text(
+        "import template_selected_verifier_provider\nassert template_selected_verifier_provider.VALUE == 7\n"
+        + verifier.read_text()
+    )
+    code, results = run_declared_project_verifier(
+        tmp_path, project, "active/demo", ("python", "scripts/verify.py"), coverage_floor=90
+    )
+    assert code == 0
+    assert results["original_exit_code"] == 0
+    assert results["coverage_percent"] == 100
+
+
+@pytest.mark.timeout(120)
+def test_actual_validator_malformed_provider_spec_keeps_typed_refusal(tmp_path: Path) -> None:
+    import os
+    import subprocess
+    import sys
+    import uuid
+
+    from infrastructure.core.testing.project_test_runtime import project_test_audit_roots, project_test_import_paths
+
+    project = _write_verifier_project(tmp_path)
+    metadata = project / "pyproject.toml"
+    metadata.write_text(
+        metadata.read_text().replace("dependencies = []", 'dependencies = ["template-malformed-provider==1.0.0"]')
+    )
+    provider = project / "src/template_malformed_provider"
+    provider.mkdir()
+    (provider / "__init__.py").write_text("VALUE = 7\n")
+    verifier = project / "scripts/verify.py"
+    verifier.write_text(
+        verifier.read_text().replace("coverage.start()", "coverage.start()\nimport template_malformed_provider")
+    )
+    receipt = tmp_path / "actual-receipt.json"
+    run_id = uuid.uuid4().hex
+    command_sha = "a" * 64
+    environment = os.environ.copy()
+    environment.update(
+        TEMPLATE_PROJECT_TEST_RECEIPT=str(receipt),
+        TEMPLATE_PROJECT_TEST_RUN_ID=run_id,
+        TEMPLATE_PROJECT_TEST_PROJECT="active/demo",
+        TEMPLATE_PROJECT_TEST_COMMAND_SHA256=command_sha,
+    )
+    body = subprocess.run(
+        [sys.executable, "-I", str(project / "scripts/verify.py")],
+        cwd=project,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert body.returncode == 0, body.stderr
+    roots = project_test_audit_roots(project, interpreter=Path(sys.executable))
+    request = tmp_path / "actual-validation.json"
+    request.write_text(
+        json.dumps(
+            {
+                "receipt_path": str(receipt),
+                "project_root": str(project),
+                "project_name": "active/demo",
+                "run_id": run_id,
+                "command_sha256": command_sha,
+                "coverage_floor": 90,
+                "result_path": str(tmp_path / "validation-result.json"),
+                "audit_roots": [str(root) for root in roots],
+            }
+        )
+    )
+    source = (
+        "import sys,runpy; "
+        f"sys.path[:0]={[str(path) for path in project_test_import_paths(project)]!r}; "
+        "import template_malformed_provider; template_malformed_provider.__spec__=None; "
+        f"sys.argv=['project_verifier','--validate-receipt',{str(request)!r}]; "
+        "runpy.run_module('infrastructure.reporting.project_verifier',run_name='__main__')"
+    )
+    checked = subprocess.run(
+        [sys.executable, "-I", "-c", source], cwd=project, env=environment, capture_output=True, text=True, timeout=30
+    )
+    assert checked.returncode == 75, checked.stderr
+    assert "Local provider-root discovery refused" in checked.stdout + checked.stderr
+    assert not (tmp_path / "validation-result.json").exists()
