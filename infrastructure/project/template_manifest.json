@@ -54,7 +54,7 @@
       "qualified_name": "templates/template_eda_notebook",
       "title": "EDA Notebook — Exploratory Data Analysis Exemplar",
       "use_when": "Use this template for **exploratory data analysis on tabular data**: load a dataset, surface missingness, compute descriptive statistics and per-group means, rank features by correlation, and produce a few diagnostic figures.",
-      "test_file_count": 11,
+      "test_file_count": 12,
       "coverage_floor": 90
     },
     {

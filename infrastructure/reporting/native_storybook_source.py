@@ -47,7 +47,11 @@ _SourceLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _u
 def read_source_yaml(path: Path) -> Any:
     if path.stat().st_size > LIMIT:
         raise ValueError("source YAML exceeds artifact bound")
-    return yaml.load(path.read_bytes(), Loader=_SourceLoader)
+    loader = _SourceLoader(path.read_bytes())
+    try:
+        return loader.get_single_data()
+    finally:
+        loader.dispose()
 
 
 def source_package(project: Path, name: str) -> Any:

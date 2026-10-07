@@ -40,8 +40,8 @@ class DevTools:
             if len(header) > 16384:
                 raise ValueError("oversized DevTools handshake")
         expected = base64.b64encode(
-            hashlib.sha1((key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").encode()).digest()
-        ).decode()  # nosec B324 - RFC6455
+            hashlib.sha1((key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").encode(), usedforsecurity=False).digest()
+        ).decode()
         lines = header.decode().split("\r\n")
         headers = {line.split(": ", 1)[0].lower(): line.split(": ", 1)[1] for line in lines[1:] if ": " in line}
         if not lines[0].startswith("HTTP/1.1 101 ") or headers.get("sec-websocket-accept") != expected:

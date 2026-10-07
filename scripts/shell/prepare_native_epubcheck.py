@@ -10,6 +10,9 @@ from pathlib import Path, PurePosixPath
 import shutil
 import stat
 import urllib.request
+from http.client import HTTPMessage, HTTPResponse
+from typing import IO, cast
+from urllib.parse import urlsplit
 import zipfile
 
 URL = "https://github.com/w3c/epubcheck/releases/download/v5.4.0/epubcheck-5.4.0.zip"
@@ -69,6 +72,25 @@ def extract_bundle(archive: Path, destination: Path) -> Path:
     return destination / PREFIX / "epubcheck.jar"
 
 
+class _HTTPSOnlyRedirect(urllib.request.HTTPRedirectHandler):
+    """Keep every acquisition redirect on HTTPS before opening it."""
+
+    def redirect_request(
+        self, req: urllib.request.Request, fp: IO[bytes], code: int, msg: str, headers: HTTPMessage, newurl: str
+    ) -> urllib.request.Request | None:
+        if urlsplit(newurl).scheme != "https":
+            raise ValueError("EPUBCheck download left HTTPS")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def _download_response(request: urllib.request.Request) -> HTTPResponse:
+    """Refuse non-HTTPS acquisition before any network or local file access."""
+    if urlsplit(request.full_url).scheme != "https":
+        raise ValueError("EPUBCheck download requires HTTPS")
+    opener = urllib.request.build_opener(_HTTPSOnlyRedirect())
+    return cast(HTTPResponse, opener.open(request, timeout=60))
+
+
 def prepare(destination: Path) -> Path:
     """Download exact authenticated release bytes; never execute downloaded code."""
     destination = destination.absolute()
@@ -80,7 +102,7 @@ def prepare(destination: Path) -> Path:
     size = 0
     try:
         request = urllib.request.Request(URL, headers={"User-Agent": "template-native-preparation"})
-        with urllib.request.urlopen(request, timeout=60) as response, archive.open("xb") as output:  # noqa: S310
+        with _download_response(request) as response, archive.open("xb") as output:
             if not response.geturl().startswith("https://"):
                 raise ValueError("EPUBCheck download left HTTPS")
             while chunk := response.read(1024 * 1024):

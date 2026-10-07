@@ -457,6 +457,24 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.project.public_acceptance_auxiliary_cli",
+      "invocation": "python -m infrastructure.project.public_acceptance_auxiliary_cli",
+      "source_path": "infrastructure/project/public_acceptance_auxiliary_cli.py",
+      "purpose": "Explicit CLI for source-bound auxiliary acceptance; never publishes.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.project.public_acceptance_auxiliary_worker",
+      "invocation": "python -m infrastructure.project.public_acceptance_auxiliary_worker",
+      "source_path": "infrastructure/project/public_acceptance_auxiliary_worker.py",
+      "purpose": "Real source-owned auxiliary checks executed only in a supervised child.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.project.public_acceptance_pytest",
       "invocation": "python -m infrastructure.project.public_acceptance_pytest",
       "source_path": "infrastructure/project/public_acceptance_pytest.py",
@@ -920,6 +938,24 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.reporting.native_dependency_preparation",
+      "invocation": "python -m infrastructure.reporting.native_dependency_preparation",
+      "source_path": "infrastructure/reporting/native_dependency_preparation.py",
+      "purpose": "Finite official npm asset preparation, bound to exact source lock integrity.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_epub_observer",
+      "invocation": "python -m infrastructure.reporting.native_epub_observer",
+      "source_path": "infrastructure/reporting/native_epub_observer.py",
+      "purpose": "Real EPUBCheck and native reader conversion with exact byte custody.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.reporting.native_format_acceptance",
       "invocation": "python -m infrastructure.reporting.native_format_acceptance",
       "source_path": "infrastructure/reporting/native_format_acceptance.py",
@@ -933,6 +969,60 @@
       "invocation": "python -m infrastructure.reporting.native_format_acceptance_worker",
       "source_path": "infrastructure/reporting/native_format_acceptance_worker.py",
       "purpose": "Fresh core execution and native observers for one admitted public project.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_format_browser_driver",
+      "invocation": "python -m infrastructure.reporting.native_format_browser_driver",
+      "source_path": "infrastructure/reporting/native_format_browser_driver.py",
+      "purpose": "Finite loopback-only Chromium DevTools driver using the standard library.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_format_browser_oracles",
+      "invocation": "python -m infrastructure.reporting.native_format_browser_oracles",
+      "source_path": "infrastructure/reporting/native_format_browser_oracles.py",
+      "purpose": "Real isolated Chromium DOM, reflow and screenshot observations.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_format_browser_semantic_controls",
+      "invocation": "python -m infrastructure.reporting.native_format_browser_semantic_controls",
+      "source_path": "infrastructure/reporting/native_format_browser_semantic_controls.py",
+      "purpose": "Real supervised math, citation and source-figure native browser controls.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_office_observer",
+      "invocation": "python -m infrastructure.reporting.native_office_observer",
+      "source_path": "infrastructure/reporting/native_office_observer.py",
+      "purpose": "Bounded native Office conversion; package parsing never grants layout acceptance.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_pdf_citation_replay",
+      "invocation": "python -m infrastructure.reporting.native_pdf_citation_replay",
+      "source_path": "infrastructure/reporting/native_pdf_citation_replay.py",
+      "purpose": "Current-reader citation regeneration and exact native glyph/ink observations.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_projection_checks",
+      "invocation": "python -m infrastructure.reporting.native_projection_checks",
+      "source_path": "infrastructure/reporting/native_projection_checks.py",
+      "purpose": "Actual per-page projected glyph checks, retaining unsupported visual gates.",
       "subcommands": [],
       "exports": [],
       "effect": "read_only"
@@ -982,6 +1072,15 @@
         "render_html",
         "render_markdown"
       ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.required_acceptance_aggregate",
+      "invocation": "python -m infrastructure.reporting.required_acceptance_aggregate",
+      "source_path": "infrastructure/reporting/required_acceptance_aggregate.py",
+      "purpose": "Combine original required evidence; publish only independently passed candidates.",
+      "subcommands": [],
+      "exports": [],
       "effect": "read_only"
     },
     {
