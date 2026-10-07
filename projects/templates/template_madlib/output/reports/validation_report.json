@@ -290,7 +290,7 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-09-28T02:24:18Z",
+  "timestamp": "2026-10-07T09:51:33Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
@@ -384,7 +384,7 @@
     "fingerprints": {
       "config": {
         "file_count": 17,
-        "sha256": "1618f8fe4bd778691731710b2df89c103e31f1fb21978e6af05a7cdc0fc2e87f"
+        "sha256": "8017d9427a22113b9c4b28b97c04aa3c3636ad352901a34fdb7eb6b696498ac1"
       },
       "output": {
         "file_count": 67,
@@ -392,11 +392,11 @@
       },
       "source": {
         "file_count": 42,
-        "sha256": "31b80f320559b96569c27ae5be69331e749f8b19ba3075761838cec94c9763f6"
+        "sha256": "dd85fefbc6d2ce4bf2c16b592d56576f2f9522a948ec4db38d452acc06c88a6a"
       },
       "stage": {
-        "file_count": 1221,
-        "sha256": "71b358c43c0fa7acf048ba8020902f1fcb5ce82c36eba1e499184c58298db48d"
+        "file_count": 1539,
+        "sha256": "caef478f83ed819bd415e84b3a21fe729153e0a445624557e9980b2b58743c6d"
       }
     },
     "project": "templates/template_madlib",

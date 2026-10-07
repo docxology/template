@@ -1,17 +1,17 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 364,
+  "fact_count": 412,
   "freshness_warnings": [],
   "kind_counts": {
     "artifact": 44,
     "boolean": 1,
     "citation": 2,
     "figure": 8,
-    "number": 302,
+    "number": 350,
     "section": 6,
     "table": 1
   },
-  "omitted_fact_count": 164,
+  "omitted_fact_count": 212,
   "sample_facts": [
     {
       "active": true,
@@ -507,10 +507,10 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
-      "source": "output/reports/test_results.json:$.coverage_details.project.total_excluded",
-      "source_field": "$.coverage_details.project.total_excluded",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_transport.py.excluded_lines",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_transport.py.excluded_lines",
       "source_path": "output/reports/test_results.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -591,10 +591,10 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
-      "source": "output/reports/test_results.json:$.coverage_details.project.total_excluded (numeric variant)",
-      "source_field": "$.coverage_details.project.total_excluded",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_transport.py.excluded_lines (numeric variant)",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_transport.py.excluded_lines",
       "source_path": "output/reports/test_results.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -975,6 +975,30 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-07T08:21:41Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_domain.py.missing_lines",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_domain.py.missing_lines",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-07T08:21:41Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_transport.py.coverage_percent (numeric variant)",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_transport.py.coverage_percent",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "1"
+    },
+    {
+      "active": true,
       "checked_at": "2026-09-13T22:34:01Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/reference_agent.py.coverage_percent (numeric variant)",
@@ -1227,6 +1251,30 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-07T08:21:41Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_domain.py.missing_lines (numeric variant)",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_domain.py.missing_lines",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-07T08:21:41Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_transport.py.coverage_percent",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_transport.py.coverage_percent",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
       "checked_at": "2026-09-13T22:34:01Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/reference_agent.py.coverage_percent",
@@ -1407,6 +1455,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-07T08:21:41Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_domain.py.missing_lines (numeric variant)",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_domain.py.missing_lines",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100%"
+    },
+    {
+      "active": true,
       "checked_at": "2026-08-09T03:43:38Z",
       "kind": "number",
       "source": "output/runs/run_1/gen_1/results.json:$.metric_value (numeric variant)",
@@ -1527,7 +1587,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-09T03:43:38Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
       "source": "pyproject.toml:$.project.requires-python",
       "source_field": "$.project.requires-python",
@@ -1535,11 +1595,11 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "3.10"
+      "value": "3.12"
     },
     {
       "active": true,
-      "checked_at": "2026-08-09T03:43:38Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
       "source": "pyproject.toml:$.project.requires-python (numeric variant)",
       "source_field": "$.project.requires-python",
@@ -1547,7 +1607,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.031"
+      "value": "0.0312"
     },
     {
       "active": true,
@@ -1695,11 +1755,35 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-07T08:21:41Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.total_excluded",
+      "source_field": "$.coverage_details.project.total_excluded",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "4"
+    },
+    {
+      "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.ordered_inputs[3].ordinal (numeric variant)",
       "source_field": "$.ordered_inputs[3].ordinal",
       "source_path": "output/reports/manuscript_composition.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.04"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-07T08:21:41Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.total_excluded (numeric variant)",
+      "source_field": "$.coverage_details.project.total_excluded",
+      "source_path": "output/reports/test_results.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
@@ -1803,7 +1887,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.project.passed",
       "source_field": "$.project.passed",
@@ -1811,11 +1895,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "75"
+      "value": "114"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.project.total",
       "source_field": "$.project.total",
@@ -1823,11 +1907,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "75"
+      "value": "114"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.summary.total_passed",
       "source_field": "$.summary.total_passed",
@@ -1835,11 +1919,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "75"
+      "value": "114"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.summary.total_tests",
       "source_field": "$.summary.total_tests",
@@ -1847,11 +1931,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "75"
+      "value": "114"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.project.passed (numeric variant)",
       "source_field": "$.project.passed",
@@ -1859,11 +1943,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.75"
+      "value": "1.14"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.project.total (numeric variant)",
       "source_field": "$.project.total",
@@ -1871,11 +1955,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.75"
+      "value": "1.14"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.summary.total_passed (numeric variant)",
       "source_field": "$.summary.total_passed",
@@ -1883,11 +1967,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.75"
+      "value": "1.14"
     },
     {
       "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
+      "checked_at": "2026-10-07T08:21:41Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.summary.total_tests (numeric variant)",
       "source_field": "$.summary.total_tests",
@@ -1895,7 +1979,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.75"
+      "value": "1.14"
     },
     {
       "active": true,
@@ -2139,6 +2223,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-10-07T08:21:41Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/live_proposals.py.excluded_lines",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/live_proposals.py.excluded_lines",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
       "checked_at": "2026-09-13T22:34:01Z",
       "kind": "number",
       "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/loop.py.missing_lines",
@@ -2167,6 +2263,42 @@
       "kind": "number",
       "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/loop_config.py.excluded_lines",
       "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/loop_config.py.excluded_lines",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-07T08:21:41Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_domain.py.excluded_lines",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_domain.py.excluded_lines",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-07T08:21:41Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_sandbox.py.excluded_lines",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_sandbox.py.excluded_lines",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-10-07T08:21:41Z",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_transport.py.missing_lines",
+      "source_field": "$.coverage_details.project.file_coverage.src/template_sia/loop/proposal_transport.py.missing_lines",
       "source_path": "output/reports/test_results.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -2280,138 +2412,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/runs/run_1/gen_1/agent_execution.json:$.returncode",
-      "source_field": "$.returncode",
-      "source_path": "output/runs/run_1/gen_1/agent_execution.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/runs/run_1/gen_2/agent_execution.json:$.returncode",
-      "source_field": "$.returncode",
-      "source_path": "output/runs/run_1/gen_2/agent_execution.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "number",
-      "source": "output/runs/run_1/gen_3/agent_execution.json:$.returncode",
-      "source_field": "$.returncode",
-      "source_path": "output/runs/run_1/gen_3/agent_execution.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.discovery_count",
-      "source_field": "$.project.discovery_count",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "77"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.discovery_count (numeric variant)",
-      "source_field": "$.project.discovery_count",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.77"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.execution_phases.setup",
-      "source_field": "$.project.execution_phases.setup",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "29.43"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.execution_phases.collection",
-      "source_field": "$.project.execution_phases.collection",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "29.43"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.execution_phases.execution",
-      "source_field": "$.project.execution_phases.execution",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "29.43"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.execution_phases.setup (numeric variant)",
-      "source_field": "$.project.execution_phases.setup",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.2943"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.execution_phases.collection (numeric variant)",
-      "source_field": "$.project.execution_phases.collection",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.2943"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-09-13T22:34:01Z",
-      "kind": "number",
-      "source": "output/reports/test_results.json:$.project.execution_phases.execution (numeric variant)",
-      "source_field": "$.project.execution_phases.execution",
-      "source_path": "output/reports/test_results.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.2943"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
@@ -2421,7 +2421,7 @@
     "claim_ledger": 10,
     "configuration": 32,
     "fixture": 2,
-    "generated_metric": 252,
+    "generated_metric": 300,
     "project_source": 7
   }
 }

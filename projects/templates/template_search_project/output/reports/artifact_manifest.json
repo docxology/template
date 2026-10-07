@@ -3161,6 +3161,15 @@
     },
     {
       "contract_match": true,
+      "path": "output/review/HISTORY.md",
+      "sha256": "1b42a3ef32b5ab4b5de5616afa16e45b364e9d3e174d70ae09834fd97efe1d4c",
+      "size_bytes": 1419,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/review/REVIEW_REPORT.md",
       "sha256": "f80ed24b3e70ea07712c33900ee89a959b3ee7b27abfa78c39c561d8ea39dd05",
       "size_bytes": 16606,
