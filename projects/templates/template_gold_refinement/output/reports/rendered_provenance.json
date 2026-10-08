@@ -76,7 +76,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "a8563f31075e7eee6cf3d3c9acce3d61325d264ce3df53c6aa78aa100ac39d76",
+      "sha256": "e0d983244fd315db994eef77d793ea1647adb87e9d470ab82e5a7c0b82c28af1",
       "size_bytes": 23807
     },
     "combined_manuscript": {
@@ -91,7 +91,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "ab7e825ac4da248f8ed5202d137f3776382ba14294f071dbd89da830e937d07c",
+      "sha256": "63a120f267f90ae2b7b7857aecc4fb571c725385ae6ef62f2e487631ecc83cf1",
       "size_bytes": 12978
     }
   },
@@ -111,7 +111,7 @@
     },
     "stage": {
       "file_count": 1541,
-      "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
+      "sha256": "a0e13cf85765de437663aa69d9b08b95311dc1ffb386d6a84b88f74e27517ec0"
     }
   },
   "project": "templates/template_gold_refinement",

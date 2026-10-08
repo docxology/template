@@ -298,7 +298,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "1180d02ab0b255ad20c61ea71dc65b44fb816eb5c0e2620e8a3faf1adeb84b54",
+      "sha256": "c88145154145dab3efd89eee87778fa25c22ed4028d23f7f476563a23a664e63",
       "size_bytes": 46008
     },
     "combined_manuscript": {
@@ -313,7 +313,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "d4658ee48c17842b65754db6320fb985042d65f166da506b147747de433f75c5",
+      "sha256": "d698e75c6083200433b21d6c985ba194e267617d78751f57e92e3cd2b06d642a",
       "size_bytes": 25905
     }
   },
@@ -333,7 +333,7 @@
     },
     "stage": {
       "file_count": 1541,
-      "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
+      "sha256": "a0e13cf85765de437663aa69d9b08b95311dc1ffb386d6a84b88f74e27517ec0"
     }
   },
   "project": "templates/template_textbook",

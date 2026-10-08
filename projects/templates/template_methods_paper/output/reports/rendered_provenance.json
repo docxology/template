@@ -58,7 +58,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "b54cb6295922d7cff12c0bb5faf6e5b45bca905fb2b7e01e8205d773a449c9c0",
+      "sha256": "b77829d32314c9111c6107fcb6ac396d1b38ccf37cc7904b4fa960b913d4afe1",
       "size_bytes": 19257
     },
     "combined_manuscript": {
@@ -73,7 +73,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "306273d6290918f92ea835a9fd4c71af5f436bdc33f956f2d1716e2fe56011f3",
+      "sha256": "7564b8596768ed1cbbb0b086355608026b472e944dd2d5608f06aaceeead9903",
       "size_bytes": 12863
     }
   },
@@ -93,7 +93,7 @@
     },
     "stage": {
       "file_count": 1541,
-      "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
+      "sha256": "a0e13cf85765de437663aa69d9b08b95311dc1ffb386d6a84b88f74e27517ec0"
     }
   },
   "project": "templates/template_methods_paper",

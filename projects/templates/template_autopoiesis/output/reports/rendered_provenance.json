@@ -52,7 +52,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "d023738ea8dda826b31913eda6222fc50d3e52470016c1829fb2604f7f1accf8",
+      "sha256": "327d9a5c80368b7157f1752ad410ee90879b8abf63d5b8aaf7b5097f0c91df45",
       "size_bytes": 41064
     },
     "combined_manuscript": {
@@ -67,7 +67,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "4b3898515fdfa9a0af95c8c6fe49dde65c52bcc7e4720ecc53b15b3be6516d96",
+      "sha256": "ec72efcf3fd9cd52f812c997dad59f555affcb62b36130697af304e5a7e6bb7b",
       "size_bytes": 11122
     }
   },
@@ -87,7 +87,7 @@
     },
     "stage": {
       "file_count": 1541,
-      "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
+      "sha256": "a0e13cf85765de437663aa69d9b08b95311dc1ffb386d6a84b88f74e27517ec0"
     }
   },
   "project": "templates/template_autopoiesis",

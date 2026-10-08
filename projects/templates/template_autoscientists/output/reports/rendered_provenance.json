@@ -58,7 +58,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "4c6b8a7902ca3c21b30c9dbb20d83936e6b134e8fd027f06c995b9e612e0e0c3",
+      "sha256": "217b35900e7e981bf0f885b81eba495a79ff150e4d43f799f6d8e45efbd5a8bd",
       "size_bytes": 8188
     },
     "combined_manuscript": {
@@ -73,7 +73,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "17877c2822364833de1ad62c506aaa38e543b6fb167f90b141c071059647e69a",
+      "sha256": "00609c53dfbeb47325f87ce51a6228cf958e1ed053a554c2f56cedbbd4d0053e",
       "size_bytes": 10914
     }
   },
@@ -93,7 +93,7 @@
     },
     "stage": {
       "file_count": 1541,
-      "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
+      "sha256": "a0e13cf85765de437663aa69d9b08b95311dc1ffb386d6a84b88f74e27517ec0"
     }
   },
   "project": "templates/template_autoscientists",

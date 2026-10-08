@@ -52,7 +52,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "f432f22102fea85d27984dcbfd238f84f7b2c0467b7827ce0c7a1b78aa1a09ba",
+      "sha256": "54ab082bfbd2adfa549de336e5bbeb1232fcadd44701e391ef4a383bc4fd4835",
       "size_bytes": 14604
     },
     "combined_manuscript": {
@@ -67,7 +67,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "dbcec46c7902f79ed299e9eac7aa636d0132317a474fd400dc0366eb3e9c8b06",
+      "sha256": "8e1cb905fcdd78ec528df9b169506b19b03ae14bd328125c02f3fe098aa86568",
       "size_bytes": 10837
     }
   },
@@ -87,7 +87,7 @@
     },
     "stage": {
       "file_count": 1541,
-      "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
+      "sha256": "a0e13cf85765de437663aa69d9b08b95311dc1ffb386d6a84b88f74e27517ec0"
     }
   },
   "project": "templates/template_pools_rules_tools",

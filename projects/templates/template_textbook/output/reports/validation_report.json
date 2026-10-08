@@ -294,11 +294,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-10-07T23:16:32Z",
+  "timestamp": "2026-10-08T00:34:49Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "1180d02ab0b255ad20c61ea71dc65b44fb816eb5c0e2620e8a3faf1adeb84b54",
+      "sha256": "c88145154145dab3efd89eee87778fa25c22ed4028d23f7f476563a23a664e63",
       "size_bytes": 46008
     },
     "combined_manuscript": {
@@ -622,7 +622,7 @@
       },
       "stage": {
         "file_count": 1541,
-        "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
+        "sha256": "a0e13cf85765de437663aa69d9b08b95311dc1ffb386d6a84b88f74e27517ec0"
       }
     },
     "project": "templates/template_textbook",

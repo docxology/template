@@ -58,7 +58,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "dcc132bf6876d173380ec1ba1fbc0efb5f5cd0db2c6650c75dfd734c308ba0b5",
+      "sha256": "2e6585e341de8e7721e4850826d22931d37cae7f07860f32c9a094362b1edf04",
       "size_bytes": 10848
     },
     "combined_manuscript": {
@@ -73,7 +73,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "57f096a021e67889a01344bd55c5e6fc7c4d25757b12ccb56010c02f4f4b77ea",
+      "sha256": "a557f0e86d46143ce4aeef8c8d897fb6e9cf6c900a2922012a3d37ff4bab0c7d",
       "size_bytes": 10639
     }
   },
@@ -93,7 +93,7 @@
     },
     "stage": {
       "file_count": 1541,
-      "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
+      "sha256": "a0e13cf85765de437663aa69d9b08b95311dc1ffb386d6a84b88f74e27517ec0"
     }
   },
   "project": "templates/template_eda_notebook",

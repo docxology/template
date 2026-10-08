@@ -112,7 +112,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "853c1e69710d2a9882d51c9a04e2f45095872ef57fa78a453bc537bab8bae1b6",
+      "sha256": "a80f42cc862f8d0173f327f00fb01fb02adacb6cdf2ba8cc6ce8fa5bd11273cc",
       "size_bytes": 58472
     },
     "combined_manuscript": {
@@ -127,7 +127,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "d0ecf84b36a06bd3610d847a927c778d2cdeef101fdeafff513f71e76ddbcfea",
+      "sha256": "78a911668055534940d84d7a0c7e69c2cf71d321a14057d851478c3fb3bd890d",
       "size_bytes": 15047
     }
   },
@@ -147,7 +147,7 @@
     },
     "stage": {
       "file_count": 1541,
-      "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
+      "sha256": "a0e13cf85765de437663aa69d9b08b95311dc1ffb386d6a84b88f74e27517ec0"
     }
   },
   "project": "templates/template_active_inference",

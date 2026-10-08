@@ -76,7 +76,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "c87de65ea01568ef1ade285633ac12d6243d853549d215b9529a74a0bca1103c",
+      "sha256": "8ecc9158a14447226098305578d21a800a0a49a661481bbeed71e25ac7980dee",
       "size_bytes": 21906
     },
     "combined_manuscript": {
@@ -91,7 +91,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "61aae00f375b7fbeee26ff8376ebfba5a511addf3843b98862fac39298a8b79f",
+      "sha256": "201a36068acd301a291bc10aa410c5d6512919d9f50e49fd6efc310b9f0439b6",
       "size_bytes": 12711
     }
   },
@@ -111,7 +111,7 @@
     },
     "stage": {
       "file_count": 1541,
-      "sha256": "c6e31fd53cf74e25cb30b3662954ba5d1f769664e0a193490b32267083338741"
+      "sha256": "a0e13cf85765de437663aa69d9b08b95311dc1ffb386d6a84b88f74e27517ec0"
     }
   },
   "project": "templates/template_madlib",
