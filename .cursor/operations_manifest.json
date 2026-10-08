@@ -956,6 +956,15 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.reporting.native_epub_preparation",
+      "invocation": "python -m infrastructure.reporting.native_epub_preparation",
+      "source_path": "infrastructure/reporting/native_epub_preparation.py",
+      "purpose": "Prepare the pinned official EPUBCheck bundle in a fresh owned directory.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.reporting.native_format_acceptance",
       "invocation": "python -m infrastructure.reporting.native_format_acceptance",
       "source_path": "infrastructure/reporting/native_format_acceptance.py",
