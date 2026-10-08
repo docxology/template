@@ -55,11 +55,19 @@ def resolve_abstract_source(
     *,
     manuscript_abstract: Path,
 ) -> Path:
-    """Prefer hydrated ``output/manuscript/00_abstract.md`` when present."""
-    hydrated = repo_root / "projects" / project_name / "output" / "manuscript" / _ABSTRACT_FILENAME
+    """Prefer hydrated output matching the selected manuscript abstract."""
+    numbered_abstract = manuscript_abstract.with_name("01_abstract.md")
+    if (
+        manuscript_abstract.name == _ABSTRACT_FILENAME
+        and not manuscript_abstract.is_file()
+        and numbered_abstract.is_file()
+    ):
+        manuscript_abstract = numbered_abstract
+    filename = manuscript_abstract.name
+    hydrated = repo_root / "projects" / project_name / "output" / "manuscript" / filename
     if hydrated.is_file():
         return hydrated
-    project_hydrated = repo_root / "output" / project_name / "manuscript" / _ABSTRACT_FILENAME
+    project_hydrated = repo_root / "output" / project_name / "manuscript" / filename
     if project_hydrated.is_file():
         return project_hydrated
     return manuscript_abstract

@@ -103,13 +103,17 @@ def _default_variables_path(config_path: Path) -> Path | None:
 def _default_abstract_path(config_path: Path) -> Path:
     """Prefer hydrated output abstract when a config belongs to a project tree."""
     project_root = config_path.parent.parent
-    candidates = [project_root / "output" / "manuscript" / "00_abstract.md"]
+    source_abstract = config_path.parent / "00_abstract.md"
+    numbered_abstract = source_abstract.with_name("01_abstract.md")
+    if not source_abstract.is_file() and numbered_abstract.is_file():
+        source_abstract = numbered_abstract
+    candidates = [project_root / "output" / "manuscript" / source_abstract.name]
     if config_path.parent.name == "manuscript":
         resolved = _repo_root_and_qualified_name(project_root)
         if resolved is not None:
             repo_root, qualified_name = resolved
-            candidates.append(repo_root / "output" / qualified_name / "manuscript" / "00_abstract.md")
-    candidates.append(config_path.parent / "00_abstract.md")
+            candidates.append(repo_root / "output" / qualified_name / "manuscript" / source_abstract.name)
+    candidates.append(source_abstract)
     for path in candidates:
         if path.is_file():
             return path
