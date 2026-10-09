@@ -1,11 +1,16 @@
-# Root case policy version 2
+# Root case policies
 
-Root runtime acceptance needs a reviewed complete case inventory before execution.
+The platform declares policy version 3 and its prerequisites in
+[`pyproject.toml`](../../pyproject.toml). Its complete literal policy uses
+[`root-case-policy.json`](../../infrastructure/config/root-case-policy.json)
+and the derived source parts. The parser also supports legacy version 2.
+
+Root runtime acceptance requires a fresh complete case inventory and independently
+reviewed classification before execution. Source changes to test modules or public
+fixtures require genuine collection, reviewed policy renewal and recollection.
 The policy, observer, canonical census producer and independent census reader
-are implemented as separate contracts. Production Root acceptance still requires
-its reviewed complete inventory, exact lane execution and required readiness
-wiring before version-2 execution is enabled.
-A compiled plan grants no acceptance and cannot authorize release or publication.
+are separate contracts; exact lane execution and required readiness wiring remain
+mandatory. A compiled plan grants no acceptance and cannot authorize publication.
 
 `infrastructure.project.public_acceptance_case_policy.RootCasePolicy.parse` admits
 only the versioned explicit families, exact parameter IDs, required obligations,

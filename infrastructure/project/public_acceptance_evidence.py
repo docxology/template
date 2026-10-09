@@ -196,11 +196,13 @@ def bootstrap_command(
         *(source for scope in PUBLIC_PROJECT_NAMES for source in project_python_roots(root / "projects" / scope)),
         *audit_roots,
     )
+    implementation = Path(__file__).absolute().parents[1]
     if command_root is None:
         audit = bytecode_audit_bootstrap(roots, None)
     else:
         # Enumerate current admitted source, but preserve original launch paths.
         origin = implementation_root or command_root / "infrastructure"
+        implementation = origin
         projected = tuple(
             origin if index == 0 else command_root / path.relative_to(root) for index, path in enumerate(roots)
         )
@@ -214,8 +216,25 @@ def bootstrap_command(
         " sys.pycache_prefix=str(Path(cache).resolve())\n"
         + "\n".join(" " + line for line in audit.splitlines())
         + "\n"
+        # A wheel-backed caller must keep its admitted implementation when the
+        # public checkout is added for tests. Bind every SDK submodule before
+        # executing any SDK initializer; editable finders cannot select a sibling.
+        + " import importlib.abc,importlib.util\n"
+        + " if any(n=='infrastructure' or n.startswith('infrastructure.') for n in sys.modules):\n"
+        + "  raise ValueError('public SDK was loaded before its audited bootstrap')\n"
+        + " class _SelectedSDKFinder(importlib.abc.MetaPathFinder):\n"
+        + "  def find_spec(self,fullname,path,target=None):\n"
+        + "   if fullname!='infrastructure' and not fullname.startswith('infrastructure.'): return None\n"
+        + f"   base=Path({str(implementation.parent)!r}).joinpath(*fullname.split('.'))\n"
+        + "   package=base/'__init__.py'; ordinary=base.with_suffix('.py')\n"
+        + "   selected=package if package.is_file() else ordinary\n"
+        + "   if not selected.is_file(): raise ImportError('selected public SDK member is absent: '+fullname)\n"
+        + "   return importlib.util.spec_from_file_location(fullname,selected,\n"
+        + "    submodule_search_locations=[str(base)] if selected==package else None)\n"
+        + " sys.meta_path.insert(0,_SelectedSDKFinder())\n"
+        + " import infrastructure\n"
         + " sys.path.insert(0,sys.argv.pop(1))\n"
-        " runpy.run_module(sys.argv.pop(1),run_name='__main__')\n"
+        + " runpy.run_module(sys.argv.pop(1),run_name='__main__')\n"
     )
     return str(interpreter), "-I", "-c", bootstrap, str(root), module, *args
 

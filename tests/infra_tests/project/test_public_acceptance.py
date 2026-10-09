@@ -374,3 +374,44 @@ def test_evidence_preflight_refuses_traversal_and_symlink_before_any_write(tmp_p
 def test_matrix_rejects_unbounded_or_nonpublic_selection_before_execution(tmp_path: Path, kwargs: dict) -> None:
     with pytest.raises(ValueError):
         run_public_acceptance(tmp_path, {}, **kwargs)
+
+
+def test_bootstrap_preserves_selected_sdk_before_public_checkout_shadow(tmp_path: Path) -> None:
+    """A real child retains its SDK and never executes the checkout's shadow."""
+    import infrastructure
+
+    selected = Path(infrastructure.__file__).absolute()
+    shadow = tmp_path / "infrastructure"
+    shadow.mkdir()
+    marker = tmp_path / "unadmitted-sdk-executed"
+    (shadow / "__init__.py").write_text(
+        "from pathlib import Path\n"
+        f"Path({str(marker)!r}).write_text('wrong provider executed')\n"
+        "raise AssertionError('checkout shadow must not execute')\n"
+    )
+    observed = tmp_path / "observed-sdk"
+    (tmp_path / "probe.py").write_text(
+        "from pathlib import Path\nimport infrastructure\n"
+        f"assert Path(infrastructure.__file__).absolute()==Path({str(selected)!r})\n"
+        "from infrastructure.core.implementation_custody import capture_implementation_custody\n"
+        "capture_implementation_custody(fresh_pycache_prefix=Path(__import__('sys').pycache_prefix))\n"
+        f"Path({str(observed)!r}).write_text(str(Path(infrastructure.__file__).absolute()))\n"
+    )
+    command = bootstrap_command(Path(sys.executable), tmp_path, "probe")
+    result = run_project_test_matrix(
+        [
+            ProjectTestTask(
+                0,
+                "selected-sdk-control",
+                command,
+                tmp_path,
+                cell_environment(Path(sys.executable), tmp_path / "evidence"),
+                90,
+                True,
+            )
+        ],
+        workers=1,
+    )[0]
+    assert result.returncode == 0 and not result.timed_out, result.output_tail
+    assert observed.read_text() == str(selected)
+    assert not marker.exists(), "an unadmitted SDK must not execute before refusal"

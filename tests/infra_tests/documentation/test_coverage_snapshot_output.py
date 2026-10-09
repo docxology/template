@@ -57,7 +57,7 @@ def test_snapshot_data_refuses_selected_source_and_physical_alias(tmp_path: Path
         CoverageSnapshotOutput.admit(repo, source, source)
     alias = tmp_path / "sdk-alias"
     alias.symlink_to(source.parents[2], target_is_directory=True)
-    with pytest.raises(ValueError, match="outside the repository"):
+    with pytest.raises(ValueError, match="parent must be a real directory"):
         CoverageSnapshotOutput.admit(repo, alias / "infrastructure/documentation/counts_coverage.py", source)
     assert source.stat() == before
 

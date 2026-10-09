@@ -111,12 +111,13 @@ class RuntimeScope:
         return declared_units(policy, prerequisites)
 
     def require_case_policy(self, reader: SnapshotReader | None = None) -> dict[str, Any]:
-        """The initial root policy permits complete offline suites, never exclusions.
+        """Require the legacy v1 complete-offline policy for owned controls.
 
-        The current platform does not declare this policy: its live/private case
-        classification needs a separate reviewed contract. Missing policy blocks
-        before collection. Small owned offline repositories can exercise the
-        genuine root producer/reader without waiving production obligations.
+        This control-only method rejects the platform's declared v3 policy.
+        Production v3 policy and prerequisite loading uses require_case_units
+        and public_root_case_admission.load_policy. Runtime admission separately
+        requires a fresh complete census and independently reviewed classification.
+        Missing or incompatible declarations fail closed without case exclusions.
         """
         if self.name != "root":
             return {}
