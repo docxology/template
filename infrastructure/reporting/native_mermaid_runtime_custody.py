@@ -27,6 +27,7 @@ MAX_FILES = 40000
 MAX_BYTES = 1024 * 1024 * 1024
 MAX_FONT_BYTES = 128 * 1024 * 1024
 FONT_SCHEMA = "template-native-mermaid-platform-font-custody-v1"
+DEFAULT_FONT_SCHEMA = "template-native-mermaid-source-licensed-default-font-custody-v1"
 
 
 def _budget(deadline: float) -> None:
@@ -310,6 +311,27 @@ def _font_names(platform_fonts: Any) -> set[str]:
     return names
 
 
+def _default_font_names(platform_fonts: Any) -> set[str]:
+    """Validate Source-default usage DATA; native authority stays external."""
+    from infrastructure.rendering._mermaid_source_font_default import NAMES
+
+    if not isinstance(platform_fonts, list) or not 0 < len(platform_fonts) <= 1000:
+        raise ValueError("Source default font usage is absent/unbounded")
+    names = set()
+    for row in platform_fonts:
+        if not isinstance(row, dict) or set(row) != {"familyName", "postScriptName", "isCustomFont", "glyphCount"}:
+            raise ValueError("Source default font usage schema differs")
+        if row["isCustomFont"] is True:
+            if row["postScriptName"] not in NAMES or not isinstance(row["familyName"], str) or not row["familyName"]:
+                raise ValueError("actual custom font escapes the Source-declared default body cohort")
+            if type(row["glyphCount"]) is not int or not 0 < row["glyphCount"] <= 1000000:
+                raise ValueError("actual Source default glyph usage exceeds its finite count")
+            names.add(row["postScriptName"])
+        else:
+            names.update(_font_names([row]))
+    return names
+
+
 def observe_platform_font_files(
     platform_fonts: list[dict[str, Any]],
     font_files: tuple[Path, ...],
@@ -377,12 +399,16 @@ def observe_platform_font_files(
 
 def validate_platform_font_files(raw: dict[str, Any]) -> None:
     """Validate original portable face ownership without producer-path reads."""
-    if (
-        set(raw) != {"schema_version", "platform_fonts", "font_faces", "content_digest"}
-        or raw["schema_version"] != FONT_SCHEMA
-    ):
+    default = raw.get("schema_version") == DEFAULT_FONT_SCHEMA
+    expected = {"schema_version", "platform_fonts", "font_faces", "content_digest"}
+    if default:
+        from infrastructure.rendering._mermaid_source_font_default import validate_default_font_buffers
+
+        expected.add("source_default_buffers")
+        validate_default_font_buffers(raw.get("source_default_buffers"))
+    if set(raw) != expected or raw["schema_version"] not in {FONT_SCHEMA, DEFAULT_FONT_SCHEMA}:
         raise ValueError("portable actual platform-font custody schema differs")
-    required = _font_names(raw["platform_fonts"])
+    required = _default_font_names(raw["platform_fonts"]) if default else _font_names(raw["platform_fonts"])
     faces = raw["font_faces"]
     if not isinstance(faces, list) or len(faces) != len(required):
         raise ValueError("portable actual native font-face closure is incomplete")
@@ -398,6 +424,14 @@ def validate_platform_font_files(raw: dict[str, Any]) -> None:
         ):
             raise ValueError("portable actual font face is undeclared/duplicate")
         _validate_file_identity({"bytes": row["bytes"], "sha256": row["sha256"]})
+        if default:
+            from infrastructure.rendering._web_font_assets import FONT_BODIES
+            from infrastructure.rendering._mermaid_source_font_default import NAMES
+
+            if row["postscript_name"] in NAMES:
+                original = FONT_BODIES[row["postscript_name"]]
+                if row["face_index"] != 0 or row["sha256"] != original["sha256"] or row["bytes"] != original["bytes"]:
+                    raise ValueError("portable Source custom face is not the exact declared font body")
         seen.add(row["postscript_name"])
     if raw["content_digest"] != canonical_digest({key: value for key, value in raw.items() if key != "content_digest"}):
         raise ValueError("portable actual font custody digest differs")
@@ -411,6 +445,32 @@ def admit_reader_platform_fonts(
 ) -> dict[str, Any]:
     """Reconstruct the original platform face map from explicit reader files."""
     validate_platform_font_files(original)
+    if original["schema_version"] == DEFAULT_FONT_SCHEMA:
+        from infrastructure.reporting.native_mermaid_font_bodies import (
+            NativeMermaidFontSelection,
+            admit_source_mermaid_font_bodies,
+        )
+        from infrastructure.reporting.native_tool_producer import current_native_producer_operation
+
+        producer = current_native_producer_operation()
+        if producer is None:
+            raise ValueError("Source-default font replay requires actual current Source producer")
+        owner = admit_source_mermaid_font_bodies(
+            NativeMermaidFontSelection(font_files), producer.source, deadline=deadline
+        )
+        try:
+            for face in original["font_faces"]:
+                content, index = owner.face_bytes(face["postscript_name"], deadline=deadline)
+                if (
+                    index != face["face_index"]
+                    or len(content) != face["bytes"]
+                    or hashlib.sha256(content).hexdigest() != face["sha256"]
+                ):
+                    raise ValueError("reader Source-declared or explicitly nominated override face body differs")
+            owner.verify_terminal_bytes(deadline=deadline)
+        finally:
+            owner.close()
+        return original
     current = observe_platform_font_files(original["platform_fonts"], font_files, deadline=deadline)
     if current != original:
         raise ValueError("reader-local native font-face bytes differ from original painted labels")

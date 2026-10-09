@@ -48,7 +48,7 @@ This is a research project template with a test-driven development workflow, aut
 | Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (claim-binding tier plus a public-roster pin; collected totals in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), rationale in [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
 | Repo-wide doc linter | `uv run python scripts/audit/lint_docs.py` |
 | Exemplar drift checker | `uv run python scripts/audit/check_template_drift.py` (add `--strict` to fail on warnings, including hardcoded doc counts) |
-| Re-measure exemplar coverage (slow; runs every suite) | `uv run python scripts/docgen/counts.py --verify-coverage` (add `--write` to rewrite the recorded percentages from the measurement, then `--refresh-coverage-provenance --write`) |
+| Re-measure exemplar coverage (slow; runs every suite) | `uv run python scripts/docgen/counts.py --verify-coverage`; refresh with `--write --coverage-snapshot-output <retained-data-copy>` using an independent byte-for-byte copy of the selected SDK's `counts_coverage.py` outside the repo and SDK. Preserve the original; review/apply only the measured literal delta after original terminal Source/Code/wheel closure, rebuild the SDK, then run `--refresh-coverage-provenance --write`. |
 | Module line count gate | `uv run python scripts/gates/module_line_count_check.py` |
 | CodeGraph local commands | `uv run python scripts/maintenance/codegraph_local.py commands .` (optional; see [`docs/guides/codegraph-local.md`](docs/guides/codegraph-local.md)) |
 | LEANN local semantic retrieval | Optional user-level companion only; see [`docs/guides/leann-local.md`](docs/guides/leann-local.md) |

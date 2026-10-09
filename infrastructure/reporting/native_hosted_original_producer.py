@@ -20,7 +20,7 @@ from typing import Any
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.core.implementation_custody import source_file_bytes
-from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
+from infrastructure.project.public_acceptance_evidence import evidence_directory
 from infrastructure.project.public_hosted_origin import MAX_ARCHIVE, _context
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -44,7 +44,7 @@ from infrastructure.reporting.native_hosted_original_custody import (
 )
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.native_tool_producer import current_native_producer_operation
-from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
+from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader, json_object_from_bytes
 
 
 @dataclass(frozen=True)
@@ -82,6 +82,7 @@ def pack_native_hosted_originals(
     repository: str,
     run_id: int,
     deadline: float,
+    native_receipt: ArtifactSnapshot,
 ) -> dict[str, Any]:
     """Freeze the actual all25 originals before the same Source owner closes.
 
@@ -112,6 +113,19 @@ def pack_native_hosted_originals(
     chunks: dict[str, bytes] = {}
     all_chunk_digests: set[str] = set()
     chunk_bytes = total = 0
+
+    held_receipt = SnapshotReader(root).read(native_receipt.relative)
+    receipt_data = held_receipt.json_object()
+    expected_gates = {scope + ":formats" for scope in PUBLIC_PROJECT_NAMES}
+    if (
+        held_receipt.content != native_receipt.content
+        or held_receipt.sha256 != native_receipt.sha256
+        or set(receipt_data.get("gates", {})) != expected_gates
+        or any(row.get("status") != "pass" for row in receipt_data["gates"].values())
+        or receipt_data.get("native_formats", {}).get("selected_projects") != list(PUBLIC_PROJECT_NAMES)
+        or receipt_data["native_formats"].get("observed_projects") != len(PUBLIC_PROJECT_NAMES)
+    ):
+        raise ValueError("native transport requires the actual complete validated all25 native receipt")
 
     def admit(label: str, digest: str | None = None) -> None:
         label = _path(label)
@@ -211,6 +225,8 @@ def pack_native_hosted_originals(
         if not reader.unchanged():
             raise ValueError("native genuine original closing Source/Code bytes changed before packing")
 
+    admit(native_receipt.relative, native_receipt.sha256)
+
     scanned: set[str] = set()
     while set(bindings) - scanned:
         for label in sorted(set(bindings) - scanned):
@@ -289,6 +305,7 @@ def pack_native_hosted_originals(
         "pdfium_wheels": wheel_rows,
         "shards": shards,
         "files": files,
+        "native_receipt": {"path": native_receipt.relative, "sha256": native_receipt.sha256},
     }
     encoded = (json.dumps(index, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n").encode()
     if len(encoded) > MAX_ARCHIVE:
@@ -303,7 +320,9 @@ def pack_native_hosted_originals(
         ):
             raise ValueError("native original graph changed before final Source-owned transport closure")
     producer.verify(SnapshotReader(root), run_id=source.bindings.run_id, deadline=deadline)
-    binding = write_json(root, directory / "index" / "native-index.json", index)
+    destination = directory / "index" / "native-index.json"
+    atomic_write_bytes_confined(root, destination, encoded, mode=0o600)
+    binding = {"path": destination.relative_to(root).as_posix(), "sha256": hashlib.sha256(encoded).hexdigest()}
     remaining(deadline)
     return {
         "index": binding,

@@ -702,6 +702,7 @@ def _run_original_native_cells(
                 repository=request.repository,
                 run_id=request.run_id,
                 deadline=deadline,
+                native_receipt=SnapshotReader(root).read(binding["path"]),
             )
     return result
 

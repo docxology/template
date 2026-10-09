@@ -10,7 +10,7 @@ from pathlib import Path, PurePosixPath
 
 from infrastructure.project.public_hosted_origin import MAX_ARCHIVE
 
-SCHEMA = "template-source-native-hosted-transport-v1"
+SCHEMA = "template-source-native-hosted-transport-v2"
 INDEX_ARTIFACT = "required-source-native-index"
 SHARD_PREFIX = "required-source-native-shard-"
 MAX_SHARDS = 256

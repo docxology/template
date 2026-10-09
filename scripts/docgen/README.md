@@ -20,14 +20,21 @@ Derived documentation generator scripts.
 ```bash
 # Run from repo root
 uv run python scripts/docgen/counts.py --write
-uv run python scripts/docgen/counts.py --verify-coverage --write
+uv run python scripts/docgen/counts.py --verify-coverage --write \
+  --coverage-snapshot-output /owned/retained/counts_coverage.snapshot.data
 uv run python scripts/docgen/api_reference.py --check
 uv run python scripts/docgen/exemplar_roster.py
 uv run python scripts/docgen/publication_records.py --refresh-external
 ```
 
-`--verify-coverage --write` updates the coverage snapshot only after every
-public exemplar was measured successfully. Any missing or failed measurement
-exits nonzero without publishing a partial refresh.
+Prepare the nominated DATA file by independently copying the selected SDK's
+`counts_coverage.py` byte-for-byte outside both the repository and SDK. Retain
+its original bytes before measurement. `--verify-coverage --write` refuses
+without `--coverage-snapshot-output`; every exemplar must measure successfully
+before the existing literal writer changes that DATA copy. The repository,
+selected SDK, and wheel remain unchanged. After original terminal custody
+closes, the owner reviews/applies the literal delta as a new source epoch,
+rebuilds the SDK, and refreshes coverage provenance. Partial measurement never
+publishes a DATA refresh.
 
 Output goes to `docs/_generated/`.

@@ -6,9 +6,11 @@ import hashlib
 import json
 from pathlib import Path
 
-SCHEMA = "template-mermaid-v11-source-pinned-default-theme-viewport-request-v1"
-POLICY = "template-mermaid-v11-source-pinned-official-run-default-theme-1400x900-v1"
-ADAPTER_SHA256 = "d735b96fcc1c10a67fa4eefb1ca52959e8cbc5a85825f8e6efc0ae120927d6c8"
+from infrastructure.rendering._mermaid_source_font_default import PROFILE_NAME, default_font_profile_bytes
+
+SCHEMA = "template-mermaid-v11-source-pinned-default-theme-viewport-licensed-font-request-v2"
+POLICY = "template-mermaid-v11-source-pinned-official-render-default-theme-liberation-sans-before-layout-1400x900-v2"
+ADAPTER_SHA256 = "41f8ef156292b253344ba56afe46d27b34641ff7e1bdc666d2092770387e968f"
 
 
 def rendering_profile() -> dict[str, str | int | bool]:
@@ -19,6 +21,8 @@ def rendering_profile() -> dict[str, str | int | bool]:
     """
     return {
         "theme": "default",
+        "source_default_font": "template-source-mermaid-licensed-default-font-v1",
+        "source_used_face_embedding": True,
         "font_embed": False,
         "background_color": "white",
         "viewport_width": 1400,
@@ -85,6 +89,8 @@ def request_bytes(
         raise ValueError("Mermaid adapter requires original diagram data and its declared output format")
     raw = {
         "schema_version": SCHEMA,
+        "font_profile": str(source.parent / PROFILE_NAME),
+        "font_profile_sha256": hashlib.sha256(default_font_profile_bytes()).hexdigest(),
         "render_profile": rendering_profile(),
         "package_root": str(package_root),
         "input": str(source),

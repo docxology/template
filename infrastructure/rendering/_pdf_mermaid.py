@@ -22,6 +22,13 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.chrome import resolve_chrome_executable as _resolve_chrome_executable
 from infrastructure.rendering._pdf_title_page_latex import _latex_graphic_alt_text
+from infrastructure.rendering import _mermaid_v11
+from infrastructure.rendering._mermaid_source_font_default import (
+    PROFILE_NAME,
+    SCRIPT_NAME,
+    default_font_profile_bytes,
+    default_font_script_bytes,
+)
 from infrastructure.rendering._mermaid_v12 import POLICY, adapter_bytes, request_bytes, selected_package
 from infrastructure.rendering.security import run_isolated_subprocess
 
@@ -471,12 +478,11 @@ def _render_mermaid(
     """Render one Mermaid source string to PNG with strict failure handling."""
     mmd_path = output_dir / f"{stem}.mmd"
     png_path = output_dir / f"{stem}.png"
-    if png_path.is_file() and png_path.stat().st_size > 0 and mmd_path.is_file():
-        if mmd_path.read_text(encoding="utf-8").rstrip("\n") == source:
-            return png_path
+    # Native profile and font inputs are reconstructed before cache admission.
 
     mmd_path.write_text(source + "\n", encoding="utf-8")
     use_api12 = False
+    use_api11 = False
     policy = "template-mermaid-original-legacy-cli-1400x900-unverified-v1"
     inputs: tuple[Path, ...] = (mmd_path, *((puppeteer_config,) if puppeteer_config is not None else ()))
     try:
@@ -486,21 +492,34 @@ def _render_mermaid(
             if manifest.stat().st_size > 1024 * 1024:
                 raise ValueError("selected Mermaid package declaration exceeds its finite profile bound")
             metadata = json.loads(manifest.read_bytes())
+            use_api11 = (
+                isinstance(metadata, dict)
+                and metadata.get("name") == "@mermaid-js/mermaid-cli"
+                and metadata.get("version") == "11.16.0"
+            )
             use_api12 = (
                 isinstance(metadata, dict)
                 and metadata.get("name") == "@mermaid-js/mermaid-cli"
                 and metadata.get("version") == "12.0.0"
             )
-        if use_api12:
-            package = selected_package(mmdc)
+        if use_api12 or use_api11:
+            module = _mermaid_v11 if use_api11 else None
+            package = module.selected_package(mmdc) if module is not None else selected_package(mmdc)
             node = shutil.which("node")
             if node is None:
                 raise ValueError("the selected Mermaid12 API requires its admitted Node executable")
-            adapter = output_dir / f"{stem}.mermaid-v12.mjs"
-            request = output_dir / f"{stem}.mermaid-v12-request.json"
-            adapter.write_bytes(adapter_bytes())
+            api_version = "v11" if use_api11 else "v12"
+            adapter = output_dir / f"{stem}.mermaid-{api_version}.mjs"
+            request = output_dir / f"{stem}.mermaid-{api_version}-request.json"
+            if use_api11:
+                helper = output_dir / SCRIPT_NAME
+                fonts = output_dir / PROFILE_NAME
+                helper.write_bytes(default_font_script_bytes())
+                fonts.write_bytes(default_font_profile_bytes())
+                inputs = (*inputs, helper, fonts)
+            adapter.write_bytes(module.adapter_bytes() if module is not None else adapter_bytes())
             request.write_bytes(
-                request_bytes(
+                (module.request_bytes if module is not None else request_bytes)(
                     package,
                     mmd_path.absolute(),
                     png_path.absolute(),
@@ -510,7 +529,7 @@ def _render_mermaid(
             )
             cmd = [str(Path(node).resolve(strict=True)), str(adapter.absolute()), str(request.absolute())]
             inputs = (*inputs, adapter, request)
-            policy = POLICY
+            policy = module.POLICY if module is not None else POLICY
         else:
             # Keep ordinary supported legacy tools and standalone executables on
             # the exact existing CLI path; this is not runtime/source admission.
@@ -534,10 +553,19 @@ def _render_mermaid(
         raise RenderingError(f"Mermaid12 rectangular viewport compatibility admission failed: {exc}") from exc
     env = os.environ.copy()
     env["PATH"] = os.pathsep.join(part for part in (env.get("PATH", ""), os.defpath) if part)
-    if use_api12 and (env.get("NODE_OPTIONS") or env.get("NODE_PATH")):
+    if (use_api12 or use_api11) and (env.get("NODE_OPTIONS") or env.get("NODE_PATH")):
         raise RenderingError("Mermaid12 profile cannot admit environment-supplied JavaScript/module overrides")
 
     before = {str(path.absolute()): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
+    cache = output_dir / f"{stem}.mermaid-cache.json"
+    cache_binding = {"policy": policy, "inputs": before, "source": source, "mmdc": str(Path(mmdc).resolve(strict=True))}
+    if png_path.is_file() and png_path.stat().st_size > 0 and cache.is_file():
+        try:
+            cached = json.loads(cache.read_bytes())
+        except (ValueError, OSError):
+            cached = None
+        if cached == {**cache_binding, "png_sha256": hashlib.sha256(png_path.read_bytes()).hexdigest()}:
+            return png_path
     started_at_monotonic = time.monotonic()
 
     try:
@@ -580,6 +608,10 @@ def _render_mermaid(
         raise RenderingError(f"mmdc failed for {stem}: {stderr[:800]}")
     if not png_path.is_file() or png_path.stat().st_size == 0:
         raise RenderingError(f"mmdc reported success for {stem} but did not produce a PNG")
+    cache.write_text(
+        json.dumps({**cache_binding, "png_sha256": hashlib.sha256(png_path.read_bytes()).hexdigest()}, sort_keys=True)
+        + "\n"
+    )
     return png_path
 
 

@@ -23,9 +23,11 @@ from infrastructure.project.public_acceptance_evidence import evidence_directory
 from infrastructure.project.public_hosted_origin import (
     DOWNLOAD_SCRIPT,
     MAX_ARCHIVE,
+    MAX_LISTING_PAGES,
     WORKFLOW,
     _api_command,
     _context,
+    _merge_listing_pages,
     _process,
 )
 from infrastructure.project.public_reference_git import remaining
@@ -171,6 +173,23 @@ class NativeHostedArtifactCustodian:
         self.verify_source(self._source, scope=scope)
         return json_object_from_bytes(json.dumps(self._index["originals"][scope], allow_nan=False).encode())
 
+    def native_receipt_binding(self) -> dict[str, str]:
+        """Exact authenticated original aggregate DATA; no gate status inferred."""
+        value = dict(self._index["native_receipt"])
+        self.read_original_file(self._index["scopes"][0], value)
+        return value
+
+    def retained_file_bindings(self) -> tuple[dict[str, Any], ...]:
+        """Expose the complete authenticated byte census, without exporting authority."""
+        scope = self._index["scopes"][0]
+        self.verify_source(self._source, scope=scope)
+        rows = []
+        for label, member in sorted(self._members.items()):
+            binding = {"path": label, "sha256": member["sha256"], "bytes": member["bytes"]}
+            self.read_original_file(scope, binding)
+            rows.append(binding)
+        return tuple(rows)
+
 
 def collect_native_hosted_originals(
     source: NativeSourceContext,
@@ -278,27 +297,14 @@ def collect_native_hosted_originals(
     ]
     if len(steps) != 1 or steps[0].get("status") != "completed" or steps[0].get("conclusion") != "success":
         raise ValueError("native hosted source-declared installed producer step did not pass")
-    artifacts: list[dict[str, Any]] = []
-    expected_count: int | None = None
-    for page in range(1, 6):
+    pages: list[dict[str, Any]] = []
+    for page in range(1, MAX_LISTING_PAGES + 1):
         response = api(f"{base}/actions/runs/{run_id}/artifacts?per_page=100&page={page}", f"listing-{page}")
-        count = response.get("total_count")
-        rows = response.get("artifacts")
-        if (
-            type(count) is not int
-            or count > 500
-            or not isinstance(rows, list)
-            or (expected_count is not None and count != expected_count)
-        ):
-            raise ValueError("native hosted artifact listing exceeds its bounded exact census")
-        expected_count = count
-        artifacts.extend(rows)
-        if len(artifacts) == count:
+        pages.append(response)
+        listing = _merge_listing_pages(pages, complete=False)
+        if len(listing["artifacts"]) == listing["total_count"]:
             break
-        if len(rows) != 100 or len(artifacts) > count:
-            raise ValueError("native hosted artifact pagination is incomplete")
-    if len(artifacts) != expected_count:
-        raise ValueError("native hosted complete artifact census is missing")
+    artifacts = _merge_listing_pages(pages, complete=True)["artifacts"]
     selected = {
         row["name"]: row
         for row in artifacts
@@ -321,6 +327,8 @@ def collect_native_hosted_originals(
             row.get("expired") is not False
             or type(row.get("id")) is not int
             or row["id"] <= 0
+            or type(row.get("size_in_bytes")) is not int
+            or not 0 < row["size_in_bytes"] <= MAX_ARCHIVE
             or origin.get("id") != run_id
             or origin.get("head_sha") != head_sha
             or origin.get("repository_id") != repo["id"]
@@ -341,10 +349,15 @@ def collect_native_hosted_originals(
         )
         content = read_bytes_confined(root, target, max_bytes=MAX_ARCHIVE)
         digest = hashlib.sha256(content).hexdigest()
-        if row.get("digest") != "sha256:" + digest or json_object_from_bytes(raw["stdout"].encode()) != {
-            "original_exit_code": 0,
-            "archive_sha256": digest,
-        }:
+        if (
+            row.get("digest") != "sha256:" + digest
+            or row["size_in_bytes"] != len(content)
+            or json_object_from_bytes(raw["stdout"].encode())
+            != {
+                "original_exit_code": 0,
+                "archive_sha256": digest,
+            }
+        ):
             raise ValueError("native hosted actual retrieved bytes differ from authenticated API digest")
         observations.append({"path": target.relative_to(root).as_posix(), "sha256": digest})
         return _archive(content, maximum=MAX_ARCHIVE, count=1)
@@ -366,6 +379,7 @@ def collect_native_hosted_originals(
             "pdfium_wheels",
             "shards",
             "files",
+            "native_receipt",
         }
         or index.get("schema_version") != SCHEMA
         or index.get("repository") != repository
@@ -452,8 +466,13 @@ def collect_native_hosted_originals(
             raise ValueError("native hosted original whole-file hash/length/census differs")
         target = root / label
         if target.exists() or target.is_symlink():
-            raise ValueError("native hosted extraction refuses overwriting current Source/evidence")
-        atomic_write_bytes_confined(root, target, body, mode=0o600)
+            # A tracked immutable Source deliverable may already be present in
+            # the independently admitted current checkout. Reuse its exact
+            # authenticated bytes; never overwrite Source or prior evidence.
+            if source.reference.read(label) != body or read_bytes_confined(root, target, max_bytes=MAX_ARCHIVE) != body:
+                raise ValueError("native hosted extraction refuses conflicting existing Source/evidence")
+        else:
+            atomic_write_bytes_confined(root, target, body, mode=0o600)
         members[label] = {"sha256": digest, "bytes": len(body), "identity": _file_identity(target)}
     if used_chunks != set(chunk_paths):
         raise ValueError("native hosted shard census contains unowned unused chunk bytes")

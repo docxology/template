@@ -965,6 +965,15 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.reporting.native_failed_transport",
+      "invocation": "python -m infrastructure.reporting.native_failed_transport",
+      "source_path": "infrastructure/reporting/native_failed_transport.py",
+      "purpose": "Bounded preservation of failed cold-launch evidence, without acceptance.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.reporting.native_format_acceptance",
       "invocation": "python -m infrastructure.reporting.native_format_acceptance",
       "source_path": "infrastructure/reporting/native_format_acceptance.py",
@@ -1010,10 +1019,82 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.reporting.native_format_html_platform_font_probe",
+      "invocation": "python -m infrastructure.reporting.native_format_html_platform_font_probe",
+      "source_path": "infrastructure/reporting/native_format_html_platform_font_probe.py",
+      "purpose": "Actual Darwin/Linux font-file resolution and source-codepoint glyph observations.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_hosted_reader",
+      "invocation": "python -m infrastructure.reporting.native_hosted_reader",
+      "source_path": "infrastructure/reporting/native_hosted_reader.py",
+      "purpose": "Cold installed Source reader with actual authenticated original custody.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_installed_custody_capture",
+      "invocation": "python -m infrastructure.reporting.native_installed_custody_capture",
+      "source_path": "infrastructure/reporting/native_installed_custody_capture.py",
+      "purpose": "Observe the real cold installed SDK against its separately admitted wheel.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_installed_launcher",
+      "invocation": "python -m infrastructure.reporting.native_installed_launcher",
+      "source_path": "infrastructure/reporting/native_installed_launcher.py",
+      "purpose": "Prepare a fresh Source4.0.1 wheel and supervise its cold native role.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_mermaid_all_source_worker",
+      "invocation": "python -m infrastructure.reporting.native_mermaid_all_source_worker",
+      "source_path": "infrastructure/reporting/native_mermaid_all_source_worker.py",
+      "purpose": "Thin installed-SDK entry point for the original complete28 Source component.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_mermaid_svg_controls",
+      "invocation": "python -m infrastructure.reporting.native_mermaid_svg_controls",
+      "source_path": "infrastructure/reporting/native_mermaid_svg_controls.py",
+      "purpose": "Source-owned controls mutating actual original Mermaid SVG output bytes.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_office_diagram_control_worker",
+      "invocation": "python -m infrastructure.reporting.native_office_diagram_control_worker",
+      "source_path": "infrastructure/reporting/native_office_diagram_control_worker.py",
+      "purpose": "One actual Source-owned Office child, invoked only by its original supervisor.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.reporting.native_office_observer",
       "invocation": "python -m infrastructure.reporting.native_office_observer",
       "source_path": "infrastructure/reporting/native_office_observer.py",
       "purpose": "Bounded native Office conversion; package parsing never grants layout acceptance.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_office_scientific_controls",
+      "invocation": "python -m infrastructure.reporting.native_office_scientific_controls",
+      "source_path": "infrastructure/reporting/native_office_scientific_controls.py",
+      "purpose": "Genuine bounded scientific native Office controls, including preserved-content ink mutants.",
       "subcommands": [],
       "exports": [],
       "effect": "read_only"
@@ -1028,10 +1109,37 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.reporting.native_print_artifact_controls",
+      "invocation": "python -m infrastructure.reporting.native_print_artifact_controls",
+      "source_path": "infrastructure/reporting/native_print_artifact_controls.py",
+      "purpose": "Actual subprocess controls over configured print outputs and source witnesses.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.reporting.native_projection_checks",
       "invocation": "python -m infrastructure.reporting.native_projection_checks",
       "source_path": "infrastructure/reporting/native_projection_checks.py",
       "purpose": "Actual per-page projected glyph checks, retaining unsupported visual gates.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_slide_controls",
+      "invocation": "python -m infrastructure.reporting.native_slide_controls",
+      "source_path": "infrastructure/reporting/native_slide_controls.py",
+      "purpose": "Actual baseline/later-page generic slide source/font/clipping/pixel controls.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_workflow_transport",
+      "invocation": "python -m infrastructure.reporting.native_workflow_transport",
+      "source_path": "infrastructure/reporting/native_workflow_transport.py",
+      "purpose": "Validate bounded transport DATA for the Source-declared upload steps.",
       "subcommands": [],
       "exports": [],
       "effect": "read_only"

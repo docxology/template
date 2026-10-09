@@ -203,9 +203,16 @@ class SvgGeometry:
                     raise ValueError("Mermaid SVG reference escapes original bytes")
                 self.urls(value)
             if local == "style":
-                if "@import" in (element.text or "").lower():
-                    raise ValueError("Mermaid SVG imports external styles")
-                self.urls(element.text or "")
+                if element.get("id") == "template-source-mermaid-licensed-fonts":
+                    from infrastructure.rendering._mermaid_source_font_default import (
+                        validate_embedded_default_font_style,
+                    )
+
+                    validate_embedded_default_font_style("".join(element.itertext()))
+                else:
+                    if "@import" in (element.text or "").lower():
+                        raise ValueError("Mermaid SVG imports external styles")
+                    self.urls(element.text or "")
         box = numbers(self.root.get("viewBox", ""))
         if len(box) != 4 or min(box[2:]) <= 0 or box[2] * box[3] > 60_000_000:
             raise ValueError("Mermaid SVG viewBox has invalid bounded geometry")

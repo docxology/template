@@ -57,11 +57,18 @@ from infrastructure.reporting.native_mermaid_svg_paint import (
 )
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
 from infrastructure.reporting.release_readiness_snapshot import json_object_from_bytes
+from infrastructure.rendering._mermaid_source_font_default import (
+    PROFILE_NAME,
+    SCRIPT_NAME,
+    default_font_profile_bytes,
+    default_font_script_bytes,
+    validate_default_font_buffers,
+)
 from infrastructure.rendering._mermaid_native_profile import rendering_profile
 
 SCHEMA = "template-native-mermaid-source11-actual-ordered-batch-reference-v1"
-REQUEST_SCHEMA = "template-mermaid-source11-ordered-batch-request-v1"
-REPORT_SCHEMA = "template-mermaid-source11-actual-ordered-batch-artifacts-v1"
+REQUEST_SCHEMA = "template-mermaid-source11-ordered-batch-request-licensed-font-v2"
+REPORT_SCHEMA = "template-mermaid-source11-actual-ordered-batch-artifacts-licensed-font-v2"
 REMAINING_ADMISSION = (
     "actual enclosing independently admitted Source/SDK/provider/terminal original custody",
     "source-required loaded-library/shared-cache/kernel and actual platform font selection/shaping custody",
@@ -156,6 +163,9 @@ def observe_original_mermaid_batch(
         on_original_tool=on_original_tool,
     )
     adapter = tool.freeze("source11-ordered-batch.mjs", _adapter())
+    font_helper = tool.freeze(SCRIPT_NAME, default_font_script_bytes())
+    font_profile_data = default_font_profile_bytes(deadline=deadline)
+    font_profile = tool.freeze(PROFILE_NAME, font_profile_data)
     profile = tool.directory / "browser-profile"
     config_data = {
         "executablePath": str(runtime_admission.selection.chrome_executable.resolve(strict=True)),
@@ -193,6 +203,8 @@ def observe_original_mermaid_batch(
     report_path = tool.directory / "actual-native-batch.json"
     request_data = {
         "schema_version": REQUEST_SCHEMA,
+        "font_profile": str(font_profile),
+        "font_profile_sha256": hashlib.sha256(font_profile_data).hexdigest(),
         "package_root": str(runtime_admission.selection.package_root.resolve(strict=True)),
         "dependency_root": str(runtime_admission.selection.dependency_root.resolve(strict=True)),
         "puppeteer_config": str(config),
@@ -225,10 +237,19 @@ def observe_original_mermaid_batch(
             observed = actual[kind]
             path = Path(planned[kind + "_output"])
             data = tool.read(path)
+            validate_default_font_buffers(observed.get("source_fonts", {}).get("buffers"), deadline=deadline)
+            expected_fonts = observed.get("source_fonts")
+            if not isinstance(expected_fonts, dict) or set(expected_fonts) != {
+                "buffers",
+                "platform_fonts",
+                "used_default_faces",
+            }:
+                raise ValueError("actual Source native font observation differs")
             if observed != {
                 "output": str(path),
                 "sha256": hashlib.sha256(data).hexdigest(),
                 "bytes": len(data),
+                "source_fonts": expected_fonts,
             }:
                 raise ValueError("actual original batch artifact bytes differ from native producer observation")
             retained[kind] = _binding(root, path, data)
@@ -299,6 +320,8 @@ def observe_original_mermaid_batch(
         "native_process": process,
         "native_process_artifact": dict(tool.tools[-1]),
         "native_report": _binding(root, report_path, report_bytes),
+        "producer_font_helper": _binding(root, font_helper, tool.read(font_helper)),
+        "producer_font_profile": _binding(root, font_profile, font_profile_data),
         "producer_adapter": _binding(root, adapter, tool.read(adapter)),
         "producer_request": _binding(root, request, tool.read(request)),
         "producer_config": _binding(root, config, tool.read(config)),
@@ -378,6 +401,8 @@ def validate_original_mermaid_batch(
             "render_profile",
             "occurrences",
             "result_output",
+            "font_profile",
+            "font_profile_sha256",
         }
         or set(native) != {"schema_version", "pid", "owner_pid", "occurrences"}
         or process["command"]
@@ -386,6 +411,8 @@ def validate_original_mermaid_batch(
             str(cwd / "source11-ordered-batch.mjs"),
             str(cwd / "batch-request.json"),
         ]
+        or request["font_profile"] != str(cwd / PROFILE_NAME)
+        or request["font_profile_sha256"] != hashlib.sha256(default_font_profile_bytes()).hexdigest()
         or request["puppeteer_config"] != str(cwd / "puppeteer.json")
         or request["result_output"] != str(cwd / "actual-native-batch.json")
         or not isinstance(rows, list)
@@ -401,6 +428,8 @@ def validate_original_mermaid_batch(
         or native["owner_pid"] != process["owner_pid"]
     ):
         raise ValueError("original batch exact request/runtime/native occurrence report differs")
+    _consumed(process, SCRIPT_NAME, default_font_script_bytes())
+    _consumed(process, PROFILE_NAME, default_font_profile_bytes())
     expected_config = {
         "executablePath": before["chrome"]["executable"],
         "userDataDir": str(cwd / "browser-profile"),
@@ -460,10 +489,12 @@ def validate_original_mermaid_batch(
             _read(row["artifacts"]["png"], artifact_reader),
         )
         for kind, data in (("svg", svg), ("png", png)):
+            validate_default_font_buffers(native_row[kind].get("source_fonts", {}).get("buffers"))
             if native_row[kind] != {
                 "output": requested[kind + "_output"],
                 "bytes": len(data),
                 "sha256": hashlib.sha256(data).hexdigest(),
+                "source_fonts": native_row[kind]["source_fonts"],
             }:
                 raise ValueError("original actual native batch result body/ordered input assignment differs")
         if _topology(normalized, svg, inspect_svg) != row["topology"]:
@@ -526,11 +557,7 @@ def replay_original_mermaid_batch(
         runtime_admission=runtime_admission,
     )
     for row in original["occurrences"]:
-        if (
-            font_bodies.portable_fonts(row["paint"]["fonts"]["platform_fonts"], deadline=deadline)
-            != row["paint"]["fonts"]
-        ):
-            raise ValueError("independently nominated current Source font bodies differ from original face bytes")
+        font_bodies.authenticate_retained_fonts(row["paint"]["fonts"], deadline=deadline)
     current = observe_original_mermaid_batch(
         root,
         directory,
@@ -575,6 +602,7 @@ def replay_original_mermaid_batch(
                     "original_dom",
                     "painted_dom",
                     "font_body_glyphs",
+                    "source_glyph_layout",
                 )
             )
             or shaped_references(prior["paint"]) != shaped_references(fresh["paint"])

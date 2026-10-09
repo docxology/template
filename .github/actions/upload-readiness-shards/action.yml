@@ -1,0 +1,2339 @@
+name: Upload exact bounded readiness transport
+description: Upload a checked primary index and each Source-declared bounded shard; no acceptance is inferred from the index.
+inputs:
+  repo-root:
+    description: Actual producer mirror containing the retained logical bytes.
+    required: true
+  directory:
+    description: Exact confined transport directory.
+    required: true
+  kind:
+    description: Source-declared native or candidate transport target.
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Check exact bounded transport bytes and membership
+      id: plan
+      shell: bash
+      env:
+        TRANSPORT_ROOT: ${{ inputs.repo-root }}
+        TRANSPORT_DIRECTORY: ${{ inputs.directory }}
+        TRANSPORT_KIND: ${{ inputs.kind }}
+      run: |
+        set -euo pipefail
+        .venv/bin/python -m infrastructure.reporting.native_workflow_transport \
+          --repo-root "$TRANSPORT_ROOT" --directory "$TRANSPORT_DIRECTORY" --kind "$TRANSPORT_KIND" \
+          --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID" --revision "$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+    - name: Upload exact primary index
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.primary_name }}
+        path: ${{ inputs.directory }}/index/${{ steps.plan.outputs.index_filename }}
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0000
+      if: fromJSON(steps.plan.outputs.shard_count) > 0
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0000
+        path: ${{ inputs.directory }}/shard-0000/${{ steps.plan.outputs.member_prefix }}-shard-0000.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0001
+      if: fromJSON(steps.plan.outputs.shard_count) > 1
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0001
+        path: ${{ inputs.directory }}/shard-0001/${{ steps.plan.outputs.member_prefix }}-shard-0001.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0002
+      if: fromJSON(steps.plan.outputs.shard_count) > 2
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0002
+        path: ${{ inputs.directory }}/shard-0002/${{ steps.plan.outputs.member_prefix }}-shard-0002.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0003
+      if: fromJSON(steps.plan.outputs.shard_count) > 3
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0003
+        path: ${{ inputs.directory }}/shard-0003/${{ steps.plan.outputs.member_prefix }}-shard-0003.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0004
+      if: fromJSON(steps.plan.outputs.shard_count) > 4
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0004
+        path: ${{ inputs.directory }}/shard-0004/${{ steps.plan.outputs.member_prefix }}-shard-0004.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0005
+      if: fromJSON(steps.plan.outputs.shard_count) > 5
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0005
+        path: ${{ inputs.directory }}/shard-0005/${{ steps.plan.outputs.member_prefix }}-shard-0005.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0006
+      if: fromJSON(steps.plan.outputs.shard_count) > 6
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0006
+        path: ${{ inputs.directory }}/shard-0006/${{ steps.plan.outputs.member_prefix }}-shard-0006.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0007
+      if: fromJSON(steps.plan.outputs.shard_count) > 7
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0007
+        path: ${{ inputs.directory }}/shard-0007/${{ steps.plan.outputs.member_prefix }}-shard-0007.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0008
+      if: fromJSON(steps.plan.outputs.shard_count) > 8
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0008
+        path: ${{ inputs.directory }}/shard-0008/${{ steps.plan.outputs.member_prefix }}-shard-0008.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0009
+      if: fromJSON(steps.plan.outputs.shard_count) > 9
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0009
+        path: ${{ inputs.directory }}/shard-0009/${{ steps.plan.outputs.member_prefix }}-shard-0009.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0010
+      if: fromJSON(steps.plan.outputs.shard_count) > 10
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0010
+        path: ${{ inputs.directory }}/shard-0010/${{ steps.plan.outputs.member_prefix }}-shard-0010.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0011
+      if: fromJSON(steps.plan.outputs.shard_count) > 11
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0011
+        path: ${{ inputs.directory }}/shard-0011/${{ steps.plan.outputs.member_prefix }}-shard-0011.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0012
+      if: fromJSON(steps.plan.outputs.shard_count) > 12
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0012
+        path: ${{ inputs.directory }}/shard-0012/${{ steps.plan.outputs.member_prefix }}-shard-0012.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0013
+      if: fromJSON(steps.plan.outputs.shard_count) > 13
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0013
+        path: ${{ inputs.directory }}/shard-0013/${{ steps.plan.outputs.member_prefix }}-shard-0013.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0014
+      if: fromJSON(steps.plan.outputs.shard_count) > 14
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0014
+        path: ${{ inputs.directory }}/shard-0014/${{ steps.plan.outputs.member_prefix }}-shard-0014.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0015
+      if: fromJSON(steps.plan.outputs.shard_count) > 15
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0015
+        path: ${{ inputs.directory }}/shard-0015/${{ steps.plan.outputs.member_prefix }}-shard-0015.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0016
+      if: fromJSON(steps.plan.outputs.shard_count) > 16
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0016
+        path: ${{ inputs.directory }}/shard-0016/${{ steps.plan.outputs.member_prefix }}-shard-0016.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0017
+      if: fromJSON(steps.plan.outputs.shard_count) > 17
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0017
+        path: ${{ inputs.directory }}/shard-0017/${{ steps.plan.outputs.member_prefix }}-shard-0017.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0018
+      if: fromJSON(steps.plan.outputs.shard_count) > 18
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0018
+        path: ${{ inputs.directory }}/shard-0018/${{ steps.plan.outputs.member_prefix }}-shard-0018.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0019
+      if: fromJSON(steps.plan.outputs.shard_count) > 19
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0019
+        path: ${{ inputs.directory }}/shard-0019/${{ steps.plan.outputs.member_prefix }}-shard-0019.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0020
+      if: fromJSON(steps.plan.outputs.shard_count) > 20
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0020
+        path: ${{ inputs.directory }}/shard-0020/${{ steps.plan.outputs.member_prefix }}-shard-0020.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0021
+      if: fromJSON(steps.plan.outputs.shard_count) > 21
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0021
+        path: ${{ inputs.directory }}/shard-0021/${{ steps.plan.outputs.member_prefix }}-shard-0021.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0022
+      if: fromJSON(steps.plan.outputs.shard_count) > 22
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0022
+        path: ${{ inputs.directory }}/shard-0022/${{ steps.plan.outputs.member_prefix }}-shard-0022.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0023
+      if: fromJSON(steps.plan.outputs.shard_count) > 23
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0023
+        path: ${{ inputs.directory }}/shard-0023/${{ steps.plan.outputs.member_prefix }}-shard-0023.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0024
+      if: fromJSON(steps.plan.outputs.shard_count) > 24
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0024
+        path: ${{ inputs.directory }}/shard-0024/${{ steps.plan.outputs.member_prefix }}-shard-0024.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0025
+      if: fromJSON(steps.plan.outputs.shard_count) > 25
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0025
+        path: ${{ inputs.directory }}/shard-0025/${{ steps.plan.outputs.member_prefix }}-shard-0025.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0026
+      if: fromJSON(steps.plan.outputs.shard_count) > 26
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0026
+        path: ${{ inputs.directory }}/shard-0026/${{ steps.plan.outputs.member_prefix }}-shard-0026.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0027
+      if: fromJSON(steps.plan.outputs.shard_count) > 27
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0027
+        path: ${{ inputs.directory }}/shard-0027/${{ steps.plan.outputs.member_prefix }}-shard-0027.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0028
+      if: fromJSON(steps.plan.outputs.shard_count) > 28
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0028
+        path: ${{ inputs.directory }}/shard-0028/${{ steps.plan.outputs.member_prefix }}-shard-0028.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0029
+      if: fromJSON(steps.plan.outputs.shard_count) > 29
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0029
+        path: ${{ inputs.directory }}/shard-0029/${{ steps.plan.outputs.member_prefix }}-shard-0029.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0030
+      if: fromJSON(steps.plan.outputs.shard_count) > 30
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0030
+        path: ${{ inputs.directory }}/shard-0030/${{ steps.plan.outputs.member_prefix }}-shard-0030.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0031
+      if: fromJSON(steps.plan.outputs.shard_count) > 31
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0031
+        path: ${{ inputs.directory }}/shard-0031/${{ steps.plan.outputs.member_prefix }}-shard-0031.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0032
+      if: fromJSON(steps.plan.outputs.shard_count) > 32
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0032
+        path: ${{ inputs.directory }}/shard-0032/${{ steps.plan.outputs.member_prefix }}-shard-0032.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0033
+      if: fromJSON(steps.plan.outputs.shard_count) > 33
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0033
+        path: ${{ inputs.directory }}/shard-0033/${{ steps.plan.outputs.member_prefix }}-shard-0033.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0034
+      if: fromJSON(steps.plan.outputs.shard_count) > 34
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0034
+        path: ${{ inputs.directory }}/shard-0034/${{ steps.plan.outputs.member_prefix }}-shard-0034.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0035
+      if: fromJSON(steps.plan.outputs.shard_count) > 35
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0035
+        path: ${{ inputs.directory }}/shard-0035/${{ steps.plan.outputs.member_prefix }}-shard-0035.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0036
+      if: fromJSON(steps.plan.outputs.shard_count) > 36
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0036
+        path: ${{ inputs.directory }}/shard-0036/${{ steps.plan.outputs.member_prefix }}-shard-0036.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0037
+      if: fromJSON(steps.plan.outputs.shard_count) > 37
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0037
+        path: ${{ inputs.directory }}/shard-0037/${{ steps.plan.outputs.member_prefix }}-shard-0037.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0038
+      if: fromJSON(steps.plan.outputs.shard_count) > 38
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0038
+        path: ${{ inputs.directory }}/shard-0038/${{ steps.plan.outputs.member_prefix }}-shard-0038.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0039
+      if: fromJSON(steps.plan.outputs.shard_count) > 39
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0039
+        path: ${{ inputs.directory }}/shard-0039/${{ steps.plan.outputs.member_prefix }}-shard-0039.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0040
+      if: fromJSON(steps.plan.outputs.shard_count) > 40
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0040
+        path: ${{ inputs.directory }}/shard-0040/${{ steps.plan.outputs.member_prefix }}-shard-0040.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0041
+      if: fromJSON(steps.plan.outputs.shard_count) > 41
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0041
+        path: ${{ inputs.directory }}/shard-0041/${{ steps.plan.outputs.member_prefix }}-shard-0041.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0042
+      if: fromJSON(steps.plan.outputs.shard_count) > 42
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0042
+        path: ${{ inputs.directory }}/shard-0042/${{ steps.plan.outputs.member_prefix }}-shard-0042.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0043
+      if: fromJSON(steps.plan.outputs.shard_count) > 43
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0043
+        path: ${{ inputs.directory }}/shard-0043/${{ steps.plan.outputs.member_prefix }}-shard-0043.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0044
+      if: fromJSON(steps.plan.outputs.shard_count) > 44
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0044
+        path: ${{ inputs.directory }}/shard-0044/${{ steps.plan.outputs.member_prefix }}-shard-0044.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0045
+      if: fromJSON(steps.plan.outputs.shard_count) > 45
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0045
+        path: ${{ inputs.directory }}/shard-0045/${{ steps.plan.outputs.member_prefix }}-shard-0045.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0046
+      if: fromJSON(steps.plan.outputs.shard_count) > 46
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0046
+        path: ${{ inputs.directory }}/shard-0046/${{ steps.plan.outputs.member_prefix }}-shard-0046.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0047
+      if: fromJSON(steps.plan.outputs.shard_count) > 47
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0047
+        path: ${{ inputs.directory }}/shard-0047/${{ steps.plan.outputs.member_prefix }}-shard-0047.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0048
+      if: fromJSON(steps.plan.outputs.shard_count) > 48
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0048
+        path: ${{ inputs.directory }}/shard-0048/${{ steps.plan.outputs.member_prefix }}-shard-0048.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0049
+      if: fromJSON(steps.plan.outputs.shard_count) > 49
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0049
+        path: ${{ inputs.directory }}/shard-0049/${{ steps.plan.outputs.member_prefix }}-shard-0049.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0050
+      if: fromJSON(steps.plan.outputs.shard_count) > 50
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0050
+        path: ${{ inputs.directory }}/shard-0050/${{ steps.plan.outputs.member_prefix }}-shard-0050.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0051
+      if: fromJSON(steps.plan.outputs.shard_count) > 51
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0051
+        path: ${{ inputs.directory }}/shard-0051/${{ steps.plan.outputs.member_prefix }}-shard-0051.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0052
+      if: fromJSON(steps.plan.outputs.shard_count) > 52
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0052
+        path: ${{ inputs.directory }}/shard-0052/${{ steps.plan.outputs.member_prefix }}-shard-0052.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0053
+      if: fromJSON(steps.plan.outputs.shard_count) > 53
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0053
+        path: ${{ inputs.directory }}/shard-0053/${{ steps.plan.outputs.member_prefix }}-shard-0053.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0054
+      if: fromJSON(steps.plan.outputs.shard_count) > 54
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0054
+        path: ${{ inputs.directory }}/shard-0054/${{ steps.plan.outputs.member_prefix }}-shard-0054.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0055
+      if: fromJSON(steps.plan.outputs.shard_count) > 55
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0055
+        path: ${{ inputs.directory }}/shard-0055/${{ steps.plan.outputs.member_prefix }}-shard-0055.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0056
+      if: fromJSON(steps.plan.outputs.shard_count) > 56
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0056
+        path: ${{ inputs.directory }}/shard-0056/${{ steps.plan.outputs.member_prefix }}-shard-0056.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0057
+      if: fromJSON(steps.plan.outputs.shard_count) > 57
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0057
+        path: ${{ inputs.directory }}/shard-0057/${{ steps.plan.outputs.member_prefix }}-shard-0057.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0058
+      if: fromJSON(steps.plan.outputs.shard_count) > 58
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0058
+        path: ${{ inputs.directory }}/shard-0058/${{ steps.plan.outputs.member_prefix }}-shard-0058.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0059
+      if: fromJSON(steps.plan.outputs.shard_count) > 59
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0059
+        path: ${{ inputs.directory }}/shard-0059/${{ steps.plan.outputs.member_prefix }}-shard-0059.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0060
+      if: fromJSON(steps.plan.outputs.shard_count) > 60
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0060
+        path: ${{ inputs.directory }}/shard-0060/${{ steps.plan.outputs.member_prefix }}-shard-0060.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0061
+      if: fromJSON(steps.plan.outputs.shard_count) > 61
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0061
+        path: ${{ inputs.directory }}/shard-0061/${{ steps.plan.outputs.member_prefix }}-shard-0061.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0062
+      if: fromJSON(steps.plan.outputs.shard_count) > 62
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0062
+        path: ${{ inputs.directory }}/shard-0062/${{ steps.plan.outputs.member_prefix }}-shard-0062.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0063
+      if: fromJSON(steps.plan.outputs.shard_count) > 63
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0063
+        path: ${{ inputs.directory }}/shard-0063/${{ steps.plan.outputs.member_prefix }}-shard-0063.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0064
+      if: fromJSON(steps.plan.outputs.shard_count) > 64
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0064
+        path: ${{ inputs.directory }}/shard-0064/${{ steps.plan.outputs.member_prefix }}-shard-0064.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0065
+      if: fromJSON(steps.plan.outputs.shard_count) > 65
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0065
+        path: ${{ inputs.directory }}/shard-0065/${{ steps.plan.outputs.member_prefix }}-shard-0065.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0066
+      if: fromJSON(steps.plan.outputs.shard_count) > 66
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0066
+        path: ${{ inputs.directory }}/shard-0066/${{ steps.plan.outputs.member_prefix }}-shard-0066.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0067
+      if: fromJSON(steps.plan.outputs.shard_count) > 67
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0067
+        path: ${{ inputs.directory }}/shard-0067/${{ steps.plan.outputs.member_prefix }}-shard-0067.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0068
+      if: fromJSON(steps.plan.outputs.shard_count) > 68
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0068
+        path: ${{ inputs.directory }}/shard-0068/${{ steps.plan.outputs.member_prefix }}-shard-0068.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0069
+      if: fromJSON(steps.plan.outputs.shard_count) > 69
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0069
+        path: ${{ inputs.directory }}/shard-0069/${{ steps.plan.outputs.member_prefix }}-shard-0069.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0070
+      if: fromJSON(steps.plan.outputs.shard_count) > 70
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0070
+        path: ${{ inputs.directory }}/shard-0070/${{ steps.plan.outputs.member_prefix }}-shard-0070.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0071
+      if: fromJSON(steps.plan.outputs.shard_count) > 71
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0071
+        path: ${{ inputs.directory }}/shard-0071/${{ steps.plan.outputs.member_prefix }}-shard-0071.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0072
+      if: fromJSON(steps.plan.outputs.shard_count) > 72
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0072
+        path: ${{ inputs.directory }}/shard-0072/${{ steps.plan.outputs.member_prefix }}-shard-0072.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0073
+      if: fromJSON(steps.plan.outputs.shard_count) > 73
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0073
+        path: ${{ inputs.directory }}/shard-0073/${{ steps.plan.outputs.member_prefix }}-shard-0073.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0074
+      if: fromJSON(steps.plan.outputs.shard_count) > 74
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0074
+        path: ${{ inputs.directory }}/shard-0074/${{ steps.plan.outputs.member_prefix }}-shard-0074.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0075
+      if: fromJSON(steps.plan.outputs.shard_count) > 75
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0075
+        path: ${{ inputs.directory }}/shard-0075/${{ steps.plan.outputs.member_prefix }}-shard-0075.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0076
+      if: fromJSON(steps.plan.outputs.shard_count) > 76
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0076
+        path: ${{ inputs.directory }}/shard-0076/${{ steps.plan.outputs.member_prefix }}-shard-0076.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0077
+      if: fromJSON(steps.plan.outputs.shard_count) > 77
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0077
+        path: ${{ inputs.directory }}/shard-0077/${{ steps.plan.outputs.member_prefix }}-shard-0077.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0078
+      if: fromJSON(steps.plan.outputs.shard_count) > 78
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0078
+        path: ${{ inputs.directory }}/shard-0078/${{ steps.plan.outputs.member_prefix }}-shard-0078.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0079
+      if: fromJSON(steps.plan.outputs.shard_count) > 79
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0079
+        path: ${{ inputs.directory }}/shard-0079/${{ steps.plan.outputs.member_prefix }}-shard-0079.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0080
+      if: fromJSON(steps.plan.outputs.shard_count) > 80
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0080
+        path: ${{ inputs.directory }}/shard-0080/${{ steps.plan.outputs.member_prefix }}-shard-0080.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0081
+      if: fromJSON(steps.plan.outputs.shard_count) > 81
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0081
+        path: ${{ inputs.directory }}/shard-0081/${{ steps.plan.outputs.member_prefix }}-shard-0081.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0082
+      if: fromJSON(steps.plan.outputs.shard_count) > 82
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0082
+        path: ${{ inputs.directory }}/shard-0082/${{ steps.plan.outputs.member_prefix }}-shard-0082.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0083
+      if: fromJSON(steps.plan.outputs.shard_count) > 83
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0083
+        path: ${{ inputs.directory }}/shard-0083/${{ steps.plan.outputs.member_prefix }}-shard-0083.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0084
+      if: fromJSON(steps.plan.outputs.shard_count) > 84
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0084
+        path: ${{ inputs.directory }}/shard-0084/${{ steps.plan.outputs.member_prefix }}-shard-0084.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0085
+      if: fromJSON(steps.plan.outputs.shard_count) > 85
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0085
+        path: ${{ inputs.directory }}/shard-0085/${{ steps.plan.outputs.member_prefix }}-shard-0085.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0086
+      if: fromJSON(steps.plan.outputs.shard_count) > 86
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0086
+        path: ${{ inputs.directory }}/shard-0086/${{ steps.plan.outputs.member_prefix }}-shard-0086.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0087
+      if: fromJSON(steps.plan.outputs.shard_count) > 87
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0087
+        path: ${{ inputs.directory }}/shard-0087/${{ steps.plan.outputs.member_prefix }}-shard-0087.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0088
+      if: fromJSON(steps.plan.outputs.shard_count) > 88
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0088
+        path: ${{ inputs.directory }}/shard-0088/${{ steps.plan.outputs.member_prefix }}-shard-0088.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0089
+      if: fromJSON(steps.plan.outputs.shard_count) > 89
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0089
+        path: ${{ inputs.directory }}/shard-0089/${{ steps.plan.outputs.member_prefix }}-shard-0089.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0090
+      if: fromJSON(steps.plan.outputs.shard_count) > 90
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0090
+        path: ${{ inputs.directory }}/shard-0090/${{ steps.plan.outputs.member_prefix }}-shard-0090.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0091
+      if: fromJSON(steps.plan.outputs.shard_count) > 91
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0091
+        path: ${{ inputs.directory }}/shard-0091/${{ steps.plan.outputs.member_prefix }}-shard-0091.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0092
+      if: fromJSON(steps.plan.outputs.shard_count) > 92
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0092
+        path: ${{ inputs.directory }}/shard-0092/${{ steps.plan.outputs.member_prefix }}-shard-0092.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0093
+      if: fromJSON(steps.plan.outputs.shard_count) > 93
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0093
+        path: ${{ inputs.directory }}/shard-0093/${{ steps.plan.outputs.member_prefix }}-shard-0093.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0094
+      if: fromJSON(steps.plan.outputs.shard_count) > 94
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0094
+        path: ${{ inputs.directory }}/shard-0094/${{ steps.plan.outputs.member_prefix }}-shard-0094.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0095
+      if: fromJSON(steps.plan.outputs.shard_count) > 95
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0095
+        path: ${{ inputs.directory }}/shard-0095/${{ steps.plan.outputs.member_prefix }}-shard-0095.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0096
+      if: fromJSON(steps.plan.outputs.shard_count) > 96
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0096
+        path: ${{ inputs.directory }}/shard-0096/${{ steps.plan.outputs.member_prefix }}-shard-0096.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0097
+      if: fromJSON(steps.plan.outputs.shard_count) > 97
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0097
+        path: ${{ inputs.directory }}/shard-0097/${{ steps.plan.outputs.member_prefix }}-shard-0097.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0098
+      if: fromJSON(steps.plan.outputs.shard_count) > 98
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0098
+        path: ${{ inputs.directory }}/shard-0098/${{ steps.plan.outputs.member_prefix }}-shard-0098.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0099
+      if: fromJSON(steps.plan.outputs.shard_count) > 99
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0099
+        path: ${{ inputs.directory }}/shard-0099/${{ steps.plan.outputs.member_prefix }}-shard-0099.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0100
+      if: fromJSON(steps.plan.outputs.shard_count) > 100
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0100
+        path: ${{ inputs.directory }}/shard-0100/${{ steps.plan.outputs.member_prefix }}-shard-0100.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0101
+      if: fromJSON(steps.plan.outputs.shard_count) > 101
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0101
+        path: ${{ inputs.directory }}/shard-0101/${{ steps.plan.outputs.member_prefix }}-shard-0101.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0102
+      if: fromJSON(steps.plan.outputs.shard_count) > 102
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0102
+        path: ${{ inputs.directory }}/shard-0102/${{ steps.plan.outputs.member_prefix }}-shard-0102.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0103
+      if: fromJSON(steps.plan.outputs.shard_count) > 103
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0103
+        path: ${{ inputs.directory }}/shard-0103/${{ steps.plan.outputs.member_prefix }}-shard-0103.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0104
+      if: fromJSON(steps.plan.outputs.shard_count) > 104
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0104
+        path: ${{ inputs.directory }}/shard-0104/${{ steps.plan.outputs.member_prefix }}-shard-0104.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0105
+      if: fromJSON(steps.plan.outputs.shard_count) > 105
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0105
+        path: ${{ inputs.directory }}/shard-0105/${{ steps.plan.outputs.member_prefix }}-shard-0105.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0106
+      if: fromJSON(steps.plan.outputs.shard_count) > 106
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0106
+        path: ${{ inputs.directory }}/shard-0106/${{ steps.plan.outputs.member_prefix }}-shard-0106.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0107
+      if: fromJSON(steps.plan.outputs.shard_count) > 107
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0107
+        path: ${{ inputs.directory }}/shard-0107/${{ steps.plan.outputs.member_prefix }}-shard-0107.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0108
+      if: fromJSON(steps.plan.outputs.shard_count) > 108
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0108
+        path: ${{ inputs.directory }}/shard-0108/${{ steps.plan.outputs.member_prefix }}-shard-0108.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0109
+      if: fromJSON(steps.plan.outputs.shard_count) > 109
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0109
+        path: ${{ inputs.directory }}/shard-0109/${{ steps.plan.outputs.member_prefix }}-shard-0109.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0110
+      if: fromJSON(steps.plan.outputs.shard_count) > 110
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0110
+        path: ${{ inputs.directory }}/shard-0110/${{ steps.plan.outputs.member_prefix }}-shard-0110.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0111
+      if: fromJSON(steps.plan.outputs.shard_count) > 111
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0111
+        path: ${{ inputs.directory }}/shard-0111/${{ steps.plan.outputs.member_prefix }}-shard-0111.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0112
+      if: fromJSON(steps.plan.outputs.shard_count) > 112
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0112
+        path: ${{ inputs.directory }}/shard-0112/${{ steps.plan.outputs.member_prefix }}-shard-0112.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0113
+      if: fromJSON(steps.plan.outputs.shard_count) > 113
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0113
+        path: ${{ inputs.directory }}/shard-0113/${{ steps.plan.outputs.member_prefix }}-shard-0113.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0114
+      if: fromJSON(steps.plan.outputs.shard_count) > 114
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0114
+        path: ${{ inputs.directory }}/shard-0114/${{ steps.plan.outputs.member_prefix }}-shard-0114.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0115
+      if: fromJSON(steps.plan.outputs.shard_count) > 115
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0115
+        path: ${{ inputs.directory }}/shard-0115/${{ steps.plan.outputs.member_prefix }}-shard-0115.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0116
+      if: fromJSON(steps.plan.outputs.shard_count) > 116
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0116
+        path: ${{ inputs.directory }}/shard-0116/${{ steps.plan.outputs.member_prefix }}-shard-0116.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0117
+      if: fromJSON(steps.plan.outputs.shard_count) > 117
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0117
+        path: ${{ inputs.directory }}/shard-0117/${{ steps.plan.outputs.member_prefix }}-shard-0117.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0118
+      if: fromJSON(steps.plan.outputs.shard_count) > 118
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0118
+        path: ${{ inputs.directory }}/shard-0118/${{ steps.plan.outputs.member_prefix }}-shard-0118.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0119
+      if: fromJSON(steps.plan.outputs.shard_count) > 119
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0119
+        path: ${{ inputs.directory }}/shard-0119/${{ steps.plan.outputs.member_prefix }}-shard-0119.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0120
+      if: fromJSON(steps.plan.outputs.shard_count) > 120
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0120
+        path: ${{ inputs.directory }}/shard-0120/${{ steps.plan.outputs.member_prefix }}-shard-0120.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0121
+      if: fromJSON(steps.plan.outputs.shard_count) > 121
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0121
+        path: ${{ inputs.directory }}/shard-0121/${{ steps.plan.outputs.member_prefix }}-shard-0121.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0122
+      if: fromJSON(steps.plan.outputs.shard_count) > 122
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0122
+        path: ${{ inputs.directory }}/shard-0122/${{ steps.plan.outputs.member_prefix }}-shard-0122.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0123
+      if: fromJSON(steps.plan.outputs.shard_count) > 123
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0123
+        path: ${{ inputs.directory }}/shard-0123/${{ steps.plan.outputs.member_prefix }}-shard-0123.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0124
+      if: fromJSON(steps.plan.outputs.shard_count) > 124
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0124
+        path: ${{ inputs.directory }}/shard-0124/${{ steps.plan.outputs.member_prefix }}-shard-0124.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0125
+      if: fromJSON(steps.plan.outputs.shard_count) > 125
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0125
+        path: ${{ inputs.directory }}/shard-0125/${{ steps.plan.outputs.member_prefix }}-shard-0125.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0126
+      if: fromJSON(steps.plan.outputs.shard_count) > 126
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0126
+        path: ${{ inputs.directory }}/shard-0126/${{ steps.plan.outputs.member_prefix }}-shard-0126.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0127
+      if: fromJSON(steps.plan.outputs.shard_count) > 127
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0127
+        path: ${{ inputs.directory }}/shard-0127/${{ steps.plan.outputs.member_prefix }}-shard-0127.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0128
+      if: fromJSON(steps.plan.outputs.shard_count) > 128
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0128
+        path: ${{ inputs.directory }}/shard-0128/${{ steps.plan.outputs.member_prefix }}-shard-0128.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0129
+      if: fromJSON(steps.plan.outputs.shard_count) > 129
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0129
+        path: ${{ inputs.directory }}/shard-0129/${{ steps.plan.outputs.member_prefix }}-shard-0129.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0130
+      if: fromJSON(steps.plan.outputs.shard_count) > 130
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0130
+        path: ${{ inputs.directory }}/shard-0130/${{ steps.plan.outputs.member_prefix }}-shard-0130.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0131
+      if: fromJSON(steps.plan.outputs.shard_count) > 131
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0131
+        path: ${{ inputs.directory }}/shard-0131/${{ steps.plan.outputs.member_prefix }}-shard-0131.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0132
+      if: fromJSON(steps.plan.outputs.shard_count) > 132
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0132
+        path: ${{ inputs.directory }}/shard-0132/${{ steps.plan.outputs.member_prefix }}-shard-0132.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0133
+      if: fromJSON(steps.plan.outputs.shard_count) > 133
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0133
+        path: ${{ inputs.directory }}/shard-0133/${{ steps.plan.outputs.member_prefix }}-shard-0133.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0134
+      if: fromJSON(steps.plan.outputs.shard_count) > 134
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0134
+        path: ${{ inputs.directory }}/shard-0134/${{ steps.plan.outputs.member_prefix }}-shard-0134.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0135
+      if: fromJSON(steps.plan.outputs.shard_count) > 135
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0135
+        path: ${{ inputs.directory }}/shard-0135/${{ steps.plan.outputs.member_prefix }}-shard-0135.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0136
+      if: fromJSON(steps.plan.outputs.shard_count) > 136
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0136
+        path: ${{ inputs.directory }}/shard-0136/${{ steps.plan.outputs.member_prefix }}-shard-0136.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0137
+      if: fromJSON(steps.plan.outputs.shard_count) > 137
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0137
+        path: ${{ inputs.directory }}/shard-0137/${{ steps.plan.outputs.member_prefix }}-shard-0137.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0138
+      if: fromJSON(steps.plan.outputs.shard_count) > 138
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0138
+        path: ${{ inputs.directory }}/shard-0138/${{ steps.plan.outputs.member_prefix }}-shard-0138.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0139
+      if: fromJSON(steps.plan.outputs.shard_count) > 139
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0139
+        path: ${{ inputs.directory }}/shard-0139/${{ steps.plan.outputs.member_prefix }}-shard-0139.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0140
+      if: fromJSON(steps.plan.outputs.shard_count) > 140
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0140
+        path: ${{ inputs.directory }}/shard-0140/${{ steps.plan.outputs.member_prefix }}-shard-0140.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0141
+      if: fromJSON(steps.plan.outputs.shard_count) > 141
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0141
+        path: ${{ inputs.directory }}/shard-0141/${{ steps.plan.outputs.member_prefix }}-shard-0141.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0142
+      if: fromJSON(steps.plan.outputs.shard_count) > 142
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0142
+        path: ${{ inputs.directory }}/shard-0142/${{ steps.plan.outputs.member_prefix }}-shard-0142.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0143
+      if: fromJSON(steps.plan.outputs.shard_count) > 143
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0143
+        path: ${{ inputs.directory }}/shard-0143/${{ steps.plan.outputs.member_prefix }}-shard-0143.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0144
+      if: fromJSON(steps.plan.outputs.shard_count) > 144
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0144
+        path: ${{ inputs.directory }}/shard-0144/${{ steps.plan.outputs.member_prefix }}-shard-0144.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0145
+      if: fromJSON(steps.plan.outputs.shard_count) > 145
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0145
+        path: ${{ inputs.directory }}/shard-0145/${{ steps.plan.outputs.member_prefix }}-shard-0145.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0146
+      if: fromJSON(steps.plan.outputs.shard_count) > 146
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0146
+        path: ${{ inputs.directory }}/shard-0146/${{ steps.plan.outputs.member_prefix }}-shard-0146.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0147
+      if: fromJSON(steps.plan.outputs.shard_count) > 147
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0147
+        path: ${{ inputs.directory }}/shard-0147/${{ steps.plan.outputs.member_prefix }}-shard-0147.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0148
+      if: fromJSON(steps.plan.outputs.shard_count) > 148
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0148
+        path: ${{ inputs.directory }}/shard-0148/${{ steps.plan.outputs.member_prefix }}-shard-0148.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0149
+      if: fromJSON(steps.plan.outputs.shard_count) > 149
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0149
+        path: ${{ inputs.directory }}/shard-0149/${{ steps.plan.outputs.member_prefix }}-shard-0149.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0150
+      if: fromJSON(steps.plan.outputs.shard_count) > 150
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0150
+        path: ${{ inputs.directory }}/shard-0150/${{ steps.plan.outputs.member_prefix }}-shard-0150.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0151
+      if: fromJSON(steps.plan.outputs.shard_count) > 151
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0151
+        path: ${{ inputs.directory }}/shard-0151/${{ steps.plan.outputs.member_prefix }}-shard-0151.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0152
+      if: fromJSON(steps.plan.outputs.shard_count) > 152
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0152
+        path: ${{ inputs.directory }}/shard-0152/${{ steps.plan.outputs.member_prefix }}-shard-0152.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0153
+      if: fromJSON(steps.plan.outputs.shard_count) > 153
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0153
+        path: ${{ inputs.directory }}/shard-0153/${{ steps.plan.outputs.member_prefix }}-shard-0153.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0154
+      if: fromJSON(steps.plan.outputs.shard_count) > 154
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0154
+        path: ${{ inputs.directory }}/shard-0154/${{ steps.plan.outputs.member_prefix }}-shard-0154.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0155
+      if: fromJSON(steps.plan.outputs.shard_count) > 155
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0155
+        path: ${{ inputs.directory }}/shard-0155/${{ steps.plan.outputs.member_prefix }}-shard-0155.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0156
+      if: fromJSON(steps.plan.outputs.shard_count) > 156
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0156
+        path: ${{ inputs.directory }}/shard-0156/${{ steps.plan.outputs.member_prefix }}-shard-0156.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0157
+      if: fromJSON(steps.plan.outputs.shard_count) > 157
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0157
+        path: ${{ inputs.directory }}/shard-0157/${{ steps.plan.outputs.member_prefix }}-shard-0157.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0158
+      if: fromJSON(steps.plan.outputs.shard_count) > 158
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0158
+        path: ${{ inputs.directory }}/shard-0158/${{ steps.plan.outputs.member_prefix }}-shard-0158.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0159
+      if: fromJSON(steps.plan.outputs.shard_count) > 159
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0159
+        path: ${{ inputs.directory }}/shard-0159/${{ steps.plan.outputs.member_prefix }}-shard-0159.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0160
+      if: fromJSON(steps.plan.outputs.shard_count) > 160
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0160
+        path: ${{ inputs.directory }}/shard-0160/${{ steps.plan.outputs.member_prefix }}-shard-0160.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0161
+      if: fromJSON(steps.plan.outputs.shard_count) > 161
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0161
+        path: ${{ inputs.directory }}/shard-0161/${{ steps.plan.outputs.member_prefix }}-shard-0161.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0162
+      if: fromJSON(steps.plan.outputs.shard_count) > 162
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0162
+        path: ${{ inputs.directory }}/shard-0162/${{ steps.plan.outputs.member_prefix }}-shard-0162.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0163
+      if: fromJSON(steps.plan.outputs.shard_count) > 163
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0163
+        path: ${{ inputs.directory }}/shard-0163/${{ steps.plan.outputs.member_prefix }}-shard-0163.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0164
+      if: fromJSON(steps.plan.outputs.shard_count) > 164
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0164
+        path: ${{ inputs.directory }}/shard-0164/${{ steps.plan.outputs.member_prefix }}-shard-0164.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0165
+      if: fromJSON(steps.plan.outputs.shard_count) > 165
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0165
+        path: ${{ inputs.directory }}/shard-0165/${{ steps.plan.outputs.member_prefix }}-shard-0165.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0166
+      if: fromJSON(steps.plan.outputs.shard_count) > 166
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0166
+        path: ${{ inputs.directory }}/shard-0166/${{ steps.plan.outputs.member_prefix }}-shard-0166.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0167
+      if: fromJSON(steps.plan.outputs.shard_count) > 167
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0167
+        path: ${{ inputs.directory }}/shard-0167/${{ steps.plan.outputs.member_prefix }}-shard-0167.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0168
+      if: fromJSON(steps.plan.outputs.shard_count) > 168
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0168
+        path: ${{ inputs.directory }}/shard-0168/${{ steps.plan.outputs.member_prefix }}-shard-0168.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0169
+      if: fromJSON(steps.plan.outputs.shard_count) > 169
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0169
+        path: ${{ inputs.directory }}/shard-0169/${{ steps.plan.outputs.member_prefix }}-shard-0169.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0170
+      if: fromJSON(steps.plan.outputs.shard_count) > 170
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0170
+        path: ${{ inputs.directory }}/shard-0170/${{ steps.plan.outputs.member_prefix }}-shard-0170.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0171
+      if: fromJSON(steps.plan.outputs.shard_count) > 171
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0171
+        path: ${{ inputs.directory }}/shard-0171/${{ steps.plan.outputs.member_prefix }}-shard-0171.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0172
+      if: fromJSON(steps.plan.outputs.shard_count) > 172
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0172
+        path: ${{ inputs.directory }}/shard-0172/${{ steps.plan.outputs.member_prefix }}-shard-0172.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0173
+      if: fromJSON(steps.plan.outputs.shard_count) > 173
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0173
+        path: ${{ inputs.directory }}/shard-0173/${{ steps.plan.outputs.member_prefix }}-shard-0173.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0174
+      if: fromJSON(steps.plan.outputs.shard_count) > 174
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0174
+        path: ${{ inputs.directory }}/shard-0174/${{ steps.plan.outputs.member_prefix }}-shard-0174.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0175
+      if: fromJSON(steps.plan.outputs.shard_count) > 175
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0175
+        path: ${{ inputs.directory }}/shard-0175/${{ steps.plan.outputs.member_prefix }}-shard-0175.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0176
+      if: fromJSON(steps.plan.outputs.shard_count) > 176
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0176
+        path: ${{ inputs.directory }}/shard-0176/${{ steps.plan.outputs.member_prefix }}-shard-0176.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0177
+      if: fromJSON(steps.plan.outputs.shard_count) > 177
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0177
+        path: ${{ inputs.directory }}/shard-0177/${{ steps.plan.outputs.member_prefix }}-shard-0177.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0178
+      if: fromJSON(steps.plan.outputs.shard_count) > 178
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0178
+        path: ${{ inputs.directory }}/shard-0178/${{ steps.plan.outputs.member_prefix }}-shard-0178.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0179
+      if: fromJSON(steps.plan.outputs.shard_count) > 179
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0179
+        path: ${{ inputs.directory }}/shard-0179/${{ steps.plan.outputs.member_prefix }}-shard-0179.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0180
+      if: fromJSON(steps.plan.outputs.shard_count) > 180
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0180
+        path: ${{ inputs.directory }}/shard-0180/${{ steps.plan.outputs.member_prefix }}-shard-0180.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0181
+      if: fromJSON(steps.plan.outputs.shard_count) > 181
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0181
+        path: ${{ inputs.directory }}/shard-0181/${{ steps.plan.outputs.member_prefix }}-shard-0181.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0182
+      if: fromJSON(steps.plan.outputs.shard_count) > 182
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0182
+        path: ${{ inputs.directory }}/shard-0182/${{ steps.plan.outputs.member_prefix }}-shard-0182.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0183
+      if: fromJSON(steps.plan.outputs.shard_count) > 183
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0183
+        path: ${{ inputs.directory }}/shard-0183/${{ steps.plan.outputs.member_prefix }}-shard-0183.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0184
+      if: fromJSON(steps.plan.outputs.shard_count) > 184
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0184
+        path: ${{ inputs.directory }}/shard-0184/${{ steps.plan.outputs.member_prefix }}-shard-0184.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0185
+      if: fromJSON(steps.plan.outputs.shard_count) > 185
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0185
+        path: ${{ inputs.directory }}/shard-0185/${{ steps.plan.outputs.member_prefix }}-shard-0185.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0186
+      if: fromJSON(steps.plan.outputs.shard_count) > 186
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0186
+        path: ${{ inputs.directory }}/shard-0186/${{ steps.plan.outputs.member_prefix }}-shard-0186.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0187
+      if: fromJSON(steps.plan.outputs.shard_count) > 187
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0187
+        path: ${{ inputs.directory }}/shard-0187/${{ steps.plan.outputs.member_prefix }}-shard-0187.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0188
+      if: fromJSON(steps.plan.outputs.shard_count) > 188
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0188
+        path: ${{ inputs.directory }}/shard-0188/${{ steps.plan.outputs.member_prefix }}-shard-0188.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0189
+      if: fromJSON(steps.plan.outputs.shard_count) > 189
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0189
+        path: ${{ inputs.directory }}/shard-0189/${{ steps.plan.outputs.member_prefix }}-shard-0189.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0190
+      if: fromJSON(steps.plan.outputs.shard_count) > 190
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0190
+        path: ${{ inputs.directory }}/shard-0190/${{ steps.plan.outputs.member_prefix }}-shard-0190.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0191
+      if: fromJSON(steps.plan.outputs.shard_count) > 191
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0191
+        path: ${{ inputs.directory }}/shard-0191/${{ steps.plan.outputs.member_prefix }}-shard-0191.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0192
+      if: fromJSON(steps.plan.outputs.shard_count) > 192
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0192
+        path: ${{ inputs.directory }}/shard-0192/${{ steps.plan.outputs.member_prefix }}-shard-0192.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0193
+      if: fromJSON(steps.plan.outputs.shard_count) > 193
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0193
+        path: ${{ inputs.directory }}/shard-0193/${{ steps.plan.outputs.member_prefix }}-shard-0193.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0194
+      if: fromJSON(steps.plan.outputs.shard_count) > 194
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0194
+        path: ${{ inputs.directory }}/shard-0194/${{ steps.plan.outputs.member_prefix }}-shard-0194.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0195
+      if: fromJSON(steps.plan.outputs.shard_count) > 195
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0195
+        path: ${{ inputs.directory }}/shard-0195/${{ steps.plan.outputs.member_prefix }}-shard-0195.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0196
+      if: fromJSON(steps.plan.outputs.shard_count) > 196
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0196
+        path: ${{ inputs.directory }}/shard-0196/${{ steps.plan.outputs.member_prefix }}-shard-0196.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0197
+      if: fromJSON(steps.plan.outputs.shard_count) > 197
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0197
+        path: ${{ inputs.directory }}/shard-0197/${{ steps.plan.outputs.member_prefix }}-shard-0197.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0198
+      if: fromJSON(steps.plan.outputs.shard_count) > 198
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0198
+        path: ${{ inputs.directory }}/shard-0198/${{ steps.plan.outputs.member_prefix }}-shard-0198.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0199
+      if: fromJSON(steps.plan.outputs.shard_count) > 199
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0199
+        path: ${{ inputs.directory }}/shard-0199/${{ steps.plan.outputs.member_prefix }}-shard-0199.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0200
+      if: fromJSON(steps.plan.outputs.shard_count) > 200
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0200
+        path: ${{ inputs.directory }}/shard-0200/${{ steps.plan.outputs.member_prefix }}-shard-0200.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0201
+      if: fromJSON(steps.plan.outputs.shard_count) > 201
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0201
+        path: ${{ inputs.directory }}/shard-0201/${{ steps.plan.outputs.member_prefix }}-shard-0201.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0202
+      if: fromJSON(steps.plan.outputs.shard_count) > 202
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0202
+        path: ${{ inputs.directory }}/shard-0202/${{ steps.plan.outputs.member_prefix }}-shard-0202.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0203
+      if: fromJSON(steps.plan.outputs.shard_count) > 203
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0203
+        path: ${{ inputs.directory }}/shard-0203/${{ steps.plan.outputs.member_prefix }}-shard-0203.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0204
+      if: fromJSON(steps.plan.outputs.shard_count) > 204
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0204
+        path: ${{ inputs.directory }}/shard-0204/${{ steps.plan.outputs.member_prefix }}-shard-0204.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0205
+      if: fromJSON(steps.plan.outputs.shard_count) > 205
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0205
+        path: ${{ inputs.directory }}/shard-0205/${{ steps.plan.outputs.member_prefix }}-shard-0205.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0206
+      if: fromJSON(steps.plan.outputs.shard_count) > 206
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0206
+        path: ${{ inputs.directory }}/shard-0206/${{ steps.plan.outputs.member_prefix }}-shard-0206.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0207
+      if: fromJSON(steps.plan.outputs.shard_count) > 207
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0207
+        path: ${{ inputs.directory }}/shard-0207/${{ steps.plan.outputs.member_prefix }}-shard-0207.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0208
+      if: fromJSON(steps.plan.outputs.shard_count) > 208
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0208
+        path: ${{ inputs.directory }}/shard-0208/${{ steps.plan.outputs.member_prefix }}-shard-0208.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0209
+      if: fromJSON(steps.plan.outputs.shard_count) > 209
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0209
+        path: ${{ inputs.directory }}/shard-0209/${{ steps.plan.outputs.member_prefix }}-shard-0209.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0210
+      if: fromJSON(steps.plan.outputs.shard_count) > 210
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0210
+        path: ${{ inputs.directory }}/shard-0210/${{ steps.plan.outputs.member_prefix }}-shard-0210.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0211
+      if: fromJSON(steps.plan.outputs.shard_count) > 211
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0211
+        path: ${{ inputs.directory }}/shard-0211/${{ steps.plan.outputs.member_prefix }}-shard-0211.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0212
+      if: fromJSON(steps.plan.outputs.shard_count) > 212
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0212
+        path: ${{ inputs.directory }}/shard-0212/${{ steps.plan.outputs.member_prefix }}-shard-0212.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0213
+      if: fromJSON(steps.plan.outputs.shard_count) > 213
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0213
+        path: ${{ inputs.directory }}/shard-0213/${{ steps.plan.outputs.member_prefix }}-shard-0213.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0214
+      if: fromJSON(steps.plan.outputs.shard_count) > 214
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0214
+        path: ${{ inputs.directory }}/shard-0214/${{ steps.plan.outputs.member_prefix }}-shard-0214.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0215
+      if: fromJSON(steps.plan.outputs.shard_count) > 215
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0215
+        path: ${{ inputs.directory }}/shard-0215/${{ steps.plan.outputs.member_prefix }}-shard-0215.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0216
+      if: fromJSON(steps.plan.outputs.shard_count) > 216
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0216
+        path: ${{ inputs.directory }}/shard-0216/${{ steps.plan.outputs.member_prefix }}-shard-0216.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0217
+      if: fromJSON(steps.plan.outputs.shard_count) > 217
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0217
+        path: ${{ inputs.directory }}/shard-0217/${{ steps.plan.outputs.member_prefix }}-shard-0217.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0218
+      if: fromJSON(steps.plan.outputs.shard_count) > 218
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0218
+        path: ${{ inputs.directory }}/shard-0218/${{ steps.plan.outputs.member_prefix }}-shard-0218.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0219
+      if: fromJSON(steps.plan.outputs.shard_count) > 219
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0219
+        path: ${{ inputs.directory }}/shard-0219/${{ steps.plan.outputs.member_prefix }}-shard-0219.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0220
+      if: fromJSON(steps.plan.outputs.shard_count) > 220
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0220
+        path: ${{ inputs.directory }}/shard-0220/${{ steps.plan.outputs.member_prefix }}-shard-0220.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0221
+      if: fromJSON(steps.plan.outputs.shard_count) > 221
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0221
+        path: ${{ inputs.directory }}/shard-0221/${{ steps.plan.outputs.member_prefix }}-shard-0221.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0222
+      if: fromJSON(steps.plan.outputs.shard_count) > 222
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0222
+        path: ${{ inputs.directory }}/shard-0222/${{ steps.plan.outputs.member_prefix }}-shard-0222.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0223
+      if: fromJSON(steps.plan.outputs.shard_count) > 223
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0223
+        path: ${{ inputs.directory }}/shard-0223/${{ steps.plan.outputs.member_prefix }}-shard-0223.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0224
+      if: fromJSON(steps.plan.outputs.shard_count) > 224
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0224
+        path: ${{ inputs.directory }}/shard-0224/${{ steps.plan.outputs.member_prefix }}-shard-0224.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0225
+      if: fromJSON(steps.plan.outputs.shard_count) > 225
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0225
+        path: ${{ inputs.directory }}/shard-0225/${{ steps.plan.outputs.member_prefix }}-shard-0225.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0226
+      if: fromJSON(steps.plan.outputs.shard_count) > 226
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0226
+        path: ${{ inputs.directory }}/shard-0226/${{ steps.plan.outputs.member_prefix }}-shard-0226.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0227
+      if: fromJSON(steps.plan.outputs.shard_count) > 227
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0227
+        path: ${{ inputs.directory }}/shard-0227/${{ steps.plan.outputs.member_prefix }}-shard-0227.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0228
+      if: fromJSON(steps.plan.outputs.shard_count) > 228
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0228
+        path: ${{ inputs.directory }}/shard-0228/${{ steps.plan.outputs.member_prefix }}-shard-0228.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0229
+      if: fromJSON(steps.plan.outputs.shard_count) > 229
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0229
+        path: ${{ inputs.directory }}/shard-0229/${{ steps.plan.outputs.member_prefix }}-shard-0229.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0230
+      if: fromJSON(steps.plan.outputs.shard_count) > 230
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0230
+        path: ${{ inputs.directory }}/shard-0230/${{ steps.plan.outputs.member_prefix }}-shard-0230.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0231
+      if: fromJSON(steps.plan.outputs.shard_count) > 231
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0231
+        path: ${{ inputs.directory }}/shard-0231/${{ steps.plan.outputs.member_prefix }}-shard-0231.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0232
+      if: fromJSON(steps.plan.outputs.shard_count) > 232
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0232
+        path: ${{ inputs.directory }}/shard-0232/${{ steps.plan.outputs.member_prefix }}-shard-0232.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0233
+      if: fromJSON(steps.plan.outputs.shard_count) > 233
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0233
+        path: ${{ inputs.directory }}/shard-0233/${{ steps.plan.outputs.member_prefix }}-shard-0233.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0234
+      if: fromJSON(steps.plan.outputs.shard_count) > 234
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0234
+        path: ${{ inputs.directory }}/shard-0234/${{ steps.plan.outputs.member_prefix }}-shard-0234.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0235
+      if: fromJSON(steps.plan.outputs.shard_count) > 235
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0235
+        path: ${{ inputs.directory }}/shard-0235/${{ steps.plan.outputs.member_prefix }}-shard-0235.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0236
+      if: fromJSON(steps.plan.outputs.shard_count) > 236
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0236
+        path: ${{ inputs.directory }}/shard-0236/${{ steps.plan.outputs.member_prefix }}-shard-0236.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0237
+      if: fromJSON(steps.plan.outputs.shard_count) > 237
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0237
+        path: ${{ inputs.directory }}/shard-0237/${{ steps.plan.outputs.member_prefix }}-shard-0237.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0238
+      if: fromJSON(steps.plan.outputs.shard_count) > 238
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0238
+        path: ${{ inputs.directory }}/shard-0238/${{ steps.plan.outputs.member_prefix }}-shard-0238.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0239
+      if: fromJSON(steps.plan.outputs.shard_count) > 239
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0239
+        path: ${{ inputs.directory }}/shard-0239/${{ steps.plan.outputs.member_prefix }}-shard-0239.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0240
+      if: fromJSON(steps.plan.outputs.shard_count) > 240
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0240
+        path: ${{ inputs.directory }}/shard-0240/${{ steps.plan.outputs.member_prefix }}-shard-0240.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0241
+      if: fromJSON(steps.plan.outputs.shard_count) > 241
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0241
+        path: ${{ inputs.directory }}/shard-0241/${{ steps.plan.outputs.member_prefix }}-shard-0241.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0242
+      if: fromJSON(steps.plan.outputs.shard_count) > 242
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0242
+        path: ${{ inputs.directory }}/shard-0242/${{ steps.plan.outputs.member_prefix }}-shard-0242.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0243
+      if: fromJSON(steps.plan.outputs.shard_count) > 243
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0243
+        path: ${{ inputs.directory }}/shard-0243/${{ steps.plan.outputs.member_prefix }}-shard-0243.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0244
+      if: fromJSON(steps.plan.outputs.shard_count) > 244
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0244
+        path: ${{ inputs.directory }}/shard-0244/${{ steps.plan.outputs.member_prefix }}-shard-0244.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0245
+      if: fromJSON(steps.plan.outputs.shard_count) > 245
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0245
+        path: ${{ inputs.directory }}/shard-0245/${{ steps.plan.outputs.member_prefix }}-shard-0245.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0246
+      if: fromJSON(steps.plan.outputs.shard_count) > 246
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0246
+        path: ${{ inputs.directory }}/shard-0246/${{ steps.plan.outputs.member_prefix }}-shard-0246.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0247
+      if: fromJSON(steps.plan.outputs.shard_count) > 247
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0247
+        path: ${{ inputs.directory }}/shard-0247/${{ steps.plan.outputs.member_prefix }}-shard-0247.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0248
+      if: fromJSON(steps.plan.outputs.shard_count) > 248
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0248
+        path: ${{ inputs.directory }}/shard-0248/${{ steps.plan.outputs.member_prefix }}-shard-0248.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0249
+      if: fromJSON(steps.plan.outputs.shard_count) > 249
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0249
+        path: ${{ inputs.directory }}/shard-0249/${{ steps.plan.outputs.member_prefix }}-shard-0249.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0250
+      if: fromJSON(steps.plan.outputs.shard_count) > 250
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0250
+        path: ${{ inputs.directory }}/shard-0250/${{ steps.plan.outputs.member_prefix }}-shard-0250.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0251
+      if: fromJSON(steps.plan.outputs.shard_count) > 251
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0251
+        path: ${{ inputs.directory }}/shard-0251/${{ steps.plan.outputs.member_prefix }}-shard-0251.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0252
+      if: fromJSON(steps.plan.outputs.shard_count) > 252
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0252
+        path: ${{ inputs.directory }}/shard-0252/${{ steps.plan.outputs.member_prefix }}-shard-0252.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0253
+      if: fromJSON(steps.plan.outputs.shard_count) > 253
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0253
+        path: ${{ inputs.directory }}/shard-0253/${{ steps.plan.outputs.member_prefix }}-shard-0253.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0254
+      if: fromJSON(steps.plan.outputs.shard_count) > 254
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0254
+        path: ${{ inputs.directory }}/shard-0254/${{ steps.plan.outputs.member_prefix }}-shard-0254.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0
+    - name: Upload exact bounded shard 0255
+      if: fromJSON(steps.plan.outputs.shard_count) > 255
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: ${{ steps.plan.outputs.shard_prefix }}0255
+        path: ${{ inputs.directory }}/shard-0255/${{ steps.plan.outputs.member_prefix }}-shard-0255.zip
+        if-no-files-found: error
+        retention-days: 1
+        compression-level: 0

@@ -2510,7 +2510,7 @@ File-backed incremental rendering cache.
 *function — defined in `infrastructure.rendering.docx_renderer`*
 
 ```python
-render_docx(combined_md: Path, output_path: Path, *, bibliography: Path | None=None, reference_doc: Path | None=None, title: str | None=None, author: str | None=None, pandoc_path: str='pandoc', extra_args: list[str] | None=None) -> DocxRenderResult
+render_docx(combined_md: Path, output_path: Path, *, bibliography: Path | None=None, reference_doc: Path | None=None, title: str | None=None, author: str | None=None, pandoc_path: str='pandoc', extra_args: list[str] | None=None, diagram_png_sha256: tuple[str, ...]=()) -> DocxRenderResult
 ```
 
 Render *combined_md* to a DOCX at *output_path*.

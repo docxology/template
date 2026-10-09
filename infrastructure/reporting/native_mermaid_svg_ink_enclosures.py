@@ -12,20 +12,19 @@ import math
 import re
 from typing import Any
 
-from fontTools.pens.boundsPen import BoundsPen
-from fontTools.pens.transformPen import TransformPen
-from fontTools.svgLib.path import parse_path
-
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.reporting.native_mermaid_svg_geometry import SvgGeometry, numbers, point
+from infrastructure.reporting.native_mermaid_source_path_ink import source_path_ink
+from infrastructure.reporting.native_mermaid_source_effect_ink import source_effect_containment
+from infrastructure.reporting.native_mermaid_source_marker_ink import source_marker_ink
 from infrastructure.reporting.native_mermaid_svg_paint import preflight_original_mermaid_svg
 
-SCHEMA = "template-native-independent-original-svg-ink-enclosures-v1"
+SCHEMA = "template-native-independent-original-svg-ink-enclosures-v2"
 PRIMITIVES = {"rect", "circle", "ellipse", "polygon", "polyline", "line", "path"}
 REMAINING = (
     "genuine Source-only browser/process/style provenance and complete native loaded-provider custody",
     "independent font-body glyph selection/shaping/outlines and exact complete glyph ink",
-    "unsupported SVG effects/arc/stroke profiles and any enclosure intersecting original declared clipping",
+    "unsupported SVG effects/stroke profiles and any enclosure intersecting original declared clipping",
     "genuine whole-document source occurrence/native page positions and complete native ink visibility",
 )
 
@@ -39,16 +38,12 @@ def _number(value: object) -> float:
     return result
 
 
-def _box(svg: SvgGeometry, element: Any) -> list[float] | None:
+def _box(svg: SvgGeometry, element: Any, matrix: tuple[float, ...] | None = None) -> list[float] | None:
     local = svg.local(element)
-    matrix = svg.world(element)
+    matrix = svg.world(element) if matrix is None else matrix
     if local == "path":
         path = element.get("d", "")
-        if len(path) > 100_000 or re.search(r"[Aa]", path):
-            raise ValueError("original Source SVG arc profile needs exact independent elliptical bounds")
-        pen = BoundsPen(None)
-        parse_path(path, TransformPen(pen, matrix))
-        return list(pen.bounds) if pen.bounds is not None else None
+        return source_path_ink(path, matrix).bounds()
     if local in {"polygon", "polyline"}:
         coords = numbers(element.get("points", ""))
         if len(coords) < 4 or len(coords) % 2:
@@ -63,7 +58,22 @@ def _box(svg: SvgGeometry, element: Any) -> list[float] | None:
         shape = svg.shape(element)
         if shape is None:
             return None
-        return list(shape["box"])
+        if matrix == svg.world(element):
+            return list(shape["box"])
+        if local == "rect":
+            x, y = _number(element.get("x", "0")), _number(element.get("y", "0"))
+            w, h = _number(element.get("width", "0")), _number(element.get("height", "0"))
+            points = [(x, y), (x + w, y), (x + w, y + h), (x, y + h)]
+        elif local in {"circle", "ellipse"}:
+            x, y = _number(element.get("cx", "0")), _number(element.get("cy", "0"))
+            rx = _number(element.get("r", "0")) if local == "circle" else _number(element.get("rx", "0"))
+            ry = rx if local == "circle" else _number(element.get("ry", "0"))
+            a, b, c, d, _, _ = matrix
+            centre = point(matrix, (x, y))
+            dx, dy = math.hypot(a * rx, c * ry), math.hypot(b * rx, d * ry)
+            return [centre[0] - dx, centre[1] - dy, centre[0] + dx, centre[1] + dy]
+        else:
+            raise ValueError("original Source marker primitive needs independent affine interpretation")
     projected = [point(matrix, item) for item in points]
     values = [coordinate for item in projected for coordinate in item]
     if any(not math.isfinite(value) or abs(value) > 1_000_000 for value in values):
@@ -76,8 +86,13 @@ def _box(svg: SvgGeometry, element: Any) -> list[float] | None:
     ]
 
 
-def _enclosure(svg: SvgGeometry, element: Any, style: dict[str, Any]) -> list[float] | None:
-    box = _box(svg, element)
+def _enclosure(
+    svg: SvgGeometry,
+    element: Any,
+    style: dict[str, Any],
+    matrix: tuple[float, ...] | None = None,
+) -> list[float] | None:
+    box = _box(svg, element, matrix)
     if box is None:
         return None
     if style.get("vectorEffect") not in {"none", ""}:
@@ -97,7 +112,7 @@ def _enclosure(svg: SvgGeometry, element: Any, style: dict[str, Any]) -> list[fl
     # inside every admitted clip. It never approves intersections or guesses a
     # smaller actual stroke from raster pixels. Curve geometry uses exact pen
     # extrema; affine expansion uses a finite matrix norm upper bound.
-    a, b, c, d, _, _ = svg.world(element)
+    a, b, c, d, _, _ = svg.world(element) if matrix is None else matrix
     scale_bound = math.sqrt(a * a + b * b + c * c + d * d)
     radius = width * max(miter, math.sqrt(2) if style["strokeLinecap"] == "square" else 1) * scale_bound / 2
     return [box[0] - radius, box[1] - radius, box[2] + radius, box[3] + radius]
@@ -123,14 +138,14 @@ def inspect_original_svg_ink_enclosures(svg_bytes: bytes, dom: dict[str, Any]) -
         style = row.get("style")
         if not isinstance(style, dict):
             raise ValueError("actual original Source computed styles are absent")
-        styles[element] = style
+        styles[element] = {**style, "_actual_visible": row.get("visible")}
     x, y, width, height = svg.viewbox
     viewport = [x, y, x + width, y + height]
     primitive_rows = []
     effects = []
     markers = []
     glyphs = []
-    blockers = []
+    blockers: list[dict[str, Any]] = []
     root_style = dom.get("root_style")
     root_attributes = dom.get("root_attributes")
     if (
@@ -140,6 +155,11 @@ def inspect_original_svg_ink_enclosures(svg_bytes: bytes, dom: dict[str, Any]) -
         != dict(svg.root.attrib)
     ):
         raise ValueError("actual original Source root computed-style/XML attributes differ")
+    styles[svg.root] = root_style
+    if re.search(rb"(?:[;{]\s*|style=[\"']\s*)transform\s*:", svg_bytes, re.I):
+        blockers.append(
+            {"reason": "Source CSS transform override requires its independently resolved transform-box/origin profile"}
+        )
     for effect in ("clipPath", "mask", "filter"):
         if root_style.get(effect) not in {"none", ""}:
             effects.append({"index": "root", "property": effect, "value": root_style.get(effect)})
@@ -169,6 +189,10 @@ def inspect_original_svg_ink_enclosures(svg_bytes: bytes, dom: dict[str, Any]) -
             continue
         if envelope is None:
             continue
+        try:
+            source_effect_containment(svg, element, styles, envelope)
+        except ValueError as error:
+            blockers.append({"index": index, "reason": str(error)})
         contained = all(
             (
                 envelope[0] >= viewport[0],
@@ -190,38 +214,42 @@ def inspect_original_svg_ink_enclosures(svg_bytes: bytes, dom: dict[str, Any]) -
             blockers.append(
                 {"index": index, "reason": "independent primitive/stroke envelope intersects original root clipping"}
             )
-        for marker_kind in ("marker-start", "marker-mid", "marker-end"):
-            reference = element.get(marker_kind)
-            if reference:
-                match = re.fullmatch(r"url\(\s*['\"]?#([^)'\"\s]+)['\"]?\s*\)", reference)
-                marker = svg.ids.get(match[1]) if match else None
-                if marker is None or svg.local(marker) != "marker":
-                    raise ValueError("original Source marker reference omits its exact local source definition")
-                markers.append(
-                    {
-                        "index": index,
-                        "attachment": marker_kind,
-                        "marker_id": marker.get("id"),
-                        "viewbox": marker.get("viewBox"),
-                        "width": marker.get("markerWidth"),
-                        "height": marker.get("markerHeight"),
-                        "orientation": marker.get("orient"),
-                        "definition_sha256": canonical_digest(dict(marker.attrib)),
-                    }
-                )
+        try:
+            placed = source_marker_ink(
+                svg,
+                element,
+                style,
+                styles,
+                lambda child, child_style, matrix: _enclosure(svg, child, child_style, matrix),
+            )
+            for marker in placed:
+                marker["index"] = index
+                for ink in marker["source_ink"]:
+                    box = ink["source_ink_enclosure"]
+                    try:
+                        source_effect_containment(svg, element, styles, box)
+                    except ValueError as error:
+                        blockers.append({"index": index, "reason": str(error)})
+                    if not (
+                        box[0] >= viewport[0]
+                        and box[1] >= viewport[1]
+                        and box[2] <= viewport[2]
+                        and box[3] <= viewport[3]
+                    ):
+                        blockers.append(
+                            {"index": index, "reason": "complete Source marker ink intersects original root clipping"}
+                        )
+            markers.extend(placed)
+        except ValueError as error:
+            blockers.append({"index": index, "reason": str(error)})
     if glyphs:
         blockers.append({"reason": "complete Source glyph outlines/shaping require genuine admitted font-body metrics"})
-    if effects:
-        blockers.append({"reason": "Source clip/mask/filter effects need independent finite interpretation"})
-    if markers:
-        blockers.append(
-            {"reason": "complete Source marker ink/viewport/attachment needs independent marker clip interpretation"}
-        )
     result = {
         "schema_version": SCHEMA,
         "svg_sha256": hashlib.sha256(svg_bytes).hexdigest(),
         "status": "blocked" if blockers else "finite-primitive-enclosures-observed",
         "full_source_ink_approval": False,
+        "finite_primitive_marker_geometry_complete": not blockers,
         "source_viewbox": viewport,
         "primitives": primitive_rows,
         "glyph_owners": glyphs,

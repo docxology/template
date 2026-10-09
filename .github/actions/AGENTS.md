@@ -19,6 +19,8 @@ Repository-local composite actions for the CI pipeline. See
 | --- | --- |
 | [`setup-python-env/action.yml`](setup-python-env/action.yml) | uv + Python provisioning (see its [`AGENTS.md`](setup-python-env/AGENTS.md)). |
 | [`setup-docs-lint/action.yml`](setup-docs-lint/action.yml) | Shared Node + Mermaid + Chrome provisioning for both blocking documentation-lint callers. |
+| [`setup-native-installed-readiness/`](setup-native-installed-readiness/README.md) | Prepare Source-locked native tools and cached inputs before the installed original/reader/handoff operation. |
+| [`upload-readiness-shards/`](upload-readiness-shards/README.md) | Check and upload exact bounded native/candidate transport or separately named failed diagnostics. |
 
 ## Editing
 

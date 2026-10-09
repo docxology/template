@@ -1,5 +1,6 @@
 // Source-pinned CLI11 public rendering API, one genuine browser/fresh pages.
 import fs from "node:fs";
+import { sourceDefaultBrowser, sourceDefaultMermaidConfig, embedUsedSourceDefaultFaces } from "./_mermaid_source_font_default.mjs";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
@@ -24,20 +25,26 @@ if (process.argv.length !== 3 || !/^20\.[0-9]+\.[0-9]+$/.test(process.versions.n
   throw new Error("ordered Source11 adapter requires actual Node20 and one literal request");
 }
 const request = JSON.parse(literalFile(process.argv[2], 1024 * 1024));
-if (!keys(request, ["schema_version", "package_root", "dependency_root", "puppeteer_config", "render_profile", "occurrences", "result_output"]) ||
-    request.schema_version !== "template-mermaid-source11-ordered-batch-request-v1" ||
+if (!keys(request, ["schema_version", "package_root", "dependency_root", "puppeteer_config", "render_profile", "occurrences", "result_output", "font_profile", "font_profile_sha256"]) ||
+    request.schema_version !== "template-mermaid-source11-ordered-batch-request-licensed-font-v2" ||
     !Array.isArray(request.occurrences) || !(request.occurrences.length > 0 && request.occurrences.length <= 100)) {
   throw new Error("ordered Source11 request differs from its exact finite declared schema");
 }
+const fontBytes = literalFile(request.font_profile, 67108864);
+if (sha(fontBytes) !== request.font_profile_sha256) throw Error("Source font profile body changed");
+const fontProfile = JSON.parse(fontBytes);
+const fontObservations = [];
 const expectedProfile = {
   theme: "default", font_embed: false, background_color: "white",
+  source_default_font: "template-source-mermaid-licensed-default-font-v1", source_used_face_embedding: true,
   viewport_width: 1400, viewport_height: 900, device_scale_factor: 1,
 };
 if (!keys(request.render_profile, Object.keys(expectedProfile)) ||
     Object.entries(expectedProfile).some(([key, value]) => request.render_profile[key] !== value)) {
   throw new Error("ordered Source11 adapter cannot alter its actual default-theme profile");
 }
-for (const name of ["package_root", "dependency_root", "puppeteer_config", "result_output"]) {
+if (!/^[0-9a-f]{64}$/.test(request.font_profile_sha256)) throw Error("Source font profile digest differs");
+for (const name of ["package_root", "dependency_root", "puppeteer_config", "result_output", "font_profile"]) {
   if (typeof request[name] !== "string" || !path.isAbsolute(request[name]) || request[name].length > 4096) {
     throw new Error("ordered Source11 adapter requires explicit bounded nominated roots");
   }
@@ -186,15 +193,18 @@ try {
     for (const kind of ["svg", "png"]) {
       // Actual public API creates/closes a new page for every format. Nothing
       // collapses duplicate bodies or reuses one native output for two owners.
-      const rendered = await renderMermaid(browser, definition, kind, {
+      const beforeFontCount = fontObservations.length;
+      const rendered = await renderMermaid(sourceDefaultBrowser(browser, fontProfile, fontObservations), definition, kind, {
         viewport: { width: 1400, height: 900, deviceScaleFactor: 1 },
-        backgroundColor: "white", mermaidConfig: { theme: "default" },
+        backgroundColor: "white", mermaidConfig: sourceDefaultMermaidConfig(),
       });
-      const body = Buffer.from(rendered.data);
+      if (fontObservations.length !== beforeFontCount + 1) throw Error("Source font before-layout page count differs");
+      const observation = fontObservations[beforeFontCount];
+      const body = kind === "svg" ? embedUsedSourceDefaultFaces(rendered.data, fontProfile, observation) : Buffer.from(rendered.data);
       if (!body.length || body.length > 67108864) throw new Error("native original artifact exceeds existing finite bytes");
       const output = row[kind + "_output"];
       fs.writeFileSync(output, body, { flag: "wx", mode: 0o600 });
-      observed[kind] = { output, sha256: sha(body), bytes: body.length };
+      observed[kind] = { output, sha256: sha(body), bytes: body.length, source_fonts: observation };
     }
     if (sha(literalFile(row.input, 1024 * 1024)) !== row.input_sha256) {
       throw new Error("Source original body changed after actual ordered native artifacts");
@@ -205,7 +215,7 @@ try {
   if (browser) await browser.close();
 }
 fs.writeFileSync(request.result_output, JSON.stringify({
-  schema_version: "template-mermaid-source11-actual-ordered-batch-artifacts-v1",
+  schema_version: "template-mermaid-source11-actual-ordered-batch-artifacts-licensed-font-v2",
   pid: process.pid, owner_pid: process.ppid, occurrences: rows,
 }) + "\n", { flag: "wx", mode: 0o600 });
 retainLiveLoadedReport("after-run");

@@ -27,6 +27,13 @@ tree instead of copying volatile literals into prose.
   generation must stay safe on incomplete optional dependencies.
 - Counts and rosters are source-owned by generators; do not hand-edit generated
   facts.
+- Coverage literal refresh requires an explicit retained DATA copy outside the
+  repository and selected SDK (`counts.py --verify-coverage --write
+  --coverage-snapshot-output <copy>`). Implicit self-rewrite is refused before
+  measurement. The existing writer updates only an admitted independent exact
+  copy of selected `counts_coverage.py`; the owner retains its original, closes
+  terminal Source/Code/wheel custody, then reviews/applies the literal-only
+  delta in a new source epoch and rebuilds before provenance refresh.
 - Coverage snapshot measurement keeps the shared `release` marker selection and
   a 1,800-second default subprocess ceiling. Named public-exemplar exceptions
   belong only in `counts_coverage.COVERAGE_MEASUREMENT_POLICY_OVERRIDES` and

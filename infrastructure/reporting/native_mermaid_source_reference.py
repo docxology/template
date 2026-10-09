@@ -37,6 +37,18 @@ from infrastructure.reporting.native_citation_process_custody import OriginalCit
 from infrastructure.reporting.native_format_acceptance_contracts import CITATION_TOOL_FIELDS, TOOL_FIELDS, TOOL_SCHEMA
 from infrastructure.reporting.release_readiness_snapshot import json_object_from_bytes
 from infrastructure.rendering._pdf_mermaid import _normalise_mermaid_source
+from infrastructure.rendering._mermaid_source_font_default import (
+    PROFILE_NAME,
+    SCRIPT_NAME,
+    default_font_profile_bytes,
+    default_font_script_bytes,
+    validate_default_font_buffers,
+)
+from infrastructure.reporting.native_mermaid_font_bodies import (
+    NativeMermaidFontSelection,
+    source_mermaid_font_bodies_operation,
+)
+from infrastructure.reporting.native_mermaid_svg_batch_paint import observe_original_svg_batch_paint
 from infrastructure.rendering._mermaid_native_profile import (
     adapter_bytes,
     adapter_filename,
@@ -48,7 +60,7 @@ from infrastructure.rendering._mermaid_native_profile import (
 )
 from infrastructure.reporting.native_mermaid_runtime_selection import NativeMermaidRuntimeAdmission
 
-SCHEMA = "template-native-mermaid-original-source-reference-source11-runtime-v3"
+SCHEMA = "template-native-mermaid-original-source-reference-source11-licensed-font-runtime-v4"
 TopologyInspector = Callable[[bytes, bytes], dict[str, Any]]
 ArtifactReader = Callable[[dict[str, Any]], bytes]
 ProcessAdmitter = Callable[[dict[str, Any]], None]
@@ -341,7 +353,15 @@ def observe_original_mermaid_sources(
         raw_path = leaf.freeze("original.mmd", source)
         normal_path = leaf.freeze("normalized.mmd", normal)
         adapter = leaf.freeze(adapter_filename(version), adapter_bytes(version))
+        if version == "11.16.0":
+            if runtime_admission is None or on_original_tool is None:
+                raise ValueError(
+                    "Source11 licensed font profile requires genuine Source runtime and live original process owner"
+                )
+            leaf.freeze(PROFILE_NAME, default_font_profile_bytes(deadline=deadline))
+            leaf.freeze(SCRIPT_NAME, default_font_script_bytes())
         processes, process_artifacts, artifacts, configs, requests = {}, {}, {}, {}, {}
+        font_observations = {}
         for kind in ("svg", "png"):
             profile = leaf.directory / f"producer-profile-{kind}"
             config_path = leaf.freeze(
@@ -379,6 +399,11 @@ def observe_original_mermaid_sources(
             )
             if version == "11.16.0":
                 _source11_live_node_reports(process)
+                font_path = output.with_name(output.name + ".source-fonts.json")
+                font_content = leaf.read(font_path)
+                font_observation = json_object_from_bytes(font_content)
+                font_observations[kind] = _binding(root, font_path, font_content)
+                validate_default_font_buffers(font_observation.get("buffers"), deadline=deadline)
             data = leaf.read(output)
             artifacts[kind] = _binding(root, output, data)
             processes[kind] = process
@@ -390,15 +415,40 @@ def observe_original_mermaid_sources(
             leaf.read(root / artifacts["png"]["path"]),
         )
         topology = _topology(normal, svg, inspect_svg)
-        paint = observe_original_svg_paint(
-            chrome_executable,
-            svg,
-            leaf.directory / "independent-svg-paint",
-            deadline=deadline,
-            font_files=font_files,
-            decoded_pixel_budget=decoded_pixel_budget,
-        )
-        paint_path = leaf.directory / "independent-svg-paint/paint.png"
+        paint_process = None
+        paint_process_artifact = None
+        if version == "11.16.0":
+            if runtime_admission is None or on_original_tool is None:
+                raise ValueError("Source11 licensed font paint requires its genuine Source/runtime/original owner")
+            with source_mermaid_font_bodies_operation(
+                NativeMermaidFontSelection(font_files), runtime_admission.source, deadline=deadline
+            ) as bodies:
+                batch = observe_original_svg_batch_paint(
+                    root,
+                    leaf.directory / "independent-svg-paint",
+                    ((identity, svg),),
+                    runtime_admission=runtime_admission,
+                    font_bodies=bodies,
+                    decoded_pixel_budget=decoded_pixel_budget,
+                    env=env,
+                    deadline=deadline,
+                    run_id=run_id,
+                    on_original_tool=on_original_tool,
+                )
+            paint = batch["occurrences"][0]["paint"]
+            paint_path = root / batch["occurrences"][0]["paint_artifact"]["path"]
+            paint_process = batch["shared_process"]
+            paint_process_artifact = batch["shared_process_artifact"]
+        else:
+            paint = observe_original_svg_paint(
+                chrome_executable,
+                svg,
+                leaf.directory / "independent-svg-paint",
+                deadline=deadline,
+                font_files=font_files,
+                decoded_pixel_budget=decoded_pixel_budget,
+            )
+            paint_path = leaf.directory / "independent-svg-paint/paint.png"
         pixel_binding = _binding(root, paint_path, paint_path.read_bytes())
         parity = inspect_original_svg_native_pixels(paint, native_png, decoded_pixel_budget=decoded_pixel_budget)
         if topology.get("status") != "pass" or topology.get("blockers") or topology.get("findings"):
@@ -423,10 +473,13 @@ def observe_original_mermaid_sources(
                 "producer_configs": configs,
                 "producer_adapter": _binding(root, adapter, leaf.read(adapter)),
                 "producer_requests": requests,
+                "producer_font_observations": font_observations,
                 "producer_invocation_policy": policy(version),
                 "producer_render_profile": rendering_profile(version),
                 "topology": topology,
                 "paint": paint,
+                "paint_process": paint_process,
+                "paint_process_artifact": paint_process_artifact,
                 "paint_artifact": pixel_binding,
                 "pixel_parity": parity,
             }
@@ -565,6 +618,29 @@ def validate_original_mermaid_sources(
             }
             if config != expected:
                 raise ValueError("portable original Mermaid native Chrome/private network config differs")
+            if version == "11.16.0":
+                observation_binding = row["producer_font_observations"][kind]
+                if Path(observation_binding["path"]).name != f"original.{kind}.source-fonts.json":
+                    raise ValueError("original Source-font result artifact identity differs")
+                font_observation = json_object_from_bytes(_read(observation_binding, artifact_reader))
+                validate_default_font_buffers(font_observation.get("buffers"))
+                for input_name, input_data in (
+                    (PROFILE_NAME, default_font_profile_bytes()),
+                    (SCRIPT_NAME, default_font_script_bytes()),
+                ):
+                    expected_input = {
+                        "name": input_name,
+                        "path": str(cwd / input_name),
+                        "bytes": len(input_data),
+                        "sha256": hashlib.sha256(input_data).hexdigest(),
+                    }
+                    if any(
+                        expected_input not in row["processes"][kind][field]
+                        for field in ("input_observations_before", "input_observations_after")
+                    ):
+                        raise ValueError(
+                            "original Source11 invocation omitted its exact consumed font profile/constructor"
+                        )
             before = row["processes"][kind]["input_observations_before"]
             if not any(
                 value.get("path") == str(cwd / f"puppeteer-{kind}.json")
@@ -597,6 +673,27 @@ def validate_original_mermaid_sources(
         ):
             raise ValueError("portable independently interpreted original Mermaid graph/topology differs")
         paint = row["paint"]
+        if version == "11.16.0":
+            process = row.get("paint_process")
+            binding = row.get("paint_process_artifact")
+            if not isinstance(process, dict) or not isinstance(binding, dict) or set(binding) != {"path", "sha256"}:
+                raise ValueError("Source11 licensed-font independent paint lacks actual original Tool custody")
+            content = artifact_reader(binding)
+            if (
+                hashlib.sha256(content).hexdigest() != binding["sha256"]
+                or json_object_from_bytes(content) != process
+                or set(process) != CITATION_TOOL_FIELDS
+            ):
+                raise ValueError("Source11 independent actual paint process bytes changed")
+            admit_original_process(process)
+            if (
+                process["pid"] != paint["browser_pid"]
+                or process["command"] != paint["browser_command"]
+                or process["original_exit_code"] != 0
+                or process["raw_stdout"]["sha256"] != paint["stdout_sha256"]
+                or process["raw_stderr"]["sha256"] != paint["stderr_sha256"]
+            ):
+                raise ValueError("Source11 licensed-font Source paint differs from actual owned original browser")
         if paint.get("content_digest") != canonical_digest(
             {key: value for key, value in paint.items() if key != "content_digest"}
         ):

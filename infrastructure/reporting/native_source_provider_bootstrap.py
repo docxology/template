@@ -42,10 +42,20 @@ from infrastructure.reporting.native_code_runtime import observe_native_code_run
 NATIVE_WORKER_MODULE = "infrastructure.reporting.native_format_acceptance_worker"
 OFFICE_CONTROL_WORKER_MODULE = "infrastructure.reporting.native_office_diagram_control_worker"
 MERMAID_SOURCE_WORKER_MODULE = "infrastructure.reporting.native_mermaid_all_source_worker"
+NATIVE_CONTROLLER_MODULE = "infrastructure.reporting.native_format_acceptance"
+NATIVE_READER_MODULE = "infrastructure.reporting.native_hosted_reader"
+NATIVE_CAPTURE_MODULE = "infrastructure.reporting.native_installed_custody_capture"
 
 
 def _worker_module(value: str) -> str:
-    if value not in (NATIVE_WORKER_MODULE, OFFICE_CONTROL_WORKER_MODULE, MERMAID_SOURCE_WORKER_MODULE):
+    if value not in (
+        NATIVE_WORKER_MODULE,
+        OFFICE_CONTROL_WORKER_MODULE,
+        MERMAID_SOURCE_WORKER_MODULE,
+        NATIVE_CONTROLLER_MODULE,
+        NATIVE_READER_MODULE,
+        NATIVE_CAPTURE_MODULE,
+    ):
         raise ValueError("selected SDK bootstrap requires an exact Source-owned worker role")
     return value
 

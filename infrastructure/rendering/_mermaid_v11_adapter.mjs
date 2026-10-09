@@ -1,6 +1,8 @@
 // Packaged SDK adapter for the admitted Mermaid CLI 11.16.0 public run API.
 // Manuscripts supply diagram text only; no manuscript JavaScript is imported.
 import fs from "node:fs";
+import { createRequire } from "node:module";
+import { sourceDefaultBrowser, sourceDefaultMermaidConfig, embedUsedSourceDefaultFaces } from "./_mermaid_source_font_default.mjs";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
@@ -20,10 +22,10 @@ if (process.argv.length !== 3) {
   throw new Error("Mermaid adapter accepts exactly one literal JSON request file");
 }
 const request = JSON.parse(literalFile(process.argv[2], 1024 * 1024));
-const keys = ["input", "output", "output_format", "package_root", "puppeteer_config", "render_profile", "schema_version"];
+const keys = ["font_profile", "font_profile_sha256", "input", "output", "output_format", "package_root", "puppeteer_config", "render_profile", "schema_version"];
 if (request === null || Array.isArray(request) ||
     JSON.stringify(Object.keys(request).sort()) !== JSON.stringify(keys) ||
-    request.schema_version !== "template-mermaid-v11-source-pinned-default-theme-viewport-request-v1" ||
+    request.schema_version !== "template-mermaid-v11-source-pinned-default-theme-viewport-licensed-font-request-v2" ||
     !["svg", "png"].includes(request.output_format)) {
   throw new Error("Mermaid adapter request differs from its finite admitted schema");
 }
@@ -35,6 +37,7 @@ if (!/^20\.[0-9]+\.[0-9]+$/.test(process.versions.node)) {
 }
 const expectedProfile = {
   theme: "default", font_embed: false, background_color: "white",
+  source_default_font: "template-source-mermaid-licensed-default-font-v1", source_used_face_embedding: true,
   viewport_width: 1400, viewport_height: 900, device_scale_factor: 1,
 };
 const profile = request.render_profile;
@@ -142,19 +145,27 @@ function retainLiveLoadedReport(phase) {
   process.stdout.write(encoded);
 }
 retainLiveLoadedReport("before-import");
-const { run } = await import(pathToFileURL(apiPath).href);
-if (typeof run !== "function") {
-  throw new Error("Selected Mermaid package does not export its admitted run API");
-}
-await run(request.input, request.output, {
-  puppeteerConfig: { headless: "shell", ...config },
-  quiet: true,
-  outputFormat: request.output_format,
-  parseMMDOptions: {
-    mermaidConfig: { theme: "default" },
-    backgroundColor: "white",
-    viewport: { width: 1400, height: 900, deviceScaleFactor: 1 },
-  },
-});
+const fontBody = Buffer.from(literalFile(request.font_profile, 67108864));
+if (createHash("sha256").update(fontBody).digest("hex") !== request.font_profile_sha256)
+  throw Error("Source font profile input differs");
+const fontProfile = JSON.parse(fontBody);
+const require = createRequire(apiPath);
+const [{renderMermaid}, {default: puppeteer}] = await Promise.all([
+  import(pathToFileURL(apiPath).href), import(pathToFileURL(require.resolve("puppeteer")).href),
+]);
+const observations = [];
+const browser = await puppeteer.launch({headless: "shell", ...config});
+try {
+  const rendered = await renderMermaid(sourceDefaultBrowser(browser, fontProfile, observations),
+    literalFile(request.input, 1048576), request.output_format, {
+      mermaidConfig: sourceDefaultMermaidConfig(), backgroundColor: "white",
+      viewport: {width: 1400, height: 900, deviceScaleFactor: 1},
+    });
+  if (observations.length !== 1) throw Error("Source before-layout font invocation differs");
+  const output = request.output_format === "svg" ?
+    embedUsedSourceDefaultFaces(rendered.data, fontProfile, observations[0]) : Buffer.from(rendered.data);
+  fs.writeFileSync(request.output, output);
+  fs.writeFileSync(request.output + ".source-fonts.json", JSON.stringify(observations[0]) + "\n");
+} finally { await browser.close(); }
 
 retainLiveLoadedReport("after-run");

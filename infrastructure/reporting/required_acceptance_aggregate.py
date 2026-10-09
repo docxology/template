@@ -19,6 +19,7 @@ from infrastructure.publishing.release_acceptance import RECEIPT_PATH, _checkout
 from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION, source_fingerprint
 from infrastructure.reporting.release_readiness_profile import collect_profile, required_profile
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.reporting.native_format_joint_source import NativeReaderOperation
 
 AUDIT_PATH = "output/readiness/aggregate-audit/receipt.json"
 BUNDLE_PATH = "output/readiness/hosted-bundle"
@@ -121,12 +122,16 @@ def _evidence_closure(reader: SnapshotReader, relative: str) -> dict[str, bytes]
 
 
 def stage_passed_bundle(
-    root: Path, *, revision: str, hosted_origin: HostedReadbackContext | None = None
+    root: Path,
+    *,
+    revision: str,
+    hosted_origin: HostedReadbackContext | None = None,
+    native_operation: NativeReaderOperation | None = None,
 ) -> dict[str, Any]:
     """Stage only the source-bound, independently verified evidence closure."""
     if not _exact_source(root, revision):
         raise ValueError("bundle requires clean exact-revision source")
-    reader = SnapshotReader(root, hosted_origin=hosted_origin)
+    reader = SnapshotReader(root, hosted_origin=hosted_origin, native_operation=native_operation)
     receipt = reader.read(RECEIPT_PATH)
     if receipt.json_object().get("source_commit") != revision:
         raise ValueError("bundle receipt differs from its exact revision")
@@ -221,6 +226,7 @@ def produce_aggregate(
     root_receipts: dict[tuple[str, str], str] | None = None,
     auxiliary_receipts: dict[str, str] | None = None,
     hosted_origin: HostedReadbackContext | None = None,
+    native_operation: NativeReaderOperation | None = None,
 ) -> dict[str, Any]:
     """Read every supplied original receipt, then apply the complete strict profile.
 
@@ -236,7 +242,7 @@ def produce_aggregate(
     paths = [*receipts, *roots.values(), *auxiliary.values()]
     if len(set(paths)) != len(paths) or not paths:
         raise ValueError("aggregate needs unique original receipt paths")
-    reader = SnapshotReader(root, hosted_origin=hosted_origin)
+    reader = SnapshotReader(root, hosted_origin=hosted_origin, native_operation=native_operation)
     fingerprint = source_fingerprint(root)
     requirements, faults = required_profile(root, reader, fingerprint)
     if not requirements:
@@ -280,7 +286,7 @@ def produce_aggregate(
     if (root / AUDIT_PATH).exists() or (root / RECEIPT_PATH).exists():
         raise ValueError("aggregate refuses to replace an earlier evidence observation")
     audit = write_json(root, root / AUDIT_PATH, payload)
-    checked_reader = SnapshotReader(root, hosted_origin=hosted_origin)
+    checked_reader = SnapshotReader(root, hosted_origin=hosted_origin, native_operation=native_operation)
     evidence = collect_profile(root, root / AUDIT_PATH, checked_reader)
     state = evidence.candidate_state
     if faults or not checked_reader.unchanged() or source_fingerprint(root) != fingerprint:
@@ -288,7 +294,7 @@ def produce_aggregate(
     canonical = None
     if state == "pass":
         canonical = write_json(root, root / RECEIPT_PATH, payload)
-        independent = SnapshotReader(root, hosted_origin=hosted_origin)
+        independent = SnapshotReader(root, hosted_origin=hosted_origin, native_operation=native_operation)
         verified = collect_profile(root, root / RECEIPT_PATH, independent)
         if verified.candidate_state != "pass" or not independent.unchanged() or not _exact_source(root, revision):
             raise ValueError("canonical aggregate independent readback refused")

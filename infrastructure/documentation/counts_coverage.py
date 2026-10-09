@@ -50,6 +50,8 @@ from infrastructure.documentation._coverage_workspace import (
     _validated_public_exemplar_path as _validated_public_exemplar_path,
 )
 
+from infrastructure.documentation._coverage_snapshot_output import CoverageSnapshotOutput
+
 COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 5
 COVERAGE_SOURCE_INVENTORY_MODE = "tracked-and-nonignored-coverage-inputs-v3"
@@ -423,8 +425,18 @@ def verify_exemplar_coverage_result(
     repo_root: Path,
     *,
     rewrite: bool = False,
+    snapshot_output: Path | None = None,
 ) -> CoverageVerificationResult:
-    """Re-measure every exemplar and return a fail-closed structured result."""
+    """Re-measure every exemplar; write only an explicitly admitted DATA copy."""
+    if rewrite and snapshot_output is None:
+        raise ValueError("--verify-coverage --write requires --coverage-snapshot-output with a retained DATA copy")
+    if not rewrite and snapshot_output is not None:
+        raise ValueError("--coverage-snapshot-output requires --verify-coverage --write")
+    admitted_output = (
+        CoverageSnapshotOutput.admit(repo_root, snapshot_output, Path(__file__))
+        if snapshot_output is not None
+        else None
+    )
     measured: dict[str, str] = {}
     failures: list[str] = []
     for row in EXEMPLAR_SNAPSHOT:
@@ -437,6 +449,7 @@ def verify_exemplar_coverage_result(
         measured,
         failures,
         rewrite=rewrite,
+        snapshot_output=admitted_output,
     )
 
 
@@ -446,9 +459,11 @@ def _finalize_exemplar_coverage_result(
     *,
     rewrite: bool,
     snapshot: tuple[ExemplarSnapshot, ...] = EXEMPLAR_SNAPSHOT,
-    source_path: Path | None = None,
+    snapshot_output: CoverageSnapshotOutput | None = None,
 ) -> CoverageVerificationResult:
-    """Compare measurements and publish only a complete snapshot refresh."""
+    """Compare measurements and publish only a complete retained DATA refresh."""
+    if rewrite and snapshot_output is None:
+        raise ValueError("coverage snapshot rewrite requires an admitted retained DATA output")
     expected_names = {row.name for row in snapshot}
     measured_names = set(measured)
     effective_failures = list(failures)
@@ -477,8 +492,10 @@ def _finalize_exemplar_coverage_result(
     measurement_complete = not effective_failures and measured_names == expected_names
     snapshot_rewritten = rewrite and measurement_complete
     if snapshot_rewritten:
-        _rewrite_exemplar_snapshot(measured, source_path)
-        lines.append(f"\nrewrote EXEMPLAR_SNAPSHOT with {len(measured)} measured values")
+        assert snapshot_output is not None
+        _rewrite_exemplar_snapshot(measured, snapshot_output)
+        lines.append(f"\nwrote EXEMPLAR_SNAPSHOT DATA with {len(measured)} measured values: {snapshot_output.path}")
+        lines.append("review and apply the literal delta only after terminal Source/Code/wheel closure")
     elif rewrite and measured:
         lines.append("\nEXEMPLAR_SNAPSHOT not rewritten because the measurement set was incomplete")
     for failure in effective_failures:
@@ -495,16 +512,19 @@ def _finalize_exemplar_coverage_result(
     )
 
 
-def verify_exemplar_coverage(repo_root: Path, *, rewrite: bool = False) -> tuple[bool, str]:
+def verify_exemplar_coverage(
+    repo_root: Path, *, rewrite: bool = False, snapshot_output: Path | None = None
+) -> tuple[bool, str]:
     """Re-measure coverage while preserving the historical tuple interface."""
-    result = verify_exemplar_coverage_result(repo_root, rewrite=rewrite)
+    result = verify_exemplar_coverage_result(repo_root, rewrite=rewrite, snapshot_output=snapshot_output)
     return result.all_match, result.report
 
 
-def _rewrite_exemplar_snapshot(measured: dict[str, str], source_path: Path | None = None) -> None:
-    """Rewrite an ``EXEMPLAR_SNAPSHOT`` tuple with measured percentages."""
-    source_path = source_path or Path(__file__)
-    text = source_path.read_text(encoding="utf-8")
+def _rewrite_exemplar_snapshot(measured: dict[str, str], snapshot_output: CoverageSnapshotOutput | None = None) -> None:
+    """Use the existing literal rewrite on an admitted DATA copy only."""
+    if not isinstance(snapshot_output, CoverageSnapshotOutput):
+        raise ValueError("coverage snapshot rewrite requires an admitted retained DATA output")
+    text = snapshot_output.original_text()
 
     def _replace(match: re.Match[str]) -> str:
         name = match.group("name")
@@ -517,7 +537,7 @@ def _rewrite_exemplar_snapshot(measured: dict[str, str], source_path: Path | Non
         text,
     )
     if updated != text:
-        source_path.write_text(updated, encoding="utf-8")
+        snapshot_output.write_text(updated)
 
 
 def exemplar_source_hash(repo_root: Path, name: str) -> str:

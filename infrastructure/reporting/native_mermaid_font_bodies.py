@@ -37,6 +37,9 @@ from infrastructure.reporting.native_tool_producer import (
     current_native_producer_operation,
 )
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.reporting.native_tool_process import NativeLiveToolProcess
+from infrastructure.rendering._mermaid_source_font_default import NAMES, validate_default_font_buffers
+from infrastructure.rendering._web_font_assets import FONT_BODIES, source_web_font_directory
 
 _SEAL = object()
 
@@ -146,6 +149,71 @@ class NativeMermaidFontBodies:
             "font_faces": faces,
         }
         return {**result, "content_digest": canonical_digest(result)}
+
+    def portable_default_fonts(
+        self,
+        platform_fonts: list[dict[str, Any]],
+        buffers: dict[str, Any],
+        *,
+        live: NativeLiveToolProcess,
+        deadline: float,
+    ) -> dict[str, Any]:
+        """Consume actual Source constructor/usage while its real browser lives.
+
+        This separately declared custom-font profile never admits arbitrary
+        custom fonts or turns a returned report into a process capability.
+        """
+        from infrastructure.reporting.native_mermaid_runtime_custody import DEFAULT_FONT_SCHEMA, _default_font_names
+
+        self.verify_live(deadline=deadline)
+        live.verify_live()
+        if deadline > live.deadline:
+            raise ValueError("Source default fonts cannot extend actual browser clock")
+        validate_default_font_buffers(buffers, deadline=deadline)
+        names = _default_font_names(platform_fonts)
+        faces = []
+        for name in sorted(names):
+            content, index = self.face_bytes(name, deadline=deadline)
+            if name in NAMES and (index != 0 or hashlib.sha256(content).hexdigest() != FONT_BODIES[name]["sha256"]):
+                raise ValueError("Source custom default usage differs from its original held body")
+            faces.append(
+                {
+                    "postscript_name": name,
+                    "face_index": index,
+                    "bytes": len(content),
+                    "sha256": hashlib.sha256(content).hexdigest(),
+                }
+            )
+        result = {
+            "schema_version": DEFAULT_FONT_SCHEMA,
+            "platform_fonts": platform_fonts,
+            "font_faces": faces,
+            "source_default_buffers": buffers,
+        }
+        live.verify_live()
+        self.verify_live(deadline=deadline)
+        return {**result, "content_digest": canonical_digest(result)}
+
+    def authenticate_retained_fonts(self, fonts: dict[str, Any], *, deadline: float) -> None:
+        """Compare admitted original font DATA to this actual Source body owner.
+
+        The enclosing caller must first admit the actual original invocation.
+        This method supplies only held body correspondence, never native usage
+        or a new custodian derived from the retained constructor observation.
+        """
+        from infrastructure.reporting.native_mermaid_runtime_custody import validate_platform_font_files
+
+        self.verify_live(deadline=deadline)
+        validate_platform_font_files(fonts)
+        for face in fonts["font_faces"]:
+            content, index = self.face_bytes(face["postscript_name"], deadline=deadline)
+            if (
+                index != face["face_index"]
+                or len(content) != face["bytes"]
+                or hashlib.sha256(content).hexdigest() != face["sha256"]
+            ):
+                raise ValueError("retained actual font DATA differs from independently held Source whole face")
+        self.verify_terminal_bytes(deadline=deadline)
 
     def unshaped_glyph_bodies(self, name: str, text: str, *, deadline: float) -> dict[str, Any]:
         """Decode every original codepoint outline; do not pretend it is shaping."""
@@ -336,7 +404,21 @@ def admit_source_mermaid_font_bodies(
     )
     originals = []
     total = 0
-    for path in sorted({path.resolve(strict=True) for path in selection.files}):
+    directory = source_web_font_directory()
+    if directory != source.bindings.selected_sdk_package_root / "rendering/assets/fonts/liberation":
+        raise ValueError("Source default fonts are outside the actual selected SDK")
+    fixed_paths = tuple(directory / FONT_BODIES[name]["filename"] for name in NAMES)
+    for name, path in zip(NAMES, fixed_paths, strict=True):
+        if path.is_symlink() or path.resolve(strict=True) != path:
+            raise ValueError("Source default font package member is an unadmitted physical alias")
+        content = read_bytes_confined(directory, path, max_bytes=512 * 1024)
+        relative = "infrastructure/rendering/assets/fonts/liberation/" + path.name
+        if (
+            content != source.reference.read(relative)
+            or hashlib.sha256(content).hexdigest() != FONT_BODIES[name]["sha256"]
+        ):
+            raise ValueError("Source fixed default face differs from independently admitted Source body")
+    for path in sorted({path.resolve(strict=True) for path in (*selection.files, *fixed_paths)}):
         remaining(deadline)
         before = _identity(path)
         total += before[3]

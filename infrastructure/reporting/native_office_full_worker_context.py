@@ -196,6 +196,7 @@ class _OriginalMermaidProcesses:
         for row in rows:
             for kind in ("svg", "png"):
                 records.append((row["process_artifacts"][kind], row["processes"][kind]))
+            records.append((row["paint_process_artifact"], row["paint_process"]))
         for binding, record in records:
             remaining(self.operation.deadline)
             if not isinstance(binding, dict) or set(binding) != {"path", "sha256"} or not isinstance(record, dict):

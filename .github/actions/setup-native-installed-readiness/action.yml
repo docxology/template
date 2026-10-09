@@ -1,0 +1,60 @@
+name: Prepare Source-locked installed native readiness inputs
+description: Provision the existing official tools and warm exact locked dependencies before the unchanged cold operation budget starts.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: uv sync --locked --inexact --group dev --group public-exemplars --group installed-build --group rendering --group rendering-pptx
+    - uses: ./.github/actions/setup-docs-lint
+    - uses: ./.github/actions/setup-acceptance-documents
+    - name: Prepare official native reader tools
+      shell: bash
+      env:
+        DEBIAN_FRONTEND: noninteractive
+        QT_QPA_PLATFORM: offscreen
+      run: |
+        set -euo pipefail
+        sudo -n apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=60 update
+        sudo -n apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=60 install -y --no-install-recommends libreoffice-writer libreoffice-calc libreoffice-impress calibre default-jre-headless zbar-tools
+        destination=$(mktemp -d "$RUNNER_TEMP/template-native-tools.XXXXXX")
+        java_executable=$(readlink -f "$(command -v java)")
+        .venv/bin/python scripts/shell/prepare_native_epubcheck.py --destination "$destination"
+        "$java_executable" -jar "$destination/epubcheck-5.4.0/epubcheck.jar" --version
+        echo "TEMPLATE_NATIVE_JAVA=$java_executable" >> "$GITHUB_ENV"
+        echo "TEMPLATE_NATIVE_EPUBCHECK=$destination/epubcheck-5.4.0/epubcheck.jar" >> "$GITHUB_ENV"
+    - name: Prepare or independently inspect exact browser math DATA
+      shell: bash
+      run: |
+        set -euo pipefail
+        if [ ! -e output/readiness/native-dependencies ]; then
+          .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
+        else
+          .venv/bin/python - <<'PYTHON'
+        from pathlib import Path
+        from infrastructure.reporting.native_format_browser_cdn import compile_cdn_assets
+        from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+        reader=SnapshotReader(Path.cwd())
+        compile_cdn_assets(reader)
+        if not reader.unchanged(): raise ValueError("Source math DATA changed during inspection")
+        PYTHON
+        fi
+    - name: Warm exact Source-locked offline dependencies for cold installed wheels
+      shell: bash
+      run: |
+        set -euo pipefail
+        interpreter="$GITHUB_WORKSPACE/.venv/bin/python"
+        for scope in root; do
+          metadata="$GITHUB_WORKSPACE"
+          if [ "$scope" != root ]; then metadata="$GITHUB_WORKSPACE/projects/$scope"; fi
+          requirements=$(mktemp "$RUNNER_TEMP/native-requirements.XXXXXX")
+          environment=$(mktemp -d "$RUNNER_TEMP/native-dependency-cache.XXXXXX")
+          if [ "$scope" = root ]; then
+            uv export --directory "$metadata" --locked --no-default-groups --group public-exemplars --group rendering --group rendering-pptx --group installed-build --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
+          else
+            uv export --directory "$metadata" --locked --no-default-groups --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
+          fi
+          uv venv --no-project --no-python-downloads --python "$interpreter" "$environment"
+          uv pip sync --no-config --no-build --require-hashes --allow-empty-requirements --python "$environment/bin/python" "$requirements"
+          rm -r "$environment"
+          rm "$requirements"
+        done

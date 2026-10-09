@@ -170,6 +170,8 @@ def validate_candidate_handoff(
     artifact_id: str = "",
     run_metadata: Path | None = None,
     artifact_metadata: Path | None = None,
+    native_operation: object = None,
+    hosted_origin: HostedReadbackContext | None = None,
 ) -> str:
     """Admit exact aggregate bytes, revision, and the entire existing candidate profile."""
     if _REVISION.fullmatch(revision) is None or _SHA256.fullmatch(receipt_sha256) is None:
@@ -189,7 +191,14 @@ def validate_candidate_handoff(
             run_id=run_id,
             artifact_id=artifact_id,
         )
-    reader = SnapshotReader(root)
+    if native_operation is not None:
+        from infrastructure.reporting.native_format_joint_source import NativeReaderOperation
+
+        if not isinstance(native_operation, NativeReaderOperation):
+            raise ValueError("candidate native admission requires its independently held current reader")
+        if native_operation.source.bindings.current_root != root:
+            raise ValueError("candidate native reader belongs to a different current checkout")
+    reader = SnapshotReader(root, native_operation=native_operation, hosted_origin=hosted_origin)
     receipt = reader.read(RECEIPT_PATH)
     payload = receipt.json_object()
     if receipt.sha256 != receipt_sha256 or payload.get("source_commit") != revision:
@@ -208,11 +217,15 @@ def validate_candidate_handoff(
             run_id=positive_id(run_id),
             head_sha=revision,
         )
-        reader = SnapshotReader(root, hosted_origin=context)
+        if hosted_origin is not None and hosted_origin != context:
+            raise ValueError("candidate hosted context differs from the exact authenticated handoff")
+        reader = SnapshotReader(root, hosted_origin=context, native_operation=native_operation)
         # Hold the same aggregate bytes in the context-aware reader as well.
         if reader.read(RECEIPT_PATH).sha256 != receipt_sha256:
             raise ValueError("acceptance receipt changed during hosted-context admission")
     evidence = collect_profile(root, root / RECEIPT_PATH, reader)
+    if native_operation is not None:
+        native_operation.verify(reader)
     if not reader.unchanged() or _checkout_revision(root) != revision:
         raise ValueError("acceptance evidence changed during required-profile admission")
     return evidence.candidate_state

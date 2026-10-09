@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import json
 import shutil
 import threading
 import time
@@ -27,6 +28,7 @@ from infrastructure.reporting.native_format_pdf_source_decode_bounds import (
 )
 from infrastructure.reporting.native_format_html_source_shaping import select_source_html_shaper
 from infrastructure.reporting.native_mermaid_font_bodies import NativeMermaidFontBodies
+from infrastructure.reporting.native_mermaid_source_glyph_layout import observe_source_glyph_layout
 from infrastructure.reporting.native_mermaid_runtime_selection import (
     NativeMermaidRuntimeAdmission,
 )
@@ -42,6 +44,11 @@ from infrastructure.reporting.native_mermaid_svg_paint import (
 )
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
 from infrastructure.reporting.native_tool_process import NativeLiveToolProcess
+from infrastructure.rendering._mermaid_source_font_default import (
+    default_font_profile,
+    default_font_loader_expression,
+    validate_default_font_buffers,
+)
 
 SCHEMA = "template-native-original-svg-ordered-batch-paint-v1"
 
@@ -102,7 +109,7 @@ def observe_original_svg_batch_paint(
         source_paths.append(source)
         html = (
             '<!doctype html><html><head><meta charset="utf-8"></head>'
-            '<body style="background:white"><div id="container">' + svg.decode("utf-8") + "</div></body></html>"
+            '<body style="background:white"><div id="container"></div></body></html>'
         ).encode()
         tool.freeze(f"source-{ordinal:04d}.html", html)
         assets[f"/source-{ordinal:04d}.html"] = html
@@ -117,7 +124,7 @@ def observe_original_svg_batch_paint(
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header(
                 "Content-Security-Policy",
-                "default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; font-src 'none'; connect-src 'none'",
+                "default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; font-src data:; connect-src 'none'",
             )
             self.send_header("Content-Length", str(len(data)))
             self.end_headers()
@@ -186,13 +193,26 @@ def observe_original_svg_batch_paint(
                         session=session,
                     )
                     url = origin + f"/source-{ordinal:04d}.html"
+                    source_font_profile = default_font_profile(deadline=deadline)
+                    expression = default_font_loader_expression(source_font_profile)
+                    client.call(
+                        "Page.addScriptToEvaluateOnNewDocument",
+                        {
+                            "source": "Object.defineProperty(globalThis,'__templateSourceDefaultFontPromise',{value:"
+                            + expression
+                            + ",writable:false,configurable:false});"
+                        },
+                        session=session,
+                    )
                     client.call("Page.navigate", {"url": url}, session=session)
                     while True:
                         live.verify_live()
                         readiness = client.call(
                             "Runtime.evaluate",
                             {
-                                "expression": "document.readyState==='complete' && !!document.querySelector('svg')",
+                                "expression": (
+                                    "document.readyState==='complete' && !!document.getElementById('container')"
+                                ),
                                 "returnByValue": True,
                             },
                             session=session,
@@ -201,6 +221,31 @@ def observe_original_svg_batch_paint(
                             break
                         remaining(deadline)
                         time.sleep(0.02)
+                    buffers_response = client.call(
+                        "Runtime.evaluate",
+                        {
+                            "expression": "globalThis.__templateSourceDefaultFontPromise",
+                            "returnByValue": True,
+                            "awaitPromise": True,
+                        },
+                        session=session,
+                    )
+                    if "exceptionDetails" in buffers_response:
+                        raise ValueError("actual Source-before-layout font constructor refused")
+                    source_buffers = buffers_response.get("result", {}).get("value")
+                    validate_default_font_buffers(source_buffers, deadline=deadline)
+                    inserted = client.call(
+                        "Runtime.evaluate",
+                        {
+                            "expression": "document.getElementById('container').innerHTML="
+                            + json.dumps(svg.decode("utf-8"))
+                            + ";true",
+                            "returnByValue": True,
+                        },
+                        session=session,
+                    )
+                    if "exceptionDetails" in inserted or inserted.get("result", {}).get("value") is not True:
+                        raise ValueError("actual Source SVG was not inserted after its owned font constructor")
                     original_dom = _evaluate(client, session)
                     clip = original_dom["clip"]
                     if (
@@ -224,7 +269,8 @@ def observe_original_svg_batch_paint(
                     )
                     painted_dom = _evaluate(client, session)
                     owners, usage = _platform_fonts(client, session)
-                    fonts = font_bodies.portable_fonts(usage, deadline=deadline)
+                    source_layout = observe_source_glyph_layout(client, session, owners, live=live, deadline=deadline)
+                    fonts = font_bodies.portable_default_fonts(usage, source_buffers, live=live, deadline=deadline)
                     glyph_bodies = [
                         {
                             "owner_index": owner["owner_index"],
@@ -291,6 +337,7 @@ def observe_original_svg_batch_paint(
                             "paint_path": pixel_path,
                             "browser_version": version,
                             "font_body_glyphs": glyph_bodies,
+                            "source_glyph_layout": source_layout,
                             "font_shaped_bodies": shaped_bodies,
                             "events": events,
                         }

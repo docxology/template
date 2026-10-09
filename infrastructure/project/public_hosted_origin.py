@@ -26,7 +26,7 @@ from infrastructure.core.files.secure_write import atomic_write_bytes_confined, 
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
 
-SCHEMA = "template-public-hosted-origin-v1"
+SCHEMA = "template-public-hosted-origin-v2"
 WORKFLOW = ".github/workflows/platform-required-acceptance.yml"
 ARTIFACTS = {
     f"required-source-root-{host}-{minor}": (platform, minor)
@@ -34,6 +34,8 @@ ARTIFACTS = {
     for minor in ("3.12", "3.13", "3.14")
 }
 MAX_ARCHIVE = 64 * 1024 * 1024
+MAX_RUN_ARTIFACTS = 1024
+MAX_LISTING_PAGES = 11
 DOWNLOAD_SCRIPT = """import sys,subprocess,json,hashlib,tempfile
 from pathlib import Path
 p=Path(sys.argv[1]); limit=64*1024*1024; written=0
@@ -113,7 +115,12 @@ def _metadata(
     ):
         raise ValueError("foreign, stale or wrong-workflow source run")
     rows = listing.get("artifacts")
-    if not isinstance(rows, list) or listing.get("total_count") != len(rows):
+    if (
+        not isinstance(rows, list)
+        or listing.get("total_count") != len(rows)
+        or len(rows) > MAX_RUN_ARTIFACTS
+        or len({row.get("id") for row in rows}) != len(rows)
+    ):
         raise ValueError("incomplete bounded artifact listing")
     selected = [row for row in rows if row.get("name") in ARTIFACTS]
     if len(selected) != 6 or {row.get("name") for row in selected} != set(ARTIFACTS):
@@ -195,8 +202,39 @@ def _api_command(endpoint: str) -> list[str]:
     ]
 
 
+def _merge_listing_pages(pages: list[dict[str, Any]], *, complete: bool) -> dict[str, Any]:
+    """Require full ordered finite pagination, including fixed artifacts beyond100."""
+    if not pages or len(pages) > MAX_LISTING_PAGES:
+        raise ValueError("hosted artifact pagination is absent or exceeds its Source bound")
+    count = pages[0].get("total_count")
+    if type(count) is not int or not 0 <= count <= MAX_RUN_ARTIFACTS:
+        raise ValueError("hosted artifact census exceeds its Source-owned1024 bound")
+    rows: list[dict[str, Any]] = []
+    for ordinal, page in enumerate(pages):
+        current = page.get("artifacts")
+        if (
+            page.get("total_count") != count
+            or not isinstance(current, list)
+            or len(current) > 100
+            or (ordinal < len(pages) - 1 and len(current) != 100)
+            or any(not isinstance(row, dict) or type(row.get("id")) is not int for row in current)
+        ):
+            raise ValueError("hosted artifact pagination is truncated, changed or malformed")
+        rows.extend(current)
+    if len(rows) > count or len({row["id"] for row in rows}) != len(rows) or (complete and len(rows) != count):
+        raise ValueError("hosted artifact census is incomplete, ambiguous or changed")
+    return {"total_count": count, "artifacts": rows}
+
+
 def collect_hosted_origin(
-    root: Path, directory: Path, *, repository: str, run_id: int, head_sha: str, timeout: float = 180
+    root: Path,
+    directory: Path,
+    *,
+    repository: str,
+    run_id: int,
+    head_sha: str,
+    timeout: float = 180,
+    operation_deadline: float | None = None,
 ) -> dict[str, str]:
     """Collect six original archives with a single finite deadline, without auth changes."""
     _context(repository, run_id, head_sha)
@@ -204,7 +242,10 @@ def collect_hosted_origin(
     directory.mkdir(parents=True)
     if not 0 < timeout <= 600:
         raise ValueError("hosted collection requires a finite bounded deadline")
-    deadline = time.monotonic() + timeout
+    started = time.monotonic()
+    deadline = min(started + timeout, operation_deadline) if operation_deadline is not None else started + timeout
+    if deadline <= started:
+        raise ValueError("hosted collection cannot restart an exhausted outer operation clock")
     observations: dict[str, Any] = {}
 
     def execute(command: list[str], label: str) -> dict[str, Any]:
@@ -234,7 +275,6 @@ def collect_hosted_origin(
     base = f"repos/{repository}"
     endpoints = {
         "run": f"{base}/actions/runs/{run_id}",
-        "listing": f"{base}/actions/runs/{run_id}/artifacts?per_page=100",
         "workflow": f"{base}/contents/{WORKFLOW}?ref={head_sha}",
     }
     responses: dict[str, Any] = {}
@@ -242,6 +282,18 @@ def collect_hosted_origin(
         record = execute(_api_command(endpoint), label)
         responses[label] = json_object_from_bytes(record["stdout"].encode())
         observations[label + "_response"] = write_json(root, directory / f"{label}-response.json", responses[label])
+    pages = []
+    for page in range(1, MAX_LISTING_PAGES + 1):
+        label = f"listing-{page}"
+        record = execute(_api_command(f"{base}/actions/runs/{run_id}/artifacts?per_page=100&page={page}"), label)
+        response = json_object_from_bytes(record["stdout"].encode())
+        observations[label + "_response"] = write_json(root, directory / f"{label}-response.json", response)
+        pages.append(response)
+        listing = _merge_listing_pages(pages, complete=False)
+        if len(listing["artifacts"]) == listing["total_count"]:
+            break
+    responses["listing"] = _merge_listing_pages(pages, complete=True)
+    observations["listing_pages"] = len(pages)
     selected = _metadata(responses["run"], responses["listing"], repository, run_id, head_sha)
     workflow = base64.b64decode(responses["workflow"]["content"], validate=False)
     if responses["workflow"].get("path") != WORKFLOW or workflow != SnapshotReader(root).read(WORKFLOW).content:
@@ -325,7 +377,6 @@ def authorize_root_evidence(
     responses = {}
     for label, endpoint in {
         "run": f"{base}/actions/runs/{run_id}",
-        "listing": f"{base}/actions/runs/{run_id}/artifacts?per_page=100",
         "workflow": f"{base}/contents/{WORKFLOW}?ref={head_sha}",
     }.items():
         process = json_object_from_bytes(bound(obs[label]))
@@ -334,6 +385,19 @@ def authorize_root_evidence(
         if json_object_from_bytes(process["stdout"].encode()) != response:
             raise ValueError("API response disagrees with original process output")
         responses[label] = response
+    page_count = obs.get("listing_pages")
+    if type(page_count) is not int or not 0 < page_count <= MAX_LISTING_PAGES:
+        raise ValueError("hosted origin lacks its exact bounded original pagination")
+    pages = []
+    for page in range(1, page_count + 1):
+        label = f"listing-{page}"
+        process = json_object_from_bytes(bound(obs[label]))
+        _process(process, _api_command(f"{base}/actions/runs/{run_id}/artifacts?per_page=100&page={page}"))
+        response = json_object_from_bytes(bound(obs[label + "_response"]))
+        if json_object_from_bytes(process["stdout"].encode()) != response:
+            raise ValueError("hosted listing page differs from its genuine original API output")
+        pages.append(response)
+    responses["listing"] = _merge_listing_pages(pages, complete=True)
     commit = json_object_from_bytes(bound(obs["commit"]))
     _process(commit, ["git", "rev-parse", "HEAD"])
     if commit["stdout"].strip() != head_sha:

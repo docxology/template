@@ -62,6 +62,7 @@ if TYPE_CHECKING:
     from infrastructure.reporting.native_authenticated_original_pdfium import NativeAuthenticatedOriginalPDFium
     from infrastructure.reporting.native_office_diagram_runtime import PDFiumRuntimeAdmission
     from infrastructure.reporting.native_office_full_worker_context import NativeOfficeReaderSelection
+    from infrastructure.reporting.native_format_pdf_source_decode_bounds import SourceImageDecodeBudget
 
 JOINT_SCHEMA = "template-native-source-launch-inputs-v4"
 
@@ -111,9 +112,15 @@ class NativeReaderOperation:
     pdfium_providers: Mapping[str, NativePDFiumProvider] = field(default_factory=dict)
     office_reader_selection: NativeOfficeReaderSelection | None = None
     pdfium_runtime_admissions: Mapping[str, PDFiumRuntimeAdmission] = field(default_factory=dict)
+    office_decoded_pixel_budget: SourceImageDecodeBudget | None = None
 
     def __post_init__(self) -> None:
         remaining(self.deadline)
+        if self.office_decoded_pixel_budget is not None:
+            from infrastructure.reporting.native_format_pdf_source_decode_bounds import SourceImageDecodeBudget
+
+            if not isinstance(self.office_decoded_pixel_budget, SourceImageDecodeBudget):
+                raise ValueError("native reader requires its actual held shared decoded-pixel budget")
         if self.office_reader_selection is not None:
             from infrastructure.reporting.native_office_full_worker_context import NativeOfficeReaderSelection
 
@@ -217,6 +224,7 @@ def admit_native_reader_operation(
     environment: Mapping[str, str],
     pdfium_selection: NativePDFiumSelection,
     office_reader_selection: NativeOfficeReaderSelection,
+    office_decoded_pixel_budget: SourceImageDecodeBudget | None = None,
 ) -> NativeReaderOperation:
     """One outer reader factory; caller owns the existing 14,400 second clock.
 
@@ -236,7 +244,9 @@ def admit_native_reader_operation(
         )
         for scope, provider in providers.items()
     }
-    operation = NativeReaderOperation(source, deadline, originals, providers, office_reader_selection, runtimes)
+    operation = NativeReaderOperation(
+        source, deadline, originals, providers, office_reader_selection, runtimes, office_decoded_pixel_budget
+    )
     operation.verify(SnapshotReader(root))
     return operation
 

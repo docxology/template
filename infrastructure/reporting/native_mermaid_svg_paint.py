@@ -93,7 +93,13 @@ def preflight_original_mermaid_svg(data: bytes) -> dict[str, Any]:
             if name == "style":
                 _css(value)
         if tag == "style":
-            _css("".join(node.itertext()))
+            text = "".join(node.itertext())
+            if node.get("id") == "template-source-mermaid-licensed-fonts":
+                from infrastructure.rendering._mermaid_source_font_default import validate_embedded_default_font_style
+
+                validate_embedded_default_font_style(text)
+            else:
+                _css(text)
     return {"svg_sha256": hashlib.sha256(data).hexdigest(), "svg_bytes": len(data), "nodes": len(nodes)}
 
 
@@ -156,13 +162,13 @@ fontFamily:s.fontFamily,fontSize:s.fontSize,fontWeight:s.fontWeight,fontStyle:s.
 fill:s.fill,stroke:s.stroke,color:s.color,opacity:s.opacity,
 fillOpacity:s.fillOpacity,strokeOpacity:s.strokeOpacity,strokeWidth:s.strokeWidth,
 strokeLinecap:s.strokeLinecap,strokeLinejoin:s.strokeLinejoin,strokeMiterlimit:s.strokeMiterlimit,
-vectorEffect:s.vectorEffect,clipPath:s.clipPath,mask:s.mask,filter:s.filter,overflow:s.overflow,
+display:s.display,visibility:s.visibility,vectorEffect:s.vectorEffect,clipPath:s.clipPath,mask:s.mask,filter:s.filter,overflow:s.overflow,
 fontKerning:s.fontKerning,fontVariantLigatures:s.fontVariantLigatures,
 markerStart:s.markerStart,markerMid:s.markerMid,markerEnd:s.markerEnd});
 const rows=elements.map((e,i)=>{
 const s=getComputedStyle(e); const r=e.getBoundingClientRect();
 return {index:i,tag:e.localName,id:e.id,text:[...e.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join(''),
-box:rect(r),visible:s.display!=='none'&&s.visibility!=='hidden'&&s.opacity!=='0',
+box:rect(r),visible:s.display!=='none'&&s.visibility==='visible'&&s.opacity!=='0',
 style:originalStyle(s),
 attributes:Object.fromEntries([...e.attributes].map(a=>[a.name,a.value]))};});
 return {root,rows,root_style:originalStyle(getComputedStyle(svg)),

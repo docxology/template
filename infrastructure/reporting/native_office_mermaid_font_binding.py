@@ -27,7 +27,6 @@ def verify_actual_office_mermaid_fonts(
     for occurrence in reference["occurrences"]:
         remaining(deadline)
         fonts = occurrence["paint"]["fonts"]
-        if owner.portable_fonts(fonts["platform_fonts"], deadline=deadline) != fonts:
-            raise ValueError("Actual Office browser font usage differs from held Source body/face bytes")
+        owner.authenticate_retained_fonts(fonts, deadline=deadline)
     owner.verify_terminal_bytes(deadline=deadline)
     remaining(deadline)

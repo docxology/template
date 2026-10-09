@@ -8,9 +8,6 @@ and their own genuine Source; transported observations never create authority.
 from __future__ import annotations
 
 import hashlib
-import importlib.util
-import marshal
-import types
 import json
 import sys
 import time
@@ -25,6 +22,7 @@ from infrastructure.core.bytecode_audit import (
     canonical_code,
 )
 from infrastructure.project.public_reference_git import remaining
+from infrastructure.reporting.native_office_cache_structure import verify_office_execution_cache
 from infrastructure.reporting.native_source_external_admission import (
     NativeSourceContext,
 )
@@ -161,15 +159,14 @@ class NativeOfficeControlOriginal:
             source = payload(row["source"])
             if self.expected_code.get(filename) != hashlib.sha256(source).hexdigest():
                 raise ValueError("Office original executed an unadmitted SDK/provider source")
-            expected = canonical_code(
-                compile(
-                    source,
-                    filename,
-                    "exec",
-                    dont_inherit=True,
-                    optimize=sys.flags.optimize,
-                )
+            compiled = compile(
+                source,
+                filename,
+                "exec",
+                dont_inherit=True,
+                optimize=sys.flags.optimize,
             )
+            expected = canonical_code(compiled)
             for run in row["runs"]:
                 count += 1
                 if count > MAX_EXECUTIONS or payload(run["executed_code"]) != expected:
@@ -177,18 +174,14 @@ class NativeOfficeControlOriginal:
                 if run["cache"] is not None:
                     cache = run["cache"]
                     retained_cache = payload(cache["bytes"])
-                    if (
-                        not Path(cache["original_path"]).is_relative_to(prefix)
-                        or len(retained_cache) < 16
-                        or retained_cache[:4] != importlib.util.MAGIC_NUMBER
-                        or hashlib.sha256(retained_cache).hexdigest() != cache["execution_sha256"]
-                    ):
-                        raise ValueError("Office original actual execution-time cache differs")
-                    cached_code = marshal.loads(retained_cache[16:])
-                    if not isinstance(cached_code, types.CodeType) or canonical_code(cached_code) != expected:
-                        raise ValueError(
-                            "Office original execution-time cache Code differs from admitted actual Source"
-                        )
+                    verify_office_execution_cache(
+                        retained_cache,
+                        compiled,
+                        original_path=cache["original_path"],
+                        prefix=prefix,
+                        execution_sha256=cache["execution_sha256"],
+                        deadline=deadline,
+                    )
         if (
             str(self.sdk_root / "reporting/native_office_diagram_control_worker.py") not in seen
             or total != raw["retained_payload_bytes"]
