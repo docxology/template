@@ -54,12 +54,12 @@ def validate_autopoiesis_observation(value: object) -> dict[str, Any]:
         or receipt.get("selection_scope") != "one-per-selected-domain"
         or type(receipt.get("selected_count")) is not int
         or receipt["selected_count"] != len(expected)
-        or receipt.get("platform_version") != "4.0.0"
+        or receipt.get("platform_version") != "4.0.1"
     ):
         raise ValueError("installed Autopoiesis omitted its required selected-child execution")
     generator = receipt.get("active_generator_custody", {})
     platform = receipt.get("platform_custody", {})
-    for custody, version in ((generator, "2.0.0"), (platform, "4.0.0")):
+    for custody, version in ((generator, "2.0.0"), (platform, "4.0.1")):
         distribution = custody.get("distribution") if isinstance(custody, dict) else None
         if (
             not isinstance(custody, dict)

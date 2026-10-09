@@ -23,9 +23,9 @@ from ._tool_sources import materialize, snapshot_file, snapshot_tree
 
 LEAN_TOOLCHAIN = "leanprover/lean4:v4.28.0"
 TLC_URL = "https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar"
-# Official release API asset601828751 digest, independently matched to downloaded
-# bytes on2026-09-30. Earlier source checksum and stale page SHA1 were rejected.
-TLC_SHA256 = "e9c2d914fc1b7ba3e4a982ba251dc5c0da65010afcc6a5f9651576a1c380deae"
+# Official release API asset614143604 digest, independently matched to downloaded
+# bytes on2026-10-08. The v1.8.0 locator now contains TLC 2.0 (2026-10-06).
+TLC_SHA256 = "7beec0f04818732a62fa193731711a99aa4f11279499b2360a7d156c519ea78d"
 
 
 @dataclass(frozen=True)
@@ -302,7 +302,7 @@ def _execute_formal_tools(
                 "failed" if corrupt_cache else "blocked",
                 (),
                 None,
-                diagnostic="Java or the exact verified TLC1.8.0 jar is unavailable",
+                diagnostic="Java or the exact verified TLC jar is unavailable",
             )
         )
     else:

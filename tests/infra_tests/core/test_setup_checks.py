@@ -126,6 +126,7 @@ def test_valid_preferred_hook_cannot_hide_malformed_fallback(tmp_path: Path) -> 
 
 def test_whole_check_registry_never_syncs_or_runs_hook(tmp_path: Path) -> None:
     project = _make_valid_project(tmp_path, "domain")
+    (tmp_path / "infrastructure").mkdir()
     marker = project / "must-not-provision"
     (project / "scripts/setup_hook.py").write_text(
         f"from pathlib import Path\nPath({str(marker)!r}).write_text('installed')\n"

@@ -41,9 +41,9 @@ def test_pypi_config_test_mode() -> None:
 )
 def test_pypi_result_describes_operation_outcome(state: str, ok: bool) -> None:
     receipt = {"assurance": "local operation only", "program_acceptance": "not established"}
-    result = PyPIResult(state, "research-project-template", "4.0.0", receipt=receipt)
+    result = PyPIResult(state, "research-project-template", "4.0.1", receipt=receipt)
     assert result.ok is ok
-    assert result.package_name == "research-project-template" and result.version == "4.0.0"
+    assert result.package_name == "research-project-template" and result.version == "4.0.1"
     assert result.receipt == receipt
 
 

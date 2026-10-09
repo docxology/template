@@ -21,7 +21,7 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "research-project-template==4.0.0",
+    "research-project-template==4.0.1",
     "pypdf>=6.16.1",
     "numpy>=1.24.0",
     "scipy>=1.10.0",
@@ -91,7 +91,7 @@ Documentation = "https://github.com/docxology/template_literature_meta_analysis/
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "4.0.0"
+platform_version = "4.0.1"
 tested_python_versions = ["3.12", "3.13", "3.14"]
 required_unpaid_capabilities = ["retrieval", "fulltext", "extraction", "local-model", "kg"]
 
@@ -113,6 +113,9 @@ packages = [
     "template_literature_meta_analysis.visualization",
     "template_literature_meta_analysis.visualization.advanced",
 ]
+
+[tool.setuptools.package-data]
+"template_literature_meta_analysis.deep_research" = ["fixtures/recorded_report.json"]
 
 [tool.setuptools.package-dir]
 template_literature_meta_analysis = "src"

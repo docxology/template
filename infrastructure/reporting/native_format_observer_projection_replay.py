@@ -8,9 +8,14 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from infrastructure.project.public_reference import PublicReference
 from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact
 from infrastructure.reporting.native_format_portable_custody import producer_path
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
+from infrastructure.reporting.native_pitch_source_admission import (
+    SourceCorrespondence,
+    compile_admitted_pitch_projection,
+)
 
 
 def replay_epub_observer(
@@ -50,7 +55,9 @@ def replay_epub_observer(
         raise ValueError("EPUB independent exact ordered spine source parity differs")
     observed = inspect_epub_reader_layout(
         pdf.content,
-        tuple(_file(item, reader).content for item in raw["raster"]["rasters"]),
+        tuple(
+            _file({"path": item["path"], "sha256": item["sha256"]}, reader).content for item in raw["raster"]["rasters"]
+        ),
         chapters,
         deadline=deadline,
     )
@@ -72,18 +79,27 @@ def replay_projection_observer(
     versions: dict[str, dict[str, Any]],
     deadline: float,
     env: dict[str, str],
+    source_reference: PublicReference | None = None,
+    verify_source_correspondence: SourceCorrespondence | None = None,
 ) -> None:
     from infrastructure.reporting.native_format_acceptance_validation import _file, _raster
     from infrastructure.reporting.native_format_observer_validation import replay_office_conversion
     from infrastructure.reporting.native_projection_contracts import (
-        compile_scope_projection_contract,
         projection_contract_record,
         ProjectionSourceUnsupported,
     )
     from infrastructure.reporting.native_projection_checks import inspect_projection
 
     try:
-        pages = compile_scope_projection_contract(root, scope, artifact, reader)
+        pages = compile_admitted_pitch_projection(
+            root,
+            scope,
+            artifact,
+            reader,
+            source_reference=source_reference,
+            verify_source_correspondence=verify_source_correspondence,
+            deadline=deadline,
+        )
     except ProjectionSourceUnsupported as error:
         expected = {"status": "blocked", "findings": [], "blockers": [str(error)]}
         if raw.get("observation") != expected or "projection_contract" in raw:
@@ -100,7 +116,9 @@ def replay_projection_observer(
         else snapshot
     )
     _raster(layout, pdf, 0, directory, reader, run_id, versions, custody)
-    rasters = tuple(_file(item, reader).content for item in layout["raster"]["rasters"])
+    rasters = tuple(
+        _file({"path": item["path"], "sha256": item["sha256"]}, reader).content for item in layout["raster"]["rasters"]
+    )
     # Fresh reader-local decoder outputs are independently observed; only their
     # transport file bindings differ from the producer's original receipts.
     from infrastructure.reporting.native_qr_runtime import replay_projection_qr_runtime

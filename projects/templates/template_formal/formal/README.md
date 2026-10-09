@@ -64,7 +64,7 @@ scripts/check_formal_specs.sh --receipt output/.pipeline/formal_tools/receipt.js
 ```
 
 The wrapper requires Python3.12+, elan, a selected Java runtime, and the optional
-`formal-tools` platform4.0.0 extra (already supplied by the canonical checkout).
+`formal-tools` platform4.0.1 extra (already supplied by the canonical checkout).
 Its filesystem main uses a private fresh cache before platform imports. The
 supervised tool worker additionally uses the platform's pre-import executed-code
 audit; the controller is not claimed to have that audit. Timestamp-valid

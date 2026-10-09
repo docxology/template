@@ -141,14 +141,17 @@ inventory, and an independent collector. The collector uploads
 `platform-required-acceptance` only after every required exact-source gate passes.
 The workflow's presence does not establish a successful hosted run, integration
 into `main`, or publication. Ordinary CI uploads cannot substitute for this
-handoff, and a dated 4.0.0 candidate heading does not authorize release.
+handoff, and a version heading does not authorize release. The 4.0.1 candidate
+remains Unreleased; the prepared 4.0.0 candidate was not published.
 The evidence handoff verifies custody and required acceptance; it does not
 perform sandbox or production transfers itself.
 
-For `v4.0.0`, the release body uses the
-[illustrated version notes](../../docs/releases/v4.0.0.md), appends the accepted
-commit, hosted run and receipt SHA256, and attaches the root distributions and
-overview PNG. Other tags retain the git-log excerpt. The workflow uses
+For root 4+, the release body uses `docs/releases/<tag>.md` for its actual tag,
+such as the [4.0.1 candidate notes](../../docs/releases/v4.0.1.md), and appends
+the accepted commit, hosted run and receipt SHA256. Assets are the admitted
+installed wheel, exact final source distribution, tag-selected overview PNG and
+byte manifest; retrieved asset hashes must match. Earlier major tags retain the
+git-log excerpt. The workflow uses
 `softprops/action-gh-release@v3.0.3` with `generate_release_notes: false`.
 Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
 

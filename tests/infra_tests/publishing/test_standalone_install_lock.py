@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[3]
 def _metadata() -> bytes:
     return (
         '[project]\nname = "installation-fixture"\nversion = "1.0.0"\nrequires-python = ">=3.12"\n'
-        'dependencies = ["research-project-template==4.0.0"]\n\n'
+        'dependencies = ["research-project-template==4.0.1"]\n\n'
         '[tool.uv.sources]\nresearch-project-template = { path = "../../..", editable = true }\n'
     ).encode()
 
@@ -37,7 +37,7 @@ def _lock(*, third_party: bool = True) -> bytes:
         '[[package]]\nname = "installation-fixture"\nversion = "1.0.0"\nsource = { virtual = "." }\n'
         'dependencies = [{ name = "research-project-template" }]\n\n'
         '[package.metadata]\nrequires-dist = [{ name = "research-project-template", editable = "../../../" }]\n\n'
-        '[[package]]\nname = "research-project-template"\nversion = "4.0.0"\n'
+        '[[package]]\nname = "research-project-template"\nversion = "4.0.1"\n'
         'source = { editable = "../../../" }\n\n'
     )
     if third_party:
@@ -50,7 +50,7 @@ def _lock(*, third_party: bool = True) -> bytes:
     return content.encode()
 
 
-def _pins(version: str = "4.0.0") -> dict[str, dict[str, str]]:
+def _pins(version: str = "4.0.1") -> dict[str, dict[str, str]]:
     return {ROOT_PACKAGE: {"version": version, "repository": PROVIDER_URLS[ROOT_PACKAGE], "commit": "a" * 40}}
 
 
@@ -96,7 +96,7 @@ def test_refuse_unadmitted_checkout_shapes(fault):
     elif fault == "noncanonical":
         metadata = metadata.replace(b"research-project-template = {", b"research_project_template = {")
     else:
-        lock += b'\n[[package]]\nname="research-project-template"\nversion="4.0.0"\nsource={editable="../../../"}\n'
+        lock += b'\n[[package]]\nname="research-project-template"\nversion="4.0.1"\nsource={editable="../../../"}\n'
     with pytest.raises(ValueError):
         transform_install_files(metadata, lock, _pins())
 
@@ -129,16 +129,16 @@ def test_actual_uv_locked_offline_install_accepts_transformed_git_fields(tmp_pat
     provider = parent / "provider"
     provider.mkdir()
     (provider / "pyproject.toml").write_text(
-        '[project]\nname="research-project-template"\nversion="4.0.0"\nrequires-python=">=3.12"\n'
+        '[project]\nname="research-project-template"\nversion="4.0.1"\nrequires-python=">=3.12"\n'
         '[build-system]\nrequires=[]\nbuild-backend="fixture_backend"\nbackend-path=["."]\n'
     )
     (provider / "fixture_backend.py").write_text(
         "import pathlib, zipfile\n"
         "def build_wheel(wheel_directory, config_settings=None, metadata_directory=None):\n"
-        "    name='research_project_template-4.0.0-py3-none-any.whl'\n"
-        "    prefix='research_project_template-4.0.0.dist-info/'\n"
+        "    name='research_project_template-4.0.1-py3-none-any.whl'\n"
+        "    prefix='research_project_template-4.0.1.dist-info/'\n"
         "    files={'infrastructure/__init__.py':'VALUE=7\\n',\n"
-        "      prefix+'METADATA':'Metadata-Version: 2.1\\nName: research-project-template\\nVersion: 4.0.0\\n',\n"
+        "      prefix+'METADATA':'Metadata-Version: 2.1\\nName: research-project-template\\nVersion: 4.0.1\\n',\n"
         "      prefix+'WHEEL':'Wheel-Version: 1.0\\nGenerator: public-fixture\\nRoot-Is-Purelib: true\\nTag: py3-none-any\\n'}\n"
         "    files[prefix+'RECORD']=''.join(key+',,\\n' for key in files)+prefix+'RECORD,,\\n'\n"
         "    with zipfile.ZipFile(pathlib.Path(wheel_directory)/name,'w') as archive:\n"
@@ -164,7 +164,7 @@ def test_actual_uv_locked_offline_install_accepts_transformed_git_fields(tmp_pat
         timeout=20,
         check=True,
     ).stdout.strip()
-    pins = {ROOT_PACKAGE: {"version": "4.0.0", "repository": provider.as_uri(), "commit": commit}}
+    pins = {ROOT_PACKAGE: {"version": "4.0.1", "repository": provider.as_uri(), "commit": commit}}
     metadata, lock, _ = transform_install_files(_metadata(), _lock(third_party=False), pins)
     project = parent / "consumer"
     project.mkdir()

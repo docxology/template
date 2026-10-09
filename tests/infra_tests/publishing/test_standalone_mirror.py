@@ -151,7 +151,7 @@ def _pools_monorepo(tmp_path: Path) -> Path:
     (project / "export.toml").write_text(
         '[template_export]\ncross_root_dependencies=["fonds/templates","rules/templates","tools/templates"]\n'
     )
-    (root / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="4.0.0"\n')
+    (root / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="4.0.1"\n')
     for kind, names in (("fonds", PUBLIC_FOND_NAMES), ("rules", PUBLIC_RULE_NAMES), ("tools", PUBLIC_TOOL_NAMES)):
         for name in names:
             resource = root / kind / name / "data/public.txt"
@@ -190,7 +190,7 @@ def test_bound_pools_export_matches_complete_canonical_export(tmp_path: Path) ->
     assert "output/data/old-run.json" not in _tree_bytes(mirror)
     metadata = json.loads((mirror / ".template-export.json").read_text())
     assert metadata["source_commit"] == revision
-    assert metadata["infrastructure_version"] == "4.0.0"
+    assert metadata["infrastructure_version"] == "4.0.1"
     assert metadata["resource_dependencies"] == ["fonds/templates", "rules/templates", "tools/templates"]
     assert len([name for name in metadata["files"] if name.startswith("_template_resources/")]) == 9
 
@@ -199,7 +199,7 @@ def test_bound_infrastructure_dependency_keeps_layer_one_output_source(tmp_path:
     root = _monorepo(tmp_path)
     project = root / "projects/templates/template_code_project"
     (project / "export.toml").write_text('[template_export]\ncross_root_dependencies=["infrastructure"]\n')
-    (root / "pyproject.toml").write_text('[project]\nversion="4.0.0"\n')
+    (root / "pyproject.toml").write_text('[project]\nversion="4.0.1"\n')
     helper = root / "infrastructure/output/helpers.py"
     helper.parent.mkdir(parents=True)
     helper.write_text("SOURCE_IMPLEMENTATION = True\n")
@@ -548,7 +548,8 @@ def _owned_transport(
         "import os,pathlib,subprocess,sys\n"
         f"native={native!r}\nroot=pathlib.Path({str(root)!r})\n"
         f"remote={str(bare)!r}\nmutation={mutation!r}\nadmitted={repository + '.git'!r}\n"
-        "args=[remote if value==admitted else value for value in sys.argv[1:]]\n"
+        'transport=any(command in sys.argv[1:] for command in ("clone","push"))\n'
+        "args=[remote if transport and value==admitted else value for value in sys.argv[1:]]\n"
         "if 'clone' in args and admitted in sys.argv[1:]:\n"
         "    completed=subprocess.run([native,*args],check=False,timeout=20)\n"
         "    if completed.returncode==0:\n"
@@ -618,8 +619,13 @@ def test_actual_commit_cli_blocks_unreviewed_removal_with_plan_and_remote_unchan
     assert actual.returncode == 1, actual.stdout + actual.stderr
     assert "REVIEW REQUIRED: stale managed files" in actual.stdout
     assert "removal-plan-sha256:" in actual.stdout
-    start = actual.stdout.index('{\n  "destination"')
-    plan, _ = json.JSONDecoder().raw_decode(actual.stdout[start:])
+    marker = "  removal-plan-sha256: "
+    remainder = actual.stdout.split(marker, 1)[1]
+    expected_hash, serialized_plan = remainder.split("\n", 1)
+    plan, _ = json.JSONDecoder().raw_decode(serialized_plan.lstrip())
+    from infrastructure.publishing.publication_tree import review_plan_sha256
+
+    assert review_plan_sha256(plan) == expected_hash.strip()
     assert "src/core.py" in plan["removals"]
     assert plan["destination"]["repository"] == "https://github.com/example/template_code_project"
     assert str(bare) not in json.dumps(plan)

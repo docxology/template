@@ -15,7 +15,7 @@ from infrastructure.publishing.root_release_contract import RUNTIME_VERSION_PROV
 
 def _authored(root: Path) -> dict[str, bytes]:
     files = {
-        "pyproject.toml": b'[project]\nname="research-project-template"\nversion="4.0.0"\nrequires-python=">=3.12"\n',
+        "pyproject.toml": b'[project]\nname="research-project-template"\nversion="4.0.1"\nrequires-python=">=3.12"\n',
         "README.md": b"Public authored SDK\n",
         "LICENSE": b"MIT\n",
         ".gitignore": b"__pycache__/\n",
@@ -29,7 +29,7 @@ def _authored(root: Path) -> dict[str, bytes]:
         path = root / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(content)
-    (root / "CHANGELOG.md").write_text("## [4.0.0] - 2026-10-07\n")
+    (root / "CHANGELOG.md").write_text("## [4.0.1] - 2026-10-07\n")
     return files
 
 
@@ -40,17 +40,17 @@ def _archive(files: dict[str, bytes], *, duplicate: bool = False, symlink: bool 
         rows.append(
             (
                 "PKG-INFO",
-                b"Metadata-Version: 2.4\nName: research-project-template\nVersion: 4.0.0\nRequires-Python: >=3.12\n",
+                b"Metadata-Version: 2.4\nName: research-project-template\nVersion: 4.0.1\nRequires-Python: >=3.12\n",
             )
         )
         if duplicate:
             rows.append(rows[0])
         for name, content in rows:
-            member = tarfile.TarInfo("research_project_template-4.0.0/" + name)
+            member = tarfile.TarInfo("research_project_template-4.0.1/" + name)
             member.size = len(content)
             archive.addfile(member, BytesIO(content))
         if symlink:
-            member = tarfile.TarInfo("research_project_template-4.0.0/linked")
+            member = tarfile.TarInfo("research_project_template-4.0.1/linked")
             member.type = tarfile.SYMTYPE
             member.linkname = "/outside-source"
             archive.addfile(member)
@@ -96,11 +96,11 @@ def test_missing_original_installed_matrix_cannot_create_release_assets(tmp_path
     files = _authored(tmp_path)
     directory = tmp_path / "dist"
     directory.mkdir()
-    sdist = directory / "research_project_template-4.0.0.tar.gz"
+    sdist = directory / "research_project_template-4.0.1.tar.gz"
     original = _archive(files)
     sdist.write_bytes(original)
     with pytest.raises(FileNotFoundError):
-        admit_root_release_artifacts(tmp_path, "v4.0.0", tmp_path / "output/readiness/missing/receipt.json")
+        admit_root_release_artifacts(tmp_path, "v4.0.1", tmp_path / "output/readiness/missing/receipt.json")
     assert list(directory.iterdir()) == [sdist]
     assert sdist.read_bytes() == original
 
@@ -122,16 +122,16 @@ def test_actual_separately_held_asset_file_custody(tmp_path: Path, change: str) 
     # The actual source archive below is admitted by the independent oracle.
     contents = [b"held wheel-file control bytes", _archive(files), b"held PNG-file control bytes"]
     names = [
-        "research_project_template-4.0.0-py3-none-any.whl",
-        "research_project_template-4.0.0.tar.gz",
-        "template-v4.0.0-overview.png",
+        "research_project_template-4.0.1-py3-none-any.whl",
+        "research_project_template-4.0.1.tar.gz",
+        "template-v4.0.1-overview.png",
     ]
     admit_sdist_bytes(tmp_path, contents[1])
     expected = [
         {"name": name, "bytes": len(value), "sha256": hashlib.sha256(value).hexdigest()}
         for name, value in zip(names, contents, strict=True)
     ]
-    manifest_name = "template-v4.0.0-artifacts.json"
+    manifest_name = "template-v4.0.1-artifacts.json"
     manifest_bytes = json.dumps({"assets": expected}).encode()
     (directory / manifest_name).write_bytes(manifest_bytes)
     for index, (name, value) in enumerate(zip(names, contents, strict=True)):

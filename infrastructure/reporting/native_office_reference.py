@@ -13,9 +13,29 @@ from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.reporting.native_format_acceptance_checks import native_tool_record, parse_native_bytes
 from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact
 from infrastructure.reporting.native_office_semantic_source import observe_office_semantic_source
+from infrastructure.reporting.native_office_mermaid_binding import (
+    OfficeMermaidAdmission,
+)
+
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 MAX_REFERENCE_INPUT_BYTES = 250 * 1024 * 1024
+
+
+def office_reference_metadata(value: Any) -> dict[str, Any]:
+    """Project admitted YAML values into the JSON reader's actual metadata.
+
+    Pandoc's JSON reader owns its metadata and ignores metadata-file values.
+    The reference therefore carries those source-owned values in the document
+    itself, independently reconstructable by the portable reader.
+    """
+    if isinstance(value, bool):
+        return {"t": "MetaBool", "c": value}
+    if isinstance(value, list):
+        return {"t": "MetaList", "c": [office_reference_metadata(item) for item in value]}
+    if isinstance(value, dict):
+        return {"t": "MetaMap", "c": {str(key): office_reference_metadata(item) for key, item in value.items()}}
+    return {"t": "MetaString", "c": str(value)}
 
 
 def build_office_source_reference(
@@ -28,6 +48,7 @@ def build_office_source_reference(
     env: dict[str, str],
     deadline: float,
     run_id: str,
+    mermaid_admission: OfficeMermaidAdmission | None = None,
 ) -> dict[str, Any]:
     """Build a real package from source; never read the candidate artifact.
 
@@ -36,13 +57,25 @@ def build_office_source_reference(
     Exact image bytes are frozen before the writer consumes them.
     """
     import yaml
-    from infrastructure.rendering._pdf_title_page_config import build_pandoc_metadata
-    from infrastructure.validation.output.render_formats import render_config_manuscript_dir
+    from infrastructure.rendering.office_native_projection import office_pandoc_metadata
+    from infrastructure.validation.output.render_formats import (
+        render_config_manuscript_dir,
+    )
 
     ast, source = observe_office_semantic_source(
-        root, directory, scope, artifact, reader, env=env, deadline=deadline, run_id=run_id
+        root,
+        directory,
+        scope,
+        artifact,
+        reader,
+        env=env,
+        deadline=deadline,
+        run_id=run_id,
+        mermaid_admission=mermaid_admission,
     )
-    document = json.loads(ast)
+    # Final native writing must run filters with its actual DOCX/EPUB target;
+    # pandoc-crossref's DOCX equation-table representation differs from JSON.
+    document = json.loads(reader.read(source["source_coverage_ast"]["path"]).content)
     manuscript = render_config_manuscript_dir(root / "projects" / scope)
     project = root / "projects" / scope
     settings: dict[str, Any] = {}
@@ -53,7 +86,7 @@ def build_office_source_reference(
         loaded = yaml.safe_load(config.content)
         if isinstance(loaded, dict):
             settings = loaded
-    metadata = build_pandoc_metadata(settings)
+    metadata = office_pandoc_metadata(settings)
     raw_metadata = settings.get("metadata") or {}
     language = raw_metadata.get("language", "en") if isinstance(raw_metadata, dict) else "en"
     if artifact.format == "epub":
@@ -61,13 +94,21 @@ def build_office_source_reference(
         author = "; ".join(str(item) for item in authors) if isinstance(authors, list) else str(authors)
         metadata = {
             key: value
-            for key, value in {"title": metadata.get("title"), "author": author, "lang": language}.items()
+            for key, value in {
+                "title": metadata.get("title"),
+                "author": author,
+                "lang": language,
+            }.items()
             if value
         }
     metadata_path = directory / "source-reference-metadata.yaml"
     atomic_write_bytes_confined(
-        root, metadata_path, yaml.safe_dump(metadata, allow_unicode=True, sort_keys=False).encode(), mode=0o600
+        root,
+        metadata_path,
+        yaml.safe_dump(metadata, allow_unicode=True, sort_keys=False).encode(),
+        mode=0o600,
     )
+    document["meta"].update({key: office_reference_metadata(value) for key, value in metadata.items()})
     figures: list[dict[str, Any]] = []
     pending = [document["blocks"]]
     total = len(ast)
@@ -84,11 +125,30 @@ def build_office_source_reference(
                 if not isinstance(target, str) or urlsplit(target).scheme or urlsplit(target).netloc:
                     raise ValueError("Office source reference requires local bound image bytes")
                 # These are the production combined writer's resource roots.
-                roots = (manuscript, project / "output/figures", project / "output", project / "output/web")
+                roots = (
+                    manuscript,
+                    project / "output/figures",
+                    project / "output",
+                    project / "output/web",
+                )
                 original = next((base / target for base in roots if (base / target).is_file()), None)
                 if original is None:
                     raise ValueError(f"Office source image has no admitted resource: {target}")
                 original = original.resolve(strict=True)
+                original_target = original
+                if original.suffix.lower() == ".pdf":
+                    # Exactly the production combined non-PDF export policy.
+                    raster = next(
+                        (
+                            original.with_suffix(suffix)
+                            for suffix in (".png", ".jpg", ".jpeg")
+                            if original.with_suffix(suffix).is_file()
+                        ),
+                        None,
+                    )
+                    if raster is None:
+                        raise ValueError(f"Office source PDF figure has no production raster sibling: {target}")
+                    original = raster
                 snapshot = reader.read(original.relative_to(root).as_posix())
                 total += len(snapshot.content)
                 if total > MAX_REFERENCE_INPUT_BYTES:
@@ -99,15 +159,27 @@ def build_office_source_reference(
                 figures.append(
                     {
                         "target": target,
-                        "source": {"path": snapshot.relative, "sha256": snapshot.sha256},
-                        "consumed": {"path": frozen.relative_to(root).as_posix(), "sha256": snapshot.sha256},
+                        "original_target": original_target.relative_to(root).as_posix(),
+                        "source": {
+                            "path": snapshot.relative,
+                            "sha256": snapshot.sha256,
+                        },
+                        "consumed": {
+                            "path": frozen.relative_to(root).as_posix(),
+                            "sha256": snapshot.sha256,
+                        },
                     }
                 )
             pending.extend(reversed(list(value.values())))
         elif isinstance(value, list):
             pending.extend(reversed(value))
     reference_ast = directory / "source-reference-ast.json"
-    atomic_write_bytes_confined(root, reference_ast, json.dumps(document, ensure_ascii=False).encode(), mode=0o600)
+    atomic_write_bytes_confined(
+        root,
+        reference_ast,
+        json.dumps(document, ensure_ascii=False).encode(),
+        mode=0o600,
+    )
     package = directory / f"source-reference.{artifact.format}"
     args = [
         str(reference_ast),
@@ -118,6 +190,15 @@ def build_office_source_reference(
         "--output",
         str(package),
     ]
+    for binding in source["filters"]:
+        args.extend(["--lua-filter", str(root / binding["consumed"]["path"])])
+    if source["crossref_runtime"]:
+        args.extend(["--filter", source["crossref_runtime"]["path"]])
+    if source["bibliographies"]:
+        args.append("--citeproc")
+        for binding in source["bibliographies"]:
+            args.append(f"--bibliography={root / binding['consumed']['path']}")
+    args.extend(["--lua-filter", str(root / source["filters"][0]["consumed"]["path"])])
     cover = None
     cover_alt = None
     source_epoch = None
@@ -126,7 +207,10 @@ def build_office_source_reference(
         isinstance(settings.get(section), dict) and settings[section].get("cover") for section in ("book", "paper")
     )
     if artifact.format == "epub":
-        from infrastructure.rendering._pdf_title_page_images import _cover_image_path, _cover_image_alt
+        from infrastructure.rendering._pdf_title_page_images import (
+            _cover_image_path,
+            _cover_image_alt,
+        )
         from infrastructure.rendering.epub_renderer import (
             _FIXED_EPUB_SOURCE_DATE_EPOCH,
             _MAX_SUPPORTED_SOURCE_DATE_EPOCH,
@@ -150,7 +234,10 @@ def build_office_source_reference(
                     raise ValueError("source EPUB cover requires declared alternative text")
                 cover = {
                     "source": {"path": snapshot.relative, "sha256": snapshot.sha256},
-                    "consumed": {"path": frozen_cover.relative_to(root).as_posix(), "sha256": snapshot.sha256},
+                    "consumed": {
+                        "path": frozen_cover.relative_to(root).as_posix(),
+                        "sha256": snapshot.sha256,
+                    },
                     "alt": cover_alt,
                 }
                 args.append(f"--epub-cover-image={frozen_cover}")
@@ -171,15 +258,29 @@ def build_office_source_reference(
     if tool["original_exit_code"] != 0 or tool["exit_code"] != 0:
         raise ValueError("actual Office source reference writer failed")
     if artifact.format == "epub":
+        from infrastructure.rendering._epub_xhtml_sanitizer import sanitize_epub_xhtml
         from infrastructure.rendering.epub_renderer import _normalize_epub_archive
 
+        sanitize_epub_xhtml(package)
         if cover:
-            from infrastructure.rendering._epub_cover_accessibility import apply_epub_cover_accessibility
+            from infrastructure.rendering._epub_cover_accessibility import (
+                apply_epub_cover_accessibility,
+            )
 
             apply_epub_cover_accessibility(package, str(cover_alt))
         if source_epoch is None:
             raise ValueError("Office EPUB reference has no frozen writer epoch")
         _normalize_epub_archive(package, source_date_epoch=source_epoch)
+    else:
+        from infrastructure.rendering.office_native_projection import (
+            project_docx_transmission_layout,
+        )
+
+        project_docx_transmission_layout(package)
+        if source["mermaid"] is not None:
+            from infrastructure.rendering.office_diagram_layout import apply_docx_diagram_layout
+
+            apply_docx_diagram_layout(package, tuple(row["png"]["sha256"] for row in source["mermaid"]["occurrences"]))
     local = SnapshotReader(root)
     snapshot = local.read(package.relative_to(root).as_posix())
     parse_native_bytes(artifact.format, snapshot.content)
@@ -197,7 +298,10 @@ def build_office_source_reference(
         "package": {"path": snapshot.relative, "sha256": snapshot.sha256},
         "writer": tool,
         "ast": {"path": frozen_ast.relative, "sha256": frozen_ast.sha256},
-        "metadata": {"path": frozen_metadata.relative, "sha256": frozen_metadata.sha256},
+        "metadata": {
+            "path": frozen_metadata.relative,
+            "sha256": frozen_metadata.sha256,
+        },
         "figures": figures,
         "cover": cover,
         "source_date_epoch": source_epoch,

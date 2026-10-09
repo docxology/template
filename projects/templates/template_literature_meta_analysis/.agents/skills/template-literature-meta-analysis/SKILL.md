@@ -33,7 +33,7 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_lit
 ```
 
 For an independent source checkout, first prepare its own environment with the
-actual platform 4.0.0 wheel and this project's `dev` extra as described in
+actual platform 4.0.1 wheel and this project's `dev` extra as described in
 [`STANDALONE.md`](../../../STANDALONE.md). These candidates are unreleased;
 do not assume they are available from a package index. Run from the standalone
 checkout's root:

@@ -14,9 +14,11 @@ import struct
 import zlib
 from pathlib import Path
 import time
+import uuid
 from typing import Any
 
 from infrastructure.reporting.native_format_acceptance_checks import native_tool_record
+from infrastructure.reporting.native_format_acceptance_contracts import TOOL_SCHEMA
 from infrastructure.reporting.native_format_pdf_source import PDFSourceInputs
 from infrastructure.reporting.native_format_portable_custody import validate_executable_observation
 from infrastructure.reporting.native_format_scientific_math import observe_scientific_math_reference
@@ -176,7 +178,8 @@ def reproduce_scientific_reference(
     producer_path: Callable[[str], str],
     original_run_id: str,
     env: dict[str, str],
-    timeout: float = 180,
+    original_reader: SnapshotReader,
+    deadline: float,
 ) -> dict[str, Any]:
     """Independently recompile unchanged source, compare original native observations.
 
@@ -184,9 +187,19 @@ def reproduce_scientific_reference(
     context. The fresh reader uses current prepared tools, observes their bytes
     twice, and retains its own finite receipts; it never opens origin tool paths.
     """
-    if not 0 < timeout <= 3600:
-        raise ValueError("reader-local source replay requires a finite budget")
-    deadline = time.monotonic() + timeout
+    from infrastructure.reporting.native_format_joint_source import (
+        NativeSDKSelection,
+        admit_native_source_operation,
+        require_native_operation,
+    )
+    from infrastructure.reporting.native_tool_producer import native_producer_operation
+    from infrastructure.project.public_reference_git import remaining
+
+    operation = require_native_operation(original_reader)
+    if original_reader.root != root or deadline != operation.deadline:
+        raise ValueError("scientific reader requires its actual current Source root and same original clock")
+    remaining(deadline)
+    reader_started = time.monotonic()
     from infrastructure.core.implementation_custody import capture_implementation_custody
 
     if not isinstance(raster, dict) or set(raster) != {"rasters", "tool_artifact"}:
@@ -201,6 +214,7 @@ def reproduce_scientific_reference(
         producer_path=producer_path,
         run_id=original_run_id,
         deadline=deadline,
+        native_reader=original_reader,
     )
     if set(raster) != {"rasters", "tool_artifact"} or not raster["rasters"]:
         raise ValueError("original source reference requires complete raster custody")
@@ -217,7 +231,7 @@ def reproduce_scientific_reference(
     original_directory = str(Path(raw["source"]["path"]).parent)
     if (
         set(process) != TOOL_FIELDS
-        or process["schema_version"] != "template-native-tool-execution-v2"
+        or process["schema_version"] != TOOL_SCHEMA
         or process["run_id"] != original_run_id
         or process["tool"] != "pdftoppm"
         or process["purpose"] != "scientific-reference-raster"
@@ -239,129 +253,155 @@ def reproduce_scientific_reference(
         or process["diagnostic"] != ""
     ):
         raise ValueError("original raster command/outcome/custody differs")
+    from infrastructure.reporting.native_tool_replay import validate_original_native_tool
+
+    validate_original_native_tool(raster["tool_artifact"], process, original_reader, run_id=original_run_id)
     directory.mkdir(parents=True, exist_ok=False)
-    reader_run_id = "reader-" + original_run_id
-    current = observe_scientific_math_reference(
-        root, directory, ast_bytes, inputs, env=env, deadline=deadline, run_id=reader_run_id
-    )
-    reader = SnapshotReader(root)
-    local = replay_scientific_math_reference(
-        current,
-        ast_bytes,
-        inputs,
-        read_artifact=lambda binding: reader.read(binding["path"]).content,
-        producer_path=lambda path: str(root) if path == "." else str(root / path),
+    reader_run_id = uuid.uuid4().hex
+    source = operation.source
+    context = admit_native_source_operation(
+        root,
+        NativeSDKSelection(source.bindings.selected_sdk_package_root, source.bindings.expected_implementation_bytes),
         run_id=reader_run_id,
         deadline=deadline,
+        environment={
+            **env,
+            "TEMPLATE_PUBLIC_REFERENCE_ROOT": str(source.reference.root),
+            "TEMPLATE_PUBLIC_REFERENCE_COMMIT": source.reference.commit,
+            "TEMPLATE_PUBLIC_REFERENCE_FINGERPRINT": source.reference.source_identity,
+        },
     )
-
-    # Compare actual consumed package/font bytes without reopening old distribution
-    # paths. Names and SHA identify every independently consumed frozen dependency.
-    def dependencies(reference: dict[str, Any]) -> list[tuple[str, str, int]]:
-        return sorted(
-            (Path(row["resolved_path"]).name, row["sha256"], row["size_bytes"])
-            for row in reference["dependencies_before"]
+    with native_producer_operation(context, run_id=reader_run_id, deadline=deadline) as owner:
+        current = observe_scientific_math_reference(
+            root, directory, ast_bytes, inputs, env=env, deadline=deadline, run_id=reader_run_id
+        )
+        reader = SnapshotReader(root, native_producer_operation=owner)
+        local = replay_scientific_math_reference(
+            current,
+            ast_bytes,
+            inputs,
+            read_artifact=lambda binding: reader.read(binding["path"]).content,
+            producer_path=lambda path: str(root) if path == "." else str(root / path),
+            run_id=reader_run_id,
+            deadline=deadline,
+            native_reader=reader,
         )
 
-    if dependencies(current) != dependencies(raw):
-        raise ValueError("reader-local actual TeX/font dependency bytes differ from original reference")
+        # Compare actual consumed package/font bytes without reopening old distribution
+        # paths. Names and SHA identify every independently consumed frozen dependency.
+        def dependencies(reference: dict[str, Any]) -> list[tuple[str, str, int]]:
+            return sorted(
+                (Path(row["resolved_path"]).name, row["sha256"], row["size_bytes"])
+                for row in reference["dependencies_before"]
+            )
 
-    def semantic_glyphs(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        # PDF subset labels are generated per file. Preserve original complete
-        # observations and compare semantic names after actual font-byte parity.
-        return [
-            {
-                **row,
-                "glyphs": [
-                    {**glyph, "fontname": re.sub(r"^[A-Z]{6}\+", "", glyph["fontname"])} for glyph in row["glyphs"]
-                ],
-            }
-            for row in rows
-        ]
+        if dependencies(current) != dependencies(raw):
+            raise ValueError("reader-local actual TeX/font dependency bytes differ from original reference")
 
-    if (
-        semantic_glyphs(local["reference_glyphs"]) != semantic_glyphs(original["reference_glyphs"])
-        or local["reference_vectors"] != original["reference_vectors"]
-    ):
-        raise ValueError("original native glyph/vector observation differs from source recompilation")
-    for label in ("discovery", "final"):
-        original_xdv = read_artifact(raw["backend_inputs"][label])
-        local_xdv = reader.read(current["backend_inputs"][label]["path"]).content
-        if canonical_xdv(original_xdv) != canonical_xdv(local_xdv):
-            raise ValueError("original retained XDV differs from independently compiled native source bytes")
-    raster_record = native_tool_record(
-        root,
-        directory,
-        "pdftoppm",
-        ["-png", "-r", "150", str(root / current["pdf"]["path"]), str(directory / "page")],
-        env=env,
-        deadline=deadline,
-        run_id=reader_run_id,
-        purpose="scientific-reference-raster",
-    )
-    process = json.loads(reader.read(raster_record["artifact"]["path"]).content)
-    if (
-        process["exit_code"] != 0
-        or process["original_exit_code"] != 0
-        or process["timed_out"]
-        or process["custody_refused"]
-        or process["diagnostic"] != ""
-    ):
-        raise ValueError("reader-local source raster did not complete")
-    paths = sorted(directory.glob("page-*.png"))
-    if len(paths) != len(raster_inputs) or len(paths) != len(original["reference_vectors"]):
-        raise ValueError("source reference raster pages are incomplete")
-    from PIL import Image, ImageChops
+        def semantic_glyphs(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+            # PDF subset labels are generated per file. Preserve original complete
+            # observations and compare semantic names after actual font-byte parity.
+            return [
+                {
+                    **row,
+                    "glyphs": [
+                        {**glyph, "fontname": re.sub(r"^[A-Z]{6}\+", "", glyph["fontname"])} for glyph in row["glyphs"]
+                    ],
+                }
+                for row in rows
+            ]
 
-    bindings = []
-    for index, (path, original_input) in enumerate(zip(paths, raster_inputs, strict=True), 1):
-        original_binding = original_input["binding"]
-        if original_binding["path"] != original_directory + f"/page-{index:0{len(str(len(paths)))}d}.png":
-            raise ValueError("original raster role/page identity differs from exact command")
-        fresh = _raster_file(root, original_binding, deadline=deadline, scan=True)
-        if fresh["identity"] != original_input["identity"]:
-            raise ValueError("original raster changed before complete ink comparison")
-        original_pixels = read_artifact(original_binding)
         if (
-            len(original_pixels) != original_input["bytes"]
-            or hashlib.sha256(original_pixels).hexdigest() != original_binding["sha256"]
+            semantic_glyphs(local["reference_glyphs"]) != semantic_glyphs(original["reference_glyphs"])
+            or local["reference_vectors"] != original["reference_vectors"]
         ):
-            raise ValueError("original callback-authenticated raster changed")
-        if path.name != f"page-{index:0{len(str(len(paths)))}d}.png":
-            raise ValueError("source reference raster page order differs")
-        actual_binding = {"path": path.relative_to(root).as_posix(), "sha256": None}
-        actual_input = _raster_file(root, actual_binding, deadline=deadline, scan=True)
-        actual_binding["sha256"] = actual_input["sha256"]
-        snapshot = reader.read(path.relative_to(root).as_posix())
-        with Image.open(BytesIO(snapshot.content)) as actual, Image.open(BytesIO(original_pixels)) as expected:
+            raise ValueError("original native glyph/vector observation differs from source recompilation")
+        for label in ("discovery", "final"):
+            original_xdv = read_artifact(raw["backend_inputs"][label])
+            local_xdv = reader.read(current["backend_inputs"][label]["path"]).content
+            if canonical_xdv(original_xdv) != canonical_xdv(local_xdv):
+                raise ValueError("original retained XDV differs from independently compiled native source bytes")
+        raster_record = native_tool_record(
+            root,
+            directory,
+            "pdftoppm",
+            ["-png", "-r", "150", str(root / current["pdf"]["path"]), str(directory / "page")],
+            env=env,
+            deadline=deadline,
+            run_id=reader_run_id,
+            purpose="scientific-reference-raster",
+        )
+        process = json.loads(reader.read(raster_record["artifact"]["path"]).content)
+        if (
+            process["exit_code"] != 0
+            or process["original_exit_code"] != 0
+            or process["timed_out"]
+            or process["custody_refused"]
+            or process["diagnostic"] != ""
+        ):
+            raise ValueError("reader-local source raster did not complete")
+        owner.validate_tool(raster_record["artifact"], process, reader, run_id=reader_run_id)
+        paths = sorted(directory.glob("page-*.png"))
+        if len(paths) != len(raster_inputs) or len(paths) != len(original["reference_vectors"]):
+            raise ValueError("source reference raster pages are incomplete")
+        from PIL import Image, ImageChops
+
+        bindings = []
+        for index, (path, original_input) in enumerate(zip(paths, raster_inputs, strict=True), 1):
+            original_binding = original_input["binding"]
+            if original_binding["path"] != original_directory + f"/page-{index:0{len(str(len(paths)))}d}.png":
+                raise ValueError("original raster role/page identity differs from exact command")
+            fresh = _raster_file(root, original_binding, deadline=deadline, scan=True)
+            if fresh["identity"] != original_input["identity"]:
+                raise ValueError("original raster changed before complete ink comparison")
+            original_pixels = read_artifact(original_binding)
             if (
-                actual.format != "PNG"
-                or expected.format != "PNG"
-                or actual.size != actual_input["dimensions"]
-                or expected.size != original_input["dimensions"]
-                or actual.size != expected.size
-                or actual.width * actual.height > 60_000_000
-                or ImageChops.difference(actual.convert("RGB"), expected.convert("RGB")).getbbox() is not None
+                len(original_pixels) != original_input["bytes"]
+                or hashlib.sha256(original_pixels).hexdigest() != original_binding["sha256"]
             ):
-                raise ValueError("original native reference ink differs from independent source pixels")
-        bindings.append({"path": snapshot.relative, "sha256": snapshot.sha256})
-    for original_input in raster_inputs:
-        if (
-            _raster_file(root, original_input["binding"], deadline=deadline, scan=False)["identity"]
-            != original_input["identity"]
-        ):
-            raise ValueError("original raster path changed during independent replay")
-    sdk_after = capture_implementation_custody()["files"]
-    if sdk_before != sdk_after or not reader.unchanged() or time.monotonic() >= deadline:
-        raise ValueError("reader-local source replay changed or exhausted its finite budget")
-    return {
-        "schema_version": "template-native-scientific-reference-reproduction-v1",
-        "original_observation": original,
-        "reader_reference": current,
-        "reader_raster": {"rasters": bindings, "tool_artifact": raster_record["artifact"]},
-        "reader_budget_seconds": timeout,
-        "reader_sdk_before": sdk_before,
-        "reader_sdk_after": sdk_after,
-        "blockers": original["blockers"],
-        "status": "blocked" if original["blockers"] else "pass",
-    }
+                raise ValueError("original callback-authenticated raster changed")
+            if path.name != f"page-{index:0{len(str(len(paths)))}d}.png":
+                raise ValueError("source reference raster page order differs")
+            actual_binding = {"path": path.relative_to(root).as_posix(), "sha256": None}
+            actual_input = _raster_file(root, actual_binding, deadline=deadline, scan=True)
+            actual_binding["sha256"] = actual_input["sha256"]
+            snapshot = reader.read(path.relative_to(root).as_posix())
+            with Image.open(BytesIO(snapshot.content)) as actual, Image.open(BytesIO(original_pixels)) as expected:
+                if (
+                    actual.format != "PNG"
+                    or expected.format != "PNG"
+                    or actual.size != actual_input["dimensions"]
+                    or expected.size != original_input["dimensions"]
+                    or actual.size != expected.size
+                    or actual.width * actual.height > 60_000_000
+                    or ImageChops.difference(actual.convert("RGB"), expected.convert("RGB")).getbbox() is not None
+                ):
+                    raise ValueError("original native reference ink differs from independent source pixels")
+            bindings.append({"path": snapshot.relative, "sha256": snapshot.sha256})
+        for original_input in raster_inputs:
+            if (
+                _raster_file(root, original_input["binding"], deadline=deadline, scan=False)["identity"]
+                != original_input["identity"]
+            ):
+                raise ValueError("original raster path changed during independent replay")
+        sdk_after = capture_implementation_custody()["files"]
+        if sdk_before != sdk_after or not reader.unchanged() or time.monotonic() >= deadline:
+            raise ValueError("reader-local source replay changed or exhausted its finite budget")
+        owner.verify(reader, run_id=reader_run_id, deadline=deadline)
+        remaining(deadline)
+        return {
+            "schema_version": "template-native-scientific-reference-reproduction-v2",
+            "original_run_id": original_run_id,
+            "current_reader_run_id": reader_run_id,
+            "original_observation": original,
+            "reader_reference": current,
+            "reader_raster": {"rasters": bindings, "tool_artifact": raster_record["artifact"]},
+            "reader_budget_seconds": deadline - reader_started,
+            "original_deadline_monotonic": deadline,
+            "reader_started_monotonic": reader_started,
+            "reader_completed_monotonic": time.monotonic(),
+            "reader_sdk_before": sdk_before,
+            "reader_sdk_after": sdk_after,
+            "blockers": original["blockers"],
+            "status": "blocked" if original["blockers"] else "pass",
+        }

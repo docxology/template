@@ -637,3 +637,9 @@ Environment variables:
 - [README.md](README.md)
 - [`zenodo/AGENTS.md`](zenodo/AGENTS.md) · [`github/AGENTS.md`](github/AGENTS.md) · [`arxiv/AGENTS.md`](arxiv/AGENTS.md) · [`archival/AGENTS.md`](archival/AGENTS.md) · [`pypi/AGENTS.md`](pypi/AGENTS.md) · [`static_site/AGENTS.md`](static_site/AGENTS.md)
 - [`../core/`](../core/) · [`../validation/`](../validation/)
+
+## Release acceptance modules
+
+| Module | Role |
+| --- | --- |
+| `root_release_artifacts.py` | Bind root release assets to the exact admitted installed wheel and source. |

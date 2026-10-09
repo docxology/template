@@ -434,10 +434,15 @@ def test_full_verifier_cli_retains_real_producer_exit_and_stops(tmp_path: Path, 
     source_root = Path(full_verification.__file__).parent
     package = project_root / "src/orchestration"
     package.mkdir(parents=True)
+    # This owned partial fixture must be a regular package: an installed
+    # orchestration provider can otherwise outrank its implicit namespace.
+    # The six production controller modules below remain exact source copies.
+    (package / "__init__.py").write_text('"""Owned CLI producer-exit fixture package."""\n')
     for module in (
         "full_verification.py",
         "portable_execution.py",
         "verification_execution.py",
+        "verification_refresh.py",
         "semantic_coverage.py",
         "_verification_launcher.py",
     ):

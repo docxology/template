@@ -12,7 +12,7 @@ from infrastructure.core.pipeline.fingerprints import canonical_digest, paths_di
 from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.core.pipeline.artifacts._inventory import collect_stable_output_inventory
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-from infrastructure.reporting.release_readiness_snapshot import PUBLIC_ROOT_FILES
+from infrastructure.reporting.release_readiness_snapshot import PUBLIC_ROOT_FILES, SnapshotReader
 
 SCHEMA_VERSION = "template-release-readiness-receipt-v2"
 _READINESS_SOURCE_METADATA_NAMES = frozenset({".DS_Store", ".git"})
@@ -127,6 +127,34 @@ def public_source_paths(repo_root: Path, project: str | None = None) -> tuple[Pa
             if kind == "file":
                 paths.add(root if relative == "." else root / relative)
     return tuple(sorted(paths))
+
+
+def public_resource_source_paths(repo_root: Path, dependency: str) -> tuple[Path, ...]:
+    """Use the public source boundary for a declared cross-root resource tree."""
+    if dependency not in {"fonds/templates", "rules/templates", "tools/templates", "infrastructure"}:
+        raise ValueError("resource scope is not a declared public dependency")
+    root = repo_root / dependency
+    if not root.is_dir():
+        raise FileNotFoundError("declared public resource tree is unavailable")
+    _, excluded = _public_roots(repo_root)
+    reader = SnapshotReader(repo_root)
+
+    def admit(path: Path) -> None:
+        reader.public_path(
+            path.relative_to(repo_root).as_posix() + ("/.reference-directory-policy" if path == root else "")
+        )
+
+    return tuple(
+        root if relative == "." else root / relative
+        for relative, kind, _ in tree_records(
+            root,
+            source=True,
+            excluded_roots=excluded,
+            excluded_names=_READINESS_SOURCE_METADATA_NAMES,
+            path_admission=admit,
+        )
+        if kind == "file"
+    )
 
 
 def source_fingerprint(repo_root: Path, *, path_admission: Callable[[Path], None] | None = None) -> str:

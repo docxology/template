@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Existing root tag to release (e.g. v4.0.0)"
+        description: "Existing root tag to release (e.g. v4.0.1)"
         required: true
       acceptance_run_id:
         description: "Successful exact-tag-SHA run that uploaded required acceptance (root 4+)"
@@ -259,9 +259,11 @@ jobs:
           ACCEPTANCE_RECEIPT_SHA256: ${{ inputs.acceptance_receipt_sha256 }}
         run: |
           set -euo pipefail
-          if [ "$TAG" = v4.0.0 ]; then
+          release_major="${TAG#v}"
+          release_major="${release_major%%.*}"
+          if [ "$release_major" -ge 4 ]; then
             candidate=$(git rev-parse HEAD)
-            cp docs/releases/v4.0.0.md "$RUNNER_TEMP/template-release-notes.md"
+            cp "docs/releases/$TAG.md" "$RUNNER_TEMP/template-release-notes.md"
             {
               echo
               echo "Accepted source: [$candidate](https://github.com/$GITHUB_REPOSITORY/commit/$candidate)."
@@ -300,7 +302,7 @@ jobs:
           generate_release_notes: false
           files: |
             dist/*
-            docs/releases/template-v4.0.0-overview.png
+            docs/releases/template-${{ steps.tag.outputs.name }}-overview.png
 
       - name: Verify retrieved release assets
         env:

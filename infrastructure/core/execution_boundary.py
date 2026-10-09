@@ -174,6 +174,7 @@ class BoundedSubprocessResult:
     command_error: str = ""
     custody_refused: bool = False
     original_returncode: int | None = None
+    pid: int | None = None
 
 
 def build_bounded_run_env(env: dict[str, str]) -> tuple[dict[str, str], str]:
@@ -323,6 +324,7 @@ def run_bounded_subprocess(
                     timed_out=False,
                     custody_refused=True,
                     original_returncode=proc.returncode,
+                    pid=proc.pid,
                     command_error=f"bounded-run guardian refused source custody: {exc}",
                 )
             if isinstance(exc, TimeoutError):
@@ -331,6 +333,7 @@ def run_bounded_subprocess(
                     returncode=130 if proc.returncode in {130, -signal.SIGINT} else 124,
                     timed_out=proc.returncode not in {130, -signal.SIGINT},
                     original_returncode=proc.returncode,
+                    pid=proc.pid,
                     command_error=f"bounded-run guardian arming timed out: {exc}",
                 )
             if isinstance(exc, (OSError, RuntimeError)):
@@ -339,6 +342,7 @@ def run_bounded_subprocess(
                     returncode=130 if proc.returncode in {130, -signal.SIGINT} else 1,
                     timed_out=False,
                     original_returncode=proc.returncode,
+                    pid=proc.pid,
                     command_error=f"failed to arm bounded-run guardian: {exc}",
                 )
             raise
@@ -365,6 +369,7 @@ def run_bounded_subprocess(
             command_error=cleanup_error,
             custody_refused=custody_refused,
             original_returncode=proc.returncode,
+            pid=proc.pid,
         )
     except subprocess.TimeoutExpired as exc:
         terminate_process_tree(proc.pid, group_id=effective_group)
@@ -392,6 +397,7 @@ def run_bounded_subprocess(
             command_error=cleanup_error,
             custody_refused=custody_refused,
             original_returncode=proc.returncode,
+            pid=proc.pid,
         )
     except Exception as exc:  # noqa: BLE001 - any post-launch failure must clean up the group
         _terminate_and_reap_interrupted_process(
@@ -405,6 +411,7 @@ def run_bounded_subprocess(
             returncode=1,
             timed_out=False,
             original_returncode=proc.returncode,
+            pid=proc.pid,
             command_error=f"bounded subprocess failed after launch: {exc}",
         )
     except BaseException:

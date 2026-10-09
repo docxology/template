@@ -62,7 +62,7 @@ def _project(root: Path, slug: str, *, with_root: bool = True, with_meta: bool =
     (project / "CITATION.cff").write_text(f"repository-code: https://github.com/docxology/{slug}\n")
     own = slug.replace("_", "-")
     providers = ([ROOT_PACKAGE] if with_root else []) + ([META_PACKAGE] if with_meta else [])
-    versions = {ROOT_PACKAGE: "4.0.0", META_PACKAGE: "0.2.0"}
+    versions = {ROOT_PACKAGE: "4.0.1", META_PACKAGE: "0.2.0"}
     paths = {ROOT_PACKAGE: "../../..", META_PACKAGE: "../template_literature_meta_analysis"}
     dependencies = [f"{name}=={versions[name]}" for name in providers]
     metadata = f'[project]\nname = "{own}"\nversion = "0.2.0"\nrequires-python = ">=3.12"\n'
@@ -95,7 +95,7 @@ def _project(root: Path, slug: str, *, with_root: bool = True, with_meta: bool =
 def committed_root(tmp_path: Path) -> GitInstallProvider:
     root = tmp_path.resolve() / "root"
     root.mkdir()
-    (root / "pyproject.toml").write_text('[project]\nname = "research-project-template"\nversion = "4.0.0"\n')
+    (root / "pyproject.toml").write_text('[project]\nname = "research-project-template"\nversion = "4.0.1"\n')
     _project(root, "template_code_project", with_root=False)
     _project(root, "template_literature_meta_analysis")
     _project(root, "template_advanced_literature_review", with_meta=True)
@@ -175,7 +175,7 @@ def test_refuse_provider_substitution_before_destination_creation(committed_root
     elif fault == "hidden-metadata":
         _git(provider.checkout, "update-index", "--assume-unchanged", "pyproject.toml")
         (provider.checkout / "pyproject.toml").write_text(
-            '[project]\nname="research-project-template"\nversion="4.0.0"\n# mutation\n'
+            '[project]\nname="research-project-template"\nversion="4.0.1"\n# mutation\n'
         )
     elif fault == "wrong-origin":
         _git(provider.checkout, "remote", "set-url", "origin", "https://github.com/example/substituted")

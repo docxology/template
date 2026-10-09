@@ -141,7 +141,10 @@ def test_mode_and_epoch_are_effective_execution_inputs(tmp_path: Path, monkeypat
 
 
 @pytest.mark.timeout(120)
-def test_real_stage_consumes_pinned_epoch_and_explicit_live_policy(tmp_path: Path) -> None:
+def test_real_stage_consumes_pinned_epoch_and_explicit_live_policy(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
     project = tmp_path / "projects/demo"
     project.mkdir(parents=True)
     scripts = tmp_path / "scripts"

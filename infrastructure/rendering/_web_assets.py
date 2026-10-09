@@ -15,6 +15,7 @@ from infrastructure.rendering._html_attributes import (
     remove_unquoted_whitespace_only_lines,
 )
 from infrastructure.rendering._web_io import write_if_changed
+from infrastructure.rendering._web_font_assets import source_web_font_script
 
 # Keep the existing diagnostic namespace for callers and log consumers.
 logger = get_logger("infrastructure.rendering._web_postprocess")
@@ -268,7 +269,7 @@ def embed_css(html_file: Path, css_file: Path) -> None:
             return
         css_content = SHARED_DESIGN_TOKENS_CSS + "\n" + css_file.read_text(encoding="utf-8")
         content = html_file.read_text(encoding="utf-8")
-        style_tag = f"\n<style>\n{css_content}\n</style>\n"
+        style_tag = f"\n<style>\n{css_content}\n</style>\n" + source_web_font_script()
         if "</head>" in content:
             updated = content.replace("</head>", style_tag + "</head>", 1)
         elif "<head>" in content:

@@ -166,6 +166,7 @@ def render_combined_docx(
     *,
     combined_md: Path | None = None,
     docx_renderer: Callable[..., Any] | None = None,
+    diagram_png_sha256: tuple[str, ...] = (),
 ) -> None:
     """Render the combined DOCX from the preprocessed combined markdown."""
     if docx_renderer is None:
@@ -196,11 +197,12 @@ def render_combined_docx(
     )
 
     import yaml as _yaml
-    from infrastructure.rendering._pdf_title_page import _load_render_config, build_pandoc_metadata
+    from infrastructure.rendering._pdf_title_page import _load_render_config
+    from infrastructure.rendering.office_native_projection import office_pandoc_metadata
 
     config, _ = _load_render_config(manuscript_dir)
     if isinstance(config, dict):
-        meta = build_pandoc_metadata(config)
+        meta = office_pandoc_metadata(config)
         if meta:
             meta_path = docx_dir / "_docx_metadata.yaml"
             with meta_path.open("w", encoding="utf-8") as handle:
@@ -210,13 +212,23 @@ def render_combined_docx(
     logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined DOCX manuscript...")
     try:
-        result = docx_renderer(
-            combined_md,
-            out_path,
-            bibliography=None,
-            pandoc_path=manager.config.pandoc_path,
-            extra_args=extra_args,
-        )
+        if diagram_png_sha256:
+            result = docx_renderer(
+                combined_md,
+                out_path,
+                bibliography=None,
+                pandoc_path=manager.config.pandoc_path,
+                extra_args=extra_args,
+                diagram_png_sha256=diagram_png_sha256,
+            )
+        else:
+            result = docx_renderer(
+                combined_md,
+                out_path,
+                bibliography=None,
+                pandoc_path=manager.config.pandoc_path,
+                extra_args=extra_args,
+            )
         logger.info(f"✅ Generated combined DOCX: {result.output_path.name} ({result.size_bytes / 1024:.1f} KB)")
     except RenderingError as rendering_exc:
         logger.warning(f"⚠️  Rendering error generating combined DOCX: {rendering_exc.message}")
@@ -267,8 +279,9 @@ def render_combined_epub(
         _cover_image_alt,
         _cover_image_path,
         _load_render_config,
-        build_pandoc_metadata,
     )
+
+    from infrastructure.rendering.office_native_projection import office_pandoc_metadata
 
     title: str | None = None
     author: str | None = None
@@ -276,7 +289,7 @@ def render_combined_epub(
     language = "en"
     config, config_file = _load_render_config(manuscript_dir)
     if isinstance(config, dict):
-        metadata = build_pandoc_metadata(config)
+        metadata = office_pandoc_metadata(config)
         if metadata.get("title"):
             title = str(metadata["title"])
         authors = metadata.get("author") or []

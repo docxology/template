@@ -60,3 +60,32 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 
 - [`README.md`](README.md)
 - [`../AGENTS.md`](../AGENTS.md)
+
+## Release acceptance modules
+
+| Module | Role |
+| --- | --- |
+| `artifact_contracts.py` | Executable artifact prerequisites and immutable consumed-input custody. |
+| `execution_custody.py` | Revalidate the frozen execution identity at launch, reuse, and completion. |
+| `execution_environment.py` | Digest the effective child environment without recording its values. |
+| `execution_records.py` | Source-bound execution records shared by every executor entry point. |
+| `execution_session.py` | Whole-run deadline and lock composition for every resolved-plan executor. |
+| `fingerprint_files.py` | Held-directory filesystem observations for content fingerprints. |
+| `fingerprints.py` | Content identities for source trees and stable deliverables. |
+| `hitl_context.py` | Public artifact context for a bound human review. |
+| `hitl_responses.py` | Typed validation of responses bound to a specific paused execution. |
+| `hitl_storage.py` | Confined, serialized mutations of human decision state. |
+| `multi_project_summary_worker.py` | Generate a typed aggregate summary only within its private scratch boundary. |
+| `multi_project_support.py` | Shared verification and aggregate completion for project orchestrators. |
+| `multi_project_worker.py` | Fresh-bytecode worker consuming the parent's exact immutable execution plan. |
+| `observability.py` | Pipeline logging, telemetry initialization, and advisory reports. |
+| `plan_custody.py` | Freeze declaration bytes and source identity before any plan policy parsing. |
+| `plan_serialization.py` | Strict transport decoding for immutable resolved execution plans. |
+| `report_finalization.py` | Supervised final reports within the executor's finite run deadline. |
+| `report_worker.py` | Fresh-bytecode worker for source-bound pipeline report generation. |
+| `runtime_namespace.py` | Admit the canonical isolated storage role before shared execution begins. |
+| `skip_receipts.py` | Fresh, parent-bound reasons for an explicitly skippable child stage. |
+| `stage_admission.py` | Original input and human review bindings transported to actual stage attempts. |
+| `stage_launch.py` | Fresh Python stage supervision and source-bound original exit receipts. |
+| `stage_worker.py` | Execute a declared Python stage with fresh caches and checked source custody. |
+| `target_contracts.py` | Canonical executable capabilities that declarations cannot weaken. |

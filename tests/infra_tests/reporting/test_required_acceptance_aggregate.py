@@ -10,7 +10,7 @@ from infrastructure.reporting.required_acceptance_aggregate import merge_receipt
 def _receipt(gates):
     return {
         "schema_version": SCHEMA_VERSION,
-        "platform_version": "4.0.0",
+        "platform_version": "4.0.1",
         "source_fingerprint": "a" * 64,
         "source_commit": "b" * 40,
         "roster": list(PUBLIC_PROJECT_NAMES),
@@ -20,7 +20,7 @@ def _receipt(gates):
 
 def _merge(values):
     return merge_receipts(
-        values, revision="b" * 40, fingerprint="a" * 64, version="4.0.0", required={"root:one", "root:two"}
+        values, revision="b" * 40, fingerprint="a" * 64, version="4.0.1", required={"root:one", "root:two"}
     )
 
 

@@ -2,6 +2,20 @@
 
 from __future__ import annotations
 
+from infrastructure.reporting.native_office_diagram_runtime import (
+    PDFiumRuntimeAdmission,
+)
+from infrastructure.reporting.native_office_diagram_source import (
+    prepare_office_diagram_source,
+)
+from infrastructure.reporting.native_office_full_worker_context import (
+    verify_office_font_nominations,
+)
+from infrastructure.reporting.native_format_pdf_source_decode_bounds import (
+    SourceImageDecodeBudget,
+    MAX_SOURCE_IMAGE_OCCURRENCES,
+)
+
 import argparse
 import json
 import math
@@ -14,6 +28,25 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.execution_boundary import run_bounded_subprocess
+from infrastructure.project.public_acceptance_dependencies import (
+    capture_runtime_providers,
+)
+from infrastructure.reporting.native_mermaid_runtime_selection import (
+    NativeMermaidSelection,
+    NativeMermaidRuntimeAdmission,
+)
+from infrastructure.reporting.native_source_external_admission import (
+    NativeSourceContext,
+)
+from infrastructure.reporting.native_format_joint_source import (
+    NativeSDKSelection,
+    admit_native_source_operation,
+    admitted_native_providers,
+    bound_input,
+)
+from infrastructure.reporting.native_format_process_custody import (
+    native_host_observation,
+)
 from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.core.pipeline.executor import PipelineExecutor
@@ -48,14 +81,24 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
     SOURCE_RENDER_ENV_NAMES,
     create_private_native_directory,
 )
-from infrastructure.reporting.native_format_content_contracts import compile_pdf_content_contract
-from infrastructure.reporting.native_format_observer_dispatch import observe_native_artifact, observe_format_controls
-from infrastructure.reporting.native_format_observer_outcome import native_observer_outcome
+from infrastructure.reporting.native_format_content_contracts import (
+    compile_pdf_content_contract,
+)
+from infrastructure.reporting.native_format_observer_dispatch import (
+    observe_native_artifact,
+    observe_format_controls,
+)
+from infrastructure.reporting.native_format_observer_outcome import (
+    native_observer_outcome,
+)
 from infrastructure.project.native_format_library_custody import (
     observe_native_library_custody,
     validate_native_library_custody,
 )
-from infrastructure.reporting.native_format_portable_custody import executable_observation, producer_custody
+from infrastructure.reporting.native_format_portable_custody import (
+    executable_observation,
+    producer_custody,
+)
 from infrastructure.reporting.native_format_pdf_oracles import (
     PDF_CONTROL_CODES,
     PDF_CONTROL_SCHEMA,
@@ -72,7 +115,19 @@ from infrastructure.validation.publication.audit import (
     format_publication_audit_json,
     validate_publication_audit,
 )
-from infrastructure.validation.publication.rendered_provenance import validate_rendered_provenance
+from infrastructure.validation.publication.rendered_provenance import (
+    validate_rendered_provenance,
+)
+
+
+from infrastructure.reporting.native_full_worker_pdfium import (
+    NativePDFiumSelection,
+    NativePDFiumProvider,
+)
+from infrastructure.reporting.native_full_worker_pdfium import (
+    readmit_full_worker_pdfium_provider,
+    full_worker_pdfium_execution,
+)
 
 
 def require_canonical_native_stages(plan: Any) -> None:
@@ -86,7 +141,12 @@ def require_canonical_native_stages(plan: Any) -> None:
 
 
 def _parser_control(
-    root: Path, directory: Path, run_id: str, kind: str, env: dict[str, str], deadline: float
+    root: Path,
+    directory: Path,
+    run_id: str,
+    kind: str,
+    env: dict[str, str],
+    deadline: float,
 ) -> dict[str, Any]:
     name = f"invalid-native-{kind}"
     path = directory / f"{name}.json"
@@ -134,7 +194,12 @@ def _parser_control(
 
 
 def _pdf_oracle_control(
-    root: Path, directory: Path, run_id: str, name: str, env: dict[str, str], deadline: float
+    root: Path,
+    directory: Path,
+    run_id: str,
+    name: str,
+    env: dict[str, str],
+    deadline: float,
 ) -> dict[str, Any]:
     """Require a real valid-PDF baseline before accepting specific mutant faults."""
     path = directory / f"pdf-oracle-{name}.json"
@@ -199,7 +264,14 @@ def run_pdf_oracle_control(root: Path, output: Path, name: str, nonce: str, dead
     observation = parse_native_bytes("pdf", snapshot.content)
     env = native_environment(root, Path(sys.executable), directory)
     raster = audit_pdf_raster(
-        root, directory, snapshot, observation, env=env, deadline=deadline, run_id=nonce, ordinal=0
+        root,
+        directory,
+        snapshot,
+        observation,
+        env=env,
+        deadline=deadline,
+        run_id=nonce,
+        ordinal=0,
     )
     contract = pdf_control_contract()
     oracle = inspect_pdf_content(
@@ -234,7 +306,16 @@ def run_pdf_oracle_control(root: Path, output: Path, name: str, nonce: str, dead
     return code
 
 
-def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, Any]:
+def _run_native_worker(
+    root: Path,
+    specification: dict[str, Any],
+    *,
+    source_context: NativeSourceContext,
+    mermaid_runtime: NativeMermaidRuntimeAdmission,
+    pdfium_runtime: PDFiumRuntimeAdmission,
+    office_font_files: tuple[Path, ...],
+    decoded_pixel_budget: SourceImageDecodeBudget,
+) -> dict[str, Any]:
     """Run the whole current core plan, then inspect exact native deliverables.
 
     Cleanup is explicitly omitted to preserve archived publication inputs.
@@ -244,11 +325,20 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
     """
     root = root.resolve()
     validate_native_specification(specification)
+    host_before = native_host_observation()
+    if host_before["system"] != specification["expected_platform"]:
+        raise ValueError("native worker host differs from the supervisor platform obligation")
     if any(key in SOURCE_RENDER_ENV_NAMES or key.startswith("SLIDES_") for key in os.environ):
         raise ValueError("native worker received an ambient rendering override")
     scope, run_id = specification["scope"], specification["run_id"]
     directory = evidence_directory(root, root / specification["directory"])
     deadline = specification["deadline_monotonic"]
+    from infrastructure.reporting.native_tool_producer import (
+        current_native_producer_operation,
+    )
+
+    native_reader = SnapshotReader(root, native_producer_operation=current_native_producer_operation())
+    source_context.verify_correspondence(source_context.reference, root, source_context.current_source_reader, deadline)
     formats = tuple(specification["formats"])
     before = public_source_digest(root)
     if before != specification["source_digest"]:
@@ -258,6 +348,9 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
     runtime_binding = write_json(root, directory / "runtime.json", {**runtime, "execution_exit_code": 0})
     raw: dict[str, Any] = {
         "schema_version": NATIVE_SCHEMA,
+        "pid": os.getpid(),
+        "host_before": host_before,
+        "host_after": {},
         "scope": scope,
         "run_id": run_id,
         "status": "fail",
@@ -270,6 +363,9 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
         "interpreter_observation_before": interpreter_before,
         "interpreter_observation_after": {},
         "runtime_artifact": runtime_binding,
+        "source_inputs": specification["source_inputs"],
+        "runtime_providers": {"before": {}, "after": {}},
+        "provider_metadata_artifacts": {},
         "pipeline": {},
         "formats": {},
         "artifacts": [],
@@ -286,8 +382,18 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
     }
     env = native_environment(root, Path(sys.executable), directory)
     try:
-        if runtime["missing"] or runtime["python_version"] not in {"3.12", "3.13", "3.14"}:
+        if runtime["missing"] or runtime["python_version"] not in {
+            "3.12",
+            "3.13",
+            "3.14",
+        }:
             raise NativeToolUnavailable("selected supported interpreter/test stack is not prepared")
+        providers = specification["source_inputs"]["providers"]
+        provider_before, metadata_artifacts = capture_runtime_providers(
+            root, providers, directory / "providers", retain_metadata=True
+        )
+        raw["runtime_providers"]["before"] = provider_before
+        raw["provider_metadata_artifacts"] = metadata_artifacts
         raw["library_custody_before"] = observe_native_library_custody(formats, repo_root=root)
         reader = SnapshotReader(root)
         config_raw = reader.read(f"projects/{scope}/manuscript/config.yaml").content
@@ -349,21 +455,34 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
                 raw["status"] = "blocked" if outcome.exit_code == 75 else "fail"
                 if raw["status"] == "blocked":
                     raw["blockers"].append(
-                        {"tool": "core execution contract", "reason": "native core execution paused or was blocked"}
+                        {
+                            "tool": "core execution contract",
+                            "reason": "native core execution paused or was blocked",
+                        }
                     )
                 raise ValueError("fresh source-owned core execution did not complete")
             if not validate_rendered_provenance(root, scope).valid:
                 raise ValueError("fresh native outputs lack valid current rendered provenance")
-            native_reader = SnapshotReader(root)
             contract = native_artifact_contract(root, scope, formats, native_reader)
             raw["contract_digest"] = contract_digest(contract)
             for index, artifact in enumerate(contract):
                 snapshot = native_reader.read(artifact.path)
                 observation = parse_native_bytes(artifact.format, snapshot.content)
-                row = {**asdict(artifact), "sha256": snapshot.sha256, "observation": observation}
+                row = {
+                    **asdict(artifact),
+                    "sha256": snapshot.sha256,
+                    "observation": observation,
+                }
                 if artifact.format == "pdf":
                     row["raster"] = audit_pdf_raster(
-                        root, directory, snapshot, observation, env=env, deadline=deadline, run_id=run_id, ordinal=index
+                        root,
+                        directory,
+                        snapshot,
+                        observation,
+                        env=env,
+                        deadline=deadline,
+                        run_id=run_id,
+                        ordinal=index,
                     )
                     content = compile_pdf_content_contract(root, scope, artifact, native_reader, deadline=deadline)
                     row["content_contract"] = content.to_dict()
@@ -381,6 +500,25 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
                         {"tool": f"PDF source oracle {artifact.id}", "reason": reason}
                         for reason in row["pdf_content"]["blockers"]
                     )
+                office_admission = None
+                if artifact.format in {"docx", "epub"}:
+                    office_admission = prepare_office_diagram_source(
+                        root,
+                        directory / f"office-source-admission-{index:04d}",
+                        scope,
+                        artifact,
+                        source_context,
+                        package_root=mermaid_runtime.selection.package_root,
+                        runtime_admission=mermaid_runtime,
+                        node_executable=mermaid_runtime.selection.node_executable,
+                        chrome_executable=mermaid_runtime.selection.chrome_executable,
+                        font_files=office_font_files,
+                        decoded_pixel_budget=decoded_pixel_budget,
+                        pdfium_runtime=pdfium_runtime,
+                        env=env,
+                        deadline=deadline,
+                        run_id=run_id,
+                    )
                 selected_tools = specification.get("observer_tools", {})
                 observer = observe_native_artifact(
                     root,
@@ -393,6 +531,9 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
                     deadline=deadline,
                     run_id=run_id,
                     ordinal=index,
+                    source_reference=source_context.reference,
+                    verify_source_correspondence=source_context.verify_correspondence,
+                    office_mermaid_admission=office_admission,
                     epubcheck_jar=Path(selected_tools["epubcheck_jar"])
                     if selected_tools.get("epubcheck_jar")
                     else None,
@@ -416,10 +557,17 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
                 id_ = f"manuscript:{kind}"
                 primary: dict[str, Any] | None = next((item for item in raw["artifacts"] if item["id"] == id_), None)
                 if kind == "slides":
-                    primary = next((item for item in raw["artifacts"] if item["id"].endswith(":slides")), None)
+                    primary = next(
+                        (item for item in raw["artifacts"] if item["id"].endswith(":slides")),
+                        None,
+                    )
                 if primary is None:
                     raise ValueError("required native format has no actual artifact")
-                raw["formats"][kind] = {"path": primary["path"], "sha256": primary["sha256"], "validated": True}
+                raw["formats"][kind] = {
+                    "path": primary["path"],
+                    "sha256": primary["sha256"],
+                    "validated": True,
+                }
             for kind in sorted({artifact.format for artifact in contract}):
                 raw["negative_controls"].append(_parser_control(root, directory, run_id, kind, env, deadline))
             if any(artifact.format == "pdf" for artifact in contract):
@@ -481,7 +629,11 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
         raw["status"], raw["execution_exit_code"] = "blocked", 75
         raw["blockers"].append({"tool": "native installed tool", "reason": str(error)})
     except TimeoutError as error:
-        raw["status"], raw["execution_exit_code"], raw["diagnostic"] = "fail", 124, str(error)
+        raw["status"], raw["execution_exit_code"], raw["diagnostic"] = (
+            "fail",
+            124,
+            str(error),
+        )
     except Exception as error:  # noqa: BLE001 - every unexpected observer failure remains failed
         raw["diagnostic"] = str(error)
         if raw["status"] != "blocked":
@@ -512,6 +664,31 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
             raw["status"] = "fail"
             raw["execution_exit_code"] = raw["execution_exit_code"] if raw["execution_exit_code"] in {124, 130} else 1
             raw["diagnostic"] = f"native decoder custody unavailable or changed: {error}"
+    try:
+        provider_after, _ = capture_runtime_providers(
+            root,
+            specification["source_inputs"]["providers"],
+            directory / "providers",
+            retain_metadata=False,
+        )
+        raw["runtime_providers"]["after"] = provider_after
+        if provider_after != raw["runtime_providers"]["before"]:
+            raise ValueError("native installed providers changed during execution")
+        source_context.verify_correspondence(
+            source_context.reference,
+            root,
+            native_reader,
+            deadline,
+        )
+    except (OSError, ValueError, RuntimeError) as error:
+        raw["status"] = "fail"
+        raw["execution_exit_code"] = raw["execution_exit_code"] if raw["execution_exit_code"] in {124, 130} else 1
+        raw["diagnostic"] = f"native original source/provider closing custody failed: {error}"
+    raw["host_after"] = native_host_observation()
+    if raw["host_after"] != host_before:
+        raw["status"] = "fail"
+        raw["execution_exit_code"] = raw["execution_exit_code"] if raw["execution_exit_code"] in {124, 130} else 1
+        raw["diagnostic"] = "native worker host changed during execution"
     raw["interpreter_observation_after"] = executable_observation(Path(sys.executable))
     if raw["interpreter_observation_after"] != interpreter_before:
         raw["status"], raw["execution_exit_code"] = "fail", 1
@@ -519,19 +696,136 @@ def run_native_worker(root: Path, specification: dict[str, Any]) -> dict[str, An
     return raw
 
 
+def run_native_worker(
+    root: Path,
+    specification: dict[str, Any],
+    *,
+    source_context: NativeSourceContext,
+    mermaid_selection: NativeMermaidSelection,
+    pdfium_provider: NativePDFiumProvider,
+    office_font_files: tuple[Path, ...],
+    decoded_pixel_budget: SourceImageDecodeBudget | None = None,
+) -> dict[str, Any]:
+    """Own live ToolAPI custody throughout this actual Source-admitted producer."""
+    from infrastructure.reporting.native_tool_producer import native_producer_operation
+
+    validate_native_specification(specification)
+    deadline = specification["deadline_monotonic"]
+    verify_office_font_nominations(
+        specification["source_inputs"]["office_fonts"],
+        office_font_files,
+        deadline=deadline,
+    )
+    # Allocate once at this genuine outer worker when no already-held caller
+    # budget is supplied. Every artifact/copy uses this exact same object.
+    if decoded_pixel_budget is None:
+        decoded_pixel_budget = SourceImageDecodeBudget(MAX_SOURCE_IMAGE_OCCURRENCES)
+    if not isinstance(decoded_pixel_budget, SourceImageDecodeBudget):
+        raise ValueError("native Office source needs the actual shared decoder budget")
+    with native_producer_operation(
+        source_context,
+        run_id=specification["run_id"],
+        deadline=specification["deadline_monotonic"],
+    ) as producer:
+        from infrastructure.reporting.native_mermaid_runtime_selection import (
+            readmit_source_mermaid_selection,
+            source_mermaid_runtime_operation,
+        )
+
+        runtime_directory = root / specification["directory"] / "mermaid-worker-runtime"
+        create_private_native_directory(root, runtime_directory)
+        runtime = readmit_source_mermaid_selection(
+            specification["source_inputs"]["mermaid_runtime"],
+            mermaid_selection,
+            source_context,
+            deadline=specification["deadline_monotonic"],
+            directory=runtime_directory,
+            env=native_environment(root, Path(sys.executable), runtime_directory),
+        )
+        with (
+            source_mermaid_runtime_operation(
+                runtime,
+                source=source_context,
+                deadline=specification["deadline_monotonic"],
+            ),
+            full_worker_pdfium_execution(
+                pdfium_provider,
+                directory=root / specification["directory"] / "pdfium-worker-runtime",
+                deadline=specification["deadline_monotonic"],
+            ) as pdfium_execution,
+        ):
+            raw = _run_native_worker(
+                root,
+                specification,
+                source_context=source_context,
+                mermaid_runtime=runtime,
+                pdfium_runtime=pdfium_execution.runtime,
+                office_font_files=office_font_files,
+                decoded_pixel_budget=decoded_pixel_budget,
+            )
+        if pdfium_execution.completed_binding is None:
+            raise ValueError("full native PDFium actual namespace/Code/image closure did not complete")
+        raw["pdfium_runtime"] = pdfium_execution.completed_binding
+        verify_office_font_nominations(
+            specification["source_inputs"]["office_fonts"],
+            office_font_files,
+            deadline=deadline,
+        )
+        raw["office_decode_budget"] = {
+            "declared_occurrences": decoded_pixel_budget.expected_occurrences,
+            "admitted_occurrences": decoded_pixel_budget.admitted_occurrences,
+            "decoded_pixels": decoded_pixel_budget.decoded_pixels,
+        }
+        try:
+            producer.verify(
+                SnapshotReader(root, native_producer_operation=producer),
+                run_id=specification["run_id"],
+                deadline=specification["deadline_monotonic"],
+            )
+        except (OSError, ValueError, RuntimeError) as error:
+            raw["status"] = "blocked"
+            if raw["execution_exit_code"] == 0:
+                raw["execution_exit_code"] = 75
+            raw["diagnostic"] = (
+                str(raw.get("diagnostic", "")) + f"; actual native producer final Source/SDK custody refused: {error}"
+            )
+        return raw
+
+
 def main(argv: list[str] | None = None) -> int:
     """Internal supervised worker; public CLI owns selection and final bindings."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", required=True, type=Path)
     parser.add_argument("--spec", type=Path)
+    parser.add_argument("--spec-sha256")
+    parser.add_argument("--source-descriptor", type=Path)
+    parser.add_argument("--source-descriptor-sha256")
+    parser.add_argument("--implementation-input", type=Path)
+    parser.add_argument("--implementation-sha256")
+    parser.add_argument("--audit-closure-directory", type=Path)
+    parser.add_argument("--audit-closure-identity", nargs=2, type=int)
+    parser.add_argument("--current-root-identity", nargs=2, type=int)
+    parser.add_argument("--mermaid-package-root", type=Path)
+    parser.add_argument("--mermaid-dependency-root", type=Path)
+    parser.add_argument("--mermaid-node-executable", type=Path)
+    parser.add_argument("--mermaid-chrome-executable", type=Path)
+    parser.add_argument("--mermaid-runtime-digest")
     parser.add_argument("--control", choices=("pdf", "html", "docx", "epub", "pptx", "png"))
     parser.add_argument(
-        "--control-suite", action="store_true", help="Internal actual nested parser-control transport check"
+        "--control-suite",
+        action="store_true",
+        help="Internal actual nested parser-control transport check",
     )
     parser.add_argument("--run-id")
     parser.add_argument("--control-output", type=Path)
     parser.add_argument("--pdf-oracle-control", choices=tuple(PDF_CONTROL_CODES))
     parser.add_argument("--deadline-monotonic", type=float)
+    parser.add_argument("--pdfium-site", type=Path)
+    parser.add_argument("--pdfium-wheel", type=Path)
+    parser.add_argument("--pdfium-wheel-sha256")
+    parser.add_argument("--pdfium-input-sha256")
+    parser.add_argument("--office-font-file", action="append", type=Path, default=[])
+    parser.add_argument("--office-fonts-sha256")
     args = parser.parse_args(argv)
     root = args.root.resolve()
     if args.pdf_oracle_control:
@@ -558,7 +852,11 @@ def main(argv: list[str] | None = None) -> int:
             _parser_control(root, directory, args.run_id, kind, env, deadline)
             for kind in ("pdf", "html", "docx", "epub", "pptx", "png")
         ]
-        write_json(root, directory / "parser-controls.json", {"run_id": args.run_id, "controls": controls})
+        write_json(
+            root,
+            directory / "parser-controls.json",
+            {"run_id": args.run_id, "controls": controls},
+        )
         return 0
     if args.control:
         code = 0
@@ -582,8 +880,138 @@ def main(argv: list[str] | None = None) -> int:
         return code
     if args.spec is None:
         parser.error("native worker requires an admitted specification")
-    specification = read_json(root, args.spec)
-    raw = run_native_worker(root, specification)
+    pins = (
+        args.spec_sha256,
+        args.source_descriptor,
+        args.source_descriptor_sha256,
+        args.implementation_input,
+        args.implementation_sha256,
+        args.audit_closure_directory,
+        args.audit_closure_identity,
+        args.current_root_identity,
+        args.mermaid_package_root,
+        args.mermaid_dependency_root,
+        args.mermaid_node_executable,
+        args.mermaid_chrome_executable,
+        args.mermaid_runtime_digest,
+        args.pdfium_site,
+        args.pdfium_wheel,
+        args.pdfium_wheel_sha256,
+        args.pdfium_input_sha256,
+        args.office_fonts_sha256,
+    )
+    if any(value is None for value in pins):
+        parser.error("native worker requires all original command-bound source/SDK/spec/closure pins")
+    input_reader = SnapshotReader(root)
+    spec_snapshot = input_reader.read(args.spec.relative_to(root).as_posix())
+    if spec_snapshot.sha256 != args.spec_sha256:
+        raise ValueError("native specification changed from original command pin")
+    specification = spec_snapshot.json_object()
+    validate_native_specification(specification)
+    inputs = specification["source_inputs"]
+    mermaid_selection = NativeMermaidSelection(
+        args.mermaid_package_root,
+        args.mermaid_dependency_root,
+        args.mermaid_node_executable,
+        args.mermaid_chrome_executable,
+    )
+    expected_runtime = {
+        **mermaid_selection.spec_data(),
+        "runtime_content_digest": args.mermaid_runtime_digest,
+    }
+    if inputs["mermaid_runtime"] != expected_runtime:
+        raise ValueError("native Source11 spec differs from all original command-pinned runtime nominations")
+    descriptor = bound_input(input_reader, inputs["descriptor"])
+    implementation = bound_input(input_reader, inputs["implementation"])
+    if (
+        descriptor.path != args.source_descriptor
+        or descriptor.sha256 != args.source_descriptor_sha256
+        or implementation.path != args.implementation_input
+        or implementation.sha256 != args.implementation_sha256
+    ):
+        raise ValueError("native source/SDK input differs from original command pins")
+    closure = root / inputs["closure"]["directory"]
+    metadata = closure.lstat()
+    current_metadata = root.lstat()
+    if (
+        closure != args.audit_closure_directory
+        or list((metadata.st_dev, metadata.st_ino)) != args.audit_closure_identity
+        or inputs["closure"]["identity"] != args.audit_closure_identity
+        or list((current_metadata.st_dev, current_metadata.st_ino)) != args.current_root_identity
+    ):
+        raise ValueError("native current root/closure differs from original actual physical bindings")
+    import infrastructure
+
+    if infrastructure.__file__ is None:
+        raise ValueError("native selected SDK origin is unavailable")
+    source_context = admit_native_source_operation(
+        root,
+        NativeSDKSelection(Path(infrastructure.__file__).absolute().parent, implementation.content),
+        run_id=specification["run_id"],
+        deadline=specification["deadline_monotonic"],
+        environment=os.environ,
+    )
+    from infrastructure.reporting.native_source_external_admission import (
+        validate_original_source_descriptor,
+    )
+
+    observation = validate_original_source_descriptor(
+        descriptor.content,
+        externally_bound_sha256=args.source_descriptor_sha256,
+        run_id=specification["run_id"],
+        scope=specification["scope"],
+        deadline=specification["deadline_monotonic"],
+    )
+    reference = source_context.reference
+    if (
+        observation["original_source"]["root"] != str(reference.root)
+        or observation["original_source"]["commit"] != reference.commit
+        or observation["original_source"]["source_identity"] != reference.source_identity
+        or observation["current_mirror"]["root"] != str(root)
+        or observation["current_mirror"]["root_identity"] != args.current_root_identity
+        or observation["selected_sdk"]["package_root"] != str(source_context.bindings.selected_sdk_package_root)
+        or observation["selected_sdk"]["implementation_sha256"] != implementation.sha256
+    ):
+        raise ValueError("native worker source/SDK re-admission differs from original observations")
+    wheels = {
+        scope: input_reader.public_path(provider["wheel_artifact"]["path"])
+        for scope, provider in inputs["providers"].items()
+    }
+    providers, roots = admitted_native_providers(
+        source_context,
+        specification["scope"],
+        wheels,
+        Path(sys.executable),
+        deadline=specification["deadline_monotonic"],
+    )
+    pdfium_provider = readmit_full_worker_pdfium_provider(
+        NativePDFiumSelection(args.pdfium_site, args.pdfium_wheel),
+        source_context,
+        inputs["pdfium"],
+        scope=specification["scope"],
+        wheel_sha256=args.pdfium_wheel_sha256,
+        input_sha256=args.pdfium_input_sha256,
+        deadline=specification["deadline_monotonic"],
+    )
+    roots = (*roots, *pdfium_provider.audit_roots)
+    if providers != inputs["providers"] or list(map(str, roots)) != inputs["provider_roots"]:
+        raise ValueError("native installed provider admission differs from original launch selection")
+    source_context.verify_correspondence(reference, root, input_reader, specification["deadline_monotonic"])
+    office_font_files = tuple(args.office_font_file)
+    verify_office_font_nominations(
+        inputs["office_fonts"],
+        office_font_files,
+        deadline=specification["deadline_monotonic"],
+        digest=args.office_fonts_sha256,
+    )
+    raw = run_native_worker(
+        root,
+        specification,
+        source_context=source_context,
+        mermaid_selection=mermaid_selection,
+        pdfium_provider=pdfium_provider,
+        office_font_files=office_font_files,
+    )
     write_json(root, root / specification["directory"] / "native-execution.json", raw)
     code = raw["execution_exit_code"]
     if type(code) is not int:

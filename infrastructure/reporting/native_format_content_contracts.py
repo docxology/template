@@ -177,7 +177,9 @@ def compile_pdf_content_contract(
     paths = discover_manuscript_files(manuscript)
     if artifact.id.startswith("section:") and artifact.id.endswith(":pdf"):
         name = artifact.id.removeprefix("section:").removesuffix(":pdf")
-        paths = [path for path in paths if path.name == name]
+        paths = [path for path in paths if path.relative_to(manuscript).as_posix() == name]
+        if len(paths) != 1:
+            raise ValueError("section identity requires one exact source-relative manuscript")
     snapshots: tuple[ArtifactSnapshot, ...] = tuple(reader.read(path.relative_to(root).as_posix()) for path in paths)
     contract = content_contract_from_bytes(artifact.id, tuple((item.relative, item.content) for item in snapshots))
     if artifact.id != "manuscript:pdf" and not (artifact.id.startswith("section:") and artifact.id.endswith(":pdf")):
@@ -200,17 +202,27 @@ class SemanticContentContract(NativeContentContract):
     image_sources: tuple[tuple[str, str, str], ...] = ()
     link_sources: tuple[tuple[str, str], ...] = ()
     citation_sources: tuple[tuple[str, tuple[str, ...]], ...] = ()
+    table_sources: tuple[dict[str, Any], ...] = ()
+    footnote_sources: tuple[dict[str, Any], ...] = ()
+    source_occurrences: tuple[dict[str, Any], ...] = ()
+    original_ast_sha256: str = ""
+    original_source_occurrences: tuple[dict[str, Any], ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         result = super().to_dict()
         result.update(
             {
-                "projection_schema": "template-pandoc-semantic-content-v1",
+                "projection_schema": "template-pandoc-semantic-content-v2",
                 "ast_sha256": self.ast_sha256,
                 "mathematical_sources": [list(item) for item in self.mathematical_sources],
                 "image_sources": [list(item) for item in self.image_sources],
                 "link_sources": [list(item) for item in self.link_sources],
                 "citation_sources": [[identity, list(keys)] for identity, keys in self.citation_sources],
+                "table_sources": list(self.table_sources),
+                "footnote_sources": list(self.footnote_sources),
+                "source_occurrences": list(self.source_occurrences),
+                "original_ast_sha256": self.original_ast_sha256,
+                "original_source_occurrences": list(self.original_source_occurrences),
             }
         )
         return result
@@ -224,152 +236,20 @@ def semantic_content_contract_from_ast(
     This pure compiler does not authenticate the AST producer. Dispatch binds
     actual parse commands and exact consumed source; replay reruns reconstruction.
     """
-    import json
+    from infrastructure.reporting.native_format_semantic_ast import compile_semantic_ast
 
-    if not sources or len(ast_bytes) > 32 * 1024 * 1024 or sum(len(data) for _, data in sources) > MAX_SOURCE_BYTES:
-        raise ValueError("semantic source contract exceeds its finite input budget")
-    document = json.loads(ast_bytes)
-    if (
-        not isinstance(document, dict)
-        or not isinstance(document.get("blocks"), list)
-        or not document.get("pandoc-api-version")
-    ):
-        raise ValueError("semantic source contract requires actual Pandoc JSON")
-    blocks: list[ContentBlock] = []
-    maths: list[tuple[str, str]] = []
-    images: list[tuple[str, str, str]] = []
-    links: list[tuple[str, str]] = []
-    citations: list[tuple[str, tuple[str, ...]]] = []
-    blockers: list[str] = []
-    node_count = 0
-
-    def identity() -> str:
-        return f"ast:{node_count}"
-
-    def inline(nodes: list[dict[str, Any]], kind: str) -> None:
-        pending: list[str] = []
-
-        def flush() -> None:
-            if pending and text_tokens("".join(pending)):
-                blocks.append(ContentBlock(f"{identity()}:text:{len(blocks)}", kind, 0, text_tokens("".join(pending))))
-            pending.clear()
-
-        def visit(node: dict[str, Any]) -> None:
-            nonlocal node_count
-            node_count += 1
-            tag = node.get("t")
-            content: Any = node.get("c")
-            if tag == "Str":
-                pending.append(content)
-            elif tag in {"Space", "SoftBreak", "LineBreak"}:
-                pending.append(" ")
-            elif tag in {"Emph", "Strong", "Underline", "Strikeout", "SmallCaps", "Superscript", "Subscript"}:
-                for child in content:
-                    visit(child)
-            elif tag == "Code":
-                pending.append(content[1])
-            elif tag == "Span":
-                for child in content[1]:
-                    visit(child)
-            elif tag == "Quoted":
-                pending.append("“" if content[0]["t"] == "DoubleQuote" else "‘")
-                for child in content[1]:
-                    visit(child)
-                pending.append("”" if content[0]["t"] == "DoubleQuote" else "’")
-            elif tag == "Link":
-                links.append((identity(), content[2][0]))
-                for child in content[1]:
-                    visit(child)
-            elif tag == "Cite":
-                citations.append((identity(), tuple(item["citationId"] for item in content[0])))
-                for child in content[1]:
-                    visit(child)
-            elif tag == "Math":
-                flush()
-                maths.append((identity(), content[1]))
-            elif tag == "Image":
-                flush()
-                alt = " ".join(child.get("c", "") for child in content[1] if child.get("t") == "Str")
-                images.append((identity(), content[2][0], alt))
-            elif tag == "Note":
-                flush()
-                blockers.append(f"{identity()}: footnote placement requires separate semantic layout observation")
-            else:
-                flush()
-                blockers.append(f"{identity()}: unsupported inline {tag}")
-            if node_count > 100000:
-                raise ValueError("semantic source node budget exceeded")
-
-        for node in nodes:
-            visit(node)
-        flush()
-
-    def nested(value: Any) -> None:
-        if isinstance(value, dict) and value.get("t") in {
-            "Para",
-            "Plain",
-            "Header",
-            "CodeBlock",
-            "Div",
-            "BlockQuote",
-            "BulletList",
-            "OrderedList",
-            "DefinitionList",
-            "Table",
-            "Figure",
-            "RawBlock",
-            "HorizontalRule",
-        }:
-            block(value)
-        elif isinstance(value, list):
-            for child in value:
-                nested(child)
-
-    def block(node: dict[str, Any]) -> None:
-        nonlocal node_count
-        node_count += 1
-        tag = node.get("t")
-        content: Any = node.get("c")
-        if tag in {"Para", "Plain"}:
-            inline(content, "body")
-        elif tag == "Header":
-            inline(content[2], f"heading:{content[0]}")
-        elif tag == "CodeBlock":
-            blocks.append(ContentBlock(f"{identity()}:code", "code", 0, text_tokens(content[1])))
-        elif tag == "Div":
-            for child in content[1]:
-                block(child)
-        elif tag == "OrderedList":
-            nested(content[1])
-        elif tag == "DefinitionList":
-            for term, definitions in content:
-                inline(term, "body")
-                nested(definitions)
-        elif tag in {"BlockQuote", "BulletList", "Table", "Figure"}:
-            if tag == "Table":
-                blockers.append(f"{identity()}: independent table cell geometry projection unsupported")
-            nested(content)
-        elif tag == "HorizontalRule":
-            pass
-        else:
-            blockers.append(f"{identity()}: unsupported block {tag}")
-        if node_count > 100000 or len(blocks) > MAX_BLOCKS:
-            raise ValueError("semantic source projection budget exceeded")
-
-    for item in document["blocks"]:
-        block(item)
-    if not blocks and not maths and not images:
-        blockers.append("semantic source contains no obligations")
-    if sum(len(item.tokens) for item in blocks) > MAX_TOKENS:
-        raise ValueError("semantic source token budget exceeded")
+    result = compile_semantic_ast(sources, ast_bytes)
     return SemanticContentContract(
-        artifact_id,
-        tuple((name, hashlib.sha256(data).hexdigest()) for name, data in sources),
-        tuple(blocks),
-        tuple(blockers),
-        hashlib.sha256(ast_bytes).hexdigest(),
-        tuple(maths),
-        tuple(images),
-        tuple(links),
-        tuple(citations),
+        artifact_id=artifact_id,
+        sources=tuple((name, hashlib.sha256(data).hexdigest()) for name, data in sources),
+        blocks=tuple(result["blocks"]),
+        blockers=tuple(result["blockers"]),
+        ast_sha256=hashlib.sha256(ast_bytes).hexdigest(),
+        mathematical_sources=tuple(result["maths"]),
+        image_sources=tuple(result["images"]),
+        link_sources=tuple(result["links"]),
+        citation_sources=tuple(result["citations"]),
+        table_sources=tuple(result["tables"]),
+        footnote_sources=tuple(result["footnotes"]),
+        source_occurrences=tuple(result["occurrences"]),
     )

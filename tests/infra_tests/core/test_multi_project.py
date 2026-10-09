@@ -85,6 +85,7 @@ sys.exit(0)
             "name": "Infrastructure Tests",
             "key": "infra_tests",
             "script": "scripts/pipeline/stage_01_test.py",
+            "args": ["--infra-only"],
             "tags": ["core"],
         },
         {

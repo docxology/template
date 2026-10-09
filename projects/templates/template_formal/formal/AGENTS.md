@@ -34,7 +34,7 @@ The shell wrapper starts the optional platform-backed `_tool_launcher.py`
 filesystem main. Its controller uses a private fresh cache; its supervised
 worker additionally receives the platform pre-import executed-code audit before
 calling `template_formal.tool_acceptance`. The domain package stays standalone;
-the direct tool command requires the `formal-tools` platform4.0.0 extra and
+the direct tool command requires the `formal-tools` platform4.0.1 extra and
 blocks75 if it is unavailable. It uses the
 exact source-owned Lean4.28.0 and dependency-free Lake manifest, then freshly
 elaborates `AntProtocol.lean` and checks all seven printed axiom audits. TLC
@@ -51,10 +51,11 @@ tool or formal source can become a successful skip.
 
 Acquisition is explicit through `--acquire`; ordinary checks never implicitly
 install a Lean toolchain. The same `v1.8.0` TLC release asset is bound to exact
-SHA256 `e9c2d914fc1b7ba3e4a982ba251dc5c0da65010afcc6a5f9651576a1c380deae`.
-This replaced a rejected stale checksum after independently matching downloaded
-bytes to the official release API's asset601828751 on2026-09-30. The release
-page's stale SHA1 is insufficient to admit the current asset. Cached bytes are
+SHA256 `7beec0f04818732a62fa193731711a99aa4f11279499b2360a7d156c519ea78d`.
+The previous asset601828751 is unavailable. These replacement bytes match the
+official release API's asset614143604 and an independent download on2026-10-08.
+The v1.8.0 tag is a locator; the jar identifies itself as TLC2.0 (2026-10-06).
+A release-page label or stale SHA1 is insufficient to admit the current asset. Cached bytes are
 verified on every run; mismatches fail without executing them. Public receipts
 contain actual commands, outcomes, source hashes and model output.
 

@@ -125,7 +125,7 @@ def test_inventory_only_native_receipt_cannot_pass(tmp_path: Path) -> None:
     output.parent.mkdir(parents=True)
     content = _pdf("Invented existing artifact")
     output.write_bytes(content)
-    requirement = Requirement(f"{SCOPE}:formats", "formats", SCOPE, "3.0.0", "4.0.0", "f" * 64, formats=("pdf",))
+    requirement = Requirement(f"{SCOPE}:formats", "formats", SCOPE, "3.0.0", "4.0.1", "f" * 64, formats=("pdf",))
     details = {
         "execution_exit_code": 0,
         "formats": {
@@ -417,7 +417,7 @@ def test_actual_child_outcome_survives_confined_persistence_refusal(tmp_path: Pa
         "run_id": "a" * 32,
         "before": "b" * 64,
         "fingerprint": "c" * 64,
-        "platform_version": "4.0.0",
+        "platform_version": "4.0.1",
         "selected": (SCOPE,),
         "deadline": time.monotonic() + 30,
         "admitted": [{"scope": SCOPE, "observation": observed, "process": None, "raw_binding": None}],

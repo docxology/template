@@ -78,3 +78,4 @@ runs:
         mkdir "$fonts"
         tar -xzf "$destination/fonts.tar.gz" -C "$fonts"
         if [ "$RUNNER_OS" = Linux ]; then fc-cache -f "$fonts"; fi
+        echo "TTFONTS=$fonts//:" >> "$GITHUB_ENV"

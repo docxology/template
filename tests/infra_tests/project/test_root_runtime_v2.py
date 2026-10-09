@@ -27,7 +27,6 @@ from infrastructure.project.public_root_runtime_producer import produce_runtime_
 from infrastructure.project.public_root_case_acceptance import run_root_case_acceptance
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.project.public_root_runtime_readback import read_runtime_cohort
-from infrastructure.project.public_root_runtime_worker import coordinate, lane_blockers
 from infrastructure.reporting.release_readiness_root_cases import case_requirements, validate_root_cases
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from tests.infra_tests.project import test_root_case_lanes as lane_controls
@@ -462,6 +461,16 @@ def test_whole_root_case_api_refuses_replacement_without_new_gate_probe_or_recei
             destination = root / "projects" / scope / name
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source / "projects" / scope / name, destination)
+        # Census admission binds every present public project's owned Python.
+        # Retain one genuine source file with the copied metadata; this partial
+        # fixture still claims only the actual Root replacement control.
+        lanes = RuntimeScope(source, scope).python_roots()
+        candidates = sorted([path for lane in lanes[:3] for path in lane.rglob("*.py")] + list(lanes[3:]))
+        assert candidates, "each copied canonical public project must have genuine Python source"
+        selected = candidates[0]
+        destination = root / selected.relative_to(source)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(selected, destination)
     saved = root.with_name(root.name + "-original-before-api-replacement")
     action = root / "output/readiness/action.json"
     try:
@@ -480,7 +489,13 @@ def test_whole_root_case_api_refuses_replacement_without_new_gate_probe_or_recei
         original_paths = {path.relative_to(saved) for path in saved.rglob("*") if path.is_file()}
         replacement_paths = {path.relative_to(root) for path in root.rglob("*") if path.is_file()}
         assert replacement_paths <= original_paths
-        for relative in replacement_paths:
+        events = Path("output/readiness/events.txt")
+        assert events in original_paths & replacement_paths
+        # The admitted real cases append their own lifecycle events after the
+        # same-content copy: first teardown, then second setup/call/teardown.
+        # Every other byte, including API evidence and source, stays exact.
+        assert (root / events).read_bytes() == (saved / events).read_bytes() + b"teardown\nsetup\ncall\nteardown\n"
+        for relative in replacement_paths - {events}:
             assert (root / relative).read_bytes() == (saved / relative).read_bytes()
         assert not (root / "output/readiness/whole-api-replacement/receipt.json").exists()
         selected_directory = (
@@ -543,26 +558,71 @@ def test_real_blocked_unit_then_original_executed_guard_failure_precedes_unavail
     binding = write(root, root / spec["directory"] / "runtime-spec.json", spec, _root_identity(root))
     source = root / "tests/test_owned.py"
     saved = source.read_bytes()
-    seen = []
-    previous = sys.getprofile()
+    from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
+    from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
 
-    def actual_observation(frame: Any, event: str, value: Any) -> None:
-        # Observe the real function return; preserve its actual original result.
-        # This hook replaces no dependency or implementation. The independent
-        # worker entrypoint remains the exact source-owned code under test.
-        if frame.f_code is lane_blockers.__code__ and event == "return" and value and not seen:
-            seen.append(copy.deepcopy(value))
-            source.write_bytes(saved + b"\n# actual owned source mutation after unavailable unit observation\n")
-
+    implementation = Path(__file__).resolve().parents[3]
+    cache = root / spec["directory"] / "owned-control-bytecode"
+    assert not cache.exists()
+    cache.mkdir(mode=0o700, parents=True)
+    observation = root / spec["directory"] / "owned-blocker-observation.json"
+    # The genuine coordinator must start after its trusted pre-import audit,
+    # just as the production entrypoint does. A normal loaded-baseline caller
+    # cannot satisfy the fresh-worker portable observation contract.
+    program = (
+        "import sys\nsys.pycache_prefix=sys.argv.pop(1)\nsys.dont_write_bytecode=False\n"
+        + bytecode_audit_bootstrap((implementation / "infrastructure", root / "tests"), None)
+        + "sys.path.insert(0,sys.argv.pop(1))\n"
+        + """
+import copy,json
+from pathlib import Path
+from infrastructure.project.public_root_runtime_worker import coordinate,lane_blockers
+root,spec,source,observation=map(Path,sys.argv[1:5])
+expected_hash=sys.argv[5]
+saved=source.read_bytes()
+seen=[]
+def actual_observation(frame,event,value):
+    if frame.f_code is lane_blockers.__code__ and event=='return' and value and not seen:
+        seen.append(copy.deepcopy(value))
+        source.write_bytes(saved+b'\\n# actual owned source mutation after unavailable unit observation\\n')
+sys.setprofile(actual_observation)
+try:
+    code=coordinate(root,spec,expected_hash)
+finally:
+    sys.setprofile(None)
+observation.write_text(json.dumps({'exit_code':code,'seen':seen,'source_changed':source.read_bytes()!=saved}))
+raise SystemExit(code)
+"""
+    )
+    environment = build_bounded_env()
+    environment.update(SOURCE_DATE_EPOCH="0", TEMPLATE_BUILD_EPOCH_SOURCE="explicit-owned-control")
     try:
-        sys.setprofile(actual_observation)
-        code = lane_controls._epoch_call(coordinate, root, root / binding["path"], binding["sha256"])
-        assert code == 1
-        assert seen and source.read_bytes() != saved
+        process = lane_controls._epoch_call(
+            run_bounded_subprocess,
+            [
+                sys.executable,
+                "-I",
+                "-c",
+                program,
+                str(cache),
+                str(implementation),
+                str(root),
+                str(root / binding["path"]),
+                str(source),
+                str(observation),
+                binding["sha256"],
+            ],
+            cwd=root,
+            env=environment,
+            timeout=720,
+        )
+        assert process.returncode == 1 and not process.timed_out, process
+        observed = json.loads(observation.read_bytes())
+        assert observed["exit_code"] == 1 and observed["seen"] and observed["source_changed"]
+        assert source.read_bytes() != saved
         current = json.loads((root / spec["directory"] / "runtime-cell.json").read_bytes())
         assert current["exit_code"] == 1 and current["diagnostic"]
         assert next(row for row in current["units"] if row["unit"] == "core")["exit_code"] == 75
         assert not (root / "output/readiness/live-body").exists()
     finally:
-        sys.setprofile(previous)
         source.write_bytes(saved)

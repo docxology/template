@@ -50,7 +50,7 @@ cell=root/'output/readiness/whole-native'
 def binding(path):
  return {'path':str(path.relative_to(root)),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
 rawpath=cell/'native-execution.json';raw=json.loads(rawpath.read_text())
-requirement=Requirement('fixture:formats','formats','templates/template_code_project','3.0.0','4.0.0',project_source_identity(root,'templates/template_code_project'),deliverables_identity=deliverable_identity(root,'templates/template_code_project'),formats=('pdf',))
+requirement=Requirement('fixture:formats','formats','templates/template_code_project','3.0.0','4.0.1',project_source_identity(root,'templates/template_code_project'),deliverables_identity=deliverable_identity(root,'templates/template_code_project'),formats=('pdf',))
 details={'schema_version':NATIVE_SCHEMA,'run_id':raw['run_id'],'formats':raw['formats'],'native_execution_artifact':binding(rawpath),'specification_artifact':binding(cell/'spec.json'),'process_artifact':binding(cell/'process.json')}
 validate_native_conformance(requirement,details,SnapshotReader(root))
 assert not Path(raw['producer_custody']['root']).exists()
@@ -80,7 +80,7 @@ def test_actual_whole_native_receipt_survives_relocation_and_separate_reader(tmp
     env = os.environ.copy()
     env.update(SOURCE_DATE_EPOCH="1700000000", MPLCONFIGDIR=str(tmp_path / "matplotlib"))
     setup = run_bounded_subprocess(
-        ["uv", "sync", "--locked", "--offline", "--group", "dev"],
+        ["uv", "sync", "--locked", "--offline", "--group", "dev", "--python", sys.executable],
         cwd=producer,
         env=env,
         timeout=90,

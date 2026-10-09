@@ -27,7 +27,7 @@ Source coverage includes domain checks and real controlled HTTP transport. The o
 ## Bounded local coordination (opt-in)
 
 The default `--mode core` preserves the deterministic figures. `--mode live`
-requires platform 4.0.0 and an explicitly selected already-installed Ollama model
+requires platform 4.0.1 and an explicitly selected already-installed Ollama model
 at a literal loopback endpoint. Both arms execute 3–6 proposals with equal
 experiment, token and request-time ceilings, and three-seed confirmation.
 Actual token consumption is recorded separately. The JSON proposal may alter

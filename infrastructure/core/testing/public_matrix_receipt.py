@@ -40,6 +40,7 @@ from infrastructure.core.logging.utils import get_logger, log_substep
 from infrastructure.core.project_pyproject import project_declared_coverage_floor
 from infrastructure.core.testing.test_runner_cache import _cache_identity_inputs, _resolve_roster_revision
 from infrastructure.core.testing.test_runner_outputs import output_tree_digest
+from infrastructure.core.files.secure_write import read_bytes_confined
 
 logger = get_logger(__name__)
 
@@ -63,6 +64,8 @@ class PublicMatrixLaneResult:
     collection_count: int | None = None
     output_isolation_digest: str = ""
     resource_limits: dict[str, str | int | float] = field(default_factory=dict)
+    coverage_database: dict[str, str | int] | None = None
+    original_exit_code: int | None = None
 
 
 @dataclass(frozen=True)
@@ -208,6 +211,11 @@ class PublicMatrixReceipt:
             if not lane.output_isolation_ok:
                 errors.append(f"OUTPUT-ISOLATION: project '{lane.project_name}' changed output/")
 
+            if lane.exit_code == 0 and lane.declared_floor is not None:
+                if lane.coverage_percent is None or not math.isfinite(lane.coverage_percent):
+                    errors.append(
+                        f"MISSING-LANE-COVERAGE: project '{lane.project_name}' has no finite measured coverage"
+                    )
             # Negative control 4: coverage-floor failure
             if (
                 lane.declared_floor is not None
@@ -332,7 +340,35 @@ def write_public_matrix_receipt(
     lane_context: list[tuple[Any, Any, float | None]] = []
     for result in results:
         spec = next(s for s in specs if s.index == result.index)
-        coverage_percent = measure_coverage_percent(result.coverage_file)
+        database_binding = getattr(result, "coverage_database", None)
+        custody_ok = True
+        if result.exit_code == 0 and getattr(spec, "declared_command", None) is not None and database_binding is None:
+            logger.error(
+                "Project '%s' passing declared lane lacks independently admitted coverage binding", result.project_name
+            )
+            custody_ok = False
+            overall_exit = overall_exit or 75
+        if database_binding is not None:
+            try:
+                database = read_bytes_confined(repo_root, result.coverage_file, max_bytes=64 * 1024 * 1024)
+                current_binding = {
+                    "path": str(result.coverage_file.absolute()),
+                    "sha256": hashlib.sha256(database).hexdigest(),
+                    "bytes": len(database),
+                }
+                if current_binding != database_binding:
+                    raise ValueError("isolated coverage differs from its independently admitted bytes")
+            except (OSError, ValueError) as exc:
+                logger.error(
+                    "Project '%s' isolated coverage custody refused at receipt finalization: %s",
+                    result.project_name,
+                    exc,
+                )
+                custody_ok = False
+                overall_exit = overall_exit or 75
+        coverage_percent = measure_coverage_percent(result.coverage_file) if custody_ok else None
+        if result.exit_code == 0 and coverage_percent is None:
+            overall_exit = overall_exit or 1
         lane_context.append((result, spec, coverage_percent))
 
     output_isolation: dict[int, bool] = {}
@@ -385,15 +421,27 @@ def write_public_matrix_receipt(
                 coverage_percent=coverage_percent,
                 output_isolation_ok=output_isolation[spec.index],
                 duration_seconds=result.duration_seconds,
-                resource_profile=worker_info,
+                resource_profile="source-declared-verifier"
+                if getattr(spec, "declared_command", None) is not None
+                else worker_info,
                 skip_reason="",
                 collection_count=result.collection_count,
                 cache_key=cache_key,
                 output_isolation_digest=output_tree_digest(spec.project_root),
+                coverage_database=getattr(result, "coverage_database", None),
+                original_exit_code=getattr(result, "original_exit_code", None),
                 resource_limits={
-                    "subprocess_timeout_seconds": subprocess_timeout_seconds,
-                    "outer_project_workers": str(project_workers or "serial"),
-                    "inner_xdist_workers": str(parallel or "serial"),
+                    "subprocess_timeout_seconds": getattr(result, "subprocess_timeout_seconds", None)
+                    or subprocess_timeout_seconds,
+                    "outer_project_workers": "1"
+                    if getattr(spec, "declared_command", None) is not None
+                    else str(project_workers or "serial"),
+                    "inner_xdist_workers": "source-declared"
+                    if getattr(spec, "declared_command", None) is not None
+                    else str(parallel or "serial"),
+                    "test_selection": json.dumps(list(spec.declared_command))
+                    if getattr(spec, "declared_command", None) is not None
+                    else str(marker_expr or "all collected tests"),
                 },
             )
         )

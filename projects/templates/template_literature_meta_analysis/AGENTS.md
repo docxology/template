@@ -79,7 +79,7 @@ These commands run from the monorepo root. Stage 01 creates/uses the project's
 isolated environment and installs dependencies declared in its `pyproject.toml`.
 
 For an independent source checkout, prepare its own Python 3.12–3.14 environment
-with the actual platform 4.0.0 wheel and this project's `dev` extra, following
+with the actual platform 4.0.1 wheel and this project's `dev` extra, following
 [`STANDALONE.md`](STANDALONE.md). From that checkout's root, run:
 
 ```bash

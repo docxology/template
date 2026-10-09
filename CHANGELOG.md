@@ -7,6 +7,22 @@ gitignore, or treat those trees as confidential); where entries mention
 `projects/`, they refer to **generic layout and tooling** defined by the template,
 not to the contents of any specific workspace.
 
+## [4.0.1] - Unreleased
+
+See the [illustrated candidate notes](docs/releases/v4.0.1.md). The prepared
+4.0.0 candidate was not published; v3.8.0 remains the preceding published root
+release. Final-source acceptance is required before dating or tagging this entry.
+
+- Align the root SDK, all 25 platform bindings, exact provider requirements,
+  locks and installed/export checks with the explicitly requested 4.0.1 version;
+  retain each exemplar's independent version and historical publications.
+- Use source-relative manuscript section identity, preserve original native
+  PID/host observations and retain timeout/interruption outcome precedence.
+- Select illustrated notes and image assets from the actual release tag while
+  preserving admitted installed-wheel and final distribution byte custody.
+- Continue the strict scientific, browser, Office, print, projection and
+  portable source witnesses; incomplete native and publication gates stay blocked.
+
 ## [4.0.0] - 2026-10-07
 
 See the [illustrated version notes](docs/releases/v4.0.0.md) for the repository
@@ -86,6 +102,14 @@ architecture, update summary and release boundary.
   receipt-validated outcome contracts. Process-exit assertions now accept an
   unreapable zombie (hosts whose PID 1 never reaps orphans), and several timing
   parameters were widened so startup under load cannot fail them.
+
+- Renew the exact TLC asset pin after upstream replacement while preserving
+  finite-model positives, the required invariant violation and tool/source
+  custody checks. Distinguish the download tag from the actual jar build.
+- Update the root and affected exemplar dependency locks to the audited security
+  fixes; retain all security checks and existing advisory policy. Prepare the
+  genuine Meta provider with an explicit locked interpreter for counts and
+  static health, and retain invalid pipeline invocation status two.
 
 ### Earlier verified work
 

@@ -54,9 +54,7 @@ def main() -> int:
         result = evaluate_strong_rules(rule_set, context)
         sym = "✓" if result["passed"] else "✗"
         print(
-            f"  {sym}  {rule_set} — "
-            f"evaluations={len(result['evaluations'])}  "
-            f"violations={result['violation_count']}"
+            f"  {sym}  {rule_set} — evaluations={len(result['evaluations'])}  violations={result['violation_count']}"
         )
         for evaluation in result["evaluations"]:
             if evaluation["passed"]:

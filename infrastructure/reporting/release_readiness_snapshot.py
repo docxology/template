@@ -83,9 +83,23 @@ class ArtifactSnapshot:
 class SnapshotReader:
     """Read each public path once; detect mutation before the report completes."""
 
-    def __init__(self, repo_root: Path, *, hosted_origin: Any = None) -> None:
+    def __init__(
+        self,
+        repo_root: Path,
+        *,
+        hosted_origin: Any = None,
+        native_operation: Any = None,
+        native_producer_operation: Any = None,
+        native_control_operation: Any = None,
+    ) -> None:
         self.root = repo_root.resolve()
         self.hosted_origin = hosted_origin
+        # Live external context only; receipt decoding never populates this.
+        self.native_operation = native_operation
+        # Explicit live owner only; never inferred from retained receipt DATA.
+        self.native_producer_operation = native_producer_operation
+        # A genuinely completed distinct original control; never receipt DATA.
+        self.native_control_operation = native_control_operation
         # Cache origin authentication only; no gate or logical execution decisions.
         self.hosted_origin_authorizations: dict[str, Any] = {}
         self.snapshots: dict[Path, ArtifactSnapshot] = {}
@@ -166,7 +180,11 @@ class SnapshotReader:
             if before != self._identity(path):
                 raise ValueError("acceptance artifact changed while being read")
             self.snapshots[path] = ArtifactSnapshot(
-                path, Path(relative).as_posix(), content, hashlib.sha256(content).hexdigest(), before
+                path,
+                Path(relative).as_posix(),
+                content,
+                hashlib.sha256(content).hexdigest(),
+                before,
             )
         if len(self.snapshots[path].content) > max_bytes:
             raise ValueError("held snapshot exceeds the admitted byte ceiling")

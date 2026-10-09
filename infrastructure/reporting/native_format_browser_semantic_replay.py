@@ -27,7 +27,8 @@ def replay_semantic_control(
 ) -> None:
     from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
     from infrastructure.reporting.native_format_browser_semantic_controls import (
-        SOURCE,
+        semantic_control_source,
+        alpha_figure_bytes,
         BIBLIOGRAPHY,
         figure_bytes,
         mutate_html,
@@ -40,10 +41,12 @@ def replay_semantic_control(
     if raw.get("schema_version") != "template-native-browser-semantic-control-v1" or raw.get("run_id") != run_id:
         raise ValueError("semantic browser control identity differs")
     for filename, content in (
-        ("source.md", SOURCE),
+        ("source.md", semantic_control_source(name)),
         ("references.bib", BIBLIOGRAPHY),
         ("figure.png", figure_bytes()),
         ("wrong.png", figure_bytes(mutant=True)),
+        ("alpha.png", alpha_figure_bytes()),
+        ("wrong-alpha.png", alpha_figure_bytes(mutant=True)),
     ):
         snapshot = reader.read((directory / filename).relative_to(root).as_posix())
         if snapshot.content != content:
@@ -89,7 +92,10 @@ def replay_semantic_control(
     )
     if parsed.get("stdout", "").encode() != ast.content:
         raise ValueError("semantic fixture AST differs from original actual stdout")
-    sources = ((source.relative_to(root).as_posix(), SOURCE), (bib.relative_to(root).as_posix(), BIBLIOGRAPHY))
+    sources = (
+        (source.relative_to(root).as_posix(), semantic_control_source(name)),
+        (bib.relative_to(root).as_posix(), BIBLIOGRAPHY),
+    )
     contract = semantic_content_contract_from_ast("semantic-browser-control", sources, ast.content)
     if raw.get("contract") != contract.to_dict():
         raise ValueError("semantic fixture source contract is not actual AST-derived")
@@ -100,7 +106,7 @@ def replay_semantic_control(
         work = Path(private).resolve()
         independent_source = work / "source.md"
         independent_bib = work / "references.bib"
-        independent_source.write_bytes(SOURCE)
+        independent_source.write_bytes(semantic_control_source(name))
         independent_bib.write_bytes(BIBLIOGRAPHY)
         result = run_bounded_subprocess(
             [

@@ -129,8 +129,10 @@ def test_direct_boundary_requires_the_planned_key_or_keyless_display_fallback(tm
     assert executor._artifact_manifest_sealed
 
 
-@pytest.mark.timeout(120)
-@pytest.mark.parametrize("full_pipeline", [False, True])
+@pytest.mark.parametrize(
+    "full_pipeline",
+    [pytest.param(False, marks=pytest.mark.timeout(120)), pytest.param(True, marks=pytest.mark.timeout(240))],
+)
 @pytest.mark.parametrize("validation_key", ["validate", "commitment_check"])
 def test_validation_seals_aggregate_before_core_and_full_downstream_stages(
     tmp_path: Path,

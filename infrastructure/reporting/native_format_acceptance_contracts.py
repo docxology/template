@@ -26,11 +26,52 @@ from infrastructure.rendering.manuscript_discovery import discover_manuscript_fi
 from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 from infrastructure.validation.output.render_formats import render_config_manuscript_dir
 
-NATIVE_SCHEMA = "template-native-format-execution-v4"
+NATIVE_SCHEMA = "template-native-format-execution-v6"
 CONTROL_SCHEMA = "template-native-format-control-v1"
-TOOL_SCHEMA = "template-native-tool-execution-v2"
+TOOL_SCHEMA = "template-native-tool-execution-v3"
+TOOL_FIELDS = frozenset(
+    (
+        "caller_deadline_monotonic",
+        "command",
+        "custody_refused",
+        "diagnostic",
+        "executable",
+        "executable_identity_after",
+        "executable_identity_before",
+        "executable_observation_after",
+        "executable_observation_before",
+        "executable_sha256",
+        "exit_code",
+        "native_process_artifact",
+        "original_deadline_monotonic",
+        "original_exit_code",
+        "owner_pid",
+        "pid",
+        "purpose",
+        "raw_stderr",
+        "raw_stdout",
+        "run_id",
+        "schema_version",
+        "stderr",
+        "stdout",
+        "timed_out",
+        "tool",
+    )
+)
+CITATION_TOOL_FIELDS = TOOL_FIELDS | frozenset(
+    {
+        "cwd",
+        "environment_digest",
+        "input_observations_before",
+        "input_observations_after",
+        "consumed_input_artifacts",
+        "started_at_monotonic",
+        "duration_seconds",
+    }
+)
+HTML_TOOL_FIELDS = TOOL_FIELDS | frozenset({"html_python_source_closure", "html_python_source_closure_error"})
 WORKER_MODULE = "infrastructure.reporting.native_format_acceptance_worker"
-PROCESS_SCHEMA = "template-native-format-process-v1"
+PROCESS_SCHEMA = "template-native-format-process-v3"
 
 
 class NativeDeadlineUnavailable(RuntimeError):
@@ -133,15 +174,19 @@ def create_private_native_directory(root: Path, directory: Path) -> None:
         child = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=parent)
         held = os.fstat(child)
         named = os.stat(name, dir_fd=parent, follow_symlinks=False)
-        if not stat.S_ISDIR(named.st_mode) or (held.st_dev, held.st_ino) != (named.st_dev, named.st_ino):
+        if not stat.S_ISDIR(named.st_mode) or (held.st_dev, held.st_ino) != (
+            named.st_dev,
+            named.st_ino,
+        ):
             raise ValueError("native private evidence leaf changed after creation")
         if not _directory_identity_matches(lexical_root, parts, parent):
             raise ValueError("native evidence parent changed after private creation")
         os.fchmod(child, 0o700)
         current = os.stat(name, dir_fd=parent, follow_symlinks=False)
-        if (held.st_dev, held.st_ino) != (current.st_dev, current.st_ino) or not _directory_identity_matches(
-            lexical_root, parts, parent
-        ):
+        if (held.st_dev, held.st_ino) != (
+            current.st_dev,
+            current.st_ino,
+        ) or not _directory_identity_matches(lexical_root, parts, parent):
             raise ValueError("native private evidence custody changed during permission admission")
     finally:
         if child >= 0:
@@ -151,15 +196,39 @@ def create_private_native_directory(root: Path, directory: Path) -> None:
 
 def validate_native_specification(specification: dict[str, Any]) -> None:
     """Refuse invalid scopes, paths and budgets before any native execution."""
-    names = {"scope", "run_id", "directory", "formats", "source_digest", "timeout_seconds", "deadline_monotonic"}
+    names = {
+        "scope",
+        "run_id",
+        "directory",
+        "formats",
+        "source_digest",
+        "timeout_seconds",
+        "deadline_monotonic",
+        "expected_platform",
+        "source_inputs",
+    }
     if (
         set(specification) not in (names, names | {"observer_tools"})
         or specification["scope"] not in PUBLIC_PROJECT_NAMES
     ):
         raise ValueError("native worker requires an exact canonical public specification")
+    from infrastructure.reporting.native_format_process_custody import (
+        require_native_platform,
+    )
+
+    require_native_platform(specification["expected_platform"])
+    from infrastructure.reporting.native_format_joint_source import (
+        validate_joint_source_inputs,
+    )
+
+    validate_joint_source_inputs(specification["source_inputs"])
     if "observer_tools" in specification:
         tools = specification["observer_tools"]
-        if not isinstance(tools, dict) or set(tools) != {"epubcheck_jar", "java_executable", "frozen_epub_engine"}:
+        if not isinstance(tools, dict) or set(tools) != {
+            "epubcheck_jar",
+            "java_executable",
+            "frozen_epub_engine",
+        }:
             raise ValueError("native observer tools require the exact source-owned selection")
         if (tools["epubcheck_jar"] is None) != (tools["java_executable"] is None):
             raise ValueError("native EPUB observation needs both actual tools")
@@ -222,7 +291,10 @@ def public_source_digest(root: Path) -> str:
     """Bind public source/config/locks without outputs that rendering must change."""
     reader = SnapshotReader(root)
     records = [
-        (path.relative_to(root).as_posix(), reader.read(path.relative_to(root).as_posix()).sha256)
+        (
+            path.relative_to(root).as_posix(),
+            reader.read(path.relative_to(root).as_posix()).sha256,
+        )
         for path in public_source_paths(root)
     ]
     if not records or not reader.unchanged():
@@ -279,7 +351,11 @@ def native_artifact_contract(
             add("manuscript:pdf", "pdf", f"{output}/pdf/{basename}_combined.pdf")
             for source in consumed:
                 if source.suffix == ".tex" and not is_transmission_bookend(source):
-                    add(f"section:{source.name}:pdf", "pdf", f"{output}/pdf/{source.stem}.pdf")
+                    add(
+                        f"section:{source.relative_to(manuscript).as_posix()}:pdf",
+                        "pdf",
+                        f"{output}/pdf/{source.stem}.pdf",
+                    )
         elif kind == "html":
             add("manuscript:html", "html", f"{output}/web/index.html")
             for source in consumed:
@@ -287,7 +363,11 @@ def native_artifact_contract(
                     continue
                 raw = f"{source.parent.name}__{source.stem}"
                 stem = re.sub(r"[^A-Za-z0-9._-]+", "-", raw).strip("-._") or source.stem
-                add(f"section:{source.name}:html", "html", f"{output}/web/{stem}.html")
+                add(
+                    f"section:{source.relative_to(manuscript).as_posix()}:html",
+                    "html",
+                    f"{output}/web/{stem}.html",
+                )
         elif kind == "slides":
             effective = _mapping(reader, (manuscript / "config.yaml").relative_to(root).as_posix())
             profile = effective.get("render", {}).get("slides", {}).get("profile", "archive")
@@ -297,11 +377,23 @@ def native_artifact_contract(
                 text = reader.read(source.relative_to(root).as_posix()).content.decode()
                 if "<!-- render:skip-beamer -->" in text:
                     continue
-                add(f"section:{source.name}:slides", "pdf", f"{output}/slides/{source.stem}_slides.pdf")
+                add(
+                    f"section:{source.relative_to(manuscript).as_posix()}:slides",
+                    "pdf",
+                    f"{output}/slides/{source.stem}_slides.pdf",
+                )
                 if profile == "accessible":
-                    add(f"section:{source.name}:reveal", "html", f"{output}/slides/{source.stem}_slides.html")
+                    add(
+                        f"section:{source.relative_to(manuscript).as_posix()}:reveal",
+                        "html",
+                        f"{output}/slides/{source.stem}_slides.html",
+                    )
         elif kind in {"docx", "epub"}:
-            add(f"manuscript:{kind}", kind, f"{output}/{kind}/{basename}_combined.{kind}")
+            add(
+                f"manuscript:{kind}",
+                kind,
+                f"{output}/{kind}/{basename}_combined.{kind}",
+            )
         else:
             raise ValueError("native acceptance received an unsupported declared format")
 
@@ -321,7 +413,11 @@ def native_artifact_contract(
         subject = _basename(deck.get("pitch_subject", "template_template"))
         for length in ("short", "medium", "long"):
             for kind in kinds:
-                add(f"pitch:{length}:{kind}", kind, f"{output}/{kind}/{subject}_pitch_{length}.{kind}")
+                add(
+                    f"pitch:{length}:{kind}",
+                    kind,
+                    f"{output}/{kind}/{subject}_pitch_{length}.{kind}",
+                )
     if scope == "templates/template_newspaper":
         edition = _mapping(reader, f"{base}/content/edition.yaml")
         name = _basename(edition.get("render", {}).get("output_basename", "the-triplicate"))
@@ -340,8 +436,16 @@ def native_artifact_contract(
                 raise ValueError("storybook page identities must be contiguous")
             slug = _basename(page.get("slug"))
             name = "00_cover.png" if number == 0 else f"{number:02d}_{slug}.png"
-            add(f"storybook:page:{number}", "png", f"{output}/figures/storybook_pages/{name}")
-        add("storybook:contact-sheet", "png", f"{output}/figures/storybook_contact_sheet.png")
+            add(
+                f"storybook:page:{number}",
+                "png",
+                f"{output}/figures/storybook_pages/{name}",
+            )
+        add(
+            "storybook:contact-sheet",
+            "png",
+            f"{output}/figures/storybook_contact_sheet.png",
+        )
     if len({row.id for row in rows}) != len(rows) or len({row.path for row in rows}) != len(rows):
         raise ValueError("native artifact obligations collide")
     if "slides" in formats and not any(row.id.endswith(":slides") for row in rows):

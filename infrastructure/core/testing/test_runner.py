@@ -22,10 +22,11 @@ The runner:
   an explicit list),
 * skips projects listed in ``skip_projects`` (default: ``("fep_lean",)``,
   which has its own dedicated CI job),
-* invokes a real ``pytest`` subprocess **per project** so conftest
-  plugins never collide,
-* uses ``--cov=projects/<name>/src`` per project and an isolated coverage
-  datafile for every subprocess,
+* invokes a real ``pytest`` subprocess per ordinary project, or the project
+  source-declared verifier under its independent receipt/coverage contract,
+  so conftest plugins never collide,
+* keeps one isolated coverage database per project; declared verifiers bind
+  their independently validated exact bytes before matrix combination,
 * combines those per-project files only after all subprocesses exit, so an
   inherited infrastructure ``COVERAGE_FILE`` cannot contaminate the union,
 * runs ``coverage report --fail-under=<fail_under>`` at the end and
@@ -52,6 +53,15 @@ from infrastructure.core.logging.utils import (
     log_success,
 )
 from infrastructure.core.testing.project_test_matrix import ProjectTestTask, run_project_test_matrix
+from infrastructure.core.execution_boundary import build_bounded_env
+from infrastructure.core.files.secure_write import read_bytes_confined
+import hashlib
+from infrastructure.core.project_pyproject import project_declared_test_command
+from infrastructure.reporting.project_verifier import (
+    DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS,
+    ProjectVerifierError,
+    run_declared_project_verifier,
+)
 from infrastructure.core.testing.public_matrix_receipt import write_public_matrix_receipt
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.core.testing.test_runner_outputs import (
@@ -110,6 +120,8 @@ class ProjectPytestSpec:
     coverage_file: Path
     cmd: list[str]
     env: dict[str, str]
+    declared_command: tuple[str, ...] | None = None
+    coverage_floor: int = DEFAULT_PROJECT_FAIL_UNDER
 
 
 @dataclass(frozen=True)
@@ -124,6 +136,9 @@ class ProjectPytestResult:
     detail: str = ""
     duration_seconds: float = 0.0
     collection_count: int | None = None
+    subprocess_timeout_seconds: float | None = None
+    coverage_database: dict[str, str | int] | None = None
+    original_exit_code: int | None = None
 
 
 def discover_skip_combined_pytest_projects(repo_root: Path) -> tuple[str, ...]:
@@ -208,10 +223,11 @@ def _execute_project_pytest_matrix(
             capture_output=capture_output,
         )
         for spec in specs
+        if spec.declared_command is None
     )
     results = run_project_test_matrix(tasks, workers=project_workers)
     coverage_by_index = {spec.index: spec.coverage_file for spec in specs}
-    return [
+    adapted = [
         ProjectPytestResult(
             index=result.index,
             project_name=result.project_name,
@@ -221,9 +237,59 @@ def _execute_project_pytest_matrix(
             detail=result.detail,
             duration_seconds=result.duration_seconds,
             collection_count=result.collection_count,
+            subprocess_timeout_seconds=subprocess_timeout_seconds,
         )
         for result in results
     ]
+    # Declared verifier lanes retain their existing composed whole-verifier
+    # budget. They run serially after the ordinary matrix, so they never add
+    # workers beyond the admitted outer concurrency cap.
+    for spec in specs:
+        if spec.declared_command is None:
+            continue
+        started = monotonic()
+        code, detail, count = 1, "", None
+        database_binding, original_exit = None, None
+        try:
+            code, observed = run_declared_project_verifier(
+                repo_root,
+                spec.project_root,
+                spec.project_name,
+                spec.declared_command,
+                coverage_floor=spec.coverage_floor,
+                timeout_seconds=DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS,
+                environment=build_bounded_env(spec.env),
+                coverage_destination=spec.coverage_file,
+            )
+            database_binding = observed.get("coverage_database")
+            if database_binding is None:
+                raise ProjectVerifierError(
+                    "Passing declared verifier lacks its independently admitted coverage binding",
+                    exit_code=75,
+                    original_exit_code=0,
+                )
+            count = observed["discovery_count"]
+            original_exit = observed["original_exit_code"]
+        except ProjectVerifierError as exc:
+            code, detail, original_exit = exc.exit_code, str(exc), exc.original_exit_code
+        except (OSError, ValueError) as exc:
+            detail = str(exc)
+        adapted.append(
+            ProjectPytestResult(
+                spec.index,
+                spec.project_name,
+                code,
+                spec.coverage_file,
+                timed_out=code == 124,
+                detail=detail,
+                duration_seconds=round(monotonic() - started, 3),
+                collection_count=count,
+                subprocess_timeout_seconds=DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS,
+                coverage_database=database_binding,
+                original_exit_code=original_exit,
+            )
+        )
+    return sorted(adapted, key=lambda result: result.index)
 
 
 def _run_combined_coverage_gate(
@@ -268,6 +334,7 @@ def _combine_project_coverage(
         "-m",
         "coverage",
         "combine",
+        "--keep",
         f"--data-file={combined_file}",
         *[str(path) for path in existing],
     ]
@@ -466,15 +533,20 @@ def run_per_project_pytest(
         except ProjectTestRuntimeError as exc:
             logger.error("Project '%s' prepared test runtime refused: %s", project_name, exc)
             return exc.exit_code
-        cmd = build_union_pytest_command(
-            repo_root,
-            project_root,
-            tests_dir,
-            is_first=(index == 0),
-            marker_expr=resolved_markers,
-            timeout=timeout,
-            parallel=parallel,
-            fail_under=project_floor,
+        declared_command = project_declared_test_command(project_root)
+        cmd = (
+            list(declared_command)
+            if declared_command is not None
+            else build_union_pytest_command(
+                repo_root,
+                project_root,
+                tests_dir,
+                is_first=(index == 0),
+                marker_expr=resolved_markers,
+                timeout=timeout,
+                parallel=parallel,
+                fail_under=project_floor,
+            )
         )
         specs.append(
             ProjectPytestSpec(
@@ -485,6 +557,8 @@ def run_per_project_pytest(
                 coverage_file=project_coverage_file,
                 cmd=cmd,
                 env=project_env,
+                declared_command=declared_command,
+                coverage_floor=project_floor,
             )
         )
 
@@ -538,8 +612,25 @@ def run_per_project_pytest(
             )
             overall_exit = 1
 
+    admitted_files = []
+    for result in results:
+        if result.coverage_database is not None:
+            try:
+                database = read_bytes_confined(repo_root, result.coverage_file, max_bytes=64 * 1024 * 1024)
+                binding = {
+                    "path": str(result.coverage_file.absolute()),
+                    "sha256": hashlib.sha256(database).hexdigest(),
+                    "bytes": len(database),
+                }
+                if binding != result.coverage_database:
+                    raise ValueError("independently admitted isolated coverage bytes changed")
+            except (OSError, ValueError) as exc:
+                logger.error("Project '%s' coverage custody refused before combine: %s", result.project_name, exc)
+                overall_exit = overall_exit or 75
+                continue
+        admitted_files.append(result.coverage_file)
     combine_started = monotonic()
-    combine_rc = _combine_project_coverage(repo_root, cf_path, project_coverage_files, base_env)
+    combine_rc = _combine_project_coverage(repo_root, cf_path, admitted_files, base_env)
     combine_duration = round(monotonic() - combine_started, 3)
     if combine_rc != 0:
         overall_exit = overall_exit or combine_rc
@@ -571,7 +662,7 @@ def run_per_project_pytest(
         combined_coverage_percent=combined_pct,
         combined_floor=fail_under,
         measure_coverage_percent=_measure_coverage_percent,
-        subprocess_timeout_seconds=DEFAULT_SUBPROCESS_TIMEOUT_SECONDS,
+        subprocess_timeout_seconds=subprocess_timeout_seconds,
         overall_exit=overall_exit,
         phase_durations={
             "project_matrix": matrix_duration,

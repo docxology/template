@@ -1,6 +1,6 @@
 # Python runtime support
 
-Platform 4.0.0 requires Python 3.12 or newer. The repository default and release
+Platform 4.0.1 requires Python 3.12 or newer. The repository default and release
 interpreter is Python 3.14. CI validates Python 3.12, 3.13, and 3.14 for the
 infrastructure and every canonical public exemplar; macOS adds a Python 3.14
 smoke lane. All supported Ubuntu lanes run on pull requests as well as main.
@@ -8,7 +8,7 @@ smoke lane. All supported Ubuntu lanes run on pull requests as well as main.
 The previous Python 3.10/3.11 support belongs to platform 3.x. Raising the floor
 is a breaking platform change and does not relabel prior published releases.
 Public exemplar packages retain independent versions. Their `[tool.template]`
-metadata binds `platform_version = "4.0.0"` and lists the three tested Python
+metadata binds `platform_version = "4.0.1"` and lists the three tested Python
 minor versions; package and manuscript metadata describe the intended next
 release, while published citation/deposit sidecars remain historical evidence.
 

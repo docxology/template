@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 import venv
@@ -48,7 +49,38 @@ def test_exemplar_collection_ignores_stale_relocated_pytest_wrapper(tmp_path: Pa
     tests.mkdir(parents=True)
     (tests / "test_moved.py").write_text("def test_moved():\n    assert True\n", encoding="utf-8")
 
-    venv.EnvBuilder(with_pip=False, system_site_packages=True).create(project / ".venv")
+    venv.EnvBuilder(with_pip=False, symlinks=True).create(project / ".venv")
+    selected = project / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    uv = shutil.which("uv")
+    assert uv is not None
+    environment = dict(os.environ)
+    environment["UV_PROJECT_ENVIRONMENT"] = str(project / ".venv")
+    # Locked sync consumes authenticated wheel URLs without needing cached index discovery.
+    # Exclude the source project and optional Git scanner; install genuine Rootdev runners.
+    installed = subprocess.run(
+        [
+            uv,
+            "sync",
+            "--project",
+            str(_repo_root()),
+            "--locked",
+            "--offline",
+            "--no-python-downloads",
+            "--only-group",
+            "dev",
+            "--no-install-project",
+            "--no-install-package",
+            "desloppify",
+            "--python",
+            str(selected),
+        ],
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=15,
+    )
+    assert installed.returncode == 0, installed.stderr
     wrapper = project / ".venv" / "bin" / "pytest"
     stale_contents = b"#!/checkout/that/no/longer/exists/.venv/bin/python\n"
     wrapper.write_bytes(stale_contents)

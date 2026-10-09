@@ -28,10 +28,12 @@ The file list always comes from ``git ls-files``, so untracked local noise
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 import os
 import stat
 import subprocess
+import sys
 import tempfile
 import uuid
 from collections.abc import Callable
@@ -49,6 +51,7 @@ from infrastructure.project.copy_exemplar import (
     _is_clean_source_path,
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.project.public_reference_git import GitReference, committed_blobs, inventory
 from infrastructure.publishing._standalone_export import canonical_snapshot_export
 from infrastructure.rules.public_scope import PUBLIC_RULE_NAMES
 from infrastructure.tools.public_scope import PUBLIC_TOOL_NAMES
@@ -135,7 +138,8 @@ class MirrorResult:
         return self.added + self.modified + self.deleted
 
 
-def _git(args: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess[str]:
+def _git_environment() -> dict[str, str]:
+    """Retain the original Git repository-selector and routing environment boundary."""
     # Keep normal global credential-helper configuration, while refusing
     # inherited repository/index selectors and command-level config injection.
     env = {
@@ -146,6 +150,11 @@ def _git(args: list[str], cwd: Path, check: bool = True) -> subprocess.Completed
     }
     # A replacement ref must never change the objects bound to a published SHA.
     env["GIT_NO_REPLACE_OBJECTS"] = "1"
+    return env
+
+
+def _git(args: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess[str]:
+    env = _git_environment()
     result = run_bounded_subprocess(
         ["git", "--no-replace-objects", "-c", "core.hooksPath=/dev/null", *args],
         cwd=cwd,
@@ -156,6 +165,132 @@ def _git(args: list[str], cwd: Path, check: bool = True) -> subprocess.Completed
     if check and proc.returncode != 0:
         raise RuntimeError(f"git {' '.join(args[:3])} failed in {cwd}: {proc.stderr.strip()}")
     return proc
+
+
+def _git_head_status(cwd: Path, supplied: str | None = None) -> tuple[str, str | None, str]:
+    """Run the original native commit/status reads under one bounded guardian.
+
+    Git stdout/stderr stream directly into the existing bounded supervisor.
+    No child output is accumulated in an unbounded intermediate buffer.
+    """
+    script = """
+import os,signal,subprocess,sys
+prefix='template-git-head-status-v1:'
+commands=[('HEAD',['rev-parse','--verify','HEAD^{commit}'])]
+if len(sys.argv)>1:
+    commands.append(('LABEL',['rev-parse','--verify',sys.argv[1]+'^{commit}']))
+commands.append(('STATUS',['status','--porcelain','--untracked-files=all']))
+for label,args in commands:
+    print(prefix+label,flush=True)
+    try:
+        result=subprocess.run(['git','--no-replace-objects','-c','core.hooksPath=/dev/null',*args],check=False,timeout=60)
+    except subprocess.TimeoutExpired:
+        print('original native Git read exceeded its 60-second deadline',file=sys.stderr,flush=True)
+        raise SystemExit(124)
+    if result.returncode:
+        print('original native Git return code: '+str(result.returncode),file=sys.stderr,flush=True)
+        if result.returncode<0:
+            signum=-result.returncode
+            if signum!=signal.SIGKILL:
+                signal.signal(signum,signal.SIG_DFL)
+            os.kill(os.getpid(),signum)
+            raise SystemExit(1)
+        raise SystemExit(result.returncode)
+print(prefix+'END',flush=True)
+"""
+    command = [sys.executable, "-I", "-S", "-c", script]
+    if supplied is not None:
+        command.append(supplied)
+    result = run_bounded_subprocess(command, cwd=cwd, env=_git_environment(), timeout=60)
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"git HEAD/status read batch failed in {cwd}: {(result.stderr or result.command_error).strip()}"
+        )
+    prefix = "template-git-head-status-v1:"
+    labels = ("HEAD", "LABEL", "STATUS", "END") if supplied is not None else ("HEAD", "STATUS", "END")
+    output = result.stdout
+    records: dict[str, str] = {}
+    for index, label in enumerate(labels[:-1]):
+        marker = prefix + label + "\n"
+        if not output.startswith(marker):
+            raise ValueError("native Git admission read framing is malformed")
+        output = output[len(marker) :]
+        next_marker = prefix + labels[index + 1] + "\n"
+        if output.count(next_marker) != 1:
+            raise ValueError("native Git admission read framing is ambiguous")
+        records[label], output = output.split(next_marker, 1)
+        output = next_marker + output
+    if output != prefix + "END\n":
+        raise ValueError("native Git admission read has trailing output")
+    return (
+        records["HEAD"].strip(),
+        records.get("LABEL", "").strip() if supplied is not None else None,
+        records["STATUS"],
+    )
+
+
+def _git_source_inventory(cwd: Path, revision: str) -> tuple[list[str], str]:
+    """Read the same tracked paths and committed provider tree under one60s guardian."""
+    commands = [
+        ("TRACKED", ["ls-files", "-z", "--", "."]),
+        (
+            "TREE",
+            [
+                "ls-tree",
+                "-r",
+                "-z",
+                revision,
+                "--",
+                *(root.as_posix() for root in _PUBLIC_ROOTS),
+                "infrastructure",
+                "pyproject.toml",
+            ],
+        ),
+    ]
+    script = """
+import json,os,signal,subprocess,sys
+prefix='template-git-source-inventory-v1:'
+for label,args in json.loads(sys.argv[1]):
+    print(prefix+label,flush=True)
+    try:
+        result=subprocess.run(['git','--no-replace-objects','-c','core.hooksPath=/dev/null',*args],check=False,timeout=60)
+    except subprocess.TimeoutExpired:
+        print('original native Git read exceeded its 60-second deadline',file=sys.stderr,flush=True)
+        raise SystemExit(124)
+    if result.returncode:
+        print('original native Git return code: '+str(result.returncode),file=sys.stderr,flush=True)
+        if result.returncode<0:
+            signum=-result.returncode
+            if signum!=signal.SIGKILL:
+                signal.signal(signum,signal.SIG_DFL)
+            os.kill(os.getpid(),signum)
+            raise SystemExit(1)
+        raise SystemExit(result.returncode)
+print(prefix+'END',flush=True)
+"""
+    result = run_bounded_subprocess(
+        [sys.executable, "-I", "-S", "-c", script, json.dumps(commands)],
+        cwd=cwd,
+        env=_git_environment(),
+        timeout=60,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"git source inventory batch failed in {cwd}: {(result.stderr or result.command_error).strip()}"
+        )
+    prefix = "template-git-source-inventory-v1:"
+    output = result.stdout
+    records = {}
+    for label, next_label in (("TRACKED", "TREE"), ("TREE", "END")):
+        marker = prefix + label + "\n"
+        following = prefix + next_label + "\n"
+        if not output.startswith(marker) or output.count(following) != 1:
+            raise ValueError("native Git source inventory framing is malformed or ambiguous")
+        records[label], output = output[len(marker) :].split(following, 1)
+        output = following + output
+    if output != prefix + "END\n":
+        raise ValueError("native Git source inventory has trailing output")
+    return [path for path in records["TRACKED"].split("\0") if path], records["TREE"]
 
 
 def validate_git_destination(
@@ -294,46 +429,81 @@ def _public_source(repo_root: Path, source: Path, provider_roots: tuple[Path, ..
 
 def clean_source_revision(repo_root: Path, supplied: str | None = None) -> str:
     """Admit an actual clean HEAD; user-supplied labels cannot grant source identity."""
-    head = _git(["rev-parse", "--verify", "HEAD^{commit}"], cwd=repo_root).stdout.strip()
+    if supplied is not None and not re.fullmatch(r"[0-9a-f]{7,64}", supplied):
+        raise ValueError("standalone source revision must be an actual hexadecimal HEAD identity")
+    head, resolved, status = _git_head_status(repo_root, supplied)
     if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", head):
         raise ValueError("standalone source HEAD has an unsupported commit identity")
-    if supplied is not None:
-        if not re.fullmatch(r"[0-9a-f]{7,64}", supplied):
-            raise ValueError("standalone source revision must be an actual hexadecimal HEAD identity")
-        resolved = _git(["rev-parse", "--verify", f"{supplied}^{{commit}}"], cwd=repo_root).stdout.strip()
-        if resolved != head:
-            raise ValueError("standalone source revision differs from current HEAD")
-    if _git(["status", "--porcelain", "--untracked-files=all"], cwd=repo_root).stdout.strip():
+    if supplied is not None and resolved != head:
+        raise ValueError("standalone source revision differs from current HEAD")
+    if status.strip():
         raise ValueError("standalone publication requires a clean source working tree")
     return head
 
 
-def _committed_files(repo_root: Path, revision: str, budget: _Budget) -> dict[str, tuple[str, str]]:
-    listed = _git(
-        [
-            "ls-tree",
-            "-r",
-            "-z",
-            revision,
-            "--",
-            *(root.as_posix() for root in _PUBLIC_ROOTS),
-            "infrastructure",
-            "pyproject.toml",
-        ],
-        cwd=repo_root,
-    ).stdout
+def _committed_files(
+    repo_root: Path,
+    revision: str,
+    budget: _Budget,
+    *,
+    listed: str | None = None,
+    pinned: list[GitReference] | None = None,
+) -> dict[str, tuple[str, str]]:
+    if listed is None:
+        listed = _git(
+            [
+                "ls-tree",
+                "-r",
+                "-z",
+                revision,
+                "--",
+                *(root.as_posix() for root in _PUBLIC_ROOTS),
+                "infrastructure",
+                "pyproject.toml",
+            ],
+            cwd=repo_root,
+        ).stdout
     records: dict[str, tuple[str, str]] = {}
+    links: dict[str, tuple[str, str]] = {}
     for entry in listed.split("\0"):
         if not entry:
             continue
         budget.check()
         header, path = entry.split("\t", 1)
         mode, kind, identity = header.split(" ")
-        if kind != "blob" or mode not in {"100644", "100755", "120000"}:
+        if path in records or path in links:
+            raise ValueError("committed mirror input repeats a provider path")
+        if (mode, kind) == ("160000", "commit"):
+            links[path] = mode, identity
+        elif kind == "blob" and mode in {"100644", "100755", "120000"}:
+            records[path] = mode, identity
+        else:
             raise ValueError("standalone source contains an unsupported committed provider")
-        records[path] = mode, identity
-        if len(records) > budget.limits.max_files:
+        if len(records) + len(links) > budget.limits.max_files:
             raise ValueError("committed mirror input exceeds its finite entry limit")
+    if links:
+        if pinned is None:
+            raise ValueError("pinned mirror source requires retained native reference custody")
+        reference = inventory(repo_root, revision, budget.deadline)
+        if {row.path: (row.mode, row.oid) for row in reference.gitlinks} != links:
+            raise ValueError("pinned mirror declaration differs from its admitted source tree")
+        selected = {
+            row.path: (row.mode, row.oid)
+            for row in reference.files
+            if row.path == "pyproject.toml"
+            or Path(row.path).is_relative_to("infrastructure")
+            or any(Path(row.path).is_relative_to(root) for root in _PUBLIC_ROOTS)
+        }
+        if selected != records:
+            raise ValueError("pinned mirror raw source inventory differs from its admitted source tree")
+        for path, (row, _) in committed_blobs(reference).items():
+            if any(path.startswith(prefix + "/") for prefix in links):
+                if path in records:
+                    raise ValueError("pinned mirror source repeats a committed provider")
+                records[path] = row.mode, row.oid
+                if len(records) > budget.limits.max_files:
+                    raise ValueError("expanded committed mirror input exceeds its finite entry limit")
+        pinned.append(reference)
     return records
 
 
@@ -402,13 +572,41 @@ def populate_mirror_tree(
     if source_revision is not None:
         source_revision = clean_source_revision(repo_root, source_revision)
     destination = destination.absolute()
-    tracked = frozenset(_tracked_paths(repo_root, "."))
+    listed = None
+    if source_revision is None:
+        tracked_paths = _tracked_paths(repo_root, ".")
+    else:
+        tracked_paths, listed = _git_source_inventory(repo_root, source_revision)
+    tracked = frozenset(tracked_paths)
     if len(tracked) > budget.limits.max_files:
         raise ValueError("tracked mirror input exceeds its finite entry limit")
     root_stat = repo_root.stat()
     root_identity = (root_stat.st_dev, root_stat.st_ino)
-    committed = _committed_files(repo_root, source_revision, budget) if source_revision is not None else None
+    pinned: list[GitReference] = []
+    committed = (
+        _committed_files(repo_root, source_revision, budget, listed=listed, pinned=pinned)
+        if source_revision is not None
+        else None
+    )
+    if pinned:
+        tracked = tracked | frozenset(committed or {})
+        if len(tracked) > budget.limits.max_files:
+            raise ValueError("expanded tracked mirror input exceeds its finite entry limit")
+    resource_inventories: dict[str, tuple[Path, ...]] = {}
+    held_providers: dict[Path, tuple[Path, tuple[int, ...], tuple[int, ...], str, int, tuple[Path, ...]]] = {}
+    held_directories: dict[Path, tuple[int, int]] = {repo_root: root_identity} if pinned else {}
     copied_files = 0
+
+    def hold_directories(path: Path) -> None:
+        for directory in path.parents:
+            budget.check()
+            current = directory.lstat()
+            identity = current.st_dev, current.st_ino
+            if not stat.S_ISDIR(current.st_mode) or held_directories.setdefault(directory, identity) != identity:
+                raise ValueError("pinned mirror provider directory changed during admission")
+            if directory == repo_root:
+                return
+        raise ValueError("pinned mirror provider has no admitted source root")
 
     def copy_source(
         source: Path,
@@ -459,6 +657,9 @@ def populate_mirror_tree(
             copied_files += 1
             if copied_files > budget.limits.max_files:
                 raise ValueError("materialized mirror input exceeds its finite entry limit")
+            resolved_initial = observation(resolved.lstat()) if pinned else ()
+            if pinned:
+                hold_directories(resolved)
             content = read_bytes_confined(
                 repo_root, resolved, max_bytes=64 * 1024 * 1024, expected_root_identity=root_identity
             )
@@ -473,6 +674,17 @@ def populate_mirror_tree(
             mode = 0o755 if os.stat(resolved).st_mode & 0o111 else 0o644
             if committed is not None:
                 _verify_committed(relative.as_posix(), content, "100755" if mode == 0o755 else "100644", committed)
+            if pinned:
+                if observation(resolved.lstat()) != resolved_initial:
+                    raise ValueError("pinned mirror provider changed during initial admission")
+                held_providers[source] = (
+                    resolved,
+                    observation(initial),
+                    resolved_initial,
+                    hashlib.sha256(content).hexdigest(),
+                    mode,
+                    provider_roots,
+                )
             atomic_write_bytes_confined(snapshot, target, content, mode=mode)
             count = 1
         if (
@@ -488,7 +700,9 @@ def populate_mirror_tree(
         snapshot.mkdir()
         snapshot_project = snapshot / project_rel
         snapshot_project.mkdir(parents=True)
-        for relative in tracked_relative_paths(repo_root, project_rel):
+        _project_root(repo_root, project_rel)
+        prefix = f"{project_rel}/"
+        for relative in (path[len(prefix) :] for path in tracked_paths if path.startswith(prefix)):
             if _is_clean_source_path(Path(relative)):
                 copy_source(project_root / relative, snapshot_project / relative, snapshot)
         dependencies = _declared_resource_dependencies(snapshot_project)
@@ -497,7 +711,19 @@ def populate_mirror_tree(
             if resource_root.resolve(strict=True) != resource_root.absolute() or not resource_root.is_dir():
                 raise ValueError("declared public resource root must be a real confined directory")
             provider_roots = _PUBLIC_ROOTS + ((Path("infrastructure"),) if dependency == "infrastructure" else ())
-            entries = [path for path in tracked if Path(path).is_relative_to(dependency)]
+            if pinned and dependency == "infrastructure":
+                from infrastructure.reporting.readiness_receipts import public_resource_source_paths
+
+                paths = public_resource_source_paths(repo_root, dependency)
+                resource_inventories[dependency] = paths
+                entries = [path.relative_to(repo_root).as_posix() for path in paths]
+                for prefix, nested in pinned[0].submodules:
+                    expected = {prefix + "/" + row.path for row in nested.files}
+                    observed = {path for path in entries if path.startswith(prefix + "/")}
+                    if observed != expected:
+                        raise ValueError("public mirror resource inventory differs from its complete pinned source")
+            else:
+                entries = [path for path in tracked if Path(path).is_relative_to(dependency)]
             if not entries:
                 raise ValueError("declared resource dependency has no tracked public contents")
             for entry in sorted(entries):
@@ -524,11 +750,69 @@ def populate_mirror_tree(
                 _verify_committed("pyproject.toml", content, metadata_mode, committed)
             if observation(metadata.lstat()) != observation(initial):
                 raise ValueError("platform export metadata changed during confined read")
+            if pinned:
+                held_providers[metadata] = (
+                    metadata,
+                    observation(initial),
+                    observation(initial),
+                    hashlib.sha256(content).hexdigest(),
+                    0o755 if initial.st_mode & 0o111 else 0o644,
+                    (Path("pyproject.toml"),),
+                )
             atomic_write_bytes_confined(snapshot, snapshot / "pyproject.toml", content)
         exported = scratch / project_root.name
         canonical_snapshot_export(snapshot, project_rel, exported, source_revision, budget)
+        for dependency, paths in resource_inventories.items():
+            if public_resource_source_paths(repo_root, dependency) != paths:
+                raise ValueError("public mirror resource inventory changed during export")
+        for reference in pinned:
+            if inventory(repo_root, reference.commit, budget.deadline) != reference:
+                raise ValueError("pinned mirror native reference custody changed during export")
+        if pinned:
+            current_root = repo_root.lstat()
+            if not stat.S_ISDIR(current_root.st_mode) or (current_root.st_dev, current_root.st_ino) != root_identity:
+                raise ValueError("pinned mirror source root changed during export")
+            for directory, identity in held_directories.items():
+                budget.check()
+                current = directory.lstat()
+                if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != identity:
+                    raise ValueError("pinned mirror provider directory changed during export")
+            assert committed is not None
+            for source, held in held_providers.items():
+                budget.check()
+                resolved, source_observed, provider_observed, digest, mode, provider_roots = held
+                if (
+                    observation(source.lstat()) != source_observed
+                    or _bound_source(repo_root, source, committed, budget, provider_roots) != resolved
+                    or observation(resolved.lstat()) != provider_observed
+                ):
+                    raise ValueError("pinned mirror physical provider changed during export")
+                closing = read_bytes_confined(
+                    repo_root, resolved, max_bytes=64 * 1024 * 1024, expected_root_identity=root_identity
+                )
+                budget.check(len(closing))
+                actual_mode = 0o755 if resolved.lstat().st_mode & 0o111 else 0o644
+                if (
+                    hashlib.sha256(closing).hexdigest() != digest
+                    or actual_mode != mode
+                    or observation(source.lstat()) != source_observed
+                    or observation(resolved.lstat()) != provider_observed
+                ):
+                    raise ValueError("pinned mirror physical bytes or mode changed during closing admission")
+                _verify_committed(
+                    resolved.relative_to(repo_root).as_posix(),
+                    closing,
+                    "100755" if actual_mode == 0o755 else "100644",
+                    committed,
+                )
+            for directory, identity in held_directories.items():
+                budget.check()
+                current = directory.lstat()
+                if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != identity:
+                    raise ValueError("pinned mirror provider directory changed during closing admission")
         if source_revision is not None:
             clean_source_revision(repo_root, source_revision)
+        budget.check()
         destination.mkdir(parents=True, exist_ok=True)
         count = 0
         for path in sorted(exported.rglob("*")):
@@ -542,6 +826,7 @@ def populate_mirror_tree(
             count += 1
             if count > budget.limits.max_files:
                 raise ValueError("canonical mirror export exceeds its finite entry limit")
+        budget.check()
         return count
 
 
@@ -555,7 +840,6 @@ def _assert_source_current(
     install_projection: bool = False,
     meta_provider: GitInstallProvider | None = None,
 ) -> None:
-    clean_source_revision(repo_root, revision)
     with tempfile.TemporaryDirectory(prefix="source-recheck-", dir=scratch) as temporary:
         private = Path(temporary).resolve(strict=True)
         verification = private / "canonical" if install_projection else private
@@ -608,9 +892,10 @@ def validate_publication_commit(destination: Path, update: PublicationUpdate, re
         budget.check(len(content))
         mode = "100755" if (destination / relative).stat().st_mode & 0o111 else "100644"
         _verify_committed(relative, content, mode, committed)
-    if _git(["rev-parse", "--verify", "HEAD^{commit}"], cwd=destination).stdout.strip() != revision:
+    head, _, status = _git_head_status(destination)
+    if head != revision:
         raise ValueError("publication destination HEAD changed before push")
-    if _git(["status", "--porcelain", "--untracked-files=all"], cwd=destination).stdout.strip():
+    if status.strip():
         raise ValueError("publication destination changed after its commit")
 
 

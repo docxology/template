@@ -35,6 +35,6 @@ runs:
         tool=$(mktemp -d "$RUNNER_TEMP/template-tlc-tools.XXXXXX")
         jar="$tool/tla2tools.jar"
         curl --fail --location --retry 2 --max-time 120 --output "$jar" https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
-        test "$(wc -c < "$jar" | tr -d ' ')" = 4499177
-        echo "e9c2d914fc1b7ba3e4a982ba251dc5c0da65010afcc6a5f9651576a1c380deae  $jar" | shasum -a 256 --check --status
+        test "$(wc -c < "$jar" | tr -d ' ')" = 4501960
+        echo "7beec0f04818732a62fa193731711a99aa4f11279499b2360a7d156c519ea78d  $jar" | shasum -a 256 --check --status
         echo "TEMPLATE_FORMAL_TLC_JAR=$jar" >> "$GITHUB_ENV"

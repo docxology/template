@@ -13,8 +13,7 @@ from io import BytesIO, StringIO
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.pipeline.fingerprints import tree_records
-from infrastructure.reporting.readiness_receipts import public_source_paths
+from infrastructure.reporting.readiness_receipts import public_resource_source_paths, public_source_paths
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
@@ -171,6 +170,8 @@ def validate_wheel_source(scope: str, archive: zipfile.ZipFile, reader: Snapshot
     if not python_files:
         raise ValueError("installed acceptance has no current Python implementation")
     required_resources: set[str] = set()
+    if scope == "templates/template_literature_meta_analysis":
+        required_resources.add("template_literature_meta_analysis/deep_research/fixtures/recorded_report.json")
     if scope == "templates/template_pools_rules_tools":
         config = tomllib.loads(reader.read(f"projects/{scope}/export.toml").content.decode())
         dependencies = config.get("template_export", {}).get("cross_root_dependencies")
@@ -178,11 +179,10 @@ def validate_wheel_source(scope: str, archive: zipfile.ZipFile, reader: Snapshot
             raise ValueError("installed pools resources differ from their exact public declaration")
         for dependency in dependencies:
             root = reader.root / dependency
-            for relative, kind, _ in tree_records(root, source=True):
-                if kind != "file":
-                    continue
-                source = reader.read((root / relative).relative_to(reader.root).as_posix())
-                name = f"template_pools_rules_tools/_template_resources/{dependency}/{relative.removeprefix('./')}"
+            for path in public_resource_source_paths(reader.root, dependency):
+                source = reader.read(path.relative_to(reader.root).as_posix())
+                relative = path.relative_to(root).as_posix()
+                name = f"template_pools_rules_tools/_template_resources/{dependency}/{relative}"
                 expected[name] = source.sha256
                 required_resources.add(name)
     for candidates in python_files:
@@ -232,10 +232,9 @@ def validate_source_archive(scope: str, manifest: dict[str, Any], bundle: bytes,
             raise ValueError("export resource declarations are invalid")
         for dependency in dependencies:
             root = reader.root / dependency
-            for relative, kind, _ in tree_records(root, source=True):
-                if kind == "file":
-                    source = reader.read((root / relative).relative_to(reader.root).as_posix())
-                    expected[f"_template_resources/{dependency}/{relative.removeprefix('./')}"] = source.sha256
+            for path in public_resource_source_paths(reader.root, dependency):
+                source = reader.read(path.relative_to(reader.root).as_posix())
+                expected[f"_template_resources/{dependency}/{path.relative_to(root).as_posix()}"] = source.sha256
     if not expected:
         raise ValueError("export has no source files")
     with zipfile.ZipFile(BytesIO(bundle)) as archive:

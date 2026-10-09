@@ -132,7 +132,7 @@ def test_standalone_repo_skeleton_present(required: str) -> None:
     [
         (
             "src/orchestration/_verification_launcher.py",
-            "research-project-template==4.0.0",
+            "research-project-template==4.0.1",
             "infrastructure.core.runtime.python_binding",
             "analysis_runtime_binding",
             True,
@@ -153,28 +153,28 @@ def test_standalone_repo_skeleton_present(required: str) -> None:
         ),
         (
             "src/analysis.py",
-            "research-project-template==4.0.0",
+            "research-project-template==4.0.1",
             "infrastructure.core.runtime.python_binding",
             "analysis_runtime_binding",
             False,
         ),
         (
             "src/orchestration/_verification_launcher.py",
-            "research-project-template==4.0.0",
+            "research-project-template==4.0.1",
             "infrastructure.core.runtime.python_binding",
             "*",
             False,
         ),
         (
             "src/orchestration/_verification_launcher.py",
-            "research-project-template==4.0.0",
+            "research-project-template==4.0.1",
             "infrastructure.core.pipeline",
             "PipelineRunner",
             False,
         ),
         (
             "src/orchestration/_verification_launcher.py",
-            "research-project-template==4.0.0",
+            "research-project-template==4.0.1",
             "projects.template_code_project",
             "run",
             False,
@@ -185,7 +185,7 @@ def test_declared_sdk_boundary_refuses_undeclared_source_imports(
     tmp_path: Path, relative: str, dependency: str, module: str, name: str, accepted: bool
 ) -> None:
     (tmp_path / "pyproject.toml").write_text(
-        f'[project.optional-dependencies]\ndev = ["{dependency}"]\n[tool.template]\nplatform_version = "4.0.0"\n',
+        f'[project.optional-dependencies]\ndev = ["{dependency}"]\n[tool.template]\nplatform_version = "4.0.1"\n',
         encoding="utf-8",
     )
     source = tmp_path / relative

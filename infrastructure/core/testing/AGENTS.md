@@ -30,3 +30,9 @@ See `README.md` for the module table. Key entry points:
 - `infrastructure/core/AGENTS.md` — the parent core contract.
 - `tests/infra_tests/core/` — the suite exercising this package.
 - Root `TO-DO.md` row `CORE-TESTING-REHOME-1` (closed by this re-home).
+
+## Release acceptance modules
+
+| Module | Role |
+| --- | --- |
+| `project_test_runtime.py` | Admission of an already prepared project test interpreter; never a resolver. |

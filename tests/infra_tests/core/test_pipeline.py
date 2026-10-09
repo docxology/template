@@ -124,6 +124,37 @@ sys.exit(0)
         for name in scripts:
             (scripts_dir / name).write_text(common_script, encoding="utf-8")
 
+        # Explicit child-only stage contracts admit the fixture's actual
+        # inputs, without inheriting the publication pipeline's prerequisites.
+        import yaml
+
+        stages = []
+        for label, key, script, args, tags in (
+            ("Environment Setup", "setup", "stage_00_setup.py", [], ["core"]),
+            ("Infrastructure Tests", "infra_tests", "stage_01_test.py", ["--infra-only"], ["core"]),
+            ("Project Tests", "project_tests", "stage_01_test.py", ["--project-only"], ["core"]),
+            ("Project Analysis", "analysis", "stage_02_analysis.py", [], ["core"]),
+            ("PDF Rendering", "render_pdf", "stage_03_render.py", [], ["core"]),
+            ("Output Validation", "validate", "stage_04_validate.py", [], ["core"]),
+            ("Copy Outputs", "copy", "stage_05_copy.py", [], ["core"]),
+            ("LLM Manuscript Review", "llm_reviews", "stage_06_llm_review.py", [], ["llm", "live"]),
+        ):
+            stages.append(
+                {
+                    "name": label,
+                    "key": key,
+                    "script": "scripts/pipeline/" + script,
+                    "args": args,
+                    "tags": tags,
+                    "contract": {
+                        "definition_of_done": "The actual child records its invocation and exits zero.",
+                        "failure_code": "FIXTURE_CHILD_FAILED",
+                    },
+                }
+            )
+        declaration = repo_root / "infrastructure/core/pipeline/pipeline.yaml"
+        declaration.parent.mkdir(parents=True, exist_ok=True)
+        declaration.write_text(yaml.safe_dump({"stages": stages, "telemetry": {"enabled": False}}))
         return repo_root
 
     def _make_executor(
@@ -172,7 +203,8 @@ sys.exit(0)
         """Test successful script execution."""
         with tempfile.TemporaryDirectory() as tmp_dir:
             # Create a simple test script
-            script_path = Path(tmp_dir) / "test_script.py"
+            script_path = Path(tmp_dir) / "scripts/test_script.py"
+            script_path.parent.mkdir()
             script_path.write_text(
                 """
 import sys
@@ -184,7 +216,7 @@ sys.exit(0)
             config = PipelineConfig(project_name="test", repo_root=Path(tmp_dir))
             executor = PipelineExecutor(config)
 
-            result = executor._run_script(str(script_path), "--arg", "value")
+            result = executor._run_script("scripts/test_script.py", "--arg", "value")
 
             assert result.complete is True
 
@@ -193,7 +225,8 @@ sys.exit(0)
         """Test failed script execution."""
         with tempfile.TemporaryDirectory() as tmp_dir:
             # Create a script that fails
-            script_path = Path(tmp_dir) / "failing_script.py"
+            script_path = Path(tmp_dir) / "scripts/failing_script.py"
+            script_path.parent.mkdir()
             script_path.write_text(
                 """
 import sys
@@ -205,7 +238,7 @@ sys.exit(1)
             config = PipelineConfig(project_name="test", repo_root=Path(tmp_dir))
             executor = PipelineExecutor(config)
 
-            result = executor._run_script(str(script_path))
+            result = executor._run_script("scripts/failing_script.py")
 
             assert result.complete is False
             assert result.child_exit_code == 1
@@ -386,7 +419,7 @@ sys.exit(1)
     @pytest.mark.timeout(60)
     def test_execute_core_pipeline_aborts_on_first_failure(self, tmp_path: Path):
         """Pipeline stops after the first failing stage; subsequent scripts are never invoked."""
-        repo_root = tmp_path / "repo"
+        repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=True)
         scripts_dir = repo_root / "scripts" / "pipeline"
         scripts_dir.mkdir(parents=True, exist_ok=True)
         (repo_root / "projects" / "test" / "src").mkdir(parents=True, exist_ok=True)
@@ -435,7 +468,7 @@ sys.exit(0)
     @pytest.mark.timeout(60)
     def test_llm_stage_exit_code_2_without_receipt_fails(self, tmp_path: Path):
         """An arbitrary child exit 2 cannot authorize a skip."""
-        repo_root = tmp_path / "repo"
+        repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=True)
         scripts_dir = repo_root / "scripts" / "pipeline"
         scripts_dir.mkdir(parents=True, exist_ok=True)
         (repo_root / "projects" / "test" / "src").mkdir(parents=True, exist_ok=True)

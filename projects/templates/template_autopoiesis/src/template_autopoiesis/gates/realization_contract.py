@@ -121,7 +121,7 @@ def realize_selected_children(
         "selection_scope": "one-per-selected-domain" if not single else "one-selected-child",
         "child_pdf_rendering": "unsupported",
         "executed_children": [],
-        "platform_version": "4.0.0",
+        "platform_version": "4.0.1",
         "child_process_deadline_sec": 60,
         "max_declared_cells": MAX_DECLARED_CELLS,
     }

@@ -13,6 +13,7 @@ import os
 import re
 import shutil
 import subprocess
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Final
@@ -21,6 +22,7 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.chrome import resolve_chrome_executable as _resolve_chrome_executable
 from infrastructure.rendering._pdf_title_page_latex import _latex_graphic_alt_text
+from infrastructure.rendering._mermaid_v12 import POLICY, adapter_bytes, request_bytes, selected_package
 from infrastructure.rendering.security import run_isolated_subprocess
 
 logger = get_logger(__name__)
@@ -474,24 +476,69 @@ def _render_mermaid(
             return png_path
 
     mmd_path.write_text(source + "\n", encoding="utf-8")
-    cmd = [
-        mmdc,
-        "--input",
-        str(mmd_path),
-        "--output",
-        str(png_path),
-        "--width",
-        "1400",
-        "--height",
-        "900",
-        "--backgroundColor",
-        "white",
-        "--quiet",
-    ]
-    if puppeteer_config is not None:
-        cmd.extend(["--puppeteerConfigFile", str(puppeteer_config)])
+    use_api12 = False
+    policy = "template-mermaid-original-legacy-cli-1400x900-unverified-v1"
+    inputs: tuple[Path, ...] = (mmd_path, *((puppeteer_config,) if puppeteer_config is not None else ()))
+    try:
+        entry = Path(mmdc).resolve(strict=True)
+        manifest = entry.parent.parent / "package.json"
+        if entry.name == "cli.js" and entry.parent.name == "src" and manifest.is_file():
+            if manifest.stat().st_size > 1024 * 1024:
+                raise ValueError("selected Mermaid package declaration exceeds its finite profile bound")
+            metadata = json.loads(manifest.read_bytes())
+            use_api12 = (
+                isinstance(metadata, dict)
+                and metadata.get("name") == "@mermaid-js/mermaid-cli"
+                and metadata.get("version") == "12.0.0"
+            )
+        if use_api12:
+            package = selected_package(mmdc)
+            node = shutil.which("node")
+            if node is None:
+                raise ValueError("the selected Mermaid12 API requires its admitted Node executable")
+            adapter = output_dir / f"{stem}.mermaid-v12.mjs"
+            request = output_dir / f"{stem}.mermaid-v12-request.json"
+            adapter.write_bytes(adapter_bytes())
+            request.write_bytes(
+                request_bytes(
+                    package,
+                    mmd_path.absolute(),
+                    png_path.absolute(),
+                    "png",
+                    puppeteer_config.absolute() if puppeteer_config is not None else None,
+                )
+            )
+            cmd = [str(Path(node).resolve(strict=True)), str(adapter.absolute()), str(request.absolute())]
+            inputs = (*inputs, adapter, request)
+            policy = POLICY
+        else:
+            # Keep ordinary supported legacy tools and standalone executables on
+            # the exact existing CLI path; this is not runtime/source admission.
+            cmd = [
+                mmdc,
+                "--input",
+                str(mmd_path),
+                "--output",
+                str(png_path),
+                "--width",
+                "1400",
+                "--height",
+                "900",
+                "--backgroundColor",
+                "white",
+                "--quiet",
+            ]
+            if puppeteer_config is not None:
+                cmd.extend(["--puppeteerConfigFile", str(puppeteer_config)])
+    except (OSError, ValueError) as exc:
+        raise RenderingError(f"Mermaid12 rectangular viewport compatibility admission failed: {exc}") from exc
     env = os.environ.copy()
     env["PATH"] = os.pathsep.join(part for part in (env.get("PATH", ""), os.defpath) if part)
+    if use_api12 and (env.get("NODE_OPTIONS") or env.get("NODE_PATH")):
+        raise RenderingError("Mermaid12 profile cannot admit environment-supplied JavaScript/module overrides")
+
+    before = {str(path.absolute()): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
+    started_at_monotonic = time.monotonic()
 
     try:
         # Intentionally convert every mmdc execution failure into a documented
@@ -501,6 +548,32 @@ def _render_mermaid(
         raise RenderingError(f"mmdc timed out while rendering {stem}") from exc
     except OSError as exc:
         raise RenderingError(f"Could not execute mmdc while rendering {stem}: {exc}") from exc
+
+    after = {str(path.absolute()): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
+    (output_dir / f"{stem}.mermaid-process.json").write_text(
+        json.dumps(
+            {
+                "role": "actual parent launch observation; enclosing genuine custody admission required",
+                "invocation_policy": policy,
+                "command": completed.args,
+                "pid": completed.pid,
+                "original_exit_code": completed.returncode,
+                "stdout": completed.stdout,
+                "stderr": completed.stderr,
+                "started_at_monotonic": started_at_monotonic,
+                "duration_seconds": time.monotonic() - started_at_monotonic,
+                "original_child_timeout_seconds": 90,
+                "input_sha256_before": before,
+                "input_sha256_after": after,
+            },
+            sort_keys=True,
+            allow_nan=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    if before != after:
+        raise RenderingError("Mermaid original source/adapter/request/config changed during native rendering")
 
     if completed.returncode != 0:
         stderr = completed.stderr.strip() or completed.stdout.strip()

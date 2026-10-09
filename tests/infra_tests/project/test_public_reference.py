@@ -285,7 +285,7 @@ def test_genuine_data_shadow_marker_is_live_but_never_selected_as_sdk(
 
 
 def test_plain_archive_and_partial_explicit_bindings_cannot_invent_git_custody(tmp_path: Path) -> None:
-    (tmp_path / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="4.0.0"\n')
+    (tmp_path / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="4.0.1"\n')
     with pytest.raises(ValueError):
         admit_public_reference(
             tmp_path.resolve(),

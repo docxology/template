@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import stat
 import subprocess
+import shutil
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -271,20 +272,39 @@ def _git_ignore_matches(
     paths: "Sequence[Path]",
     project_dir: Path,
     *,
-    command: Sequence[str] = ("git",),
+    command: Sequence[str] | None = None,
 ) -> _GitIgnoreEvaluation:
     """Return ignored paths with the exact Git rule that selected each path."""
     if not paths:
         return _GitIgnoreEvaluation(matches={})
     payload = b"\0".join(os.fsencode(path) for path in paths) + b"\0"
+    if command is None:
+        executable = shutil.which("git", path=os.defpath)
+        if executable is None:
+            return _GitIgnoreEvaluation(matches={}, error="native git check-ignore unavailable")
+        command = (executable, "--no-replace-objects", "-c", "core.fsmonitor=false")
+    environment = {
+        "PATH": os.defpath,
+        "LC_ALL": "C",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        "GIT_OPTIONAL_LOCKS": "0",
+        "GIT_NO_REPLACE_OBJECTS": "1",
+        "GIT_NO_LAZY_FETCH": "1",
+        "GIT_TERMINAL_PROMPT": "0",
+    }
+    if os.name == "nt" and "SystemRoot" in os.environ:
+        environment["SystemRoot"] = os.environ["SystemRoot"]
     try:
         proc = subprocess.run(  # noqa: S603 - fixed argv, no shell
             [*command, "-C", str(project_dir), "check-ignore", "-v", "-z", "--stdin"],
             input=payload,
             capture_output=True,
             check=False,
+            env=environment,
+            timeout=30,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return _GitIgnoreEvaluation(matches={}, error="git check-ignore unavailable")
     except ValueError:
         return _GitIgnoreEvaluation(matches={}, error="git check-ignore invocation invalid")

@@ -214,7 +214,7 @@ def _provider_control(requirement: Requirement, details: dict, reader: SnapshotR
 
 
 def _requirement(kind: str = "runtime") -> Requirement:
-    return Requirement(f"{PROJECT}:{kind}", kind, PROJECT, "0.2.0", "4.0.0", "a" * 64)
+    return Requirement(f"{PROJECT}:{kind}", kind, PROJECT, "0.2.0", "4.0.1", "a" * 64)
 
 
 def test_actual_installed_provider_pytest_and_metadata_pass_narrow_custody_control(provider_evidence) -> None:

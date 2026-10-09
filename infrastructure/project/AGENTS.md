@@ -643,3 +643,58 @@ The `infrastructure/project/` module enables multi-project support by:
 - ✅ Providing ProjectInfo dataclass for project information
 - ✅ Supporting both default and custom projects
 - ✅ Enabling project selection in pipeline scripts
+
+## Release acceptance modules
+
+| Module | Role |
+| --- | --- |
+| `installed_acceptance_artifacts.py` | Exact public exports and installed-wheel provenance for isolated acceptance. |
+| `installed_acceptance_runtime.py` | Locked dependency installation without editable/source provider substitution. |
+| `installed_acceptance_validation.py` | Require bound actual installed observations across every supported minor. |
+| `installed_acceptance_worker.py` | One bounded locked build and outside-source installed-wheel execution. |
+| `installed_domain_acceptance.py` | Functional installed execution with exported project inputs kept as data. |
+| `installed_reference_oracle.py` | Bounded current-reference recomputation, distinct from installed execution. |
+| `native_format_library_custody.py` | Bounded installed decoder file observations; hashes alone do not attest origin. |
+| `native_reader_runtime_custody.py` | Complete bounded native app file observations, independent of loaded-memory claims. |
+| `public_acceptance.py` | Source-bound 25-project × supported-runtime acceptance using the existing matrix. |
+| `public_acceptance_auxiliary.py` | Source-bound supervision for genuine auxiliary acceptance producers. |
+| `public_acceptance_auxiliary_cli.py` | Explicit CLI for source-bound auxiliary acceptance; never publishes. |
+| `public_acceptance_auxiliary_domains.py` | Concrete deterministic domain computations and independent raw-value admission. |
+| `public_acceptance_auxiliary_native.py` | Adapters for native scientific producers, retaining their complete raw facts. |
+| `public_acceptance_auxiliary_pipeline.py` | Portable custody of a genuine complete core pipeline in disposable public source. |
+| `public_acceptance_auxiliary_validation.py` | Independent admission of raw auxiliary process and scientific evidence. |
+| `public_acceptance_auxiliary_worker.py` | Real source-owned auxiliary checks executed only in a supervised child. |
+| `public_acceptance_case_observer.py` | Actual Root collection metadata, without invoking fixtures or test cases. |
+| `public_acceptance_case_policy.py` | Closed Root case classification; plans do not themselves grant acceptance. |
+| `public_acceptance_cases.py` | Source-owned pytest invocation and consumed-source contracts for runtime cells. |
+| `public_acceptance_cli.py` | Reusable argument contracts for public diagnostics and runtime acceptance. |
+| `public_acceptance_dependencies.py` | Actual installed public providers consumed by source-suite pytest children. |
+| `public_acceptance_evidence.py` | Confined evidence and whole-collection accounting for public runtime cells. |
+| `public_acceptance_pytest.py` | Real pytest execution with nonce-bound complete collection and case evidence. |
+| `public_acceptance_root.py` | Source-bound root runtime cells; unresolved root case policy blocks execution. |
+| `public_acceptance_scope.py` | One source-owned path, identity and coverage contract for runtime cells. |
+| `public_acceptance_worker.py` | One locked, bounded full-selection public project/runtime acceptance cell. |
+| `public_hosted_origin.py` | Exact-run GitHub artifact custody; hosted handoff must authenticate its binding. |
+| `public_package_dependencies.py` | Source-owned canonical public package dependency declarations and closure. |
+| `public_reference.py` | Complete committed public source DATA, distinct from the loaded platform SDK. |
+| `public_reference_git.py` | Read-only native Git custody for an explicitly nominated public reference. |
+| `public_reference_session.py` | One finite source DATA admission shared by an own project's consumers. |
+| `public_root_case_acceptance.py` | All required Root v2 case cells, original prepared-runtime execution and truthful gates. |
+| `public_root_case_admission.py` | Source-owned Root v2 policy, operation eligibility and exact plan admission. |
+| `public_root_case_census.py` | Bounded canonical Root collection and independent readback; never runtime acceptance. |
+| `public_root_case_contract.py` | Source-owned exact Root census specifications and confined evidence validation. |
+| `public_root_case_readback.py` | Independent canonical Root collection evidence reader, separate from producer claims. |
+| `public_root_case_units.py` | Source-owned case applicability units; every declared target stays required. |
+| `public_root_census_encoding.py` | Lossless original census JSON DAG; limits and every observation remain intact. |
+| `public_root_lane_contract.py` | Exact Root v2 lane admission and source-owned pytest invocations. |
+| `public_root_lane_coverage.py` | Real in-memory coverage observations, exact source mapping and confined JSON. |
+| `public_root_lane_producer.py` | Whole-budget Root v2 lane API; only original supervised outcomes can pass. |
+| `public_root_lane_readback.py` | Independently validate exact Root v2 lane processes, source policy and case reports. |
+| `public_root_lane_worker.py` | Real exact-node Root v2 execution, guarded chunks and original case outcomes. |
+| `public_root_policy_authoring.py` | Draft literal policy only from original census and exhaustive reviewed decisions. |
+| `public_root_policy_encoding.py` | Lossless bounded source-policy parts; serialization never grants acceptance. |
+| `public_root_portable.py` | Portable Root observations authenticated by the exact hosted artifact origin. |
+| `public_root_runtime_contract.py` | Exact source, interpreter and finite budget contract for a Root v2 runtime cohort. |
+| `public_root_runtime_producer.py` | Supervised prepared-interpreter Root v2 execution and genuine selected-interpreter readback. |
+| `public_root_runtime_readback.py` | Independent Root runtime readback in the genuinely selected interpreter; no cross-minor reconstruction. |
+| `public_root_runtime_worker.py` | One genuine full census and exact applicability units in the selected Root interpreter. |

@@ -6,12 +6,16 @@ import hashlib
 import math
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from infrastructure.reporting.native_format_html_admitted_source import AdmittedHTMLSource
 from collections.abc import Callable
 
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.reporting.native_format_content_contracts import NativeContentContract
 from infrastructure.reporting.native_format_portable_custody import producer_path, validate_executable_observation
+from infrastructure.reporting.native_format_html_child_custody import validate_retained_html_child
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
 
@@ -27,6 +31,10 @@ def replay_browser_observation(
     custody: dict[str, str],
     runtime: dict[str, Any],
     control: str | None = None,
+    metadata_source: dict[str, Any] | None = None,
+    admitted_source: AdmittedHTMLSource | None = None,
+    deadline: float | None = None,
+    env: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Reconstruct all source/DOM/glyph-region/pixel/asset and command bindings."""
     from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
@@ -44,11 +52,26 @@ def replay_browser_observation(
         raw.get("schema_version") != BROWSER_SCHEMA
         or raw.get("contract_digest") != contract.digest
         or raw.get("policy_digest") != canonical_digest(BROWSER_POLICY)
+        or raw.get("metadata_source_digest") != (metadata_source["digest"] if metadata_source is not None else None)
     ):
         raise ValueError("native browser source/policy identity changed")
-    deadline = raw.get("deadline_monotonic")
-    if not isinstance(deadline, (int, float)) or isinstance(deadline, bool) or not math.isfinite(deadline):
+    original_deadline = raw.get("deadline_monotonic")
+    if (
+        not isinstance(original_deadline, (int, float))
+        or isinstance(original_deadline, bool)
+        or not math.isfinite(original_deadline)
+    ):
         raise ValueError("browser omitted original finite deadline")
+    if raw.get("fidelity_source_digest") != (
+        admitted_source.fidelity["digest"] if admitted_source is not None else None
+    ):
+        raise ValueError("browser original admitted Source fidelity witness changed")
+    if admitted_source is not None and (deadline is None or env is None or metadata_source != admitted_source.metadata):
+        raise ValueError("source-bound HTML replay requires caller clock/environment and separate exact config witness")
+    if deadline is not None:
+        from infrastructure.reporting.native_format_html_source_metadata import remaining_seconds
+
+        remaining_seconds(deadline)
     mirror = directory / "mirror"
     source = mirror / (snapshot.relative if control is None else "admitted.html")
     consumed = _file(raw.get("input"), reader)
@@ -64,10 +87,15 @@ def replay_browser_observation(
     if runtime_source.content != runtime_copy.content or raw.get("runtime_source_sha256") != runtime_source.sha256:
         raise ValueError("browser complete runtime observer source changed")
     observer = reader.read((directory / "observer.js").relative_to(root).as_posix())
-    script = OBSERVER_SCRIPT.removeprefix("\n<script>\n").removesuffix("\n</script>\n").encode()
+    observer_script = OBSERVER_SCRIPT
+    if admitted_source is not None:
+        from infrastructure.reporting.native_format_html_browser_extensions import extend_browser_observer_script
+
+        observer_script = extend_browser_observer_script(observer_script)
+    script = observer_script.removeprefix("\n<script>\n").removesuffix("\n</script>\n").encode()
     if (
         observer.content != script
-        or raw.get("observer_script_sha256") != hashlib.sha256(OBSERVER_SCRIPT.encode()).hexdigest()
+        or raw.get("observer_script_sha256") != hashlib.sha256(observer_script.encode()).hexdigest()
     ):
         raise ValueError("browser observation script changed")
     assets = (
@@ -131,12 +159,26 @@ def replay_browser_observation(
             "--output",
             str(producer_path(custody, root, result_path)),
             "--deadline",
-            str(deadline),
+            str(original_deadline),
             "--observer-script",
             str(producer_path(custody, root, observer.path)),
             "--asset-root",
             str(producer_path(custody, root, mirror)),
         ]
+        if admitted_source is not None:
+            if deadline is None:
+                raise ValueError("source font observer requires caller clock")
+            from infrastructure.reporting.native_format_html_font_driver_adapter import replay_html_font_driver
+
+            replay_html_font_driver(root, directory, reader, raw["font_observer"], result, deadline=deadline)
+            args.extend(
+                [
+                    "--platform-font-observer",
+                    str(producer_path(custody, root, directory / "native_format_html_platform_font_dom.py")),
+                ]
+            )
+        elif raw.get("font_observer") is not None:
+            raise ValueError("unadmitted browser acquired an unexplained font witness")
         if cdn:
             args.extend(["--cdn-map", str(producer_path(custody, root, directory / "cdn-map.json"))])
             expected_responses = {row["url"]: row["sha256"] for row in cdn}
@@ -148,6 +190,17 @@ def replay_browser_observation(
             ):
                 raise ValueError("actual browser CDN fulfilment differs from authenticated mapped bytes")
         _tool(tool.get("artifact"), reader, run_id, runtime["executable"], f"browser-cdp-{width}", args)
+        child_programs = {
+            "native_format_browser_driver.py": driver_source.sha256,
+            "native_format_browser_runtime.py": runtime_source.sha256,
+        }
+        if admitted_source is not None:
+            child_programs["native_format_html_platform_font_dom.py"] = raw["font_observer"]["source"]["sha256"]
+        if deadline is None:
+            raise ValueError("HTML copied-driver Source replay needs the original finite reader clock")
+        validate_retained_html_child(
+            tool.get("artifact"), result, child_programs, reader, custody=custody, deadline=deadline
+        )
         if (
             tool.get("exit_code") != 0
             or tool.get("original_exit_code") != 0
@@ -195,7 +248,7 @@ def replay_browser_observation(
             raise ValueError("browser screenshot metadata differs from original native bytes")
         if dimensions["width_px"] != width or dimensions["height_px"] < result["dom"]["height"]:
             raise ValueError("browser screenshot omits native page geometry")
-        observation = inspect_browser_dom(result["dom"], contract)
+        observation = inspect_browser_dom(result["dom"], contract, metadata_source)
         localized = inspect_browser_pixels(result["dom"], pixels.content, observation["source_text_indices"])
         from infrastructure.reporting.native_format_browser_figures import inspect_browser_figures
 
@@ -207,10 +260,38 @@ def replay_browser_observation(
         observation["findings"].extend(figures["findings"])
         observation["blockers"].extend(figures["blockers"])
         observation["findings"].extend(localized["findings"])
+        observation["blockers"].extend(localized["blockers"])
+        if admitted_source is not None:
+            if deadline is None or env is None:
+                raise ValueError("HTML fidelity reader requires original caller clock/environment")
+            from infrastructure.reporting.native_format_html_fidelity_observer import replay_html_fidelity
+            from infrastructure.reporting.native_format_observer_dispatch import _chrome
+
+            fidelity = replay_html_fidelity(
+                root,
+                directory / f"fidelity-{width}",
+                admitted_source,
+                result["dom"],
+                pixels.content,
+                snapshot,
+                viewport["fidelity"],
+                reader,
+                run_id=run_id,
+                custody=custody,
+                runtime=runtime,
+                env=env,
+                deadline=deadline,
+                original_deadline=original_deadline,
+                chrome=_chrome(env),
+            )
+            observation["findings"].extend(fidelity["findings"])
+            observation["blockers"].extend(fidelity["blockers"])
+        elif "fidelity" in viewport:
+            raise ValueError("browser fidelity observation has no admitted original source context")
         observation["status"] = (
             "fail" if observation["findings"] else "blocked" if observation["blockers"] else observation["status"]
         )
-        for key in ("findings", "blockers", "status", "source_text_indices"):
+        for key in ("findings", "blockers", "status", "source_text_indices", "structure", "metadata"):
             if viewport.get(key) != observation[key]:
                 raise ValueError("browser independently recomputed semantic/layout observations differ")
         if viewport.get("pixels") != localized:
@@ -224,6 +305,12 @@ def replay_browser_observation(
         raise ValueError("browser aggregate source/native gate outcome differs")
     if not sdk_reader.unchanged():
         raise ValueError("current reader SDK source changed during replay")
+    if admitted_source is not None:
+        if deadline is None:
+            raise ValueError("HTML source closing requires original caller clock")
+        admitted_source.close(root, reader, deadline=deadline)
+    if deadline is not None:
+        remaining_seconds(deadline)
     return raw
 
 

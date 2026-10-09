@@ -14,10 +14,9 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
-from infrastructure.core.pipeline.fingerprints import tree_records
 from infrastructure.project.copy_exemplar import export_exemplar
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
-from infrastructure.reporting.readiness_receipts import public_source_paths
+from infrastructure.reporting.readiness_receipts import public_resource_source_paths, public_source_paths
 from infrastructure.reporting.release_readiness_artifacts import (
     bounded_members,
     validate_source_archive,
@@ -40,6 +39,8 @@ def prepare_export(
     requirement: Requirement,
     scratch: Path,
     directory: Path,
+    *,
+    deadline_monotonic: float | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     """Reuse canonical exemplar export, then bind its exact complete public bytes."""
     reader = SnapshotReader(root)
@@ -55,14 +56,13 @@ def prepare_export(
         for relative in expected:
             atomic_write_bytes_confined(destination, destination / relative, reader.read(relative).content)
     else:
-        export_exemplar(root, scope, destination)
+        export_exemplar(root, scope, destination, deadline_monotonic=deadline_monotonic)
         embedded = json.loads((destination / ".template-export.json").read_text())
         for dependency in embedded["resource_dependencies"]:
             resource = root / dependency
-            for relative, kind, _ in tree_records(resource, source=True):
-                if kind == "file":
-                    source = reader.read((resource / relative).relative_to(root).as_posix())
-                    expected[f"_template_resources/{dependency}/{relative.removeprefix('./')}"] = source.sha256
+            for path in public_resource_source_paths(root, dependency):
+                source = reader.read(path.relative_to(root).as_posix())
+                expected[f"_template_resources/{dependency}/{path.relative_to(resource).as_posix()}"] = source.sha256
     actual = {
         path.relative_to(destination).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in destination.rglob("*")
@@ -285,6 +285,17 @@ if spec['scope']=='templates/template_pools_rules_tools':
         or tool_result.get('child_exit_code')!=0 or tool_result.get('stdout')!='4\n'):
         raise ValueError('actual installed bundled executor domain computation failed')
     domain={'summary':summary,'resource_roots':[str(root) for root in roots],'code_executor':tool_result}
+if spec['scope']=='templates/template_literature_meta_analysis':
+    from template_literature_meta_analysis.deep_research.deep_research_adapter import (
+        default_fixture_path,replay_recorded_report)
+    fixture=default_fixture_path()
+    if fixture.is_symlink() or not fixture.resolve(strict=True).is_relative_to(prefix):
+        raise ValueError('Meta replay fixture escaped the installed environment')
+    report=replay_recorded_report()
+    domain={'fixture_path':str(fixture),'fixture_sha256':hashlib.sha256(fixture.read_bytes()).hexdigest(),
+        'replay':{'provider':report.provider,'job_id':report.job_id,'status':report.status,
+            'query':report.query,'output_text':report.output_text,'citations':list(report.citations),
+            'citation_count':report.citation_count}}
 if spec['scope']=='templates/template_autopoiesis':
     from infrastructure.project.installed_domain_acceptance import run_autopoiesis_installed
     project=pathlib.Path(spec['domain_inputs']['project_root'])

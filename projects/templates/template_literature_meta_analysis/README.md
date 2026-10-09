@@ -157,7 +157,7 @@ uv run python scripts/pipeline/stage_01_test.py --project templates/template_lit
 ```
 
 For an independent source checkout, prepare its own Python 3.12–3.14 environment
-with the actual platform 4.0.0 wheel and this project's `dev` extra, following
+with the actual platform 4.0.1 wheel and this project's `dev` extra, following
 [`STANDALONE.md`](STANDALONE.md). From that checkout's root, run:
 
 ```bash

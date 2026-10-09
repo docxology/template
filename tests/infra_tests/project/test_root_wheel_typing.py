@@ -91,7 +91,7 @@ def test_actual_wheel_and_sdist_ship_types_for_independent_strict_consumers(tmp_
             "source=Path(infrastructure.__file__).resolve();"
             "assert source.is_relative_to(Path(sys.prefix).resolve());"
             "assert (source.parent/'py.typed').is_file();"
-            "assert infrastructure.__version__=='4.0.0'",
+            "assert infrastructure.__version__=='4.0.1'",
         ],
         cwd=tmp_path,
         env=environment,

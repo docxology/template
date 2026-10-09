@@ -69,6 +69,6 @@ exclude_lines = [
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "4.0.0"
+platform_version = "4.0.1"
 tested_python_versions = ["3.12", "3.13", "3.14"]
 required_unpaid_capabilities = ["local-review", "translation"]

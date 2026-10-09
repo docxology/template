@@ -111,7 +111,7 @@ def test_runtime_version_is_read_without_executing_source(tmp_path: Path) -> Non
 def test_current_source_versions_agree() -> None:
     from infrastructure import __version__
 
-    assert validate_root_versions(REPO_ROOT) == __version__ == "4.0.0"
+    assert validate_root_versions(REPO_ROOT) == __version__ == "4.0.1"
 
 
 @pytest.mark.parametrize(
@@ -131,11 +131,11 @@ def test_retired_runtime_constant_and_arbitrary_code_are_refused(tmp_path: Path,
 
 
 def test_intended_unreleased_version_does_not_authorize_tag(tmp_path: Path) -> None:
-    _write_pyproject(tmp_path, "4.0.0")
-    (tmp_path / "CHANGELOG.md").write_text("# Changelog\n\n## [4.0.0] - Unreleased\n")
+    _write_pyproject(tmp_path, "4.0.1")
+    (tmp_path / "CHANGELOG.md").write_text("# Changelog\n\n## [4.0.1] - Unreleased\n")
     assert root_changelog_versions(tmp_path) == ()
     with pytest.raises(ValueError, match="no released heading"):
-        validate_root_release_tag(tmp_path, "v4.0.0")
+        validate_root_release_tag(tmp_path, "v4.0.1")
 
 
 def test_wrong_distribution_provider_is_refused(tmp_path: Path) -> None:

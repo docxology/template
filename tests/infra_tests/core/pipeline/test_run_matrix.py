@@ -107,7 +107,14 @@ def _scaffold(root: Path) -> None:
     analysis = next(stage for stage in payload["stages"] if stage["key"] == "analysis")
     stages = []
     for key in ("setup", "analysis", "render_pdf", "copy"):
-        stages.append({**analysis, "name": key.replace("_", " ").title(), "key": key, "args": [key]})
+        stages.append(
+            {
+                **analysis,
+                "name": key.replace("_", " ").title(),
+                "key": key,
+                "args": [key],
+            }
+        )
     payload["stages"] = stages
     path.write_text(yaml.safe_dump(payload), encoding="utf-8")
 
@@ -224,7 +231,10 @@ def test_continue_after_failure_runs_next_project(tmp_path: Path) -> None:
     results = execute_run_plan(plan, tmp_path)
     assert run_plan_exit_code(plan, results) == 1
     assert not results[0].ok and results[1].ok
-    assert (tmp_path / "process_order.log").read_text().splitlines() == ["fail:analysis", "other:analysis"]
+    assert (tmp_path / "process_order.log").read_text().splitlines() == [
+        "fail:analysis",
+        "other:analysis",
+    ]
 
 
 def _shared_matrix(root: Path, *, infra_exit: int = 0, resume: bool = False):
@@ -235,7 +245,12 @@ def _shared_matrix(root: Path, *, infra_exit: int = 0, resume: bool = False):
     source = root / "infrastructure/core/pipeline/pipeline.yaml"
     definition = yaml.safe_load(source.read_text())
     child = next(stage for stage in definition["stages"] if stage["key"] == "analysis")
-    child.update(name="Project child", key="child", args=["child"], depends_on=["Infrastructure Tests"])
+    child.update(
+        name="Project child",
+        key="child",
+        args=["child"],
+        depends_on=["Infrastructure Tests"],
+    )
     child["contract"]["output_artifacts"] = ["projects/{project}/output/data/child.json"]
     definition["stages"] = [stage for stage in definition["stages"] if stage["key"] != "llm_reviews"]
     source.write_text(yaml.safe_dump(definition))
@@ -246,10 +261,15 @@ def _shared_matrix(root: Path, *, infra_exit: int = 0, resume: bool = False):
 
 
 @pytest.mark.timeout(180)
-def test_matrix_shared_gate_executes_once_before_both_actual_project_children(tmp_path: Path) -> None:
+def test_matrix_shared_gate_executes_once_before_both_actual_project_children(
+    tmp_path: Path,
+) -> None:
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
 
-    plan = resolve_run_plan(_shared_matrix(tmp_path), tmp_path)
+    # This positive fixture includes real audited startup/reporting for three children.
+    # Explicit deadline-negative controls retain their original90-second run budget.
+    cfg = replace(_shared_matrix(tmp_path), run_timeout_seconds=180)
+    plan = resolve_run_plan(cfg, tmp_path)
     assert [(step.project, step.stage) for step in plan.steps] == [
         ("root", "infra_tests"),
         ("first", "child"),
@@ -259,7 +279,11 @@ def test_matrix_shared_gate_executes_once_before_both_actual_project_children(tm
     results = execute_run_plan(plan, tmp_path)
     assert run_plan_exit_code(plan, results) == 0
     assert results[0].shared_result is not None and results[0].shared_result.exit_code == 0
-    assert (tmp_path / "process_order.log").read_text().splitlines() == ["first:infra", "first:child", "second:child"]
+    assert (tmp_path / "process_order.log").read_text().splitlines() == [
+        "first:infra",
+        "first:child",
+        "second:child",
+    ]
 
 
 @pytest.mark.timeout(180)
@@ -281,7 +305,9 @@ def test_matrix_failed_shared_gate_prevents_every_project_even_without_fail_fast
 
 
 @pytest.mark.timeout(180)
-def test_matrix_explicit_project_only_selection_does_not_admit_shared_execution(tmp_path: Path) -> None:
+def test_matrix_explicit_project_only_selection_does_not_admit_shared_execution(
+    tmp_path: Path,
+) -> None:
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
 
     cfg = _shared_matrix(tmp_path, infra_exit=7)
@@ -290,11 +316,16 @@ def test_matrix_explicit_project_only_selection_does_not_admit_shared_execution(
     assert plan.shared_infrastructure is None
     results = execute_run_plan(plan, tmp_path)
     assert run_plan_exit_code(plan, results) == 0
-    assert (tmp_path / "process_order.log").read_text().splitlines() == ["first:child", "second:child"]
+    assert (tmp_path / "process_order.log").read_text().splitlines() == [
+        "first:child",
+        "second:child",
+    ]
 
 
 @pytest.mark.timeout(180)
-def test_matrix_infrastructure_only_selection_executes_one_shared_contract(tmp_path: Path) -> None:
+def test_matrix_infrastructure_only_selection_executes_one_shared_contract(
+    tmp_path: Path,
+) -> None:
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
 
     cfg = replace(_shared_matrix(tmp_path), default_stages=("infra_tests",))
@@ -306,17 +337,28 @@ def test_matrix_infrastructure_only_selection_executes_one_shared_contract(tmp_p
 
 
 @pytest.mark.timeout(240)
-def test_matrix_preserves_each_effective_project_dag_after_shared_verification(tmp_path: Path) -> None:
+def test_matrix_preserves_each_effective_project_dag_after_shared_verification(
+    tmp_path: Path,
+) -> None:
     import yaml
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
 
     cfg = _shared_matrix(tmp_path)
     source = yaml.safe_load((tmp_path / "infrastructure/core/pipeline/pipeline.yaml").read_text())
     infra, child = source["stages"]
-    for project, first, second in (("first", "alpha", "beta"), ("second", "beta", "alpha")):
+    for project, first, second in (
+        ("first", "alpha", "beta"),
+        ("second", "beta", "alpha"),
+    ):
         stages = [infra]
-        for key, dependency in ((first, "Infrastructure Tests"), (second, first.title())):
-            contract = {**child["contract"], "output_artifacts": [f"projects/{{project}}/output/data/{key}.json"]}
+        for key, dependency in (
+            (first, "Infrastructure Tests"),
+            (second, first.title()),
+        ):
+            contract = {
+                **child["contract"],
+                "output_artifacts": [f"projects/{{project}}/output/data/{key}.json"],
+            }
             stages.append(
                 {
                     **child,
@@ -329,9 +371,17 @@ def test_matrix_preserves_each_effective_project_dag_after_shared_verification(t
             )
         (tmp_path / "projects" / project / "pipeline.yaml").write_text(yaml.safe_dump({**source, "stages": stages}))
     plan = resolve_run_plan(
-        replace(cfg, default_stages=("infra_tests", "beta", "alpha"), run_timeout_seconds=180), tmp_path
+        replace(
+            cfg,
+            default_stages=("infra_tests", "beta", "alpha"),
+            run_timeout_seconds=180,
+        ),
+        tmp_path,
     )
-    assert [item.expected_stage_keys for item in plan.execution_plans] == [("alpha", "beta"), ("beta", "alpha")]
+    assert [item.expected_stage_keys for item in plan.execution_plans] == [
+        ("alpha", "beta"),
+        ("beta", "alpha"),
+    ]
     results = execute_run_plan(plan, tmp_path)
     assert run_plan_exit_code(plan, results) == 0
     assert plan.deadline_monotonic is not None
@@ -359,7 +409,9 @@ def test_matrix_preserves_each_effective_project_dag_after_shared_verification(t
             assert f"[{number}/2] {stage} (" not in content
 
 
-def test_matrix_refuses_project_shared_override_before_any_execution(tmp_path: Path) -> None:
+def test_matrix_refuses_project_shared_override_before_any_execution(
+    tmp_path: Path,
+) -> None:
     import yaml
 
     cfg = _shared_matrix(tmp_path)
@@ -371,12 +423,15 @@ def test_matrix_refuses_project_shared_override_before_any_execution(tmp_path: P
     assert not (tmp_path / "process_order.log").exists()
 
 
-@pytest.mark.timeout(240)
-def test_matrix_resume_keeps_fresh_shared_gate_and_reuses_exact_project_checkpoints(tmp_path: Path) -> None:
+# Two independently bounded180s plans retain finite setup and closing allowance.
+@pytest.mark.timeout(420)
+def test_matrix_resume_keeps_fresh_shared_gate_and_reuses_exact_project_checkpoints(
+    tmp_path: Path,
+) -> None:
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
     from infrastructure.core.pipeline.outcomes import StageStatus
 
-    cfg = _shared_matrix(tmp_path)
+    cfg = replace(_shared_matrix(tmp_path), run_timeout_seconds=180)
     first_plan = resolve_run_plan(cfg, tmp_path)
     first = execute_run_plan(first_plan, tmp_path)
     assert run_plan_exit_code(first_plan, first) == 0
@@ -394,7 +449,9 @@ def test_matrix_resume_keeps_fresh_shared_gate_and_reuses_exact_project_checkpoi
 
 
 @pytest.mark.timeout(180)
-def test_matrix_resume_without_exact_checkpoints_is_pending_and_never_starts_projects(tmp_path: Path) -> None:
+def test_matrix_resume_without_exact_checkpoints_is_pending_and_never_starts_projects(
+    tmp_path: Path,
+) -> None:
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
     from infrastructure.core.pipeline.outcomes import StageStatus
 
@@ -407,17 +464,20 @@ def test_matrix_resume_without_exact_checkpoints_is_pending_and_never_starts_pro
 
 
 @pytest.mark.timeout(90)
-def test_matrix_original_deadline_stops_current_and_later_projects(tmp_path: Path) -> None:
+def test_matrix_original_deadline_stops_current_and_later_projects(
+    tmp_path: Path,
+) -> None:
     """An exhausted shared budget prevents every project from entering."""
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
     from infrastructure.core.pipeline.outcomes import StageStatus
 
     cfg = _shared_matrix(tmp_path)
     script = tmp_path / "scripts/stage.py"
-    source = script.read_text().replace(
-        "if step == 'infra': sys.exit(0)",
-        "if step == 'infra':\n    import time\n    time.sleep(60)\n    sys.exit(0)",
-    )
+    gate = tmp_path / "scripts/pipeline/stage_01_test.py"
+    gate_source = gate.read_text()
+    assert gate_source.count("sys.exit(0)\n") == 1
+    gate.write_text(gate_source.replace("sys.exit(0)\n", "import time\ntime.sleep(60)\nsys.exit(0)\n"))
+    source = script.read_text()
     source = source.replace(
         "if project.endswith('fail'):",
         "if step == 'child':\n    import time\n    time.sleep(60)\nif project.endswith('fail'):",
@@ -445,7 +505,9 @@ def test_matrix_original_deadline_stops_current_and_later_projects(tmp_path: Pat
 
 @pytest.mark.timeout(180)
 @pytest.mark.skipif(os.name != "posix", reason="POSIX detached descendant cleanup")
-def test_matrix_original_deadline_kills_started_child_and_detached_descendant(tmp_path: Path) -> None:
+def test_matrix_original_deadline_kills_started_child_and_detached_descendant(
+    tmp_path: Path,
+) -> None:
     """The original deadline includes shared work and kills actual project processes."""
     import contextlib
     import json
@@ -464,10 +526,11 @@ def test_matrix_original_deadline_kills_started_child_and_detached_descendant(tm
     payload["control"] = {"stage_policies": {1: {"timeout_seconds": 180}, 2: {"timeout_seconds": 180}}}
     declaration.write_text(yaml.safe_dump(payload))
     script = tmp_path / "scripts/stage.py"
-    source = script.read_text().replace(
-        "if step == 'infra': sys.exit(0)",
-        f"if step == 'infra':\n    import time\n    time.sleep({shared_delay})\n    sys.exit(0)",
-    )
+    gate = tmp_path / "scripts/pipeline/stage_01_test.py"
+    gate_source = gate.read_text()
+    assert gate_source.count("sys.exit(0)\n") == 1
+    gate.write_text(gate_source.replace("sys.exit(0)\n", f"import time\ntime.sleep({shared_delay})\nsys.exit(0)\n"))
+    source = script.read_text()
     source = source.replace(
         "if project.endswith('fail'):",
         "if step == 'child':\n"
@@ -520,7 +583,10 @@ def test_matrix_original_deadline_kills_started_child_and_detached_descendant(tm
         assert first.outcome.child_exit_code is not None
         assert all(result.outcome.status is StageStatus.TIMED_OUT for result in results if result.project == "second")
         assert all(result.outcome.child_exit_code is None for result in results if result.project == "second")
-        assert (tmp_path / "process_order.log").read_text().splitlines() == ["first:infra", "first:child"]
+        assert (tmp_path / "process_order.log").read_text().splitlines() == [
+            "first:infra",
+            "first:child",
+        ]
         assert not any(
             (tmp_path / "projects" / name / "output/data/child.json").exists() for name in ("first", "second")
         )
@@ -543,7 +609,9 @@ def test_matrix_original_deadline_kills_started_child_and_detached_descendant(tm
 
 
 @pytest.mark.timeout(180)
-def test_matrix_targeted_selection_validates_prerequisites_without_running_other_stages(tmp_path: Path) -> None:
+def test_matrix_targeted_selection_validates_prerequisites_without_running_other_stages(
+    tmp_path: Path,
+) -> None:
     import yaml
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
     from infrastructure.core.pipeline.outcomes import StageStatus
@@ -603,7 +671,9 @@ def test_shipped_example_config_parses_and_uses_valid_stages() -> None:
     assert not unknown, f"example references unknown stages: {unknown}"
 
 
-def test_matrix_pause_preserves_pending_exit_for_unexecuted_dependencies(tmp_path: Path) -> None:
+def test_matrix_pause_preserves_pending_exit_for_unexecuted_dependencies(
+    tmp_path: Path,
+) -> None:
     import yaml
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
     from infrastructure.core.pipeline.outcomes import StageStatus
@@ -625,7 +695,9 @@ def test_matrix_pause_preserves_pending_exit_for_unexecuted_dependencies(tmp_pat
 
 
 @pytest.mark.timeout(150)
-def test_matrix_report_refusal_retains_successful_children_and_fails_run(tmp_path: Path) -> None:
+def test_matrix_report_refusal_retains_successful_children_and_fails_run(
+    tmp_path: Path,
+) -> None:
     """A real final-report refusal cannot disappear during matrix projection."""
     from infrastructure.core.pipeline.run_matrix import run_plan_exit_code
     from infrastructure.core.pipeline.outcomes import StageStatus
@@ -669,12 +741,18 @@ def test_matrix_retains_actual_post_stage_custody_and_deadline_outcomes(tmp_path
     from infrastructure.core.pipeline.executor import PipelineExecutor
     from infrastructure.core.pipeline.types import PipelineConfig
     from infrastructure.core.pipeline.outcomes import StageStatus
-    from infrastructure.core.pipeline.report_finalization import finalize_execution_reports
-    from infrastructure.core.pipeline.run_matrix import _project_steps, run_plan_exit_code
+    from infrastructure.core.pipeline.report_finalization import (
+        finalize_execution_reports,
+    )
+    from infrastructure.core.pipeline.run_matrix import (
+        _project_steps,
+        run_plan_exit_code,
+    )
 
     _scaffold(tmp_path)
     plan = resolve_run_plan(
-        parse_run_config("runs:\n  - project: templates/template_code_project\n    stages: [analysis]\n"), tmp_path
+        parse_run_config("runs:\n  - project: templates/template_code_project\n    stages: [analysis]\n"),
+        tmp_path,
     )
     selection = replace(plan.execution_plans[0], run_timeout_seconds=90)
     plan.execution_plans = (selection,)

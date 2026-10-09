@@ -346,7 +346,7 @@ jobs:
         continue-on-error: true
         run: >-
           .venv/bin/python -m infrastructure.reporting.native_format_acceptance
-          --repo-root . --timeout 14400 --evidence-dir output/readiness/native
+          --repo-root . --expected-platform Linux --timeout 14400 --evidence-dir output/readiness/native
           --epubcheck-jar "$TEMPLATE_NATIVE_EPUBCHECK" --java-executable "$TEMPLATE_NATIVE_JAVA"
       - name: Retain original native source audit
         if: always()

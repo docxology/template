@@ -26,9 +26,9 @@ from infrastructure.reporting.release_readiness_validators import validate_accep
 
 
 def _declarations(root: Path) -> None:
-    (root / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="4.0.0"\n')
+    (root / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="4.0.1"\n')
     (root / ".python-version").write_text("3.14\n")
-    (root / "CHANGELOG.md").write_text("## [4.0.0] — intended candidate\n")
+    (root / "CHANGELOG.md").write_text("## [4.0.1] — intended candidate\n")
     (root / "infrastructure").mkdir()
     (root / "infrastructure/_version.py").write_text(RUNTIME_VERSION_PROVIDER_SOURCE)
     for project in PUBLIC_PROJECT_NAMES:
@@ -40,11 +40,11 @@ def _declarations(root: Path) -> None:
         (path / "tests/test_model.py").write_text("def test_one():\n    assert 1\ndef test_two():\n    assert 2\n")
         (path / "pyproject.toml").write_text(
             '[project]\nname="exemplar"\nversion="2.0.0"\n'
-            '[tool.template]\nplatform_version="4.0.0"\n'
+            '[tool.template]\nplatform_version="4.0.1"\n'
             'tested_python_versions=["3.12","3.13","3.14"]\nrequired_unpaid_capabilities=[]\n'
         )
         (path / "manuscript/config.yaml").write_text(
-            'publication:\n  intended_version: "2.0.0"\n  platform_version: "4.0.0"\n'
+            'publication:\n  intended_version: "2.0.0"\n  platform_version: "4.0.1"\n'
             "render:\n  formats:\n    pdf: true\n    html: false\n    slides: false\n    docx: false\n    epub: false\n"
         )
 
@@ -85,7 +85,7 @@ def _receipt(
         json.dumps(
             {
                 "schema_version": SCHEMA_VERSION,
-                "platform_version": "4.0.0",
+                "platform_version": "4.0.1",
                 "source_fingerprint": fingerprint,
                 "roster": list(PUBLIC_PROJECT_NAMES),
                 "gates": {
@@ -141,7 +141,7 @@ def test_source_owned_profile_requires_every_project_runtime_and_capability(tmp_
 @pytest.mark.parametrize(
     "provider",
     [
-        '__version__ = "4.0.0"\n',
+        '__version__ = "4.0.1"\n',
         RUNTIME_VERSION_PROVIDER_SOURCE + "raise RuntimeError('untrusted')\n",
         RUNTIME_VERSION_PROVIDER_SOURCE.replace("research-project-template", "other-package"),
     ],
@@ -231,9 +231,9 @@ def test_raw_singleton_summary_and_tag_hint_cannot_grant_release(tmp_path: Path)
     report_path = tmp_path / "output" / PUBLIC_PROJECT_NAMES[0] / "reports/pipeline_report.json"
     report_path.parent.mkdir(parents=True)
     report_path.write_text('{"stages":[{"status":"passed","exit_code":0}]}')
-    report = collect_release_readiness(tmp_path, latest_tag="v4.0.0")
+    report = collect_release_readiness(tmp_path, latest_tag="v4.0.1")
     assert report.pipeline.available and not report.pipeline.ready
-    assert report.release.latest_tag == "v4.0.0"
+    assert report.release.latest_tag == "v4.0.1"
     assert report.evidence.verified_tag is None and report.status == "unknown"
 
 
@@ -296,7 +296,7 @@ def test_paid_or_transport_only_live_receipt_cannot_pass(tmp_path: Path) -> None
         "live",
         "templates/template_code_project",
         "2.0.0",
-        "4.0.0",
+        "4.0.1",
         "a" * 64,
         capability="local-review",
     )
@@ -320,7 +320,7 @@ def test_source_declared_draft_does_not_require_fabricated_publication(tmp_path:
         "publication",
         "templates/template_code_project",
         "2.0.0",
-        "4.0.0",
+        "4.0.1",
         "a" * 64,
         profile="released",
         draft=True,
@@ -347,7 +347,7 @@ def test_platform_four_auxiliary_flags_require_original_process_and_raw_evidence
         details.update(mermaid=[], broken_links=[], consistency=[], doc_pairs=[])
     else:
         details["projects"] = list(PUBLIC_PROJECT_NAMES)
-    requirement = Requirement("root:" + kind, kind, "root", "4.0.0", "4.0.0", "a" * 64)
+    requirement = Requirement("root:" + kind, kind, "root", "4.0.1", "4.0.1", "a" * 64)
     payload = {"source_fingerprint": "b" * 64, "details": details}
     with pytest.raises(ValueError, match="exact artifact binding"):
         validate_acceptance(requirement, payload, SnapshotReader(tmp_path))

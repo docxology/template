@@ -13,23 +13,24 @@ a new validated field.
 `java -jar` against it — a real supply-chain risk (a compromised or
 silently-republished release asset would run unverified).
 
-**The fix**, in
-[`scripts/check_formal_specs.sh`](../scripts/check_formal_specs.sh):
+**The fix** is owned by
+[`template_formal.tool_acceptance`](../src/template_formal/tool_acceptance.py);
+[`scripts/check_formal_specs.sh`](../scripts/check_formal_specs.sh) delegates to it.
 
-- The URL is pinned to a specific, dated tag —
-  `https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar`
-  — never `latest`.
-- A hardcoded SHA-256
-  (`TLA_JAR_SHA256="9e27b5e19a69ae1f56aabf8403a6ed5598dbfa6e638908e5278ac39736c1543d"`)
-  is verified via `shasum -a 256 -c -` **every run**, whether the jar was
-  just fetched or already cached — so a stale/corrupted/tampered cache is
-  caught too, not just a fresh download.
-- On mismatch: `rm -f "${TLA_JAR}"` then `status=1` — the untrusted file is
-  never left sitting around for a later invocation to reuse, and the
-  script fails loudly rather than silently proceeding.
-- The jar itself is gitignored, not committed — a 2.2MB compiled binary
-  has no place in a strongly-typed *source* template (a separate, earlier
-  Forge finding; see `ISA.md`'s Changelog).
+- Explicit `--acquire` fetches the fixed `v1.8.0` release URL, never `latest`.
+  Its current official asset614143604 is 4,501,960 bytes. The jar identifies
+  itself as TLC2.0 (2026-10-06); the mutable tag label does not establish version
+  or integrity.
+- Source-owned SHA-256
+  `7beec0f04818732a62fa193731711a99aa4f11279499b2360a7d156c519ea78d`
+  was independently matched to official API metadata and downloaded bytes on
+  2026-10-08. Acquisition verifies bytes before replacing the local cache.
+- Every run verifies the selected jar, freezes its bytes before execution and
+  rechecks source and tool custody after execution. A changed or unverified
+  provider fails; no mismatch executes. Ordinary checks do not acquire tools.
+- `TEMPLATE_FORMAL_TLC_JAR` can select an authenticated external provider when
+  the local cache is absent. Tool bytes and scratch state remain outside
+  authored source and exports. The compiled jar is never committed.
 
 ## Construction-time SQL-identifier validation (ISC-70)
 

@@ -7,9 +7,10 @@ Parent layer contract: [`../AGENTS.md`](../AGENTS.md).
 The canonical wrapper delegates acquisition and execution to
 [`template_formal.tool_acceptance`](../../src/template_formal/tool_acceptance.py).
 Only explicit `--acquire` downloads the fixed release URL. The current official
-v1.8.0 asset601828751 has source-owned SHA256
-`e9c2d914fc1b7ba3e4a982ba251dc5c0da65010afcc6a5f9651576a1c380deae`, verified
-against both official API metadata and exact downloaded bytes on2026-09-30.
+v1.8.0 asset614143604 has source-owned SHA256
+`7beec0f04818732a62fa193731711a99aa4f11279499b2360a7d156c519ea78d`, verified
+against both official API metadata and exact downloaded bytes on2026-10-08.
+The jar identifies itself as TLC2.0 (2026-10-06); v1.8.0 is the download locator.
 The previous source checksum and stale release-page SHA1 were rejected. Preserve
 this distinction when refreshing a pin: matching a moving release URL is
 insufficient, and a mismatch must never execute an unverified cached jar.

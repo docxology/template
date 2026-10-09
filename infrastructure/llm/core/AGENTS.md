@@ -481,3 +481,10 @@ client.query("How do these assumptions affect the validity of results?")
 **System Documentation:**
 - [`../../../infrastructure/core/AGENTS.md`](../../../infrastructure/core/AGENTS.md) - Core infrastructure
 - [`../../../docs/development/testing/testing-guide.md`](../../../docs/development/testing/testing-guide.md) - Testing guide
+
+## Release acceptance modules
+
+| Module | Role |
+| --- | --- |
+| `local_ollama.py` | Explicit, bounded local Ollama generation with byte-level custody. |
+| `local_review_operation.py` | Supervise explicit local review producers over frozen public input bytes. |

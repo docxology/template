@@ -131,76 +131,29 @@ class ProjectionSourceUnsupported(ValueError):
 
 
 def compile_scope_projection_contract(
-    root: Path, scope: str, artifact: Any, reader: SnapshotReader
+    root: Path,
+    scope: str,
+    artifact: Any,
+    reader: SnapshotReader,
+    *,
+    tracked_paths: tuple[str, ...],
+    deadline: float,
 ) -> tuple[ProjectionPage, ...]:
-    """Reconstruct all selected pitch variants from source, never receipt DeckContent.
+    """Use admitted original Root membership and SDK-owned source compilation.
 
-    Manuscript Beamer/reveal source projection remains explicit unsupported.
-    Pure project helpers rebuild token values from current source configurations,
-    generated public counts and original Root Git membership; the enclosing
-    producer/reader must retain its existing frozen public-source/Root identity.
+    Generic manuscript projections have complete occurrence/reference contracts
+    and must enter observe_manuscript_projection before this literal Pitch path.
+    Source DATA is never executable project/provider code or an import root.
     """
-    import importlib
-    import sys
-    import yaml
-    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-    from infrastructure.rendering.slide_deck import filter_deck_for_budget, SlideBudget
+    from infrastructure.reporting.native_pitch_source import compile_pitch_source_contract
 
-    if (
-        scope not in PUBLIC_PROJECT_NAMES
-        or scope != "templates/template_pitch_deck"
-        or not artifact.id.startswith("pitch:")
-    ):
-        raise ProjectionSourceUnsupported(
-            "manuscript archive/accessible slide projection is not independently compiled"
-        )
-    parts = artifact.id.split(":")
-    if len(parts) != 3 or parts[1] not in {"short", "medium", "long"} or parts[2] not in {"pdf", "pptx"}:
-        raise ValueError("pitch artifact is outside source-owned variant identities")
-    project = root / "projects" / scope
-    source_root = project / "src"
-    for path in sorted(source_root.rglob("*.py")):
-        reader.read(path.relative_to(root).as_posix())
-    config_path = f"projects/{scope}/manuscript/config.yaml"
-    config = yaml.safe_load(reader.read(config_path).content)
-    deck_config = config.get("project_config", {}).get("deck")
-    if not isinstance(deck_config, dict):
-        raise ValueError("pitch source has no current project_config.deck")
-    subject = str(deck_config.get("pitch_subject", "template_template"))
-    if f"templates/{subject}" not in PUBLIC_PROJECT_NAMES:
-        raise ValueError("pitch source subject is outside canonical public scope")
-    reader.read(f"projects/templates/{subject}/manuscript/config.yaml")
-    reader.read("docs/_generated/COUNTS.md")
-    reader.read("infrastructure/project/public_scope.py")
-    for path in sorted((root / "infrastructure").glob("*/__init__.py")):
-        reader.read(path.relative_to(root).as_posix())
-    previous_path = list(sys.path)
-    try:
-        sys.path.insert(0, str(source_root))
-        loader = importlib.import_module("template_pitch_deck.content_loader")
-        tokens_module = importlib.import_module("template_pitch_deck.deck_tokens")
-        orchestration = importlib.import_module("template_pitch_deck.render_orchestration")
-        standalone = importlib.import_module("template_pitch_deck.standalone_slides")
-        for name, module in tuple(sys.modules.items()):
-            if name == "template_pitch_deck" or name.startswith("template_pitch_deck."):
-                location = getattr(module, "__file__", None)
-                if location is None or not Path(location).resolve().is_relative_to(source_root):
-                    raise ProjectionSourceUnsupported("project source helper was imported from a different source tree")
-        tokens = tokens_module.build_deck_tokens(root, pitch_subject=subject)
-        prefix = orchestration._subject_content_prefix(deck_config, subject)
-        relative = f"projects/{scope}/manuscript/{prefix}_{parts[1]}.yaml"
-        raw = yaml.safe_load(reader.read(relative).content)
-        model = loader.build_deck_content(raw, tokens, figures_dir=project / "output/figures")
-        budget = {"short": SlideBudget.SHORT, "medium": SlideBudget.MEDIUM, "long": SlideBudget.LONG}[parts[1]]
-        model = filter_deck_for_budget(model, budget)
-        source_base = str(deck_config.get("source_base_url", ""))
-        model = standalone.attach_qr_urls(model, length=parts[1], pitch_subject=subject, source_base_url=source_base)
-        expected_path = f"projects/{scope}/output/{parts[2]}/{subject}_pitch_{parts[1]}.{parts[2]}"
-        if artifact.path != expected_path or artifact.format != parts[2]:
-            raise ValueError("pitch artifact differs from its exact current source-owned path/format")
-        pages = compile_projection_contract(model, source_base_url=source_base, reader=reader)
-    finally:
-        sys.path[:] = previous_path
-    if not reader.unchanged():
-        raise ValueError("pitch source/count/configuration inputs changed during independent reconstruction")
-    return pages
+    if scope != "templates/template_pitch_deck" or not artifact.id.startswith("pitch:"):
+        raise ProjectionSourceUnsupported("manuscript slides require their source-aware occurrence/reference adapter")
+    return compile_pitch_source_contract(
+        root,
+        scope,
+        artifact,
+        reader,
+        tracked_paths=tracked_paths,
+        deadline=deadline,
+    )

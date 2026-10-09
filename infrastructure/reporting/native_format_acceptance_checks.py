@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import math
-import shutil
 import re
 import stat
 import time
@@ -19,12 +18,14 @@ from defusedxml.ElementTree import fromstring
 from defusedxml.common import DefusedXmlException
 from pypdf.errors import PyPdfError
 
-from infrastructure.core.execution_boundary import run_bounded_subprocess
-from infrastructure.core.files.secure_write import read_bytes_confined, atomic_write_bytes_confined
+from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.reporting.native_format_acceptance_contracts import TOOL_SCHEMA
 from infrastructure.reporting.release_readiness_artifacts import bounded_members
-from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, ArtifactSnapshot
+from infrastructure.reporting.release_readiness_snapshot import (
+    SnapshotReader,
+    ArtifactSnapshot,
+)
 
 
 class NativeToolUnavailable(RuntimeError):
@@ -56,7 +57,14 @@ def parse_native_bytes(kind: str, content: bytes) -> dict[str, Any]:
     """Translate positively identified native parse failures into contract errors."""
     try:
         return _parse_native_bytes(kind, content)
-    except (ParseError, DefusedXmlException, PyPdfError, zipfile.BadZipFile, KeyError, OSError) as error:
+    except (
+        ParseError,
+        DefusedXmlException,
+        PyPdfError,
+        zipfile.BadZipFile,
+        KeyError,
+        OSError,
+    ) as error:
         raise ValueError(f"native {kind} parser rejected invalid bytes: {error}") from error
 
 
@@ -95,16 +103,25 @@ def _parse_native_bytes(kind: str, content: bytes) -> dict[str, Any]:
             if image.format != "PNG" or min(image.size) <= 0:
                 raise ValueError("native PNG has invalid format/dimensions")
             image.load()
-            return {"width_px": image.width, "height_px": image.height, "mode": image.mode}
+            return {
+                "width_px": image.width,
+                "height_px": image.height,
+                "mode": image.mode,
+            }
     if kind not in {"docx", "epub", "pptx"}:
         raise ValueError("native artifact format is unsupported")
     with zipfile.ZipFile(BytesIO(content)) as archive:
         names = bounded_members(archive)
         if kind == "epub":
-            from infrastructure.rendering._epub_package_validation import validate_epub_package
+            from infrastructure.rendering._epub_package_validation import (
+                validate_epub_package,
+            )
 
             validate_epub_package(archive)
-            return {"members": len(names), "xhtml_documents": len([name for name in names if name.endswith(".xhtml")])}
+            return {
+                "members": len(names),
+                "xhtml_documents": len([name for name in names if name.endswith(".xhtml")]),
+            }
         if "[Content_Types].xml" not in names:
             raise ValueError("native Office artifact lacks content types")
         types = fromstring(archive.read("[Content_Types].xml"))
@@ -132,7 +149,12 @@ def _parse_native_bytes(kind: str, content: bytes) -> dict[str, Any]:
         for name in actual:
             if fromstring(archive.read(name)).tag != namespace + "sld":
                 raise ValueError("native PPTX slide XML is invalid")
-        return {"members": len(names), "slides": len(actual), "width_emu": width, "height_emu": height}
+        return {
+            "members": len(names),
+            "slides": len(actual),
+            "width_emu": width,
+            "height_emu": height,
+        }
 
 
 def native_tool_record(
@@ -145,58 +167,116 @@ def native_tool_record(
     deadline: float,
     run_id: str,
     purpose: str,
+    preserve_nominated_launcher: bool = False,
 ) -> dict[str, Any]:
-    """Execute and bind exact tool bytes and the original observed process outcome."""
-    selected = shutil.which(name, path=env.get("PATH"))
-    if not selected:
-        raise NativeToolUnavailable(f"{name} is not installed in the selected native environment")
-    executable = Path(selected).resolve(strict=True)
-    content = read_bytes_confined(executable.parent, executable, max_bytes=512 * 1024 * 1024)
-    digest = hashlib.sha256(content).hexdigest()
-    remaining = deadline - time.monotonic()
-    if remaining <= 0:
-        raise TimeoutError("native observer deadline expired before tool launch")
-    command = [str(executable), *arguments]
-    result = run_bounded_subprocess(command, cwd=root, env=env, timeout=min(remaining, 120), capture_output=True)
-    if (
-        hashlib.sha256(read_bytes_confined(executable.parent, executable, max_bytes=512 * 1024 * 1024)).hexdigest()
-        != digest
-    ):
-        raise ValueError("native executable changed during tool observation")
-    from infrastructure.reporting.native_format_portable_custody import EXECUTABLE_SCHEMA
+    """Bind genuine original native PID/OS/streams under the same caller clock."""
+    from infrastructure.reporting.native_tool_process import run_native_tool_process
 
+    from infrastructure.reporting.native_tool_producer import current_native_producer_operation
+
+    producer = current_native_producer_operation()
+    if producer is not None:
+        producer.verify(SnapshotReader(root), run_id=run_id, deadline=deadline)
+    operation_deadline = min(deadline, time.monotonic() + 120)
+    from infrastructure.reporting.native_format_html_child_custody import prepare_html_child_launch
+
+    html_child = prepare_html_child_launch([name, *arguments], env, operation_deadline)
+    result = run_native_tool_process(
+        directory,
+        name,
+        arguments,
+        cwd=root,
+        env=html_child.environment if html_child is not None else env,
+        deadline=operation_deadline,
+        purpose=purpose,
+        preserve_nominated_launcher=html_child is not None or preserve_nominated_launcher,
+    )
+    if result["nomination"] is None:
+        raise NativeToolUnavailable(f"{name} is not installed in the selected native environment")
+    executable = result["nomination"]["resolved_path"]
+    observation = result["executable_observation_before"]
+    original = result["original_exit_code"]
+    complete = result["accepted"]
+    html_closure = None
+    html_closure_error = None
+    if html_child is not None:
+        try:
+            html_closure = html_child.authenticate(result, caller_deadline=deadline)
+        except BaseException as error:
+            html_closure_error = {
+                "type": type(error).__name__,
+                "message": str(error),
+                "plan": str(html_child.plan),
+                "closure": str(html_child.closure),
+            }
+            complete = False
+    code = 124 if result["timed_out"] else 75 if not complete and original in (None, 0, 75) else original
+    process_path = directory / f"{purpose}.native-process.json"
+    reader = SnapshotReader(root)
+    process = reader.read(process_path.relative_to(root).as_posix())
+    streams = {}
+    for channel in ("stdout", "stderr"):
+        stream = result.get(f"raw_{channel}")
+        if stream is not None:
+            snapshot = reader.read(Path(stream["path"]).relative_to(root).as_posix())
+            if snapshot.sha256 != stream["sha256"] or len(snapshot.content) != stream["bytes"]:
+                raise ValueError("native original binary stream changed before ToolAPI retention")
+            streams[channel] = {
+                "path": snapshot.relative,
+                "sha256": snapshot.sha256,
+                "bytes": len(snapshot.content),
+            }
     payload = {
         "schema_version": TOOL_SCHEMA,
-        "executable_observation_before": {
-            "schema_version": EXECUTABLE_SCHEMA,
-            "path": str(executable),
-            "sha256": digest,
-        },
-        "executable_observation_after": {
-            "schema_version": EXECUTABLE_SCHEMA,
-            "path": str(executable),
-            "sha256": digest,
-        },
         "run_id": run_id,
         "tool": name,
         "purpose": purpose,
-        "executable": str(executable),
-        "executable_sha256": digest,
-        "command": command,
-        "exit_code": result.returncode,
-        "original_exit_code": result.original_returncode,
-        "timed_out": result.timed_out,
-        "custody_refused": result.custody_refused,
-        "diagnostic": result.command_error,
-        "stdout": result.stdout,
-        "stderr": result.stderr,
+        "executable": executable,
+        "executable_sha256": observation["sha256"],
+        "executable_observation_before": observation,
+        "executable_observation_after": result["executable_observation_after"],
+        "executable_identity_before": result.get("executable_identity_before"),
+        "executable_identity_after": result.get("executable_identity_after"),
+        "command": result["command"],
+        "pid": result["pid"],
+        "owner_pid": result["owner_pid"],
+        "exit_code": code,
+        "original_exit_code": original,
+        "timed_out": result["timed_out"],
+        "custody_refused": not complete,
+        "diagnostic": "; ".join(result["diagnostics"] + ([str(html_closure_error)] if html_closure_error else [])),
+        "stdout": result.get("stdout", ""),
+        "stderr": result.get("stderr", ""),
+        "raw_stdout": streams.get("stdout"),
+        "raw_stderr": streams.get("stderr"),
+        "native_process_artifact": {"path": process.relative, "sha256": process.sha256},
+        "original_deadline_monotonic": operation_deadline,
+        "caller_deadline_monotonic": deadline,
     }
+    if html_child is not None:
+        payload["html_python_source_closure"] = html_closure
+        payload["html_python_source_closure_error"] = html_closure_error
     binding = write_json(root, directory / f"{purpose}.json", payload)
-    if result.custody_refused:
-        raise NativeToolUnavailable(f"native tool guardian positively refused source custody: {result.command_error}")
-    if result.timed_out or result.returncode == 124:
+    if time.monotonic() >= operation_deadline:
+        raise TimeoutError("actual native ToolAPI retention exceeded its original finite deadline")
+    if not reader.unchanged():
+        raise ValueError("native original process or raw stream evidence changed during ToolAPI retention")
+    if result["timed_out"]:
         raise TimeoutError("actual native tool exceeded its original finite deadline")
-    return {"artifact": binding, "exit_code": result.returncode, "original_exit_code": result.original_returncode}
+    if not complete:
+        raise NativeToolUnavailable(
+            "native tool original guardian or evidence custody refused: " + payload["diagnostic"]
+        )
+    if producer is not None:
+        producer._retain_actual_tool(
+            root,
+            binding,
+            payload["native_process_artifact"],
+            result,
+            run_id=run_id,
+            deadline=deadline,
+        )
+    return {"artifact": binding, "exit_code": code, "original_exit_code": original}
 
 
 def audit_pdf_raster(
@@ -239,11 +319,22 @@ def audit_pdf_raster(
         raise ValueError("native tool input differs from admitted artifact bytes")
     tools = []
     for name, args, purpose in (
-        ("pdftoppm", ["-r", "150", "-png", str(frozen), str(prefix)], f"raster-{ordinal:04d}"),
+        (
+            "pdftoppm",
+            ["-r", "150", "-png", str(frozen), str(prefix)],
+            f"raster-{ordinal:04d}",
+        ),
         ("pdffonts", [str(frozen)], f"fonts-{ordinal:04d}"),
     ):
         record = native_tool_record(
-            root, directory, name, args, env=env, deadline=deadline, run_id=run_id, purpose=purpose
+            root,
+            directory,
+            name,
+            args,
+            env=env,
+            deadline=deadline,
+            run_id=run_id,
+            purpose=purpose,
         )
         tools.append(record["artifact"])
         if record["exit_code"] != 0 or record["original_exit_code"] != 0:

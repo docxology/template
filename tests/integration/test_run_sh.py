@@ -25,9 +25,8 @@ def script_path(repo_root: Path) -> Path:
 
 def run_script(script_path: Path, args: list[str]) -> subprocess.CompletedProcess[str]:
     cmd = ["bash", str(script_path), *args]
-    # Bounded wait: a cold environment triggers the uv auto-installer inside
-    # run.sh, which can take minutes; without a timeout the test hangs until
-    # the pytest-level timeout fires with no subprocess teardown.
+    # Prepared dispatch checks the real interpreter and source before execution.
+    # Bound the subprocess wait as well as the existing pytest case deadline.
     return subprocess.run(cmd, capture_output=True, text=True, env=os.environ.copy(), timeout=300)
 
 
@@ -63,7 +62,7 @@ def test_project_option_missing_value(script_path: Path) -> None:
 
 def test_project_option_invalid_project(script_path: Path) -> None:
     result = run_script(script_path, ["pipeline", "--project", "nonexistent_project_name_12345"])
-    assert result.returncode == 1
+    assert result.returncode == 2  # Invalid invocation is rejected before execution.
     combined = (result.stdout or "") + (result.stderr or "")
     assert "nonexistent_project_name_12345" in combined
     assert "not found" in combined

@@ -167,7 +167,7 @@ def test_audit_roots_include_only_exactly_pinned_resolvable_exemplar_providers(
         "  'template-owned-provider==1.0',\n"
         "  'template-ranged-provider>=1.0',\n"
         "  'template-absent-provider==1.0',\n"
-        "  'research-project-template==4.0.0',\n]\n",
+        "  'research-project-template==4.0.1',\n]\n",
         encoding="utf-8",
     )
     roots = project_test_audit_roots(project)

@@ -45,14 +45,26 @@ def original_reference(tmp_path_factory: pytest.TempPathFactory):
         source, (("fixture.md", source),), ("fixture.yaml", b"metadata:\n  fontsize: 10pt\n"), None, (), (), ()
     )
     environment = native_environment(ROOT, Path(sys.executable), directory)
-    environment["PATH"] = str(tools) + ":" + environment["PATH"]
-    # Preserve the existing verified installed distribution for actual copied
-    # executables; their private paths are deleted before any reader runs.
-    installed = Path(shutil.which("kpsewhich")).resolve().parents[2]
-    environment["TEXMFROOT"] = str(installed)
-    environment["TEXMFDIST"] = str(installed / "texmf-dist")
-    environment["TEXMFCNF"] = str(installed) + ":" + str(installed / "texmf-dist/web2c")
     run_id = base.name
+    for variable in ("TEXMFROOT", "TEXMFDIST", "TEXMFCNF"):
+        tool = native_tool_record(
+            ROOT,
+            directory,
+            str(Path(shutil.which("kpsewhich")).resolve()),
+            [f"--var-value={variable}"],
+            env=environment,
+            deadline=time.monotonic() + 30,
+            run_id=run_id,
+            purpose=f"original-installed-{variable.lower()}",
+        )
+        process = json.loads((ROOT / tool["artifact"]["path"]).read_bytes())
+        assert process["original_exit_code"] == process["exit_code"] == 0
+        value = process["stdout"].strip()
+        assert value, f"actual installed TeX configuration missing {variable}"
+        if variable != "TEXMFCNF":
+            assert Path(value).is_absolute() and Path(value).resolve(strict=True).is_dir()
+        environment[variable] = value
+    environment["PATH"] = str(tools) + ":" + environment["PATH"]
     ast_tool = native_tool_record(
         ROOT,
         directory,

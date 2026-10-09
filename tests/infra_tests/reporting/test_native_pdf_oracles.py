@@ -14,7 +14,9 @@ import pytest
 
 from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
 from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
-from infrastructure.project.public_acceptance_evidence import read_json, write_json
+from infrastructure.project.public_acceptance_evidence import read_json, write_json, runtime_identity
+from infrastructure.core.pipeline.fingerprints import paths_digest
+from infrastructure.reporting.native_format_portable_custody import producer_custody, validate_producer_custody
 from infrastructure.reporting.native_format_acceptance_checks import native_tool_record, parse_native_bytes
 from infrastructure.reporting.native_format_acceptance_contracts import (
     create_private_native_directory,
@@ -87,6 +89,9 @@ def actual_pdf_controls(tmp_path_factory: pytest.TempPathFactory) -> dict[str, A
     nonce = "c" * 32
     deadline = time.monotonic() + 450
     env = native_environment(REPO, Path(sys.executable), directory)
+    runtime = runtime_identity()
+    source_digest = paths_digest((REPO / "infrastructure",), source=True)
+    custody = validate_producer_custody(producer_custody(root, runtime, source_digest), runtime, source_digest)
     versions = {
         name: native_tool_record(
             root, directory, name, ["-v"], env=env, deadline=deadline, run_id=nonce, purpose=f"version-{name}"
@@ -103,7 +108,8 @@ def actual_pdf_controls(tmp_path_factory: pytest.TempPathFactory) -> dict[str, A
         "deadline": deadline,
         "controls": controls,
         "versions": versions,
-        "runtime": {"executable": sys.executable},
+        "runtime": runtime,
+        "custody": custody,
     }
 
 
@@ -192,6 +198,7 @@ def _validate_controls(fixture: dict[str, Any], controls: list[dict[str, Any]]) 
         {"deadline_monotonic": fixture["deadline"]},
         versions,
         True,
+        fixture["custody"],
     )
 
 

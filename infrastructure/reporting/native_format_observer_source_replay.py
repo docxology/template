@@ -103,6 +103,20 @@ def replay_html_source(
     if ast.path != directory / "semantic-ast.json":
         raise ValueError("semantic AST belongs to another attempt")
     contract = semantic_content_contract_from_ast(artifact.id, (*sources, *bibliographies), ast.content)
+    from infrastructure.reporting.native_format_semantic_original import replay_original_source
+
+    contract = replay_original_source(
+        root,
+        directory,
+        (*sources, *bibliographies),
+        contract,
+        raw["original_source"],
+        reader,
+        run_id=run_id,
+        custody=custody,
+        env=env,
+        deadline=deadline,
+    )
     if artifact.id != "manuscript:html" and not (artifact.id.startswith("section:") and artifact.id.endswith(":html")):
         contract = replace(
             contract,
@@ -184,8 +198,17 @@ def replay_html_source(
         independent = semantic_content_contract_from_ast(
             artifact.id, (*sources, *bibliographies), result.stdout.encode()
         )
-        if contract.blockers != independent.blockers and artifact.id.startswith(("section:", "manuscript:")):
+        if contract.blockers != (
+            *independent.blockers,
+            *raw["original_source"]["survival"]["blockers"],
+        ) and artifact.id.startswith(("section:", "manuscript:")):
             raise ValueError("independent source unsupported obligations differ")
+        independent = replace(
+            independent,
+            blockers=(*independent.blockers, *raw["original_source"]["survival"]["blockers"]),
+            original_ast_sha256=contract.original_ast_sha256,
+            original_source_occurrences=contract.original_source_occurrences,
+        )
         expected = contract.to_dict()
         actual = independent.to_dict()
         expected.pop("ast_sha256", None)

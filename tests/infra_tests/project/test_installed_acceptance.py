@@ -53,7 +53,7 @@ def _wheel(
     content = content or b"def measured_value():\n    return 17\n"
     (package / "__init__.py").write_bytes(content)
     requirement = Requirement(
-        f"{scope}:installed", "installed", scope, "1.0.0", "4.0.0", "a" * 64, package=distribution
+        f"{scope}:installed", "installed", scope, "1.0.0", "4.0.1", "a" * 64, package=distribution
     )
     metadata = f"{module}-1.0.0.dist-info"
     members = {
@@ -491,8 +491,9 @@ def test_complete_missing_runtime_matrix_retains_all_blockers_and_exit75(tmp_pat
     root = Path(__file__).resolve().parents[3]
     (tmp_path / "infrastructure").mkdir()
     (tmp_path / "infrastructure/_version.py").write_bytes((root / "infrastructure/_version.py").read_bytes())
-    (tmp_path / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="4.0.0"\n')
-    (tmp_path / "CHANGELOG.md").write_text("## [4.0.0] - Unreleased\n")
+    (tmp_path / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="4.0.1"\n')
+    (tmp_path / "CHANGELOG.md").write_text("## [4.0.1] - Unreleased\n")
+    (tmp_path / ".python-version").write_text("3.14\n")
     for scope in PUBLIC_PROJECT_NAMES:
         project = tmp_path / "projects" / scope
         (project / "src").mkdir(parents=True)
@@ -500,11 +501,11 @@ def test_complete_missing_runtime_matrix_retains_all_blockers_and_exit75(tmp_pat
         (project / "src/model.py").write_text("VALUE=1\n")
         (project / "pyproject.toml").write_text(
             "[project]\nname=" + json.dumps(Path(scope).name) + '\nversion="1.0.0"\n'
-            '[tool.template]\nplatform_version="4.0.0"\n'
+            '[tool.template]\nplatform_version="4.0.1"\n'
             'tested_python_versions=["3.12","3.13","3.14"]\nrequired_unpaid_capabilities=[]\n'
         )
         (project / "manuscript/config.yaml").write_text(
-            'publication:\n  intended_version: "1.0.0"\n  platform_version: "4.0.0"\n'
+            'publication:\n  intended_version: "1.0.0"\n  platform_version: "4.0.1"\n'
         )
     report = run_installed_acceptance(tmp_path, {}, project_workers=3)
     assert report["exit_code"] == 75
@@ -610,14 +611,14 @@ def test_private_metadata_mutation_refuses_original_snapshot_identity(tmp_path: 
 
 def _provider_metadata(root: Path) -> tuple[str, str]:
     root.mkdir(exist_ok=True)
-    (root / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="4.0.0"\n')
+    (root / "pyproject.toml").write_text('[project]\nname="research-project-template"\nversion="4.0.1"\n')
     engine = "templates/template_literature_meta_analysis"
     consumer = "templates/template_advanced_literature_review"
     for scope, name, dependencies, sources in (
         (
             engine,
             "template-literature-meta-analysis",
-            '["research-project-template==4.0.0"]',
+            '["research-project-template==4.0.1"]',
             'research-project-template={path="../../..",editable=true}',
         ),
         (
@@ -666,9 +667,12 @@ def test_actual_namespaced_engine_wheel_is_consumed_and_bound(tmp_path: Path, mu
     requirement, wheel, members = _wheel(
         root, content=b"from installed_engine import measured_value\nCOMPUTED=measured_value()\n"
     )
+    # This invented1.0.0 package proves generic provider byte custody.
+    # Canonical Meta's authored resource/default replay belongs to its genuine
+    # installed cell and the dedicated mandatory-resource reader controls.
     engine, engine_wheel, _ = _wheel(
         root,
-        scope="templates/template_literature_meta_analysis",
+        scope="templates/template_prose_project",
         module="installed_engine",
         distribution="installed-engine",
     )
@@ -739,3 +743,57 @@ def test_actual_namespaced_engine_wheel_is_consumed_and_bound(tmp_path: Path, mu
             check=False,
         )
         assert measured.returncode == 0 and measured.stdout == "17\n"
+
+
+@pytest.mark.parametrize(
+    "damage", ["none", "omitted-member", "changed-member", "changed-result", "outside-prefix", "changed-source"]
+)
+def test_meta_installed_replay_reader_binds_authored_fixture_and_normalized_result(tmp_path: Path, damage: str) -> None:
+    from infrastructure.project.installed_acceptance_validation import _validate_meta_replay
+    from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+    source = (
+        Path(__file__).resolve().parents[3]
+        / "projects/templates/template_literature_meta_analysis/src/deep_research/fixtures/recorded_report.json"
+    )
+    fixture = (
+        tmp_path
+        / "projects/templates/template_literature_meta_analysis/src/deep_research/fixtures/recorded_report.json"
+    )
+    fixture.parent.mkdir(parents=True)
+    fixture.write_bytes(source.read_bytes())
+    payload = json.loads(fixture.read_bytes())
+    prefix = tmp_path / "installed"
+    site = prefix / f"lib/python{sys.version_info.major}.{sys.version_info.minor}/site-packages"
+    member = "template_literature_meta_analysis/deep_research/fixtures/recorded_report.json"
+    digest = hashlib.sha256(fixture.read_bytes()).hexdigest()
+    citations = [{"title": item.get("title"), "url": item.get("url")} for item in payload["citations"]]
+    members = {member: digest}
+    domain = {
+        "fixture_path": str(site / member),
+        "fixture_sha256": digest,
+        "replay": {
+            "provider": payload["provider"],
+            "job_id": payload["job_id"],
+            "status": payload["status"],
+            "query": payload["request"]["query"],
+            "output_text": payload["output_text"],
+            "citations": citations,
+            "citation_count": len(citations),
+        },
+    }
+    if damage == "omitted-member":
+        members.clear()
+    elif damage == "changed-member":
+        members[member] = "0" * 64
+    elif damage == "changed-result":
+        domain["replay"]["output_text"] = "unexecuted replacement report"
+    elif damage == "outside-prefix":
+        domain["fixture_path"] = str(tmp_path / member)
+    elif damage == "changed-source":
+        fixture.write_text(json.dumps({**payload, "output_text": "new authored report"}))
+    if damage == "none":
+        _validate_meta_replay(domain, prefix, site, members, SnapshotReader(tmp_path))
+    else:
+        with pytest.raises(ValueError, match="admitted authored fixture"):
+            _validate_meta_replay(domain, prefix, site, members, SnapshotReader(tmp_path))

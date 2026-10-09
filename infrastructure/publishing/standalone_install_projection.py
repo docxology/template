@@ -108,7 +108,7 @@ def _assert_canonical_original(original: Path, root: GitInstallProvider) -> tupl
         manifest.get("schema_version") != 2
         or scope not in PUBLIC_PROJECT_NAMES
         or manifest.get("source_commit") != root.commit
-        or manifest.get("infrastructure_version") != "4.0.0"
+        or manifest.get("infrastructure_version") != "4.0.1"
         or manifest.get("files")
         != {name: row["sha256"] for name, row in before.items() if name != ".template-export.json"}
     ):
@@ -247,7 +247,7 @@ def _admit_meta_provider(
 def _expected(
     original: Path, root: GitInstallProvider, meta: GitInstallProvider | None
 ) -> tuple[dict[str, Any], dict[str, bytes]]:
-    platform = _admit_provider(root, ROOT_PACKAGE, "4.0.0")
+    platform = _admit_provider(root, ROOT_PACKAGE, "4.0.1")
     scope, records = _assert_canonical_original(original, root)
     versions = checkout_providers(
         read_bytes_confined(original, original / "pyproject.toml", max_bytes=4 * 1024 * 1024),
@@ -266,7 +266,7 @@ def _expected(
     if META_PACKAGE in pins:
         if meta is None or _admit_meta_provider(meta, root, platform, "0.2.0") != pins[META_PACKAGE]:
             raise ValueError("Meta provider changed while preparing installation fields")
-    if _admit_provider(root, ROOT_PACKAGE, "4.0.0") != platform:
+    if _admit_provider(root, ROOT_PACKAGE, "4.0.1") != platform:
         raise ValueError("Root provider changed during installation projection")
     return manifest, edits
 

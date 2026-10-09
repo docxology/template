@@ -10,6 +10,7 @@ from typing import Any
 from collections.abc import Callable
 
 from infrastructure.project.public_acceptance_evidence import write_json
+from infrastructure.project.public_reference import PublicReference
 from infrastructure.reporting.native_format_acceptance_checks import (
     NativeToolUnavailable,
     audit_pdf_raster,
@@ -22,6 +23,12 @@ from infrastructure.reporting.native_format_content_contracts import (
     content_contract_from_bytes,
 )
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
+from infrastructure.reporting.native_pitch_source_admission import (
+    SourceCorrespondence,
+    compile_admitted_pitch_projection,
+)
+
+from infrastructure.reporting.native_office_mermaid_binding import OfficeMermaidAdmission
 
 OBSERVER_SCHEMA = "template-native-observer-dispatch-v1"
 
@@ -72,6 +79,9 @@ def observe_native_artifact(
     epubcheck_jar: Path | None = None,
     java_executable: Path | None = None,
     frozen_epub_engine: Path | None = None,
+    source_reference: PublicReference | None = None,
+    verify_source_correspondence: SourceCorrespondence | None = None,
+    office_mermaid_admission: OfficeMermaidAdmission | None = None,
 ) -> dict[str, Any]:
     """Observe exact current artifacts with native tools and source contracts.
 
@@ -90,13 +100,20 @@ def observe_native_artifact(
     }
     if artifact.format in {"pdf", "pptx"} and (artifact.id.endswith(":slides") or artifact.id.startswith("pitch:")):
         from infrastructure.reporting.native_projection_contracts import (
-            compile_scope_projection_contract,
             projection_contract_record,
             ProjectionSourceUnsupported,
         )
 
         try:
-            pages = compile_scope_projection_contract(root, scope, artifact, reader)
+            pages = compile_admitted_pitch_projection(
+                root,
+                scope,
+                artifact,
+                reader,
+                source_reference=source_reference,
+                verify_source_correspondence=verify_source_correspondence,
+                deadline=deadline,
+            )
         except ProjectionSourceUnsupported as error:
             observed["observation"] = {"status": "blocked", "findings": [], "blockers": [str(error)]}
             return observed
@@ -151,12 +168,26 @@ def observe_native_artifact(
         )
         observed.update({"content_contract": content.to_dict(), "raster": raster, "observation": result})
     elif artifact.format == "html":
-        from infrastructure.reporting.native_format_semantic_source import observe_html_source
+        from infrastructure.reporting.native_format_html_admitted_source import observe_admitted_html_source
         from infrastructure.reporting.native_format_browser_oracles import audit_browser_html
+        from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
 
-        content, semantic = observe_html_source(
-            root, leaf, scope, artifact, reader, env=env, deadline=deadline, run_id=run_id
-        )
+        try:
+            content, semantic, admitted = observe_admitted_html_source(
+                root,
+                leaf,
+                scope,
+                artifact,
+                reader,
+                env=env,
+                deadline=deadline,
+                run_id=run_id,
+                source_reference=source_reference,
+                verify_source_correspondence=verify_source_correspondence,
+            )
+        except ProjectionSourceUnsupported as error:
+            observed["observation"] = {"status": "blocked", "findings": [], "blockers": [str(error)]}
+            return observed
         result = audit_browser_html(
             root,
             leaf,
@@ -167,68 +198,40 @@ def observe_native_artifact(
             deadline=deadline,
             run_id=run_id,
             artifact=snapshot,
+            metadata_source=admitted.metadata,
+            admitted_source=admitted,
         )
+        admitted.close(root, reader, deadline=deadline)
         observed.update({"content_contract": content.to_dict(), "semantic_source": semantic, "observation": result})
-    elif artifact.format == "docx":
-        from infrastructure.reporting.native_office_observer import convert_office, observe_office_layout
+    elif artifact.format in {"docx", "epub"}:
+        from infrastructure.reporting.native_office_full_observer import observe_office_full_source
 
-        chapters = _manuscript_contracts(root, scope, reader)
-        content = NativeContentContract(
-            artifact.id,
-            tuple(item for chapter in chapters for item in chapter.sources),
-            tuple(item for chapter in chapters for item in chapter.blocks),
-            tuple(item for chapter in chapters for item in chapter.blockers),
-        )
-        converted = convert_office(root, leaf, snapshot, "docx", env=env, deadline=deadline, run_id=run_id)
-        result = observe_office_layout(
-            root, leaf, converted, source_contract=content, env=env, deadline=deadline, run_id=run_id
-        )
-        observed.update({"content_contract": content.to_dict(), "observation": result})
-    elif artifact.format == "epub":
-        from infrastructure.reporting.native_epub_observer import (
-            inspect_epub,
-            inspect_epub_spine,
-            inspect_epub_reader_layout,
-        )
-
-        chapters = _manuscript_contracts(root, scope, reader)
-        converted = inspect_epub(
+        if source_reference is None or verify_source_correspondence is None:
+            raise NativeToolUnavailable(
+                "complete Office source observation requires original source and current-mirror admission"
+            )
+        if reader.root != root.resolve():
+            raise ValueError("complete Office source reader differs from its admitted current mirror")
+        source_reference.verify_unchanged(deadline=deadline)
+        verify_source_correspondence(source_reference, root, reader, deadline)
+        complete = observe_office_full_source(
             root,
             leaf,
+            scope,
+            artifact,
             snapshot,
+            reader,
             env=env,
             deadline=deadline,
             run_id=run_id,
             epubcheck_jar=epubcheck_jar,
             java_executable=java_executable,
-            frozen_engine=frozen_epub_engine,
+            frozen_epub_engine=frozen_epub_engine,
+            mermaid_admission=office_mermaid_admission,
         )
-        pdf = reader.read(converted["pdf"]["path"])
-        raster = audit_pdf_raster(
-            root,
-            leaf,
-            pdf,
-            parse_native_bytes("pdf", pdf.content),
-            env=env,
-            deadline=deadline,
-            run_id=run_id,
-            ordinal=0,
-        )
-        result = inspect_epub_reader_layout(
-            pdf.content,
-            tuple(reader.read(item["path"]).content for item in raster["rasters"]),
-            chapters,
-            deadline=deadline,
-        )
-        observed.update(
-            {
-                "chapter_contracts": [chapter.to_dict() for chapter in chapters],
-                "conversion": converted,
-                "raster": raster,
-                "spine": inspect_epub_spine(snapshot.content, chapters),
-                "observation": result,
-            }
-        )
+        verify_source_correspondence(source_reference, root, reader, deadline)
+        source_reference.verify_unchanged(deadline=deadline)
+        observed.update({"office_complete_source": complete, "observation": complete["observation"]})
     else:
         observed["observation"] = {
             "status": "blocked",

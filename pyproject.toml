@@ -18,7 +18,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "research-project-template"
-version = "4.0.0"
+version = "4.0.1"
 description = "A comprehensive template for research projects with test-driven development, automated PDF generation, and professional documentation structure"
 authors = [{ name = "Research Template Team" }]
 readme = "README.md"
@@ -384,6 +384,17 @@ ignore = [
 "infrastructure/__init__.py" = ["E501"]  # Module inventory docstring
 # T20 (print ban) over infrastructure/: only legitimate CLI entrypoint, gate,
 # and human-report modules may print; library modules route through get_logger.
+"infrastructure/core/runtime/prepared_dispatch.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/project/public_acceptance_auxiliary_cli.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/project/public_acceptance_root.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/project/public_root_case_census.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/project/public_root_runtime_readback.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/publishing/release_acceptance.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/publishing/root_release_artifacts.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/reporting/native_dependency_preparation.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/reporting/native_epub_preparation.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/reporting/native_format_acceptance.py" = ["T201"]  # acceptance CLI / human report
+"infrastructure/reporting/required_acceptance_aggregate.py" = ["T201"]  # acceptance CLI / human report
 "infrastructure/autoresearch/cli.py" = ["T201"]
 "infrastructure/benchmark/template_harness.py" = ["T201"]
 "infrastructure/core/cli_handlers.py" = ["T201"]

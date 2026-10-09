@@ -202,8 +202,96 @@ def test_short_worker_budget_is_supervised_and_blocked(tmp_path) -> None:
     # observation and final custody/cleanup have a separate finite outer bound.
     assert elapsed < 30
     assert receipt["status"] == "blocked"
-    assert receipt["arms"]["coordinated"]["calls"][0]["execution"]["timed_out"] is True
-    assert receipt["arms"]["coordinated"]["calls"][0]["execution"]["deadline_seconds"] == 1
+    calls = receipt["arms"]["coordinated"]["calls"]
+    assert receipt["source_unchanged"] is True
+    if calls:
+        assert calls[0]["execution"]["timed_out"] is True
+        assert calls[0]["execution"]["deadline_seconds"] == 1
+    else:
+        # Source admission can exhaust the actual matched three-second arm
+        # before a worker is launched. That is an observed prelaunch refusal,
+        # not evidence of an entered generation worker's request timeout.
+        assert "run deadline exhausted" in receipt["diagnostic"]
+
+
+@pytest.mark.timeout(180)
+def test_actual_worker_one_second_http_budget_blocks_after_request_entry(tmp_path: Path) -> None:
+    """An actual audited worker enters HTTP and retains its original blocked75."""
+    from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
+    from template_autoscientists.agents import live_transport
+    from template_autoscientists.agents.live_domain import proposal_schema
+
+    worker = Path(live_transport.__file__).resolve()
+    source_root = worker.parents[2]
+    platform_root = Path(platform_custody.__file__).resolve().parents[2]
+    prefix = tmp_path / "fresh-worker-bytecode"
+    prefix.mkdir(mode=0o700)
+    directory = tmp_path / "actual-worker"
+    directory.mkdir()
+    custody = implementation_custody()
+    sources = platform_sources()
+    runtime = environment_identity()
+    verify_custody(sources, runtime, custody)
+    bootstrap = bytecode_audit_bootstrap(
+        (
+            worker.parents[1],
+            source_root.parent / "scripts",
+            platform_root / "infrastructure",
+            platform_root / "scripts",
+        ),
+        prefix,
+    )
+    launch = (
+        "import runpy,sys;sys.path[:0]=[sys.argv.pop(1),sys.argv.pop(1)];"
+        "runpy.run_module('template_autoscientists.agents.live_transport',run_name='__main__')"
+    )
+    with provider_oracle(fault="stall") as (endpoint, requests):
+        request = {
+            "prompt": "Choose one bounded synthetic numeric proposal.",
+            "model": "fixture:latest",
+            "endpoint": endpoint,
+            "format_schema": proposal_schema((0, 1, 2, 3)),
+            "budget": {"timeout_seconds": 1, "num_predict": 512, "seed": 0, "temperature": 0},
+            "platform_sources": sources,
+            "runtime_environment": runtime,
+            "implementation_custody": custody,
+            "fresh_pycache_prefix": str(prefix),
+        }
+        invocation = directory / "invocation.json"
+        live_transport.write_json(invocation, request)
+        result = run_with_policy(
+            [
+                sys.executable,
+                "-I",
+                "-X",
+                f"pycache_prefix={prefix}",
+                "-c",
+                bootstrap + launch,
+                str(source_root),
+                str(platform_root),
+                "--request",
+                str(invocation),
+                "--directory",
+                str(directory),
+            ],
+            cwd=directory,
+            env=None,
+            policy=SubprocessPolicy(
+                policy_id="autoscientists-entered-worker-request-control",
+                source_path="projects/templates/template_autoscientists/tests/search/test_live_comparison.py",
+                timeout_seconds=90,
+                credential_free=True,
+                capture_output=True,
+            ),
+        )
+    assert result.returncode == result.original_returncode == 75, result.stdout + result.stderr
+    assert not result.timed_out and not result.custody_refused
+    assert len(requests) == 1, "the real provider worker must enter generation HTTP"
+    assert requests[0]["model"] == "fixture:latest"
+    assert request["budget"]["timeout_seconds"] == 1
+    assert "local model unavailable:" in result.stdout
+    assert not (directory / "response.json").exists()
+    verify_custody(sources, runtime, custody)
 
 
 def test_run_deadline_is_independent_of_per_request_budget(tmp_path) -> None:

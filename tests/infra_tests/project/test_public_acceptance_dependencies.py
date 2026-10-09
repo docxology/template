@@ -157,7 +157,7 @@ def test_actual_collection_and_execution_producer_bind_provider_custody(provider
     root, existing = provider_evidence
     requirements = {
         f"{PROVIDER}:installed": Requirement(
-            f"{PROVIDER}:installed", "installed", PROVIDER, "0.2.0", "4.0.0", "", package=PACKAGE
+            f"{PROVIDER}:installed", "installed", PROVIDER, "0.2.0", "4.0.1", "", package=PACKAGE
         )
     }
     wheel = root / existing["dependency_providers"][PROVIDER]["wheel_artifact"]["path"]
@@ -175,7 +175,7 @@ def test_actual_collection_and_execution_producer_bind_provider_custody(provider
         "case_artifacts": [cases["binding"]],
     }
     for kind in ("runtime", "coverage"):
-        requirement = Requirement(f"{PROJECT}:{kind}", kind, PROJECT, "0.2.0", "4.0.0", "a" * 64)
+        requirement = Requirement(f"{PROJECT}:{kind}", kind, PROJECT, "0.2.0", "4.0.1", "a" * 64)
         _provider_control(requirement, details, SnapshotReader(root))
     for raw in (baseline["raw"], cases["raw"]):
         assert raw["dependency_custody"][PROVIDER]["before"] == raw["dependency_custody"][PROVIDER]["after"]

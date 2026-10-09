@@ -104,6 +104,7 @@ class TestSuiteResults(TypedDict, total=False):
     execution_phases: dict[str, float]
     test_categories: dict[str, int]
     coverage_percent: float
+    coverage_database: dict[str, str | int]
     failed_tests: list[dict[str, str]]
 
 

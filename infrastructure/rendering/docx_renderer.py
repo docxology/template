@@ -48,6 +48,7 @@ def render_docx(
     author: str | None = None,
     pandoc_path: str = "pandoc",
     extra_args: list[str] | None = None,
+    diagram_png_sha256: tuple[str, ...] = (),
 ) -> DocxRenderResult:
     """Render *combined_md* to a DOCX at *output_path*.
 
@@ -92,6 +93,9 @@ def render_docx(
         str(output_path),
         "--standalone",
     ]
+    from infrastructure.rendering.office_native_projection import office_semantics_filter_path
+
+    cmd.extend(["--lua-filter", str(office_semantics_filter_path())])
     if title is not None:
         cmd.append(f"--metadata=title:{title}")
     if author is not None:
@@ -102,6 +106,7 @@ def render_docx(
         cmd.append(f"--reference-doc={reference_doc}")
     if extra_args:
         cmd.extend(extra_args)
+    cmd.extend(["--lua-filter", str(office_semantics_filter_path())])
 
     logger.debug("Invoking pandoc for DOCX: %s", " ".join(cmd))
     start = time.monotonic()
@@ -129,6 +134,12 @@ def render_docx(
     if not output_path.exists():
         raise RenderingError(f"pandoc reported success but DOCX was not created: {output_path}")
 
+    from infrastructure.rendering.office_native_projection import project_docx_transmission_layout
+
+    project_docx_transmission_layout(output_path)
+    from infrastructure.rendering.office_diagram_layout import apply_docx_diagram_layout
+
+    apply_docx_diagram_layout(output_path, diagram_png_sha256)
     size = output_path.stat().st_size
     if size == 0:
         raise RenderingError(f"pandoc reported success but DOCX is empty: {output_path}")

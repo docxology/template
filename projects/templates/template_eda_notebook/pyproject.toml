@@ -15,7 +15,7 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "research-project-template==4.0.0",
+    "research-project-template==4.0.1",
     "nbclient>=0.10.0",
     "nbformat>=5.10.0",
     "ipykernel>=6.29.0",
@@ -73,6 +73,6 @@ research-project-template = { path = "../../..", editable = true }
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "4.0.0"
+platform_version = "4.0.1"
 tested_python_versions = ["3.12", "3.13", "3.14"]
 required_unpaid_capabilities = ["fresh-kernel"]

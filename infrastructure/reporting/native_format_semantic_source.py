@@ -36,7 +36,9 @@ def semantic_source_plan(
     paths = discover_manuscript_files(manuscript)
     if artifact.id.startswith("section:") and artifact.id.endswith(":html"):
         name = artifact.id.removeprefix("section:").removesuffix(":html")
-        paths = [path for path in paths if path.name == name]
+        paths = [path for path in paths if path.relative_to(manuscript).as_posix() == name]
+        if len(paths) != 1:
+            raise ValueError("section identity requires one exact source-relative manuscript")
     if not paths:
         raise ValueError("source-owned HTML artifact has no consumed source")
     sources = tuple(
@@ -119,6 +121,11 @@ def observe_html_source(
     ast_snapshot = snapshot_reader.read(ast_path.relative_to(root).as_posix())
     consumed = snapshot_reader.read(source.relative_to(root).as_posix())
     contract = semantic_content_contract_from_ast(artifact.id, (*sources, *bibliographies), ast)
+    from infrastructure.reporting.native_format_semantic_original import observe_original_source
+
+    contract, original_source = observe_original_source(
+        root, directory, (*sources, *bibliographies), contract, env=env, deadline=deadline, run_id=run_id
+    )
     if artifact.id != "manuscript:html" and not (artifact.id.startswith("section:") and artifact.id.endswith(":html")):
         from dataclasses import replace
 
@@ -136,4 +143,5 @@ def observe_html_source(
         "filters": copied,
         "bibliographies": [{"path": path, "sha256": hashlib.sha256(data).hexdigest()} for path, data in bibliographies],
         "contract": contract.to_dict(),
+        "original_source": original_source,
     }

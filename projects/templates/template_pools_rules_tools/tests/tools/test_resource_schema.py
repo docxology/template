@@ -158,10 +158,7 @@ def test_validate_resource_directory_rejects_symlinked_entrypoint(tmp_path):
 
 def test_validate_resource_directory_rejects_escaping_entrypoint(tmp_path):
     (tmp_path / "tools.yaml").write_text(
-        "type: code_executor\n"
-        "description: x\n"
-        "version: '1'\n"
-        "license: MIT\n"
+        "type: code_executor\ndescription: x\nversion: '1'\nlicense: MIT\n"
         "entrypoints: ['../escape.py']\n",
         encoding="utf-8",
     )
@@ -171,10 +168,7 @@ def test_validate_resource_directory_rejects_escaping_entrypoint(tmp_path):
 
 def test_validate_resource_directory_reports_missing_entrypoint_file(tmp_path):
     (tmp_path / "tools.yaml").write_text(
-        "type: code_executor\n"
-        "description: x\n"
-        "version: '1'\n"
-        "license: MIT\n"
+        "type: code_executor\ndescription: x\nversion: '1'\nlicense: MIT\n"
         "entrypoints: [missing.py]\n",
         encoding="utf-8",
     )

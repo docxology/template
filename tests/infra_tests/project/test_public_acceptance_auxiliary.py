@@ -76,6 +76,7 @@ def test_unselected_model_and_docker_image_are_blocked_without_acquisition(tmp_p
 def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path: Path) -> None:
     import json
     import os
+    import platform
     import shutil
     import subprocess
 
@@ -117,7 +118,37 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
         if entrypoint.is_file() and not entrypoint.is_symlink() and entrypoint.name != "python":
             os.link(entrypoint, environment / "bin" / entrypoint.name)
     directory = producer / "output/readiness/portable"
-    gate = "root:macos:rendering"
+    gate = "root:macos:rendering" if platform.system() == "Darwin" else "root:roster"
+    if gate == "root:roster":
+        from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+        # This control claims complete source-roster metadata and process
+        # portability, not execution of each exemplar's algorithms.
+        for scope in PUBLIC_PROJECT_NAMES:
+            project = producer / "projects" / scope
+            (project / "src").mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source / "projects" / scope / "pyproject.toml", project / "pyproject.toml")
+        refused_directory = producer / "output/readiness/unsupported-print"
+        refused_spec = write_json(
+            producer,
+            refused_directory / "spec.json",
+            {"gate": "root:macos:rendering", "budget": 180, "raw_path": "output/readiness/unsupported-print/raw.json"},
+        )
+        refused_command = [
+            str(interpreter),
+            "-m",
+            "infrastructure.project.public_acceptance_auxiliary_worker",
+            "--spec",
+            str(producer / refused_spec["path"]),
+        ]
+        refused = supervise(refused_command, producer, refused_directory / "execution", time.monotonic() + 180)
+        actual_refusal = json.loads((refused_directory / "raw.json").read_text())
+        assert refused["exit_code"] == actual_refusal["exit_code"] == 75
+        assert refused["timed_out"] is False and actual_refusal["status"] == "blocked"
+        assert "actual Darwin host" in actual_refusal["diagnostic"]
+        assert not list(refused_directory.rglob("print-witness.json"))
+        assert not actual_refusal.get("details", {}).get("print_witness_artifact")
+    fingerprint = source_fingerprint(producer)
     spec = write_json(
         producer,
         directory / "spec.json",
@@ -137,7 +168,7 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
         "sha256": __import__("hashlib").sha256((directory / "raw.json").read_bytes()).hexdigest(),
     }
     raw = json.loads((directory / "raw.json").read_text())
-    fingerprint = source_fingerprint(source)
+    assert source_fingerprint(producer) == fingerprint
     process.update(
         gate=gate,
         source_fingerprint=fingerprint,
@@ -159,6 +190,7 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     shutil.copytree(producer, reader_root, ignore=shutil.ignore_patterns(".venv"))
     shutil.rmtree(producer)
     assert not interpreter.exists()
+    assert source_fingerprint(reader_root) == fingerprint
     minor = f"{sys.version_info.major}.{sys.version_info.minor}"
     # Retain the actual already-prepared interpreter distribution at a
     # distinct reader location; preserve its ABI without another install.
@@ -169,7 +201,21 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     assert len(members) <= 100_000
     assert sum(item.lstat().st_size for item in members if item.is_file() and not item.is_symlink()) <= 2 * 1024**3
     reader_runtime = tmp_path / "reader-python"
-    shutil.copytree(prefix, reader_runtime, copy_function=os.link, symlinks=True)
+    # A fresh reader must not add links to the shared interpreter distribution.
+    # Retain exact ABI bytes in independent files and keep its original metadata.
+    metadata_fields = ("st_dev", "st_ino", "st_nlink", "st_size", "st_mtime_ns", "st_ctime_ns")
+    originals = {
+        item.relative_to(prefix): tuple(getattr(item.stat(), field) for field in metadata_fields)
+        for item in members
+        if item.is_file() and not item.is_symlink()
+    }
+    shutil.copytree(prefix, reader_runtime, copy_function=shutil.copy2, symlinks=True)
+    for relative, expected in originals.items():
+        original = prefix / relative
+        copied = reader_runtime / relative
+        assert tuple(getattr(original.stat(), field) for field in metadata_fields) == expected
+        assert (copied.stat().st_dev, copied.stat().st_ino) != (expected[0], expected[1])
+        assert copied.stat().st_nlink == 1
     alternate = reader_runtime / binary.relative_to(prefix)
     assert alternate.is_file() and alternate.resolve() != Path(sys.executable).resolve()
     script = r"""
@@ -181,39 +227,69 @@ from infrastructure.reporting.native_print_witness_validation import validate_pr
 from infrastructure.reporting.required_acceptance_aggregate import _evidence_closure
 root=pathlib.Path(sys.argv[1])
 details=json.loads((root/'output/readiness/portable/details.json').read_text())
-validate_auxiliary_process('root:macos:rendering',sys.argv[3],details,SnapshotReader(root))
-binding=details['print_witness_artifact']
-path=root/binding['path'];original=path.read_bytes();witness=json.loads(original)
-raw=json.loads((root/'output/readiness/portable/raw.json').read_text())
-closure=_evidence_closure(SnapshotReader(root),binding['path'])
-assert sum(map(len,closure.values()))<64*1024*1024
-assert all(item['path'] in closure for item in witness['raster_artifacts'])
-for fault in ('worker','source','font-roles','font-before-after','font-private-path','library-files','pages','closure','tool'):
-    changed=copy.deepcopy(witness)
-    if fault=='worker':changed['pid']+=1
-    elif fault=='source':changed['source_after']['infrastructure'][1][-1]='0'*64
-    elif fault=='font-roles':changed['fonts_before']['storybook']['roles'].pop()
-    elif fault=='font-before-after':changed['fonts_after']['storybook']['roles'][0]['resource']['sha256']='0'*64
-    elif fault=='font-private-path':
-        for key in ('fonts_before','fonts_after'):
-            changed[key]['storybook']['roles'][0]['resource']['path']='/private/unsupported/font.ttf'
-    elif fault=='library-files':changed['library_before']['distributions'][0]['files'].pop()
-    elif fault=='pages':changed['prints'][0]['source']['pages'].pop()
-    elif fault=='closure':changed['raster_artifacts'].pop()
-    elif fault=='tool':
-        tool_path=root/changed['versions']['pdftoppm']['path'];saved_tool=tool_path.read_bytes()
-        tool=json.loads(saved_tool);tool['original_exit_code']=1
-        tool_path.write_text(json.dumps(tool));changed['versions']['pdftoppm']['sha256']=hashlib.sha256(tool_path.read_bytes()).hexdigest()
-    path.write_text(json.dumps(changed));rebound={'path':binding['path'],'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
-    try:
-        validate_print_witness(rebound,SnapshotReader(root),expected_pid=raw['pid'],expected_runtime=raw['runtime'])
+from infrastructure.reporting.readiness_receipts import source_fingerprint
+gate=sys.argv[4]
+assert source_fingerprint(root)==sys.argv[3]
+validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
+if gate=='root:macos:rendering':
+    binding=details['print_witness_artifact']
+    path=root/binding['path'];original=path.read_bytes();witness=json.loads(original)
+    raw=json.loads((root/'output/readiness/portable/raw.json').read_text())
+    closure=_evidence_closure(SnapshotReader(root),binding['path'])
+    assert sum(map(len,closure.values()))<64*1024*1024
+    assert all(item['path'] in closure for item in witness['raster_artifacts'])
+    for fault in ('worker','source','font-roles','font-before-after','font-private-path','library-files','pages','closure','tool'):
+        changed=copy.deepcopy(witness)
+        if fault=='worker':changed['pid']+=1
+        elif fault=='source':changed['source_after']['infrastructure'][1][-1]='0'*64
+        elif fault=='font-roles':changed['fonts_before']['storybook']['roles'].pop()
+        elif fault=='font-before-after':changed['fonts_after']['storybook']['roles'][0]['resource']['sha256']='0'*64
+        elif fault=='font-private-path':
+            for key in ('fonts_before','fonts_after'):
+                changed[key]['storybook']['roles'][0]['resource']['path']='/private/unsupported/font.ttf'
+        elif fault=='library-files':changed['library_before']['distributions'][0]['files'].pop()
+        elif fault=='pages':changed['prints'][0]['source']['pages'].pop()
+        elif fault=='closure':changed['raster_artifacts'].pop()
+        elif fault=='tool':
+            tool_path=root/changed['versions']['pdftoppm']['path'];saved_tool=tool_path.read_bytes()
+            tool=json.loads(saved_tool);tool['original_exit_code']=1
+            tool_path.write_text(json.dumps(tool));changed['versions']['pdftoppm']['sha256']=hashlib.sha256(tool_path.read_bytes()).hexdigest()
+        path.write_text(json.dumps(changed));rebound={'path':binding['path'],'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+        try:
+            validate_print_witness(rebound,SnapshotReader(root),expected_pid=raw['pid'],expected_runtime=raw['runtime'])
+        except ValueError:pass
+        else:raise AssertionError('rehashed original witness accepted '+fault)
+        finally:
+            path.write_bytes(original)
+            if fault=='tool':tool_path.write_bytes(saved_tool)
+    print(json.dumps({'role':'actual-portable-print-controls','pages':[item['observation']['pages'] for item in witness['prints']],
+                      'closure_files':len(closure),'closure_bytes':sum(map(len,closure.values())),'rehashed_controls':9}))
+else:
+    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+    observations=details['source_roster_observations']
+    assert details['projects']==list(PUBLIC_PROJECT_NAMES)
+    assert [item['scope'] for item in observations]==list(PUBLIC_PROJECT_NAMES)
+    metadata=root/observations[0]['metadata_artifact']['path'];original_metadata=metadata.read_bytes()
+    metadata.write_bytes(original_metadata+b'\n# changed after actual roster producer\n')
+    try:validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
     except ValueError:pass
-    else:raise AssertionError('rehashed original witness accepted '+fault)
-    finally:
-        path.write_bytes(original)
-        if fault=='tool':tool_path.write_bytes(saved_tool)
-print(json.dumps({'role':'actual-portable-print-controls','pages':[item['observation']['pages'] for item in witness['prints']],
-                  'closure_files':len(closure),'closure_bytes':sum(map(len,closure.values())),'rehashed_controls':9}))
+    else:raise AssertionError('changed current roster metadata admitted')
+    finally:metadata.write_bytes(original_metadata)
+    sdk=root/'infrastructure/core/execution_boundary.py';original_sdk=sdk.read_bytes()
+    sdk.write_bytes(original_sdk+b'\n# changed current source after portable producer\n')
+    current=source_fingerprint(root);assert current!=sys.argv[3]
+    try:
+        validate_auxiliary_process(gate,current,details,SnapshotReader(root))
+    except ValueError:pass
+    else:raise AssertionError('changed current SDK source fingerprint admitted')
+    finally:sdk.write_bytes(original_sdk)
+    assert source_fingerprint(root)==sys.argv[3]
+    validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
+    refusal=json.loads((root/'output/readiness/unsupported-print/raw.json').read_text())
+    assert refusal['exit_code']==75 and refusal['status']=='blocked'
+    assert not refusal.get('details',{}).get('print_witness_artifact')
+    print(json.dumps({'role':'actual-portable-roster-controls','projects':len(observations),
+                      'unsupported_print_original_exit':75,'source_and_metadata_controls':2}))
 """
     result = subprocess.run(
         [
@@ -224,6 +300,7 @@ print(json.dumps({'role':'actual-portable-print-controls','pages':[item['observa
             str(reader_root),
             str(prepared / f"lib/python{minor}/site-packages"),
             fingerprint,
+            gate,
         ],
         cwd=reader_root,
         capture_output=True,

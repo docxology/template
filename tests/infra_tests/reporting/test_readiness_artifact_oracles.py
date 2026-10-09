@@ -65,7 +65,7 @@ def _wheel(implementation: bytes, extra: dict[str, bytes] | None = None) -> byte
 
 
 def _requirement(kind: str, **kwargs) -> Requirement:
-    return Requirement(f"{PROJECT}:{kind}", kind, PROJECT, "2.0.0", "4.0.0", "a" * 64, package="exemplar", **kwargs)
+    return Requirement(f"{PROJECT}:{kind}", kind, PROJECT, "2.0.0", "4.0.1", "a" * 64, package="exemplar", **kwargs)
 
 
 def test_metadata_only_and_stale_wheels_cannot_grant_installed_acceptance(tmp_path: Path) -> None:
@@ -130,7 +130,7 @@ def test_export_and_remote_pairs_require_current_complete_source_archive(tmp_pat
         "output/readiness/manifest.json",
         {
             "version": "2.0.0",
-            "platform_version": "4.0.0",
+            "platform_version": "4.0.1",
             "source_identity": "a" * 64,
             "deliverables_identity": "",
             "bundle_sha256": exported["sha256"],
@@ -171,7 +171,7 @@ def test_export_and_remote_pairs_require_current_complete_source_archive(tmp_pat
         "output/readiness/incomplete.json",
         {
             "version": "2.0.0",
-            "platform_version": "4.0.0",
+            "platform_version": "4.0.1",
             "source_identity": "a" * 64,
             "deliverables_identity": "",
             "bundle_sha256": invalid["sha256"],
@@ -216,7 +216,7 @@ def test_actual_standalone_publication_binds_distinct_commit_to_monorepo_export(
         "source_project": PROJECT,
         "exported_project": Path(PROJECT).name,
         "source_commit": source_commit,
-        "infrastructure_version": "4.0.0",
+        "infrastructure_version": "4.0.1",
         "resource_dependencies": [],
         "files": files,
     }
@@ -240,7 +240,7 @@ def test_actual_standalone_publication_binds_distinct_commit_to_monorepo_export(
         "output/readiness/source-manifest.json",
         {
             "version": "2.0.0",
-            "platform_version": "4.0.0",
+            "platform_version": "4.0.1",
             "source_identity": "a" * 64,
             "deliverables_identity": "",
             "source_commit": source_commit,
@@ -330,13 +330,13 @@ def test_embedded_export_metadata_requires_exact_public_producer_binding(tmp_pat
     source = b"def model():\n    return 2\n"
     _file(tmp_path, f"projects/{PROJECT}/src/model.py", source)
     files = {"src/model.py": hashlib.sha256(source).hexdigest()}
-    manifest = {"files": files, "source_commit": "c" * 40, "platform_version": "4.0.0"}
+    manifest = {"files": files, "source_commit": "c" * 40, "platform_version": "4.0.1"}
     metadata = {
         "schema_version": 2,
         "source_project": PROJECT,
         "exported_project": "template_code_project",
         "source_commit": "c" * 40,
-        "infrastructure_version": "4.0.0",
+        "infrastructure_version": "4.0.1",
         "resource_dependencies": [],
         "files": files,
     }
@@ -459,7 +459,7 @@ def test_installed_pools_bundle_requires_exact_complete_declared_resources(tmp_p
         content = f"public {kind} resource".encode()
         _file(tmp_path, relative, content)
         resources[f"template_pools_rules_tools/_template_resources/{relative}"] = content
-    requirement = Requirement(f"{scope}:installed", "installed", scope, "2.0.0", "4.0.0", "a" * 64, package="exemplar")
+    requirement = Requirement(f"{scope}:installed", "installed", scope, "2.0.0", "4.0.1", "a" * 64, package="exemplar")
     details = {
         "execution_exit_code": 0,
         "package": "exemplar",
@@ -482,7 +482,7 @@ def test_installed_pools_bundle_requires_exact_complete_declared_resources(tmp_p
         validate_acceptance(requirement, {"details": dict(details, wheel_artifact=wheel)}, SnapshotReader(tmp_path))
 
 
-@pytest.mark.parametrize("change", ["current", "old-layout", "stale", "private"])
+@pytest.mark.parametrize("change", ["current", "old-layout", "stale", "private", "omitted-fixture", "corrupt-fixture"])
 def test_declared_namespaced_package_directory_binds_exact_wheel_members(tmp_path: Path, change: str) -> None:
     scope = "templates/template_literature_meta_analysis"
     _file(
@@ -494,15 +494,30 @@ def test_declared_namespaced_package_directory_binds_exact_wheel_members(tmp_pat
     source = b"def value():\n    return 17\n"
     _file(tmp_path, f"projects/{scope}/src/__init__.py", source)
     _file(tmp_path, f"projects/{scope}/src/public_data.txt", b"public input")
+    fixture = b'{"provider":"openai","output_text":"authored recorded report"}\n'
+    _file(tmp_path, f"projects/{scope}/src/deep_research/fixtures/recorded_report.json", fixture)
     prefix = "" if change == "old-layout" else "template_literature_meta_analysis/"
     members = {
         prefix + "__init__.py": b"def value():\n    return 99\n" if change == "stale" else source,
         prefix + "public_data.txt": b"public input",
         "example-0.2.0.dist-info/METADATA": b"Name: example\nVersion: 0.2.0\n",
     }
+    if change != "omitted-fixture":
+        members[prefix + "deep_research/fixtures/recorded_report.json"] = (
+            b"changed fixture" if change == "corrupt-fixture" else fixture
+        )
     if change == "private":
         members[prefix + "private.txt"] = b"private fixture only"
+    members["example-0.2.0.dist-info/WHEEL"] = b"Wheel-Version: 1.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n"
+    record = StringIO()
+    writer = csv.writer(record)
+    for name, data in members.items():
+        digest = base64.urlsafe_b64encode(hashlib.sha256(data).digest()).decode().rstrip("=")
+        writer.writerow((name, "sha256=" + digest, len(data)))
+    writer.writerow(("example-0.2.0.dist-info/RECORD", "", ""))
+    members["example-0.2.0.dist-info/RECORD"] = record.getvalue().encode()
     with zipfile.ZipFile(BytesIO(_zip(members))) as archive:
+        validate_wheel_members(archive, [])
         if change == "current":
             validate_wheel_source(scope, archive, SnapshotReader(tmp_path))
         else:
@@ -542,7 +557,7 @@ def test_root_wheel_requires_authored_sdk_bytes_and_excludes_local_native_produc
     }
     for name, content in native.items():
         _file(tmp_path, name, content)
-    requirement = Requirement("root:installed", "installed", "root", "2.0.0", "4.0.0", "a" * 64, package="exemplar")
+    requirement = Requirement("root:installed", "installed", "root", "2.0.0", "4.0.1", "a" * 64, package="exemplar")
 
     def recorded_wheel(source_members: dict[str, bytes]) -> bytes:
         members = dict(source_members)

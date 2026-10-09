@@ -84,7 +84,9 @@ were violated.
 strongly-typed *source* template. `scripts/check_formal_specs.sh` acquires it
 only with explicit `--acquire` from a pinned, dated release tag
 (`tlaplus/tlaplus` `v1.8.0`, never `latest`) and verifies its SHA-256 before
-ever invoking it (see [`../AGENTS.md`](../AGENTS.md)). Once
+ever invoking it (see [`../AGENTS.md`](../AGENTS.md)). This mutable tag currently
+locates asset614143604, whose jar identifies itself as TLC2.0 (2026-10-06); the
+exact source-owned digest, rather than the tag label, admits executable bytes. Once
 `tla2tools.jar` is present in this directory (fetched by the script, or
 downloaded yourself and checksum-verified the same way), you can run either
 spec directly without the wrapper:

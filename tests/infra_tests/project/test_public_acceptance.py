@@ -249,7 +249,7 @@ def test_parent_oracle_reads_real_case_union_and_rejects_foreign_coverage_scope(
     common = {
         "scope": PROJECT,
         "version": "1.0.0",
-        "platform_version": "4.0.0",
+        "platform_version": "4.0.1",
         "source_identity": raw["source_identity"],
         "deliverables_identity": raw["deliverables_identity"],
         "python_version": raw["python_version"],

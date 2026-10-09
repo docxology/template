@@ -24,6 +24,7 @@ from infrastructure.reporting.release_readiness_collectors import (
     collect_docs_lint,
 )
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.reporting.native_format_joint_source import NativeReaderOperation
 from infrastructure.reporting.release_readiness_profile import collect_profile
 from infrastructure.reporting.release_readiness_types import (
     CoverageFacts,
@@ -61,10 +62,13 @@ def collect_release_readiness(
     evidence_graph_filename: str = "evidence_graph.json",
     generated_at: str = _DEFAULT_GENERATED_AT,
     readiness_receipt: Path | None = None,
+    native_operation: NativeReaderOperation | None = None,
 ) -> ReleaseReadinessReport:
     """Observe each artifact once and validate the full required profile offline."""
     repo_root = repo_root.resolve()
-    reader = SnapshotReader(repo_root)
+    reader = SnapshotReader(repo_root, native_operation=native_operation)
+    if native_operation is not None:
+        native_operation.verify(reader)
     pipeline_path = _find_newest(repo_root, "pipeline_report.json")
     graph_path = _find_newest(repo_root, evidence_graph_filename)
     release = collect_release_metadata(repo_root, latest_tag=latest_tag, reader=reader)
@@ -195,7 +199,10 @@ def render_html(report: ReleaseReadinessReport) -> str:
     """Render a static HTML dashboard reusing the shared reporting templates."""
     rel = report.release
     cards = [
-        {"title": "Overall", "value": f"{_verdict(report.overall_ready)} ({report.status})"},
+        {
+            "title": "Overall",
+            "value": f"{_verdict(report.overall_ready)} ({report.status})",
+        },
         {"title": "Candidate acceptance", "value": report.evidence.candidate_state},
         {"title": "Released acceptance", "value": report.evidence.released_state},
         {"title": "Version", "value": rel.version if rel.version else _NOT_AVAILABLE},
@@ -239,7 +246,10 @@ def render_html(report: ReleaseReadinessReport) -> str:
                 ["Metric", "Value"],
                 [
                     ["Status", "informational snapshot"],
-                    ["Stages", f"{pipe.passed_stages} passed / {pipe.failed_stages} failed of {pipe.total_stages}"],
+                    [
+                        "Stages",
+                        f"{pipe.passed_stages} passed / {pipe.failed_stages} failed of {pipe.total_stages}",
+                    ],
                     ["Source", str(pipe.source)],
                 ],
             )
@@ -285,8 +295,17 @@ def _build_parser() -> argparse.ArgumentParser:
         default="released",
         help="Required acceptance profile (default: released).",
     )
-    parser.add_argument("--readiness-receipt", type=Path, help="Source and artifact receipt from executed checks.")
-    parser.add_argument("--out", type=Path, default=None, help="Output file path; prints to stdout if omitted.")
+    parser.add_argument(
+        "--readiness-receipt",
+        type=Path,
+        help="Source and artifact receipt from executed checks.",
+    )
+    parser.add_argument(
+        "--out",
+        type=Path,
+        default=None,
+        help="Output file path; prints to stdout if omitted.",
+    )
     parser.add_argument(
         "--format",
         choices=["markdown", "html", "json"],

@@ -215,8 +215,15 @@ def test_actual_parallel_stage_intervals_overlap(tmp_path: Path) -> None:
     scaffold_pipeline(tmp_path, names)
     (tmp_path / "scripts/stage.py").write_text(
         "import json,os,sys,time\nfrom pathlib import Path\n"
-        "project=sys.argv[sys.argv.index('--project')+1]\nstart=time.monotonic();time.sleep(1.2)\n"
+        "project=sys.argv[sys.argv.index('--project')+1]\n"
         "output=Path('projects')/project/'output/data';output.mkdir(parents=True,exist_ok=True)\n"
+        "(output/'ready.json').write_text(json.dumps({'pid':os.getpid()}))\n"
+        "ready=[Path('projects')/name/'output/data/ready.json' for name in ('templates/alpha','templates/beta')]\n"
+        "deadline=time.monotonic()+10\n"
+        "while not all(path.is_file() for path in ready):\n"
+        "    if time.monotonic()>=deadline: raise TimeoutError('actual parallel worker rendezvous not reached')\n"
+        "    time.sleep(.01)\n"
+        "start=time.monotonic();time.sleep(1.2)\n"
         "(output/'interval.json').write_text(json.dumps({'start':start,'end':time.monotonic(),'pid':os.getpid()}))\n"
     )
     result = run_projects_in_parallel(names, repo_root=tmp_path, max_workers=2, run_infra_tests=False)

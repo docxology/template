@@ -72,6 +72,37 @@ def _custody_matches_wheel(custody: object, binding: object, scope: str, reader:
         raise ValueError("installed custody omits admitted wheel Python")
 
 
+def _validate_meta_replay(
+    domain: object, prefix: Path, site: Path, members: dict[str, str], reader: SnapshotReader
+) -> None:
+    """Bind genuine installed default replay to its exact authored JSON resource."""
+    member = "template_literature_meta_analysis/deep_research/fixtures/recorded_report.json"
+    source = reader.read(
+        "projects/templates/template_literature_meta_analysis/src/deep_research/fixtures/recorded_report.json"
+    )
+    payload = source.json_object()
+    citations = [{"title": item.get("title"), "url": item.get("url")} for item in payload.get("citations", [])]
+    expected = {
+        "provider": str(payload["provider"]),
+        "job_id": str(payload.get("job_id", "")),
+        "status": str(payload.get("status", "completed")),
+        "query": str((payload.get("request", {}) or {}).get("query", "")),
+        "output_text": str(payload.get("output_text", "")),
+        "citations": citations,
+        "citation_count": len(citations),
+    }
+    if (
+        not isinstance(domain, dict)
+        or set(domain) != {"fixture_path", "fixture_sha256", "replay"}
+        or domain["fixture_path"] != str(site / member)
+        or not (site / member).is_relative_to(prefix)
+        or domain["fixture_sha256"] != source.sha256
+        or members.get(member) != source.sha256
+        or domain["replay"] != expected
+    ):
+        raise ValueError("installed Meta replay differs from its admitted authored fixture")
+
+
 def _cell(requirement: Requirement, cell: dict[str, Any], reader: SnapshotReader) -> None:
     from infrastructure.reporting.release_readiness_validators import validate_installed_wheel
 
@@ -261,6 +292,8 @@ def _cell(requirement: Requirement, cell: dict[str, Any], reader: SnapshotReader
                 or any(Path(location).is_relative_to(forbidden) for forbidden in spec["forbidden_roots"])
             ):
                 raise ValueError("installed package imported from source or outside its environment")
+    if requirement.scope == "templates/template_literature_meta_analysis":
+        _validate_meta_replay(raw.get("domain"), Path(prefix), site, members, reader)
     if requirement.scope == "templates/template_autopoiesis":
         receipt = validate_autopoiesis_observation(raw.get("domain"))
         base = reader.root / "projects" / requirement.scope

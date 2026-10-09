@@ -61,7 +61,7 @@ def _complete_project(
         (
             f'[project]\nname = "{package_name or name.replace("_", "-")}"\n'
             f'version = "0.1.0"\nrequires-python = "{requires_python}"\n'
-            '[tool.template]\nplatform_version = "4.0.0"\n'
+            '[tool.template]\nplatform_version = "4.0.1"\n'
             'tested_python_versions = ["3.12", "3.13", "3.14"]\n'
         ),
     )
@@ -546,7 +546,7 @@ def test_platform_binding_and_runtime_range_must_match(tmp_path: Path) -> None:
     path = project / "pyproject.toml"
     path.write_text(
         path.read_text()
-        .replace('platform_version = "4.0.0"', 'platform_version = "3.8.0"')
+        .replace('platform_version = "4.0.1"', 'platform_version = "3.8.0"')
         .replace('["3.12", "3.13", "3.14"]', '["3.14"]'),
         encoding="utf-8",
     )

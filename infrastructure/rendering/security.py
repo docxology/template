@@ -104,13 +104,19 @@ def subprocess_options(profile: RenderSecurityProfile, timeout: int) -> Subproce
     }
 
 
+class IsolatedCompletedProcess(subprocess.CompletedProcess[str]):
+    """Existing completed-process semantics with the genuine parent-launched PID."""
+
+    pid: int
+
+
 def run_isolated_subprocess(
     args: list[str],
     *,
     timeout: int,
     env: dict[str, str] | None = None,
     cwd: Path | None = None,
-) -> subprocess.CompletedProcess[str]:
+) -> IsolatedCompletedProcess:
     """Run a renderer helper and terminate its descendant process group on timeout.
 
     ``subprocess.run(timeout=...)`` terminates the direct child but does not
@@ -143,7 +149,9 @@ def run_isolated_subprocess(
             except subprocess.TimeoutExpired:
                 pass
         raise
-    return subprocess.CompletedProcess(args=args, returncode=process.returncode or 0, stdout=stdout, stderr=stderr)
+    completed = IsolatedCompletedProcess(args=args, returncode=process.returncode or 0, stdout=stdout, stderr=stderr)
+    completed.pid = process.pid
+    return completed
 
 
 def _terminate_process_group(process: subprocess.Popen[str], *, force: bool = False) -> None:

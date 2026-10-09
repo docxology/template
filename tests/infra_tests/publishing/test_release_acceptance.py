@@ -26,7 +26,7 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION, source_fingerprint
 
 
-def _root(root: Path, version: str = "4.0.0") -> str:
+def _root(root: Path, version: str = "4.0.1") -> str:
     (root / "pyproject.toml").write_text(f'[project]\nname="research-project-template"\nversion="{version}"\n')
     (root / "CHANGELOG.md").write_text(f"## [{version}] - Unreleased\n")
     (root / ".python-version").write_text("3.14\n")
@@ -269,7 +269,7 @@ def _receipt(root: Path, revision: str) -> str:
         json.dumps(
             {
                 "schema_version": SCHEMA_VERSION,
-                "platform_version": "4.0.0",
+                "platform_version": "4.0.1",
                 "source_commit": revision,
                 "source_fingerprint": source_fingerprint(root),
                 "roster": list(PUBLIC_PROJECT_NAMES),

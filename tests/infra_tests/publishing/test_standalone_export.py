@@ -28,7 +28,7 @@ def _fixture(tmp_path: Path) -> tuple[Path, Path]:
     project = snapshot / "projects/templates/template_code_project/src"
     project.mkdir(parents=True)
     (project / "model.py").write_text("CURRENT_PUBLIC_SOURCE = True\n")
-    (snapshot / "pyproject.toml").write_text('[project]\nversion="4.0.0"\n')
+    (snapshot / "pyproject.toml").write_text('[project]\nversion="4.0.1"\n')
     return implementation, snapshot
 
 

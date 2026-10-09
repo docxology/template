@@ -20,7 +20,7 @@ import tempfile
 import uuid
 import sys
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Mapping, cast
 
 from coverage import Coverage
 from coverage.exceptions import CoverageException
@@ -203,7 +203,7 @@ def _load_receipt(
     return results, float(raw_coverage)
 
 
-def _regenerate_coverage_json(project_root: Path) -> float:
+def _regenerate_coverage_json(project_root: Path) -> tuple[float, bytes]:
     """Read the fresh project coverage DB and write the canonical JSON report."""
     coverage_db = project_root / ".coverage"
     if coverage_db.is_symlink() or not coverage_db.is_file():
@@ -227,7 +227,7 @@ def _regenerate_coverage_json(project_root: Path) -> float:
             atomic_write_bytes_confined(project_root, project_root / "coverage_project.json", report_path.read_bytes())
     except (CoverageException, OSError, ValueError) as exc:
         raise ProjectVerifierError(f"cannot read project verifier coverage evidence: {exc}") from exc
-    return percent
+    return percent, frozen_database
 
 
 def run_declared_project_verifier(
@@ -238,6 +238,8 @@ def run_declared_project_verifier(
     *,
     coverage_floor: float,
     timeout_seconds: float = DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS,
+    environment: Mapping[str, str] | None = None,
+    coverage_destination: Path | None = None,
 ) -> tuple[int, TestSuiteResults]:
     """Run a declared verifier and return canonical Stage-01 test results."""
     try:
@@ -272,7 +274,7 @@ def run_declared_project_verifier(
     with tempfile.TemporaryDirectory(prefix="template-project-verifier-") as temp_dir:
         temporary_root = Path(temp_dir).resolve()
         receipt_path = temporary_root / "receipt.json"
-        env = os.environ.copy()
+        env = dict(os.environ if environment is None else environment)
         env.pop("COVERAGE_FILE", None)
         for pytest_env in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "PYTEST_DISABLE_PLUGIN_AUTOLOAD"):
             env.pop(pytest_env, None)
@@ -330,8 +332,14 @@ def run_declared_project_verifier(
                     "run_id": run_id,
                     "command_sha256": command_sha,
                     "coverage_floor": coverage_floor,
+                    "repository_root": str(repo_root.absolute()),
+                    "coverage_destination": str(coverage_destination.absolute())
+                    if coverage_destination is not None
+                    else None,
                     "result_path": str(result_path),
                     "audit_roots": [str(root) for root in frozen_roots],
+                    "selected_interpreter": str(selected),
+                    "deadline_monotonic": deadline,
                 }
             ),
             encoding="utf-8",
@@ -377,6 +385,19 @@ def run_declared_project_verifier(
                 json.loads(read_bytes_confined(temporary_root, result_path, max_bytes=_MAX_RECEIPT_BYTES)),
             )
             measured_coverage = float(results["coverage_percent"])
+            if coverage_destination is not None:
+                admitted = results.get("coverage_database")
+                database = read_bytes_confined(repo_root, coverage_destination, max_bytes=64 * 1024 * 1024)
+                if admitted != {
+                    "path": str(coverage_destination.absolute()),
+                    "sha256": hashlib.sha256(database).hexdigest(),
+                    "bytes": len(database),
+                }:
+                    raise ProjectVerifierError(
+                        "Isolated verifier coverage differs from the independently admitted bytes",
+                        exit_code=75,
+                        original_exit_code=0,
+                    )
             try:
                 unchanged_runtime = analysis_runtime_binding(project_root, interpreter=selected) == runtime["binding"]
             except (OSError, ValueError) as exc:
@@ -411,7 +432,7 @@ def _validate_receipt_worker(request_path: Path) -> int:
         run_id=request["run_id"],
         command_sha256=request["command_sha256"],
     )
-    measured = _regenerate_coverage_json(project_root)
+    measured, frozen_database = _regenerate_coverage_json(project_root)
     if not math.isclose(receipt_coverage, measured, abs_tol=0.01):
         raise ProjectVerifierError("project verifier receipt coverage does not match the independently read database")
     floor = request["coverage_floor"]
@@ -423,11 +444,41 @@ def _validate_receipt_worker(request_path: Path) -> int:
         )
     results["coverage_percent"] = measured
     frozen_roots = tuple(Path(root) for root in request["audit_roots"])
+    deadline = request["deadline_monotonic"]
+    selected = Path(request["selected_interpreter"])
+    remaining_test_budget(deadline)
+    if (
+        not selected.is_absolute()
+        or selected != Path(sys.executable).absolute()
+        or selected.resolve(strict=True) != Path(sys.executable).resolve(strict=True)
+    ):
+        raise ProjectVerifierError(
+            "Independent validation used a different actual selected child interpreter", exit_code=75
+        )
+    # The current validator must inspect its actual live import state.
+    # Parent nomination already used the selected interpreter; a fresh probe
+    # cannot detect a changed provider spec in this running child.
     if project_test_audit_roots(project_root) != frozen_roots:
         raise ProjectVerifierError("Project plugin-root set changed during independent validation", exit_code=75)
     for root in frozen_roots:
         verify_fresh_module_bytecode(root, Path(sys.pycache_prefix or ""))
+    destination = request.get("coverage_destination")
+    if destination is not None:
+        repository = Path(request["repository_root"])
+        coverage_destination = Path(destination)
+        if read_bytes_confined(project_root, project_root / ".coverage", max_bytes=64 * 1024 * 1024) != frozen_database:
+            raise ProjectVerifierError("Verified coverage bytes changed before isolated admission", exit_code=75)
+        atomic_write_bytes_confined(repository, coverage_destination, frozen_database)
+        if read_bytes_confined(repository, coverage_destination, max_bytes=64 * 1024 * 1024) != frozen_database:
+            raise ProjectVerifierError("Isolated verifier coverage changed during admission", exit_code=75)
+        results["coverage_database"] = {
+            "path": str(coverage_destination),
+            "sha256": hashlib.sha256(frozen_database).hexdigest(),
+            "bytes": len(frozen_database),
+        }
+    remaining_test_budget(deadline)
     atomic_write_bytes_confined(request_path.parent, Path(request["result_path"]), json.dumps(results).encode("utf-8"))
+    remaining_test_budget(deadline)
     return 0
 
 

@@ -77,7 +77,7 @@ uv run pytest projects/templates/template_autoscientists/tests/ \
 ## Platform dependency
 
 The deterministic research core is project-local. The exemplar declares the
-research-project-template 4.0.0 runtime dependency for the shared bounded live
+research-project-template 4.0.1 runtime dependency for the shared bounded live
 coordination and custody support. The checkout-only uv resolver points to the
 platform root. Standalone acceptance builds the current platform and exemplar
 wheels, installs them into a selected fresh environment, and executes outside

@@ -44,3 +44,9 @@ uv run python scripts/gates/public_readiness.py --include-ollama-tests --allow-s
 
 - [`scripts/`](../) — Pipeline orchestration scripts
 - [`infrastructure/validation/`](../../infrastructure/validation/) — Validation infrastructure
+
+## Release acceptance modules
+
+| Module | Role |
+| --- | --- |
+| `native_formats.py` | Execute the source-bound public native-format acceptance producer. |

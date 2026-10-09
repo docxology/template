@@ -43,7 +43,7 @@ def _root(root: Path) -> Path:
     (root / "LICENSE").write_text("Invented fixture license\n")
     (root / "pyproject.toml").write_text(
         '[build-system]\nrequires=["hatchling"]\nbuild-backend="hatchling.build"\n'
-        '[project]\nname="research-project-template"\nversion="4.0.0"\n'
+        '[project]\nname="research-project-template"\nversion="4.0.1"\n'
         'requires-python=">=3.12"\nreadme="README.md"\nlicense={file="LICENSE"}\n'
         '[tool.hatch.build.targets.wheel]\npackages=["infrastructure"]\n'
         '[tool.hatch.build.targets.sdist]\ninclude=["/infrastructure","/README.md","/LICENSE","/pyproject.toml"]\n'
@@ -123,7 +123,7 @@ def test_source_snapshot_preserves_existing_dist_and_rejects_real_mutation(tmp_p
     deadline = Deadline.start(30)
     source = freeze_build_source(root, scratch, deadline)
     assert source.requirement.package == "research-project-template"
-    assert source.requirement.version == source.requirement.platform_version == "4.0.0"
+    assert source.requirement.version == source.requirement.platform_version == "4.0.1"
     assert old.read_bytes() == b"retained previous release"
     run_command(
         (
@@ -175,12 +175,12 @@ def test_genuine_uv_build_admits_metadata_and_source_sdist_with_negative_control
     with pytest.raises(ValueError, match="unowned or different source"):
         admit_sdist(buffer.getvalue(), sdist.path.name, source)
     with pytest.raises(ValueError, match="filename differs"):
-        admit_sdist(sdist.content, "template-4.0.0.tar.gz", source)
+        admit_sdist(sdist.content, "template-4.0.1.tar.gz", source)
 
 
 def _retrieval(scratch: Path) -> tuple[tuple[Distribution, ...], dict[str, object]]:
     content = b"original uploaded artifact"
-    name = "research_project_template-4.0.0-py3-none-any.whl"
+    name = "research_project_template-4.0.1-py3-none-any.whl"
     original = scratch / "original" / name
     original.parent.mkdir()
     original.write_bytes(content)
@@ -191,7 +191,7 @@ def _retrieval(scratch: Path) -> tuple[tuple[Distribution, ...], dict[str, objec
     artifacts = (Distribution(original, content, digest, "wheel"),)
     observation: dict[str, object] = {
         "package": "research-project-template",
-        "version": "4.0.0",
+        "version": "4.0.1",
         "nonce": "a" * 32,
         "artifacts": [
             {
@@ -207,7 +207,7 @@ def _retrieval(scratch: Path) -> tuple[tuple[Distribution, ...], dict[str, objec
 
 def test_actual_retrieved_bytes_reject_forged_new_hash_and_wrong_identity(tmp_path: Path) -> None:
     artifacts, observation = _retrieval(tmp_path)
-    kwargs = {"package": "research-project-template", "version": "4.0.0", "nonce": "a" * 32}
+    kwargs = {"package": "research-project-template", "version": "4.0.1", "nonce": "a" * 32}
     returned = admit_retrieved(tmp_path, artifacts, observation, **kwargs)
     assert returned[0].content == artifacts[0].content
     run_command(

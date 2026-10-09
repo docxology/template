@@ -1,7 +1,8 @@
 # Release boundary
 
-The root package metadata and dated changelog heading declare platform
-**4.0.0** as of **2026-10-07**. Tagging and publication require the verified
+The root package metadata declares the **4.0.1** candidate. Its changelog
+heading remains **Unreleased** until exact-revision acceptance closes.
+The prepared 4.0.0 candidate was not published; its notes are retained. Tagging and publication require the verified
 acceptance and publication steps below. The earlier recorded root release is `3.8.0` /
 `v3.8.0`; its original publication evidence is retained in
 [subsystem history](subsystem-status-history.md). Historical standalone release
@@ -33,7 +34,7 @@ provider-specific publishing steps.
 
 ## Development checkpoint
 
-Work on the 4.0.0 acceptance adapters may be committed on a development branch
+Work on the 4.0.1 acceptance adapters may be committed on a development branch
 while acceptance remains incomplete. Such a checkpoint preserves reviewed source
 and focused regression checks; it is not a candidate acceptance receipt or a
 release authorization. Unsupported source occurrences and missing native,

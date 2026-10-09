@@ -264,10 +264,10 @@ Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input). Both trig
 3. For root 4+, requires the exact successful hosted run ID, `platform-required-acceptance` artifact ID and aggregate receipt SHA256; authenticates the same-repository exact-revision run, bounded artifact and every candidate requirement before continuing. Tag pushes without that explicit handoff stop
 4. Runs the tagged-SHA no-mocks and bounded pipeline-smoke gates, root release contract and fail-closed public capability manifest
 5. Clean-exports, installs and import-smokes the root and every canonical public exemplar on Python 3.12/3.13/3.14 without credentials
-6. Runs the strict rendered publication audit across every canonical public exemplar, then builds and validates the root distributions
-7. For `v4.0.0`, uses [illustrated version notes](../../docs/releases/v4.0.0.md) with accepted-commit, hosted-run and receipt-hash bindings; other tags use the commit-based git-log excerpt
-8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.3` with **`generate_release_notes: false`** and attaches the distributions and v4.0.0 overview PNG
-9. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
+6. Runs the strict rendered publication audit across every canonical public exemplar, builds the final source distribution and admits exact final bytes alongside the wheel already accepted by the installed matrix
+7. For root 4+, selects `docs/releases/<tag>.md` for the actual tag, such as the [4.0.1 candidate notes](../../docs/releases/v4.0.1.md), and adds accepted-commit, hosted-run and receipt-hash bindings; earlier major tags use the commit-based git-log excerpt
+8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.3` with **`generate_release_notes: false`** and attaches the admitted distributions, tag-selected overview PNG and byte manifest
+9. Retrieves the published assets and requires exact admitted hashes; auto-marks as pre-release if the tag contains `-rc`, `-beta`, or `-alpha`
 
 The candidate [`platform-required-acceptance.yml`](platform-required-acceptance.yml)
 implements six original Root minor/platform units plus common and native

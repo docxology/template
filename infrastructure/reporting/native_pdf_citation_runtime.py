@@ -13,15 +13,31 @@ import re
 import shutil
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
-from infrastructure.core.execution_boundary import run_bounded_subprocess
-from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
+from infrastructure.core.files.secure_write import (
+    atomic_write_bytes_confined,
+    read_bytes_confined,
+)
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.project.public_acceptance_evidence import write_json
-from infrastructure.reporting.native_format_acceptance_checks import NativeToolUnavailable
-from infrastructure.reporting.native_format_acceptance_contracts import TOOL_SCHEMA, create_private_native_directory
+from infrastructure.reporting.native_format_acceptance_checks import (
+    NativeToolUnavailable,
+)
+from infrastructure.reporting.native_format_acceptance_contracts import (
+    CITATION_TOOL_FIELDS,
+    TOOL_SCHEMA,
+    create_private_native_directory,
+)
+from infrastructure.reporting.native_citation_process_custody import (
+    CitationOriginalInvocation,
+    OriginalCitationToolObserver,
+)
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+if TYPE_CHECKING:
+    from infrastructure.reporting.native_tool_process import NativeLiveToolProcess
+    from typing import Callable
 
 DEPENDENCY_SCHEMA = "template-native-citation-dependency-observation-v1"
 EXECUTABLE_SCHEMA = "template-native-executable-observation-v1"
@@ -52,12 +68,22 @@ def file_observation(path: Path) -> dict[str, Any]:
 class CitationRuntime:
     """Private source inputs, real outcomes and immutable before/after records."""
 
-    def __init__(self, root: Path, directory: Path, *, env: dict[str, str], deadline: float, run_id: str):
+    def __init__(
+        self,
+        root: Path,
+        directory: Path,
+        *,
+        env: dict[str, str],
+        deadline: float,
+        run_id: str,
+        on_original_tool: OriginalCitationToolObserver | None = None,
+    ):
         budget(deadline)
         self.root = root.absolute()
         self.directory = directory.absolute()
         create_private_native_directory(self.root, self.directory)
         self.env, self.deadline, self.run_id = dict(env), deadline, run_id
+        self.on_original_tool = on_original_tool
         self.inputs: dict[Path, dict[str, Any]] = {}
         self.tools: list[dict[str, Any]] = []
 
@@ -77,10 +103,27 @@ class CitationRuntime:
             raise ValueError("citation source/private input changed during original observation")
 
     def tool(
-        self, name: str, arguments: list[str], purpose: str, *, input_paths: tuple[Path, ...] = ()
+        self,
+        name: str,
+        arguments: list[str],
+        purpose: str,
+        *,
+        input_paths: tuple[Path, ...] = (),
+        while_live: Callable[[NativeLiveToolProcess], None] | None = None,
     ) -> dict[str, Any]:
-        """Keep actual exit/cleanup outcomes, executable and input observations."""
+        """Retain direct native OS custody and notify its actual Source owner."""
+        from infrastructure.reporting.native_tool_process import run_native_tool_process
+        from infrastructure.reporting.native_tool_producer import (
+            current_native_producer_operation,
+        )
+
+        operation_deadline = min(self.deadline, time.monotonic() + 120.0)
         self.unchanged()
+        producer = current_native_producer_operation()
+        if self.on_original_tool is not None and producer is None:
+            raise ValueError("citation original callback requires the actual live Source owner before launch")
+        if producer is not None:
+            producer.verify(SnapshotReader(self.root), run_id=self.run_id, deadline=self.deadline)
         selected = shutil.which(name, path=self.env.get("PATH"))
         if not selected:
             raise NativeToolUnavailable(f"{name} is not installed in the selected citation environment")
@@ -96,14 +139,46 @@ class CitationRuntime:
             consumed.append(
                 {
                     "observation": observation,
-                    "artifact": {"path": frozen.relative_to(self.root).as_posix(), "sha256": observation["sha256"]},
+                    "artifact": {
+                        "path": frozen.relative_to(self.root).as_posix(),
+                        "sha256": observation["sha256"],
+                    },
                 }
             )
-        command = [str(executable), *arguments]
-        result = run_bounded_subprocess(
-            command, cwd=self.directory, env=self.env, timeout=budget(self.deadline), capture_output=True
+        if time.monotonic() >= operation_deadline:
+            raise TimeoutError("citation tool Source admission exhausted its existing native ceiling")
+        result = run_native_tool_process(
+            self.directory,
+            name,
+            arguments,
+            cwd=self.directory,
+            env=self.env,
+            deadline=operation_deadline,
+            purpose=purpose,
+            while_live=while_live,
         )
+        if result["nomination"] is None:
+            raise NativeToolUnavailable("citation actual native tool nomination was unavailable")
+        if result["nomination"]["resolved_path"] != str(executable):
+            raise ValueError("citation actual nominated native executable changed")
         after = file_observation(executable)
+        original = result["original_exit_code"]
+        complete = result["accepted"]
+        code = 124 if result["timed_out"] else 75 if not complete and original in (None, 0, 75) else original
+        reader = SnapshotReader(self.root)
+        process = reader.read((self.directory / f"{purpose}.native-process.json").relative_to(self.root).as_posix())
+        streams = {}
+        for channel in ("stdout", "stderr"):
+            raw = result.get(f"raw_{channel}")
+            if raw is not None:
+                snapshot = reader.read(Path(raw["path"]).relative_to(self.root).as_posix())
+                if snapshot.sha256 != raw["sha256"] or len(snapshot.content) != raw["bytes"]:
+                    raise ValueError("citation original raw native stream changed before retention")
+                streams[channel] = {
+                    "path": snapshot.relative,
+                    "sha256": snapshot.sha256,
+                    "bytes": len(snapshot.content),
+                }
         payload = {
             "schema_version": TOOL_SCHEMA,
             "run_id": self.run_id,
@@ -111,45 +186,83 @@ class CitationRuntime:
             "purpose": purpose,
             "executable": str(executable),
             "executable_sha256": before["sha256"],
-            "executable_observation_before": {
-                "schema_version": EXECUTABLE_SCHEMA,
-                "path": str(executable),
-                "sha256": before["sha256"],
-            },
-            "executable_observation_after": {
-                "schema_version": EXECUTABLE_SCHEMA,
-                "path": str(executable),
-                "sha256": after["sha256"],
-            },
-            "command": command,
+            "executable_observation_before": result["executable_observation_before"],
+            "executable_observation_after": result["executable_observation_after"],
+            "executable_identity_before": result.get("executable_identity_before"),
+            "executable_identity_after": result.get("executable_identity_after"),
+            "command": result["command"],
+            "pid": result["pid"],
+            "owner_pid": result["owner_pid"],
+            "started_at_monotonic": result["operation_begin"]["monotonic"],
+            "duration_seconds": result["operation_end"]["monotonic"] - result["operation_begin"]["monotonic"],
+            "original_deadline_monotonic": operation_deadline,
+            "caller_deadline_monotonic": self.deadline,
             "cwd": str(self.directory),
             "environment_digest": canonical_digest(self.env),
             "input_observations_before": [*self.inputs.values(), *extra_before],
             "consumed_input_artifacts": consumed,
-            "exit_code": result.returncode,
-            "original_exit_code": result.original_returncode,
-            "timed_out": result.timed_out,
-            "custody_refused": result.custody_refused,
-            "diagnostic": result.command_error,
-            "stdout": result.stdout,
-            "stderr": result.stderr,
+            "exit_code": code,
+            "original_exit_code": original,
+            "timed_out": result["timed_out"],
+            "custody_refused": not complete,
+            "diagnostic": "; ".join(result["diagnostics"]),
+            "stdout": result.get("stdout", ""),
+            "stderr": result.get("stderr", ""),
+            "raw_stdout": streams.get("stdout"),
+            "raw_stderr": streams.get("stderr"),
+            "native_process_artifact": {
+                "path": process.relative,
+                "sha256": process.sha256,
+            },
         }
         self.unchanged()
         extra_after = [file_observation(path) for path in input_paths]
-        payload["input_observations_after"] = [*[file_observation(path) for path in self.inputs], *extra_after]
+        payload["input_observations_after"] = [
+            *[file_observation(path) for path in self.inputs],
+            *extra_after,
+        ]
+        if set(payload) != CITATION_TOOL_FIELDS:
+            raise ValueError("citation ToolAPI differs from the exact shared original fieldset")
         binding = write_json(self.root, self.directory / f"{purpose}.json", payload)
         self.tools.append(binding)
-        if before != after or extra_before != extra_after:
-            raise ValueError("citation executable/consumed input changed during original tool execution")
-        if result.custody_refused:
-            raise NativeToolUnavailable(f"citation guardian refused actual source custody: {result.command_error}")
-        if result.timed_out or result.returncode == 124:
-            raise TimeoutError("actual citation tool exhausted its original finite deadline")
-        if result.returncode != 0 or result.original_returncode != 0 or result.command_error:
-            raise ValueError(
-                f"actual citation {name} failed ({result.returncode}/{result.original_returncode}): "
-                f"{result.command_error or result.stderr or result.stdout}"
+        if before != after or extra_before != extra_after or not reader.unchanged():
+            raise ValueError("citation executable/input/original native artifacts changed during execution")
+        if producer is not None and complete:
+            producer._retain_actual_tool(
+                self.root,
+                binding,
+                payload["native_process_artifact"],
+                result,
+                run_id=self.run_id,
+                deadline=self.deadline,
             )
+            if self.on_original_tool is not None:
+                self.on_original_tool(
+                    CitationOriginalInvocation(
+                        producer,
+                        self.root,
+                        binding["path"],
+                        binding["sha256"],
+                        operation_deadline,
+                        time.monotonic(),
+                    )
+                )
+        if not complete:
+            if result["timed_out"]:
+                raise TimeoutError("actual citation tool exhausted its original finite deadline")
+            raise NativeToolUnavailable(
+                "citation original native guardian/evidence custody refused: " + payload["diagnostic"]
+            )
+        if code != 0 or original != 0 or payload["diagnostic"]:
+            raise ValueError(
+                f"actual citation {name} failed ({code}/{original}): "
+                f"{payload['diagnostic'] or payload['stderr'] or payload['stdout']}"
+            )
+        self.unchanged()
+        if producer is not None:
+            producer.verify(SnapshotReader(self.root), run_id=self.run_id, deadline=self.deadline)
+        if time.monotonic() >= operation_deadline:
+            raise TimeoutError("citation original ToolAPI/callback retention exceeded its existing tool clock")
         return payload
 
     def read(self, path: Path) -> bytes:
@@ -184,7 +297,9 @@ def tex_dependencies(runtime: CitationRuntime, fls: Path) -> tuple[dict[str, Any
     return tuple(external[key] for key in sorted(external))
 
 
-def dependency_identity(rows: tuple[dict[str, Any], ...] | list[dict[str, Any]]) -> list[list[Any]]:
+def dependency_identity(
+    rows: tuple[dict[str, Any], ...] | list[dict[str, Any]],
+) -> list[list[Any]]:
     """Content identities survive relocation without reopening producer paths."""
     return sorted([[row["name"], row["sha256"], row["bytes"]] for row in rows])
 
@@ -266,7 +381,13 @@ def compile_reference(runtime: CitationRuntime, tex: bytes) -> tuple[bytes, dict
             raise ValueError("citation dependency changed before final reference admission")
         frozen = runtime.freeze(f"dependency-{number:06d}.input", content)
         retained.append(
-            {**row, "artifact": {"path": frozen.relative_to(runtime.root).as_posix(), "sha256": row["sha256"]}}
+            {
+                **row,
+                "artifact": {
+                    "path": frozen.relative_to(runtime.root).as_posix(),
+                    "sha256": row["sha256"],
+                },
+            }
         )
     # This stem is entirely observer-owned. Remove only generated discovery outputs.
     for suffix in ("aux", "bbl", "blg", "log", "out", "fls", "pdf", "xdv", "toc"):
@@ -300,5 +421,8 @@ def compile_reference(runtime: CitationRuntime, tex: bytes) -> tuple[bytes, dict
     }
     for suffix in ("tex", "aux", "bbl", "blg", "log", "fls", "pdf"):
         content = runtime.read(runtime.directory / f"oracle.{suffix}")
-        custody["diagnostic_outputs"][suffix] = {"sha256": hashlib.sha256(content).hexdigest(), "bytes": len(content)}
+        custody["diagnostic_outputs"][suffix] = {
+            "sha256": hashlib.sha256(content).hexdigest(),
+            "bytes": len(content),
+        }
     return pdf, custody

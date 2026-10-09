@@ -19,7 +19,7 @@ requires-python = ">=3.12"
 # Runtime dependencies for the *project-local* code in `src/`.
 dependencies = [
     "requests>=2.32.0",
-    "research-project-template==4.0.0",
+    "research-project-template==4.0.1",
     "pypdf>=6.16.1",
     "pyyaml>=6.0,<7.0",
     "matplotlib>=3.7,<4.0",
@@ -91,7 +91,7 @@ exclude_lines = [
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "4.0.0"
+platform_version = "4.0.1"
 tested_python_versions = ["3.12", "3.13", "3.14"]
 required_unpaid_capabilities = ["retrieval", "fulltext", "local-synthesis"]
 

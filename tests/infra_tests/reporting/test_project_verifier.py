@@ -490,7 +490,11 @@ def test_actual_validator_malformed_provider_spec_keeps_typed_refusal(tmp_path: 
     import sys
     import uuid
 
-    from infrastructure.core.testing.project_test_runtime import project_test_audit_roots, project_test_import_paths
+    from infrastructure.core.testing.project_test_runtime import (
+        project_test_audit_roots,
+        project_test_deadline,
+        project_test_import_paths,
+    )
 
     project = _write_verifier_project(tmp_path)
     metadata = project / "pyproject.toml"
@@ -536,6 +540,8 @@ def test_actual_validator_malformed_provider_spec_keeps_typed_refusal(tmp_path: 
                 "coverage_floor": 90,
                 "result_path": str(tmp_path / "validation-result.json"),
                 "audit_roots": [str(root) for root in roots],
+                "deadline_monotonic": project_test_deadline(30),
+                "selected_interpreter": str(Path(sys.executable).absolute()),
             }
         )
     )
@@ -552,3 +558,172 @@ def test_actual_validator_malformed_provider_spec_keeps_typed_refusal(tmp_path: 
     assert checked.returncode == 75, checked.stderr
     assert "Local provider-root discovery refused" in checked.stdout + checked.stderr
     assert not (tmp_path / "validation-result.json").exists()
+
+
+@pytest.mark.timeout(300)
+def test_union_matrix_honors_declared_verifier_and_retains_bound_inputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A real declared verifier and ordinary pytest both enter the final union."""
+    import hashlib
+
+    from coverage import CoverageData
+
+    from infrastructure.core.testing.public_matrix_receipt import PublicMatrixReceipt
+    from infrastructure.core.testing.test_runner import run_per_project_pytest
+    from tests.infra_tests.core._test_runner_helpers import _write_project
+
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    project = _write_verifier_project(tmp_path)
+    # The declared source command owns its selection; generic pytest must not
+    # collect this deliberately failing module instead of invoking that command.
+    (project / "tests/test_demo.py").write_text("raise AssertionError('generic path selected')\n")
+    _write_project(tmp_path, "ordinary", extra_module="ordinary_mod")
+    receipt_path = tmp_path / "matrix.json"
+    combined = tmp_path / ".coverage.union"
+    assert (
+        run_per_project_pytest(
+            tmp_path,
+            projects=["active/demo", "ordinary"],
+            fail_under=90,
+            timeout=60,
+            subprocess_timeout_seconds=120,
+            coverage_file=combined,
+            receipt_path=receipt_path,
+            project_workers=2,
+        )
+        == 0
+    )
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    assert receipt.validate(("active/demo", "ordinary")) == []
+    lanes = {lane.project_name: lane for lane in receipt.lanes}
+    declared = lanes["active/demo"]
+    binding = declared.coverage_database
+    assert binding is not None
+    database = Path(str(binding["path"]))
+    assert database.is_file() and not database.is_symlink()
+    assert hashlib.sha256(database.read_bytes()).hexdigest() == binding["sha256"]
+    assert len(database.read_bytes()) == binding["bytes"]
+    assert declared.original_exit_code == 0
+    assert declared.collection_count == 1 and declared.coverage_percent == 100
+    assert declared.resource_profile == "source-declared-verifier"
+    assert declared.resource_limits["outer_project_workers"] == "1"
+    assert declared.resource_limits["subprocess_timeout_seconds"] == 6900
+    assert json.loads(declared.resource_limits["test_selection"]) == ["python", "scripts/verify.py"]
+    assert lanes["ordinary"].coverage_percent == 100
+    assert lanes["ordinary"].resource_limits["outer_project_workers"] == "2"
+    data = CoverageData(basename=str(combined))
+    data.read()
+    measured = data.measured_files()
+    assert any(path.endswith("demo_mod.py") for path in measured)
+    assert any(path.endswith("ordinary_mod.py") for path in measured)
+
+
+@pytest.mark.timeout(240)
+@pytest.mark.parametrize("refusal", ["missing-receipt", "below-floor"])
+def test_union_matrix_refuses_unadmitted_declared_verifier(tmp_path: Path, refusal: str) -> None:
+    """A child exit zero cannot replace fresh receipt and independent coverage."""
+    from infrastructure.core.testing.public_matrix_receipt import PublicMatrixReceipt
+    from infrastructure.core.testing.test_runner import run_per_project_pytest
+
+    project = _write_verifier_project(tmp_path, write_receipt=refusal != "missing-receipt")
+    if refusal == "below-floor":
+        (project / "src/demo_mod.py").write_text("def answer():\n    return 7\ndef uncovered():\n    return 9\n")
+    receipt_path = tmp_path / "refused-matrix.json"
+    assert (
+        run_per_project_pytest(
+            tmp_path,
+            projects=["active/demo"],
+            fail_under=90,
+            timeout=60,
+            subprocess_timeout_seconds=120,
+            coverage_file=tmp_path / ".coverage.union",
+            receipt_path=receipt_path,
+        )
+        != 0
+    )
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    assert receipt.overall_exit != 0
+    assert receipt.validate(("active/demo",))
+    lane = receipt.lanes[0]
+    assert lane.exit_code != 0 and lane.coverage_database is None
+    assert lane.original_exit_code == 0
+    assert not lane.timed_out
+
+
+@pytest.mark.timeout(180)
+@pytest.mark.parametrize("mutation", ["database-bytes", "missing-database", "missing-binding"])
+def test_matrix_receipt_closes_exact_admitted_declared_coverage(tmp_path: Path, mutation: str) -> None:
+    """Finalization refuses changed or missing bytes from an actual admitted run."""
+    from infrastructure.core.testing.public_matrix_receipt import PublicMatrixReceipt, write_public_matrix_receipt
+    from infrastructure.core.testing.test_runner import (
+        ProjectPytestResult,
+        ProjectPytestSpec,
+        _measure_coverage_percent,
+    )
+    from infrastructure.core.testing.test_runner_outputs import output_tree_digest
+
+    project = _write_verifier_project(tmp_path)
+    database = tmp_path / ".coverage.admitted"
+    before = output_tree_digest(project)
+    code, observed = run_declared_project_verifier(
+        tmp_path,
+        project,
+        "active/demo",
+        ("python", "scripts/verify.py"),
+        coverage_floor=90,
+        timeout_seconds=120,
+        coverage_destination=database,
+    )
+    assert code == 0 and observed["coverage_percent"] == 100
+    binding = observed["coverage_database"]
+    assert binding is not None and database.is_file()
+    if mutation == "database-bytes":
+        database.write_bytes(database.read_bytes() + b"altered")
+    elif mutation == "missing-database":
+        database.unlink()
+    else:
+        binding = None
+    spec = ProjectPytestSpec(
+        index=0,
+        project_name="active/demo",
+        project_root=project,
+        tests_dir=project / "tests",
+        coverage_file=database,
+        cmd=["python", "scripts/verify.py"],
+        env={},
+        declared_command=("python", "scripts/verify.py"),
+        coverage_floor=90,
+    )
+    result = ProjectPytestResult(
+        index=0,
+        project_name="active/demo",
+        exit_code=code,
+        coverage_file=database,
+        collection_count=observed["discovery_count"],
+        duration_seconds=1.0,
+        coverage_database=binding,
+        original_exit_code=observed["original_exit_code"],
+        subprocess_timeout_seconds=6900,
+    )
+    receipt_path = tmp_path / "refused-finalization.json"
+    arguments = dict(
+        specs=[spec],
+        results=[result],
+        output_digests_before={"active/demo": before},
+        profile="release",
+        marker_expr=None,
+        project_workers=1,
+        parallel=None,
+        combined_coverage_percent=100.0,
+        combined_floor=90,
+        measure_coverage_percent=_measure_coverage_percent,
+        phase_durations={"project_matrix": 1.0, "coverage_combine": 1.0, "coverage_gate": 1.0},
+    )
+    assert write_public_matrix_receipt(tmp_path, receipt_path, overall_exit=0, **arguments) == 75
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    assert receipt.validate(("active/demo",))
+    assert receipt.lanes[0].coverage_percent is None
+    assert receipt.lanes[0].original_exit_code == 0
+    # Closing custody must preserve a previously observed failure identity.
+    assert write_public_matrix_receipt(tmp_path, receipt_path, overall_exit=42, **arguments) == 42

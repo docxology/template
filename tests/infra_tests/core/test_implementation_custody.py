@@ -87,9 +87,9 @@ def installed_fixture(tmp_path: Path) -> Path:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / "infrastructure" / name, target)
     (site / "infrastructure/custody_probe.py").write_text("VALUE = 1\n")
-    metadata = site / "research_project_template-4.0.0.dist-info"
+    metadata = site / "research_project_template-4.0.1.dist-info"
     metadata.mkdir()
-    (metadata / "METADATA").write_text("Metadata-Version: 2.3\nName: research-project-template\nVersion: 4.0.0\n")
+    (metadata / "METADATA").write_text("Metadata-Version: 2.3\nName: research-project-template\nVersion: 4.0.1\n")
     update_record(site)
     return site
 
@@ -102,8 +102,8 @@ def update_record(site: Path) -> None:
             raw = path.read_bytes()
             value = base64.urlsafe_b64encode(hashlib.sha256(raw).digest()).decode().rstrip("=")
             writer.writerow([path.relative_to(site).as_posix(), "sha256=" + value, len(raw)])
-    writer.writerow(["research_project_template-4.0.0.dist-info/RECORD", "", ""])
-    (site / "research_project_template-4.0.0.dist-info/RECORD").write_text(buffer.getvalue())
+    writer.writerow(["research_project_template-4.0.1.dist-info/RECORD", "", ""])
+    (site / "research_project_template-4.0.1.dist-info/RECORD").write_text(buffer.getvalue())
 
 
 def probe(
@@ -241,7 +241,7 @@ def test_mutated_fresh_cache_is_rejected_without_decoding_its_body(tmp_path):
 def test_actual_installed_record_or_source_violation_is_rejected(tmp_path, fault):
     site = installed_fixture(tmp_path)
     source = site / "infrastructure/custody_probe.py"
-    record = site / "research_project_template-4.0.0.dist-info/RECORD"
+    record = site / "research_project_template-4.0.1.dist-info/RECORD"
     if fault == "modified":
         source.write_text("VALUE = 2\n")
     elif fault == "extra":

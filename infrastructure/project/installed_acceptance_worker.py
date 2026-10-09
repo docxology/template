@@ -45,8 +45,14 @@ class MissingInstalledTool(RuntimeError):
 def _environment(interpreter: Path, scratch: Path, *, repo_root: Path | None = None) -> dict[str, str]:
     environment = build_bounded_env(cell_environment(interpreter, scratch, repo_root=repo_root))
     for key in tuple(environment):
-        if key.startswith(("UV_", "PIP_")) or key in {"VIRTUAL_ENV", "PYTHONPATH", "PYTHONHOME"}:
+        if (key.startswith(("UV_", "PIP_")) and key != "UV_CACHE_DIR") or key in {
+            "VIRTUAL_ENV",
+            "PYTHONPATH",
+            "PYTHONHOME",
+        }:
             environment.pop(key)
+    # Preserve the prepared wheel-data cache; every installation still uses
+    # the source-owned lock and mandatory artifact hashes with networking off.
     environment.update(UV_PYTHON_DOWNLOADS="never", UV_NO_SYNC="1", UV_OFFLINE="1", MPLBACKEND="Agg")
     return environment
 
@@ -105,7 +111,7 @@ def run_installed_cell(
         selected_sha = selected_identity[0][2]
         scratch.mkdir()
         environment = _environment(interpreter, scratch, repo_root=root)
-        source, export_details = prepare_export(root, requirement, scratch, directory)
+        source, export_details = prepare_export(root, requirement, scratch, directory, deadline_monotonic=deadline)
         if not (source / "uv.lock").is_file():
             raise MissingInstalledTool("standalone source has no locked dependency environment")
         metadata = freeze_locked_metadata(root, scratch)

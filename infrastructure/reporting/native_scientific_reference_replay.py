@@ -25,24 +25,12 @@ from infrastructure.reporting.native_format_scientific_math import (
     scientific_math_from_ast,
 )
 
-TOOL_FIELDS = {
-    "command",
-    "custody_refused",
-    "diagnostic",
-    "executable",
-    "executable_observation_after",
-    "executable_observation_before",
-    "executable_sha256",
-    "exit_code",
-    "original_exit_code",
-    "purpose",
-    "run_id",
-    "schema_version",
-    "stderr",
-    "stdout",
-    "timed_out",
-    "tool",
-}
+from infrastructure.reporting.native_format_acceptance_contracts import (
+    TOOL_FIELDS,
+    TOOL_SCHEMA,
+)
+from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
 POLICY = "actual successful Kpathsea file opens plus native fonts/metrics and every TeX FLS input"
 
 
@@ -95,6 +83,7 @@ def replay_scientific_math_reference(
     producer_path: Callable[[str], str],
     run_id: str,
     deadline: float,
+    native_reader: SnapshotReader,
 ) -> dict[str, Any]:
     """Rebuild all source/reference predicates from original retained bytes."""
 
@@ -194,7 +183,7 @@ def replay_scientific_math_reference(
             process["executable_observation_after"], process["executable"], process["executable_sha256"]
         )
         if (
-            process["schema_version"] != "template-native-tool-execution-v2"
+            process["schema_version"] != TOOL_SCHEMA
             or process["run_id"] != run_id
             or process["purpose"] != purpose
             or process["tool"] != name
@@ -210,6 +199,23 @@ def replay_scientific_math_reference(
             or not isinstance(process["stderr"], str)
         ):
             raise ValueError("reference original command/outcome/custody differs")
+        if native_reader.native_producer_operation is not None:
+            from infrastructure.reporting.native_tool_producer import validate_live_native_tool
+
+            validate_live_native_tool(binding, process, native_reader, run_id=run_id)
+        else:
+            from infrastructure.reporting.native_tool_replay import validate_original_native_tool
+
+            validate_original_native_tool(
+                binding,
+                process,
+                native_reader,
+                run_id=run_id,
+                required_sdk_modules=(
+                    "reporting/native_tool_process.py",
+                    "reporting/native_format_acceptance_checks.py",
+                ),
+            )
         return process
 
     import yaml

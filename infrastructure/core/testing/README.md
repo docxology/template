@@ -11,7 +11,7 @@ probes, and test-selection planning. Re-homed from the flat
 
 | Module | Role |
 | --- | --- |
-| `test_runner.py` | `run_per_project_pytest` — one pytest process per exemplar, combined coverage gate, receipt finalization. |
+| `test_runner.py` | `run_per_project_pytest` — isolated ordinary pytest or admitted source-declared verifier per exemplar, retained exact coverage databases, combined coverage gate and receipt finalization. |
 | `test_runner_outputs.py` | Output-tree visibility, declared-output artifacts, and isolation digests. |
 | `test_runner_cache.py` | Cache identity inputs and roster revision for public-matrix receipts. |
 | `project_test_matrix.py` | Bounded deterministic execution of project test subprocesses. |

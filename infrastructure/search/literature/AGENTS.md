@@ -83,3 +83,14 @@ uv run pytest tests/infra_tests/search/ -v
 - [`README.md`](README.md) — quick reference + diagram.
 - [`SKILL.md`](SKILL.md) — agent-oriented API.
 - [`../AGENTS.md`](../AGENTS.md) — module-level overview.
+
+## Release acceptance modules
+
+| Module | Role |
+| --- | --- |
+| `configuration_sources.py` | Text streams over immutable admitted YAML bytes, preserving file diagnostics. |
+| `configuration_validation.py` | Typed configuration validation for literature pipeline boundaries. |
+| `live_artifacts.py` | Strict source-bound model annotations and complete, independently parsed citations. |
+| `live_contract.py` | Fresh, bounded acceptance evidence for unpaid literature capabilities. |
+| `live_providers.py` | Keyless bounded Crossref retrieval and explicitly licensed full-text custody. |
+| `live_transport.py` | Supervised credential-free HTTP and local-model workers with byte receipts. |
