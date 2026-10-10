@@ -50,6 +50,7 @@ def process_birth(pid: int, *, deadline: float) -> dict[str, Any]:
     remaining(deadline)
     if type(pid) is not int or pid <= 0:
         raise ValueError("filter process identity requires a positive observed PID")
+    row: dict[str, Any]
     if sys.platform == "darwin":
         library = ctypes.CDLL("/usr/lib/libproc.dylib", use_errno=True)
         query = library.proc_pidinfo

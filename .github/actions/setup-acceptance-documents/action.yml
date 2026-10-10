@@ -159,6 +159,7 @@ runs:
         else
           fonts="$HOME/Library/Fonts/template-acceptance-juliamono"
         fi
+        mkdir -p "$(dirname "$fonts")"
         mkdir "$fonts"
         tar -xzf "$archive" -C "$fonts"
         if [ "$RUNNER_OS" = Linux ]; then fc-cache -f "$fonts"; fi

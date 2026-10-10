@@ -33,6 +33,13 @@ REQUEST_FFLAGS = NOTE_EXIT | NOTE_EXITSTATUS
 _KEY = object()
 _EVENT_FIELDS = {"ident", "filter", "flags", "fflags", "data", "udata"}
 
+if sys.platform == "darwin":
+    _KQueue = select.kqueue
+    _KEvent = select.kevent
+else:  # Non-Darwin hosts refuse before any kqueue object exists.
+    _KQueue = Any
+    _KEvent = Any
+
 
 def require_filter_exit_capability() -> None:
     """Refuse unsupported original topology before launching Pandoc or its child."""
@@ -52,7 +59,7 @@ def require_filter_exit_capability() -> None:
             raise ValueError("filter original kqueue API differs from the declared Darwin ABI")
 
 
-def _event(value: select.kevent) -> dict[str, int]:
+def _event(value: _KEvent) -> dict[str, int]:
     return {name: int(getattr(value, name)) for name in _EVENT_FIELDS}
 
 
@@ -104,7 +111,7 @@ class SourceFilterExitObserver:
         reader: SnapshotReader,
         live: NativeLiveToolProcess,
         owner: NativeProducerOperation,
-        queue: select.kqueue,
+        queue: _KQueue,
         facts: dict[str, Any],
         *,
         deadline: float,
@@ -215,6 +222,8 @@ def register_filter_exit(
     # A per-registration kernel udata correlation label; it grants no custody.
     cookie = int.from_bytes(os.urandom(8), "little") & 0x7FFFFFFF or 1
     requested = time.monotonic()
+    if sys.platform != "darwin":
+        raise ValueError("filter kernel exit-status custody requires the original Darwin kqueue observer")
     queue = select.kqueue()
     try:
         change = select.kevent(

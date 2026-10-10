@@ -385,6 +385,7 @@ jobs:
           if [ "$INSTALLED_MATRIX" = skipped ] && [ "$REQUIRED_ACCEPTANCE" = true ] && [ "$CANDIDATE_READER" = success ]; then
             matrix_reason="authenticated original matrix reused after fresh installed readback"
           fi
+          # shellcheck disable=SC2016 # Backticks in printf formats are literal Markdown.
           {
             printf '### Release\n\nTag: `%s` · verified source: `%s` · job: `%s`\n\n' "$TAG" "${SOURCE_COMMIT:-not verified}" "$JOB_STATUS"
             printf '| Operation | Outcome | Detail |\n| --- | --- | --- |\n'

@@ -451,6 +451,7 @@ jobs:
           JOB_STATUS: ${{ job.status }}
         run: |
           set -euo pipefail
+          # shellcheck disable=SC2016 # Backticks in printf formats are literal Markdown.
           {
             printf '### Required acceptance\n\nSource: `%s` · job: `%s`\n\n' "$GITHUB_SHA" "$JOB_STATUS"
             printf '| Operation | Outcome |\n| --- | --- |\n'
