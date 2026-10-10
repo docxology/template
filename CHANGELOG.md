@@ -7,26 +7,39 @@ gitignore, or treat those trees as confidential); where entries mention
 `projects/`, they refer to **generic layout and tooling** defined by the template,
 not to the contents of any specific workspace.
 
-## [4.0.1] - Unreleased
+## [4.0.1] - 2026-10-10
 
-See the [illustrated candidate notes](docs/releases/v4.0.1.md). The prepared
-4.0.0 candidate was not published; v3.8.0 remains the preceding published root
-release. Final-source acceptance is required before dating or tagging this entry.
+See the [illustrated release-intent notes](docs/releases/v4.0.1.md). The date
+freezes the intended 4.0.1 metadata before exact-revision acceptance; it does not
+record completed publication. The prepared 4.0.0 candidate was not published;
+v3.8.0 remains the preceding published root release. Tagging and publication
+require final-source acceptance, the authenticated handoff and remote verification.
 
 - Align the root SDK, all 25 platform bindings, exact provider requirements,
-  locks and installed/export checks with the explicitly requested 4.0.1 version;
-  retain each exemplar's independent version and historical publications.
-- Use source-relative manuscript section identity, preserve original native
-  PID/host observations and retain timeout/interruption outcome precedence.
+  locks and installed/export checks with 4.0.1 while retaining each exemplar's
+  independent version and historical publications.
+- Clarify ordinary development and exact-revision release acceptance as two
+  routes. Remove four duplicated scan lanes from the default local fallback,
+  eliminating 16 duplicate top-level `uv` commands while retaining their owning
+  health checks, named lanes and hooks; no timing improvement is claimed.
+- Use the existing canonical 25-project batch entry point for isolated release-
+  profile tests and each project's coverage floor; a diagnostic batch does not
+  replace the complete runtime, native or installed acceptance matrices.
+- Reuse the authenticated installed acceptance handoff for Root 4+ publication
+  after a fresh installed reader; retain the exact tested wheel, fresh source
+  distribution and retrieved-asset verification.
+- Preserve source-relative manuscript section identity, original native PID/host
+  observations and timeout/interruption outcome precedence. Source-specific
+  scientific, browser, Office, print and portable controls still require genuine
+  final-source acceptance before they can authorize a release.
 - Select illustrated notes and image assets from the actual release tag while
   preserving admitted installed-wheel and final distribution byte custody.
-- Continue the strict scientific, browser, Office, print, projection and
-  portable source witnesses; incomplete native and publication gates stay blocked.
 
-## [4.0.0] - 2026-10-07
+## Prepared 4.0.0 candidate — unpublished
 
-See the [illustrated version notes](docs/releases/v4.0.0.md) for the repository
-architecture, update summary and release boundary.
+See the retained [illustrated candidate notes](docs/releases/v4.0.0.md) for the
+repository architecture, update summary and release boundary. These changes
+remain part of the pending 4.0.1 work; this heading records no published release.
 
 - Require every authored SDK member in root wheels, including native source and
   typing markers, with exact source bytes and complete RECORD validation. Reject

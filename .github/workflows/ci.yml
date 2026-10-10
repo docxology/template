@@ -146,8 +146,7 @@ jobs:
       - name: Resolve public CI paths
         id: public-scope
         run: |
-          echo "lint_paths=$(uv run python -m infrastructure.project.public_scope lint-paths)" >> "$GITHUB_OUTPUT"
-          echo "source_paths=$(uv run python -m infrastructure.project.public_scope source-paths)" >> "$GITHUB_OUTPUT"
+          uv run python -m infrastructure.project.public_scope ci-paths >> "$GITHUB_OUTPUT"
 
       - name: Ruff lint
         run: uv run ruff check ${{ steps.public-scope.outputs.lint_paths }}
@@ -387,42 +386,6 @@ jobs:
         if: runner.os == 'macOS'
         run: sudo scutil --set HostName "$(hostname)"
 
-      - name: Install pandoc
-        uses: pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e # v1.1.1
-
-      - name: Prepare actual PDF observer tools
-        run: |
-          if [ "$RUNNER_OS" = "Linux" ]; then
-            sudo apt-get update
-            sudo apt-get install -y --no-install-recommends poppler-utils
-          elif [ "$RUNNER_OS" = "macOS" ]; then
-            brew install poppler
-          fi
-          pdftoppm -v
-          pdffonts -v
-
-      # TeX Live so the xelatex/bibtex-gated rendering tests run instead of
-      # skipping (they assert a real PDF lands on disk). Linux lanes only:
-      # MacTeX is a multi-GB install and macOS breadth is a 3.14 smoke lane.
-      - name: Cache TeX Live packages
-        if: runner.os == 'Linux'
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            /var/cache/apt
-            /usr/share/texlive
-            /usr/share/texmf
-          key: texlive-${{ runner.os }}-xetex-extra-bibtex-fonts-v1
-        id: texlive-cache
-
-      - name: Install TeX Live (xelatex + bibtex)
-        if: runner.os == 'Linux' && steps.texlive-cache.outputs.cache-hit != 'true'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            texlive-xetex texlive-latex-extra texlive-bibtex-extra \
-            texlive-fonts-recommended lmodern
-
       - uses: ./.github/actions/setup-acceptance-documents
 
       - name: Run infrastructure tests
@@ -607,22 +570,28 @@ jobs:
       # per-project aliases + temporary sys.meta_path finders whose isolation is
       # collection-order-sensitive (see docs/maintenance/regression-testing.md).
       - name: Run claim-binding regression tier
-        run: >-
-          uv run pytest tests/regression/ --no-cov --timeout=120
-          --collect-only -q | tee /tmp/regression-collect.txt
-          && uv run pytest tests/regression/ -q --no-cov --timeout=120
+        run: |
+          set -euo pipefail
+          report=$(mktemp "$RUNNER_TEMP/regression-junit.XXXXXX.xml")
+          echo "TEMPLATE_TIER_JUNIT=$report" >> "$GITHUB_ENV"
+          uv run pytest tests/regression/ -q --no-cov --timeout=120 --junitxml="$report"
 
-      # Fail closed against a silently empty regression tier: the claim-binding
-      # pins are load-bearing release evidence, so zero collected tests must
-      # surface as a violation, not vacuous success.
+      # Count the fresh report from that successful run, so the collection
+      # census and behavioral evidence come from the same pytest invocation.
+      # Fewer than three cases, malformed XML, failures, or errors block.
       - name: Assert regression tier is not empty
-        run: |-
-          count=$(grep -c "::" /tmp/regression-collect.txt || true)
-          echo "regression collection lines: $count"
-          if [ "$count" -lt 3 ]; then
-            echo "FAIL: regression tier collected fewer than 3 tests; claim-binding pins are missing." >&2
-            exit 1
-          fi
+        run: |
+          uv run --no-sync --offline python - <<'PYTHON'
+          import os
+          from defusedxml.ElementTree import parse
+          root = parse(os.environ["TEMPLATE_TIER_JUNIT"]).getroot()
+          if root.tag not in {"testsuite", "testsuites"}:
+              raise SystemExit("FAIL: missing JUnit suite root.")
+          count = len(list(root.iter("testcase")))
+          print(f"regression actual JUnit cases: {count}")
+          if count < 3 or root.find(".//failure") is not None or root.find(".//error") is not None:
+              raise SystemExit("FAIL: regression tier requires at least 3 cases and no failures or errors.")
+          PYTHON
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 3c — Integration tier (repository-level wiring)
@@ -650,22 +619,27 @@ jobs:
         run: uv sync --group public-exemplars
 
       - name: Run integration suite
-        run: >-
-          uv run pytest tests/integration/ --no-cov --timeout=120
-          --collect-only -q | tee /tmp/integration-collect.txt
-          && uv run pytest tests/integration/ -q --no-cov --timeout=120
+        run: |
+          set -euo pipefail
+          report=$(mktemp "$RUNNER_TEMP/integration-junit.XXXXXX.xml")
+          echo "TEMPLATE_TIER_JUNIT=$report" >> "$GITHUB_ENV"
+          uv run pytest tests/integration/ -q --no-cov --timeout=120 --junitxml="$report"
 
-      # Fail closed against a silently empty integration tier: this suite is
-      # the only CI exercise for the shell entry points, so zero collected
-      # tests must surface as a violation, not vacuous success.
+      # Keep the original three-case minimum on the actual successful run.
+      # Fresh JUnit also refuses malformed XML and recorded failures/errors.
       - name: Assert integration tier is not empty
-        run: |-
-          count=$(grep -c "::" /tmp/integration-collect.txt || true)
-          echo "integration collection lines: $count"
-          if [ "$count" -lt 3 ]; then
-            echo "FAIL: integration tier collected fewer than 3 tests; the suite is not wired." >&2
-            exit 1
-          fi
+        run: |
+          uv run --no-sync --offline python - <<'PYTHON'
+          import os
+          from defusedxml.ElementTree import parse
+          root = parse(os.environ["TEMPLATE_TIER_JUNIT"]).getroot()
+          if root.tag not in {"testsuite", "testsuites"}:
+              raise SystemExit("FAIL: missing JUnit suite root.")
+          count = len(list(root.iter("testcase")))
+          print(f"integration actual JUnit cases: {count}")
+          if count < 3 or root.find(".//failure") is not None or root.find(".//error") is not None:
+              raise SystemExit("FAIL: integration tier requires at least 3 cases and no failures or errors.")
+          PYTHON
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 4 — Project Tests (one parallel job per public exemplar)
@@ -808,11 +782,11 @@ jobs:
       # though this job runs Stage 1 only. Keep the converter provisioned for
       # every capability-manifest lane so those regressions never degrade into
       # missing-tool failures or skips.
-      - name: Install pandoc
-        uses: pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e # v1.1.1
-
       - uses: ./.github/actions/setup-acceptance-documents
-        if: matrix.project == 'templates/template_eda_notebook'
+        with:
+          # EDA directly requires XeLaTeX and embedded JuliaMono faces. Other
+          # ordinary project cells retain exact Pandoc/crossref preparation.
+          mode: ${{ matrix.project == 'templates/template_eda_notebook' && 'native' || 'converter' }}
 
       # Controlled API fixtures verify transport; these Docker checks are not
       # actual Ollama/model acceptance. Image provisioning is explicit and
@@ -1018,7 +992,10 @@ jobs:
 
       - name: Resolve public project names
         id: project-scope
-        run: echo "names=$(uv run python -m infrastructure.project.public_scope project-names)" >> "$GITHUB_OUTPUT"
+        run: |
+          set -euo pipefail
+          names=$(uv run python -m infrastructure.project.public_scope project-names)
+          echo "names=$names" >> "$GITHUB_OUTPUT"
 
       - name: Validate manuscript markdown
         # The `markdown` subcommand takes ONE directory; project globs
@@ -1117,7 +1094,10 @@ jobs:
 
       - name: Resolve public project names
         id: security-scope
-        run: echo "names=$(uv run python -m infrastructure.project.public_scope project-names)" >> "$GITHUB_OUTPUT"
+        run: |
+          set -euo pipefail
+          names=$(uv run python -m infrastructure.project.public_scope project-names)
+          echo "names=$names" >> "$GITHUB_OUTPUT"
 
       - name: Dependency audit (pip-audit)
         run: |
@@ -1472,6 +1452,7 @@ jobs:
       contents: read
     steps:
       - name: Evaluate upstream job results
+        id: results
         env:
           NEEDS_JSON: ${{ toJson(needs) }}
           EVENT_NAME: ${{ github.event_name }}
@@ -1503,3 +1484,27 @@ jobs:
             exit 1
           fi
           echo "All required CI jobs succeeded (or were intentionally skipped)."
+      - name: Summarize CI gate outcomes
+        if: always()
+        shell: bash
+        env:
+          NEEDS_JSON: ${{ toJson(needs) }}
+          EVENT_NAME: ${{ github.event_name }}
+          GATE_OUTCOME: ${{ steps.results.outcome }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          {
+            # shellcheck disable=SC2016  # Markdown backticks are literal printf text.
+            printf '### CI Gate\n\nSource: `%s` · job: `%s` · gate evaluation: `%s`\n\n' "$GITHUB_SHA" "$JOB_STATUS" "$GATE_OUTCOME"
+            printf '| Required job | Outcome | Admitted skip reason |\n| --- | --- | --- |\n'
+            jq -r --arg gate "$GATE_OUTCOME" --arg event "$EVENT_NAME" '
+              to_entries[] | [ .key, .value.result,
+                (if .value.result != "skipped" then ""
+                 elif $gate != "success" then "not admitted by CI Gate"
+                 elif .key == "setup-hook-windows-smoke" then "detect: setup_hook=false"
+                 elif .key == "fep-lean" then "detect: fep_lean=false"
+                 else "schedule/manual lane on " + $event end)
+              ] | "| " + join(" | ") + " |"
+            ' <<< "$NEEDS_JSON"
+          } >> "$GITHUB_STEP_SUMMARY"

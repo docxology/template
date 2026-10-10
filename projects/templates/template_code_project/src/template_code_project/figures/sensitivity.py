@@ -7,6 +7,7 @@ from typing import Any
 import matplotlib.pyplot as plt
 
 from ..core.experiment_config import ExperimentConfig
+from ..core._runtime import save_analysis_figure
 from ..core.optimizer import quadratic_optimum
 from ..core.sweeps import sensitivity_sweep
 from .viz_config import VIZ_CONFIG
@@ -110,7 +111,8 @@ def generate_step_size_sensitivity_plot(results: Any, config: ExperimentConfig |
     output_dir = project_root() / "output" / "figures"
     output_dir.mkdir(parents=True, exist_ok=True)
     plot_path = output_dir / "step_size_sensitivity.png"
-    plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
+    if not save_analysis_figure(project_root(), plot_path, fig):
+        plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
 
     logger.info("Saved step size sensitivity plot to: %s", plot_path)

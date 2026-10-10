@@ -1,9 +1,20 @@
 # Fresh native-format evidence
 
-Run `uv run --no-sync --offline python scripts/gates/native_formats.py` after explicit environment
-preparation. `--project templates/template_code_project` selects a diagnostic
-subset; `--timeout` bounds admission, execution and observers together. Ordinary
-execution stays in offline core mode. This command performs no publication.
+Native acceptance requires an explicitly admitted installed SDK and independently
+prepared runtime, tools and providers. Follow the source-owned
+[required acceptance workflow](../../.github/workflows/platform-required-acceptance.yml):
+`native-original` uses `infrastructure.reporting.native_installed_launcher
+--mode original`; `complete` supplies a separate installed reader with the actual
+original source, process and artifact context.
+
+The [installed-wheel guide](../development/installed-wheel-matrix.md#separate-rendering-and-native-format-evidence)
+lists every required launcher and lower-level producer flag, including exact SDK
+implementation/hash, host, Mermaid and PDFium selections, provider wheels, fonts
+and paired EPUB inputs. A bare checkout `scripts/gates/native_formats.py`
+invocation cannot supply that admission context. Preparation is separate from
+execution, which remains offline core mode and performs no publication. The
+lower-level `--project templates/template_code_project` selection is diagnostic;
+`--timeout` retains the admission, execution and observer budget.
 
 The producer executes the complete current core plan with cleanup and shared
 infrastructure tests explicitly omitted. Cleanup omission preserves frozen
@@ -63,12 +74,27 @@ raster/font tools succeed and the intended semantic, geometry or localized pixel
 diagnostic appears with its original exit code. A setup exception, launch refusal,
 timeout, forged observation or missing baseline cannot substitute for that result.
 
-These observations establish narrower native conformance. Full format acceptance
-remains **blocked** for the remaining complete source-content/layout and visual controls,
-including generic PDF, browser HTML, native DOCX/EPUB readers, projected slides,
+These observations establish narrower native conformance. The source-owned
+`unsupported_native_controls()` declaration currently reports missing full-oracle
+obligations for PDF, browser HTML, native DOCX/EPUB readers, projected slides,
 pitch parity, newspaper print geometry and storybook localized pixel controls.
-The producer can retain validated conformance while preserving exit 75 and the
-missing full-acceptance obligations. A nonblank raster proves neither correct
-scientific content nor readable typography. Receipts are auditable local evidence;
-execution provenance still belongs to the supervised producer, and independent
-review is required before a release claim.
+Full format acceptance remains **blocked** for those applicable declarations.
+The full validator requires the original passing execution, no remaining blockers
+and every required oracle; narrower conformance cannot satisfy that boundary.
+
+Current release acceptance remains pending implementation and actual observation
+of those required controls, followed by independent readback with the held live
+reader operation. Receipt decoding cannot create that operation. The producer
+retains validated conformance separately from exit 75 and missing full obligations;
+actual failures and custody refusals remain failures. A nonblank raster proves
+neither correct scientific content nor readable typography. Execution provenance
+belongs to the supervised producer; independent review is required before a
+release claim. No existing receipt is rewritten or promoted by this guidance.
+
+## Next steps
+
+Use the existing [Release boundary](../maintenance/release-boundary.md) for root
+promotion through exact-revision acceptance, hosted handoff, tag/release and
+retrieved-asset verification. Standalone project publishing follows the
+[Publication runbook](publication-runbook.md); its versions and provider outcomes
+remain separate from root acceptance.

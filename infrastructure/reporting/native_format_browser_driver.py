@@ -644,7 +644,7 @@ if __name__ == "__main__":
                 raise TimeoutError("HTML child completed terminal Source retention after its original clock")
         except BaseException as error:
             _closing_errors.append({"type": type(error).__name__, "message": str(error)})
-            print(json.dumps({"html_child_closure_error": _closing_errors[-1]}), file=sys.stderr)
+            sys.stderr.write(json.dumps({"html_child_closure_error": _closing_errors[-1]}) + "\n")
     if _original_exception is not None:
         raise _original_exception.with_traceback(_original_traceback)
     if _original_return == 0 and _closing_errors:

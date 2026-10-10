@@ -19,11 +19,11 @@ from infrastructure.validation.output.render_formats import render_config_manusc
 from infrastructure.validation.publication.rendered_provenance import (
     RECEIPT_RELATIVE_PATH,
     build_rendered_provenance_receipt,
-    validate_rendered_provenance,
+    validate_current_rendered_provenance,
 )
 
-METADATA_OBSERVATION_SCHEMA = "template-native-html-source-metadata-observation-v1"
-HTML_WITNESS_SCHEMA = "template-native-html-complete-source-observation-v2"
+METADATA_OBSERVATION_SCHEMA = "template-native-html-source-metadata-observation-v2"
+HTML_WITNESS_SCHEMA = "template-native-html-complete-source-observation-v3"
 METADATA_PURPOSE = "semantic-config-metadata-pandoc"
 
 
@@ -85,7 +85,7 @@ def html_metadata_plan(
     require_unambiguous_yaml(config.content)
     receipt = reader.read((project / RECEIPT_RELATIVE_PATH).relative_to(root).as_posix())
     current: Any = build_rendered_provenance_receipt(root, scope).to_dict()
-    if receipt.json_object() != current or not validate_rendered_provenance(root, scope).valid:
+    if receipt.json_object() != current or not validate_current_rendered_provenance(root, scope).valid:
         raise ValueError("HTML config metadata requires the exact current validated hydration receipt")
     evidence: list[dict[str, str]] = []
     for row in current["evidence_files"].values():

@@ -106,6 +106,22 @@ def bounded_png_observation(content: bytes) -> dict[str, Any]:
     }
 
 
+def selected_print_artifact(scope: str, artifact: NativeArtifact) -> bool:
+    """Select source-declared print roles before generic manuscript dispatch.
+
+    Selection grants no path or format admission: configured_print_target then
+    requires the exact current configured output before any observation.
+    """
+    if scope == "templates/template_newspaper":
+        return artifact.id == "newspaper:edition:pdf"
+    if scope == "templates/template_storybook":
+        return (
+            artifact.id in {"storybook:print:pdf", "storybook:contact-sheet"}
+            or re.fullmatch(r"storybook:page:(0|[1-9][0-9]*)", artifact.id) is not None
+        )
+    return False
+
+
 def configured_print_target(root: Path, scope: str, artifact: NativeArtifact) -> tuple[str, int | None]:
     """Bind each specialized obligation to its exact current configured path."""
     if scope not in PRINT_SCOPES:

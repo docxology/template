@@ -184,7 +184,7 @@ def test_fingerprint_tracks_hydrated_auxiliary_membership(copied_root: Path) -> 
     assert _fingerprint(copied_root) == first
 
 
-def test_fingerprint_tracks_real_git_head_without_project_byte_change(tmp_path: Path) -> None:
+def test_fingerprint_is_stable_across_real_git_commits_without_input_change(tmp_path: Path) -> None:
     root = copy_project_tree(tmp_path / "git-project")
     subprocess.run(["git", "init", "-q", str(root)], check=True)
     subprocess.run(["git", "-C", str(root), "config", "user.name", "Fixed Point Test"], check=True)
@@ -193,7 +193,7 @@ def test_fingerprint_tracks_real_git_head_without_project_byte_change(tmp_path: 
     subprocess.run(["git", "-C", str(root), "commit", "-qm", "initial"], check=True)
     before = _fingerprint(root)
     subprocess.run(["git", "-C", str(root), "commit", "--allow-empty", "-qm", "identity-only"], check=True)
-    assert _fingerprint(root) != before
+    assert _fingerprint(root) == before
 
 
 @pytest.mark.parametrize(

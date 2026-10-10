@@ -102,6 +102,22 @@ def inspect_pdf_reference_parity(
             )
             if total_vectors > 4_000_000:
                 raise ValueError("full-source comparison exceeds its complete vector budget")
+
+            def links(native_page: Any) -> list[tuple[Any, ...]]:
+                result = []
+                for annotation in native_page.hyperlinks:
+                    geometry = tuple(float(annotation[key]) for key in ("x0", "top", "x1", "bottom"))
+                    if not all(math.isfinite(value) for value in geometry):
+                        raise ValueError("native full-source Link annotation has nonfinite geometry")
+                    result.append((annotation["uri"], *geometry))
+                    if len(result) > 100_000:
+                        raise ValueError("native full-source Link annotation census exceeds its finite budget")
+                return result
+
+            actual_links, expected_links = links(page), links(expected)
+            links_match = actual_links == expected_links
+            if not links_match:
+                findings.append({"code": "pdf.reference.links", "page": ordinal})
             vectors = [_vector(item) for items in (page.lines, page.rects, page.curves) for item in items]
             expected_vectors = [
                 _vector(item) for items in (expected.lines, expected.rects, expected.curves) for item in items
@@ -136,6 +152,7 @@ def inspect_pdf_reference_parity(
                     "glyph_count": len(actual_glyphs),
                     "reference_glyph_count": len(expected_glyphs),
                     "glyphs_match": glyph_match,
+                    "links_match": links_match,
                     "vectors_match": vectors == expected_vectors,
                     "pixels_match": pixel_match,
                     "raster_sha256": hashlib.sha256(raster_bytes[ordinal - 1]).hexdigest(),

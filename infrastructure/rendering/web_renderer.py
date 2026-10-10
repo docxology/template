@@ -19,6 +19,7 @@ from infrastructure.rendering._bibliography import pandoc_bibliography_args, res
 from infrastructure.rendering.manuscript_composition import write_manuscript_composition
 from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering.combined_native_commands import html_combined_command, html_metadata_arguments
 from infrastructure.rendering.security import subprocess_options
 import infrastructure.rendering._web_postprocess as web_postprocess
 from infrastructure.rendering._web_markdown_preprocess import (
@@ -213,43 +214,16 @@ class WebRenderer:
         # The combined page is the authoritative HTML edition; publish the
         # pandoc output by rename from an exclusive temporary target.
         render_target = output_dir / f".{output_file.stem}.{secrets.token_hex(12)}.html.tmp"
-        cmd = [
-            self.config.pandoc_path,
-            str(combined_md),
-            "-t",
-            "html5",
-            "-o",
-            str(render_target),
-            "--standalone",
-            f"--mathjax={_MATHJAX_URL}",
-            "--toc",
-            "--toc-depth=3",
-            "--number-sections",
-            "--from=markdown+tex_math_dollars+raw_tex+header_attributes",
-        ]
-        cmd.extend(self._pandoc_metadata_args(manuscript_dir))
-
-        # Add resource paths for figure resolution
-        if manuscript_dir.exists():
-            cmd.extend(["--resource-path", str(manuscript_dir)])
-        if figures_dir.exists():
-            cmd.extend(["--resource-path", str(figures_dir)])
-
-        # Add Lua filter for LaTeX image conversion
-        if lua_filter.exists():
-            cmd.extend(["--lua-filter", str(lua_filter)])
-
-        # Formalism numbering, identical to the PDF/DOCX/EPUB editions. Added
-        # ahead of pandoc-crossref and of the --citeproc block below, which is
-        # what keeps [@def:...] out of the citation machinery. Distinct from
-        # _html_theorem_blocks above: that handles the raw-LaTeX
-        # \begin{theorem} authoring style web-only, this handles the portable
-        # ::: {.definition #def:x} Div style across every edition.
-        cmd.extend(formalism_filter_args())
+        metadata = self._pandoc_metadata_args(manuscript_dir)
+        resource_paths = [path for path in (manuscript_dir, figures_dir) if path.exists()]
+        lua_filters = [lua_filter] if lua_filter.exists() else []
+        formalism = formalism_filter_args()
+        if len(formalism) != 2 or formalism[0] != "--lua-filter":
+            raise ValueError("combined HTML requires the exact Source formalism filter role")
+        lua_filters.append(Path(formalism[1]))
 
         crossref = shutil.which("pandoc-crossref")
         if crossref:
-            cmd.extend(["--filter", crossref])
             logger.info("Using pandoc-crossref at %s for combined HTML", crossref)
         else:
             logger.warning(
@@ -258,16 +232,30 @@ class WebRenderer:
             )
 
         bibliographies = resolve_bibliography(manuscript_dir)
-        if bibliographies:
-            cmd.append("--citeproc")
-            cmd.extend(pandoc_bibliography_args(bibliographies))
-            cmd.append("--metadata=link-citations:true")
+        # The existing bibliography selector preserves ordered, unique, existing paths.
+        bibliography_arguments = pandoc_bibliography_args(bibliographies)
+        selected_bibliographies = [Path(value.removeprefix("--bibliography=")) for value in bibliography_arguments]
+        cmd = html_combined_command(
+            self.config.pandoc_path,
+            combined_md,
+            render_target,
+            _MATHJAX_URL,
+            metadata,
+            resource_paths,
+            lua_filters,
+            crossref,
+            selected_bibliographies,
+        )
 
         logger.info("Converting combined markdown to HTML...")
         logger.debug(f"Combined markdown file: {combined_md}")
 
         try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True, **subprocess_options(profile, 600))
+            from infrastructure.reporting.native_renderer_source_call import run_source_native_pandoc
+
+            options = subprocess_options(profile, 600)
+            if not run_source_native_pandoc(cmd, combined_md, source_files, writer="html", environment=options["env"]):
+                subprocess.run(cmd, check=True, capture_output=True, text=True, **options)
             if output_file.exists():
                 os.chmod(render_target, stat.S_IMODE(output_file.stat().st_mode))
             try:
@@ -343,34 +331,7 @@ class WebRenderer:
         except (OSError, yaml.YAMLError) as exc:
             logger.warning("Could not read HTML metadata from %s: %s", config_path, exc)
             return []
-        if not isinstance(config, dict):
-            return []
-        paper = config.get("paper") or {}
-        if not isinstance(paper, dict):
-            return []
-
-        args: list[str] = []
-        args.append("--metadata=linkReferences:true")
-        title = paper.get("title")
-        subtitle = paper.get("subtitle")
-        description = paper.get("description") or subtitle
-        if title:
-            title_text = str(title)
-            args.append(f"--metadata=title:{title_text}")
-            args.append(f"--metadata=pagetitle:{title_text}")
-        if subtitle:
-            args.append(f"--metadata=subtitle:{subtitle}")
-        if description:
-            args.append(f"--metadata=description:{description}")
-        for entry in config.get("authors") or []:
-            if isinstance(entry, dict) and entry.get("name"):
-                args.append(f"--metadata=author:{entry['name']}")
-            elif isinstance(entry, str) and entry:
-                args.append(f"--metadata=author:{entry}")
-        language = WebRenderer._manuscript_language(manuscript_dir)
-        if language:
-            args.append(f"--metadata=lang:{language}")
-        return args
+        return html_metadata_arguments(config)
 
     @staticmethod
     def _manuscript_language(manuscript_dir: Path) -> str:

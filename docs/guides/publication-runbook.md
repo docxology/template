@@ -173,11 +173,35 @@ uv run python scripts/publish/publish_project_release.py \
   --tag "$TAG" \
   --repo "$REPO" \
   --production \
-  --new-version
+  --new-version \
+  --reserve-doi-first \
+  --github-target-commit "$FINAL_STANDALONE_COMMIT"
 ```
 
-The workflow keeps `publication.doi` stable and updates only
-`publication.version_doi` plus `publication.version_record`.
+Set `FINAL_STANDALONE_COMMIT` to the full 40-character commit SHA of the
+accepted standalone export in the destination repository. If the release tag
+already exists, independently verify that it resolves to this same commit;
+GitHub uses `target_commitish` when creating a missing tag. This value does not
+assert acceptance by itself. Supply it only after the final DOI-bearing source
+was rendered, checked and normally committed in the destination. If reservation
+changes those bodies, use the existing library reserve-first workflow with
+`skip_github=True` and a render callback that establishes that final standalone
+commit before the Zenodo upload; then use the existing GitHub release API with
+its actual commit SHA and the exact same final PDF bundle. The frozen accepted
+Root checkout remains separate from these publication-owner writes.
+
+The reserve-first route creates a new draft in the existing series, clears its
+inherited files, reserves the new version DOI, writes the DOI fields and renders
+before creating the upload bundle. It keeps `publication.doi` stable and updates
+`publication.version_doi` plus `publication.version_record`. A live new-version
+reserve-first release requires this explicit GitHub commit when GitHub is enabled
+and refuses `--skip-rerender`. The legacy `--new-version` route remains available.
+
+Check `final_rendered_pdf_sha256` and `pdf_sha256` in the release receipt, then
+retrieve the actual Zenodo and GitHub PDF assets and require their bytes/hash to
+match that final bundle. Publication API success alone is not retrieved-asset or
+released-profile acceptance; the existing released-profile checks still require
+verified source/export, tag/remote and retrieved-artifact parity.
 
 ## Standalone GitHub mirror
 

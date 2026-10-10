@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -70,7 +71,20 @@ def deposition_metadata_dict(
     }
 
     if metadata.publication_date:
-        payload["publication_date"] = metadata.publication_date
+        supplied_date = metadata.publication_date
+        try:
+            if re.fullmatch(r"[0-9]{4}", supplied_date):
+                if int(supplied_date) == 0:
+                    raise ValueError("Invalid publication year")
+                # A citation year is not a full deposition date. Let Zenodo use
+                # its documented current-date default without inventing a day.
+            elif re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", supplied_date):
+                date.fromisoformat(supplied_date)
+                payload["publication_date"] = supplied_date
+            else:
+                raise ValueError("Invalid publication date format")
+        except (TypeError, ValueError) as exc:
+            raise PublishingError("Zenodo publication_date must be a valid YYYY-MM-DD date or citation year") from exc
 
     version = metadata.paper_version or metadata.release_tag
     if version:
@@ -145,11 +159,22 @@ def reserve_zenodo_deposition(
     sandbox: bool = True,
     *,
     base_url: str | None = None,
+    existing_doi: str | None = None,
 ) -> DepositionResult:
     """Create a Zenodo draft and reserve its version DOI before upload."""
     config = ZenodoConfig(access_token=access_token, sandbox=sandbox, base_url=base_url)
     client = ZenodoClient(config)
-    return client.create_deposition(deposition_metadata_dict(metadata, prereserve_doi=True))
+    reserved_metadata = deposition_metadata_dict(metadata, prereserve_doi=True)
+    if existing_doi is None:
+        return client.create_deposition(reserved_metadata)
+    parent_id = client.resolve_deposition_id_from_doi(existing_doi)
+    draft = client.create_new_version(parent_id)
+    client.clear_deposition_files(draft.deposition_id)
+    client.update_deposition_metadata(draft.deposition_id, reserved_metadata)
+    reserved = DepositionResult.from_zenodo_body(client.get_deposition(draft.deposition_id))
+    if reserved.deposition_id != draft.deposition_id or reserved.bucket_url != draft.bucket_url:
+        raise PublishingError("Reserved new-version draft identity differs from the created draft")
+    return reserved
 
 
 def publish_reserved_deposition_to_zenodo(
@@ -195,6 +220,7 @@ def publish_new_version_to_zenodo(
     """Create a new Zenodo version and return DOI plus deposition id."""
     config = ZenodoConfig(access_token=access_token, sandbox=sandbox, base_url=base_url)
     client = ZenodoClient(config)
+    dep_metadata = deposition_metadata_dict(metadata)
 
     parent_id = client.resolve_deposition_id_from_doi(existing_doi)
     deposition = client.create_new_version(parent_id)
@@ -206,7 +232,7 @@ def publish_new_version_to_zenodo(
             deposition.deposition_id,
             ", ".join(removed),
         )
-    client.update_deposition_metadata(deposition.deposition_id, deposition_metadata_dict(metadata))
+    client.update_deposition_metadata(deposition.deposition_id, dep_metadata)
 
     for path in file_paths:
         if path.exists():

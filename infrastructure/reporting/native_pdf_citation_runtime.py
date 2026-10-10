@@ -38,6 +38,7 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 if TYPE_CHECKING:
     from infrastructure.reporting.native_tool_process import NativeLiveToolProcess
     from typing import Callable
+    from infrastructure.reporting.native_loader_observation import NativeLoaderObservation
 
 DEPENDENCY_SCHEMA = "template-native-citation-dependency-observation-v1"
 EXECUTABLE_SCHEMA = "template-native-executable-observation-v1"
@@ -110,6 +111,11 @@ class CitationRuntime:
         *,
         input_paths: tuple[Path, ...] = (),
         while_live: Callable[[NativeLiveToolProcess], None] | None = None,
+        stdin_path: Path | None = None,
+        loader: NativeLoaderObservation | None = None,
+        cwd: Path | None = None,
+        phase_deadline: float | None = None,
+        preserve_nominated_launcher: bool = False,
     ) -> dict[str, Any]:
         """Retain direct native OS custody and notify its actual Source owner."""
         from infrastructure.reporting.native_tool_process import run_native_tool_process
@@ -118,6 +124,29 @@ class CitationRuntime:
         )
 
         operation_deadline = min(self.deadline, time.monotonic() + 120.0)
+        if phase_deadline is not None:
+            budget(phase_deadline)
+            if phase_deadline > operation_deadline:
+                raise ValueError("citation Source-selected phase clock cannot extend the native tool ceiling")
+            operation_deadline = phase_deadline
+        if loader is not None:
+            budget(loader.deadline)
+            if loader.deadline > operation_deadline:
+                raise ValueError("loader Source clock exceeds the actual native tool ceiling")
+            operation_deadline = loader.deadline
+        selected_cwd = self.directory if cwd is None else cwd.absolute()
+        if (
+            selected_cwd != selected_cwd.resolve(strict=True)
+            or not selected_cwd.is_relative_to(self.root)
+            or not selected_cwd.is_dir()
+            or (stdin_path is not None and stdin_path.parent != selected_cwd)
+        ):
+            raise ValueError("citation cwd/stdin differs from a confined real Source-selected directory")
+        if stdin_path is not None:
+            if stdin_path not in self.inputs:
+                raise ValueError("citation stdin must be a genuine runtime-frozen original input")
+            if stdin_path not in input_paths:
+                input_paths = (*input_paths, stdin_path)
         self.unchanged()
         producer = current_native_producer_operation()
         if self.on_original_tool is not None and producer is None:
@@ -151,16 +180,24 @@ class CitationRuntime:
             self.directory,
             name,
             arguments,
-            cwd=self.directory,
+            cwd=selected_cwd,
             env=self.env,
             deadline=operation_deadline,
             purpose=purpose,
             while_live=while_live,
+            stdin_path=stdin_path,
+            loader=loader,
+            preserve_nominated_launcher=preserve_nominated_launcher,
         )
         if result["nomination"] is None:
             raise NativeToolUnavailable("citation actual native tool nomination was unavailable")
-        if result["nomination"]["resolved_path"] != str(executable):
-            raise ValueError("citation actual nominated native executable changed")
+        nominated = str(Path(selected).absolute())
+        if (
+            result["nomination"] != {"tool": name, "path": nominated, "resolved_path": str(executable)}
+            or result["launcher_preserved"] is not preserve_nominated_launcher
+            or result["command"] != [nominated if preserve_nominated_launcher else str(executable), *arguments]
+        ):
+            raise ValueError("citation actual nominated native executable or selected launcher changed")
         after = file_observation(executable)
         original = result["original_exit_code"]
         complete = result["accepted"]
@@ -197,7 +234,7 @@ class CitationRuntime:
             "duration_seconds": result["operation_end"]["monotonic"] - result["operation_begin"]["monotonic"],
             "original_deadline_monotonic": operation_deadline,
             "caller_deadline_monotonic": self.deadline,
-            "cwd": str(self.directory),
+            "cwd": str(selected_cwd),
             "environment_digest": canonical_digest(self.env),
             "input_observations_before": [*self.inputs.values(), *extra_before],
             "consumed_input_artifacts": consumed,
@@ -347,6 +384,7 @@ def compile_reference(runtime: CitationRuntime, tex: bytes) -> tuple[bytes, dict
                 args,
                 f"{phase}-{number:02d}-{name}",
                 input_paths=(runtime.directory / "oracle.aux",) if name == "bibtex" else (),
+                preserve_nominated_launcher=name == "xelatex",
             )
         backend = runtime.tool(
             "xdvipdfmx",

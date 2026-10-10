@@ -81,17 +81,12 @@ def reserve_zenodo_doi_pair(
             "--reserve-doi-first is for first releases unless --new-version "
             "is supplied; existing publication.doi is already set"
         )
-    if new_version and existing_doi:
-        raise PublishingError(
-            "Reserve-first new-version publishing is not implemented; use the "
-            "existing --new-version flow for already-published concept DOIs"
-        )
-
     deposition = reserve_zenodo_deposition(
         metadata,
         zenodo_token,
         sandbox=sandbox,
         base_url=zenodo_base_url,
+        existing_doi=existing_doi if new_version else None,
     )
     reserved_version_doi = deposition.reserved_doi
     reserved_concept_doi = deposition.concept_doi or existing_doi
@@ -141,6 +136,8 @@ def run_reserve_doi_first_phase(
 ) -> ReserveDoiPhaseResult:
     """Reserve DOIs, write config, optionally re-render, and reload release context."""
     existing_doi = release_context.prior_doi
+    if new_version and existing_doi and skip_rerender and not dry_run:
+        raise PublishingError("Reserve-first new-version publishing requires the final DOI-bearing render")
     concept_doi, version_doi, reserved_deposition = reserve_zenodo_doi_pair(
         dry_run=dry_run,
         zenodo_token=zenodo_token,
@@ -158,7 +155,7 @@ def run_reserve_doi_first_phase(
         dry_run=dry_run,
     )
     render_exit_code: int | None = None
-    if config_updated and not skip_rerender and not dry_run:
+    if (config_updated or new_version and existing_doi) and not skip_rerender and not dry_run:
         render_exit_code = renderer(repo_root, project_name)
         if render_exit_code != 0:
             raise PublishingError(f"Pre-upload render after DOI reservation failed with exit code {render_exit_code}")

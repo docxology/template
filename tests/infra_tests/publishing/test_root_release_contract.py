@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import shlex
+
+import subprocess
+
 import pytest
 
 from infrastructure.publishing.root_release_contract import (
@@ -71,26 +75,55 @@ def test_cli_reports_matching_root_version(tmp_path: Path, capsys: pytest.Captur
 
 
 def test_root_release_workflow_invokes_version_contract() -> None:
-    workflow = (REPO_ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8")
+    import yaml
 
+    workflow = (REPO_ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8")
+    steps = yaml.safe_load(workflow)["jobs"]["release"]["steps"]
+    audit_index, audit = next(
+        (index, step)
+        for index, step in enumerate(steps)
+        if step.get("name") == "Verify pristine published public exemplars"
+    )
+    assert shlex.split(audit["run"]) == [
+        "uv",
+        "run",
+        "--no-sync",
+        "--offline",
+        "python",
+        "-m",
+        "infrastructure.validation.cli",
+        "publication-audit",
+        "--repo-root",
+        "$GITHUB_WORKSPACE",
+        "--all-public",
+        "--strict",
+        "--rendered",
+        "--format",
+        "json",
+    ]
+    assert "if" not in audit
+    assert not audit.get("continue-on-error", False)
     assert "Verify root package release contract" in workflow
     assert 'python -m infrastructure.publishing.root_release_contract --tag "$TAG"' in workflow
     assert "ref: ${{ steps.tag.outputs.name }}" in workflow
     assert 'EXPECTED=$(git rev-parse "refs/tags/$TAG^{commit}")' in workflow
     assert 'if [ "$ACTUAL" != "$EXPECTED" ]; then' in workflow
-    assert (
-        "python -m infrastructure.validation.cli publication-audit --all-public --strict --rendered --format json"
-    ) in workflow
     assert "python scripts/gates/public_capabilities.py" in workflow
     assert "python scripts/gates/installed_public.py" in workflow
     assert workflow.index("Determine tag name") < workflow.index("uses: actions/checkout@")
+    names = {step.get("name"): index for index, step in enumerate(steps)}
     assert (
-        workflow.index("Verify checkout is the requested tag")
-        < workflow.index("python scripts/gates/public_capabilities.py")
-        < workflow.index("python scripts/gates/installed_public.py")
-        < workflow.index("publication-audit --all-public --strict --rendered")
-        < workflow.index("uv build")
+        names["Verify checkout is the requested tag"]
+        < audit_index
+        < names["Require explicit root 4+ acceptance handoff"]
+        < names["Verify complete authenticated candidate with independently installed current providers"]
+        < names["Verify root package release contract"]
+        < names["Verify public capability manifest"]
+        < names["Verify complete installed-wheel matrix"]
+        < names["Admit the exact installed wheel and final source distribution"]
     )
+    distribution = steps[names["Admit the exact installed wheel and final source distribution"]]
+    assert "uv build" in distribution["run"]
 
 
 def test_runtime_and_package_version_drift_blocks_release(tmp_path: Path) -> None:
@@ -156,8 +189,9 @@ def test_release_installed_matrix_prepares_all_supported_runtimes() -> None:
     selected = {
         step.get("with", {}).get("python-version") for step in steps if "actions/setup-python@" in step.get("uses", "")
     }
-    assert selected == {"3.12", "3.13", "3.14"}
+    assert selected == {"3.12", "3.13", "3.14", "3.14.4"}
     matrix = next(step for step in steps if step.get("name") == "Verify complete installed-wheel matrix")
+    assert matrix["if"] == "steps.acceptance.outputs.required != 'true'"
     command = matrix["run"]
     assert "--project " not in command
     assert "--project-workers 1" in command
@@ -166,6 +200,7 @@ def test_release_installed_matrix_prepares_all_supported_runtimes() -> None:
     for minor in ("3.12", "3.13", "3.14"):
         assert f'--python "{minor}=' in command
     preparation = next(step for step in steps if step.get("name") == "Prepare locked installed-matrix dependency cache")
+    assert preparation["if"] == matrix["if"]
     assert "infrastructure.project.public_scope project-names" in preparation["run"]
     for flag in ("--locked", "--no-emit-project", "--no-emit-local", "--require-hashes", "--no-build"):
         assert flag in preparation["run"]
@@ -186,3 +221,70 @@ def test_release_serializes_selected_tag_across_trigger_refs() -> None:
     selection = next(step for step in steps if step.get("id") == "tag")
     assert selection["env"]["INPUT_TAG"] == "${{ inputs.tag }}"
     assert selection["env"]["REF_NAME"] == "${{ github.ref_name }}"
+
+
+@pytest.mark.parametrize("case", ["accepted", "legacy", "missing-receipt", "different-revision"])
+def test_release_publication_inputs_use_exact_handoff_or_legacy_matrix(tmp_path: Path, case: str) -> None:
+    """Execute actual workflow routing; absent/stale handoffs never fall back."""
+    import os
+    import yaml
+
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["release"]["steps"]
+    selection = next(step for step in steps if step.get("id") == "release_inputs")
+    source = tmp_path / "release source"
+    source.mkdir()
+
+    def git(root: Path, *arguments: str) -> None:
+        subprocess.run(
+            ["git", "--no-optional-locks", "-c", "core.fsmonitor=false", *arguments],
+            cwd=root,
+            check=True,
+            capture_output=True,
+        )
+
+    git(source, "init", "--quiet")
+    git(source, "config", "user.name", "Release Routing Test")
+    git(source, "config", "user.email", "release-routing@example.invalid")
+    (source / "authored.txt").write_text("same authored source\n")
+    git(source, "add", "authored.txt")
+    git(source, "commit", "--quiet", "-m", "Freeze test source")
+    temporary = tmp_path / "runner temporary"
+    temporary.mkdir()
+    mirror = temporary / "template-release-reader-root"
+    git(source, "clone", "--quiet", "--no-hardlinks", str(source), str(mirror))
+    root = source if case == "legacy" else mirror
+    relative = (
+        "output/readiness/installed-release-123-1/receipt.json"
+        if case == "legacy"
+        else "output/readiness/installed/receipt.json"
+    )
+    receipt = root / relative
+    if case != "missing-receipt":
+        receipt.parent.mkdir(parents=True)
+        receipt.write_text("{}\n")  # Routing only; existing validators authenticate evidence.
+    if case == "different-revision":
+        git(mirror, "config", "user.name", "Release Routing Test")
+        git(mirror, "config", "user.email", "release-routing@example.invalid")
+        (mirror / "authored.txt").write_text("different authored source\n")
+        git(mirror, "add", "authored.txt")
+        git(mirror, "commit", "--quiet", "-m", "Different test source")
+    output = tmp_path / "output.txt"
+    environment = {name: value for name, value in os.environ.items() if not name.startswith("GIT_")}
+    environment.update(
+        REQUIRED_ACCEPTANCE="false" if case == "legacy" else "true",
+        GITHUB_WORKSPACE=str(source),
+        RUNNER_TEMP=str(temporary),
+        GITHUB_RUN_ID="123",
+        GITHUB_RUN_ATTEMPT="1",
+        GITHUB_OUTPUT=str(output),
+    )
+    result = subprocess.run(
+        ["bash", "-c", selection["run"]], cwd=source, env=environment, capture_output=True, text=True, timeout=30
+    )
+    if case in {"missing-receipt", "different-revision"}:
+        assert result.returncode != 0
+        assert not output.exists()
+    else:
+        assert result.returncode == 0, result.stderr
+        assert output.read_text().splitlines() == [f"root={root}", f"installed_receipt={receipt}"]

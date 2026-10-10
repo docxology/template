@@ -11,6 +11,7 @@ import hashlib
 import json
 import os
 import stat
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -178,7 +179,7 @@ def main(argv: list[str] | None = None) -> int:
             kind=args.kind,
         )
     except (OSError, ValueError) as error:
-        print("failed native diagnostic retention refused: " + str(error))
+        sys.stdout.write("failed native diagnostic retention refused: " + str(error) + "\n")
         return 2
     return 0
 

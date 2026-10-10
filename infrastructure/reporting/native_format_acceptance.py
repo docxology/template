@@ -15,6 +15,11 @@ from typing import Any, Sequence
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.core.implementation_custody import source_file_bytes
+from infrastructure.reporting.native_format_acceptance_results import (
+    _executed_failure_exit as _executed_failure_exit,
+    _executed_failure_result as _original_executed_failure_result,
+    _finalize_profile as _finalize_profile,
+)
 from infrastructure.reporting.native_projection_contracts import (
     ProjectionSourceUnsupported,
 )
@@ -34,7 +39,6 @@ from infrastructure.reporting.native_mermaid_runtime_selection import (
 from infrastructure.reporting.native_format_joint_source import (
     JOINT_SCHEMA,
     NativeSDKSelection,
-    NativeReaderOperation,
     admit_native_source_operation,
     admitted_native_providers,
     source_environment,
@@ -47,13 +51,11 @@ from infrastructure.reporting.native_format_process_custody import (
 from infrastructure.project.public_acceptance_cli import positive_int
 from infrastructure.project.public_acceptance_evidence import (
     evidence_directory,
-    gate_payload,
     read_json,
     write_json,
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_format_acceptance_contracts import (
-    NATIVE_SCHEMA,
     PROCESS_SCHEMA,
     native_environment,
     public_source_digest,
@@ -62,12 +64,7 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
     NativeDeadlineExpired,
     NativeDeadlineUnavailable,
 )
-from infrastructure.reporting.native_format_acceptance_validation import (
-    validate_native_acceptance,
-    validate_native_conformance,
-)
 from infrastructure.reporting.readiness_receipts import (
-    SCHEMA_VERSION,
     source_fingerprint,
 )
 from infrastructure.reporting.release_readiness_profile import required_profile
@@ -79,19 +76,22 @@ from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelec
 from infrastructure.reporting.native_hosted_original_producer import NativeHostedTransportRequest
 
 
-def _finalize_profile(root: Path, before: str) -> tuple[bool, str, tuple[Requirement, ...]]:
-    """Derive final identities only after actual regeneration has settled."""
-    current = public_source_digest(root) == before
-    fingerprint = source_fingerprint(root)
-    requirements, faults = required_profile(root, SnapshotReader(root), fingerprint)
-    if faults:
-        raise ValueError("final source-owned readiness metadata is invalid or incomplete")
-    return current, fingerprint, requirements
+def _executed_failure_result(state: dict[str, Any], error: BaseException) -> dict[str, Any]:
+    """Preserve Original and directly returned Current failures independently."""
+    from infrastructure.reporting.native_format_current_orchestration import preserve_current_attempts
 
-
-def _executed_failure_exit(codes: list[int]) -> int:
-    """Post-execution finalization failures preserve stronger actual outcomes."""
-    return 130 if 130 in codes else 124 if 124 in codes else 1
+    packet = getattr(error, "native_current_pipeline", None)
+    if isinstance(packet, dict):
+        state.setdefault("current_failures", []).append(packet)
+    domain_attempt = getattr(error, "native_project_domain_attempt", None)
+    if isinstance(domain_attempt, dict):
+        state.setdefault("current_domain_failures", []).append(
+            {
+                "attempt": domain_attempt,
+                "controller_exit_code": getattr(error, "native_project_domain_exit_code", getattr(error, "code", None)),
+            }
+        )
+    return preserve_current_attempts(_original_executed_failure_result(state, error), state)
 
 
 def _run_native_format_acceptance(
@@ -108,6 +108,7 @@ def _run_native_format_acceptance(
     mermaid_selection: NativeMermaidSelection | None = None,
     pdfium_selection: NativePDFiumSelection | None = None,
     office_font_files: tuple[Path, ...] = (),
+    current_analysis_root: Path | None = None,
     _state: dict[str, Any],
 ) -> dict[str, Any]:
     """Run fresh whole-core project plans serially under one admission deadline.
@@ -149,9 +150,14 @@ def _run_native_format_acceptance(
         root, sdk_selection, run_id=run_id, deadline=deadline, environment=os.environ
     )
     from infrastructure.reporting.native_tool_producer import native_producer_operation
+    from infrastructure.reporting.native_format_current_orchestration import (
+        finish_native_format_acceptance,
+        validate_current_destination,
+    )
 
+    validate_current_destination(source_context, current_analysis_root)
     with native_producer_operation(source_context, run_id=run_id, deadline=deadline):
-        return _run_admitted_native_format_acceptance(
+        _run_admitted_native_format_acceptance(
             root,
             selected=selected,
             started=started,
@@ -169,6 +175,18 @@ def _run_native_format_acceptance(
             office_font_files=office_font_files,
             _state=_state,
         )
+    # Both Original producer and Mermaid owners have now closed. Only the
+    # externally held Original launch/provider capabilities survive this split.
+    return finish_native_format_acceptance(
+        source_context,
+        sdk_selection,
+        current_analysis_root,
+        mermaid_selection,
+        provider_wheels or {},
+        _state,
+        epubcheck_jar=epubcheck_jar,
+        java_executable=java_executable,
+    )
 
 
 def _run_admitted_native_format_acceptance(
@@ -189,7 +207,7 @@ def _run_admitted_native_format_acceptance(
     pdfium_selection: NativePDFiumSelection | None,
     office_font_files: tuple[Path, ...],
     _state: dict[str, Any],
-) -> dict[str, Any]:
+) -> None:
     """Hold the actual live Source producer across preparation and every worker."""
     deadline = _state["deadline"]
     host_before = native_host_observation()
@@ -227,6 +245,9 @@ def _run_admitted_native_format_acceptance(
         run_id=run_id,
         selected=selected,
         platform_version=requirements[0].platform_version,
+        original_requirements=requirements,
+        current_processes=[],
+        current_failures=[],
     )
     if not isinstance(mermaid_selection, NativeMermaidSelection):
         raise ProjectionSourceUnsupported(
@@ -248,7 +269,7 @@ def _run_admitted_native_format_acceptance(
         env=native_environment(root, Path(sys.executable), directory),
     )
     with source_mermaid_runtime_operation(runtime, source=source_context, deadline=deadline):
-        return _run_original_native_cells(
+        _run_original_native_cells(
             root,
             source_context=source_context,
             selected=selected,
@@ -296,7 +317,7 @@ def _run_original_native_cells(
     host_before: dict[str, Any],
     admitted: list[dict[str, Any]],
     _state: dict[str, Any],
-) -> dict[str, Any]:
+) -> None:
     """Actual fully pinned originals under the live Source11 factory capability."""
     if not isinstance(pdfium_selection, NativePDFiumSelection):
         raise ProjectionSourceUnsupported(
@@ -328,6 +349,11 @@ def _run_original_native_cells(
         )
         for scope, provider in prepared_pdfium.items()
     }
+    _state.update(
+        original_provider_bindings={scope: prepared_providers[scope][0] for scope in selected},
+        office_reader_selection=office_reader_selection,
+        prepared_reader_runtimes=prepared_reader_runtimes,
+    )
     for scope in selected:
         cell = directory / scope
         create_private_native_directory(root, cell)
@@ -520,244 +546,6 @@ def _run_original_native_cells(
                 item["process"] = process
         if observation["exit_code"] in {124, 130}:
             break
-    try:
-        current, fingerprint, final_requirements = _finalize_profile(root, before)
-    except (OSError, ValueError, TypeError, KeyError) as error:
-        # After launch, failed source custody/finalization is executed failure.
-        # Preserve original interruption/timeout precedence and private attempts;
-        # parser.error(2) is exclusively a pre-execution configuration result.
-        codes = [item["observation"]["exit_code"] for item in admitted]
-        code = _executed_failure_exit(codes)
-        summary = {
-            "run_id": run_id,
-            "source_digest": before,
-            "source_current": False,
-            "complete_selection": selected == PUBLIC_PROJECT_NAMES,
-            "selected_projects": list(selected),
-            "observed_projects": len(admitted),
-            "diagnostic": str(error),
-            "results": [
-                {
-                    "project": item["scope"],
-                    "status": "fail",
-                    "execution_exit_code": item["observation"]["exit_code"],
-                    "process_artifact": item["process"],
-                    "native_execution_artifact": item["raw_binding"],
-                }
-                for item in admitted
-            ],
-        }
-        payload = {
-            "schema_version": SCHEMA_VERSION,
-            "platform_version": requirements[0].platform_version,
-            "source_fingerprint": initial_fingerprint,
-            "roster": list(PUBLIC_PROJECT_NAMES),
-            "gates": {},
-            "native_formats": summary,
-        }
-        binding = write_json(root, directory / "receipt.json", payload)
-        return {"receipt": binding, "native_formats": summary, "exit_code": code}
-    final_lookup = {item.scope: item for item in final_requirements if item.kind == "formats"}
-    gates: dict[str, Any] = {}
-    summaries = []
-    for item in admitted:
-        scope, raw, observed = item["scope"], item["raw"], item["observation"]
-        requirement = final_lookup[scope]
-        details = {
-            "schema_version": NATIVE_SCHEMA,
-            "run_id": run_id,
-            "execution_exit_code": observed["exit_code"],
-            "specification_artifact": item["specification"],
-            "process_artifact": item["process"],
-            "native_execution_artifact": item["raw_binding"],
-            "sdk_closure_artifact": observed["sdk_closure_artifact"],
-            "formats": raw.get("formats", {}),
-            "conformance_validated": False,
-            "diagnostic": raw.get("diagnostic") or observed.get("diagnostic", ""),
-        }
-        status, blockers = "fail", []
-        matching = (
-            current
-            and raw.get("schema_version") == NATIVE_SCHEMA
-            and raw.get("scope") == scope
-            and raw.get("run_id") == run_id
-            and raw.get("source_digest_before") == before
-            and raw.get("source_digest_after") == before
-            and raw.get("execution_exit_code") == observed["exit_code"]
-            and (
-                not raw.get("pipeline")
-                or raw.get("deliverables_identity_after") in {"", requirement.deliverables_identity}
-            )
-            and observed["original_exit_code"] == observed["exit_code"]
-            and not observed["timed_out"]
-            and not observed["custody_refused"]
-            and item["original_launch"] is not None
-        )
-        if matching and raw.get("status") == "blocked" and observed["exit_code"] == 75:
-            declared = raw.get("blockers")
-            if (
-                isinstance(declared, list)
-                and declared
-                and all(
-                    isinstance(row, dict)
-                    and isinstance(row.get("tool"), str)
-                    and row["tool"]
-                    and isinstance(row.get("reason"), str)
-                    and row["reason"]
-                    for row in declared
-                )
-            ):
-                status, blockers = "blocked", declared
-        if current and observed["custody_refused"] and observed["exit_code"] == 75:
-            status, blockers = (
-                "blocked",
-                [{"tool": "native process guardian", "reason": observed["diagnostic"]}],
-            )
-        if matching and raw.get("status") in {"pass", "blocked"}:
-            try:
-                operation = NativeReaderOperation(
-                    source_context,
-                    deadline,
-                    {scope: item["original_launch"]},
-                    {scope: item["pdfium_provider"]},
-                    office_reader_selection=office_reader_selection,
-                    pdfium_runtime_admissions={scope: prepared_reader_runtimes[scope]},
-                )
-                reader = SnapshotReader(root, native_operation=operation)
-                validate_native_conformance(requirement, details, reader)
-                details["conformance_validated"] = True
-                if raw["status"] == "pass":
-                    validate_native_acceptance(requirement, details, reader)
-                    status = "pass"
-            except (OSError, ValueError, TypeError, KeyError) as error:
-                details["diagnostic"] = str(error)
-                status = "fail"
-        binding = write_json(
-            root,
-            item["directory"] / "formats-gate.json",
-            gate_payload(requirement, fingerprint, status, details, blockers),
-        )
-        gates[requirement.id] = {
-            "status": status,
-            "command": item["command"],
-            "artifact": binding["path"],
-            "artifact_sha256": binding["sha256"],
-        }
-        summaries.append(
-            {
-                "project": scope,
-                "status": status,
-                "execution_exit_code": observed["exit_code"],
-                "conformance_validated": details["conformance_validated"],
-                "diagnostic": details["diagnostic"],
-                "blockers": blockers,
-            }
-        )
-    codes = [item["observation"]["exit_code"] for item in admitted]
-    states = [item["status"] for item in summaries]
-    exit_code = (
-        130
-        if 130 in codes
-        else 124
-        if 124 in codes or time.monotonic() >= deadline
-        else 1
-        if not current or "fail" in states or len(admitted) != len(selected)
-        else 75
-        if "blocked" in states
-        else 0
-    )
-    payload = {
-        "schema_version": SCHEMA_VERSION,
-        "platform_version": final_requirements[0].platform_version,
-        "source_fingerprint": fingerprint,
-        "roster": list(PUBLIC_PROJECT_NAMES),
-        "gates": gates,
-        "native_formats": {
-            "run_id": run_id,
-            "source_digest": before,
-            "source_current": current,
-            "complete_selection": selected == PUBLIC_PROJECT_NAMES,
-            "selected_projects": list(selected),
-            "observed_projects": len(admitted),
-            "results": summaries,
-        },
-    }
-    binding = write_json(root, directory / "receipt.json", payload)
-    result = {
-        "receipt": binding,
-        "native_formats": payload["native_formats"],
-        "exit_code": exit_code,
-    }
-    request = _state.get("hosted_transport")
-    if request is not None:
-        if not isinstance(request, NativeHostedTransportRequest):
-            raise ValueError("native hosted transport requires its explicit Source-owned request")
-        if exit_code == 0:
-            from infrastructure.reporting.native_hosted_original_producer import pack_native_hosted_originals
-
-            result["transport"] = pack_native_hosted_originals(
-                source_context,
-                {item["scope"]: item["original_launch"] for item in admitted},
-                request.directory,
-                repository=request.repository,
-                run_id=request.run_id,
-                deadline=deadline,
-                native_receipt=SnapshotReader(root).read(binding["path"]),
-            )
-    return result
-
-
-def _executed_failure_result(state: dict[str, Any], error: BaseException) -> dict[str, Any]:
-    """Preserve attempts even when every subsequent confined write refuses."""
-    codes = [item["observation"]["exit_code"] for item in state["admitted"]]
-    if isinstance(error, KeyboardInterrupt):
-        codes.append(130)
-    if isinstance(error, (TimeoutError, NativeDeadlineExpired)) or time.monotonic() >= state["deadline"]:
-        codes.append(124)
-    summary = {
-        "run_id": state["run_id"],
-        "source_digest": state["before"],
-        "source_current": False,
-        "complete_selection": state["selected"] == PUBLIC_PROJECT_NAMES,
-        "selected_projects": list(state["selected"]),
-        "observed_projects": len(state["admitted"]),
-        "diagnostic": str(error),
-        "results": [
-            {
-                "project": item["scope"],
-                "status": "fail",
-                "observation": item["observation"],
-                "process_artifact": item["process"],
-                "native_execution_artifact": item["raw_binding"],
-            }
-            for item in state["admitted"]
-        ],
-    }
-    payload = {
-        "schema_version": SCHEMA_VERSION,
-        "platform_version": state["platform_version"],
-        "source_fingerprint": state["fingerprint"],
-        "roster": list(PUBLIC_PROJECT_NAMES),
-        "gates": {},
-        "native_formats": summary,
-    }
-    binding = None
-    try:
-        if time.monotonic() < state["deadline"]:
-            with native_deadline_guard(state["deadline"]):
-                binding = write_json(state["root"], state["directory"] / "receipt.json", payload)
-    except NativeDeadlineExpired as persistence_error:
-        summary["persistence_diagnostic"] = str(persistence_error)
-        codes.append(124)
-    except Exception as persistence_error:  # noqa: BLE001 - original outcomes survive failed evidence persistence
-        summary["persistence_diagnostic"] = str(persistence_error)
-    if time.monotonic() >= state["deadline"]:
-        codes.append(124)
-    return {
-        "receipt": binding,
-        "native_formats": summary,
-        "exit_code": _executed_failure_exit(codes),
-    }
 
 
 def run_native_format_acceptance(
@@ -776,6 +564,7 @@ def run_native_format_acceptance(
     office_font_files: tuple[Path, ...] = (),
     operation_started: float | None = None,
     hosted_transport: NativeHostedTransportRequest | None = None,
+    current_analysis_root: Path | None = None,
 ) -> dict[str, Any]:
     """Keep invocation faults separate from the entire actual executed phase."""
     try:
@@ -809,6 +598,7 @@ def run_native_format_acceptance(
                 mermaid_selection=mermaid_selection,
                 pdfium_selection=pdfium_selection,
                 office_font_files=office_font_files,
+                current_analysis_root=current_analysis_root,
                 _state=state,
             )
         if result["exit_code"] != 130 and time.monotonic() >= state["deadline"]:
@@ -883,6 +673,7 @@ def main(argv: list[str] | None = None) -> int:
         help="Whole admission/execution/observer budget in seconds",
     )
     parser.add_argument("--evidence-dir", type=Path)
+    parser.add_argument("--current-analysis-root", required=True, type=Path)
     parser.add_argument("--epubcheck-jar", type=Path)
     parser.add_argument("--java-executable", type=Path)
     parser.add_argument("--expected-platform", required=True, choices=("Linux", "Darwin"))
@@ -941,6 +732,7 @@ def main(argv: list[str] | None = None) -> int:
             office_font_files=tuple(args.office_font_file),
             operation_started=started,
             hosted_transport=transport,
+            current_analysis_root=args.current_analysis_root,
         )
     except (OSError, ValueError, TypeError, KeyError) as error:
         parser.error(str(error))

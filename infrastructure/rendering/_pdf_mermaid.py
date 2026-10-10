@@ -128,22 +128,13 @@ def replace_inline_mermaid(
                 stem=stem,
                 source=source,
                 puppeteer_config=puppeteer_config,
+                original_source=match.group("source"),
             )
         except RenderingError as exc:
             logger.warning("%s", exc)
             return _mermaid_fallback_figure(fallback_source, caption)
         diagrams_rendered += 1
-        rel_path = f"../figures/mermaid_inline/{png_path.name}"
-        escaped_caption = _latex_caption(caption)
-        escaped_alt = _latex_graphic_alt_text(alt)
-        return (
-            "\n\\begin{figure}[htbp]\n"
-            "\\centering\n"
-            "\\includegraphics[width=0.82\\linewidth,height=4.2in,keepaspectratio,"
-            f"alt={{{escaped_alt}}}]{{{rel_path}}}\n"
-            f"\\caption{{{escaped_caption}}}\n"
-            "\\end{figure}\n"
-        )
+        return inline_mermaid_figure_markdown(match, png_path.name)
 
     try:
         rewritten = _MERMAID_BLOCK_RE.sub(_replace, content)
@@ -161,6 +152,24 @@ def replace_inline_mermaid(
             )
     logger.info("Rendered %d inline Mermaid diagram(s) for PDF output", diagrams_rendered)
     return MermaidReplacementResult(rewritten, diagrams_rendered)
+
+
+def inline_mermaid_figure_markdown(match: re.Match[str], png_name: str) -> str:
+    """Return the Source positive replacement; no render or native admission."""
+    caption_text = _caption_text(match)
+    alt = _first_alt(match.group("alts")) or caption_text or "Mermaid diagram"
+    caption = _caption_for_markdown(caption_text or alt)
+    rel_path = f"../figures/mermaid_inline/{png_name}"
+    escaped_caption = _latex_caption(caption)
+    escaped_alt = _latex_graphic_alt_text(alt)
+    return (
+        "\n\\begin{figure}[htbp]\n"
+        "\\centering\n"
+        "\\includegraphics[width=0.82\\linewidth,height=4.2in,keepaspectratio,"
+        f"alt={{{escaped_alt}}}]{{{rel_path}}}\n"
+        f"\\caption{{{escaped_caption}}}\n"
+        "\\end{figure}\n"
+    )
 
 
 def _inline_mermaid_dir(manuscript_dir: Path) -> Path:
@@ -474,6 +483,7 @@ def _render_mermaid(
     stem: str,
     source: str,
     puppeteer_config: Path | None,
+    original_source: str | None = None,
 ) -> Path:
     """Render one Mermaid source string to PNG with strict failure handling."""
     mmd_path = output_dir / f"{stem}.mmd"
@@ -571,7 +581,20 @@ def _render_mermaid(
     try:
         # Intentionally convert every mmdc execution failure into a documented
         # caller-side fallback so combined PDF rendering can continue.
-        completed = run_isolated_subprocess(cmd, env=env, timeout=90)
+        from infrastructure.reporting.native_mermaid_production_tool import run_source_native_mermaid
+
+        completed = run_source_native_mermaid(
+            cmd,
+            mmd_path,
+            png_path,
+            role="inline",
+            raw_source=source if original_source is None else original_source,
+            input_paths=inputs,
+            environment=env,
+            timeout=90,
+        )
+        if completed is None:
+            completed = run_isolated_subprocess(cmd, env=env, timeout=90)
     except subprocess.TimeoutExpired as exc:
         raise RenderingError(f"mmdc timed out while rendering {stem}") from exc
     except OSError as exc:

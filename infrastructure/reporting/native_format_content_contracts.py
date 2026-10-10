@@ -20,7 +20,7 @@ from infrastructure.reporting.native_format_acceptance_contracts import NativeAr
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.validation.output.render_formats import render_config_manuscript_dir
-from infrastructure.validation.publication.rendered_provenance import validate_rendered_provenance
+from infrastructure.validation.publication.rendered_provenance import validate_current_rendered_provenance
 
 CONTENT_SCHEMA = "template-native-source-content-v1"
 MAX_SOURCE_BYTES = 4 * 1024 * 1024
@@ -170,7 +170,7 @@ def compile_pdf_content_contract(
     """Use current validated hydration and the renderer's actual source ordering."""
     if type(deadline) not in {int, float} or not math.isfinite(deadline) or time.monotonic() >= deadline:
         raise TimeoutError("native source-content admission deadline expired")
-    if artifact.format != "pdf" or not validate_rendered_provenance(root, scope).valid:
+    if artifact.format != "pdf" or not validate_current_rendered_provenance(root, scope).valid:
         raise ValueError("PDF source obligations require current validated consumed hydration")
     reader.read(f"projects/{scope}/manuscript/config.yaml")
     manuscript = render_config_manuscript_dir(root / "projects" / scope)
@@ -188,7 +188,11 @@ def compile_pdf_content_contract(
         contract = NativeContentContract(
             artifact.id, contract.sources, (), (f"{artifact.id}: domain/projection source binding unsupported",)
         )
-    if not reader.unchanged() or not validate_rendered_provenance(root, scope).valid or time.monotonic() >= deadline:
+    if (
+        not reader.unchanged()
+        or not validate_current_rendered_provenance(root, scope).valid
+        or time.monotonic() >= deadline
+    ):
         raise ValueError("native consumed source custody or admission budget changed")
     return contract
 

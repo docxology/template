@@ -11,7 +11,7 @@ from collections.abc import Callable
 from typing import Any
 
 from infrastructure.reporting.native_format_acceptance_checks import parse_native_bytes
-from infrastructure.reporting.native_format_acceptance_contracts import TOOL_SCHEMA
+from infrastructure.reporting.native_format_acceptance_contracts import TOOL_FIELDS, TOOL_SCHEMA
 from infrastructure.reporting.native_format_portable_custody import validate_executable_observation
 
 
@@ -20,6 +20,7 @@ def replay_epub_conversion(
     input_bytes: bytes,
     *,
     read_artifact: Callable[[dict[str, Any]], bytes],
+    authenticate_tool: Callable[[dict[str, Any], dict[str, Any]], None],
     producer_path: Callable[[str], str],
     run_id: str,
 ) -> dict[str, Any]:
@@ -28,6 +29,8 @@ def replay_epub_conversion(
     The enclosing reader supplies confined artifact admission and the recorded
     original producer root mapping. External Java identity is original execution
     custody; only admitted private JAR bytes are reopened during portable replay.
+    Every retained tool additionally passes the enclosing genuine original
+    process authenticator. This DATA leaf never constructs that authority.
     """
 
     def admitted(binding: dict[str, Any]) -> bytes:
@@ -36,7 +39,11 @@ def replay_epub_conversion(
             raise ValueError("portable EPUB artifact differs from original admitted bytes")
         return data
 
-    if raw["schema_version"] != "template-native-epub-reader-v2" or admitted(raw["input"]) != input_bytes:
+    linux_calibre = raw["schema_version"] == "template-native-epub-reader-v3"
+    if (
+        raw["schema_version"] not in {"template-native-epub-reader-v2", "template-native-epub-reader-v3"}
+        or admitted(raw["input"]) != input_bytes
+    ):
         raise ValueError("portable EPUB conversion differs from exact original input")
     parse_native_bytes("epub", input_bytes)
     directory = str(PurePosixPath(raw["input"]["path"]).parent)
@@ -44,7 +51,14 @@ def replay_epub_conversion(
 
     environment = json_object_from_bytes(admitted(raw["reader_environment_artifact"]))
     if environment != {
-        "schema_version": "template-native-epub-reader-environment-v2",
+        "schema_version": "template-native-epub-reader-environment-v3"
+        if linux_calibre
+        else "template-native-epub-reader-environment-v2",
+        **(
+            {"QT_QPA_PLATFORM": "offscreen", "calibre_policy": "debian-owned-calibre-embedded-qt-offscreen-v1"}
+            if linux_calibre
+            else {}
+        ),
         "run_id": run_id,
         "CALIBRE_CONFIG_DIRECTORY": producer_path(directory + "/calibre-profile"),
         "CALIBRE_CACHE_DIRECTORY": producer_path(directory + "/calibre-cache"),
@@ -120,27 +134,10 @@ def replay_epub_conversion(
             "--disable-font-rescaling",
         ],
     )
-    tool_fields = {
-        "schema_version",
-        "run_id",
-        "purpose",
-        "tool",
-        "command",
-        "executable",
-        "executable_sha256",
-        "executable_observation_before",
-        "executable_observation_after",
-        "exit_code",
-        "original_exit_code",
-        "timed_out",
-        "custody_refused",
-        "diagnostic",
-        "stdout",
-        "stderr",
-    }
     for index, (tool, purpose, command) in enumerate(zip(tools, purposes, commands, strict=True)):
-        if set(tool) != tool_fields:
+        if frozenset(tool) != TOOL_FIELDS:
             raise ValueError("portable EPUB original tool fieldset differs")
+        authenticate_tool(raw["tool_artifacts"][index], tool)
         for name in ("executable_observation_before", "executable_observation_after"):
             validate_executable_observation(tool[name], tool["executable"], tool["executable_sha256"])
         if (
@@ -173,22 +170,53 @@ def replay_epub_conversion(
         require_native_reader_plugin_trace,
     )
 
-    consumed_plugin = "Contents/Frameworks/plugins/headless.so"
-    reader_runtime = replay_retained_native_reader_runtime(
-        raw["reader_runtime_before"],
-        raw["reader_runtime_after"],
-        read_artifact=admitted,
-        run_id=run_id,
-        executable=reader_exe,
-        executable_sha256=tools[4]["executable_sha256"],
-        consumed_members=(consumed_plugin,),
-    )
-    require_native_reader_plugin_trace(reader_runtime, tools[4]["stderr"], consumed_plugin)
+    if linux_calibre:
+        from infrastructure.reporting.native_linux_calibre_runtime import (
+            replay_linux_calibre_runtime,
+            require_linux_calibre_plugin_trace,
+        )
+
+        selections = raw["linux_calibre_selection"]
+        if not isinstance(selections, dict) or set(selections) != {"before", "after"}:
+            raise ValueError("Linux Calibre requires both actual package/embedded Qt selections")
+        runtimes = [
+            replay_linux_calibre_runtime(
+                selections[phase],
+                raw["reader_runtime_before"],
+                raw["reader_runtime_after"],
+                read_artifact=admitted,
+                authenticate_tool=authenticate_tool,
+                run_id=run_id,
+                reader_tool=tools[4],
+            )
+            for phase in ("before", "after")
+        ]
+        if {k: v for k, v in selections["before"].items() if k != "tools"} != {
+            k: v for k, v in selections["after"].items() if k != "tools"
+        } or runtimes[0] != runtimes[1]:
+            raise ValueError("Linux Calibre genuine before/after package/embedded Qt selections differ")
+        reader_runtime = runtimes[0]
+        require_linux_calibre_plugin_trace(reader_runtime, tools[4]["stderr"])
+    else:
+        if "linux_calibre_selection" in raw:
+            raise ValueError("Darwin EPUB runtime cannot carry Linux selection DATA")
+        consumed_plugin = "Contents/Frameworks/plugins/headless.so"
+        reader_runtime = replay_retained_native_reader_runtime(
+            raw["reader_runtime_before"],
+            raw["reader_runtime_after"],
+            read_artifact=admitted,
+            run_id=run_id,
+            executable=reader_exe,
+            executable_sha256=tools[4]["executable_sha256"],
+            consumed_members=(consumed_plugin,),
+        )
+        require_native_reader_plugin_trace(reader_runtime, tools[4]["stderr"], consumed_plugin)
     pdf = admitted(raw["pdf"])
     parsed = parse_native_bytes("pdf", pdf)
     if parsed != raw["observation"]:
         raise ValueError("portable EPUB native reader PDF observation differs from actual bytes")
     return {
+        "reader_runtime": reader_runtime,
         "input": raw["input"],
         "pdf": raw["pdf"],
         "observation": parsed,

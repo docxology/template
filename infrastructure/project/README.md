@@ -124,6 +124,10 @@ from infrastructure.project.public_scope import (
 
 CLI: `python -m infrastructure.project.public_scope lint-paths` supplies Ruff's
 full public surface; `... source-paths` supplies mypy's import-safe source roots.
+`... ci-paths` emits the same scopes together as `lint_paths=` then
+`source_paths=` lines. CI redirects that command directly into `$GITHUB_OUTPUT`,
+so a failed scope command fails the step. Health and standalone commands retain
+their existing scope helpers and gates.
 
 ### Sidecar Symlink Sync (`linking.py`)
 

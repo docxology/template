@@ -126,22 +126,62 @@ uv run --no-sync --offline python -m infrastructure.validation.cli publication-a
   --all-public --strict --rendered --require-figure-accessibility --format json
 ```
 
-This audit and actual rendering are required evidence. The supervised native
-producer performs a fresh complete core selection, with cleanup and shared
-infrastructure tests explicitly omitted, then binds exact artifact variants,
-native parser observations, actual tool versions, fonts and complete PDF rasters:
+This audit and actual rendering are required evidence. Native acceptance uses an
+explicitly admitted installed SDK, prepared tools/providers and a fresh supervised
+operation. The [required acceptance workflow](../../.github/workflows/platform-required-acceptance.yml)
+prepares these inputs, runs `infrastructure.reporting.native_installed_launcher
+--mode original`, then supplies a separate installed reader with the original
+source, process and artifact context. Follow its `native-original` and `complete`
+jobs; a bare `scripts/gates/native_formats.py` invocation does not supply that
+admission context.
 
-```bash
-uv run --no-sync --offline python scripts/gates/native_formats.py
-```
+Advanced callers of the lower-level native producer must supply every required
+CLI selection from independently prepared inputs:
 
-The producer emits a fresh partial formats receipt and independently validates
-narrower conformance. Full format acceptance remains blocked with exit 75 until
-independent source-content/layout and visual negative controls exist for PDF,
-browser HTML, native DOCX/EPUB readers, projected slides, pitch pairs, newspaper
-editions and storybook pages (`P4-NATIVE-FORMAT-RECEIPTS`). Existing files,
-nonblank rasters and a passing structural audit cannot grant those missing
-controls. See [`native-format-acceptance.md`](../guides/native-format-acceptance.md)
-for the exact supervision and receipt boundaries. Until full native acceptance
-and the other required lanes pass the strict candidate profile, release
-readiness must remain unknown, blocked, or failed.
+| Selection | Required flags |
+| --- | --- |
+| Actual host | `--expected-platform Linux` or `--expected-platform Darwin` |
+| Selected SDK and exact implementation input | `--sdk-package-root`, `--implementation-input`, `--implementation-sha256` |
+| Prepared Mermaid runtime | `--mermaid-package-root`, `--mermaid-dependency-root`, `--mermaid-node-executable`, `--mermaid-chrome-executable` |
+| Independently selected PDFium | `--pdfium-site`, `--pdfium-wheel` |
+
+Add each declared local provider with repeated `--provider-wheel SCOPE=PATH` and
+nominate the consumed Office fonts with repeated `--office-font-file PATH`.
+For EPUB, supply both `--epubcheck-jar PATH` and `--java-executable PATH`.
+The installed launcher accepts prepared `--office-font-directory` inputs and
+constructs its owned SDK/provider selections. Alongside the host and four Mermaid
+flags above, its required arguments are:
+
+| Launcher context | Required flags |
+| --- | --- |
+| Original operation | `--mode original` |
+| Exact source | `--source-root`, `--source-commit`, `--source-identity` |
+| Prepared runtime/tools | `--python`, `--uv` |
+| Fresh owned directories | `--current-root`, `--scratch` |
+| Actual hosted origin | `--repository`, `--run-id` |
+
+It does not acquire credentials or publish a release. `--timeout` retains the
+finite admission, execution and observer budget. The lower-level producer's
+`--project` subset is diagnostic and cannot establish the full native roster.
+
+The supervised producer executes a fresh complete core selection, with cleanup
+and shared infrastructure tests explicitly omitted, then binds exact artifact
+variants, native parser observations, actual tool versions, fonts and complete
+PDF rasters. Its receipt owns only format gates. A format gate can pass only
+after the original conformance checks and full independent native acceptance
+checks succeed with the held live reader operation. Decoding a receipt cannot
+create that operation. Missing inputs or unsupported obligations remain blocked;
+actual execution, custody or validation failures remain failed.
+
+Current source declarations still report missing full-oracle obligations for
+PDF, browser HTML, native DOCX/EPUB readers, projected slides, pitch pairs,
+newspaper editions and storybook pages. Full format acceptance remains blocked
+for those applicable declarations until every required oracle is implemented,
+its original observations pass and independent readback succeeds. Existing files,
+nonblank rasters and a passing structural audit cannot substitute for the required
+source-content/layout, semantic, reader and visual negative controls. See
+[`native-format-acceptance.md`](../guides/native-format-acceptance.md) for the
+supervision and receipt boundaries. Runtime, installed/export, domain, live,
+transfer and publication evidence remain independent requirements. Release
+readiness must remain unknown, blocked, or failed until every applicable gate
+passes the strict candidate profile.

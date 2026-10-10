@@ -240,13 +240,15 @@ def replay_print_artifact(
     deadline: float,
 ) -> dict[str, Any]:
     """Reconstruct admission from actual configured bytes and retained observations."""
+    from infrastructure.reporting.native_format_observer_dispatch import OBSERVER_SCHEMA
+
     kind, page = configured_print_target(root, scope, artifact)
     fields = {"schema_version", "id", "format", "input", "print_reference", "observation"}
     if artifact.format == "pdf":
         fields.add("raster")
     if (
         set(raw) != fields
-        or raw.get("schema_version") != "template-native-observer-dispatch-v1"
+        or raw.get("schema_version") != OBSERVER_SCHEMA
         or raw.get("id") != artifact.id
         or raw.get("format") != artifact.format
         or raw.get("input") != {"path": snapshot.relative, "sha256": snapshot.sha256}
@@ -290,4 +292,4 @@ def replay_print_artifact(
         raise ValueError("configured print independent source/glyph/pixel replay differs")
     if not reader.unchanged():
         raise ValueError("configured print source/evidence changed during portable admission")
-    return raw
+    return observed

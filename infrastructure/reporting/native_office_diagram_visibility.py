@@ -445,8 +445,8 @@ def replay_office_diagram_visibility(
             or len(row["tool_artifacts"]) != 2
         ):
             raise ValueError("portable original diagram source pixels/stencil/frame custody differs")
-        original_pdf = str(producer_path(custody, root, stencil.path))
-        original_prefix = str(producer_path(custody, root, prefix))
+        original_pdf = str(producer_path(custody, reader.root, stencil.path))
+        original_prefix = str(producer_path(custody, reader.root, prefix))
         for tool_binding, name, arguments, purpose in (
             (
                 row["tool_artifacts"][0],
@@ -547,7 +547,7 @@ def replay_office_diagram_visibility(
         pdfium_runtime=pdfium_runtime,
         env=env,
         deadline=deadline,
-        run_id=run_id,
+        run_id=pdfium_runtime.source.bindings.run_id,
         decoded_native_pages=decoded_pages,
     )
     if fresh["geometry"] != geometry or any(fresh[key] != raw[key] for key in ("status", "findings", "blockers")):

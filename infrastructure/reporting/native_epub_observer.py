@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import shutil
 import time
+import sys
 from pathlib import Path
 from infrastructure.reporting.native_epub_replay import replay_epub_conversion as replay_epub_conversion
 from typing import Any
@@ -47,18 +48,25 @@ def inspect_epub(
     selected = shutil.which("ebook-convert", path=env.get("PATH"))
     if selected is None:
         raise NativeToolUnavailable("actual native Calibre reader is unavailable")
+    linux_calibre = sys.platform == "linux"
     consumed_plugin = "Contents/Frameworks/plugins/headless.so"
     try:
-        runtime_before = observe_native_reader_runtime(
-            Path(selected), deadline=deadline, consumed_members=(consumed_plugin,)
-        )
+        if not linux_calibre:
+            runtime_before = observe_native_reader_runtime(
+                Path(selected), deadline=deadline, consumed_members=(consumed_plugin,)
+            )
     except ValueError as error:
         if "dedicated app/resource prefix" in str(error):
             raise NativeToolUnavailable(str(error)) from error
         raise
-    before_binding = retain_native_reader_runtime(root, runtime_before, run_id=run_id)
+    if not linux_calibre:
+        before_binding = retain_native_reader_runtime(root, runtime_before, run_id=run_id)
     engine = bind_epubcheck_engine(epubcheck_jar, java_executable, deadline=deadline)
     tool_env = dict(env)
+    if linux_calibre:
+        for key in ("QT_PLUGIN_PATH", "QT_QPA_PLATFORM_PLUGIN_PATH", "CALIBRE_DEVELOP_FROM", "CALIBRE_PYTHON_PATH"):
+            tool_env.pop(key, None)
+        tool_env["QT_QPA_PLATFORM"] = "offscreen"
     for key in ("CLASSPATH", "JAVA_TOOL_OPTIONS", "JDK_JAVA_OPTIONS", "_JAVA_OPTIONS"):
         tool_env.pop(key, None)
     tool_env["CALIBRE_CONFIG_DIRECTORY"] = str(directory / "calibre-profile")
@@ -69,13 +77,28 @@ def inspect_epub(
     tool_env["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu"
     tool_env["QT_DEBUG_PLUGINS"] = "1"
     tool_env["QT_LOGGING_RULES"] = "qt.core.plugin.factoryloader.debug=false;qt.core.plugin.loader.debug=false"
+    if linux_calibre:
+        from infrastructure.reporting.native_linux_calibre_runtime import observe_linux_calibre_runtime
+
+        linux_selection, runtime_before = observe_linux_calibre_runtime(
+            root,
+            directory / "calibre-before",
+            selected=Path(selected).absolute(),
+            env=tool_env,
+            deadline=deadline,
+            run_id=run_id,
+        )
+        before_binding = retain_native_reader_runtime(root, runtime_before, run_id=run_id)
     from infrastructure.project.public_acceptance_evidence import write_json
 
     environment = write_json(
         root,
         directory / "epub-reader-environment.json",
         {
-            "schema_version": "template-native-epub-reader-environment-v2",
+            "schema_version": "template-native-epub-reader-environment-v3"
+            if linux_calibre
+            else "template-native-epub-reader-environment-v2",
+            **({"QT_QPA_PLATFORM": "offscreen", "calibre_policy": runtime_before["policy"]} if linux_calibre else {}),
             "run_id": run_id,
             "CALIBRE_CONFIG_DIRECTORY": tool_env["CALIBRE_CONFIG_DIRECTORY"],
             "CALIBRE_CACHE_DIRECTORY": tool_env["CALIBRE_CACHE_DIRECTORY"],
@@ -125,17 +148,39 @@ def inspect_epub(
         tools.append(record["artifact"])
         if record["exit_code"] != 0 or record["original_exit_code"] != 0:
             raise ValueError(f"actual {purpose} failed")
-    runtime_after = observe_native_reader_runtime(
-        Path(selected), deadline=deadline, consumed_members=(consumed_plugin,)
-    )
     native_reader = reader.read(tools[-1]["path"]).json_object()
-    validate_native_reader_runtime(
-        runtime_before,
-        runtime_after,
-        executable_sha256=native_reader["executable_sha256"],
-        consumed_members=(consumed_plugin,),
-    )
-    require_native_reader_plugin_trace(runtime_after, native_reader["stderr"], consumed_plugin)
+    if linux_calibre:
+        from infrastructure.project.native_linux_calibre_custody import validate_linux_calibre_packages
+        from infrastructure.reporting.native_linux_calibre_runtime import require_linux_calibre_plugin_trace
+
+        after_selection, runtime_after = observe_linux_calibre_runtime(
+            root,
+            directory / "calibre-after",
+            selected=Path(selected).absolute(),
+            env=tool_env,
+            deadline=deadline,
+            run_id=run_id,
+        )
+        if {k: v for k, v in linux_selection.items() if k != "tools"} != {
+            k: v for k, v in after_selection.items() if k != "tools"
+        }:
+            raise ValueError("Linux Calibre selected package/embedded Qt policy changed during conversion")
+        validate_linux_calibre_packages(runtime_before, runtime_after)
+        executable = next(row for row in runtime_after["files"] if row["path"] == native_reader["executable"])
+        if executable.get("sha256") != native_reader["executable_sha256"]:
+            raise ValueError("Linux Calibre reader differs from bound complete package bytes")
+        require_linux_calibre_plugin_trace(runtime_after, native_reader["stderr"])
+    else:
+        runtime_after = observe_native_reader_runtime(
+            Path(selected), deadline=deadline, consumed_members=(consumed_plugin,)
+        )
+        validate_native_reader_runtime(
+            runtime_before,
+            runtime_after,
+            executable_sha256=native_reader["executable_sha256"],
+            consumed_members=(consumed_plugin,),
+        )
+        require_native_reader_plugin_trace(runtime_after, native_reader["stderr"], consumed_plugin)
     after_binding = retain_native_reader_runtime(root, runtime_after, run_id=run_id)
     converted = reader.read(target.relative_to(root).as_posix())
     observation = parse_native_bytes("pdf", converted.content)
@@ -145,7 +190,8 @@ def inspect_epub(
         raise ValueError("EPUB input/reader output changed during inspection")
     private_binding = reader.read(private_jar.relative_to(root).as_posix())
     return {
-        "schema_version": "template-native-epub-reader-v2",
+        "schema_version": "template-native-epub-reader-v3" if linux_calibre else "template-native-epub-reader-v2",
+        **({"linux_calibre_selection": {"before": linux_selection, "after": after_selection}} if linux_calibre else {}),
         "input": {"path": consumed.relative, "sha256": consumed.sha256},
         "pdf": {"path": converted.relative, "sha256": converted.sha256},
         "observation": observation,
@@ -250,13 +296,8 @@ def freeze_epubcheck_bundle(root: Path, directory: Path, engine: dict[str, Any],
     return frozen / Path(engine["jar"]).name
 
 
-def inspect_epub_spine(epub_bytes: bytes, chapters: tuple[NativeContentContract, ...]) -> dict[str, Any]:
-    """Compare every OPF spine body against independently source-owned chapters.
-
-    Chapter contracts include cover/title/navigation entries when those are in
-    the spine. No linear=no, empty or decorative entry is silently skipped.
-    Unknown source projection syntax remains an explicit inherited blocker.
-    """
+def epub_spine_rows(epub_bytes: bytes) -> list[dict[str, Any]]:
+    """Read every actual ordered spine body under the existing package policy."""
     import zipfile
     from io import BytesIO
     from pathlib import PurePosixPath
@@ -265,11 +306,7 @@ def inspect_epub_spine(epub_bytes: bytes, chapters: tuple[NativeContentContract,
     from infrastructure.rendering._epub_package_validation import _resolve_reference
 
     parse_native_bytes("epub", epub_bytes)
-    if not chapters:
-        raise ValueError("EPUB spine requires independently reconstructed source chapter contracts")
     observed = []
-    findings = []
-    blockers: list[str] = []
     with zipfile.ZipFile(BytesIO(epub_bytes)) as archive:
         container = fromstring(archive.read("META-INF/container.xml"))
         rootfile = container.find(
@@ -306,16 +343,31 @@ def inspect_epub_spine(epub_bytes: bytes, chapters: tuple[NativeContentContract,
                 "tokens": list(actual_tokens),
             }
             observed.append(row)
-            if ordinal < len(chapters):
-                contract = chapters[ordinal]
-                expected = tuple(token for block in contract.blocks for token in block.tokens)
-                blockers.extend(contract.blockers)
-                if not expected:
-                    blockers.append(f"spine {ordinal}: source nontext/image projection required")
-                elif actual_tokens != expected:
-                    findings.append({"code": "epub.spine.content", "ordinal": ordinal})
-        if len(observed) != len(chapters):
-            findings.append({"code": "epub.spine.count"})
+    return observed
+
+
+def inspect_epub_spine(epub_bytes: bytes, chapters: tuple[NativeContentContract, ...]) -> dict[str, Any]:
+    """Compare every actual spine body with independently source-owned chapters.
+
+    Cover/title/navigation and non-linear entries are never silently skipped.
+    Unknown source projections and nontext entries remain explicit blockers.
+    """
+    observed = epub_spine_rows(epub_bytes)
+    if not chapters:
+        raise ValueError("EPUB spine requires independently reconstructed source chapter contracts")
+    findings = []
+    blockers: list[str] = []
+    for ordinal, row in enumerate(observed):
+        if ordinal < len(chapters):
+            contract = chapters[ordinal]
+            expected = tuple(token for block in contract.blocks for token in block.tokens)
+            blockers.extend(contract.blockers)
+            if not expected:
+                blockers.append(f"spine {ordinal}: source nontext/image projection required")
+            elif tuple(row["tokens"]) != expected:
+                findings.append({"code": "epub.spine.content", "ordinal": ordinal})
+    if len(observed) != len(chapters):
+        findings.append({"code": "epub.spine.count"})
     return {
         "schema_version": "template-native-epub-spine-v1",
         "epub_sha256": hashlib.sha256(epub_bytes).hexdigest(),
@@ -390,7 +442,10 @@ def epub_control_bytes(name: str) -> tuple[bytes, tuple[NativeContentContract, .
     elif name == "clipped-text":
         style += " p {position: relative; left: -110px;}"
     elif name == "opaque-overlay":
-        style += " div.native-overlay {position:relative; top:-2.5em; height:2.5em; width:100%;} div.native-overlay img {display:block; width:100%; height:100%;}"
+        style += (
+            " div.native-overlay {position:relative; top:-2.5em; height:2.5em; width:100"
+            "%;} div.native-overlay img {display:block; width:100%; height:100%;}"
+        )
     first = "Measured offset -3.26 mV." if name == "changed-number" else "Measured offset -3.25 mV."
     if name == "omitted-text":
         first = ""
@@ -400,15 +455,23 @@ def epub_control_bytes(name: str) -> tuple[bytes, tuple[NativeContentContract, .
         if name == "reordered-spine"
         else '<itemref idref="c1"/><itemref idref="c2"/>'
     )
-    package = f"""<?xml version="1.0" encoding="UTF-8"?>
-<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="id">
-<metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="id">urn:uuid:1acb1635-3212-4b03-8a09-665222c222e3</dc:identifier>
-<dc:title>Invented reader control</dc:title><dc:language>en</dc:language>
-<meta property="dcterms:modified">2020-01-01T00:00:00Z</meta></metadata>
-<manifest><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
-<item id="css" href="style.css" media-type="text/css"/>
-<item id="c1" href="c1.xhtml" media-type="application/xhtml+xml"/>
-<item id="c2" href="c2.xhtml" media-type="application/xhtml+xml"/></manifest><spine>{order}</spine></package>"""
+    package = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifi'
+        'er="id">\n'
+        '<metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="id'
+        '">urn:uuid:1acb1635-3212-4b03-8a09-665222c222e3</dc:identifier>\n'
+        "<dc:title>Invented reader control</dc:title><dc:language>en</dc:language>\n"
+        '<meta property="dcterms:modified">2020-01-01T00:00:00Z</meta></metadata>\n'
+        '<manifest><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml'
+        '" properties="nav"/>\n'
+        '<item id="css" href="style.css" media-type="text/css"/>\n'
+        '<item id="c1" href="c1.xhtml" media-type="application/xhtml+xml"/>\n'
+        '<item id="c2" href="c2.xhtml" media-type="application/xhtml+xml"/></manifes'
+        "t><spine>"
+        f"{order}"
+        "</spine></package>"
+    )
     overlay = b""
     if name == "opaque-overlay":
         from PIL import Image
@@ -432,8 +495,12 @@ def epub_control_bytes(name: str) -> tuple[bytes, tuple[NativeContentContract, .
         )
         archive.writestr(
             zipfile.ZipInfo("META-INF/container.xml", date_time=(2020, 1, 1, 0, 0, 0)),
-            """<container xmlns="urn:oasis:names:tc:opendocument:xmlns:container" version="1.0">
-<rootfiles><rootfile full-path="EPUB/package.opf" media-type="application/oebps-package+xml"/></rootfiles></container>""",
+            (
+                '<container xmlns="urn:oasis:names:tc:opendocument:xmlns:container" version='
+                '"1.0">\n'
+                '<rootfiles><rootfile full-path="EPUB/package.opf" media-type="application/o'
+                'ebps-package+xml"/></rootfiles></container>'
+            ),
         )
         archive.writestr(zipfile.ZipInfo("EPUB/package.opf", date_time=(2020, 1, 1, 0, 0, 0)), package)
         archive.writestr(zipfile.ZipInfo("EPUB/nav.xhtml", date_time=(2020, 1, 1, 0, 0, 0)), navigation)

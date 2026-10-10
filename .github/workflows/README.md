@@ -29,12 +29,12 @@ flowchart TB
     SEC[security<br/>pip-audit + bandit -c bandit.yaml]
     DL[docs-lint<br/>mermaid + links + consistency]
     VNM --> SHW[setup-hook-windows-smoke<br/>conditional · Windows]
-    VNM --> TI[test-infra<br/>ubuntu × py312–314 + macOS × py314<br/>≥ 60% coverage]
+    VNM --> TI[test-infra<br/>ubuntu × py312–314 + macOS × py314<br/>four complete shards per environment]
+    TI --> IC[coverage-infra<br/>complete py314 Linux union ≥ 60%]
     VNM --> TR[test-regression<br/>claim-binding pins]
     VNM --> TP[test-project<br/>validated capability matrix<br/>each ≥ 90% own src/]
     VNM --> FL[fep-lean optional<br/>gauss + lake · timeout 60m]
-    TI --> PERF[performance<br/>import time ≤ 5 s]
-    TP --> PERF
+    PERF[performance<br/>independent · import time ≤ 5 s]
 
     classDef gate fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef matrix fill:#0f766e,stroke:#0f172a,color:#fff
@@ -42,9 +42,15 @@ flowchart TB
     classDef info fill:#334155,stroke:#0f172a,color:#fff
     class LINT,VNM gate
     class TI,TP,FL,SHW matrix
-    class VAL,SEC,DL,PERF terminal
+    class VAL,SEC,DL,PERF,IC terminal
     class HEALTH info
 ```
+
+`test-infra` retains its 90-minute hosted budget and unchanged per-case
+timeouts. Its Linux/macOS cells invoke the shared
+[`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml)
+once before the tests; pinned archive verification, native package preparation,
+and actual executable probes remain required.
 
 ### Quality Gates
 
@@ -132,6 +138,15 @@ bounded, previously absent `output/readiness` files. Its canonical
 every source-owned candidate requirement, including live, sandbox, macOS,
 runtime, domain, installed-package, and format evidence. Partial matrices or
 green static checks cannot substitute for missing requirements.
+
+For root 4+, the fresh installed reader authenticates the complete installed
+matrix from that exact hosted candidate. Release asset admission revalidates
+its source, versions, full roster, three runtimes, original process and Code
+observations, dependency providers, and wheel bytes, then publishes that already
+tested wheel from the reader mirror. It does not rebuild the installed matrix
+after the handoff. Earlier majors still run the complete installed matrix in
+the release job. Both paths build and admit a fresh source distribution and
+recheck the selected assets before and after publication.
 
 The candidate implementation includes
 [`platform-required-acceptance.yml`](platform-required-acceptance.yml). Its four

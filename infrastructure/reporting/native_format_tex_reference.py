@@ -30,7 +30,15 @@ def _process(
     purpose: str,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     record = native_tool_record(
-        root, directory, tool, arguments, env=env, deadline=deadline, run_id=run_id, purpose=purpose
+        root,
+        directory,
+        tool,
+        arguments,
+        env=env,
+        deadline=deadline,
+        run_id=run_id,
+        purpose=purpose,
+        preserve_nominated_launcher=tool == "xelatex",
     )
     raw = json.loads(SnapshotReader(root).read(record["artifact"]["path"]).content)
     if raw["original_exit_code"] != 0 or raw["exit_code"] != 0:
@@ -260,7 +268,9 @@ def observe_tex_reference(
         "runtime_after": runtime_after,
         "dependencies_before": retained,
         "dependencies_after": retained,
-        "backend_input_policy": "actual successful Kpathsea file opens plus native fonts/metrics and every TeX FLS input",
+        "backend_input_policy": (
+            "actual successful Kpathsea file opens plus native fonts/metrics and every TeX FLS input"
+        ),
         "tool_artifacts": tools,
         "environment": {
             name: environment[name] for name in ("TEXMFHOME", "TEXMFCONFIG", "TEXMFVAR", "openin_any", "openout_any")

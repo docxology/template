@@ -38,6 +38,8 @@ def scientific_math_from_ast(ast_bytes: bytes) -> tuple[ScientificMath, ...]:
     document = json.loads(ast_bytes)
     if not isinstance(document.get("blocks"), list) or not document.get("pandoc-api-version"):
         raise ValueError("scientific math requires actual original Pandoc AST")
+    from infrastructure.reporting.native_format_pdf_semantic_plan import exact_figure_caption_alias
+
     nodes: list[ScientificMath] = []
     count = 0
 
@@ -68,6 +70,11 @@ def scientific_math_from_ast(ast_bytes: bytes) -> tuple[ScientificMath, ...]:
                 if mode not in {"InlineMath", "DisplayMath"} or not isinstance(source, str) or not source:
                     raise ValueError("invalid source mathematical occurrence")
                 nodes.append(ScientificMath(path, source, mode, context, before[-100:], after[:100]))
+                return
+            if tag == "Figure" and exact_figure_caption_alias(value) is not None:
+                # Traverse the genuine visible caption once. The exact equal
+                # Image.alt is retained as a Source alias, not a second paint.
+                visit(value["c"][1], f"{path}/c/1", "caption", before, after)
                 return
             if tag == "Header":
                 context = f"heading:{value['c'][0]}"

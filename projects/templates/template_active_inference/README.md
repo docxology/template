@@ -209,6 +209,16 @@ It also writes `output/data/sheaf_evidence_crosswalk.json` and
 `output/data/validation_dependency_graph.json`. Together these artifacts bind shared
 GNN/ontology symbols, typed claims, artifact producers, validation gates, and manuscript
 variables so the project validates semantic agreement, not only coverage shape.
+Generated `output/data/artifact_provenance.json` uses
+`template_active_inference.artifact_provenance.v2`. Each artifact and field row
+binds `source_input_sha256` to the exact confined generation-input inventory;
+`all_source_inputs_bound` is rederived against the current input bytes. The v1
+`source_commit` / `all_source_commits` fields are retired: regenerate old
+snapshots through the normal pipeline. Actual checkout commits remain in
+runtime and native acceptance evidence. Commit-only changes do not rewrite
+scientific provenance, while changed input bytes and forged digests fail
+validation.
+
 The promoted validation-spine and canonical roadmap artifacts cover provenance,
 replay, counterexamples, toy sweeps, uncertainty summaries, benchmark rows,
 finite model-checking witnesses, interop reports, semantic gluing, dependency

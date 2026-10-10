@@ -10,6 +10,7 @@ from __future__ import annotations
 import math
 import os
 import time
+import copy
 from collections.abc import Iterator
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -18,7 +19,8 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.project.public_reference_git import remaining
-from infrastructure.reporting.native_source_external_admission import NativeSourceContext
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.reporting.native_source_external_admission import NativeSourceContext, _physical_directory
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
@@ -36,10 +38,34 @@ class _OriginalTool:
     completion: float
 
 
+def _stage_scope_nomination(
+    root: Path,
+    scope: str | None,
+    directory: Path | None,
+) -> tuple[str, Path, tuple[int, int]] | None:
+    """Observe optional paired DATA; this helper never constructs ownership."""
+    from infrastructure.project.public_acceptance_evidence import evidence_directory
+
+    if scope is None and directory is None:
+        return None
+    if not isinstance(scope, str) or scope not in PUBLIC_PROJECT_NAMES or not isinstance(directory, Path):
+        raise ValueError("native stage scope requires a paired exact public scope and directory nomination")
+    selected = evidence_directory(root, directory)
+    return scope, selected, _physical_directory(selected)
+
+
 class NativeProducerOperation:
     """One genuine live Source owner; tools come directly from actual ToolAPI."""
 
-    def __init__(self, source: NativeSourceContext, run_id: str, deadline: float) -> None:
+    def __init__(
+        self,
+        source: NativeSourceContext,
+        run_id: str,
+        deadline: float,
+        *,
+        scope: str | None = None,
+        directory: Path | None = None,
+    ) -> None:
         if not isinstance(source, NativeSourceContext) or not isinstance(run_id, str) or not run_id:
             raise ValueError("native producer requires genuine admitted Source and run identity")
         if type(deadline) not in (float, int) or not math.isfinite(deadline):
@@ -48,7 +74,9 @@ class NativeProducerOperation:
         self.run_id = run_id
         self.deadline = float(deadline)
         self.owner_pid = os.getpid()
+        self._stage_scope = _stage_scope_nomination(source.bindings.current_root, scope, directory)
         self._tools: dict[str, _OriginalTool] = {}
+        self._stage_children: dict[str, dict[str, Any]] = {}
         self._closed = False
 
     def verify(self, reader: SnapshotReader, *, run_id: str, deadline: float) -> None:
@@ -58,7 +86,16 @@ class NativeProducerOperation:
             raise ValueError("native producer run or original clock differs")
         remaining(self.deadline)
         self.source.verify_correspondence(self.source.reference, reader.root, reader, self.deadline)
+        if self._stage_scope is not None and _physical_directory(self._stage_scope[1]) != self._stage_scope[2]:
+            raise ValueError("native producer nominated stage scope directory changed physical identity")
         remaining(self.deadline)
+
+    def stage_scope_directory(self, scope: str) -> Path:
+        """Return the held directory only in the exact actual live public owner."""
+        self.verify(SnapshotReader(self.source.bindings.current_root), run_id=self.run_id, deadline=self.deadline)
+        if self._stage_scope is None or scope != self._stage_scope[0]:
+            raise ValueError("native stage requires this actual owner's exact nominated public scope directory")
+        return self._stage_scope[1]
 
     def _retain_actual_tool(
         self,
@@ -130,6 +167,60 @@ class NativeProducerOperation:
         validate_native_tool_data(raw, reader, original_deadline=self.deadline, original_completion=original.completion)
         self.verify(reader, run_id=run_id, deadline=self.deadline)
 
+    @property
+    def retained_tool_bindings(self) -> tuple[dict[str, str], ...]:
+        """Read copied DATA for actual ToolAPI events while this owner is live."""
+        self.verify(SnapshotReader(self.source.bindings.current_root), run_id=self.run_id, deadline=self.deadline)
+        return tuple({"path": tool.artifact_relative, "sha256": tool.artifact_sha256} for tool in self._tools.values())
+
+    @property
+    def stage_children(self) -> tuple[dict[str, str], ...]:
+        """Expose exact closed stage packets; these bindings create no authority."""
+        reader = SnapshotReader(self.source.bindings.current_root)
+        self.verify(reader, run_id=self.run_id, deadline=self.deadline)
+        bindings = []
+        for relative, item in self._stage_children.items():
+            held = reader.read(relative)
+            if held.sha256 != item["sha256"]:
+                raise ValueError("live native stage child packet changed after actual retention")
+            bindings.append({"path": relative, "sha256": held.sha256})
+        if not reader.unchanged():
+            raise ValueError("live native stage child packet changed during accessor readback")
+        return tuple(bindings)
+
+    def _retain_actual_stage_child(
+        self,
+        preparation: Any,
+        process_binding: dict[str, str],
+        packet_binding: dict[str, str],
+    ) -> None:
+        """Only the fixed factory closes real ToolAPI/Source/Code before retention."""
+        from infrastructure.reporting.native_stage_child import NativeStageChildPreparation
+
+        if type(preparation) is not NativeStageChildPreparation or preparation.owner is not self:
+            raise ValueError("native stage child retention requires the actual live fixed parent preparation")
+        reader = SnapshotReader(self.source.bindings.current_root, native_producer_operation=self)
+        preparation.verify_owner(reader)
+        process = reader.read(process_binding["path"])
+        self.validate_tool(process_binding, process.json_object(), reader, run_id=self.run_id)
+        packet = reader.read(packet_binding["path"])
+        if (
+            packet.sha256 != packet_binding["sha256"]
+            or packet.relative in self._stage_children
+            or packet.path != preparation.directory / "stage-child.json"
+        ):
+            raise ValueError("native stage packet is replaced, duplicated or belongs to another actual attempt")
+        value = packet.json_object()
+        preparation.verify_closed_packet(value, process_binding, reader)
+        self._stage_children[packet.relative] = {
+            "sha256": packet.sha256,
+            "value": copy.deepcopy(value),
+            "process_binding": dict(process_binding),
+        }
+        if not reader.unchanged():
+            raise ValueError("native stage packet changed during actual ToolAPI retention")
+        preparation.verify_owner(reader)
+
 
 _CURRENT: ContextVar[NativeProducerOperation | None] = ContextVar("template_native_producer", default=None)
 
@@ -142,7 +233,12 @@ def current_native_producer_operation() -> NativeProducerOperation | None:
 
 @contextmanager
 def native_producer_operation(
-    source: NativeSourceContext, *, run_id: str, deadline: float
+    source: NativeSourceContext,
+    *,
+    run_id: str,
+    deadline: float,
+    scope: str | None = None,
+    directory: Path | None = None,
 ) -> Iterator[NativeProducerOperation]:
     """Begin only from genuine admitted Source, and never start another clock."""
     from infrastructure.reporting.native_format_joint_source import _require_installed_sdk
@@ -150,7 +246,7 @@ def native_producer_operation(
     _require_installed_sdk(source.bindings.expected_implementation_bytes)
     if _CURRENT.get() is not None:
         raise ValueError("native producer cannot replace another live original owner")
-    operation = NativeProducerOperation(source, run_id, deadline)
+    operation = NativeProducerOperation(source, run_id, deadline, scope=scope, directory=directory)
     token = _CURRENT.set(operation)
     try:
         operation.verify(SnapshotReader(source.bindings.current_root), run_id=run_id, deadline=deadline)

@@ -66,6 +66,8 @@ def replay_browser_observation(
         admitted_source.fidelity["digest"] if admitted_source is not None else None
     ):
         raise ValueError("browser original admitted Source fidelity witness changed")
+    if raw.get("source_fidelity") != (None if admitted_source is None else admitted_source.fidelity):
+        raise ValueError("browser retained Source fidelity differs from actual independent Source admission")
     if admitted_source is not None and (deadline is None or env is None or metadata_source != admitted_source.metadata):
         raise ValueError("source-bound HTML replay requires caller clock/environment and separate exact config witness")
     if deadline is not None:
@@ -140,6 +142,7 @@ def replay_browser_observation(
     tools = raw.get("tools")
     if not isinstance(viewports, list) or not isinstance(tools, list) or len(viewports) != 2 or len(tools) != 2:
         raise ValueError("browser omitted complete declared reflow views")
+    fresh_viewports: list[dict[str, Any]] = []
     for width, viewport, tool in zip(BROWSER_POLICY["widths_px"], viewports, tools, strict=True):
         result_path = directory / f"browser-result-{width}.json"
         driver_result = _file(viewport.get("driver"), reader)
@@ -261,6 +264,7 @@ def replay_browser_observation(
         observation["blockers"].extend(figures["blockers"])
         observation["findings"].extend(localized["findings"])
         observation["blockers"].extend(localized["blockers"])
+        fidelity = None
         if admitted_source is not None:
             if deadline is None or env is None:
                 raise ValueError("HTML fidelity reader requires original caller clock/environment")
@@ -296,6 +300,15 @@ def replay_browser_observation(
                 raise ValueError("browser independently recomputed semantic/layout observations differ")
         if viewport.get("pixels") != localized:
             raise ValueError("browser independently recomputed localized pixels differ")
+        fresh_viewports.append(
+            {
+                **observation,
+                "width": width,
+                "pixels": localized,
+                "figures": figures,
+                "fidelity": fidelity,
+            }
+        )
     if raw.get("blockers") != sorted(
         set([*contract.blockers, *assets["blockers"], *(b for v in viewports for b in v["blockers"])])
     ):
@@ -311,7 +324,17 @@ def replay_browser_observation(
         admitted_source.close(root, reader, deadline=deadline)
     if deadline is not None:
         remaining_seconds(deadline)
-    return raw
+    return {
+        "status": expected_status,
+        "findings": [f for v in fresh_viewports for f in v["findings"]],
+        "blockers": sorted(
+            set([*contract.blockers, *assets["blockers"], *(b for v in fresh_viewports for b in v["blockers"])])
+        ),
+        "viewports": fresh_viewports,
+        "asset_contract": assets,
+        "source_fidelity": None if admitted_source is None else admitted_source.fidelity,
+        "source_metadata": metadata_source,
+    }
 
 
 def replay_browser_controls(
@@ -326,16 +349,34 @@ def replay_browser_controls(
     semantic: bool = False,
     deadline: float | None = None,
     env: dict[str, str] | None = None,
-) -> None:
+    scope: str | None = None,
+) -> dict[str, Any]:
     """Require real supervised control outcomes and independently replay their pixels."""
-    from infrastructure.reporting.native_format_acceptance_validation import _file, _process
+    from infrastructure.reporting.native_format_html_source_metadata import remaining_seconds
+
+    if deadline is None:
+        raise ValueError("browser control replay requires the original caller's finite clock")
+    remaining_seconds(deadline)
+    from infrastructure.reporting.native_format_acceptance_validation import _file
     from infrastructure.reporting.native_format_browser_oracles import (
         BROWSER_CONTROL_CODES,
         browser_control_bytes,
         browser_control_contract,
         require_browser_control_result,
     )
-    from infrastructure.reporting.native_format_portable_custody import producer_bootstrap
+    from infrastructure.reporting.native_format_joint_source import require_native_operation
+    from infrastructure.reporting.native_print_child_custody import (
+        BasicBrowserControlReaderOperation,
+        SemanticBrowserControlReaderOperation,
+    )
+
+    if scope is None:
+        raise ValueError("browser controls require the genuine enclosing public scope")
+    operation = require_native_operation(reader)
+    role = SemanticBrowserControlReaderOperation if semantic else BasicBrowserControlReaderOperation
+    context = role(operation.source, reader, records, scope=scope, run_id=run_id, deadline=deadline)
+    parent_reader = reader
+    reader = SnapshotReader(root, native_operation=operation, native_control_operation=context)
 
     require_result: Callable[[str, dict[str, Any]], int]
     if semantic:
@@ -345,15 +386,16 @@ def replay_browser_controls(
         )
 
         names, require_result, prefix = SEMANTIC_CONTROL_CODES, require_semantic_control_result, "browser-semantic"
-        module = "infrastructure.reporting.native_format_browser_semantic_controls"
     else:
         names, require_result, prefix = BROWSER_CONTROL_CODES, require_browser_control_result, "browser-control"
-        module = "infrastructure.reporting.native_format_browser_oracles"
     if [item.get("name") for item in records] != list(names):
         raise ValueError("browser negative-control suite is incomplete or reordered")
+    outcomes: list[dict[str, Any]] = []
     for item in records:
+        remaining_seconds(deadline)
         name = item["name"]
         leaf = directory / f"{prefix}-{name}"
+        context.child(item, reader)
         result = _file(item.get("artifact"), reader)
         if result.path != leaf / "control-observation.json":
             raise ValueError("browser control belongs to another supervision attempt")
@@ -392,28 +434,30 @@ def replay_browser_controls(
                 custody=custody,
                 runtime=runtime,
                 control=name,
+                deadline=deadline,
+                env=env,
             )
         code = require_result(name, raw["observation"])
         if raw.get("oracle_exit_code") != code or item.get("original_exit_code") != code:
             raise ValueError("browser control did not preserve its actual original oracle exit")
-        original_deadline = raw["observation"]["deadline_monotonic"]
-        command = producer_bootstrap(
-            custody,
-            root,
-            runtime,
-            module,
-            "--control",
-            name,
-            "--root",
-            custody["root"],
-            "--directory",
-            str(producer_path(custody, root, leaf)),
-            "--deadline",
-            str(original_deadline),
-            "--run-id",
-            run_id,
+        outcomes.append(
+            {
+                "name": name,
+                "original_exit_code": item["original_exit_code"],
+                "reconstructed_exit_code": code,
+                "intended_diagnostic": names[name],
+                "targets": [{"fixture": prefix, "name": name}],
+                "artifact": item["artifact"],
+            }
         )
-        process = _file(item.get("process_artifact"), reader)
-        if process.path != leaf / "control-process.json":
-            raise ValueError("browser supervision process receipt moved between controls")
-        _process(process.json_object(), run_id, command, code)
+        remaining_seconds(deadline)
+    if not reader.unchanged() or not parent_reader.unchanged():
+        raise ValueError("browser original child Source/native evidence changed during independent replay")
+    operation.verify(parent_reader)
+    remaining_seconds(deadline)
+    return {
+        "suite_id": "html_semantic" if semantic else "html",
+        "scope": scope,
+        "original_run_id": run_id,
+        "outcomes": outcomes,
+    }

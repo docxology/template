@@ -3,20 +3,20 @@
 from __future__ import annotations
 
 import json
-import shutil
-import tempfile
-import time
 from io import BytesIO
 from pathlib import Path
 from typing import Any, cast
 
-from infrastructure.reporting.native_format_portable_custody import producer_bootstrap, producer_path
+from infrastructure.reporting.native_format_portable_custody import producer_path
 from infrastructure.reporting.native_office_scientific_controls import (
     CONTROL_BIBLIOGRAPHY,
     CONTROL_CODES,
     CONTROL_SOURCE,
+    SCHEMA,
+    office_scientific_epub_arguments,
     mutate_office_scientific_package,
 )
+from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
@@ -34,6 +34,8 @@ def replay_office_scientific_controls(
     reader: SnapshotReader,
     *,
     run_id: str,
+    scope: str,
+    source: NativeSourceContext,
     custody: dict[str, str],
     runtime: dict[str, Any],
     versions: dict[str, dict[str, Any]],
@@ -41,7 +43,7 @@ def replay_office_scientific_controls(
     deadline: float,
     env: dict[str, str],
     original_epub_arguments: tuple[str, ...] = (),
-) -> None:
+) -> dict[str, Any]:
     """Retain original zero/negative exits and recompute source/native findings.
 
     ``original_epub_arguments`` comes from the admitted original supervision
@@ -50,7 +52,9 @@ def replay_office_scientific_controls(
     EPUB replay binds actual engine/JAR receipts to archived bytes.
     """
     from PIL import Image
-    from infrastructure.core.execution_boundary import run_bounded_subprocess
+    from infrastructure.reporting.native_format_current_pandoc import current_pandoc_reader
+    from infrastructure.reporting.native_print_child_custody import OfficeScientificControlReaderOperation
+    from infrastructure.reporting.native_tool_replay import validate_original_native_tool
     from infrastructure.reporting.native_format_acceptance_validation import _file, _raster, _tool
     from infrastructure.reporting.native_format_observer_source_replay import replay_office_conversion
     from infrastructure.reporting.native_epub_replay import replay_epub_conversion
@@ -62,19 +66,14 @@ def replay_office_scientific_controls(
 
     if kind not in {"docx", "epub"} or not isinstance(records, list) or len(records) != len(CONTROL_CODES):
         raise ValueError("portable scientific native suite omitted a required original control")
-    if kind == "docx" and original_epub_arguments:
-        raise ValueError("portable DOCX suite introduced unrelated original engine arguments")
-    options = list(original_epub_arguments[::2])
-    if (
-        len(original_epub_arguments) % 2
-        or len(set(options)) != len(options)
-        or any(option not in {"--epubcheck-jar", "--java-executable", "--frozen-epub-engine"} for option in options)
-    ):
-        raise ValueError("portable scientific EPUB original supervision arguments differ")
-    pandoc = shutil.which("pandoc", path=env.get("PATH"))
-    crossref = shutil.which("pandoc-crossref", path=env.get("PATH"))
-    if not pandoc or not crossref:
-        raise ValueError("portable scientific native replay requires actual current Pandoc/crossref")
+    if tuple(item.get("name") for item in records) != tuple(CONTROL_CODES):
+        raise ValueError("portable scientific native suite missing, duplicated or reordered a required control")
+    epub_arguments = office_scientific_epub_arguments(kind, original_epub_arguments)
+    parent_reader = reader
+    context = OfficeScientificControlReaderOperation(
+        source, parent_reader, records, scope=scope, run_id=run_id, deadline=deadline
+    )
+    reader = SnapshotReader(root, native_control_operation=context)
     image = Image.new("RGB", (64, 48), (255, 255, 255))
     for x in range(8, 56):
         for y in range(8, 40):
@@ -86,86 +85,43 @@ def replay_office_scientific_controls(
     def original_path(path):
         return str(producer_path(custody, root, path))
 
-    def actual(command: list[str], cwd: Path, retained: bytes) -> None:
-        remaining = deadline - time.monotonic()
-        if remaining <= 0:
-            raise TimeoutError("portable scientific native control replay expired")
-        outcome = run_bounded_subprocess(command, cwd=cwd, env=env, timeout=min(60.0, remaining))
-        if (
-            outcome.returncode != 0
-            or outcome.original_returncode != 0
-            or outcome.timed_out
-            or outcome.custody_refused
-            or json.loads(outcome.stdout) != json.loads(retained)
-        ):
-            raise ValueError("portable scientific native actual current reader differs")
-
+    outcomes: list[dict[str, Any]] = []
     for ordinal, (item, (name, required)) in enumerate(zip(records, CONTROL_CODES.items(), strict=True)):
-        _exact(item, {"kind", "name", "process_artifact", "artifact", "original_exit_code"})
-        leaf = directory / f"{kind}-scientific-control-{ordinal}"
+        _exact(
+            item,
+            {
+                "name",
+                "process_artifact",
+                "artifact",
+                "specification_artifact",
+                "closure_artifact",
+                "original_exit_code",
+            },
+        )
+        leaf = directory / f"{kind}-scientific-control-{ordinal:04d}"
         expected_exit = int(required is not None)
-        process = _file(item["process_artifact"], reader)
-        observation = _file(item["artifact"], reader)
+        authority = context.child(item, reader)
+        specification = authority["specification"]
         if (
-            item["kind"] != kind
+            specification["kind"] != kind
+            or specification["epub_arguments"] != list(epub_arguments)
+            or specification["caller_deadline_monotonic"] != original_deadline
+            or specification["directory"] != leaf.relative_to(root).as_posix()
             or item["name"] != name
             or type(item["original_exit_code"]) is not int
             or item["original_exit_code"] != expected_exit
-            or process.path != directory / f"{kind}-scientific-control-{ordinal}-process.json"
-            or observation.path != leaf / "observation.json"
         ):
-            raise ValueError("portable scientific native control original attempt differs")
-        original = _exact(
-            process.json_object(),
-            {
-                "schema_version",
-                "run_id",
-                "command",
-                "exit_code",
-                "original_exit_code",
-                "timed_out",
-                "custody_refused",
-                "stdout",
-                "stderr",
-                "diagnostic",
-            },
-        )
-        arguments = [
-            "--kind",
-            kind,
-            "--control",
-            name,
-            "--root",
-            custody["root"],
-            "--directory",
-            original_path(leaf),
-            "--deadline",
-            str(original_deadline),
-            "--run-id",
-            run_id,
-            *original_epub_arguments,
-        ]
-        wanted = producer_bootstrap(
-            custody, root, runtime, "infrastructure.reporting.native_office_scientific_controls", *arguments
-        )
-        if (
-            original["schema_version"] != "template-native-office-scientific-control-process-v1"
-            or original["run_id"] != run_id
-            or original["command"] != wanted
-            or original["diagnostic"] != ""
-            or original["timed_out"] is not False
-            or original["custody_refused"] is not False
-            or any(
-                type(original[key]) is not int or original[key] != expected_exit
-                for key in ("exit_code", "original_exit_code")
-            )
-        ):
-            raise ValueError("portable scientific native control original supervised exit differs")
+            raise ValueError("portable scientific native actual child scope/kind/engine/clock differs")
+        observation = _file(item["artifact"], reader)
+        fixture = leaf / "fixture"
         raw = _exact(
             observation.json_object(),
             {
                 "schema_version",
                 "run_id",
+                "scope",
+                "worker_pid",
+                "worker_platform",
                 "kind",
                 "source",
                 "source_package",
@@ -178,22 +134,25 @@ def replay_office_scientific_controls(
             },
         )
         if (
-            raw["schema_version"] != "template-native-office-scientific-controls-v1"
+            raw["schema_version"] != SCHEMA
             or raw["run_id"] != run_id
             or raw["kind"] != kind
+            or raw["scope"] != scope
+            or raw["worker_pid"] != authority["process"]["pid"]
+            or raw["worker_platform"] != specification["parent_platform"]
             or raw["control"] != name
             or type(raw["oracle_exit_code"]) is not int
             or raw["oracle_exit_code"] != expected_exit
         ):
             raise ValueError("portable scientific native source oracle differs")
-        source_dir = leaf / "source"
-        source = _file(raw["source"], reader)
+        source_dir = fixture / "source"
+        source_file = _file(raw["source"], reader)
         baseline = _file(raw["source_package"], reader)
         bibliography = reader.read((source_dir / "references.bib").relative_to(root).as_posix())
         figure = reader.read((source_dir / "control.png").relative_to(root).as_posix())
         if (
-            source.path != source_dir / "source.md"
-            or source.content != CONTROL_SOURCE.encode()
+            source_file.path != source_dir / "source.md"
+            or source_file.content != CONTROL_SOURCE.encode()
             or baseline.path != source_dir / f"baseline.{kind}"
             or bibliography.content != CONTROL_BIBLIOGRAPHY.encode()
             or figure.content != image_bytes
@@ -235,7 +194,7 @@ def replay_office_scientific_controls(
                 raise ValueError("portable scientific EPUB original archive epoch differs")
         elif raw["source_date_epoch"] is not None:
             raise ValueError("portable scientific DOCX introduced an EPUB epoch")
-        base = [original_path(source.path), "--from=markdown+yaml_metadata_block"]
+        base = [original_path(source_file.path), "--from=markdown+yaml_metadata_block"]
         if not isinstance(raw["source_tools"], list) or len(raw["source_tools"]) != 3:
             raise ValueError("portable scientific native source tool evidence omitted")
         specifications = (
@@ -257,22 +216,28 @@ def replay_office_scientific_controls(
         names = ("baseline",) if name == "baseline" else ("baseline", name)
         if not isinstance(raw["controls"], list) or len(raw["controls"]) != len(names):
             raise ValueError("portable scientific native control omitted positive counterpart")
-        with tempfile.TemporaryDirectory(prefix="office-scientific-replay-") as private:
-            work = Path(private)
-            local_source = work / "source.md"
-            local_source.write_bytes(source.content)
-            local_bib = work / "references.bib"
-            local_bib.write_bytes(bibliography.content)
-            (work / "control.png").write_bytes(image_bytes)
+        checked_rows: list[dict[str, Any]] = []
+        with current_pandoc_reader(
+            root, parent_reader, env=env, deadline=deadline, purpose=f"office-scientific-{kind}-{name}", crossref=True
+        ) as current:
+            work = current.runtime.directory
+            local_source = current.runtime.freeze("source.md", source_file.content)
+            local_bib = current.runtime.freeze("references.bib", bibliography.content)
+            current.runtime.freeze("control.png", image_bytes)
+
+            def actual(arguments: list[str], retained: bytes, purpose: str) -> None:
+                original = current.tool("pandoc", arguments, purpose)
+                if json.loads(original["stdout"]) != json.loads(retained):
+                    raise ValueError("portable scientific native actual current Source-owned reader differs")
+
             local_filters = []
             for index, data in enumerate(current_filters):
-                path = work / f"filter-{index}.lua"
-                path.write_bytes(data)
+                path = current.runtime.freeze(f"filter-{index}.lua", data)
                 local_filters.extend(["--lua-filter", str(path)])
             current_common = [
                 *local_filters,
                 "--filter",
-                crossref,
+                str(current.crossref),
                 "--citeproc",
                 f"--bibliography={local_bib}",
                 f"--resource-path={work}",
@@ -283,13 +248,12 @@ def replay_office_scientific_controls(
             if kind == "epub":
                 current_common.append(f"--metadata=identifier:{_EPUB_IDENTIFIER_PLACEHOLDER}")
             actual(
-                [pandoc, str(local_source), "--from=markdown+yaml_metadata_block", "--to=json", "--standalone"],
-                work,
+                [str(local_source), "--from=markdown+yaml_metadata_block", "--to=json", "--standalone"],
                 source_ast,
+                "current-office-scientific-source",
             )
             actual(
                 [
-                    pandoc,
                     str(local_source),
                     "--from=markdown+yaml_metadata_block",
                     "--to=json",
@@ -297,8 +261,8 @@ def replay_office_scientific_controls(
                     f"--metadata=office-native-target:{kind}",
                     *current_common,
                 ],
-                work,
                 filtered_ast,
+                "current-office-scientific-filtered",
             )
             positive = None
             for row, control in zip(raw["controls"], names, strict=True):
@@ -308,13 +272,18 @@ def replay_office_scientific_controls(
                 if row["name"] != control or row["required_finding"] != CONTROL_CODES[control]:
                     raise ValueError("portable scientific native control source requirement differs")
                 package = _file(row["package"], reader)
-                control_leaf = leaf / control
+                control_leaf = fixture / control
                 if package.path != control_leaf / f"control.{kind}":
                     raise ValueError("portable scientific native control package belongs to another attempt")
-                mutated = work / f"mutated.{kind}"
-                mutated.write_bytes(mutate_office_scientific_package(baseline.content, kind, control))
+                candidate = mutate_office_scientific_package(baseline.content, kind, control)
                 if kind == "epub":
-                    _normalize_epub_archive(mutated, source_date_epoch=cast(int, raw["source_date_epoch"]))
+                    from infrastructure.core.files.secure_write import atomic_write_bytes_confined
+
+                    normalization = work / f"normalize-{control}.epub"
+                    atomic_write_bytes_confined(root, normalization, candidate, mode=0o600)
+                    _normalize_epub_archive(normalization, source_date_epoch=cast(int, raw["source_date_epoch"]))
+                    candidate = normalization.read_bytes()
+                mutated = current.runtime.freeze(f"mutated-{control}.{kind}", candidate)
                 if mutated.read_bytes() != package.content:
                     raise ValueError("portable scientific native candidate differs from actual source-defined mutation")
                 readback = row["readback"]
@@ -336,7 +305,11 @@ def replay_office_scientific_controls(
                 )
                 if tool["stdout"].encode() != parsed.content:
                     raise ValueError("portable scientific native original reader stdout differs")
-                actual([pandoc, str(mutated), f"--from={kind}", "--to=json", "--standalone"], work, parsed.content)
+                actual(
+                    [str(mutated), f"--from={kind}", "--to=json", "--standalone"],
+                    parsed.content,
+                    f"current-office-scientific-readback-{control}",
+                )
                 survival = inspect_office_source_survival(
                     source_ast,
                     filtered_ast,
@@ -359,6 +332,12 @@ def replay_office_scientific_controls(
                         read_artifact=lambda binding: _file(binding, reader).content,
                         producer_path=lambda relative: original_path(root / relative),
                         run_id=run_id,
+                        authenticate_tool=lambda binding, raw: validate_original_native_tool(
+                            binding,
+                            raw,
+                            reader,
+                            run_id=run_id,
+                        ),
                     )
                     pdf = _file(native["conversion"]["pdf"], reader)
                 _raster(native, pdf, 0, native_leaf, reader, run_id, versions, custody)
@@ -385,5 +364,26 @@ def replay_office_scientific_controls(
                     or (control in {"tiny-math", "invisible-math"} and survival["status"] != "observed")
                 ):
                     raise ValueError("portable scientific native independently reconstructed original finding differs")
-    if not reader.unchanged():
+                checked_rows.append(
+                    {
+                        "control": control,
+                        "source_survival": survival,
+                        "projection": projection,
+                        "diagnostics": sorted(codes),
+                    }
+                )
+        outcomes.append(
+            {
+                "name": name,
+                "original_exit_code": item["original_exit_code"],
+                "reconstructed_exit_code": 0 if required is None else 1,
+                "intended_diagnostic": required,
+                "targets": [{"fixture": "scientific-" + kind, "control": row["control"]} for row in checked_rows],
+                "rows": checked_rows,
+                "artifact": item["artifact"],
+            }
+        )
+    context.verify(reader)
+    if not reader.unchanged() or not parent_reader.unchanged():
         raise ValueError("portable scientific native admitted custody changed")
+    return {"suite_id": kind + "_scientific", "scope": scope, "original_run_id": run_id, "outcomes": outcomes}

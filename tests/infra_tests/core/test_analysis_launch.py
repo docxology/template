@@ -67,7 +67,7 @@ def test_actual_leaf_exit_and_source_runtime_evidence(tmp_path: Path, code: int,
     result, receipt = _launch(repo, project, script)
     assert result.status is state and result.child_exit_code == code
     assert result.attempt_exit_codes == (code,)
-    assert receipt["schema"] == "template-analysis-leaf/1"
+    assert receipt["schema"] == "template-analysis-leaf/3"
     assert receipt["stage_key"] == "analysis:scripts/leaf.py"
     assert receipt["plan_digest"] == "a" * 64
     assert receipt["outcome"] == json.loads(json.dumps(result.to_dict()))
@@ -76,6 +76,13 @@ def test_actual_leaf_exit_and_source_runtime_evidence(tmp_path: Path, code: int,
     packet = receipt["worker"]
     assert packet["completion"]["request_digest"] == canonical_digest(packet["request"])
     assert packet["completion"]["actual_runtime"]["executable"] == str(Path(sys.executable).absolute())
+    assert packet["completion"]["data_before_digest"] == packet["request"]["data_before"]["content_digest"]
+    assert packet["original_process"]["pid"] > 0
+    assert packet["original_process"]["original_exit_code"] == code
+    assert (
+        packet["original_process"]["observed_completion_monotonic"]
+        < packet["original_process"]["original_deadline_monotonic"]
+    )
     if code in {124, 130}:
         assert "script exited" in result.diagnostic
 
@@ -97,6 +104,37 @@ def test_actual_selected_runtime_has_separate_identity(tmp_path: Path) -> None:
     assert packet["request"]["runtime_binding"]["executable"] == str(project / ".venv/bin/python")
     assert packet["completion"]["actual_runtime"]["python_version"].startswith(str(selected_minor) + ".")
     assert packet["request"]["source_content_digest"] == receipt["controller_before"]["source_content_digest"]
+
+
+def test_actual_stage_retains_incoming_and_written_output_bodies_with_fresh_nonce(tmp_path: Path) -> None:
+    repo, project, script = _project(
+        tmp_path,
+        "import json\nfrom pathlib import Path\n"
+        "root=Path(__file__).parents[1]\n"
+        "value=root.joinpath('data/input.csv').read_text().splitlines()[1]\n"
+        "root.joinpath('output/data/manuscript_variables.json').write_text(json.dumps({'VALUE':value}))\n",
+    )
+    (project / "data").mkdir()
+    (project / "data/input.csv").write_text("value\n-2.50\n")
+    (project / "output/data").mkdir()
+    target = project / "output/data/manuscript_variables.json"
+    old = b'{"VALUE":"2.50"}'
+    target.write_bytes(old)
+    first, receipt = _launch(repo, project, script)
+    assert first.status is StageStatus.SUCCEEDED
+    packet = receipt["worker"]
+    incoming = {row["path"]: row for row in packet["request"]["data_before"]["records"]}
+    outgoing = {row["path"]: row for row in packet["completion"]["data_after"]["records"]}
+    name = "output/data/manuscript_variables.json"
+    assert project.joinpath(incoming[name]["retained_path"]).read_bytes() == old
+    assert project.joinpath(outgoing[name]["retained_path"]).read_bytes() == target.read_bytes()
+    assert incoming[name]["sha256"] != outgoing[name]["sha256"]
+    assert incoming[name]["native_identity"] != outgoing[name]["native_identity"]
+    assert packet["original_process"]["analysis_nonce"] == packet["completion"]["analysis_nonce"]
+    second, later = _launch(repo, project, script)
+    assert second.status is StageStatus.SUCCEEDED
+    assert later["worker"]["request"]["analysis_nonce"] != packet["request"]["analysis_nonce"]
+    assert project.joinpath(incoming[name]["retained_path"]).read_bytes() == old
 
 
 def test_same_binary_distinct_lexical_venvs_are_distinct(tmp_path: Path) -> None:
@@ -156,7 +194,8 @@ def test_restored_script_helper_bytes_cannot_launder_actual_executed_code(tmp_pa
         "import os\nfrom pathlib import Path\n"
         "helper=Path(__file__).with_name('script_helper.py')\n"
         "original=helper.read_bytes()\nobserved=helper.stat()\n"
-        "helper.write_text(\"from pathlib import Path\\nPath(__file__).parents[1].joinpath('output/aba-ran').write_text('actual')\\nVALUE=17\\n\")\n"
+        'helper.write_text("from pathlib import Path\\n'
+        "Path(__file__).parents[1].joinpath('output/aba-ran').write_text('actual')\\nVALUE=17\\n\")\n"
         "import script_helper\nassert script_helper.VALUE == 17\n"
         "helper.write_bytes(original)\nos.utime(helper,ns=(observed.st_atime_ns,observed.st_mtime_ns))\n",
     )

@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 from ..core.optimizer import gradient_descent, make_quadratic_problem
+from ..core._runtime import read_analysis_bytes, save_analysis_figure
 from ..core.sweeps import stability_error_matrix
 from .viz_config import VIZ_CONFIG
 from ._common import experiment_config, get_logger, project_root
@@ -50,8 +52,7 @@ def generate_stability_visualization(stability_path: Any) -> Any:
     cbar = fig.colorbar(im, ax=ax1, fraction=0.046, pad=0.04)
     cbar.set_label("log₁₀ |error|", fontsize=10)
 
-    with open(stability_path, "r") as f:
-        stability_data = json.load(f)
+    stability_data = json.loads(read_analysis_bytes(project_root(), Path(stability_path)))
 
     score = stability_data["stability_score"]
     ax2.barh([0], [score], color=VIZ_CONFIG["colors"]["success"], alpha=0.85, height=0.4)
@@ -74,7 +75,8 @@ def generate_stability_visualization(stability_path: Any) -> Any:
     output_dir = project_root() / "output" / "figures"
     output_dir.mkdir(parents=True, exist_ok=True)
     plot_path = output_dir / "stability_analysis.png"
-    plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
+    if not save_analysis_figure(project_root(), plot_path, fig):
+        plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
 
     logger.info("Saved stability visualization to: %s", plot_path)
@@ -158,7 +160,8 @@ def generate_benchmark_visualization(benchmark_path: Any) -> Any:
     output_dir = project_root() / "output" / "figures"
     output_dir.mkdir(parents=True, exist_ok=True)
     plot_path = output_dir / "performance_benchmark.png"
-    plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
+    if not save_analysis_figure(project_root(), plot_path, fig):
+        plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
 
     logger.info("Saved benchmark visualization to: %s", plot_path)

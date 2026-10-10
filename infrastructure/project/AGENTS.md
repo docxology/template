@@ -38,7 +38,7 @@ Single source of truth for which projects are public and which paths CI checks. 
 - `public_project_names(repo_root)` / `public_project_infos(repo_root)` - resolve roster to names / `ProjectInfo` objects present in the checkout
 - `public_ci_lint_paths(repo_root)` - public source, tests, scripts, and notebooks fed to Ruff
 - `public_ci_source_paths(repo_root)` - import-safe public `src/` paths fed to mypy
-- `main(argv=None)` - CLI entry point for `lint-paths`, `source-paths`, and roster subcommands
+- `main(argv=None)` - CLI entry point for `lint-paths`, `source-paths`, `ci-paths`, and roster subcommands. `ci-paths` prints the same lint/source scopes as ordered `lint_paths=` / `source_paths=` lines for direct CI output redirection.
 
 ### Public Template Contract (`public_template_contract.py`)
 

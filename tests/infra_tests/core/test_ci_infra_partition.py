@@ -91,16 +91,25 @@ def _fixture(tmp_path: Path) -> Path:
 def _native(root: Path, program: str, *, seconds: float = 90.0):
     bootstrap = (
         "import json, pathlib, sys\n"
-        f"sys.path.insert(0, {str(SDK_ROOT)!r})\n"
-        "import pytest\nimport infrastructure.core.testing.ci_infra_shard_plugin as plugin\n"
+        "sys.path.insert(0, "
+        f"{str(SDK_ROOT)!r}"
+        ")\n"
+        "import pytest\n"
+        "import infrastructure.core.testing.ci_infra_shard_plugin as plugin\n"
         "from infrastructure.core.testing.ci_infra_partition import INFRA_MARKERS\n"
-        "from infrastructure.core.testing.ci_infra_coverage import export_shard, merge_shards\n"
-        f"assert pathlib.Path(plugin.__file__).resolve() == pathlib.Path({str(SDK_ROOT)!r})/'infrastructure/core/testing/ci_infra_shard_plugin.py'\n"
-        f"root = pathlib.Path({str(root)!r})\n"
+        "from infrastructure.core.testing.ci_infra_coverage import export_shard, mer"
+        "ge_shards\n"
+        "assert pathlib.Path(plugin.__file__).resolve() == pathlib.Path("
+        f"{str(SDK_ROOT)!r}"
+        ")/'infrastructure/core/testing/ci_infra_shard_plugin.py'\n"
+        "root = pathlib.Path("
+        f"{str(root)!r}"
+        ")\n"
         "def command(shard):\n"
-        "    return ['-c', str(root/'pyproject.toml'), str(root/'tests/infra_tests'), '-q', '-p', plugin.__name__, '--infra-ci-shard', str(shard), '-m', INFRA_MARKERS]\n"
-        + program
-    )
+        "    return ['-c', str(root/'pyproject.toml'), str(root/'tests/infra_tests')"
+        ", '-q', '-p', plugin.__name__, '--infra-ci-shard', str(shard), '-m', INFRA_"
+        "MARKERS]\n"
+    ) + program
     return run_with_policy(
         [sys.executable, "-I", "-c", bootstrap],
         cwd=root,
@@ -177,37 +186,52 @@ def test_actual_serial_shards_execute_exact_union_and_enforce_real_branch_covera
     root = _fixture(tmp_path)
     result = _native(
         root,
-        "for shard in range(4):\n"
-        "    status = pytest.main(command(shard) + ['--cov='+str(root/'infrastructure'), '--cov-report=', '--cov-fail-under=0'])\n"
-        "    assert status == 0, status\n"
-        "    export_shard(root, shard)\n"
-        "assert merge_shards(root) >= 60.0\n"
-        "from coverage import Coverage\n"
-        "import hashlib, importlib.util\n"
-        "foreign = root.parent/'foreign-owned-source.py'\n"
-        "foreign.write_text('def selected(value):\\n    if value: return 19\\n    return 23\\n')\n"
-        "capture = Coverage(data_file=str(root/'foreign.coverage'), branch=True, source=[str(root.parent)])\n"
-        "capture.start()\n"
-        "spec = importlib.util.spec_from_file_location('owned_foreign_calculation', foreign)\n"
-        "calculation = importlib.util.module_from_spec(spec); spec.loader.exec_module(calculation)\n"
-        "assert calculation.selected(True)==19 and calculation.selected(False)==23\n"
-        "capture.stop(); capture.save()\n"
-        "artifact = root/'output/readiness/ordinary-infra-ci/coverage-data/infra-coverage-shard-0'\n"
-        "original_data = (artifact/'coverage.data').read_bytes(); original_record = (artifact/'selection.json').read_bytes()\n"
-        "data = (root/'foreign.coverage').read_bytes(); (artifact/'coverage.data').write_bytes(data)\n"
-        "record = json.loads(original_record); record['coverage_sha256']=hashlib.sha256(data).hexdigest()\n"
-        "(artifact/'selection.json').write_text(json.dumps(record))\n"
-        "def foreign_open_guard(event, arguments):\n"
-        "    if event == 'open' and arguments and isinstance(arguments[0], str) and pathlib.Path(arguments[0]) == foreign:\n"
-        "        raise AssertionError('merge attempted to read foreign source')\n"
-        "sys.addaudithook(foreign_open_guard)\n"
-        "try: foreign.read_text()\n"
-        "except AssertionError as error: assert 'read foreign source' in str(error)\n"
-        "else: raise AssertionError('genuine open audit control was not active')\n"
-        "try: merge_shards(root)\n"
-        "except ValueError as error: assert 'foreign source path' in str(error), str(error)\n"
-        "else: raise AssertionError('foreign recorded source authorized coverage merge')\n"
-        "(artifact/'coverage.data').write_bytes(original_data); (artifact/'selection.json').write_bytes(original_record)\n",
+        (
+            "for shard in range(4):\n"
+            "    status = pytest.main(command(shard) + ['--cov='+str(root/'infrastructur"
+            "e'), '--cov-report=', '--cov-fail-under=0'])\n"
+            "    assert status == 0, status\n"
+            "    export_shard(root, shard)\n"
+            "assert merge_shards(root) >= 60.0\n"
+            "from coverage import Coverage\n"
+            "import hashlib, importlib.util\n"
+            "foreign = root.parent/'foreign-owned-source.py'\n"
+            "foreign.write_text('def selected(value):\\n    if value: return 19\\n    retu"
+            "rn 23\\n')\n"
+            "capture = Coverage(data_file=str(root/'foreign.coverage'), branch=True, sou"
+            "rce=[str(root.parent)])\n"
+            "capture.start()\n"
+            "spec = importlib.util.spec_from_file_location('owned_foreign_calculation', "
+            "foreign)\n"
+            "calculation = importlib.util.module_from_spec(spec); spec.loader.exec_modul"
+            "e(calculation)\n"
+            "assert calculation.selected(True)==19 and calculation.selected(False)==23\n"
+            "capture.stop(); capture.save()\n"
+            "artifact = root/'output/readiness/ordinary-infra-ci/coverage-data/infra-cov"
+            "erage-shard-0'\n"
+            "original_data = (artifact/'coverage.data').read_bytes(); original_record = "
+            "(artifact/'selection.json').read_bytes()\n"
+            "data = (root/'foreign.coverage').read_bytes(); (artifact/'coverage.data').w"
+            "rite_bytes(data)\n"
+            "record = json.loads(original_record); record['coverage_sha256']=hashlib.sha"
+            "256(data).hexdigest()\n"
+            "(artifact/'selection.json').write_text(json.dumps(record))\n"
+            "def foreign_open_guard(event, arguments):\n"
+            "    if event == 'open' and arguments and isinstance(arguments[0], str) and "
+            "pathlib.Path(arguments[0]) == foreign:\n"
+            "        raise AssertionError('merge attempted to read foreign source')\n"
+            "sys.addaudithook(foreign_open_guard)\n"
+            "try: foreign.read_text()\n"
+            "except AssertionError as error: assert 'read foreign source' in str(error)\n"
+            "else: raise AssertionError('genuine open audit control was not active')\n"
+            "try: merge_shards(root)\n"
+            "except ValueError as error: assert 'foreign source path' in str(error), str"
+            "(error)\n"
+            "else: raise AssertionError('foreign recorded source authorized coverage mer"
+            "ge')\n"
+            "(artifact/'coverage.data').write_bytes(original_data); (artifact/'selection"
+            ".json').write_bytes(original_record)\n"
+        ),
     )
     assert result.returncode == 0, result.stderr + result.stdout
     assert sorted((root / "executed.txt").read_text().splitlines()) == [f"case-{index}" for index in range(4)]
@@ -376,7 +400,7 @@ def test_ci_workflow_consumes_partition_and_keeps_the_union_gate_required() -> N
     emit = next(step["run"] for step in jobs["detect-projects"]["steps"] if step.get("id") == "matrix")
     assert "scripts/gates/infra_ci_partition.py --matrix" in emit
     infra = jobs["test-infra"]
-    assert infra["timeout-minutes"] == 30 and infra["strategy"]["fail-fast"] is False
+    assert infra["timeout-minutes"] == 90 and infra["strategy"]["fail-fast"] is False
     execution = next(step for step in infra["steps"] if step.get("name") == "Run infrastructure tests")
     assert "--infra-ci-shard" in execution["run"] and "--dist loadscope" in execution["run"]
     assert INFRA_MARKERS in execution["run"] and "--timeout=120" in execution["run"]

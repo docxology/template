@@ -182,6 +182,8 @@ def main(argv: list[str] | None = None) -> int:
                 str(mirror),
                 "--expected-platform",
                 args.expected_platform,
+                "--current-analysis-root",
+                str(scratch / "native-analysis-current"),
                 "--evidence-dir",
                 str(mirror / "output/readiness/native"),
                 "--hosted-transport-dir",
@@ -206,6 +208,8 @@ def main(argv: list[str] | None = None) -> int:
             arguments = (
                 "--repo-root",
                 str(mirror),
+                "--current-analysis-root",
+                str(scratch / "native-analysis-current"),
                 "--revision",
                 args.source_commit,
                 "--repository",
@@ -217,6 +221,15 @@ def main(argv: list[str] | None = None) -> int:
                 *(item for receipt in args.root_receipt for item in ("--root-receipt", receipt)),
                 *(item for receipt in args.auxiliary_receipt for item in ("--auxiliary-receipt", receipt)),
             )
+            if args.epubcheck_jar is not None or args.java_executable is not None:
+                if args.epubcheck_jar is None or args.java_executable is None:
+                    raise ValueError("actual EPUB tools require both explicit nominations")
+                arguments += (
+                    "--epubcheck-jar",
+                    str(args.epubcheck_jar),
+                    "--java-executable",
+                    str(args.java_executable),
+                )
             if args.stage_bundle:
                 arguments += ("--stage-bundle",)
             role = NATIVE_READER_MODULE
@@ -250,13 +263,14 @@ def main(argv: list[str] | None = None) -> int:
             "native_transport": str(mirror / "output/readiness/native-transport") if args.mode == "original" else None,
         }
         if args.mode in {"original", "reader"}:
-            print(
+            sys.stdout.write(
                 "transport_directory="
                 + str(
                     mirror
                     / "output/readiness"
                     / ("native-transport" if args.mode == "original" else "candidate-transport")
                 )
+                + "\n"
             )
         atomic_write_bytes_confined(
             scratch,
@@ -264,8 +278,9 @@ def main(argv: list[str] | None = None) -> int:
             (json.dumps(record, sort_keys=True) + "\n").encode(),
             mode=0o600,
         )
-        print(
+        sys.stdout.write(
             json.dumps({"original_os_exit": result["original_exit_code"], "current_root": str(mirror)}, sort_keys=True)
+            + "\n"
         )
         return 0
     except (NativeInstalledInvocationFailure, NativePreparationFailure) as error:
@@ -287,13 +302,13 @@ def main(argv: list[str] | None = None) -> int:
                 mode=0o600,
             )
         except (OSError, ValueError, TypeError):
-            print("failed launch summary could not be retained; original tool files remain", file=sys.stderr)
-        print("installed native original refused; genuine process/raw evidence retained", file=sys.stderr)
+            sys.stderr.write("failed launch summary could not be retained; original tool files remain" + "\n")
+        sys.stderr.write("installed native original refused; genuine process/raw evidence retained" + "\n")
         return _signed_failure(error.result)
     except KeyboardInterrupt:
         return 130
     except (OSError, ValueError, TypeError, RuntimeError) as error:
-        print("installed native Source/Code admission refused: " + str(error), file=sys.stderr)
+        sys.stderr.write("installed native Source/Code admission refused: " + str(error) + "\n")
         return 124 if time.monotonic() >= deadline else 1
 
 

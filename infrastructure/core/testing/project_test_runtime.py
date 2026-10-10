@@ -359,7 +359,13 @@ def build_audited_project_test_command(
         "   if _exit in (0,75): _exit=75\n"
         " raise SystemExit(_exit)\n"
     )
-    return (str(selected), "-I", "-c", source, *args)
+    # Audited plugin code must execute exactly as compiled from its held Source.
+    # Plain assertions still run, including assertions in tests and conftest.
+    entry_args = args
+    if module == "pytest":
+        option_end = args.index("--") if "--" in args else len(args)
+        entry_args = (*args[:option_end], "--assert=plain", *args[option_end:])
+    return (str(selected), "-I", "-c", source, *entry_args)
 
 
 __all__ = [

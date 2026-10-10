@@ -48,7 +48,7 @@ from roadmap_tracks.sheaf_tracks_io import (
     _pipeline_tracks,
     _registry_tracks,
     _sha256,
-    _source_commit,
+    _source_input_sha256,
 )
 from roadmap_tracks.sheaf_tracks_registry import (
     CANONICAL_ARTIFACTS,
@@ -96,7 +96,7 @@ __all__ = [
     "_provenance_context",
     "_registry_tracks",
     "_sha256",
-    "_source_commit",
+    "_source_input_sha256",
     "build_adversarial_audit",
     "build_artifact_contract_index",
     "build_artifact_provenance",

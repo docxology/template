@@ -32,7 +32,9 @@ def _compact(text: str) -> str:
     return "".join(text_tokens(text))
 
 
-def _validate_original_tools(raw: dict[str, Any], reader: SnapshotReader, fresh: dict[str, Any]) -> None:
+def _validate_original_tools(
+    raw: dict[str, Any], reader: SnapshotReader, fresh: dict[str, Any], fresh_reader: SnapshotReader
+) -> None:
     bindings = raw.get("tool_artifacts")
     if not isinstance(bindings, list) or len(bindings) != 14:
         raise ValueError("original citation reference omitted its complete actual process cohort")
@@ -59,7 +61,7 @@ def _validate_original_tools(raw: dict[str, Any], reader: SnapshotReader, fresh:
         if snapshot.sha256 != binding["sha256"]:
             raise ValueError("original citation tool receipt bytes changed")
         process = snapshot.json_object()
-        new_process = reader.read(fresh_binding["path"]).json_object()
+        new_process = fresh_reader.read(fresh_binding["path"]).json_object()
         executable, digest, command = (
             process.get("executable"),
             process.get("executable_sha256"),
@@ -81,11 +83,31 @@ def _validate_original_tools(raw: dict[str, Any], reader: SnapshotReader, fresh:
             or not command
             or not isinstance(executable, str)
             or not Path(executable).is_absolute()
-            or command[0] != executable
             or not isinstance(digest, str)
             or not re.fullmatch(r"[0-9a-f]{64}", digest)
         ):
             raise ValueError("original citation tool did not actually execute the required successful process")
+        native_binding = process.get("native_process_artifact")
+        if not isinstance(native_binding, dict) or set(native_binding) != {"path", "sha256"}:
+            raise ValueError("original citation lacks its bound actual native process nomination")
+        native_snapshot = reader.read(native_binding["path"])
+        if native_snapshot.sha256 != native_binding["sha256"]:
+            raise ValueError("original citation actual native process nomination bytes changed")
+        native = native_snapshot.json_object()
+        nomination = native.get("nomination")
+        preserve = name == "xelatex"
+        if (
+            not isinstance(nomination, dict)
+            or set(nomination) != {"tool", "path", "resolved_path"}
+            or nomination["tool"] != name
+            or nomination["resolved_path"] != executable
+            or not isinstance(nomination["path"], str)
+            or not Path(nomination["path"]).is_absolute()
+            or native.get("launcher_preserved") is not preserve
+            or native.get("command") != command
+            or command[0] != (nomination["path"] if preserve else executable)
+        ):
+            raise ValueError("original citation argv differs from its Source-selected actual native launcher")
         for key in ("executable_observation_before", "executable_observation_after"):
             if process.get(key) != {
                 "schema_version": "template-native-executable-observation-v1",
@@ -200,6 +222,27 @@ def replay_natbib_reference(
     if not isinstance(original.get("run_id"), str) or not original["run_id"]:
         raise ValueError("original citation reference lacks original run identity")
     fresh = observe_natbib_reference(root, directory, **source_arguments)
+    return validate_natbib_reference_reproduction(original, reader, fresh)
+
+
+def validate_natbib_reference_reproduction(
+    original: dict[str, Any],
+    reader: SnapshotReader,
+    fresh: dict[str, Any],
+    *,
+    fresh_reader: SnapshotReader | None = None,
+) -> dict[str, Any]:
+    """Validate an already genuine fresh reference; DATA grants no ownership.
+
+    The enclosing caller authenticates both actual Source execution cohorts.
+    Sharing this predicate avoids a second identical native citation compile.
+    """
+    if original.get("schema_version") != CITATION_SCHEMA or original.get("policy_digest") != canonical_digest(
+        CITATION_POLICY
+    ):
+        raise ValueError("original citation reference policy/schema changed")
+    if not isinstance(original.get("run_id"), str) or not original["run_id"]:
+        raise ValueError("original citation reference lacks original run identity")
     for key in ("artifact_id", "policy_digest", "inputs", "occurrences", "nonvisible", "blockers"):
         if original.get(key) != fresh[key]:
             raise ValueError(f"current source-only citation reference differs from original {key}")
@@ -207,7 +250,7 @@ def replay_natbib_reference(
         if original.get("tool_artifacts") != [] or original.get("dependency_custody") is not None:
             raise ValueError("citation-free original source claims unexecuted process/dependency evidence")
         return fresh
-    _validate_original_tools(original, reader, fresh)
+    _validate_original_tools(original, reader, fresh, fresh_reader if fresh_reader is not None else reader)
     old = original.get("dependency_custody")
     current = fresh["dependency_custody"]
     if (

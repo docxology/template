@@ -273,7 +273,7 @@ def main() -> None:
     parser.add_argument("--deadline", type=float, required=True)
     args = parser.parse_args()
     request = json.loads(read_bytes_confined(args.request.parent, args.request, max_bytes=8 * 1024 * 1024))
-    print(json.dumps(probe_platform_fonts(request, deadline=args.deadline), sort_keys=True))
+    sys.stdout.write(json.dumps(probe_platform_fonts(request, deadline=args.deadline), sort_keys=True) + "\n")
 
 
 def _probe_source_web_fonts(request: dict[str, Any], *, deadline: float) -> dict[str, Any]:

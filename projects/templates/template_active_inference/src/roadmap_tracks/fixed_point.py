@@ -170,6 +170,26 @@ def _generation_input_rels(root: Path) -> list[str]:
     return sorted(rels)
 
 
+def _source_input_sha256(root: Path) -> str:
+    """Bind the exact confined generation-input file inventory and bytes.
+
+    Directory entries establish confinement while walking; they are not input
+    files. Ignored runtime outputs, bytecode directories and Git metadata never
+    enter this identity. Missing declared inputs remain explicit state tokens.
+    """
+    root = root.resolve()
+    digest = hashlib.sha256(b"template-active-inference-source-inputs-v1\0")
+    for rel in _generation_input_rels(root):
+        state = _confined_path_state(root, rel, allow_directory=True)
+        if state == "directory":
+            continue
+        digest.update(rel.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(state.encode("ascii"))
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
 def _observed_output_rels(root: Path) -> list[str]:
     """Derive the complete positive, negative, and hydrated output inventory from SSOTs."""
     from contracts.artifact_contract import VARIABLE_ARTIFACTS
@@ -274,16 +294,10 @@ def _write_contract_artifacts(root: Path) -> dict[str, Path]:
 
 
 def _fingerprint(root: Path) -> str:
-    from roadmap_tracks.sheaf_tracks_io import _source_commit
-
     digest = hashlib.sha256()
-    for rel in _generation_input_rels(root):
-        state = _confined_path_state(root, rel, allow_directory=True)
-        digest.update(b"input\0")
-        digest.update(rel.encode("utf-8"))
-        digest.update(b"\0")
-        digest.update(state.encode("ascii"))
-        digest.update(b"\0")
+    digest.update(b"source-inputs\0")
+    digest.update(_source_input_sha256(root).encode("ascii"))
+    digest.update(b"\0")
     for rel in _observed_output_rels(root):
         state = _confined_path_state(
             root,
@@ -295,9 +309,6 @@ def _fingerprint(root: Path) -> str:
         digest.update(b"\0")
         digest.update(state.encode("ascii"))
         digest.update(b"\0")
-    digest.update(b"source-commit\0")
-    digest.update(_source_commit(root).encode("utf-8"))
-    digest.update(b"\0")
     return digest.hexdigest()
 
 

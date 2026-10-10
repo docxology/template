@@ -46,7 +46,16 @@ def source_inventory(root: Path, *, original: bool = False) -> dict[str, Any]:
     _observe_loaded_implementation()
     loaded_sdk = Path(__file__).resolve().parents[1]
     if loaded_sdk != (root / "infrastructure").resolve():
-        if original or tree_records(loaded_sdk, source=True) != tree_records(root / "infrastructure", source=True):
+        if original:
+            from infrastructure.reporting.native_tool_producer import current_native_producer_operation
+
+            owner = current_native_producer_operation()
+            if owner is None or owner.source.bindings.selected_sdk_package_root != loaded_sdk:
+                raise ValueError("installed print witness requires its genuine selected-SDK Source owner")
+            owner.verify(SnapshotReader(root), run_id=owner.run_id, deadline=owner.deadline)
+            # NativeSourceContext verifies complete installed body/mode/origin,
+            # actual current Git source correspondence and original Code startup.
+        if tree_records(loaded_sdk, source=True) != tree_records(root / "infrastructure", source=True):
             raise ValueError("print worker/reader differs from the current complete source SDK")
     roots = ["infrastructure", "pyproject.toml", "uv.lock"]
     for kind in KINDS:

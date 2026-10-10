@@ -115,8 +115,8 @@ behaviorally equivalent to the dedicated documentation job.
 #### 2. Static Health Report (`health`)
 
 - **Runner:** `ubuntu-latest` / Python 3.14
-- **Depends on:** `lint`
-A red static gate turns this job red and blocks dependents; this page does not certify hosted-runner behavior beyond that.
+- **Depends on:** nothing; the job performs its own checkout and setup alongside `lint`.
+A red static gate turns this job red and blocks `ci-gate`; this page does not certify hosted-runner behavior beyond that.
 - **Purpose:** Runs `uv run python -m infrastructure.core.health --json --quiet` → `health-report.json`; every represented static gate blocks, while behavioral and platform matrices remain separate jobs; a gate exiting non-zero must turn the job red, and warnings alone never satisfy it. Negative control: when any represented static gate fails, `infrastructure.core.health` exits non-zero and blocks this job rather than reporting green alongside a failure.
 A negative control backs this contract: deliberately breaking any represented static check locally flips the aggregate health report away from healthy status, which blocks the job.
   - **Negative control:** removing or weakening a represented static gate in `infrastructure/core/health.py` must make the `health` job fail on the next run — a green report with a missing gate is invalid.
@@ -143,10 +143,10 @@ A negative control backs this contract: deliberately breaking any represented st
 
 - **Pinned source setup:** `test-infra` and `coverage-infra` both initialize the direct submodule declared by the actual Root gitlink and `.gitmodules` using the pinned checkout action's `submodules: true`. This checks out the committed kmyth object; the declaration's branch is not used to advance it. Initialization is an explicit network-capable setup boundary before Python setup and source observation. Tests subsequently clone this actual local checkout without network. Both jobs use `persist-credentials: false`, so setup credentials are removed before test or merge code runs. The merge runner receives the same complete source bytes as the coverage workers; missing pins remain failures, with no fixture fabrication or skip. The canonical workflow guard in `tests/infra_tests/core/test_ci_infra_partition.py` checks both setup declarations against the actual native Git index and public submodule declaration.
 - **Sync:** `uv sync --locked --group public-exemplars --group installed-build`. Genuine wheel/sdist controls use the prepared, locked build backend.
-- **PDF observers:** Linux installs `poppler-utils`; macOS installs `poppler`. Both lanes directly check `pdftoppm` and `pdffonts` before the actual PDF controls.
+- **Document tools:** Both platforms invoke [`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml) once. It verifies exact pinned Pandoc/crossref/font archives, prepares the complete TeX and native-reader package union, and probes the selected executables. Linux installs `poppler-utils`; macOS installs `poppler`. Both lanes directly check `pdftoppm` and `pdffonts` before the actual PDF controls. Package caches cannot certify preparation or acceptance.
 - **Matrix:** Every existing environment is retained: Linux Python 3.12–3.14 and macOS Python 3.14. The source-declared `ci_infra_partition.py` emits four complete module shards per environment (16 cells). The four measured C4 families are assigned distinct shards; every other current or future collected module receives a stable SHA-256 assignment. No test is marked slow or removed by partitioning.
 - **Selection:** `ci_infra_shard_plugin` partitions actual pytest collection after the unchanged ordinary marker expression. Each selected case belongs to exactly one shard; empty/duplicate/noncanonical inventory, worker disagreement and incomplete actual completion fail. The plugin is explicitly loaded for this invocation, so nested pytest jobs retain their own selection.
-- **Budgets:** The job remains 30 minutes, pytest remains `--timeout=120`, and every existing per-case timeout override remains effective. Linux retains `-n auto`, macOS retains `-n 2`, and both use `--dist loadscope`. Faster completion is a hypothesis until fresh hosted timings establish it; additional jobs repeat preparation and may increase total runner minutes.
+- **Budgets:** The job is 90 minutes, pytest remains `--timeout=120`, and every existing per-case timeout override remains effective. Linux retains `-n auto`, macOS retains `-n 2`, and both use `--dist loadscope`. Faster completion is a hypothesis until fresh hosted timings establish it; additional jobs repeat preparation and may increase total runner minutes.
 - **Coverage:** Only the four Python 3.14/Linux shards instrument execution. Per-shard thresholds are replaced by the required `coverage-infra` complete-union gate at the same ≥60% floor. The gate refuses missing/extra/duplicate/stale/failed selection records, incomplete case unions and changed coverage bytes, then merges genuine branch measurements in memory and writes confined JSON/XML. Codecov upload remains nonblocking after this required local threshold passes.
 - **Receipt scope:** Ordinary selection records bind infrastructure/scripts/infra tests/CI configuration source bytes. They do not replace full public source custody, installed-wheel, live, platform or release acceptance; missing Root release policy remains blocked.
 - **MathJax live viewport:** The scheduled/manual browser spec runs once on shard 0 of Python 3.14/Linux. Its existing tool provisioning, completed-typesetting checks and failure policy remain unchanged.
@@ -157,8 +157,15 @@ For an unpartitioned local check, the existing full `pytest tests/infra_tests/` 
 
 - **Depends on:** `verify-no-mocks`, `timeout-minutes: 20`, ubuntu-only.
 - **Sync:** `uv sync --group public-exemplars`.
-- **What it runs:** `uv run pytest tests/regression/ -q --no-cov --timeout=120`, serial (no `-n auto`) — see [`docs/maintenance/regression-testing.md`](../../docs/maintenance/regression-testing.md) for why (exemplars ship colliding top-level `src` packages resolved via per-project aliases + temporary `sys.meta_path` finders whose isolation is collection-order-sensitive).
-- **Collection contract:** the collection pass must succeed and emit node IDs (`--collect-only -q`) before the behavioral run. A separate "Assert regression tier is not empty" step counts those IDs and fails the job when fewer than 3 tests collect, so claim-binding pins cannot silently vanish behind a vacuous success.
+- **What it runs:** `uv run pytest tests/regression/ -q --no-cov --timeout=120 --junitxml=<fresh job-local report>`, serial (no `-n auto`) — see [`docs/maintenance/regression-testing.md`](../../docs/maintenance/regression-testing.md) for why (exemplars ship colliding top-level `src` packages resolved via per-project aliases + temporary `sys.meta_path` finders whose isolation is collection-order-sensitive).
+- **Collection contract:** the ordinary run must exit zero, including successful collection. "Assert regression tier is not empty" then reads that run's fresh JUnit report and requires at least 3 actual case entries with no failures or errors. Missing/malformed reports and empty or undersized suites block. This replaces a second collection-only invocation while keeping the original selector and three-case minimum.
+
+#### 4c. Integration Tier — repository wiring (`test-integration`)
+
+- **Depends on:** `verify-no-mocks`, `timeout-minutes: 20`, ubuntu-only.
+- **Sync:** `uv sync --group public-exemplars`.
+- **What it runs:** `uv run pytest tests/integration/ -q --no-cov --timeout=120 --junitxml=<fresh job-local report>`, serial.
+- **Collection contract:** the same successful-run JUnit census requires at least 3 case entries and no failures or errors. Collection errors retain pytest's nonzero exit; missing/malformed, empty, or undersized reports block. The shell and pipeline suite selector stays unchanged.
 
 #### 5. Project Tests (`test-project`)
 
@@ -168,7 +175,7 @@ For an unpartitioned local check, the existing full `pytest tests/infra_tests/` 
 - **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
 - **Coverage files:** project-local `.coverage.project` for the generic pytest path or `.coverage` for a declared structured verifier; both are isolated, cleaned before the run, and independently produce the same project-local `coverage_project.json`.
 - **Scope:** [`scripts/pipeline/stage_01_test.py`](../../scripts/pipeline/stage_01_test.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell). The workflow uploads the resulting project-local JSON directly; it does not synthesize a separate XML report. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
-- **External render tool:** every lane provisions the same SHA-pinned Pandoc action as `test-infra`, because project suites may exercise real DOCX/EPUB rendering during Stage 1. A required converter is never handled by skipping or weakening those regression tests.
+- **External render tools:** every lane unconditionally invokes [`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml) for exact pinned Pandoc/crossref preparation. EDA selects `native` because its ordinary tests directly require XeLaTeX and embedded JuliaMono faces; other ordinary project cells select `converter`. Infrastructure and all genuine acceptance callers retain the default native package/font preparation. Test selections, coverage floors and required native acceptance remain unchanged; no runtime or cost improvement is established until genuine execution is measured.
 - **Codecov upload:** On Python 3.14 / `ubuntu-latest` only; upload failures do not fail CI
 
 #### 6. fep_lean — real Open Gauss + Lake (`fep-lean`)
@@ -200,7 +207,7 @@ For an unpartitioned local check, the existing full `pytest tests/infra_tests/` 
 #### 9. Documentation Lint (`docs-lint`)
 
 - **Runner:** `ubuntu-latest` / Python 3.14 / Node 20
-- **Depends on:** `lint`
+- **Depends on:** nothing; the job performs its own checkout and setup alongside `lint`.
 - **Timeout:** 15 minutes
 - **External tools (real, not mocked):**
   - `mmdc` (mermaid-cli) — pinned in the root `package.json`; run `npm ci`
@@ -260,11 +267,11 @@ Runs daily at 01:00 UTC using `actions/stale@v10.3.0`.
 Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input). Both triggers serialize by the selected tag and preserve in-flight publication; a manual dispatch from a different branch cannot race the same tag push.
 
 1. Resolves the requested tag before checkout, initializes its pinned submodules, and proves `HEAD` equals the dereferenced tag commit
-2. Prepares supported interpreters, the locked release environment and identical acceptance fixture inputs before source admission
-3. For root 4+, requires the exact successful hosted run ID, `platform-required-acceptance` artifact ID and aggregate receipt SHA256; authenticates the same-repository exact-revision run, bounded artifact and every candidate requirement before continuing. Tag pushes without that explicit handoff stop
+2. Prepares supported interpreters, the locked release environment and identical acceptance fixture inputs; audits pristine published exemplars before the installed handoff
+3. For root 4+, requires the exact successful hosted run ID, `platform-required-acceptance` artifact ID and aggregate receipt SHA256; authenticates the same-repository exact-revision run and bounded artifact, then uses an independently installed current reader to authenticate every candidate requirement, the complete retained installed matrix and its exact admitted wheel/receipt. Tag pushes without that explicit handoff stop
 4. Runs the tagged-SHA no-mocks and bounded pipeline-smoke gates, root release contract and fail-closed public capability manifest
-5. Clean-exports, installs and import-smokes the root and every canonical public exemplar on Python 3.12/3.13/3.14 without credentials
-6. Runs the strict rendered publication audit across every canonical public exemplar, builds the final source distribution and admits exact final bytes alongside the wheel already accepted by the installed matrix
+5. Earlier major tags retain the clean-export, install and import-smoke matrix on Python 3.12/3.13/3.14. Root 4+ already authenticated its retained complete matrix in step 3. Preparation and acceptance stay distinct
+6. Builds the final source distribution and admits its exact final bytes alongside the wheel already accepted by the installed matrix; the pristine published audit has already passed before derived execution
 7. For root 4+, selects `docs/releases/<tag>.md` for the actual tag, such as the [4.0.1 candidate notes](../../docs/releases/v4.0.1.md), and adds accepted-commit, hosted-run and receipt-hash bindings; earlier major tags use the commit-based git-log excerpt
 8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.3` with **`generate_release_notes: false`** and attaches the admitted distributions, tag-selected overview PNG and byte manifest
 9. Retrieves the published assets and requires exact admitted hashes; auto-marks as pre-release if the tag contains `-rc`, `-beta`, or `-alpha`

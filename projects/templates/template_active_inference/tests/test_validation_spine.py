@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import subprocess
 from collections.abc import Callable
 from pathlib import Path
 
@@ -23,34 +22,26 @@ def _ensure_validation_spine_inputs(project_root: Path) -> None:
         ensure_gate_artifacts(project_root)
 
 
-def test_artifact_provenance_looks_up_source_commit_once(project_root: Path) -> None:
+def test_artifact_provenance_binds_exact_source_inputs(project_root: Path) -> None:
+    from roadmap_tracks.fixed_point import _source_input_sha256
     from validation_spine import artifacts
 
-    calls: list[list[str]] = []
-
-    def fake_run(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
-        cmd = args[0]
-        assert isinstance(cmd, list)
-        calls.append([str(part) for part in cmd])
-        assert kwargs["timeout"] == 5
-        return subprocess.CompletedProcess(args=args[0], returncode=0, stdout="abc123\n", stderr="")
-
-    provenance = artifacts.build_artifact_provenance(
-        project_root,
-        source_commit_resolver=lambda root: artifacts._source_commit(root, process_runner=fake_run),
-    )
-
-    assert calls == [["git", "-C", str(project_root.resolve()), "rev-parse", "HEAD"]]
-    assert {record["source_commit"] for record in (provenance.get("artifacts") or {}).values()} == {"abc123"}
+    provenance = artifacts.build_artifact_provenance(project_root)
+    expected = _source_input_sha256(project_root)
+    assert provenance["all_source_inputs_bound"] is True
+    assert {record["source_input_sha256"] for record in provenance["artifacts"].values()} == {expected}
 
 
-def test_validation_spine_source_commit_times_out_to_unknown(project_root: Path) -> None:
+def test_validation_spine_rejects_symlinked_source_inputs(tmp_path: Path) -> None:
     from validation_spine import artifacts
 
-    def fake_run(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
-        raise subprocess.TimeoutExpired(cmd=args[0], timeout=kwargs["timeout"])
-
-    assert artifacts._source_commit(project_root, process_runner=fake_run) == "unknown"
+    outside = tmp_path / "outside.txt"
+    outside.write_text("outside evidence\n", encoding="utf-8")
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "producer.py").symlink_to(outside)
+    with pytest.raises(RuntimeError, match="must not contain symlinks"):
+        artifacts.build_artifact_provenance(tmp_path)
+    assert outside.read_text(encoding="utf-8") == "outside evidence\n"
 
 
 @pytest.mark.timeout(30)
@@ -64,7 +55,7 @@ def test_validation_spine_artifacts_are_written(project_root: Path) -> None:
     replay = json.loads(paths["reproducibility"].read_text(encoding="utf-8"))
     counterexamples = json.loads(paths["counterexample"].read_text(encoding="utf-8"))
 
-    assert provenance["schema"] == "template_active_inference.artifact_provenance.v1"
+    assert provenance["schema"] == "template_active_inference.artifact_provenance.v2"
     assert provenance["all_hashed"] is True
     assert provenance["all_seeded"] is True
     assert provenance["all_config_digests"] is True
@@ -80,7 +71,7 @@ def test_validation_spine_artifacts_are_written(project_root: Path) -> None:
     ]
     assert all(provenance["artifacts"][rel]["deterministic_seed"] == 0 for rel in semantic_artifacts)
     assert all(provenance["artifacts"][rel]["config_digest"] for rel in semantic_artifacts)
-    assert all(provenance["artifacts"][rel]["source_commit"] for rel in semantic_artifacts)
+    assert all(provenance["artifacts"][rel]["source_input_sha256"] for rel in semantic_artifacts)
     assert replay["schema"] == "template_active_inference.reproducibility_replay.v1"
     assert replay["all_passed"] is True
     assert {check["id"] for check in replay["checks"]} >= {
@@ -132,7 +123,7 @@ def test_validation_spine_rejects_stale_seed_config_provenance(project_root: Pat
 
 
 @pytest.mark.timeout(30)
-def test_validation_spine_allows_nonempty_source_commit_drift(project_root: Path) -> None:
+def test_validation_spine_rejects_valid_looking_source_input_digest_forgery(project_root: Path) -> None:
     from validation_spine.artifacts import validate_artifact_provenance, write_validation_spine_artifacts
 
     _ensure_validation_spine_inputs(project_root)
@@ -141,14 +132,15 @@ def test_validation_spine_allows_nonempty_source_commit_drift(project_root: Path
     payload = json.loads(original)
     try:
         record = payload["artifacts"]["output/data/si_graph_world_trace.json"]
-        record["source_commit"] = "0" * 40
+        record["source_input_sha256"] = "0" * 64
+        payload["all_source_inputs_bound"] = True
         paths["provenance"].write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
         issues = validate_artifact_provenance(project_root)
     finally:
         paths["provenance"].write_text(original, encoding="utf-8")
 
-    assert not any("source commit mismatch" in issue for issue in issues)
-    assert not any("si_graph_world_trace.json" in issue and "missing source commit" in issue for issue in issues)
+    assert any("source input digest mismatch" in issue for issue in issues)
+    assert any("all_source_inputs_bound" in issue for issue in issues)
 
 
 @pytest.mark.timeout(30)

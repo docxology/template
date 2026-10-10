@@ -26,7 +26,7 @@ from infrastructure.rendering.manuscript_discovery import discover_manuscript_fi
 from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 from infrastructure.validation.output.render_formats import render_config_manuscript_dir
 
-NATIVE_SCHEMA = "template-native-format-execution-v6"
+NATIVE_SCHEMA = "template-native-format-execution-v13"
 CONTROL_SCHEMA = "template-native-format-control-v1"
 TOOL_SCHEMA = "template-native-tool-execution-v3"
 TOOL_FIELDS = frozenset(
@@ -35,6 +35,7 @@ TOOL_FIELDS = frozenset(
         "command",
         "custody_refused",
         "diagnostic",
+        "environment_digest",
         "executable",
         "executable_identity_after",
         "executable_identity_before",
@@ -61,7 +62,6 @@ TOOL_FIELDS = frozenset(
 CITATION_TOOL_FIELDS = TOOL_FIELDS | frozenset(
     {
         "cwd",
-        "environment_digest",
         "input_observations_before",
         "input_observations_after",
         "consumed_input_artifacts",

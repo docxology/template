@@ -57,9 +57,9 @@ def manuscript_slide_source_plan(
     from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
     from infrastructure.rendering._bibliography import resolve_bibliography
     from infrastructure.validation.output.render_formats import render_config_manuscript_dir
-    from infrastructure.validation.publication.rendered_provenance import validate_rendered_provenance
+    from infrastructure.validation.publication.rendered_provenance import validate_current_rendered_provenance
 
-    if scope not in PUBLIC_PROJECT_NAMES or not validate_rendered_provenance(root, scope).valid:
+    if scope not in PUBLIC_PROJECT_NAMES or not validate_current_rendered_provenance(root, scope).valid:
         raise ValueError("manuscript slides require exact admitted current source hydration")
     kind = "slides" if artifact.format == "pdf" else "reveal" if artifact.format == "html" else ""
     parts = artifact.id.split(":")
@@ -71,7 +71,11 @@ def manuscript_slide_source_plan(
     if not config.enable_slides or (kind == "reveal" and config.slides_profile != "accessible"):
         raise ValueError("manuscript slide artifact is not enabled by its current source configuration")
     manuscript = render_config_manuscript_dir(project)
-    matches = [p for p in discover_manuscript_files(manuscript) if p.name == parts[1] and p.suffix == ".md"]
+    matches = [
+        p
+        for p in discover_manuscript_files(manuscript)
+        if p.relative_to(manuscript).as_posix() == parts[1] and p.suffix == ".md"
+    ]
     if len(matches) != 1:
         raise ValueError("manuscript slide source selection is missing or ambiguous")
     snapshot = reader.read(matches[0].relative_to(root).as_posix())

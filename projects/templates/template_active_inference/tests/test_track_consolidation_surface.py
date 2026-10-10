@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -25,13 +24,16 @@ from track_consolidation_support import (
 pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
 
 
-def test_sheaf_track_source_commit_times_out_to_unknown(project_root: Path) -> None:
+def test_sheaf_track_source_identity_changes_with_actual_inputs(tmp_path: Path) -> None:
     from roadmap_tracks import sheaf_tracks
 
-    def fake_run(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
-        raise subprocess.TimeoutExpired(cmd=args[0], timeout=kwargs["timeout"])
-
-    assert sheaf_tracks._source_commit(project_root, process_runner=fake_run) == "unknown"
+    source = tmp_path / "pymdp.yaml"
+    source.write_text("random_seed: 0\n", encoding="utf-8")
+    first = sheaf_tracks._source_input_sha256(tmp_path)
+    source.write_text("random_seed: 1\n", encoding="utf-8")
+    assert sheaf_tracks._source_input_sha256(tmp_path) != first
+    source.write_text("random_seed: 0\n", encoding="utf-8")
+    assert sheaf_tracks._source_input_sha256(tmp_path) == first
 
 
 def test_temporary_json_mutation_restores_after_exception(tmp_path: Path) -> None:

@@ -39,7 +39,11 @@ Direct-command fallback lanes (when act is unavailable):
   - tests            canonical template project test stage
   - precommit        all pre-commit and pre-push hooks via uv
   - confid           scripts/audit/check_tracked_all.py + check_mirror_symlinks.py
-  - public-readiness all 24 public exemplar tests in isolated subprocesses
+  - public-readiness all public exemplar tests in isolated subprocesses
+
+With no job selected, run health, tests, precommit, then public-readiness.
+The complete health registry and retained hooks cover the shared lint, security,
+no-mocks and confidentiality checks; named lanes remain available separately.
 
 The fallback is intentionally described as a subset: workflow matrices,
 service containers, dependency auditing, and platform-specific jobs require act
@@ -153,7 +157,7 @@ if [[ "$DRY_RUN" -eq 1 ]]; then
   if [[ -n "$JOB" ]]; then
     echo "[ci_local] DRYRUN — would run direct-command fallback lane: $JOB"
   else
-    echo "[ci_local] DRYRUN — would run direct-command fallback lanes: lint, health, verify-no-mocks, security, tests, precommit, confid, public-readiness"
+    echo "[ci_local] DRYRUN — would run direct-command fallback lanes: health, tests, precommit, public-readiness"
   fi
   exit 0
 fi
@@ -161,10 +165,16 @@ fi
 echo "[ci_local] act unavailable — running direct-command fallback"
 echo
 
-if [[ -z "$JOB" || "$JOB" == "lint" ]]; then
+if [[ "$JOB" == "lint" ]]; then
   echo "[ci_local] === CI lint job ==="
-  read -r -a PUBLIC_CI_SOURCE_PATHS <<<"$(uv run python -m infrastructure.project.public_scope source-paths)"
-  read -r -a PUBLIC_CI_LINT_PATHS <<<"$(uv run python -m infrastructure.project.public_scope lint-paths)"
+  # Assignment preserves the producer's failure before any lint/type command.
+  PUBLIC_CI_PATHS=$(uv run python -m infrastructure.project.public_scope ci-paths)
+  PUBLIC_CI_LINT_ROW=${PUBLIC_CI_PATHS%%$'\n'*}
+  PUBLIC_CI_SOURCE_ROW=${PUBLIC_CI_PATHS#*$'\n'}
+  [[ "$PUBLIC_CI_LINT_ROW" == lint_paths=* && "$PUBLIC_CI_SOURCE_ROW" == source_paths=* ]]
+  read -r -a PUBLIC_CI_LINT_PATHS <<<"${PUBLIC_CI_LINT_ROW#lint_paths=}"
+  read -r -a PUBLIC_CI_SOURCE_PATHS <<<"${PUBLIC_CI_SOURCE_ROW#source_paths=}"
+  [[ ${#PUBLIC_CI_LINT_PATHS[@]} -gt 0 && ${#PUBLIC_CI_SOURCE_PATHS[@]} -gt 0 ]]
   uv run ruff check "${PUBLIC_CI_LINT_PATHS[@]}"
   uv run ruff format --check "${PUBLIC_CI_LINT_PATHS[@]}"
   uv run python scripts/gates/mypy_ratchet.py "${PUBLIC_CI_SOURCE_PATHS[@]}"
@@ -181,13 +191,13 @@ if [[ -z "$JOB" || "$JOB" == "health" ]]; then
   uv run python -m infrastructure.core.health
 fi
 
-if [[ -z "$JOB" || "$JOB" == "verify-no-mocks" ]]; then
+if [[ "$JOB" == "verify-no-mocks" ]]; then
   echo "[ci_local] === No-mocks and semantic stand-in policy ==="
   uv run python scripts/audit/verify_no_mocks.py
   uv run python scripts/audit/verify_no_mocks.py --inventory --max-dependency-replacements 0
 fi
 
-if [[ -z "$JOB" || "$JOB" == "security" ]]; then
+if [[ "$JOB" == "security" ]]; then
   echo "[ci_local] === Bandit MEDIUM+ (public scope; dependency audit remains act-only) ==="
   read -r -a PUBLIC_PROJECTS <<<"$(uv run python -m infrastructure.project.public_scope project-names)"
   SECURITY_TARGETS=(infrastructure/ scripts/)
@@ -209,7 +219,7 @@ if [[ -z "$JOB" || "$JOB" == "precommit" ]]; then
   uv run pre-commit run --hook-stage pre-push --all-files
 fi
 
-if [[ -z "$JOB" || "$JOB" == "confid" ]]; then
+if [[ "$JOB" == "confid" ]]; then
   echo "[ci_local] === Confidentiality check ==="
   uv run python scripts/audit/check_tracked_all.py
   uv run python scripts/audit/check_mirror_symlinks.py

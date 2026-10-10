@@ -179,6 +179,7 @@ def bootstrap_command(
     audit_roots: tuple[Path, ...] = (),
     command_root: Path | None = None,
     implementation_root: Path | None = None,
+    command_audit_roots: tuple[Path, ...] | None = None,
 ) -> tuple[str, ...]:
     """Use the exact interpreter with isolated startup and explicit trusted source."""
     from infrastructure.core.implementation_custody import bytecode_audit_bootstrap, _format_bytecode_audit_bootstrap
@@ -203,9 +204,16 @@ def bootstrap_command(
         # Enumerate current admitted source, but preserve original launch paths.
         origin = implementation_root or command_root / "infrastructure"
         implementation = origin
+        if command_audit_roots is not None and (
+            len(command_audit_roots) != len(audit_roots)
+            or any(not path.is_absolute() or ".." in path.parts for path in command_audit_roots)
+        ):
+            raise ValueError("portable provider audit labels differ from actual admitted namespace arity")
+        owned_count = len(roots) - len(audit_roots)
         projected = tuple(
-            origin if index == 0 else command_root / path.relative_to(root) for index, path in enumerate(roots)
-        )
+            origin if index == 0 else command_root / path.relative_to(root)
+            for index, path in enumerate(roots[:owned_count])
+        ) + (command_audit_roots if command_audit_roots is not None else audit_roots)
         hook = Path(__file__).absolute().parents[1] / "core/bytecode_audit.py"
         raw = read_bytes_confined(hook.parent, hook, max_bytes=1024 * 1024)
         audit = _format_bytecode_audit_bootstrap(raw, origin / "core/bytecode_audit.py", projected, None)

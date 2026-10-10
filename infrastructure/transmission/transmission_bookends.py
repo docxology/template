@@ -279,36 +279,28 @@ def _latex_envelope_close(*, newpage: bool = True) -> str:
     return close
 
 
-def build_transmission_context(
-    project_root: Path,
-    project_name: str,
+def transmission_context_from_inputs(
+    raw_config: dict[str, Any],
+    ledger: dict[str, Any],
     *,
-    repo_root: Path | None = None,
+    title: str,
+    version: str | None,
+    doi: str | None,
 ) -> TransmissionContext | None:
-    """Build bookend context when the feature is enabled."""
-    _config_candidates = [
-        project_root / "manuscript" / "config.yaml",
-        project_root / "output" / "manuscript" / "config.yaml",
-        project_root / "docs" / "manuscript" / "config.yaml",
-    ]
-    config_path = next((p for p in _config_candidates if p.is_file()), None)
-    if config_path is None:
-        return None
+    """Rebuild exact bookend text inputs without generating any native assets.
 
-    raw_config = _load_raw_config(config_path)
+    Config and ledger are data; matching this deterministic context does not
+    authenticate publication history, asset generation or consumed native ink.
+    """
     settings = _bookend_settings(raw_config)
     if not settings.enabled:
         return None
-
-    metadata = publication_metadata_from_config(config_path, allow_draft_abstract=True)
-    resolved_repo = repo_root or project_root.parent.parent
     version_doi, version_record = _publication_version_fields(raw_config)
     if version_doi and not version_record:
         version_record = zenodo_record_url_from_doi(version_doi)
-    ledger = load_publication_ledger(project_root, repo_root=resolved_repo, project_name=project_name)
     latest = _latest_release(ledger)
 
-    doi = metadata.doi or (str(latest.get("doi")) if latest else None)
+    doi = doi or (str(latest.get("doi")) if latest else None)
     github_release_url_value = (
         str(latest.get("github_release_url")) if latest and latest.get("github_release_url") else None
     )
@@ -330,16 +322,7 @@ def build_transmission_context(
         require_doi=bool(doi),
     )
 
-    figure_path = project_root / "output" / "figures" / FIGURE_NAME
-    write_transmission_diagram(
-        figure_path,
-        current={"doi": doi, "pdf_sha256": pdf_sha256},
-    )
     figure_markdown = f"![Publication pairing flow](../figures/{FIGURE_NAME}){{width={FIGURE_WIDTH}}}"
-
-    authors = raw_config.get("authors") or []
-    if not isinstance(authors, list):
-        authors = []
 
     stego_one_liner = _format_steganography_one_liner(raw_config) if settings.show_steganography else ""
     releases = [item for item in (ledger.get("releases") or []) if isinstance(item, dict)]
@@ -354,8 +337,8 @@ def build_transmission_context(
     )
 
     draft_context = TransmissionContext(
-        title=metadata.title,
-        version=metadata.paper_version,
+        title=title,
+        version=version,
         doi=doi,
         version_doi=version_doi,
         version_record=version_record,
@@ -377,11 +360,6 @@ def build_transmission_context(
         prior_compact=prior_compact,
         published=bool(latest and doi and github_release_url_value and pdf_sha256 and pairing.valid),
     )
-
-    manifest_path = project_root / "output" / "data" / MANIFEST_FILENAME
-    write_transmission_manifest(manifest_path, draft_context)
-    strip_path = project_root / "output" / "figures" / STRIP_FILENAME
-    write_transmission_barcode_strip(strip_path, context=draft_context, authors=authors)
 
     return TransmissionContext(
         title=draft_context.title,
@@ -407,6 +385,44 @@ def build_transmission_context(
         prior_compact=draft_context.prior_compact,
         published=draft_context.published,
     )
+
+
+def build_transmission_context(
+    project_root: Path,
+    project_name: str,
+    *,
+    repo_root: Path | None = None,
+) -> TransmissionContext | None:
+    """Build bookend context and its assets when the feature is enabled."""
+    _config_candidates = [
+        project_root / "manuscript" / "config.yaml",
+        project_root / "output" / "manuscript" / "config.yaml",
+        project_root / "docs" / "manuscript" / "config.yaml",
+    ]
+    config_path = next((p for p in _config_candidates if p.is_file()), None)
+    if config_path is None:
+        return None
+    raw_config = _load_raw_config(config_path)
+    if not _bookend_settings(raw_config).enabled:
+        return None
+    metadata = publication_metadata_from_config(config_path, allow_draft_abstract=True)
+    resolved_repo = repo_root or project_root.parent.parent
+    ledger = load_publication_ledger(project_root, repo_root=resolved_repo, project_name=project_name)
+    context = transmission_context_from_inputs(
+        raw_config, ledger, title=metadata.title, version=metadata.paper_version, doi=metadata.doi
+    )
+    if context is None:
+        return None
+    figure_path = project_root / "output" / "figures" / FIGURE_NAME
+    write_transmission_diagram(figure_path, current={"doi": context.doi, "pdf_sha256": context.pdf_sha256})
+    authors = raw_config.get("authors") or []
+    if not isinstance(authors, list):
+        authors = []
+    manifest_path = project_root / "output" / "data" / MANIFEST_FILENAME
+    write_transmission_manifest(manifest_path, context)
+    strip_path = project_root / "output" / "figures" / STRIP_FILENAME
+    write_transmission_barcode_strip(strip_path, context=context, authors=authors)
+    return context
 
 
 def _current_release_one_liner(context: TransmissionContext) -> str:

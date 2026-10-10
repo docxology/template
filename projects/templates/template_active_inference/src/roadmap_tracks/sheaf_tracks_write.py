@@ -29,7 +29,7 @@ from roadmap_tracks.sheaf_tracks_context import (
     _ProvenanceContext,
 )
 from roadmap_tracks.sheaf_tracks_helpers import _refresh_hydrated_manuscript, _remove_legacy_artifacts
-from roadmap_tracks.sheaf_tracks_io import _config_digest, _deterministic_seed, _source_commit, _write_json
+from roadmap_tracks.sheaf_tracks_io import _config_digest, _deterministic_seed, _source_input_sha256, _write_json
 from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS
 
 
@@ -224,7 +224,6 @@ def write_sheaf_track_artifacts(
     project_root: Path,
     *,
     finalize: bool = True,
-    source_commit_resolver=_source_commit,
 ) -> dict[str, Path]:
     """Write the canonical promoted sheaf artifacts in deterministic phases."""
     root = project_root.resolve()
@@ -237,7 +236,7 @@ def write_sheaf_track_artifacts(
     context = _ProvenanceContext(
         config_digest=_config_digest(root),
         deterministic_seed=_deterministic_seed(root),
-        source_commit=source_commit_resolver(root),
+        source_input_sha256=_source_input_sha256(root),
     )
     paths: dict[str, Path] = {}
 

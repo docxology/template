@@ -14,7 +14,6 @@ runs:
         QT_QPA_PLATFORM: offscreen
       run: |
         set -euo pipefail
-        sudo -n apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=60 update
         sudo -n apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=60 install -y --no-install-recommends libreoffice-writer libreoffice-calc libreoffice-impress calibre default-jre-headless zbar-tools
         destination=$(mktemp -d "$RUNNER_TEMP/template-native-tools.XXXXXX")
         java_executable=$(readlink -f "$(command -v java)")

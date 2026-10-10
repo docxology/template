@@ -26,11 +26,11 @@ _REPO_ROOT = ensure_repo_root_on_path()
 
 from infrastructure.core.credentials import ensure_dotenv_loaded  # noqa: E402
 from infrastructure.core.exceptions import MetadataError, PublishingError  # noqa: E402
-from infrastructure.core.logging.utils import (
+from infrastructure.core.logging.utils import (  # noqa: E402
     get_logger,
     log_header,
     log_success,
-)  # noqa: E402
+)
 from infrastructure.publishing.release.release_workflow import (  # noqa: E402
     ReleaseRequest,
     resolve_combined_pdf,
@@ -133,6 +133,7 @@ def main(argv: list[str] | None = None) -> int:
         release_name=args.release_name,
         github_token=github_token,
         zenodo_token=zenodo_token,
+        github_target_commit=args.github_target_commit,
     )
 
     try:

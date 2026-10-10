@@ -8,6 +8,7 @@ import os
 import sys
 import time
 import uuid
+from typing import Any, cast
 from pathlib import Path
 
 from infrastructure.core.files.secure_write import read_bytes_confined
@@ -15,6 +16,16 @@ from infrastructure.project.public_hosted_origin import HostedReadbackContext, c
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_authenticated_original_launch import admit_authenticated_native_originals
+from infrastructure.reporting.native_format_current_orchestration import (
+    _prepare_current_root,
+    preserve_current_attempts,
+    validate_current_destination,
+)
+from infrastructure.reporting.native_current_reader_inputs import NativeCurrentAnalysisInputs
+from infrastructure.reporting.native_format_acceptance_contracts import (
+    create_private_native_directory,
+    validate_native_specification,
+)
 from infrastructure.reporting.native_format_joint_source import (
     NativeReaderOperation,
     NativeSDKSelection,
@@ -29,14 +40,11 @@ from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumSelec
 from infrastructure.reporting.native_hosted_original_custody import collect_native_hosted_originals
 from infrastructure.reporting.native_mermaid_runtime_selection import (
     NativeMermaidSelection,
-    admit_source_mermaid_selection,
-    source_mermaid_runtime_operation,
 )
 from infrastructure.reporting.native_office_diagram_runtime import admit_pdfium_runtime
 from infrastructure.reporting.native_office_full_worker_context import NativeOfficeReaderSelection
-from infrastructure.reporting.native_tool_producer import native_producer_operation
 from infrastructure.reporting.required_acceptance_aggregate import produce_aggregate
-from infrastructure.reporting.required_candidate_transport import pack_required_candidate
+from infrastructure.reporting.required_candidate_transport import RequiredCandidatePackingInputs
 from infrastructure.reporting.required_candidate_collection import collect_required_candidate
 from infrastructure.publishing.release_acceptance import RECEIPT_PATH, validate_candidate_handoff
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -57,6 +65,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, required=True)
     parser.add_argument("--revision", required=True)
+    parser.add_argument("--current-analysis-root", type=Path, required=True)
     parser.add_argument("--repository", required=True)
     parser.add_argument("--run-id", type=int, required=True)
     parser.add_argument("--sdk-package-root", type=Path, required=True)
@@ -66,6 +75,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pdfium-site", type=Path, required=True)
     parser.add_argument("--pdfium-wheel", type=Path, required=True)
     parser.add_argument("--office-font-file", action="append", default=[], type=Path)
+    parser.add_argument("--epubcheck-jar", type=Path)
+    parser.add_argument("--java-executable", type=Path)
     parser.add_argument("--mermaid-package-root", type=Path, required=True)
     parser.add_argument("--mermaid-dependency-root", type=Path, required=True)
     parser.add_argument("--mermaid-node-executable", type=Path, required=True)
@@ -81,9 +92,20 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not 0 < args.timeout <= 14400 or not 0 < args.operation_started_monotonic < time.monotonic():
         parser.error("reader requires its actual already-started outer Source clock")
+    if bool(args.epubcheck_jar) != bool(args.java_executable):
+        parser.error("Current native observers require paired caller EPUBCheck/Java nominees")
+    for nominee in (args.epubcheck_jar, args.java_executable):
+        if nominee is not None and (not nominee.is_absolute() or nominee.is_symlink() or not nominee.is_file()):
+            parser.error("Current native observer nominees require physical absolute input files")
     deadline = args.operation_started_monotonic + args.timeout
     root = args.repo_root.resolve(strict=True)
     run = uuid.uuid4().hex
+    attempts: dict[str, Any] = {
+        "deadline": deadline,
+        "current_processes": [],
+        "current_failures": [],
+        "current_domain_failures": [],
+    }
     try:
         remaining(deadline)
         raw = read_bytes_confined(args.implementation_input.parent, args.implementation_input, max_bytes=64 * 1024**2)
@@ -91,6 +113,7 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError("reader selected SDK input differs from its actual parent-held digest")
         sdk = NativeSDKSelection(args.sdk_package_root, raw)
         source = admit_native_source_operation(root, sdk, run_id=run, deadline=deadline, environment=os.environ)
+        validate_current_destination(source, args.current_analysis_root)
         if source.reference.commit != args.revision:
             raise ValueError("reader Source differs from the externally selected hosted revision")
         provider_paths = _assignments(args.provider_wheel, pair=False)
@@ -99,8 +122,11 @@ def main(argv: list[str] | None = None) -> int:
         wheels = {str(scope): Path(path) for scope, path in provider_paths.items()}
         # Admit all installed project providers and both PDFium namespaces before
         # any current payload. Receipt paths never select import providers.
+        provider_bindings = {}
         for scope in PUBLIC_PROJECT_NAMES:
-            admitted_native_providers(source, scope, wheels, Path(sys.executable), deadline=deadline)
+            provider_bindings[scope], _ = admitted_native_providers(
+                source, scope, wheels, Path(sys.executable), deadline=deadline
+            )
         selection = NativePDFiumSelection(args.pdfium_site, args.pdfium_wheel)
         providers = {
             scope: admit_full_worker_pdfium_provider(selection, source, scope=scope, deadline=deadline)
@@ -130,6 +156,90 @@ def main(argv: list[str] | None = None) -> int:
         originals = admit_authenticated_native_originals(
             custodian, source, current_pdfium_providers=providers, deadline=deadline
         )
+        preparation_directory = root / "output/readiness" / f"native-current-preparation-{run}"
+        create_private_native_directory(root, preparation_directory)
+        attempts.update({"directory": preparation_directory, "original_provider_bindings": provider_bindings})
+        current_source, current_wheels = _prepare_current_root(
+            source, sdk, args.current_analysis_root, attempts, wheels
+        )
+        # Admit every Current scope before its first Core or reader import.
+        current_providers = {
+            scope: admit_full_worker_pdfium_provider(selection, current_source, scope=scope, deadline=deadline)
+            for scope in originals
+        }
+        current_runtimes = {
+            scope: admit_pdfium_runtime(
+                current_source, scope=scope, site=selection.site, wheel=selection.wheel, deadline=deadline
+            )
+            for scope in originals
+        }
+        original_operation = NativeReaderOperation(source, deadline, originals, providers, fonts, runtimes)
+        original_reader = SnapshotReader(root, native_operation=original_operation)
+        from infrastructure.reporting.release_readiness_profile import required_profile
+        from infrastructure.reporting.readiness_receipts import source_fingerprint
+        from infrastructure.reporting.native_current_epub_engine_data import prepare_current_epub_observer_tools
+
+        profile, faults = required_profile(root, original_reader, source_fingerprint(root))
+        if faults:
+            raise ValueError("Current observer preparation lacks the complete admitted Source profile")
+        epub_scopes = [row.scope for row in profile if row.kind == "formats" and "epub" in row.formats]
+        if epub_scopes:
+            completed_epub = [scope for scope in epub_scopes if scope in originals]
+            if not completed_epub:
+                raise ValueError("Current shared EPUB input preparation lacks a genuinely completed selected Original")
+            current_tools = prepare_current_epub_observer_tools(
+                completed_epub[0],
+                original_reader,
+                current_source,
+                epubcheck_jar=args.epubcheck_jar,
+                java_executable=args.java_executable,
+            )
+        else:
+            # This is whole Source-selection absence, never a missing receipt
+            # promoted to an engine or native completion.
+            original = next(iter(originals.values()))
+            specification_file = original_reader.read(original.specification_relative)
+            if specification_file.sha256 != original.specification_sha256:
+                raise ValueError("unused Current observer selection changed its held Original specification")
+            specification = specification_file.json_object()
+            validate_native_specification(specification)
+            tools = specification.get(
+                "observer_tools", dict.fromkeys(("epubcheck_jar", "java_executable", "frozen_epub_engine"))
+            )
+            if (
+                specification["run_id"] != original.run_id
+                or tools["epubcheck_jar"] != (None if args.epubcheck_jar is None else str(args.epubcheck_jar))
+                or tools["java_executable"] != (None if args.java_executable is None else str(args.java_executable))
+            ):
+                raise ValueError("unused Current observer nominees differ from the caller's actual Source selection")
+            label = tools["frozen_epub_engine"]
+            current_tools = {
+                "epubcheck_jar": args.epubcheck_jar,
+                "java_executable": args.java_executable,
+                "frozen_epub_engine": None if label is None else current_source.bindings.current_root / label,
+            }
+        current_directories = {}
+        for scope in originals:
+            directory = (
+                current_source.bindings.current_root
+                / "output/readiness"
+                / f"native-current-{current_source.bindings.run_id}"
+                / scope
+            )
+            create_private_native_directory(current_source.bindings.current_root, directory)
+            current_directories[scope] = directory
+        current_inputs = NativeCurrentAnalysisInputs(
+            current_source,
+            deadline,
+            current_directories,
+            current_wheels,
+            pdfium_providers=current_providers,
+            pdfium_runtimes=current_runtimes,
+            office_font_files=fonts.font_files,
+            observer_tools=current_tools,
+            failure_observations=attempts["current_failures"],
+            domain_failure_observations=attempts["current_domain_failures"],
+        )
         operation = NativeReaderOperation(
             source,
             deadline,
@@ -138,6 +248,7 @@ def main(argv: list[str] | None = None) -> int:
             fonts,
             runtimes,
             SourceImageDecodeBudget(MAX_SOURCE_IMAGE_OCCURRENCES),
+            current_analysis=current_inputs,
         )
         operation.verify(SnapshotReader(root))
         handoff = args.acceptance_artifact_id is not None or args.acceptance_receipt_sha256 is not None
@@ -176,59 +287,70 @@ def main(argv: list[str] | None = None) -> int:
         receipts = [*args.receipt, custodian.native_receipt_binding()["path"]]
         if len(set(receipts)) != len(receipts):
             raise ValueError("reader refuses duplicate native/common original receipt ownership")
-        with native_producer_operation(source, run_id=run, deadline=deadline):
-            mermaid_directory = root / "output/readiness/current-reader-mermaid"
-            mermaid_directory.mkdir(parents=True, mode=0o700)
-            runtime = admit_source_mermaid_selection(
-                mermaid, source, deadline=deadline, directory=mermaid_directory, env=dict(os.environ)
+        # Current and per-format Office owners are opened serially by the
+        # existing complete validator, never inside a hosted-wide producer.
+        if handoff:
+            state = validate_candidate_handoff(
+                root,
+                revision=args.revision,
+                receipt_sha256=args.acceptance_receipt_sha256,
+                repository=args.repository,
+                run_id=str(args.run_id),
+                artifact_id=str(args.acceptance_artifact_id),
+                run_metadata=root / "output/readiness/candidate-hosted-origin/run-response.json",
+                artifact_metadata=root / "output/readiness/candidate-hosted-origin/primary-metadata-response.json",
+                native_operation=operation,
+                hosted_origin=context,
             )
-            with source_mermaid_runtime_operation(runtime, source=source, deadline=deadline):
-                if handoff:
-                    state = validate_candidate_handoff(
-                        root,
-                        revision=args.revision,
-                        receipt_sha256=args.acceptance_receipt_sha256,
-                        repository=args.repository,
-                        run_id=str(args.run_id),
-                        artifact_id=str(args.acceptance_artifact_id),
-                        run_metadata=root / "output/readiness/candidate-hosted-origin/run-response.json",
-                        artifact_metadata=root
-                        / "output/readiness/candidate-hosted-origin/primary-metadata-response.json",
-                        native_operation=operation,
-                        hosted_origin=context,
-                    )
-                    print("required candidate acceptance: " + state)
-                    return {"pass": 0, "fail": 1, "blocked": 75, "unknown": 2}[state]
-                roots = _assignments(args.root_receipt, pair=True)
-                auxiliary = _assignments(args.auxiliary_receipt, pair=False)
-                result = produce_aggregate(
-                    root,
-                    receipts,
-                    revision=args.revision,
-                    root_receipts={key: value for key, value in roots.items() if isinstance(key, tuple)},
-                    auxiliary_receipts={str(key): value for key, value in auxiliary.items()},
-                    hosted_origin=context,
-                    native_operation=operation,
-                )
-                print("required candidate acceptance: " + result["candidate_state"])
-                if result["exit_code"] == 0 and args.stage_bundle:
-                    bundle = pack_required_candidate(
-                        source,
-                        operation,
-                        native_custodian=custodian,
-                        hosted_origin=context,
-                        directory=root / "output/readiness/candidate-transport",
-                        repository=args.repository,
-                        run_id=args.run_id,
-                        deadline=deadline,
-                    )
-                    print("receipt_sha256=" + bundle["receipt_sha256"])
-                return int(result["exit_code"])
+            sys.stdout.write("required candidate acceptance: " + state + "\n")
+            return cast(
+                int,
+                preserve_current_attempts(
+                    {"exit_code": {"pass": 0, "fail": 1, "blocked": 75, "unknown": 2}[state]}, attempts
+                )["exit_code"],
+            )
+        roots = _assignments(args.root_receipt, pair=True)
+        auxiliary = _assignments(args.auxiliary_receipt, pair=False)
+        packing = (
+            RequiredCandidatePackingInputs(
+                custodian, root / "output/readiness/candidate-transport", args.repository, args.run_id, deadline
+            )
+            if args.stage_bundle
+            else None
+        )
+        result = produce_aggregate(
+            root,
+            receipts,
+            revision=args.revision,
+            root_receipts={key: value for key, value in roots.items() if isinstance(key, tuple)},
+            auxiliary_receipts={str(key): value for key, value in auxiliary.items()},
+            hosted_origin=context,
+            native_operation=operation,
+            candidate_packing=packing,
+        )
+        result = preserve_current_attempts(result, attempts)
+        sys.stdout.write("required candidate acceptance: " + result["candidate_state"] + "\n")
+        if "candidate_transport" in result:
+            sys.stdout.write("receipt_sha256=" + result["candidate_transport"]["receipt_sha256"] + "\n")
+        return int(result["exit_code"])
     except KeyboardInterrupt:
         return 130
     except (OSError, ValueError, TypeError, KeyError, RuntimeError) as error:
-        print("authenticated installed reader refused: " + str(error))
-        return 124 if time.monotonic() >= deadline else 2
+        packet = getattr(error, "native_current_pipeline", None)
+        if isinstance(packet, dict):
+            attempts["current_failures"].append(packet)
+        domain_attempt = getattr(error, "native_project_domain_attempt", None)
+        if isinstance(domain_attempt, dict):
+            attempts["current_domain_failures"].append(
+                {
+                    "attempt": domain_attempt,
+                    "controller_exit_code": getattr(
+                        error, "native_project_domain_exit_code", getattr(error, "code", None)
+                    ),
+                }
+            )
+        sys.stdout.write("authenticated installed reader refused: " + str(error) + "\n")
+        return int(preserve_current_attempts({"exit_code": 2}, attempts)["exit_code"])
 
 
 if __name__ == "__main__":

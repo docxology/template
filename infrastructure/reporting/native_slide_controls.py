@@ -107,22 +107,116 @@ def run_slide_source_control(
 
 
 def main() -> int:
+    """Actual selected-SDK child; standalone DATA producers grant no custody."""
     import argparse
+    import json
     import os
+    import platform
+    import sys
+
+    import infrastructure
     from infrastructure.project.public_acceptance_evidence import write_json
+    from infrastructure.project.public_reference_git import remaining
+    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+    from infrastructure.reporting.native_format_acceptance_contracts import native_deadline_guard, native_environment
+    from infrastructure.reporting.native_print_child_custody import SLIDE_CHILD_SCHEMA
+    from infrastructure.reporting.native_source_external_admission import admit_explicitly_bound_native_source
+    from infrastructure.reporting.native_tool_producer import native_producer_operation
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
-    parser.add_argument("--directory", type=Path, required=True)
-    parser.add_argument("--name", choices=tuple(SLIDE_CONTROL_CODES), required=True)
+    parser.add_argument("--specification", required=True)
+    parser.add_argument("--specification-sha256", required=True)
+    parser.add_argument("--implementation-sha256", required=True)
     parser.add_argument("--deadline", type=float, required=True)
     parser.add_argument("--run-id", required=True)
     args = parser.parse_args()
-    result = run_slide_source_control(
-        args.root, args.directory, args.name, env=dict(os.environ), deadline=args.deadline, run_id=args.run_id
-    )
-    write_json(args.root, args.directory / "observation.json", result)
-    return int(result["oracle_exit_code"])
+    with native_deadline_guard(args.deadline):
+        remaining(args.deadline)
+        root = args.root.absolute()
+        reader = SnapshotReader(root)
+        specification = reader.read(args.specification)
+        spec = specification.json_object()
+        if (
+            set(spec)
+            != {
+                "schema_version",
+                "scope",
+                "name",
+                "run_id",
+                "directory",
+                "source",
+                "implementation",
+                "expected_exit",
+                "parent_pid",
+                "parent_platform",
+                "deadline_monotonic",
+                "caller_deadline_monotonic",
+                "closure_identity",
+            }
+            or specification.sha256 != args.specification_sha256
+            or spec["schema_version"] != SLIDE_CHILD_SCHEMA
+            or spec["deadline_monotonic"] != args.deadline
+            or spec["run_id"] != args.run_id
+        ):
+            raise ValueError("slide child differs from actual parent prelaunch role/clock/Source bytes")
+        scope, name = spec["scope"], spec["name"]
+        if (
+            scope not in PUBLIC_PROJECT_NAMES
+            or name not in SLIDE_CONTROL_CODES
+            or type(spec["expected_exit"]) is not int
+            or spec["expected_exit"] != (0 if SLIDE_CONTROL_CODES[name] is None else 1)
+        ):
+            raise ValueError("slide child is outside the Source-owned named control roster")
+        implementation = reader.read(spec["implementation"]["path"])
+        if (
+            implementation.sha256 != args.implementation_sha256
+            or implementation.sha256 != spec["implementation"]["sha256"]
+        ):
+            raise ValueError("slide child selected implementation differs from its actual parent nomination")
+        if infrastructure.__file__ is None:
+            raise ValueError("slide child actual installed SDK origin is unavailable")
+        metadata = root.stat()
+        source = admit_explicitly_bound_native_source(
+            root,
+            environment=dict(os.environ),
+            current_root_identity=(metadata.st_dev, metadata.st_ino),
+            selected_sdk_package_root=Path(infrastructure.__file__).absolute().parent,
+            expected_implementation_bytes=implementation.content,
+            run_id=args.run_id,
+            deadline=args.deadline,
+            fresh_pycache_prefix=Path(sys.pycache_prefix) if sys.pycache_prefix else None,
+        )
+        if source is None or json.loads(source.descriptor(scope, deadline=args.deadline)) != spec["source"]:
+            raise ValueError("slide child lacks fresh genuine original/current Source correspondence")
+        directory = root / spec["directory"]
+        if (
+            specification.path != directory / "specification.json"
+            or spec["parent_pid"] != os.getppid()
+            or spec["parent_platform"] != platform.system()
+        ):
+            raise ValueError("slide child differs from actual original parent/root/platform")
+        with native_producer_operation(source, run_id=args.run_id, deadline=args.deadline) as owner:
+            reader = SnapshotReader(root, native_producer_operation=owner)
+            result = run_slide_source_control(
+                root,
+                directory / "fixture",
+                name,
+                env=native_environment(root, Path(sys.executable), directory),
+                deadline=args.deadline,
+                run_id=args.run_id,
+            )
+            binding = write_json(root, directory / "control-observation.json", result)
+            observation = reader.read(binding["path"])
+            if observation.sha256 != binding["sha256"]:
+                raise ValueError("slide child terminal observation changed during original custody")
+            source.verify_correspondence(source.reference, root, reader, args.deadline)
+            remaining(args.deadline)
+            code = result["oracle_exit_code"]
+            sys.stdout.write(f"SLIDE_OBSERVATION_V1 {specification.sha256} {observation.sha256} {args.run_id} {code}\n")
+            sys.stdout.flush()
+            remaining(args.deadline)
+            return int(code)
 
 
 if __name__ == "__main__":

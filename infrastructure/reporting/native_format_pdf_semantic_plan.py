@@ -26,6 +26,47 @@ MAX_TEXT_BLOCKS = 20_000
 MAX_TOKENS = 250_000
 
 
+def exact_figure_caption_alias(node: dict[str, Any]) -> tuple[list[dict[str, Any]], list[str | int]] | None:
+    """Recognize the actual modern Figure's one equal visible/alt AST pair.
+
+    The alias is Source DATA. Every visible descendant still requires its own
+    native caption witness and the image's pixels and complete source parity.
+    """
+    if node.get("t") != "Figure":
+        return None
+    value = node.get("c")
+    if not isinstance(value, list) or len(value) != 3:
+        return None
+    caption, body = value[1], value[2]
+    if (
+        not isinstance(caption, list)
+        or len(caption) != 2
+        or caption[0] is not None
+        or not isinstance(caption[1], list)
+        or len(caption[1]) != 1
+        or not isinstance(caption[1][0], dict)
+        or caption[1][0].get("t") not in {"Plain", "Para"}
+        or not isinstance(body, list)
+        or len(body) != 1
+        or not isinstance(body[0], dict)
+        or body[0].get("t") not in {"Plain", "Para"}
+        or not isinstance(body[0].get("c"), list)
+        or len(body[0].get("c", [])) != 1
+    ):
+        return None
+    image = body[0]["c"][0]
+    if (
+        not isinstance(image, dict)
+        or image.get("t") != "Image"
+        or not isinstance(image.get("c"), list)
+        or len(image["c"]) != 3
+        or not isinstance(caption[1][0].get("c"), list)
+        or image["c"][1] != caption[1][0]["c"]
+    ):
+        return None
+    return caption[1][0]["c"], ["c", 2, 0, "c", 0]
+
+
 def strict_ast(content: bytes) -> dict[str, Any]:
     """Reject ambiguous JSON before interpreting any source occurrence."""
     if not content or len(content) > MAX_BYTES:
@@ -62,6 +103,7 @@ class PDFSemanticPlan:
     occurrences: tuple[dict[str, Any], ...]
     tables: tuple[dict[str, Any], ...]
     blockers: tuple[str, ...]
+    literal_members: tuple[dict[str, Any], ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return {"schema_version": SCHEMA, **asdict(self)}
@@ -121,10 +163,11 @@ def compile_pdf_semantic_plan(
     occurrences: list[dict[str, Any]] = []
     tables: list[dict[str, Any]] = []
     blockers: list[str] = []
+    literal_members: list[dict[str, Any]] = []
     if document.get("meta"):
         blockers.append("original PDF source AST metadata requires independent frontmatter/native admission")
     visited = 0
-    figure_captions: list[tuple[tuple[str, ...], tuple[str, ...]]] = []
+    figure_captions: list[tuple[tuple[str, ...], tuple[str, ...], str | None, list[str]]] = []
 
     def literal_alternative(nodes: list[dict[str, Any]]) -> tuple[str, ...] | None:
         """Image alternatives are source metadata, not a second visible caption."""
@@ -161,18 +204,48 @@ def compile_pdf_semantic_plan(
         if not isinstance(values, list):
             raise ValueError("PDF semantic inline list is malformed")
         pending: list[str] = []
+        members: list[str] = []
+        literal_spans: list[tuple[str, str, int, int]] = []
         ids: list[str] = []
         chunk = 0
 
         def flush() -> None:
             nonlocal chunk
-            tokens = text_tokens("".join(pending))
+            raw = "".join(pending)
+            tokens = text_tokens(raw)
             pending.clear()
             if tokens:
                 identity = f"{path}/text/{chunk}"
                 chunk += 1
                 (notes if note else text).append(ContentBlock(identity, context, 0, tokens))
+                spans = []
+                for source_identity, kind, start, end in literal_spans:
+                    before, selected, after = (
+                        text_tokens(raw[:start]),
+                        text_tokens(raw[start:end]),
+                        text_tokens(raw[end:]),
+                    )
+                    # Only exact Source token partitions identify a subrole. A
+                    # word merged across an inline boundary remains unsupported.
+                    if selected and before + selected + after == tokens:
+                        spans.append(
+                            {
+                                "identity": source_identity,
+                                "kind": kind,
+                                "token_span": [len(before), len(before) + len(selected)],
+                            }
+                        )
+                literal_members.append(
+                    {
+                        "block_id": identity,
+                        "context": context,
+                        "ast_paths": list(members),
+                        "occurrence_token_spans": spans,
+                    }
+                )
                 ids.append(identity)
+            members.clear()
+            literal_spans.clear()
 
         def visit(node: Any, identity: str) -> None:
             tick()
@@ -184,21 +257,29 @@ def compile_pdf_semantic_plan(
                 if not isinstance(value, str):
                     raise ValueError("PDF semantic literal text is malformed")
                 pending.append(value)
+                members.append(identity)
             elif tag in {"Space", "SoftBreak", "LineBreak"}:
                 pending.append(" ")
+                members.append(identity)
             elif tag in {"Emph", "Strong", "Underline", "Strikeout", "SmallCaps", "Superscript", "Subscript"}:
                 for index, child in enumerate(value):
                     visit(child, f"{identity}/c/{index}")
                 if tag in {"Superscript", "Subscript"}:
                     occurrence(node, identity, context)
             elif tag == "Code":
+                start = len("".join(pending))
                 pending.append(value[1])
+                literal_spans.append((identity, tag, start, start + len(value[1])))
+                members.append(identity)
                 occurrence(node, identity, context)
             elif tag in {"Span", "Link"}:
                 if tag == "Link":
                     occurrence(node, identity, context)
+                start, initial_chunk = len("".join(pending)), chunk
                 for index, child in enumerate(value[1]):
                     visit(child, f"{identity}/c/1/{index}")
+                if tag == "Link" and chunk == initial_chunk:
+                    literal_spans.append((identity, tag, start, len("".join(pending))))
             elif tag == "Quoted":
                 quote = value[0]["t"]
                 if quote not in {"DoubleQuote", "SingleQuote"}:
@@ -214,6 +295,7 @@ def compile_pdf_semantic_plan(
                 occurrence(node, identity, context)
                 occurrences[-1]["raw_citation_reference_ids"] = list(label["reference_ids"])
                 pending.append(label["native_text"])
+                members.append(identity)
             elif tag in {"Math", "Cite", "Image", "RawInline"}:
                 if tag == "Cite" and identity in citation_labels:
                     occurrence(node, identity, context)
@@ -225,6 +307,7 @@ def compile_pdf_semantic_plan(
                     ):
                         raise ValueError("PDF semantic citation interpretation differs from original AST occurrence")
                     pending.append(label["native_text"])
+                    members.append(identity)
                     citation_occurrence["citation_reference_id"] = label["id"]
                     # Keep this label between its exact original prose neighbours.
                     # It is independently interpreted native text, never Cite.c[1].
@@ -235,12 +318,19 @@ def compile_pdf_semantic_plan(
                     census(value, f"{identity}/c", context)
                 if tag == "Image":
                     alternative = literal_alternative(value[1])
-                    if figure_captions and alternative == figure_captions[-1][0]:
+                    if figure_captions and (identity == figure_captions[-1][2]):
                         # Modern Pandoc retains the same source caption in both
                         # Figure.caption and Image.alt. Account for the exact
                         # alias using the one independently matched visible
                         # caption; requiring it twice would invent source text.
                         occurrences[-1]["rendered_caption_text_ids"] = list(figure_captions[-1][1])
+                        occurrences[-1]["rendered_caption_occurrence_ids"] = list(figure_captions[-1][3])
+                        if identity == figure_captions[-1][2]:
+                            occurrences[-1]["exact_caption_ast_alias"] = {
+                                "visible": identity.removesuffix("/c/2/0/c/0") + "/c/1/1/0/c",
+                                "alternative": identity + "/c/1",
+                                "inline_ast_sha256": canonical_digest(value[1]),
+                            }
                     elif not figure_captions and value[2][1].startswith("fig:"):
                         caption_ids = inlines(value[1], f"{identity}/c/1", "caption", note=note)
                         ids.extend(caption_ids)
@@ -355,6 +445,16 @@ def compile_pdf_semantic_plan(
             tokens = text_tokens(value[1])
             if tokens:
                 (notes if note else text).append(ContentBlock(path, "code", 0, tokens))
+                literal_members.append(
+                    {
+                        "block_id": path,
+                        "context": "footnote" if note else "code",
+                        "ast_paths": [path],
+                        "occurrence_token_spans": [
+                            {"identity": path, "kind": "CodeBlock", "token_span": [0, len(tokens)]}
+                        ],
+                    }
+                )
             occurrence(node, path, context)
         elif tag in {"Div", "BlockQuote", "BulletList", "OrderedList", "DefinitionList", "Figure"}:
             if tag == "Div":
@@ -365,6 +465,8 @@ def compile_pdf_semantic_plan(
                 children = [(child, f"{path}/c/2/{index}") for index, child in enumerate(value[2])]
                 # Figure captions are independent from Image alternatives.
                 before_caption = len(notes if note else text)
+                before_caption_occurrences = len(occurrences)
+                exact_alias = exact_figure_caption_alias(node)
                 for index, child in enumerate(value[1][1]):
                     block(child, f"{path}/c/1/1/{index}", "caption", note=note)
                 caption_blocks = (notes if note else text)[before_caption:]
@@ -372,6 +474,12 @@ def compile_pdf_semantic_plan(
                     (
                         tuple(token for item in caption_blocks for token in item.tokens),
                         tuple(item.id for item in caption_blocks),
+                        path + "/" + "/".join(map(str, exact_alias[1])) if exact_alias is not None else None,
+                        [
+                            item["identity"]
+                            for item in occurrences[before_caption_occurrences:]
+                            if item["kind"] == "Math"
+                        ],
                     )
                 )
             else:
@@ -426,4 +534,5 @@ def compile_pdf_semantic_plan(
         tuple(occurrences),
         tuple(tables),
         tuple(blockers),
+        tuple(literal_members),
     )

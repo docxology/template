@@ -94,7 +94,20 @@ def render_mermaid_png(
     env["PATH"] = os.pathsep.join(part for part in (env.get("PATH", ""), os.defpath) if part)
 
     try:
-        completed = run_isolated_subprocess(cmd, env=env, timeout=timeout)
+        from infrastructure.reporting.native_mermaid_production_tool import run_source_native_mermaid
+
+        completed = run_source_native_mermaid(
+            cmd,
+            mmd_sidecar,
+            output_path,
+            role="standalone",
+            raw_source=source,
+            input_paths=(mmd_sidecar, *((puppeteer_config,) if puppeteer_config is not None else ())),
+            environment=env,
+            timeout=timeout,
+        )
+        if completed is None:
+            completed = run_isolated_subprocess(cmd, env=env, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
         raise RenderingError(f"mmdc timed out while rendering {output_path.name}") from exc
     except OSError as exc:

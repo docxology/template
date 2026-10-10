@@ -29,6 +29,8 @@ bash scripts/shell/health-check.sh
 # One-shot system dependency setup (pandoc, xelatex + LaTeX packages, uv)
 bash scripts/shell/setup-system-deps.sh --check
 bash scripts/shell/setup-system-deps.sh
+# Hosted/advanced callers with an already locked environment:
+bash scripts/shell/setup-system-deps.sh --prepared-python .venv/bin/python
 
 # Local CI
 bash scripts/shell/ci_local.sh
@@ -74,3 +76,9 @@ bash scripts/shell/restore-test.sh backup pre-upgrade-2026-08-14
 
 - [`scripts/AGENTS.md`](../AGENTS.md) — full scripts inventory
 - [`scripts/backup/`](../backup/) — backup scripts directory
+
+`setup-system-deps.sh --prepared-python PATH` never bootstraps or syncs Python;
+it requires an executable CPython >=3.12 and uses that interpreter for the actual
+LaTeX package validator. The caller owns dependency preparation. `--check` can
+be combined with this selection and retains its no-install behavior. Ordinary
+standalone invocation keeps its existing uv setup, sync and validation.

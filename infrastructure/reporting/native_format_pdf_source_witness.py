@@ -352,15 +352,9 @@ def inspect_pdf_source_witness(
         )
     from infrastructure.reporting.native_format_pdf_figure_positions import bind_pdf_figure_positions
 
-    figure_positions = bind_pdf_figure_positions(
-        plan,
-        literal,
-        figures,
-        reference_literal=reference_literal,
-        reference_figures=reference_figures,
-        whole_page_parity=whole_page_parity,
-        deadline=deadline,
-    )
+    from infrastructure.reporting.native_pdf_literal_roles import inspect_pdf_literal_roles
+
+    literal_roles = inspect_pdf_literal_roles(plan, literal, reference_literal, whole_page_parity, deadline=deadline)
     pagebreaks = inspect_pdf_source_pagebreaks(plan, literal, deadline=deadline)
     citations = None
     equations = None
@@ -380,6 +374,16 @@ def inspect_pdf_source_witness(
         ):
             raise ValueError("PDF mathematical inputs differ from original source AST")
         equations = inspect_pdf_positioned_math(pdf, rasters, deadline=deadline, **mathematical_inputs)
+    figure_positions = bind_pdf_figure_positions(
+        plan,
+        literal,
+        figures,
+        reference_literal=reference_literal,
+        reference_figures=reference_figures,
+        whole_page_parity=whole_page_parity,
+        deadline=deadline,
+        equations=equations,
+    )
     scientific_boxes = {row["identity"]: (row["page"], row["box_pt"]) for row in figures["figures"] if row["covered"]}
     if equations is not None:
         scientific_boxes.update({row["identity"]: (row["page"], row["box_pt"]) for row in equations["observations"]})
@@ -389,16 +393,27 @@ def inspect_pdf_source_witness(
     if note is not None:
         blockers.extend(note["blockers"])
         findings.extend(note["findings"])
-    for component in (citations, equations, pagebreaks, figure_positions, reference_literal, reference_figures):
+    for component in (
+        citations,
+        equations,
+        pagebreaks,
+        figure_positions,
+        reference_literal,
+        reference_figures,
+        literal_roles,
+    ):
         if component is not None:
             blockers.extend(component["blockers"])
             findings.extend(component["findings"])
     if whole_page_parity is not None:
         findings.extend(whole_page_parity["findings"])
     mathematically_observed = {row["identity"] for row in equations["observations"]} if equations else set()
+    literal_roles_observed = {row["identity"] for row in literal_roles["observations"]}
     pagebreaks_observed = {row["identity"] for row in pagebreaks["observations"]}
     for row in plan.occurrences:
         kind = row["kind"]
+        if kind in {"Code", "CodeBlock", "Link"} and row["identity"] in literal_roles_observed:
+            continue
         if kind == "Math" and row["identity"] in mathematically_observed:
             continue
         if kind == "Cite" and "citation_reference_id" in row and citations is not None:
@@ -436,6 +451,7 @@ def inspect_pdf_source_witness(
         "pdf_sha256": hashlib.sha256(pdf).hexdigest(),
         "raster_sha256": [hashlib.sha256(raw).hexdigest() for raw in rasters],
         "literal": literal,
+        "literal_roles": literal_roles,
         "notes": note,
         "tables": tables,
         "figures": figures,

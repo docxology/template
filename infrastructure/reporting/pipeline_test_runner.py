@@ -357,14 +357,14 @@ def _run_project_tests_impl(
     logger.info("Coverage target: %s (%s%% minimum)", project_root / "src", project_threshold)
 
     try:
-        declared_command = project_declared_test_command(project_root)
+        declared_command = project_declared_test_command(project_root, profile=profile)
     except ValueError as exc:
         logger.error("Invalid declared project verifier for '%s': %s", project_name, exc)
         return 2, cast(TestSuiteResults, {"exit_code": 2, "original_exit_code": None})
     if declared_command is not None:
         log_substep(
             "Using the project's explicit structured Stage-01 verifier "
-            "(the generic pytest profile flags do not rewrite its declared argv).",
+            "(only its declared named-profile argument is forwarded).",
             logger,
         )
         try:

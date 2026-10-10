@@ -110,6 +110,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                     " from infrastructure.validation.xml_parser_policy import validate_xml_parser_policy;"
                     " violations = validate_xml_parser_policy("
                     f"Path({str(repo_root)!r}) / 'infrastructure', Path({str(repo_root)!r}));"
+                    " print('\\n'.join(violations));"
                     " sys.exit(1 if violations else 0)"
                 ),
             ],

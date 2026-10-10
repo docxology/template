@@ -154,8 +154,35 @@ def _coverage(requirement: Requirement, details: dict[str, Any], reader: Snapsho
 
 def _formats(requirement: Requirement, details: dict[str, Any], reader: SnapshotReader) -> None:
     from infrastructure.reporting.native_format_acceptance_validation import validate_native_acceptance
+    from infrastructure.reporting.native_format_joint_source import require_native_operation
+    from infrastructure.reporting.native_current_reader_inputs import NativeCurrentAnalysisInputs
 
-    validate_native_acceptance(requirement, details, reader)
+    operation = require_native_operation(reader)
+    current = operation.current_analysis
+    if not isinstance(current, NativeCurrentAnalysisInputs):
+        raise ValueError("full native acceptance needs the actual reader's distinct admitted Current Source inputs")
+    if current.terminal_failure_exit() is not None:
+        raise ValueError("a genuine Current interruption/timeout ended execution for the remaining format scopes")
+    current.verify(operation.source, set(operation.originals), operation.deadline)
+    if requirement.scope not in current.scope_directories:
+        raise ValueError("Current native acceptance scope is absent from the complete actual selection")
+    provider, runtime, fonts, tools = current.nominees(requirement.scope)
+    try:
+        validate_native_acceptance(
+            requirement,
+            details,
+            reader,
+            current_source=current.source,
+            current_directory=current.scope_directories[requirement.scope],
+            provider_wheels=current.provider_wheels,
+            pdfium_provider=provider,
+            pdfium_runtime=runtime,
+            office_font_files=fonts,
+            current_observer_tools=tools,
+        )
+    except (OSError, ValueError, TypeError, KeyError, RuntimeError) as error:
+        current.retain_failure(error)
+        raise
 
 
 def validate_installed_wheel(requirement: Requirement, details: dict[str, Any], reader: SnapshotReader) -> None:

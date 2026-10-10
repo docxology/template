@@ -12,9 +12,8 @@ from pathlib import Path
 from typing import Any
 
 
-from infrastructure.core.execution_boundary import run_bounded_subprocess
 from infrastructure.project.installed_acceptance_artifacts import write_binary
-from infrastructure.project.public_acceptance_evidence import bootstrap_command, runtime_identity, write_json
+from infrastructure.project.public_acceptance_evidence import runtime_identity, write_json
 from infrastructure.reporting.native_format_acceptance_checks import audit_pdf_raster, parse_native_bytes
 from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact, create_private_native_directory
 from infrastructure.reporting.native_print_artifact_observer import (
@@ -29,7 +28,7 @@ from infrastructure.reporting.native_print_mutations import mutate_print as muta
 from infrastructure.reporting.native_storybook_source import source_package
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
-SCHEMA = "template-configured-print-controls-v1"
+SCHEMA = "template-configured-print-controls-v2"
 PROCESS_SCHEMA = "template-configured-print-control-process-v1"
 MODULE = "infrastructure.reporting.native_print_artifact_controls"
 STORYBOOK_CONTROLS = (
@@ -116,19 +115,21 @@ def run_print_control(
     worker_platform: str,
     deadline: float,
     env: dict[str, str],
+    reader: SnapshotReader,
 ) -> int:
     """Write and inspect actual native bytes; caller preserves the original exit."""
     if worker_platform not in PRINT_PLATFORMS or platform.system() != worker_platform:
         raise ValueError("configured print control does not execute on the admitted original worker platform")
-    reader = SnapshotReader(root)
     kind = PRINT_SCOPES[scope]
-    reference_file = reader.read(
-        (directory.parent / f"print-reference-{kind}/source-reference.json").relative_to(root).as_posix()
-    )
-    binding = {"path": reference_file.relative, "sha256": reference_file.sha256}
+    from infrastructure.reporting.native_print_artifact_observer import _source_reference
+
+    # Every child starts with genuine fresh Source/Code custody and makes its
+    # own original witness. Parent font/tool transcripts are never authority.
+    reference_directory = directory / "reference-owner"
+    binding = _source_reference(root, reference_directory, scope, reader, env=env, deadline=deadline, run_id=run_id)
     reference, source = admit_print_reference(
         root,
-        directory,
+        reference_directory,
         scope,
         binding,
         reader,
@@ -221,100 +222,209 @@ def supervise_print_controls(
     run_id: str,
     interpreter: Path,
 ) -> list[dict[str, Any]]:
-    """Retain original baseline 0 and meaningful native-mutant 1 subprocess exits."""
-    records = []
+    """Launch fresh admitted SDK/Source children; retain genuine original 0/1 exits."""
+    import hashlib
+    import json
+    from infrastructure.core.files.secure_write import atomic_write_bytes_confined
+    from infrastructure.reporting.native_print_child_custody import CHILD_SCHEMA, WORKER, PrintControlReaderOperation
+    from infrastructure.reporting.native_source_provider_bootstrap import format_selected_sdk_native_bootstrap
+    from infrastructure.reporting.native_tool_producer import current_native_producer_operation
+    from infrastructure.reporting.native_format_acceptance_checks import native_tool_record
+    from infrastructure.project.public_reference_git import remaining
+
+    owner = current_native_producer_operation()
+    if owner is None or owner.run_id != run_id or owner.deadline != deadline:
+        raise ValueError("configured print controls require this actual live Source/ToolAPI owner and original clock")
+    source = owner.source
+    selected_runtime = json.loads(source.bindings.expected_implementation_bytes)["runtime_environment"]
+    if not interpreter.is_absolute() or str(interpreter.resolve(strict=True)) != selected_runtime["python_executable"]:
+        raise ValueError("configured print controls differ from the actual admitted selected interpreter")
+    parent_reader = SnapshotReader(root, native_producer_operation=owner)
+    records: list[dict[str, Any]] = []
     for ordinal, name in enumerate(print_control_names(scope)):
+        remaining(deadline)
+        # Admission, fresh code prefix, child, cleanup and sealing share this
+        # genuine existing ToolAPI cap; the enclosing clock never extends.
+        child_deadline = min(deadline, time.monotonic() + 120.0)
         leaf = directory / f"print-control-{ordinal:04d}"
         create_private_native_directory(root, leaf)
-        command = bootstrap_command(
-            interpreter,
-            root,
-            MODULE,
-            "--scope",
-            scope,
-            "--control",
-            name,
+        create_private_native_directory(root, leaf / "closure")
+        source.verify_correspondence(source.reference, root, parent_reader, child_deadline)
+        implementation_path = leaf / "implementation.json"
+        atomic_write_bytes_confined(
+            root, implementation_path, source.bindings.expected_implementation_bytes, mode=0o600
+        )
+        implementation = parent_reader.read(implementation_path.relative_to(root).as_posix())
+        closure_identity = (leaf / "closure").stat()
+        specification = {
+            "schema_version": CHILD_SCHEMA,
+            "scope": scope,
+            "name": name,
+            "run_id": run_id,
+            "directory": leaf.relative_to(root).as_posix(),
+            "source": json.loads(source.descriptor(scope, deadline=child_deadline)),
+            "implementation": {"path": implementation.relative, "sha256": implementation.sha256},
+            "expected_exit": 0 if name == "baseline" else 1,
+            "parent_pid": os.getpid(),
+            "parent_platform": platform.system(),
+            "deadline_monotonic": child_deadline,
+            "caller_deadline_monotonic": deadline,
+            "closure_identity": [closure_identity.st_dev, closure_identity.st_ino],
+        }
+        spec = write_json(root, leaf / "specification.json", specification)
+        sdk = source.bindings.selected_sdk_package_root
+        hook = source.current_source_reader.read("infrastructure/core/bytecode_audit.py").content
+        if (
+            json.loads(source.bindings.expected_implementation_bytes)["files"]["infrastructure/core/bytecode_audit.py"]
+            != hashlib.sha256(hook).hexdigest()
+        ):
+            raise ValueError("configured print child raw hook differs from the admitted installed SDK")
+        bootstrap = format_selected_sdk_native_bootstrap(
+            hook,
+            sdk,
+            (root / "projects" / scope / "src",),
+            implementation_path,
+            implementation.sha256,
+            leaf / "closure",
+            (closure_identity.st_dev, closure_identity.st_ino),
+            child_deadline,
+            required_worker_module=WORKER,
+        )
+        command = [
+            str(interpreter),
+            "-I",
+            "-c",
+            bootstrap,
             "--root",
             str(root),
-            "--directory",
-            str(leaf),
+            "--specification",
+            spec["path"],
+            "--specification-sha256",
+            spec["sha256"],
+            "--implementation-sha256",
+            implementation.sha256,
             "--deadline",
-            str(deadline),
+            repr(child_deadline),
             "--run-id",
             run_id,
-            "--worker-pid",
-            str(os.getpid()),
-            "--worker-platform",
-            platform.system(),
-        )
-        remaining = deadline - time.monotonic()
-        if remaining <= 0:
-            raise TimeoutError("configured print controls exhausted original deadline")
-        process = run_bounded_subprocess(command, cwd=root, env=env, timeout=remaining)
-        expected = 0 if name == "baseline" else 1
-        if (
-            process.timed_out
-            or process.custody_refused
-            or process.returncode != expected
-            or process.original_returncode != expected
-        ):
-            raise ValueError("actual print control failed to preserve its required original process outcome")
-        reader = SnapshotReader(root)
-        result = reader.read((leaf / "control-observation.json").relative_to(root).as_posix())
-        if result.json_object().get("oracle_exit_code") != expected:
-            raise ValueError("actual print control omitted its observed oracle outcome")
-        binding = write_json(
+        ]
+        process = native_tool_record(
             root,
-            leaf / "control-process.json",
-            {
-                "schema_version": PROCESS_SCHEMA,
-                "run_id": run_id,
-                "command": list(command),
-                "exit_code": process.returncode,
-                "original_exit_code": process.original_returncode,
-                "timed_out": process.timed_out,
-                "custody_refused": process.custody_refused,
-                "stdout": process.stdout,
-                "stderr": process.stderr,
-                "diagnostic": process.command_error,
-            },
+            leaf,
+            str(interpreter),
+            command[1:],
+            env=env,
+            deadline=child_deadline,
+            run_id=run_id,
+            purpose="print-child",
+            preserve_nominated_launcher=True,
         )
-        records.append(
-            {
-                "name": name,
-                "artifact": {"path": result.relative, "sha256": result.sha256},
-                "process_artifact": binding,
-                "original_exit_code": process.original_returncode,
-            }
+        expected = specification["expected_exit"]
+        if process["exit_code"] != expected or process["original_exit_code"] != expected:
+            raise ValueError("actual configured print child failed its required original native oracle")
+        result = parent_reader.read((leaf / "control-observation.json").relative_to(root).as_posix())
+        closure = parent_reader.read((leaf / "closure/receipt.json").relative_to(root).as_posix())
+        item = {
+            "name": name,
+            "artifact": {"path": result.relative, "sha256": result.sha256},
+            "process_artifact": process["artifact"],
+            "specification_artifact": spec,
+            "closure_artifact": {"path": closure.relative, "sha256": closure.sha256},
+            "original_exit_code": expected,
+        }
+        # This constructor requires the actual live parent, not its JSON. The
+        # final installed reader independently supplies its own genuine owner.
+        context = PrintControlReaderOperation(
+            source, parent_reader, [item], scope=scope, run_id=run_id, deadline=deadline
         )
+        context.child(item, SnapshotReader(root, native_control_operation=context))
+        records.append(item)
+        source.verify_correspondence(source.reference, root, parent_reader, deadline)
     return records
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--scope", choices=tuple(PRINT_SCOPES), required=True)
-    parser.add_argument("--control", required=True)
     parser.add_argument("--root", type=Path, required=True)
-    parser.add_argument("--directory", type=Path, required=True)
+    parser.add_argument("--specification", required=True)
+    parser.add_argument("--specification-sha256", required=True)
+    parser.add_argument("--implementation-sha256", required=True)
     parser.add_argument("--deadline", type=float, required=True)
     parser.add_argument("--run-id", required=True)
-    parser.add_argument("--worker-pid", type=int, required=True)
-    parser.add_argument("--worker-platform", choices=tuple(sorted(PRINT_PLATFORMS)), required=True)
     args = parser.parse_args()
     from infrastructure.reporting.native_format_acceptance_contracts import native_deadline_guard, native_environment
+    from infrastructure.reporting.native_print_child_custody import CHILD_SCHEMA
+    from infrastructure.reporting.native_source_external_admission import admit_explicitly_bound_native_source
+    from infrastructure.reporting.native_tool_producer import native_producer_operation
+    import infrastructure
+    import json
 
     with native_deadline_guard(args.deadline):
-        return run_print_control(
-            args.root,
-            args.directory,
-            args.scope,
-            args.control,
+        root = args.root.absolute()
+        reader = SnapshotReader(root)
+        specification = reader.read(args.specification)
+        spec = specification.json_object()
+        if (
+            specification.sha256 != args.specification_sha256
+            or spec.get("schema_version") != CHILD_SCHEMA
+            or spec.get("deadline_monotonic") != args.deadline
+            or spec.get("run_id") != args.run_id
+        ):
+            raise ValueError("configured print child differs from actual parent prelaunch role/clock/Source bytes")
+        scope, name = spec["scope"], spec["name"]
+        if (
+            scope not in PRINT_SCOPES
+            or name not in print_control_names(scope)
+            or spec["expected_exit"] != (0 if name == "baseline" else 1)
+        ):
+            raise ValueError("configured print child is outside the complete Source-owned control roster")
+        implementation = reader.read(spec["implementation"]["path"])
+        if (
+            implementation.sha256 != args.implementation_sha256
+            or implementation.sha256 != spec["implementation"]["sha256"]
+        ):
+            raise ValueError("configured print child selected implementation differs from its actual parent nomination")
+        if infrastructure.__file__ is None:
+            raise ValueError("configured print child actual installed SDK origin is unavailable")
+        metadata = root.stat()
+        source = admit_explicitly_bound_native_source(
+            root,
+            environment=dict(os.environ),
+            current_root_identity=(metadata.st_dev, metadata.st_ino),
+            selected_sdk_package_root=Path(infrastructure.__file__).absolute().parent,
+            expected_implementation_bytes=implementation.content,
             run_id=args.run_id,
-            worker_pid=args.worker_pid,
-            worker_platform=args.worker_platform,
             deadline=args.deadline,
-            env=native_environment(args.root, Path(sys.executable), args.directory),
+            fresh_pycache_prefix=Path(sys.pycache_prefix) if sys.pycache_prefix else None,
         )
+        if source is None or json.loads(source.descriptor(scope, deadline=args.deadline)) != spec["source"]:
+            raise ValueError("configured print child lacks fresh genuine original/current Source correspondence")
+        directory = root / spec["directory"]
+        if (
+            specification.path != directory / "specification.json"
+            or spec["parent_pid"] != os.getppid()
+            or spec["parent_platform"] != platform.system()
+        ):
+            raise ValueError("configured print child differs from actual original parent/root/platform")
+        with native_producer_operation(source, run_id=args.run_id, deadline=args.deadline) as owner:
+            reader = SnapshotReader(root, native_producer_operation=owner)
+            code = run_print_control(
+                root,
+                directory,
+                scope,
+                name,
+                run_id=args.run_id,
+                worker_pid=os.getpid(),
+                worker_platform=platform.system(),
+                deadline=args.deadline,
+                env=native_environment(root, Path(sys.executable), directory),
+                reader=reader,
+            )
+            source.verify_correspondence(source.reference, root, reader, args.deadline)
+            observation = reader.read((directory / "control-observation.json").relative_to(root).as_posix())
+            sys.stdout.write(f"PRINT_OBSERVATION_V2 {specification.sha256} {observation.sha256} {args.run_id} {code}\n")
+            sys.stdout.flush()
+            return code
 
 
 if __name__ == "__main__":

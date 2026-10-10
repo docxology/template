@@ -16,6 +16,8 @@ Shell helpers used by root entry points and maintenance workflows:
 bash scripts/shell/health-check.sh
 bash scripts/shell/setup-system-deps.sh --check
 bash scripts/shell/setup-system-deps.sh
+# After your explicit locked sync, preserve its selected Python dependencies:
+bash scripts/shell/setup-system-deps.sh --prepared-python .venv/bin/python
 bash scripts/shell/ci_local.sh
 bash scripts/shell/ci_local.sh --no-act --dry-run
 bash scripts/shell/backup-daily.sh

@@ -50,7 +50,7 @@ from infrastructure.reporting.native_format_html_local_paint import (
     inspect_local_paint,
 )
 
-BROWSER_SCHEMA = "template-native-browser-observation-v2"
+BROWSER_SCHEMA = "template-native-browser-observation-v3"
 BROWSER_POLICY: dict[str, Any] = {
     "schema_version": BROWSER_SCHEMA,
     "widths_px": [390, 1280],
@@ -552,6 +552,7 @@ def audit_browser_html(
         "contract_digest": contract.digest,
         "metadata_source_digest": metadata_source["digest"] if metadata_source is not None else None,
         "fidelity_source_digest": admitted_source.fidelity["digest"] if admitted_source is not None else None,
+        "source_fidelity": None if admitted_source is None else admitted_source.fidelity,
         "font_observer": font_observer,
         "policy_digest": canonical_digest(BROWSER_POLICY),
         "deadline_monotonic": deadline,
@@ -660,45 +661,9 @@ def require_browser_control_result(name: str, observation: dict[str, Any]) -> in
 
 
 def main() -> int:
-    """Execute a real valid native control with its actual oracle process exit."""
-    import argparse
-    from infrastructure.core.execution_boundary import build_bounded_env
-    from infrastructure.project.public_acceptance_evidence import write_json
-    from infrastructure.reporting.native_format_observer_dispatch import _chrome
+    from infrastructure.reporting.native_format_browser_child import browser_source_child_main
 
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--control", choices=tuple(BROWSER_CONTROL_CODES), required=True)
-    parser.add_argument("--root", type=Path, required=True)
-    parser.add_argument("--directory", type=Path, required=True)
-    parser.add_argument("--deadline", type=float, required=True)
-    parser.add_argument("--run-id", required=True)
-    args = parser.parse_args()
-    if len(args.run_id) != 32 or any(c not in "0123456789abcdef" for c in args.run_id):
-        raise ValueError("browser control requires admitted original run nonce")
-    env = build_bounded_env()
-    observation = audit_browser_html(
-        args.root,
-        args.directory,
-        browser_control_bytes(args.control),
-        browser_control_contract(),
-        chrome=_chrome(env),
-        env=env,
-        deadline=args.deadline,
-        run_id=args.run_id,
-    )
-    code = require_browser_control_result(args.control, observation)
-    write_json(
-        args.root,
-        args.directory / "control-observation.json",
-        {
-            "schema_version": "template-native-browser-valid-control-v1",
-            "name": args.control,
-            "run_id": args.run_id,
-            "observation": observation,
-            "oracle_exit_code": code,
-        },
-    )
-    return code
+    return browser_source_child_main(semantic=False)
 
 
 if __name__ == "__main__":

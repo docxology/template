@@ -19,6 +19,8 @@ from infrastructure.reporting.native_office_reference_visual import (
 )
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
+SCHEMA = "template-native-office-scientific-controls-v2"
+
 CONTROL_CODES = {
     "baseline": None,
     "changed-equation": "office.source.math",
@@ -156,6 +158,7 @@ def run_office_scientific_controls(
     directory: Path,
     kind: str,
     *,
+    reader: SnapshotReader,
     env: dict[str, str],
     deadline: float,
     run_id: str,
@@ -170,6 +173,18 @@ def run_office_scientific_controls(
     A semantic mutant must trigger its exact source finding; preserved-content
     ink mutants must additionally retain semantic survival and change pixels.
     """
+    from infrastructure.reporting.native_tool_producer import current_native_producer_operation
+
+    owner = current_native_producer_operation()
+    if (
+        kind not in {"docx", "epub"}
+        or owner is None
+        or reader.native_producer_operation is not owner
+        or owner.run_id != run_id
+        or owner.deadline != deadline
+    ):
+        raise ValueError("Office scientific controls require their actual genuine Source/ToolAPI owner/run/clock")
+    owner.verify(reader, run_id=run_id, deadline=deadline)
     from PIL import Image
     from infrastructure.rendering.office_native_projection import (
         office_semantics_filter_path,
@@ -179,23 +194,32 @@ def run_office_scientific_controls(
     from infrastructure.rendering._epub_xhtml_sanitizer import sanitize_epub_xhtml
     import shutil
 
-    create_private_native_directory(root, directory / "source")
-    source_dir = directory / "source"
-    source_path = source_dir / "source.md"
-    bibliography = source_dir / "references.bib"
-    atomic_write_bytes_confined(root, source_path, CONTROL_SOURCE.encode(), mode=0o600)
-    atomic_write_bytes_confined(root, bibliography, CONTROL_BIBLIOGRAPHY.encode(), mode=0o600)
+    from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
+
+    runtime = CitationRuntime(root, directory / "source", env=env, deadline=deadline, run_id=run_id)
+    source_dir = runtime.directory
+    source_path = runtime.freeze("source.md", CONTROL_SOURCE.encode())
+    bibliography = runtime.freeze("references.bib", CONTROL_BIBLIOGRAPHY.encode())
+
+    def source_tool(arguments: list[str], purpose: str) -> dict[str, Any]:
+        original = runtime.tool("pandoc", arguments, purpose, input_paths=tuple(runtime.inputs))
+        owner.validate_tool(runtime.tools[-1], original, reader, run_id=run_id)
+        return {
+            "artifact": runtime.tools[-1],
+            "exit_code": original["exit_code"],
+            "original_exit_code": original["original_exit_code"],
+        }
+
     image = Image.new("RGB", (64, 48), (255, 255, 255))
     for x in range(8, 56):
         for y in range(8, 40):
             image.putpixel((x, y), (40, 80, 160))
     image_bytes = BytesIO()
     image.save(image_bytes, format="PNG")
-    atomic_write_bytes_confined(root, source_dir / "control.png", image_bytes.getvalue(), mode=0o600)
+    runtime.freeze("control.png", image_bytes.getvalue())
     filters = []
     for index, path in enumerate((office_semantics_filter_path(), formalism_filter_path())):
-        consumed = source_dir / f"filter-{index}.lua"
-        atomic_write_bytes_confined(root, consumed, path.read_bytes(), mode=0o600)
+        consumed = runtime.freeze(f"filter-{index}.lua", path.read_bytes())
         filters.extend(["--lua-filter", str(consumed)])
     crossref = shutil.which("pandoc-crossref", path=env.get("PATH"))
     if not crossref:
@@ -223,20 +247,11 @@ def run_office_scientific_controls(
         from infrastructure.rendering.epub_renderer import _EPUB_IDENTIFIER_PLACEHOLDER
 
         common.append(f"--metadata=identifier:{_EPUB_IDENTIFIER_PLACEHOLDER}")
-    inventory_tool = native_tool_record(
-        root,
-        source_dir,
-        "pandoc",
+    inventory_tool = source_tool(
         [str(source_path), "--from=markdown+yaml_metadata_block", "--to=json", "--standalone"],
-        env=env,
-        deadline=deadline,
-        run_id=run_id,
-        purpose="office-scientific-control-source",
+        "office-scientific-control-source",
     )
-    filtered_tool = native_tool_record(
-        root,
-        source_dir,
-        "pandoc",
+    filtered_tool = source_tool(
         [
             str(source_path),
             "--from=markdown+yaml_metadata_block",
@@ -245,16 +260,10 @@ def run_office_scientific_controls(
             f"--metadata=office-native-target:{kind}",
             *common,
         ],
-        env=env,
-        deadline=deadline,
-        run_id=run_id,
-        purpose="office-scientific-control-filtered",
+        "office-scientific-control-filtered",
     )
     baseline_path = source_dir / f"baseline.{kind}"
-    writer = native_tool_record(
-        root,
-        source_dir,
-        "pandoc",
+    writer = source_tool(
         [
             str(source_path),
             "--from=markdown+yaml_metadata_block",
@@ -264,10 +273,7 @@ def run_office_scientific_controls(
             "--output",
             str(baseline_path),
         ],
-        env=env,
-        deadline=deadline,
-        run_id=run_id,
-        purpose="office-scientific-control-writer",
+        "office-scientific-control-writer",
     )
     if any(row["original_exit_code"] != 0 or row["exit_code"] != 0 for row in (inventory_tool, filtered_tool, writer)):
         raise ValueError("actual scientific native source parser/writer failed")
@@ -279,7 +285,6 @@ def run_office_scientific_controls(
         project_docx_transmission_layout(baseline_path)
     else:
         sanitize_epub_xhtml(baseline_path)
-    reader = SnapshotReader(root)
     source_ast = reader.read(inventory_tool["artifact"]["path"]).json_object()["stdout"].encode()
     filtered_ast = reader.read(filtered_tool["artifact"]["path"]).json_object()["stdout"].encode()
     baseline = reader.read(baseline_path.relative_to(root).as_posix())
@@ -364,10 +369,12 @@ def run_office_scientific_controls(
                 "required_finding": required,
             }
         )
+    runtime.unchanged()
+    owner.verify(reader, run_id=run_id, deadline=deadline)
     if not reader.unchanged():
         raise ValueError("actual original scientific native control custody changed")
     return {
-        "schema_version": "template-native-office-scientific-controls-v1",
+        "schema_version": SCHEMA,
         "run_id": run_id,
         "kind": kind,
         "source": {
@@ -384,11 +391,30 @@ def run_office_scientific_controls(
     }
 
 
+def office_scientific_epub_arguments(kind: str, arguments: tuple[str, ...]) -> tuple[str, ...]:
+    """Preserve original nominated labels; reader never reopens those engines."""
+    allowed = {"--epubcheck-jar", "--java-executable", "--frozen-epub-engine"}
+    options = arguments[::2]
+    if (
+        kind not in {"docx", "epub"}
+        or len(arguments) % 2
+        or len(set(options)) != len(options)
+        or any(option not in allowed for option in options)
+        or any(not isinstance(value, str) or not Path(value).is_absolute() for value in arguments[1::2])
+        or (kind == "docx" and arguments)
+    ):
+        raise ValueError("Office scientific original EPUB engine arguments differ")
+    if kind == "epub" and not {"--epubcheck-jar", "--java-executable"} <= set(options):
+        raise ValueError("Office scientific EPUB requires its actual admitted validator/Java nominations")
+    return arguments
+
+
 def supervise_office_scientific_controls(
     root: Path,
     directory: Path,
     kind: str,
     *,
+    scope: str,
     interpreter: Path,
     env: dict[str, str],
     deadline: float,
@@ -397,116 +423,253 @@ def supervise_office_scientific_controls(
     java_executable: Path | None = None,
     frozen_epub_engine: Path | None = None,
 ) -> list[dict[str, Any]]:
-    """Preserve every actual positive/negative child exit in the original budget."""
+    """Every scientific name gets an actual source-admitted child and OS oracle."""
+    import json
+    import os
+    import platform
     import time
-    from infrastructure.core.execution_boundary import run_bounded_subprocess
-    from infrastructure.project.public_acceptance_evidence import bootstrap_command, write_json
-    from infrastructure.reporting.native_format_acceptance_checks import NativeToolUnavailable
+    from infrastructure.project.public_reference_git import remaining
+    from infrastructure.project.public_acceptance_evidence import write_json
+    from infrastructure.reporting.native_print_child_custody import (
+        OFFICE_SCIENTIFIC_CHILD_SCHEMA,
+        OFFICE_SCIENTIFIC_WORKER,
+        OfficeScientificControlReaderOperation,
+    )
+    from infrastructure.reporting.native_source_provider_bootstrap import format_selected_sdk_native_bootstrap
+    from infrastructure.reporting.native_tool_producer import current_native_producer_operation
 
+    owner = current_native_producer_operation()
+    if owner is None or owner.run_id != run_id or owner.deadline != deadline:
+        raise ValueError("Office scientific supervisor needs its actual genuine enclosing Source/ToolAPI owner")
+    source = owner.source
+    parent_reader = SnapshotReader(root, native_producer_operation=owner)
+    owner.verify(parent_reader, run_id=run_id, deadline=deadline)
+    arguments: list[str] = []
+    for option, value in (
+        ("--epubcheck-jar", epubcheck_jar),
+        ("--java-executable", java_executable),
+        ("--frozen-epub-engine", frozen_epub_engine),
+    ):
+        if value is not None:
+            arguments.extend((option, str(value)))
+    epub_arguments = office_scientific_epub_arguments(kind, tuple(arguments))
     records = []
     for ordinal, (name, required) in enumerate(CONTROL_CODES.items()):
-        child = directory / f"{kind}-scientific-control-{ordinal}"
-        create_private_native_directory(root, child)
-        arguments = [
-            "--kind",
-            kind,
-            "--control",
-            name,
+        remaining(deadline)
+        child_deadline = min(deadline, time.monotonic() + 120.0)
+        leaf = directory / f"{kind}-scientific-control-{ordinal:04d}"
+        create_private_native_directory(root, leaf)
+        create_private_native_directory(root, leaf / "closure")
+        source.verify_correspondence(source.reference, root, parent_reader, child_deadline)
+        implementation_path = leaf / "implementation.json"
+        atomic_write_bytes_confined(
+            root, implementation_path, source.bindings.expected_implementation_bytes, mode=0o600
+        )
+        implementation = parent_reader.read(implementation_path.relative_to(root).as_posix())
+        closure = (leaf / "closure").stat()
+        expected = int(required is not None)
+        specification = {
+            "schema_version": OFFICE_SCIENTIFIC_CHILD_SCHEMA,
+            "scope": scope,
+            "name": name,
+            "run_id": run_id,
+            "directory": leaf.relative_to(root).as_posix(),
+            "source": json.loads(source.descriptor(scope, deadline=child_deadline)),
+            "implementation": {"path": implementation.relative, "sha256": implementation.sha256},
+            "expected_exit": expected,
+            "parent_pid": os.getpid(),
+            "parent_platform": platform.system(),
+            "deadline_monotonic": child_deadline,
+            "caller_deadline_monotonic": deadline,
+            "closure_identity": [closure.st_dev, closure.st_ino],
+            "kind": kind,
+            "epub_arguments": list(epub_arguments),
+        }
+        spec = write_json(root, leaf / "specification.json", specification)
+        hook = source.current_source_reader.read("infrastructure/core/bytecode_audit.py").content
+        if (
+            json.loads(source.bindings.expected_implementation_bytes)["files"]["infrastructure/core/bytecode_audit.py"]
+            != hashlib.sha256(hook).hexdigest()
+        ):
+            raise ValueError("Office scientific child raw hook differs from its genuine selected SDK")
+        bootstrap = format_selected_sdk_native_bootstrap(
+            hook,
+            source.bindings.selected_sdk_package_root,
+            (),
+            implementation_path,
+            implementation.sha256,
+            leaf / "closure",
+            (closure.st_dev, closure.st_ino),
+            child_deadline,
+            required_worker_module=OFFICE_SCIENTIFIC_WORKER,
+        )
+        command = [
+            str(interpreter),
+            "-I",
+            "-c",
+            bootstrap,
             "--root",
             str(root),
-            "--directory",
-            str(child),
+            "--specification",
+            spec["path"],
+            "--specification-sha256",
+            spec["sha256"],
+            "--implementation-sha256",
+            implementation.sha256,
             "--deadline",
-            str(deadline),
+            repr(child_deadline),
             "--run-id",
             run_id,
         ]
-        for option, value in (
-            ("--epubcheck-jar", epubcheck_jar),
-            ("--java-executable", java_executable),
-            ("--frozen-epub-engine", frozen_epub_engine),
-        ):
-            if value is not None:
-                arguments.extend((option, str(value)))
-        command = bootstrap_command(interpreter, root, __name__, *arguments)
-        remaining = deadline - time.monotonic()
-        if remaining <= 0:
-            raise TimeoutError("scientific native controls exhausted their original deadline")
-        process = run_bounded_subprocess(command, cwd=root, env=env, timeout=min(remaining, 120))
-        receipt = write_json(
+        process = native_tool_record(
             root,
-            directory / f"{kind}-scientific-control-{ordinal}-process.json",
-            {
-                "schema_version": "template-native-office-scientific-control-process-v1",
-                "run_id": run_id,
-                "command": list(command),
-                "exit_code": process.returncode,
-                "original_exit_code": process.original_returncode,
-                "timed_out": process.timed_out,
-                "custody_refused": process.custody_refused,
-                "stdout": process.stdout,
-                "stderr": process.stderr,
-                "diagnostic": process.command_error,
-            },
+            leaf,
+            str(interpreter),
+            command[1:],
+            env=env,
+            deadline=child_deadline,
+            run_id=run_id,
+            purpose="office-scientific-child",
+            preserve_nominated_launcher=True,
         )
-        if process.returncode == 75:
-            raise NativeToolUnavailable(f"actual scientific native {kind} control {name} requires missing engine")
-        expected = int(required is not None)
-        if (
-            process.returncode != expected
-            or process.original_returncode != expected
-            or process.timed_out
-            or process.custody_refused
-        ):
-            raise ValueError("actual scientific native control lost its intended original outcome")
-        observation = SnapshotReader(root).read((child / "observation.json").relative_to(root).as_posix())
-        records.append(
-            {
-                "kind": kind,
-                "name": name,
-                "process_artifact": receipt,
-                "artifact": {"path": observation.relative, "sha256": observation.sha256},
-                "original_exit_code": expected,
-            }
+        if process["exit_code"] != expected or process["original_exit_code"] != expected:
+            raise ValueError("actual Office scientific child lost its required original OS outcome")
+        observed = parent_reader.read((leaf / "control-observation.json").relative_to(root).as_posix())
+        closure_receipt = parent_reader.read((leaf / "closure/receipt.json").relative_to(root).as_posix())
+        item = {
+            "name": name,
+            "artifact": {"path": observed.relative, "sha256": observed.sha256},
+            "process_artifact": process["artifact"],
+            "specification_artifact": spec,
+            "closure_artifact": {"path": closure_receipt.relative, "sha256": closure_receipt.sha256},
+            "original_exit_code": expected,
+        }
+        context = OfficeScientificControlReaderOperation(
+            source, parent_reader, [item], scope=scope, run_id=run_id, deadline=deadline
         )
+        context.child(item, parent_reader)
+        records.append(item)
+        owner.verify(parent_reader, run_id=run_id, deadline=deadline)
     return records
 
 
 def main() -> int:
-    """Run one source-owned scientific control under the admitted supervisor."""
+    """Re-admit exact genuine Source, installed SDK and clock in each actual child."""
     import argparse
+    import json
     import os
+    import platform
+    import sys
+    import infrastructure
+    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
     from infrastructure.project.public_acceptance_evidence import write_json
-    from infrastructure.reporting.native_format_acceptance_checks import NativeToolUnavailable
+    from infrastructure.reporting.native_format_acceptance_contracts import native_deadline_guard, native_environment
+    from infrastructure.reporting.native_print_child_custody import OFFICE_SCIENTIFIC_CHILD_SCHEMA
+    from infrastructure.reporting.native_source_external_admission import admit_explicitly_bound_native_source
+    from infrastructure.reporting.native_tool_producer import native_producer_operation
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--kind", choices=("docx", "epub"), required=True)
-    parser.add_argument("--control", choices=tuple(CONTROL_CODES), required=True)
     parser.add_argument("--root", type=Path, required=True)
-    parser.add_argument("--directory", type=Path, required=True)
+    parser.add_argument("--specification", required=True)
+    parser.add_argument("--specification-sha256", required=True)
+    parser.add_argument("--implementation-sha256", required=True)
     parser.add_argument("--deadline", type=float, required=True)
     parser.add_argument("--run-id", required=True)
-    parser.add_argument("--epubcheck-jar", type=Path)
-    parser.add_argument("--java-executable", type=Path)
-    parser.add_argument("--frozen-epub-engine", type=Path)
     args = parser.parse_args()
-    try:
-        result = run_office_scientific_controls(
-            args.root,
-            args.directory,
-            args.kind,
-            env=dict(os.environ),
-            deadline=args.deadline,
+    with native_deadline_guard(args.deadline):
+        root = args.root.absolute()
+        reader = SnapshotReader(root)
+        specification = reader.read(args.specification)
+        spec = specification.json_object()
+        keys = {
+            "schema_version",
+            "scope",
+            "name",
+            "run_id",
+            "directory",
+            "source",
+            "implementation",
+            "expected_exit",
+            "parent_pid",
+            "parent_platform",
+            "deadline_monotonic",
+            "caller_deadline_monotonic",
+            "closure_identity",
+            "kind",
+            "epub_arguments",
+        }
+        if (
+            set(spec) != keys
+            or specification.sha256 != args.specification_sha256
+            or spec["schema_version"] != OFFICE_SCIENTIFIC_CHILD_SCHEMA
+            or spec["deadline_monotonic"] != args.deadline
+            or spec["run_id"] != args.run_id
+            or spec["scope"] not in PUBLIC_PROJECT_NAMES
+            or spec["name"] not in CONTROL_CODES
+            or type(spec["expected_exit"]) is not int
+            or spec["expected_exit"] != int(CONTROL_CODES[spec["name"]] is not None)
+            or not isinstance(spec["epub_arguments"], list)
+        ):
+            raise ValueError("Office scientific child differs from actual source-owned role/roster/specification")
+        epub_arguments = office_scientific_epub_arguments(spec["kind"], tuple(spec["epub_arguments"]))
+        implementation = reader.read(spec["implementation"]["path"])
+        if (
+            implementation.sha256 != args.implementation_sha256
+            or implementation.sha256 != spec["implementation"]["sha256"]
+            or infrastructure.__file__ is None
+        ):
+            raise ValueError("Office scientific actual child SDK nomination differs")
+        metadata = root.stat()
+        source = admit_explicitly_bound_native_source(
+            root,
+            environment=dict(os.environ),
+            current_root_identity=(metadata.st_dev, metadata.st_ino),
+            selected_sdk_package_root=Path(infrastructure.__file__).absolute().parent,
+            expected_implementation_bytes=implementation.content,
             run_id=args.run_id,
-            epubcheck_jar=args.epubcheck_jar,
-            java_executable=args.java_executable,
-            frozen_epub_engine=args.frozen_epub_engine,
-            control_name=args.control,
+            deadline=args.deadline,
+            fresh_pycache_prefix=Path(sys.pycache_prefix) if sys.pycache_prefix else None,
         )
-    except NativeToolUnavailable:
-        return 75
-    write_json(args.root, args.directory / "observation.json", result)
-    return int(result["oracle_exit_code"])
+        if source is None or json.loads(source.descriptor(spec["scope"], deadline=args.deadline)) != spec["source"]:
+            raise ValueError("Office scientific actual child lacks fresh genuine Source correspondence")
+        leaf = root / spec["directory"]
+        if (
+            specification.path != leaf / "specification.json"
+            or spec["parent_pid"] != os.getppid()
+            or spec["parent_platform"] != platform.system()
+        ):
+            raise ValueError("Office scientific child differs from actual parent/root/platform")
+        selected = dict(zip(epub_arguments[::2], epub_arguments[1::2], strict=True))
+        with native_producer_operation(source, run_id=args.run_id, deadline=args.deadline) as owner:
+            reader = SnapshotReader(root, native_producer_operation=owner)
+            create_private_native_directory(root, leaf / "fixture")
+            result = run_office_scientific_controls(
+                root,
+                leaf / "fixture",
+                spec["kind"],
+                reader=reader,
+                env=native_environment(root, Path(sys.executable), leaf),
+                deadline=args.deadline,
+                run_id=args.run_id,
+                epubcheck_jar=Path(selected["--epubcheck-jar"]) if "--epubcheck-jar" in selected else None,
+                java_executable=Path(selected["--java-executable"]) if "--java-executable" in selected else None,
+                frozen_epub_engine=Path(selected["--frozen-epub-engine"])
+                if "--frozen-epub-engine" in selected
+                else None,
+                control_name=spec["name"],
+            )
+            result.update({"scope": spec["scope"], "worker_pid": os.getpid(), "worker_platform": platform.system()})
+            if result["oracle_exit_code"] != spec["expected_exit"]:
+                raise ValueError("Office scientific actual native oracle differs from source-owned expected exit")
+            write_json(root, leaf / "control-observation.json", result)
+            source.verify_correspondence(source.reference, root, reader, args.deadline)
+            observed = reader.read((leaf / "control-observation.json").relative_to(root).as_posix())
+            sys.stdout.write(
+                f"OFFICE_SCIENTIFIC_OBSERVATION_V1 {specification.sha256} {observed.sha256} "
+                f"{args.run_id} {result['oracle_exit_code']}\n"
+            )
+            sys.stdout.flush()
+            return int(result["oracle_exit_code"])
 
 
 if __name__ == "__main__":

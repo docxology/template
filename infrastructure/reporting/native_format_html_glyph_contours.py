@@ -57,6 +57,9 @@ def compile_source_character_runs(
     an AST reconstructed from candidate DOM or pixels. Original-survival and
     other semantic obligations remain owned by the enclosing source reader.
     """
+    from infrastructure.reporting.native_format_html_image_alt import figure_caption_image_aliases
+
+    aliases = figure_caption_image_aliases(ast_bytes)
     document = json_object_from_bytes(ast_bytes)
     runs: list[dict[str, Any]] = []
     blockers: list[str] = []
@@ -100,10 +103,29 @@ def compile_source_character_runs(
                 notes.append((content, path))
             elif tag == "Math":
                 blockers.append(f"{path}: MathJax shaping/contours require an independent source math glyph reference")
+            elif tag == "Image" and path in aliases:
+                return  # Exact alternative attribute; visible caption has its own traversal.
             elif tag == "Image":
                 blockers.append(
                     f"{path}: image caption/alternative glyph placement needs authenticated writer projection"
                 )
+            elif tag == "Figure":
+                if (
+                    not isinstance(content, list)
+                    or len(content) != 3
+                    or not isinstance(content[1], list)
+                    or len(content[1]) != 2
+                    or not isinstance(content[1][1], list)
+                    or not isinstance(content[2], list)
+                ):
+                    raise ValueError("Source Figure glyph projection requires the actual modern caption/body shape")
+                if content[1][0] is not None:
+                    blockers.append(f"{path}: figure short-caption glyph placement needs a specific writer model")
+                # Actual painted caption and Image alternative remain distinct
+                # Source roles. Traverse both body and visible caption; Image's
+                # existing alternative-placement refusal is retained unchanged.
+                walk(content[1][1], path + "/c/1/1", flow, depth + 1, inherited)
+                walk(content[2], path + "/c/2", flow, depth + 1, inherited)
             elif tag in {"Space", "SoftBreak", "LineBreak", "HorizontalRule", "Null"}:
                 if source_styles is not None and tag in {
                     "Space",

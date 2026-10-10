@@ -194,6 +194,35 @@ def atomic_write_bytes_confined(
     expected_root_identity: tuple[int, int] | None = None,
 ) -> None:
     """Atomically persist exact binary bytes with the text writer's confinement."""
+    _atomic_write_bytes_confined(root, target, content, mode=mode, expected_root_identity=expected_root_identity)
+
+
+def atomic_write_bytes_confined_observed(
+    root: Path,
+    target: Path,
+    content: bytes,
+    *,
+    mode: int = 0o644,
+    expected_root_identity: tuple[int, int] | None = None,
+) -> tuple[int, int, int, int, int]:
+    """Return the actual held written inode identity, never prior-target CAS.
+
+    The temporary file descriptor remains open through publication and final
+    parent/name validation. A later path replacement cannot supply this inode.
+    This API does not compare-and-swap or attest which prior target was replaced.
+    """
+    return _atomic_write_bytes_confined(root, target, content, mode=mode, expected_root_identity=expected_root_identity)
+
+
+def _atomic_write_bytes_confined(
+    root: Path,
+    target: Path,
+    content: bytes,
+    *,
+    mode: int = 0o644,
+    expected_root_identity: tuple[int, int] | None = None,
+) -> tuple[int, int, int, int, int]:
+    """Atomically persist exact binary bytes with the text writer's confinement."""
     if not isinstance(content, bytes):
         raise TypeError("confined binary evidence must be bytes")
     lexical_root, parent_parts, filename = _relative_target(root, target)
@@ -206,8 +235,6 @@ def atomic_write_bytes_confined(
         _reject_existing_symlink(parent_fd, filename)
         temporary_fd, temporary_name = _create_temporary(parent_fd, filename)
         _write_all(temporary_fd, content, mode)
-        os.close(temporary_fd)
-        temporary_fd = -1
         if not _directory_identity_matches(lexical_root, parent_parts, parent_fd, expected_root_identity):
             raise ValueError("write parent changed during confined atomic write")
         os.replace(
@@ -220,6 +247,16 @@ def atomic_write_bytes_confined(
         os.fsync(parent_fd)
         if not _directory_identity_matches(lexical_root, parent_parts, parent_fd, expected_root_identity):
             raise ValueError("write parent changed during confined atomic write")
+        written = os.fstat(temporary_fd)
+        named = os.stat(filename, dir_fd=parent_fd, follow_symlinks=False)
+        identity = (written.st_dev, written.st_ino, written.st_size, written.st_mtime_ns, written.st_ctime_ns)
+        if (
+            not stat.S_ISREG(named.st_mode)
+            or identity != (named.st_dev, named.st_ino, named.st_size, named.st_mtime_ns, named.st_ctime_ns)
+            or written.st_size != len(content)
+        ):
+            raise ValueError("published target differs from the actual held written inode")
+        return identity
     finally:
         if temporary_fd >= 0:
             with suppress(OSError):
@@ -415,6 +452,7 @@ def unlink_confined(root: Path, target: Path) -> None:
 __all__ = [
     "atomic_write_text_confined",
     "atomic_write_bytes_confined",
+    "atomic_write_bytes_confined_observed",
     "read_text_confined",
     "read_bytes_confined",
     "append_text_confined",

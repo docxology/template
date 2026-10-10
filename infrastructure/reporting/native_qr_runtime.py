@@ -14,14 +14,14 @@ from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.reporting.native_format_acceptance_checks import native_tool_record, NativeToolUnavailable
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
-from infrastructure.reporting.native_format_acceptance_contracts import TOOL_SCHEMA
+from infrastructure.reporting.native_format_acceptance_contracts import TOOL_SCHEMA, TOOL_FIELDS
 from infrastructure.reporting.native_format_portable_custody import EXECUTABLE_SCHEMA
 
 
 def bind_qr_core(
     root: Path, directory: Path, *, env: dict[str, str], deadline: float, run_id: str, ordinal: int
 ) -> tuple[dict[str, Any], Path, bytes]:
-    """Observe native loader metadata and retain original linked-core file observations without binary redistribution."""
+    """Retain actual native loader/core observations without binary redistribution."""
     version = native_tool_record(
         root,
         directory,
@@ -261,24 +261,7 @@ def replay_projection_qr_runtime(
     return runtime
 
 
-_TOOL_FIELDS = {
-    "schema_version",
-    "executable_observation_before",
-    "executable_observation_after",
-    "run_id",
-    "tool",
-    "purpose",
-    "executable",
-    "executable_sha256",
-    "command",
-    "exit_code",
-    "original_exit_code",
-    "timed_out",
-    "custody_refused",
-    "diagnostic",
-    "stdout",
-    "stderr",
-}
+_TOOL_FIELDS = TOOL_FIELDS
 
 
 def _canonical_path(label: str) -> None:

@@ -42,7 +42,7 @@ from infrastructure.reporting.native_office_diagram_visibility import (
     observe_office_diagram_visibility,
 )
 
-SCHEMA = "template-native-office-complete-source-observer-v2"
+SCHEMA = "template-native-office-complete-source-observer-v3"
 
 
 def office_full_outcome(
@@ -212,6 +212,11 @@ def observe_office_full_source(
         metadata,
         cover,
     )
+    spine = None
+    if artifact.format == "epub":
+        from infrastructure.reporting.native_epub_source_spine import inspect_source_reference_epub_spine
+
+        spine = inspect_source_reference_epub_spine(reference_package, snapshot.content, reference_survival)
     parity = inspect_office_package_reference(reference_ast, candidate_ast, source["source_coverage"])
     # Legacy reference parity intentionally has unresolved census blockers.
     # Replace them only with the independent source survival result above.
@@ -290,5 +295,6 @@ def observe_office_full_source(
         "readbacks": readbacks,
         "native": native,
         "diagram_visibility": diagram_visibility,
+        "spine": spine,
         "observation": result,
     }

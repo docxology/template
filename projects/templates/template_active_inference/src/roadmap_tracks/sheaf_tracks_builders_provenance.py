@@ -13,6 +13,7 @@ from roadmap_tracks.sheaf_tracks_io import (
     _artifact_maps,
     _load_json,
     _sha256,
+    _source_input_sha256,
 )
 from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS, CANONICAL_SCHEMA, hash_cycle_excluded
 
@@ -21,11 +22,12 @@ def build_artifact_provenance(project_root: Path, *, context: _ProvenanceContext
     """Build canonical artifact, field-provenance, and bundle provenance rows."""
     root = project_root.resolve()
     rows = _canonical_artifact_rows(root, context or _provenance_context(root))
+    source_input_sha256 = _source_input_sha256(root)
     field_rows = [
         {
             "artifact": row["artifact"],
             "jsonpath": "$",
-            "source_commit": row["source_commit"],
+            "source_input_sha256": row["source_input_sha256"],
             "config_digest": row["config_digest"],
             "seed": row["deterministic_seed"],
             "producer": row["producer"],
@@ -33,7 +35,7 @@ def build_artifact_provenance(project_root: Path, *, context: _ProvenanceContext
             "artifact_hash": row["sha256"],
             "complete": bool(
                 row["exists"]
-                and row["source_commit"]
+                and row["source_input_sha256"] == source_input_sha256
                 and row["config_digest"]
                 and isinstance(row["deterministic_seed"], int)
                 and row["producer"]
@@ -51,7 +53,7 @@ def build_artifact_provenance(project_root: Path, *, context: _ProvenanceContext
             "sha256": row["sha256"],
             "deterministic_seed": row["deterministic_seed"],
             "config_digest": row["config_digest"],
-            "source_commit": row["source_commit"],
+            "source_input_sha256": row["source_input_sha256"],
             "cycle_excluded": row["cycle_excluded"],
             "hash_authority": row["hash_authority"],
         }
@@ -60,7 +62,7 @@ def build_artifact_provenance(project_root: Path, *, context: _ProvenanceContext
     coverage = {producer: producer in _analysis_scripts(root) for producer in sorted({row["producer"] for row in rows})}
     bundles = _artifact_bundles(root, rows)
     return {
-        "schema": "template_active_inference.artifact_provenance.v1",
+        "schema": "template_active_inference.artifact_provenance.v2",
         "schema_version": CANONICAL_SCHEMA,
         "configured_analysis_scripts": _analysis_scripts(root),
         "producer_coverage": coverage,
@@ -77,7 +79,8 @@ def build_artifact_provenance(project_root: Path, *, context: _ProvenanceContext
         "all_hashed": all(row["exists"] and (row["sha256"] or row["cycle_excluded"]) for row in rows),
         "all_seeded": all(isinstance(row.get("deterministic_seed"), int) for row in rows),
         "all_config_digests": all(bool(row.get("config_digest")) for row in rows),
-        "all_source_commits": all(bool(row.get("source_commit")) for row in rows),
+        "all_source_inputs_bound": bool(rows)
+        and all(row.get("source_input_sha256") == source_input_sha256 for row in rows),
         "all_producers_configured": all(coverage.values()),
         "cycle_hash_exclusions": sorted(row["artifact"] for row in rows if row["cycle_excluded"]),
     }

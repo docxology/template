@@ -86,6 +86,7 @@ def inspect_pdf_content(
         raise ValueError("PDF localized observer exceeds its raster-byte budget")
     words: list[dict[str, Any]] = []
     page_rows: list[dict[str, Any]] = []
+    links: list[dict[str, Any]] = []
     blockers = list(contract.blockers)
     chars_total = 0
     with pdfplumber.open(BytesIO(pdf_bytes)) as document:
@@ -107,6 +108,17 @@ def inspect_pdf_content(
             supported_geometry = page.rotation == 0 and media[:2] == (0.0, 0.0)
             if not supported_geometry:
                 blockers.append(f"page {page_number}: rotated/nonzero-origin geometry projection unsupported")
+            for annotation_index, link in enumerate(page.hyperlinks):
+                links.append(
+                    {
+                        "page": page_number,
+                        "annotation_index": annotation_index,
+                        "uri": link.get("uri"),
+                        "box_pt": list(_finite_box(link)),
+                    }
+                )
+                if len(links) > PDF_POLICY["max_words"]:
+                    raise ValueError("PDF native URI annotations exceed their finite complete budget")
             extracted = page.extract_words(use_text_flow=True, expand_ligatures=False, return_chars=True)
             for word in extracted:
                 box = _finite_box(word)
@@ -161,7 +173,14 @@ def inspect_pdf_content(
         end = index + len(block.tokens)
         selected = sorted(set(owners[index:end]))
         required_words.update(selected)
-        matches.append({"block_id": block.id, "token_span": [index, end], "word_indices": selected})
+        matches.append(
+            {
+                "block_id": block.id,
+                "token_span": [index, end],
+                "word_indices": selected,
+                "token_word_indices": owners[index:end],
+            }
+        )
         cursor = end
     observed_words: list[dict[str, Any]] = []
     for page_number, raw_image in enumerate(raster_bytes, 1):
@@ -237,6 +256,7 @@ def inspect_pdf_content(
         "policy_digest": canonical_digest(PDF_POLICY),
         "observer_versions": {name: version(name) for name in ("pdfplumber", "pdfminer.six", "Pillow")},
         "pages": page_rows,
+        "links": links,
         "word_count": len(words),
         "token_count": len(tokens),
         "matches": matches,

@@ -127,10 +127,14 @@ def zenodo_version_test_server():
         method="POST",
     ).respond_with_json(
         {
-            "id": 54321,
-            "links": {"bucket": f"{base}/files/bucket999"},
-            "metadata": {"title": "New version"},
-            "state": "unsubmitted",
+            "id": 999,
+            "links": {
+                "bucket": f"{base}/files/original-record-bucket",
+                "latest_draft": f"{base}/deposit/depositions/54321",
+            },
+            "metadata": {"title": "Original publication"},
+            "state": "done",
+            "submitted": True,
         }
     )
 
@@ -144,7 +148,10 @@ def zenodo_version_test_server():
     server.expect_request("/deposit/depositions/54321", method="GET").respond_with_json(
         {
             "id": 54321,
+            "links": {"bucket": f"{base}/files/bucket999"},
+            "metadata": {"title": "New version"},
             "state": "unsubmitted",
+            "submitted": False,
             "files": [
                 {
                     "id": "legacy-file-id",

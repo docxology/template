@@ -10,6 +10,8 @@ from typing import Any
 
 import numpy as np
 
+from ..core._runtime import write_analysis_bytes
+
 try:
     from ..core.experiment_config import ExperimentConfig, load_experiment_config
     from ..core.optimizer import compute_gradient, gradient_descent, quadratic_function, quadratic_optimum
@@ -152,8 +154,7 @@ def run_stability_analysis(config: ExperimentConfig | None = None) -> Path:
     output_dir = _root() / "output" / "reports"
     output_dir.mkdir(parents=True, exist_ok=True)
     stability_path = output_dir / "stability_analysis.json"
-    with open(stability_path, "w") as f:
-        json.dump(stability_data, f, indent=2)
+    write_analysis_bytes(_root(), stability_path, json.dumps(stability_data, indent=2).encode("utf-8"))
 
     logger.info("Stability analysis complete - Score: %.2f", stability_data["stability_score"])
     logger.info("Saved stability report to: %s", stability_path)
@@ -269,12 +270,18 @@ def register_figure(*, figure_manager_factory: Any = None) -> None:
             raise ImportError("FigureManager unavailable")
         registry_file = _root() / "output" / "figures" / "figure_registry.json"
         fm = manager_factory(registry_file=str(registry_file))
+        # This producer owns the complete six-figure Source registry. A prior
+        # run's labels and numeric IDs must not choose today's declaration or
+        # make output bytes depend on unrelated legacy registry contents.
+        fm.figures = {}
+        fm.counter = 0
         figures = [
             (
                 "convergence_plot.png",
                 "Gradient descent convergence for different step sizes",
                 "fig:convergence",
-                "Objective value over iterations for each declared step size; lower curves indicate faster convergence.",
+                "Objective value over iterations for each declared step size; "
+                "lower curves indicate faster convergence.",
             ),
             (
                 "step_size_sensitivity.png",
@@ -286,7 +293,8 @@ def register_figure(*, figure_manager_factory: Any = None) -> None:
                 "convergence_rate_comparison.png",
                 "Convergence rate comparison on logarithmic scale",
                 "fig:convergence_rate",
-                "Log-scale comparison of convergence error across step sizes, showing the stable and aggressive regimes.",
+                "Log-scale comparison of convergence error across step sizes, "
+                "showing the stable and aggressive regimes.",
             ),
             (
                 "algorithm_complexity.png",
@@ -304,7 +312,8 @@ def register_figure(*, figure_manager_factory: Any = None) -> None:
                 "performance_benchmark.png",
                 "Performance benchmarking results and metrics",
                 "fig:benchmark",
-                "Deterministic objective-evaluation observations; host-dependent wall-clock timing is excluded from the claim.",
+                "Deterministic objective-evaluation observations; "
+                "host-dependent wall-clock timing is excluded from the claim.",
             ),
         ]
         for filename, caption, label, alt_text in figures:

@@ -18,7 +18,7 @@ from infrastructure.reporting.native_format_content_contracts import (
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.validation.output.render_formats import render_config_manuscript_dir
-from infrastructure.validation.publication.rendered_provenance import validate_rendered_provenance
+from infrastructure.validation.publication.rendered_provenance import validate_current_rendered_provenance
 
 
 def semantic_source_plan(
@@ -29,7 +29,7 @@ def semantic_source_plan(
     from infrastructure.rendering.config import RenderingConfig
     from infrastructure.rendering._bibliography import resolve_bibliography
 
-    if artifact.format != "html" or not validate_rendered_provenance(root, scope).valid:
+    if artifact.format != "html" or not validate_current_rendered_provenance(root, scope).valid:
         raise ValueError("HTML semantics requires actual current consumed hydration")
     reader.read(f"projects/{scope}/manuscript/config.yaml")
     manuscript = render_config_manuscript_dir(root / "projects" / scope)
@@ -108,9 +108,28 @@ def observe_html_source(
         crossref = shutil.which("pandoc-crossref", path=env.get("PATH"))
         if crossref:
             args.extend(["--filter", crossref])
-    tool = native_tool_record(
-        root, directory, "pandoc", args, env=env, deadline=deadline, run_id=run_id, purpose="semantic-pandoc"
-    )
+    crossref_filter = None
+    if "--filter" in args:
+        from infrastructure.reporting.native_crossref_pandoc import source_crossref_pandoc
+        from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
+
+        runtime = CitationRuntime(
+            root, directory / "semantic-crossref-owner", env=env, deadline=deadline, run_id=run_id
+        )
+        held_paths = [source, *(root / row["consumed"]["path"] for row in copied)]
+        held_paths.extend(directory / f"semantic-bibliography-{index}.bib" for index, _ in enumerate(bibliographies))
+        observed, crossref_filter = source_crossref_pandoc(
+            runtime, scope, args, "semantic-pandoc", output_format="json", input_paths=tuple(held_paths)
+        )
+        tool = {
+            "artifact": runtime.tools[-1],
+            "exit_code": observed["exit_code"],
+            "original_exit_code": observed["original_exit_code"],
+        }
+    else:
+        tool = native_tool_record(
+            root, directory, "pandoc", args, env=env, deadline=deadline, run_id=run_id, purpose="semantic-pandoc"
+        )
     if tool["exit_code"] != 0 or tool["original_exit_code"] != 0:
         raise ValueError("actual source Pandoc parse failed")
     snapshot_reader = SnapshotReader(root)
@@ -136,7 +155,7 @@ def observe_html_source(
     if not reader.unchanged() or not snapshot_reader.unchanged() or not sdk_reader.unchanged():
         raise ValueError("semantic consumed custody changed")
     return contract, {
-        "schema_version": "template-native-semantic-source-observation-v1",
+        "schema_version": "template-native-semantic-source-observation-v2",
         "source": {"path": consumed.relative, "sha256": consumed.sha256},
         "ast": {"path": ast_snapshot.relative, "sha256": ast_snapshot.sha256},
         "tool": tool,
@@ -144,4 +163,5 @@ def observe_html_source(
         "bibliographies": [{"path": path, "sha256": hashlib.sha256(data).hexdigest()} for path, data in bibliographies],
         "contract": contract.to_dict(),
         "original_source": original_source,
+        "crossref_filter": crossref_filter,
     }

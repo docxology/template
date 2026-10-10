@@ -30,6 +30,9 @@ def compile_semantic_ast(sources: tuple[tuple[str, bytes], ...], ast_bytes: byte
         or sum(len(data) for _, data in sources) > MAX_SOURCE_BYTES
     ):
         raise ValueError("semantic source contract exceeds its finite input budget")
+    from infrastructure.reporting.native_format_html_image_alt import figure_caption_image_aliases
+
+    aliases = figure_caption_image_aliases(ast_bytes)
     document = json.loads(ast_bytes)
     if (
         not isinstance(document, dict)
@@ -139,7 +142,10 @@ def compile_semantic_ast(sources: tuple[tuple[str, bytes], ...], ast_bytes: byte
                     child.get("c", "") if child.get("t") == "Str" else " " if child.get("t") == "Space" else ""
                     for child in content[1]
                 )
-                if not alt or any(child.get("t") not in {"Str", "Space"} for child in content[1]):
+                alias = aliases.get(current)
+                if alias is not None:
+                    alt = alias["expected_alt"]
+                elif not alt or any(child.get("t") not in {"Str", "Space"} for child in content[1]):
                     blocker(current, "original rich/empty image alternative requires an independent writer alt model")
                     alt = ""
                 result["images"].append((ident(current), content[2][0], alt))

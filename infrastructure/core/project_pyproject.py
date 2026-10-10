@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
+from infrastructure.core.testing.pytest_profiles import TestProfileName, resolve_test_profile
+
 
 @dataclass(frozen=True)
 class ProjectPyprojectConfig:
@@ -21,6 +23,7 @@ class ProjectPyprojectConfig:
     declares_dev_extra: bool
     project_test_command: tuple[str, ...] | None
     project_test_command_error: str | None
+    project_test_profile_argument: str | None = None
 
 
 @lru_cache(maxsize=128)
@@ -56,6 +59,18 @@ def load_project_pyproject(project_root: Path) -> ProjectPyprojectConfig | None:
         else:
             test_command = tuple(raw_test_command)
 
+    raw_profile_argument = template.get("project_test_profile_argument") if isinstance(template, dict) else None
+    profile_argument: str | None = None
+    if raw_profile_argument is not None:
+        if raw_profile_argument != "--profile" or test_command is None:
+            test_command_error = (
+                "[tool.template].project_test_profile_argument requires a declared command and the literal --profile"
+            )
+        elif any(part == "--profile" or part.startswith("--profile=") for part in test_command[2:]):
+            test_command_error = "a profile-aware declared command cannot already select --profile"
+        else:
+            profile_argument = raw_profile_argument
+
     return ProjectPyprojectConfig(
         path=pyproject,
         coverage_fail_under=fail_under,
@@ -63,6 +78,7 @@ def load_project_pyproject(project_root: Path) -> ProjectPyprojectConfig | None:
         declares_dev_extra=dev_extra,
         project_test_command=test_command,
         project_test_command_error=test_command_error,
+        project_test_profile_argument=profile_argument,
     )
 
 
@@ -86,18 +102,25 @@ def project_declares_dev_extra(project_root: Path) -> bool:
     return bool(cfg and cfg.declares_dev_extra)
 
 
-def project_declared_test_command(project_root: Path) -> tuple[str, ...] | None:
+def project_declared_test_command(
+    project_root: Path, *, profile: TestProfileName | None = None
+) -> tuple[str, ...] | None:
     """Return an explicit single-project Stage-01 verifier command.
 
     The declaration is deliberately opt-in. A malformed declaration fails
-    closed instead of silently falling back to the generic pytest lane.
+    closed instead of silently falling back to the generic pytest lane. Only
+    commands explicitly declaring the supported --profile argument receive a
+    named profile; arbitrary command argv remains unchanged.
     """
     cfg = load_project_pyproject(project_root)
     if cfg is None:
         return None
     if cfg.project_test_command_error:
         raise ValueError(cfg.project_test_command_error)
-    return cfg.project_test_command
+    command = cfg.project_test_command
+    if command is None or profile is None or cfg.project_test_profile_argument is None:
+        return command
+    return (*command, cfg.project_test_profile_argument, resolve_test_profile(profile).name)
 
 
 __all__ = [

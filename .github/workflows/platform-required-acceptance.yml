@@ -45,8 +45,6 @@ jobs:
       - uses: ./.github/actions/setup-acceptance-fixtures
       - uses: ./.github/actions/setup-docs-lint
       - uses: ./.github/actions/setup-acceptance-documents
-      - name: Reconcile complete selected locked environment after tool setup
-        run: uv sync --locked --inexact --group dev --group installed-build --group timeseries-bench --group rendering-pptx --python '${{ matrix.python }}'
       - name: Prepare source-locked browser math dependencies
         run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
       - uses: ./.github/actions/setup-acceptance-model
@@ -142,6 +140,8 @@ jobs:
           done
       - uses: ./.github/actions/setup-docs-lint
       - uses: ./.github/actions/setup-acceptance-documents
+        with:
+          python-executable: output/runtime-envs/3.14/bin/python
       - name: Prepare source-locked browser math dependencies
         run: output/runtime-envs/3.14/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
       - name: Prepare pinned Lean and TLC before formal observations
@@ -376,7 +376,6 @@ jobs:
       - uses: ./.github/actions/setup-python-env
         with:
           python-version: "3.14.4"
-      - run: uv sync --locked --group dev
       - name: Read same-run original common DATA
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
@@ -407,6 +406,7 @@ jobs:
           --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID"
           --current-root "$RUNNER_TEMP/template-native-reader-root"
           --scratch "$RUNNER_TEMP/template-native-reader-scratch" --stage-bundle
+          --epubcheck-jar "$TEMPLATE_NATIVE_EPUBCHECK" --java-executable "$TEMPLATE_NATIVE_JAVA"
           --receipt output/readiness/projects/receipt.json
           --receipt output/readiness/installed/receipt.json
           --receipt output/readiness/sandbox-transfer/receipt.json
@@ -419,6 +419,7 @@ jobs:
           --root-receipt darwin/3.13=output/readiness/root-darwin-3.13/receipt.json
           --root-receipt darwin/3.14=output/readiness/root-darwin-3.14/receipt.json
       - name: Complete passed exact-SHA candidate transport only
+        id: candidate_transport
         uses: ./.github/actions/upload-readiness-shards
         with:
           repo-root: ${{ runner.temp }}/template-native-reader-root
@@ -432,9 +433,31 @@ jobs:
           --scratch "$RUNNER_TEMP/template-native-reader-scratch" --kind failed-reader
           --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID" --revision "$GITHUB_SHA"
       - name: Retain bounded failed-reader diagnostics without acceptance
+        id: diagnostic_transport
         if: always() && steps.reader.outcome == 'failure'
         uses: ./.github/actions/upload-readiness-shards
         with:
           repo-root: ${{ github.workspace }}
           directory: ${{ github.workspace }}/output/readiness/failed-reader-transport
           kind: failed-reader
+      - name: Summarize required acceptance outcomes
+        if: always()
+        shell: bash
+        env:
+          NEEDS_JSON: ${{ toJson(needs) }}
+          READER_OUTCOME: ${{ steps.reader.outcome }}
+          CANDIDATE_TRANSPORT: ${{ steps.candidate_transport.outcome }}
+          DIAGNOSTIC_TRANSPORT: ${{ steps.diagnostic_transport.outcome }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          {
+            printf '### Required acceptance\n\nSource: `%s` · job: `%s`\n\n' "$GITHUB_SHA" "$JOB_STATUS"
+            printf '| Operation | Outcome |\n| --- | --- |\n'
+            jq -r 'to_entries[] | "| Original observation job: " + .key + " | " + .value.result + " |"' <<< "$NEEDS_JSON"
+            printf '| Fresh installed candidate readback | %s |\n' "${READER_OUTCOME:-not run}"
+            printf '| Passed candidate transport | %s |\n' "${CANDIDATE_TRANSPORT:-not run}"
+            printf '| Failed-reader diagnostic transport | %s |\n\n' "${DIAGNOSTIC_TRANSPORT:-not run}"
+            printf 'Original job outcomes are diagnostic; the fresh installed reader admits the complete candidate. Failed-reader diagnostics do not constitute acceptance.\n\n'
+            printf '[Retained run artifacts](https://github.com/%s/actions/runs/%s)\n' "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+          } >> "$GITHUB_STEP_SUMMARY"

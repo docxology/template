@@ -49,6 +49,15 @@ def launch_analysis_script(
     key = stage_key or analysis_stage_key(script_path, project_root)
     if type(deadline) not in (int, float) or not math.isfinite(deadline):
         raise ValueError("Analysis deadline must be finite")
+    from infrastructure.reporting.native_tool_producer import current_native_producer_operation
+
+    native_owner = current_native_producer_operation()
+    if native_owner is not None:
+        if native_owner.source.bindings.current_root != repo_root:
+            raise ValueError("Analysis actual repository differs from its already-live native Source owner")
+        # The existing caller may select a shorter per-script/hydration ceiling,
+        # but cannot extend the actual enclosing native stage's finite clock.
+        deadline = min(deadline, native_owner.deadline)
     run_id = env.get("PIPELINE_RUN_ID") or uuid.uuid4().hex
     raw_receipt: dict[str, object] = {}
     before: dict[str, object] | None = None
@@ -142,6 +151,9 @@ def _unreturned_outcome(key: str, validated: dict[str, object], state: StageStat
     """Retain a launcher-validated original if its scratch cleanup was interrupted."""
     completion = validated.get("completion")
     original = completion.get("original_exit_code") if isinstance(completion, dict) else None
+    checkpoint = validated.get("original_checkpoint")
+    if original is None and isinstance(checkpoint, dict) and checkpoint.get("completion_authorized") is False:
+        original = checkpoint.get("original_exit_code")
     original = original if type(original) is int and 0 <= original <= 255 else None
     if original is not None:
         diagnostic = diagnostic.replace("; no verified leaf exit", "") + "; verified original leaf exit retained"
@@ -164,7 +176,7 @@ def _persist_analysis_result(
     """An incomplete or missing worker receipt cannot become completion evidence."""
     target = analysis_receipt_path(project, run_id, result.stage_key)
     record = {
-        "schema": "template-analysis-leaf/1",
+        "schema": "template-analysis-leaf/3",
         "run_id": run_id,
         "stage_key": result.stage_key,
         "plan_digest": plan_digest,

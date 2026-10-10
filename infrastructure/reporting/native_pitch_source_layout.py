@@ -9,6 +9,9 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any
 from zipfile import ZipFile
+from xml.etree.ElementTree import canonicalize
+
+from defusedxml.ElementTree import iterparse
 
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.reporting.native_pitch_source import compile_pitch_source_model
@@ -17,14 +20,19 @@ from infrastructure.reporting.native_projection_contracts import compile_project
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
+LAYOUT_SCHEMA = "template-native-pitch-package-layout-v2"
+LAYOUT_CANONICALIZATION = "xml-c14n2-with-comments-and-namespace-bindings-v1"
+
+
 def pitch_package_layout(content: bytes) -> dict[str, str]:
     """Preserve every native PPTX semantic part, including styles and notes.
 
     Creation metadata outside the presentation does not affect source layout.
     All presentation XML, relationships and native media bytes remain exact.
-    Parser/stream safety is independently required by inspect_pitch_package.
+    Hardened admission precedes C14N2 of the same immutable member bytes.
+    Complete scoped namespace declarations remain bound, including prefixes
+    used only in OOXML compatibility metadata. Media bytes stay exact.
     """
-    from lxml import etree
 
     result = {}
     with ZipFile(BytesIO(content)) as archive:
@@ -36,12 +44,31 @@ def pitch_package_layout(content: bytes) -> dict[str, str]:
                 continue
             data = archive.read(name)
             if name.endswith((".xml", ".rels")):
-                parser = etree.XMLParser(resolve_entities=False, no_network=True)
-                node = etree.fromstring(data, parser=parser)
-                if node.getroottree().docinfo.doctype:
-                    raise ValueError("Pitch native package layout contains unadmitted XML entity definitions")
-                data = etree.tostring(node, method="c14n")
-            result[name] = hashlib.sha256(data).hexdigest()
+                namespaces: list[tuple[int, tuple[tuple[str, str], ...]]] = []
+                pending: list[tuple[str, str]] = []
+                ordinal = 0
+                for event, value in iterparse(
+                    BytesIO(data),
+                    events=("start-ns", "start"),
+                    forbid_dtd=True,
+                    forbid_entities=True,
+                    forbid_external=True,
+                ):
+                    if event == "start-ns":
+                        pending.append(value)
+                    else:
+                        if pending:
+                            namespaces.append((ordinal, tuple(sorted(pending))))
+                            pending.clear()
+                        ordinal += 1
+                result[name] = canonical_digest(
+                    {
+                        "xml_c14n2": canonicalize(data, with_comments=True),
+                        "namespace_bindings": namespaces,
+                    }
+                )
+            else:
+                result[name] = hashlib.sha256(data).hexdigest()
     if not result:
         raise ValueError("Pitch native package has no complete presentation layout")
     return result
@@ -103,6 +130,8 @@ def observe_pitch_package_source(
     ]
     observed["findings"].extend(layout_findings)
     observed["source_layout"] = {
+        "schema_version": LAYOUT_SCHEMA,
+        "canonicalization": LAYOUT_CANONICALIZATION,
         "source_artifact": {"path": snapshot.relative, "sha256": snapshot.sha256},
         "source_layout_digest": canonical_digest(source_layout),
         "candidate_layout_digest": canonical_digest(actual_layout),
@@ -153,6 +182,8 @@ def replay_pitch_source_layout(
     if time.monotonic() >= deadline or not reader.unchanged():
         raise ValueError("portable Pitch source layout DATA changed or original deadline expired")
     return {
+        "schema_version": LAYOUT_SCHEMA,
+        "canonicalization": LAYOUT_CANONICALIZATION,
         "source_layout_digest": canonical_digest(source_layout),
         "candidate_layout_digest": canonical_digest(candidate_layout),
         "parts": len(source_layout),

@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import argparse
 import hashlib
 import sys
-import time
 from io import BytesIO
 from pathlib import Path
 from typing import Any
@@ -35,8 +33,15 @@ SEMANTIC_CONTROL_CODES = {
     "changed-alpha-pixel": "html.figure.pixels",
     "opaque-alpha-figure": "html.figure.visual",
 }
-SOURCE = b"# Invented measurement\n\nMeasured value -3.25 mV.\n\n$x^2 + \\frac{1}{2}$\n\nInvented reference [@invented].\n\n![Invented pixels](figure.png)\n"
-BIBLIOGRAPHY = b"@article{invented,author={Example, Ada},title={Invented measurement fixture},journal={Example Journal},year={2020}}\n"
+SOURCE = (
+    b"# Invented measurement\n\nMeasured value -3.25 mV.\n\n$x^2 + \\frac{1}"
+    b"{2}$\n\nInvented reference [@invented].\n\n![Invented pixels](figure."
+    b"png)\n"
+)
+BIBLIOGRAPHY = (
+    b"@article{invented,author={Example, Ada},title={Invented measureme"
+    b"nt fixture},journal={Example Journal},year={2020}}\n"
+)
 
 STRUCTURE_SOURCE = SOURCE + (
     b"\n| Invented channel | Invented value |\n|---|---:|\n| A | -9.25 |\n| B | 2.75 |\n\n"
@@ -101,10 +106,20 @@ def mutate_html(content: str, name: str) -> str:
         "hidden-math": ".math{opacity:0}",
         "hidden-table-cell": "td:first-child{visibility:hidden}",
         "hidden-footnote": "section.footnotes{visibility:hidden}",
-        "opaque-footnote": "section.footnotes li{position:relative}section.footnotes li:after{content:'';position:absolute;inset:0;background:white;z-index:99}",
-        "opaque-alpha-figure": 'figure:has(img[src="alpha.png"]){position:relative}figure:has(img[src="alpha.png"]):after{content:\'\';position:absolute;inset:0;background:white;z-index:99}',
+        ("opaque-footnote"): (
+            "section.footnotes li{position:relative}section.footnotes li:after"
+            "{content:'';position:absolute;inset:0;background:white;z-index:99"
+            "}"
+        ),
+        ("opaque-alpha-figure"): (
+            'figure:has(img[src="alpha.png"]){position:relative}figure:has(img'
+            "[src=\"alpha.png\"]):after{content:'';position:absolute;inset:0;bac"
+            "kground:white;z-index:99}"
+        ),
         "distorted-figure": "img{width:160px;height:20px}",
-        "opaque-figure": "figure{position:relative}figure:after{content:'';position:absolute;inset:0;background:white;z-index:99}",
+        ("opaque-figure"): (
+            "figure{position:relative}figure:after{content:'';position:absolute;inset:0;background:white;z-index:99}"
+        ),
     }
     return content.replace("</head>", f"<style>{styles[name]}</style></head>") if name in styles else content
 
@@ -224,27 +239,9 @@ def run_semantic_control(
 
 
 def main() -> int:
-    from infrastructure.core.execution_boundary import build_bounded_env
-    from infrastructure.project.public_acceptance_evidence import write_json
+    from infrastructure.reporting.native_format_browser_child import browser_source_child_main
 
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--control", choices=tuple(SEMANTIC_CONTROL_CODES), required=True)
-    parser.add_argument("--root", type=Path, required=True)
-    parser.add_argument("--directory", type=Path, required=True)
-    parser.add_argument("--deadline", type=float, required=True)
-    parser.add_argument("--run-id", required=True)
-    args = parser.parse_args()
-    if (
-        args.deadline <= time.monotonic()
-        or len(args.run_id) != 32
-        or any(c not in "0123456789abcdef" for c in args.run_id)
-    ):
-        raise ValueError("semantic browser control requires original bounded run identity")
-    raw = run_semantic_control(
-        args.root, args.directory, args.control, env=build_bounded_env(), deadline=args.deadline, run_id=args.run_id
-    )
-    write_json(args.root, args.directory / "control-observation.json", raw)
-    return int(raw["oracle_exit_code"])
+    return browser_source_child_main(semantic=True)
 
 
 if __name__ == "__main__":

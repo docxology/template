@@ -70,7 +70,7 @@ def office_semantic_source_plan(
         render_config_manuscript_dir,
     )
     from infrastructure.validation.publication.rendered_provenance import (
-        validate_rendered_provenance,
+        validate_current_rendered_provenance,
     )
     import yaml
 
@@ -78,7 +78,7 @@ def office_semantic_source_plan(
         raise TimeoutError("Office semantic source admission expired")
     if artifact.format not in {"docx", "epub"} or artifact.id != f"manuscript:{artifact.format}":
         raise ValueError("Office semantics requires a literal combined manuscript artifact")
-    if not validate_rendered_provenance(root, scope).valid:
+    if not validate_current_rendered_provenance(root, scope).valid:
         raise ValueError("Office semantics requires current consumed hydration")
     reader.read(f"projects/{scope}/manuscript/config.yaml")
     manuscript = render_config_manuscript_dir(root / "projects" / scope)
@@ -129,7 +129,11 @@ def office_semantic_source_plan(
         (item.relative, item.content)
         for item in (reader.read(path.relative_to(root).as_posix()) for path in resolve_bibliography(manuscript))
     )
-    if not reader.unchanged() or time.monotonic() >= deadline or not validate_rendered_provenance(root, scope).valid:
+    if (
+        not reader.unchanged()
+        or time.monotonic() >= deadline
+        or not validate_current_rendered_provenance(root, scope).valid
+    ):
         raise ValueError("Office semantic hydration/source custody changed")
     return OfficeSemanticPlan(
         content.encode(),

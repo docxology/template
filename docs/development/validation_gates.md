@@ -6,6 +6,14 @@ This document outlines the validation steps used to maintain code quality, corre
 
 ## Overview
 
+Choose a focused check or local CI lane from the [local command map](../maintenance/ci-local.md)
+while editing. For shared static checks, use its existing health route. The
+individual lint/type, no-stand-ins and confidentiality commands below are
+targeted diagnostics, rather than extra preparatory passes before the default
+direct route. Coverage floors, configured hooks and
+[exact-revision release acceptance](../maintenance/release-boundary.md) retain
+their existing requirements.
+
 Before submitting a pull request or merging changes, contributors should ensure the following gates are passed:
 
 | Gate | Purpose | How to Run | Status |

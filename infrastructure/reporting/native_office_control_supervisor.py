@@ -29,6 +29,7 @@ from infrastructure.reporting.native_office_control_custody import (
     _capture_original,
 )
 from infrastructure.reporting.native_office_diagram_controls import CONTROL_CODES
+from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumProvider
 from infrastructure.reporting.native_office_diagram_runtime import (
     PDFiumRuntimeAdmission,
 )
@@ -66,13 +67,57 @@ class OfficeNativeDependencies:
         }
 
 
-def supervise_office_original_cells(
+def _child_provider_inputs(
+    provider: PDFiumRuntimeAdmission | NativePDFiumProvider,
+    source: NativeSourceContext,
+    *,
+    deadline: float,
+) -> tuple[Path, Path, dict[str, bytes], dict[str, Any]]:
+    """Actual preimport provider or runtime inputs; never a new runtime owner.
+
+    The same genuine Source/SDK and physical provider may nominate an audited
+    fixed child in the distinct Current root. That child independently admits
+    its Source-bound provider before any imports. Parent inputs are not proof
+    of the child's consuming native mapping.
+    """
+    remaining(deadline)
+    if type(provider) is NativePDFiumProvider:
+        provider.verify_current(deadline=deadline)
+        provider.held_inputs()
+        site, wheel, members, observation = (
+            provider.selection.site,
+            provider.selection.wheel,
+            dict(provider.members),
+            provider.wheel,
+        )
+    elif type(provider) is PDFiumRuntimeAdmission:
+        provider.verify()
+        site, wheel, members, observation = provider.site, provider.wheel, provider.members, provider.wheel_observation
+    else:
+        raise ValueError("Office child needs the actual typed Source provider or live runtime")
+    if (
+        deadline > provider.deadline
+        or provider.source.reference.commit != source.reference.commit
+        or provider.source.reference.source_identity != source.reference.source_identity
+        or provider.source.bindings.expected_implementation_bytes != source.bindings.expected_implementation_bytes
+        or provider.source.bindings.selected_sdk_package_root != source.bindings.selected_sdk_package_root
+    ):
+        raise ValueError("Office child provider nomination differs from its actual Source/SDK/original clock")
+    source.verify_correspondence(
+        source.reference, source.bindings.current_root, SnapshotReader(source.bindings.current_root), deadline
+    )
+    remaining(deadline)
+    return site, wheel, members, observation
+
+
+def _supervise_office_cases(
     root: Path,
     directory: Path,
     source: NativeSourceContext,
-    pdfium_runtime: PDFiumRuntimeAdmission,
+    pdfium_runtime: PDFiumRuntimeAdmission | NativePDFiumProvider,
     dependencies: OfficeNativeDependencies,
     *,
+    cases: tuple[tuple[str, str, str, dict[str, Any] | None], ...],
     interpreter: Path,
     env: dict[str, str],
     deadline: float,
@@ -90,7 +135,8 @@ def supervise_office_original_cells(
         or producer.deadline != deadline
     ):
         raise ValueError("Office original launcher requires this actual live Source/tool owner and unchanged clock")
-    if dependencies.pdfium_site != pdfium_runtime.site or dependencies.pdfium_wheel != pdfium_runtime.wheel:
+    site, wheel, members, wheel_observation = _child_provider_inputs(pdfium_runtime, source, deadline=deadline)
+    if dependencies.pdfium_site != site or dependencies.pdfium_wheel != wheel:
         raise ValueError("Office original dependency nomination differs from genuinely admitted provider")
     expected_runtime = json.loads(source.bindings.expected_implementation_bytes).get("runtime_environment", {})
     if not interpreter.is_absolute() or str(interpreter.resolve(strict=True)) != expected_runtime.get(
@@ -98,11 +144,13 @@ def supervise_office_original_cells(
     ):
         raise ValueError("Office selected interpreter differs from actual admitted Source SDK runtime")
     create_private_native_directory(root, directory)
-    cases = [(scope, kind, "office-cell") for scope in SCOPES for kind in KINDS]
-    cases.extend((SCOPES[1], kind, control) for kind in KINDS for control in ("baseline", *CONTROL_CODES))
     originals = []
-    for ordinal, (scope, kind, control) in enumerate(cases):
+    for ordinal, (scope, kind, control, target) in enumerate(cases):
         remaining(deadline)
+        if kind not in KINDS or control not in ("office-cell", "diagram-census", "baseline", *CONTROL_CODES):
+            raise ValueError("Office supervisor selected an unsupported fixed Source child role")
+        if (control in ("baseline", *CONTROL_CODES)) != isinstance(target, dict):
+            raise ValueError("Office diagram case requires an exact census target and ordinary/census roles forbid it")
         # Admission, bootstrap, child, cleanup and final custody share this cap.
         phase_deadline = min(deadline, time.monotonic() + 120.0)
         child = directory / f"original-{ordinal:02d}-{kind}-{control}"
@@ -111,7 +159,7 @@ def supervise_office_original_cells(
         create_private_native_directory(root, child)
         create_private_native_directory(root, child / "closure")
         source.verify_correspondence(source.reference, root, SnapshotReader(root), phase_deadline)
-        pdfium_runtime.verify()
+        _child_provider_inputs(pdfium_runtime, source, deadline=phase_deadline)
         contracts = native_artifact_contract(root, scope, (kind,), SnapshotReader(root))
         selected = [value for value in contracts if value.id == f"manuscript:{kind}"]
         if len(selected) != 1:
@@ -163,6 +211,7 @@ def supervise_office_original_cells(
             "scope": scope,
             "kind": kind,
             "control": control,
+            "target": target,
             "expected_exit": 1 if control in CONTROL_CODES else 0,
             "blocked_exit": 2,
             "directory": child.relative_to(root).as_posix(),
@@ -172,7 +221,7 @@ def supervise_office_original_cells(
             "implementation": implementation,
             "dependencies": dependencies.observation(),
             "mermaid_selection": mermaid_selection,
-            "pdfium_wheel_sha256": pdfium_runtime.wheel_observation["sha256"],
+            "pdfium_wheel_sha256": wheel_observation["sha256"],
             "original_deadline_monotonic": phase_deadline,
             "caller_deadline_monotonic": deadline,
             "closure_identity": [closure_identity.st_dev, closure_identity.st_ino],
@@ -245,7 +294,7 @@ def supervise_office_original_cells(
         expected_code.update(
             {
                 str(dependencies.pdfium_site / name): hashlib.sha256(content).hexdigest()
-                for name, content in pdfium_runtime.members.items()
+                for name, content in members.items()
                 if name.endswith(".py")
             }
         )
@@ -268,7 +317,115 @@ def supervise_office_original_cells(
             raise ValueError("Office actual original child failed its exact Source-declared oracle")
         originals.append(original)
         source.verify_correspondence(source.reference, root, SnapshotReader(root), deadline)
-    pdfium_runtime.verify()
+    _child_provider_inputs(pdfium_runtime, source, deadline=deadline)
     source.verify_correspondence(source.reference, root, SnapshotReader(root), deadline)
     remaining(deadline)
     return tuple(originals)
+
+
+def supervise_office_diagram_cohort(
+    root: Path,
+    directory: Path,
+    source: NativeSourceContext,
+    pdfium_runtime: PDFiumRuntimeAdmission | NativePDFiumProvider,
+    dependencies: OfficeNativeDependencies,
+    *,
+    scope: str,
+    kind: str,
+    interpreter: Path,
+    env: dict[str, str],
+    deadline: float,
+) -> tuple[NativeOfficeControlOriginal, ...]:
+    """One genuine census and every placement/control, with actual child0/1.
+
+    A diagram-free Source produces one authenticated absence census. A
+    nonempty census schedules baseline plus all six intended refusals for
+    every actual native placement, including repeated/shared image paints.
+    """
+    from infrastructure.reporting.native_office_diagram_census import validate_diagram_census_data
+
+    _child_provider_inputs(pdfium_runtime, source, deadline=deadline)
+    if pdfium_runtime.scope != scope or kind not in KINDS:
+        raise ValueError("Office cohort requires this scope's genuinely admitted Source/provider")
+    create_private_native_directory(root, directory)
+    census = _supervise_office_cases(
+        root,
+        directory / "census",
+        source,
+        pdfium_runtime,
+        dependencies,
+        cases=((scope, kind, "diagram-census", None),),
+        interpreter=interpreter,
+        env=env,
+        deadline=deadline,
+    )
+    raw = SnapshotReader(root).read(census[0].observation_relative).json_object()
+    validate_diagram_census_data(raw, scope=scope, kind=kind, source=source, deadline=deadline)
+    targets = raw["targets"]
+    if not targets:
+        return census
+    cases = tuple((scope, kind, control, target) for target in targets for control in ("baseline", *CONTROL_CODES))
+    controls = _supervise_office_cases(
+        root,
+        directory / "controls",
+        source,
+        pdfium_runtime,
+        dependencies,
+        cases=cases,
+        interpreter=interpreter,
+        env=env,
+        deadline=deadline,
+    )
+    reader = SnapshotReader(root)
+    for original in controls:
+        raw_control = reader.read(original.observation_relative).json_object()
+        if raw_control["targets"] != targets or raw_control["positive"]["occurrences"] != raw["occurrences"]:
+            raise ValueError("Office control child differs from the entire actual Source/native census")
+    source.verify_correspondence(source.reference, root, reader, deadline)
+    return census + controls
+
+
+def supervise_office_original_cells(
+    root: Path,
+    directory: Path,
+    source: NativeSourceContext,
+    pdfium_runtime: PDFiumRuntimeAdmission | NativePDFiumProvider,
+    dependencies: OfficeNativeDependencies,
+    *,
+    interpreter: Path,
+    env: dict[str, str],
+    deadline: float,
+) -> tuple[NativeOfficeControlOriginal, ...]:
+    """Preserve four native cells and expand the Textbook diagram capability suite.
+
+    Complete release diagram admission additionally invokes the per-artifact
+    cohort for every Source-declared Office scope. These fixed capability
+    exemplars never substitute for another artifact's complete Source roster.
+    """
+    create_private_native_directory(root, directory)
+    cells = _supervise_office_cases(
+        root,
+        directory / "native-cells",
+        source,
+        pdfium_runtime,
+        dependencies,
+        cases=tuple((scope, kind, "office-cell", None) for scope in SCOPES for kind in KINDS),
+        interpreter=interpreter,
+        env=env,
+        deadline=deadline,
+    )
+    diagrams: tuple[NativeOfficeControlOriginal, ...] = ()
+    for kind in KINDS:
+        diagrams += supervise_office_diagram_cohort(
+            root,
+            directory / f"textbook-{kind}-diagrams",
+            source,
+            pdfium_runtime,
+            dependencies,
+            scope=SCOPES[1],
+            kind=kind,
+            interpreter=interpreter,
+            env=env,
+            deadline=deadline,
+        )
+    return cells + diagrams

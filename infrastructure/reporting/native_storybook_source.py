@@ -8,8 +8,7 @@ Font/library custody must be admitted by the calling native receipt reader.
 from __future__ import annotations
 
 import hashlib
-import importlib.util
-import sys
+import importlib
 import math
 import re
 import textwrap
@@ -56,17 +55,9 @@ def read_source_yaml(path: Path) -> Any:
 
 def source_package(project: Path, name: str) -> Any:
     """Import only the current candidate's confined source package."""
-    source = project.resolve() / "src" / name
-    label = "_native_print_" + hashlib.sha256((str(source) + source_identity(project)).encode()).hexdigest()[:16]
-    spec = importlib.util.spec_from_file_location(
-        label, source / "__init__.py", submodule_search_locations=[str(source)]
-    )
-    if spec is None or spec.loader is None:
-        raise ValueError("missing source package")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[label] = module
-    spec.loader.exec_module(module)
-    return importlib.import_module(label + ".rendering" if name == "storybook" else label + ".engine")
+    from infrastructure.reporting.native_print_source_loader import load_print_source
+
+    return load_print_source(project, name, source_identity(project))
 
 
 def source_identity(project: Path) -> str:

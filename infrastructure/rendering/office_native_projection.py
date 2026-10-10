@@ -8,7 +8,7 @@ import zipfile
 from io import BytesIO
 from pathlib import Path
 from typing import Any
-from xml.etree import ElementTree as ET
+from xml.etree.ElementTree import SubElement, tostring
 
 from defusedxml.ElementTree import fromstring
 
@@ -46,7 +46,7 @@ def project_docx_transmission_layout(package: Path) -> None:
             return
         properties = style.find(W + "pPr")
         if properties is None:
-            properties = ET.SubElement(style, W + "pPr")
+            properties = SubElement(style, W + "pPr")
         for name, attributes in (
             ("keepNext", {}),
             ("keepLines", {}),
@@ -54,22 +54,22 @@ def project_docx_transmission_layout(package: Path) -> None:
         ):
             node = properties.find(W + name)
             if node is None:
-                node = ET.SubElement(properties, W + name)
+                node = SubElement(properties, W + name)
             node.attrib.update(attributes)
         runs = style.find(W + "rPr")
         if runs is None:
-            runs = ET.SubElement(style, W + "rPr")
+            runs = SubElement(style, W + "rPr")
         for name in ("sz", "szCs"):
             size = runs.find(W + name)
             if size is None:
-                size = ET.SubElement(runs, W + name)
+                size = SubElement(runs, W + name)
             size.set(W + "val", "14")
         destination = BytesIO()
         with zipfile.ZipFile(destination, "w") as output:
             for row in rows:
                 output.writestr(
                     row,
-                    ET.tostring(styles, encoding="utf-8", xml_declaration=True)
+                    tostring(styles, encoding="utf-8", xml_declaration=True)
                     if row.filename == "word/styles.xml"
                     else source.read(row),
                 )

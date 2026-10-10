@@ -727,3 +727,178 @@ def test_matrix_receipt_closes_exact_admitted_declared_coverage(tmp_path: Path, 
     assert receipt.lanes[0].original_exit_code == 0
     # Closing custody must preserve a previously observed failure identity.
     assert write_public_matrix_receipt(tmp_path, receipt_path, overall_exit=42, **arguments) == 42
+
+
+def _write_profile_verifier_project(repo_root: Path, *, opt_in: bool = True) -> Path:
+    """Give the existing real verifier a strict supported CLI and retained argv."""
+    project = _write_verifier_project(repo_root)
+    metadata = project / "pyproject.toml"
+    if opt_in:
+        metadata.write_text(metadata.read_text() + '\nproject_test_profile_argument = "--profile"\n')
+    script = project / "scripts/verify.py"
+    body = script.read_text()
+    prefix = (
+        "import argparse,json\nfrom pathlib import Path\n"
+        "parser=argparse.ArgumentParser()\n"
+        + (
+            'parser.add_argument("--profile", choices=("quick","release","exhaustive"), required=True)\n'
+            if opt_in
+            else ""
+        )
+        + "selected=parser.parse_args()\n"
+        + "Path(__file__).resolve().with_name('observed-profile.json').write_text(json.dumps(vars(selected)))\n"
+    )
+    script.write_text(prefix + body)
+    return project
+
+
+@pytest.mark.timeout(180)
+@pytest.mark.parametrize("profile", ["quick", "release", "exhaustive"])
+def test_actual_stage_forwards_only_the_declared_named_profile(tmp_path: Path, profile: str) -> None:
+    project = _write_profile_verifier_project(tmp_path)
+    exit_code = execute_test_pipeline(
+        "active/demo",
+        tmp_path,
+        run_infra=False,
+        run_project=True,
+        quiet=True,
+        include_slow=False,
+        include_long_running=False,
+        include_ollama_tests=False,
+        profile=profile,
+        strict=True,
+    )
+    assert exit_code == 0
+    observed = json.loads((project / "scripts/observed-profile.json").read_text())
+    assert observed == {"profile": profile}
+    report = json.loads((project / "output/reports/test_results.json").read_text())
+    assert report["summary"]["all_passed"] is True and report["project"]["passed"] == 1
+    assert report["project"]["exit_code"] == 0 and report["summary"]["project_coverage"] >= 90
+
+
+@pytest.mark.timeout(180)
+def test_actual_stage_preserves_arbitrary_declared_argv_without_profile_opt_in(tmp_path: Path) -> None:
+    project = _write_profile_verifier_project(tmp_path, opt_in=False)
+    assert (
+        execute_test_pipeline(
+            "active/demo",
+            tmp_path,
+            run_infra=False,
+            run_project=True,
+            quiet=True,
+            include_slow=False,
+            include_long_running=False,
+            include_ollama_tests=False,
+            profile="release",
+            strict=True,
+        )
+        == 0
+    )
+    # The real strict parser accepts no arguments, so any guessed profile flag
+    # would fail the actual process rather than being silently ignored.
+    assert json.loads((project / "scripts/observed-profile.json").read_text()) == {}
+
+
+@pytest.mark.timeout(240)
+def test_actual_union_forwards_declared_profile_and_retains_real_command(tmp_path: Path) -> None:
+    import os
+    import sys
+
+    from infrastructure.core.execution_boundary import run_bounded_subprocess
+    from infrastructure.core.testing.project_test_runtime import build_audited_project_test_command
+
+    project = _write_profile_verifier_project(tmp_path)
+    # A plain audited child imports production test_* modules without pytest's
+    # assertion rewriting; retain the actual union and receipt checks there.
+    driver = tmp_path / "union_profile_driver.py"
+    driver.write_text(
+        dedent(
+            """
+            import json
+            import sys
+            from pathlib import Path
+            from infrastructure.core.testing.public_matrix_receipt import PublicMatrixReceipt
+            from infrastructure.core.testing.test_runner import run_per_project_pytest
+            tmp_path = Path(sys.argv[1])
+            project = tmp_path / 'projects/active/demo'
+            receipt_path = tmp_path / "profile-matrix.json"
+            assert (
+                run_per_project_pytest(
+                    tmp_path,
+                    projects=["active/demo"],
+                    profile="release",
+                    fail_under=90,
+                    timeout=60,
+                    subprocess_timeout_seconds=120,
+                    coverage_file=tmp_path / ".coverage.profile-union",
+                    receipt_path=receipt_path,
+                    project_workers=1,
+                )
+                == 0
+            )
+            assert json.loads((project / "scripts/observed-profile.json").read_text()) == {"profile": "release"}
+            receipt = PublicMatrixReceipt.read(receipt_path)
+            assert receipt.validate(("active/demo",)) == []
+            lane = receipt.lanes[0]
+            assert lane.original_exit_code == 0 and lane.collection_count == 1 and lane.coverage_percent >= 90
+            assert json.loads(lane.resource_limits["test_selection"]) == ["python", "scripts/verify.py", "--profile", "release"]
+            """
+        ).lstrip(),
+        encoding="utf-8",
+    )
+    command = build_audited_project_test_command(
+        tmp_path, Path(sys.executable).absolute(), (str(tmp_path),), script=driver
+    )
+    outcome = run_bounded_subprocess(command, cwd=tmp_path, env=os.environ.copy(), timeout=180)
+    assert outcome.returncode == 0, outcome.stdout + outcome.stderr
+    assert json.loads((project / "scripts/observed-profile.json").read_text()) == {"profile": "release"}
+
+
+@pytest.mark.parametrize("literal", ["true", '""', '"--other"', "7"])
+def test_profile_argument_metadata_refuses_unsupported_shapes(tmp_path: Path, literal: str) -> None:
+    from infrastructure.core.project_pyproject import project_declared_test_command
+
+    project = _write_verifier_project(tmp_path)
+    path = project / "pyproject.toml"
+    path.write_text(path.read_text() + "\nproject_test_profile_argument = " + literal + "\n")
+    with pytest.raises(ValueError, match="literal --profile"):
+        project_declared_test_command(project, profile="release")
+    assert not (project / "scripts/observed-profile.json").exists()
+
+
+def test_profile_argument_requires_an_actual_declared_command(tmp_path: Path) -> None:
+    from infrastructure.core.project_pyproject import project_declared_test_command
+
+    project = _write_verifier_project(tmp_path)
+    path = project / "pyproject.toml"
+    path.write_text(
+        path.read_text().replace(
+            'project_test_command = ["python", "scripts/verify.py"]', 'project_test_profile_argument = "--profile"'
+        )
+    )
+    with pytest.raises(ValueError, match="requires a declared command"):
+        project_declared_test_command(project, profile="release")
+
+
+def test_profile_argument_refuses_an_already_fixed_profile(tmp_path: Path) -> None:
+    from infrastructure.core.project_pyproject import project_declared_test_command
+
+    project = _write_verifier_project(tmp_path)
+    path = project / "pyproject.toml"
+    path.write_text(
+        path.read_text().replace(
+            'project_test_command = ["python", "scripts/verify.py"]',
+            'project_test_command = ["python", "scripts/verify.py", "--profile=quick"]',
+        )
+        + '\nproject_test_profile_argument = "--profile"\n'
+    )
+    with pytest.raises(ValueError, match="already select --profile"):
+        project_declared_test_command(project, profile="release")
+
+
+def test_profile_aware_command_uses_the_existing_profile_validation(tmp_path: Path) -> None:
+    from infrastructure.core.project_pyproject import project_declared_test_command
+
+    project = _write_profile_verifier_project(tmp_path)
+    with pytest.raises(ValueError, match="Unknown test profile"):
+        project_declared_test_command(project, profile="unrecognized")

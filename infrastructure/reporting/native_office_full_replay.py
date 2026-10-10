@@ -337,7 +337,7 @@ def replay_office_full_source(
     deadline: float,
     env: dict[str, str],
     mermaid_runtime: OfficeMermaidReaderRuntime | None = None,
-) -> None:
+) -> dict[str, Any]:
     """Recompute source/package/all-page witnesses and original command custody.
 
     Producer absolute executable paths are retained labels. New executions use
@@ -355,6 +355,7 @@ def replay_office_full_source(
         replay_office_conversion,
     )
     from infrastructure.reporting.native_epub_replay import replay_epub_conversion
+    from infrastructure.reporting.native_tool_replay import validate_original_native_tool
     from infrastructure.reporting.native_office_content_witness import (
         inspect_office_source_survival,
     )
@@ -378,6 +379,7 @@ def replay_office_full_source(
             "readbacks",
             "native",
             "diagram_visibility",
+            "spine",
             "observation",
         }
         or raw.get("schema_version") != SCHEMA
@@ -666,6 +668,9 @@ def replay_office_full_source(
                 native["conversion"],
                 package.content,
                 read_artifact=lambda binding: _file(binding, reader).content,
+                authenticate_tool=lambda binding, tool: validate_original_native_tool(
+                    binding, tool, reader, run_id=run_id
+                ),
                 producer_path=lambda relative: str(producer_path(custody, root, root / relative)),
                 run_id=run_id,
             )
@@ -695,6 +700,19 @@ def replay_office_full_source(
         yaml.safe_load(metadata.content),
         cover,
     )
+    if artifact.format == "epub":
+        from infrastructure.reporting.native_epub_source_spine import replay_source_reference_epub_spine
+
+        fresh_spine = replay_source_reference_epub_spine(
+            reference_package.content,
+            snapshot.content,
+            reference_survival,
+            raw["spine"],
+        )
+    elif raw["spine"] is not None:
+        raise ValueError("DOCX complete-source observer cannot carry an EPUB spine")
+    else:
+        fresh_spine = None
     package_parity = inspect_office_package_reference(
         readbacks["reference"], readbacks["candidate"], source["source_coverage"]
     )
@@ -765,3 +783,4 @@ def replay_office_full_source(
     outcome["status"] = "failed" if outcome["findings"] else "blocked" if outcome["blockers"] else "observed"
     if outcome != raw["observation"] or not reader.unchanged() or time.monotonic() >= deadline:
         raise ValueError("portable Office independently reconstructed complete source/native evidence differs")
+    return {"observation": outcome, "spine": fresh_spine}

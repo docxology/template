@@ -168,6 +168,11 @@ def _compile(
         "HTML consumed hydration/data/figure values require independently admitted "
         "original complete-source execution provenance"
     )
+    parser = _file(body["tool"]["artifact"], reader).json_object()
+    if "--filter" in parser.get("command", []):
+        from infrastructure.reporting.native_format_current_pandoc import CROSSREF_CUSTODY_BLOCKER
+
+        fidelity["blockers"].append(CROSSREF_CUSTODY_BLOCKER)
     fidelity["digest"] = canonical_digest(fidelity)
     result = AdmittedHTMLSource(fidelity, metadata, reference, verify)
     result.close(root, reader, deadline=deadline)

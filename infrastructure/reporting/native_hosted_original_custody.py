@@ -53,6 +53,36 @@ from infrastructure.reporting.native_hosted_transport_archive import (
 _COLLECTOR_KEY = object()
 
 
+def _receive_native_original_file(
+    root: Path,
+    label: str,
+    body: bytes,
+    *,
+    published_snapshot: bytes | None,
+) -> None:
+    """Write authenticated transport bytes only into declared mutable outputs.
+
+    The live collector supplies an independently held pristine Source snapshot,
+    when one exists. A differing earlier derived/evidence file is never replaced.
+    This filesystem helper grants no Source or transport authentication itself.
+    """
+    from infrastructure.reporting.native_hosted_original_producer import _mutable_output
+
+    label = _path(label)
+    if not _mutable_output(label):
+        raise ValueError("native hosted extraction refuses authored Source paths")
+    target = root / label
+    if target.exists() or target.is_symlink():
+        current = read_bytes_confined(root, target, max_bytes=MAX_ARCHIVE)
+        if current == body:
+            return
+        if published_snapshot is None or current != published_snapshot:
+            raise ValueError("native hosted extraction refuses conflicting earlier derived/evidence bytes")
+    atomic_write_bytes_confined(root, target, body, mode=0o600)
+    if read_bytes_confined(root, target, max_bytes=MAX_ARCHIVE) != body:
+        raise ValueError("native hosted extraction differs from its authenticated original bytes")
+
+
 class NativeHostedArtifactCustodian:
     """Genuinely collected original bytes under externally nominated Source/run.
 
@@ -464,15 +494,11 @@ def collect_native_hosted_originals(
         total += len(body)
         if len(body) != row["bytes"] or hashlib.sha256(body).hexdigest() != digest or total > MAX_TOTAL:
             raise ValueError("native hosted original whole-file hash/length/census differs")
+        published: bytes | None = None
+        if source.reference.root / label in source.reference.reader.snapshots:
+            published = source.reference.read(label)
+        _receive_native_original_file(root, label, body, published_snapshot=published)
         target = root / label
-        if target.exists() or target.is_symlink():
-            # A tracked immutable Source deliverable may already be present in
-            # the independently admitted current checkout. Reuse its exact
-            # authenticated bytes; never overwrite Source or prior evidence.
-            if source.reference.read(label) != body or read_bytes_confined(root, target, max_bytes=MAX_ARCHIVE) != body:
-                raise ValueError("native hosted extraction refuses conflicting existing Source/evidence")
-        else:
-            atomic_write_bytes_confined(root, target, body, mode=0o600)
         members[label] = {"sha256": digest, "bytes": len(body), "identity": _file_identity(target)}
     if used_chunks != set(chunk_paths):
         raise ValueError("native hosted shard census contains unowned unused chunk bytes")

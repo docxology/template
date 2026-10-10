@@ -19,7 +19,7 @@ from infrastructure.rendering.manuscript_discovery import discover_manuscript_fi
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.validation.output.render_formats import render_config_manuscript_dir
-from infrastructure.validation.publication.rendered_provenance import validate_rendered_provenance
+from infrastructure.validation.publication.rendered_provenance import validate_current_rendered_provenance
 
 SCHEMA = "template-native-current-source-mermaid-fence-census-v1"
 MAX_MANUSCRIPT_BYTES = 64 * 1024 * 1024
@@ -105,7 +105,7 @@ def collect_current_source_mermaid_fences(source: NativeSourceContext, *, deadli
     documents = []
     for scope in sorted(PUBLIC_PROJECT_NAMES):
         remaining(deadline)
-        if not validate_rendered_provenance(root, scope).valid:
+        if not validate_current_rendered_provenance(root, scope).valid:
             raise ValueError("Mermaid source census requires current consumed hydration provenance: " + scope)
         project = root / "projects" / scope
         # Actual source guards surround the existing discovery functions; they

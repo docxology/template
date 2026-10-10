@@ -192,64 +192,72 @@ class TestSheafTracksIODeterministicSeed:
 
 
 # ---------------------------------------------------------------------------
-# roadmap_tracks.sheaf_tracks_io  - _source_commit (injectable subprocess)
+# roadmap_tracks.fixed_point - exact generation-input identity (real files)
 # ---------------------------------------------------------------------------
 
 
-class TestSheafTracksIOSourceCommit:
-    def test_returns_stdout_stripped(self, tmp_path: Path) -> None:
-        def _fake_runner(*args, **kwargs):
-            class Result:
-                stdout = " abc123def  \n"
-                returncode = 0
+class TestSheafTracksSourceInputs:
+    def test_digest_tracks_exact_input_bytes_and_membership(self, tmp_path: Path) -> None:
+        from roadmap_tracks.fixed_point import _source_input_sha256
 
-            return Result()
+        source = tmp_path / "src" / "producer.py"
+        source.parent.mkdir()
+        source.write_text("value = 1\n", encoding="utf-8")
+        first = _source_input_sha256(tmp_path)
+        assert len(first) == 64
+        source.write_text("value = 2\n", encoding="utf-8")
+        assert _source_input_sha256(tmp_path) != first
+        source.write_text("value = 1\n", encoding="utf-8")
+        assert _source_input_sha256(tmp_path) == first
+        extra = source.parent / "new_input.py"
+        extra.write_text("value = 3\n", encoding="utf-8")
+        assert _source_input_sha256(tmp_path) != first
+        extra.unlink()
+        assert _source_input_sha256(tmp_path) == first
 
-        from roadmap_tracks.sheaf_tracks_io import _source_commit
+    def test_digest_ignores_generated_outputs_and_bytecode(self, tmp_path: Path) -> None:
+        from roadmap_tracks.fixed_point import _source_input_sha256
 
-        assert _source_commit(tmp_path, process_runner=_fake_runner) == "abc123def"
+        (tmp_path / "src").mkdir()
+        first = _source_input_sha256(tmp_path)
+        for rel in ("output/report.json", "src/__pycache__/producer.pyc", ".git/HEAD"):
+            path = tmp_path / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("runtime-only bytes\n", encoding="utf-8")
+        assert _source_input_sha256(tmp_path) == first
 
-    def test_returns_unknown_on_error(self, tmp_path: Path) -> None:
-        def _fake_runner(*args, **kwargs):
-            raise OSError("not a git repo")
+    def test_digest_rejects_symlinked_inputs(self, tmp_path: Path) -> None:
+        import pytest
+        from roadmap_tracks.fixed_point import _source_input_sha256
 
-        from roadmap_tracks.sheaf_tracks_io import _source_commit
-
-        assert _source_commit(tmp_path, process_runner=_fake_runner) == "unknown"
-
-    def test_returns_unknown_when_stdout_empty(self, tmp_path: Path) -> None:
-        def _fake_runner(*args, **kwargs):
-            class Result:
-                stdout = ""
-                returncode = 0
-
-            return Result()
-
-        from roadmap_tracks.sheaf_tracks_io import _source_commit
-
-        assert _source_commit(tmp_path, process_runner=_fake_runner) == "unknown"
+        outside = tmp_path / "outside.txt"
+        outside.write_text("unique outside bytes\n", encoding="utf-8")
+        (tmp_path / "src").mkdir()
+        (tmp_path / "src" / "producer.py").symlink_to(outside)
+        with pytest.raises(RuntimeError, match="must not contain symlinks"):
+            _source_input_sha256(tmp_path)
+        assert outside.read_text(encoding="utf-8") == "unique outside bytes\n"
 
 
-def test_provenance_comparison_allows_commit_after_producer_run() -> None:
-    from roadmap_tracks.sheaf_track_validation import _provenance_payloads_equal
+def test_provenance_comparison_rejects_source_input_digest_drift() -> None:
+    from template_active_inference.json_io import json_payloads_equal
 
     saved = {
-        "schema": "template_active_inference.artifact_provenance.v1",
-        "artifacts": {"output/data/result.json": {"sha256": "abc", "source_commit": "producer-commit"}},
-        "rows": [{"artifact": "output/data/result.json", "source_commit": "producer-commit"}],
-        "field_provenance_rows": [{"artifact": "output/data/result.json", "source_commit": "producer-commit"}],
+        "schema": "template_active_inference.artifact_provenance.v2",
+        "artifacts": {"output/data/result.json": {"sha256": "abc", "source_input_sha256": "1" * 64}},
+        "rows": [{"artifact": "output/data/result.json", "source_input_sha256": "1" * 64}],
+        "field_provenance_rows": [{"artifact": "output/data/result.json", "source_input_sha256": "1" * 64}],
     }
-    live = {
-        **saved,
-        "artifacts": {"output/data/result.json": {"sha256": "abc", "source_commit": "validation-commit"}},
-        "rows": [{"artifact": "output/data/result.json", "source_commit": "validation-commit"}],
-        "field_provenance_rows": [{"artifact": "output/data/result.json", "source_commit": "validation-commit"}],
-    }
+    import copy
 
-    assert _provenance_payloads_equal(saved, live) is True
-
-    cast(dict[str, Any], live["artifacts"])["output/data/result.json"]["sha256"] = "stale"
-    assert _provenance_payloads_equal(saved, live) is False
+    assert json_payloads_equal(saved, copy.deepcopy(saved)) is True
+    for section in ("artifacts", "rows", "field_provenance_rows"):
+        live = copy.deepcopy(saved)
+        if section == "artifacts":
+            cast(dict[str, Any], live[section])["output/data/result.json"]["source_input_sha256"] = "2" * 64
+        else:
+            cast(list[dict[str, Any]], live[section])[0]["source_input_sha256"] = "2" * 64
+        assert json_payloads_equal(saved, live) is False
 
 
 # ---------------------------------------------------------------------------

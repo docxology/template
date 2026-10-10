@@ -5,75 +5,68 @@ from __future__ import annotations
 import math
 import re
 from io import BytesIO
+from collections.abc import Mapping
 from pathlib import Path
 from uuid import uuid4
 from typing import TYPE_CHECKING, Any
 
-from infrastructure.reporting.native_format_portable_source import (
-    native_source_content_identity,
-)
+from infrastructure.reporting.native_format_portable_source import native_source_content_identity
 from infrastructure.reporting.native_format_joint_source import (
     require_native_operation,
     validate_original_joint_launch,
     validate_retained_sdk_closure,
 )
-from infrastructure.reporting.native_format_observer_outcome import (
-    native_observer_outcome,
-)
-from infrastructure.project.native_format_library_custody import (
-    validate_native_library_custody,
-)
+from infrastructure.project.native_format_library_custody import validate_native_library_custody
 from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
 from infrastructure.core.pipeline.plan import compile_execution_plan
 from infrastructure.core.pipeline.plan_serialization import plan_from_payload
 from infrastructure.core.pipeline.types import PipelineConfig
 from infrastructure.reporting.native_format_portable_custody import (
-    producer_bootstrap,
     producer_path,
     validate_producer_custody,
     validate_executable_observation,
 )
 from infrastructure.reporting.native_format_acceptance_checks import parse_native_bytes
 from infrastructure.reporting.native_format_acceptance_contracts import (
-    CONTROL_SCHEMA,
     NATIVE_SCHEMA,
     PROCESS_SCHEMA,
     TOOL_SCHEMA,
     TOOL_FIELDS,
     CITATION_TOOL_FIELDS,
     HTML_TOOL_FIELDS,
-    WORKER_MODULE,
     contract_digest,
     native_artifact_contract,
     public_source_digest,
-    unsupported_native_controls,
     validate_native_specification,
 )
-from infrastructure.reporting.native_format_content_contracts import (
-    compile_pdf_content_contract,
-)
-from infrastructure.reporting.native_format_pdf_oracles import (
-    PDF_CONTROL_CODES,
-    PDF_CONTROL_SCHEMA,
-    inspect_pdf_content,
-    pdf_control_bytes,
-    pdf_control_contract,
-    require_pdf_control_result,
-)
+from infrastructure.reporting.native_format_content_contracts import compile_pdf_content_contract
+from infrastructure.reporting.native_format_pdf_oracles import inspect_pdf_content
+from infrastructure.reporting.native_format_pdf_control_replay import replay_pdf_controls as _pdf_controls  # noqa: F401 - compatibility for existing Source tests
+from infrastructure.reporting.native_oracle_phase import NativeOraclePhase, finish_reader_native_oracle_phase
 from infrastructure.reporting.release_readiness_snapshot import (
     ArtifactSnapshot,
     SnapshotReader,
 )
+from infrastructure.reporting.native_print_artifact_observer import selected_print_artifact
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.validation.publication.rendered_provenance import (
-    validate_rendered_provenance,
-)
+from infrastructure.validation.publication.rendered_provenance import validate_current_rendered_provenance
+
+
+__all__ = [
+    "_pdf_controls",
+    "native_environment_for_replay",
+    "validate_native_acceptance",
+    "validate_native_conformance",
+]
 
 if TYPE_CHECKING:
+    from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumProvider
+    from infrastructure.reporting.native_office_diagram_runtime import PDFiumRuntimeAdmission
+    from infrastructure.reporting.native_source_external_admission import NativeSourceContext
     from infrastructure.reporting.release_readiness_profile import Requirement
-    from infrastructure.reporting.native_office_full_worker_context import (
-        OfficeCurrentReaderContext,
-    )
+    from infrastructure.reporting.native_office_scope_cohorts import CurrentOfficeCohorts
+    from infrastructure.reporting.native_renderer_section_roster import RendererScopeReplay
+    from infrastructure.reporting.native_office_full_worker_context import OfficeCurrentReaderContext
 
 
 def _file(binding: object, reader: SnapshotReader) -> ArtifactSnapshot:
@@ -164,7 +157,7 @@ def _tool(
     return raw
 
 
-def _pipeline(raw: dict[str, Any], scope: str, reader: SnapshotReader, custody: dict[str, Any]) -> None:
+def _pipeline(raw: dict[str, Any], scope: str, reader: SnapshotReader, custody: dict[str, Any]) -> RunResult:
     from infrastructure.reporting.native_format_acceptance_worker import (
         require_canonical_native_stages,
     )
@@ -237,6 +230,7 @@ def _pipeline(raw: dict[str, Any], scope: str, reader: SnapshotReader, custody: 
     result = RunResult(plan.expected_stage_keys, tuple(outcomes))
     if not result.complete or result.exit_code:
         raise ValueError("native execution omitted or duplicated required stages")
+    return result
 
 
 def _raster(
@@ -322,7 +316,19 @@ def _raster(
                 raise ValueError("native raster geometry differs from the actual PDF page")
 
 
-def validate_native_conformance(requirement: Requirement, details: dict[str, Any], reader: SnapshotReader) -> None:
+def validate_native_conformance(
+    requirement: Requirement,
+    details: dict[str, Any],
+    reader: SnapshotReader,
+    *,
+    current_source: NativeSourceContext | None = None,
+    current_directory: Path | None = None,
+    provider_wheels: Mapping[str, Path] | None = None,
+    pdfium_provider: NativePDFiumProvider | None = None,
+    pdfium_runtime: PDFiumRuntimeAdmission | None = None,
+    office_font_files: tuple[Path, ...] | None = None,
+    current_observer_tools: Mapping[str, Path | None] | None = None,
+) -> None:
     """Own genuine fresh current-provider scopes throughout one full readback."""
     from infrastructure.reporting.native_format_pdf_source_decode_bounds import (
         SourceImageDecodeBudget,
@@ -337,6 +343,11 @@ def validate_native_conformance(requirement: Requirement, details: dict[str, Any
     selection = getattr(operation, "office_reader_selection", None)
     if selection is not None and not isinstance(selection, NativeOfficeReaderSelection):
         raise ValueError("native Office reader selection must be independently supplied and exactly typed")
+    from infrastructure.reporting.native_format_scope_replay import replay_native_scope_evidence
+
+    from infrastructure.reporting.native_oracle_phase_reader import current_native_observer_nominees
+
+    observer_nominees = current_native_observer_nominees(current_observer_tools)
     # This is one current replay phase, with one budget held across all source,
     # retained validation, native crop and reproduction allocations.
     budget = getattr(operation, "office_decoded_pixel_budget", None)
@@ -344,6 +355,36 @@ def validate_native_conformance(requirement: Requirement, details: dict[str, Any
         budget = SourceImageDecodeBudget(MAX_SOURCE_IMAGE_OCCURRENCES)
     if not isinstance(budget, SourceImageDecodeBudget):
         raise ValueError("native Office current reader requires its actual shared decode budget")
+    current_artifacts: list[dict[str, Any]] = []
+    current_comparisons: list[dict[str, Any]] = []
+    oracle_phases: list[NativeOraclePhase] = []
+    office_current: list[CurrentOfficeCohorts] = []
+    renderer_current: list[RendererScopeReplay] = []
+    details["current_scope_replay"] = replay_native_scope_evidence(
+        requirement,
+        details,
+        reader,
+        current_source=current_source,
+        current_directory=current_directory,
+        provider_wheels=provider_wheels,
+        pdfium_provider=pdfium_provider,
+        pdfium_runtime=pdfium_runtime,
+        office_font_files=office_font_files,
+        office_current=office_current,
+        renderer_current=renderer_current,
+        decoded_pixel_budget=budget,
+        current_observer_tools=observer_nominees,
+        current_artifacts=current_artifacts,
+        current_comparisons=current_comparisons,
+    )
+    if (
+        len(office_current) != 1
+        or len(renderer_current) != 1
+        or len(current_artifacts) != 1
+        or len(current_comparisons) != 1
+        or current_source is None
+    ):
+        raise ValueError("native Current Office tuple did not close once under its genuine Source scope")
     directory = reader.root / ".pipeline" / f"native-office-reader-{uuid4().hex}"
     with office_current_reader_context(
         operation,
@@ -353,8 +394,23 @@ def validate_native_conformance(requirement: Requirement, details: dict[str, Any
         decoded_pixel_budget=budget,
         env=native_environment_for_replay(reader.root),
     ) as office_context:
-        _validate_native_conformance(requirement, details, reader, office_context=office_context)
+        _validate_native_conformance(
+            requirement,
+            details,
+            reader,
+            office_context=office_context,
+            office_current=office_current[0],
+            renderer_current=renderer_current[0],
+            current_comparison=current_comparisons[0],
+            oracle_phases=oracle_phases,
+        )
     operation.verify(reader)
+    if len(oracle_phases) != 1:
+        raise ValueError("native reader requires its one completed checked oracle phase")
+    raw = _file(details["native_execution_artifact"], reader).json_object()
+    residual_graphs = finish_reader_native_oracle_phase(oracle_phases[0], raw, reader, current_artifacts[0])
+    details["native_oracle_phase_residuals"] = residual_graphs.data()
+    details["native_oracle_residuals"] = residual_graphs.combined()
 
 
 def _validate_native_conformance(
@@ -363,12 +419,18 @@ def _validate_native_conformance(
     reader: SnapshotReader,
     *,
     office_context: OfficeCurrentReaderContext,
+    office_current: CurrentOfficeCohorts,
+    renderer_current: RendererScopeReplay,
+    current_comparison: dict[str, Any],
+    oracle_phases: list[NativeOraclePhase],
 ) -> None:
     """Validate narrower actual conformance; this never authorizes a full gate."""
     operation = require_native_operation(reader)
     deadline = operation.deadline
     raw_file = _file(details.get("native_execution_artifact"), reader)
     raw = raw_file.json_object()
+    if details["current_scope_replay"]["current_renderer"] != renderer_current[0]:
+        raise ValueError("Current renderer DATA differs from its genuine retained in-memory roster")
     nonce = raw.get("run_id")
     if (
         raw.get("schema_version") != NATIVE_SCHEMA
@@ -377,6 +439,13 @@ def _validate_native_conformance(
         or raw.get("scope") != requirement.scope
         or details.get("schema_version") != NATIVE_SCHEMA
         or details.get("run_id") != nonce
+        or not isinstance(raw.get("native_oracle_requirements"), dict)
+        or not isinstance(raw.get("office_mermaid_census"), dict)
+        or not isinstance(raw.get("office_diagram_cohorts"), dict)
+        or not isinstance(raw.get("office_capability_cells"), list)
+        or not isinstance(raw.get("stage_children"), list)
+        or not isinstance(raw.get("native_project_domain"), dict)
+        or not isinstance(raw.get("loader_persistent_rx_control"), dict)
     ):
         raise ValueError("versioned actual native execution evidence is required")
     specification_file = _file(details.get("specification_artifact"), reader)
@@ -481,7 +550,12 @@ def _validate_native_conformance(
     pipeline = raw.get("pipeline")
     if not isinstance(pipeline, dict):
         raise ValueError("native whole-core execution evidence is missing")
-    _pipeline(pipeline, requirement.scope, reader, custody)
+    checked_pipeline = _pipeline(pipeline, requirement.scope, reader, custody)
+    from infrastructure.reporting.native_analysis_boundary_replay import replay_native_analysis_boundary_graph
+    from infrastructure.reporting.native_hydration_reconstruction import replay_native_hydration_reconstruction
+
+    checked_analysis = replay_native_analysis_boundary_graph(requirement.scope, raw_file, reader)
+    checked_hydration = replay_native_hydration_reconstruction(requirement.scope, raw_file, reader)
     if raw.get("deliverables_identity_after") != requirement.deliverables_identity:
         raise ValueError("native stable deliverables changed after the actual audit")
     import yaml
@@ -510,6 +584,20 @@ def _validate_native_conformance(
         )
         for index, (name, arguments) in enumerate(version_requests)
     }
+    from infrastructure.reporting.native_office_scope_cohorts import replay_office_scope_cohorts
+
+    details["office_diagram_cohorts"] = replay_office_scope_cohorts(
+        reader,
+        office_current.source,
+        office_current,
+        raw,
+        office_context,
+        custody,
+        versions,
+        native_environment_for_replay(reader.root),
+        requirement.formats,
+        requirement.scope,
+    )
     contract = native_artifact_contract(reader.root, requirement.scope, requirement.formats, reader)
     rows = raw.get("artifacts")
     if (
@@ -518,7 +606,54 @@ def _validate_native_conformance(
         or raw.get("contract_digest") != contract_digest(contract)
     ):
         raise ValueError("native execution omitted source-owned formats/variants")
+    if not {"whole_pdf_cohort", "whole_pdf_source_controls"} <= set(raw):
+        raise ValueError("native v9 omitted its coupled whole PDF observation fields")
     expected_blockers: list[dict[str, str]] = []
+    whole_pdf_blockers: list[dict[str, str]] = []
+    whole_pdf: tuple[dict[str, Any], dict[str, Any]] | None = None
+    if any(artifact.format == "pdf" for artifact in contract):
+        from infrastructure.reporting.native_pdf_whole_cohort import replay_whole_pdf_cohort
+        from infrastructure.reporting.native_pdf_whole_control_replay import replay_whole_pdf_source_controls
+        from infrastructure.reporting.native_pdf_whole_diagnostics import whole_pdf_diagnostics
+
+        cohort_file = _file(raw["whole_pdf_cohort"], reader)
+        controls_file = _file(raw["whole_pdf_source_controls"], reader)
+        if (
+            cohort_file.path != directory / "whole-pdf-cohort/cohort.json"
+            or controls_file.path != directory / "whole-pdf-source-controls/control-suite.json"
+        ):
+            raise ValueError("whole PDF original observations belong to a different evidence attempt")
+        replay_env = native_environment_for_replay(reader.root)
+        cohort = replay_whole_pdf_cohort(
+            reader.root,
+            requirement.scope,
+            requirement.formats,
+            {"path": cohort_file.relative, "sha256": cohort_file.sha256},
+            reader,
+            env=replay_env,
+            deadline=deadline,
+        )
+        cohort_blockers, cohort_findings = whole_pdf_diagnostics(cohort, control_suite=False)
+        whole_pdf_blockers.extend(cohort_blockers)
+        if cohort_findings:
+            raise ValueError(f"independent current whole PDF cohort failed: {cohort_findings}")
+        controls = replay_whole_pdf_source_controls(
+            reader.root,
+            requirement.scope,
+            requirement.formats,
+            {"path": controls_file.relative, "sha256": controls_file.sha256},
+            reader,
+            env=replay_env,
+            deadline=deadline,
+        )
+        control_blockers, control_findings = whole_pdf_diagnostics(controls, control_suite=True)
+        whole_pdf_blockers.extend(control_blockers)
+        if control_findings:
+            raise ValueError(f"independent current whole PDF controls failed: {control_findings}")
+        whole_pdf = (cohort, controls)
+    elif raw["whole_pdf_cohort"] is not None or raw["whole_pdf_source_controls"] is not None:
+        raise ValueError("non-PDF native contract contains unadmitted whole PDF observations")
+    checked_observers: list[dict[str, Any]] = []
     for ordinal, (row, obligation) in enumerate(zip(rows, contract, strict=True)):
         if not isinstance(row, dict) or any(
             row.get(key) != getattr(obligation, key) for key in ("id", "format", "path")
@@ -529,22 +664,28 @@ def _validate_native_conformance(
             raise ValueError("native observation differs from the actual artifact bytes")
         if obligation.format == "pdf":
             _raster(row, snapshot, ordinal, directory, reader, nonce, versions, custody)
-            content = compile_pdf_content_contract(
-                reader.root, requirement.scope, obligation, reader, deadline=deadline
-            )
-            if row.get("content_contract") != content.to_dict():
-                raise ValueError("native PDF obligations differ from the current consumed source bytes")
-            observed = inspect_pdf_content(
-                snapshot.content,
-                tuple(reader.read(item["path"]).content for item in row["raster"]["rasters"]),
-                content,
-                deadline=deadline,
-            )
-            if row.get("pdf_content") != observed or observed["findings"]:
-                raise ValueError("native PDF source/glyph/localized-pixel observation differs or failed")
-            expected_blockers.extend(
-                {"tool": f"PDF source oracle {obligation.id}", "reason": reason} for reason in observed["blockers"]
-            )
+            from infrastructure.reporting.native_projection_source_dispatch import selected_source_projection
+
+            if selected_print_artifact(requirement.scope, obligation) or selected_source_projection(obligation):
+                if "content_contract" in row or "pdf_content" in row:
+                    raise ValueError("specialized native artifact contains an unadmitted generic text fallback")
+            else:
+                content = compile_pdf_content_contract(
+                    reader.root, requirement.scope, obligation, reader, deadline=deadline
+                )
+                if row.get("content_contract") != content.to_dict():
+                    raise ValueError("native PDF obligations differ from the current consumed source bytes")
+                observed = inspect_pdf_content(
+                    snapshot.content,
+                    tuple(reader.read(item["path"]).content for item in row["raster"]["rasters"]),
+                    content,
+                    deadline=deadline,
+                )
+                if row.get("pdf_content") != observed or observed["findings"]:
+                    raise ValueError("native PDF source/glyph/localized-pixel observation differs or failed")
+                expected_blockers.extend(
+                    {"tool": f"PDF source oracle {obligation.id}", "reason": reason} for reason in observed["blockers"]
+                )
         from infrastructure.reporting.native_format_observer_validation import (
             replay_native_observer,
         )
@@ -552,7 +693,7 @@ def _validate_native_conformance(
         observer = row.get("native_observer")
         if not isinstance(observer, dict):
             raise ValueError("native execution lacks independently replayable source/native observation")
-        replay_native_observer(
+        result = replay_native_observer(
             reader.root,
             directory / f"observer-{ordinal:04d}",
             requirement.scope,
@@ -569,20 +710,34 @@ def _validate_native_conformance(
             source_reference=operation.source.reference,
             verify_source_correspondence=operation.source.verify_correspondence,
             office_mermaid_runtime=office_context.runtime_for(observer, reader, ordinal=ordinal, run_id=nonce),
+            original_worker_pid=raw["pid"],
+            original_worker_platform=raw["host_before"]["system"],
         )
-        result = native_observer_outcome(observer)
-        if result.get("status") == "fail" or result.get("findings"):
+        if result["findings"]:
             raise ValueError("native artifact independent source/readback observations failed")
+        checked_observers.append(result)
         expected_blockers.extend(
-            {"tool": f"native source oracle {obligation.id}", "reason": reason} for reason in result.get("blockers", [])
+            {"tool": f"native source oracle {obligation.id}", "reason": reason} for reason in result["residuals"]
         )
-    expected_blockers.extend(unsupported_native_controls(requirement.scope, requirement.formats))
-    if (
-        raw.get("blockers") != expected_blockers
-        or raw.get("status") != ("blocked" if expected_blockers else "pass")
-        or code != (75 if expected_blockers else 0)
-    ):
-        raise ValueError("native execution does not preserve its exact current unsupported obligations")
+    expected_blockers.extend(whole_pdf_blockers)
+    if requirement.scope == "templates/template_pitch_deck":
+        from infrastructure.reporting.native_projection_source_dispatch import inspect_admitted_pitch_pairs
+
+        pairs = inspect_admitted_pitch_pairs(
+            reader.root,
+            requirement.scope,
+            contract,
+            rows,
+            reader,
+            source_reference=operation.source.reference,
+            verify_source_correspondence=operation.source.verify_correspondence,
+            deadline=deadline,
+        )
+        if raw.get("pitch_native_pairs") != pairs or pairs["findings"] or pairs["status"] == "fail":
+            raise ValueError("complete independently reconstructed Pitch native pair parity differs or failed")
+        expected_blockers.extend({"tool": "Pitch all native pairs", "reason": reason} for reason in pairs["blockers"])
+    elif raw.get("pitch_native_pairs") is not None:
+        raise ValueError("non-Pitch native scope contains an unadmitted pair aggregate")
     formats = raw.get("formats")
     if not isinstance(formats, dict) or set(formats) != set(requirement.formats) or details.get("formats") != formats:
         raise ValueError("native primary formats omit the declared selection")
@@ -601,61 +756,10 @@ def _validate_native_conformance(
             "validated": True,
         }:
             raise ValueError("native primary format differs from the required artifact role")
-    controls = raw.get("negative_controls")
-    kinds = sorted({item.format for item in contract})
-    if not isinstance(controls, list) or [item.get("name") for item in controls if isinstance(item, dict)] != [
-        *(f"invalid-native-{kind}" for kind in kinds),
-        "invalid-pdf-tool",
-    ]:
-        raise ValueError("native actual negative controls are missing or duplicated")
-    for control, kind in zip(controls[:-1], kinds, strict=True):
-        observed_file = _file(control.get("artifact"), reader)
-        observed = observed_file.json_object()
-        expected = {
-            "schema_version": CONTROL_SCHEMA,
-            "run_id": nonce,
-            "name": f"invalid-native-{kind}",
-            "format": kind,
-            "exit_code": 1,
-        }
-        if observed != expected or control.get("expected_exit_code") != 1 or control.get("observed_exit_code") != 1:
-            raise ValueError("native parser control did not record its actual rejection")
-        args = [
-            "--root",
-            custody["root"],
-            "--control",
-            kind,
-            "--run-id",
-            nonce,
-            "--control-output",
-            str(producer_path(custody, reader.root, observed_file.path)),
-        ]
-        control_command = producer_bootstrap(custody, reader.root, runtime, WORKER_MODULE, *args)
-        _process(
-            _file(control.get("process_artifact"), reader).json_object(),
-            nonce,
-            control_command,
-            1,
-        )
-    invalid = directory / "invented-invalid.pdf"
-    if (
-        reader.read(invalid.relative_to(reader.root).as_posix()).content
-        != b"invented public malformed PDF negative control\n"
-    ):
-        raise ValueError("native tool negative-control input changed")
-    _tool(
-        controls[-1].get("artifact"),
-        reader,
-        nonce,
-        "pdftoppm",
-        "invalid-pdf-tool",
-        [
-            str(producer_path(custody, reader.root, invalid)),
-            str(producer_path(custody, reader.root, directory / "invalid-raster")),
-        ],
-        1,
-    )
-    _pdf_controls(
+    from infrastructure.reporting.native_format_acceptance_control_validation import validate_native_controls
+
+    checked_controls = validate_native_controls(
+        requirement,
         raw,
         reader,
         directory,
@@ -663,138 +767,61 @@ def _validate_native_conformance(
         runtime,
         specification,
         versions,
-        any(item.format == "pdf" for item in contract),
+        contract,
         custody,
         deadline=deadline,
+        operation=operation,
     )
-    from infrastructure.reporting.native_format_control_replay import (
-        validate_format_controls,
-    )
-    from infrastructure.reporting.native_format_observer_validation import (
-        replay_browser_controls,
+    for kind, checked in details["office_diagram_cohorts"]["cohorts"].items():
+        if checked["targets"]:
+            checked_controls["suites"][kind + "_diagrams"] = checked
+    current_scope = details["current_scope_replay"]
+    if requirement.scope == "templates/template_pitch_deck":
+        checked_controls["suites"]["configured_pitch"] = current_scope["current_pitch_controls"]
+    from infrastructure.validation.publication.audit import (
+        build_current_publication_audit,
+        build_native_published_audit,
+        validate_publication_audit,
     )
 
-    controls = raw.get("observer_controls")
-    if not isinstance(controls, dict):
-        raise ValueError("native format observer control suite is missing")
-    replay_deadline = deadline
-    replay_env = native_environment_for_replay(reader.root)
-    validate_format_controls(
-        controls,
-        requirement.formats,
-        reader,
-        directory,
-        run_id=nonce,
-        custody=custody,
-        runtime=runtime,
-        versions=versions,
-        deadline=replay_deadline,
-        env=replay_env,
-        original_deadline=specification["deadline_monotonic"],
-    )
-    if "html" in requirement.formats:
-        for semantic, key in ((False, "html"), (True, "html_semantic")):
-            replay_browser_controls(
-                reader.root,
-                directory,
-                controls[key],
-                reader,
-                run_id=nonce,
-                custody=custody,
-                runtime=runtime,
-                semantic=semantic,
-                deadline=replay_deadline,
-                env=replay_env,
-            )
+    published = build_native_published_audit(operation.source, requirement.scope, reader, deadline=deadline)
+    if _file(raw.get("published_source_audit_artifact"), reader).json_object() != published.to_dict():
+        raise ValueError("Original pre-Core published audit differs from independent pristine Source evidence")
+    current_audit = build_current_publication_audit(operation.source, requirement.scope, reader, deadline=deadline)
     audit = _file(raw.get("publication_audit_artifact"), reader).json_object()
     if (
-        audit.get("status") != "pass"
+        audit != current_audit.to_dict()
+        or validate_publication_audit(current_audit, strict=True) != 0
+        or audit.get("status") != "pass"
         or audit.get("projects") != [requirement.scope]
         or audit.get("summary", {}).get("blocking_count") != 0
         or audit.get("summary", {}).get("review_required_count") != 0
-        or not validate_rendered_provenance(reader.root, requirement.scope).valid
+        or not validate_current_rendered_provenance(reader.root, requirement.scope).valid
         or not reader.unchanged()
     ):
         raise ValueError("native strict rendered audit/current provenance or custody failed")
     operation.verify(reader)
+    from infrastructure.reporting.native_oracle_phase_reader import collect_reader_native_oracle_phase
 
-
-def _pdf_controls(
-    raw: dict[str, Any],
-    reader: SnapshotReader,
-    directory: Path,
-    nonce: str,
-    runtime: dict[str, Any],
-    specification: dict[str, Any],
-    versions: dict[str, dict[str, Any]],
-    required: bool,
-    custody: dict[str, str],
-    *,
-    deadline: float,
-) -> None:
-    """Reparse valid fixtures and recompute their exact intended semantic faults."""
-    controls = raw.get("pdf_negative_controls")
-    names = list(PDF_CONTROL_CODES) if required else []
-    if not isinstance(controls, list) or [item.get("name") for item in controls if isinstance(item, dict)] != names:
-        raise ValueError("native actual valid-PDF baseline/negative controls are absent or duplicated")
-    for control, name in zip(controls, names, strict=True):
-        observed_file = _file(control.get("artifact"), reader)
-        if observed_file.path != directory / f"pdf-oracle-{name}.json":
-            raise ValueError("valid-PDF control belongs to a different evidence attempt")
-        observed = observed_file.json_object()
-        contract = pdf_control_contract()
-        if (
-            observed.get("schema_version") != PDF_CONTROL_SCHEMA
-            or observed.get("run_id") != nonce
-            or observed.get("name") != name
-            or observed.get("content_contract") != contract.to_dict()
-        ):
-            raise ValueError("valid-PDF control contract/run/name changed")
-        row = observed.get("artifact")
-        if not isinstance(row, dict) or row.get("id") != "invented-control:pdf" or row.get("format") != "pdf":
-            raise ValueError("valid-PDF control requires the actual invented PDF artifact")
-        snapshot = _file({"path": row.get("path"), "sha256": row.get("sha256")}, reader)
-        control_directory = directory / f"pdf-oracle-{name}-artifacts"
-        if snapshot.path != control_directory / "invented-control.pdf" or snapshot.content != pdf_control_bytes(name):
-            raise ValueError("valid-PDF control does not contain its exact current valid mutant bytes")
-        if row.get("observation") != parse_native_bytes("pdf", snapshot.content):
-            raise ValueError("valid-PDF control did not actually parse successfully")
-        _raster(row, snapshot, 0, control_directory, reader, nonce, versions, custody)
-        oracle = inspect_pdf_content(
-            snapshot.content,
-            tuple(reader.read(item["path"]).content for item in row["raster"]["rasters"]),
-            contract,
-            deadline=deadline,
+    oracle_phases.append(
+        collect_reader_native_oracle_phase(
+            office_current.source,
+            office_current,
+            raw,
+            reader,
+            checked_pipeline,
+            current_comparison,
+            checked_analysis,
+            checked_hydration,
+            checked_observers,
+            checked_controls,
+            renderer_current[0],
+            expected_blockers,
+            requirement.formats,
+            whole_pdf=whole_pdf,
+            selected_lineage=current_scope["selected_lineage"],
         )
-        if observed.get("pdf_content") != oracle:
-            raise ValueError("valid-PDF control semantic/geometry/pixel observations changed")
-        code = require_pdf_control_result(name, oracle)
-        if (
-            type(observed.get("exit_code")) is not int
-            or observed["exit_code"] != code
-            or control.get("expected_exit_code") != code
-            or control.get("observed_exit_code") != code
-        ):
-            raise ValueError("valid-PDF control did not preserve its exact intended original outcome")
-        args = [
-            "--root",
-            custody["root"],
-            "--pdf-oracle-control",
-            name,
-            "--run-id",
-            nonce,
-            "--control-output",
-            str(producer_path(custody, reader.root, observed_file.path)),
-            "--deadline-monotonic",
-            str(specification["deadline_monotonic"]),
-        ]
-        command = producer_bootstrap(custody, reader.root, runtime, WORKER_MODULE, *args)
-        _process(
-            _file(control.get("process_artifact"), reader).json_object(),
-            nonce,
-            command,
-            code,
-        )
+    )
 
 
 def native_environment_for_replay(root: Path) -> dict[str, str]:
@@ -811,15 +838,38 @@ def native_environment_for_replay(root: Path) -> dict[str, str]:
     return env
 
 
-def validate_native_acceptance(requirement: Requirement, details: dict[str, Any], reader: SnapshotReader) -> None:
+def validate_native_acceptance(
+    requirement: Requirement,
+    details: dict[str, Any],
+    reader: SnapshotReader,
+    *,
+    current_source: NativeSourceContext | None = None,
+    current_directory: Path | None = None,
+    provider_wheels: Mapping[str, Path] | None = None,
+    pdfium_provider: NativePDFiumProvider | None = None,
+    pdfium_runtime: PDFiumRuntimeAdmission | None = None,
+    office_font_files: tuple[Path, ...] | None = None,
+    current_observer_tools: Mapping[str, Path | None] | None = None,
+) -> None:
     """Full format acceptance additionally requires every implemented visual oracle."""
-    validate_native_conformance(requirement, details, reader)
+    validate_native_conformance(
+        requirement,
+        details,
+        reader,
+        current_source=current_source,
+        current_directory=current_directory,
+        provider_wheels=provider_wheels,
+        pdfium_provider=pdfium_provider,
+        pdfium_runtime=pdfium_runtime,
+        office_font_files=office_font_files,
+        current_observer_tools=current_observer_tools,
+    )
     raw = _file(details.get("native_execution_artifact"), reader).json_object()
     if (
         raw.get("status") != "pass"
         or raw.get("execution_exit_code") != 0
         or raw.get("blockers") != []
-        or unsupported_native_controls(requirement.scope, requirement.formats)
+        or details.get("native_oracle_residuals") != []
     ):
         raise ValueError("native conformance cannot grant missing full content/layout/visual acceptance")
 

@@ -2,20 +2,17 @@
 
 from __future__ import annotations
 
-import hashlib
+import contextvars
 import json
-import math
 import os
 import re
 import shutil
-import stat
 import subprocess
 import threading
 import time
 from collections.abc import Callable
-from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from infrastructure.core._bounded_run_guardian import (
     _DONE,
@@ -33,20 +30,28 @@ from infrastructure.reporting.native_format_portable_custody import (
     executable_observation,
 )
 
+from infrastructure.reporting.native_tool_process_inputs import (
+    _nomination_observation as _nomination_observation,
+    _physical_identity as _physical_identity,
+    _remaining as _remaining,
+    _stamp as _stamp,
+    _stdin_observation as _stdin_observation,
+    _stream as _stream,
+)
+
+if TYPE_CHECKING:
+    from infrastructure.reporting.native_loader_observation import NativeLoaderObservation
+
 SCHEMA = "template-original-native-tool-process-v1"
+STDIN_SCHEMA = "template-original-native-tool-stdin-process-v2"
+LOADER_SCHEMA = "template-original-native-loader-tool-process-v3"
 # Even six-byte JSON escaping of the complete text stays inside one 64 MiB artifact.
 MAX_STREAM_BYTES = 8 * 1024 * 1024
 _LIVE_OWNER_KEY = object()
 
 
 class NativeLiveToolProcess:
-    """A short-lived owner supplied directly by the real Popen supervisor.
-
-    This object authenticates this process lifetime and command. It grants no
-    browser, loaded-provider or kernel admission. The Source-owned interaction
-    must retain its own observations and close its protocol before returning.
-    No receipt parser can acquire this owner's actual Popen/guardian objects.
-    """
+    """Actual Popen/guardian custody; serialized DATA cannot acquire it."""
 
     def __init__(
         self,
@@ -97,66 +102,27 @@ class NativeLiveToolProcess:
         ):
             raise ValueError("native interaction lost its actual live original process")
 
+    def observe_original_os_exit(self) -> int:
+        """Reap this genuine Popen's signed OS result, preserving its clock."""
+        _remaining(self._deadline)
+        actual_arguments = self._process.args
+        if (
+            not self._active
+            or self._owner_pid != os.getpid()
+            or not isinstance(actual_arguments, (list, tuple))
+            or tuple(actual_arguments) != self._command
+            or not self._guardian.armed
+            or self._guardian.process.poll() is not None
+        ):
+            raise ValueError("original OS reaping lost its actual supervisor-held Popen/guardian")
+        outcome = self._process.wait(timeout=_remaining(self._deadline))
+        _remaining(self._deadline)
+        if type(outcome) is not int:
+            raise ValueError("original OS reaping lacks the actual signed kernel exit result")
+        return outcome
+
     def _close_owner(self) -> None:
         self._active = False
-
-
-def _physical_identity(path: Path) -> dict[str, int]:
-    """Retain actual executable metadata; this grants no loaded-library proof."""
-    metadata = path.stat()
-    return {
-        "device": metadata.st_dev,
-        "inode": metadata.st_ino,
-        "mode": metadata.st_mode,
-        "size": metadata.st_size,
-        "mtime_ns": metadata.st_mtime_ns,
-        "ctime_ns": metadata.st_ctime_ns,
-        "links": metadata.st_nlink,
-    }
-
-
-def _nomination_observation(path: Path) -> dict[str, Any]:
-    metadata = path.lstat()
-    return {
-        "device": metadata.st_dev,
-        "inode": metadata.st_ino,
-        "mode": metadata.st_mode,
-        "size": metadata.st_size,
-        "mtime_ns": metadata.st_mtime_ns,
-        "ctime_ns": metadata.st_ctime_ns,
-        "links": metadata.st_nlink,
-        "symlink_target": os.readlink(path) if stat.S_ISLNK(metadata.st_mode) else None,
-    }
-
-
-def _stamp() -> dict[str, str | float]:
-    return {
-        "utc": datetime.now(timezone.utc).isoformat(),
-        "monotonic": time.monotonic(),
-    }
-
-
-def _remaining(deadline: float) -> float:
-    if type(deadline) not in (int, float) or not math.isfinite(deadline):
-        raise ValueError("native tool requires the original finite absolute deadline")
-    remaining = deadline - time.monotonic()
-    if remaining <= 0:
-        raise TimeoutError("native tool exhausted its original admitted deadline")
-    return remaining
-
-
-def _stream(path: Path) -> tuple[dict[str, Any], str]:
-    digest = hashlib.sha256()
-    size, chunks = 0, []
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(65536), b""):
-            digest.update(chunk)
-            size += len(chunk)
-            if size > MAX_STREAM_BYTES:
-                raise ValueError("native tool stream exceeds its finite retained byte ceiling")
-            chunks.append(chunk)
-    raw = b"".join(chunks)
-    return {"path": str(path), "sha256": digest.hexdigest(), "bytes": size}, raw.decode("utf-8", errors="replace")
 
 
 def _finish_guardian(guardian: BoundedRunGuardian, deadline: float) -> None:
@@ -183,23 +149,38 @@ def run_native_tool_process(
     purpose: str,
     preserve_nominated_launcher: bool = False,
     while_live: Callable[[NativeLiveToolProcess], None] | None = None,
+    stdin_path: Path | None = None,
+    loader: NativeLoaderObservation | None = None,
+    observed_processes: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Own actual Popen/guardian PIDs, signed OS exit and complete raw streams.
-
-    All accepted work, custody and retention use the same externally supplied
-    finite deadline. The independently admitted originating caller authenticates
-    these DATA observations; this function does not grant kernel/library proof.
-    """
+    """Retain actual Popen/guardian outcomes under the original finite clock."""
     _remaining(deadline)
+    if observed_processes is not None and not isinstance(observed_processes, list):
+        raise ValueError("actual native OS observation sink must be a list")
+    if loader is not None:
+        from infrastructure.reporting.native_loader_observation import NativeLoaderObservation
+
+        if type(loader) is not NativeLoaderObservation:
+            raise ValueError("native loader requires the fixed Source/actual compiler capability")
+        loader.compiled.verify(deadline=deadline)
     if while_live is not None and not callable(while_live):
         raise ValueError("native interaction requires a Source-owned callable")
     if type(preserve_nominated_launcher) is not bool or (
         preserve_nominated_launcher
+        and name not in {"xelatex", "lualatex", "pdflatex"}
         and (not Path(name).is_absolute() or re.fullmatch(r"python(?:[0-9]+(?:\.[0-9]+)*)?", Path(name).name) is None)
     ):
-        raise ValueError("preserving a launcher requires an explicit absolute selected Python nomination")
+        raise ValueError("preserving a launcher requires an absolute selected Python or fixed TeX engine nomination")
     directory = directory.absolute()
     cwd = cwd.absolute()
+    if stdin_path is not None and (
+        not isinstance(stdin_path, Path)
+        or not stdin_path.is_absolute()
+        or not stdin_path.is_relative_to(directory)
+        or stdin_path != stdin_path.resolve(strict=True)
+        or stdin_path.is_symlink()
+    ):
+        raise ValueError("native stdin must be an exact owned private-directory input")
     if (
         os.name != "posix"
         or directory != directory.resolve(strict=True)
@@ -236,6 +217,7 @@ def run_native_tool_process(
         "diagnostics": [],
         "timed_out": False,
         "accepted": False,
+        "environment_custody": None,
     }
     process: subprocess.Popen[bytes] | None = None
     guardian: BoundedRunGuardian | None = None
@@ -244,6 +226,18 @@ def run_native_tool_process(
     limit_refused = threading.Event()
     monitor_stop = threading.Event()
     monitor: threading.Thread | None = None
+    stdin_stream = None
+    loader_thread: threading.Thread | None = None
+    loader_errors: list[BaseException] = []
+    loader_owner: NativeLiveToolProcess | None = None
+
+    def collect_loader() -> None:
+        try:
+            if loader is None or loader_owner is None:
+                raise ValueError("actual loader observer lost its Source/Popen capability")
+            loader.collect(loader_owner)
+        except BaseException as error:
+            loader_errors.append(error)
 
     def monitor_streams() -> None:
         while not monitor_stop.wait(0.05):
@@ -267,6 +261,13 @@ def run_native_tool_process(
     }
     with stdout_path.open("xb") as stdout, stderr_path.open("xb") as stderr:
         try:
+            if stdin_path is not None:
+                stdin_stream = os.fdopen(
+                    os.open(stdin_path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC),
+                    "rb",
+                )
+                payload["schema_version"] = STDIN_SCHEMA
+                payload["stdin_input_before"] = _stdin_observation(stdin_stream, stdin_path, deadline)
             selected_env = build_bounded_env(env)
             selected = shutil.which(name, path=selected_env.get("PATH"))
             if not selected:
@@ -281,11 +282,15 @@ def run_native_tool_process(
             payload["executable_observation_before"] = executable_observation(executable)
             payload["executable_identity_before"] = _physical_identity(executable)
             payload["nominated_command"] = [str(nominated), *arguments]
-            payload["command"] = [str(nominated) if preserve_nominated_launcher else str(executable), *arguments]
+            payload["command"] = [
+                str(nominated) if preserve_nominated_launcher else str(executable),
+                *arguments,
+            ]
             payload["launcher_preserved"] = preserve_nominated_launcher
             payload["nominated_identity_before"] = _nomination_observation(nominated)
 
             process_env, run_token = build_bounded_run_env(selected_env)
+            bounded_env = dict(process_env)
             guardian = start_bounded_run_guardian(
                 selected_env,
                 deadline_monotonic=deadline,
@@ -296,11 +301,27 @@ def run_native_tool_process(
             cleanup["guardian_pid"] = guardian.process.pid
             _remaining(deadline)
             payload["launch_begin"] = _stamp()
+            if loader is not None:
+                # Instrument only this exact Source-owned qualification launch;
+                # guardian/env sanitation and all ordinary launches stay intact.
+                process_env = loader.prepare_env(process_env, deadline=deadline, purpose=purpose)
+                payload["schema_version"] = LOADER_SCHEMA
+                payload["loader_stdin"] = stdin_stream is not None
+            from infrastructure.reporting.native_environment_custody import capture_native_environment
+
+            payload["environment_custody"] = capture_native_environment(
+                env,
+                selected_env,
+                bounded_env,
+                process_env,
+                run_token,
+                loader,
+            )
             process = subprocess.Popen(
                 payload["command"],
                 cwd=cwd,
                 env=process_env,
-                stdin=subprocess.DEVNULL,
+                stdin=stdin_stream if stdin_stream is not None else subprocess.DEVNULL,
                 stdout=stdout,
                 stderr=stderr,
                 start_new_session=True,
@@ -311,11 +332,34 @@ def run_native_tool_process(
             cleanup["guardian_armed"] = guardian.armed
             monitor = threading.Thread(target=monitor_streams, name="native-tool-owned-streams", daemon=True)
             monitor.start()
+            if loader is not None:
+                loader_owner = NativeLiveToolProcess(
+                    process,
+                    guardian,
+                    tuple(payload["command"]),
+                    deadline,
+                    key=_LIVE_OWNER_KEY,
+                )
+                context = contextvars.copy_context()
+                loader_thread = threading.Thread(
+                    target=lambda: context.run(collect_loader),
+                    name="native-tool-source-loader-callbacks",
+                    daemon=True,
+                )
+                loader_thread.start()
             if while_live is not None:
-                interaction: dict[str, Any] = {"begin": _stamp(), "end": None, "completed": False}
+                interaction: dict[str, Any] = {
+                    "begin": _stamp(),
+                    "end": None,
+                    "completed": False,
+                }
                 payload["live_interaction"] = interaction
                 owner = NativeLiveToolProcess(
-                    process, guardian, tuple(payload["command"]), deadline, key=_LIVE_OWNER_KEY
+                    process,
+                    guardian,
+                    tuple(payload["command"]),
+                    deadline,
+                    key=_LIVE_OWNER_KEY,
                 )
                 try:
                     while_live(owner)
@@ -329,11 +373,40 @@ def run_native_tool_process(
                     interaction["end"] = _stamp()
             process.wait(timeout=_remaining(deadline))
             payload["root_reaped"] = _stamp()
+            if loader_thread is not None:
+                loader_thread.join(timeout=_remaining(deadline))
+                if loader_thread.is_alive():
+                    raise TimeoutError("actual loader callbacks failed to finish in their original tool clock")
+                if loader_errors:
+                    raise loader_errors[0]
+                if loader is None:
+                    raise ValueError("actual loader thread lost its genuine observer")
+                payload["loader_lifecycle"] = loader.finish({**payload, "original_exit_code": process.returncode})
         except BaseException as error:
             original_error = error
             payload["diagnostics"].append(f"{type(error).__name__}: {error}")
             payload["timed_out"] = isinstance(error, (TimeoutError, subprocess.TimeoutExpired))
         finally:
+            if loader_thread is not None and loader_thread.is_alive():
+                if loader is not None:
+                    loader.abort()
+                loader_thread.join(timeout=max(0.0, deadline - time.monotonic()))
+                if loader_thread.is_alive():
+                    payload["diagnostics"].append("actual Source loader thread did not close inside original deadline")
+            if loader_owner is not None:
+                loader_owner._close_owner()
+            if stdin_stream is not None:
+                try:
+                    if stdin_path is None:
+                        raise ValueError("native stdin lost its actual prelaunch path")
+                    payload["stdin_input_after"] = _stdin_observation(stdin_stream, stdin_path, deadline)
+                    if payload["stdin_input_before"] != payload["stdin_input_after"]:
+                        raise ValueError("native stdin changed while the actual child consumed it")
+                except Exception as error:
+                    payload["diagnostics"].append(f"original stdin custody {type(error).__name__}: {error}")
+                    original_error = original_error or error
+                finally:
+                    stdin_stream.close()
             monitor_stop.set()
             if monitor is not None:
                 monitor.join(timeout=max(0.0, deadline - time.monotonic()))
@@ -383,6 +456,16 @@ def run_native_tool_process(
                 cleanup["root_reaped"] = process is not None and process.returncode is not None
                 cleanup["end"] = _stamp()
     payload["cleanup"] = cleanup
+    if observed_processes is not None:
+        # Direct independently reaped Popen/guardian facts survive later
+        # executable/stream/JSON retention failure. They remain DATA and cannot
+        # grant actual original-tool capability or successful completion.
+        observed_processes.append(
+            {
+                key: payload.get(key)
+                for key in ("pid", "owner_pid", "command", "original_exit_code", "timed_out", "diagnostics")
+            }
+        )
     try:
         if payload["nomination"] is not None:
             nominated = Path(payload["nomination"]["path"])

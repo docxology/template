@@ -43,11 +43,11 @@ def pdf_source_inputs(
     from infrastructure.rendering._pdf_title_page_config import _rendering_options
     from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
     from infrastructure.validation.output.render_formats import render_config_manuscript_dir
-    from infrastructure.validation.publication.rendered_provenance import validate_rendered_provenance
+    from infrastructure.validation.publication.rendered_provenance import validate_current_rendered_provenance
 
     if artifact.format != "pdf" or artifact.id != "manuscript:pdf":
         raise ValueError("scientific manuscript source plan requires manuscript:pdf")
-    if not validate_rendered_provenance(root, scope).valid:
+    if not validate_current_rendered_provenance(root, scope).valid:
         raise ValueError("scientific source reconstruction requires current consumed hydration")
     reader.read(f"projects/{scope}/manuscript/config.yaml")
     manuscript = render_config_manuscript_dir(root / "projects" / scope)

@@ -18,7 +18,7 @@ from typing import Any
 from coverage import Coverage
 
 from infrastructure.core.files.project_lock import project_output_lock
-from infrastructure.core.testing.project_test_matrix import ProjectTestTask, run_project_test_matrix
+from infrastructure.core.testing.project_test_matrix import ProjectTestResult, ProjectTestTask, run_project_test_matrix
 from infrastructure.project.public_acceptance_evidence import (
     CELL_SCHEMA,
     aggregate_pytest,
@@ -93,6 +93,7 @@ def _run_pytest(
     admitted_source_identity: str,
     admitted_deliverables_identity: str,
     observed_child_codes: list[int],
+    native_tools: list[dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any], int]:
     receipt = directory / ("collection.json" if collect else f"chunk-{index:03d}.json")
     remaining = math.floor(deadline - time.monotonic())
@@ -150,10 +151,80 @@ def _run_pytest(
         min(remaining, 600) if collect else remaining,
         capture_output=True,
     )
-    result = run_project_test_matrix([task], workers=1)[0]
+    if native_tools is None:
+        result = run_project_test_matrix([task], workers=1)[0]
+    else:
+        from infrastructure.reporting.native_format_acceptance_checks import NativeToolUnavailable, native_tool_record
+        from infrastructure.reporting.native_tool_producer import current_native_producer_operation
+
+        owner = current_native_producer_operation()
+        if owner is None:
+            raise ValueError("native full-suite execution lost its genuine current Source owner")
+        owner.verify(SnapshotReader(root), run_id=run_id, deadline=deadline)
+        child_tools: list[dict[str, Any]] = []
+        started = time.monotonic()
+        launch_error: Exception | None = None
+        try:
+            native_tool_record(
+                root,
+                directory,
+                command[0],
+                list(command[1:]),
+                env=dict(os.environ),
+                deadline=deadline,
+                phase_deadline=min(deadline, started + task.timeout_seconds),
+                run_id=run_id,
+                purpose=receipt.stem + "-native-tool",
+                preserve_nominated_launcher=True,
+                observed_tools=child_tools,
+            )
+        except (TimeoutError, NativeToolUnavailable) as error:
+            launch_error = error
+            if not child_tools:
+                raise
+        finally:
+            # Keep actual child OS facts even if final retention/source custody
+            # refuses after reap. These DATA facts cannot grant completion.
+            native_tools.extend(child_tools)
+            for packet in child_tools:
+                actual = packet["observation"]
+                actual_code = 130 if actual["original_exit_code"] in (130, -2) else actual["exit_code"]
+                if type(actual_code) is int:
+                    observed_child_codes.append(actual_code)
+        if len(child_tools) != 1:
+            raise ValueError("actual full-suite child lacks one exact Native ToolAPI observation")
+        packet = child_tools[0]
+        child = packet["observation"]
+        # These fields came directly from the actual ToolAPI invocation above.
+        # Incomplete custody cannot pass or mint a tool original capability.
+        code = 130 if child["original_exit_code"] in (130, -2) else child["exit_code"]
+        if type(code) is not int:
+            code = 75
+        result = ProjectTestResult(
+            index,
+            project.relative_to(root).as_posix(),
+            code,
+            timed_out=child["timed_out"],
+            detail=child["diagnostic"],
+            output_tail=(child["stdout"] + "\n" + child["stderr"])[-4000:],
+            duration_seconds=time.monotonic() - started,
+        )
+        if child["custody_refused"] or packet.get("completion_authorized") is not True:
+            failure_code = (
+                130
+                if child["original_exit_code"] in (130, -2)
+                else 124
+                if isinstance(launch_error, TimeoutError) or child["timed_out"]
+                else 75
+                if result.returncode == 0
+                else result.returncode
+            )
+            observed_child_codes.append(failure_code)
+            raise _RuntimeChildFailure(failure_code, "native pytest original custody/promotion refused")
     # Keep native supervised outcomes before any receipt/source read can fail.
     # Interruption and timeout remain dominant even with incomplete evidence.
-    observed_child_codes.append(result.returncode)
+    if native_tools is None:
+        observed_child_codes.append(result.returncode)
     receipt_reader = SnapshotReader(root)
     observed_snapshot = receipt_reader.read(receipt.relative_to(root).as_posix()) if receipt.is_file() else None
     write_json(
@@ -192,7 +263,13 @@ def _run_pytest(
     return observed, result.returncode
 
 
-def run_cell(spec: dict[str, Any], spec_binding: dict[str, str]) -> int:
+def run_cell(
+    spec: dict[str, Any],
+    spec_binding: dict[str, str],
+    *,
+    original_deadline: float | None = None,
+    native_tools: list[dict[str, Any]] | None = None,
+) -> int:
     """Produce raw collection/outcome/branch coverage evidence under the project lock."""
     root = Path(spec["root"]).resolve()
     scope = spec["scope"]
@@ -221,13 +298,28 @@ def run_cell(spec: dict[str, Any], spec_binding: dict[str, str]) -> int:
         "observed_child_exit_codes": observed_child_codes,
     }
     deadline = time.monotonic() + timeout
+    if original_deadline is not None:
+        from infrastructure.reporting.native_tool_producer import current_native_producer_operation
+
+        owner = current_native_producer_operation()
+        if (
+            type(original_deadline) not in (float, int)
+            or not math.isfinite(original_deadline)
+            or native_tools is None
+            or owner is None
+        ):
+            raise ValueError("native cell needs its actual owner, observation sink and existing finite clock")
+        deadline = min(deadline, original_deadline)
+        owner.verify(SnapshotReader(root), run_id=run_id, deadline=deadline)
+    elif native_tools is not None:
+        raise ValueError("native cell cannot launch with a fresh replacement clock")
     try:
         if initial_runtime != spec["runtime"]:
             raise ValueError("selected interpreter or test stack changed after the bounded runtime probe")
         resolved.require_case_policy()
         if scope == "root" and list(resolved.test_files()) != spec["test_files"]:
             raise ValueError("root cell omitted or invented source-owned test files")
-        with project_output_lock(project, timeout=timeout):
+        with project_output_lock(project, timeout=min(timeout, max(0.0, deadline - time.monotonic()))):
             if resolved.source_identity() != spec["source_identity"]:
                 raise ValueError("project source changed before full-selection execution")
             if resolved.deliverables_identity() != spec["deliverables_identity"]:
@@ -259,6 +351,7 @@ def run_cell(spec: dict[str, Any], spec_binding: dict[str, str]) -> int:
                 admitted_source_identity=spec["source_identity"],
                 admitted_deliverables_identity=spec["deliverables_identity"],
                 observed_child_codes=observed_child_codes,
+                native_tools=native_tools,
             )
             if collection_exit != 0 or not baseline.get("nodeids"):
                 raise ValueError("full collection failed or was empty")
@@ -279,6 +372,7 @@ def run_cell(spec: dict[str, Any], spec_binding: dict[str, str]) -> int:
                     admitted_source_identity=spec["source_identity"],
                     admitted_deliverables_identity=spec["deliverables_identity"],
                     observed_child_codes=observed_child_codes,
+                    native_tools=native_tools,
                 )
                 if receipt.get("runtime") != initial_runtime:
                     raise ValueError("pytest child ran a different interpreter or test stack")

@@ -187,7 +187,9 @@ def replay_scientific_math_reference(
             or process["run_id"] != run_id
             or process["purpose"] != purpose
             or process["tool"] != name
-            or process["command"] != [process["executable"], *arguments]
+            or not isinstance(process["command"], list)
+            or len(process["command"]) != len(arguments) + 1
+            or process["command"][1:] != arguments
             or type(process["exit_code"]) is not int
             or process["exit_code"] != 0
             or type(process["original_exit_code"]) is not int
@@ -199,6 +201,21 @@ def replay_scientific_math_reference(
             or not isinstance(process["stderr"], str)
         ):
             raise ValueError("reference original command/outcome/custody differs")
+        native = strict_json_object(admitted(process["native_process_artifact"]))
+        nomination = native.get("nomination")
+        preserve = name == "xelatex"
+        if (
+            not isinstance(nomination, dict)
+            or set(nomination) != {"tool", "path", "resolved_path"}
+            or nomination["tool"] != name
+            or nomination["resolved_path"] != process["executable"]
+            or not isinstance(nomination["path"], str)
+            or str(_absolute(nomination["path"])) != nomination["path"]
+            or native.get("launcher_preserved") is not preserve
+            or native.get("command") != process["command"]
+            or process["command"][0] != (nomination["path"] if preserve else process["executable"])
+        ):
+            raise ValueError("reference actual Source-nominated launcher differs from its original argv")
         if native_reader.native_producer_operation is not None:
             from infrastructure.reporting.native_tool_producer import validate_live_native_tool
 

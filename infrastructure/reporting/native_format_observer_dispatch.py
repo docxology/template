@@ -7,9 +7,7 @@ import shutil
 import sys
 from pathlib import Path
 from typing import Any
-from collections.abc import Callable
 
-from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.project.public_reference import PublicReference
 from infrastructure.reporting.native_format_acceptance_checks import (
     NativeToolUnavailable,
@@ -30,15 +28,17 @@ from infrastructure.reporting.native_pitch_source_admission import (
 
 from infrastructure.reporting.native_office_mermaid_binding import OfficeMermaidAdmission
 
-OBSERVER_SCHEMA = "template-native-observer-dispatch-v1"
+from infrastructure.reporting.native_print_artifact_observer import selected_print_artifact
+
+OBSERVER_SCHEMA = "template-native-observer-dispatch-v2"
 
 
 def _manuscript_contracts(root: Path, scope: str, reader: SnapshotReader) -> tuple[NativeContentContract, ...]:
     from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
     from infrastructure.validation.output.render_formats import render_config_manuscript_dir
-    from infrastructure.validation.publication.rendered_provenance import validate_rendered_provenance
+    from infrastructure.validation.publication.rendered_provenance import validate_current_rendered_provenance
 
-    if not validate_rendered_provenance(root, scope).valid:
+    if not validate_current_rendered_provenance(root, scope).valid:
         raise ValueError("native text obligations require current consumed hydration")
     manuscript = render_config_manuscript_dir(root / "projects" / scope)
     snapshots = [reader.read(path.relative_to(root).as_posix()) for path in discover_manuscript_files(manuscript)]
@@ -98,7 +98,47 @@ def observe_native_artifact(
         "format": artifact.format,
         "input": {"path": snapshot.relative, "sha256": snapshot.sha256},
     }
-    if artifact.format in {"pdf", "pptx"} and (artifact.id.endswith(":slides") or artifact.id.startswith("pitch:")):
+    if selected_print_artifact(scope, artifact):
+        from infrastructure.reporting.native_print_artifact_observer import observe_print_artifact
+
+        if source_reference is None or verify_source_correspondence is None:
+            raise NativeToolUnavailable("configured print requires original source and current-mirror admission")
+        if reader.root != root.resolve():
+            raise ValueError("configured print reader differs from its admitted current mirror")
+        source_reference.verify_unchanged(deadline=deadline)
+        verify_source_correspondence(source_reference, root, reader, deadline)
+        observed.update(
+            observe_print_artifact(
+                root, leaf, scope, artifact, snapshot, reader, env=env, deadline=deadline, run_id=run_id
+            )
+        )
+        verify_source_correspondence(source_reference, root, reader, deadline)
+        source_reference.verify_unchanged(deadline=deadline)
+        return observed
+    if artifact.format == "pdf" and artifact.id.endswith(":slides"):
+        from infrastructure.reporting.native_projection_source_dispatch import observe_admitted_manuscript_projection
+        from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
+
+        try:
+            complete = observe_admitted_manuscript_projection(
+                root,
+                leaf,
+                scope,
+                artifact,
+                snapshot,
+                reader,
+                env=env,
+                deadline=deadline,
+                run_id=run_id,
+                source_reference=source_reference,
+                verify_source_correspondence=verify_source_correspondence,
+            )
+        except ProjectionSourceUnsupported as error:
+            observed["observation"] = {"status": "blocked", "findings": [], "blockers": [str(error)]}
+            return observed
+        observed.update({"manuscript_projection": complete, "observation": complete["observation"]})
+        return observed
+    if artifact.format in {"pdf", "pptx"} and artifact.id.startswith("pitch:"):
         from infrastructure.reporting.native_projection_contracts import (
             projection_contract_record,
             ProjectionSourceUnsupported,
@@ -146,10 +186,29 @@ def observe_native_artifact(
                 native_context=(root, leaf, env, run_id),
             )
             observed.update({"raster": raster, "observation": result})
+        from infrastructure.reporting.native_projection_source_dispatch import observe_admitted_pitch_companion
+
         observed["projection_contract"] = projection_contract_record(pages)
+        layout = observed["observation"] if artifact.format == "pptx" else observed
+        pixels = tuple(reader.read(item["path"]).content for item in layout["raster"]["rasters"])
+        companion = observe_admitted_pitch_companion(
+            root,
+            leaf / "source-companion",
+            scope,
+            artifact,
+            snapshot,
+            pixels,
+            reader,
+            projection_contract=observed["projection_contract"],
+            env=env,
+            deadline=deadline,
+            run_id=run_id,
+            source_reference=source_reference,
+            verify_source_correspondence=verify_source_correspondence,
+        )
+        observed["source_package" if artifact.format == "pptx" else "source_native_reference"] = companion
         return observed
     if artifact.format == "pdf":
-        content = compile_pdf_content_contract(root, scope, artifact, reader, deadline=deadline)
         raster = audit_pdf_raster(
             root,
             leaf,
@@ -160,13 +219,33 @@ def observe_native_artifact(
             run_id=run_id,
             ordinal=0,
         )
-        result = inspect_pdf_content(
-            snapshot.content,
-            tuple(reader.read(item["path"]).content for item in raster["rasters"]),
-            content,
-            deadline=deadline,
-        )
-        observed.update({"content_contract": content.to_dict(), "raster": raster, "observation": result})
+        if artifact.id == "manuscript:pdf":
+            from infrastructure.reporting.native_format_scientific_pdf_observer import observe_scientific_pdf_source
+
+            source = observe_scientific_pdf_source(
+                root,
+                leaf,
+                scope,
+                artifact,
+                snapshot,
+                raster,
+                reader,
+                env=env,
+                deadline=deadline,
+                run_id=run_id,
+                source_reference=source_reference,
+                verify_source_correspondence=verify_source_correspondence,
+            )
+            observed.update({"scientific_pdf_source": source, "raster": raster, "observation": source["observation"]})
+        else:
+            content = compile_pdf_content_contract(root, scope, artifact, reader, deadline=deadline)
+            result = inspect_pdf_content(
+                snapshot.content,
+                tuple(reader.read(item["path"]).content for item in raster["rasters"]),
+                content,
+                deadline=deadline,
+            )
+            observed.update({"content_contract": content.to_dict(), "raster": raster, "observation": result})
     elif artifact.format == "html":
         from infrastructure.reporting.native_format_html_admitted_source import observe_admitted_html_source
         from infrastructure.reporting.native_format_browser_oracles import audit_browser_html
@@ -232,6 +311,8 @@ def observe_native_artifact(
         verify_source_correspondence(source_reference, root, reader, deadline)
         source_reference.verify_unchanged(deadline=deadline)
         observed.update({"office_complete_source": complete, "observation": complete["observation"]})
+        if artifact.format == "epub":
+            observed["spine"] = complete["spine"]
     else:
         observed["observation"] = {
             "status": "blocked",
@@ -250,91 +331,23 @@ def observe_browser_controls(
     run_id: str,
     interpreter: Path | None = None,
     semantic: bool = False,
+    scope: str | None = None,
 ) -> list[dict[str, Any]]:
-    """Supervise actual oracle exits after successful real native execution."""
-    import time
-    from infrastructure.core.execution_boundary import run_bounded_subprocess
-    from infrastructure.project.public_acceptance_evidence import bootstrap_command, read_json
-    from infrastructure.reporting.native_format_acceptance_contracts import PROCESS_SCHEMA
-    from infrastructure.reporting.native_format_browser_oracles import (
-        BROWSER_CONTROL_CODES,
-        require_browser_control_result,
+    """Select only genuine Source-owned basic/semantic original child roles."""
+    from infrastructure.reporting.native_format_browser_child import supervise_browser_source_controls
+
+    if scope is None:
+        raise ValueError("browser controls require their original explicit admitted public scope")
+    return supervise_browser_source_controls(
+        root,
+        directory,
+        scope,
+        env=env,
+        deadline=deadline,
+        run_id=run_id,
+        interpreter=interpreter or Path(sys.executable),
+        semantic=semantic,
     )
-
-    require_result: Callable[[str, dict[str, Any]], int]
-    if semantic:
-        from infrastructure.reporting.native_format_browser_semantic_controls import (
-            SEMANTIC_CONTROL_CODES,
-            require_semantic_control_result,
-        )
-
-        names = SEMANTIC_CONTROL_CODES
-        require_result = require_semantic_control_result
-        module = "infrastructure.reporting.native_format_browser_semantic_controls"
-        prefix = "browser-semantic"
-    else:
-        names = BROWSER_CONTROL_CODES
-        require_result = require_browser_control_result
-        module = "infrastructure.reporting.native_format_browser_oracles"
-        prefix = "browser-control"
-    records = []
-    for name in names:
-        leaf = directory / f"{prefix}-{name}"
-        create_private_native_directory(root, leaf)
-        output = leaf / "control-observation.json"
-        command = bootstrap_command(
-            interpreter or Path(sys.executable),
-            root,
-            module,
-            "--control",
-            name,
-            "--root",
-            str(root),
-            "--directory",
-            str(leaf),
-            "--deadline",
-            str(deadline),
-            "--run-id",
-            run_id,
-        )
-        remaining = deadline - time.monotonic()
-        if remaining <= 0:
-            raise TimeoutError("browser controls exhausted original deadline")
-        process = run_bounded_subprocess(command, cwd=root, env=env, timeout=min(remaining, 120))
-        if process.timed_out:
-            raise TimeoutError("actual browser control timed out")
-        raw = read_json(root, output)
-        code = require_result(name, raw["observation"])
-        if (
-            process.returncode != code
-            or process.original_returncode != code
-            or raw["oracle_exit_code"] != code
-            or process.custody_refused
-        ):
-            raise ValueError("actual browser control did not preserve its intended original process outcome")
-        binding = write_json(
-            root,
-            leaf / "control-process.json",
-            {
-                "schema_version": PROCESS_SCHEMA,
-                "run_id": run_id,
-                "command": list(command),
-                "exit_code": process.returncode,
-                "original_exit_code": process.original_returncode,
-                "timed_out": process.timed_out,
-                "custody_refused": process.custody_refused,
-            },
-        )
-        snapshot = SnapshotReader(root).read(output.relative_to(root).as_posix())
-        records.append(
-            {
-                "name": name,
-                "artifact": {"path": snapshot.relative, "sha256": snapshot.sha256},
-                "process_artifact": binding,
-                "original_exit_code": process.original_returncode,
-            }
-        )
-    return records
 
 
 def observe_format_controls(
@@ -345,17 +358,27 @@ def observe_format_controls(
     env: dict[str, str],
     deadline: float,
     run_id: str,
+    scope: str | None = None,
     interpreter: Path | None = None,
     epubcheck_jar: Path | None = None,
     java_executable: Path | None = None,
     frozen_epub_engine: Path | None = None,
 ) -> dict[str, Any]:
     """Source-owned complete format control selection; exceptions retain failure."""
-    result: dict[str, Any] = {"schema_version": "template-native-observer-controls-v1"}
+    result: dict[str, Any] = {"schema_version": "template-native-observer-controls-v2"}
     if "html" in formats:
-        result["html"] = observe_browser_controls(root, directory, env=env, deadline=deadline, run_id=run_id)
+        result["html"] = observe_browser_controls(
+            root, directory, env=env, deadline=deadline, run_id=run_id, scope=scope
+        )
         result["html_semantic"] = observe_browser_controls(
-            root, directory, env=env, deadline=deadline, run_id=run_id, interpreter=interpreter, semantic=True
+            root,
+            directory,
+            env=env,
+            deadline=deadline,
+            run_id=run_id,
+            interpreter=interpreter,
+            semantic=True,
+            scope=scope,
         )
     if "docx" in formats:
         from infrastructure.reporting.native_office_observer import supervise_office_controls
@@ -397,6 +420,20 @@ def observe_format_controls(
             root,
             directory,
             "pptx",
+            interpreter=interpreter or Path(sys.executable),
+            env=env,
+            deadline=deadline,
+            run_id=run_id,
+        )
+    if "slides" in formats:
+        if scope is None:
+            raise ValueError("slide controls require the exact enclosing public Source scope")
+        from infrastructure.reporting.native_slide_control_adapter import supervise_slide_source_controls
+
+        result["slide_source"] = supervise_slide_source_controls(
+            root,
+            directory,
+            scope=scope,
             interpreter=interpreter or Path(sys.executable),
             env=env,
             deadline=deadline,

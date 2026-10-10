@@ -11,21 +11,25 @@ import zipfile
 from html.parser import HTMLParser
 from io import BytesIO
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from xml.etree.ElementTree import ParseError
 
 from defusedxml.ElementTree import fromstring
 from defusedxml.common import DefusedXmlException
 from pypdf.errors import PyPdfError
 
+from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.project.public_acceptance_evidence import write_json
-from infrastructure.reporting.native_format_acceptance_contracts import TOOL_SCHEMA
+from infrastructure.reporting.native_format_acceptance_contracts import TOOL_SCHEMA, TOOL_FIELDS, HTML_TOOL_FIELDS
 from infrastructure.reporting.release_readiness_artifacts import bounded_members
 from infrastructure.reporting.release_readiness_snapshot import (
     SnapshotReader,
     ArtifactSnapshot,
 )
+
+if TYPE_CHECKING:
+    from infrastructure.reporting.native_stage_child import NativeStageChildPreparation
 
 
 class NativeToolUnavailable(RuntimeError):
@@ -168,6 +172,9 @@ def native_tool_record(
     run_id: str,
     purpose: str,
     preserve_nominated_launcher: bool = False,
+    phase_deadline: float | None = None,
+    observed_tools: list[dict[str, Any]] | None = None,
+    prepared_stage: NativeStageChildPreparation | None = None,
 ) -> dict[str, Any]:
     """Bind genuine original native PID/OS/streams under the same caller clock."""
     from infrastructure.reporting.native_tool_process import run_native_tool_process
@@ -177,20 +184,76 @@ def native_tool_record(
     producer = current_native_producer_operation()
     if producer is not None:
         producer.verify(SnapshotReader(root), run_id=run_id, deadline=deadline)
-    operation_deadline = min(deadline, time.monotonic() + 120)
+    # Existing callers keep their finite 120-second phase. A Source-owned
+    # complete-suite/analysis controller may supply its already-live phase clock.
+    # No callback, status or serialized original is accepted as authority.
+    if phase_deadline is not None and (
+        type(phase_deadline) not in (int, float)
+        or not math.isfinite(phase_deadline)
+        or phase_deadline > deadline
+        or producer is None
+    ):
+        raise ValueError("extended native phase needs its genuine owner and existing finite clock")
+    if observed_tools is not None and (not isinstance(observed_tools, list) or producer is None):
+        raise ValueError("native tool observation sink needs its genuine live Source owner")
+    operation_deadline = min(deadline, time.monotonic() + 120) if phase_deadline is None else phase_deadline
     from infrastructure.reporting.native_format_html_child_custody import prepare_html_child_launch
 
     html_child = prepare_html_child_launch([name, *arguments], env, operation_deadline)
-    result = run_native_tool_process(
-        directory,
-        name,
-        arguments,
-        cwd=root,
-        env=html_child.environment if html_child is not None else env,
-        deadline=operation_deadline,
-        purpose=purpose,
-        preserve_nominated_launcher=html_child is not None or preserve_nominated_launcher,
-    )
+    working_directory = root
+    if prepared_stage is not None:
+        from infrastructure.reporting.native_stage_child import NativeStageChildPreparation
+
+        if type(prepared_stage) is not NativeStageChildPreparation or producer is None or html_child is not None:
+            raise ValueError("native stage requires its exact actual factory; child roles cannot be combined")
+        working_directory = prepared_stage.verify_tool_launch(
+            root, directory, name, arguments, env, operation_deadline, purpose
+        )
+    # Freeze the exact Source-selected map passed to the native supervisor.
+    # HTML's genuine launch preparation is part of this selection; guardian
+    # and loader injections are separately retained by that supervisor.
+    selected_env = dict(html_child.environment if html_child is not None else env)
+    environment_digest = canonical_digest(selected_env)
+    process_facts: list[dict[str, Any]] = []
+    packet: dict[str, Any] | None = None
+    try:
+        result = run_native_tool_process(
+            directory,
+            name,
+            arguments,
+            cwd=working_directory,
+            env=selected_env,
+            deadline=operation_deadline,
+            purpose=purpose,
+            preserve_nominated_launcher=prepared_stage is not None
+            or html_child is not None
+            or preserve_nominated_launcher,
+            observed_processes=process_facts,
+        )
+    finally:
+        if observed_tools is not None and process_facts:
+            actual = process_facts[-1]
+            original_code = actual["original_exit_code"]
+            packet = {
+                "artifact": None,
+                "completion_authorized": False,
+                "observation": {
+                    **actual,
+                    "environment_digest": environment_digest,
+                    "exit_code": 130
+                    if original_code in (130, -2)
+                    else 124
+                    if actual["timed_out"]
+                    else 75
+                    if original_code in (None, 0)
+                    else original_code,
+                    "custody_refused": True,
+                    "diagnostic": "actual native OS facts retained; ToolAPI promotion incomplete",
+                    "stdout": "",
+                    "stderr": "",
+                },
+            }
+            observed_tools.append(packet)
     if result["nomination"] is None:
         raise NativeToolUnavailable(f"{name} is not installed in the selected native environment")
     executable = result["nomination"]["resolved_path"]
@@ -238,6 +301,7 @@ def native_tool_record(
         "executable_identity_before": result.get("executable_identity_before"),
         "executable_identity_after": result.get("executable_identity_after"),
         "command": result["command"],
+        "environment_digest": environment_digest,
         "pid": result["pid"],
         "owner_pid": result["owner_pid"],
         "exit_code": code,
@@ -256,7 +320,11 @@ def native_tool_record(
     if html_child is not None:
         payload["html_python_source_closure"] = html_closure
         payload["html_python_source_closure_error"] = html_closure_error
+    if set(payload) != (HTML_TOOL_FIELDS if html_child is not None else TOOL_FIELDS):
+        raise ValueError("native ToolAPI differs from the exact shared original fieldset")
     binding = write_json(root, directory / f"{purpose}.json", payload)
+    if packet is not None:
+        packet.update(artifact=binding, observation=payload)
     if time.monotonic() >= operation_deadline:
         raise TimeoutError("actual native ToolAPI retention exceeded its original finite deadline")
     if not reader.unchanged():
@@ -276,6 +344,8 @@ def native_tool_record(
             run_id=run_id,
             deadline=deadline,
         )
+    if packet is not None:
+        packet["completion_authorized"] = True
     return {"artifact": binding, "exit_code": code, "original_exit_code": original}
 
 

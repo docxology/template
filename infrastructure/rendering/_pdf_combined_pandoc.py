@@ -13,6 +13,7 @@ import yaml
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering._pdf_pandoc_engine import build_pandoc_render_error
+from infrastructure.rendering.combined_native_commands import pdf_combined_command
 
 if TYPE_CHECKING:
     from infrastructure.rendering.config import RenderingConfig
@@ -27,69 +28,21 @@ def build_pandoc_tex_command(
     manuscript_dir: Path,
 ) -> list[str]:
     """Build the Pandoc CLI command for markdown→LaTeX conversion."""
-    figures_dir = Path(config.figures_dir)
-    cmd = [
-        config.pandoc_path,
-        str(combined_md),
-        "-o",
-        str(combined_tex),
-        "--from=markdown+tex_math_dollars+raw_tex+header_attributes",
-        "--to=latex",
-        "--standalone",
-        "--number-sections",
-        "--natbib",
-        "--metadata=linkReferences:true",
-        "--resource-path=" + str(manuscript_dir),
-        "--resource-path=" + str(figures_dir),
-    ]
-
-    # Attempt to extract geometry from config.yaml and pass to pandoc
+    configuration = None
     config_file = manuscript_dir / "config.yaml"
     if config_file.exists():
         try:
-            with open(config_file, "r", encoding="utf-8") as f:
-                yaml_data = yaml.safe_load(f)
-
-            if yaml_data and isinstance(yaml_data, dict):
-                metadata = yaml_data.get("metadata", {})
-                paper = yaml_data.get("paper", {})
-                authors = yaml_data.get("authors", [])
-                if isinstance(paper, dict) and paper.get("title"):
-                    cmd.append(f"--metadata=title:{paper['title']}")
-                author_names = [
-                    str(author["name"]) for author in authors if isinstance(author, dict) and author.get("name")
-                ]
-                if author_names:
-                    cmd.append(f"--metadata=author:{'; '.join(author_names)}")
-                if isinstance(metadata, dict) and metadata.get("language"):
-                    cmd.append(f"--metadata=lang:{metadata['language']}")
-                geometry = metadata.get("geometry")
-                if geometry:
-                    cmd.extend(["-V", f"geometry:{geometry}"])
-                    logger.debug(f"Added geometry to pandoc args: {geometry}")
-                # Opt-in typography overrides (mirror the geometry pattern). Unset =>
-                # pandoc defaults, so existing projects are unaffected. ``documentclass``
-                # (e.g. ``extarticle``) is required for sub-10pt ``fontsize`` values.
-                documentclass = metadata.get("documentclass")
-                if documentclass:
-                    cmd.extend(["-V", f"documentclass:{documentclass}"])
-                    logger.debug(f"Added documentclass to pandoc args: {documentclass}")
-                fontsize = metadata.get("fontsize")
-                if fontsize:
-                    cmd.extend(["-V", f"fontsize:{fontsize}"])
-                    logger.debug(f"Added fontsize to pandoc args: {fontsize}")
-        except (OSError, yaml.YAMLError) as e:
-            logger.warning(f"Failed to read typography settings from config.yaml: {e}")
-
-    # Numbers Definition/Proposition blocks and resolves [@def:...] references.
-    # Must precede pandoc-crossref and --natbib above: it consumes those
-    # citations, which natbib would otherwise emit as \citep{def:...} and ship
-    # as "[?]" in the PDF.
-    cmd.extend(formalism_filter_args())
+            with open(config_file, "r", encoding="utf-8") as stream:
+                decoded = yaml.safe_load(stream)
+            if isinstance(decoded, dict):
+                configuration = decoded
+        except (OSError, yaml.YAMLError) as exc:
+            logger.warning("Failed to read typography settings from config.yaml: %s", exc)
+    # Preserve Source's formalism-before-Crossref ordering.
+    formalism = formalism_filter_args()
 
     crossref = shutil.which("pandoc-crossref")
     if crossref:
-        cmd.extend(["--filter", crossref])
         logger.info("Using pandoc-crossref at %s", crossref)
     else:
         logger.warning(
@@ -97,7 +50,16 @@ def build_pandoc_tex_command(
             "Install: https://github.com/lierdakil/pandoc-crossref (e.g. brew install pandoc-crossref)"
         )
 
-    return cmd
+    return pdf_combined_command(
+        config.pandoc_path,
+        combined_md,
+        combined_tex,
+        manuscript_dir,
+        Path(config.figures_dir),
+        configuration,
+        formalism,
+        crossref,
+    )
 
 
 def run_pandoc_conversion(
@@ -107,7 +69,11 @@ def run_pandoc_conversion(
     md_content: str,
 ) -> None:
     """Execute the Pandoc subprocess, raising on failure."""
+    from infrastructure.reporting.native_renderer_source_call import run_source_native_pandoc
+
     try:
+        if run_source_native_pandoc(cmd, combined_md, source_files, writer="latex"):
+            return
         subprocess.run(
             cmd,
             check=True,

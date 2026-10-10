@@ -4,7 +4,6 @@ Provides pytest streaming execution and a common retry/coverage-conflict
 loop used by both infrastructure and project test suites.
 """
 
-import collections
 import os
 import math
 import select
@@ -40,7 +39,10 @@ from infrastructure.reporting.coverage_parser import (
     extract_coverage_percentage,
     extract_failed_tests,
 )
-from infrastructure.reporting.pytest_output_parser import parse_pytest_output
+from infrastructure.reporting.pytest_output_parser import (
+    parse_pytest_output,
+    report_pytest_failure,
+)
 
 logger = get_logger(__name__)
 
@@ -180,7 +182,6 @@ def run_pytest_stream(
     validate_guardian_startup_timeout(guardian_startup_timeout_seconds)
     deadline = monotonic() + timeout_seconds
     stdout_buf: list[str] = []
-    recent_lines: collections.deque[str] = collections.deque(maxlen=10)
 
     base_env = build_bounded_env(env)
     process_env, run_token = build_bounded_run_env(base_env)
@@ -244,7 +245,6 @@ def run_pytest_stream(
                     if char == "\n" or (char == "." and not quiet):
                         if char == "\n" and not _is_internal_stack_line(current_line):
                             stdout_buf.append(current_line)
-                            recent_lines.append(current_line)
 
                         if _passes_quiet_filter(char, current_line, quiet):
                             sys.stdout.write(char if char == "." else current_line)
@@ -288,7 +288,8 @@ def run_pytest_stream(
     interrupted = process.returncode in {130, -signal.SIGINT}
     if expired and not interrupted and not stderr_text:
         stderr_text = f"streaming subprocess timed out after {timeout_seconds:g}s including cleanup"
-    return (130 if interrupted else 124 if expired else process.returncode), "".join(stdout_buf), stderr_text
+    exit_code = 130 if interrupted else 124 if expired else process.returncode
+    return report_pytest_failure(exit_code, "".join(stdout_buf), stderr_text, quiet)
 
 
 @dataclass

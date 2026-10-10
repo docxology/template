@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -31,18 +32,28 @@ from infrastructure.reporting.native_hosted_original_producer import _zip
 from infrastructure.reporting.native_hosted_original_custody import NativeHostedArtifactCustodian
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.release_readiness_profile import collect_profile
-from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
 SCHEMA = "template-required-candidate-sharded-transport-v1"
 INDEX_PATH = "candidate-index.json"
 SHARD_PREFIX = "platform-required-acceptance-shard-"
 
 
-def _graph_paths(root: Path, receipt: str, *, deadline: float) -> dict[str, str]:
+@dataclass(frozen=True)
+class RequiredCandidatePackingInputs:
+    """Explicit packing nominations; this object grants no acceptance authority."""
+
+    native_custodian: NativeHostedArtifactCustodian
+    directory: Path
+    repository: str
+    run_id: int
+    deadline: float
+
+
+def _graph_paths(root: Path, receipt: str, reader: SnapshotReader, *, deadline: float) -> dict[str, str]:
     """Walk exact bindings; source bytes stay in the admitted Source checkout."""
     pending: list[tuple[str, str | None]] = [(receipt, None)]
     paths: dict[str, str] = {}
-    source_reader = SnapshotReader(root)
 
     def walk(value: object, parent: Path) -> None:
         if isinstance(value, dict):
@@ -67,13 +78,12 @@ def _graph_paths(root: Path, receipt: str, *, deadline: float) -> dict[str, str]
     while pending:
         remaining(deadline)
         label, expected = pending.pop()
-        source_reader.public_path(label)
+        reader.public_path(label)
         prior = paths.get(label)
         if prior is not None:
             if expected is not None and prior != expected:
                 raise ValueError("candidate graph has conflicting exact artifact bindings")
             continue
-        reader = SnapshotReader(root)
         held = reader.read(label)
         if expected is not None and held.sha256 != expected:
             raise ValueError("candidate graph bytes differ from the verified binding")
@@ -121,14 +131,64 @@ def pack_required_candidate(
     evidence = collect_profile(root, receipt.path, reader)
     if evidence.candidate_state != "pass" or not reader.unchanged():
         raise ValueError("candidate cannot publish shards unless every required Source gate independently passes")
-    paths = _graph_paths(root, RECEIPT_PATH, deadline=deadline)
+    return _pack_required_candidate_from_reader(
+        operation,
+        reader,
+        receipt,
+        packing_inputs=RequiredCandidatePackingInputs(native_custodian, directory, repository, run_id, deadline),
+        hosted_origin=hosted_origin,
+    )
+
+
+def _pack_required_candidate_from_reader(
+    operation: NativeReaderOperation,
+    reader: SnapshotReader,
+    receipt: ArtifactSnapshot,
+    *,
+    packing_inputs: RequiredCandidatePackingInputs,
+    hosted_origin: HostedReadbackContext,
+) -> dict[str, Any]:
+    """Pack bytes immediately within a caller's complete passing profile observation."""
+    if not isinstance(operation, NativeReaderOperation) or not isinstance(
+        packing_inputs, RequiredCandidatePackingInputs
+    ):
+        raise ValueError("candidate packing requires independently held reader and explicit packing nominations")
+    source = operation.source
+    native_custodian = packing_inputs.native_custodian
+    directory, repository = packing_inputs.directory, packing_inputs.repository
+    run_id, deadline = packing_inputs.run_id, packing_inputs.deadline
+    remaining(deadline)
+    root = source.bindings.current_root
+    if (
+        reader.root != root
+        or reader.native_operation is not operation
+        or reader.hosted_origin != hosted_origin
+        or not isinstance(hosted_origin, HostedReadbackContext)
+        or deadline != operation.deadline
+        or receipt.relative != RECEIPT_PATH
+        or reader.read(RECEIPT_PATH) is not receipt
+        or not reader.unchanged()
+    ):
+        raise ValueError("candidate packing lost its actual Source/reader/receipt observation or original clock")
+    operation.verify(reader)
+    _context(repository, run_id, source.reference.commit)
+    if (hosted_origin.repository, hosted_origin.run_id, hosted_origin.head_sha) != (
+        repository,
+        run_id,
+        source.reference.commit,
+    ):
+        raise ValueError("candidate packing hosted nomination differs from the independently held reader")
     if (
         not isinstance(native_custodian, NativeHostedArtifactCustodian)
         or native_custodian.deadline != deadline
         or native_custodian.repository != repository
         or native_custodian.run_id != run_id
+        or native_custodian.head_sha != source.reference.commit
+        or not operation.originals
     ):
         raise ValueError("candidate requires the genuinely collected exact-run native byte census")
+    native_custodian.verify_source(source, scope=next(iter(operation.originals)))
+    paths = _graph_paths(root, RECEIPT_PATH, reader, deadline=deadline)
     # The native closure includes relocated SDK/cache/Python-child payloads.
     # Absolute producer labels inside DATA are never opened on this host.
     # Carry every independently authenticated retained member explicitly.
@@ -209,7 +269,10 @@ def pack_required_candidate(
         held = held_reader.read(label)
         if _file_identity(held.path) != identity or held.sha256 != paths[label] or not held_reader.unchanged():
             raise ValueError("candidate evidence lost its final retained physical/body identity")
-    operation.verify(SnapshotReader(root))
+    operation.verify(reader)
+    native_custodian.verify_source(source, scope=next(iter(operation.originals)))
+    if not reader.unchanged():
+        raise ValueError("candidate packing consumed evidence changed after its passing observation")
     index = {
         "schema_version": SCHEMA,
         "repository": repository,
@@ -226,6 +289,9 @@ def pack_required_candidate(
     destination = directory / "index" / INDEX_PATH
     atomic_write_bytes_confined(root, destination, encoded, mode=0o600)
     binding = {"path": destination.relative_to(root).as_posix(), "sha256": hashlib.sha256(encoded).hexdigest()}
+    operation.verify(reader)
+    if not reader.unchanged():
+        raise ValueError("candidate packing lost its retained Source/evidence observation during index publication")
     remaining(deadline)
     return {
         "index": binding,

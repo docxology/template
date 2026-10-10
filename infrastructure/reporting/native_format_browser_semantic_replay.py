@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import shutil
 import tempfile
-import time
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.execution_boundary import run_bounded_subprocess
 from infrastructure.reporting.native_format_portable_custody import producer_path
+from infrastructure.reporting.native_format_current_pandoc import current_pandoc_reader
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
@@ -25,6 +23,9 @@ def replay_semantic_control(
     deadline: float,
     env: dict[str, str],
 ) -> None:
+    from infrastructure.reporting.native_format_html_source_metadata import remaining_seconds
+
+    remaining_seconds(deadline)
     from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
     from infrastructure.reporting.native_format_browser_semantic_controls import (
         semantic_control_source,
@@ -48,6 +49,7 @@ def replay_semantic_control(
         ("alpha.png", alpha_figure_bytes()),
         ("wrong-alpha.png", alpha_figure_bytes(mutant=True)),
     ):
+        remaining_seconds(deadline)
         snapshot = reader.read((directory / filename).relative_to(root).as_posix())
         if snapshot.content != content:
             raise ValueError("scientific browser control source is not independently reconstructed fixture")
@@ -99,18 +101,14 @@ def replay_semantic_control(
     contract = semantic_content_contract_from_ast("semantic-browser-control", sources, ast.content)
     if raw.get("contract") != contract.to_dict():
         raise ValueError("semantic fixture source contract is not actual AST-derived")
-    pandoc = shutil.which("pandoc", path=env.get("PATH"))
-    if not pandoc:
-        raise ValueError("reader requires actual source semantic parser")
-    with tempfile.TemporaryDirectory(prefix="semantic-control-replay-") as private:
-        work = Path(private).resolve()
-        independent_source = work / "source.md"
-        independent_bib = work / "references.bib"
-        independent_source.write_bytes(semantic_control_source(name))
-        independent_bib.write_bytes(BIBLIOGRAPHY)
-        result = run_bounded_subprocess(
+    with current_pandoc_reader(
+        root, reader, env=env, deadline=deadline, purpose="html-semantic-control-ast"
+    ) as current:
+        independent_source = current.runtime.freeze("source.md", semantic_control_source(name))
+        independent_bib = current.runtime.freeze("references.bib", BIBLIOGRAPHY)
+        result = current.tool(
+            "pandoc",
             [
-                pandoc,
                 str(independent_source),
                 "--from=markdown+tex_math_dollars+raw_tex+header_attributes",
                 f"--bibliography={independent_bib}",
@@ -118,21 +116,18 @@ def replay_semantic_control(
                 "--metadata=link-citations:true",
                 "--to=json",
             ],
-            cwd=work,
-            env=env,
-            timeout=min(60, deadline - time.monotonic()),
+            "current-semantic-control-ast",
         )
-        if result.returncode != 0 or result.original_returncode != 0 or result.timed_out or result.custody_refused:
-            raise ValueError("independent actual scientific source parsing failed")
         independent = semantic_content_contract_from_ast(
-            "semantic-browser-control", sources, result.stdout.encode()
+            "semantic-browser-control", sources, result["stdout"].encode()
         ).to_dict()
         expected = contract.to_dict()
         independent.pop("ast_sha256", None)
         expected.pop("ast_sha256", None)
         if independent != expected:
             raise ValueError("scientific source AST semantics differ on independent reader")
-        transformed = work / "baseline.html"
+    with tempfile.TemporaryDirectory(prefix="semantic-html-mutation-replay-") as private:
+        transformed = Path(private) / "baseline.html"
         transformed.write_bytes(pandoc_html.content)
         harden_mathjax_script(transformed)
         if (
@@ -150,4 +145,7 @@ def replay_semantic_control(
         run_id=run_id,
         custody=custody,
         runtime=runtime,
+        deadline=deadline,
+        env=env,
     )
+    remaining_seconds(deadline)

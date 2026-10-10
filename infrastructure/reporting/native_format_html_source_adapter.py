@@ -2,18 +2,16 @@
 
 from __future__ import annotations
 
-import shutil
-import tempfile
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.execution_boundary import run_bounded_subprocess
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.reporting.native_format_acceptance_checks import native_tool_record
 from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact
 from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
 from infrastructure.reporting.native_format_content_contracts import NativeContentContract, SemanticContentContract
+from infrastructure.reporting.native_format_current_pandoc import current_pandoc_reader
 from infrastructure.reporting.native_format_html_source_metadata import (
     HTML_WITNESS_SCHEMA,
     METADATA_OBSERVATION_SCHEMA,
@@ -73,7 +71,7 @@ def observe_html_source_witness(
     deadline: float,
     run_id: str,
 ) -> tuple[SemanticContentContract, dict[str, Any], dict[str, Any] | None]:
-    """Keep v1 body custody intact and execute a separately bound metadata parse."""
+    """Execute separately bound body/metadata parses with fresh filter children."""
     remaining_seconds(deadline)
     plan = html_metadata_plan(root, scope, artifact, reader)
     contract, body = observe_html_source(
@@ -88,11 +86,40 @@ def observe_html_source_witness(
     copied = reader.read(copied_path.relative_to(root).as_posix())
     transcript = _body_transcript(body, reader, run_id)
     args = [*transcript["command"][1:], *source["pandoc_args"]]
+    crossref_filter = None
+    if "--filter" in args:
+        from infrastructure.reporting.native_crossref_pandoc import source_crossref_pandoc
+        from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
+
+        from infrastructure.reporting.native_crossref_pair import parent_observation
+
+        body_filter = parent_observation(body["crossref_filter"], reader)
+        body_spec = _file(body_filter["specification"], reader).json_object()
+        args[args.index("--filter") + 1] = body_spec["crossref"]["path"]
+        runtime = CitationRuntime(
+            root, directory / "metadata-crossref-owner", env=env, deadline=deadline, run_id=run_id
+        )
+        inputs = [
+            _file(body["source"], reader).path,
+            copied.path,
+            *(_file(row["consumed"], reader).path for row in body["filters"]),
+        ]
+        inputs.extend(directory / f"semantic-bibliography-{index}.bib" for index in range(len(body["bibliographies"])))
+        observed, crossref_filter = source_crossref_pandoc(
+            runtime, scope, args, METADATA_PURPOSE, output_format="json", input_paths=tuple(inputs)
+        )
+        args = observed["command"][1:]
+        tool = {
+            "artifact": runtime.tools[-1],
+            "exit_code": observed["exit_code"],
+            "original_exit_code": observed["original_exit_code"],
+        }
+    else:
+        tool = native_tool_record(
+            root, directory, "pandoc", args, env=env, deadline=deadline, run_id=run_id, purpose=METADATA_PURPOSE
+        )
     argv = write_json(
         root, directory / "semantic-config-metadata-argv.json", _argv_record(custody, binding(copied), body, args)
-    )
-    tool = native_tool_record(
-        root, directory, "pandoc", args, env=env, deadline=deadline, run_id=run_id, purpose=METADATA_PURPOSE
     )
     actual = _tool(tool["artifact"], reader, run_id, "pandoc", METADATA_PURPOSE, args)
     if (
@@ -115,6 +142,7 @@ def observe_html_source_witness(
         "ast": binding(ast),
         "tool": tool,
         "contract": metadata,
+        "crossref_filter": crossref_filter,
     }
     if not reader.unchanged():
         raise ValueError("HTML body/config/metadata artifacts changed during genuine observation")
@@ -151,7 +179,12 @@ def replay_html_source_witness(
         remaining_seconds(deadline)
         return contract, None
     config, source, expected_custody = plan
-    if not isinstance(observation, dict) or observation.get("schema_version") != METADATA_OBSERVATION_SCHEMA:
+    if (
+        not isinstance(observation, dict)
+        or set(observation)
+        != {"schema_version", "config_custody", "consumed_config", "argv", "ast", "tool", "contract", "crossref_filter"}
+        or observation.get("schema_version") != METADATA_OBSERVATION_SCHEMA
+    ):
         raise ValueError("combined HTML omitted genuine separate config metadata evidence")
     if observation.get("config_custody") != expected_custody:
         raise ValueError("HTML metadata source config/current hydration differs from reader evidence")
@@ -163,6 +196,21 @@ def replay_html_source_witness(
         raise ValueError("HTML metadata AST belongs to another artifact/attempt")
     transcript = _body_transcript(body, reader, run_id)
     args = [*transcript["command"][1:], *source["pandoc_args"]]
+    if "--filter" in args:
+        from infrastructure.reporting.native_crossref_replay import CrossrefFilterReaderOperation
+        from infrastructure.reporting.native_format_joint_source import require_native_operation
+
+        operation = require_native_operation(reader)
+        CrossrefFilterReaderOperation(
+            operation.source, observation["crossref_filter"], reader, scope=scope, run_id=run_id, deadline=deadline
+        ).replay()
+        from infrastructure.reporting.native_crossref_pair import parent_observation, parent_launcher_binding
+
+        graph = parent_observation(observation["crossref_filter"], reader)
+        wrapper = _file(parent_launcher_binding(graph), reader)
+        args[args.index("--filter") + 1] = str(producer_path(custody, root, wrapper.path))
+    elif observation["crossref_filter"] is not None:
+        raise ValueError("HTML metadata without a filter cannot claim a crossref child")
     argv = _file(observation.get("argv"), reader)
     expected_argv = _argv_record(expected_custody, binding(copied), body, args)
     # The copied/body bindings are repository-relative; only actual command paths
@@ -183,17 +231,17 @@ def replay_html_source_witness(
     metadata = metadata_contract(source, ast.content, body_ast.content, original_bibs)
     if observation.get("contract") != metadata:
         raise ValueError("HTML metadata source contract was not derived from retained current-source native AST")
-    pandoc = shutil.which("pandoc", path=env.get("PATH"))
-    if pandoc is None:
-        raise ValueError("independent HTML metadata reader lacks admitted native Pandoc")
-    with tempfile.TemporaryDirectory(prefix="native-html-metadata-replay-") as private:
-        work = Path(private).resolve()
-        local_source = work / "source.md"
-        local_source.write_bytes(content)
-        local_filter = work / "formalism.lua"
-        local_filter.write_bytes(_file(body["filters"][0]["consumed"], reader).content)
+    with current_pandoc_reader(
+        root,
+        reader,
+        env=env,
+        deadline=deadline,
+        purpose="html-metadata-ast",
+        crossref="--filter" in transcript["command"],
+    ) as current:
+        local_source = current.runtime.freeze("source.md", content)
+        local_filter = current.runtime.freeze("formalism.lua", _file(body["filters"][0]["consumed"], reader).content)
         local_args = [
-            pandoc,
             str(local_source),
             "--from=markdown+tex_math_dollars+raw_tex+header_attributes",
             "--to=json",
@@ -202,23 +250,21 @@ def replay_html_source_witness(
         ]
         local_bibs: list[tuple[str, bytes]] = []
         for index, (_, data) in enumerate(bibliographies):
-            path = work / f"bibliography-{index}.bib"
-            path.write_bytes(data)
+            path = current.runtime.freeze(f"bibliography-{index}.bib", data)
             local_args.append(f"--bibliography={path}")
             local_bibs.append((str(path), data))
         if bibliographies:
             local_args.extend(["--citeproc", "--metadata=link-citations:true"])
-        # replay_html_source authenticated this exact optional tail beforehand.
-        if "--filter" in transcript["command"]:
-            crossref = shutil.which("pandoc-crossref", path=env.get("PATH"))
-            if crossref is None:
-                raise ValueError("independent HTML metadata reader lacks original crossref parser")
-            local_args.extend(["--filter", crossref])
+        if current.crossref is not None:
+            local_args.extend(["--filter", current.crossref])
         local_args.extend(source["pandoc_args"])
-        result = run_bounded_subprocess(local_args, cwd=work, env=env, timeout=remaining_seconds(deadline))
-        if result.returncode != 0 or result.original_returncode != 0 or result.timed_out or result.custody_refused:
-            raise ValueError("independent native config metadata parse did not produce an original successful exit")
-        independent = portable_metadata_document(result.stdout.encode(), tuple(local_bibs))
+        if current.crossref is not None:
+            result, _ = current.source_crossref_tool(
+                local_args, "current-html-metadata-ast", scope=scope, output_format="json"
+            )
+        else:
+            result = current.tool("pandoc", local_args, "current-html-metadata-ast")
+        independent = portable_metadata_document(result["stdout"].encode(), tuple(local_bibs))
         retained = portable_metadata_document(ast.content, original_bibs)
         if independent != retained:
             raise ValueError("independent full native source/metadata AST occurrences differ")

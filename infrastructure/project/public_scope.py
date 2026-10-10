@@ -134,8 +134,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "command",
-        choices=("lint-paths", "source-paths", "project-names", "project-names-json"),
-        help="Value to print for shell consumption.",
+        choices=("lint-paths", "source-paths", "ci-paths", "project-names", "project-names-json"),
+        help="Value to print; ci-paths emits lint_paths and source_paths key=value lines for CI outputs.",
     )
     parser.add_argument(
         "--repo-root",
@@ -146,7 +146,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     repo_root = args.repo_root.resolve()
-    if args.command == "lint-paths":
+    if args.command == "ci-paths":
+        # Compute both scopes before publishing either output. The helpers
+        # remain the same source of truth used by health and legacy commands.
+        lint_paths = _format_paths(public_ci_lint_paths(repo_root))
+        source_paths = _format_paths(public_ci_source_paths(repo_root))
+        print(f"lint_paths={lint_paths}\nsource_paths={source_paths}")
+    elif args.command == "lint-paths":
         print(_format_paths(public_ci_lint_paths(repo_root)))
     elif args.command == "source-paths":
         print(_format_paths(public_ci_source_paths(repo_root)))

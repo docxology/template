@@ -938,6 +938,15 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.reporting.native_crossref_worker",
+      "invocation": "python -m infrastructure.reporting.native_crossref_worker",
+      "source_path": "infrastructure/reporting/native_crossref_worker.py",
+      "purpose": "Actual Source-audited Pandoc filter child; stdout contains only filter JSON.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.reporting.native_dependency_preparation",
       "invocation": "python -m infrastructure.reporting.native_dependency_preparation",
       "source_path": "infrastructure/reporting/native_dependency_preparation.py",
@@ -1109,6 +1118,24 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.reporting.native_pdf_whole_control_worker",
+      "invocation": "python -m infrastructure.reporting.native_pdf_whole_control_worker",
+      "source_path": "infrastructure/reporting/native_pdf_whole_control_worker.py",
+      "purpose": "Fixed selected-SDK original whole-PDF page/occurrence control child.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_pitch_control_worker",
+      "invocation": "python -m infrastructure.reporting.native_pitch_control_worker",
+      "source_path": "infrastructure/reporting/native_pitch_control_worker.py",
+      "purpose": "One fixed selected-SDK child for a complete configured Pitch control axis.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.reporting.native_print_artifact_controls",
       "invocation": "python -m infrastructure.reporting.native_print_artifact_controls",
       "source_path": "infrastructure/reporting/native_print_artifact_controls.py",
@@ -1131,6 +1158,15 @@
       "invocation": "python -m infrastructure.reporting.native_slide_controls",
       "source_path": "infrastructure/reporting/native_slide_controls.py",
       "purpose": "Actual baseline/later-page generic slide source/font/clipping/pixel controls.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.reporting.native_stage_child_worker",
+      "invocation": "python -m infrastructure.reporting.native_stage_child_worker",
+      "source_path": "infrastructure/reporting/native_stage_child_worker.py",
+      "purpose": "One fixed child that independently admits Source before an existing stage.",
       "subcommands": [],
       "exports": [],
       "effect": "read_only"

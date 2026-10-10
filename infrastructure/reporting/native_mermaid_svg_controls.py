@@ -9,7 +9,7 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 from typing import Any
-from xml.etree import ElementTree
+from xml.etree.ElementTree import SubElement, tostring
 
 from defusedxml.ElementTree import fromstring
 
@@ -148,7 +148,7 @@ def mutate_original_mermaid_svg(source: bytes, original: bytes, control: str) ->
             for child in list(marker):
                 marker.remove(child)
             namespace = "{http://www.w3.org/2000/svg}"
-            ElementTree.SubElement(marker, namespace + "path", {"d": "M3,0 L3,18 M9,0 L9,18"})
+            SubElement(marker, namespace + "path", {"d": "M3,0 L3,18 M9,0 L9,18"})
             # Select the zero-or-more relationship so its changed actual bars
             # cannot accidentally preserve an original exactly-one endpoint.
             if edge["source_edge"].get("to_cardinality") == "||":
@@ -160,7 +160,7 @@ def mutate_original_mermaid_svg(source: bytes, original: bytes, control: str) ->
             marker.set("orient", "180")
         else:
             raise ValueError("actual original Mermaid control cannot be applied")
-    data = ElementTree.tostring(parsed.root, encoding="utf-8", xml_declaration=True)
+    data = tostring(parsed.root, encoding="utf-8", xml_declaration=True)
     fromstring(data)
     if data == original:
         raise ValueError("actual original Mermaid control did not change bytes")

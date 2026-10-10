@@ -5,7 +5,6 @@ from __future__ import annotations
 import copy
 import json
 import hashlib
-import time
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -217,9 +216,7 @@ def replay_original_source(
     deadline: float,
 ) -> SemanticContentContract:
     """Independently reparse original sources and all unsupported occurrences."""
-    import shutil
-    import tempfile
-    from infrastructure.core.execution_boundary import run_bounded_subprocess
+    from infrastructure.reporting.native_format_current_pandoc import current_pandoc_reader
     from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
     from infrastructure.reporting.native_format_portable_custody import producer_path
 
@@ -244,19 +241,10 @@ def replay_original_source(
     survival = inspect_original_source(projected.artifact_id, sources, ast.content, projected)
     if raw.get("survival") != survival:
         raise ValueError("original source occurrence/survival obligations changed")
-    pandoc = shutil.which("pandoc", path=env.get("PATH"))
-    if not pandoc:
-        raise ValueError("independent original source parser is unavailable")
-    with tempfile.TemporaryDirectory(prefix="original-source-replay-") as private:
-        work = Path(private)
-        local_source = work / "source.md"
-        local_source.write_bytes(content)
-        process = run_bounded_subprocess(
-            [pandoc, str(local_source), *args[1:]], cwd=work, env=env, timeout=min(60, deadline - time.monotonic())
-        )
-        if process.returncode != 0 or process.original_returncode != 0 or process.timed_out or process.custody_refused:
-            raise ValueError("actual independent original source parse failed")
-        independent = inspect_original_source(projected.artifact_id, sources, process.stdout.encode(), projected)
+    with current_pandoc_reader(root, reader, env=env, deadline=deadline, purpose="html-original-ast") as current:
+        local_source = current.runtime.freeze("source.md", content)
+        process = current.tool("pandoc", [str(local_source), *args[1:]], "current-html-original-ast")
+        independent = inspect_original_source(projected.artifact_id, sources, process["stdout"].encode(), projected)
         expected = copy.deepcopy(survival)
         actual = copy.deepcopy(independent)
         expected["contract"].pop("ast_sha256", None)

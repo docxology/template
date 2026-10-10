@@ -7,11 +7,13 @@ font tools; it never fabricates the supervising process receipt.
 
 from __future__ import annotations
 
+from infrastructure.reporting.native_office_nested_custody import OfficeNestedReaderOperation
+
 import hashlib
 import time
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.reporting.native_format_acceptance_checks import (
@@ -32,6 +34,7 @@ from infrastructure.reporting.native_office_diagram_geometry import (
 from infrastructure.reporting.native_office_diagram_visibility import (
     observe_office_diagram_visibility,
 )
+from infrastructure.reporting.native_office_control_custody import OfficeControlReaderOperation
 from infrastructure.reporting.native_office_diagram_positive import (
     OfficeDiagramNativePositive,
 )
@@ -140,6 +143,7 @@ def run_office_diagram_control(
     sources: tuple[DiagramSource, ...],
     control: str,
     *,
+    target_ordinal: int,
     budget: SourceImageDecodeBudget,
     positive: OfficeDiagramNativePositive,
     pdfium_runtime: PDFiumRuntimeAdmission,
@@ -167,10 +171,14 @@ def run_office_diagram_control(
     baseline = positive.record["visibility"]["geometry"]
     if baseline["status"] != "pass" or not baseline["placements"]:
         raise ValueError("native diagram control requires a supported genuine original geometry baseline")
+    from infrastructure.reporting.native_office_diagram_census import select_diagram_control_targets
+
+    targets = select_diagram_control_targets(sources, baseline, deadline=deadline)
+    if type(target_ordinal) is not int or not 0 <= target_ordinal < len(targets):
+        raise ValueError("Office control requires one exact Source-census placement ordinal")
+    target = targets[target_ordinal]
     data = (
-        original_pdf
-        if control == "baseline"
-        else mutate_office_diagram_pdf(original_pdf, baseline["placements"][0], control)
+        original_pdf if control == "baseline" else mutate_office_diagram_pdf(original_pdf, target["placement"], control)
     )
     create_private_native_directory(root, directory)
     path = directory / "actual-native-control.pdf"
@@ -223,7 +231,7 @@ def run_office_diagram_control(
     if not reader.unchanged() or time.monotonic() >= deadline:
         raise ValueError("actual native Office diagram control source/raster changed")
     return code, {
-        "schema_version": "template-native-office-diagram-genuine-control-v2",
+        "schema_version": "template-native-office-diagram-genuine-control-v3",
         "run_id": run_id,
         "control": control,
         "scope": positive.scope,
@@ -231,7 +239,8 @@ def run_office_diagram_control(
         "original_pdf_sha256": hashlib.sha256(original_pdf).hexdigest(),
         "positive": positive.record,
         "mutated_pdf": {"path": artifact.relative, "sha256": artifact.sha256},
-        "target": baseline["placements"][0],
+        "targets": targets,
+        "target": target,
         "raster": raster,
         "visibility": witness,
         "expected_finding": intended,
@@ -261,13 +270,14 @@ def replay_office_diagram_control(
     env: dict[str, str],
     reader_directory: Path,
     original_child: dict[str, Any],
-    admit_original_child: Callable[[dict[str, Any], str, str, int], None],
+    original_operation: OfficeControlReaderOperation | OfficeNestedReaderOperation,
 ) -> None:
     """Recompute mutations, admit original tools and genuinely repaint source.
 
-    Root's mandatory callback verifies the external supervisor's original
-    child against this control, exact original input SHA and recomputed exit.
-    A claimed exit, an opaque pass flag or mutation-byte equality cannot suffice.
+    The fixed genuine reader role authenticates the externally held child,
+    exact original Source/target and independently reaped intended exit.
+    Current execution of the complete cohort is required by the enclosing
+    cohort adapter; this per-case replay never claims to supply that execution.
     """
     from infrastructure.reporting.native_format_acceptance_validation import (
         _file,
@@ -287,6 +297,7 @@ def replay_office_diagram_control(
         "positive",
         "mutated_pdf",
         "target",
+        "targets",
         "raster",
         "visibility",
         "expected_finding",
@@ -296,10 +307,16 @@ def replay_office_diagram_control(
     }
     if (
         set(raw) != expected_fields
-        or raw["schema_version"] != "template-native-office-diagram-genuine-control-v2"
+        or raw["schema_version"] != "template-native-office-diagram-genuine-control-v3"
         or raw["run_id"] != run_id
     ):
         raise ValueError("portable original native diagram control schema differs")
+    if (
+        type(original_operation) not in (OfficeControlReaderOperation, OfficeNestedReaderOperation)
+        or original_operation.deadline != deadline
+    ):
+        raise ValueError("Office control replay requires the exact externally held original reader role")
+    original_operation.verify(reader)
     current_positive.verify(deadline)
     if current_positive.decoded_pixel_budget is not budget or current_positive.source is not pdfium_runtime.source:
         raise ValueError("portable Office control requires the actual reader's shared Source/native positive")
@@ -357,15 +374,23 @@ def replay_office_diagram_control(
     if control != "baseline" and control not in CONTROL_CODES:
         raise ValueError("portable original native diagram control kind differs")
     geometry = inspect_diagram_pdf_geometry(original_pdf, sources, budget=budget, deadline=deadline)
+    from infrastructure.reporting.native_office_diagram_census import select_diagram_control_targets
+
+    targets = select_diagram_control_targets(sources, geometry, deadline=deadline)
+    target = raw["target"]
+    ordinal = target.get("ordinal") if isinstance(target, dict) else None
     if (
-        geometry["status"] != "pass"
+        type(ordinal) is not int
+        or not 0 <= ordinal < len(targets)
+        or raw["targets"] != targets
+        or target != targets[ordinal]
+        or geometry["status"] != "pass"
         or not geometry["placements"]
-        or raw["target"] != geometry["placements"][0]
         or raw["original_pdf_sha256"] != hashlib.sha256(original_pdf).hexdigest()
     ):
         raise ValueError("portable native diagram control target/original source geometry differs")
     expected = (
-        original_pdf if control == "baseline" else mutate_office_diagram_pdf(original_pdf, raw["target"], control)
+        original_pdf if control == "baseline" else mutate_office_diagram_pdf(original_pdf, target["placement"], control)
     )
     mutated = _file(raw["mutated_pdf"], reader)
     if mutated.path != directory / "actual-native-control.pdf" or mutated.content != expected:
@@ -424,7 +449,16 @@ def replay_office_diagram_control(
     )
     if raw["expected_finding"] != intended or raw["oracle_exit_code"] != code:
         raise ValueError("portable original native diagram control outcome differs")
-    admit_original_child(original_child, control, hashlib.sha256(original_pdf).hexdigest(), code)
+    original_operation.admit_original_child(
+        original_child,
+        control,
+        hashlib.sha256(original_pdf).hexdigest(),
+        code,
+        reader=reader,
+        scope=raw["scope"],
+        kind=raw["kind"],
+        target=target,
+    )
     current_positive.verify(deadline)
     pdfium_runtime.verify()
     if not reader.unchanged() or time.monotonic() >= deadline:

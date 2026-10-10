@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shlex
 import subprocess
 import zipfile
 from pathlib import Path
@@ -304,18 +305,57 @@ def test_hash_bound_incomplete_candidate_cannot_authorize_release(tmp_path: Path
 
 
 def test_workflow_cannot_create_root_4_release_before_required_acceptance() -> None:
+    import yaml
+
     root = Path(__file__).resolve().parents[3]
-    workflow = (root / ".github/workflows/release.yml").read_text()
+    workflow = yaml.safe_load((root / ".github/workflows/release.yml").read_text())
+    steps = workflow["jobs"]["release"]["steps"]
+    release = next(index for index, step in enumerate(steps) if "action-gh-release@" in step.get("uses", ""))
+    audit_index, audit = next(
+        (index, step)
+        for index, step in enumerate(steps)
+        if step.get("name") == "Verify pristine published public exemplars"
+    )
+    assert shlex.split(audit["run"]) == [
+        "uv",
+        "run",
+        "--no-sync",
+        "--offline",
+        "python",
+        "-m",
+        "infrastructure.validation.cli",
+        "publication-audit",
+        "--repo-root",
+        "$GITHUB_WORKSPACE",
+        "--all-public",
+        "--strict",
+        "--rendered",
+        "--format",
+        "json",
+    ]
+    assert "if" not in audit
+    positions = [audit_index]
     for command in (
         "release_acceptance inputs",
         "release_acceptance hosted",
-        "release_acceptance archive",
-        "release_acceptance candidate",
+        "native_installed_launcher --mode handoff",
+        "scripts/audit/verify_no_mocks.py",
+        "scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke",
+        "infrastructure.publishing.root_release_contract --tag",
+        "scripts/gates/public_capabilities.py",
+        "infrastructure.publishing.root_release_artifacts",
     ):
-        assert workflow.index(command) < workflow.index("name: Create GitHub Release\n        uses:")
-    assert '"repos/$GITHUB_REPOSITORY/actions/runs/$ACCEPTANCE_RUN_ID"' in workflow
-    assert '"repos/$GITHUB_REPOSITORY/actions/artifacts/$ACCEPTANCE_ARTIFACT_ID/zip"' in workflow
-    assert "actions: read" in workflow
+        positions.append(next(index for index, step in enumerate(steps) if command in step.get("run", "")))
+    assert positions == sorted(positions)
+    assert all(index < release for index in positions)
+    required = "steps.acceptance.outputs.required == 'true'"
+    assert steps[positions[2]]["if"] == required
+    assert steps[positions[3]]["if"] == required
+    assert "if" not in steps[release]
+    assert all(not step.get("continue-on-error", False) for step in steps[: release + 1])
+    recheck = next(step for step in steps[:release] if step.get("name") == "Recheck admitted publication bytes")
+    assert "root_release_artifacts" in recheck["run"] and "--verify" in recheck["run"]
+    assert workflow["permissions"]["actions"] == "read"
 
 
 def test_candidate_requires_all_external_hosted_context_fields(tmp_path: Path) -> None:
@@ -361,16 +401,37 @@ def test_candidate_revalidates_hosted_api_before_admitting_portable_origin(tmp_p
 
 
 def test_release_workflow_passes_external_api_context_to_candidate() -> None:
+    import yaml
+
     root = Path(__file__).resolve().parents[3]
-    workflow = (root / ".github/workflows/release.yml").read_text()
-    candidate_step = workflow.split("name: Verify every required candidate acceptance gate", 1)[1].split(
-        "name: Verify core test contract on tagged SHA", 1
-    )[0]
+    workflow = yaml.safe_load((root / ".github/workflows/release.yml").read_text())
+    steps = workflow["jobs"]["release"]["steps"]
+    candidate = next(step for step in steps if "native_installed_launcher --mode handoff" in step.get("run", ""))
+    assert candidate["env"] == {
+        "GH_TOKEN": "${{ github.token }}",
+        "ACCEPTANCE_RECEIPT_SHA256": "${{ inputs.acceptance_receipt_sha256 }}",
+        "ACCEPTANCE_RUN_ID": "${{ inputs.acceptance_run_id }}",
+        "ACCEPTANCE_ARTIFACT_ID": "${{ inputs.acceptance_artifact_id }}",
+    }
     for required in (
-        '--repository "$GITHUB_REPOSITORY"',
-        '--run-id "$ACCEPTANCE_RUN_ID"',
-        '--artifact-id "$ACCEPTANCE_ARTIFACT_ID"',
+        '--source-root "$GITHUB_WORKSPACE" --source-commit "$(git rev-parse HEAD)"',
+        "--source-identity ",
+        "source_fingerprint(Path.cwd())",
+        '--current-root "$RUNNER_TEMP/template-release-reader-root"',
+        '--scratch "$RUNNER_TEMP/template-release-reader-scratch"',
+        '--repository "$GITHUB_REPOSITORY" --run-id "$ACCEPTANCE_RUN_ID"',
+        '--acceptance-artifact-id "$ACCEPTANCE_ARTIFACT_ID"',
+        '--acceptance-receipt-sha256 "$ACCEPTANCE_RECEIPT_SHA256"',
+    ):
+        assert required in candidate["run"]
+    assert "--stage-bundle" not in candidate["run"]
+    hosted = next(step for step in steps if "release_acceptance hosted" in step.get("run", ""))
+    for required in (
+        '"repos/$GITHUB_REPOSITORY/actions/runs/$ACCEPTANCE_RUN_ID"',
+        '"repos/$GITHUB_REPOSITORY/actions/artifacts/$ACCEPTANCE_ARTIFACT_ID"',
         '--run-metadata "$RUNNER_TEMP/root-release-acceptance-run.json"',
         '--artifact-metadata "$RUNNER_TEMP/root-release-acceptance-artifact.json"',
+        '--repository "$GITHUB_REPOSITORY" --revision "$(git rev-parse HEAD)"',
+        '--run-id "$ACCEPTANCE_RUN_ID" --artifact-id "$ACCEPTANCE_ARTIFACT_ID"',
     ):
-        assert required in candidate_step
+        assert required in hosted["run"]

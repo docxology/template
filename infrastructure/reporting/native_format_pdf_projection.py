@@ -26,6 +26,7 @@ def observe_pdf_source_projection(
     env: dict[str, str],
     deadline: float,
     run_id: str,
+    source_scope: str | None = None,
 ) -> dict[str, Any]:
     """Project current admitted sources through their actual declared writer.
 
@@ -106,16 +107,39 @@ def observe_pdf_source_projection(
         if argument == "--filter":
             if Path(command[index + 1]).resolve(strict=True) != crossref_path:
                 raise ValueError("source cross-reference executable differs from its declared observation")
-    process = native_tool_record(
-        root,
-        directory,
-        "pandoc",
-        command[1:],
-        env=env,
-        deadline=deadline,
-        run_id=run_id,
-        purpose="source-only-pdf-projection",
-    )
+    crossref_filter = None
+    if source_scope is None:
+        process = native_tool_record(
+            root,
+            directory,
+            "pandoc",
+            command[1:],
+            env=env,
+            deadline=deadline,
+            run_id=run_id,
+            purpose="source-only-pdf-projection",
+        )
+        custody_blockers = ["source PDF projection has no genuine nested Crossref child-role nomination"]
+    else:
+        from infrastructure.reporting.native_crossref_filter import BLOCKERS
+        from infrastructure.reporting.native_crossref_pandoc import source_crossref_pandoc
+        from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
+
+        runtime = CitationRuntime(root, directory / "crossref-owner", env=env, deadline=deadline, run_id=run_id)
+        actual, crossref_filter = source_crossref_pandoc(
+            runtime,
+            source_scope,
+            command[1:],
+            "source-only-pdf-projection",
+            output_format="latex",
+            input_paths=tuple(path for path, _ in snapshots),
+        )
+        process = {
+            "artifact": runtime.tools[-1],
+            "exit_code": actual["exit_code"],
+            "original_exit_code": actual["original_exit_code"],
+        }
+        custody_blockers = list(BLOCKERS)
     receipt = json.loads(SnapshotReader(root).read(process["artifact"]["path"]).content)
     version_receipt = json.loads(SnapshotReader(root).read(version["artifact"]["path"]).content)
     if any(row["original_exit_code"] != 0 or row["exit_code"] != 0 for row in (receipt, version_receipt)):
@@ -157,7 +181,11 @@ def observe_pdf_source_projection(
     if time.monotonic() >= deadline:
         raise TimeoutError("source PDF projection exhausted its original budget")
     return {
-        "schema_version": "template-native-source-pdf-projection-v1",
+        "schema_version": "template-native-source-pdf-projection-v2",
+        "source_scope": source_scope,
+        "crossref_filter": crossref_filter,
+        "custody_blockers": custody_blockers,
+        "pandoc_arguments": receipt["command"][1:],
         "source_tex": {
             "path": projected.relative_to(root).as_posix(),
             "sha256": hashlib.sha256(text.encode()).hexdigest(),
@@ -185,7 +213,10 @@ def observe_pdf_source_projection(
                 "sha256": hashlib.sha256(crossref_after).hexdigest(),
                 "size_bytes": len(crossref_after),
             },
-            "retention_policy": "original process/tool byte metadata under enclosing source/SDK custody; executable bytes are not redistributed",
+            "retention_policy": (
+                "original process/tool byte metadata under enclosing source/SDK custody; "
+                "executable bytes are not redistributed"
+            ),
         },
         "tool_artifacts": [version["artifact"], process["artifact"]],
         "execution_budget_seconds": deadline - started,

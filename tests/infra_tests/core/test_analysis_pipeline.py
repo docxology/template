@@ -213,7 +213,7 @@ def test_aggregate_retains_actual_originals_and_exact_leaf_hashes(
     assert run_analysis_pipeline([first, second], tmp_path, "p") == 1
     report = analysis_receipt_path(project, "aggregate-originals", "aggregate").with_name("run.json")
     record = json.loads(report.read_bytes())
-    assert record["schema"] == "template-analysis-run/1"
+    assert record["schema"] == "template-analysis-run/3"
     assert record["complete"] is False and record["exit_code"] == 1
     assert record["plan_digest"] == "exact-parent-plan"
     assert [leaf["child_exit_code"] for leaf in record["outcomes"]] == [7, 0]

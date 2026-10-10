@@ -25,10 +25,23 @@ uv run python scripts/gates/methods_plan_check.py --project templates/template_c
 
 ## Running
 
-```bash
-# Run all gates
-./run.sh gates
+For ordinary development, start with the existing direct local lane for the
+area changed. The [local command map](../../docs/maintenance/ci-local.md) lists
+owning tests, supported lanes and the separate release acceptance route.
+Run these commands from repository root:
 
-# Dry-run (skip actual changes)
-./run.sh gates --dry-run
+```bash
+# Inspect a selected development lane before running it
+./scripts/shell/ci_local.sh --no-act --dry-run -j lint
+./scripts/shell/ci_local.sh --no-act -j lint
+
+# Inspect all supported direct lanes
+./scripts/shell/ci_local.sh --no-act --list
+
+# Run the complete static health registry
+uv run --no-sync --offline python -m infrastructure.core.health --json
 ```
+
+Focused local feedback must be followed by the required CI matrix and release
+acceptance for the exact source revision. The local wrapper documents which
+workflow jobs require `act` or GitHub Actions.

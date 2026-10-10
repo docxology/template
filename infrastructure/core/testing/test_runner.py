@@ -533,7 +533,7 @@ def run_per_project_pytest(
         except ProjectTestRuntimeError as exc:
             logger.error("Project '%s' prepared test runtime refused: %s", project_name, exc)
             return exc.exit_code
-        declared_command = project_declared_test_command(project_root)
+        declared_command = project_declared_test_command(project_root, profile=profile)
         cmd = (
             list(declared_command)
             if declared_command is not None

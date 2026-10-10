@@ -141,8 +141,19 @@ def inspect_pitch_package(
             findings.append({"code": "pitch.package.source.notes", "page": ordinal})
         figure_pictures = []
         qr_pictures = []
+        source_width, source_height = page.size_pt
+        qr_box = (
+            source_width - 39.6 - 44.64,
+            source_height - 53.28,
+            source_width - 39.6,
+            source_height - 53.28 + 44.64,
+        )
         for picture in pictures:
-            if picture["target"] == page.qr_target and page.qr_target:
+            # The role comes from the Source-owned QR position, not a mutable
+            # candidate hyperlink. A wrong link still fails source.targets.
+            # An unplaced/extra picture remains an explicit figure blocker.
+            in_qr_box = all(abs(a - b) <= 0.05 for a, b in zip(picture["box_pt"], qr_box, strict=True))
+            if page.qr_target and (picture["target"] == page.qr_target or in_qr_box):
                 qr_pictures.append(picture)
             else:
                 figure_pictures.append(picture)
@@ -159,7 +170,7 @@ def inspect_pitch_package(
             blockers.append(f"page {ordinal}: complete source-owned figure projection is required")
         qr = None
         if page.qr_target:
-            wanted_box = (width - 39.6 - 44.64, height - 53.28, width - 39.6, height - 53.28 + 44.64)
+            wanted_box = qr_box
             if len(qr_pictures) != 1:
                 findings.append({"code": "pitch.package.qr.draw", "page": ordinal})
             else:
@@ -215,6 +226,8 @@ def inspect_pitch_native_pairs(
     No variant or format can be substituted for another; equal titles, page
     counts or content summaries do not authorize a missing native observation.
     """
+    from infrastructure.reporting.native_pitch_source_layout import LAYOUT_CANONICALIZATION, LAYOUT_SCHEMA
+
     expected_ids = {f"pitch:{length}:{kind}" for length in PITCH_VARIANTS for kind in ("pdf", "pptx")}
     if set(artifacts) != expected_ids or set(contracts) != expected_ids:
         raise ValueError("Pitch native parity requires exactly all three PDF/PPTX source-owned pairs")
@@ -247,6 +260,8 @@ def inspect_pitch_native_pairs(
                     or package.get("findings")
                     or package.get("input_sha256") != value.get("input", {}).get("sha256")
                     or package.get("source_notes_checked") is not True
+                    or package.get("source_layout", {}).get("schema_version") != LAYOUT_SCHEMA
+                    or package.get("source_layout", {}).get("canonicalization") != LAYOUT_CANONICALIZATION
                     or package.get("source_layout", {}).get("status") != "pass"
                     or package.get("source_layout", {}).get("findings")
                     or package.get("source_layout", {}).get("source_layout_digest")

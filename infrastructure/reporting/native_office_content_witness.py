@@ -201,6 +201,7 @@ def inspect_office_source_survival(
     members = _archive(package)
     occurrences = scientific_source_occurrences(source_ast)
     native_occurrences = scientific_source_occurrences(native_ast)
+    filtered_occurrences = scientific_source_occurrences(filtered_ast)
     roles = office_raw_source_roles(source_ast)
     findings: list[dict[str, Any]] = []
     blockers: list[str] = []
@@ -346,6 +347,40 @@ def inspect_office_source_survival(
                     raw_role["label"],
                 )
             )
+    filtered_math = []
+    for row in filtered_occurrences:
+        if row.kind == "Math":
+            value = json.loads(row.content_json)
+            try:
+                filtered_math.append((row, value[0]["t"], math_expression(value[1])))
+            except ValueError as error:
+                blockers.append(f"filtered Math occurrence {row.ordinal}: {error}")
+    filtered_math_to_source = []
+    try:
+        complete_source_math = [
+            (ordinal, mode, math_expression(expression)) for ordinal, _, mode, expression, _ in sorted(source_math)
+        ]
+    except ValueError:
+        complete_source_math = []  # Existing exact Source Math refusal remains below.
+    if (
+        complete_source_math
+        and len(complete_source_math) == len(filtered_math)
+        and all(
+            (mode, expression) == (filtered_mode, filtered_expression)
+            for (_, mode, expression), (_, filtered_mode, filtered_expression) in zip(
+                complete_source_math, filtered_math, strict=True
+            )
+        )
+    ):
+        filtered_math_to_source = [
+            {
+                "filtered_ordinal": row.ordinal,
+                "filtered_ast_path": list(row.location),
+                "filtered_content_sha256": row.content_sha256,
+                "source_occurrence": original[0],
+            }
+            for original, (row, _, _) in zip(complete_source_math, filtered_math, strict=True)
+        ]
     cursor = 0
     equation_number = 0
     for ordinal, digest, mode, expression, label in sorted(source_math):
@@ -456,6 +491,12 @@ def inspect_office_source_survival(
                     table_descriptions(child)
 
         table_descriptions(native_body)
+    from infrastructure.reporting.native_office_ordered_blocks import ordered_office_block_correspondence
+
+    normalized_native_ast = json.dumps({**native, "blocks": native_body}, ensure_ascii=False).encode()
+    ordered_blocks = ordered_office_block_correspondence(source_ast, filtered_ast, normalized_native_ast, text=_text)
+    findings.extend(ordered_blocks["findings"])
+    blockers.extend(ordered_blocks["blockers"])
     native_text = _compact(_text(native_body))
     if expected_text and expected_text not in native_text:
         findings.append(
@@ -465,7 +506,7 @@ def inspect_office_source_survival(
                 "native_text_sha256": hashlib.sha256(native_text.encode()).hexdigest(),
             }
         )
-    filtered_cites = [row for row in scientific_source_occurrences(filtered_ast) if row.kind == "Cite"]
+    filtered_cites = [row for row in filtered_occurrences if row.kind == "Cite"]
     remaining = Counter(_compact(_text(json.loads(row.content_json)[1])) for row in filtered_cites)
     for rendered, count in remaining.items():
         if not rendered or native_text.count(rendered) < count:
@@ -520,7 +561,7 @@ def inspect_office_source_survival(
     except (ValueError, TypeError, IndexError, KeyError) as error:
         blockers.append(f"source/native table witness: {error}")
     source_images = [row for row in occurrences if row.kind == "Image"]
-    filtered_images = [row for row in scientific_source_occurrences(filtered_ast) if row.kind == "Image"]
+    filtered_images = [row for row in filtered_occurrences if row.kind == "Image"]
     native_images = [row for row in native_occurrences if row.kind == "Image"]
     if kind == "epub" and cover is not None:
         container = fromstring(members["META-INF/container.xml"])
@@ -726,6 +767,23 @@ def inspect_office_source_survival(
         ],
         "witnesses": witnesses,
         "raw_roles": list(roles),
+        "ordered_blocks": ordered_blocks,
+        "filtered_math_to_source": filtered_math_to_source,
+        "filtered_table_locations": [
+            {"ordinal": row.ordinal, "ast_path": list(row.location), "content_sha256": row.content_sha256}
+            for row in filtered_occurrences
+            if row.kind == "Table"
+        ],
+        "native_table_locations": [
+            {"ordinal": row.ordinal, "ast_path": list(row.location), "content_sha256": row.content_sha256}
+            for row in native_occurrences
+            if row.kind == "Table"
+        ],
+        "native_math_locations": [
+            {"ordinal": row.ordinal, "ast_path": list(row.location), "content_sha256": row.content_sha256}
+            for row in native_occurrences
+            if row.kind == "Math"
+        ],
         "source_math_count": len(source_math),
         "native_math_count": len(native_math),
         "prose_text_sha256": hashlib.sha256(expected_text.encode()).hexdigest(),

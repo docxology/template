@@ -20,7 +20,12 @@ from infrastructure.reporting.native_format_joint_source import (
     validate_original_joint_launch,
     validate_retained_sdk_closure,
 )
-from infrastructure.reporting.native_tool_process import MAX_STREAM_BYTES, SCHEMA
+from infrastructure.reporting.native_tool_process import (
+    MAX_STREAM_BYTES,
+    SCHEMA,
+    STDIN_SCHEMA,
+    LOADER_SCHEMA,
+)
 from infrastructure.reporting.release_readiness_snapshot import (
     ArtifactSnapshot,
     SnapshotReader,
@@ -124,8 +129,56 @@ def authenticate_original_native_artifact(
             OfficeControlReaderOperation,
         )
 
-        if not isinstance(control, OfficeControlReaderOperation):
-            raise ValueError("native control artifact requires its genuine typed original Office custodian")
+        from infrastructure.reporting.native_crossref_replay import (
+            CrossrefFilterReaderOperation,
+        )
+
+        from infrastructure.reporting.native_stage_child_custody import NativeStageChildReaderOperation
+        from infrastructure.reporting.native_pitch_control_custody import PitchControlReaderOperation
+
+        from infrastructure.reporting.native_office_nested_custody import OfficeNestedReaderOperation
+
+        from infrastructure.reporting.native_print_child_custody import (
+            BasicBrowserControlReaderOperation,
+            OfficeScientificControlReaderOperation,
+            PrintControlReaderOperation,
+            SemanticBrowserControlReaderOperation,
+            SlideControlReaderOperation,
+            WholePDFControlReaderOperation,
+        )
+
+        if not isinstance(
+            control,
+            (
+                OfficeControlReaderOperation,
+                CrossrefFilterReaderOperation,
+                NativeStageChildReaderOperation,
+                PitchControlReaderOperation,
+                OfficeNestedReaderOperation,
+                BasicBrowserControlReaderOperation,
+                OfficeScientificControlReaderOperation,
+                PrintControlReaderOperation,
+                SemanticBrowserControlReaderOperation,
+                SlideControlReaderOperation,
+                WholePDFControlReaderOperation,
+            ),
+        ) or (
+            not isinstance(control, OfficeControlReaderOperation)
+            and type(control)
+            not in (
+                CrossrefFilterReaderOperation,
+                NativeStageChildReaderOperation,
+                PitchControlReaderOperation,
+                OfficeNestedReaderOperation,
+                BasicBrowserControlReaderOperation,
+                OfficeScientificControlReaderOperation,
+                PrintControlReaderOperation,
+                SemanticBrowserControlReaderOperation,
+                SlideControlReaderOperation,
+                WholePDFControlReaderOperation,
+            )
+        ):
+            raise ValueError("native control artifact requires its genuine typed original Source custodian")
         if not isinstance(binding, dict):
             raise ValueError("native original control artifact binding must be an exact mapping")
         return control.authenticate_artifact(binding, reader, run_id=run_id, required_sdk_modules=required_sdk_modules)
@@ -246,7 +299,7 @@ def validate_native_tool_data(
     native = native_file.json_object()
     # The tool wrapper binds its exact original process and raw binary streams.
     if (
-        native.get("schema_version") != SCHEMA
+        native.get("schema_version") not in {SCHEMA, STDIN_SCHEMA, LOADER_SCHEMA}
         or native.get("pid") != raw.get("pid")
         or type(native.get("pid")) is not int
         or native["pid"] <= 0
@@ -264,6 +317,59 @@ def validate_native_tool_data(
         or native.get("executable_observation_after") != raw.get("executable_observation_after")
     ):
         raise ValueError("native tool lacks its actual original PID/OS/executable observations")
+    stdin_keys = {"stdin_input_before", "stdin_input_after"}
+    if native["schema_version"] == LOADER_SCHEMA and type(native.get("loader_stdin")) is not bool:
+        raise ValueError("loader native process must explicitly bind its original stdin mode")
+    if (
+        native["schema_version"] == SCHEMA
+        or native["schema_version"] == LOADER_SCHEMA
+        and native["loader_stdin"] is False
+    ):
+        if stdin_keys & set(native):
+            raise ValueError("ordinary DEVNULL native process cannot claim a stdin witness")
+    else:
+        before, after = (
+            native.get("stdin_input_before"),
+            native.get("stdin_input_after"),
+        )
+        if (
+            not isinstance(before, dict)
+            or set(before) != {"path", "sha256", "bytes", "identity"}
+            or before != after
+            or type(before["bytes"]) is not int
+            or not 0 < before["bytes"] <= MAX_STREAM_BYTES
+        ):
+            raise ValueError("native original stdin descriptor/body witness differs")
+        identity = before["identity"]
+        if (
+            not isinstance(before["path"], str)
+            or not Path(before["path"]).is_absolute()
+            or Path(before["path"]).parent != Path(native["cwd"])
+            or not isinstance(identity, dict)
+            or set(identity) != {"device", "inode", "mode", "size", "mtime_ns", "ctime_ns", "links"}
+            or any(type(value) is not int or value < 0 for value in identity.values())
+            or not stat.S_ISREG(identity["mode"])
+            or identity["size"] != before["bytes"]
+            or identity["links"] < 1
+        ):
+            raise ValueError("native original stdin physical identity/private input label differs")
+        inputs = raw.get("input_observations_before")
+        if not isinstance(inputs, list) or raw.get("input_observations_after") != inputs:
+            raise ValueError("stdin native tool requires unchanged original CitationToolAPI inputs")
+        matches = [row for row in inputs if row.get("path") == before["path"]]
+        if not matches or any(
+            row.get("sha256") != before["sha256"] or row.get("bytes") != before["bytes"] for row in matches
+        ):
+            raise ValueError("native stdin differs from the actual source-owned frozen tool input")
+        copies = [row for row in raw.get("consumed_input_artifacts", []) if row.get("observation") in matches]
+        if len(copies) != 1:
+            raise ValueError("native stdin requires one exact independently retained consumed copy")
+        consumed = _binding(copies[0]["artifact"], reader)
+        if consumed.sha256 != before["sha256"] or len(consumed.content) != before["bytes"]:
+            raise ValueError("native original stdin bytes differ from their authenticated consumed copy")
+    from infrastructure.reporting.native_environment_custody import validate_native_environment
+
+    validate_native_environment(native, raw, reader)
     deadline = _finite(raw.get("original_deadline_monotonic"))
     caller = _finite(raw.get("caller_deadline_monotonic"))
     if native.get("original_deadline_monotonic") != deadline or not deadline <= caller <= original_deadline:
@@ -372,3 +478,15 @@ def validate_native_tool_data(
         total += len(observed.content)
     if total > MAX_STREAM_BYTES or not reader.unchanged():
         raise ValueError("native original tool stream byte bound or current retained custody differs")
+
+    if native["schema_version"] == LOADER_SCHEMA:
+        from infrastructure.reporting.native_loader_replay import validate_native_loader_data
+
+        validate_native_loader_data(
+            native,
+            reader,
+            original_deadline=original_deadline,
+            original_completion=original_completion,
+        )
+    elif "loader_lifecycle" in native or "loader_stdin" in native:
+        raise ValueError("ordinary native tool cannot claim loader callback custody")

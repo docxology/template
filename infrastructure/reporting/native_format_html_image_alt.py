@@ -58,16 +58,89 @@ def _images(ast_bytes: bytes) -> list[dict[str, Any]]:
     return images
 
 
+def figure_caption_image_aliases(ast_bytes: bytes) -> dict[str, dict[str, Any]]:
+    """Exact modern caption/alt aliases with a finite Pandoc HTML string rule.
+
+    Pandoc 3.12 HTML Image uses stringifyInlines: Str is literal, Space is one
+    space and Math is its exact TeX source. This projects an alternative
+    attribute, never visible mathematical glyphs. Other rich nodes, empty
+    captions, short captions and explicit alt overrides stay unsupported.
+    """
+    from infrastructure.reporting.native_format_pdf_semantic_plan import exact_figure_caption_alias
+
+    document = json_object_from_bytes(ast_bytes)
+    aliases: dict[str, dict[str, Any]] = {}
+    count = 0
+
+    def walk(value: Any, path: str, depth: int) -> None:
+        nonlocal count
+        count += 1
+        if count > 100000 or depth > 256:
+            raise ValueError("Figure caption aliases exceed the finite Source AST bound")
+        if isinstance(value, dict):
+            alias = exact_figure_caption_alias(value)
+            if alias is not None:
+                alternative, relative_image = alias
+                image = value
+                for member in relative_image:
+                    image = image[member]
+                attributes = image["c"][0]
+                if (
+                    isinstance(attributes, list)
+                    and len(attributes) == 3
+                    and isinstance(attributes[2], list)
+                    and not any(item[0] == "alt" for item in attributes[2])
+                ):
+                    pieces: list[str] = []
+                    for node in alternative:
+                        if isinstance(node, dict) and node.get("t") == "Str" and isinstance(node.get("c"), str):
+                            pieces.append(node["c"])
+                        elif isinstance(node, dict) and node.get("t") == "Space":
+                            pieces.append(" ")
+                        elif (
+                            isinstance(node, dict)
+                            and node.get("t") == "Math"
+                            and isinstance(node.get("c"), list)
+                            and len(node["c"]) == 2
+                            and node["c"][0] in ({"t": "InlineMath"}, {"t": "DisplayMath"})
+                            and isinstance(node["c"][1], str)
+                        ):
+                            pieces.append(node["c"][1])
+                        else:
+                            break
+                    else:
+                        expected = "".join(pieces)
+                        if expected.strip():
+                            image_path = path + "/" + "/".join(map(str, relative_image))
+                            aliases[image_path] = {
+                                "figure_path": path,
+                                "caption_path": path + "/c/1/1/0/c",
+                                "image_path": image_path,
+                                "alternative_ast": alternative,
+                                "expected_alt": expected,
+                                "model": "pandoc-html-Str-Space-Math-caption-alias-v1",
+                            }
+            for key, child in value.items():
+                walk(child, path + "/" + key, depth + 1)
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                walk(child, path + "/" + str(index), depth + 1)
+
+    walk(document.get("blocks"), "blocks", 0)
+    return aliases
+
+
 def compile_original_image_alt(original_ast: bytes, projected_ast: bytes) -> dict[str, Any]:
     """Retain every rich alternative before transformation; never flatten it away.
 
-    Only literal Str/Space alternatives currently have an independent HTML alt
-    string model. Rich, math, raw, empty and line-breaking alternatives remain
-    explicit obligations with their complete original AST payload retained.
+    Literal Str/Space and exact modern Figure Str/Space/Math caption aliases
+    have a finite independent HTML alt string model. Other rich, raw, empty
+    and line-breaking alternatives retain their complete explicit obligations.
     Original/projected target rewrites are owned by the authenticated source
     transformation reader, rather than accepted on a basename match here.
     """
     original, projected = _images(original_ast), _images(projected_ast)
+    aliases = figure_caption_image_aliases(original_ast)
     findings: list[dict[str, Any]] = []
     blockers: list[str] = []
     rows = []
@@ -86,6 +159,9 @@ def compile_original_image_alt(original_ast: bytes, projected_ast: bytes) -> dic
             else:
                 expected = None
                 break
+        alias = aliases.get(image["source_id"].removeprefix("image-alt:"))
+        if alias is not None:
+            expected = alias["expected_alt"]
         if not expected:
             blockers.append(
                 image["source_id"]
@@ -93,7 +169,10 @@ def compile_original_image_alt(original_ast: bytes, projected_ast: bytes) -> dic
             )
             expected = None
         projection = projected[index] if index < len(projected) else None
-        if projection is not None and projection["alternative_ast"] != alternative:
+        if projection is not None and (
+            projection["alternative_ast"] != alternative
+            or (alias is not None and any(item[0] == "alt" for item in projection["attributes"][2]))
+        ):
             findings.append({"code": "html.figure.alt-source", "source_id": image["source_id"]})
         rows.append(
             {
@@ -101,6 +180,7 @@ def compile_original_image_alt(original_ast: bytes, projected_ast: bytes) -> dic
                 "native_target": projection["target"][0] if projection else None,
                 "projected_alternative_ast": projection["alternative_ast"] if projection else None,
                 "expected_alt": expected,
+                **({"caption_alias": alias} if alias is not None else {}),
             }
         )
     base = {

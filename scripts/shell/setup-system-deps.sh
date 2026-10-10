@@ -17,6 +17,8 @@
 # Usage:
 #   bash scripts/shell/setup-system-deps.sh            # install missing + verify
 #   bash scripts/shell/setup-system-deps.sh --check    # verify only, install nothing
+#   bash scripts/shell/setup-system-deps.sh --prepared-python PATH
+#       # use the caller's selected Python; do not bootstrap or sync Python
 #
 # uv bootstrap reuses shell_bootstrap.sh (pinned installer + SHA-256 check).
 # Platform support: macOS (Homebrew), Debian/Ubuntu (apt-get), matching the
@@ -29,15 +31,25 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 CHECK_ONLY=0
-for arg in "$@"; do
+PREPARED_PYTHON=""
+while [[ $# -gt 0 ]]; do
+    arg="$1"
     case "$arg" in
-        --check) CHECK_ONLY=1 ;;
+        --check) CHECK_ONLY=1; shift ;;
+        --prepared-python)
+            if [[ $# -lt 2 || -z "${2:-}" || "${2:-}" == -* || -n "$PREPARED_PYTHON" ]]; then
+                echo "ERROR: --prepared-python requires one nonempty executable path" >&2
+                exit 1
+            fi
+            PREPARED_PYTHON="$2"
+            shift 2
+            ;;
         -h|--help)
-            sed -n '2,30p' "${BASH_SOURCE[0]}" | grep -E '^#( |$)' | sed 's/^# \{0,1\}//'
+            sed -n '2,33p' "${BASH_SOURCE[0]}" | grep -E '^#( |$)' | sed 's/^# \{0,1\}//'
             exit 0
             ;;
         *)
-            echo "ERROR: unknown argument '$arg' (supported: --check)" >&2
+            echo "ERROR: unknown argument '$arg' (supported: --check, --prepared-python PATH)" >&2
             exit 1
             ;;
     esac
@@ -47,6 +59,18 @@ info() { echo "✅ $*"; }
 warn() { echo "⚠️  $*"; }
 fail() { echo "❌ $*" >&2; }
 die()  { fail "$1"; exit "${2:-1}"; }
+
+# This only selects the caller's already prepared runtime. It does not admit an
+# SDK, dependency set or acceptance result. Missing tools/packages still fail.
+if [[ -n "$PREPARED_PYTHON" ]]; then
+    [[ "$PREPARED_PYTHON" == /* ]] || PREPARED_PYTHON="$PWD/$PREPARED_PYTHON"
+    [[ -f "$PREPARED_PYTHON" && -x "$PREPARED_PYTHON" ]] \
+        || die "prepared Python is not an executable file"
+    python_kind=$("$PREPARED_PYTHON" -I -B -c \
+        'import sys; print("prepared-cpython" if sys.implementation.name == "cpython" and sys.version_info >= (3, 12) else "unsupported")') \
+        || die "prepared Python probe failed"
+    [[ "$python_kind" == prepared-cpython ]] || die "prepared Python must be CPython >=3.12"
+fi
 
 # True when elevation may be requested without hanging: either we are root,
 # sudo is passwordless, or stdin is an interactive TTY (sudo can prompt).
@@ -115,25 +139,29 @@ install_tex_packages_tlmgr() {
     sudo "$1" install ${MISSING_EXTRA_TLMGR}
 }
 
-# Shared tail: uv presence + repo validator run.
-verify_with_uv() {
+# Shared tail: actual selected Python + unchanged repo validator.
+verify_with_python() {
     echo ""
     echo "=== Verification ==="
     info "pandoc $(pandoc --version | head -1)"
     info "xelatex $(xelatex --version | head -1)"
-    (cd "$REPO_ROOT" && uv run python -m infrastructure.rendering.latex_package_validator) \
-        || die "LaTeX package validator failed — see its report above"
+    if [[ -n "$PREPARED_PYTHON" ]]; then
+        (cd "$REPO_ROOT" && "$PREPARED_PYTHON" -m infrastructure.rendering.latex_package_validator)
+    else
+        (cd "$REPO_ROOT" && uv run python -m infrastructure.rendering.latex_package_validator)
+    fi || die "LaTeX package validator failed — see its report above"
     info "system dependencies verified end-to-end"
 }
 
 # ── uv ───────────────────────────────────────────────────────────────────────
-# shellcheck source=scripts/shell/shell_bootstrap.sh
-source "${REPO_ROOT}/scripts/shell/shell_bootstrap.sh"
-
-if [[ ${CHECK_ONLY} -eq 1 ]]; then
-    command -v uv >/dev/null 2>&1 || die "uv not found (required). Install: brew install uv, or the pinned installer in docs/operational/build/dependency-management.md"
-else
-    ensure_uv || die "could not provision uv — install it manually and re-run (see docs/operational/build/dependency-management.md)"
+if [[ -z "$PREPARED_PYTHON" ]]; then
+    # shellcheck source=scripts/shell/shell_bootstrap.sh
+    source "${REPO_ROOT}/scripts/shell/shell_bootstrap.sh"
+    if [[ ${CHECK_ONLY} -eq 1 ]]; then
+        command -v uv >/dev/null 2>&1 || die "uv not found (required). Install: brew install uv, or the pinned installer in docs/operational/build/dependency-management.md"
+    else
+        ensure_uv || die "could not provision uv — install it manually and re-run (see docs/operational/build/dependency-management.md)"
+    fi
 fi
 
 # ── Platform detection ──────────────────────────────────────────────────────
@@ -182,7 +210,7 @@ if [[ $CHECK_ONLY -eq 1 ]]; then
     if [[ "${MISSING_PANDOC:-0}" -eq 1 || "${MISSING_XELATEX:-0}" -eq 1 || "${MISSING_TEX_PKG:-0}" -eq 1 ]]; then
         die "verification failed — re-run without --check to install what is missing"
     fi
-    verify_with_uv
+    verify_with_python
     exit 0
 fi
 
@@ -262,11 +290,14 @@ else
 fi
 
 echo ""
-if ! command -v uv >/dev/null 2>&1 && [[ "${PLATFORM}" == "linux" ]]; then
+if [[ -z "$PREPARED_PYTHON" ]] && ! command -v uv >/dev/null 2>&1 && [[ "${PLATFORM}" == "linux" ]]; then
     warn "uv not found — 'uv sync' inside the pipeline bootstraps it via shell_bootstrap.sh on first run"
 fi
 
-# Sync the Python environment now that system tools exist.
-(cd "$REPO_ROOT" && uv sync --quiet) || die "uv sync failed — resolve Python dependency issues and re-run"
+# Standalone installation retains its ordinary sync. Hosted callers preserve
+# their selected locked group environment and execute its real validator above.
+if [[ -z "$PREPARED_PYTHON" ]]; then
+    (cd "$REPO_ROOT" && uv sync --quiet) || die "uv sync failed — resolve Python dependency issues and re-run"
+fi
 
-verify_with_uv
+verify_with_python

@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from infrastructure.core.analysis_launch import analysis_receipt_path
+from infrastructure.core.analysis_data_custody import require_analysis_data
 from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined, unlink_confined
 from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint
 from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
@@ -37,7 +39,7 @@ class AnalysisRunEvidence:
         """Only exact current run/stage/outcome bytes become aggregate evidence."""
         target = analysis_receipt_path(self.project, self.run_id, outcome.stage_key)
         try:
-            payload = read_bytes_confined(self.project, target)
+            payload = read_bytes_confined(self.project, target, max_bytes=64 * 1024 * 1024)
         except FileNotFoundError:
             if outcome.complete or outcome.child_exit_code is not None:
                 raise ValueError("Executed analysis producer is missing its leaf evidence") from None
@@ -46,7 +48,7 @@ class AnalysisRunEvidence:
         serialized = json.loads(json.dumps(outcome.to_dict()))
         if (
             not isinstance(record, dict)
-            or record.get("schema") != "template-analysis-leaf/1"
+            or record.get("schema") != "template-analysis-leaf/3"
             or record.get("run_id") != self.run_id
             or record.get("stage_key") != outcome.stage_key
             or record.get("plan_digest") != self.plan_digest
@@ -71,7 +73,7 @@ class AnalysisRunEvidence:
             if (
                 not isinstance(request, dict)
                 or not isinstance(completion, dict)
-                or request.get("schema") != "template-python-analysis/2"
+                or request.get("schema") != "template-python-analysis/4"
                 or request.get("cwd") != str(self.repo.absolute())
                 or any(request.get(key) != record[key] for key in ("run_id", "stage_key", "plan_digest"))
                 or request.get("source_digest") != self.source_before
@@ -87,10 +89,53 @@ class AnalysisRunEvidence:
                 or completion.get("request_digest") != canonical_digest(request)
                 or any(completion.get(key) != record[key] for key in ("run_id", "stage_key", "plan_digest"))
                 or completion.get("custody") != "verified"
+                or completion.get("supervisory_interrupted") is not False
+                or not isinstance(request.get("analysis_nonce"), str)
+                or len(request["analysis_nonce"]) != 32
+                or any(char not in "0123456789abcdef" for char in request["analysis_nonce"])
+                or completion.get("analysis_nonce") != request["analysis_nonce"]
+                or not isinstance(request.get("data_before"), dict)
+                or completion.get("data_before_digest") != request["data_before"].get("content_digest")
+                or not isinstance(worker.get("original_process"), dict)
+                or not isinstance(completion.get("analysis_reads"), dict)
                 or type(completion.get("original_exit_code")) is not int
                 or completion["original_exit_code"] != 0
             ):
                 raise ValueError("Analysis worker completion is not bound to its admitted request")
+            process = worker["original_process"]
+            reads = completion["analysis_reads"]
+            if (
+                type(process.get("pid")) is not int
+                or process["pid"] <= 0
+                or process.get("request_digest") != canonical_digest(request)
+                or process.get("analysis_nonce") != request["analysis_nonce"]
+                or process.get("original_exit_code") != 0
+                or process.get("observed_exit_code") != 0
+                or process.get("timed_out") is not False
+                or process.get("custody_refused") is not False
+                or process.get("original_deadline_monotonic") != request.get("original_deadline_monotonic")
+                or type(process.get("original_deadline_monotonic")) not in (int, float)
+                or not math.isfinite(process["original_deadline_monotonic"])
+                or type(process.get("observed_completion_monotonic")) not in (int, float)
+                or not math.isfinite(process["observed_completion_monotonic"])
+                or not process["observed_completion_monotonic"] < process["original_deadline_monotonic"]
+                or reads.get("schema") != "template-analysis-returned-read-bytes-v2"
+                or reads.get("owner_pid") != process.get("pid")
+                or reads.get("analysis_nonce") != request["analysis_nonce"]
+                or reads.get("request_digest") != canonical_digest(request)
+                or reads.get("run_id") != self.run_id
+                or reads.get("stage_key") != outcome.stage_key
+                or reads.get("content_digest")
+                != canonical_digest({key: value for key, value in reads.items() if key != "content_digest"})
+            ):
+                raise ValueError("Analysis completion lacks the actual controller-observed PID/OS result and clock")
+            require_analysis_data(
+                completion.get("data_after"),
+                self.project,
+                run_id=self.run_id,
+                stage_key=outcome.stage_key,
+                deadline=self.deadline,
+            )
         self.leaves[outcome.stage_key] = hashlib.sha256(payload).hexdigest()
 
     def finish(self, outcomes: list[StageOutcome]) -> RunResult:
@@ -102,7 +147,11 @@ class AnalysisRunEvidence:
             if source_after != self.source_before:
                 raise ValueError("Analysis source changed across the selected producer sequence")
             for key, digest in self.leaves.items():
-                payload = read_bytes_confined(self.project, analysis_receipt_path(self.project, self.run_id, key))
+                payload = read_bytes_confined(
+                    self.project,
+                    analysis_receipt_path(self.project, self.run_id, key),
+                    max_bytes=64 * 1024 * 1024,
+                )
                 if hashlib.sha256(payload).hexdigest() != digest:
                     raise ValueError("Analysis leaf evidence changed after admission")
         except KeyboardInterrupt:
@@ -115,7 +164,7 @@ class AnalysisRunEvidence:
             )
         result = RunResult(self.expected, tuple(final))
         record = {
-            "schema": "template-analysis-run/1",
+            "schema": "template-analysis-run/3",
             "run_id": self.run_id,
             "plan_digest": self.plan_digest,
             "policy": self.policy,
@@ -136,7 +185,11 @@ class AnalysisRunEvidence:
                 raise ValueError("Analysis source changed during aggregate evidence promotion")
             if result.complete:
                 for key, digest in self.leaves.items():
-                    payload = read_bytes_confined(self.project, analysis_receipt_path(self.project, self.run_id, key))
+                    payload = read_bytes_confined(
+                        self.project,
+                        analysis_receipt_path(self.project, self.run_id, key),
+                        max_bytes=64 * 1024 * 1024,
+                    )
                     if hashlib.sha256(payload).hexdigest() != digest:
                         raise ValueError("Analysis leaf changed during aggregate evidence promotion")
             if time.monotonic() >= self.deadline and result.exit_code not in {124, 130}:

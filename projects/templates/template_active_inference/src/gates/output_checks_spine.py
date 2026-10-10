@@ -32,11 +32,11 @@ def add_validation_spine_checks(root: Path, checks: dict[str, bool]) -> dict[str
 
         provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
         checks["artifact_provenance_schema"] = (
-            provenance.get("schema") == "template_active_inference.artifact_provenance.v1"
+            provenance.get("schema") == "template_active_inference.artifact_provenance.v2"
             and provenance.get("all_hashed") is True
             and provenance.get("all_seeded") is True
             and provenance.get("all_config_digests") is True
-            and provenance.get("all_source_commits") is True
+            and provenance.get("all_source_inputs_bound") is True
             and provenance.get("all_producers_configured") is True
             and not validate_artifact_provenance(root)
         )

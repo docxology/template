@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import hashlib
-import time
 from pathlib import Path
 from typing import Any
 
@@ -85,16 +84,28 @@ def replay_html_source(
     env: dict[str, str],
 ) -> NativeContentContract:
     """Reparse current admitted sources with reader-local Pandoc, without producer access."""
-    import shutil
-    import tempfile
     from dataclasses import replace
-    from infrastructure.core.execution_boundary import run_bounded_subprocess
+    from infrastructure.reporting.native_format_current_pandoc import current_pandoc_reader
     from infrastructure.reporting.native_format_acceptance_validation import _file, _tool
     from infrastructure.reporting.native_format_content_contracts import semantic_content_contract_from_ast
     from infrastructure.reporting.native_format_semantic_source import semantic_source_plan
 
     content, sources, bibliographies = semantic_source_plan(root, scope, artifact, reader)
-    if raw.get("schema_version") != "template-native-semantic-source-observation-v1":
+    if (
+        set(raw)
+        != {
+            "schema_version",
+            "source",
+            "ast",
+            "tool",
+            "filters",
+            "bibliographies",
+            "contract",
+            "original_source",
+            "crossref_filter",
+        }
+        or raw.get("schema_version") != "template-native-semantic-source-observation-v2"
+    ):
         raise ValueError("invalid semantic source observation")
     consumed = _file(raw.get("source"), reader)
     ast = _file(raw.get("ast"), reader)
@@ -154,30 +165,38 @@ def replay_html_source(
         original_args.extend(["--citeproc", "--metadata=link-citations:true"])
     transcript = _file(raw["tool"]["artifact"], reader).json_object()
     tail = transcript.get("command", [])[1 + len(original_args) :]
+    crossref_child = raw["crossref_filter"]
     if tail:
+        from infrastructure.reporting.native_crossref_replay import CrossrefFilterReaderOperation
+        from infrastructure.reporting.native_format_joint_source import require_native_operation
+
+        operation = require_native_operation(reader)
+        CrossrefFilterReaderOperation(
+            operation.source, crossref_child, reader, scope=scope, run_id=run_id, deadline=deadline
+        ).replay()
+        from infrastructure.reporting.native_crossref_pair import parent_observation, parent_launcher_binding
+
+        graph = parent_observation(crossref_child, reader)
+        wrapper = _file(parent_launcher_binding(graph), reader)
         if (
             artifact.id != "manuscript:html"
             or len(tail) != 2
             or tail[0] != "--filter"
-            or Path(tail[1]).name != "pandoc-crossref"
+            or tail[1] != str(producer_path(custody, root, wrapper.path))
         ):
             raise ValueError("semantic source parser used undeclared arguments")
         original_args.extend(tail)
+    elif crossref_child is not None:
+        raise ValueError("semantic source without a filter cannot claim an original crossref child")
     transcript = _tool(raw["tool"]["artifact"], reader, run_id, "pandoc", "semantic-pandoc", original_args)
     if transcript.get("stdout", "").encode() != ast.content:
         raise ValueError("semantic AST differs from original Pandoc stdout")
-    pandoc = shutil.which("pandoc", path=env.get("PATH"))
-    crossref = shutil.which("pandoc-crossref", path=env.get("PATH")) if tail else None
-    if not pandoc or (tail and not crossref):
-        raise ValueError("independent reader lacks declared semantic parsing tools")
-    with tempfile.TemporaryDirectory(prefix="native-semantic-replay-") as private:
-        work = Path(private).resolve()
-        source = work / "source.md"
-        source.write_bytes(content)
-        filter_path = work / "formalism.lua"
-        filter_path.write_bytes(filter_bytes.content)
+    with current_pandoc_reader(
+        root, reader, env=env, deadline=deadline, purpose="html-projected-ast", crossref=bool(tail)
+    ) as current:
+        source = current.runtime.freeze("source.md", content)
+        filter_path = current.runtime.freeze("formalism.lua", filter_bytes.content)
         args = [
-            pandoc,
             str(source),
             "--from=markdown+tex_math_dollars+raw_tex+header_attributes",
             "--to=json",
@@ -185,18 +204,19 @@ def replay_html_source(
             str(filter_path),
         ]
         for index, (_, data) in enumerate(bibliographies):
-            bib_path = work / f"bibliography-{index}.bib"
-            bib_path.write_bytes(data)
+            bib_path = current.runtime.freeze(f"bibliography-{index}.bib", data)
             args.append(f"--bibliography={bib_path}")
         if bibliographies:
             args.extend(["--citeproc", "--metadata=link-citations:true"])
-        if crossref:
-            args.extend(["--filter", crossref])
-        result = run_bounded_subprocess(args, cwd=work, env=env, timeout=min(60.0, deadline - time.monotonic()))
-        if result.returncode != 0 or result.original_returncode != 0 or result.timed_out or result.custody_refused:
-            raise ValueError("independent actual source parse failed")
+        if current.crossref is not None:
+            args.extend(["--filter", current.crossref])
+            result, _ = current.source_crossref_tool(
+                args, "current-html-projected-ast", scope=scope, output_format="json"
+            )
+        else:
+            result = current.tool("pandoc", args, "current-html-projected-ast")
         independent = semantic_content_contract_from_ast(
-            artifact.id, (*sources, *bibliographies), result.stdout.encode()
+            artifact.id, (*sources, *bibliographies), result["stdout"].encode()
         )
         if contract.blockers != (
             *independent.blockers,

@@ -32,6 +32,7 @@ def replay_epub_observer(
     deadline: float,
 ) -> None:
     from infrastructure.reporting.native_format_acceptance_validation import _file, _raster
+    from infrastructure.reporting.native_tool_replay import validate_original_native_tool
     from infrastructure.reporting.native_format_observer_dispatch import _manuscript_contracts
     from infrastructure.reporting.native_epub_observer import (
         replay_epub_conversion,
@@ -46,6 +47,7 @@ def replay_epub_observer(
         raw["conversion"],
         snapshot.content,
         read_artifact=lambda binding: _file(binding, reader).content,
+        authenticate_tool=lambda binding, tool: validate_original_native_tool(binding, tool, reader, run_id=run_id),
         producer_path=lambda relative: str(producer_path(custody, root, root / relative)),
         run_id=run_id,
     )
@@ -81,7 +83,7 @@ def replay_projection_observer(
     env: dict[str, str],
     source_reference: PublicReference | None = None,
     verify_source_correspondence: SourceCorrespondence | None = None,
-) -> None:
+) -> dict[str, Any]:
     from infrastructure.reporting.native_format_acceptance_validation import _file, _raster
     from infrastructure.reporting.native_format_observer_validation import replay_office_conversion
     from infrastructure.reporting.native_projection_contracts import (
@@ -90,6 +92,32 @@ def replay_projection_observer(
     )
     from infrastructure.reporting.native_projection_checks import inspect_projection
 
+    if artifact.format == "pdf" and artifact.id.endswith(":slides"):
+        from infrastructure.reporting.native_projection_source_replay import replay_admitted_manuscript_projection
+
+        try:
+            observed = replay_admitted_manuscript_projection(
+                root,
+                directory,
+                scope,
+                artifact,
+                snapshot,
+                raw,
+                reader,
+                run_id=run_id,
+                custody=custody,
+                versions=versions,
+                deadline=deadline,
+                env=env,
+                source_reference=source_reference,
+                verify_source_correspondence=verify_source_correspondence,
+            )
+        except ProjectionSourceUnsupported as error:
+            expected = {"status": "blocked", "findings": [], "blockers": [str(error)]}
+            if set(raw) != {"schema_version", "id", "format", "input", "observation"} or raw["observation"] != expected:
+                raise ValueError("unsupported manuscript source projection was promoted to acceptance") from error
+            observed = expected
+        return {"observation": observed}
     try:
         pages = compile_admitted_pitch_projection(
             root,
@@ -104,7 +132,13 @@ def replay_projection_observer(
         expected = {"status": "blocked", "findings": [], "blockers": [str(error)]}
         if raw.get("observation") != expected or "projection_contract" in raw:
             raise ValueError("unsupported source projection was promoted to observed acceptance") from error
-        return
+        return {"observation": expected}
+    companion_key = "source_package" if artifact.format == "pptx" else "source_native_reference"
+    expected_fields = {"schema_version", "id", "format", "input", "observation", "projection_contract", companion_key}
+    if artifact.format == "pdf":
+        expected_fields.add("raster")
+    if set(raw) != expected_fields:
+        raise ValueError("Pitch native dispatch omitted its complete source companion")
     if raw.get("projection_contract") != projection_contract_record(pages):
         raise ValueError("projected page source obligations differ")
     layout = raw["observation"] if artifact.format == "pptx" else raw
@@ -139,22 +173,31 @@ def replay_projection_observer(
                 or consumed.sha256 != hashlib.sha256(rasters[ordinal - 1]).hexdigest()
             ):
                 raise ValueError("retained native QR input differs from admitted page raster")
+            runtime = _file(qr["runtime_artifact"], reader).json_object()
+            from infrastructure.reporting.native_format_acceptance_validation import _tool
+
+            for binding in (runtime["version_artifact"], runtime["loader_artifact"], qr["tool_artifact"]):
+                tool = _file(binding, reader).json_object()
+                code = qr["original_exit_code"] if binding == qr["tool_artifact"] else 0
+                _tool(binding, reader, run_id, tool["tool"], tool["purpose"], tool["command"][1:], code)
             replay_projection_qr_runtime(
                 page["qr"],
                 read_artifact=lambda binding: _file(binding, reader).content,
                 producer_path=lambda relative: str(producer_path(custody, root, root / relative)),
                 run_id=run_id,
             )
-    with tempfile.TemporaryDirectory(prefix="projection-replay-") as private:
-        temporary_root = Path(private).resolve()
-        temporary_directory = temporary_root / "output/readiness/qr"
-        temporary_directory.mkdir(parents=True, mode=0o700)
+    from infrastructure.reporting.native_projection_source_replay import _current_source_tools
+
+    with (
+        _current_source_tools(reader, deadline) as current_run_id,
+        tempfile.TemporaryDirectory(prefix="projection-replay-", dir=root / "output/readiness") as private,
+    ):
         observed = inspect_projection(
             pdf.content,
             rasters,
             pages,
             deadline=deadline,
-            native_context=(temporary_root, temporary_directory, env, run_id),
+            native_context=(root, Path(private), env, current_run_id),
         )
     recorded = copy.deepcopy(layout["observation"])
     independent = copy.deepcopy(observed)
@@ -165,3 +208,25 @@ def replay_projection_observer(
                 page["qr"].pop("runtime_artifact", None)
     if recorded != independent:
         raise ValueError("independent projected glyph/figure/QR geometry/pixels differ")
+
+    from infrastructure.reporting.native_projection_source_replay import replay_admitted_pitch_companion
+
+    companion = replay_admitted_pitch_companion(
+        root,
+        directory / "source-companion",
+        scope,
+        artifact,
+        snapshot,
+        rasters,
+        raw[companion_key],
+        reader,
+        projection_contract=raw["projection_contract"],
+        run_id=run_id,
+        custody=custody,
+        versions=versions,
+        deadline=deadline,
+        env=env,
+        source_reference=source_reference,
+        verify_source_correspondence=verify_source_correspondence,
+    )
+    return {"observation": observed, "companion": companion}

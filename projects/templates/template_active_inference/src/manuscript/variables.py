@@ -275,7 +275,7 @@ def _validation_spine_token_values(ctx: dict[str, Any]) -> dict[str, Any]:
         ),
         "provenance_all_seeded": bool(provenance_data.get("all_seeded", False)),
         "provenance_all_config_digests": bool(provenance_data.get("all_config_digests", False)),
-        "provenance_all_source_commits": bool(provenance_data.get("all_source_commits", False)),
+        "provenance_all_source_inputs_bound": bool(provenance_data.get("all_source_inputs_bound", False)),
         "reproducibility_check_count": replay_data.get("check_count", 0),
         "reproducibility_all_passed": int(bool(replay_data.get("all_passed", False))),
         "counterexample_count": counterexample_data.get("counterexample_count", 0),

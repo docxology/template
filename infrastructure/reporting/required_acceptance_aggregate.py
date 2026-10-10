@@ -18,8 +18,12 @@ from infrastructure.project.public_hosted_origin import HostedReadbackContext
 from infrastructure.publishing.release_acceptance import RECEIPT_PATH, _checkout_revision
 from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION, source_fingerprint
 from infrastructure.reporting.release_readiness_profile import collect_profile, required_profile
-from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 from infrastructure.reporting.native_format_joint_source import NativeReaderOperation
+from infrastructure.reporting.required_candidate_transport import (
+    RequiredCandidatePackingInputs,
+    _pack_required_candidate_from_reader,
+)
 
 AUDIT_PATH = "output/readiness/aggregate-audit/receipt.json"
 BUNDLE_PATH = "output/readiness/hosted-bundle"
@@ -129,6 +133,7 @@ def stage_passed_bundle(
     native_operation: NativeReaderOperation | None = None,
 ) -> dict[str, Any]:
     """Stage only the source-bound, independently verified evidence closure."""
+    root = root.resolve(strict=True)
     if not _exact_source(root, revision):
         raise ValueError("bundle requires clean exact-revision source")
     reader = SnapshotReader(root, hosted_origin=hosted_origin, native_operation=native_operation)
@@ -138,6 +143,27 @@ def stage_passed_bundle(
     evidence = collect_profile(root, root / RECEIPT_PATH, reader)
     if evidence.candidate_state != "pass":
         raise ValueError("incomplete candidate cannot be staged as required acceptance")
+    return _stage_passed_bundle_from_reader(root, reader, receipt, revision=revision)
+
+
+def _stage_passed_bundle_from_reader(
+    root: Path, reader: SnapshotReader, receipt: ArtifactSnapshot, *, revision: str
+) -> dict[str, Any]:
+    """Stage bytes immediately within the caller's complete passing profile observation."""
+    if (
+        reader.root != root
+        or receipt.relative != RECEIPT_PATH
+        or reader.read(RECEIPT_PATH) is not receipt
+        or receipt.json_object().get("source_commit") != revision
+        or not reader.unchanged()
+        or not _exact_source(root, revision)
+    ):
+        raise ValueError("bundle lost its exact source/receipt observation after full profile validation")
+    operation = reader.native_operation
+    if operation is not None:
+        if not isinstance(operation, NativeReaderOperation):
+            raise ValueError("bundle native context must be the genuinely held current reader")
+        operation.verify(reader)
     content = _evidence_closure(reader, RECEIPT_PATH)
     destination = reader.public_path(BUNDLE_PATH)
     if destination.exists() or not reader.unchanged() or not _exact_source(root, revision):
@@ -150,6 +176,10 @@ def stage_passed_bundle(
             raise ValueError("staged bundle readback differs from its original bytes")
     if not reader.unchanged() or not _exact_source(root, revision):
         raise ValueError("bundle source or evidence changed during readback")
+    if operation is not None:
+        operation.verify(reader)
+    if not reader.unchanged():
+        raise ValueError("bundle evidence changed during final native Source verification")
     return {"directory": BUNDLE_PATH, "receipt_sha256": receipt.sha256, "files": sorted(content)}
 
 
@@ -227,6 +257,8 @@ def produce_aggregate(
     auxiliary_receipts: dict[str, str] | None = None,
     hosted_origin: HostedReadbackContext | None = None,
     native_operation: NativeReaderOperation | None = None,
+    candidate_packing: RequiredCandidatePackingInputs | None = None,
+    stage_bundle: bool = False,
 ) -> dict[str, Any]:
     """Read every supplied original receipt, then apply the complete strict profile.
 
@@ -237,6 +269,19 @@ def produce_aggregate(
     root = root.resolve(strict=True)
     if not _exact_source(root, revision):
         raise ValueError("aggregate requires clean exact-revision source bytes")
+    if type(stage_bundle) is not bool or (
+        candidate_packing is not None
+        and (
+            not isinstance(candidate_packing, RequiredCandidatePackingInputs)
+            or not isinstance(native_operation, NativeReaderOperation)
+            or not isinstance(hosted_origin, HostedReadbackContext)
+        )
+    ):
+        raise ValueError("aggregate packing/staging requires explicit typed nominations and the held native reader")
+    if native_operation is not None:
+        if not isinstance(native_operation, NativeReaderOperation):
+            raise ValueError("aggregate native context must be independently held current reader custody")
+        native_operation.verify(SnapshotReader(root))
     roots = root_receipts or {}
     auxiliary = auxiliary_receipts or {}
     paths = [*receipts, *roots.values(), *auxiliary.values()]
@@ -289,22 +334,76 @@ def produce_aggregate(
     checked_reader = SnapshotReader(root, hosted_origin=hosted_origin, native_operation=native_operation)
     evidence = collect_profile(root, root / AUDIT_PATH, checked_reader)
     state = evidence.candidate_state
-    if faults or not checked_reader.unchanged() or source_fingerprint(root) != fingerprint:
+    if faults or not reader.unchanged() or not checked_reader.unchanged() or source_fingerprint(root) != fingerprint:
         state = "fail"
     canonical = None
+    result: dict[str, Any] = {}
     if state == "pass":
         canonical = write_json(root, root / RECEIPT_PATH, payload)
+        if native_operation is not None:
+            native_operation.verify(checked_reader)
+        held_audit = checked_reader.read(AUDIT_PATH)
+        held_canonical = checked_reader.read(RECEIPT_PATH)
         independent = SnapshotReader(root, hosted_origin=hosted_origin, native_operation=native_operation)
-        verified = collect_profile(root, root / RECEIPT_PATH, independent)
-        if verified.candidate_state != "pass" or not independent.unchanged() or not _exact_source(root, revision):
-            raise ValueError("canonical aggregate independent readback refused")
-    return {
-        "candidate_state": state,
-        "audit": audit,
-        "receipt": canonical,
-        "issues": list(evidence.issues),
-        "exit_code": {"pass": 0, "fail": 1, "blocked": 75, "unknown": 2}[state],
-    }
+        if (
+            held_canonical.content != held_audit.content
+            or held_canonical.sha256 != held_audit.sha256
+            or held_canonical.sha256 != canonical["sha256"]
+        ):
+            raise ValueError("canonical aggregate bytes differ from its completely validated audit")
+        for consumed_reader in (reader, checked_reader):
+            for held in tuple(consumed_reader.snapshots.values()):
+                observed = independent.read(held.relative, max_bytes=max(1, len(held.content)))
+                if (
+                    observed.content != held.content
+                    or observed.sha256 != held.sha256
+                    or observed.identity != held.identity
+                ):
+                    raise ValueError("canonical aggregate independent closure readback differs from validated bytes")
+        if (
+            not reader.unchanged()
+            or not checked_reader.unchanged()
+            or not independent.unchanged()
+            or source_fingerprint(root) != fingerprint
+            or not _exact_source(root, revision)
+        ):
+            raise ValueError("canonical aggregate independent Source/evidence readback refused")
+        if native_operation is not None:
+            native_operation.verify(checked_reader)
+            native_operation.verify(independent)
+        if candidate_packing is not None:
+            if native_operation is None or hosted_origin is None:
+                raise ValueError("candidate packing lost its independently held native/hosted nominations")
+            result["candidate_transport"] = _pack_required_candidate_from_reader(
+                native_operation,
+                checked_reader,
+                held_canonical,
+                packing_inputs=candidate_packing,
+                hosted_origin=hosted_origin,
+            )
+        if stage_bundle:
+            result["bundle"] = _stage_passed_bundle_from_reader(root, checked_reader, held_canonical, revision=revision)
+        if (
+            not reader.unchanged()
+            or not checked_reader.unchanged()
+            or source_fingerprint(root) != fingerprint
+            or not _exact_source(root, revision)
+        ):
+            raise ValueError("aggregate source or consumed evidence changed during immediate packing/staging")
+        if native_operation is not None:
+            native_operation.verify(checked_reader)
+        if not reader.unchanged() or not checked_reader.unchanged():
+            raise ValueError("aggregate consumed evidence changed during final native Source verification")
+    result.update(
+        {
+            "candidate_state": state,
+            "audit": audit,
+            "receipt": canonical,
+            "issues": list(evidence.issues),
+            "exit_code": {"pass": 0, "fail": 1, "blocked": 75, "unknown": 2}[state],
+        }
+    )
+    return result
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -348,12 +447,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             root_receipts=roots,
             auxiliary_receipts=auxiliary,
             hosted_origin=hosted_origin,
+            stage_bundle=args.stage_bundle,
         )
         print("required candidate acceptance: " + result["candidate_state"])
         for issue in result["issues"]:
             print(issue)
         if result["exit_code"] == 0 and args.stage_bundle:
-            bundle = stage_passed_bundle(args.repo_root.resolve(), revision=args.revision, hosted_origin=hosted_origin)
+            bundle = result["bundle"]
             print("receipt_sha256=" + bundle["receipt_sha256"])
         return int(result["exit_code"])
     except (OSError, ValueError, TypeError, KeyError, RuntimeError) as error:

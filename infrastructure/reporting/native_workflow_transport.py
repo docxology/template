@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -195,10 +196,10 @@ def main(argv: list[str] | None = None) -> int:
             revision=args.revision,
         )
     except (OSError, ValueError, KeyError, TypeError) as error:
-        print("transport upload refused: " + str(error))
+        sys.stdout.write("transport upload refused: " + str(error) + "\n")
         return 2
     for key, value in plan.items():
-        print(f"{key}={value}")
+        sys.stdout.write(f"{key}={value}" + "\n")
     return 0
 
 

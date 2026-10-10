@@ -45,6 +45,15 @@ MERMAID_SOURCE_WORKER_MODULE = "infrastructure.reporting.native_mermaid_all_sour
 NATIVE_CONTROLLER_MODULE = "infrastructure.reporting.native_format_acceptance"
 NATIVE_READER_MODULE = "infrastructure.reporting.native_hosted_reader"
 NATIVE_CAPTURE_MODULE = "infrastructure.reporting.native_installed_custody_capture"
+PRINT_CONTROL_WORKER_MODULE = "infrastructure.reporting.native_print_artifact_controls"
+SLIDE_CONTROL_WORKER_MODULE = "infrastructure.reporting.native_slide_controls"
+BROWSER_CONTROL_WORKER_MODULE = "infrastructure.reporting.native_format_browser_oracles"
+SEMANTIC_BROWSER_CONTROL_WORKER_MODULE = "infrastructure.reporting.native_format_browser_semantic_controls"
+OFFICE_SCIENTIFIC_CONTROL_WORKER_MODULE = "infrastructure.reporting.native_office_scientific_controls"
+WHOLE_PDF_CONTROL_WORKER_MODULE = "infrastructure.reporting.native_pdf_whole_control_worker"
+CROSSREF_FILTER_WORKER_MODULE = "infrastructure.reporting.native_crossref_worker"
+STAGE_CHILD_WORKER_MODULE = "infrastructure.reporting.native_stage_child_worker"
+PITCH_CONTROL_WORKER_MODULE = "infrastructure.reporting.native_pitch_control_worker"
 
 
 def _worker_module(value: str) -> str:
@@ -55,6 +64,15 @@ def _worker_module(value: str) -> str:
         NATIVE_CONTROLLER_MODULE,
         NATIVE_READER_MODULE,
         NATIVE_CAPTURE_MODULE,
+        PRINT_CONTROL_WORKER_MODULE,
+        SLIDE_CONTROL_WORKER_MODULE,
+        BROWSER_CONTROL_WORKER_MODULE,
+        SEMANTIC_BROWSER_CONTROL_WORKER_MODULE,
+        OFFICE_SCIENTIFIC_CONTROL_WORKER_MODULE,
+        WHOLE_PDF_CONTROL_WORKER_MODULE,
+        CROSSREF_FILTER_WORKER_MODULE,
+        STAGE_CHILD_WORKER_MODULE,
+        PITCH_CONTROL_WORKER_MODULE,
     ):
         raise ValueError("selected SDK bootstrap requires an exact Source-owned worker role")
     return value
@@ -311,20 +329,49 @@ def format_selected_sdk_native_bootstrap(
         None,
     )
     package_root = str(sdk_package_root)
+    closure_seal = {
+        OFFICE_CONTROL_WORKER_MODULE: "OFFICE_CLOSURE_V1 ",
+        PRINT_CONTROL_WORKER_MODULE: "PRINT_CLOSURE_V2 ",
+        SLIDE_CONTROL_WORKER_MODULE: "SLIDE_CLOSURE_V1 ",
+        BROWSER_CONTROL_WORKER_MODULE: "BROWSER_CLOSURE_V1 ",
+        SEMANTIC_BROWSER_CONTROL_WORKER_MODULE: "BROWSER_SEMANTIC_CLOSURE_V1 ",
+        OFFICE_SCIENTIFIC_CONTROL_WORKER_MODULE: "OFFICE_SCIENTIFIC_CLOSURE_V1 ",
+        WHOLE_PDF_CONTROL_WORKER_MODULE: "WHOLE_PDF_CLOSURE_V1 ",
+        STAGE_CHILD_WORKER_MODULE: "STAGE_CHILD_CLOSURE_V1 ",
+        PITCH_CONTROL_WORKER_MODULE: "PITCH_CLOSURE_V1 ",
+    }.get(required_worker_module)
     office_seal = (
         ""
-        if required_worker_module != OFFICE_CONTROL_WORKER_MODULE
+        if closure_seal is None
         else (
             "   import hashlib\n"
             f"   _office_closure=Path({str(closure_directory / 'receipt.json')!r}).read_bytes()\n"
-            "   sys.stdout.write('OFFICE_CLOSURE_V1 '+hashlib.sha256(_office_closure).hexdigest()+'\\n')\n"
+            f"   sys.stdout.write({closure_seal!r}+hashlib.sha256(_office_closure).hexdigest()+'\\n')\n"
             "   sys.stdout.flush()\n"
         )
     )
+    cache_context = (
+        f"with __import__('contextlib').nullcontext({str(closure_directory.parent / 'bytecode')!r}) as cache:\n"
+        if required_worker_module == STAGE_CHILD_WORKER_MODULE
+        else "with tempfile.TemporaryDirectory(prefix='template-native-sdk-bytecode-') as cache:\n"
+    )
+    stage_prefix_guard = (
+        " import os,stat\n"
+        " _stage_prefix=Path(cache)\n"
+        " _stage_identity=_stage_prefix.lstat()\n"
+        " if (not stat.S_ISDIR(_stage_identity.st_mode) or _stage_prefix.is_symlink() "
+        "or _stage_prefix.absolute()!=_stage_prefix.resolve(strict=True) or any(_stage_prefix.iterdir())):\n"
+        "  raise ValueError('native stage requires the parent-held fresh real bytecode directory')\n"
+        if required_worker_module == STAGE_CHILD_WORKER_MODULE
+        else ""
+    )
     body = (
         "import importlib.util,runpy,sys,tempfile\nfrom pathlib import Path\n"
-        "with tempfile.TemporaryDirectory(prefix='template-native-sdk-bytecode-') as cache:\n"
-        " sys.pycache_prefix=str(Path(cache).resolve())\n" + "\n".join(" " + line for line in audit.splitlines()) + "\n"
+        + cache_context
+        + stage_prefix_guard
+        + " sys.pycache_prefix=str(Path(cache).resolve())\n"
+        + "\n".join(" " + line for line in audit.splitlines())
+        + "\n"
         " outcome={'kind':'not_started'}\n"
         " try:\n"
         "  if any(name=='infrastructure' or name.startswith('infrastructure.') for name in sys.modules):\n"

@@ -209,8 +209,15 @@ def load_experiment_config(project_root: Path | None = None) -> ExperimentConfig
     if not config_path.exists():
         return ExperimentConfig()
 
-    with config_path.open("r") as f:
-        data = yaml.safe_load(f) or {}
+    # Function-local adapter import avoids the existing _runtime/config cycle.
+    # Pure optimizer/invariant modules continue to have no infrastructure edge.
+    try:
+        from ._runtime import read_analysis_bytes
+    except ImportError:  # pragma: no cover — independent standalone module load
+        body = config_path.read_bytes()
+    else:
+        body = read_analysis_bytes(root, config_path)
+    data = yaml.safe_load(body) or {}
 
     exp_raw = data.get("experiment", {})
     exp: dict[str, Any] = exp_raw if isinstance(exp_raw, dict) else {}

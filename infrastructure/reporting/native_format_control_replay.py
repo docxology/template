@@ -19,7 +19,7 @@ from infrastructure.reporting.native_format_acceptance_checks import parse_nativ
 from infrastructure.reporting.native_format_portable_custody import producer_bootstrap, producer_path
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
-SCHEMA = "template-native-observer-controls-v1"
+SCHEMA = "template-native-observer-controls-v2"
 
 
 def _keys(raw: object, keys: set[str]) -> dict[str, Any]:
@@ -140,7 +140,7 @@ def _projection_pixels(
     custody: dict[str, str],
     deadline: float,
     env: dict[str, str],
-) -> None:
+) -> dict[str, Any]:
     from infrastructure.reporting.native_format_acceptance_validation import _file
     from infrastructure.reporting.native_projection_checks import inspect_projection
     from infrastructure.reporting.native_qr_runtime import replay_projection_qr_runtime
@@ -193,11 +193,24 @@ def _projection_pixels(
                 page["qr"].pop("runtime_artifact", None)
     if left != right:
         raise ValueError("independent projected control geometry/decoded pixels differ")
+    return independent
 
 
-def _closure(raw: object, reader: SnapshotReader, directory: Path, run_id: str, seen: set[str] | None = None) -> None:
+def _closure(
+    raw: object,
+    reader: SnapshotReader,
+    directory: Path,
+    run_id: str,
+    seen: set[str] | None = None,
+    tool_binding: dict[str, str] | None = None,
+) -> None:
     """Admit every retained binding, including nested tools and frozen engines."""
-    from infrastructure.reporting.native_format_acceptance_contracts import TOOL_SCHEMA
+    from infrastructure.reporting.native_format_acceptance_contracts import (
+        TOOL_SCHEMA,
+        TOOL_FIELDS,
+        CITATION_TOOL_FIELDS,
+        HTML_TOOL_FIELDS,
+    )
     from infrastructure.reporting.native_format_portable_custody import validate_executable_observation
     from infrastructure.reporting.native_format_acceptance_validation import _file
 
@@ -214,7 +227,13 @@ def _closure(raw: object, reader: SnapshotReader, directory: Path, run_id: str, 
             "template-native-epubcheck-engine-v1": {"schema_version", "java", "jar", "files"},
             "template-native-epub-reader-v2": set(
                 "schema_version input pdf observation engine consumed_jar "
-                "consumed_jars tool_artifacts reader_environment_artifact reader_runtime_before reader_runtime_after status blockers".split()
+                "consumed_jars tool_artifacts reader_environment_artifact "
+                "reader_runtime_before reader_runtime_after status blockers".split()
+            ),
+            "template-native-epub-reader-v3": set(
+                "schema_version input pdf observation engine consumed_jar "
+                "consumed_jars tool_artifacts reader_environment_artifact "
+                "reader_runtime_before reader_runtime_after status blockers linux_calibre_selection".split()
             ),
         }
         if raw.get("schema_version") in strict:
@@ -223,31 +242,21 @@ def _closure(raw: object, reader: SnapshotReader, directory: Path, run_id: str, 
             for row in raw["files"]:
                 _keys(row, {"category", "path", "sha256", "bytes"})
         if raw.get("schema_version") == TOOL_SCHEMA:
-            _keys(
-                raw,
-                {
-                    "schema_version",
-                    "executable_observation_before",
-                    "executable_observation_after",
-                    "run_id",
-                    "tool",
-                    "purpose",
-                    "executable",
-                    "executable_sha256",
-                    "command",
-                    "exit_code",
-                    "original_exit_code",
-                    "timed_out",
-                    "custody_refused",
-                    "diagnostic",
-                    "stdout",
-                    "stderr",
-                },
+            if frozenset(raw) not in {TOOL_FIELDS, CITATION_TOOL_FIELDS, HTML_TOOL_FIELDS} or tool_binding is None:
+                raise ValueError("native control tool lacks its exact shared original receipt fields/binding")
+            from infrastructure.reporting.native_format_acceptance_validation import _tool
+
+            _tool(
+                tool_binding, reader, run_id, raw["tool"], raw["purpose"], raw["command"][1:], raw["original_exit_code"]
             )
             if raw["run_id"] != run_id or raw["diagnostic"] != "":
                 raise ValueError("native control tool run or custody diagnostic changed")
             for field in ("executable_observation_before", "executable_observation_after"):
                 validate_executable_observation(raw[field], raw["executable"], raw["executable_sha256"])
+            # The existing native tool reader authenticates the original OS
+            # process, raw streams, source/SDK closure and nested custody. The
+            # enclosing specialized reader still reconstructs required argv.
+            return
         if set(raw) == {"path", "sha256"}:
             snapshot = _file(raw, reader)
             if not snapshot.path.is_relative_to(directory):
@@ -260,7 +269,7 @@ def _closure(raw: object, reader: SnapshotReader, directory: Path, run_id: str, 
                     raise ValueError("native control binding escaped original confined control closure")
             if snapshot.relative not in seen and snapshot.path.suffix == ".json":
                 seen.add(snapshot.relative)
-                _closure(snapshot.json_object(), reader, directory, run_id, seen)
+                _closure(snapshot.json_object(), reader, directory, run_id, seen, raw)
         else:
             for item in raw.values():
                 _closure(item, reader, directory, run_id, seen)
@@ -308,7 +317,7 @@ def _office(
     versions: dict[str, dict[str, Any]],
     deadline: float,
     env: dict[str, str],
-) -> None:
+) -> dict[str, Any]:
     from infrastructure.reporting.native_format_acceptance_validation import _file, _raster, _tool
     from infrastructure.reporting.native_format_observer_source_replay import replay_office_conversion
     from infrastructure.reporting.native_format_pdf_oracles import inspect_pdf_content
@@ -426,12 +435,12 @@ def _office(
     )
     pixels = _pixels(layout["raster"], reader)
     if kind == "docx":
-        if contract is None or layout["observation"] != inspect_pdf_content(
-            pdf.content, pixels, contract, deadline=deadline
+        if contract is None or layout["observation"] != (
+            fresh_observation := inspect_pdf_content(pdf.content, pixels, contract, deadline=deadline)
         ):
             raise ValueError("independent DOCX source/glyph/layout/pixel control differs")
     else:
-        _projection_pixels(
+        fresh_observation = _projection_pixels(
             pdf.content,
             pixels,
             pages,
@@ -445,6 +454,7 @@ def _office(
         )
     if layout["status"] != layout["observation"]["status"]:
         raise ValueError("Office control layout summary differs")
+    return fresh_observation
 
 
 def validate_format_controls(
@@ -454,13 +464,14 @@ def validate_format_controls(
     directory: Path,
     *,
     run_id: str,
+    scope: str | None = None,
     custody: dict[str, str],
     runtime: dict[str, Any],
     versions: dict[str, dict[str, Any]],
     deadline: float,
     env: dict[str, str],
     original_deadline: float,
-) -> None:
+) -> dict[str, Any]:
     """Replay complete ordered source suites, independently from original process exits."""
     from infrastructure.reporting.native_format_acceptance_validation import _file, _raster
     from infrastructure.reporting.native_epub_observer import (
@@ -470,6 +481,7 @@ def validate_format_controls(
         inspect_epub_reader_layout,
     )
     from infrastructure.reporting.native_epub_replay import replay_epub_conversion
+    from infrastructure.reporting.native_tool_replay import validate_original_native_tool
     from infrastructure.reporting.native_office_observer import OFFICE_CONTROL_CODES, PPTX_CONTROL_CODES
     from infrastructure.reporting.native_projection_checks import PROJECTION_CONTROL_CODES, projection_control_fixture
 
@@ -489,11 +501,32 @@ def validate_format_controls(
             selected.add(kind)
     if "slides" in formats or "pptx" in formats:
         selected.update({"projection", "pptx"})
+    if "slides" in formats:
+        selected.add("slide_source")
     _keys(rawcontrols, selected)
     if rawcontrols["schema_version"] != SCHEMA or not math.isfinite(deadline) or deadline <= time.monotonic():
         raise ValueError("invalid or exhausted native control replay contract")
     # HTML control replay is independently owned and invoked by the enclosing
     # reader; this module owns Office, EPUB and projected native controls.
+    results: dict[str, Any] = {}
+    if "slide_source" in selected:
+        if scope is None:
+            raise ValueError("slide control replay requires the exact enclosing public Source scope")
+        from infrastructure.reporting.native_slide_control_adapter import replay_slide_source_controls
+
+        results["manuscript_slides"] = replay_slide_source_controls(
+            rawcontrols["slide_source"],
+            reader,
+            directory,
+            scope=scope,
+            run_id=run_id,
+            custody=custody,
+            runtime=runtime,
+            versions=versions,
+            original_deadline=original_deadline,
+            deadline=deadline,
+            env=env,
+        )
     suites = {
         "docx": OFFICE_CONTROL_CODES,
         "epub": EPUB_CONTROL_CODES,
@@ -508,6 +541,7 @@ def validate_format_controls(
             codes
         ):
             raise ValueError("incomplete, duplicated, unknown or reordered native control suite")
+        checked: list[dict[str, Any]] = []
         for ordinal, (item, (name, code)) in enumerate(zip(records, codes.items(), strict=True)):
             projection = kind == "projection"
             fields = (
@@ -560,7 +594,7 @@ def validate_format_controls(
                 extra,
             )
             if kind in {"docx", "pptx"}:
-                _office(
+                fresh_observation = _office(
                     kind,
                     name,
                     leaf,
@@ -606,7 +640,7 @@ def validate_format_controls(
                     custody,
                 )
                 pixels = _pixels(raw["raster"], reader)
-                _projection_pixels(
+                fresh_observation = _projection_pixels(
                     fixture,
                     pixels,
                     pages,
@@ -646,6 +680,9 @@ def validate_format_controls(
                     conversion,
                     fixture,
                     read_artifact=lambda binding: _file(binding, reader).content,
+                    authenticate_tool=lambda binding, tool: validate_original_native_tool(
+                        binding, tool, reader, run_id=run_id
+                    ),
                     producer_path=lambda relative: str(producer_path(custody, reader.root, reader.root / relative)),
                     run_id=run_id,
                 )
@@ -661,10 +698,24 @@ def validate_format_controls(
                     custody,
                 )
                 pixels = _pixels(raw["raster"], reader)
-                if raw["spine"] != inspect_epub_spine(fixture, chapters) or raw["layout"] != inspect_epub_reader_layout(
-                    pdf.content, pixels, chapters, deadline=deadline
-                ):
+                fresh_spine = inspect_epub_spine(fixture, chapters)
+                fresh_layout = inspect_epub_reader_layout(pdf.content, pixels, chapters, deadline=deadline)
+                if raw["spine"] != fresh_spine or raw["layout"] != fresh_layout:
                     raise ValueError("independent EPUB ordered spine/layout/pixel control differs")
                 _outcome(raw, [raw["spine"], raw["layout"]], code)
+                fresh_observation = {"spine": fresh_spine, "layout": fresh_layout}
+            checked.append(
+                {
+                    "name": name,
+                    "original_exit_code": item["original_exit_code"],
+                    "reconstructed_exit_code": 0 if code is None else 1,
+                    "intended_diagnostic": code,
+                    "targets": [{"fixture": kind, "name": name}],
+                    "artifact": item["result" if projection else "artifact"],
+                    "observation": fresh_observation,
+                }
+            )
+        results[kind] = {"suite_id": kind, "scope": scope, "original_run_id": run_id, "outcomes": checked}
     if not reader.unchanged():
         raise ValueError("native control closure changed during independent replay")
+    return results

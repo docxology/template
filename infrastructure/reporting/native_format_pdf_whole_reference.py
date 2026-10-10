@@ -68,6 +68,7 @@ def observe_pdf_whole_reference(
     run_id: str,
     sdk_context: dict[str, Any] | None = None,
     declared_tex_dependencies: tuple[dict[str, Any], ...] = (),
+    source_scope: str | None = None,
 ) -> dict[str, Any]:
     """Retain a real complete reference and prove instrumentation noninterference.
 
@@ -91,6 +92,11 @@ def observe_pdf_whole_reference(
             inspect_pdf_reference_parity.__module__,
             scientific_math_from_ast.__module__,
             CitationRuntime.__module__,
+            "infrastructure.reporting.native_pdf_whole_semantic_references",
+            "infrastructure.reporting.native_pdf_citations",
+            "infrastructure.reporting.native_pdf_citation_replay",
+            "infrastructure.reporting.native_scientific_reference_replay",
+            "infrastructure.reporting.native_scientific_reference_reproduction",
         )
     ):
         path = Path(cast(str, importlib.import_module(name).__file__)).resolve(strict=True)
@@ -105,7 +111,7 @@ def observe_pdf_whole_reference(
             }
         )
     projection = observe_pdf_source_projection(
-        root, directory / "projection", inputs, env=env, deadline=deadline, run_id=run_id
+        root, directory / "projection", inputs, env=env, deadline=deadline, run_id=run_id, source_scope=source_scope
     )
     original_parser = native_tool_record(
         root,
@@ -131,7 +137,7 @@ def observe_pdf_whole_reference(
     nodes = scientific_math_from_ast(ast_bytes)
     original_tex = SnapshotReader(root).read(projection["source_tex"]["path"]).content
     instrumented, bindings, position_blockers = instrument_source_math_positions(original_tex.decode(), nodes)
-    blockers = list(projection["blockers"]) + list(position_blockers)
+    blockers = [*projection["blockers"], *projection["custody_blockers"], *position_blockers]
     raw = _raw_obligations(ast_bytes)
     if raw:
         blockers.append("original raw source nodes require independent per-node semantic/layout admission")
@@ -141,7 +147,8 @@ def observe_pdf_whole_reference(
     if sdk_context is None:
         blockers.append("complete SDK source custody requires the enclosing authenticated native specification")
     common = {
-        "schema_version": "template-native-whole-source-pdf-reference-v1",
+        "schema_version": "template-native-whole-source-pdf-reference-v3",
+        "source_scope": source_scope,
         "run_id": run_id,
         "source_ast": _binding(root, ast_path),
         "source_ast_parser_artifact": original_parser["artifact"],
@@ -150,6 +157,7 @@ def observe_pdf_whole_reference(
         "sdk_context": sdk_context,
         "raw_source_obligations": raw,
         "math_bindings": list(bindings),
+        "semantic_references": None,
         "blockers": blockers,
         "execution_budget_seconds": budget,
     }
@@ -259,6 +267,7 @@ def observe_pdf_whole_reference(
             "raster_tool_artifact": raster["tool_artifacts"][0],
             "raster_tool_artifacts": raster["tool_artifacts"],
             "rasters": raster_bindings,
+            "raster": raster,
         }
     positions = source_math_positions_from_aux((directory / "instrumented" / "oracle.aux").read_bytes(), bindings)
     paint = source_math_paint_from_pdf(native_inputs["instrumented"][0], bindings, deadline=deadline)
@@ -269,6 +278,20 @@ def observe_pdf_whole_reference(
         native_inputs["uninstrumented"][1],
         deadline=deadline,
     )
+    semantic = None
+    if source_scope is not None:
+        from infrastructure.reporting.native_pdf_whole_semantic_references import observe_whole_pdf_semantic_references
+
+        semantic = observe_whole_pdf_semantic_references(
+            root,
+            directory / "semantics",
+            inputs,
+            ast_bytes,
+            scope=source_scope,
+            env=env,
+            deadline=deadline,
+            run_id=run_id,
+        )
     for row in implementations:
         if hashlib.sha256(Path(row["original_path"]).read_bytes()).hexdigest() != row["sha256"]:
             raise ValueError("actual loaded complete-source reference implementation changed during execution")
@@ -278,6 +301,7 @@ def observe_pdf_whole_reference(
         **common,
         "references": references,
         "math_positions": list(positions),
+        "semantic_references": semantic,
         "declared_tex_dependencies": package_inputs,
         "math_paint": list(paint),
         "instrumentation_noninterference": parity,

@@ -49,13 +49,12 @@ def replay_manuscript_slide_reference(
     # The selected reader's provider performs its own finite parse using the
     # same held source DATA. Transport/process bindings vary; source semantics
     # and original occurrence multiplicity may not.
-    with tempfile.TemporaryDirectory(prefix="native-slide-source-replay-") as private:
-        temporary_root = Path(private).resolve()
-        directory = temporary_root / "output/readiness/source"
+    with tempfile.TemporaryDirectory(prefix="native-slide-source-replay-", dir=root / "output/readiness") as private:
+        directory = Path(private) / "source"
         # Source plan contains explicit immutable Path consumers in `root`;
         # they never appear on Python's import path and remain read-only.
         independent = observe_manuscript_slide_source(
-            temporary_root,
+            root,
             directory,
             plan,
             env=env,
@@ -251,10 +250,9 @@ def _reconstruct_writer(
             text = text.replace(path.as_posix(), f"<SOURCE-RESOURCE-{index}>")
         return text.encode()
 
-    with tempfile.TemporaryDirectory(prefix="native-slide-writer-replay-") as private:
-        temporary_root = Path(private).resolve()
+    with tempfile.TemporaryDirectory(prefix="native-slide-writer-replay-", dir=root / "output/readiness") as private:
         for label, document in (("source", ast), ("marked", marked)):
-            runtime = CitationRuntime(temporary_root, temporary_root / label, env=env, deadline=deadline, run_id=run_id)
+            runtime = CitationRuntime(root, Path(private) / label, env=env, deadline=deadline, run_id=run_id)
             prepared = prepare_source_beamer_writer(runtime, plan, config, document, level, source_reference_numbers)
             recorded = reference["references"][label]
             old_roots = tuple(Path(item["absolute"]) for item in original_roots)

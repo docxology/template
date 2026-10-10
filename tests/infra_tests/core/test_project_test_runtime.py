@@ -175,3 +175,58 @@ def test_audit_roots_include_only_exactly_pinned_resolvable_exemplar_providers(
     assert other.absolute() not in roots
     assert not any("absent" in root.name for root in roots)
     assert "template_owned_provider" not in sys.modules  # resolved without executing it
+
+
+@pytest.mark.parametrize("failure", ["none", "test", "conftest"])
+@pytest.mark.timeout(120)
+def test_actual_audited_pytest_keeps_conftest_and_test_assertions(tmp_path: Path, failure: str) -> None:
+    import os
+
+    from infrastructure.core.execution_boundary import run_bounded_subprocess
+    from infrastructure.core.testing.project_test_runtime import (
+        build_audited_project_test_command,
+    )
+
+    (tmp_path / "src").mkdir()
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "pytest.ini").write_text("[pytest]\n")
+    marker = tmp_path / "conftest-executed.txt"
+    (tmp_path / "conftest.py").write_text(
+        "import pytest\nfrom pathlib import Path\n"
+        + ("assert False, 'ACTUAL_CONFTEST_ASSERTION'\n" if failure == "conftest" else "assert 7 == 7\n")
+        + "Path('conftest-executed.txt').write_text('actual conftest payload')\n"
+        + "@pytest.fixture\ndef actual_value():\n return 7\n"
+    )
+    expected = 9 if failure == "test" else 7
+    (tmp_path / "tests/test_value.py").write_text(
+        f"def test_value(actual_value):\n assert actual_value == {expected}\n"
+    )
+    args = (
+        "-c",
+        str(tmp_path / "pytest.ini"),
+        "--rootdir",
+        str(tmp_path),
+        "--confcutdir",
+        str(tmp_path),
+        "--assert=rewrite",
+        "-p",
+        "no:benchmark",
+        "--no-cov",
+        "-q",
+        *(("--", "tests") if failure == "none" else ("tests",)),
+    )
+    command = build_audited_project_test_command(tmp_path, Path(sys.executable).absolute(), args, module="pytest")
+    option_end = args.index("--") if "--" in args else len(args)
+    assert command[4:] == (*args[:option_end], "--assert=plain", *args[option_end:])
+    result = run_bounded_subprocess(command, cwd=tmp_path, env=os.environ.copy(), timeout=60)
+    combined = result.stdout + result.stderr
+    assert "executed public module differs" not in combined
+    assert "executed-code custody refused" not in combined
+    if failure == "conftest":
+        assert result.returncode == 4, combined
+        assert "ACTUAL_CONFTEST_ASSERTION" in combined
+        assert not marker.exists()
+    else:
+        assert marker.read_text() == "actual conftest payload"
+        assert result.returncode == (1 if failure == "test" else 0), combined
+        assert ("1 failed" if failure == "test" else "1 passed") in result.stdout

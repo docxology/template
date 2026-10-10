@@ -22,7 +22,8 @@ from infrastructure.reporting.native_format_pdf_source_decode_bounds import (
     SourceImageDecodeBudget,
 )
 from infrastructure.reporting.native_office_control_custody import SCHEMA
-from infrastructure.reporting.native_office_control_supervisor import KINDS, SCOPES
+from infrastructure.reporting.native_office_control_supervisor import KINDS
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_office_diagram_controls import (
     CONTROL_CODES,
     run_office_diagram_control,
@@ -75,12 +76,13 @@ def main() -> int:
             raise ValueError("Office child Source/control role/run/original clock differs")
         scope, kind, control = value["scope"], value["kind"], value["control"]
         if (
-            scope not in SCOPES
+            scope not in PUBLIC_PROJECT_NAMES
             or kind not in KINDS
-            or control not in ("office-cell", "baseline", *CONTROL_CODES)
-            or (scope != SCOPES[1] and control != "office-cell")
+            or control not in ("office-cell", "diagram-census", "baseline", *CONTROL_CODES)
         ):
-            raise ValueError("Office child role is not in the Source-owned four-cell/seven-control contract")
+            raise ValueError("Office child role is outside the literal public Source artifact/control contract")
+        if (control in ("baseline", *CONTROL_CODES)) != isinstance(value.get("target"), dict):
+            raise ValueError("Office child target nomination differs from its fixed Source role")
         implementation = reader.read(value["implementation"]["path"])
         if (
             implementation.sha256 != args.implementation_sha256
@@ -223,6 +225,22 @@ def main() -> int:
                         "oracle_exit_code": code,
                         "full_source": record,
                     }
+                elif control == "diagram-census":
+                    from infrastructure.reporting.native_office_diagram_census import observe_office_diagram_census
+
+                    record = observe_office_diagram_census(
+                        root,
+                        directory,
+                        scope,
+                        artifact,
+                        context,
+                        mermaid,
+                        env=dict(os.environ),
+                        deadline=args.deadline,
+                        run_id=args.run_id,
+                        **native_kwargs,
+                    )
+                    code = 0
                 else:
                     if mermaid is None:
                         raise ValueError("Office diagram control has no genuine current Source diagrams")
@@ -244,6 +262,7 @@ def main() -> int:
                         positive.pdf,
                         positive.sources,
                         control,
+                        target_ordinal=value["target"]["ordinal"],
                         budget=budget,
                         positive=positive,
                         pdfium_runtime=runtime,
@@ -251,6 +270,8 @@ def main() -> int:
                         deadline=args.deadline,
                         run_id=args.run_id,
                     )
+                    if record["target"] != value["target"]:
+                        raise ValueError("Office child independently selected a different complete-census placement")
                     record.update({"scope": scope, "kind": kind})
             except Exception as error:
                 code = 2

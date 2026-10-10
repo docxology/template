@@ -128,6 +128,50 @@ class TestInternalStackPatterns:
 class TestRunPytestStream:
     """Test run_pytest_stream with real trivial commands."""
 
+    @pytest.mark.parametrize("quiet,child_exit", [(True, 4), (False, 4), (True, 0)])
+    def test_quiet_failure_reports_captured_tail_once(self, tmp_path, capsys, quiet, child_exit):
+        """Real child diagnostics appear once only for a failed quiet attempt."""
+        command = [
+            sys.executable,
+            "-I",
+            "-c",
+            "import sys; print('child stdout detail'); "
+            "print('child stderr detail', file=sys.stderr); raise SystemExit(int(sys.argv[1]))",
+            str(child_exit),
+        ]
+        code, stdout, stderr = run_pytest_stream(command, tmp_path, os.environ.copy(), quiet=quiet)
+        captured = capsys.readouterr()
+        assert code == child_exit
+        assert "child stdout detail" in stdout and "child stderr detail" in stdout
+        assert stderr == ""
+        if quiet and child_exit:
+            assert captured.err.count("captured diagnostic tail:") == 1
+            assert "child stdout detail" in captured.err and "child stderr detail" in captured.err
+        else:
+            assert "captured diagnostic tail:" not in captured.err
+        if quiet:
+            assert captured.out == ""
+
+    def test_quiet_failure_tail_is_bounded(self, tmp_path, capsys):
+        """A real noisy failed child retains its latest detail without flooding output."""
+        command = [
+            sys.executable,
+            "-I",
+            "-c",
+            "import sys; [print(str(i) + ':' + 'x' * 1000) for i in range(40)]; "
+            "print('last child detail', end=''); raise SystemExit(4)",
+        ]
+        code, stdout, stderr = run_pytest_stream(command, tmp_path, os.environ.copy(), quiet=True)
+        captured = capsys.readouterr()
+        assert code == 4 and stderr == ""
+        assert len(stdout) > 40000
+        header, tail = captured.err.split("captured diagnostic tail:\n", 1)
+        assert "Pytest exited 4" in header and captured.err.count("captured diagnostic tail:") == 1
+        assert len(tail.rstrip("\n")) <= 8192
+        assert len(tail.splitlines()) <= 20
+        assert "last child detail" in tail
+        assert not any(line.startswith("0:") for line in tail.splitlines())
+
     def test_stream_echo_command(self, tmp_path):
         """Test streaming a simple echo command."""
         env = os.environ.copy()
@@ -417,6 +461,30 @@ class TestRunTestSuite:
             quiet=quiet,
             spinner_label="Running test suite",
         )
+
+    def test_precollection_error_retains_original_diagnostic(self, tmp_path, capsys):
+        """A real pytest usage failure keeps its original exit and option diagnostic."""
+        config = self._make_config(
+            tmp_path,
+            cmd=[sys.executable, "-m", "pytest", "--noconftest", "--diagnostic-unknown-option"],
+        )
+        config.env["PYTEST_ADDOPTS"] = ""
+        config.env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+        code, results = run_test_suite(config)
+        captured = capsys.readouterr()
+        assert code == results["exit_code"] == results["original_exit_code"] == 4
+        assert results["failed"] == results["total"] == 0
+        assert "usage:" in results["failure_diagnostic"]
+        assert "unrecognized arguments: --diagnostic-unknown-option" in results["failure_diagnostic"]
+        assert captured.err.count("captured diagnostic tail:") == 1
+
+    def test_success_does_not_record_failure_diagnostic(self, tmp_path, capsys):
+        """A successful real child retains the existing quiet/result behavior."""
+        config = self._make_config(tmp_path, cmd=[sys.executable, "-I", "-c", "print('successful detail')"])
+        code, results = run_test_suite(config)
+        assert code == results["original_exit_code"] == 0
+        assert "failure_diagnostic" not in results
+        assert "captured diagnostic tail:" not in capsys.readouterr().err
 
     def test_run_suite_with_passing_command(self, tmp_path):
         """Test running suite with a passing command."""

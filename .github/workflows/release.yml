@@ -56,6 +56,7 @@ jobs:
           ref: ${{ steps.tag.outputs.name }}
 
       - name: Verify checkout is the requested tag
+        id: tag_checkout
         env:
           TAG: ${{ steps.tag.outputs.name }}
         run: |
@@ -70,26 +71,9 @@ jobs:
             echo "Checked-out commit '$ACTUAL' does not match requested tag '$TAG' at '$EXPECTED'."
             exit 1
           fi
+          echo "source_commit=$ACTUAL" >> "$GITHUB_OUTPUT"
 
       - uses: ./.github/actions/setup-python-env
-        with:
-          python-version: "3.14"
-
-      - name: Install supported Python 3.12
-        id: python312
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        with:
-          python-version: "3.12"
-
-      - name: Install supported Python 3.13
-        id: python313
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        with:
-          python-version: "3.13"
-
-      - name: Select supported Python 3.14
-        id: python314
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.14"
 
@@ -109,6 +93,11 @@ jobs:
         run: uv sync --locked --group public-exemplars --group installed-build --group publishing
 
       - uses: ./.github/actions/setup-acceptance-fixtures
+
+      - name: Verify pristine published public exemplars
+        run: >-
+          uv run --no-sync --offline python -m infrastructure.validation.cli publication-audit
+          --repo-root "$GITHUB_WORKSPACE" --all-public --strict --rendered --format json
 
       - name: Require explicit root 4+ acceptance handoff
         id: acceptance
@@ -150,6 +139,7 @@ jobs:
       - uses: ./.github/actions/setup-native-installed-readiness
         if: steps.acceptance.outputs.required == 'true'
       - name: Verify complete authenticated candidate with independently installed current providers
+        id: candidate_reader
         if: steps.acceptance.outputs.required == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -162,6 +152,7 @@ jobs:
           --source-identity "$(.venv/bin/python -c 'from pathlib import Path;from infrastructure.reporting.readiness_receipts import source_fingerprint;print(source_fingerprint(Path.cwd()))')"
           --current-root "$RUNNER_TEMP/template-release-reader-root"
           --scratch "$RUNNER_TEMP/template-release-reader-scratch"
+          --epubcheck-jar "$TEMPLATE_NATIVE_EPUBCHECK" --java-executable "$TEMPLATE_NATIVE_JAVA"
           --python "$pythonLocation/bin/python" --uv "$(command -v uv)"
           --expected-platform Linux --timeout 14400
           --mermaid-package-root "$GITHUB_WORKSPACE/node_modules/@mermaid-js/mermaid-cli"
@@ -193,7 +184,29 @@ jobs:
       - name: Verify public capability manifest
         run: uv run --no-sync --offline python scripts/gates/public_capabilities.py
 
+      - name: Install supported Python 3.12
+        if: steps.acceptance.outputs.required != 'true'
+        id: python312
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Install supported Python 3.13
+        if: steps.acceptance.outputs.required != 'true'
+        id: python313
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.13"
+
+      - name: Select supported Python 3.14
+        if: steps.acceptance.outputs.required != 'true'
+        id: python314
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.14"
+
       - name: Prepare locked installed-matrix dependency cache
+        if: steps.acceptance.outputs.required != 'true'
         env:
           PYTHON312: ${{ steps.python312.outputs.python-path }}
           PYTHON313: ${{ steps.python313.outputs.python-path }}
@@ -225,6 +238,8 @@ jobs:
           done
 
       - name: Verify complete installed-wheel matrix
+        id: installed_matrix
+        if: steps.acceptance.outputs.required != 'true'
         env:
           PYTHON312: ${{ steps.python312.outputs.python-path }}
           PYTHON313: ${{ steps.python313.outputs.python-path }}
@@ -236,24 +251,45 @@ jobs:
             --python "3.12=$PYTHON312" --python "3.13=$PYTHON313" --python "3.14=$PYTHON314" \
             --evidence-dir "$GITHUB_WORKSPACE/output/readiness/installed-release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
 
-      - name: Verify rendered public exemplars
-        run: uv run --no-sync --offline python -m infrastructure.validation.cli publication-audit --all-public --strict --rendered --format json
+      - name: Select source-bound installed publication inputs
+        id: release_inputs
+        env:
+          REQUIRED_ACCEPTANCE: ${{ steps.acceptance.outputs.required }}
+        run: |
+          set -euo pipefail
+          release_root="$GITHUB_WORKSPACE"
+          installed_receipt="$release_root/output/readiness/installed-release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT/receipt.json"
+          if [ "$REQUIRED_ACCEPTANCE" = true ]; then
+            # The preceding fresh installed reader authenticated this complete candidate.
+            release_root="$RUNNER_TEMP/template-release-reader-root"
+            installed_receipt="$release_root/output/readiness/installed/receipt.json"
+          fi
+          test -f "$installed_receipt"
+          expected=$(git --no-optional-locks -c core.fsmonitor=false -C "$GITHUB_WORKSPACE" rev-parse HEAD)
+          actual=$(git --no-optional-locks -c core.fsmonitor=false -C "$release_root" rev-parse HEAD)
+          test "$actual" = "$expected"
+          {
+            echo "root=$release_root"
+            echo "installed_receipt=$installed_receipt"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Admit the exact installed wheel and final source distribution
         id: distributions
         env:
           TAG: ${{ steps.tag.outputs.name }}
+          RELEASE_ROOT: ${{ steps.release_inputs.outputs.root }}
+          INSTALLED_RECEIPT: ${{ steps.release_inputs.outputs.installed_receipt }}
         run: |
           set -euo pipefail
           source_archive_directory="$RUNNER_TEMP/template-source-archive-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
           uv build --sdist --no-build-isolation --offline --out-dir "$source_archive_directory"
-          mkdir dist
-          cp "$source_archive_directory"/*.tar.gz dist/
+          mkdir "$RELEASE_ROOT/dist"
+          cp "$source_archive_directory"/*.tar.gz "$RELEASE_ROOT/dist/"
           uv run --no-sync --offline python -m infrastructure.publishing.root_release_artifacts \
-            --tag "$TAG" \
-            --installed-receipt "$GITHUB_WORKSPACE/output/readiness/installed-release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT/receipt.json" \
+            --repo-root "$RELEASE_ROOT" --tag "$TAG" \
+            --installed-receipt "$INSTALLED_RECEIPT" \
             >> "$GITHUB_OUTPUT"
-          uv run --no-sync --offline python -m twine check dist/*.whl dist/*.tar.gz
+          uv run --no-sync --offline python -m twine check "$RELEASE_ROOT"/dist/*.whl "$RELEASE_ROOT"/dist/*.tar.gz
 
       - name: Generate changelog excerpt
         id: changelog
@@ -285,16 +321,20 @@ jobs:
           echo "file=$RUNNER_TEMP/template-release-notes.md" >> "$GITHUB_OUTPUT"
 
       - name: Recheck admitted publication bytes
+        id: asset_recheck
         env:
           TAG: ${{ steps.tag.outputs.name }}
           MANIFEST_SHA256: ${{ steps.distributions.outputs.manifest_sha256 }}
+          RELEASE_ROOT: ${{ steps.release_inputs.outputs.root }}
+          INSTALLED_RECEIPT: ${{ steps.release_inputs.outputs.installed_receipt }}
         run: |
           set -euo pipefail
           uv run --no-sync --offline python -m infrastructure.publishing.root_release_artifacts \
-            --verify --tag "$TAG" --manifest-sha256 "$MANIFEST_SHA256" \
-            --installed-receipt "$GITHUB_WORKSPACE/output/readiness/installed-release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT/receipt.json"
+            --verify --repo-root "$RELEASE_ROOT" --tag "$TAG" --manifest-sha256 "$MANIFEST_SHA256" \
+            --installed-receipt "$INSTALLED_RECEIPT"
 
       - name: Create GitHub Release
+        id: publish
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           tag_name: ${{ steps.tag.outputs.name }}
@@ -305,18 +345,58 @@ jobs:
           # Omit generate_release_notes — avoids duplicating narrative vs body_path excerpt.
           generate_release_notes: false
           files: |
-            dist/*
-            docs/releases/template-${{ steps.tag.outputs.name }}-overview.png
+            ${{ steps.release_inputs.outputs.root }}/dist/*
+            ${{ steps.release_inputs.outputs.root }}/docs/releases/template-${{ steps.tag.outputs.name }}-overview.png
 
       - name: Verify retrieved release assets
+        id: retrieved_assets
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.tag.outputs.name }}
           MANIFEST_SHA256: ${{ steps.distributions.outputs.manifest_sha256 }}
+          RELEASE_ROOT: ${{ steps.release_inputs.outputs.root }}
+          INSTALLED_RECEIPT: ${{ steps.release_inputs.outputs.installed_receipt }}
         run: |
           set -euo pipefail
           destination="$RUNNER_TEMP/template-release-retrieved-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir "$destination"
           uv run --no-sync --offline python -m infrastructure.publishing.root_release_artifacts \
-            --verify --tag "$TAG" --manifest-sha256 "$MANIFEST_SHA256" --retrieved "$destination" \
-            --installed-receipt "$GITHUB_WORKSPACE/output/readiness/installed-release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT/receipt.json"
+            --verify --repo-root "$RELEASE_ROOT" --tag "$TAG" --manifest-sha256 "$MANIFEST_SHA256" --retrieved "$destination" \
+            --installed-receipt "$INSTALLED_RECEIPT"
+      - name: Summarize release and retrieved-asset outcomes
+        if: always()
+        shell: bash
+        env:
+          TAG: ${{ steps.tag.outputs.name }}
+          SOURCE_COMMIT: ${{ steps.tag_checkout.outputs.source_commit }}
+          REQUIRED_ACCEPTANCE: ${{ steps.acceptance.outputs.required }}
+          HANDOFF_INPUTS: ${{ steps.acceptance.outcome }}
+          CANDIDATE_READER: ${{ steps.candidate_reader.outcome }}
+          INSTALLED_MATRIX: ${{ steps.installed_matrix.outcome }}
+          WHEEL_ADMISSION: ${{ steps.distributions.outcome }}
+          MANIFEST_SHA256: ${{ steps.distributions.outputs.manifest_sha256 }}
+          ASSET_RECHECK: ${{ steps.asset_recheck.outcome }}
+          RELEASE_PUBLICATION: ${{ steps.publish.outcome }}
+          RETRIEVED_ASSETS: ${{ steps.retrieved_assets.outcome }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          matrix_reason=""
+          if [ "$INSTALLED_MATRIX" = skipped ] && [ "$REQUIRED_ACCEPTANCE" = true ] && [ "$CANDIDATE_READER" = success ]; then
+            matrix_reason="authenticated original matrix reused after fresh installed readback"
+          fi
+          {
+            printf '### Release\n\nTag: `%s` · verified source: `%s` · job: `%s`\n\n' "$TAG" "${SOURCE_COMMIT:-not verified}" "$JOB_STATUS"
+            printf '| Operation | Outcome | Detail |\n| --- | --- | --- |\n'
+            printf '| Required handoff inputs | %s | required=%s |\n' "${HANDOFF_INPUTS:-not run}" "${REQUIRED_ACCEPTANCE:-not admitted}"
+            printf '| Fresh installed candidate readback | %s | |\n' "${CANDIDATE_READER:-not run}"
+            printf '| Installed-wheel matrix | %s | %s |\n' "${INSTALLED_MATRIX:-not run}" "$matrix_reason"
+            printf '| Exact installed wheel/receipt and source distribution admission | %s | |\n' "${WHEEL_ADMISSION:-not run}"
+            printf '| Admitted publication byte recheck | %s | |\n' "${ASSET_RECHECK:-not run}"
+            printf '| GitHub release publication | %s | |\n' "${RELEASE_PUBLICATION:-not run}"
+            printf '| Retrieved release asset verification | %s | |\n\n' "${RETRIEVED_ASSETS:-not run}"
+            if [ "$WHEEL_ADMISSION" = success ] && [ "$ASSET_RECHECK" = success ]; then
+              printf 'Admitted asset manifest SHA-256: `%s`\n\n' "$MANIFEST_SHA256"
+            fi
+            printf 'Publication and retrieved-byte verification retain separate outcomes.\n'
+          } >> "$GITHUB_STEP_SUMMARY"

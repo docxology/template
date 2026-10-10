@@ -340,11 +340,15 @@ should produce or point at a Zenodo software version under that concept DOI.
    `pyproject.toml` and root `CITATION.cff` should name the release version;
    `CITATION.cff` keeps the concept DOI, not a version DOI.
 
-4. Create the GitHub release on the root repository and let the configured
-   Zenodo-GitHub integration archive the release, or create a Zenodo "New
-   version" manually from the latest root software record and upload the source
-   archive for the same tag. The Zenodo record must include a related identifier
-   for `https://github.com/docxology/template/tree/vX.Y.Z`.
+4. For root 4+, follow the [release boundary](../maintenance/release-boundary.md):
+   freeze the final source and outputs, obtain a complete hosted acceptance
+   bundle at that exact revision, create its matching tag, and manually dispatch
+   `release.yml` with the run ID, exact artifact ID and receipt SHA256. The
+   workflow authenticates the handoff, publishes admitted assets and verifies
+   retrieved bytes. The root Zenodo archive must refer to that same tag; use
+   the configured integration or a new version of the existing root software
+   record after verifying the GitHub release. Include the related identifier
+   `https://github.com/docxology/template/tree/vX.Y.Z`.
 
 5. Verify both public surfaces after publishing:
 
@@ -498,7 +502,14 @@ Zenodo and GitHub release metadata no longer reuse raw manuscript markdown. The 
 
 > The leading-`# Abstract` strip is `infrastructure.prose.markdown.strip_leading_abstract_heading`, applied inside `normalise_for_deposit`. It only removes a standalone heading whose sole text is "Abstract" (any level, with or without a `{#id}` attribute); `# Abstract and Outlook` or prose that genuinely begins with the word are left untouched. Covered by `tests/infra_tests/prose/test_markdown_helpers.py::TestStripLeadingAbstractHeading` and the deposit-render assertions in `tests/infra_tests/publishing/test_abstract_plaintext.py`.
 
-**Workflow order:** prepare bundle → **Zenodo publish** → enrich metadata with minted DOI → **patch live Zenodo description** (best-effort; deposit API accepts only draft depositions — published records return HTTP 404) → **GitHub release** (body includes fresh DOI) → write `publication.doi` → optional local re-render.
+Current DOI-bearing standalone releases use the reserve-first route in the
+[publication runbook](publication-runbook.md#new-version-of-an-existing-doi-series):
+reserve the version DOI, update metadata, regenerate and validate the final
+PDF, bind the accepted standalone commit, then publish the exact final bundle
+and verify both retrieved assets. The diagram below records the historical
+May 2026 non-reserve workflow.
+
+**Historical non-reserve workflow order:** prepare bundle → **Zenodo publish** → enrich metadata with minted DOI → **patch live Zenodo description** (best-effort; deposit API accepts only draft depositions — published records return HTTP 404) → **GitHub release** (body includes fresh DOI) → write `publication.doi` → optional local re-render.
 
 ```mermaid
 flowchart LR

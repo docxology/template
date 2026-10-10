@@ -12,18 +12,21 @@ from typing import Any
 from infrastructure.reporting.native_format_pdf_semantic_plan import PDFSemanticPlan
 
 
-def _caption(text: dict[str, Any], identities: list[str]) -> dict[str, Any] | None:
+def _caption(
+    text: dict[str, Any], identities: list[str], mathematical: list[dict[str, Any]] | None = None
+) -> dict[str, Any] | None:
     matches = {row["block_id"]: row["word_indices"] for row in text["matches"]}
     words = {row["word_index"]: row for row in text["supported_words"]}
-    if not identities or any(identity not in matches for identity in identities):
+    if (not identities and not mathematical) or any(identity not in matches for identity in identities):
         return None
-    selected = [words[index] for identity in identities for index in matches[identity]]
+    selected = [words[index] for identity in identities for index in matches[identity]] + list(mathematical or [])
     pages = {word["page"] for word in selected}
     if not selected or len(pages) != 1:
         return None
     boxes = [word["box_pt"] for word in selected]
     return {
         "text_ids": identities,
+        "mathematical_ids": [row["identity"] for row in mathematical or []],
         "page": next(iter(pages)),
         "box_pt": [
             min(box[0] for box in boxes),
@@ -49,6 +52,7 @@ def bind_pdf_figure_positions(
     reference_figures: dict[str, Any] | None,
     whole_page_parity: dict[str, Any] | None,
     deadline: float,
+    equations: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Require each exact source caption and image at source-reference positions.
 
@@ -77,18 +81,31 @@ def bind_pdf_figure_positions(
             for page in whole_page_parity["pages"]
         )
     )
+    math_positions = {row["identity"]: row for row in (equations or {}).get("observations", [])}
     for image in figures["figures"]:
         if time.monotonic() >= deadline:
             raise TimeoutError("original figure/caption position witness exhausted its finite deadline")
         identity = image["identity"]
         image["covered"] = False
         caption_ids = expected_images[identity].get("rendered_caption_text_ids", [])
-        caption = _caption(literal, caption_ids)
+        scientific_ids = expected_images[identity].get("rendered_caption_occurrence_ids", [])
+        scientific_rows = [math_positions[item] for item in scientific_ids if item in math_positions]
+        if any(item not in math_positions for item in scientific_ids):
+            blockers.append(
+                f"{identity}: exact rich caption descendant lacks its independent native mathematical witness"
+            )
+            continue
+        caption = _caption(literal, caption_ids, scientific_rows)
         if caption is None:
             blockers.append(f"{identity}: original rendered caption identity lacks native placement")
             continue
         expected_image = source_images.get(identity)
-        expected_caption = _caption(reference_literal, caption_ids) if reference_literal is not None else None
+        # The actual independent Math interpreter binds original Source paint
+        # to these exact glyph boxes. Complete every-page parity independently
+        # binds those positions to the uninstrumented Source reference.
+        expected_caption = (
+            _caption(reference_literal, caption_ids, scientific_rows) if reference_literal is not None else None
+        )
         if expected_image is None or expected_caption is None:
             blockers.append(f"{identity}: independently admitted source figure/caption positions are required")
             continue

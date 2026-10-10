@@ -7,6 +7,7 @@ import re
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import yaml
 from markdown_it import MarkdownIt
@@ -31,7 +32,12 @@ from infrastructure.validation.publication.rendered_provenance import (
     RenderedProvenanceValidation,
     rendered_manuscript_paths,
     validate_rendered_provenance,
+    validate_current_rendered_provenance,
 )
+
+if TYPE_CHECKING:
+    from infrastructure.reporting.native_source_external_admission import NativeSourceContext
+    from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 SCHEMA_VERSION = "template-publication-audit-v1"
 
@@ -557,9 +563,16 @@ def _audit_project(
     rendered: bool,
     include_drift: bool,
     require_figure_accessibility: bool,
+    current_rendered: bool = False,
 ) -> list[PublicationFinding]:
     project_root = (repo_root / "projects" / project).resolve()
-    provenance = validate_rendered_provenance(repo_root, project) if rendered and project_root.is_dir() else None
+    provenance = None
+    if rendered and project_root.is_dir():
+        provenance = (
+            validate_current_rendered_provenance(repo_root, project)
+            if current_rendered
+            else validate_rendered_provenance(repo_root, project)
+        )
     ctx = AuditContext(
         repo_root=repo_root,
         project=project,
@@ -581,13 +594,14 @@ def _audit_project(
     return findings
 
 
-def build_publication_audit(
+def _build_publication_audit(
     repo_root: Path | str,
     projects: Iterable[str] | None = None,
     *,
     rendered: bool = False,
     include_drift: bool = True,
     require_figure_accessibility: bool = False,
+    current_rendered: bool = False,
 ) -> PublicationAuditReport:
     """Build a deterministic audit for one or all public projects."""
     root = Path(repo_root).resolve()
@@ -601,6 +615,7 @@ def build_publication_audit(
                 rendered=rendered,
                 include_drift=include_drift,
                 require_figure_accessibility=require_figure_accessibility,
+                current_rendered=current_rendered,
             )
         )
     findings.sort(
@@ -613,6 +628,107 @@ def build_publication_audit(
         )
     )
     return PublicationAuditReport(schema_version=SCHEMA_VERSION, projects=names, findings=tuple(findings))
+
+
+def build_publication_audit(
+    repo_root: Path | str,
+    projects: Iterable[str] | None = None,
+    *,
+    rendered: bool = False,
+    include_drift: bool = True,
+    require_figure_accessibility: bool = False,
+) -> PublicationAuditReport:
+    """Audit published exemplars, retaining strict cached-Git Output equality."""
+    return _build_publication_audit(
+        repo_root,
+        projects,
+        rendered=rendered,
+        include_drift=include_drift,
+        require_figure_accessibility=require_figure_accessibility,
+    )
+
+
+def _verify_native_audit_source(
+    source: NativeSourceContext,
+    project: str,
+    reader: SnapshotReader,
+    deadline: float,
+) -> None:
+    from infrastructure.reporting.native_source_external_admission import NativeSourceContext
+    from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+    if (
+        not isinstance(source, NativeSourceContext)
+        or not isinstance(reader, SnapshotReader)
+        or project not in PUBLIC_PROJECT_NAMES
+        or reader.root != source.bindings.current_root
+    ):
+        raise ValueError("native audit needs genuine exact Source, scope and reader")
+    source.verify_correspondence(source.reference, reader.root, reader, deadline)
+
+
+def build_native_published_audit(
+    source: NativeSourceContext,
+    project: str,
+    reader: SnapshotReader,
+    *,
+    deadline: float,
+) -> PublicationAuditReport:
+    """Prove pristine published Output on the independently held Source reference.
+
+    Original and Current each call this before their own Core. The returned DATA
+    is retained and independently compared at readback; it grants no execution
+    authority. Actual Source/index/SDK checks bracket the complete strict audit.
+    """
+    _verify_native_audit_source(source, project, reader, deadline)
+    report = build_publication_audit(
+        source.reference.root,
+        [project],
+        rendered=True,
+        require_figure_accessibility=True,
+    )
+    _verify_native_audit_source(source, project, reader, deadline)
+    if validate_publication_audit(report, strict=True):
+        raise ValueError("native Source reference lacks strict published rendered evidence")
+    return report
+
+
+def build_current_publication_audit(
+    source: NativeSourceContext,
+    project: str,
+    reader: SnapshotReader,
+    *,
+    deadline: float,
+) -> PublicationAuditReport:
+    """Audit all Source/rendered predicates on actual derived Output under Source custody.
+
+    This route reuses every checker. Only published cached-Output equality is
+    assigned to the separate immutable reference audit. No report establishes
+    native execution or acceptance, and no caller supplies a pre-labelled pass.
+    """
+    _verify_native_audit_source(source, project, reader, deadline)
+    prefix = f"projects/{project}/"
+    evidence_paths = (
+        "output/reports/rendered_provenance.json",
+        "output/reports/artifact_manifest.json",
+        "output/reports/manuscript_composition.json",
+        "output/reports/validation_report.json",
+        "output/web/_combined_manuscript.md",
+    )
+    for relative in evidence_paths:
+        reader.read(prefix + relative)
+    manifest = read_artifact_manifest(reader.root / prefix / "output/reports/artifact_manifest.json")
+    for entry in manifest.entries:
+        reader.read(prefix + entry.path)
+    report = _build_publication_audit(
+        reader.root,
+        [project],
+        rendered=True,
+        require_figure_accessibility=True,
+        current_rendered=True,
+    )
+    _verify_native_audit_source(source, project, reader, deadline)
+    return report
 
 
 def validate_publication_audit(report: PublicationAuditReport, *, strict: bool = False) -> int:
