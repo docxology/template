@@ -146,8 +146,10 @@ def test_source_citation_looking_fragment_in_residual_raw_markup_stays_blocked(
 ) -> None:
     cohort = original_natbib
     source = rb"Before \raisebox{1pt}{\citep{example}} after." + b"\n"
+    # Native citation evidence is confined to the ignored output/readiness lane.
+    directory = tmp_path / "output/readiness/citations"
     parser = CitationRuntime(
-        tmp_path, tmp_path / "parse", env=cohort["env"], deadline=time.monotonic() + 10, run_id="raw-residual"
+        tmp_path, directory / "parse", env=cohort["env"], deadline=time.monotonic() + 10, run_id="raw-residual"
     )
     path = parser.freeze("original.md", source)
     ast = parser.tool("pandoc", [str(path), "--from=markdown+raw_tex", "--to=json"], "original-source-ast")[
@@ -155,7 +157,7 @@ def test_source_citation_looking_fragment_in_residual_raw_markup_stays_blocked(
     ].encode()
     reference = observe_natbib_reference(
         tmp_path,
-        tmp_path / "reference",
+        directory / "reference",
         ast_bytes=ast,
         sources=(("original.md", source),),
         bibliographies=(("references.bib", BIB),),

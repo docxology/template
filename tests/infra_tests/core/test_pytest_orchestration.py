@@ -378,7 +378,8 @@ def test_build_project_pytest_command_uses_existing_python_without_acquisition(t
     cmd = build_project_pytest_command(project, args)
     assert cmd[:3] == [str(Path(sys.executable).absolute()), "-I", "-c"]
     assert "runpy.run_module('pytest'" in cmd[3]
-    assert cmd[-3:] == ["tests", "--cov=src", "--timeout=120"]
+    # The audited entry appends --assert=plain so held plugin source runs unrewritten.
+    assert cmd[4:] == ["tests", "--cov=src", "--timeout=120", "--assert=plain"]
 
 
 def test_build_project_pytest_command_does_not_fall_back_from_missing_venv(tmp_path: Path) -> None:
