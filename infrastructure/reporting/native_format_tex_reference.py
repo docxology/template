@@ -16,6 +16,8 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 SCHEMA = "template-native-source-tex-reference-v1"
 MAX_DEPENDENCIES = 2048
 MAX_DEPENDENCY_BYTES = 256 * 1024 * 1024
+# Literal argv; Kpathsea itself expands $TEXMF to its existing search trees.
+TEXMF_TREES_ARGUMENT = "--expand-path=$TEXMF"
 
 
 def _process(
@@ -74,6 +76,10 @@ def observe_tex_reference(
         environment[name] = str(path)
     environment["openin_any"] = "p"
     environment["openout_any"] = "p"
+    # Paranoid Kpathsea through TeX Live 2023 admits the absolute private source
+    # only under TEXMFOUTPUT (2024-2025 also honour -output-directory; 2026 stops
+    # checking reads). Binding it to this directory keeps every release paranoid.
+    environment["TEXMFOUTPUT"] = str(directory)
     tools = []
     runtime = {}
     for name in ("xelatex", "xdvipdfmx", "kpsewhich"):
@@ -110,6 +116,28 @@ def observe_tex_reference(
         if not path.is_dir() or not path.is_absolute():
             raise ValueError("source reference distribution root is invalid")
         allowed_roots.append(path)
+    # Debian/Ubuntu split the installed distribution across system trees outside
+    # TEXMFROOT (/etc/texmf, /var/lib/texmf, /usr/share/texmf). Admit exactly the
+    # existing trees Kpathsea searches for this run, never the private ones.
+    record, process = _process(
+        root,
+        directory,
+        "kpsewhich",
+        [TEXMF_TREES_ARGUMENT],
+        env=environment,
+        deadline=deadline,
+        run_id=run_id,
+        purpose="reference-texmf-trees",
+    )
+    tools.append(record)
+    for item in process["stdout"].strip().split(":"):
+        if not item or not Path(item).is_absolute():
+            raise ValueError("source reference Kpathsea tree is invalid")
+        path = Path(item).resolve(strict=True)
+        if not path.is_dir():
+            raise ValueError("source reference Kpathsea tree is invalid")
+        if not path.is_relative_to(directory.resolve()):
+            allowed_roots.append(path)
     compiler_args = [
         "-fmt=xelatex",
         "-no-pdf",
@@ -273,7 +301,8 @@ def observe_tex_reference(
         ),
         "tool_artifacts": tools,
         "environment": {
-            name: environment[name] for name in ("TEXMFHOME", "TEXMFCONFIG", "TEXMFVAR", "openin_any", "openout_any")
+            name: environment[name]
+            for name in ("TEXMFHOME", "TEXMFCONFIG", "TEXMFVAR", "TEXMFOUTPUT", "openin_any", "openout_any")
         },
         "status": "pass",
     }

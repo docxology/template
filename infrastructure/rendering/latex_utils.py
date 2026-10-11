@@ -11,6 +11,7 @@ from infrastructure.core.determinism import deterministic_subprocess_env, resolv
 from infrastructure.core.exceptions import CompilationError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
+from infrastructure.rendering.native_render_custody import native_render_custody
 
 logger = get_logger(__name__)
 
@@ -225,11 +226,14 @@ def latex_compile_command(tex_path: Path, out_dir: Path, compiler: str, *, recor
 
 def _run_latex_pass(command: list[str], tex_path: Path, timeout: int) -> subprocess.CompletedProcess[str]:
     """Use genuine native stage custody when present, preserving the ordinary call."""
-    from infrastructure.reporting.native_tex_section_render import run_native_tex_section_pass
-
     environment = deterministic_subprocess_env(repo_root=tex_path.parent)
-    native = run_native_tex_section_pass(
-        command, tex_path, Path(command[-2].removeprefix("-output-directory=")), environment=environment
+    custody = native_render_custody("native-origin section rendering lacks its actual Source owner")
+    native = (
+        None
+        if custody is None
+        else custody.tex_section_launcher()(
+            command, tex_path, Path(command[-2].removeprefix("-output-directory=")), environment=environment
+        )
     )
     if native is not None:
         return native

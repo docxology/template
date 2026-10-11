@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 896
+Total documented definitions: 892
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -691,20 +691,21 @@ Total documented definitions: 896
 | 81 | `function` | `_confined_path_state` | docstring | Return a race-checked state token without following any symlink. |
 | 134 | `function` | `_walk_generation_inputs` | docstring | Walk one declared input tree without following directory symlinks. |
 | 165 | `function` | `_generation_input_rels` | docstring | Return deterministic source/config inputs that can change generated evidence. |
-| 173 | `function` | `_observed_output_rels` | docstring | Derive the complete positive, negative, and hydrated output inventory from SSOTs. |
-| 217 | `function` | `_cached_fingerprint_matches` | docstring | Return whether the disposable cache exactly binds the current state. |
-| 226 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:226`. |
-| 238 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:238`. |
-| 245 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:245`. |
-| 252 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:252`. |
-| 259 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:259`. |
-| 276 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:276`. |
-| 304 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:304`. |
-| 332 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
-| 347 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:347`. |
-| 369 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:369`. |
-| 389 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
-| 421 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
+| 173 | `function` | `_source_input_sha256` | docstring | Bind the exact confined generation-input file inventory and bytes. |
+| 193 | `function` | `_observed_output_rels` | docstring | Derive the complete positive, negative, and hydrated output inventory from SSOTs. |
+| 237 | `function` | `_cached_fingerprint_matches` | docstring | Return whether the disposable cache exactly binds the current state. |
+| 246 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:246`. |
+| 258 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:258`. |
+| 265 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:265`. |
+| 272 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:272`. |
+| 279 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:279`. |
+| 296 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:296`. |
+| 315 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:315`. |
+| 343 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
+| 358 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:358`. |
+| 380 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:380`. |
+| 400 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
+| 432 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
 
 ## `src/roadmap_tracks/formal_interop.py`
 
@@ -846,15 +847,12 @@ Total documented definitions: 896
 | 22 | `function` | `_all_rows_absent` | inventory fallback | Inventory fallback for function `_all_rows_absent` defined at `src/roadmap_tracks/sheaf_track_validation.py:22`. |
 | 26 | `function` | `_append_schema_issue` | inventory fallback | Inventory fallback for function `_append_schema_issue` defined at `src/roadmap_tracks/sheaf_track_validation.py:26`. |
 | 31 | `function` | `_append_summary_issue` | inventory fallback | Inventory fallback for function `_append_summary_issue` defined at `src/roadmap_tracks/sheaf_track_validation.py:31`. |
-| 36 | `function` | `_without_source_commit` | docstring | Remove the producer snapshot from one provenance record for comparison. |
-| 43 | `function` | `_provenance_payload_for_comparison` | docstring | Normalize generated provenance before comparing it with a live build. |
-| 63 | `function` | `_provenance_payloads_equal` | docstring | Compare provenance exactly, allowing only producer-commit drift. |
-| 73 | `function` | `_coerce_int` | inventory fallback | Inventory fallback for function `_coerce_int` defined at `src/roadmap_tracks/sheaf_track_validation.py:73`. |
-| 85 | `function` | `_semantic_restriction_value_ok` | inventory fallback | Inventory fallback for function `_semantic_restriction_value_ok` defined at `src/roadmap_tracks/sheaf_track_validation.py:85`. |
-| 99 | `function` | `_validate_registry_contract` | inventory fallback | Inventory fallback for function `_validate_registry_contract` defined at `src/roadmap_tracks/sheaf_track_validation.py:99`. |
-| 116 | `function` | `validate_sheaf_track_source_contract` | docstring | Validate source-side sheaf contracts without regenerating artifacts. |
-| 138 | `function` | `_validate_saved_semantic_certificate` | inventory fallback | Inventory fallback for function `_validate_saved_semantic_certificate` defined at `src/roadmap_tracks/sheaf_track_validation.py:138`. |
-| 186 | `function` | `validate_sheaf_track_artifacts` | docstring | Validate canonical sheaf-track artifacts and their semantic certificate. |
+| 36 | `function` | `_coerce_int` | inventory fallback | Inventory fallback for function `_coerce_int` defined at `src/roadmap_tracks/sheaf_track_validation.py:36`. |
+| 48 | `function` | `_semantic_restriction_value_ok` | inventory fallback | Inventory fallback for function `_semantic_restriction_value_ok` defined at `src/roadmap_tracks/sheaf_track_validation.py:48`. |
+| 62 | `function` | `_validate_registry_contract` | inventory fallback | Inventory fallback for function `_validate_registry_contract` defined at `src/roadmap_tracks/sheaf_track_validation.py:62`. |
+| 79 | `function` | `validate_sheaf_track_source_contract` | docstring | Validate source-side sheaf contracts without regenerating artifacts. |
+| 101 | `function` | `_validate_saved_semantic_certificate` | inventory fallback | Inventory fallback for function `_validate_saved_semantic_certificate` defined at `src/roadmap_tracks/sheaf_track_validation.py:101`. |
+| 149 | `function` | `validate_sheaf_track_artifacts` | docstring | Validate canonical sheaf-track artifacts and their semantic certificate. |
 
 ## `src/roadmap_tracks/sheaf_tracks_builders_formal.py`
 
@@ -883,9 +881,9 @@ Total documented definitions: 896
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 20 | `function` | `build_artifact_provenance` | docstring | Build canonical artifact, field-provenance, and bundle provenance rows. |
-| 86 | `function` | `_artifact_bundles` | inventory fallback | Inventory fallback for function `_artifact_bundles` defined at `src/roadmap_tracks/sheaf_tracks_builders_provenance.py:86`. |
-| 178 | `function` | `build_replay_matrix` | docstring | Build replay matrix. |
+| 21 | `function` | `build_artifact_provenance` | docstring | Build canonical artifact, field-provenance, and bundle provenance rows. |
+| 89 | `function` | `_artifact_bundles` | inventory fallback | Inventory fallback for function `_artifact_bundles` defined at `src/roadmap_tracks/sheaf_tracks_builders_provenance.py:89`. |
+| 181 | `function` | `build_replay_matrix` | docstring | Build replay matrix. |
 
 ## `src/roadmap_tracks/sheaf_tracks_builders_release.py`
 
@@ -928,21 +926,20 @@ Total documented definitions: 896
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 22 | `function` | `_load_structured` | inventory fallback | Inventory fallback for function `_load_structured` defined at `src/roadmap_tracks/sheaf_tracks_io.py:22`. |
-| 31 | `function` | `_bridge_reference_section_status` | inventory fallback | Inventory fallback for function `_bridge_reference_section_status` defined at `src/roadmap_tracks/sheaf_tracks_io.py:31`. |
-| 41 | `function` | `_sha256` | inventory fallback | Inventory fallback for function `_sha256` defined at `src/roadmap_tracks/sheaf_tracks_io.py:41`. |
-| 51 | `function` | `_analysis_scripts` | inventory fallback | Inventory fallback for function `_analysis_scripts` defined at `src/roadmap_tracks/sheaf_tracks_io.py:51`. |
-| 56 | `function` | `_registry_tracks` | inventory fallback | Inventory fallback for function `_registry_tracks` defined at `src/roadmap_tracks/sheaf_tracks_io.py:56`. |
-| 62 | `function` | `_manifest_sections` | inventory fallback | Inventory fallback for function `_manifest_sections` defined at `src/roadmap_tracks/sheaf_tracks_io.py:62`. |
-| 68 | `function` | `_bound_tracks` | inventory fallback | Inventory fallback for function `_bound_tracks` defined at `src/roadmap_tracks/sheaf_tracks_io.py:68`. |
-| 80 | `function` | `_pipeline_tracks` | inventory fallback | Inventory fallback for function `_pipeline_tracks` defined at `src/roadmap_tracks/sheaf_tracks_io.py:80`. |
-| 86 | `function` | `_claim_records` | inventory fallback | Inventory fallback for function `_claim_records` defined at `src/roadmap_tracks/sheaf_tracks_io.py:86`. |
-| 92 | `function` | `_claim_ids_by_path` | inventory fallback | Inventory fallback for function `_claim_ids_by_path` defined at `src/roadmap_tracks/sheaf_tracks_io.py:92`. |
-| 102 | `function` | `_claim_ids_by_track` | inventory fallback | Inventory fallback for function `_claim_ids_by_track` defined at `src/roadmap_tracks/sheaf_tracks_io.py:102`. |
-| 111 | `function` | `_artifact_maps` | inventory fallback | Inventory fallback for function `_artifact_maps` defined at `src/roadmap_tracks/sheaf_tracks_io.py:111`. |
-| 117 | `function` | `_source_commit` | inventory fallback | Inventory fallback for function `_source_commit` defined at `src/roadmap_tracks/sheaf_tracks_io.py:117`. |
-| 142 | `function` | `_deterministic_seed` | inventory fallback | Inventory fallback for function `_deterministic_seed` defined at `src/roadmap_tracks/sheaf_tracks_io.py:142`. |
-| 147 | `function` | `_config_digest` | inventory fallback | Inventory fallback for function `_config_digest` defined at `src/roadmap_tracks/sheaf_tracks_io.py:147`. |
+| 21 | `function` | `_load_structured` | inventory fallback | Inventory fallback for function `_load_structured` defined at `src/roadmap_tracks/sheaf_tracks_io.py:21`. |
+| 30 | `function` | `_bridge_reference_section_status` | inventory fallback | Inventory fallback for function `_bridge_reference_section_status` defined at `src/roadmap_tracks/sheaf_tracks_io.py:30`. |
+| 40 | `function` | `_sha256` | inventory fallback | Inventory fallback for function `_sha256` defined at `src/roadmap_tracks/sheaf_tracks_io.py:40`. |
+| 50 | `function` | `_analysis_scripts` | inventory fallback | Inventory fallback for function `_analysis_scripts` defined at `src/roadmap_tracks/sheaf_tracks_io.py:50`. |
+| 55 | `function` | `_registry_tracks` | inventory fallback | Inventory fallback for function `_registry_tracks` defined at `src/roadmap_tracks/sheaf_tracks_io.py:55`. |
+| 61 | `function` | `_manifest_sections` | inventory fallback | Inventory fallback for function `_manifest_sections` defined at `src/roadmap_tracks/sheaf_tracks_io.py:61`. |
+| 67 | `function` | `_bound_tracks` | inventory fallback | Inventory fallback for function `_bound_tracks` defined at `src/roadmap_tracks/sheaf_tracks_io.py:67`. |
+| 79 | `function` | `_pipeline_tracks` | inventory fallback | Inventory fallback for function `_pipeline_tracks` defined at `src/roadmap_tracks/sheaf_tracks_io.py:79`. |
+| 85 | `function` | `_claim_records` | inventory fallback | Inventory fallback for function `_claim_records` defined at `src/roadmap_tracks/sheaf_tracks_io.py:85`. |
+| 91 | `function` | `_claim_ids_by_path` | inventory fallback | Inventory fallback for function `_claim_ids_by_path` defined at `src/roadmap_tracks/sheaf_tracks_io.py:91`. |
+| 101 | `function` | `_claim_ids_by_track` | inventory fallback | Inventory fallback for function `_claim_ids_by_track` defined at `src/roadmap_tracks/sheaf_tracks_io.py:101`. |
+| 110 | `function` | `_artifact_maps` | inventory fallback | Inventory fallback for function `_artifact_maps` defined at `src/roadmap_tracks/sheaf_tracks_io.py:110`. |
+| 116 | `function` | `_deterministic_seed` | inventory fallback | Inventory fallback for function `_deterministic_seed` defined at `src/roadmap_tracks/sheaf_tracks_io.py:116`. |
+| 121 | `function` | `_config_digest` | inventory fallback | Inventory fallback for function `_config_digest` defined at `src/roadmap_tracks/sheaf_tracks_io.py:121`. |
 
 ## `src/roadmap_tracks/sheaf_tracks_registry.py`
 
@@ -1275,19 +1272,18 @@ Total documented definitions: 896
 | 97 | `function` | `_configured_analysis_scripts` | inventory fallback | Inventory fallback for function `_configured_analysis_scripts` defined at `src/validation_spine/artifacts.py:97`. |
 | 103 | `function` | `_config_digest` | inventory fallback | Inventory fallback for function `_config_digest` defined at `src/validation_spine/artifacts.py:103`. |
 | 115 | `function` | `_deterministic_seed` | inventory fallback | Inventory fallback for function `_deterministic_seed` defined at `src/validation_spine/artifacts.py:115`. |
-| 122 | `function` | `_source_commit` | inventory fallback | Inventory fallback for function `_source_commit` defined at `src/validation_spine/artifacts.py:122`. |
-| 136 | `function` | `_artifact_record` | inventory fallback | Inventory fallback for function `_artifact_record` defined at `src/validation_spine/artifacts.py:136`. |
-| 170 | `function` | `_config_record` | inventory fallback | Inventory fallback for function `_config_record` defined at `src/validation_spine/artifacts.py:170`. |
-| 180 | `function` | `build_artifact_provenance` | docstring | Build deterministic artifact lineage and hash records. |
-| 220 | `function` | `_same_json` | inventory fallback | Inventory fallback for function `_same_json` defined at `src/validation_spine/artifacts.py:220`. |
-| 226 | `function` | `_copy_replay_inputs` | inventory fallback | Inventory fallback for function `_copy_replay_inputs` defined at `src/validation_spine/artifacts.py:226`. |
-| 235 | `function` | `build_reproducibility_replay` | docstring | Replay deterministic toy producers in a temporary tree and compare outputs. |
-| 312 | `function` | `build_counterexample_matrix` | docstring | Document expected-failure fixtures that keep the gates falsifiable. |
-| 411 | `function` | `write_validation_spine_artifacts` | docstring | Write provenance, replay, and counterexample artifacts. |
-| 438 | `function` | `validate_artifact_provenance` | docstring | Validate artifact provenance. |
-| 491 | `function` | `validate_reproducibility_replay` | docstring | Validate reproducibility replay. |
-| 543 | `function` | `validate_counterexample_matrix` | docstring | Validate counterexample matrix. |
-| 572 | `function` | `validate_validation_spine` | docstring | Return all validation-spine artifact issues. |
+| 122 | `function` | `_artifact_record` | inventory fallback | Inventory fallback for function `_artifact_record` defined at `src/validation_spine/artifacts.py:122`. |
+| 156 | `function` | `_config_record` | inventory fallback | Inventory fallback for function `_config_record` defined at `src/validation_spine/artifacts.py:156`. |
+| 166 | `function` | `build_artifact_provenance` | docstring | Build deterministic artifact lineage and hash records. |
+| 203 | `function` | `_same_json` | inventory fallback | Inventory fallback for function `_same_json` defined at `src/validation_spine/artifacts.py:203`. |
+| 209 | `function` | `_copy_replay_inputs` | inventory fallback | Inventory fallback for function `_copy_replay_inputs` defined at `src/validation_spine/artifacts.py:209`. |
+| 218 | `function` | `build_reproducibility_replay` | docstring | Replay deterministic toy producers in a temporary tree and compare outputs. |
+| 295 | `function` | `build_counterexample_matrix` | docstring | Document expected-failure fixtures that keep the gates falsifiable. |
+| 399 | `function` | `write_validation_spine_artifacts` | docstring | Write provenance, replay, and counterexample artifacts. |
+| 426 | `function` | `validate_artifact_provenance` | docstring | Validate artifact provenance. |
+| 482 | `function` | `validate_reproducibility_replay` | docstring | Validate reproducibility replay. |
+| 534 | `function` | `validate_counterexample_matrix` | docstring | Validate counterexample matrix. |
+| 563 | `function` | `validate_validation_spine` | docstring | Return all validation-spine artifact issues. |
 
 ## `src/visualizations/animation.py`
 

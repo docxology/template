@@ -5,6 +5,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 if sys.version_info >= (3, 11):
     import tomllib
 else:  # pragma: no cover - Python 3.10
@@ -30,16 +32,39 @@ def test_default_pipeline_is_a_packaged_resource() -> None:
     assert "stages:" in pipeline.read_text(encoding="utf-8")
 
 
-def test_lint_toolchain_is_locked_and_shared_by_ci_and_hooks() -> None:
+def test_lint_toolchain_is_locked_and_shared_by_ci_and_hooks(capsys: pytest.CaptureFixture[str]) -> None:
+    """CI and the pre-commit hook lint the same public scope with the locked ruff.
+
+    CI resolves both of its scopes in one ``public_scope ci-paths`` step, so a
+    failure cannot publish one output without the other; the hook asks for
+    ``public_scope lint-paths`` directly. Both must name the identical paths.
+    """
+    from infrastructure.project.public_scope import main as public_scope_main
+
     payload = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     dev_dependencies = payload["dependency-groups"]["dev"]
 
     assert any(dependency.startswith("ruff>=") for dependency in dev_dependencies)
     assert not any(dependency.startswith("black") for dependency in dev_dependencies)
 
-    for relative_path in (".github/workflows/ci.yml", ".pre-commit-config.yaml"):
+    scope_commands = {
+        ".github/workflows/ci.yml": "public_scope ci-paths",
+        ".pre-commit-config.yaml": "public_scope lint-paths",
+    }
+    for relative_path, scope_command in scope_commands.items():
         config = (REPO_ROOT / relative_path).read_text(encoding="utf-8")
         assert "uv run ruff check" in config
         assert "uv run ruff format" in config
-        assert "public_scope lint-paths" in config
+        assert scope_command in config
         assert "uvx ruff" not in config
+
+    ci = (REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    assert "uv run ruff check ${{ steps.public-scope.outputs.lint_paths }}" in ci
+    assert "uv run ruff format --check ${{ steps.public-scope.outputs.lint_paths }}" in ci
+
+    assert public_scope_main(["ci-paths", "--repo-root", str(REPO_ROOT)]) == 0
+    ci_outputs = dict(line.split("=", 1) for line in capsys.readouterr().out.splitlines())
+    assert public_scope_main(["lint-paths", "--repo-root", str(REPO_ROOT)]) == 0
+    hook_lint_paths = capsys.readouterr().out.strip()
+    assert set(ci_outputs) == {"lint_paths", "source_paths"}
+    assert ci_outputs["lint_paths"] == hook_lint_paths != ""

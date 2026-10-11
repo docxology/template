@@ -54,6 +54,8 @@ def test_exemplar_collection_ignores_stale_relocated_pytest_wrapper(tmp_path: Pa
     uv = shutil.which("uv")
     assert uv is not None
     environment = dict(os.environ)
+    # `--locked` verifies the lockfile itself; an inherited UV_FROZEN conflicts with it.
+    environment.pop("UV_FROZEN", None)
     environment["UV_PROJECT_ENVIRONMENT"] = str(project / ".venv")
     # Locked sync consumes authenticated wheel URLs without needing cached index discovery.
     # Exclude the source project and optional Git scanner; install genuine Rootdev runners.

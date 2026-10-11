@@ -377,6 +377,20 @@ jobs:
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --locked --group public-exemplars --group installed-build
 
+      - name: Warm locked offline wheels for fresh-environment tests
+        # A restored `.venv` can satisfy the sync above without downloading,
+        # and setup-uv prunes registry wheels from its cache. Infra tests that
+        # build fresh environments with `uv sync --locked --offline` need every
+        # locked default-group wheel and the build backend for this interpreter,
+        # so warm them through the same lockfile installer while the network is
+        # allowed. The scratch environment is discarded; only the cache remains.
+        run: |
+          set -euo pipefail
+          scratch=$(mktemp -d "$RUNNER_TEMP/uv-offline-warm.XXXXXX")
+          UV_PROJECT_ENVIRONMENT="$scratch/venv" uv sync --frozen --no-python-downloads \
+            --python .venv/bin/python
+          rm -rf "$scratch"
+
       - name: Verify selected Python minor
         run: |
           uv run python -c \
@@ -695,18 +709,30 @@ jobs:
         run: uv sync --locked --group public-exemplars --group installed-build
 
       - name: Prepare exact standalone runtime dependencies
+        # The genuine standalone-wheel control installs the root build backend
+        # and the standalone runtime with `uv pip sync --offline --no-config
+        # --no-build --require-hashes`. A lockfile `uv sync` fetches wheels by
+        # their locked URLs and never records the registry entries that an
+        # offline `uv pip sync` resolves from, so warm both exact hash-pinned
+        # sets through the same installer here, while the network is allowed.
         if: matrix.project == 'templates/template_autoresearch_project'
         timeout-minutes: 5
         run: |
+          set -euo pipefail
+          uv export --locked --only-group installed-build --no-emit-project \
+            --no-header --no-annotate \
+            --output-file "$RUNNER_TEMP/autoresearch-build-requirements.txt"
           uv export --project projects/templates/template_autoresearch_project \
             --locked --no-default-groups --no-emit-project --no-emit-local \
             --no-header --no-annotate \
             --output-file "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
-          uv venv --no-project --no-python-downloads --python .venv/bin/python \
-            "$RUNNER_TEMP/autoresearch-runtime-preparation"
-          uv pip sync --no-build --require-hashes \
-            --python "$RUNNER_TEMP/autoresearch-runtime-preparation/bin/python" \
-            "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
+          for kind in build runtime; do
+            uv venv --no-project --no-python-downloads --python .venv/bin/python \
+              "$RUNNER_TEMP/autoresearch-$kind-preparation"
+            uv pip sync --no-config --no-build --require-hashes \
+              --python "$RUNNER_TEMP/autoresearch-$kind-preparation/bin/python" \
+              "$RUNNER_TEMP/autoresearch-$kind-requirements.txt"
+          done
 
       # Active Inference and Formal execute their declared Lean proofs in
       # ordinary Stage 01 (Formal also runs TLC with the runner's Java and its

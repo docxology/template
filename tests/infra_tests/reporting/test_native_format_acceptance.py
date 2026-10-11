@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import platform
 import shutil
 import sys
 import time
@@ -36,6 +37,11 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
     NativeDeadlineExpired,
 )
 from infrastructure.reporting.native_format_acceptance_validation import _tool
+from infrastructure.reporting.native_format_joint_source import JOINT_SCHEMA
+from infrastructure.reporting.native_full_worker_pdfium import SCHEMA as PDFIUM_INPUT_SCHEMA
+from infrastructure.reporting.native_mermaid_runtime_selection import SELECTION_SCHEMA as MERMAID_SELECTION_SCHEMA
+from infrastructure.reporting.native_office_full_worker_context import observe_office_font_nominations
+from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
 from infrastructure.reporting.native_format_acceptance import (
     _finalize_profile,
     _executed_failure_exit,
@@ -136,7 +142,10 @@ def test_inventory_only_native_receipt_cannot_pass(tmp_path: Path) -> None:
             }
         },
     }
-    with pytest.raises(ValueError, match="exact artifact"):
+    # Format acceptance first requires the reader's externally admitted Source
+    # and original launch custody; inventory DATA alone is refused before any
+    # artifact listing is even considered.
+    with pytest.raises(ProjectionSourceUnsupported, match="externally admitted source and original launch custody"):
         validate_acceptance(requirement, {"details": details}, SnapshotReader(tmp_path))
 
 
@@ -192,6 +201,8 @@ def test_actual_nested_control_suite_preserves_module_identity(tmp_path: Path) -
 
 def test_actual_failed_tool_and_wrong_run_cannot_authorize_native_pass(tmp_path: Path) -> None:
     directory = tmp_path / "output/readiness/tool"
+    # The native supervisor writes only into an existing owned private leaf.
+    create_private_native_directory(tmp_path, directory)
     env = native_environment(REPO, Path(sys.executable), directory)
     record = native_tool_record(
         tmp_path,
@@ -267,6 +278,29 @@ def test_raster_tools_consume_held_pdf_bytes_after_original_output_changes(tmp_p
         assert str(consumed.path) in tool["command"] and str(path) not in tool["command"]
 
 
+def _canonical_source_inputs() -> dict[str, object]:
+    """Closed joint Source launch DATA labels; validation never admits them."""
+    artifact = {"path": "output/readiness/actual/source-descriptor.json", "sha256": "c" * 64}
+    return {
+        "schema_version": JOINT_SCHEMA,
+        "descriptor": artifact,
+        "implementation": {**artifact, "path": "output/readiness/actual/implementation-input.json"},
+        "providers": {},
+        "provider_roots": [],
+        "closure": {"directory": "output/readiness/actual/sdk-execution-closure", "identity": [1, 2]},
+        "mermaid_runtime": {
+            "schema_version": MERMAID_SELECTION_SCHEMA,
+            "package_root_path": "/nominated/mermaid/package",
+            "dependency_root_path": "/nominated/mermaid/dependencies",
+            "node_executable_path": "/nominated/node",
+            "chrome_executable_path": "/nominated/chrome",
+            "runtime_content_digest": "d" * 64,
+        },
+        "pdfium": {"schema_version": PDFIUM_INPUT_SCHEMA},
+        "office_fonts": observe_office_font_nominations((), deadline=time.monotonic() + 30),
+    }
+
+
 def test_invalid_worker_specification_refuses_scope_and_deadline_before_execution() -> None:
     raw = {
         "scope": SCOPE,
@@ -276,6 +310,8 @@ def test_invalid_worker_specification_refuses_scope_and_deadline_before_executio
         "source_digest": "b" * 64,
         "timeout_seconds": 30,
         "deadline_monotonic": 1.0,
+        "expected_platform": "Linux",
+        "source_inputs": _canonical_source_inputs(),
     }
     validate_native_specification(raw)
     for change in (
@@ -283,9 +319,14 @@ def test_invalid_worker_specification_refuses_scope_and_deadline_before_executio
         {"directory": "../private"},
         {"timeout_seconds": float("inf")},
         {"formats": ["pdf", "pdf"]},
+        {"expected_platform": "Windows"},
+        {"source_inputs": {**raw["source_inputs"], "schema_version": "template-native-source-launch-inputs-v3"}},
     ):
         with pytest.raises(ValueError):
             validate_native_specification({**raw, **change})
+    for missing in ("expected_platform", "source_inputs"):
+        with pytest.raises(ValueError, match="exact canonical public specification"):
+            validate_native_specification({key: value for key, value in raw.items() if key != missing})
 
 
 def test_actual_source_removal_after_launch_is_executed_failure(tmp_path: Path) -> None:
@@ -366,6 +407,12 @@ def test_actual_cli_oversized_timer_refuses_before_admission(tmp_path: Path) -> 
             pytest.fail("unrepresentable timer must refuse before native admission")
     assert signal.getsignal(signal.SIGALRM) == previous_handler
     assert signal.getitimer(signal.ITIMER_REAL) == previous_timer
+    # Every required Source/SDK/runtime nomination is supplied, so only the
+    # unrepresentable timer can refuse. Nominations are never admitted first.
+    nominations = tmp_path / "nominations"
+    nominations.mkdir()
+    implementation = nominations / "implementation-input.json"
+    implementation.write_bytes(b'{"binding_kind": "nominated-only"}\n')
     command = bootstrap_command(
         Path(sys.executable),
         REPO,
@@ -376,6 +423,28 @@ def test_actual_cli_oversized_timer_refuses_before_admission(tmp_path: Path) -> 
         SCOPE,
         "--timeout",
         str(10**100),
+        "--current-analysis-root",
+        str(nominations / "current"),
+        "--expected-platform",
+        platform.system(),
+        "--sdk-package-root",
+        str(nominations / "sdk"),
+        "--implementation-input",
+        str(implementation),
+        "--implementation-sha256",
+        hashlib.sha256(implementation.read_bytes()).hexdigest(),
+        "--mermaid-package-root",
+        str(nominations / "mermaid"),
+        "--mermaid-dependency-root",
+        str(nominations / "mermaid-dependencies"),
+        "--mermaid-node-executable",
+        str(nominations / "node"),
+        "--mermaid-chrome-executable",
+        str(nominations / "chrome"),
+        "--pdfium-site",
+        str(nominations / "pdfium-site"),
+        "--pdfium-wheel",
+        str(nominations / "pdfium.whl"),
     )
     result = run_bounded_subprocess(
         command,

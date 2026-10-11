@@ -664,7 +664,11 @@ Core module is imported by all other infrastructure modules for:
 
 | Module | Role |
 | --- | --- |
+| `analysis_data_custody.py` | Retain actual boundary data bytes around supervised analysis execution. |
 | `analysis_evidence.py` | Private, source-bound aggregate evidence for supervised analysis producers. |
+| `analysis_figure_custody.py` | Observe the existing six plotted figures inside the actual analysis scope. |
 | `analysis_launch.py` | Analysis adapter for the canonical audited Python stage supervisor. |
+| `analysis_read_custody.py` | Observe exact bytes returned by the real Source-owned project read API. |
+| `analysis_write_custody.py` | Observe actual completed Source API writes inside the genuine script scope. |
 | `bytecode_audit.py` | Stdlib-only pre-import audit of executed public code and its cache bytes. |
 | `implementation_custody.py` | Actual public implementation and installed-distribution custody. |

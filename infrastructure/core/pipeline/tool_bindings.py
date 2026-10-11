@@ -116,10 +116,16 @@ def collect_tool_bindings(
         if project_dir is not None:
             for relative in ("lean/lean-toolchain", "formal/lean/lean-toolchain"):
                 path = project_dir / relative
-                try:
-                    content = read_bytes_confined(project_dir, path, max_bytes=4096)
-                except FileNotFoundError:
-                    continue
+                # A missing project or pin directory is an explicit absent pin,
+                # matching the elan settings observation below; symlinked or
+                # substituted ancestors are still refused by anchored_parent.
+                with anchored_parent(path) as parent:
+                    if parent is None:
+                        continue
+                    try:
+                        content = read_bytes_confined(project_dir, path, max_bytes=4096)
+                    except FileNotFoundError:
+                        continue
                 rows["lean_pin_" + relative.replace("/", "_")] = hashlib.sha256(content).hexdigest()
                 pins.add(content.decode().strip())
         settings = home / "settings.toml"

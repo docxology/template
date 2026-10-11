@@ -17,8 +17,8 @@ from infrastructure.core.files.secure_write import atomic_write_bytes_confined, 
 from infrastructure.project.copy_exemplar import export_exemplar
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
 from infrastructure.reporting.readiness_receipts import public_resource_source_paths, public_source_paths
+from infrastructure.core.files.archive_members import bounded_members
 from infrastructure.reporting.release_readiness_artifacts import (
-    bounded_members,
     validate_source_archive,
     validate_wheel_members,
     validate_wheel_source,

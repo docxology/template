@@ -32,9 +32,14 @@ from infrastructure.reporting.native_format_pdf_oracles import (
     pdf_control_contract,
     require_pdf_control_result,
 )
+from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 REPO = Path(__file__).resolve().parents[3]
+# Strict replay authenticates every retained native tool receipt against the
+# externally admitted Source and original launch custodian. Receipt DATA and a
+# bare SnapshotReader never hold them, so replay refuses before reconstruction.
+UNADMITTED = "externally admitted source and original launch custody"
 pytestmark = pytest.mark.timeout(600)
 
 
@@ -183,13 +188,14 @@ def test_actual_valid_pdf_reaches_exact_intended_observer(name: str, actual_pdf_
     assert reader.unchanged()
 
 
-def _validate_controls(fixture: dict[str, Any], controls: list[dict[str, Any]]) -> None:
+def _replay_controls(fixture: dict[str, Any], controls: list[dict[str, Any]]) -> dict[str, Any]:
+    """Run the strict control replay with only retained DATA and a bare reader."""
     reader = SnapshotReader(fixture["root"])
     versions = {
-        name: _tool(record["artifact"], reader, fixture["nonce"], name, f"version-{name}", ["-v"])
+        name: read_json(fixture["root"], fixture["root"] / record["artifact"]["path"])
         for name, record in fixture["versions"].items()
     }
-    _pdf_controls(
+    return _pdf_controls(
         {"pdf_negative_controls": controls},
         reader,
         fixture["directory"],
@@ -199,11 +205,28 @@ def _validate_controls(fixture: dict[str, Any], controls: list[dict[str, Any]]) 
         versions,
         True,
         fixture["custody"],
+        deadline=fixture["deadline"],
     )
 
 
+def _independent_oracle(fixture: dict[str, Any], control: dict[str, Any]) -> dict[str, Any]:
+    raw = read_json(fixture["root"], fixture["root"] / control["artifact"]["path"])
+    reader = SnapshotReader(fixture["root"])
+    pdf = reader.read(raw["artifact"]["path"])
+    pixels = tuple(reader.read(item["path"]).content for item in raw["artifact"]["raster"]["rasters"])
+    return inspect_pdf_content(pdf.content, pixels, pdf_control_contract(), deadline=time.monotonic() + 30)
+
+
 def test_strict_reader_reconstructs_actual_pdf_controls(actual_pdf_controls: dict[str, Any]) -> None:
-    _validate_controls(actual_pdf_controls, actual_pdf_controls["controls"])
+    """Reconstruction needs original launch custody; bare DATA never admits it."""
+    fixture = actual_pdf_controls
+    reader = SnapshotReader(fixture["root"])
+    for name, record in fixture["versions"].items():
+        with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+            _tool(record["artifact"], reader, fixture["nonce"], name, f"version-{name}", ["-v"])
+    with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+        _replay_controls(fixture, fixture["controls"])
+    assert reader.unchanged()
 
 
 def test_strict_reader_refuses_forged_observer_bytes(actual_pdf_controls: dict[str, Any]) -> None:
@@ -215,8 +238,11 @@ def test_strict_reader_refuses_forged_observer_bytes(actual_pdf_controls: dict[s
     payload["pdf_content"]["pdf_sha256"] = "0" * 64
     try:
         controls[1]["artifact"] = write_json(fixture["root"], path, payload)
-        with pytest.raises(ValueError, match="observations changed"):
-            _validate_controls(fixture, controls)
+        # The forged observation cannot equal an independent recomputation
+        # from the retained PDF and raster bytes, and it cannot be admitted.
+        assert _independent_oracle(fixture, controls[1]) != payload["pdf_content"]
+        with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+            _replay_controls(fixture, controls)
     finally:
         path.write_bytes(original)
 
@@ -224,7 +250,7 @@ def test_strict_reader_refuses_forged_observer_bytes(actual_pdf_controls: dict[s
 def test_missing_baseline_and_wrong_process_code_cannot_count(actual_pdf_controls: dict[str, Any]) -> None:
     fixture = actual_pdf_controls
     with pytest.raises(ValueError, match="absent or duplicated"):
-        _validate_controls(fixture, fixture["controls"][1:])
+        _replay_controls(fixture, fixture["controls"][1:])
     controls = copy.deepcopy(fixture["controls"])
     path = fixture["root"] / controls[1]["process_artifact"]["path"]
     original = path.read_bytes()
@@ -232,8 +258,8 @@ def test_missing_baseline_and_wrong_process_code_cannot_count(actual_pdf_control
     process["original_exit_code"] = 7
     try:
         controls[1]["process_artifact"] = write_json(fixture["root"], path, process)
-        with pytest.raises(ValueError, match="original outcome"):
-            _validate_controls(fixture, controls)
+        with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+            _replay_controls(fixture, controls)
     finally:
         path.write_bytes(original)
 

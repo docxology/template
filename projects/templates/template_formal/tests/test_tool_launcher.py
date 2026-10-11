@@ -38,7 +38,17 @@ def test_actual_canonical_shell_ignores_timestamp_valid_poisoned_tool_cache(tmp_
     )
     assert len(injected) < len(original)
     source.write_bytes(injected + b"\n#" + b"x" * (len(original) - len(injected) - 2))
-    py_compile.compile(str(source), doraise=True, invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP)
+    # Poison the ordinary ``__pycache__`` entry that an isolated interpreter
+    # without a pycache prefix reads. The audited Stage 01 runner sets
+    # ``sys.pycache_prefix`` for this pytest process, so the default ``cfile``
+    # would land in that private prefix and the poison would never be visible.
+    ordinary_cache = source.parent / "__pycache__" / f"{source.stem}.{sys.implementation.cache_tag}.pyc"
+    py_compile.compile(
+        str(source),
+        cfile=str(ordinary_cache),
+        doraise=True,
+        invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP,
+    )
     observation = source.stat()
     source.write_bytes(original)
     os.utime(source, ns=(observation.st_atime_ns, observation.st_mtime_ns))
@@ -54,7 +64,7 @@ def test_actual_canonical_shell_ignores_timestamp_valid_poisoned_tool_cache(tmp_
         text=True,
         timeout=20,
     )
-    assert ordinary.returncode == 0 and marker.is_file(), ordinary.stderr
+    assert ordinary.returncode == 0 and marker.is_file(), (ordinary.returncode, marker.is_file(), ordinary.stderr)
     marker.unlink()
     receipt = root / "output/.pipeline/formal_tools/receipt.json"
     environment = dict(os.environ, FORMAL_PYTHON_BIN=sys.executable)

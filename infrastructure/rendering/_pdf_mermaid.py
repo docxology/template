@@ -30,6 +30,7 @@ from infrastructure.rendering._mermaid_source_font_default import (
     default_font_script_bytes,
 )
 from infrastructure.rendering._mermaid_v12 import POLICY, adapter_bytes, request_bytes, selected_package
+from infrastructure.rendering.native_render_custody import native_render_custody
 from infrastructure.rendering.security import run_isolated_subprocess
 
 logger = get_logger(__name__)
@@ -581,17 +582,24 @@ def _render_mermaid(
     try:
         # Intentionally convert every mmdc execution failure into a documented
         # caller-side fallback so combined PDF rendering can continue.
-        from infrastructure.reporting.native_mermaid_production_tool import run_source_native_mermaid
-
-        completed = run_source_native_mermaid(
-            cmd,
-            mmd_path,
-            png_path,
-            role="inline",
-            raw_source=source if original_source is None else original_source,
-            input_paths=inputs,
-            environment=env,
-            timeout=90,
+        custody = native_render_custody(
+            "native-origin Mermaid production lacks its independently admitted Source owner"
+        )
+        # The launcher is called from this frame: native custody verifies
+        # this exact function as its caller.
+        completed = (
+            None
+            if custody is None
+            else custody.mermaid_launcher()(
+                cmd,
+                mmd_path,
+                png_path,
+                role="inline",
+                raw_source=source if original_source is None else original_source,
+                input_paths=inputs,
+                environment=env,
+                timeout=90,
+            )
         )
         if completed is None:
             completed = run_isolated_subprocess(cmd, env=env, timeout=90)

@@ -20,6 +20,7 @@ from infrastructure.rendering.manuscript_composition import write_manuscript_com
 from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.combined_native_commands import html_combined_command, html_metadata_arguments
+from infrastructure.rendering.native_render_custody import native_render_custody
 from infrastructure.rendering.security import subprocess_options
 import infrastructure.rendering._web_postprocess as web_postprocess
 from infrastructure.rendering._web_markdown_preprocess import (
@@ -251,10 +252,13 @@ class WebRenderer:
         logger.debug(f"Combined markdown file: {combined_md}")
 
         try:
-            from infrastructure.reporting.native_renderer_source_call import run_source_native_pandoc
-
+            custody = native_render_custody(
+                "native-origin rendering lacks its actual independently admitted Source owner"
+            )
             options = subprocess_options(profile, 600)
-            if not run_source_native_pandoc(cmd, combined_md, source_files, writer="html", environment=options["env"]):
+            if custody is None or not custody.pandoc_launcher()(
+                cmd, combined_md, source_files, writer="html", environment=options["env"]
+            ):
                 subprocess.run(cmd, check=True, capture_output=True, text=True, **options)
             if output_file.exists():
                 os.chmod(render_target, stat.S_IMODE(output_file.stat().st_mode))

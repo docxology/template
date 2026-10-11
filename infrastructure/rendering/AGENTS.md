@@ -44,12 +44,31 @@ HTML and Beamer TeX rewrites use exclusive temporary files in the destination
 folder, so a planted predictable temporary symlink cannot redirect the write.
 Unsupported URI schemes fail validation even when their URL path is empty.
 
+## Release acceptance modules
+
+| Module | Role |
+| --- | --- |
+| `combined_native_commands.py` | Pure Source command construction shared by actual combined writers/readers. |
+| `manuscript_hydration_replay.py` | Reconstruct exact shared hydration bytes and every lexical token occurrence. |
+| `manuscript_ordinal_anchors.py` | Exact ordinal anchors in held bytes and a complete annotated Pandoc AST. |
+| `native_render_custody.py` | Rendering-owned seam through which a live native owner supplies tool custody. |
+| `office_diagram_layout.py` | Complete the already declared original-diagram DOCX 4.2-inch height cap. |
+| `office_mermaid_projection.py` | Project successful source-owned Mermaid figures into native Office images. |
+| `office_native_projection.py` | Source-owned native Office equation and bookend layout projection. |
+
 ## Boundaries
 
 - Project analysis outputs are inputs; rendering must not compute project
   results.
 - Rendering may call narrow validation preflight leaves, but must not import
   broad validation orchestrators.
+- Rendering never imports `infrastructure.reporting` or
+  `infrastructure.publishing` (`RENDERING-LAYERING-1`, enforced by
+  `tests/infra_tests/rendering/test_layering.py`). A live native producer
+  owner supplies Pandoc, Mermaid and TeX section custody through
+  `native_render_custody.py`; without one, a nominated native reference origin
+  is refused instead of rendering on the ordinary path. Shared ZIP member
+  admission lives in `infrastructure.core.files.archive_members`.
 - Fix manuscript syntax or artifact producers upstream; do not patch generated
   LaTeX/PDF output by hand.
 - `FIGURE_WIDTH_*` values must stay bare fractions, and figure alt-text comments

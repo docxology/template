@@ -18,6 +18,7 @@ import time
 from typing import Any
 
 from infrastructure.reporting.native_format_pdf_source import PDFSourceInputs
+from infrastructure.reporting.native_format_tex_reference import TEXMF_TREES_ARGUMENT
 from infrastructure.reporting.native_format_portable_custody import validate_executable_observation
 from infrastructure.reporting.native_format_scientific_math import (
     _math_body,
@@ -271,6 +272,7 @@ def replay_scientific_math_reference(
         raise ValueError("retained reference TeX differs from source-only reconstruction")
     if raw["environment"] != {
         **{name: str(original_directory / name.lower()) for name in ("TEXMFHOME", "TEXMFCONFIG", "TEXMFVAR")},
+        "TEXMFOUTPUT": str(original_directory),
         "openin_any": "p",
         "openout_any": "p",
     }:
@@ -282,7 +284,7 @@ def replay_scientific_math_reference(
     }:
         raise ValueError("reference runtime changed")
     records = raw["tool_artifacts"]
-    if len(records) != 9 or any(
+    if len(records) != 10 or any(
         set(row) != {"artifact", "exit_code", "original_exit_code"}
         or type(row["exit_code"]) is not int
         or row["exit_code"] != 0
@@ -300,14 +302,27 @@ def replay_scientific_math_reference(
         }:
             raise ValueError("reference runtime version differs from original custody")
     roots = []
-    for index, name in enumerate(("TEXMFDIST", "TEXMFROOT"), 3):
-        process = tool(records[index]["artifact"], f"reference-{name.lower()}", "kpsewhich", [f"--var-value={name}"])
+    queries = (
+        ("reference-texmfdist", ["--var-value=TEXMFDIST"]),
+        ("reference-texmfroot", ["--var-value=TEXMFROOT"]),
+        ("reference-texmf-trees", [TEXMF_TREES_ARGUMENT]),
+    )
+    for index, (purpose, query) in enumerate(queries, 3):
+        process = tool(records[index]["artifact"], purpose, "kpsewhich", query)
         if (
             process["executable"] != raw["runtime_before"]["kpsewhich"]["path"]
             or process["executable_sha256"] != raw["runtime_before"]["kpsewhich"]["sha256"]
         ):
             raise ValueError("reference distribution query runtime changed")
-        roots.append(_absolute(process["stdout"].strip()))
+        if query != [TEXMF_TREES_ARGUMENT]:
+            roots.append(_absolute(process["stdout"].strip()))
+            continue
+        # Same admission as the original: every searched tree except the private ones.
+        roots.extend(
+            tree
+            for tree in (_absolute(item) for item in process["stdout"].strip().split(":"))
+            if not tree.is_relative_to(original_directory)
+        )
     compiler_args = [
         "-fmt=xelatex",
         "-no-pdf",
@@ -351,7 +366,7 @@ def replay_scientific_math_reference(
             or row["artifact"]["path"] != directory + f"/dependencies/{index:04d}-{resolved.name}.bin"
         ):
             raise ValueError("retained reference dependency differs from actual original observations")
-    for offset, label in ((5, "discovery"), (7, "final")):
+    for offset, label in ((6, "discovery"), (8, "final")):
         compiler = tool(records[offset]["artifact"], f"reference-{label}-compiler", "xelatex", compiler_args)
         backend = tool(records[offset + 1]["artifact"], f"reference-{label}-backend", "xdvipdfmx", backend_args)
         for process, name in ((compiler, "xelatex"), (backend, "xdvipdfmx")):

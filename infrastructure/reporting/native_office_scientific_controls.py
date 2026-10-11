@@ -11,7 +11,7 @@ from typing import Any
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.reporting.native_format_acceptance_checks import native_tool_record, parse_native_bytes
 from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
-from infrastructure.reporting.native_office_content_witness import inspect_office_source_survival
+from infrastructure.reporting.native_office_content_witness import docx_bookmark_names, inspect_office_source_survival
 from infrastructure.reporting.native_office_reference import read_office_package_ast
 from infrastructure.reporting.native_office_reference_visual import (
     inspect_office_reference_projection,
@@ -85,9 +85,10 @@ def mutate_office_scientific_package(original: bytes, kind: str, name: str) -> b
                 elif name == "wrong-alternative":
                     changed = data.replace(b"Measured alternative description.", b"Incorrect alternative description.")
                 elif name == "lost-label":
-                    digest = hashlib.sha1(b"eq:control", usedforsecurity=False).hexdigest()
-                    marker = ("_" + digest[1:]).encode() if kind == "docx" else b"eq:control"
-                    changed = data.replace(marker, b"changed-source-label")
+                    # Remove whichever bookmark form the actual pinned writer emitted.
+                    markers = docx_bookmark_names("eq:control") if kind == "docx" else ("eq:control",)
+                    for marker in markers:
+                        changed = changed.replace(marker.encode(), b"changed-source-label")
                 elif name == "lost-pagebreak":
                     import re
 

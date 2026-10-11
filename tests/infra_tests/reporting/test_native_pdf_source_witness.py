@@ -144,9 +144,12 @@ def test_tex_comments_and_verbatim_do_not_execute_embedded_commands() -> None:
 
 
 def test_frontmatter_is_bound_to_declared_literal_source() -> None:
+    # Without a literal date the title page would print the TeX runtime clock,
+    # which stays blocked; this source declares that no date is rendered.
     contract = compile_pdf_frontmatter_contract(
         "config.yaml",
-        b"paper:\n  title: Source Title\nauthors:\n  - name: Ada\n    email: ada@example.invalid\n",
+        b"paper:\n  title: Source Title\nauthors:\n  - name: Ada\n    email: ada@example.invalid\n"
+        b"rendering:\n  include_date: false\n",
         "manuscript:pdf",
     )
     assert [block.id for block in contract.blocks] == [

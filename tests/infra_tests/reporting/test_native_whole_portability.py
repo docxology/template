@@ -82,7 +82,8 @@ def test_actual_whole_native_receipt_survives_relocation_and_separate_reader(tmp
     setup = run_bounded_subprocess(
         ["uv", "sync", "--locked", "--offline", "--group", "dev", "--python", sys.executable],
         cwd=producer,
-        env=env,
+        # `--locked` verifies the lockfile itself; an inherited UV_FROZEN conflicts with it.
+        env={name: value for name, value in env.items() if name != "UV_FROZEN"},
         timeout=90,
         capture_output=True,
     )

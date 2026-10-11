@@ -20,7 +20,7 @@ from typing import Any, Sequence
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.publishing.root_release_contract import root_package_version
 from infrastructure.project.public_hosted_origin import HostedReadbackContext, WORKFLOW
-from infrastructure.reporting.release_readiness_artifacts import bounded_members
+from infrastructure.core.files.archive_members import bounded_members
 from infrastructure.reporting.release_readiness_profile import collect_profile
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
 

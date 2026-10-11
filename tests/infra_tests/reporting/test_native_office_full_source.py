@@ -16,7 +16,7 @@ from infrastructure.reporting.native_office_scientific_controls import (
     CONTROL_SOURCE,
     mutate_office_scientific_package,
 )
-from infrastructure.reporting.native_office_content_witness import inspect_office_source_survival
+from infrastructure.reporting.native_office_content_witness import docx_bookmark_names, inspect_office_source_survival
 from infrastructure.rendering.office_native_projection import (
     office_semantics_filter_path,
     project_docx_transmission_layout,
@@ -44,6 +44,23 @@ def test_independent_expression_tree_preserves_signs_scripts_fractions_and_array
         office_math_expression(r"\invented{visible}")
     with pytest.raises(ValueError, match="finite expression budget"):
         office_math_expression("x" * (64 * 1024 + 1))
+
+
+@pytest.mark.parametrize(
+    ("label", "pinned", "current"),
+    [
+        # Bookmark names observed from actual Pandoc 3.11 and 3.12 DOCX writers.
+        ("eq:control", "eq:control", "_d17530b69e3a78bc022e0ff92c94249180367d5"),
+        ("refs", "refs", "_refs"),
+        ("_x", "Xa532fea85b26fa6eea03db6aa3984579acd0189", "__x"),
+        ("1abc", "X1ad43d75ba33f5f8a8956ad2118d0b62f840fa2", "_1abc"),
+        ("a" * 39, "a" * 39, "_" + "a" * 39),
+        ("b" * 40, "b" * 40, "_6e892b750b146f39a486af8c31d555e9c771b3e"),
+        ("c" * 45, "X14c3280596694af2d9c25b194b62cfae2a23a55", "_14c3280596694af2d9c25b194b62cfae2a23a55"),
+    ],
+)
+def test_docx_bookmark_names_match_both_pinned_pandoc_writers(label: str, pinned: str, current: str) -> None:
+    assert docx_bookmark_names(label) == (pinned, current)
 
 
 def test_raw_source_roles_cannot_excuse_visible_content_as_nonvisible_metadata() -> None:

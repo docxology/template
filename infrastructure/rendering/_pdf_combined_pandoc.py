@@ -14,6 +14,7 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering._pdf_pandoc_engine import build_pandoc_render_error
 from infrastructure.rendering.combined_native_commands import pdf_combined_command
+from infrastructure.rendering.native_render_custody import native_render_custody
 
 if TYPE_CHECKING:
     from infrastructure.rendering.config import RenderingConfig
@@ -69,10 +70,10 @@ def run_pandoc_conversion(
     md_content: str,
 ) -> None:
     """Execute the Pandoc subprocess, raising on failure."""
-    from infrastructure.reporting.native_renderer_source_call import run_source_native_pandoc
+    custody = native_render_custody("native-origin rendering lacks its actual independently admitted Source owner")
 
     try:
-        if run_source_native_pandoc(cmd, combined_md, source_files, writer="latex"):
+        if custody is not None and custody.pandoc_launcher()(cmd, combined_md, source_files, writer="latex"):
             return
         subprocess.run(
             cmd,

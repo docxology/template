@@ -21,7 +21,7 @@ from xml.parsers import expat
 
 from defusedxml.ElementTree import fromstring
 
-from infrastructure.reporting.release_readiness_artifacts import bounded_members
+from infrastructure.core.files.archive_members import bounded_members
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 WP = "{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}"

@@ -16,6 +16,7 @@ import types
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from infrastructure.rendering.native_render_custody import NATIVE_ORIGIN_KEYS
 from infrastructure.rendering.security import IsolatedCompletedProcess
 
 if TYPE_CHECKING:
@@ -51,11 +52,6 @@ CALLERS = {
     "inline": ("infrastructure/rendering/_pdf_mermaid.py", "_render_mermaid"),
     "standalone": ("infrastructure/rendering/mermaid_figure.py", "render_mermaid_png"),
 }
-ORIGIN_KEYS = (
-    "TEMPLATE_PUBLIC_REFERENCE_ROOT",
-    "TEMPLATE_PUBLIC_REFERENCE_COMMIT",
-    "TEMPLATE_PUBLIC_REFERENCE_FINGERPRINT",
-)
 REMAINING_ADMISSION = (
     "complete independently reconstructed Source occurrence/caller-value membership",
     "actual native child output-write causality beyond held before/after bodies",
@@ -120,14 +116,14 @@ def run_source_native_mermaid(
     """
     loaded = sys.modules.get("infrastructure.reporting.native_tool_producer")
     if loaded is None:
-        if any(os.environ.get(key) for key in ORIGIN_KEYS):
+        if any(os.environ.get(key) for key in NATIVE_ORIGIN_KEYS):
             raise ValueError("native-origin Mermaid production lacks its independently admitted Source owner")
         return None
     from infrastructure.reporting.native_tool_producer import NativeProducerOperation, current_native_producer_operation
 
     owner = current_native_producer_operation()
     if owner is None:
-        if any(os.environ.get(key) for key in ORIGIN_KEYS):
+        if any(os.environ.get(key) for key in NATIVE_ORIGIN_KEYS):
             raise ValueError("native-origin Mermaid production lacks its genuine live Source owner")
         return None
     if type(owner) is not NativeProducerOperation:

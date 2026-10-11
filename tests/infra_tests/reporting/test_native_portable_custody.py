@@ -13,6 +13,7 @@ import pytest
 from infrastructure.core.execution_boundary import run_bounded_subprocess
 from infrastructure.project.public_acceptance_evidence import bootstrap_command, runtime_identity, write_json
 from infrastructure.reporting.native_format_acceptance_checks import native_tool_record
+from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
 from infrastructure.reporting.native_format_acceptance_validation import _tool
 from infrastructure.reporting.native_format_portable_custody import (
     producer_custody,
@@ -20,9 +21,14 @@ from infrastructure.reporting.native_format_portable_custody import (
     producer_path,
     validate_producer_custody,
 )
+from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
+from infrastructure.reporting.native_tool_replay import validate_native_tool_data
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 REPO = Path(__file__).absolute().parents[3]
+# Portable admission of a retained native tool receipt needs the externally
+# admitted Source and original launch custodian; receipt DATA never holds them.
+UNADMITTED = "externally admitted source and original launch custody"
 
 
 def test_original_bootstrap_reconstruction_preserves_root_and_hook(tmp_path: Path) -> None:
@@ -44,33 +50,44 @@ def test_original_bootstrap_reconstruction_preserves_root_and_hook(tmp_path: Pat
 
 
 def test_actual_tool_receipt_relocated_reader_and_tamper(tmp_path: Path) -> None:
+    """Relocated receipt DATA stays checkable but never self-authorizes.
+
+    Admission of an original tool receipt requires the externally held
+    original launch custodian. A bare relocated reader, in this or another
+    interpreter, must refuse; tampered DATA is refused by its own checks.
+    """
     producer = tmp_path / "producer"
     producer.mkdir()
     executable = producer / "producer-python"
     executable.write_text(f'#!/bin/sh\nexec "{sys.executable}" "$@"\n')
     executable.chmod(0o700)
     args = ["-I", "-c", "print('original actual execution')"]
+    directory = producer / "output/readiness/tool"
+    create_private_native_directory(producer, directory)
+    deadline = time.monotonic() + 30
     record = native_tool_record(
         producer,
-        producer / "output/readiness/tool",
+        directory,
         str(executable),
         args,
         env={"PATH": str(Path(sys.executable).parent)},
-        deadline=time.monotonic() + 30,
+        deadline=deadline,
         run_id="a" * 32,
         purpose="portable-actual",
     )
+    completed = time.monotonic()
     assert record["exit_code"] == 0
     reader = tmp_path / "reader"
     shutil.copytree(producer, reader)
     shutil.rmtree(producer)
-    assert (
-        _tool(record["artifact"], SnapshotReader(reader), "a" * 32, str(executable), "portable-actual", args)[
-            "stdout"
-        ].strip()
-        == "original actual execution"
-    )
-    # Use another actual interpreter for admission, with source loaded explicitly.
+    raw = SnapshotReader(reader).read(record["artifact"]["path"]).json_object()
+    assert raw["stdout"].strip() == "original actual execution"
+    # The relocated original PID/OS/stream/guardian DATA remains consistent
+    # under the clock this caller actually held for the original launch.
+    validate_native_tool_data(raw, SnapshotReader(reader), original_deadline=deadline, original_completion=completed)
+    with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+        _tool(record["artifact"], SnapshotReader(reader), "a" * 32, str(executable), "portable-actual", args)
+    # Another actual interpreter loading the same source cannot mint custody either.
     alternate = Path(sys.base_prefix) / "bin/python3"
     if alternate.exists():
         script = (
@@ -100,7 +117,8 @@ def test_actual_tool_receipt_relocated_reader_and_tamper(tmp_path: Path) -> None
             timeout=30,
             capture_output=True,
         )
-        assert result.returncode == 0, result.stderr
+        assert result.returncode != 0 and not result.timed_out
+        assert "ProjectionSourceUnsupported" in result.stderr and UNADMITTED in result.stderr, result.stderr
     path = reader / record["artifact"]["path"]
     payload = json.loads(path.read_text())
     for changed in (
@@ -110,8 +128,10 @@ def test_actual_tool_receipt_relocated_reader_and_tamper(tmp_path: Path) -> None
         {"executable_observation_after": {}},
     ):
         binding = write_json(reader, path, {**payload, **changed})
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError) as refused:
             _tool(binding, SnapshotReader(reader), "a" * 32, str(executable), "portable-actual", args)
+        # The tampered DATA itself is refused before custody is even consulted.
+        assert not isinstance(refused.value, ProjectionSourceUnsupported)
     path.write_text("{}")
     with pytest.raises(ValueError, match="bytes differ"):
         _tool(record["artifact"], SnapshotReader(reader), "a" * 32, str(executable), "portable-actual", args)

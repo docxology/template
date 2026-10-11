@@ -118,36 +118,48 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
         if entrypoint.is_file() and not entrypoint.is_symlink() and entrypoint.name != "python":
             os.link(entrypoint, environment / "bin" / entrypoint.name)
     directory = producer / "output/readiness/portable"
-    gate = "root:macos:rendering" if platform.system() == "Darwin" else "root:roster"
-    if gate == "root:roster":
-        from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+    gate = "root:roster"
+    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
-        # This control claims complete source-roster metadata and process
-        # portability, not execution of each exemplar's algorithms.
-        for scope in PUBLIC_PROJECT_NAMES:
-            project = producer / "projects" / scope
-            (project / "src").mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source / "projects" / scope / "pyproject.toml", project / "pyproject.toml")
-        refused_directory = producer / "output/readiness/unsupported-print"
-        refused_spec = write_json(
-            producer,
-            refused_directory / "spec.json",
-            {"gate": "root:macos:rendering", "budget": 180, "raw_path": "output/readiness/unsupported-print/raw.json"},
-        )
-        refused_command = [
-            str(interpreter),
-            "-m",
-            "infrastructure.project.public_acceptance_auxiliary_worker",
-            "--spec",
-            str(producer / refused_spec["path"]),
+    # This control claims complete source-roster metadata and process
+    # portability, not execution of each exemplar's algorithms.
+    for scope in PUBLIC_PROJECT_NAMES:
+        project = producer / "projects" / scope
+        (project / "src").mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source / "projects" / scope / "pyproject.toml", project / "pyproject.toml")
+    refused_directory = producer / "output/readiness/unsupported-print"
+    refused_spec = write_json(
+        producer,
+        refused_directory / "spec.json",
+        {"gate": "root:macos:rendering", "budget": 180, "raw_path": "output/readiness/unsupported-print/raw.json"},
+    )
+    refused_command = [
+        str(interpreter),
+        "-m",
+        "infrastructure.project.public_acceptance_auxiliary_worker",
+        "--spec",
+        str(producer / refused_spec["path"]),
+    ]
+    refused = supervise(refused_command, producer, refused_directory / "execution", time.monotonic() + 180)
+    actual_refusal = json.loads((refused_directory / "raw.json").read_text())
+    assert refused["timed_out"] is False
+    assert not actual_refusal.get("details", {}).get("print_witness_artifact")
+    darwin_tools = all(shutil.which(name) for name in ("pandoc", "pdftoppm", "pdffonts"))
+    if platform.system() == "Darwin" and darwin_tools:
+        # A standalone Darwin print witness runs its tools, but every native tool
+        # record needs externally admitted source and original launch custody.
+        # Without that authority the witness fails closed and grants nothing.
+        refusal_code, refusal_status = 1, "fail"
+        assert actual_refusal["failure_class"] == "ProjectionSourceUnsupported"
+        assert "externally admitted source and original launch custody" in actual_refusal["diagnostic"]
+    else:
+        refusal_code, refusal_status = 75, "blocked"
+        assert ("actual Darwin host" if platform.system() != "Darwin" else "unavailable") in actual_refusal[
+            "diagnostic"
         ]
-        refused = supervise(refused_command, producer, refused_directory / "execution", time.monotonic() + 180)
-        actual_refusal = json.loads((refused_directory / "raw.json").read_text())
-        assert refused["exit_code"] == actual_refusal["exit_code"] == 75
-        assert refused["timed_out"] is False and actual_refusal["status"] == "blocked"
-        assert "actual Darwin host" in actual_refusal["diagnostic"]
         assert not list(refused_directory.rglob("print-witness.json"))
-        assert not actual_refusal.get("details", {}).get("print_witness_artifact")
+    assert refused["exit_code"] == actual_refusal["exit_code"] == refusal_code
+    assert actual_refusal["status"] == refusal_status
     fingerprint = source_fingerprint(producer)
     spec = write_json(
         producer,
@@ -219,77 +231,41 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     alternate = reader_runtime / binary.relative_to(prefix)
     assert alternate.is_file() and alternate.resolve() != Path(sys.executable).resolve()
     script = r"""
-import sys,json,pathlib,copy,hashlib
+import sys,json,pathlib
 sys.path[:0]=sys.argv[1:3]
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.project.public_acceptance_auxiliary_validation import validate_auxiliary_process
-from infrastructure.reporting.native_print_witness_validation import validate_print_witness
-from infrastructure.reporting.required_acceptance_aggregate import _evidence_closure
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.reporting.readiness_receipts import source_fingerprint
 root=pathlib.Path(sys.argv[1])
 details=json.loads((root/'output/readiness/portable/details.json').read_text())
-from infrastructure.reporting.readiness_receipts import source_fingerprint
-gate=sys.argv[4]
+gate,refusal_code,refusal_status=sys.argv[4],int(sys.argv[5]),sys.argv[6]
 assert source_fingerprint(root)==sys.argv[3]
 validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
-if gate=='root:macos:rendering':
-    binding=details['print_witness_artifact']
-    path=root/binding['path'];original=path.read_bytes();witness=json.loads(original)
-    raw=json.loads((root/'output/readiness/portable/raw.json').read_text())
-    closure=_evidence_closure(SnapshotReader(root),binding['path'])
-    assert sum(map(len,closure.values()))<64*1024*1024
-    assert all(item['path'] in closure for item in witness['raster_artifacts'])
-    for fault in ('worker','source','font-roles','font-before-after','font-private-path','library-files','pages','closure','tool'):
-        changed=copy.deepcopy(witness)
-        if fault=='worker':changed['pid']+=1
-        elif fault=='source':changed['source_after']['infrastructure'][1][-1]='0'*64
-        elif fault=='font-roles':changed['fonts_before']['storybook']['roles'].pop()
-        elif fault=='font-before-after':changed['fonts_after']['storybook']['roles'][0]['resource']['sha256']='0'*64
-        elif fault=='font-private-path':
-            for key in ('fonts_before','fonts_after'):
-                changed[key]['storybook']['roles'][0]['resource']['path']='/private/unsupported/font.ttf'
-        elif fault=='library-files':changed['library_before']['distributions'][0]['files'].pop()
-        elif fault=='pages':changed['prints'][0]['source']['pages'].pop()
-        elif fault=='closure':changed['raster_artifacts'].pop()
-        elif fault=='tool':
-            tool_path=root/changed['versions']['pdftoppm']['path'];saved_tool=tool_path.read_bytes()
-            tool=json.loads(saved_tool);tool['original_exit_code']=1
-            tool_path.write_text(json.dumps(tool));changed['versions']['pdftoppm']['sha256']=hashlib.sha256(tool_path.read_bytes()).hexdigest()
-        path.write_text(json.dumps(changed));rebound={'path':binding['path'],'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
-        try:
-            validate_print_witness(rebound,SnapshotReader(root),expected_pid=raw['pid'],expected_runtime=raw['runtime'])
-        except ValueError:pass
-        else:raise AssertionError('rehashed original witness accepted '+fault)
-        finally:
-            path.write_bytes(original)
-            if fault=='tool':tool_path.write_bytes(saved_tool)
-    print(json.dumps({'role':'actual-portable-print-controls','pages':[item['observation']['pages'] for item in witness['prints']],
-                      'closure_files':len(closure),'closure_bytes':sum(map(len,closure.values())),'rehashed_controls':9}))
-else:
-    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-    observations=details['source_roster_observations']
-    assert details['projects']==list(PUBLIC_PROJECT_NAMES)
-    assert [item['scope'] for item in observations]==list(PUBLIC_PROJECT_NAMES)
-    metadata=root/observations[0]['metadata_artifact']['path'];original_metadata=metadata.read_bytes()
-    metadata.write_bytes(original_metadata+b'\n# changed after actual roster producer\n')
-    try:validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
-    except ValueError:pass
-    else:raise AssertionError('changed current roster metadata admitted')
-    finally:metadata.write_bytes(original_metadata)
-    sdk=root/'infrastructure/core/execution_boundary.py';original_sdk=sdk.read_bytes()
-    sdk.write_bytes(original_sdk+b'\n# changed current source after portable producer\n')
-    current=source_fingerprint(root);assert current!=sys.argv[3]
-    try:
-        validate_auxiliary_process(gate,current,details,SnapshotReader(root))
-    except ValueError:pass
-    else:raise AssertionError('changed current SDK source fingerprint admitted')
-    finally:sdk.write_bytes(original_sdk)
-    assert source_fingerprint(root)==sys.argv[3]
-    validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
-    refusal=json.loads((root/'output/readiness/unsupported-print/raw.json').read_text())
-    assert refusal['exit_code']==75 and refusal['status']=='blocked'
-    assert not refusal.get('details',{}).get('print_witness_artifact')
-    print(json.dumps({'role':'actual-portable-roster-controls','projects':len(observations),
-                      'unsupported_print_original_exit':75,'source_and_metadata_controls':2}))
+observations=details['source_roster_observations']
+assert details['projects']==list(PUBLIC_PROJECT_NAMES)
+assert [item['scope'] for item in observations]==list(PUBLIC_PROJECT_NAMES)
+metadata=root/observations[0]['metadata_artifact']['path'];original_metadata=metadata.read_bytes()
+metadata.write_bytes(original_metadata+b'\n# changed after actual roster producer\n')
+try:validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
+except ValueError:pass
+else:raise AssertionError('changed current roster metadata admitted')
+finally:metadata.write_bytes(original_metadata)
+sdk=root/'infrastructure/core/execution_boundary.py';original_sdk=sdk.read_bytes()
+sdk.write_bytes(original_sdk+b'\n# changed current source after portable producer\n')
+current=source_fingerprint(root);assert current!=sys.argv[3]
+try:
+    validate_auxiliary_process(gate,current,details,SnapshotReader(root))
+except ValueError:pass
+else:raise AssertionError('changed current SDK source fingerprint admitted')
+finally:sdk.write_bytes(original_sdk)
+assert source_fingerprint(root)==sys.argv[3]
+validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
+refusal=json.loads((root/'output/readiness/unsupported-print/raw.json').read_text())
+assert refusal['exit_code']==refusal_code and refusal['status']==refusal_status
+assert not refusal.get('details',{}).get('print_witness_artifact')
+print(json.dumps({'role':'actual-portable-roster-controls','projects':len(observations),
+                  'unsupported_print_original_exit':refusal_code,'source_and_metadata_controls':2}))
 """
     result = subprocess.run(
         [
@@ -301,6 +277,8 @@ else:
             str(prepared / f"lib/python{minor}/site-packages"),
             fingerprint,
             gate,
+            str(refusal_code),
+            refusal_status,
         ],
         cwd=reader_root,
         capture_output=True,

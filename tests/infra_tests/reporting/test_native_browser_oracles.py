@@ -23,6 +23,7 @@ from infrastructure.reporting.native_format_browser_oracles import (
     browser_control_contract,
     require_browser_control_result,
 )
+from tests.infra_tests.reporting._audited_browser_child import audited_browser_control
 
 
 def _chrome() -> str:
@@ -44,18 +45,36 @@ def test_configured_native_browser_preserves_actual_selection_and_refuses_missin
             native_chrome({"CHROME_EXECUTABLE_PATH": str(invalid), "PATH": str(tmp_path)})
 
 
+def test_unaudited_parent_cannot_hold_html_child_custody(tmp_path: Path) -> None:
+    """A pytest worker never installed the preimport audit, so it cannot launch."""
+    directory = tmp_path / "output" / "readiness" / "evidence"
+    directory.mkdir(mode=0o700, parents=True)
+    with pytest.raises(ValueError, match="actually preimport-audited SDK package"):
+        audit_browser_html(
+            tmp_path,
+            directory,
+            browser_control_bytes("baseline"),
+            browser_control_contract(),
+            chrome=_chrome(),
+            env=build_bounded_env(),
+            deadline=time.monotonic() + 30,
+            run_id="c" * 32,
+        )
+    assert not list(directory.glob("browser-result-*"))
+
+
 @pytest.mark.timeout(240)
 @pytest.mark.parametrize("name", tuple(BROWSER_CONTROL_CODES))
 def test_valid_native_browser_control(tmp_path: Path, name: str) -> None:
+    # The HTML parent custodian requires an interpreter that installed the
+    # executed-bytecode audit before importing the SDK, as trusted launchers do.
     directory = tmp_path / "output" / "readiness" / "evidence"
     directory.mkdir(mode=0o700, parents=True)
-    observed = audit_browser_html(
+    observed = audited_browser_control(
         tmp_path,
         directory,
-        browser_control_bytes(name),
-        browser_control_contract(),
-        chrome=_chrome(),
-        env=build_bounded_env(),
+        name,
+        workspace=tmp_path / "audited-child",
         deadline=time.monotonic() + 120,
         run_id="c" * 32,
     )

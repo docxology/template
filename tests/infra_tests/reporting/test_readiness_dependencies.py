@@ -48,6 +48,10 @@ def provider_evidence(tmp_path_factory):
     source = root / "projects" / PROVIDER
     source.joinpath("src").mkdir(parents=True)
     source.joinpath("src/__init__.py").write_text("def measured_value():\n    return 17\n")
+    # The provider wheel must ship its declared recorded-report package resource.
+    recorded_report = source / "src/deep_research/fixtures/recorded_report.json"
+    recorded_report.parent.mkdir(parents=True)
+    recorded_report.write_bytes(b'{"provider":"openai","output_text":"authored recorded report"}\n')
     source.joinpath("pyproject.toml").write_text(
         f'[project]\nname="{PACKAGE}"\nversion="0.2.0"\n[tool.setuptools.package-dir]\n{MODULE}="src"\n'
     )
@@ -61,6 +65,7 @@ def provider_evidence(tmp_path_factory):
     metadata = f"{MODULE}-0.2.0.dist-info"
     members = {
         f"{MODULE}/__init__.py": source.joinpath("src/__init__.py").read_bytes(),
+        f"{MODULE}/deep_research/fixtures/recorded_report.json": recorded_report.read_bytes(),
         f"{metadata}/METADATA": f"Metadata-Version: 2.1\nName: {PACKAGE}\nVersion: 0.2.0\n".encode(),
         f"{metadata}/WHEEL": b"Wheel-Version: 1.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
     }

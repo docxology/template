@@ -166,6 +166,51 @@ def admit_original_rasters(
     return identities
 
 
+def validate_original_raster_process(
+    process: dict[str, Any],
+    raw: dict[str, Any],
+    *,
+    producer_path: Callable[[str], str],
+    original_run_id: str,
+) -> None:
+    """DATA predicate for the retained original raster command and outcome.
+
+    Passing confers no custody: reproduction still authenticates the same record
+    through the externally held original launch before trusting its rasters.
+    """
+    validate_executable_observation(
+        process["executable_observation_before"], process["executable"], process["executable_sha256"]
+    )
+    validate_executable_observation(
+        process["executable_observation_after"], process["executable"], process["executable_sha256"]
+    )
+    original_directory = str(Path(raw["source"]["path"]).parent)
+    if (
+        set(process) != TOOL_FIELDS
+        or process["schema_version"] != TOOL_SCHEMA
+        or process["run_id"] != original_run_id
+        or process["tool"] != "pdftoppm"
+        or process["purpose"] != "scientific-reference-raster"
+        or process["command"]
+        != [
+            process["executable"],
+            "-png",
+            "-r",
+            "150",
+            producer_path(raw["pdf"]["path"]),
+            producer_path(original_directory + "/page"),
+        ]
+        or type(process["exit_code"]) is not int
+        or process["exit_code"] != 0
+        or type(process["original_exit_code"]) is not int
+        or process["original_exit_code"] != 0
+        or process["timed_out"] is not False
+        or process["custody_refused"] is not False
+        or process["diagnostic"] != ""
+    ):
+        raise ValueError("original raster command/outcome/custody differs")
+
+
 def reproduce_scientific_reference(
     root: Path,
     directory: Path,
@@ -222,40 +267,11 @@ def reproduce_scientific_reference(
     if hashlib.sha256(process_bytes).hexdigest() != raster["tool_artifact"]["sha256"]:
         raise ValueError("original raster process changed")
     process = strict_json_object(process_bytes)
-    validate_executable_observation(
-        process["executable_observation_before"], process["executable"], process["executable_sha256"]
-    )
-    validate_executable_observation(
-        process["executable_observation_after"], process["executable"], process["executable_sha256"]
-    )
-    original_directory = str(Path(raw["source"]["path"]).parent)
-    if (
-        set(process) != TOOL_FIELDS
-        or process["schema_version"] != TOOL_SCHEMA
-        or process["run_id"] != original_run_id
-        or process["tool"] != "pdftoppm"
-        or process["purpose"] != "scientific-reference-raster"
-        or process["command"]
-        != [
-            process["executable"],
-            "-png",
-            "-r",
-            "150",
-            producer_path(raw["pdf"]["path"]),
-            producer_path(original_directory + "/page"),
-        ]
-        or type(process["exit_code"]) is not int
-        or process["exit_code"] != 0
-        or type(process["original_exit_code"]) is not int
-        or process["original_exit_code"] != 0
-        or process["timed_out"] is not False
-        or process["custody_refused"] is not False
-        or process["diagnostic"] != ""
-    ):
-        raise ValueError("original raster command/outcome/custody differs")
+    validate_original_raster_process(process, raw, producer_path=producer_path, original_run_id=original_run_id)
     from infrastructure.reporting.native_tool_replay import validate_original_native_tool
 
     validate_original_native_tool(raster["tool_artifact"], process, original_reader, run_id=original_run_id)
+    original_directory = str(Path(raw["source"]["path"]).parent)
     directory.mkdir(parents=True, exist_ok=False)
     reader_run_id = uuid.uuid4().hex
     source = operation.source

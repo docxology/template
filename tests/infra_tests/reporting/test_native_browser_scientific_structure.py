@@ -12,17 +12,23 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
-from infrastructure.reporting.native_format_browser_oracles import audit_browser_html
+from infrastructure.reporting.native_format_browser_oracles import inspect_browser_dom
 from infrastructure.reporting.native_format_browser_replay import replay_browser_observation
 from infrastructure.reporting.native_format_browser_semantic_controls import alpha_figure_bytes, mutate_html
 from infrastructure.reporting.native_format_content_contracts import semantic_content_contract_from_ast
-from infrastructure.reporting.native_format_observer_dispatch import _chrome
 from infrastructure.reporting.native_format_semantic_original import (
     inspect_original_source,
     observe_original_source,
     replay_original_source,
 )
+from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from tests.infra_tests.reporting._audited_browser_child import audited_browser_artifact
+
+# Portable replay of a retained native receipt needs the externally admitted
+# Source and the original launch custodian. Receipt DATA and a bare relocated
+# SnapshotReader never hold either, so replay must refuse before reconstruction.
+UNADMITTED = "externally admitted source and original launch custody"
 
 
 SOURCE = (
@@ -102,22 +108,30 @@ def test_actual_original_source_receipts_and_portable_replay(tmp_path: Path) -> 
         run_id="d" * 32,
     )
     assert bound.original_source_occurrences and not bound.blockers
-    independently_bound = replay_original_source(
-        tmp_path,
-        evidence,
-        sources,
-        projected,
-        raw,
-        SnapshotReader(tmp_path),
-        run_id="d" * 32,
-        custody={
-            "root": str(tmp_path),
-            "implementation_root": str(Path(__file__).resolve().parents[3] / "infrastructure"),
-        },
-        env=build_bounded_env(),
-        deadline=deadline,
-    )
-    assert independently_bound.to_dict() == bound.to_dict()
+    # The retained survival obligation is recomputed from the retained AST bytes
+    # with the current implementation; a forged witness cannot equal it.
+    forged = copy.deepcopy(raw)
+    forged["survival"]["contract"]["source_occurrences"].pop()
+    retained_ast = SnapshotReader(tmp_path).read(raw["ast"]["path"]).content
+    recomputed = inspect_original_source("invented:html", sources, retained_ast, projected)
+    assert recomputed == raw["survival"] != forged["survival"]
+    for receipt in (raw, forged):
+        with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+            replay_original_source(
+                tmp_path,
+                evidence,
+                sources,
+                projected,
+                receipt,
+                SnapshotReader(tmp_path),
+                run_id="d" * 32,
+                custody={
+                    "root": str(tmp_path),
+                    "implementation_root": str(Path(__file__).resolve().parents[3] / "infrastructure"),
+                },
+                env=build_bounded_env(),
+                deadline=deadline,
+            )
     mutated = semantic_content_contract_from_ast("invented:html", sources, ast.replace(b"-9.25", b"-8.25"))
     assert any(
         item["code"] == "html.original.content"
@@ -128,24 +142,6 @@ def test_actual_original_source_receipts_and_portable_replay(tmp_path: Path) -> 
             mutated,
         )["findings"]
     )
-    forged = copy.deepcopy(raw)
-    forged["survival"]["contract"]["source_occurrences"].pop()
-    with pytest.raises(ValueError, match="occurrence/survival"):
-        replay_original_source(
-            tmp_path,
-            evidence,
-            sources,
-            projected,
-            forged,
-            SnapshotReader(tmp_path),
-            run_id="d" * 32,
-            custody={
-                "root": str(tmp_path),
-                "implementation_root": str(Path(__file__).resolve().parents[3] / "infrastructure"),
-            },
-            env=build_bounded_env(),
-            deadline=deadline,
-        )
 
 
 @pytest.mark.timeout(240)
@@ -179,20 +175,21 @@ def test_actual_structure_and_alpha_browser_controls(tmp_path: Path, name: str, 
     for filename, mutant in (("alpha.png", False), ("wrong-alpha.png", True)):
         (fixture / filename).write_bytes(alpha_figure_bytes(mutant=mutant))
     original.write_text(mutate_html(original.read_text(), name))
-    env = build_bounded_env()
     snapshot = SnapshotReader(tmp_path).read(original.relative_to(tmp_path).as_posix())
     evidence = tmp_path / "output/readiness/observation"
     evidence.mkdir(mode=0o700)
-    raw = audit_browser_html(
+    # The HTML parent custodian requires an interpreter that installed the
+    # executed-bytecode audit before importing the SDK, as trusted launchers do.
+    raw = audited_browser_artifact(
         tmp_path,
         evidence,
-        snapshot.content,
-        contract,
-        chrome=_chrome(env),
-        env=env,
+        snapshot.relative,
+        sources=(source.relative_to(tmp_path).as_posix(),),
+        artifact_id="invented:html",
+        ast=ast,
+        workspace=tmp_path / "audited-child",
         deadline=time.monotonic() + 120,
         run_id="d" * 32,
-        artifact=snapshot,
     )
     # Preserve only retained observation custody; retired browser caches are not
     # inputs to replay and can be removed from this disposable test root.
@@ -204,42 +201,37 @@ def test_actual_structure_and_alpha_browser_controls(tmp_path: Path, name: str, 
         assert not codes if expected is None else expected in codes, codes
         assert len(viewport["figures"]["figures"]) == 2
         assert len(viewport["structure"]["tables"]) == len(viewport["structure"]["footnotes"]) == 1
-    # Independent parsing and native replay use the current implementation and
-    # retained bytes, not producer outcomes or an equal-writer assertion.
+    # Independent parsing uses the current implementation and retained bytes,
+    # not producer outcomes or an equal-writer assertion. Each retained DOM
+    # independently recomputes the exact structure witness it was bound to.
     independent = semantic_content_contract_from_ast(
         "invented:html", ((source.relative_to(tmp_path).as_posix(), SOURCE),), _parse(source)
     )
     assert independent.to_dict() == contract.to_dict()
-    replay_browser_observation(
-        tmp_path,
-        evidence,
-        snapshot,
-        independent,
-        raw,
-        SnapshotReader(tmp_path),
-        run_id="d" * 32,
-        custody={
-            "root": str(tmp_path),
-            "implementation_root": str(Path(__file__).resolve().parents[3] / "infrastructure"),
-        },
-        runtime={"executable": sys.executable},
-    )
+    for viewport in raw["viewports"]:
+        assert inspect_browser_dom(viewport["dom"], independent, None)["structure"] == viewport["structure"]
     # Removing a source cell or forging a structure witness cannot reuse a
-    # valid native screenshot/driver receipt to obtain portable admission.
+    # valid native screenshot/driver receipt. Without the original launch
+    # custodian, neither the genuine nor the forged receipt obtains admission.
     forged = copy.deepcopy(raw)
     forged["viewports"][0]["structure"]["tables"][0]["cells"].pop()
-    with pytest.raises(ValueError, match="independently recomputed"):
-        replay_browser_observation(
-            tmp_path,
-            evidence,
-            snapshot,
-            independent,
-            forged,
-            SnapshotReader(tmp_path),
-            run_id="d" * 32,
-            custody={
-                "root": str(tmp_path),
-                "implementation_root": str(Path(__file__).resolve().parents[3] / "infrastructure"),
-            },
-            runtime={"executable": sys.executable},
-        )
+    assert (
+        inspect_browser_dom(forged["viewports"][0]["dom"], independent, None)["structure"]
+        != (forged["viewports"][0]["structure"])
+    )
+    for observation in (raw, forged):
+        with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+            replay_browser_observation(
+                tmp_path,
+                evidence,
+                snapshot,
+                independent,
+                observation,
+                SnapshotReader(tmp_path),
+                run_id="d" * 32,
+                custody={
+                    "root": str(tmp_path),
+                    "implementation_root": str(Path(__file__).resolve().parents[3] / "infrastructure"),
+                },
+                runtime={"executable": sys.executable},
+            )

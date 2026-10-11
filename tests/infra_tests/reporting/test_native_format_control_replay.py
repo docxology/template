@@ -22,6 +22,7 @@ from infrastructure.reporting.native_format_control_replay import (
     validate_format_controls,
 )
 from infrastructure.reporting.native_projection_checks import PROJECTION_CONTROL_CODES, projection_control_fixture
+from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
@@ -38,6 +39,11 @@ def test_current_source_projection_fixtures_exact_repeat_and_real_parse() -> Non
 
 
 def test_original_executable_deleted_portable_actual_tool_closure(tmp_path: Path) -> None:
+    """A relocated closure walks to its nested tool but never self-authorizes it.
+
+    Admission of the original tool receipt needs the externally held original
+    launch custodian; a bare relocated reader refuses even unchanged DATA.
+    """
     producer = tmp_path / "producer"
     directory = producer / "output/readiness/controls"
     directory.mkdir(parents=True)
@@ -62,7 +68,8 @@ def test_original_executable_deleted_portable_actual_tool_closure(tmp_path: Path
     shutil.rmtree(producer)
     relocated = reader_root / "output/readiness/controls"
     assert not executable.exists()
-    _closure(result["artifact"], SnapshotReader(reader_root), relocated, "actual-control-custody")
+    with pytest.raises(ProjectionSourceUnsupported, match="externally admitted source and original launch custody"):
+        _closure(result["artifact"], SnapshotReader(reader_root), relocated, "actual-control-custody")
     path = reader_root / result["artifact"]["path"]
     original = json.loads(path.read_text())
     for change in (

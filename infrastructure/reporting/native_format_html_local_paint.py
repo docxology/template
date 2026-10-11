@@ -50,10 +50,18 @@ def _region(box: Any, page: Any) -> tuple[int, int, int, int]:
     )
 
 
+def _outside(box: list[float], page: Any) -> bool:
+    """A finite box wholly beyond the captured page is unpainted, not subpixel."""
+    x, y, width, height = box
+    return x >= page.width or y >= page.height or x + width <= 0 or y + height <= 0
+
+
 def inspect_local_paint(dom: dict[str, Any], pixels: bytes, indices: list[int]) -> dict[str, Any]:
     """Recompute every required nonspace character and rendered math leaf ROI.
 
-    Missing/zero-width/combined geometry remains explicit. All character text
+    Missing/zero-width/combined geometry remains explicit. Geometry wholly
+    beyond the captured page is an unpainted finding; in-page geometry too
+    small for an integral pixel region remains a blocker. All character text
     is reconstructed, so a producer cannot omit the covered minus or exponent
     while leaving the whole paragraph's contrast intact.
     """
@@ -99,9 +107,12 @@ def inspect_local_paint(dom: dict[str, Any], pixels: bytes, indices: list[int]) 
                 for box in boxes:
                     roi = _region(box, page)
                     if roi[0] >= roi[2] or roi[1] >= roi[3]:
-                        blockers.append(
-                            f"text:{index}:{character_index}: subpixel glyph needs a source outline witness"
-                        )
+                        if _outside(box, page):
+                            findings.append({"code": "html.text.character-outside", **owner})
+                        else:
+                            blockers.append(
+                                f"text:{index}:{character_index}: subpixel glyph needs a source outline witness"
+                            )
                         continue
                     low, high = cast(tuple[int, int], gray.crop(roi).getextrema())
                     regions.append({**owner, "box_px": list(roi), "luminance_range": high - low})
@@ -126,9 +137,12 @@ def inspect_local_paint(dom: dict[str, Any], pixels: bytes, indices: list[int]) 
                     findings.append({"code": "html.math.leaf-hidden", **owner})
                 roi = _region(leaf.get("box"), page)
                 if roi[0] >= roi[2] or roi[1] >= roi[3]:
-                    blockers.append(
-                        f"math:{math_index}:{leaf_index}: subpixel math leaf needs a source outline witness"
-                    )
+                    if _outside(leaf["box"], page):
+                        findings.append({"code": "html.math.leaf-outside", **owner})
+                    else:
+                        blockers.append(
+                            f"math:{math_index}:{leaf_index}: subpixel math leaf needs a source outline witness"
+                        )
                     continue
                 low, high = cast(tuple[int, int], gray.crop(roi).getextrema())
                 regions.append({**owner, "box_px": list(roi), "luminance_range": high - low})
@@ -144,7 +158,11 @@ def inspect_unit_image_paint(
 
     Every unit pixel, including a one-pixel scientific mark, has a maximum
     error obligation. Mean image error cannot hide a localized opaque cover.
-    Resampling and fractional origins retain a separate native capability gap.
+    The native browser paints an unscaled replaced image at its device-pixel
+    snapped rectangle (origin rounded half up at the 1:1 screenshot scale), so
+    a fractional layout origin is compared at that exact integral placement;
+    shifted or resampled paint remains a localized-paint finding. Resized
+    figures retain a separate native capability gap.
     """
     from PIL import Image, ImageChops
 
@@ -153,10 +171,11 @@ def inspect_unit_image_paint(
     x, y, width, height = box
     blockers = []
     findings: list[dict[str, Any]] = []
-    if any(value != round(value) for value in box) or (width, height) != expected_rgba.size:
-        blockers.append(f"{identity}: resized/fractional figure requires calibrated localized source paint proof")
+    if (width, height) != expected_rgba.size:
+        blockers.append(f"{identity}: resized figure requires calibrated localized source paint proof")
         return {"source_id": identity, "findings": findings, "blockers": blockers, "pixels": None}
-    roi = (int(x), int(y), int(x + width), int(y + height))
+    left, top = math.floor(x + 0.5), math.floor(y + 0.5)
+    roi = (left, top, left + int(width), top + int(height))
     if x < 0 or y < 0 or roi[2] > page.width or roi[3] > page.height:
         findings.append({"code": "html.figure.localized-crop", "source_id": identity})
         return {"source_id": identity, "findings": findings, "blockers": blockers, "pixels": None}

@@ -6,8 +6,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
-
 from infrastructure.core.pipeline.artifacts import (
     STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
     STABLE_OUTPUT_INVENTORY_MODE,
@@ -207,25 +205,29 @@ def test_git_ignore_query_distinguishes_errors_malformed_output_and_valid_no_mat
 
 def test_git_ignore_unavailable_blocks_a_worktree_but_not_a_nonrepo_static_fallback(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """A detected worktree whose Git cannot answer fails closed; a non-repo tree does not.
+
+    The collector resolves Git from the fixed system search path, never the
+    caller's ``PATH``, so emptying ``PATH`` no longer withholds Git. The
+    control instead makes the worktree itself unanswerable: its ``.git``
+    marker names a missing gitdir, so the actual ``git check-ignore`` exits
+    fatally while the marker still identifies a worktree.
+    """
     repo = tmp_path / "repo"
     repo_file = repo / "output" / "data" / "result.json"
     repo_file.parent.mkdir(parents=True)
     repo_file.write_text("{}\n", encoding="utf-8")
-    subprocess.run(["git", "init", "-q"], cwd=repo, check=True, capture_output=True)
+    (repo / ".git").write_text(f"gitdir: {tmp_path / 'missing-gitdir'}\n", encoding="utf-8")
     nonrepo_file = tmp_path / "nonrepo" / "output" / "data" / "result.json"
     nonrepo_file.parent.mkdir(parents=True)
     nonrepo_file.write_text("{}\n", encoding="utf-8")
-    empty_path = tmp_path / "empty-path"
-    empty_path.mkdir()
-    monkeypatch.setenv("PATH", str(empty_path))
 
     blocked = collect_stable_output_inventory(repo / "output")
     fallback = collect_stable_output_inventory(nonrepo_file.parents[2] / "output")
 
     assert blocked.files == ()
-    assert blocked.issues == ("git ignore evaluation failed: git check-ignore unavailable",)
+    assert blocked.issues == ("git ignore evaluation failed: git check-ignore exited with status 128",)
     assert fallback.issues == ()
     assert [path.name for path in fallback.files] == ["result.json"]
 

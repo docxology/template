@@ -655,6 +655,7 @@ The `infrastructure/project/` module enables multi-project support by:
 | `installed_domain_acceptance.py` | Functional installed execution with exported project inputs kept as data. |
 | `installed_reference_oracle.py` | Bounded current-reference recomputation, distinct from installed execution. |
 | `native_format_library_custody.py` | Bounded installed decoder file observations; hashes alone do not attest origin. |
+| `native_linux_calibre_custody.py` | Bounded sparse installed-package DATA for the selected Linux Calibre reader. |
 | `native_reader_runtime_custody.py` | Complete bounded native app file observations, independent of loaded-memory claims. |
 | `public_acceptance.py` | Source-bound 25-project × supported-runtime acceptance using the existing matrix. |
 | `public_acceptance_auxiliary.py` | Source-bound supervision for genuine auxiliary acceptance producers. |

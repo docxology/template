@@ -15,6 +15,7 @@ from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.rendering.native_render_custody import NATIVE_ORIGIN_KEYS
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
 from infrastructure.reporting.native_stage_child import current_native_stage_directory, retain_native_stage_artifact
 from infrastructure.reporting.native_tool_producer import current_native_producer_operation
@@ -28,14 +29,7 @@ def run_native_tex_section_pass(
     """Run this actual Source-selected compiler pass, retaining real OS and output."""
     owner = current_native_producer_operation()
     if owner is None:
-        if any(
-            os.environ.get(key)
-            for key in (
-                "TEMPLATE_PUBLIC_REFERENCE_ROOT",
-                "TEMPLATE_PUBLIC_REFERENCE_COMMIT",
-                "TEMPLATE_PUBLIC_REFERENCE_FINGERPRINT",
-            )
-        ):
+        if any(os.environ.get(key) for key in NATIVE_ORIGIN_KEYS):
             raise ValueError("native-origin section rendering lacks its actual Source owner")
         return None
     from infrastructure.rendering.latex_utils import latex_compile_command

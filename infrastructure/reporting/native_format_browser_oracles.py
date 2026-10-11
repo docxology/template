@@ -598,9 +598,11 @@ def browser_control_bytes(name: str) -> bytes:
     if name not in BROWSER_CONTROL_CODES:
         raise ValueError("unknown browser control")
     value = "-8.25" if name == "changed-number" else "-3.25"
+    # Tiny text stays below the 12px body minimum while every glyph advance
+    # keeps an integral pixel region, so localized paint stays decidable.
     style = {
         "hidden-text": "visibility:hidden",
-        "tiny-text": "font-size:5px",
+        "tiny-text": "font-size:10px",
         "overflow-text": "position:absolute;left:2000px",
         "clipped-text": "height:0;overflow:hidden",
     }.get(name, "")
@@ -635,16 +637,20 @@ def browser_control_contract() -> NativeContentContract:
 
 
 def require_browser_control_result(name: str, observation: dict[str, Any]) -> int:
-    """Only actual successful native execution with the intended fault counts."""
+    """Only actual successful native execution with the intended fault counts.
+
+    Each unpainted control is observed by both the line-level pixel oracle and
+    the localized per-character paint oracle, so both diagnostics are required.
+    """
     expected = {
         "baseline": set(),
         "changed-number": {"html.content.missing"},
-        "hidden-text": {"html.visual.hidden", "html.visual.invisible"},
+        "hidden-text": {"html.visual.hidden", "html.visual.invisible", "html.text.character-invisible"},
         "tiny-text": {"html.layout.font"},
-        "overflow-text": {"html.layout.overflow", "html.visual.outside"},
+        "overflow-text": {"html.layout.overflow", "html.visual.outside", "html.text.character-outside"},
         "broken-image": {"html.asset.image"},
-        "clipped-text": {"html.layout.clip", "html.visual.invisible"},
-        "opaque-overlay": {"html.visual.invisible"},
+        "clipped-text": {"html.layout.clip", "html.visual.invisible", "html.text.character-invisible"},
+        "opaque-overlay": {"html.visual.invisible", "html.text.character-invisible"},
     }
     if name not in expected or observation.get("schema_version") != BROWSER_SCHEMA:
         raise ValueError("unknown valid browser control observation")

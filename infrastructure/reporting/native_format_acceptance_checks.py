@@ -22,7 +22,7 @@ from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.reporting.native_format_acceptance_contracts import TOOL_SCHEMA, TOOL_FIELDS, HTML_TOOL_FIELDS
-from infrastructure.reporting.release_readiness_artifacts import bounded_members
+from infrastructure.core.files.archive_members import bounded_members
 from infrastructure.reporting.release_readiness_snapshot import (
     SnapshotReader,
     ArtifactSnapshot,

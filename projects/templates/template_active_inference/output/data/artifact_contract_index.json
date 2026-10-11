@@ -376,7 +376,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "41a58ba8e5482f222b316a7f563c7b7782548c874b057090a09d990699a0146d",
+      "source_sha256": "073ecb18c31dc50a75ef95d9a88c05ea3851bbd35a6cb288a5c5abaa921df3e7",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"

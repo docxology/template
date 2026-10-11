@@ -18,6 +18,7 @@ from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rendering.combined_native_commands import RENDERER_CROSSREF_SCHEMA, pre_crossref_json_command
+from infrastructure.rendering.native_render_custody import NATIVE_ORIGIN_KEYS
 from infrastructure.reporting.native_crossref_pandoc import source_crossref_pandoc
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime, file_observation
 from infrastructure.reporting.native_tool_process import _physical_identity
@@ -27,11 +28,6 @@ from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot
 from infrastructure.validation.output.render_formats import render_config_manuscript_dir
 
 _SCHEMA = "template-source-native-renderer-command-v1"
-_ORIGIN_KEYS = (
-    "TEMPLATE_PUBLIC_REFERENCE_ROOT",
-    "TEMPLATE_PUBLIC_REFERENCE_COMMIT",
-    "TEMPLATE_PUBLIC_REFERENCE_FINGERPRINT",
-)
 
 
 def _binding(item: ArtifactSnapshot) -> dict[str, str]:
@@ -70,7 +66,7 @@ def run_source_native_pandoc(
     """
     owner = current_native_producer_operation()
     if owner is None:
-        if any(os.environ.get(key) for key in _ORIGIN_KEYS):
+        if any(os.environ.get(key) for key in NATIVE_ORIGIN_KEYS):
             raise ValueError("native-origin rendering lacks its actual independently admitted Source owner")
         return False
     directory = current_native_stage_directory()

@@ -78,6 +78,8 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 | `multi_project_summary_worker.py` | Generate a typed aggregate summary only within its private scratch boundary. |
 | `multi_project_support.py` | Shared verification and aggregate completion for project orchestrators. |
 | `multi_project_worker.py` | Fresh-bytecode worker consuming the parent's exact immutable execution plan. |
+| `native_analysis_current.py` | Fresh Current execution through the existing complete native core controller. |
+| `native_stage_launch.py` | Use the single fixed audited child for an already-owned native stage. |
 | `observability.py` | Pipeline logging, telemetry initialization, and advisory reports. |
 | `plan_custody.py` | Freeze declaration bytes and source identity before any plan policy parsing. |
 | `plan_serialization.py` | Strict transport decoding for immutable resolved execution plans. |

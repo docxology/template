@@ -26,6 +26,22 @@ MAX_PIXELS = 60_000_000
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
 
+def docx_bookmark_names(label: str) -> tuple[str, str]:
+    """Return the DOCX bookmark names Pandoc 3.11 and 3.12 write for one identifier.
+
+    Pandoc 3.11, pinned for hosted acceptance, keeps a letter-led identifier of
+    at most 40 characters and otherwise writes ``X`` plus the SHA-1 digest tail.
+    Pandoc 3.12 writes ``_`` plus a word identifier of at most 39 characters and
+    otherwise ``_`` plus the digest tail. The two forms never coincide; these
+    are identifiers, not authentication. Callers still require exactly one
+    declaration across both forms.
+    """
+    tail = hashlib.sha1(label.encode(), usedforsecurity=False).hexdigest()[1:]
+    pinned = label if label[:1].isalpha() and len(label) <= 40 else "X" + tail
+    word = len(label) <= 39 and all(character.isalnum() or character == "_" for character in label)
+    return pinned, "_" + label if word else "_" + tail
+
+
 def _document(data: bytes) -> dict[str, Any]:
     if len(data) > MAX_AST_BYTES:
         raise ValueError("Office source/native AST exceeds finite byte budget")
@@ -220,8 +236,15 @@ def inspect_office_source_survival(
             for node in fromstring(data).iter()
         ]
 
-    def native_label(label):
-        return "_" + hashlib.sha1(label.encode(), usedforsecurity=False).hexdigest()[1:] if kind == "docx" else label
+    def native_targets(label: str) -> tuple[str, ...]:
+        return docx_bookmark_names(label) if kind == "docx" else (label,)
+
+    def native_declarations(label: str) -> int:
+        return sum(declarations.count(name) for name in native_targets(label))
+
+    def native_label(label: str) -> str:
+        names = native_targets(label)
+        return next((name for name in names if name in declarations), names[0])
 
     labels = Counter(row["label"] for row in roles if row.get("label"))
 
@@ -522,13 +545,13 @@ def inspect_office_source_survival(
     if retained_ids - source_ids:
         blockers.append("filtered source introduced citation identifiers absent from original source")
     for label, count in (source_ids - retained_ids).items():
-        if labels[label] != 1 or declarations.count(native_label(label)) != 1:
+        if labels[label] != 1 or native_declarations(label) != 1:
             findings.append(
                 {
                     "code": "office.source.crossref_label",
                     "label": label,
                     "source_declarations": labels[label],
-                    "native_declarations": declarations.count(native_label(label)),
+                    "native_declarations": native_declarations(label),
                 }
             )
         else:
@@ -693,15 +716,12 @@ def inspect_office_source_survival(
         if raw_role["kind"] in {"heading", "equation"} and raw_role.get("label"):
             label = raw_role["label"]
             if kind == "docx":
-                # Pandoc DOCX uses a 40-character NCName derived from the
-                # SHA1 label digest; this is an identifier, not authentication.
-                digest = hashlib.sha1(label.encode(), usedforsecurity=False).hexdigest()
-                bookmark = "_" + digest[1:]
-                declarations = [node.get(W + "name") for node in document_xml.iter(W + "bookmarkStart")]
+                bookmarks: tuple[str, ...] = docx_bookmark_names(label)
+                declared = [node.get(W + "name") for node in document_xml.iter(W + "bookmarkStart")]
             else:
-                bookmark = label
-                declarations = [node.get("id") for tree in xhtml for node in tree.iter()]
-            if declarations.count(bookmark) != 1:
+                bookmarks = (label,)
+                declared = [node.get("id") for tree in xhtml for node in tree.iter()]
+            if sum(declared.count(bookmark) for bookmark in bookmarks) != 1:
                 findings.append(
                     {"code": "office.source.label", "source_occurrence": raw_role["source_occurrence"], "label": label}
                 )

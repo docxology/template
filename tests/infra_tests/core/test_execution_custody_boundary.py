@@ -80,6 +80,17 @@ print(json.dumps({'exit':result.returncode,'timed_out':True,'no_child_or_guardia
     assert result == {"exit": 124, "timed_out": True, "no_child_or_guardian": True}
 
 
+# Whole-operation budget for the SIGINT-during-cleanup control. Guardian
+# startup (source admission plus a fresh audited bytecode cache) is charged to
+# this same deadline, and it grows with the audited package. The observer must
+# stop the armed guardian before the deadline expires, otherwise the guardian
+# completes cleanup first and there is no cleanup wait left to interrupt.
+# Hosted runners under ``-n auto`` load have consumed most of a 3.5 s budget in
+# startup alone, so the budget leaves several seconds of margin.
+_SIGINT_CLEANUP_BUDGET_SECONDS = 12.0
+
+
+@pytest.mark.timeout(120)
 def test_timeout_cleanup_sigint_reaps_actual_root_and_detached_writer(tmp_path: Path) -> None:
     result = _run_copy(
         tmp_path,
@@ -87,13 +98,14 @@ def test_timeout_cleanup_sigint_reaps_actual_root_and_detached_writer(tmp_path: 
 import json, os, signal, subprocess, time
 from pathlib import Path
 from infrastructure.core.execution_boundary import run_bounded_subprocess,terminate_bounded_run_processes
+budget=float(sys.argv[1])
 directory=Path.cwd();pids=directory/'actual-timeout-pids.json'
 stopped=directory/'guardian-stopped';signalled=directory/'cleanup-interrupted';marker=directory/'detached-survived'
 observer_body=r"""
 import json,os,signal,subprocess,sys,time
 from pathlib import Path
 directory=Path(sys.argv[1]);controller=int(sys.argv[2]);pids=directory/'actual-timeout-pids.json'
-deadline=time.monotonic()+12
+deadline=time.monotonic()+float(sys.argv[3])
 while not pids.exists() and time.monotonic()<deadline: time.sleep(.01)
 assert pids.exists(), 'actual bounded root did not start'
 root=json.loads(pids.read_text())['root']
@@ -117,15 +129,15 @@ while time.monotonic()<deadline:
  time.sleep(.01)
 else: raise AssertionError('actual root did not reach killed, unreaped timeout state')
 """
-observer=subprocess.Popen([sys.executable,'-I','-c',observer_body,str(directory),str(os.getpid())],
+observer=subprocess.Popen([sys.executable,'-I','-c',observer_body,str(directory),str(os.getpid()),repr(budget+10)],
  stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE,text=True)
-descendant="import time;from pathlib import Path;time.sleep(5);Path("+repr(str(marker))+").write_text('leaked')"
+descendant="import time;from pathlib import Path;time.sleep("+repr(budget+1.5)+");Path("+repr(str(marker))+").write_text('leaked')"
 body="import json,os,subprocess,sys,time;from pathlib import Path;child=subprocess.Popen([sys.executable,'-I','-c',sys.argv[1]],start_new_session=True);Path(sys.argv[2]).write_text(json.dumps({'root':os.getpid(),'detached':child.pid}));time.sleep(30)"
 interruption=None;proc=None;guardian=None;token=None
 try:
  try:
   run_bounded_subprocess([sys.executable,'-I','-c',body,descendant,str(pids)],cwd=directory,
-                         env=dict(os.environ),timeout=3.5)
+                         env=dict(os.environ),timeout=budget)
  except KeyboardInterrupt as exc:
   # Retain the real traceback so Popen.__del__ cannot hide missing explicit reaping.
   interruption=exc;trace=exc.__traceback__
@@ -133,7 +145,12 @@ try:
    if trace.tb_frame.f_code.co_name=='run_bounded_subprocess':
     proc=trace.tb_frame.f_locals['proc'];guardian=trace.tb_frame.f_locals['guardian'];token=trace.tb_frame.f_locals['run_token']
    trace=trace.tb_next
- assert interruption is not None and stopped.exists() and signalled.exists()
+ if interruption is None or not (stopped.exists() and signalled.exists()):
+  try: observer.wait(timeout=5)
+  except subprocess.TimeoutExpired: pass
+  raise AssertionError(('timeout cleanup was not interrupted while waiting for the stopped guardian',
+                        interruption is not None, stopped.exists(), signalled.exists(), observer.poll(),
+                        observer.stderr.read() if observer.poll() is not None else 'observer still running'))
  observed=json.loads(pids.read_text())
  assert proc is not None and proc.returncode==-signal.SIGKILL, 'actual timeout root was not explicitly reaped'
  try: os.waitpid(observed['root'],os.WNOHANG)
@@ -156,5 +173,7 @@ finally:
  if observer.poll() is None: observer.kill();observer.wait(timeout=5)
  if observer.stderr is not None: observer.stderr.close()
 ''',
+        repr(_SIGINT_CLEANUP_BUDGET_SECONDS),
+        observer_timeout=_SIGINT_CLEANUP_BUDGET_SECONDS + 45,
     )
     assert result == {"interrupted_exit": 130, "original_child": -9, "root_reaped": True, "detached_reaped": True}

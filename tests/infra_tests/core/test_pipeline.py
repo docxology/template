@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -11,6 +10,8 @@ import pytest
 
 from infrastructure.core.runtime.checkpoint import CheckpointManager
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult
+
+_CANONICAL_PIPELINE_DECLARATION = Path(__file__).resolve().parents[3] / "infrastructure/core/pipeline/pipeline.yaml"
 
 
 class TestPipelineConfig:
@@ -126,13 +127,19 @@ sys.exit(0)
 
         # Explicit child-only stage contracts admit the fixture's actual
         # inputs, without inheriting the publication pipeline's prerequisites.
+        # The test-stage argv is taken from the canonical declaration so the
+        # fixture exercises the scope the real pipeline forwards (for example
+        # Stage 2's bounded ``--infra-scope pipeline-smoke`` lane).
         import yaml
+
+        canonical = yaml.safe_load(_CANONICAL_PIPELINE_DECLARATION.read_text(encoding="utf-8"))
+        canonical_args = {stage["key"]: list(stage.get("args") or []) for stage in canonical["stages"]}
 
         stages = []
         for label, key, script, args, tags in (
             ("Environment Setup", "setup", "stage_00_setup.py", [], ["core"]),
-            ("Infrastructure Tests", "infra_tests", "stage_01_test.py", ["--infra-only"], ["core"]),
-            ("Project Tests", "project_tests", "stage_01_test.py", ["--project-only"], ["core"]),
+            ("Infrastructure Tests", "infra_tests", "stage_01_test.py", canonical_args["infra_tests"], ["core"]),
+            ("Project Tests", "project_tests", "stage_01_test.py", canonical_args["project_tests"], ["core"]),
             ("Project Analysis", "analysis", "stage_02_analysis.py", [], ["core"]),
             ("PDF Rendering", "render_pdf", "stage_03_render.py", [], ["core"]),
             ("Output Validation", "validate", "stage_04_validate.py", [], ["core"]),
@@ -191,61 +198,63 @@ sys.exit(0)
         lines = inv_path.read_text(encoding="utf-8").strip().splitlines()
         return [json.loads(line) for line in lines if line.strip()]
 
-    def test_initialization(self):
-        """Test executor initialization."""
-        config = PipelineConfig(project_name="test", repo_root=Path("/tmp"))
+    def test_initialization(self, tmp_path: Path):
+        """Test executor initialization.
+
+        The executor fingerprints its source boundary on construction and
+        refuses symlinked ancestors by design, so fixtures use pytest's
+        canonical ``tmp_path`` rather than platform aliases such as macOS's
+        ``/tmp`` -> ``/private/tmp``.
+        """
+        config = PipelineConfig(project_name="test", repo_root=tmp_path)
         executor = PipelineExecutor(config)
 
         assert executor.config == config
 
     @pytest.mark.timeout(60)
-    def test_run_script_success(self):
+    def test_run_script_success(self, tmp_path: Path):
         """Test successful script execution."""
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            # Create a simple test script
-            script_path = Path(tmp_dir) / "scripts/test_script.py"
-            script_path.parent.mkdir()
-            script_path.write_text(
-                """
+        script_path = tmp_path / "scripts/test_script.py"
+        script_path.parent.mkdir()
+        script_path.write_text(
+            """
 import sys
 print("success")
 sys.exit(0)
 """
-            )
+        )
 
-            config = PipelineConfig(project_name="test", repo_root=Path(tmp_dir))
-            executor = PipelineExecutor(config)
+        config = PipelineConfig(project_name="test", repo_root=tmp_path)
+        executor = PipelineExecutor(config)
 
-            result = executor._run_script("scripts/test_script.py", "--arg", "value")
+        result = executor._run_script("scripts/test_script.py", "--arg", "value")
 
-            assert result.complete is True
+        assert result.complete is True
 
     @pytest.mark.timeout(60)
-    def test_run_script_failure(self):
+    def test_run_script_failure(self, tmp_path: Path):
         """Test failed script execution."""
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            # Create a script that fails
-            script_path = Path(tmp_dir) / "scripts/failing_script.py"
-            script_path.parent.mkdir()
-            script_path.write_text(
-                """
+        script_path = tmp_path / "scripts/failing_script.py"
+        script_path.parent.mkdir()
+        script_path.write_text(
+            """
 import sys
 print("error", file=sys.stderr)
 sys.exit(1)
 """
-            )
+        )
 
-            config = PipelineConfig(project_name="test", repo_root=Path(tmp_dir))
-            executor = PipelineExecutor(config)
+        config = PipelineConfig(project_name="test", repo_root=tmp_path)
+        executor = PipelineExecutor(config)
 
-            result = executor._run_script("scripts/failing_script.py")
+        result = executor._run_script("scripts/failing_script.py")
 
-            assert result.complete is False
-            assert result.child_exit_code == 1
+        assert result.complete is False
+        assert result.child_exit_code == 1
 
-    def test_execute_stage_success(self):
+    def test_execute_stage_success(self, tmp_path: Path):
         """Test successful stage execution."""
-        config = PipelineConfig(project_name="test", repo_root=Path("/tmp"))
+        config = PipelineConfig(project_name="test", repo_root=tmp_path)
         executor = PipelineExecutor(config)
 
         def stage():
@@ -261,9 +270,9 @@ sys.exit(1)
         assert result.exit_code == 0
         assert result.error_message == ""
 
-    def test_execute_stage_failure(self):
+    def test_execute_stage_failure(self, tmp_path: Path):
         """Test failed stage execution."""
-        config = PipelineConfig(project_name="test", repo_root=Path("/tmp"))
+        config = PipelineConfig(project_name="test", repo_root=tmp_path)
         executor = PipelineExecutor(config)
 
         def stage():
@@ -279,9 +288,9 @@ sys.exit(1)
         assert result.exit_code == 1
         assert "Test error" in result.error_message
 
-    def test_execute_stage_failure_captures_exception_type(self):
+    def test_execute_stage_failure_captures_exception_type(self, tmp_path: Path):
         """Exception type is recorded correctly for OSError and generic Exception."""
-        config = PipelineConfig(project_name="test", repo_root=Path("/tmp"))
+        config = PipelineConfig(project_name="test", repo_root=tmp_path)
         executor = PipelineExecutor(config)
 
         def os_error_stage():

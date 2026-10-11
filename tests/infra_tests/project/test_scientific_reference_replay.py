@@ -1,8 +1,18 @@
-"""Genuine frozen producer deletion and independent source replay controls."""
+"""Genuine frozen producer deletion and independent source replay controls.
+
+The fixture compiles a real source-only XeTeX reference, deletes its copied
+compiler and producer directory, and relocates the retained bytes to another
+base. Ordinary infra CI constructs no NativeSourceContext, NativeOriginalLaunch
+or live producer owner, so the replay/reproduction entry points must refuse
+before consuming any custody-gated native byte; reachable DATA predicates are
+exercised against the genuine retained records. Positive replay remains an
+installed native acceptance obligation.
+"""
 
 from __future__ import annotations
 
 import copy
+from dataclasses import asdict
 import hashlib
 import json
 from pathlib import Path
@@ -16,11 +26,24 @@ import pytest
 from infrastructure.reporting.native_format_acceptance_checks import native_tool_record
 from infrastructure.reporting.native_format_acceptance_contracts import native_environment
 from infrastructure.reporting.native_format_pdf_source import PDFSourceInputs
-from infrastructure.reporting.native_format_scientific_math import observe_scientific_math_reference
-from infrastructure.reporting.native_scientific_reference_replay import replay_scientific_math_reference
-from infrastructure.reporting.native_scientific_reference_reproduction import reproduce_scientific_reference
+from infrastructure.reporting.native_format_scientific_math import (
+    observe_scientific_math_reference,
+    reference_math_glyphs,
+    scientific_math_from_ast,
+)
+from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
+from infrastructure.reporting.native_scientific_reference_replay import (
+    replay_scientific_math_reference,
+    strict_json_object,
+)
+from infrastructure.reporting.native_scientific_reference_reproduction import (
+    reproduce_scientific_reference,
+    validate_original_raster_process,
+)
+from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 ROOT = Path(__file__).resolve().parents[3]
+CUSTODY = "externally admitted source and original launch custody"
 pytestmark = pytest.mark.timeout(300)
 
 
@@ -104,7 +127,9 @@ def original_reference(tmp_path_factory: pytest.TempPathFactory):
     copied = reader_root / directory.relative_to(ROOT)
     shutil.copytree(directory, copied)
     original_files = {str(path): path.stat().st_size for path in copied.rglob("*") if path.is_file()}
-    assert sum(original_files.values()) < 10 * 1024**2
+    # Finite closure incl. the distribution's preloaded format: xelatex.fmt is
+    # ~5.4 MB in TeX Live 2026 and ~9.1 MB in Ubuntu's TeX Live 2023.
+    assert sum(original_files.values()) < 32 * 1024**2
     compiler_paths = [Path(row["path"]) for row in raw["runtime_before"].values()]
     shutil.rmtree(base)
     assert not directory.exists() and all(not path.exists() for path in compiler_paths)
@@ -122,87 +147,179 @@ def original_reference(tmp_path_factory: pytest.TempPathFactory):
     }
 
 
-def component(fixture, raw=None):
+def _producer_path(path):
+    return str(ROOT) if path == "." else str(ROOT / path)
+
+
+def _recording_reader(root, reads):
+    """Plain relocated-base reader that records which retained bindings were consumed."""
+
+    def read(binding):
+        reads.append(binding["path"])
+        return (root / binding["path"]).read_bytes()
+
+    return read
+
+
+def _custody_gated_paths(raw):
+    """Retained native bytes the replay may consume only after original launch custody."""
+    paths = {raw[name]["path"] for name in ("source", "pdf", "discovery_fls", "final_fls")}
+    paths |= {binding["path"] for role in ("backend_inputs", "compiler_logs") for binding in raw[role].values()}
+    paths |= {row["artifact"]["path"] for row in (*raw["tool_artifacts"], *raw["dependencies_before"])}
+    return paths
+
+
+def component(fixture, raw=None, *, reader=None, reads=None):
     root = fixture["root"]
     return replay_scientific_math_reference(
         raw or fixture["raw"],
         fixture["ast"],
         fixture["inputs"],
-        read_artifact=lambda binding: (root / binding["path"]).read_bytes(),
-        producer_path=lambda path: str(ROOT) if path == "." else str(ROOT / path),
+        read_artifact=_recording_reader(root, [] if reads is None else reads),
+        producer_path=_producer_path,
         run_id=fixture["run_id"],
         deadline=time.monotonic() + 30,
+        native_reader=SnapshotReader(root) if reader is None else reader,
     )
 
 
-def test_deleted_original_compiler_and_producer_replay_at_different_base(original_reference):
-    observed = component(original_reference)
-    assert len(observed["reference_glyphs"]) == 2
-    assert observed["blockers"]
-    assert not original_reference["original_directory"].exists()
-
-
-def test_fresh_reader_source_compilation_reconstructs_glyph_vectors_and_ink(original_reference):
-    root = original_reference["root"]
-    directory = root / "output/readiness/fresh-reader-reference"
-    environment = native_environment(root, Path(sys.executable), directory)
-    result = reproduce_scientific_reference(
+def reproduce(fixture, directory, raw, raster, reader, reads):
+    root = fixture["root"]
+    return reproduce_scientific_reference(
         root,
         directory,
-        original_reference["raw"],
-        original_reference["ast"],
-        original_reference["inputs"],
-        original_reference["raster"],
-        read_artifact=lambda binding: (root / binding["path"]).read_bytes(),
-        producer_path=lambda path: str(ROOT) if path == "." else str(ROOT / path),
-        original_run_id=original_reference["run_id"],
-        env=environment,
-        timeout=180,
+        raw,
+        fixture["ast"],
+        fixture["inputs"],
+        raster,
+        read_artifact=_recording_reader(root, reads),
+        producer_path=_producer_path,
+        original_run_id=fixture["run_id"],
+        env=native_environment(root, Path(sys.executable), directory),
+        original_reader=reader,
+        deadline=time.monotonic() + 180,
     )
-    assert result["status"] == "blocked"
-    assert len(result["original_observation"]["reference_glyphs"]) == 2
-    assert result["reader_reference"]["runtime_before"] == result["reader_reference"]["runtime_after"]
 
 
-@pytest.mark.parametrize("kind", ["source", "command", "font", "outcome", "implementation"])
+def _data_only_readers(fixture):
+    # Neither a plain reader nor serialized original observation DATA is custody.
+    root = fixture["root"]
+    return (SnapshotReader(root), SnapshotReader(root, native_operation=copy.deepcopy(fixture["raw"])))
+
+
+def test_deleted_original_compiler_and_producer_replay_requires_launch_custody(original_reference):
+    raw, root = original_reference["raw"], original_reference["root"]
+    directory = original_reference["original_directory"]
+    assert not directory.exists()
+    # Paranoid Kpathsea policy is retained exactly as replay requires it.
+    assert raw["environment"] == {
+        **{name: str(directory / name.lower()) for name in ("TEXMFHOME", "TEXMFCONFIG", "TEXMFVAR")},
+        "TEXMFOUTPUT": str(directory),
+        "openin_any": "p",
+        "openout_any": "p",
+    }
+    # Exact process order the replay authenticates once custody is admitted.
+    assert [json.loads((root / row["artifact"]["path"]).read_bytes())["purpose"] for row in raw["tool_artifacts"]] == [
+        "reference-xelatex-version",
+        "reference-xdvipdfmx-version",
+        "reference-kpsewhich-version",
+        "reference-texmfdist",
+        "reference-texmfroot",
+        "reference-texmf-trees",
+        "reference-discovery-compiler",
+        "reference-discovery-backend",
+        "reference-final-compiler",
+        "reference-final-backend",
+    ]
+    nodes = scientific_math_from_ast(original_reference["ast"])
+    assert raw["nodes"] == [asdict(node) for node in nodes]
+    pdf = (root / raw["pdf"]["path"]).read_bytes()
+    assert hashlib.sha256(pdf).hexdigest() == raw["pdf"]["sha256"]
+    # Retained bytes alone reconstruct both glyph rows at the different base.
+    assert len(reference_math_glyphs(pdf, nodes)) == 2
+    for reader in _data_only_readers(original_reference):
+        reads: list[str] = []
+        with pytest.raises(ProjectionSourceUnsupported, match=CUSTODY):
+            component(original_reference, reader=reader, reads=reads)
+        # Source/AST/implementation/template predicates ran on genuine bytes;
+        # no TeX source, compiler, font, XDV or PDF byte was consumed.
+        assert raw["template_tool_artifact"]["path"] in reads
+        assert not set(reads) & _custody_gated_paths(raw)
+
+
+def test_fresh_reader_source_compilation_requires_original_launch_custody(original_reference):
+    directory = original_reference["root"] / "output/readiness/fresh-reader-reference"
+    for reader in _data_only_readers(original_reference):
+        reads: list[str] = []
+        with pytest.raises(ProjectionSourceUnsupported, match=CUSTODY):
+            reproduce(
+                original_reference, directory, original_reference["raw"], original_reference["raster"], reader, reads
+            )
+        assert reads == [] and not directory.exists()
+
+
+PRE_CUSTODY_TAMPER = {
+    "source-ast": "original AST bytes differ",
+    "implementation": "current loaded implementation bytes",
+    "template-command": "command/outcome/custody differs",
+    "template-outcome": "command/outcome/custody differs",
+}
+CUSTODY_GATED_TAMPER = ("tex-source", "font", "compiler-command", "compiler-outcome")
+
+
+@pytest.mark.parametrize("kind", [*PRE_CUSTODY_TAMPER, *CUSTODY_GATED_TAMPER])
 def test_rehashed_original_artifact_tamper_refused(original_reference, kind):
     raw = copy.deepcopy(original_reference["raw"])
-    if kind == "source":
+    if kind == "source-ast":
+        binding = raw["source_ast"]
+    elif kind == "tex-source":
         binding = raw["source"]
-    elif kind in {"command", "outcome"}:
-        binding = raw["tool_artifacts"][7]["artifact"]
+    elif kind.startswith("template-"):
+        binding = raw["template_tool_artifact"]
+    elif kind.startswith("compiler-"):
+        binding = next(
+            row["artifact"]
+            for row in raw["tool_artifacts"]
+            if json.loads((original_reference["root"] / row["artifact"]["path"]).read_bytes())["purpose"]
+            == "reference-final-compiler"
+        )
     elif kind == "font":
         binding = next(
             row["artifact"] for row in raw["dependencies_before"] if Path(row["resolved_path"]).suffix == ".otf"
         )
-    elif kind == "implementation":
-        binding = raw["implementation"][0]["artifact"]
     else:
-        binding = raw["backend_inputs"]["final"]
+        binding = raw["implementation"][0]["artifact"]
     path = original_reference["root"] / binding["path"]
     original = path.read_bytes()
-    if kind in {"command", "outcome"}:
+    if kind.endswith(("-command", "-outcome")):
         process = json.loads(original)
-        if kind == "command":
+        if kind.endswith("-command"):
             process["command"].append("--source-unowned")
         else:
             process["original_exit_code"] = 1
         changed = json.dumps(process).encode()
-    elif kind == "xdv":
-        changed = b""
     else:
         changed = original + b"changed"
+    reads: list[str] = []
     try:
         path.write_bytes(changed)
         binding["sha256"] = hashlib.sha256(changed).hexdigest()
-        with pytest.raises(ValueError):
-            component(original_reference, raw)
+        if kind in PRE_CUSTODY_TAMPER:
+            with pytest.raises(ValueError, match=PRE_CUSTODY_TAMPER[kind]) as refused:
+                component(original_reference, raw, reads=reads)
+            assert not isinstance(refused.value, ProjectionSourceUnsupported)
+            assert binding["path"] in reads
+        else:
+            # Without original launch custody the rehashed bytes are never consumed.
+            with pytest.raises(ProjectionSourceUnsupported, match=CUSTODY):
+                component(original_reference, raw, reads=reads)
+            assert binding["path"] not in reads
     finally:
         path.write_bytes(original)
 
 
 @pytest.mark.parametrize("kind", ["xdv", "vector", "pixels"])
-def test_rehashed_native_substitution_refused_by_actual_source_recompilation(original_reference, kind):
+def test_rehashed_native_substitution_never_consumed_without_original_custody(original_reference, kind):
     from io import BytesIO
 
     raw = copy.deepcopy(original_reference["raw"])
@@ -239,26 +356,15 @@ def test_rehashed_native_substitution_refused_by_actual_source_recompilation(ori
             output = BytesIO()
             Image.new("RGB", image.size, "white").save(output, format="PNG")
             changed = output.getvalue()
+    assert changed != original
     try:
         path.write_bytes(changed)
         binding["sha256"] = hashlib.sha256(changed).hexdigest()
-        root = original_reference["root"]
-        directory = root / "output/readiness" / ("fresh-reader-negative-" + kind)
-        environment = native_environment(root, Path(sys.executable), directory)
-        with pytest.raises(ValueError):
-            reproduce_scientific_reference(
-                root,
-                directory,
-                raw,
-                original_reference["ast"],
-                original_reference["inputs"],
-                raster,
-                read_artifact=lambda b: (root / b["path"]).read_bytes(),
-                producer_path=lambda p: str(ROOT) if p == "." else str(ROOT / p),
-                original_run_id=original_reference["run_id"],
-                env=environment,
-                timeout=180,
-            )
+        directory = original_reference["root"] / "output/readiness" / ("fresh-reader-negative-" + kind)
+        reads: list[str] = []
+        with pytest.raises(ProjectionSourceUnsupported, match=CUSTODY):
+            reproduce(original_reference, directory, raw, raster, SnapshotReader(original_reference["root"]), reads)
+        assert reads == [] and not directory.exists()
     finally:
         path.write_bytes(original)
 
@@ -420,31 +526,19 @@ def test_original_tool_json_duplicate_fields_refused():
 @pytest.mark.parametrize("diagnostic", [False, 0, None, []])
 def test_original_raster_diagnostic_requires_exact_empty_string(original_reference, diagnostic):
     root = original_reference["root"]
-    raster = copy.deepcopy(original_reference["raster"])
-    binding = raster["tool_artifact"]
-    path = root / binding["path"]
-    original = path.read_bytes()
-    process = json.loads(original)
+    binding = original_reference["raster"]["tool_artifact"]
+    process = strict_json_object((root / binding["path"]).read_bytes())
+
+    def validate(value):
+        validate_original_raster_process(
+            value,
+            original_reference["raw"],
+            producer_path=_producer_path,
+            original_run_id=original_reference["run_id"],
+        )
+
+    # The genuine relocated pdftoppm record satisfies the exact DATA predicate.
+    validate(process)
     process["diagnostic"] = diagnostic
-    changed = json.dumps(process).encode()
-    try:
-        path.write_bytes(changed)
-        binding["sha256"] = hashlib.sha256(changed).hexdigest()
-        directory = root / "output/readiness" / ("diagnostic-negative-" + uuid.uuid4().hex)
-        with pytest.raises(ValueError, match="command/outcome/custody differs"):
-            reproduce_scientific_reference(
-                root,
-                directory,
-                original_reference["raw"],
-                original_reference["ast"],
-                original_reference["inputs"],
-                raster,
-                read_artifact=lambda b: (root / b["path"]).read_bytes(),
-                producer_path=lambda p: str(ROOT) if p == "." else str(ROOT / p),
-                original_run_id=original_reference["run_id"],
-                env=native_environment(root, Path(sys.executable), directory),
-                timeout=30,
-            )
-        assert not directory.exists()
-    finally:
-        path.write_bytes(original)
+    with pytest.raises(ValueError, match="command/outcome/custody differs"):
+        validate(process)

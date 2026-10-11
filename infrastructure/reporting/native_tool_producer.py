@@ -20,6 +20,12 @@ from typing import Any
 
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.rendering.native_render_custody import (
+    NativeTexSectionPass,
+    SourceNativeMermaid,
+    SourceNativePandoc,
+    installed_native_render_custody,
+)
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext, _physical_directory
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
@@ -225,6 +231,31 @@ class NativeProducerOperation:
 _CURRENT: ContextVar[NativeProducerOperation | None] = ContextVar("template_native_producer", default=None)
 
 
+class _NativeRenderLaunchers:
+    """Reporting's native rendering launchers, resolved only when rendering asks.
+
+    Rendering may not import reporting, so a live owner installs these through
+    the rendering seam. Each method returns the real custody function so
+    rendering calls it from its own frame; each function still checks its own
+    live owner, admitted Source and stage, so installation grants no authority.
+    """
+
+    def pandoc_launcher(self) -> SourceNativePandoc:
+        from infrastructure.reporting.native_renderer_source_call import run_source_native_pandoc
+
+        return run_source_native_pandoc
+
+    def mermaid_launcher(self) -> SourceNativeMermaid:
+        from infrastructure.reporting.native_mermaid_production_tool import run_source_native_mermaid
+
+        return run_source_native_mermaid
+
+    def tex_section_launcher(self) -> NativeTexSectionPass:
+        from infrastructure.reporting.native_tex_section_render import run_native_tex_section_pass
+
+        return run_native_tex_section_pass
+
+
 def current_native_producer_operation() -> NativeProducerOperation | None:
     """Return the actual process-local owner; a child must admit its own Source."""
     operation = _CURRENT.get()
@@ -249,8 +280,9 @@ def native_producer_operation(
     operation = NativeProducerOperation(source, run_id, deadline, scope=scope, directory=directory)
     token = _CURRENT.set(operation)
     try:
-        operation.verify(SnapshotReader(source.bindings.current_root), run_id=run_id, deadline=deadline)
-        yield operation
+        with installed_native_render_custody(_NativeRenderLaunchers()):
+            operation.verify(SnapshotReader(source.bindings.current_root), run_id=run_id, deadline=deadline)
+            yield operation
     finally:
         operation._closed = True
         _CURRENT.reset(token)

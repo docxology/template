@@ -57,7 +57,10 @@ def slide_source_control_fixture(name: str, ast: bytes) -> tuple[bytes, Any, tup
             x += canvas.stringWidth(text, "Helvetica", 5 if page == 1 and name == "tiny-later-page" else 18) + 8
             canvas.addLiteral("EMC")
         if page == 1 and name == "overlay-later-page":
-            canvas.setFillColorRGB(1, 1, 1)
+            # An opaque theme-coloured band occludes every later source glyph while
+            # leaving visible page ink; a page-coloured band would make the whole
+            # page uniform, which the raster reader refuses before slide oracles run.
+            canvas.setFillColorRGB(0.12, 0.23, 0.45)
             canvas.rect(0, 250, 720, 70, fill=1, stroke=0)
         canvas.showPage()
     canvas.save()

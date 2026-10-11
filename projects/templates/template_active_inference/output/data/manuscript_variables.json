@@ -92,7 +92,7 @@
   "proof_extraction_theorem_count": 12,
   "provenance_all_config_digests": true,
   "provenance_all_seeded": true,
-  "provenance_all_source_commits": true,
+  "provenance_all_source_inputs_bound": true,
   "provenance_bundle_complete": true,
   "provenance_bundle_count": 5,
   "provenance_seeded_count": 86,
