@@ -82,3 +82,19 @@ def test_external_symlinked_public_project_roots_are_refused(tmp_path: Path) -> 
         (templates / Path(project).name).symlink_to(REPO / "projects" / project, target_is_directory=True)
     with pytest.raises(ValueError, match="project root is missing or noncanonical"):
         project_smoke_matrix(tmp_path)
+
+
+def test_search_render_smoke_gets_converter_only_preparation_before_execution() -> None:
+    workflow = yaml.safe_load((REPO / ".github/workflows/ci.yml").read_text())
+    steps = workflow["jobs"]["test-project"]["steps"]
+    preparations = [
+        (index, step)
+        for index, step in enumerate(steps)
+        if step.get("uses") == "./.github/actions/setup-acceptance-documents"
+    ]
+    assert len(preparations) == 1
+    index, preparation = preparations[0]
+    assert preparation["if"] == "matrix.project == 'templates/template_search_project'"
+    assert preparation["with"]["mode"] == "converter"
+    execution = next(i for i, step in enumerate(steps) if step.get("name") == "Run focused behavioral tests")
+    assert index < execution

@@ -354,7 +354,10 @@ Run manually from the project directory: `uv run python scripts/review`.
 
 ## Optional hardening
 
-Default CI builds this template's wheel and runs focused behavioral tests. Further
-hardening can add live retrieval/provider reproducibility and independent bibliography audits. The complete suites and native/provider acceptance remain opt-in;
+Default CI builds this template's wheel and runs focused behavioral tests.
+The selected bibliography test requires Pandoc; CI prepares the pinned converter
+before running it.
+Further hardening can add live retrieval/provider reproducibility and independent
+bibliography audits. The complete suites and native/provider acceptance remain opt-in;
 see [functional CI and hardening](../../../docs/development/ci.md) for commands
 and the evidence each lane establishes.

@@ -592,9 +592,13 @@ def test_project_and_infra_matrices_provision_the_pinned_document_toolchain() ->
                 if step.get("uses") != "./.github/actions/setup-acceptance-documents":
                     continue
                 declared = step.get("with", {}).get("mode", "native")
-                expected = (
-                    project_mode if workflow_path.name == "hardening.yml" and job_name == "test-project" else "native"
-                )
+                if workflow_path.name == "ci.yml" and job_name == "test-project":
+                    expected = "converter"
+                    assert step["if"] == "matrix.project == 'templates/template_search_project'"
+                elif workflow_path.name == "hardening.yml" and job_name == "test-project":
+                    expected = project_mode
+                else:
+                    expected = "native"
                 assert declared == expected
                 prepared_python = step.get("with", {}).get("python-executable", ".venv/bin/python")
                 expected_python = (

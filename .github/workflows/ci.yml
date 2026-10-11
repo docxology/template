@@ -134,6 +134,11 @@ jobs:
         run: |
           uv build --wheel --no-build-isolation --python .venv/bin/python --out-dir "$RUNNER_TEMP/provider" projects/templates/template_literature_meta_analysis
           uv pip install --python .venv/bin/python --no-deps "$RUNNER_TEMP/provider"/*.whl
+      - name: Prepare the bibliography converter for Search Project
+        if: matrix.project == 'templates/template_search_project'
+        uses: ./.github/actions/setup-acceptance-documents
+        with:
+          mode: converter
       - name: Run focused behavioral tests
         env:
           PROJECT: ${{ matrix.project }}

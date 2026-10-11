@@ -22,7 +22,10 @@ uv run python scripts/gates/ci_smoke.py --project templates/template_code_projec
 ```
 
 Advanced Literature Review also needs its declared Meta provider installed;
-CI builds that provider wheel before its behavioral tests. A project wheel
+CI builds that provider wheel before its behavioral tests. Search Project's
+bibliography test also performs a real Pandoc conversion; only that job uses the
+existing pinned converter-only preparation, without native document prerequisites.
+A project wheel
 build is packaging evidence; these source-tree tests do not certify installation
 outside the checkout, publication, native rendering, or scientific validity.
 
