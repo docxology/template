@@ -214,3 +214,11 @@ Navigation links to in-tree documents (keeps them discoverable):
 - [Troubleshooting](docs/troubleshooting.md)
 
 <!-- foam-orphan-nav:end -->
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add numerical stress cases and clear separation of the physical-domain analogy from claims. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

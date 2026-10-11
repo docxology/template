@@ -138,3 +138,11 @@ Whole-source producers and the full own test suite admit this reference once, re
 After explicit SDK/dev preparation, run `python -I -m pytest tests/ --cov=src --cov-fail-under=90` from the standalone own project. This command requires the admitted DATA environment and every declared renderer/provider needed by the selected cases. A fresh complete own-suite receipt and actual installed-wheel execution remain distinct acceptance requirements.
 
 Bound infrastructure file counts use the retained native Root Git inventory from this same admitted reference; pinned submodules contribute their Root gitlink once. Ambient PATH Git output cannot supply bound counts. Ordinary unbound checkout counting retains its original Git behavior.
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add native slide rendering, accessibility and independently sourced diligence checks. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

@@ -179,3 +179,11 @@ METADATA/RECORD and declared files; checkout evidence additionally includes publ
 scripts and root package/lock files. Fresh owned worker bytecode prefixes precede
 imports. Directory links, stale loaded code, altered provider artifacts, and a
 deadline exceeded during final custody checks prevent passed acceptance.
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add independent ranking baselines and retained real-provider comparisons. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

@@ -90,3 +90,11 @@ Confirmatory claims must map to registered hypotheses and outcomes. Exploratory 
 ## Fork guidance
 
 Use `scripts/audit/copy_exemplar.py` for clean forks. Replace the registration fixture, update the analysis plan, record ethics/stage metadata, and rerun tests before rendering.
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add preregistered intent preservation, deviation reporting and independent review. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

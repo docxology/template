@@ -395,7 +395,7 @@ def test_complete_merge_admission_refuses_invalid_selection_records(fault: str) 
 
 
 def test_ci_workflow_consumes_partition_and_keeps_the_union_gate_required() -> None:
-    workflow = yaml.safe_load((SDK_ROOT / ".github/workflows/ci.yml").read_text())
+    workflow = yaml.safe_load((SDK_ROOT / ".github/workflows/hardening.yml").read_text())
     jobs = workflow["jobs"]
     emit = next(step["run"] for step in jobs["detect-projects"]["steps"] if step.get("id") == "matrix")
     assert "scripts/gates/infra_ci_partition.py --matrix" in emit
@@ -429,7 +429,7 @@ def test_ci_infra_checkouts_prepare_the_declared_public_pin_before_source_observ
                 assert metadata.split()[2] == b"0"
                 links.append(path.decode("utf-8"))
     assert links == [_PINNED_SUBMODULE]
-    jobs = yaml.safe_load((SDK_ROOT / ".github/workflows/ci.yml").read_text())["jobs"]
+    jobs = yaml.safe_load((SDK_ROOT / ".github/workflows/hardening.yml").read_text())["jobs"]
     checkouts = []
     for job_name in ("test-infra", "coverage-infra"):
         steps = jobs[job_name]["steps"]

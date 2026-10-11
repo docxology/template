@@ -41,7 +41,7 @@ def test_health_registry_carries_cross_surface_gates() -> None:
 
 
 def test_ci_workflow_carries_cross_surface_gates() -> None:
-    workflow = (REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    workflow = (REPO_ROOT / ".github/workflows/hardening.yml").read_text(encoding="utf-8")
 
     required_commands = (
         "scripts/audit/verify_no_mocks.py\n          --inventory --max-dependency-replacements 0",
@@ -57,7 +57,7 @@ def test_ci_workflow_carries_cross_surface_gates() -> None:
 
 
 def test_ci_public_matrix_uses_current_stage_cli_contract() -> None:
-    workflow = (REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    workflow = (REPO_ROOT / ".github/workflows/hardening.yml").read_text(encoding="utf-8")
 
     assert "--project-only --all-projects --public-projects" in workflow
     assert "--project-workers auto" in workflow

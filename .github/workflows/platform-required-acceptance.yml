@@ -2,8 +2,6 @@ name: Platform required acceptance
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main, codex/platform-4]
 
 permissions:
   contents: read

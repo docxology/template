@@ -10,6 +10,7 @@ states which surfaces are wired into unified health or remain explicit.
 | Script | Delegates to | Purpose |
 |--------|--------------|---------|
 | `infra_ci_partition.py` | `infrastructure.core.testing.ci_infra_partition`, `infrastructure.core.testing.ci_infra_coverage` | Complete ordinary infrastructure matrix, exact shard data export and required ≥60% coverage union |
+| `ci_smoke.py` | `infrastructure.core.testing.ci_smoke` | Validate the complete public functional roster and run one project selection in an isolated pytest process. |
 | `ci_policy.py` | `infrastructure.core.ci_policy.required_ci_jobs` | Source-owned complete job selection for CI Gate; missing or extra hosted job outcomes refuse completion |
 | `gate_cache.py` | `infrastructure.core.cache_gate.run_cache_gate` | Hermes cache validation (requires `HERMES_HOME`; opt-in) |
 | `methods_plan_check.py` | `infrastructure.methods.audit_methods_projects` | All-public or single-project source/rendered methods audit. Source mode runs in unified health; rendered mode remains an explicit publication gate. |

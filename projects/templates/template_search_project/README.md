@@ -350,3 +350,11 @@ Run manually from the project directory: `uv run python scripts/review`.
 * [`docs/architecture/discovery-export-synthesis.md`](../../../docs/architecture/discovery-export-synthesis.md)
 * [`docs/best-practices/literature-search-best-practices.md`](../../../docs/best-practices/literature-search-best-practices.md)
 * [`docs/security/literature-fetch-security.md`](../../../docs/security/literature-fetch-security.md)
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add live retrieval/provider reproducibility and independent bibliography audits. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

@@ -229,3 +229,11 @@ Navigation links to in-tree documents (keeps them discoverable):
 - [src/ — agent notes](src/AGENTS.md)
 
 <!-- foam-orphan-nav:end -->
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add native book layout, cross-reference stability and accessibility audits. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

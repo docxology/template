@@ -16,9 +16,10 @@ from infrastructure.core.ci_policy import required_ci_jobs
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
+    parser.add_argument("--workflow", choices=("ci.yml", "hardening.yml"), default="ci.yml")
     args = parser.parse_args()
     try:
-        jobs = required_ci_jobs(args.repo_root)
+        jobs = required_ci_jobs(args.repo_root, args.workflow)
     except (OSError, ValueError) as error:
         parser.error(str(error))
     print(json.dumps(jobs, separators=(",", ":")))

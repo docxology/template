@@ -208,3 +208,11 @@ See [AGENTS.md](AGENTS.md) for technical documentation and
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_eda_notebook/tests --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add notebook execution on additional datasets and outside-checkout installations. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

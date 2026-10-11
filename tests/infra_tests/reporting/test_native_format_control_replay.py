@@ -25,6 +25,12 @@ from infrastructure.reporting.native_projection_checks import PROJECTION_CONTROL
 from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
+UNADMITTED = "externally admitted source and original launch custody"
+CUSTODY_GATED = (
+    "requires original launch custody, which unit tests cannot construct; reachable only "
+    "under the platform-required-acceptance native-original/complete jobs"
+)
+
 
 def test_current_source_projection_fixtures_exact_repeat_and_real_parse() -> None:
     for name in PROJECTION_CONTROL_CODES:
@@ -68,21 +74,37 @@ def test_original_executable_deleted_portable_actual_tool_closure(tmp_path: Path
     shutil.rmtree(producer)
     relocated = reader_root / "output/readiness/controls"
     assert not executable.exists()
-    with pytest.raises(ProjectionSourceUnsupported, match="externally admitted source and original launch custody"):
+    with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
         _closure(result["artifact"], SnapshotReader(reader_root), relocated, "actual-control-custody")
     path = reader_root / result["artifact"]["path"]
     original = json.loads(path.read_text())
-    for change in (
-        {"diagnostic": "custody lost"},
-        {"unknown": True},
-        {"executable_observation_after": {**original["executable_observation_after"], "sha256": "e" * 64}},
+    # Receipt DATA checked before custody is consulted is refused for its own
+    # reason, never merely by the custody refusal that also refuses genuine DATA.
+    for change, run_id, reason in (
+        ({"unknown": True}, "actual-control-custody", "exact shared original receipt fields"),
+        (
+            {"executable_observation_after": {**original["executable_observation_after"], "sha256": "e" * 64}},
+            "actual-control-custody",
+            "original executable observation changed",
+        ),
+        ({}, "different-run", "command/run/outcome differs"),
     ):
         binding = write_json(reader_root, path, {**original, **change})
-        with pytest.raises(ValueError):
-            _closure(binding, SnapshotReader(reader_root), relocated, "actual-control-custody")
-    binding = write_json(reader_root, path, original)
-    with pytest.raises(ValueError):
-        _closure(binding, SnapshotReader(reader_root), relocated, "different-run")
+        with pytest.raises(ValueError, match=reason) as refused:
+            _closure(binding, SnapshotReader(reader_root), relocated, run_id)
+        assert not isinstance(refused.value, ProjectionSourceUnsupported)
+    # The custody diagnostic is compared only after original launch custody
+    # admits the receipt. Here the changed diagnostic fails closed at that gate;
+    # its own rejection is the explicit skip below, not coverage claimed here.
+    binding = write_json(reader_root, path, {**original, "diagnostic": "custody lost"})
+    with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+        _closure(binding, SnapshotReader(reader_root), relocated, "actual-control-custody")
+
+
+def test_changed_custody_diagnostic_rejection_needs_original_launch_custody() -> None:
+    """Uncovered here: _closure rejects a non-empty control tool diagnostic only
+    after _tool admits the receipt against original launch custody."""
+    pytest.skip(f"changed-custody-diagnostic: {CUSTODY_GATED}")
 
 
 def test_source_suite_cannot_be_missing_duplicate_unknown_or_bare_pass(tmp_path: Path) -> None:

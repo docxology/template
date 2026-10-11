@@ -95,3 +95,11 @@ Publication state: draft (source repository: https://github.com/docxology/templa
 `publication.status: draft`). Claim boundary: the manuscript projects the
 committed experiment tree; no claim may cite a run that is not an answered
 node in the tree. Counts are generated, never hand-typed.
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add durable event replay, concurrent writers and recovery from interrupted exports. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

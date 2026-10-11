@@ -507,7 +507,7 @@ def test_ci_matrix_cli_emits_one_line_exact_product(
 
 def test_ci_workflow_consumes_only_the_capability_matrix() -> None:
     repo = Path(__file__).resolve().parents[3]
-    workflow = yaml.safe_load((repo / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"))
+    workflow = yaml.safe_load((repo / ".github" / "workflows" / "hardening.yml").read_text(encoding="utf-8"))
     detect = workflow["jobs"]["detect-projects"]
     matrix_step = next(step for step in detect["steps"] if step.get("id") == "matrix")
     strategy = workflow["jobs"]["test-project"]["strategy"]
@@ -533,7 +533,7 @@ def test_ci_workflow_consumes_only_the_capability_matrix() -> None:
 
 def test_project_and_infra_matrices_provision_the_pinned_document_toolchain() -> None:
     repo = Path(__file__).resolve().parents[3]
-    workflow = yaml.safe_load((repo / ".github/workflows/ci.yml").read_text(encoding="utf-8"))
+    workflow = yaml.safe_load((repo / ".github/workflows/hardening.yml").read_text(encoding="utf-8"))
     action = yaml.safe_load(
         (repo / ".github/actions/setup-acceptance-documents/action.yml").read_text(encoding="utf-8")
     )
@@ -592,7 +592,9 @@ def test_project_and_infra_matrices_provision_the_pinned_document_toolchain() ->
                 if step.get("uses") != "./.github/actions/setup-acceptance-documents":
                     continue
                 declared = step.get("with", {}).get("mode", "native")
-                expected = project_mode if workflow_path.name == "ci.yml" and job_name == "test-project" else "native"
+                expected = (
+                    project_mode if workflow_path.name == "hardening.yml" and job_name == "test-project" else "native"
+                )
                 assert declared == expected
                 prepared_python = step.get("with", {}).get("python-executable", ".venv/bin/python")
                 expected_python = (

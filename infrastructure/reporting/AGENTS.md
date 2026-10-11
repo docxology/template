@@ -477,3 +477,15 @@ observations alone do not establish complete execution or a universal speedup.
 | `required_acceptance_aggregate.py` | Combine original required evidence; publish only independently passed candidates. |
 | `required_candidate_collection.py` | Actually authenticate the exact completed candidate and every bounded shard. |
 | `required_candidate_transport.py` | Source-owned bounded shards for the complete independently passed candidate. |
+
+
+## Native reference custody
+
+TeX references bind canonical distribution leaves to the selected Kpathsea
+installation. `TEXMFROOT` is a locator, never a broad input root. Producer and
+portable replay share the same explicit leaf policy, including Debian's split
+system distribution; ambient TeX routing, local/auxiliary trees and private
+execution overlaps are refused. Browser children freeze bytecode writes only
+after their executed Source audit closes; parents still verify the exact final
+cache inventory and bytes. Unit replay DATA cannot grant original native launch
+custody; post-admission tamper coverage remains a hosted native acceptance gate.

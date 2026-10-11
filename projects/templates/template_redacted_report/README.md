@@ -103,3 +103,11 @@ This exemplar is a release-safety and disclosure-control template. It must not b
 ## Fork guidance
 
 Use `scripts/audit/copy_exemplar.py` for clean forks. Keep high-side source files outside the public repository, commit only sanitized fixtures, configure your lawful marking taxonomy explicitly, require source-safe ledgers and review records, and require an explicit release authority field before publication.
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add adversarial residual-disclosure checks and independent human release review. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

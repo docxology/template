@@ -256,3 +256,11 @@ CC-BY-4.0, granted by this exemplar's own [`LICENSE`](LICENSE) and declared in
 (`metadata.license`), from which the `codemeta.json` and `.zenodo.json` sidecars
 are generated. The template monorepo's own root `LICENSE` is Apache-2.0 and does
 not govern this project's content.
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add provider-wheel compatibility and reproducible live connector retrieval. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

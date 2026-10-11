@@ -12,13 +12,18 @@ import hashlib
 from io import BytesIO
 import json
 import math
-from pathlib import PurePosixPath
+from pathlib import PurePath, PurePosixPath
 import re
 import time
 from typing import Any
 
 from infrastructure.reporting.native_format_pdf_source import PDFSourceInputs
-from infrastructure.reporting.native_format_tex_reference import TEXMF_TREES_ARGUMENT
+from infrastructure.reporting.native_format_tex_reference import (
+    TEXMF_TREES_ARGUMENT,
+    admitted_texmf_roots,
+    validate_texmf_installation,
+    texmf_dependency_admitted,
+)
 from infrastructure.reporting.native_format_portable_custody import validate_executable_observation
 from infrastructure.reporting.native_format_scientific_math import (
     _math_body,
@@ -301,7 +306,7 @@ def replay_scientific_math_reference(
             "version": process["stdout"],
         }:
             raise ValueError("reference runtime version differs from original custody")
-    roots = []
+    roots: list[PurePath] = []
     queries = (
         ("reference-texmfdist", ["--var-value=TEXMFDIST"]),
         ("reference-texmfroot", ["--var-value=TEXMFROOT"]),
@@ -317,12 +322,10 @@ def replay_scientific_math_reference(
         if query != [TEXMF_TREES_ARGUMENT]:
             roots.append(_absolute(process["stdout"].strip()))
             continue
-        # Same admission as the original: every searched tree except the private ones.
-        roots.extend(
-            tree
-            for tree in (_absolute(item) for item in process["stdout"].strip().split(":"))
-            if not tree.is_relative_to(original_directory)
-        )
+        searched = tuple(_absolute(item) for item in process["stdout"].strip().split(":"))
+        installation = roots[1]
+        validate_texmf_installation(installation, _absolute(raw["runtime_before"]["kpsewhich"]["path"]))
+        roots = list(admitted_texmf_roots(roots[0], roots[1], searched, original_directory))
     compiler_args = [
         "-fmt=xelatex",
         "-no-pdf",
@@ -354,7 +357,7 @@ def replay_scientific_math_reference(
             raise ValueError("reference dependency fieldset differs")
         path, resolved = _absolute(row["original_path"]), _absolute(row["resolved_path"])
         if (
-            not any(resolved.is_relative_to(base) for base in roots)
+            not texmf_dependency_admitted(resolved, tuple(roots), installation)
             or type(row["size_bytes"]) is not int
             or not 0 < row["size_bytes"] <= 64 * 1024 * 1024
         ):

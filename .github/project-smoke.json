@@ -1,0 +1,102 @@
+{
+  "templates/template_active_inference": [
+    "tests/test_analytical_guards.py",
+    "tests/test_invariants.py"
+  ],
+  "templates/template_advanced_literature_review": [
+    "tests/test_local_config_loader.py",
+    "tests/test_advanced_template.py"
+  ],
+  "templates/template_autopoiesis": [
+    "tests/primitives/test_primitives_dynamics.py",
+    "tests/primitives/test_primitives_statistics.py"
+  ],
+  "templates/template_autoresearch_project": [
+    "tests/loop/test_models.py",
+    "tests/loop/test_edge_loop.py"
+  ],
+  "templates/template_autoscientists": [
+    "tests/analysis/test_objective.py",
+    "tests/search/test_ranking.py"
+  ],
+  "templates/template_code_project": [
+    "tests/core/test_optimizer.py",
+    "tests/core/test_optimizer_gradient_descent.py"
+  ],
+  "templates/template_data_descriptor": [
+    "tests/test_descriptor.py",
+    "tests/test_verification.py"
+  ],
+  "templates/template_eda_notebook": [
+    "tests/test_cleaning.py",
+    "tests/test_dataset.py"
+  ],
+  "templates/template_experiment_tree": [
+    "tests/test_tree.py",
+    "tests/test_store.py"
+  ],
+  "templates/template_formal": [
+    "tests/test_types_result.py",
+    "tests/test_types_ids.py"
+  ],
+  "templates/template_gold_refinement": [
+    "tests/test_domain_adapter.py",
+    "tests/test_coercion.py"
+  ],
+  "templates/template_literature_meta_analysis": [
+    "tests/test_config_validation.py",
+    "tests/test_variables.py"
+  ],
+  "templates/template_madlib": [
+    "tests/test_tokens.py",
+    "tests/test_config.py"
+  ],
+  "templates/template_methods_paper": [
+    "tests/test_examples_methods.py",
+    "tests/test_units.py"
+  ],
+  "templates/template_newspaper": [
+    "tests/test_content.py",
+    "tests/test_geometry.py"
+  ],
+  "templates/template_pitch_deck": [
+    "tests/test_deck_audit.py",
+    "tests/test_token_resolution.py"
+  ],
+  "templates/template_pools_rules_tools": [
+    "tests/rules/test_rules_applier.py",
+    "tests/rules/test_strong_rule_evaluator.py"
+  ],
+  "templates/template_prose_project": [
+    "tests/pipeline/test_claim_ledger.py",
+    "tests/pipeline/test_prose_facade.py"
+  ],
+  "templates/template_redacted_report": [
+    "tests/test_redaction.py",
+    "tests/test_manuscript_binding.py"
+  ],
+  "templates/template_registered_report": [
+    "tests/test_protocol.py",
+    "tests/test_demo_study.py"
+  ],
+  "templates/template_search_project": [
+    "tests/publish/test_config.py",
+    "tests/publish/test_bibliography_projection.py"
+  ],
+  "templates/template_sia": [
+    "tests/loop/test_reference_agent.py",
+    "tests/loop/test_approval.py"
+  ],
+  "templates/template_storybook": [
+    "tests/test_models.py",
+    "tests/test_story.py"
+  ],
+  "templates/template_template": [
+    "tests/core/test_meta.py",
+    "tests/core/test_edge_cases.py"
+  ],
+  "templates/template_textbook": [
+    "tests/test_models.py",
+    "tests/test_content.py"
+  ]
+}

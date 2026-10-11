@@ -147,3 +147,11 @@ uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integ
 - `fonds/AGENTS.md` — fond discovery and validation conventions
 - `rules/AGENTS.md` — rule loading and enforcement conventions
 - `tools/AGENTS.md` — tool discovery and invocation conventions
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add standalone resource portability, policy faults and interrupted mirror publication. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

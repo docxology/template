@@ -111,7 +111,9 @@ assert pids.exists(), 'actual bounded root did not start'
 root=json.loads(pids.read_text())['root']
 # The actual root has launched; allow the independent guardian to finish ARM.
 time.sleep(.5)
-rows=subprocess.run(['/bin/ps','-axo','pid=,ppid=,command='],capture_output=True,text=True,timeout=3).stdout
+# Linux otherwise truncates command lines, hiding the fresh-cache argument
+# that identifies the actual guardian. Darwin accepts the same wide option.
+rows=subprocess.run(['/bin/ps','-axww','-o','pid=,ppid=,command='],capture_output=True,text=True,timeout=3).stdout
 guardians=[]
 for row in rows.splitlines():
  parts=row.split(None,2)

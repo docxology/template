@@ -9,11 +9,15 @@ import yaml
 from infrastructure.core.files.secure_write import read_bytes_confined
 
 
-def required_ci_jobs(repo_root: Path) -> tuple[str, ...]:
+def required_ci_jobs(repo_root: Path, workflow_name: str = "ci.yml") -> tuple[str, ...]:
     """Require one aggregate covering every other declared workflow job."""
+    if workflow_name not in {"ci.yml", "hardening.yml"}:
+        raise ValueError("unsupported CI workflow")
     root = repo_root.resolve(strict=True)
     try:
-        workflow = yaml.safe_load(read_bytes_confined(root, root / ".github/workflows/ci.yml", max_bytes=256 * 1024))
+        workflow = yaml.safe_load(
+            read_bytes_confined(root, root / ".github/workflows" / workflow_name, max_bytes=256 * 1024)
+        )
     except yaml.YAMLError as error:
         raise ValueError("CI workflow contains invalid YAML") from error
     if not isinstance(workflow, dict) or not isinstance(workflow.get("jobs"), dict):

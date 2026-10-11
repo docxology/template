@@ -36,3 +36,5 @@ See `README.md` for the module table. Key entry points:
 | Module | Role |
 | --- | --- |
 | `project_test_runtime.py` | Admission of an already prepared project test interpreter; never a resolver. |
+
+Default functional CI uses `ci_smoke.py` and the explicit `.github/project-smoke.json` selections. Full matrices and coverage union remain available in the manual hardening workflow.

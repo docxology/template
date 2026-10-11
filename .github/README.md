@@ -1,3 +1,14 @@
+## Default functional checks
+
+Default [`ci.yml`](workflows/ci.yml) uses Linux/Python 3.14 for public
+lint/type/data/security checks, pipeline smoke, and focused behavioral tests plus
+wheel builds for every public template. Its required `CI Gate` demands success
+from all functional jobs. No full-suite coverage or native acceptance is implied.
+The complete matrix described below belongs to manual optional hardening;
+coverage union, dependency vulnerability auditing and semantic replacement
+inventory are requirements of that lane. Native/formal release acceptance also
+remains a separate manual lane. See [CI scope and local commands](../docs/development/ci.md).
+
 <!-- markdownlint-disable MD013 MD033 MD041 MD051 MD060 -->
 <div align="center">
 
@@ -895,13 +906,13 @@ Long-horizon viability — toolchain migration, local CI, archival targets, regr
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| [`ci.yml`](workflows/ci.yml) | push/PR to `main` · weekly (Sun 00:00 UTC) · manual | **20 jobs** (2 conditional · 2 schedule/dispatch-only · 1 aggregation gate) — see the full table below |
+| [`hardening.yml`](workflows/hardening.yml) | manual only | **20 jobs** (2 conditional · 2 schedule/dispatch-only · 1 aggregation gate) — see the full table below |
 | [`stale.yml`](workflows/stale.yml) | Daily schedule | Close inactive issues/PRs (`actions/stale`) |
 | [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | Exact-tag gates, root 4+ full required-acceptance handoff, installed-wheel matrix, rendered evidence, and release build |
-| [`platform-required-acceptance.yml`](workflows/platform-required-acceptance.yml) | push to `main` or `codex/platform-4` · manual | Original Root/common/native observations and strict complete candidate handoff; implementation presence is not acceptance or publication proof |
+| [`platform-required-acceptance.yml`](workflows/platform-required-acceptance.yml) | manual only | Original Root/common/native observations and strict complete candidate handoff; implementation presence is not acceptance or publication proof |
 | [`dependabot-automerge.yml`](workflows/dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
 
-### CI Jobs (`ci.yml`) — complete inventory
+### CI Jobs (`hardening.yml`) — complete inventory
 
 The repo-wide `permissions:` is `contents: read`; every job re-declares its own minimal scope. **Conditional jobs are gated by the `detect` job's outputs** — *not* by a job-level `hashFiles()` (that is invalid in a job-level `if:` and rejects the entire workflow at parse time).
 
@@ -922,9 +933,9 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | 13 | `security` | — | always | Frozen dependency audit plus Bandit over the generated public source scope |
 | 14 | `docs-lint` | — | always | Mermaid render + relative-link resolution + doc-pair + consistency |
 | 15 | `performance` | `test-infra`, `test-project` | always | Benchmarks + coverage-history dashboard (informational) |
-| 16 | `public-matrix-receipt` | — | schedule · manual dispatch | Uploads the public-matrix coverage receipt artifact (fail-closed output-drift) |
-| 17 | `test-infra-slow` | `verify-no-mocks` | schedule · manual dispatch | Slow-marked infra suite lane (`pytest.mark.slow`) that the push/PR lanes deselect |
-| 18 | `test-integration` | `verify-no-mocks` | always | Registered `tests/integration/` suite (`run.sh` + pipeline CLI) on every push/PR (CI-WIRING-1) |
+| 16 | `public-matrix-receipt` | — | manual dispatch | Uploads the public-matrix coverage receipt artifact (fail-closed output-drift) |
+| 17 | `test-infra-slow` | `verify-no-mocks` | manual dispatch | Slow-marked infra suite lane (`pytest.mark.slow`) that the push/PR lanes deselect |
+| 18 | `test-integration` | `verify-no-mocks` | always | Registered `tests/integration/` suite (`run.sh` + pipeline CLI) on manual full-suite runs |
 | 19 | `coverage-infra` | `test-infra` | always | Complete Python 3.14/Linux branch-coverage union; missing/stale/overlapping/tampered selections refuse merge, ≥60% is required |
 | 20 | `ci-gate` | all upstream jobs (`if: always()`) | always | Aggregation gate — fails if any upstream job failed or was cancelled (skipped counts as intentional) |
 
@@ -1023,8 +1034,8 @@ enabled, force pushes disabled, and `strict: false`. GitHub currently has no
 required PR-approval or CODEOWNERS-approval rule and reported no additional
 branch rulesets. Recheck these external settings before integration.
 
-`CI Gate` aggregates the infrastructure/project matrices, regression tests,
-and the other required jobs in [`workflows/ci.yml`](workflows/ci.yml). Verify its
+`CI Gate` requires every fast functional job in [`workflows/ci.yml`](workflows/ci.yml)
+to succeed. The manual full matrix reports a distinct `Hardening Gate`. Verify its
 success for the exact candidate commit before updating `main`. Complete root 4+
 release acceptance remains a separate handoff. [`CODEOWNERS`](CODEOWNERS) routes
 reviews, while the repository's sensitive-area review obligations remain in
@@ -1108,4 +1119,4 @@ Common issues: [docs/operational/troubleshooting/](../docs/operational/troublesh
 
 </div>
 
-The infrastructure partition changes execution placement only. The required `coverage-infra` job consumes every 3.14/Linux shard, validates their complete disjoint case union and source/data identities, and enforces the unchanged 60% floor. The existing `ci-gate` complete-job policy includes this job; an unsuccessful or skipped merge prevents normal main integration. Root 4 release evidence remains separately required.
+The infrastructure partition changes execution placement only. The required `coverage-infra` job consumes every 3.14/Linux shard, validates their complete disjoint case union and source/data identities, and enforces the unchanged 60% floor. The existing `ci-gate` complete-job policy includes this job; an unsuccessful or skipped merge prevents exhaustive hardening acceptance. Root 4 release evidence remains separately required.

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import html
 import hashlib
+import json
 from io import BytesIO
 import math
 import time
@@ -391,7 +392,6 @@ def audit_browser_html(
     cdn_map = directory / "cdn-map.json"
     cdn_bindings = []
     if asset_contract.get("cdn_assets"):
-        import json
         from infrastructure.reporting.native_format_browser_cdn import cdn_member_bytes
 
         mapping = {}

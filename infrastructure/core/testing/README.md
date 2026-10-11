@@ -20,6 +20,7 @@ probes, and test-selection planning. Re-homed from the flat
 | `pytest_marker_exprs.py` | Marker-expression assembly per profile. |
 | `public_matrix_receipt.py` | Deterministic public-matrix receipt build/validate/write. |
 | `coverage_policy.py` | pytest-cov capability probes. |
+| `ci_smoke.py` | Complete public roster with focused functional tests; no whole-suite coverage claim. |
 | `ci_infra_partition.py` | Source-declared complete ordinary-CI module partition and selection admission. |
 | `ci_infra_shard_plugin.py` | Explicit pytest/xdist collection partition and actual completion accounting. |
 | `ci_infra_coverage.py` | Confined shard transfer checks and the complete ≥60% branch-coverage union. |

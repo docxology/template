@@ -105,7 +105,7 @@ class TestPublicSurface:
         assert all("stage_01_test.py" not in argument for argument in specs["public-capabilities"])
 
     def test_ci_security_and_platform_oracles_fail_closed(self) -> None:
-        workflow = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+        workflow = (REPO_ROOT / ".github" / "workflows" / "hardening.yml").read_text(encoding="utf-8")
         assert "continue-on-error: ${{ runner.os == 'macOS' }}" not in workflow
         assert "uv export --all-groups --all-extras --frozen" in workflow
         assert 'audit_requirements "$LOCK_REQUIREMENTS"' in workflow

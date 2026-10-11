@@ -1,3 +1,14 @@
+## Default functional checks
+
+Default [`ci.yml`](../../.github/workflows/ci.yml) uses Linux/Python 3.14 for public
+lint/type/data/security checks, pipeline smoke, and focused behavioral tests plus
+wheel builds for every public template. Its required `CI Gate` demands success
+from all functional jobs. No full-suite coverage or native acceptance is implied.
+The complete matrix described below belongs to manual optional hardening;
+coverage union, dependency vulnerability auditing and semantic replacement
+inventory are requirements of that lane. Native/formal release acceptance also
+remains a separate manual lane. See [CI scope and local commands](../development/ci.md).
+
 # Local CI and release checks
 
 Use the commands below to choose a development check, reproduce CI, or complete
@@ -72,7 +83,7 @@ docker info >/dev/null     # should succeed
 # Run the full default workflow (everything on push to main)
 ./scripts/shell/ci_local.sh
 
-# Run a specific job (job IDs match .github/workflows/ci.yml)
+# Run a specific job (job IDs match .github/workflows/hardening.yml)
 ./scripts/shell/ci_local.sh -j lint
 ./scripts/shell/ci_local.sh -j test-infra
 ./scripts/shell/ci_local.sh -j test-project
@@ -240,7 +251,7 @@ release paths to match Git's cached index.
 
 ## Long-term portability
 
-The workflow YAML at `.github/workflows/ci.yml` records current jobs and
+The workflow YAML at `.github/workflows/hardening.yml` records current jobs and
 dependencies. A future provider migration depends on the destination's
 support for runners, actions, permissions and services.
 
@@ -258,5 +269,5 @@ Docker is unavailable.
 
 - [`README.md`](README.md) — guide hub
 - [`scripts/shell/ci_local.sh`](../../scripts/shell/ci_local.sh) — the wrapper
-- [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) — the workflow being reproduced
+- [`.github/workflows/hardening.yml`](../../.github/workflows/hardening.yml) — the workflow being reproduced
 - [`.github/AGENTS.md`](../../.github/AGENTS.md) — CI job names + thresholds

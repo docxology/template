@@ -1,3 +1,17 @@
+## Fast functional CI
+
+`ci.yml` runs on main pushes, pull requests and manual dispatch. It uses Linux
+and Python 3.14: lint/types and public data/security guards, pipeline smoke,
+a standalone wheel build and focused behavioral tests for every public template,
+and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
+the smoke runner refuses missing projects, empty selections and escaping paths.
+These are functional checks, with no full-suite coverage or native acceptance claim.
+
+The former cross-version/full-suite matrix remains in `hardening.yml`, invoked
+manually. `platform-required-acceptance.yml` is also manual-only; its original
+custody requirements remain mandatory for formal release acceptance. Further
+hardening choices and the local commands are in [`docs/development/ci.md`](../docs/development/ci.md).
+
 # GitHub Integration
 
 ## Overview
@@ -34,7 +48,7 @@ flowchart TB
     ITPL --> ITPL_F[config.yml · bug_report.md ·<br/>feature_request.md · documentation.md]
 
     WF --> WF_DOCS[AGENTS.md · README.md]
-    WF --> WF_CI[ci.yml<br/>20 jobs — 2 conditional via detect outputs — fep-lean, setup-hook-windows-smoke — 2 schedule/dispatch-only — public-matrix-receipt, test-infra-slow — 1 aggregation gate — ci-gate]
+    WF --> WF_CI[hardening.yml<br/>20 jobs — 2 conditional via detect outputs — fep-lean, setup-hook-windows-smoke — 2 schedule/dispatch-only — public-matrix-receipt, test-infra-slow — 1 aggregation gate — ci-gate]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
     WF --> WF_REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
@@ -50,18 +64,17 @@ flowchart TB
 
 ## Continuous Integration (CI/CD)
 
-### CI Pipeline (`workflows/ci.yml`)
+### Optional exhaustive hardening (`workflows/hardening.yml`)
 
-**Triggers:** push to `main`, pull requests targeting `main`, weekly scheduled run (Sunday midnight UTC), manual **`workflow_dispatch`** (no inputs).
+**Triggers:** manual **`workflow_dispatch`** only.
 **Concurrency:** Superseded PR runs are cancelled by PR ref. Main pushes, scheduled runs, and manual runs each retain a unique run group so later commits cannot cancel exact-commit verification.
 
-**Pipeline jobs** (job ids in `ci.yml`; display names differ — use `name:` for branch protection):
+**Pipeline jobs** (job ids in `hardening.yml`; display names differ — use `name:` for branch protection):
 
-**20 jobs total; 2 are conditional on push/PR (fep-lean, setup-hook-windows-smoke), gated by the `detect` job's outputs
+**20 jobs total; 2 depend on optional-project presence (fep-lean, setup-hook-windows-smoke), gated by the `detect` job's outputs
 (`needs.detect.outputs.*`) — NOT a job-level `hashFiles()` (that is invalid
 in a job `if:` and rejects the whole workflow at parse). 2 further jobs
-(`public-matrix-receipt`, `test-infra-slow`) run only on the weekly schedule
-or manual dispatch.**
+(`public-matrix-receipt`, `test-infra-slow`) run only on the manual dispatch.**
 
 | # | Job id | Display name (representative) | Depends on | Python | Runner |
 | --- | --- | --- | --- | --- | --- |
@@ -82,13 +95,13 @@ or manual dispatch.**
 | 15 | `performance` | Performance Check | — (no `needs:`; CI-FAST-PERF-1) | 3.14 | ubuntu |
 | 16 | `public-matrix-receipt` | Public Matrix Receipt (receipt-bearing full matrix) | — | 3.14 | ubuntu · schedule/manual only |
 | 17 | `test-infra-slow` | Infra Slow Lane (`pytest.mark.slow`) | verify-no-mocks | 3.14 | ubuntu · schedule/manual only — exercises the slow-marked suite PR lanes deselect |
-| 18 | `test-integration` | Integration Tier (run.sh + pipeline CLI) | verify-no-mocks | 3.14 | ubuntu — runs the registered `tests/integration/` suite on every push/PR (CI-WIRING-1) |
+| 18 | `test-integration` | Integration Tier (run.sh + pipeline CLI) | verify-no-mocks | 3.14 | ubuntu — runs the registered `tests/integration/` suite on manual full-suite runs |
 | 19 | `coverage-infra` | Infrastructure Union Coverage | test-infra | 3.14 | ubuntu · validates all four transferred selections/data hashes and requires ≥60% union coverage |
-| 20 | `ci-gate` | CI Gate | all 19 upstream jobs (`if: always()`) | — | ubuntu · aggregation — fails if any upstream job failed or was cancelled; skipped counts as intentional |
+| 20 | `ci-gate` | Hardening Gate | all 19 upstream jobs (`if: always()`) | — | ubuntu · aggregation — fails if any upstream job failed or was cancelled; skipped counts as intentional |
 
 **Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/audit/check_tracked_generated_artifacts.py` (rejects generated outputs and local `.codegraph/` indexes), **`scripts/audit/check_template_drift.py --strict`** (exemplar doc/script drift against Layer-1 contracts), and **`scripts/audit/check_tracked_all.py`** — the **confidentiality guard** that fails CI if any path outside the public allowlists for `projects/`, `fonds/`, `rules/`, or `tools/` is git-tracked (this is a public repo; confidential/rotating resources are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/docgen/api_reference.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (`projects/working/`, `projects/ongoing/`, `projects/published/`, `projects/archive/`, `projects/other/`, plus `.venv`, `site-packages`, `.lake`, the vendored `infrastructure/steganography/kmyth` submodule, and named rotating research projects such as `projects/BeeStack` — **not** the rendered `projects/active/` mirror) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
 
-**Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when the `detect` job sets `fep_lean == 'true'` (`if: needs.detect.outputs.fep_lean == 'true'`) — a job-level `hashFiles()` is **invalid** in a job `if:` and would reject the whole workflow at parse, which is why the `detect` job exists. When fep_lean lives under `projects/working/`, `detect` reports `false` and the job is skipped. Promote with `mv projects/working/fep_lean projects/active/fep_lean` to activate CI. **Branch protection must NOT mark the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) as required** — they are skipped (not failed) when their project is absent, so requiring them would wedge every PR.
+**Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`hardening.yml` `name:` on job id `fep-lean`). It runs only when the `detect` job sets `fep_lean == 'true'` (`if: needs.detect.outputs.fep_lean == 'true'`) — a job-level `hashFiles()` is **invalid** in a job `if:` and would reject the whole workflow at parse, which is why the `detect` job exists. When fep_lean lives under `projects/working/`, `detect` reports `false` and the job is skipped. Promote with `mv projects/working/fep_lean projects/active/fep_lean` to activate CI. **Branch protection must NOT mark the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) as required** — they are skipped (not failed) when their project is absent, so requiring them would wedge every PR.
 
 Infrastructure and project coverage are uploaded to **Codecov** only from their
 Python 3.14 / `ubuntu-latest` cells; upload failures do not fail CI.
@@ -209,10 +222,10 @@ CODEOWNERS-approval rule for this branch, and no additional branch rulesets
 were reported. These are observed settings; recheck the external control before
 integration rather than treating this snapshot as permanent configuration.
 
-[`workflows/ci.yml`](workflows/ci.yml) defines `CI Gate` as the aggregate of all
-upstream jobs, including the regression tier and the dynamic infrastructure and
-project matrices. A failed or cancelled required job makes the aggregate fail;
-jobs conditionally skipped by the workflow are permitted. Before updating
+[`workflows/ci.yml`](workflows/ci.yml) defines `CI Gate` as the aggregate of
+all fast functional jobs. Every one must succeed; missing, skipped, failed or
+cancelled results are refused. The manual full matrix has a separate
+`Hardening Gate` in `hardening.yml`. Before updating
 `main`, verify a successful `CI Gate` for the exact candidate commit. An older
 successful main run does not establish acceptance for a new revision. CI success
 also does not replace the complete required-acceptance handoff for a root 4+
@@ -282,4 +295,4 @@ gh run view <run-id> --log
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [uv Documentation](https://docs.astral.sh/uv/)
 
-The infrastructure partition changes execution placement only. The required `coverage-infra` job consumes every 3.14/Linux shard, validates their complete disjoint case union and source/data identities, and enforces the unchanged 60% floor. The existing `ci-gate` complete-job policy includes this job; an unsuccessful or skipped merge prevents normal main integration. Root 4 release evidence remains separately required.
+The infrastructure partition changes execution placement only. The required `coverage-infra` job consumes every 3.14/Linux shard, validates their complete disjoint case union and source/data identities, and enforces the unchanged 60% floor. The existing `ci-gate` complete-job policy includes this job; an unsuccessful or skipped merge prevents optional exhaustive hardening acceptance. Root 4 release evidence remains separately required.

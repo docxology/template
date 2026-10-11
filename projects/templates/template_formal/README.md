@@ -294,3 +294,11 @@ locator alone does not establish engine identity. The same exact hash,
 regular-file, frozen-copy and final custody checks apply. Explicit acquisition
 never writes to that external provider. A present local cache remains checked
 and cannot silently fall through to an external tool.
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add genuine Lean proofs and TLC model checks with pinned external tools. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

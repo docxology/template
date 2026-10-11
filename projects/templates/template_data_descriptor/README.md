@@ -81,3 +81,11 @@ This exemplar is intentionally about publishing data responsibly, not about clai
 ## Fork guidance
 
 Use `scripts/audit/copy_exemplar.py` to fork this template cleanly. Replace placeholder descriptors, keep `domain_profile.yaml` and `experiment_plan.yaml` aligned with your dataset, and extend field constraints before publishing real data.
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add descriptor/schema compatibility against diverse independently collected datasets. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

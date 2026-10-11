@@ -11,6 +11,19 @@ import pytest
 from infrastructure.project.public_acceptance_auxiliary import supervise
 from infrastructure.project.public_acceptance_auxiliary_worker import negative_control
 
+UNADMITTED = "externally admitted source and original launch custody"
+# Witness faults that validate_print_witness refuses before it authenticates any
+# native tool receipt, with the specific refusal each one must produce.
+PRINT_WITNESS_FAULTS = {
+    "worker": "lacks exact worker/source custody",
+    "source": "complete print source/SDK inventory differs or changed",
+    "font-roles": "original complete font selection changed or was omitted",
+    "font-before-after": "original complete font selection changed or was omitted",
+    "font-private-path": "original print font path/identity is malformed",
+    "library-files": "native decoder provider file custody changed",
+    "tool": "actual native tool command/run/outcome differs",
+}
+
 
 def test_supervision_preserves_original_failure_and_bound_streams(tmp_path: Path) -> None:
     process = supervise(
@@ -146,18 +159,25 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
     assert not actual_refusal.get("details", {}).get("print_witness_artifact")
     darwin_tools = all(shutil.which(name) for name in ("pandoc", "pdftoppm", "pdffonts"))
     if platform.system() == "Darwin" and darwin_tools:
-        # A standalone Darwin print witness runs its tools, but every native tool
-        # record needs externally admitted source and original launch custody.
-        # Without that authority the witness fails closed and grants nothing.
+        # A standalone Darwin print witness runs its tools and writes its witness
+        # DATA, then its own validation needs externally admitted source and
+        # original launch custody for every native tool receipt. Without that
+        # authority it fails closed: the raw result references no witness, and
+        # the retained file is only unadmitted DATA for the controls below.
         refusal_code, refusal_status = 1, "fail"
         assert actual_refusal["failure_class"] == "ProjectionSourceUnsupported"
-        assert "externally admitted source and original launch custody" in actual_refusal["diagnostic"]
+        assert UNADMITTED in actual_refusal["diagnostic"]
+        assert list(refused_directory.rglob("print-witness.json")) == [
+            refused_directory / "print-witness/print-witness.json"
+        ]
+        print_controls = "retained-witness"
     else:
         refusal_code, refusal_status = 75, "blocked"
         assert ("actual Darwin host" if platform.system() != "Darwin" else "unavailable") in actual_refusal[
             "diagnostic"
         ]
         assert not list(refused_directory.rglob("print-witness.json"))
+        print_controls = "no-witness"
     assert refused["exit_code"] == actual_refusal["exit_code"] == refusal_code
     assert actual_refusal["status"] == refusal_status
     fingerprint = source_fingerprint(producer)
@@ -239,7 +259,7 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.readiness_receipts import source_fingerprint
 root=pathlib.Path(sys.argv[1])
 details=json.loads((root/'output/readiness/portable/details.json').read_text())
-gate,refusal_code,refusal_status=sys.argv[4],int(sys.argv[5]),sys.argv[6]
+gate,refusal_code,refusal_status,print_controls=sys.argv[4],int(sys.argv[5]),sys.argv[6],sys.argv[7]
 assert source_fingerprint(root)==sys.argv[3]
 validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
 observations=details['source_roster_observations']
@@ -264,8 +284,48 @@ validate_auxiliary_process(gate,sys.argv[3],details,SnapshotReader(root))
 refusal=json.loads((root/'output/readiness/unsupported-print/raw.json').read_text())
 assert refusal['exit_code']==refusal_code and refusal['status']==refusal_status
 assert not refusal.get('details',{}).get('print_witness_artifact')
-print(json.dumps({'role':'actual-portable-roster-controls','projects':len(observations),
-                  'unsupported_print_original_exit':refusal_code,'source_and_metadata_controls':2}))
+report={'role':'actual-portable-roster-controls','projects':len(observations),
+        'unsupported_print_original_exit':refusal_code,'source_and_metadata_controls':2}
+if print_controls=='retained-witness':
+    # Call the production witness validator directly on the retained DATA of the
+    # refused Darwin print run, after the producer root has been deleted.
+    import copy,hashlib
+    from infrastructure.reporting.native_print_witness_validation import validate_print_witness
+    from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
+    from infrastructure.reporting.required_acceptance_aggregate import _evidence_closure
+    relative='output/readiness/unsupported-print/print-witness/print-witness.json'
+    path=root/relative;original=path.read_bytes();witness=json.loads(original)
+    closure=_evidence_closure(SnapshotReader(root),relative)
+    assert sum(map(len,closure.values()))<64*1024*1024
+    assert all(item['path'] in closure for item in witness['raster_artifacts'])
+    def refused(binding):
+        try:validate_print_witness(binding,SnapshotReader(root),expected_pid=refusal['pid'],expected_runtime=refusal['runtime'])
+        except ValueError as error:return [isinstance(error,ProjectionSourceUnsupported),str(error)]
+        raise AssertionError('retained print witness admitted without original launch custody')
+    controls={'untampered':refused({'path':relative,'sha256':hashlib.sha256(original).hexdigest()})}
+    for fault in ('worker','source','font-roles','font-before-after','font-private-path','library-files','tool'):
+        changed=copy.deepcopy(witness);tool_path=None
+        if fault=='worker':changed['pid']+=1
+        elif fault=='source':changed['source_after']['infrastructure'][1][-1]='0'*64
+        elif fault=='font-roles':changed['fonts_before']['storybook']['roles'].pop()
+        elif fault=='font-before-after':changed['fonts_after']['storybook']['roles'][0]['resource']['sha256']='0'*64
+        elif fault=='font-private-path':
+            for key in ('fonts_before','fonts_after'):
+                changed[key]['storybook']['roles'][0]['resource']['path']='/private/unsupported/font.ttf'
+        elif fault=='library-files':changed['library_before']['distributions'][0]['files'].pop()
+        elif fault=='tool':
+            # Version receipts are read in retained order; only the first is reached before custody.
+            name=next(iter(changed['versions']))
+            tool_path=root/changed['versions'][name]['path'];saved_tool=tool_path.read_bytes()
+            tool=json.loads(saved_tool);tool['original_exit_code']=1
+            tool_path.write_text(json.dumps(tool));changed['versions'][name]['sha256']=hashlib.sha256(tool_path.read_bytes()).hexdigest()
+        path.write_text(json.dumps(changed))
+        try:controls[fault]=refused({'path':relative,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
+        finally:
+            path.write_bytes(original)
+            if tool_path is not None:tool_path.write_bytes(saved_tool)
+    report['print_witness']={'controls':controls,'closure_files':len(closure),'closure_bytes':sum(map(len,closure.values()))}
+print(json.dumps(report))
 """
     result = subprocess.run(
         [
@@ -279,6 +339,7 @@ print(json.dumps({'role':'actual-portable-roster-controls','projects':len(observ
             gate,
             str(refusal_code),
             refusal_status,
+            print_controls,
         ],
         cwd=reader_root,
         capture_output=True,
@@ -288,6 +349,30 @@ print(json.dumps({'role':'actual-portable-roster-controls','projects':len(observ
     )
     assert result.returncode == 0, result.stderr
     (tmp_path / "portable-observation.json").write_text(result.stdout)
+    observation = json.loads(result.stdout.strip().splitlines()[-1])
+    if print_controls == "retained-witness":
+        controls = observation["print_witness"]["controls"]
+        # Unchanged retained witness DATA fails closed at the custody gate.
+        custody_refusal, message = controls.pop("untampered")
+        assert custody_refusal and UNADMITTED in message, message
+        # Each fault reached before custody is refused for its own reason.
+        assert set(controls) == set(PRINT_WITNESS_FAULTS)
+        for fault, reason in PRINT_WITNESS_FAULTS.items():
+            custody_refusal, message = controls[fault]
+            assert not custody_refusal and reason in message, (fault, message)
+    else:
+        assert "print_witness" not in observation
+
+
+@pytest.mark.parametrize("fault", ["pages", "closure"])
+def test_print_witness_page_and_closure_tamper_needs_original_launch_custody(fault: str) -> None:
+    """Uncovered here: validate_print_witness checks the edition page inventory and
+    the raster page closure only after it admits the version tool receipts against
+    original launch custody, so retained witness DATA cannot reach either check."""
+    pytest.skip(
+        f"print-witness {fault} tamper: requires original launch custody, which unit tests cannot construct; "
+        "reachable only under a custody-holding platform-required-acceptance reader"
+    )
 
 
 def test_mandatory_raw_custody_rejects_bare_success_flags(tmp_path: Path) -> None:

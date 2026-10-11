@@ -38,8 +38,14 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 REPO = Path(__file__).resolve().parents[3]
 # Strict replay authenticates every retained native tool receipt against the
 # externally admitted Source and original launch custodian. Receipt DATA and a
-# bare SnapshotReader never hold them, so replay refuses before reconstruction.
+# bare SnapshotReader never hold them, so replay refuses at the baseline's first
+# raster tool receipt. Checks before that point are asserted for their own
+# reason; checks after it are listed as explicit custody-gated skips.
 UNADMITTED = "externally admitted source and original launch custody"
+CUSTODY_GATED = (
+    "requires original launch custody, which unit tests cannot construct; reachable only "
+    "under the platform-required-acceptance native-original/complete jobs"
+)
 pytestmark = pytest.mark.timeout(600)
 
 
@@ -209,12 +215,11 @@ def _replay_controls(fixture: dict[str, Any], controls: list[dict[str, Any]]) ->
     )
 
 
-def _independent_oracle(fixture: dict[str, Any], control: dict[str, Any]) -> dict[str, Any]:
-    raw = read_json(fixture["root"], fixture["root"] / control["artifact"]["path"])
-    reader = SnapshotReader(fixture["root"])
-    pdf = reader.read(raw["artifact"]["path"])
-    pixels = tuple(reader.read(item["path"]).content for item in raw["artifact"]["raster"]["rasters"])
-    return inspect_pdf_content(pdf.content, pixels, pdf_control_contract(), deadline=time.monotonic() + 30)
+def _refused_before_custody(fixture: dict[str, Any], controls: list[dict[str, Any]], reason: str) -> None:
+    """The replay refuses tampered DATA for its own reason, not for absent custody."""
+    with pytest.raises(ValueError, match=reason) as refused:
+        _replay_controls(fixture, controls)
+    assert not isinstance(refused.value, ProjectionSourceUnsupported)
 
 
 def test_strict_reader_reconstructs_actual_pdf_controls(actual_pdf_controls: dict[str, Any]) -> None:
@@ -229,39 +234,42 @@ def test_strict_reader_reconstructs_actual_pdf_controls(actual_pdf_controls: dic
     assert reader.unchanged()
 
 
-def test_strict_reader_refuses_forged_observer_bytes(actual_pdf_controls: dict[str, Any]) -> None:
+def test_strict_reader_refuses_forged_baseline_observer_before_custody(actual_pdf_controls: dict[str, Any]) -> None:
+    """Baseline observer DATA is checked before its raster tool receipts need custody."""
     fixture = actual_pdf_controls
-    controls = copy.deepcopy(fixture["controls"])
-    path = fixture["root"] / controls[1]["artifact"]["path"]
+    path = fixture["root"] / fixture["controls"][0]["artifact"]["path"]
     original = path.read_bytes()
     payload = read_json(fixture["root"], path)
-    payload["pdf_content"]["pdf_sha256"] = "0" * 64
+    forged = copy.deepcopy(payload)
+    forged["pdf_content"]["pdf_sha256"] = "0" * 64
+    observation = {**payload["artifact"]["observation"], "pages": payload["artifact"]["observation"]["pages"] + 1}
     try:
-        controls[1]["artifact"] = write_json(fixture["root"], path, payload)
-        # The forged observation cannot equal an independent recomputation
-        # from the retained PDF and raster bytes, and it cannot be admitted.
-        assert _independent_oracle(fixture, controls[1]) != payload["pdf_content"]
-        with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
-            _replay_controls(fixture, controls)
+        # Forged observer bytes under the retained genuine binding.
+        write_json(fixture["root"], path, forged)
+        _refused_before_custody(fixture, fixture["controls"], "bytes differ from their binding")
+        # Rebound forgeries of the run identity and of the parsed PDF facts.
+        for change, reason in (
+            ({"run_id": "d" * 32}, "contract/run/name changed"),
+            ({"artifact": {**payload["artifact"], "observation": observation}}, "did not actually parse successfully"),
+        ):
+            controls = copy.deepcopy(fixture["controls"])
+            controls[0]["artifact"] = write_json(fixture["root"], path, {**payload, **change})
+            _refused_before_custody(fixture, controls, reason)
     finally:
         path.write_bytes(original)
 
 
-def test_missing_baseline_and_wrong_process_code_cannot_count(actual_pdf_controls: dict[str, Any]) -> None:
+def test_missing_baseline_cannot_count(actual_pdf_controls: dict[str, Any]) -> None:
     fixture = actual_pdf_controls
-    with pytest.raises(ValueError, match="absent or duplicated"):
-        _replay_controls(fixture, fixture["controls"][1:])
-    controls = copy.deepcopy(fixture["controls"])
-    path = fixture["root"] / controls[1]["process_artifact"]["path"]
-    original = path.read_bytes()
-    process = read_json(fixture["root"], path)
-    process["original_exit_code"] = 7
-    try:
-        controls[1]["process_artifact"] = write_json(fixture["root"], path, process)
-        with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
-            _replay_controls(fixture, controls)
-    finally:
-        path.write_bytes(original)
+    _refused_before_custody(fixture, fixture["controls"][1:], "absent or duplicated")
+
+
+@pytest.mark.parametrize("obligation", ["forged-negative-observation", "wrong-process-exit-code"])
+def test_pdf_control_tamper_rejection_needs_original_launch_custody(obligation: str) -> None:
+    """Uncovered here: replay compares a control's semantic/geometry/pixel observation
+    and its process exit codes only after the baseline's raster tool receipts are
+    admitted against original launch custody."""
+    pytest.skip(f"{obligation}: {CUSTODY_GATED}")
 
 
 def test_changed_consumed_source_cannot_reuse_positive_observation(actual_pdf_controls: dict[str, Any]) -> None:

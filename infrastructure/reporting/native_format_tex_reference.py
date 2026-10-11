@@ -6,7 +6,7 @@ import hashlib
 import json
 import re
 import time
-from pathlib import Path
+from pathlib import Path, PurePath, PurePosixPath
 from typing import Any
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
@@ -18,6 +18,77 @@ MAX_DEPENDENCIES = 2048
 MAX_DEPENDENCY_BYTES = 256 * 1024 * 1024
 # Literal argv; Kpathsea itself expands $TEXMF to its existing search trees.
 TEXMF_TREES_ARGUMENT = "--expand-path=$TEXMF"
+
+
+def admitted_texmf_roots(
+    distribution: PurePath, installation: PurePath, searched: tuple[PurePath, ...], private: PurePath
+) -> tuple[PurePath, ...]:
+    """Admit distribution leaves, never ambient search roots or broad parents.
+
+    This label-only policy is shared by original observation and portable replay.
+    Filesystem canonicality is checked separately by the original producer.
+    """
+    paths = (distribution, installation, private, *searched)
+    if any(not path.is_absolute() or ".." in path.parts for path in paths):
+        raise ValueError("source reference Kpathsea tree is invalid")
+    if installation == Path("/") or distribution != installation / "texmf-dist":
+        raise ValueError("source reference distribution is not its installation leaf")
+    candidates = {distribution, installation / "texmf-var", installation / "texmf-config"}
+    if installation == Path("/usr/share/texlive"):
+        candidates.update(map(Path, ("/usr/share/texmf", "/var/lib/texmf", "/etc/texmf")))
+    admitted = tuple(sorted({distribution, *(path for path in searched if path in candidates)}))
+    if any(path.is_relative_to(private) or private.is_relative_to(path) for path in admitted):
+        raise ValueError("source reference distribution overlaps private execution")
+    return admitted
+
+
+def validate_texmf_installation(installation: PurePath, executable: PurePath) -> None:
+    """Bind the distribution locator to its originally observed Kpathsea tool."""
+    if executable.name != "kpsewhich" or not executable.is_absolute():
+        raise ValueError("source reference Kpathsea executable label is invalid")
+    mac_or_generic = executable.is_relative_to(installation / "bin")
+    homebrew = installation == executable.parent.parent / "share" and executable.parent.name == "bin"
+    debian = installation == Path("/usr/share/texlive") and executable == Path("/usr/bin/kpsewhich")
+    if installation == Path("/") or not (mac_or_generic or homebrew or debian):
+        raise ValueError("source reference distribution differs from its Kpathsea installation")
+
+
+def absolute_texmf_label(label: str) -> PurePosixPath:
+    """Parse exact original POSIX labels without normalizing their evidence."""
+    path = PurePosixPath(label)
+    if not path.is_absolute() or ".." in path.parts or str(path) != label or "\\" in label or "\0" in label:
+        raise ValueError("source reference Kpathsea tree is invalid or noncanonical")
+    return path
+
+
+def canonical_texmf_path(label: str) -> Path:
+    """Retain exact absolute labels so producer and portable replay agree."""
+    path = Path(absolute_texmf_label(label))
+    if (
+        not path.is_absolute()
+        or ".." in path.parts
+        or str(path) != label
+        or "\\" in label
+        or "\0" in label
+        or not path.is_dir()
+        or path.resolve(strict=True) != path
+    ):
+        raise ValueError("source reference distribution root is invalid or noncanonical")
+    return path
+
+
+def texmf_dependency_admitted(path: PurePath, roots: tuple[PurePath, ...], installation: PurePath) -> bool:
+    """Keep the top-level distribution config as an exact file, not a root."""
+    return path == installation / "texmf.cnf" or any(path.is_relative_to(base) for base in roots)
+
+
+def _refuse_tex_overrides(environment: dict[str, str]) -> None:
+    """Ambient Kpathsea input/config routes cannot nominate public providers."""
+    if any(
+        name.upper().startswith(("TEX", "SELFAUTO")) or name.upper().endswith(("INPUTS", "FONTS"))
+        for name in environment
+    ):
+        raise ValueError("source reference refuses ambient TeX routing overrides")
 
 
 def _process(
@@ -61,6 +132,7 @@ def observe_tex_reference(
     The discovery run is retained but cannot stand in for the final reference.
     Native backend font/maps are observed separately because TeX FLS omits them.
     """
+    _refuse_tex_overrides(env)
     if not tex_bytes or len(tex_bytes) > 4 * 1024 * 1024:
         raise ValueError("source-only TeX exceeds its finite byte budget")
     started = time.monotonic()
@@ -112,13 +184,12 @@ def observe_tex_reference(
             purpose=f"reference-{variable.lower()}",
         )
         tools.append(record)
-        path = Path(process["stdout"].strip()).resolve(strict=True)
-        if not path.is_dir() or not path.is_absolute():
-            raise ValueError("source reference distribution root is invalid")
+        path = canonical_texmf_path(process["stdout"].strip())
         allowed_roots.append(path)
-    # Debian/Ubuntu split the installed distribution across system trees outside
-    # TEXMFROOT (/etc/texmf, /var/lib/texmf, /usr/share/texmf). Admit exactly the
-    # existing trees Kpathsea searches for this run, never the private ones.
+    installation = allowed_roots[1]
+    validate_texmf_installation(installation, Path(runtime["kpsewhich"]["path"]))
+    # Retain searched labels, then intersect them with exact distribution leaves.
+    # TEXMFROOT locates the installation and is never an admitted input root.
     record, process = _process(
         root,
         directory,
@@ -130,14 +201,13 @@ def observe_tex_reference(
         purpose="reference-texmf-trees",
     )
     tools.append(record)
-    for item in process["stdout"].strip().split(":"):
-        if not item or not Path(item).is_absolute():
-            raise ValueError("source reference Kpathsea tree is invalid")
-        path = Path(item).resolve(strict=True)
-        if not path.is_dir():
-            raise ValueError("source reference Kpathsea tree is invalid")
-        if not path.is_relative_to(directory.resolve()):
-            allowed_roots.append(path)
+    searched = tuple(absolute_texmf_label(item) for item in process["stdout"].strip().split(":"))
+    allowed_roots = [
+        Path(label) for label in admitted_texmf_roots(allowed_roots[0], allowed_roots[1], searched, directory.resolve())
+    ]
+    for path in allowed_roots:
+        if not path.is_dir() or path.resolve(strict=True) != path:
+            raise ValueError("source reference distribution leaf is not canonical")
     compiler_args = [
         "-fmt=xelatex",
         "-no-pdf",
@@ -227,7 +297,7 @@ def observe_tex_reference(
             raise ValueError("source reference dependency set is empty or exceeds its budget")
         for path in admitted:
             resolved = path.resolve(strict=True)
-            if not any(resolved.is_relative_to(base) for base in allowed_roots) or not resolved.is_file():
+            if not texmf_dependency_admitted(resolved, tuple(allowed_roots), installation) or not resolved.is_file():
                 raise ValueError("native reference dependency escapes the admitted public TeX distribution")
         return sorted(admitted, key=str)
 

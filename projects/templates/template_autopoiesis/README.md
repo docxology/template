@@ -188,3 +188,11 @@ uv run pytest projects/templates/template_autopoiesis/tests/ \
     --cov=projects/templates/template_autopoiesis/src \
     --cov-fail-under=90 -q
 ```
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add numeric stress cases and conservation checks across larger parameter sweeps. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

@@ -132,3 +132,11 @@ uv run pytest projects/templates/template_storybook/tests/ \
 ```
 
 The suite uses the real YAML content and renders real PNG/PDF artifacts.
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add native edition layout, accessible illustrations and reader review. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

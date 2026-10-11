@@ -598,6 +598,11 @@ if __name__ == "__main__":
             _HTML_CHILD_AUDIT.verify_executed_source_code(
                 Path(__file__).absolute().parent, Path(_HTML_CHILD_PLAN["cache_prefix"])
             )
+            # Browser work and its executed Source audit are now closed. Lazy
+            # stdlib imports during terminal serialization must not add cache
+            # files after the retained inventory is taken (notably on Linux).
+            # The parent still checks the exact final file set and every byte.
+            sys.dont_write_bytecode = True
             _after_programs = {
                 name: _html_source_physical(Path(__file__).absolute().with_name(name))
                 for name in _HTML_CHILD_PLAN["programs"]

@@ -166,3 +166,11 @@ Whole-source producers and the full own test suite admit this reference once, re
 After explicit SDK/dev preparation, run `python -I -m pytest tests/ --cov=src --cov-fail-under=90` from the standalone own project. This command requires the admitted DATA environment and every declared renderer/provider needed by the selected cases. A fresh complete own-suite receipt and actual installed-wheel execution remain distinct acceptance requirements.
 
 Public metrics enumerate only the exact canonical qualified public roster paths under projects/templates. Local lifecycle or flat aliases with a public leaf name remain available only to explicit public_only=False diagnostics; they cannot enter published counts. Canonical public directory redirects are refused.
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add outside-checkout provider installation, exhaustive source/runtime custody and release acceptance. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

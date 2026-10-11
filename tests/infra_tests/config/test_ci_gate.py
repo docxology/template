@@ -21,7 +21,7 @@ _SUMMARY = "Summarize CI gate outcomes"
 
 def _workflow() -> dict:
     root = Path(__file__).resolve().parents[3]
-    return yaml.safe_load((root / ".github/workflows/ci.yml").read_text(encoding="utf-8"))
+    return yaml.safe_load((root / ".github/workflows/hardening.yml").read_text(encoding="utf-8"))
 
 
 def _gate_steps() -> dict[str, dict]:
@@ -47,7 +47,7 @@ def _run(values: object, event: str, tmp_path: Path) -> subprocess.CompletedProc
             "PATH": os.environ.get("PATH", os.defpath),
             "NEEDS_JSON": json.dumps(values),
             "EVENT_NAME": event,
-            "REQUIRED_JOBS_JSON": json.dumps(required_ci_jobs(Path(__file__).resolve().parents[3])),
+            "REQUIRED_JOBS_JSON": json.dumps(required_ci_jobs(Path(__file__).resolve().parents[3], "hardening.yml")),
         },
         capture_output=True,
         text=True,
@@ -155,7 +155,7 @@ def test_aggregate_requires_every_declared_job_and_keeps_independent_checks() ->
     jobs = _workflow()["jobs"]
     assert set(jobs["ci-gate"]["needs"]) == set(jobs) - {"ci-gate"}
     assert jobs["ci-gate"]["if"] == "always()"
-    assert set(required_ci_jobs(Path(__file__).resolve().parents[3])) == set(jobs) - {"ci-gate"}
+    assert set(required_ci_jobs(Path(__file__).resolve().parents[3], "hardening.yml")) == set(jobs) - {"ci-gate"}
     for name in ("health", "validate", "security", "docs-lint"):
         assert "needs" not in jobs[name]
         assert jobs[name]["steps"]
@@ -208,7 +208,7 @@ def test_actual_aggregate_refuses_empty_or_malformed_results(values: object, tmp
     assert _run(copy.deepcopy(values), "push", tmp_path).returncode != 0
 
 
-@pytest.mark.parametrize("name", required_ci_jobs(Path(__file__).resolve().parents[3]))
+@pytest.mark.parametrize("name", required_ci_jobs(Path(__file__).resolve().parents[3], "hardening.yml"))
 def test_actual_aggregate_refuses_each_missing_required_job(name: str, tmp_path: Path) -> None:
     values = _success()
     del values[name]
@@ -231,10 +231,10 @@ def test_source_owned_aggregate_refuses_invalid_workflow_selection(tmp_path: Pat
         aggregate["needs"].append("lint")
     else:
         aggregate["if"] = "success()"
-    path = tmp_path / ".github/workflows/ci.yml"
+    path = tmp_path / ".github/workflows/hardening.yml"
     path.parent.mkdir(parents=True)
     path.write_text(yaml.safe_dump(workflow))
     if fault == "invalid-yaml":
         path.write_text("jobs: [invalid\n")
     with pytest.raises(ValueError):
-        required_ci_jobs(tmp_path)
+        required_ci_jobs(tmp_path, "hardening.yml")

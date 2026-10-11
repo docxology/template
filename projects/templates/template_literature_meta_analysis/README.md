@@ -223,3 +223,11 @@ Navigation links to in-tree documents (keeps them discoverable):
 - [Tests - Literature Meta-Analysis](tests/README.md)
 
 <!-- foam-orphan-nav:end -->
+
+
+## Optional hardening
+
+Default CI builds this template's wheel and runs focused behavioral tests. Further
+hardening can add live database retrieval, extraction calibration and stable provider exports. The complete suites and native/provider acceptance remain opt-in;
+see [functional CI and hardening](../../../docs/development/ci.md) for commands
+and the evidence each lane establishes.

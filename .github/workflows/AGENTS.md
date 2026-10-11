@@ -1,3 +1,17 @@
+## Fast functional CI
+
+`ci.yml` runs on main pushes, pull requests and manual dispatch. It uses Linux
+and Python 3.14: lint/types and public data/security guards, pipeline smoke,
+a standalone wheel build and focused behavioral tests for every public template,
+and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
+the smoke runner refuses missing projects, empty selections and escaping paths.
+These are functional checks, with no full-suite coverage or native acceptance claim.
+
+The former cross-version/full-suite matrix remains in `hardening.yml`, invoked
+manually. `platform-required-acceptance.yml` is also manual-only; its original
+custody requirements remain mandatory for formal release acceptance. Further
+hardening choices and the local commands are in [`docs/development/ci.md`](../../docs/development/ci.md).
+
 # CI/CD Workflows
 
 ## Overview
@@ -10,7 +24,7 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 flowchart LR
     W[.github/workflows/]
     W --> META[AGENTS.md · README.md]
-    W --> CI[ci.yml<br/>20 jobs · 2 conditional via detect outputs<br/>2 schedule/manual-only lanes: test-infra-slow, public-matrix-receipt]
+    W --> CI[hardening.yml<br/>20 jobs · 2 conditional via detect outputs<br/>2 schedule/manual-only lanes: test-infra-slow, public-matrix-receipt]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
     W --> REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
@@ -24,24 +38,19 @@ flowchart LR
     class META doc
 ```
 
-## CI Pipeline (`ci.yml`)
+## Optional exhaustive hardening (`hardening.yml`)
 
 ### Triggers
 
-| Trigger | Condition |
-|---|---|
-| `push` | Commits to `main` |
-| `pull_request` | PRs targeting `main` |
-| `schedule` | Weekly Sunday midnight UTC (CVE catch-up) |
-| `workflow_dispatch` | Manual trigger (no inputs) |
-
-**Concurrency:** PR runs share a group by PR ref and cancel superseded runs. Push, scheduled, and manual runs use their unique `github.run_id` and do not cancel other runs, preserving exact-commit post-merge evidence while `main` advances. GitHub runner availability still bounds job execution; this policy does not guarantee completion or permit a cancelled run to count as green. Historical reruns retain their original workflow and concurrency group: avoid running two old-policy main workflows concurrently during exact-commit certification. The first new-policy PR run also has a different group from any pre-policy run of that PR.
+`workflow_dispatch` only. Each manual run uses its unique run ID and preserves
+its evidence independently. This lane is not a requirement for ordinary main
+integration. Its aggregate check is named **Hardening Gate**.
 
 **Global env:** `UV_FROZEN=true`, `MPLBACKEND=Agg` (non-interactive matplotlib backend).
 
 ### Job Graph
 
-`health`, `validate`, `security`, and `docs-lint` run independently alongside **`lint`**; each uses its own checkout and setup. `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is skipped unless `needs.detect.outputs.setup_hook == 'true'`. The test jobs run through the independent `verify-no-mocks` subtree; `test-infra` also consumes `detect-projects`. An individual job can pass when lint fails. The aggregate `ci-gate` must still fail when a required job fails or is unexpectedly skipped. This graph describes [`ci.yml`](ci.yml); workflow checks and review verify its current dependencies and aggregate policy.
+`health`, `validate`, `security`, and `docs-lint` run independently alongside **`lint`**; each uses its own checkout and setup. `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is skipped unless `needs.detect.outputs.setup_hook == 'true'`. The test jobs run through the independent `verify-no-mocks` subtree; `test-infra` also consumes `detect-projects`. An individual job can pass when lint fails. The aggregate `ci-gate` must still fail when a required job fails or is unexpectedly skipped. This graph describes [`hardening.yml`](hardening.yml); workflow checks and review verify its current dependencies and aggregate policy.
 
 ```mermaid
 flowchart TB
@@ -56,7 +65,7 @@ flowchart TB
     DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
     DETP -.->|infra_matrix output| TI
-    VNM --> TI[test-infra<br/>dynamic matrix from detect-projects<br/>push/schedule: ubuntu × 3.12-3.14 + macOS × 3.14<br/>PR: full supported matrix · four complete shards per environment]
+    VNM --> TI[test-infra<br/>dynamic matrix from detect-projects<br/>manual: ubuntu × 3.12-3.14 + macOS × 3.14<br/>full supported matrix · four complete shards per environment]
     TI --> IC[coverage-infra<br/>complete 3.14 Linux union ≥60%]
     VNM --> TR[test-regression<br/>claim-binding pins · tests/regression/]
     VNM --> TP[test-project<br/>capability manifest roster × canonical Python versions<br/>stage_01_test.py --project per cell]
@@ -143,6 +152,7 @@ A negative control backs this contract: deliberately breaking any represented st
 
 - **Pinned source setup:** `test-infra` and `coverage-infra` both initialize the direct submodule declared by the actual Root gitlink and `.gitmodules` using the pinned checkout action's `submodules: true`. This checks out the committed kmyth object; the declaration's branch is not used to advance it. Initialization is an explicit network-capable setup boundary before Python setup and source observation. Tests subsequently clone this actual local checkout without network. Both jobs use `persist-credentials: false`, so setup credentials are removed before test or merge code runs. The merge runner receives the same complete source bytes as the coverage workers; missing pins remain failures, with no fixture fabrication or skip. The canonical workflow guard in `tests/infra_tests/core/test_ci_infra_partition.py` checks both setup declarations against the actual native Git index and public submodule declaration.
 - **Sync:** `uv sync --locked --group public-exemplars --group installed-build`. Genuine wheel/sdist controls use the prepared, locked build backend.
+- **Offline warm:** a scratch `uv sync --frozen` against the selected interpreter re-populates the uv cache with every locked default-group wheel (setup-uv prunes registry wheels from the saved cache), so infra tests that build fresh environments with `uv sync --locked --offline` do not depend on a cold or pruned cache. The scratch environment is deleted.
 - **Document tools:** Both platforms invoke [`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml) once. It verifies exact pinned Pandoc/crossref/font archives, prepares the complete TeX and native-reader package union, and probes the selected executables. Linux installs `poppler-utils`; macOS installs `poppler`. Both lanes directly check `pdftoppm` and `pdffonts` before the actual PDF controls. Package caches cannot certify preparation or acceptance.
 - **Matrix:** Every existing environment is retained: Linux Python 3.12–3.14 and macOS Python 3.14. The source-declared `ci_infra_partition.py` emits four complete module shards per environment (16 cells). The four measured C4 families are assigned distinct shards; every other current or future collected module receives a stable SHA-256 assignment. No test is marked slow or removed by partitioning.
 - **Selection:** `ci_infra_shard_plugin` partitions actual pytest collection after the unchanged ordinary marker expression. Each selected case belongs to exactly one shard; empty/duplicate/noncanonical inventory, worker disagreement and incomplete actual completion fail. The plugin is explicitly loaded for this invocation, so nested pytest jobs retain their own selection.
@@ -419,4 +429,4 @@ print(s.getvalue())
 - [uv Documentation](https://docs.astral.sh/uv/)
 - [Codecov Documentation](https://docs.codecov.com/)
 
-The infrastructure partition changes execution placement only. The required `coverage-infra` job consumes every 3.14/Linux shard, validates their complete disjoint case union and source/data identities, and enforces the unchanged 60% floor. The existing `ci-gate` complete-job policy includes this job; an unsuccessful or skipped merge prevents normal main integration. Root 4 release evidence remains separately required.
+The infrastructure partition changes execution placement only. The required `coverage-infra` job consumes every 3.14/Linux shard, validates their complete disjoint case union and source/data identities, and enforces the unchanged 60% floor. The existing `ci-gate` complete-job policy includes this job; an unsuccessful or skipped merge prevents optional exhaustive hardening acceptance. Root 4 release evidence remains separately required.

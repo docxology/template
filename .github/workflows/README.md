@@ -1,3 +1,17 @@
+## Fast functional CI
+
+`ci.yml` runs on main pushes, pull requests and manual dispatch. It uses Linux
+and Python 3.14: lint/types and public data/security guards, pipeline smoke,
+a standalone wheel build and focused behavioral tests for every public template,
+and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
+the smoke runner refuses missing projects, empty selections and escaping paths.
+These are functional checks, with no full-suite coverage or native acceptance claim.
+
+The former cross-version/full-suite matrix remains in `hardening.yml`, invoked
+manually. `platform-required-acceptance.yml` is also manual-only; its original
+custody requirements remain mandatory for formal release acceptance. Further
+hardening choices and the local commands are in [`docs/development/ci.md`](../../docs/development/ci.md).
+
 # workflows/ — CI/CD Pipelines
 
 GitHub Actions workflows for automated quality assurance, testing, and deployment. Enforces development standards across Python versions and environments.
@@ -8,13 +22,13 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 | File | Trigger | Purpose |
 |---|---|---|
-| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | **20 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; 2 schedule/manual-only lanes: **`test-infra-slow`** and **`public-matrix-receipt`**; see [`AGENTS.md`](AGENTS.md)) |
+| [`hardening.yml`](hardening.yml) | manual only | **20 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; 2 schedule/manual-only lanes: **`test-infra-slow`** and **`public-matrix-receipt`**; see [`AGENTS.md`](AGENTS.md)) |
 | [`stale.yml`](stale.yml) | Daily 01:00 UTC | Auto-label and close stale issues/PRs |
 | [`release.yml`](release.yml) | `v*.*.*` tag push or manual | Generate GitHub Release with changelog |
-| [`platform-required-acceptance.yml`](platform-required-acceptance.yml) | push to `main` or `codex/platform-4` · manual | Original required-profile observations and strict exact-source acceptance bundle |
+| [`platform-required-acceptance.yml`](platform-required-acceptance.yml) | manual only | Original required-profile observations and strict exact-source acceptance bundle |
 | [`dependabot-automerge.yml`](dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
 
-## CI Pipeline (`ci.yml`)
+## Optional exhaustive hardening (`hardening.yml`)
 
 ### Job Graph
 
